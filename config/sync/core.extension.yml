@@ -21,4 +21,5 @@ module:
   minimal: 1000
 theme:
   stark: 0
+  famtastic_extreme: 0
 profile: minimal

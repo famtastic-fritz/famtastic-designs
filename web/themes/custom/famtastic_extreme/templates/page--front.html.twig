@@ -205,40 +205,46 @@
     <p>Unapologetic Digital Goods</p>
   </div>
 
-  <div class="gallery">
-    <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.5">
-      <div class="visual-core" style="background: linear-gradient(135deg, var(--orange), var(--cyan)); background-color: var(--cyan);"></div>
-      <div class="card-content">
-        <h2>Cyber_Blade</h2>
-        <p>Tech-wear footwear concept [B05]</p>
-        <div class="price">2400 CRD</div>
-        <button class="add-to-cart">ADD TO CART</button>
-      </div>
-    </div>
-    
-    <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.5">
-      <div class="visual-core" style="background: linear-gradient(135deg, var(--orange), var(--cyan)); background-color: var(--orange);"></div>
-      <div class="card-content">
-        <h2>Neural Drift</h2>
-        <p>Aesthetic overlay package [A01]</p>
-        <div class="price">1800 CRD</div>
-        <button class="add-to-cart">ADD TO CART</button>
-      </div>
-    </div>
-
-    <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.5">
-      <div class="visual-core" style="background: linear-gradient(135deg, var(--orange), var(--cyan)); background-color: #a200ff;"></div>
-      <div class="card-content">
-        <h2>Data Stream</h2>
-        <p>Cargo-system rigid backpack [C02]</p>
-        <div class="price">1600 CRD</div>
-        <button class="add-to-cart">ADD TO CART</button>
-      </div>
-    </div>
+  <div class="gallery" id="proof-gallery">
+    {% if proof_artifacts %}
+      {% for item in proof_artifacts %}
+        {% set metric = item.metrics|first %}
+        {% set metric_key = item.metrics|keys|first ?: 'Impact' %}
+        {% set colors = ['var(--cyan)', 'var(--orange)', '#a200ff', '#c5ff00', '#ff0055'] %}
+        {% set color = colors[loop.index0 % colors|length] %}
+        <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.5">
+          <div class="visual-core" style="background: linear-gradient(135deg, var(--orange), var(--cyan)); background-color: {{ color }};"></div>
+          <div class="card-content">
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.industry }}</p>
+            <div class="price">{{ metric_key }}: {{ metric }}</div>
+            <button class="add-to-cart" data-after="{{ item.after_url }}">VIEW PROOF</button>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p style="color:#888; text-align:center; grid-column: 1 / -1;">No public proofs yet.</p>
+    {% endif %}
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+<script>
+  (function () {
+    if (typeof VanillaTilt !== 'undefined') {
+      VanillaTilt.init(document.querySelectorAll('#proof-gallery .card'), {
+        max: 15, speed: 400, perspective: 1000, glare: true, 'max-glare': 0.5
+      });
+    }
+
+    document.querySelectorAll('#proof-gallery .add-to-cart').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var after = this.getAttribute('data-after');
+        if (after) window.open(after, '_blank');
+      });
+    });
+  })();
+</script>
 
 {# Hide the mandatory page content so Drupal doesn't break #}
 <div style="display:none !important;" aria-hidden="true">

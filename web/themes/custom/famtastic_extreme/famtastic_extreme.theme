@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Theme hooks for the FAMtastic Extreme theme.
+ */
+
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_preprocess_page() for page templates.
+ */
+function famtastic_extreme_preprocess_page(array &$variables): void {
+  if (empty($variables['is_front'])) {
+    return;
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $query = $storage->getQuery()
+    ->condition('type', 'proof_artifact')
+    ->condition('status', NodeInterface::PUBLISHED)
+    ->condition('field_is_public', TRUE)
+    ->sort('field_published_at', 'DESC')
+    ->accessCheck(FALSE)
+    ->range(0, 12);
+
+  $nids = $query->execute();
+  if (!$nids) {
+    $variables['proof_artifacts'] = [];
+    return;
+  }
+
+  $nodes = $storage->loadMultiple($nids);
+  $items = [];
+  foreach ($nodes as $node) {
+    $metrics = [];
+    if ($node->hasField('field_metrics') && !$node->get('field_metrics')->isEmpty()) {
+      $metrics_raw = $node->get('field_metrics')->value;
+      $decoded = json_decode($metrics_raw, TRUE);
+      if (is_array($decoded)) {
+        $metrics = $decoded;
+      }
+    }
+
+    $items[] = [
+      'title' => $node->getTitle(),
+      'industry' => $node->hasField('field_industry') ? $node->get('field_industry')->value : '',
+      'summary' => $node->hasField('field_story_summary') ? $node->get('field_story_summary')->value : '',
+      'before_url' => $node->hasField('field_before_url') && !$node->get('field_before_url')->isEmpty()
+        ? $node->get('field_before_url')->uri
+        : '',
+      'after_url' => $node->hasField('field_after_url') && !$node->get('field_after_url')->isEmpty()
+        ? $node->get('field_after_url')->uri
+        : '',
+      'metrics' => $metrics,
+    ];
+  }
+
+  $variables['proof_artifacts'] = $items;
+}
