@@ -867,3 +867,8 @@ $databases['default']['default'] = array (
   'autoload' => 'core/modules/sqlite/src/Driver/Database/sqlite/',
 );
 $settings['config_sync_directory'] = '../config/sync';
+
+// Allow production overrides (MySQL credentials, etc.) via settings.local.php.
+if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
+  include $app_root . '/' . $site_path . '/settings.local.php';
+}
