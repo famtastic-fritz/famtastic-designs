@@ -1,0 +1,11 @@
+uuid: 3e848032-b465-459a-b51b-af8683b45ea0
+langcode: en
+status: true
+dependencies: {  }
+name: Testimonial
+type: testimonial
+description: 'Quotes and social proof snippets.'
+help: null
+new_revision: false
+preview_mode: 1
+display_submitted: true

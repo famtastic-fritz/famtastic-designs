@@ -8,53 +8,152 @@
 use Drupal\node\NodeInterface;
 
 /**
- * Implements hook_preprocess_page() for page templates.
+ * Load editable site blocks keyed by page -> section -> key.
  */
-function famtastic_extreme_preprocess_page(array &$variables): void {
-  if (empty($variables['is_front'])) {
-    return;
+function famtastic_extreme_load_site_blocks(): array {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->condition('type', 'site_block')
+    ->condition('status', NodeInterface::PUBLISHED)
+    ->sort('changed', 'DESC')
+    ->accessCheck(FALSE)
+    ->execute();
+
+  if (!$nids) {
+    return [];
   }
 
+  $blocks = [];
+  foreach ($storage->loadMultiple($nids) as $node) {
+    $page = $node->hasField('field_page') ? $node->get('field_page')->value : 'global';
+    $section = $node->hasField('field_section') ? $node->get('field_section')->value : 'default';
+    $key = $node->hasField('field_key_name') ? $node->get('field_key_name')->value : 'value';
+    $value = $node->hasField('field_value_text') ? $node->get('field_value_text')->value : '';
+    $blocks[$page][$section][$key] = $value;
+  }
+  return $blocks;
+}
+
+/**
+ * Load active service offerings.
+ */
+function famtastic_extreme_load_services(): array {
   $storage = \Drupal::entityTypeManager()->getStorage('node');
-  $query = $storage->getQuery()
+  $nids = $storage->getQuery()
+    ->condition('type', 'service_offering')
+    ->condition('status', NodeInterface::PUBLISHED)
+    ->condition('field_is_active', TRUE)
+    ->sort('field_sort_order', 'ASC')
+    ->accessCheck(FALSE)
+    ->range(0, 20)
+    ->execute();
+
+  if (!$nids) {
+    return [];
+  }
+
+  $items = [];
+  foreach ($storage->loadMultiple($nids) as $node) {
+    $deliverables = [];
+    if ($node->hasField('field_deliverables') && !$node->get('field_deliverables')->isEmpty()) {
+      $deliverables = json_decode($node->get('field_deliverables')->value, TRUE) ?: [];
+    }
+    $price = $node->hasField('field_starting_price') ? (int) $node->get('field_starting_price')->value : 0;
+
+    $items[] = [
+      'title' => $node->getTitle(),
+      'slug' => $node->hasField('field_slug') ? $node->get('field_slug')->value : '',
+      'pitch' => $node->hasField('field_short_pitch') ? $node->get('field_short_pitch')->value : '',
+      'description' => $node->hasField('body') ? $node->get('body')->value : '',
+      'starting_price' => $price,
+      'starting_price_display' => '$' . number_format($price / 100, 2),
+      'deliverables' => $deliverables,
+      'duration_days' => $node->hasField('field_duration_days') ? (int) $node->get('field_duration_days')->value : 0,
+      'icon' => $node->hasField('field_icon') ? $node->get('field_icon')->value : '',
+    ];
+  }
+  return $items;
+}
+
+/**
+ * Load active testimonials.
+ */
+function famtastic_extreme_load_testimonials(): array {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
+    ->condition('type', 'testimonial')
+    ->condition('status', NodeInterface::PUBLISHED)
+    ->condition('field_is_active', TRUE)
+    ->sort('created', 'DESC')
+    ->accessCheck(FALSE)
+    ->range(0, 10)
+    ->execute();
+
+  if (!$nids) {
+    return [];
+  }
+
+  $items = [];
+  foreach ($storage->loadMultiple($nids) as $node) {
+    $items[] = [
+      'author' => $node->getTitle(),
+      'role' => $node->hasField('field_role') ? $node->get('field_role')->value : '',
+      'quote' => $node->hasField('field_quote') ? $node->get('field_quote')->value : '',
+      'source' => $node->hasField('field_source') ? $node->get('field_source')->value : '',
+    ];
+  }
+  return $items;
+}
+
+/**
+ * Load public proof artifacts for the gallery.
+ */
+function famtastic_extreme_load_proof_artifacts(): array {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()
     ->condition('type', 'proof_artifact')
     ->condition('status', NodeInterface::PUBLISHED)
     ->condition('field_is_public', TRUE)
     ->sort('field_published_at', 'DESC')
     ->accessCheck(FALSE)
-    ->range(0, 12);
+    ->range(0, 12)
+    ->execute();
 
-  $nids = $query->execute();
   if (!$nids) {
-    $variables['proof_artifacts'] = [];
-    return;
+    return [];
   }
 
-  $nodes = $storage->loadMultiple($nids);
   $items = [];
-  foreach ($nodes as $node) {
+  foreach ($storage->loadMultiple($nids) as $node) {
     $metrics = [];
     if ($node->hasField('field_metrics') && !$node->get('field_metrics')->isEmpty()) {
-      $metrics_raw = $node->get('field_metrics')->value;
-      $decoded = json_decode($metrics_raw, TRUE);
-      if (is_array($decoded)) {
-        $metrics = $decoded;
-      }
+      $decoded = json_decode($node->get('field_metrics')->value, TRUE);
+      $metrics = is_array($decoded) ? $decoded : [];
     }
 
     $items[] = [
       'title' => $node->getTitle(),
       'industry' => $node->hasField('field_industry') ? $node->get('field_industry')->value : '',
       'summary' => $node->hasField('field_story_summary') ? $node->get('field_story_summary')->value : '',
-      'before_url' => $node->hasField('field_before_url') && !$node->get('field_before_url')->isEmpty()
-        ? $node->get('field_before_url')->uri
-        : '',
-      'after_url' => $node->hasField('field_after_url') && !$node->get('field_after_url')->isEmpty()
-        ? $node->get('field_after_url')->uri
-        : '',
+      'before_url' => ($node->hasField('field_before_url') && !$node->get('field_before_url')->isEmpty())
+        ? $node->get('field_before_url')->uri : '',
+      'after_url' => ($node->hasField('field_after_url') && !$node->get('field_after_url')->isEmpty())
+        ? $node->get('field_after_url')->uri : '',
       'metrics' => $metrics,
     ];
   }
+  return $items;
+}
 
-  $variables['proof_artifacts'] = $items;
+/**
+ * Implements hook_preprocess_page() for page templates.
+ */
+function famtastic_extreme_preprocess_page(array &$variables): void {
+  $variables['site_blocks'] = famtastic_extreme_load_site_blocks();
+
+  if (!empty($variables['is_front'])) {
+    $variables['proof_artifacts'] = famtastic_extreme_load_proof_artifacts();
+    $variables['service_offerings'] = famtastic_extreme_load_services();
+    $variables['testimonials'] = famtastic_extreme_load_testimonials();
+  }
 }

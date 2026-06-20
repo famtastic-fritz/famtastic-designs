@@ -1,0 +1,30 @@
+uuid: 77187f21-8cc1-496f-9811-fd5cb7a9a153
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_cta_action
+field_name: field_cta_action
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: book_call
+      label: 'Book a call'
+    -
+      value: pay_now
+      label: 'Pay now'
+    -
+      value: claim_proof
+      label: 'Claim proof'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

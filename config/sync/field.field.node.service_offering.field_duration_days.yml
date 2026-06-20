@@ -1,0 +1,23 @@
+uuid: 6624fef1-263b-41bb-9cb9-9f8ada9841ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_duration_days
+    - node.type.service_offering
+id: node.service_offering.field_duration_days
+field_name: field_duration_days
+entity_type: node
+bundle: service_offering
+label: 'Duration (days)'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

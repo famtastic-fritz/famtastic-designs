@@ -1,0 +1,33 @@
+uuid: 753cbc2d-7c0d-4012-8245-23b9df44b56a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_source
+field_name: field_source
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: video
+      label: Video
+    -
+      value: email
+      label: Email
+    -
+      value: survey
+      label: Survey
+    -
+      value: linkedin
+      label: LinkedIn
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
