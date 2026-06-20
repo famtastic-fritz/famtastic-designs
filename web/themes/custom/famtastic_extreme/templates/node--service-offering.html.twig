@@ -1,0 +1,61 @@
+<article class="service-page">
+  <style>
+    .service-page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      color: #F4F4F5;
+      font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    }
+    .service-page h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -3px;
+      margin: 0 0 20px;
+      background: linear-gradient(to bottom, #fff, #999);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .service-page .meta {
+      color: #FF4500;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      display: block;
+    }
+    .service-page .body {
+      color: #aaa;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      margin-bottom: 50px;
+    }
+    .service-page h2 {
+      color: #fff;
+      text-transform: uppercase;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    .service-page ul {
+      color: #aaa;
+      padding-left: 25px;
+      line-height: 1.8;
+    }
+  </style>
+
+  <h1>{{ label }}</h1>
+  <span class="meta">From {{ starting_price_display }} · {{ content.field_duration_days.0 }} days</span>
+
+  <div class="body">{{ content.body }}</div>
+
+  {% if service_deliverables %}
+    <h2>Deliverables</h2>
+    <ul>
+      {% for item in service_deliverables %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {{ content|without('body', 'field_duration_days', 'field_deliverables', 'field_starting_price') }}
+</article>

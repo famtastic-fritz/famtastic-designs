@@ -8,6 +8,7 @@
  */
 
 use Drupal\node\Entity\Node;
+use Drupal\path_alias\Entity\PathAlias;
 
 function ensure_not_exists(string $type, string $title): bool {
   $existing = \Drupal::entityTypeManager()
@@ -98,7 +99,7 @@ foreach ($services as $svc) {
   if (ensure_not_exists('service_offering', $svc['title'])) {
     continue;
   }
-  Node::create([
+  $service = Node::create([
     'type' => 'service_offering',
     'title' => $svc['title'],
     'status' => 1,
@@ -112,15 +113,29 @@ foreach ($services as $svc) {
     'field_icon' => $svc['icon'],
     'field_is_active' => TRUE,
     'field_sort_order' => $svc['order'],
-  ])->save();
+  ]);
+  $service->save();
   print "Created ServiceOffering: {$svc['title']}\n";
+
+  $alias = '/services/' . $svc['slug'];
+  $existing_alias = \Drupal::entityTypeManager()
+    ->getStorage('path_alias')
+    ->loadByProperties(['alias' => $alias]);
+  if (!$existing_alias) {
+    PathAlias::create([
+      'path' => '/node/' . $service->id(),
+      'alias' => $alias,
+      'langcode' => 'en',
+    ])->save();
+    print "Created alias: {$alias}\n";
+  }
 }
 
 // ---------------------------------------------------------------------------
 // CampaignPage.
 // ---------------------------------------------------------------------------
 if (!ensure_not_exists('campaign_page', 'Local Business Launch')) {
-  Node::create([
+  $campaign = Node::create([
     'type' => 'campaign_page',
     'title' => 'Local Business Launch',
     'status' => 1,
@@ -133,8 +148,21 @@ if (!ensure_not_exists('campaign_page', 'Local Business Launch')) {
     'field_cta_label' => 'Claim Your Proof',
     'field_cta_action' => 'claim_proof',
     'field_pricing_snapshot' => '{"starter": 49900, "growth": 129900}',
-  ])->save();
+  ]);
+  $campaign->save();
   print "Created CampaignPage: Local Business Launch\n";
+
+  $existing_alias = \Drupal::entityTypeManager()
+    ->getStorage('path_alias')
+    ->loadByProperties(['alias' => '/campaign/local-business']);
+  if (!$existing_alias) {
+    PathAlias::create([
+      'path' => '/node/' . $campaign->id(),
+      'alias' => '/campaign/local-business',
+      'langcode' => 'en',
+    ])->save();
+    print "Created alias: /campaign/local-business\n";
+  }
 }
 
 // ---------------------------------------------------------------------------

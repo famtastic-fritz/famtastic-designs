@@ -157,3 +157,34 @@ function famtastic_extreme_preprocess_page(array &$variables): void {
     $variables['testimonials'] = famtastic_extreme_load_testimonials();
   }
 }
+
+/**
+ * Implements hook_preprocess_node() for node templates.
+ */
+function famtastic_extreme_preprocess_node(array &$variables): void {
+  $node = $variables['node'] ?? NULL;
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+
+  if ($node->bundle() === 'campaign_page') {
+    $variables['accent_color'] = $node->hasField('field_accent_color')
+      ? $node->get('field_accent_color')->value
+      : '#FF4500';
+
+    $pricing = [];
+    if ($node->hasField('field_pricing_snapshot') && !$node->get('field_pricing_snapshot')->isEmpty()) {
+      $pricing = json_decode($node->get('field_pricing_snapshot')->value, TRUE) ?: [];
+    }
+    $variables['pricing_snapshot'] = $pricing;
+  }
+
+  if ($node->bundle() === 'service_offering') {
+    $variables['service_deliverables'] = [];
+    if ($node->hasField('field_deliverables') && !$node->get('field_deliverables')->isEmpty()) {
+      $variables['service_deliverables'] = json_decode($node->get('field_deliverables')->value, TRUE) ?: [];
+    }
+    $price = $node->hasField('field_starting_price') ? (int) $node->get('field_starting_price')->value : 0;
+    $variables['starting_price_display'] = '$' . number_format($price / 100, 2);
+  }
+}
