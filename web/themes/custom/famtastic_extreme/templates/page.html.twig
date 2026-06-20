@@ -1,0 +1,36 @@
+<div id="cinematic-viewport">
+  <canvas id="webgl-canvas"></canvas>
+  <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, #0b0c10 100%); z-index: -1;"></div>
+</div>
+
+<div class="extreme-container">
+  {% if page.header %}
+    <header class="glass-card" style="margin-bottom: 5vh; padding: 1rem 3rem;">
+      {{ page.header }}
+    </header>
+  {% endif %}
+
+  <main role="main">
+    <div class="extreme-header">
+      <h1>FAMTASTIC<br/>DESIGNS</h1>
+      <p>THE ULTIMATE COMMERCE ENGINE</p>
+    </div>
+
+    <div class="glass-card">
+      <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+      {{ page.content }}
+    </div>
+
+    {% if page.sidebar_first %}
+      <aside class="glass-card">
+        {{ page.sidebar_first }}
+      </aside>
+    {% endif %}
+  </main>
+
+  {% if page.footer %}
+    <footer class="glass-card" style="text-align: center; margin-top: 10vh;">
+      {{ page.footer }}
+    </footer>
+  {% endif %}
+</div>

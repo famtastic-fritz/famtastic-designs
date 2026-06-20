@@ -1,0 +1,178 @@
+:root {
+  --bg: #050505;
+  --orange: #FF4500;
+  --cyan: #00E5FF;
+  --text: #F4F4F5;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 70%);
+  overflow-x: hidden;
+}
+
+/* Hide Drupal Defaults */
+.tabs, .region-header .block-search, .region-header .block-system-branding-block, .region-header nav { display: none; }
+
+/* Asymmetrical Nav */
+nav {
+  width: 100%;
+  padding: 40px 60px;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 10;
+}
+.logo {
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  color: var(--orange);
+  text-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+}
+.links { display: flex; align-items: center; }
+.links a {
+  color: var(--cyan);
+  text-decoration: none;
+  margin-left: 40px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: text-shadow 0.3s;
+}
+.links a:hover {
+  text-shadow: 0 0 10px var(--cyan);
+}
+
+/* Hero */
+.hero {
+  margin-top: 10vh;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.hero h1 {
+  font-size: 8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.85;
+  margin: 0;
+  letter-spacing: -4px;
+  background: linear-gradient(to bottom, #fff, #555);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transform: scaleY(1.2);
+}
+.hero p {
+  font-size: 1.5rem;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: #888;
+  margin-top: 40px;
+}
+
+/* Holographic Grid */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+  padding: 100px;
+  max-width: 1400px;
+  perspective: 1000px;
+  position: relative;
+  z-index: 2;
+  margin: 0 auto;
+}
+
+/* The Glass/Holographic Card */
+.card {
+  width: 100%;
+  height: 500px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 30px;
+  box-sizing: border-box;
+  position: relative;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 30px 50px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+/* Holographic Glow Pseudo-element */
+.card::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  border-radius: 22px;
+  background: linear-gradient(45deg, var(--orange), transparent, var(--cyan));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  filter: blur(15px);
+}
+.card:hover::before {
+  opacity: 1;
+}
+
+/* 3D Elements inside the card */
+.card-content {
+  transform: translateZ(50px);
+}
+
+.card h2 {
+  font-size: 2.5rem;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #fff;
+}
+.card p {
+  color: #aaa;
+  font-size: 1rem;
+  margin-bottom: 30px;
+}
+.price {
+  color: var(--cyan);
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.add-to-cart {
+  background: var(--text); color: var(--bg); border: none; padding: 12px 24px;
+  font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px;
+  cursor: pointer; transition: background 0.3s; width: 100%;
+}
+.add-to-cart:hover { background: var(--orange); color: #fff; }
+
+.gallery .card:nth-child(2) {
+  transform: translateY(80px);
+}
+
+.visual-core {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 150px; height: 150px;
+  background: linear-gradient(135deg, var(--orange), var(--cyan));
+  transform: translate(-50%, -80%) translateZ(80px);
+  border-radius: 30%;
+  filter: blur(40px);
+  opacity: 0.6;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}

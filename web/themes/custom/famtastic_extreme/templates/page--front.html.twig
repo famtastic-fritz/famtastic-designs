@@ -1,0 +1,246 @@
+{# Guarantee no Drupal defaults break the layout by hiding everything except our engine #}
+<style>
+  :root {
+    --bg: #050505;
+    --orange: #FF4500;
+    --cyan: #00E5FF;
+    --text: #F4F4F5;
+  }
+  
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif !important;
+    min-height: 100vh !important;
+    background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 70%) !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Force hide all standard Drupal blocks and regions that might leak in */
+  .region, .block, #block-famtastic-extreme-page-title, .skip-link, .visually-hidden {
+    display: none !important;
+  }
+
+  /* Our Engine Container */
+  .famtastic-engine {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100vw;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 9999;
+  }
+
+  .famtastic-engine nav {
+    width: 100%;
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 10;
+  }
+  .famtastic-engine .logo {
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    color: var(--orange);
+    text-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+  }
+  .famtastic-engine .links { display: flex; align-items: center; }
+  .famtastic-engine .links a {
+    color: var(--cyan);
+    text-decoration: none;
+    margin-left: 40px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: text-shadow 0.3s;
+  }
+  .famtastic-engine .links a:hover {
+    text-shadow: 0 0 10px var(--cyan);
+  }
+
+  /* Hero */
+  .famtastic-engine .hero {
+    margin-top: 10vh;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+  .famtastic-engine .hero h1 {
+    font-size: 8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.85;
+    margin: 0;
+    letter-spacing: -4px;
+    background: linear-gradient(to bottom, #fff, #555);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transform: scaleY(1.2);
+  }
+  .famtastic-engine .hero p {
+    font-size: 1.5rem;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: #888;
+    margin-top: 40px;
+  }
+
+  /* Holographic Grid */
+  .famtastic-engine .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px;
+    padding: 100px;
+    max-width: 1400px;
+    perspective: 1000px;
+    position: relative;
+    z-index: 2;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* The Glass/Holographic Card */
+  .famtastic-engine .card {
+    width: 100%;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 30px 50px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+
+  .famtastic-engine .card::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 22px;
+    background: linear-gradient(45deg, var(--orange), transparent, var(--cyan));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    filter: blur(15px);
+  }
+  .famtastic-engine .card:hover::before {
+    opacity: 1;
+  }
+
+  .famtastic-engine .card-content {
+    transform: translateZ(50px);
+  }
+
+  .famtastic-engine .card h2 {
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    line-height: 1;
+    color: #fff;
+  }
+  .famtastic-engine .card p {
+    color: #aaa;
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+  .famtastic-engine .price {
+    color: var(--cyan);
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .famtastic-engine .add-to-cart {
+    background: var(--text); color: var(--bg); border: none; padding: 12px 24px;
+    font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px;
+    cursor: pointer; transition: background 0.3s; width: 100%;
+  }
+  .famtastic-engine .add-to-cart:hover { background: var(--orange); color: #fff; }
+
+  .famtastic-engine .gallery .card:nth-child(2) {
+    transform: translateY(80px);
+  }
+
+  .famtastic-engine .visual-core {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 150px; height: 150px;
+    transform: translate(-50%, -80%) translateZ(80px);
+    border-radius: 30%;
+    filter: blur(40px);
+    opacity: 0.6;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+</style>
+
+<div class="famtastic-engine">
+  <nav>
+    <div class="logo">VOID // FORM</div>
+    <div class="links">
+      <a href="#">Works</a>
+      <a href="#" style="color: var(--orange);">Shop</a>
+      <a href="#">Journal</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h1>FEARLESS<br>DEVIATION</h1>
+    <p>Unapologetic Digital Goods</p>
+  </div>
+
+  <div class="gallery">
+    <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.5">
+      <div class="visual-core" style="background: linear-gradient(135deg, var(--orange), var(--cyan)); background-color: var(--cyan);"></div>
+      <div class="card-content">
+        <h2>Cyber_Blade</h2>
+        <p>Tech-wear footwear concept [B05]</p>
+        <div class="price">2400 CRD</div>
+        <button class="add-to-cart">ADD TO CART</button>
+      </div>
+    </div>
+    
+    <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.5">
+      <div class="visual-core" style="background: linear-gradient(135deg, var(--orange), var(--cyan)); background-color: var(--orange);"></div>
+      <div class="card-content">
+        <h2>Neural Drift</h2>
+        <p>Aesthetic overlay package [A01]</p>
+        <div class="price">1800 CRD</div>
+        <button class="add-to-cart">ADD TO CART</button>
+      </div>
+    </div>
+
+    <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.5">
+      <div class="visual-core" style="background: linear-gradient(135deg, var(--orange), var(--cyan)); background-color: #a200ff;"></div>
+      <div class="card-content">
+        <h2>Data Stream</h2>
+        <p>Cargo-system rigid backpack [C02]</p>
+        <div class="price">1600 CRD</div>
+        <button class="add-to-cart">ADD TO CART</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+{# Hide the mandatory page content so Drupal doesn't break #}
+<div style="display:none !important;" aria-hidden="true">
+  {{ page.content }}
+</div>

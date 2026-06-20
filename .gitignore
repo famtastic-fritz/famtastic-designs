@@ -1,0 +1,25 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+vendor/
+node_modules/
+
+# Build / runtime
+web/sites/default/files/
+web/sites/default/settings.local.php
+web/sites/default/private/
+cache/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
