@@ -1,0 +1,19 @@
+uuid: 568f5803-3aa5-41eb-84dd-7ab9d00f18ca
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_page
+    - node.type.site_block
+id: node.site_block.field_page
+field_name: field_page
+entity_type: node
+bundle: site_block
+label: 'Page key'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

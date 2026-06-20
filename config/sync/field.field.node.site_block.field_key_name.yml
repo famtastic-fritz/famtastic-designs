@@ -1,0 +1,19 @@
+uuid: ed28c27e-2e02-4aaa-b089-db552cc819a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_key_name
+    - node.type.site_block
+id: node.site_block.field_key_name
+field_name: field_key_name
+entity_type: node
+bundle: site_block
+label: 'Key name'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,73 @@
+uuid: 340581f2-689c-41a2-9cb6-e1284d31b19d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.site_block.field_key_name
+    - field.field.node.site_block.field_page
+    - field.field.node.site_block.field_section
+    - field.field.node.site_block.field_updated_by
+    - field.field.node.site_block.field_value_text
+    - field.field.node.site_block.field_value_type
+    - node.type.site_block
+  module:
+    - options
+    - text
+    - user
+id: node.site_block.default
+targetEntityType: node
+bundle: site_block
+mode: default
+content:
+  field_key_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_page:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_section:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_updated_by:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_value_text:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_value_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

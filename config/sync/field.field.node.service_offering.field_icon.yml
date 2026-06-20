@@ -1,0 +1,19 @@
+uuid: fb195bf6-a015-49ed-a412-3e8eab4b6c42
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_icon
+    - node.type.service_offering
+id: node.service_offering.field_icon
+field_name: field_icon
+entity_type: node
+bundle: service_offering
+label: 'Icon name / path'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

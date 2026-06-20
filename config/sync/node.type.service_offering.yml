@@ -1,0 +1,11 @@
+uuid: fe3a5204-a987-4dd1-af1e-708955ec9813
+langcode: en
+status: true
+dependencies: {  }
+name: 'Service Offering'
+type: service_offering
+description: 'Services listed on /services and in campaigns.'
+help: null
+new_revision: false
+preview_mode: 1
+display_submitted: true

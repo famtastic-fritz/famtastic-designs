@@ -1,0 +1,22 @@
+uuid: 00a54996-fa58-4324-94ea-0c35ca2d0084
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_value_text
+    - node.type.site_block
+  module:
+    - text
+id: node.site_block.field_value_text
+field_name: field_value_text
+entity_type: node
+bundle: site_block
+label: Value
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

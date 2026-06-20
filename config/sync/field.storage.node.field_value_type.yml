@@ -1,0 +1,36 @@
+uuid: 58a21641-54e0-4c90-ae3b-361524192a92
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_value_type
+field_name: field_value_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: text
+      label: 'Plain text'
+    -
+      value: html
+      label: HTML
+    -
+      value: markdown
+      label: Markdown
+    -
+      value: url
+      label: URL
+    -
+      value: image_url
+      label: 'Image URL'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
