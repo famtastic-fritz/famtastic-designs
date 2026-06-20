@@ -1,0 +1,14 @@
+uuid: 6d8a63ad-4d8b-42ce-acf5-8007be9ad181
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+_core:
+  default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
+id: authenticated
+label: 'Authenticated user'
+weight: 1
+is_admin: false
+permissions:
+  - 'access content'
