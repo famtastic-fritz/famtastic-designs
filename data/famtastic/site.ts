@@ -1,0 +1,31 @@
+export const siteContent = {
+  company: {
+    name: 'FAMtastic Designs',
+    domain: 'famtasticdesigns.co',
+    email: 'hello@famtasticdesigns.co',
+    phone: '(555) 010-2026',
+    tagline: 'FAMtastic Designs helps businesses launch professional websites, branding, and client systems without messy tech or scattered tools.',
+    portalUrlConcept: 'portal.famtasticdesigns.co',
+  },
+  nav: [
+    { label: 'Work', to: '/work' },
+    { label: 'Services', to: '/services' },
+    { label: 'Process', to: '/#process' },
+    { label: 'Pricing', to: '/pricing' },
+    { label: 'Contact', to: '/contact' },
+  ],
+  homepageSections: [
+    'Header',
+    'Hero',
+    'Proof/trust bar',
+    'Services',
+    'Why FAMtastic',
+    'Process',
+    'Featured Work',
+    'Pricing',
+    'Client Portal Preview',
+    'FAQ',
+    'Final CTA',
+    'Footer',
+  ],
+};

@@ -1,25 +1,24 @@
-# Secrets
+node_modules
+.nuxt
+.nitro
+.cache
+.output
+dist
 .env
 .env.local
-.env.*.local
-
-# Dependencies
-vendor/
-node_modules/
-
-# Build / runtime
-web/sites/default/files/
-web/sites/default/settings.local.php
-web/sites/default/private/
-cache/
+.env.*
+!.env.example
+!.env.local.example
+.data/
+directus/database/
+directus/uploads/
+.directus/data/
+.directus/uploads/
+*.sqlite
+*.sqlite3
+*.db
 *.log
-
-# OS
 .DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+.vscode
+.eslintcache
+.netlify

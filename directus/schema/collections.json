@@ -1,0 +1,13 @@
+{
+  "collections": {
+    "site_settings": ["id", "site_name", "domain", "contact_email", "phone", "booking_link", "audit_payment_link", "seo_title", "seo_description"],
+    "homepage": ["id", "hero_headline", "hero_subheadline", "primary_cta_label", "primary_cta_url", "secondary_cta_label", "secondary_cta_url", "final_cta_headline", "final_cta_text"],
+    "services": ["id", "title", "slug", "short_description", "bullets", "icon", "sort", "status"],
+    "pricing_packages": ["id", "name", "price_label", "description", "features", "cta_label", "cta_url", "highlighted", "sort", "status"],
+    "faqs": ["id", "question", "answer", "sort", "status"],
+    "portfolio_projects": ["id", "title", "project_type", "summary", "result_label", "image", "demo_label", "sort", "status"],
+    "testimonials": ["id", "quote", "name", "title", "company", "rating", "sort", "status"],
+    "leads": ["id", "name", "email", "phone", "business_name", "industry", "current_website", "social_url", "location", "project_type", "goals", "budget", "timeline", "message", "preferred_contact_method", "best_time_to_reach", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "referrer", "landing_page", "device_type", "status", "assigned_owner", "notes", "submitted_at"]
+  },
+  "lead_statuses": ["New Lead", "Contacted", "Discovery Scheduled", "Proposal Sent", "Won", "Lost", "Follow Up Later"]
+}

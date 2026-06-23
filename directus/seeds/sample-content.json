@@ -1,0 +1,26 @@
+{
+  "site_settings": [
+    {
+      "site_name": "FAMtastic Designs",
+      "domain": "famtasticdesigns.co",
+      "contact_email": "hello@famtasticdesigns.co",
+      "phone": "(555) 010-2026",
+      "booking_link": "https://calendly.com/REPLACE_WITH_REAL_LINK",
+      "audit_payment_link": "https://buy.stripe.com/REPLACE_WITH_REAL_LINK",
+      "seo_title": "FAMtastic Designs",
+      "seo_description": "Websites that look expensive, load fast, and convert."
+    }
+  ],
+  "homepage": [
+    {
+      "hero_headline": "Websites that look expensive, load fast, and convert.",
+      "hero_subheadline": "FAMtastic Designs helps businesses launch professional websites, branding, and client systems without messy tech or scattered tools.",
+      "primary_cta_label": "Get Started",
+      "primary_cta_url": "/get-started",
+      "secondary_cta_label": "View Packages",
+      "secondary_cta_url": "/pricing",
+      "final_cta_headline": "Ready for a website that finally matches your business?",
+      "final_cta_text": "Let’s tighten the front door of the business."
+    }
+  ]
+}

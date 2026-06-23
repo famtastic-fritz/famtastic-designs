@@ -1,0 +1,33 @@
+{
+  "leads": [
+    {
+      "project_type": "New website",
+      "business_name": "Example Business",
+      "industry": "Consulting",
+      "current_website": "",
+      "social_url": "",
+      "location": "Tallahassee, FL",
+      "goals": ["Get more leads"],
+      "timeline": "2–4 weeks",
+      "budget": "$3,000–$6,000",
+      "name": "Example Contact",
+      "email": "example@famtasticdesigns.co",
+      "phone": "555-010-2026",
+      "preferred_contact_method": "Email",
+      "best_time_to_reach": "Afternoons",
+      "message": "Need a premium proof site with a clean intake funnel.",
+      "utm_source": "sample",
+      "utm_medium": "cpc",
+      "utm_campaign": "proof",
+      "utm_content": "hero",
+      "utm_term": "web design",
+      "referrer": "example-seed",
+      "landing_page": "/get-started",
+      "device_type": "desktop",
+      "submitted_at": "2026-06-23T00:00:00.000Z",
+      "status": "New Lead",
+      "assigned_owner": "",
+      "notes": ""
+    }
+  ]
+}

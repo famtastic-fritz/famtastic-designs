@@ -1,5 +1,0 @@
-admin_comment_form:
-  js:
-    js/commerce_log.admin-comment-form.js: {}
-  dependencies:
-    - core/once
