@@ -1,10 +1,14 @@
-import { siteContent } from '~/data/famtastic/site';
-import { serviceCards } from '~/data/famtastic/services';
-import { pricingPackages, monthlyPlans } from '~/data/famtastic/pricing';
-import { faqItems } from '~/data/famtastic/faqs';
-import { featuredWork, portalPreview } from '~/data/famtastic/portfolio';
-import { testimonials, leadStatuses } from '~/data/famtastic/testimonials';
+import { getBaseFamtasticContent } from './famtastic/content';
 
-export const company = siteContent.company;
-export const nav = siteContent.nav;
-export { serviceCards, pricingPackages, monthlyPlans, faqItems, featuredWork, portalPreview, testimonials, leadStatuses };
+const base = getBaseFamtasticContent();
+
+export const company = base.siteSettings;
+export const nav = base.navigation;
+export const serviceCards = base.services;
+export const pricingPackages = base.packages;
+export const monthlyPlans = base.paymentPlaceholders.carePlans;
+export const faqItems = base.faqs;
+export const featuredWork = base.portfolio;
+export const portalPreview = base.portalPreview;
+export const testimonials = base.testimonials;
+export const leadStatuses = base.leadStatuses;

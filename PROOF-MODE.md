@@ -1,12 +1,12 @@
 # FAMtastic Designs proof-mode hardening
 
-This branch converts the AgencyOS starter into a proof-first FAMtastic Designs sandbox that runs without a live Directus backend, real Stripe keys, or the original authenticated portal stack.
+This branch converts the AgencyOS starter into a proof-first FAMtastic Designs sandbox that runs without a live Directus backend, committed PayPal credentials, real Stripe keys, or the original authenticated portal stack.
 
 ## What changed
 
 - CMS: local fallback content powers the marketing pages when Directus is offline or unset.
 - Leads: `POST /api/leads` writes submissions to `.data/famtastic-leads.json` for local funnel testing.
-- Payments: audit/deposit CTAs stay in mock mode until real Stripe/payment links are supplied.
+- Payments: audit/deposit CTAs stay in mock mode until real PayPal links, invoice flow, or approved future checkout wiring are supplied.
 - Portal: public preview pages replace the original authenticated portal dependency chain.
 - SEO stability: page-level meta and a static `public/robots.txt` keep the proof build index-safe and deterministic.
 - Nuxt dev fix: `package.json` now includes an `imports` mapping for `#internal/nuxt/paths`, which resolves the dev-time 500 caused by `Package import specifier "#internal/nuxt/paths" is not defined`.
@@ -23,11 +23,17 @@ NUXT_PUBLIC_LEAD_STORAGE_MODE="local"
 NUXT_PUBLIC_PAYMENT_MODE="mock"
 NUXT_PUBLIC_PORTAL_MODE="preview"
 DIRECTUS_URL=""
-DIRECTUS_TOKEN=""
-STRIPE_SECRET_KEY=""
+DIRECTUS_TOKEN=***
+PAYPAL_ENV="sandbox"
+PAYPAL_CLIENT_ID=""
+PAYPAL_CLIENT_SECRET=""
+PAYPAL_WEBHOOK_ID=""
+PAYPAL_BUSINESS_EMAIL=""
+PAYPAL_RETURN_URL=""
+PAYPAL_CANCEL_URL=""
+STRIPE_SECRET_KEY=***
 STRIPE_PUBLISHABLE_KEY=""
-STRIPE_WEBHOOK_SECRET=""
-STRIPE_AUDIT_PAYMENT_LINK="https://buy.stripe.com/REPLACE_WITH_REAL_LINK"
+STRIPE_WEBHOOK_SECRET=***
 BOOKING_LINK="https://calendly.com/REPLACE_WITH_REAL_LINK"
 ```
 
@@ -49,6 +55,7 @@ PORT=3200 node .output/server/index.mjs
 2. Marketing routes load: `/services`, `/pricing`, `/work`, `/contact`, `/portal`, `/client-portal-login`, `/get-started`, `/thank-you`.
 3. `POST /api/leads` returns `{ ok: true }` and appends a record to `.data/famtastic-leads.json`.
 4. Contact and pricing CTAs stay on placeholder-safe routes/links instead of hitting missing live services.
+5. No CTA or form leaks live PayPal or Stripe credentials into the repo or browser bundle.
 
 ## Reconnecting live services later
 
@@ -67,9 +74,12 @@ PORT=3200 node .output/server/index.mjs
 
 ### Payments
 
-1. Supply `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, and `STRIPE_WEBHOOK_SECRET`.
-2. Replace placeholder CTA links with real payment/session creation.
-3. Restore webhook handling only after end-to-end verification succeeds.
+1. Keep `NUXT_PUBLIC_PAYMENT_MODE=mock` for local proof until PayPal is approved for this repo.
+2. Supply `PAYPAL_ENV`, `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`, `PAYPAL_BUSINESS_EMAIL`, `PAYPAL_RETURN_URL`, and `PAYPAL_CANCEL_URL` locally only.
+3. Do not copy secrets out of `site-famtastic-hosting`; that repo remains the current owner of the live PayPal checkout implementation.
+4. Replace placeholder CTA links with the approved PayPal payment-link, invoice, deposit, or care-plan monthly path.
+5. Verify return/cancel flow, webhook/event ownership, and reconciliation before any production claim.
+6. Keep Stripe as future/optional only unless explicitly approved.
 
 ### Portal
 

@@ -1,91 +1,140 @@
-import { getLocalFamtasticContent } from '~/app/utils/cms';
-import { fetchDirectusCollection } from '~/server/utils/directus';
+import { useRuntimeConfig } from '#imports';
+import { getBaseFamtasticContent } from '../../data/famtastic/content';
+import { applyAdminOverrides } from './admin-proof';
+import { fetchDirectusCollection } from './directus';
 
 function toArray(value: unknown) {
-  if (Array.isArray(value)) return value;
-  return [];
+  return Array.isArray(value) ? value : [];
 }
 
 function mapDirectusContent(payload: Record<string, any>) {
-  const local = getLocalFamtasticContent();
+  const base = getBaseFamtasticContent();
   const settings = payload.site_settings?.[0] || {};
   const homepage = payload.homepage?.[0] || {};
+  const navigation = payload.navigation || [];
+  const legalPages = payload.legal_pages || [];
+  const seoPages = payload.seo_pages || [];
+
+  const legalBySlug = Object.fromEntries(legalPages.map((item: any) => [item.slug, item]));
+  const seoBySlug = Object.fromEntries(seoPages.map((item: any) => [item.slug, item]));
 
   return {
-    ...local,
-    company: {
-      ...local.company,
-      name: settings.site_name || local.company.name,
-      domain: settings.domain || local.company.domain,
-      email: settings.contact_email || local.company.email,
-      phone: settings.phone || local.company.phone,
-      tagline: homepage.hero_subheadline || local.company.tagline,
+    ...base,
+    siteSettings: {
+      ...base.siteSettings,
+      siteName: settings.site_name || base.siteSettings.siteName,
+      domain: settings.domain || base.siteSettings.domain,
+      contactEmail: settings.contact_email || base.siteSettings.contactEmail,
+      phone: settings.phone || base.siteSettings.phone,
+      bookingLink: settings.booking_link || base.siteSettings.bookingLink,
+      auditPaymentLink: settings.audit_payment_link || base.siteSettings.auditPaymentLink,
     },
-    serviceCards: payload.services?.length
+    homepage: {
+      ...base.homepage,
+      heroEyebrow: homepage.hero_eyebrow || base.homepage.heroEyebrow,
+      heroHeadline: homepage.hero_headline || base.homepage.heroHeadline,
+      heroSubheadline: homepage.hero_subheadline || base.homepage.heroSubheadline,
+      primaryCtaLabel: homepage.primary_cta_label || base.homepage.primaryCtaLabel,
+      primaryCtaHref: homepage.primary_cta_url || base.homepage.primaryCtaHref,
+      secondaryCtaLabel: homepage.secondary_cta_label || base.homepage.secondaryCtaLabel,
+      secondaryCtaHref: homepage.secondary_cta_url || base.homepage.secondaryCtaHref,
+      finalCtaHeadline: homepage.final_cta_headline || base.homepage.finalCtaHeadline,
+    },
+    navigation: navigation.length
+      ? navigation.map((item: any) => ({ label: item.label, to: item.href || item.to }))
+      : base.navigation,
+    services: payload.services?.length
       ? payload.services.map((item: any) => ({
           title: item.title,
-          sentence: item.short_description,
-          deliverables: toArray(item.bullets),
-          cta: `/services#${item.slug || item.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+          slug: item.slug,
+          shortDescription: item.short_description,
+          deliverables: toArray(item.deliverables || item.bullets),
+          cta: item.cta_label || 'Get Started',
         }))
-      : local.serviceCards,
-    pricingPackages: payload.pricing_packages?.length
+      : base.services,
+    packages: payload.pricing_packages?.length
       ? payload.pricing_packages.map((item: any) => ({
-          name: item.name,
-          price: item.price_label,
+          packageName: item.package_name || item.name,
+          priceLabel: item.price_label,
           description: item.description,
+          bestFor: item.best_for,
           features: toArray(item.features),
           cta: item.cta_label || 'Get Started',
-          href: item.cta_url || '/get-started',
-          featured: Boolean(item.highlighted),
+          sortOrder: item.sort || 0,
+          highlighted: Boolean(item.highlighted),
         }))
-      : local.pricingPackages,
-    faqItems: payload.faqs?.length
-      ? payload.faqs.map((item: any) => ({ q: item.question, a: item.answer }))
-      : local.faqItems,
-    featuredWork: payload.portfolio_projects?.length
+      : base.packages,
+    addons: payload.addons?.length
+      ? payload.addons.map((item: any) => ({ name: item.name, description: item.description, priceLabel: item.price_label, cta: item.cta_label || 'Learn More' }))
+      : base.addons,
+    portfolio: payload.portfolio_projects?.length
       ? payload.portfolio_projects.map((item: any) => ({
           title: item.title,
-          type: item.project_type,
+          projectType: item.project_type,
           summary: item.summary,
-          result: item.result_label,
-          demoLabel: item.demo_label || 'Demo / placeholder',
+          resultLabel: item.result_label,
+          demoOrReal: item.demo_or_real || 'demo',
+          status: item.status || 'draft',
         }))
-      : local.featuredWork,
+      : base.portfolio,
     testimonials: payload.testimonials?.length
       ? payload.testimonials.map((item: any) => ({
           quote: item.quote,
           name: item.name,
-          title: item.title,
-          company: item.company,
-          rating: item.rating,
+          titleCompany: item.title_company || item.title || '',
+          realOrDemo: item.real_or_demo || 'expectation',
+          status: item.status || 'published',
         }))
-      : local.testimonials,
+      : base.testimonials,
+    faqs: payload.faqs?.length
+      ? payload.faqs.map((item: any) => ({ question: item.question, answer: item.answer }))
+      : base.faqs,
+    legal: {
+      privacyPolicy: legalBySlug['privacy-policy'] || base.legal.privacyPolicy,
+      termsOfService: legalBySlug['terms-of-service'] || base.legal.termsOfService,
+      cookiePolicy: legalBySlug['cookie-policy'] || base.legal.cookiePolicy,
+    },
+    seo: {
+      ...base.seo,
+      pages: {
+        ...base.seo.pages,
+        home: seoBySlug.home || base.seo.pages.home,
+        services: seoBySlug.services || base.seo.pages.services,
+        packages: seoBySlug.packages || base.seo.pages.packages,
+        getStarted: seoBySlug['get-started'] || base.seo.pages.getStarted,
+        contact: seoBySlug.contact || base.seo.pages.contact,
+      },
+    },
   };
 }
 
 export async function getServerCmsContent() {
   const config = useRuntimeConfig();
-  const mode = config.public.cmsMode;
+  const mode = config.public.cmsMode || 'local';
+  const base = getBaseFamtasticContent();
 
-  if (mode === 'local' || !config.directusUrl) {
-    return getLocalFamtasticContent();
+  if (mode !== 'directus' || !config.directusUrl) {
+    return await applyAdminOverrides(base);
   }
 
   try {
-    const [site_settings, homepage, services, pricing_packages, faqs, portfolio_projects, testimonials] = await Promise.all([
+    const [site_settings, homepage, navigation, services, pricing_packages, addons, faqs, portfolio_projects, testimonials, legal_pages, seo_pages] = await Promise.all([
       fetchDirectusCollection('site_settings', { limit: 1 }),
       fetchDirectusCollection('homepage', { limit: 1 }),
-      fetchDirectusCollection('services', { sort: ['sort'], filter: { status: { _eq: 'published' } } }),
-      fetchDirectusCollection('pricing_packages', { sort: ['sort'], filter: { status: { _eq: 'published' } } }),
-      fetchDirectusCollection('faqs', { sort: ['sort'], filter: { status: { _eq: 'published' } } }),
-      fetchDirectusCollection('portfolio_projects', { sort: ['sort'], filter: { status: { _eq: 'published' } } }),
-      fetchDirectusCollection('testimonials', { sort: ['sort'], filter: { status: { _eq: 'published' } } }),
+      fetchDirectusCollection('navigation', { sort: ['sort'] }),
+      fetchDirectusCollection('services', { sort: ['sort'] }),
+      fetchDirectusCollection('pricing_packages', { sort: ['sort'] }),
+      fetchDirectusCollection('addons', { sort: ['sort'] }),
+      fetchDirectusCollection('faqs', { sort: ['sort'] }),
+      fetchDirectusCollection('portfolio_projects', { sort: ['sort'] }),
+      fetchDirectusCollection('testimonials', { sort: ['sort'] }),
+      fetchDirectusCollection('legal_pages', { sort: ['sort'] }),
+      fetchDirectusCollection('seo_pages', { sort: ['sort'] }),
     ]);
 
-    return mapDirectusContent({ site_settings, homepage, services, pricing_packages, faqs, portfolio_projects, testimonials });
+    return await applyAdminOverrides(mapDirectusContent({ site_settings, homepage, navigation, services, pricing_packages, addons, faqs, portfolio_projects, testimonials, legal_pages, seo_pages }));
   } catch (error) {
     console.error('[cms] Directus mode failed, falling back to local content.', error);
-    return getLocalFamtasticContent();
+    return await applyAdminOverrides(base);
   }
 }

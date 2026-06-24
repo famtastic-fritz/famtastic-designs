@@ -1,11 +1,14 @@
 # Live readiness checklist
 
-- [ ] Real env vars added locally, not committed
+- [ ] Real PayPal env vars added locally, not committed
+- [ ] PayPal return/cancel URLs confirmed
+- [ ] PayPal business email confirmed
 - [ ] Production domain decision confirmed
 - [ ] Production Directus host chosen
 - [ ] Production Directus token generated
 - [ ] Real booking link added
-- [ ] Real Stripe/payment links and keys added
+- [ ] Approved PayPal payment link / invoice / deposit / care-plan monthly path added
+- [ ] Stripe kept optional/future unless explicitly approved
 - [ ] Contact email confirmed
 - [ ] Demo portfolio labels reviewed/kept/removed intentionally
 - [ ] Mobile pass completed

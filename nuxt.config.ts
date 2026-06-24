@@ -1,6 +1,6 @@
 import { theme } from './theme';
 
-const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3001';
 const cmsMode = process.env.NUXT_PUBLIC_CMS_MODE || 'local';
 const paymentMode = process.env.NUXT_PUBLIC_PAYMENT_MODE || 'mock';
 const portalMode = process.env.NUXT_PUBLIC_PORTAL_MODE || 'preview';
@@ -40,6 +40,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     directusUrl: process.env.DIRECTUS_URL || '',
     directusToken: process.env.DIRECTUS_TOKEN || '',
+    adminProofPin: process.env.ADMIN_PROOF_PIN || '',
     stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
     stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
     public: {
@@ -48,6 +49,7 @@ export default defineNuxtConfig({
       cmsMode,
       paymentMode,
       portalMode,
+      enableAdminProof: process.env.NUXT_PUBLIC_ENABLE_ADMIN_PROOF || 'true',
       leadStorageMode: process.env.NUXT_PUBLIC_LEAD_STORAGE_MODE || 'local',
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
       stripeAuditPaymentLink: process.env.STRIPE_AUDIT_PAYMENT_LINK || 'https://buy.stripe.com/REPLACE_WITH_REAL_LINK',

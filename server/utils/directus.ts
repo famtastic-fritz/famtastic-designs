@@ -1,4 +1,5 @@
 import { createDirectus, createItem, readItems, rest, staticToken } from '@directus/sdk';
+import { useRuntimeConfig } from '#imports';
 
 type DirectusClient = ReturnType<typeof createDirectus>;
 

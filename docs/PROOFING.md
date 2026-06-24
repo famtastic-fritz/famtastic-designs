@@ -42,7 +42,8 @@ What is working
 - Mock payment CTA flow
 
 What is mocked
-- Real Stripe checkout
+- Real PayPal checkout, invoice, deposit, and care-plan billing
+- Stripe remains future/optional only
 - Real authenticated portal
 - Live CMS data unless Directus mode is configured
 

@@ -1,13 +1,24 @@
-export const testimonials = [
+export const testimonialsOrExpectations = [
   {
-    quote: 'The process was clean, the site looked expensive, and we finally had a funnel that made sense.',
-    name: 'Demo Client One',
-    title: 'Service Business Owner',
+    quote: 'Clear communication, clean design decisions, and a practical build path that respects the business goal.',
+    name: 'What clients can expect',
+    titleCompany: 'Project standard',
+    realOrDemo: 'expectation',
+    status: 'published',
   },
   {
-    quote: 'The client portal preview alone made the offer feel more premium and easier to trust.',
-    name: 'Demo Client Two',
-    title: 'Consulting Brand Founder',
+    quote: 'Lead capture, CTA placement, and content structure are treated as core business logic, not decoration.',
+    name: 'What clients can expect',
+    titleCompany: 'Project standard',
+    realOrDemo: 'expectation',
+    status: 'published',
+  },
+  {
+    quote: 'Editable content, operational follow-through, and honest handoff notes instead of fake polish.',
+    name: 'What clients can expect',
+    titleCompany: 'Project standard',
+    realOrDemo: 'expectation',
+    status: 'published',
   },
 ];
 

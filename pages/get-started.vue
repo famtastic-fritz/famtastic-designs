@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { company } from '~/data/famtastic-proof';
+import { useFamtasticContent } from '~/composables/useFamtasticContent';
 
 definePageMeta({ layout: 'famproof' });
-useSeoMeta({ title: 'Get Started | FAMtastic Designs', description: 'Project intake form for websites, branding, automation, and client portal work.' });
-
 const route = useRoute();
 const router = useRouter();
+const { getContent, fallback } = useFamtasticContent();
+const { data } = await useAsyncData('intake-content', () => getContent());
+const content = computed(() => data.value || fallback);
+const site = computed(() => content.value.siteSettings);
+
+useSeoMeta({
+  title: content.value.seo.pages.getStarted.title,
+  description: content.value.seo.pages.getStarted.description,
+});
 
 const projectTypes = ['New website', 'Website redesign', 'Branding', 'Landing page', 'Client portal', 'Automation', 'SEO / maintenance', 'Not sure yet'];
 const goals = ['Get more leads', 'Look more professional', 'Sell products', 'Book appointments', 'Automate client onboarding', 'Replace outdated website', 'Launch a new brand', 'Other'];
@@ -39,6 +46,7 @@ const form = reactive({
   device_type: '',
   submitted_at: '',
   package: '',
+  form_type: 'full_intake',
 });
 
 const submitting = ref(false);
@@ -80,8 +88,8 @@ async function submitForm() {
     <div class="grid gap-8 lg:grid-cols-[0.82fr_1.18fr]">
       <div>
         <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Get Started</p>
-        <h1 class="mt-3 text-4xl font-black text-white">The most important page in the proof.</h1>
-        <p class="mt-5 text-base leading-8 text-white/72">This intake captures project details, campaign source data, and contact information now. In local proof mode, leads are saved to a local JSON file so the funnel can be tested without waiting on full Directus activation.</p>
+        <h1 class="mt-3 text-4xl font-black text-white">Full project intake for the serious version of the conversation.</h1>
+        <p class="mt-5 text-base leading-8 text-white/72">This intake captures project details, campaign source data, and contact information. In local proof mode, leads are saved to a local JSON file so the funnel can be tested without waiting on full Directus activation.</p>
         <div class="mt-8 grid gap-4">
           <div class="rounded-[24px] border border-white/8 bg-[#0D1210] p-5 text-sm leading-7 text-white/72">
             <p class="text-xs uppercase tracking-[0.24em] text-[#79FF00]">What happens after submit</p>
@@ -89,12 +97,12 @@ async function submitForm() {
               <li>1. Lead saves locally in .data/famtastic-leads.json.</li>
               <li>2. User lands on the thank-you page.</li>
               <li>3. Placeholder links support booking or deposit flow.</li>
-              <li>4. Directus CRM mapping stays documented for the real activation pass.</li>
+              <li>4. Directus mapping stays documented for the real activation pass.</li>
             </ol>
           </div>
           <div class="rounded-[24px] border border-white/8 bg-[#0D1210] p-5 text-sm leading-7 text-white/72">
             <p class="text-xs uppercase tracking-[0.24em] text-[#79FF00]">Proof contact</p>
-            <p class="mt-3">{{ company.email }}</p>
+            <p class="mt-3">{{ site.contactEmail }}</p>
           </div>
         </div>
       </div>
@@ -151,7 +159,7 @@ async function submitForm() {
 
           <section class="rounded-[24px] border border-dashed border-white/12 bg-[#0D1210] p-5 text-sm text-white/65">
             <h2 class="text-lg font-bold text-white">Hidden Campaign Fields</h2>
-            <p class="mt-2 leading-7">This proof captures UTM query strings, referrer, landing page, device type, and submitted timestamp. Those fields are saved with the lead payload so campaign attribution is not lost.</p>
+            <p class="mt-2 leading-7">This proof captures UTM query strings, referrer, landing page, device type, and submitted timestamp so attribution is not lost.</p>
             <div class="mt-4 grid gap-2 sm:grid-cols-2">
               <code>utm_source={{ form.utm_source || '—' }}</code>
               <code>utm_medium={{ form.utm_medium || '—' }}</code>
