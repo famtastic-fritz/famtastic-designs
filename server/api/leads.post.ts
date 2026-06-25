@@ -5,7 +5,7 @@ import { createError, defineEventHandler, readBody } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { createDirectusLead } from '~/server/utils/directus';
 
-const storageDir = () => join(process.cwd(), '.data');
+const storageDir = () => join(process.env.INIT_CWD || process.cwd(), '.data');
 const storageFile = () => join(storageDir(), 'famtastic-leads.json');
 
 function normalizeString(value: unknown) {

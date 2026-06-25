@@ -1,54 +1,37 @@
 # FAMtastic Designs proofing guide
 
 Repo path
-- `~/famtastic/sites/site-famtastic-designs`
+- ~/famtastic/sites/site-famtastic-designs
 
-Local URL
-- Dev: `http://localhost:3001`
-- Preview: `http://localhost:3300`
+Required local proof env
+- ADMIN_PROOF_PIN=1234
+- NUXT_PUBLIC_SITE_URL=http://127.0.0.1:3001
+- NUXT_PUBLIC_CMS_MODE=local
+- NUXT_PUBLIC_LEAD_STORAGE_MODE=local
+- NUXT_PUBLIC_PAYMENT_MODE=mock
+- NUXT_PUBLIC_PORTAL_MODE=preview
+- BOOKING_PROVIDER=mock
 
-Pages to proof
-- `/`
-- `/services`
-- `/pricing`
-- `/work`
-- `/get-started`
-- `/thank-you`
-- `/contact`
-- `/portal`
-- `/client-portal-login`
+Local proof commands
+- pnpm install
+- pnpm typecheck
+- pnpm lint
+- pnpm build
+- ADMIN_PROOF_PIN=1234 NUXT_PUBLIC_SITE_URL=http://127.0.0.1:3001 NUXT_PUBLIC_CMS_MODE=local NUXT_PUBLIC_LEAD_STORAGE_MODE=local NUXT_PUBLIC_PAYMENT_MODE=mock NUXT_PUBLIC_PORTAL_MODE=preview BOOKING_PROVIDER=mock pnpm preview --port 3001
 
-Mobile proof checklist
-- 360px: hero, nav, CTAs, cards, form spacing
-- 390px: pricing cards and CTA buttons
-- 768px: section spacing and stacked-to-grid transitions
-- Desktop: hero composition, services grid, pricing grid, portal preview, footer
+Expected local URLs
+- Site: http://127.0.0.1:3001
+- Admin proof: http://127.0.0.1:3001/admin-proof
 
-Get Started form test steps
-1. Open `/get-started`.
-2. Fill business name, name, email, and at least one project detail.
-3. Submit.
-4. Confirm redirect to `/thank-you`.
-5. Confirm a record exists in `.data/famtastic-leads.json`.
+Proof claims that are now true
+- Public content comes from the merged content API path, not just base fallback data.
+- Admin-proof saved hero overrides show on homepage.
+- Admin-proof saved package overrides show on /pricing and /packages.
+- Lead capture can save locally in .data/famtastic-leads.json.
+- Protected admin proof leads endpoint can read those saved leads with the proof PIN.
 
-What is working
-- Local marketing site routes
-- Local lead persistence
-- `pnpm typecheck`
-- `pnpm lint`
-- `pnpm build`
-- Preview build on `http://localhost:3300`
-- Portal preview UI
-- Mock payment CTA flow
-
-What is mocked
-- Real PayPal checkout, invoice, deposit, and care-plan billing
-- Stripe remains future/optional only
-- Real authenticated portal
-- Live CMS data unless Directus mode is configured
-
-Current verification notes
-- Dev was verified from the target repo on port `3001` because another local process already owned `3000`.
-- Preview was verified from the target repo on port `3300`.
-- Directus did not come up in this session because the local Docker daemon was not running.
-- Lead persistence was verified through `POST /api/leads` and `.data/famtastic-leads.json`.
+Still mocked
+- Payments
+- Scheduling providers
+- Directus live CMS activation
+- Production auth/integrations

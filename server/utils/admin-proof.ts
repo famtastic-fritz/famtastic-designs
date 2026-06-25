@@ -2,9 +2,9 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-const dataDir = () => join(process.cwd(), '.data');
-const overrideFile = () => join(dataDir(), 'famtastic-admin-content.json');
-const leadsFile = () => join(dataDir(), 'famtastic-leads.json');
+const projectDataRoot = () => join(process.env.INIT_CWD || process.cwd(), '.data');
+const overrideFile = () => join(projectDataRoot(), 'famtastic-admin-content.json');
+const leadsFile = () => join(projectDataRoot(), 'famtastic-leads.json');
 
 function mergeDeep(base: any, override: any): any {
   if (Array.isArray(base) || Array.isArray(override)) {
@@ -36,7 +36,7 @@ export async function readAdminOverrides() {
 }
 
 export async function writeAdminOverrides(payload: Record<string, any>) {
-  await mkdir(dataDir(), { recursive: true });
+  await mkdir(projectDataRoot(), { recursive: true });
   await writeFile(overrideFile(), JSON.stringify(payload, null, 2));
   return overrideFile();
 }

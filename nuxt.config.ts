@@ -4,6 +4,7 @@ const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3001';
 const cmsMode = process.env.NUXT_PUBLIC_CMS_MODE || 'local';
 const paymentMode = process.env.NUXT_PUBLIC_PAYMENT_MODE || 'mock';
 const portalMode = process.env.NUXT_PUBLIC_PORTAL_MODE || 'preview';
+const bookingProvider = process.env.BOOKING_PROVIDER || 'mock';
 
 export default defineNuxtConfig({
   extends: [],
@@ -43,6 +44,9 @@ export default defineNuxtConfig({
     adminProofPin: process.env.ADMIN_PROOF_PIN || '',
     stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
     stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
+    paypalClientId: process.env.PAYPAL_CLIENT_ID || '',
+    paypalClientSecret: process.env.PAYPAL_CLIENT_SECRET || '',
+    paypalWebhookId: process.env.PAYPAL_WEBHOOK_ID || '',
     public: {
       siteName: process.env.NUXT_PUBLIC_SITE_NAME || 'FAMtastic Designs',
       siteUrl,
@@ -51,9 +55,22 @@ export default defineNuxtConfig({
       portalMode,
       enableAdminProof: process.env.NUXT_PUBLIC_ENABLE_ADMIN_PROOF || 'true',
       leadStorageMode: process.env.NUXT_PUBLIC_LEAD_STORAGE_MODE || 'local',
+      bookingProvider,
+      bookingUrl: process.env.BOOKING_URL || '',
+      bookingEmbedUrl: process.env.BOOKING_EMBED_URL || '',
+      calcomUrl: process.env.CALCOM_URL || '',
+      caldiyUrl: process.env.CALDIY_URL || '',
+      calendsoUrl: process.env.CALENDSO_URL || '',
+      easyappointmentsUrl: process.env.EASYAPPOINTMENTS_URL || '',
+      paypalEnv: process.env.PAYPAL_ENV || 'sandbox',
+      paypalBusinessEmail: process.env.PAYPAL_BUSINESS_EMAIL || '',
+      paypalReturnUrl: process.env.PAYPAL_RETURN_URL || '',
+      paypalCancelUrl: process.env.PAYPAL_CANCEL_URL || '',
+      paypalCheckoutUrl: process.env.PAYPAL_CHECKOUT_URL || '',
+      paypalInvoiceUrl: process.env.PAYPAL_INVOICE_URL || '',
+      paypalCarePlanUrl: process.env.PAYPAL_CARE_PLAN_URL || '',
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
-      stripeAuditPaymentLink: process.env.STRIPE_AUDIT_PAYMENT_LINK || 'https://buy.stripe.com/REPLACE_WITH_REAL_LINK',
-      bookingLink: process.env.BOOKING_LINK || 'https://calendly.com/REPLACE_WITH_REAL_LINK',
+      stripeAuditPaymentLink: process.env.STRIPE_AUDIT_PAYMENT_LINK || '',
     },
   },
   app: {

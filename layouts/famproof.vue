@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import CookieBanner from '~/components/CookieBanner.vue';
+import { resolveAuditPaymentLink, resolveBookingLink, isExternalLink } from '~/app/utils/proof-links';
 import { useFamtasticContent } from '~/composables/useFamtasticContent';
 
+const config = useRuntimeConfig();
 const { getContent, fallback } = useFamtasticContent();
 const { data } = await useAsyncData('layout-content', () => getContent());
 const content = computed(() => data.value || fallback);
 const site = computed(() => content.value.siteSettings);
 const nav = computed(() => content.value.navigation || []);
 const footerLinks = computed(() => content.value.footerLinks || []);
+const bookingHref = computed(() => resolveBookingLink(config.public, site.value));
+const auditHref = computed(() => resolveAuditPaymentLink(config.public, site.value));
+const bookingExternal = computed(() => isExternalLink(bookingHref.value));
+const auditExternal = computed(() => isExternalLink(auditHref.value));
 </script>
 
 <template>
@@ -22,7 +28,8 @@ const footerLinks = computed(() => content.value.footerLinks || []);
           <a :href="`mailto:${site.contactEmail}`" class="transition hover:text-[#79FF00]">{{ site.contactEmail }}</a>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <a :href="site.bookingLink" target="_blank" rel="noreferrer" class="transition hover:text-[#79FF00]">Free Website Consultation</a>
+          <a v-if="bookingExternal" :href="bookingHref" target="_blank" rel="noreferrer" class="transition hover:text-[#79FF00]">Free Website Consultation</a>
+          <NuxtLink v-else :to="bookingHref" class="transition hover:text-[#79FF00]">Free Website Consultation</NuxtLink>
           <NuxtLink :to="site.portalLink" class="transition hover:text-[#79FF00]">{{ site.portalLabel }}</NuxtLink>
           <NuxtLink to="/get-started" class="rounded-full border border-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:border-[#79FF00]/50 hover:text-[#79FF00]">{{ site.fastQuoteLabel }}</NuxtLink>
         </div>
@@ -76,8 +83,10 @@ const footerLinks = computed(() => content.value.footerLinks || []);
           <div class="mt-4 grid gap-3 text-sm text-white/72">
             <a :href="`mailto:${site.contactEmail}`" class="transition hover:text-[#79FF00]">{{ site.contactEmail }}</a>
             <a :href="`tel:${site.phone}`" class="transition hover:text-[#79FF00]">{{ site.phone }}</a>
-            <a :href="site.bookingLink" target="_blank" rel="noreferrer" class="transition hover:text-[#79FF00]">Book a Strategy Call</a>
-            <a :href="site.auditPaymentLink" target="_blank" rel="noreferrer" class="transition hover:text-[#79FF00]">Pay Website Audit Deposit</a>
+            <a v-if="bookingExternal" :href="bookingHref" target="_blank" rel="noreferrer" class="transition hover:text-[#79FF00]">Request a Consultation</a>
+            <NuxtLink v-else :to="bookingHref" class="transition hover:text-[#79FF00]">Request a Consultation</NuxtLink>
+            <a v-if="auditExternal" :href="auditHref" target="_blank" rel="noreferrer" class="transition hover:text-[#79FF00]">Discuss Audit / Deposit Options</a>
+            <NuxtLink v-else :to="auditHref" class="transition hover:text-[#79FF00]">Discuss Audit / Deposit Options</NuxtLink>
           </div>
           <p class="mt-6 text-xs text-white/45">© 2026 {{ site.siteName }}. Local production-proof build.</p>
         </div>

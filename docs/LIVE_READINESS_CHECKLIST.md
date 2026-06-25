@@ -1,18 +1,17 @@
 # Live readiness checklist
 
-- [ ] Real PayPal env vars added locally, not committed
+- [ ] Final production domain approved and added to NUXT_PUBLIC_SITE_URL
+- [ ] Final contact email and phone approved
+- [ ] Admin proof no longer needed or replaced by real CMS flow
+- [ ] Directus lane either activated or intentionally deferred
+- [ ] PayPal local-only keys added and verified
 - [ ] PayPal return/cancel URLs confirmed
-- [ ] PayPal business email confirmed
-- [ ] Production domain decision confirmed
-- [ ] Production Directus host chosen
-- [ ] Production Directus token generated
-- [ ] Real booking link added
-- [ ] Approved PayPal payment link / invoice / deposit / care-plan monthly path added
-- [ ] Stripe kept optional/future unless explicitly approved
-- [ ] Contact email confirmed
-- [ ] Demo portfolio labels reviewed/kept/removed intentionally
-- [ ] Mobile pass completed
-- [ ] Get Started form pass completed
-- [ ] Build pass completed
+- [ ] Package/deposit/care-plan payment paths approved
+- [ ] Booking provider decision approved
+- [ ] Real booking URL or manual workflow approved
+- [ ] Legal starter text reviewed by owner
+- [ ] Demo/proof portfolio/testimonial wording approved
+- [ ] Mobile QA repeated on final domain
+- [ ] Analytics/search keys supplied if needed
 - [ ] No secrets committed
-- [ ] Backup/checkpoint created before live pull/deploy
+- [ ] No .data, .output, .nuxt, node_modules, Directus data, or real leads staged

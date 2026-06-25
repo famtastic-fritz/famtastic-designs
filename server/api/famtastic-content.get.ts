@@ -1,6 +1,7 @@
-import { defineEventHandler } from 'h3';
+import { defineEventHandler, setHeader } from 'h3';
 import { getServerCmsContent } from '~/server/utils/cms';
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  setHeader(event, 'cache-control', 'no-store, max-age=0');
   return await getServerCmsContent();
 });
