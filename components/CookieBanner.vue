@@ -17,7 +17,7 @@ function setConsent(value: 'accepted' | 'declined') {
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div>
         <p class="text-sm font-semibold text-white">Cookie notice</p>
-        <p class="mt-2 text-sm leading-7 text-white/70">This local proof stores cookie preferences in localStorage. Future analytics or marketing scripts should respect this consent before firing. See the <NuxtLink class="text-[#79FF00] underline-offset-2 hover:underline" to="/cookie-policy">Cookie Policy</NuxtLink>.</p>
+        <p class="mt-2 text-sm leading-7 text-white/70">This site stores cookie preferences in localStorage. Any future analytics or marketing scripts should respect this consent before firing. See the <NuxtLink class="text-[#79FF00] underline-offset-2 hover:underline" to="/cookie-policy">Cookie Policy</NuxtLink>.</p>
       </div>
       <div class="flex gap-3">
         <button class="rounded-full border border-white/14 px-4 py-2 text-sm font-semibold text-white" @click="setConsent('declined')">Decline</button>

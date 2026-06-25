@@ -1,52 +1,58 @@
-# QA report
+# QA Report
 
-Date
-- 2026-06-24
+## 2026-06-25 — FAMtastic Designs public rescue preflight
 
-Proof URLs
-- Site: http://127.0.0.1:3001
-- Admin proof: http://127.0.0.1:3001/admin-proof
+### Scope
+Public marketing rescue only for `site-famtastic-designs`.
+Backend branch was explicitly excluded from deploy consideration.
 
-Environment used
-- ENABLE_ADMIN_PROOF=true
-- ADMIN_PROOF_PIN=1234
-- NUXT_PUBLIC_SITE_URL=http://127.0.0.1:3001
-- NUXT_PUBLIC_CMS_MODE=local
-- NUXT_PUBLIC_LEAD_STORAGE_MODE=local
-- NUXT_PUBLIC_PAYMENT_MODE=mock
-- NUXT_PUBLIC_PORTAL_MODE=preview
-- BOOKING_PROVIDER=mock
+### Branches
+- Source proof branch: `famtastic/site-v1-production-proof`
+- Working rescue branch: `famtastic/prod-public-rescue`
+- Backend branch skipped: `famtastic/backend-v1-directus-paypal`
 
-Build + local runtime
-- pnpm install: pass
-- pnpm typecheck: pass
-- pnpm lint: pass
-- pnpm build: pass
-- pnpm preview --port 3001: pass
+### Build checks
+- `pnpm install` ✅
+- `pnpm typecheck` ✅
+- `pnpm lint` ✅
+- `pnpm build` ✅
 
-Admin/backend distinction
-- /admin-proof now clearly labels itself as Local Proof Admin — Not Production CMS.
-- /admin-proof now clearly states this page is for local proofing only.
-- /admin-proof now clearly states production admin should be Directus or the selected CMS backend.
-- /admin-proof is removed from sitemap generation.
-- /admin-proof is server-gated by ENABLE_ADMIN_PROOF and should be disabled by default outside proof/dev usage.
+### Local production-safe preview checks
+Preview command used:
+`HOST=127.0.0.1 PORT=3001 ENABLE_ADMIN_PROOF=false NUXT_PUBLIC_ENABLE_ADMIN_PROOF=false NUXT_PUBLIC_ENABLE_PAYMENT_PROOF=false NUXT_PUBLIC_SITE_URL=http://127.0.0.1:3001 NUXT_PUBLIC_CMS_MODE=local NUXT_PUBLIC_LEAD_STORAGE_MODE=local NUXT_PUBLIC_LEAD_CAPTURE_MODE=manual NUXT_PUBLIC_PAYMENT_MODE=mock NUXT_PUBLIC_PORTAL_MODE=preview BOOKING_PROVIDER=manual node .output/server/index.mjs`
 
-Content-render override proof
-- Saved hero override through admin-proof content endpoint.
-- Verified /api/famtastic-content returned the saved hero headline.
-- Refreshed homepage and confirmed the visible H1 updated correctly.
-- Saved package/pricing override through admin-proof content endpoint.
-- Verified /api/famtastic-content returned the saved package price label.
-- Refreshed /pricing and /packages and confirmed the visible override updated correctly.
+Verified locally:
+- `/` ✅
+- `/services` ✅
+- `/pricing` ✅
+- `/packages` ✅
+- `/work` ✅
+- `/contact` ✅
+- `/get-started` ✅
+- `/portal` ✅
+- `/client-portal-login` ✅
+- `/thank-you` ✅
+- `/privacy-policy` ✅
+- `/terms-of-service` ✅
+- `/cookie-policy` ✅
+- `/sitemap` ✅
+- `/sitemap.xml` ✅
+- `/robots.txt` ✅
+- `/admin-proof` returns 404 ✅
 
-Portal preview distinction
-- /portal uses client-facing preview language only.
-- /client-portal-login uses client-facing preview language only.
-- Portal auth is still mocked and not represented as production-complete.
-- Future invite, forgot-password, reset-password, and dashboard surfaces are documented but not yet implemented as real auth.
+### Safety findings
+- Admin proof content no longer applies automatically when the proof flag is off.
+- Static `public/robots.txt` was removed so the guarded route wins.
+- `robots.txt` now disallows `/admin-proof` and `/payment-proof`.
+- Portal pages present access/info posture without claiming real auth is active.
+- Consultation forms now use manual email-draft fallback instead of pretending a backend submission pipeline is live.
+- Payment/booking CTAs route into safe consultation paths instead of exposing fake checkout or dead booking links.
+- Cookie banner rendered and dismissed in browser automation.
 
-What remains mocked
-- PayPal checkout, invoice, and recurring billing
-- Booking provider integrations
-- Directus live CMS / live DB writes
-- Client portal production auth/integrations
+### Known limitations
+- Live deployment not executed because authenticated production host access was unavailable.
+- Production lead handling is intentionally manual fallback for this rescue pass.
+- Directus, real portal auth, live PayPal, live scheduler integration, and production email automation remain pending backend work.
+
+### Verdict
+Local public rescue build is safe enough for production cutover once host access is authenticated and a rollback backup is created first.

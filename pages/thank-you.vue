@@ -12,7 +12,7 @@ const bookingHref = computed(() => resolveBookingLink(config.public, site.value)
 const auditHref = computed(() => resolveAuditPaymentLink(config.public, site.value));
 const bookingExternal = computed(() => isExternalLink(bookingHref.value));
 const auditExternal = computed(() => isExternalLink(auditHref.value));
-useSeoMeta({ title: 'Thank You | FAMtastic Designs', description: 'Thank you page for the FAMtastic Designs proof intake flow.' });
+useSeoMeta({ title: 'Thank You | FAMtastic Designs', description: 'Thank you page for the FAMtastic Designs contact and intake flow.' });
 </script>
 
 <template>
@@ -20,7 +20,7 @@ useSeoMeta({ title: 'Thank You | FAMtastic Designs', description: 'Thank you pag
     <div class="rounded-[32px] border border-[#79FF00]/22 bg-[#0D1210] p-10">
       <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Submission received</p>
       <h1 class="mt-4 text-4xl font-black text-white">Thanks — your request is in.</h1>
-      <p class="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/72">In proof mode, submissions are stored locally while the full CMS/CRM activation remains documented. The user-facing flow still lands cleanly here.</p>
+      <p class="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/72">Thanks for reaching out. Project details are reviewed manually so the next step can match your scope, timing, and business goals.</p>
       <div class="mt-8 grid gap-3 sm:grid-cols-3">
         <a v-if="bookingExternal" :href="bookingHref" target="_blank" rel="noreferrer" class="rounded-full bg-[#79FF00] px-5 py-3 text-sm font-bold text-[#050807]">Request a Consultation</a>
         <NuxtLink v-else :to="bookingHref" class="rounded-full bg-[#79FF00] px-5 py-3 text-sm font-bold text-[#050807]">Request a Consultation</NuxtLink>

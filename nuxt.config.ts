@@ -5,6 +5,7 @@ const cmsMode = process.env.NUXT_PUBLIC_CMS_MODE || 'local';
 const paymentMode = process.env.NUXT_PUBLIC_PAYMENT_MODE || 'mock';
 const portalMode = process.env.NUXT_PUBLIC_PORTAL_MODE || 'preview';
 const bookingProvider = process.env.BOOKING_PROVIDER || 'mock';
+const leadCaptureMode = process.env.NUXT_PUBLIC_LEAD_CAPTURE_MODE || 'manual';
 
 export default defineNuxtConfig({
   extends: [],
@@ -55,6 +56,7 @@ export default defineNuxtConfig({
       paymentMode,
       portalMode,
       leadStorageMode: process.env.NUXT_PUBLIC_LEAD_STORAGE_MODE || 'local',
+      leadCaptureMode,
       bookingProvider,
       bookingUrl: process.env.BOOKING_URL || '',
       bookingEmbedUrl: process.env.BOOKING_EMBED_URL || '',
@@ -62,7 +64,7 @@ export default defineNuxtConfig({
       caldiyUrl: process.env.CALDIY_URL || '',
       calendsoUrl: process.env.CALENDSO_URL || '',
       easyappointmentsUrl: process.env.EASYAPPOINTMENTS_URL || '',
-      paypalEnv: process.env.PAYPAL_ENV || 'sandbox',
+      paypalEnv: process.env.PAYPAL_ENV || 'mock',
       paypalBusinessEmail: process.env.PAYPAL_BUSINESS_EMAIL || '',
       paypalReturnUrl: process.env.PAYPAL_RETURN_URL || '',
       paypalCancelUrl: process.env.PAYPAL_CANCEL_URL || '',

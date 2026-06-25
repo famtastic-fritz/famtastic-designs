@@ -20,7 +20,7 @@ useSeoMeta({
     <div class="max-w-3xl">
       <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Services</p>
       <h1 class="mt-3 text-4xl font-black text-white">Web design, development, CMS/admin setup, automation, and website care.</h1>
-      <p class="mt-5 text-base leading-8 text-white/72">This proof keeps the service stack direct: build a stronger website, tighten the lead flow, and create a cleaner client-facing experience.</p>
+      <p class="mt-5 text-base leading-8 text-white/72">The service stack stays direct: build a stronger website, tighten the lead flow, and create a cleaner client-facing experience.</p>
     </div>
 
     <div class="mt-12 grid gap-5">

@@ -29,10 +29,6 @@ useSeoMeta({ title: content.value.seo.pages.contact.title, description: content.
             <a :href="`mailto:${site.contactEmail}`" class="mt-2 block text-lg font-semibold text-white">{{ site.contactEmail }}</a>
           </div>
           <div class="rounded-[24px] border border-white/8 bg-[#0D1210] p-5">
-            <p class="text-xs uppercase tracking-[0.24em] text-[#79FF00]">Phone</p>
-            <a :href="`tel:${site.phone}`" class="mt-2 block text-lg font-semibold text-white">{{ site.phone }}</a>
-          </div>
-          <div class="rounded-[24px] border border-white/8 bg-[#0D1210] p-5">
             <p class="text-xs uppercase tracking-[0.24em] text-[#79FF00]">Quick actions</p>
             <div class="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a v-if="bookingExternal" :href="bookingHref" target="_blank" rel="noreferrer" class="rounded-full border border-white/12 px-4 py-2 text-sm text-white transition hover:border-[#79FF00]/40">Request a Consultation</a>

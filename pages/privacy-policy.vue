@@ -7,7 +7,7 @@ const { getContent, fallback } = useFamtasticContent();
 const { data } = await useAsyncData(`legal-${route.path}`, () => getContent());
 const content = computed(() => data.value || fallback);
 const page = computed(() => content.value.legal.privacyPolicy);
-useSeoMeta({ title: 'Privacy Policy | FAMtastic Designs', description: 'Starter privacy policy for the FAMtastic Designs local proof.' });
+useSeoMeta({ title: 'Privacy Policy | FAMtastic Designs', description: 'Privacy policy for the FAMtastic Designs website.' });
 </script>
 
 <template>

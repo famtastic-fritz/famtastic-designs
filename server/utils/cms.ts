@@ -1,6 +1,6 @@
 import { useRuntimeConfig } from '#imports';
 import { getBaseFamtasticContent } from '../../data/famtastic/content';
-import { applyAdminOverrides } from './admin-proof';
+import { applyAdminOverrides, isAdminProofEnabled } from './admin-proof';
 import { fetchDirectusCollection } from './directus';
 
 function toArray(value: unknown) {
@@ -114,7 +114,7 @@ export async function getServerCmsContent() {
   const base = getBaseFamtasticContent();
 
   if (mode !== 'directus' || !config.directusUrl) {
-    return await applyAdminOverrides(base);
+    return isAdminProofEnabled() ? await applyAdminOverrides(base) : base;
   }
 
   try {
@@ -132,9 +132,9 @@ export async function getServerCmsContent() {
       fetchDirectusCollection('seo_pages', { sort: ['sort'] }),
     ]);
 
-    return await applyAdminOverrides(mapDirectusContent({ site_settings, homepage, navigation, services, pricing_packages, addons, faqs, portfolio_projects, testimonials, legal_pages, seo_pages }));
+    return isAdminProofEnabled() ? await applyAdminOverrides(mapDirectusContent({ site_settings, homepage, navigation, services, pricing_packages, addons, faqs, portfolio_projects, testimonials, legal_pages, seo_pages })) : mapDirectusContent({ site_settings, homepage, navigation, services, pricing_packages, addons, faqs, portfolio_projects, testimonials, legal_pages, seo_pages });
   } catch (error) {
     console.error('[cms] Directus mode failed, falling back to local content.', error);
-    return await applyAdminOverrides(base);
+    return isAdminProofEnabled() ? await applyAdminOverrides(base) : base;
   }
 }

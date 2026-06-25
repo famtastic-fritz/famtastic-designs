@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import { createMailto } from '~/utils/links';
 import { useFamtasticContent } from '~/composables/useFamtasticContent';
 
 definePageMeta({ layout: 'famproof' });
 const route = useRoute();
 const router = useRouter();
+const config = useRuntimeConfig();
+const leadCaptureMode = computed(() => (config.public.leadCaptureMode || 'manual').toLowerCase());
+const manualSubmit = computed(() => leadCaptureMode.value !== 'api');
 const { getContent, fallback } = useFamtasticContent();
 const { data } = await useAsyncData('intake-content', () => getContent());
 const content = computed(() => data.value || fallback);
@@ -70,6 +74,35 @@ async function submitForm() {
   submitting.value = true;
   try {
     form.submitted_at = new Date().toISOString();
+
+    if (manualSubmit.value) {
+      const body = [
+        `Name: ${form.name}`,
+        `Email: ${form.email}`,
+        form.phone ? `Phone: ${form.phone}` : '',
+        `Project type: ${form.project_type}`,
+        `Business: ${form.business_name}`,
+        form.industry ? `Industry: ${form.industry}` : '',
+        form.location ? `Location: ${form.location}` : '',
+        form.timeline ? `Timeline: ${form.timeline}` : '',
+        form.budget ? `Budget: ${form.budget}` : '',
+        form.goals.length ? `Goals: ${form.goals.join(', ')}` : '',
+        form.message ? `Message: ${form.message}` : '',
+        '',
+        `Landing page: ${form.landing_page}`,
+        `Referrer: ${form.referrer}`,
+        `UTM source: ${form.utm_source}`,
+        `UTM medium: ${form.utm_medium}`,
+        `UTM campaign: ${form.utm_campaign}`,
+      ].filter(Boolean).join('\n');
+      window.location.href = createMailto(site.value.contactEmail || 'hello@famtasticdesigns.com', {
+        subject: `Project request from ${form.name} — ${form.project_type}`,
+        body,
+      });
+      await router.push('/thank-you?mode=manual');
+      return;
+    }
+
     await $fetch('/api/leads', {
       method: 'POST',
       body: form,
@@ -89,19 +122,20 @@ async function submitForm() {
       <div>
         <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Get Started</p>
         <h1 class="mt-3 text-4xl font-black text-white">Full project intake for the serious version of the conversation.</h1>
-        <p class="mt-5 text-base leading-8 text-white/72">This intake captures project details, campaign source data, and contact information. In local proof mode, leads are saved to a local JSON file so the funnel can be tested without waiting on full Directus activation.</p>
+        <p class="mt-5 text-base leading-8 text-white/72">This intake captures project details, campaign source data, and contact information so the project can move into a real consultation without a messy back-and-forth.</p>
+        <p class="mt-3 text-sm leading-7 text-white/60" v-if="manualSubmit">For the public rescue launch, this intake opens an email draft instead of pretending a hidden backend is already live.</p>
         <div class="mt-8 grid gap-4">
           <div class="rounded-[24px] border border-white/8 bg-[#0D1210] p-5 text-sm leading-7 text-white/72">
-            <p class="text-xs uppercase tracking-[0.24em] text-[#79FF00]">What happens after submit</p>
+            <p class="text-xs uppercase tracking-[0.24em] text-[#79FF00]">What happens next</p>
             <ol class="mt-3 grid gap-2">
-              <li>1. Lead saves locally in .data/famtastic-leads.json.</li>
-              <li>2. User lands on the thank-you page.</li>
-              <li>3. Placeholder links support booking or deposit flow.</li>
-              <li>4. Directus mapping stays documented for the real activation pass.</li>
+              <li>1. Send the project details through the intake or email.</li>
+              <li>2. FAMtastic Designs reviews scope, goals, and timeline.</li>
+              <li>3. The next step moves into consultation, quote, or a custom plan.</li>
+              <li>4. Payment and scheduling options are shared directly when needed.</li>
             </ol>
           </div>
           <div class="rounded-[24px] border border-white/8 bg-[#0D1210] p-5 text-sm leading-7 text-white/72">
-            <p class="text-xs uppercase tracking-[0.24em] text-[#79FF00]">Proof contact</p>
+            <p class="text-xs uppercase tracking-[0.24em] text-[#79FF00]">Primary contact</p>
             <p class="mt-3">{{ site.contactEmail }}</p>
           </div>
         </div>
@@ -159,7 +193,7 @@ async function submitForm() {
 
           <section class="rounded-[24px] border border-dashed border-white/12 bg-[#0D1210] p-5 text-sm text-white/65">
             <h2 class="text-lg font-bold text-white">Hidden Campaign Fields</h2>
-            <p class="mt-2 leading-7">This proof captures UTM query strings, referrer, landing page, device type, and submitted timestamp so attribution is not lost.</p>
+            <p class="mt-2 leading-7">Campaign fields capture attribution, referrer, landing page, device type, and submit time so project context does not get lost.</p>
             <div class="mt-4 grid gap-2 sm:grid-cols-2">
               <code>utm_source={{ form.utm_source || '—' }}</code>
               <code>utm_medium={{ form.utm_medium || '—' }}</code>
@@ -170,7 +204,7 @@ async function submitForm() {
 
           <div v-if="errorMessage" class="rounded-2xl border border-[#EF4444]/30 bg-[#EF4444]/10 px-4 py-3 text-sm text-[#ffd3d3]">{{ errorMessage }}</div>
 
-          <button type="submit" :disabled="submitting" class="inline-flex items-center justify-center rounded-full bg-[#79FF00] px-6 py-3 text-sm font-bold text-[#050807] disabled:cursor-not-allowed disabled:opacity-60">{{ submitting ? 'Submitting...' : 'Submit Project Request' }}</button>
+          <button type="submit" :disabled="submitting" class="inline-flex items-center justify-center rounded-full bg-[#79FF00] px-6 py-3 text-sm font-bold text-[#050807] disabled:cursor-not-allowed disabled:opacity-60">{{ submitting ? 'Submitting...' : (manualSubmit ? 'Email Project Request' : 'Submit Project Request') }}</button>
         </div>
       </form>
     </div>

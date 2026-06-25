@@ -80,7 +80,7 @@ useHead({
         <div>
           <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Packages</p>
           <h2 class="mt-3 text-3xl font-bold text-white">Offer ladder built for real buying paths.</h2>
-          <p class="mt-4 max-w-2xl text-sm leading-7 text-white/68">Starting-price language keeps the proof honest while still showing how the business can sell at multiple entry points.</p>
+          <p class="mt-4 max-w-2xl text-sm leading-7 text-white/68">Starting-price language keeps the offer ladder clear while still showing how buyers can enter at different levels.</p>
         </div>
         <NuxtLink to="/packages" class="hidden text-sm text-white/65 transition hover:text-[#79FF00] md:block">See all packages →</NuxtLink>
       </div>
@@ -95,7 +95,7 @@ useHead({
             <li v-for="feature in plan.features" :key="feature" class="flex gap-2"><span class="mt-1 h-2 w-2 rounded-full bg-[#79FF00]" /> <span>{{ feature }}</span></li>
           </ul>
           <p class="mt-5 text-xs text-white/45">Final scope confirmed after consultation.</p>
-          <p v-if="plan.paymentOptions?.length" class="mt-3 text-xs leading-6 text-white/60">Future payment path: {{ plan.paymentOptions.join(' • ') }}</p>
+          <p v-if="plan.paymentOptions?.length" class="mt-3 text-xs leading-6 text-white/60">Payment options are finalized during consultation: {{ plan.paymentOptions.join(' • ') }}</p>
           <NuxtLink :to="`/get-started?package=${encodeURIComponent(plan.packageName)}`" class="mt-5 inline-flex rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#050807]">{{ plan.cta }}</NuxtLink>
         </article>
       </div>
@@ -125,7 +125,7 @@ useHead({
       <div class="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
         <div class="rounded-[28px] border border-white/8 bg-[#0D1210] p-8">
           <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Why FAMtastic</p>
-          <h2 class="mt-3 text-3xl font-bold text-white">A website should act like a business asset, not a pretty placeholder.</h2>
+          <h2 class="mt-3 text-3xl font-bold text-white">A website should act like a business asset, not a brochure that just sits there.</h2>
           <ul class="mt-6 grid gap-3 text-sm leading-7 text-white/72">
             <li v-for="line in home.whyFamtastic" :key="line">{{ line }}</li>
           </ul>
@@ -158,7 +158,7 @@ useHead({
       <div class="flex items-end justify-between gap-6">
         <div>
           <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Work</p>
-          <h2 class="mt-3 text-3xl font-bold text-white">Honest demo concepts instead of fake client wins.</h2>
+          <h2 class="mt-3 text-3xl font-bold text-white">Website directions built to show range, clarity, and conversion thinking.</h2>
         </div>
         <NuxtLink to="/work" class="hidden text-sm text-white/65 transition hover:text-[#79FF00] md:block">View work →</NuxtLink>
       </div>
@@ -187,7 +187,7 @@ useHead({
         <div>
           <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Client Portal Preview</p>
           <h2 class="mt-3 text-3xl font-bold text-white">Project progress, files, invoices, and updates in one place.</h2>
-          <p class="mt-4 max-w-xl text-sm leading-7 text-white/70">The portal is presented as a preview now. Real auth and deeper operations are still mocked until the next backend activation pass.</p>
+          <p class="mt-4 max-w-xl text-sm leading-7 text-white/70">The portal page currently serves as client access information and rollout planning. Active clients receive live access once the secure portal system is enabled.</p>
           <NuxtLink to="/portal" class="mt-6 inline-flex rounded-full border border-white/12 px-5 py-3 text-sm font-semibold text-white transition hover:border-[#79FF00]/55 hover:text-[#79FF00]">Client Portal Login</NuxtLink>
         </div>
         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

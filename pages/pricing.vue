@@ -21,7 +21,7 @@ useSeoMeta({
     <div class="max-w-3xl">
       <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Pricing</p>
       <h1 class="mt-3 text-4xl font-black text-white">Clear package lanes, not vague agency fog.</h1>
-      <p class="mt-5 text-base leading-8 text-white/72">Starting prices keep the proof honest while still showing how a buyer can enter at different levels. Final scope gets confirmed after consultation.</p>
+      <p class="mt-5 text-base leading-8 text-white/72">Starting prices show how a buyer can enter at different levels. Final scope gets confirmed after consultation.</p>
     </div>
 
     <div class="mt-10 grid gap-4 lg:grid-cols-3">
@@ -35,7 +35,7 @@ useSeoMeta({
           <li v-for="feature in plan.features" :key="feature" class="flex gap-2"><span class="mt-1 h-2 w-2 rounded-full bg-[#79FF00]" /> <span>{{ feature }}</span></li>
         </ul>
         <p class="mt-5 text-xs text-white/45">Final scope confirmed after consultation.</p>
-        <p v-if="plan.paymentOptions?.length" class="mt-3 text-xs leading-6 text-white/60">Future payment path: {{ plan.paymentOptions.join(' • ') }}</p>
+        <p v-if="plan.paymentOptions?.length" class="mt-3 text-xs leading-6 text-white/60">Payment options are finalized during consultation: {{ plan.paymentOptions.join(' • ') }}</p>
         <NuxtLink :to="`/get-started?package=${encodeURIComponent(plan.packageName)}`" class="mt-6 inline-flex rounded-full bg-white px-5 py-3 text-sm font-bold text-[#050807]">{{ plan.cta }}</NuxtLink>
       </article>
     </div>

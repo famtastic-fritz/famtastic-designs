@@ -6,7 +6,7 @@ const { getContent, fallback } = useFamtasticContent();
 const { data } = await useAsyncData('terms-content', () => getContent());
 const content = computed(() => data.value || fallback);
 const page = computed(() => content.value.legal.termsOfService);
-useSeoMeta({ title: 'Terms of Service | FAMtastic Designs', description: 'Starter terms page for the FAMtastic Designs local proof.' });
+useSeoMeta({ title: 'Terms of Service | FAMtastic Designs', description: 'Terms of service for the FAMtastic Designs website.' });
 </script>
 
 <template>

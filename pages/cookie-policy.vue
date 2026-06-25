@@ -6,7 +6,7 @@ const { getContent, fallback } = useFamtasticContent();
 const { data } = await useAsyncData('cookie-content', () => getContent());
 const content = computed(() => data.value || fallback);
 const page = computed(() => content.value.legal.cookiePolicy);
-useSeoMeta({ title: 'Cookie Policy | FAMtastic Designs', description: 'Starter cookie policy for the FAMtastic Designs local proof.' });
+useSeoMeta({ title: 'Cookie Policy | FAMtastic Designs', description: 'Cookie policy for the FAMtastic Designs website.' });
 </script>
 
 <template>

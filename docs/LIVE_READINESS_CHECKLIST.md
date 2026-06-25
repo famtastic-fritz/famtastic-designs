@@ -1,17 +1,55 @@
-# Live readiness checklist
+# Live Readiness Checklist
 
-- [ ] Final production domain approved and added to NUXT_PUBLIC_SITE_URL
-- [ ] Final contact email and phone approved
-- [ ] Admin proof no longer needed or replaced by real CMS flow
-- [ ] Directus lane either activated or intentionally deferred
-- [ ] PayPal local-only keys added and verified
-- [ ] PayPal return/cancel URLs confirmed
-- [ ] Package/deposit/care-plan payment paths approved
-- [ ] Booking provider decision approved
-- [ ] Real booking URL or manual workflow approved
-- [ ] Legal starter text reviewed by owner
-- [ ] Demo/proof portfolio/testimonial wording approved
-- [ ] Mobile QA repeated on final domain
-- [ ] Analytics/search keys supplied if needed
-- [ ] No secrets committed
-- [ ] No .data, .output, .nuxt, node_modules, Directus data, or real leads staged
+## 2026-06-25 — Public rescue readiness pass
+
+Status: local rescue build is ready for authenticated production cutover; live deployment is still blocked by missing verified host access.
+
+### Passed locally
+- Homepage loads
+- Services loads
+- Pricing loads
+- Packages loads
+- Work loads
+- Contact loads
+- Get Started loads
+- Portal loads with access-info posture
+- Client Portal Login loads with invitation-only posture
+- Thank You loads
+- Privacy Policy loads
+- Terms of Service loads
+- Cookie Policy loads
+- Sitemap page loads
+- `sitemap.xml` loads
+- `robots.txt` loads
+- `/admin-proof` returns 404 when `ENABLE_ADMIN_PROOF=false`
+- Cookie banner renders and dismisses
+- Public CTA links for consultation/audit route safely to `/get-started` paths
+- Form posture is manual fallback, not fake success
+
+### Verified production-safe posture in this branch
+- No public `/admin-proof` access by default
+- No public fake PayPal checkout
+- No public fake booking links
+- No fake portal-auth claims
+- No dependency on Directus for the public rescue site
+- No requirement to deploy `.env`, `.data`, Directus DB, uploads, or `node_modules`
+
+### Remaining blockers before live
+- Authenticated production deployment lane not verified from this session
+- No live backup path created yet because host access is unavailable
+- Live form-delivery behavior is intentionally manual fallback until a real production capture/notification lane is enabled
+
+### Required production env posture for cutover
+- `NUXT_PUBLIC_SITE_NAME=FAMtastic Designs`
+- `NUXT_PUBLIC_SITE_URL=https://famtasticdesigns.com`
+- `NUXT_PUBLIC_CMS_MODE=local`
+- `NUXT_PUBLIC_LEAD_CAPTURE_MODE=manual`
+- `NUXT_PUBLIC_PAYMENT_MODE=mock`
+- `NUXT_PUBLIC_PORTAL_MODE=preview`
+- `ENABLE_ADMIN_PROOF=false`
+- `NUXT_PUBLIC_ENABLE_ADMIN_PROOF=false`
+- `NUXT_PUBLIC_ENABLE_PAYMENT_PROOF=false`
+- `BOOKING_PROVIDER=manual`
+
+### Decision
+Do not cut over live production until the GoDaddy/cPanel/host lane is authenticated and a rollback backup is created first.

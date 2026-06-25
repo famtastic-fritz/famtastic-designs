@@ -24,7 +24,7 @@ const auditExternal = computed(() => isExternalLink(auditHref.value));
       <div class="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
         <div class="flex flex-wrap items-center gap-4">
           <span>{{ site.utilityBarText }}</span>
-          <a :href="`tel:${site.phone}`" class="transition hover:text-[#79FF00]">{{ site.phone }}</a>
+          <a v-if="site.phone" :href="`tel:${site.phone}`" class="transition hover:text-[#79FF00]">{{ site.phone }}</a>
           <a :href="`mailto:${site.contactEmail}`" class="transition hover:text-[#79FF00]">{{ site.contactEmail }}</a>
         </div>
         <div class="flex flex-wrap items-center gap-3">
@@ -82,13 +82,13 @@ const auditExternal = computed(() => isExternalLink(auditHref.value));
           <p class="text-sm font-semibold text-white">Contact</p>
           <div class="mt-4 grid gap-3 text-sm text-white/72">
             <a :href="`mailto:${site.contactEmail}`" class="transition hover:text-[#79FF00]">{{ site.contactEmail }}</a>
-            <a :href="`tel:${site.phone}`" class="transition hover:text-[#79FF00]">{{ site.phone }}</a>
+            <a v-if="site.phone" :href="`tel:${site.phone}`" class="transition hover:text-[#79FF00]">{{ site.phone }}</a>
             <a v-if="bookingExternal" :href="bookingHref" target="_blank" rel="noreferrer" class="transition hover:text-[#79FF00]">Request a Consultation</a>
             <NuxtLink v-else :to="bookingHref" class="transition hover:text-[#79FF00]">Request a Consultation</NuxtLink>
             <a v-if="auditExternal" :href="auditHref" target="_blank" rel="noreferrer" class="transition hover:text-[#79FF00]">Discuss Audit / Deposit Options</a>
             <NuxtLink v-else :to="auditHref" class="transition hover:text-[#79FF00]">Discuss Audit / Deposit Options</NuxtLink>
           </div>
-          <p class="mt-6 text-xs text-white/45">© 2026 {{ site.siteName }}. Local production-proof build.</p>
+          <p class="mt-6 text-xs text-white/45">© 2026 {{ site.siteName }}. All rights reserved.</p>
         </div>
       </div>
     </footer>

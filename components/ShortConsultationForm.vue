@@ -1,5 +1,10 @@
 <script setup lang="ts">
+import { createMailto } from '~/utils/links';
+
 const router = useRouter();
+const config = useRuntimeConfig();
+const leadCaptureMode = computed(() => (config.public.leadCaptureMode || 'manual').toLowerCase());
+const manualSubmit = computed(() => leadCaptureMode.value !== 'api');
 
 const props = withDefaults(
   defineProps<{
@@ -52,6 +57,31 @@ async function submitForm() {
   submitting.value = true;
   try {
     form.submitted_at = new Date().toISOString();
+
+    if (manualSubmit.value) {
+      const body = [
+        `Name: ${form.name}`,
+        `Email: ${form.email}`,
+        form.phone ? `Phone: ${form.phone}` : '',
+        form.business_name ? `Business: ${form.business_name}` : '',
+        `Service needed: ${form.service_needed}`,
+        form.budget ? `Budget: ${form.budget}` : '',
+        form.message ? `Message: ${form.message}` : '',
+        '',
+        `Landing page: ${form.landing_page}`,
+        `Referrer: ${form.referrer}`,
+        `UTM source: ${form.utm_source}`,
+        `UTM medium: ${form.utm_medium}`,
+        `UTM campaign: ${form.utm_campaign}`,
+      ].filter(Boolean).join('\n');
+      window.location.href = createMailto('hello@famtasticdesigns.com', {
+        subject: `Consultation request from ${form.name}`,
+        body,
+      });
+      await router.push('/thank-you?mode=manual');
+      return;
+    }
+
     await $fetch('/api/leads', { method: 'POST', body: form });
     await router.push('/thank-you');
   } catch (error: any) {
@@ -74,8 +104,8 @@ async function submitForm() {
       <label class="grid gap-2 text-sm text-white/75"><span>Budget</span><input v-model="form.budget" class="rounded-2xl border border-white/10 bg-[#050807] px-4 py-3 text-white" /></label>
       <label class="grid gap-2 text-sm text-white/75 sm:col-span-2"><span>Message</span><textarea v-model="form.message" rows="4" class="rounded-2xl border border-white/10 bg-[#050807] px-4 py-3 text-white"></textarea></label>
     </div>
-    <p class="mt-4 text-xs text-white/55">By submitting this proof form, you are sending a local mock lead for QA purposes.</p>
+    <p class="mt-4 text-xs text-white/55">{{ manualSubmit ? 'This request opens an email draft so nothing disappears into a broken pipeline.' : 'Use this form to request a consultation. If direct scheduling is not enabled yet, the next step continues by email.' }}</p>
     <div v-if="errorMessage" class="mt-4 rounded-2xl border border-[#EF4444]/30 bg-[#EF4444]/10 px-4 py-3 text-sm text-[#ffd3d3]">{{ errorMessage }}</div>
-    <button type="submit" :disabled="submitting" class="mt-5 inline-flex items-center justify-center rounded-full bg-[#79FF00] px-6 py-3 text-sm font-bold text-[#050807] disabled:cursor-not-allowed disabled:opacity-60">{{ submitting ? 'Submitting...' : 'Request Free Consultation' }}</button>
+    <button type="submit" :disabled="submitting" class="mt-5 inline-flex items-center justify-center rounded-full bg-[#79FF00] px-6 py-3 text-sm font-bold text-[#050807] disabled:cursor-not-allowed disabled:opacity-60">{{ submitting ? 'Submitting...' : (manualSubmit ? 'Email My Consultation Request' : 'Request Free Consultation') }}</button>
   </form>
 </template>

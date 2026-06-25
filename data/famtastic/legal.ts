@@ -2,7 +2,7 @@ export const legalContent = {
   privacyPolicy: {
     title: 'Privacy Policy',
     updated: '2026-06-24',
-    intro: 'This starter privacy policy is provided for local production-proof purposes only and is not legal advice. Owner review is required before production use.',
+    intro: 'This privacy policy explains how FAMtastic Designs collects and uses information submitted through this website. It is provided for general business transparency and should be reviewed with legal counsel as needed.',
     sections: [
       {
         heading: 'Information collected',
@@ -14,7 +14,7 @@ export const legalContent = {
       },
       {
         heading: 'Storage and handling',
-        body: 'In this local proof environment, lead data is stored in local mock storage for testing. Production storage, retention, and access rules must be reviewed before launch.',
+        body: 'Submitted information is reviewed for consultation, quoting, and project follow-up. Storage, retention, and access controls are managed according to the active business workflow in use at the time of submission.',
       },
       {
         heading: 'Third-party services',
@@ -29,11 +29,11 @@ export const legalContent = {
   termsOfService: {
     title: 'Terms of Service',
     updated: '2026-06-24',
-    intro: 'This starter terms page is for local proofing only and is not legal advice. Owner review is required before production use.',
+    intro: 'These terms describe the general use of the FAMtastic Designs website and should be reviewed with legal counsel as needed.',
     sections: [
       {
         heading: 'Scope of information',
-        body: 'Website content, offers, pricing language, and service details shown in this proof are for discussion and planning purposes until a final production version is approved.',
+        body: 'Website content, offers, pricing language, and service details are provided for general informational purposes and may be refined during consultation or written agreement.',
       },
       {
         heading: 'Quotes and project scope',
@@ -45,7 +45,7 @@ export const legalContent = {
       },
       {
         heading: 'Payments and scheduling',
-        body: 'Payment links and scheduling flows in this proof are placeholders unless explicitly replaced with approved production systems.',
+        body: 'Payment options and scheduling steps are confirmed directly with the client during consultation, proposal, or onboarding.',
       },
       {
         heading: 'Liability and review',
@@ -56,15 +56,15 @@ export const legalContent = {
   cookiePolicy: {
     title: 'Cookie Policy',
     updated: '2026-06-24',
-    intro: 'This starter cookie policy is for local proofing only and is not legal advice. Owner review is required before production use.',
+    intro: 'This cookie policy explains how cookie preferences are handled on the FAMtastic Designs website.',
     sections: [
       {
         heading: 'How cookies are used',
-        body: 'This proof currently uses localStorage to remember cookie consent choices and may later support analytics or marketing scripts after review.',
+        body: 'This site currently uses localStorage to remember cookie consent choices and may later support analytics or marketing scripts after review.',
       },
       {
-        heading: 'Current proof behavior',
-        body: 'No live analytics or marketing tags are required for the local proof. Consent is stored locally so future tracking can respect the saved preference.',
+        heading: 'Current site behavior',
+        body: 'No live analytics or marketing tags are required for the current site setup. Consent is stored locally so any future tracking can respect the saved preference.',
       },
       {
         heading: 'Managing consent',
