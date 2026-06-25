@@ -39,6 +39,7 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   runtimeConfig: {
+    enableAdminProof: process.env.ENABLE_ADMIN_PROOF || 'false',
     directusUrl: process.env.DIRECTUS_URL || '',
     directusToken: process.env.DIRECTUS_TOKEN || '',
     adminProofPin: process.env.ADMIN_PROOF_PIN || '',
@@ -53,7 +54,6 @@ export default defineNuxtConfig({
       cmsMode,
       paymentMode,
       portalMode,
-      enableAdminProof: process.env.NUXT_PUBLIC_ENABLE_ADMIN_PROOF || 'true',
       leadStorageMode: process.env.NUXT_PUBLIC_LEAD_STORAGE_MODE || 'local',
       bookingProvider,
       bookingUrl: process.env.BOOKING_URL || '',

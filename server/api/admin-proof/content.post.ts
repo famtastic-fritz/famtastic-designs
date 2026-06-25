@@ -1,9 +1,10 @@
 import { createError, defineEventHandler, readBody } from 'h3';
 import { useRuntimeConfig } from '#imports';
-import { writeAdminOverrides } from '../../utils/admin-proof';
+import { assertAdminProofEnabled, writeAdminOverrides } from '../../utils/admin-proof';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
+  assertAdminProofEnabled();
   const body = await readBody<Record<string, any>>(event);
   const pin = typeof body?.pin === 'string' ? body.pin : '';
   if (!config.adminProofPin || pin !== config.adminProofPin) {

@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { createError } from 'h3';
 
 const projectDataRoot = () => join(process.env.INIT_CWD || process.cwd(), '.data');
 const overrideFile = () => join(projectDataRoot(), 'famtastic-admin-content.json');
@@ -20,6 +21,16 @@ function mergeDeep(base: any, override: any): any {
   }
 
   return override ?? base;
+}
+
+export function isAdminProofEnabled() {
+  return process.env.ENABLE_ADMIN_PROOF === 'true';
+}
+
+export function assertAdminProofEnabled() {
+  if (!isAdminProofEnabled()) {
+    throw createError({ statusCode: 404, statusMessage: 'Local proof admin is disabled.' });
+  }
 }
 
 export async function readAdminOverrides() {

@@ -1,7 +1,17 @@
 <script setup lang="ts">
+import { createError } from 'h3';
+
 definePageMeta({ layout: 'famproof' });
-const config = useRuntimeConfig();
-useSeoMeta({ title: 'Admin Proof | FAMtastic Designs', description: 'Local admin proof route for editing proof content without waiting on full CMS activation.' });
+
+if (import.meta.server && process.env.ENABLE_ADMIN_PROOF !== 'true') {
+  throw createError({ statusCode: 404, statusMessage: 'Local proof admin is disabled.' });
+}
+
+useSeoMeta({
+  title: 'Local Proof Admin — Not Production CMS | FAMtastic Designs',
+  description: 'Local proof-only admin surface for FAMtastic Designs. Production admin should be Directus or the selected CMS backend.',
+  robots: 'noindex, nofollow, noarchive',
+});
 
 const pin = ref('');
 const loading = ref(false);
@@ -105,10 +115,26 @@ onMounted(() => {
 
 <template>
   <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
-    <div class="max-w-3xl">
-      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Admin Proof</p>
-      <h1 class="mt-3 text-4xl font-black text-white">Local content editing proof without waiting on production CMS rollout.</h1>
-      <p class="mt-5 text-base leading-8 text-white/72">Use this route to prove editable content now. Directus remains the documented next CMS lane; this fallback proves the owner can change content and see it on the site locally.</p>
+    <div class="max-w-4xl">
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Local Proof Admin — Not Production CMS</p>
+      <h1 class="mt-3 text-4xl font-black text-white">This page is for local proofing only.</h1>
+      <p class="mt-5 text-base leading-8 text-white/72">Use this route to prove editable content and local lead review during development. Production admin should be Directus or the selected CMS backend, not this page.</p>
+    </div>
+
+    <div class="mt-8 grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
+      <div class="rounded-[28px] border border-[#79FF00]/25 bg-[#0D1210] p-6 text-sm leading-7 text-white/78">
+        <p class="font-semibold text-white">Local proof admin only</p>
+        <ul class="mt-3 grid gap-2 text-white/68">
+          <li>- Not a production-secure backend</li>
+          <li>- Not a replacement for Directus or another real CMS</li>
+          <li>- Intended only when ENABLE_ADMIN_PROOF=true and ADMIN_PROOF_PIN are set locally</li>
+        </ul>
+      </div>
+      <div class="rounded-[28px] border border-white/8 bg-white/[0.03] p-6 text-sm leading-7 text-white/72">
+        <p class="font-semibold text-white">Production target</p>
+        <p class="mt-3">Recommended CMS/admin host: <strong class="text-white">admin.famtasticdesigns.com</strong> or <strong class="text-white">cms.famtasticdesigns.com</strong>.</p>
+        <p class="mt-3">That real backend should own homepage, services, packages, FAQs, legal pages, SEO, leads, and booking/payment settings.</p>
+      </div>
     </div>
 
     <div class="mt-10 grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
@@ -152,15 +178,15 @@ onMounted(() => {
           <h2 class="text-xl font-bold text-white">Proof steps</h2>
           <ol class="mt-4 grid gap-3 text-sm leading-7 text-white/72">
             <li>1. Load content.</li>
-            <li>2. Change the hero headline or CTA text.</li>
+            <li>2. Change the hero headline or package data.</li>
             <li>3. Save the content using the PIN.</li>
-            <li>4. Open the homepage and confirm the new text appears.</li>
+            <li>4. Open the homepage/pricing/packages pages and confirm the new text appears.</li>
             <li>5. Load leads and confirm recent form submissions exist locally.</li>
           </ol>
         </div>
         <div class="rounded-[28px] border border-white/8 bg-[#0D1210] p-6">
           <h2 class="text-xl font-bold text-white">Local leads</h2>
-          <p class="mt-2 text-sm text-white/60">Loaded from .data/famtastic-leads.json through the proof route.</p>
+          <p class="mt-2 text-sm text-white/60">Loaded from .data/famtastic-leads.json through the proof route. This is a local proof aid, not a production lead backend.</p>
           <div class="mt-5 grid gap-3">
             <article v-for="(lead, idx) in leads" :key="`${lead.email}-${idx}`" class="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
               <p class="text-sm font-semibold text-white">{{ lead.name }} — {{ lead.form_type }}</p>

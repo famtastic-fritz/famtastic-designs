@@ -8,6 +8,7 @@ Proof URLs
 - Admin proof: http://127.0.0.1:3001/admin-proof
 
 Environment used
+- ENABLE_ADMIN_PROOF=true
 - ADMIN_PROOF_PIN=1234
 - NUXT_PUBLIC_SITE_URL=http://127.0.0.1:3001
 - NUXT_PUBLIC_CMS_MODE=local
@@ -23,66 +24,29 @@ Build + local runtime
 - pnpm build: pass
 - pnpm preview --port 3001: pass
 
+Admin/backend distinction
+- /admin-proof now clearly labels itself as Local Proof Admin — Not Production CMS.
+- /admin-proof now clearly states this page is for local proofing only.
+- /admin-proof now clearly states production admin should be Directus or the selected CMS backend.
+- /admin-proof is removed from sitemap generation.
+- /admin-proof is server-gated by ENABLE_ADMIN_PROOF and should be disabled by default outside proof/dev usage.
+
 Content-render override proof
 - Saved hero override through admin-proof content endpoint.
 - Verified /api/famtastic-content returned the saved hero headline.
-- Refreshed homepage and confirmed the visible H1 updated to: Proof Hero Visible 2026-06-24T20-override
+- Refreshed homepage and confirmed the visible H1 updated correctly.
 - Saved package/pricing override through admin-proof content endpoint.
 - Verified /api/famtastic-content returned the saved package price label.
-- Refreshed /pricing and confirmed visible price updated to: Proof Price Visible $1,901+
-- Refreshed /packages and confirmed visible price updated to: Proof Price Visible $1,901+
-- Result: content-render override bug closed.
+- Refreshed /pricing and /packages and confirmed the visible override updated correctly.
 
-Route checks
-- / : 200
-- /services : 200
-- /pricing : 200
-- /packages : 200
-- /work : 200
-- /contact : 200
-- /get-started : 200
-- /portal : 200
-- /client-portal-login : 200
-- /thank-you : 200
-- /privacy-policy : 200
-- /terms-of-service : 200
-- /cookie-policy : 200
-- /sitemap : 200
-- /sitemap.xml : 200
-- /robots.txt : 200
-- /admin-proof : 200
-
-Lead capture proof
-- Full intake POST to /api/leads: pass
-- Short consultation POST to /api/leads: pass
-- Local lead save target: .data/famtastic-leads.json
-- Admin proof leads endpoint /api/admin-proof/leads?pin=1234: pass
-- Verified returned lead types include full_intake and consultation.
-
-Browser-visible checks
-- Homepage hero override visible: pass
-- Pricing override visible: pass
-- Packages override visible: pass
-- Cookie banner visible: pass
-- Legal links visible in footer: pass
-- Booking/payment CTAs remain safe mock/placeholder flows: pass
-
-Notes on UI-level admin lead viewer
-- Protected admin proof leads endpoint works with pin=1234.
-- Browser-side visual confirmation of rendered lead cards on /admin-proof was not consistently reproduced during this run even though the endpoint returned the saved leads.
-- This is non-blocking for production-proof because the secured endpoint and local lead storage both verified successfully, but the admin-proof page interaction can be polished later if needed.
-
-Responsive audit
-- Desktop layout verified in browser.
-- Mobile/tablet behavior remains CSS-driven and structurally responsive via existing layout classes.
-- Dedicated viewport-emulated screenshot proof for 360px / 390px / 768px was not captured in this run.
+Portal preview distinction
+- /portal uses client-facing preview language only.
+- /client-portal-login uses client-facing preview language only.
+- Portal auth is still mocked and not represented as production-complete.
+- Future invite, forgot-password, reset-password, and dashboard surfaces are documented but not yet implemented as real auth.
 
 What remains mocked
 - PayPal checkout, invoice, and recurring billing
 - Booking provider integrations
 - Directus live CMS / live DB writes
 - Client portal production auth/integrations
-
-Overall result
-- Production-proof branch is locally runnable.
-- Core proof claim is now true: admin-proof content overrides propagate through the content API and render on public pages.

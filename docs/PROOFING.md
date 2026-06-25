@@ -4,6 +4,7 @@ Repo path
 - ~/famtastic/sites/site-famtastic-designs
 
 Required local proof env
+- ENABLE_ADMIN_PROOF=true
 - ADMIN_PROOF_PIN=1234
 - NUXT_PUBLIC_SITE_URL=http://127.0.0.1:3001
 - NUXT_PUBLIC_CMS_MODE=local
@@ -17,13 +18,19 @@ Local proof commands
 - pnpm typecheck
 - pnpm lint
 - pnpm build
-- ADMIN_PROOF_PIN=1234 NUXT_PUBLIC_SITE_URL=http://127.0.0.1:3001 NUXT_PUBLIC_CMS_MODE=local NUXT_PUBLIC_LEAD_STORAGE_MODE=local NUXT_PUBLIC_PAYMENT_MODE=mock NUXT_PUBLIC_PORTAL_MODE=preview BOOKING_PROVIDER=mock pnpm preview --port 3001
+- ENABLE_ADMIN_PROOF=true ADMIN_PROOF_PIN=1234 NUXT_PUBLIC_SITE_URL=http://127.0.0.1:3001 NUXT_PUBLIC_CMS_MODE=local NUXT_PUBLIC_LEAD_STORAGE_MODE=local NUXT_PUBLIC_PAYMENT_MODE=mock NUXT_PUBLIC_PORTAL_MODE=preview BOOKING_PROVIDER=mock pnpm preview --port 3001
 
 Expected local URLs
 - Site: http://127.0.0.1:3001
 - Admin proof: http://127.0.0.1:3001/admin-proof
 
-Proof claims that are now true
+Admin distinction
+- /admin-proof is local proof only.
+- It is not the production CMS.
+- Production admin should be Directus or the selected CMS backend.
+- /admin-proof should stay disabled unless ENABLE_ADMIN_PROOF=true.
+
+Proof claims that are true
 - Public content comes from the merged content API path, not just base fallback data.
 - Admin-proof saved hero overrides show on homepage.
 - Admin-proof saved package overrides show on /pricing and /packages.
@@ -34,4 +41,4 @@ Still mocked
 - Payments
 - Scheduling providers
 - Directus live CMS activation
-- Production auth/integrations
+- Client portal auth/integrations
