@@ -1,0 +1,10 @@
+# Build-context hygiene: the bundle is rebuilt inside the image.
+node_modules/
+dist/
+.env
+.env.local
+
+# Docker packaging itself.
+Dockerfile
+.dockerignore
+docker/
