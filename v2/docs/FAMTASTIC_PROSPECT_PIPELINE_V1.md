@@ -1,6 +1,8 @@
 # FAMtastic Designs — Prospect → Paid → Site Studio Pipeline (V1)
 
-**Status:** Phase 1 complete (assessment + plan). Phase 2 (implementation) not started — awaiting go-ahead.
+**Status:** Approved as a **bounded local proof**. Phase 2 implementation in progress. Scope is the 20
+deliverables in §12 only — not a larger platform phase. See §12 for the deliverable→file→Drupal→React→
+test→DoD traceability matrix.
 **Branch:** `feat/famtastic-prospect-pipeline-v1`
 **Working project:** `sites/site-famtastic-designs/v2` (headless Drupal 11 + React 18 SPA)
 **Author:** Implementation engineering, FAMtastic Designs
@@ -356,3 +358,48 @@ reconciliation of the live Nuxt site's divergent pricing files.
 9. **Tests + docs** — unit tests, env docs, run instructions, final report.
 
 Each numbered step is a logical checkpoint commit. No push, no deploy, no merge.
+
+---
+
+## 12. Bounded local proof — 20-deliverable traceability matrix
+
+All backend code lives in one custom module: `v2/backend/web/modules/custom/famtastic_pipeline`.
+All frontend code lives in `v2/frontend/src`. Tests: PHPUnit under the module's `tests/`, plus one
+executed end-to-end script `v2/scripts/e2e-proof.sh` (curl against a locally-served Drupal + a signed
+webhook). "DoD" = definition of done.
+
+| # | Deliverable | Component / file | Drupal responsibility | React responsibility | Test that proves it | Definition of done |
+|---|---|---|---|---|---|---|
+| 1 | Admin creates a prospect from discovered info | `src/Drush/Commands/ProspectCommands.php` (`famtastic:prospect-create`) + entity add form (`AdminHtmlRouteProvider`) | Validate + persist a `prospect` entity from CLI args or admin form | — (admin uses Drupal UI/CLI) | E2E step 1 creates a prospect and asserts an entity id is returned | A prospect row exists with discovered fields + `source=public` |
+| 2 | Secure personalized prospect link | `src/Service/TokenManager.php`; issued by the drush command | Generate ≥32-byte base64url token, store SHA-256 `token_hash` + `token_expires`; return raw link once | — | Unit test `TokenManagerTest`: hash is deterministic, verify() matches raw, wrong token fails | Command prints `/p/<token>`; only the hash is stored |
+| 3 | React page shows discovered business info | `frontend/src/pages/ProspectLandingPage.jsx`, `src/api/pipeline.js` | `GET /api/pipeline/session` returns prospect-safe payload (no internal notes) | Fetch by `:token`, render business info | E2E `GET /session` returns the business name; unit: internal `discovery_notes` absent from payload | Visiting `/p/<token>` shows the discovered business; bad token → 404/expired UI |
+| 4 | Confirm/correct + contact + authorization form | `frontend/src/pages/ProspectLandingPage.jsx` (confirm form); `Controller\PipelineController::confirm` | Validate/sanitize, save corrections + `contact_*` + `authorized`, mark `confirmed_fields` | Controlled form; require authorization checkbox before submit | E2E `POST /confirm` then re-`GET /session` shows corrected value + `authorized=true` | Corrections persist; `authorized=false` is rejected server-side |
+| 5 | Convert confirmed prospect → lead | `PipelineController::confirm` (status transition) | On valid confirm, set `status = lead`, `confirmed_at` | Reflect "lead" state in UI | E2E asserts prospect `status=lead` after confirm | Status is `lead` only after authorization captured |
+| 6 | Present the $199 offer | `frontend/src/pages/ProspectLandingPage.jsx` (OfferCard) + `config/install/famtastic_pipeline.settings.yml` (package def) | Serve package `basic_199` (name, $199, inclusions) in `/session` payload | Render offer + "Pay $199" CTA | E2E `/session` payload includes `package.amount=19900`; UI snapshot renders "$199" | Offer shows only when `status ≥ lead` |
+| 7 | Stripe test product + $199 price (repeatable) | `v2/scripts/stripe-setup.sh` | — (script uses env `STRIPE_SECRET_KEY` test) | — | Script is idempotent (dry-run without creds prints required steps); with creds, creates product+price and prints price id | Running it with a test key yields a `price_...`; without creds it explains + exits cleanly |
+| 8 | Create Checkout Session | `src/Service/StripeGateway.php` (impl of `PaymentGatewayInterface`); `PipelineController::checkout` | Create session via Stripe API (Guzzle), store `stripe_checkout_session_id`, order `pending` | "Pay" button hits `/checkout`, redirects to returned URL | Kernel test stubs `http_client`, asserts session id stored + order pending; E2E uses stub gateway to return a fake session | `POST /checkout` returns a redirect URL and an order row is `pending` |
+| 9 | Stripe success + cancel return routes | `frontend/src/pages/PaymentReturnPage.jsx`; routes `/p/:token/return`, `/p/:token/cancel` | `success_url`/`cancel_url` built from `FRONTEND_BASE_URL` | Return page calls `/order-status`; cancel page offers retry | E2E asserts success_url/cancel_url encoded in the checkout call; UI renders both routes | Both routes exist; success verifies server-side, never trusts the redirect alone |
+| 10 | Signature-verified webhook | `src/Controller/StripeWebhookController.php` | Verify `Stripe-Signature` HMAC-SHA256 against `STRIPE_WEBHOOK_SECRET`; reject bad/old sigs | — | Unit `WebhookSignatureTest` (valid passes, tampered fails); E2E posts a correctly-signed `checkout.session.completed` | Only correctly-signed events are processed (401 otherwise) |
+| 11 | Reliable status + duplicate protection | `StripeWebhookController` + `order` fields `stripe_event_ids` | Idempotency: record processed event id; second identical event is a no-op | — | E2E posts the same event twice; asserts order paid once, `paid_at` unchanged, no double transition | Re-delivered webhook does not re-fulfill; order ends `paid` exactly once |
+| 12 | Paid-access gate on intake | `PipelineController::intake` + `::asset` guards | Reject intake/asset unless owning `order.payment_status = paid` (403) | Intake route redirects to offer if unpaid | E2E: `POST /intake` before payment → 403; after webhook → 200 | Unpaid prospect cannot read or write intake |
+| 13 | Website-intake form | `frontend/src/pages/IntakePage.jsx`; `PipelineController::intake` | Validate + persist all §7 intake fields on `intake` entity | Multi-field controlled form (services, goals, CTAs, brand, domain, etc.) | E2E `POST /intake` then read-back asserts stored fields; unit validates required-field handling | Submitting a complete intake persists every §7 field |
+| 14 | Asset upload (logo + images) | `PipelineController::asset` (managed file); IntakePage uploader | Accept image uploads → Drupal managed `file` in **private** store, reference on `intake.asset_refs`; validate mime/size | File input → `POST /asset`, show uploaded list | E2E uploads a PNG, asserts a file id returned + referenced on intake | Uploaded logo/image is stored privately and linked to the intake |
+| 15 | Human-readable Site Studio prompt | `src/Service/SiteStudioRequestBuilder::buildBrief()` | Render Markdown brief from the intake | (admin views/exports it) | Unit `SiteStudioBuilderTest` asserts brief contains business name, services, CTAs | Brief is generated from a submitted intake and is human-readable |
+| 16 | Machine-readable Site Studio JSON | `SiteStudioRequestBuilder::buildJson()`; `StudioExportController` | Produce versioned JSON (all §7 fields) stored on `project.studio_json` | — | Unit asserts JSON schema keys (`schema_version`, `business`, `positioning`, `content`, `brand`, `assets`, `domain`, `approvals`) | Valid JSON with every §7 group is produced from the same intake |
+| 17 | Project record (job id, repo, proof, revision, approval, live URL, delivery status) | `src/Entity/Project.php` + admin edit form (`AdminHtmlRouteProvider`) | Editable fields: `studio_job_id`, `repo_url`, `proof_url`, `revision_notes`, `approval_status`, `live_url`, `delivery_status` | — (admin uses Drupal UI) | E2E sets `proof_url` via drush/entity API, asserts persisted; admin route reachable | Admin can record all listed fields on the project |
+| 18 | Customer proof-review page | `frontend/src/pages/ProofStatusPage.jsx`; `PipelineController::session` exposes proof | Include `proof_url` + delivery status in the token-scoped payload once set | Render proof link + status at `/p/:token/status` | E2E: after proof set, `/session` returns `proof_url`; UI renders it | Customer sees the proof URL and current status |
+| 19 | Request-revision or approve action | `PipelineController::approval` | Accept `approve` or `request_revision` (+ note); update `project.approval_status` + prospect status | Two buttons + optional note | E2E posts `approve`; asserts `approval_status=approved`; separate case posts `request_revision` | Customer action updates approval state; one revision is representable |
+| 20 | Documented + executed local E2E test | `v2/scripts/e2e-proof.sh` + `docs/E2E_PROOF_RUN.md` | Serve site (`drush runserver`/`php -S`), run full chain | — | The script runs the entire chain and exits 0; its output is captured in `E2E_PROOF_RUN.md` | The whole create→…→delivered chain passes locally and is recorded |
+
+### 12.1 Backend gateway note (test without live Stripe)
+`PaymentGatewayInterface` has two implementations selected by config/env: `StripeGateway` (real, Guzzle,
+used when `STRIPE_SECRET_KEY` is set) and `StubGateway` (deterministic fake session, used when no key is
+present — for the local proof). Webhook verification is identical in both cases and is proven by posting a
+**correctly HMAC-signed** event using the configured test `STRIPE_WEBHOOK_SECRET`, so deliverables 10/11
+are proven without any network call. If real test credentials are supplied, `stripe-setup.sh` creates the
+product/price and the same flow runs against Stripe's real test API.
+
+### 12.2 What stays manual (per approval)
+Site Studio submission, prospect discovery, outreach sending, deployment, domain connection, production
+launch. The records and customer-facing flow are still complete and repeatable.
+
