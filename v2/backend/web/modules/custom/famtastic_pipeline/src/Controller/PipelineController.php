@@ -62,7 +62,7 @@ class PipelineController extends ControllerBase {
     if ($prospect->get('status')->value === 'new') {
       $prospect->set('status', 'viewed')->save();
     }
-    return new JsonResponse($this->safePayload($prospect));
+    return $this->noStore(new JsonResponse($this->safePayload($prospect)));
   }
 
   /**
@@ -176,7 +176,7 @@ class PipelineController extends ControllerBase {
     }
     $order = $this->repository->getOrder($prospect);
     if (!$order) {
-      return new JsonResponse(['payment_status' => 'none', 'gateway_mode' => $this->gatewayManager->active()->getMode()]);
+      return $this->noStore(new JsonResponse(['payment_status' => 'none', 'gateway_mode' => $this->gatewayManager->active()->getMode()]));
     }
 
     // Never trust the browser redirect: for real Stripe, reconcile server-side.
@@ -193,10 +193,10 @@ class PipelineController extends ControllerBase {
       }
     }
 
-    return new JsonResponse([
+    return $this->noStore(new JsonResponse([
       'payment_status' => $order->get('payment_status')->value,
       'gateway_mode' => $this->gatewayManager->active()->getMode(),
-    ]);
+    ]));
   }
 
   /**
@@ -435,6 +435,16 @@ class PipelineController extends ControllerBase {
    */
   protected function error(string $code, int $status, ?string $message = NULL): JsonResponse {
     return new JsonResponse(['ok' => FALSE, 'error' => $code, 'message' => $message ?? $code], $status);
+  }
+
+  /**
+   * Marks a response uncacheable — token-scoped GETs must never be page-cached.
+   */
+  protected function noStore(JsonResponse $response): JsonResponse {
+    $response->setPrivate();
+    $response->setMaxAge(0);
+    $response->headers->addCacheControlDirective('no-store', TRUE);
+    return $response;
   }
 
 }

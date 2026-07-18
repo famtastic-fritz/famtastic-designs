@@ -6,6 +6,8 @@ famtastic_pipeline.session:
   methods: [GET]
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 famtastic_pipeline.confirm:
   path: '/api/pipeline/confirm'
@@ -30,6 +32,8 @@ famtastic_pipeline.order_status:
   methods: [GET]
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
 
 famtastic_pipeline.intake:
   path: '/api/pipeline/intake'
