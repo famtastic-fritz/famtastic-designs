@@ -188,7 +188,7 @@ class SiteStudioRequestBuilder {
     $out[] = '## Brand & style';
     $out[] = '- **Colors:** ' . $val($br['colors'] ?? NULL);
     $out[] = '- **Style preferences:** ' . $val($br['style_preferences'] ?? NULL);
-    $out[] = '- **Reference sites:** ' . ($br['reference_sites'] ? implode(', ', $br['reference_sites']) : '_none provided_');
+    $out[] = '- **Reference sites:** ' . (!empty($br['reference_sites']) ? implode(', ', $br['reference_sites']) : '_none provided_');
     $out[] = '';
     $out[] = '## Domain';
     $out[] = '- **Existing domain:** ' . $val($d['existing_domain'] ?? NULL);
