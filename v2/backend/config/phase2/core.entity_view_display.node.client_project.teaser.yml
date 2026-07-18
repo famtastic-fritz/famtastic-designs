@@ -1,0 +1,42 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.client_project.field_budget
+    - field.field.node.client_project.field_client_name
+    - field.field.node.client_project.field_due_date
+    - field.field.node.client_project.field_notes
+    - field.field.node.client_project.field_project_status
+    - node.type.client_project
+  module:
+    - options
+    - user
+id: node.client_project.teaser
+targetEntityType: node
+bundle: client_project
+mode: teaser
+content:
+  field_client_name:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_project_status:
+    type: list_default
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  field_budget: true
+  field_due_date: true
+  field_notes: true
+  langcode: true

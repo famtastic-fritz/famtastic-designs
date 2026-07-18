@@ -1,0 +1,993 @@
+/**
+ * @file
+ * FAMtastic Admin — global brand stylesheet.
+ *
+ * A premium dark admin experience layered on top of Claro: near-black
+ * surfaces, subtle borders, and a single lime accent for interactive
+ * affordances. This file is attached through the "global-styling" library
+ * (theme CSS group, weight 50), so it wins the cascade over Claro's
+ * global-styling and over all module-provided CSS (toolbar, admin_toolbar,
+ * dropbutton, views, …), which is aggregated in earlier groups.
+ */
+
+/* ---------------------------------------------------------------------------
+ * 1. Design tokens
+ * ------------------------------------------------------------------------ */
+
+:root {
+  /* FAMtastic brand palette. */
+  --fam-bg: #0a0a0a;
+  --fam-surface: #141414;
+  --fam-surface-raised: #1c1c1c;
+  --fam-border: #2a2a2a;
+  --fam-lime: #7CFC00;
+  --fam-lime-hover: #a4ff4d;
+  --fam-lime-press: #64d600;
+  --fam-lime-soft: rgba(124, 252, 0, 0.12);
+  --fam-text: #ffffff;
+  --fam-text-muted: #888888;
+  --fam-danger: #ff5c5c;
+  --fam-warning: #ffc94d;
+  --fam-focus-ring: 0 0 0 1px var(--fam-lime), 0 0 0 4px rgba(124, 252, 0, 0.18);
+
+  /* Claro custom-property overrides. Each override is harmless if the
+     installed core version does not define the property. */
+  --color--text: var(--fam-text);
+  /* NB: Claro uses --color--absolute-white mostly for SURFACES (toolbar tray,
+     exposed-filter blocks, tables) — map it to the dark surface, not to the
+     (white) text token, or those panels render as light slabs. */
+  --color--absolute-white: var(--fam-surface);
+  --color--primary: var(--fam-lime);
+  --color--link: var(--fam-lime);
+
+  /* Defensive Gin overrides — no-ops while Gin is not installed, but they
+     keep the brand intact if the site ever experiments with it. */
+  --gin-bg-app: var(--fam-bg);
+  --gin-bg-layer: var(--fam-surface);
+  --gin-bg-layer2: var(--fam-surface-raised);
+  --gin-border-color: var(--fam-border);
+  --gin-color-text: var(--fam-text);
+  --gin-color-primary: var(--fam-lime);
+  --gin-color-primary-hover: var(--fam-lime-hover);
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Base page surfaces
+ * ------------------------------------------------------------------------ */
+
+body {
+  background-color: var(--fam-bg);
+  color: var(--fam-text);
+}
+
+::selection {
+  background-color: rgba(124, 252, 0, 0.28);
+  color: var(--fam-text);
+}
+
+.layout-container,
+.content-header,
+.region-header,
+.region-pre-content,
+.region-content {
+  background-color: transparent;
+  color: var(--fam-text);
+}
+
+h1, h2, h3, h4,
+.page-title,
+.heading-a, .heading-b, .heading-c {
+  color: var(--fam-text);
+}
+
+/* Admin links default to the lime accent so Claro's blue never appears on
+   dark surfaces. Buttons and menus re-declare their own colors below. */
+a {
+  color: var(--fam-lime);
+}
+
+a:hover,
+a:focus {
+  color: var(--fam-lime-hover);
+}
+
+a:focus-visible,
+.button:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+.tabs__link:focus-visible {
+  outline: 2px solid var(--fam-lime);
+  outline-offset: 1px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Toolbar (core toolbar module: bar, tabs, tray, orientation toggle)
+ * ------------------------------------------------------------------------ */
+
+#toolbar-bar,
+.toolbar .toolbar-bar {
+  background-color: var(--fam-surface);
+  border-bottom: 1px solid var(--fam-border);
+  box-shadow: none;
+}
+
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item {
+  color: var(--fam-text-muted);
+  background-image: none;
+}
+
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:hover,
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:focus {
+  color: var(--fam-lime);
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active {
+  color: var(--fam-lime);
+  background-color: var(--fam-bg);
+  background-image: none;
+  box-shadow: inset 0 -3px 0 0 var(--fam-lime);
+}
+
+/* Toolbar icons are monochrome sprites rendered via ::before; recoloring the
+   source assets is out of scope, so hover/focus/active states tint them with
+   a filter approximating --fam-lime, alongside the label color change. */
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:hover::before,
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item:focus::before,
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active::before,
+.toolbar .toolbar-tray a.toolbar-icon:hover::before,
+.toolbar .toolbar-tray a.toolbar-icon:focus::before {
+  filter: brightness(0) saturate(100%) invert(84%) sepia(64%) saturate(1722%) hue-rotate(48deg) brightness(104%) contrast(101%);
+}
+
+/* Tray. */
+.toolbar .toolbar-tray {
+  background-color: var(--fam-surface);
+  border-bottom: 1px solid var(--fam-border);
+}
+
+.toolbar .toolbar-tray .toolbar-lining {
+  background-color: var(--fam-surface);
+  background-image: none;
+}
+
+.toolbar .toolbar-tray-vertical {
+  border-right: 1px solid var(--fam-border);
+}
+
+.toolbar .toolbar-tray-horizontal .toolbar-menu .menu-item + .menu-item {
+  border-left: 1px solid var(--fam-border);
+}
+
+.toolbar .toolbar-tray-vertical .toolbar-menu .menu-item + .menu-item {
+  border-top: 1px solid var(--fam-border);
+}
+
+.toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu {
+  background-color: transparent;
+}
+
+.toolbar .toolbar-tray .toolbar-menu a {
+  color: var(--fam-text);
+}
+
+.toolbar .toolbar-tray .toolbar-menu a:hover,
+.toolbar .toolbar-tray .toolbar-menu a:focus {
+  color: var(--fam-lime);
+  background-color: var(--fam-surface-raised);
+  background-image: none;
+  text-decoration: none;
+}
+
+/* Orientation toggle. */
+.toolbar .toolbar-tray .toolbar-toggle-orientation {
+  background-color: var(--fam-surface);
+  border-left: 1px solid var(--fam-border);
+}
+
+.toolbar .toolbar-toggle-orientation button {
+  background-color: transparent;
+  color: var(--fam-text-muted);
+}
+
+.toolbar .toolbar-toggle-orientation button:hover,
+.toolbar .toolbar-toggle-orientation button:focus {
+  background-color: var(--fam-lime-soft);
+  box-shadow: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. admin_toolbar dropdowns (flyout menus on the horizontal tray)
+ * ------------------------------------------------------------------------ */
+
+.toolbar .toolbar-tray-horizontal .toolbar-menu .toolbar-menu {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  border-top: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65);
+}
+
+.toolbar .toolbar-tray-horizontal .toolbar-menu .toolbar-menu .menu-item + .menu-item {
+  border-top: 1px solid var(--fam-border);
+}
+
+.toolbar .toolbar-tray-horizontal .toolbar-menu .toolbar-menu a {
+  color: var(--fam-text);
+  background-color: transparent;
+}
+
+.toolbar .toolbar-tray-horizontal .toolbar-menu .toolbar-menu a:hover,
+.toolbar .toolbar-tray-horizontal .toolbar-menu .toolbar-menu a:focus {
+  color: var(--fam-lime);
+  background-color: var(--fam-surface-raised);
+  background-image: none;
+}
+
+/* Caret arrows inside dropdowns. */
+.toolbar .toolbar-tray-horizontal .toolbar-menu .menu-item--expanded > a::after,
+.toolbar .toolbar-tray-horizontal .toolbar-menu .menu-item--expanded > span::after {
+  border-left-color: var(--fam-text-muted);
+}
+
+.toolbar .toolbar-tray-horizontal .toolbar-menu .menu-item--expanded > a:hover::after {
+  border-left-color: var(--fam-lime);
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Buttons, action links, dropbuttons
+ * ------------------------------------------------------------------------ */
+
+.button,
+button.button,
+a.button {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  border-radius: 4px;
+  color: var(--fam-text);
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.button:hover,
+.button:focus {
+  background-color: var(--fam-surface-raised);
+  border-color: var(--fam-lime);
+  color: var(--fam-lime);
+  box-shadow: none;
+}
+
+.button:active {
+  background-color: var(--fam-bg);
+  border-color: var(--fam-lime);
+  color: var(--fam-lime);
+}
+
+/* Primary action: lime fill, dark text. */
+.button--primary,
+a.button--primary {
+  background-color: var(--fam-lime);
+  border-color: var(--fam-lime);
+  color: var(--fam-bg);
+  font-weight: 600;
+}
+
+.button--primary:hover,
+.button--primary:focus,
+a.button--primary:hover,
+a.button--primary:focus {
+  background-color: var(--fam-lime-hover);
+  border-color: var(--fam-lime-hover);
+  color: var(--fam-bg);
+  box-shadow: none;
+}
+
+.button--primary:focus-visible {
+  box-shadow: 0 0 0 2px var(--fam-bg), 0 0 0 5px var(--fam-lime);
+}
+
+.button--primary:active,
+a.button--primary:active {
+  background-color: var(--fam-lime-press);
+  border-color: var(--fam-lime-press);
+  color: var(--fam-bg);
+}
+
+/* Destructive action stays red, outlined rather than filled. */
+.button--danger {
+  background-color: transparent;
+  border-color: var(--fam-danger);
+  color: var(--fam-danger);
+  text-shadow: none;
+}
+
+.button--danger:hover,
+.button--danger:focus {
+  background-color: rgba(255, 92, 92, 0.12);
+  border-color: var(--fam-danger);
+  color: #ff8a8a;
+  box-shadow: none;
+}
+
+/* Action links ("Add content", "Add view", …). */
+.action-links .button,
+.action-links .button-action {
+  background-color: var(--fam-lime-soft);
+  border-color: var(--fam-lime);
+  color: var(--fam-lime);
+  box-shadow: none;
+}
+
+.action-links .button:hover,
+.action-links .button:focus,
+.action-links .button-action:hover,
+.action-links .button-action:focus {
+  background-color: var(--fam-lime);
+  border-color: var(--fam-lime);
+  color: var(--fam-bg);
+}
+
+/* Dropbuttons ("Operations" column widgets). */
+.dropbutton-widget {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  border-radius: 4px;
+  text-shadow: none;
+}
+
+.dropbutton-single .dropbutton-action a,
+.dropbutton-multiple .dropbutton-action a,
+.dropbutton-multiple .dropbutton-action .button {
+  color: var(--fam-text);
+  text-shadow: none;
+}
+
+.dropbutton-action a:hover,
+.dropbutton-action a:focus {
+  color: var(--fam-lime);
+}
+
+.dropbutton-multiple.open .dropbutton-widget {
+  background-color: var(--fam-surface-raised);
+  border-color: var(--fam-border);
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Form elements
+ * ------------------------------------------------------------------------ */
+
+label,
+.form-item label,
+.form-item__label,
+.fieldset__label {
+  color: var(--fam-text);
+}
+
+.form-item__description,
+.form-item .description,
+.description {
+  color: var(--fam-text-muted);
+}
+
+.form-required::after {
+  color: var(--fam-lime);
+}
+
+input.form-element,
+textarea.form-element,
+select.form-element {
+  background-color: var(--fam-bg);
+  border: 1px solid var(--fam-border);
+  border-radius: 4px;
+  color: var(--fam-text);
+  box-shadow: none;
+}
+
+input.form-element:hover,
+textarea.form-element:hover,
+select.form-element:hover {
+  border-color: #3f3f3f;
+}
+
+input.form-element:focus,
+textarea.form-element:focus,
+select.form-element:focus {
+  border-color: var(--fam-lime);
+  outline: none;
+  box-shadow: var(--fam-focus-ring);
+}
+
+.form-element::placeholder {
+  color: var(--fam-text-muted);
+  opacity: 1;
+}
+
+input.form-element:disabled,
+textarea.form-element:disabled,
+select.form-element:disabled {
+  background-color: var(--fam-surface);
+  border-color: var(--fam-border);
+  color: var(--fam-text-muted);
+}
+
+/* Checkboxes & radios (Claro renders these as .form-boolean; .form-checkbox /
+   .form-radio covered for stable9-style markup). */
+input.form-checkbox,
+input.form-radio,
+.form-boolean {
+  background-color: var(--fam-bg);
+  border: 1px solid var(--fam-border);
+  accent-color: var(--fam-lime);
+}
+
+input.form-checkbox:hover,
+input.form-radio:hover,
+.form-boolean:hover {
+  border-color: var(--fam-lime);
+}
+
+input.form-checkbox:checked,
+input.form-radio:checked,
+.form-boolean:checked,
+.form-boolean--type-checkbox:checked,
+.form-boolean--type-radio:checked {
+  background-color: var(--fam-bg);
+  border-color: var(--fam-lime);
+}
+
+.form-boolean:focus,
+.form-boolean--type-checkbox:focus,
+.form-boolean--type-radio:focus {
+  box-shadow: var(--fam-focus-ring);
+}
+
+/* Fieldsets. */
+fieldset,
+.fieldset {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  border-radius: 4px;
+}
+
+fieldset legend,
+.fieldset__legend {
+  color: var(--fam-text);
+}
+
+/* Details / collapsible containers (Claro details component). */
+.claro-details {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.claro-details__summary {
+  color: var(--fam-text);
+  background-color: transparent;
+  text-shadow: none;
+}
+
+.claro-details__summary:hover,
+.claro-details__summary:focus {
+  color: var(--fam-lime);
+  background-color: var(--fam-surface-raised);
+}
+
+/* Replace Claro's light-background chevron asset with a CSS triangle. */
+.claro-details__summary::before {
+  background-image: none;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid var(--fam-lime);
+}
+
+.claro-details[open] > .claro-details__summary::before {
+  transform: rotate(90deg);
+}
+
+.claro-details__description {
+  color: var(--fam-text-muted);
+}
+
+.claro-details__wrapper {
+  border-top-color: var(--fam-border);
+}
+
+/* Vertical tabs. */
+.vertical-tabs {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+}
+
+.vertical-tabs__menu {
+  background-color: var(--fam-bg);
+  border-color: var(--fam-border);
+}
+
+.vertical-tabs__menu-item {
+  background-color: var(--fam-surface);
+  border-color: var(--fam-border);
+}
+
+.vertical-tabs__menu-item a {
+  color: var(--fam-text);
+}
+
+.vertical-tabs__menu-item-title {
+  color: var(--fam-text);
+}
+
+.vertical-tabs__menu-item-summary {
+  color: var(--fam-text-muted);
+}
+
+.vertical-tabs__menu-item.is-selected {
+  background-color: var(--fam-surface-raised);
+  border-left-color: var(--fam-lime);
+}
+
+.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-item-title,
+.vertical-tabs__menu-item.is-selected a {
+  color: var(--fam-lime);
+}
+
+/* Node add/edit form sidebar and footer. */
+.layout-region-node-secondary,
+.entity-meta {
+  background-color: var(--fam-surface);
+  border-color: var(--fam-border);
+}
+
+.entity-meta .entity-meta__header {
+  border-bottom-color: var(--fam-border);
+}
+
+.layout-region-node-footer {
+  background-color: var(--fam-surface);
+  border-top: 1px solid var(--fam-border);
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Tables
+ * ------------------------------------------------------------------------ */
+
+table {
+  background-color: var(--fam-surface);
+  color: var(--fam-text);
+}
+
+table caption {
+  color: var(--fam-text-muted);
+}
+
+thead th {
+  background-color: var(--fam-bg);
+  border-bottom: 2px solid var(--fam-border);
+  color: var(--fam-text);
+}
+
+thead th.is-active {
+  background-color: #161616;
+  color: var(--fam-lime);
+}
+
+tbody tr {
+  background-color: var(--fam-surface);
+  border-bottom: 1px solid var(--fam-border);
+}
+
+tbody tr:nth-child(odd) {
+  background-color: var(--fam-surface);
+}
+
+tbody tr:hover {
+  background-color: #1a1a1a;
+}
+
+th,
+td {
+  color: var(--fam-text);
+}
+
+td.is-active {
+  background-color: #1a1a1a;
+}
+
+table a {
+  color: var(--fam-lime);
+}
+
+/* Status report rows. */
+.system-status-report__entry {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  color: var(--fam-text);
+}
+
+/* Batch / update progress bar. */
+.progress__track {
+  background-color: var(--fam-surface);
+  border-color: var(--fam-border);
+}
+
+.progress__bar {
+  background-color: var(--fam-lime);
+}
+
+.progress__label,
+.progress__percentage {
+  color: var(--fam-text);
+}
+
+/* ---------------------------------------------------------------------------
+ * 8. Local tasks (primary/secondary tabs)
+ * ------------------------------------------------------------------------ */
+
+.tabs {
+  border-bottom: 1px solid var(--fam-border);
+}
+
+.tabs__tab {
+  background-color: var(--fam-surface);
+  border-color: var(--fam-border);
+}
+
+.tabs__tab:hover {
+  background-color: var(--fam-surface-raised);
+  border-top-color: var(--fam-lime);
+}
+
+.tabs__link {
+  color: var(--fam-text-muted);
+}
+
+.tabs__link:hover,
+.tabs__link:focus {
+  color: var(--fam-lime);
+  background-color: transparent;
+}
+
+.tabs__tab.is-active {
+  background-color: var(--fam-bg);
+  border-top-color: var(--fam-lime);
+  border-bottom-color: var(--fam-bg);
+}
+
+.tabs__tab.is-active .tabs__link,
+.tabs__link.is-active {
+  color: var(--fam-lime);
+}
+
+.tabs__trigger {
+  background-color: var(--fam-surface);
+  border-color: var(--fam-border);
+  color: var(--fam-text-muted);
+}
+
+/* Secondary tabs render as pills. */
+.tabs.secondary .tabs__tab {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.tabs.secondary .tabs__link:hover,
+.tabs.secondary .tabs__link:focus {
+  color: var(--fam-lime);
+}
+
+.tabs.secondary .is-active .tabs__link,
+.tabs.secondary .tabs__link.is-active {
+  background-color: var(--fam-lime);
+  color: var(--fam-bg);
+}
+
+/* ---------------------------------------------------------------------------
+ * 9. Breadcrumbs
+ * ------------------------------------------------------------------------ */
+
+.breadcrumb,
+.breadcrumb ol {
+  background-color: transparent;
+  color: var(--fam-text-muted);
+}
+
+.breadcrumb a {
+  color: var(--fam-text-muted);
+}
+
+.breadcrumb a:hover,
+.breadcrumb a:focus {
+  color: var(--fam-lime);
+}
+
+.breadcrumb li + li::before,
+.breadcrumb__item + .breadcrumb__item::before {
+  color: var(--fam-text-muted);
+}
+
+/* ---------------------------------------------------------------------------
+ * 10. Messages (status / warning / error)
+ * ------------------------------------------------------------------------ */
+
+.messages {
+  background-color: var(--fam-surface);
+  background-image: none;
+  border: 1px solid var(--fam-border);
+  border-left-width: 6px;
+  border-radius: 4px;
+  color: var(--fam-text);
+  box-shadow: none;
+}
+
+.messages--status {
+  background-color: rgba(124, 252, 0, 0.07);
+  border-color: var(--fam-border);
+  border-left-color: var(--fam-lime);
+  color: var(--fam-text);
+}
+
+.messages--warning {
+  background-color: rgba(255, 201, 77, 0.07);
+  border-color: var(--fam-border);
+  border-left-color: var(--fam-warning);
+  color: var(--fam-text);
+}
+
+.messages--error {
+  background-color: rgba(255, 92, 92, 0.08);
+  border-color: var(--fam-border);
+  border-left-color: var(--fam-danger);
+  color: var(--fam-text);
+}
+
+.messages a {
+  color: var(--fam-lime);
+  font-weight: 600;
+}
+
+.messages--error a {
+  color: #ff8a8a;
+}
+
+/* ---------------------------------------------------------------------------
+ * 11. Dialogs, modals and the off-canvas tray
+ * ------------------------------------------------------------------------ */
+
+.ui-dialog,
+.ui-widget-content {
+  background-color: var(--fam-surface);
+  border-color: var(--fam-border);
+  color: var(--fam-text);
+}
+
+.ui-dialog .ui-dialog-titlebar {
+  background-color: var(--fam-bg);
+  border-color: var(--fam-border);
+  color: var(--fam-text);
+}
+
+.ui-dialog .ui-dialog-title {
+  color: var(--fam-text);
+}
+
+#drupal-off-canvas,
+#drupal-off-canvas-wrapper {
+  background-color: var(--fam-surface);
+  color: var(--fam-text);
+}
+
+/* ---------------------------------------------------------------------------
+ * 12. Subtle premium polish
+ * ------------------------------------------------------------------------ */
+
+/* Slim, brand-tinted scrollbars for tray and modal scroll regions. */
+.toolbar-tray::-webkit-scrollbar,
+.ui-dialog::-webkit-scrollbar,
+#drupal-off-canvas::-webkit-scrollbar {
+  width: 10px;
+}
+
+.toolbar-tray::-webkit-scrollbar-thumb,
+.ui-dialog::-webkit-scrollbar-thumb,
+#drupal-off-canvas::-webkit-scrollbar-thumb {
+  background-color: var(--fam-border);
+  border-radius: 5px;
+}
+
+.toolbar-tray::-webkit-scrollbar-thumb:hover,
+.ui-dialog::-webkit-scrollbar-thumb:hover,
+#drupal-off-canvas::-webkit-scrollbar-thumb:hover {
+  background-color: var(--fam-lime);
+}
+
+.toolbar-tray::-webkit-scrollbar-track,
+.ui-dialog::-webkit-scrollbar-track,
+#drupal-off-canvas::-webkit-scrollbar-track {
+  background-color: var(--fam-bg);
+}
+
+/* ---------------------------------------------------------------------------
+ * 13. Toolbar hardcoded-color overrides (higher-specificity)
+ *
+ * core/modules/toolbar/css/toolbar.theme.css + toolbar.menu.css hardcode
+ * light colors (#fff/#f5f5f5/#eee…) on the SAME selectors used above. Within
+ * an aggregate, source order can put those rules after ours, so these
+ * body-prefixed duplicates win on specificity regardless of order.
+ * ------------------------------------------------------------------------ */
+
+body .toolbar .toolbar-tray,
+body .toolbar .toolbar-tray-horizontal .toolbar-tray,
+body .toolbar .toolbar-menu {
+  background-color: var(--fam-surface);
+  color: var(--fam-text);
+}
+
+body .toolbar .toolbar-tray-vertical .toolbar-lining {
+  background-color: var(--fam-surface);
+  border-right-color: var(--fam-border);
+}
+
+body .toolbar .toolbar-tray-horizontal .toolbar-lining {
+  background-color: var(--fam-surface);
+}
+
+/* Active-trail menu items hardcode #f5f5f5. */
+body .toolbar .toolbar-tray .menu-item--active-trail > .toolbar-box a,
+body .toolbar .toolbar-tray a.is-active {
+  background-color: var(--fam-surface-raised);
+  color: var(--fam-lime);
+}
+
+/* Nested flyout levels hardcode a light gradient (#fafafa → #ddd). */
+body .toolbar .level-2 > ul,
+body .toolbar .level-3 > ul,
+body .toolbar .level-4 > ul,
+body .toolbar .level-5 > ul,
+body .toolbar .level-6 > ul,
+body .toolbar .level-7 > ul,
+body .toolbar .level-8 > ul,
+body .toolbar .level-9 > ul,
+body .toolbar .level-10 > ul {
+  background-color: var(--fam-surface);
+}
+
+/* Menu item text/borders inside the vertical tray. */
+body .toolbar .toolbar-tray-vertical .toolbar-menu .menu-item {
+  border-top-color: var(--fam-border);
+}
+
+body .toolbar .toolbar-tray .toolbar-menu a {
+  color: var(--fam-text);
+}
+
+body .toolbar .toolbar-tray .toolbar-menu a:hover,
+body .toolbar .toolbar-tray .toolbar-menu a:focus {
+  color: var(--fam-lime);
+  background-color: var(--fam-surface-raised);
+}
+
+/* ---------------------------------------------------------------------------
+ * 14. Navigation module sidebar (Drupal 11.1+ core "navigation")
+ *
+ * Drupal 11.1 replaced the classic toolbar with the Navigation module's
+ * <aside id="admin-toolbar">. It is token-driven:
+ *   --admin-toolbar-color-white    → sidebar backgrounds (NOT text)
+ *   --admin-toolbar-color-gray-990 → text color
+ *   --admin-toolbar-color-gray-100 → borders/dividers
+ * Verified against core/modules/navigation/css — safe to flip.
+ * ------------------------------------------------------------------------ */
+
+:root {
+  --admin-toolbar-color-white: var(--fam-surface);
+  --admin-toolbar-color-gray-990: var(--fam-text);
+  --admin-toolbar-color-gray-100: var(--fam-border);
+  --admin-toolbar-color-shadow-15: rgba(0, 0, 0, 0.5);
+}
+
+body .admin-toolbar,
+body #admin-toolbar {
+  background-color: var(--fam-surface);
+  color: var(--fam-text);
+  border-right-color: var(--fam-border);
+}
+
+body .admin-toolbar__scroll-wrapper,
+body .admin-toolbar__content {
+  background-color: var(--fam-surface);
+}
+
+body .admin-toolbar .toolbar-block,
+body .admin-toolbar .toolbar-block__list,
+body .admin-toolbar .toolbar-block__list-item {
+  background-color: transparent;
+  color: var(--fam-text);
+}
+
+body .admin-toolbar .toolbar-button {
+  color: var(--fam-text);
+  background-color: transparent;
+}
+
+body .admin-toolbar .toolbar-button:hover,
+body .admin-toolbar .toolbar-button:focus,
+body .admin-toolbar .toolbar-button:focus-visible {
+  color: var(--fam-lime);
+  background-color: var(--fam-surface-raised);
+  box-shadow: none;
+}
+
+/* Active / current-trail sidebar items get the lime treatment. */
+body .admin-toolbar .toolbar-block__list-item.is-active > .toolbar-button,
+body .admin-toolbar .toolbar-button[aria-current="page"],
+body .admin-toolbar .toolbar-button[aria-expanded="true"] {
+  color: var(--fam-lime);
+  background-color: var(--fam-surface-raised);
+}
+
+/* Popover / flyout panels from the sidebar. */
+body .toolbar-popover__wrapper,
+body .toolbar-popover__header {
+  background-color: var(--fam-surface);
+  color: var(--fam-text);
+  border-color: var(--fam-border);
+}
+
+body .toolbar-popover a:hover,
+body .toolbar-popover a:focus {
+  color: var(--fam-lime);
+}
+
+/* Sidebar control bar ("Collapse" toggle) and divider lines. */
+body .admin-toolbar-control-bar,
+body .admin-toolbar .toolbar-block + .toolbar-block {
+  background-color: var(--fam-surface);
+  border-color: var(--fam-border);
+}
+
+/* ---------------------------------------------------------------------------
+ * 15. Residual hardcoded lights (admin_toolbar + Claro views)
+ * ------------------------------------------------------------------------ */
+
+:root {
+  /* Claro's --color-white drives light surfaces (e.g. views-exposed-form).
+     Flipped to the dark surface; button text stays handled by section 5. */
+  --color-white: var(--fam-surface);
+}
+
+/* admin_toolbar/css/admin.toolbar.css hardcodes #f5f5f2 / #fff on expanded
+   horizontal-tray parents and their flyout panels. */
+body .toolbar-tray-horizontal .menu-item--expanded {
+  background-color: var(--fam-surface-raised);
+}
+
+body .toolbar-tray-horizontal .menu-item--expanded .menu {
+  background: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+}
+
+body .toolbar-tray-horizontal .menu-item--expanded > a {
+  color: var(--fam-text);
+}
+
+body .toolbar-tray-horizontal .menu-item--expanded > a:hover,
+body .toolbar-tray-horizontal .menu-item--expanded > a:focus {
+  color: var(--fam-lime);
+}
+
+/* Views exposed filters (admin/content, admin/people, …). */
+body .views-exposed-form,
+body .views-exposed-form.views-exposed-form {
+  background-color: var(--fam-surface);
+  color: var(--fam-text);
+  border: 1px solid var(--fam-border);
+  border-radius: 4px;
+}
+
+body .views-exposed-form .form-item label {
+  color: var(--fam-text);
+}

@@ -1,0 +1,69 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.client_project.field_budget
+    - field.field.node.client_project.field_client_name
+    - field.field.node.client_project.field_due_date
+    - field.field.node.client_project.field_notes
+    - field.field.node.client_project.field_project_status
+    - node.type.client_project
+  module:
+    - datetime
+    - options
+    - text
+    - user
+id: node.client_project.default
+targetEntityType: node
+bundle: client_project
+mode: default
+content:
+  field_budget:
+    type: number_decimal
+    label: above
+    settings:
+      thousand_separator: ','
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_client_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_due_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_notes:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_project_status:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+hidden:
+  langcode: true

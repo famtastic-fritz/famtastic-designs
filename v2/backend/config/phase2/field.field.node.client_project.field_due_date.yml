@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_due_date
+    - node.type.client_project
+  module:
+    - datetime
+id: node.client_project.field_due_date
+field_name: field_due_date
+entity_type: node
+bundle: client_project
+label: 'Due Date'
+description: 'Target delivery date for the project.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

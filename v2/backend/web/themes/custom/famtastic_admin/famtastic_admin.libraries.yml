@@ -1,0 +1,12 @@
+# FAMtastic Admin — global brand styling.
+#
+# Loaded in the "theme" CSS group with a high weight so it is aggregated
+# AFTER Claro's own global-styling library, and after every module-provided
+# stylesheet (toolbar, admin_toolbar, dropbutton, views UI, …), which live
+# in the earlier "layout"/"component"/"state" groups. Equal-specificity
+# selectors therefore always resolve in our favour.
+global-styling:
+  version: 1.0.0
+  css:
+    theme:
+      css/famtastic-admin.css: { weight: 50 }

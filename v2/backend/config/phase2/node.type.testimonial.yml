@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies: {  }
+name: Testimonial
+type: testimonial
+description: 'Use <em>testimonials</em> to capture client quotes and ratings, optionally linked to a client project.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false
