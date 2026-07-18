@@ -23,6 +23,9 @@ fi
 
 echo "==> [2/7] Installing Drupal 11 (standard profile)"
 DB_URL="${DB_URL:-sqlite://sites/default/files/.ht.sqlite}"
+# Git can't track empty dirs; ensure the SQLite/public-files dir and the
+# out-of-docroot private dir exist before install (a fresh checkout lacks them).
+mkdir -p web/sites/default/files private
 if ${DRUSH} status --field=bootstrap 2>/dev/null | grep -q "Successful"; then
   echo "    Drupal already installed — skipping site:install."
 else
