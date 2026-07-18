@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * FAMtastic Pipeline module hooks.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_help().
+ */
+function famtastic_pipeline_help(string $route_name): ?string {
+  if ($route_name === 'help.page.famtastic_pipeline') {
+    return '<p>' . t('Prospect → confirm → pay ($199 test) → intake → Site Studio request → project/approval pipeline. See docs/FAMTASTIC_PROSPECT_PIPELINE_V1.md.') . '</p>';
+  }
+  return NULL;
+}

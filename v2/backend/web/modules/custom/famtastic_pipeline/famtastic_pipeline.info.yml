@@ -1,0 +1,9 @@
+name: FAMtastic Pipeline
+type: module
+description: 'Prospect → confirm → pay ($199 test) → intake → Site Studio request → project/approval pipeline for FAMtastic Designs. Bounded local proof (V1).'
+package: FAMtastic
+core_version_requirement: ^11
+dependencies:
+  - drupal:system
+  - drupal:user
+  - drupal:file

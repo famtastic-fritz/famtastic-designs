@@ -1,0 +1,4 @@
+administer famtastic pipeline:
+  title: 'Administer FAMtastic pipeline'
+  description: 'Create and manage prospects, orders, intakes, and projects.'
+  restrict access: true

@@ -1,0 +1,19 @@
+# Non-secret pipeline configuration.
+# Secrets (STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SMTP_*) are read from
+# environment variables via settings, NEVER stored here.
+token_ttl_days: 14
+frontend_base_url: 'http://localhost:5173'
+support_from_email: 'support@famtasticdesigns.com'
+package:
+  id: basic_199
+  name: 'FAMtastic Basic Website'
+  tagline: 'A professional, mobile-ready website built for your business — launched fast.'
+  amount: 19900
+  currency: usd
+  inclusions:
+    - 'Custom mobile-responsive website (core pages)'
+    - 'Your business info, services, and contact details'
+    - 'Contact / lead capture form'
+    - 'Basic SEO foundation'
+    - 'One included revision'
+    - 'Launch support'

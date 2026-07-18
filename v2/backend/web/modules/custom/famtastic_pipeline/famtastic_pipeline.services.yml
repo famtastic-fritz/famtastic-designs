@@ -1,0 +1,46 @@
+services:
+  logger.channel.famtastic_pipeline:
+    parent: logger.channel_base
+    arguments: ['famtastic_pipeline']
+
+  famtastic_pipeline.token_manager:
+    class: Drupal\famtastic_pipeline\Service\TokenManager
+    arguments: ['@config.factory', '@datetime.time']
+
+  famtastic_pipeline.repository:
+    class: Drupal\famtastic_pipeline\Service\PipelineRepository
+    arguments: ['@entity_type.manager', '@famtastic_pipeline.token_manager', '@datetime.time']
+
+  famtastic_pipeline.stripe_gateway:
+    class: Drupal\famtastic_pipeline\Service\StripeGateway
+    arguments: ['@http_client', '@logger.channel.famtastic_pipeline']
+
+  famtastic_pipeline.stub_gateway:
+    class: Drupal\famtastic_pipeline\Service\StubGateway
+
+  famtastic_pipeline.gateway_manager:
+    class: Drupal\famtastic_pipeline\Service\PaymentGatewayManager
+    arguments: ['@famtastic_pipeline.stripe_gateway', '@famtastic_pipeline.stub_gateway']
+
+  famtastic_pipeline.webhook_verifier:
+    class: Drupal\famtastic_pipeline\Service\WebhookVerifier
+
+  famtastic_pipeline.fulfillment:
+    class: Drupal\famtastic_pipeline\Service\FulfillmentService
+    arguments: ['@entity_type.manager', '@datetime.time', '@logger.channel.famtastic_pipeline']
+
+  famtastic_pipeline.studio_builder:
+    class: Drupal\famtastic_pipeline\Service\SiteStudioRequestBuilder
+    arguments: ['@config.factory']
+
+  famtastic_pipeline.studio_adapter:
+    class: Drupal\famtastic_pipeline\Service\FileExportAdapter
+    arguments: ['@file_system', '@logger.channel.famtastic_pipeline']
+
+  famtastic_pipeline.studio_generator:
+    class: Drupal\famtastic_pipeline\Service\StudioRequestGenerator
+    arguments: ['@famtastic_pipeline.repository', '@famtastic_pipeline.studio_builder', '@famtastic_pipeline.studio_adapter', '@entity_type.manager']
+
+  famtastic_pipeline.mailer:
+    class: Drupal\famtastic_pipeline\Service\OutreachMailer
+    arguments: ['@config.factory', '@logger.channel.famtastic_pipeline']
