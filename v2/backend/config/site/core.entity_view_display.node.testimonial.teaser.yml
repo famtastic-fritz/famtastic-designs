@@ -1,0 +1,44 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.testimonial
+    - core.entity_view_mode.node.teaser
+    - field.field.node.testimonial.field_client_name
+    - field.field.node.testimonial.field_client_title
+    - field.field.node.testimonial.field_location
+    - field.field.node.testimonial.field_quote
+    - field.field.node.testimonial.field_related_service
+    - field.field.node.testimonial.field_related_case_study
+    - field.field.node.testimonial.field_photo
+    - field.field.node.testimonial.field_sort_order
+  module:
+    - image
+    - node
+    - text
+    - user
+id: node.testimonial.teaser
+targetEntityType: node
+bundle: testimonial
+mode: teaser
+content:
+  field_quote:
+    type: text_default
+    label: above
+    settings: {}
+    third_party_settings: {}
+    weight: 0
+    region: content
+  field_photo:
+    type: image
+    label: above
+    settings:
+      image_style: medium
+      image_link: content
+    third_party_settings: {}
+    weight: 1
+    region: content
+  links:
+    weight: 2
+    region: content
+hidden: {}

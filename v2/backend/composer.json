@@ -17,8 +17,14 @@
         "drupal/core-composer-scaffold": "^11",
         "drupal/core-project-message": "^11",
         "drupal/core-recommended": "^11",
+        "drupal/ctools": "^4.1",
         "drupal/jsonapi_extras": "^3.28",
+        "drupal/jsonapi_views": "^1.1",
+        "drupal/paragraphs": "^1.21",
+        "drupal/pathauto": "^1.15",
         "drupal/simple_oauth": "^6.0",
+        "drupal/token": "^1.17",
+        "drupal/webform": "^6.3",
         "drush/drush": "^13"
     },
     "conflict": {

@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - field.storage.paragraph.field_platform
+  - paragraphs.paragraphs_type.social_link
+  module:
+  - paragraphs
+id: paragraph.social_link.field_platform
+field_name: field_platform
+entity_type: paragraph
+bundle: social_link
+label: Platform
+description: ''
+required: true
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

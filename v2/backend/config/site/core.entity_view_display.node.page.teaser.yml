@@ -1,0 +1,37 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.page
+    - core.entity_view_mode.node.teaser
+    - field.field.node.page.body
+    - field.field.node.page.field_page_type
+    - field.field.node.page.field_hero_headline
+    - field.field.node.page.field_hero_subheadline
+    - field.field.node.page.field_cta_text
+    - field.field.node.page.field_cta_link
+    - field.field.node.page.field_sort_order
+    - field.field.node.page.field_meta_title
+    - field.field.node.page.field_meta_description
+  module:
+    - link
+    - options
+    - text
+    - user
+id: node.page.teaser
+targetEntityType: node
+bundle: page
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {}
+    weight: 0
+    region: content
+  links:
+    weight: 1
+    region: content
+hidden: {}

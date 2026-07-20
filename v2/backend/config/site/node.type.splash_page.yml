@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Splash Page'
+type: splash_page
+description: 'Standalone marketing or promotional splash pages with a manual URL alias and optional publish scheduling.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

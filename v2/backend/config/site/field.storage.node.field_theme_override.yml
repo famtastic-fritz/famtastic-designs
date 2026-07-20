@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - node
+  - options
+id: node.field_theme_override
+field_name: field_theme_override
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+  - value: default
+    label: Default
+  - value: tv_special
+    label: TV Special
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {}
+persist_with_no_fields: false
+custom_storage: false

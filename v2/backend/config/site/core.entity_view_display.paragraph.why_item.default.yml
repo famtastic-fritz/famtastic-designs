@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - field.field.paragraph.why_item.field_why_title
+  - field.field.paragraph.why_item.field_why_body
+  - paragraphs.paragraphs_type.why_item
+  module:
+  - text
+id: paragraph.why_item.default
+targetEntityType: paragraph
+bundle: why_item
+mode: default
+content:
+  field_why_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {}
+    weight: 0
+    region: content
+  field_why_body:
+    type: text_default
+    label: hidden
+    settings: {}
+    third_party_settings: {}
+    weight: 1
+    region: content
+hidden: {}

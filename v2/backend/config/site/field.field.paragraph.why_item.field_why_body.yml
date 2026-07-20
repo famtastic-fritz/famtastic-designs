@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - field.storage.paragraph.field_why_body
+  - paragraphs.paragraphs_type.why_item
+  module:
+  - paragraphs
+  - text
+id: paragraph.why_item.field_why_body
+field_name: field_why_body
+entity_type: paragraph
+bundle: why_item
+label: Why body
+description: ''
+required: true
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: text_long

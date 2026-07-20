@@ -1,0 +1,133 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.package_page
+    - field.field.node.package_page.field_price
+    - field.field.node.package_page.field_timeline
+    - field.field.node.package_page.field_hero_headline
+    - field.field.node.package_page.field_hero_subheadline
+    - field.field.node.package_page.field_whats_included
+    - field.field.node.package_page.field_best_for
+    - field.field.node.package_page.field_addons
+    - field.field.node.package_page.field_badge
+    - field.field.node.package_page.field_cta_text
+    - field.field.node.package_page.field_cta_link
+    - field.field.node.package_page.field_sort_order
+    - field.field.node.package_page.field_meta_title
+    - field.field.node.package_page.field_meta_description
+  module:
+    - entity_reference_revisions
+    - link
+    - options
+    - paragraphs
+    - text
+id: node.package_page.default
+targetEntityType: node
+bundle: package_page
+mode: default
+content:
+  field_price:
+    type: string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_timeline:
+    type: string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_hero_headline:
+    type: string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_hero_subheadline:
+    type: string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_whats_included:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_best_for:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_addons:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_badge:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_cta_text:
+    type: string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_cta_link:
+    type: link
+    label: above
+    settings:
+      trim_length: ''
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_sort_order:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_meta_title:
+    type: string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_meta_description:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 12
+    region: content
+  links:
+    weight: 13
+    region: content
+hidden: {  }
