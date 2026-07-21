@@ -91,7 +91,8 @@ foreach ($vocabularies as $vid => $names) {
 // 2. Main-menu links (weights in the listed order).
 // ---------------------------------------------------------------------------
 $menu_items = [
-  ['Home', 'internal:/'],
+  // NOTE: no 'Home' link here — core provides 'standard.front_page' in the
+  // main menu; adding another creates a duplicate (fixed 2026-07).
   ['Services', 'internal:/services'],
   ['Work', 'internal:/work'],
   ['Packages', 'internal:/packages'],

@@ -1,0 +1,56 @@
+/**
+ * @file
+ * Node preview styling for the headless FAMtastic backend.
+ *
+ * famtastic_admin is the site's default theme, so Drupal-side node renders
+ * ("View" tab) get dark, on-brand preview pages instead of a white/blue
+ * default look. Loaded via the theme's global-styling library.
+ */
+
+.node--view-mode-full {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.node__title,
+.node--view-mode-full h1 {
+  color: var(--fam-lime);
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.node__content {
+  color: #EAEAEA;
+  line-height: 1.6;
+}
+
+.node__content h2,
+.node__content h3 {
+  color: #FFFFFF;
+}
+
+.node__content a {
+  color: var(--fam-lime);
+}
+
+.node__content ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.node__content ul li::before {
+  content: "→ ";
+  color: var(--fam-lime);
+}
+
+.field__label {
+  color: var(--fam-lime);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.field__item {
+  color: #EAEAEA;
+}

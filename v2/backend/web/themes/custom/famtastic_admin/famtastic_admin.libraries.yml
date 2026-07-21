@@ -10,3 +10,5 @@ global-styling:
   css:
     theme:
       css/famtastic-admin.css: { weight: 50 }
+      # Dark node previews ("View" tab) for the headless setup.
+      css/node-preview.css: { weight: 51 }
