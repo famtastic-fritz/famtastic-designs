@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_faq_title
+    - node.type.service_page
+id: node.service_page.field_faq_title
+field_name: field_faq_title
+entity_type: node
+bundle: service_page
+label: 'FAQ Title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
