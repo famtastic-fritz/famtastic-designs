@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getNodesRaw } from '../api/drupal.js';
-import { nodeSlug, textValue } from '../utils/content.js';
+import { transformCaseStudyNode } from '../lib/drupalAdapter.js';
+import { Hero, Section, CTABanner, Stagger, Item } from '../components/v1/index.js';
 
 /**
- * /work — hub listing every case_study as a card grid.
+ * /work — hub listing every case_study as a v1 card grid (sky kicker for the
+ * project type, per the v1 work page).
  */
 export default function WorkHubPage() {
   const [studies, setStudies] = useState(null); // null = loading
@@ -12,7 +14,9 @@ export default function WorkHubPage() {
   useEffect(() => {
     let cancelled = false;
     getNodesRaw('case_study').then(({ data }) => {
-      if (!cancelled) setStudies(data);
+      if (!cancelled) {
+        setStudies(data.map((node) => transformCaseStudyNode(node)).filter(Boolean));
+      }
     });
     return () => {
       cancelled = true;
@@ -21,51 +25,48 @@ export default function WorkHubPage() {
 
   return (
     <>
-      <section className="hero">
-        <span className="hero__eyebrow">Case Studies</span>
-        <h1 className="hero__title">
-          Our <span className="accent">Work</span>
-        </h1>
-        <p className="hero__lede">
-          Real systems, real outcomes — a look at what we have engineered for our clients.
-        </p>
-      </section>
+      <Hero
+        eyebrow="Case Studies"
+        title="Our"
+        accent="work"
+        lede="Real systems, real outcomes — a look at what we have engineered for our clients."
+        primaryCta={{ label: 'Start your project', href: '/contact' }}
+      />
 
-      {studies === null && <div className="loading" role="status">Loading case studies…</div>}
+      <Section>
+        {studies === null && <div className="v1-loading" role="status">Loading case studies…</div>}
 
-      {studies !== null && studies.length === 0 && (
-        <div className="status">
-          <p>
+        {studies !== null && studies.length === 0 && (
+          <div className="v1-empty">
             <strong>Case studies are being written up.</strong>
             <br />
             We are documenting recent projects right now — meanwhile,{' '}
             <Link to="/contact">ask us for examples</Link> on a call.
-          </p>
-        </div>
-      )}
+          </div>
+        )}
 
-      {studies !== null && studies.length > 0 && (
-        <ul className="node-list">
-          {studies.map((node) => {
-            const attrs = node.attributes ?? {};
-            const summary =
-              textValue(attrs.field_subtitle) ||
-              textValue(attrs.field_summary) ||
-              textValue(attrs.body?.summary) ||
-              'See the challenge, the build, and the outcome.';
-            return (
-              <li key={node.id}>
-                <Link to={`/work/${nodeSlug(node)}`} className="node-card">
-                  <span className="node-card__type">Case Study</span>
-                  <h3 className="node-card__title">{attrs.title ?? 'Untitled project'}</h3>
-                  <p className="node-card__summary">{summary}</p>
-                  <span className="node-card__cta">Read the Story →</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+        {studies !== null && studies.length > 0 && (
+          <Stagger className="v1-grid v1-grid--3">
+            {studies.map((study) => (
+              <Item key={study.id}>
+                <article className="v1-card">
+                  <span className="v1-card__kicker">{study.projectType || 'Case Study'}</span>
+                  <h3 className="v1-card__title">{study.title}</h3>
+                  {study.summary && <p className="v1-card__text">{study.summary}</p>}
+                  <Link to={`/work/${study.slug}`} className="v1-card__cta">
+                    Read the Story →
+                  </Link>
+                </article>
+              </Item>
+            ))}
+          </Stagger>
+        )}
+      </Section>
+
+      <CTABanner
+        title="Need a project direction that matches your business?"
+        primaryCta={{ label: 'Book a Call', href: '/contact' }}
+      />
     </>
   );
 }

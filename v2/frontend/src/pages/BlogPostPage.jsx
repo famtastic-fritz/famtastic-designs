@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getNodesRaw } from '../api/drupal.js';
-import { matchBySlug, textValue } from '../utils/content.js';
+import { matchBySlug } from '../utils/content.js';
+import { transformBlogNode } from '../lib/drupalAdapter.js';
+import { Hero, Section, CTABanner, FadeUp } from '../components/v1/index.js';
 
 /**
- * /blog/:slug — single blog_post node: title, date, full body.
+ * /blog/:slug — single blog_post node: hero, date, full body.
  */
 export default function BlogPostPage() {
   const { slug } = useParams();
-  const [state, setState] = useState({ node: null, loading: true });
+  const [state, setState] = useState({ post: null, loading: true });
 
   useEffect(() => {
     let cancelled = false;
+    setState({ post: null, loading: true });
     getNodesRaw('blog_post').then(({ data }) => {
-      if (!cancelled) setState({ node: matchBySlug(data, slug), loading: false });
+      if (!cancelled) {
+        setState({ post: transformBlogNode(matchBySlug(data, slug)), loading: false });
+      }
     });
     return () => {
       cancelled = true;
@@ -21,49 +26,44 @@ export default function BlogPostPage() {
   }, [slug]);
 
   if (state.loading) {
-    return <div className="loading" role="status">Loading post…</div>;
+    return <div className="v1-loading" role="status">Loading post…</div>;
   }
 
-  if (!state.node) {
+  const post = state.post;
+
+  if (!post) {
     return (
-      <div className="status">
-        <p>
+      <Section>
+        <div className="v1-empty">
           <strong>We could not find that post.</strong>
           <br />
           <Link to="/blog">Browse all posts</Link>.
-        </p>
-      </div>
+        </div>
+      </Section>
     );
   }
 
-  const attrs = state.node.attributes ?? {};
-  const created = attrs.created
-    ? new Date(attrs.created).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    : '';
-  const body = textValue(attrs.body);
-
   return (
-    <article className="node-view">
-      <Link to="/blog" className="node-view__back">
-        ← All posts
-      </Link>
-      <h1 className="node-view__title">{attrs.title ?? 'Untitled post'}</h1>
-      {created && <p className="node-view__meta">{created}</p>}
+    <article>
+      <Hero eyebrow={post.dateLabel || 'Blog'} title={post.title} lede={post.summary} />
 
-      {body ? (
-        <div
-          className="node-view__body"
-          dangerouslySetInnerHTML={{ __html: body }}
-        />
-      ) : (
-        <div className="status">
-          <p>This post is being published — check back soon.</p>
-        </div>
-      )}
+      <Section>
+        <Link to="/blog" className="v1-back-link">
+          ← All posts
+        </Link>
+        {post.bodyHtml ? (
+          <FadeUp className="v1-panel">
+            <div className="v1-prose" dangerouslySetInnerHTML={{ __html: post.bodyHtml }} />
+          </FadeUp>
+        ) : (
+          <div className="v1-empty">This post is being published — check back soon.</div>
+        )}
+      </Section>
+
+      <CTABanner
+        title="Want a system like this for your business?"
+        primaryCta={{ label: 'Book a Call', href: '/contact' }}
+      />
     </article>
   );
 }

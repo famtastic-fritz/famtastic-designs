@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getNodesRaw } from '../api/drupal.js';
-import { nodeSlug, textValue } from '../utils/content.js';
+import { transformBlogNode } from '../lib/drupalAdapter.js';
+import { Hero, Section, Stagger, Item } from '../components/v1/index.js';
 
 /**
- * /blog — hub listing every blog_post, newest first.
+ * /blog — hub listing every blog_post, newest first, as v1 cards.
  */
 export default function BlogHubPage() {
   const [posts, setPosts] = useState(null); // null = loading
@@ -13,10 +14,12 @@ export default function BlogHubPage() {
     let cancelled = false;
     getNodesRaw('blog_post').then(({ data }) => {
       if (!cancelled) {
-        const sorted = [...data].sort(
-          (a, b) => new Date(b.attributes?.created ?? 0) - new Date(a.attributes?.created ?? 0),
+        setPosts(
+          data
+            .map((node) => transformBlogNode(node))
+            .filter(Boolean)
+            .sort((a, b) => new Date(b.created ?? 0) - new Date(a.created ?? 0)),
         );
-        setPosts(sorted);
       }
     });
     return () => {
@@ -26,56 +29,41 @@ export default function BlogHubPage() {
 
   return (
     <>
-      <section className="hero">
-        <span className="hero__eyebrow">Blog</span>
-        <h1 className="hero__title">
-          Notes from the <span className="accent">studio</span>
-        </h1>
-        <p className="hero__lede">
-          Practical thinking on agentic AI, automation, and engineering systems that sell.
-        </p>
-      </section>
+      <Hero
+        eyebrow="Blog"
+        title="Notes from the"
+        accent="studio"
+        lede="Practical thinking on agentic AI, automation, and engineering systems that sell."
+      />
 
-      {posts === null && <div className="loading" role="status">Loading posts…</div>}
+      <Section>
+        {posts === null && <div className="v1-loading" role="status">Loading posts…</div>}
 
-      {posts !== null && posts.length === 0 && (
-        <div className="status">
-          <p>
+        {posts !== null && posts.length === 0 && (
+          <div className="v1-empty">
             <strong>The first posts are being drafted.</strong>
             <br />
             New articles are on the way — check back shortly.
-          </p>
-        </div>
-      )}
+          </div>
+        )}
 
-      {posts !== null && posts.length > 0 && (
-        <ul className="node-list">
-          {posts.map((node) => {
-            const attrs = node.attributes ?? {};
-            const created = attrs.created
-              ? new Date(attrs.created).toLocaleDateString(undefined, {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                })
-              : '';
-            const summary =
-              textValue(attrs.body?.summary) ||
-              textValue(attrs.field_summary) ||
-              'Read the full post.';
-            return (
-              <li key={node.id}>
-                <Link to={`/blog/${nodeSlug(node)}`} className="node-card">
-                  <span className="node-card__type">{created || 'Post'}</span>
-                  <h3 className="node-card__title">{attrs.title ?? 'Untitled post'}</h3>
-                  <p className="node-card__summary">{summary}</p>
-                  <span className="node-card__cta">Read Post →</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+        {posts !== null && posts.length > 0 && (
+          <Stagger className="v1-grid v1-grid--3">
+            {posts.map((post) => (
+              <Item key={post.id}>
+                <article className="v1-card">
+                  <span className="v1-card__kicker">{post.dateLabel || 'Post'}</span>
+                  <h3 className="v1-card__title">{post.title}</h3>
+                  <p className="v1-card__text">{post.summary || 'Read the full post.'}</p>
+                  <Link to={`/blog/${post.slug}`} className="v1-card__cta">
+                    Read Post →
+                  </Link>
+                </article>
+              </Item>
+            ))}
+          </Stagger>
+        )}
+      </Section>
     </>
   );
 }

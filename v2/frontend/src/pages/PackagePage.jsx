@@ -1,21 +1,27 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getNodesRaw } from '../api/drupal.js';
-import { listValues, matchBySlug, textValue } from '../utils/content.js';
+import { matchBySlug } from '../utils/content.js';
+import { transformPackageNode } from '../lib/drupalAdapter.js';
+import { Hero, Section, CTABanner, FadeUp, Stagger, Item } from '../components/v1/index.js';
 
 /**
- * /packages/:slug — detail page for one package_page node.
- * Hero with prominent price, timeline, "What's Included" checklist,
- * "Best For" description, and a CTA to /contact.
+ * /packages/:slug — v1 detail page for one package_page node: hero with
+ * price/timeline, "What's Included" checklist, "Best For", optional add-ons,
+ * and CTA to /contact.
  */
 export default function PackagePage() {
   const { slug } = useParams();
-  const [state, setState] = useState({ node: null, loading: true });
+  const [state, setState] = useState({ plan: null, loading: true });
 
   useEffect(() => {
     let cancelled = false;
-    getNodesRaw('package_page').then(({ data }) => {
-      if (!cancelled) setState({ node: matchBySlug(data, slug), loading: false });
+    setState({ plan: null, loading: true });
+    getNodesRaw('package_page', { include: 'field_addons' }).then(({ data, included }) => {
+      if (!cancelled) {
+        const node = matchBySlug(data, slug);
+        setState({ plan: transformPackageNode(node, included), loading: false });
+      }
     });
     return () => {
       cancelled = true;
@@ -23,87 +29,85 @@ export default function PackagePage() {
   }, [slug]);
 
   if (state.loading) {
-    return <div className="loading" role="status">Loading package…</div>;
+    return <div className="v1-loading" role="status">Loading package…</div>;
   }
 
-  if (!state.node) {
+  const plan = state.plan;
+
+  if (!plan) {
     return (
-      <div className="status">
-        <p>
+      <Section>
+        <div className="v1-empty">
           <strong>We could not find that package.</strong>
           <br />
           It may have been renamed or is still being published.{' '}
           <Link to="/packages">Browse all packages</Link>.
-        </p>
-      </div>
+        </div>
+      </Section>
     );
   }
 
-  const attrs = state.node.attributes ?? {};
-  const price = textValue(attrs.field_price);
-  const timeline = textValue(attrs.field_timeline);
-  const badge = textValue(attrs.field_badge);
-  const features = listValues(attrs.field_features);
-  const bestFor = textValue(attrs.field_best_for);
-  const ctaText = textValue(attrs.field_cta_text) || 'Book a Call';
-  const body = textValue(attrs.body);
+  const included = plan.whatsIncluded.length ? plan.whatsIncluded : plan.features;
+  const cta = { label: plan.ctaText, href: plan.ctaHref };
 
   return (
-    <article className="package-page">
-      <section className="hero">
-        <span className="hero__eyebrow">Package</span>
-        <h1 className="hero__title">
-          <span className="accent">{attrs.title ?? 'Package'}</span>
-        </h1>
-        {badge && badge.toLowerCase() !== 'none' && (
-          <p>
-            <span className="badge-pill">{badge}</span>
-          </p>
+    <article>
+      <Hero
+        eyebrow={plan.timeline ? `Package · ${plan.timeline}` : 'Package'}
+        title={plan.title}
+        lede={plan.subheadline || plan.bestFor}
+        primaryCta={cta}
+        secondaryCta={{ label: 'All packages', href: '/packages' }}
+      >
+        {plan.price && (
+          <FadeUp delay={0.3}>
+            <p className="v1-pricing-card__price" style={{ marginTop: '1.8rem' }}>
+              {plan.price}
+            </p>
+          </FadeUp>
         )}
-        {price && <p className="package-page__price">{price}</p>}
-        {timeline && <p className="hero__lede">{timeline}</p>}
-        <p className="hero__actions">
-          <Link className="btn btn--lime" to="/contact">
-            {ctaText}
-          </Link>
-        </p>
-      </section>
+      </Hero>
 
-      {body && (
-        <section
-          className="feature-section node-view__body"
-          dangerouslySetInnerHTML={{ __html: body }}
-        />
+      {included.length > 0 && (
+        <Section eyebrow="Deliverables" title="What's Included">
+          <FadeUp className="v1-panel">
+            <ul className="v1-dot-list" style={{ marginTop: 0 }}>
+              {included.map((feature) => (
+                <li key={feature}>{feature}</li>
+              ))}
+            </ul>
+          </FadeUp>
+        </Section>
       )}
 
-      {features.length > 0 && (
-        <section className="feature-section" aria-labelledby="included-heading">
-          <h2 id="included-heading" className="feature-section__title">
-            What's Included
-          </h2>
-          <ul className="check-list">
-            {features.map((feature, i) => (
-              <li key={i}>{feature}</li>
+      {plan.bestFor && (
+        <Section eyebrow="Fit" title="Best For">
+          <FadeUp className="v1-panel v1-panel--soft">
+            <p className="v1-card__text" style={{ margin: 0 }}>{plan.bestFor}</p>
+          </FadeUp>
+        </Section>
+      )}
+
+      {plan.addons.length > 0 && (
+        <Section eyebrow="Add-ons" title="Extra support when the project needs more.">
+          <Stagger className="v1-grid v1-grid--3">
+            {plan.addons.map((addon) => (
+              <Item key={addon.id} className="v1-card">
+                <h3 className="v1-card__title">{addon.name}</h3>
+                {addon.description && <p className="v1-card__text">{addon.description}</p>}
+                {addon.price && <p className="v1-pricing-card__price" style={{ fontSize: '1.2rem' }}>{addon.price}</p>}
+              </Item>
             ))}
-          </ul>
-        </section>
+          </Stagger>
+        </Section>
       )}
 
-      {bestFor && (
-        <section className="feature-section" aria-labelledby="bestfor-heading">
-          <h2 id="bestfor-heading" className="feature-section__title">
-            Best For
-          </h2>
-          <p className="feature-section__text">{bestFor}</p>
-        </section>
-      )}
-
-      <section className="cta-banner">
-        <h2 className="cta-banner__title">Ready to get started?</h2>
-        <Link className="btn btn--lime" to="/contact">
-          {ctaText}
-        </Link>
-      </section>
+      <CTABanner
+        title="Ready to get started?"
+        body="Final scope is confirmed after a short consultation — the price you see is the price you pay."
+        primaryCta={cta}
+        secondaryCta={{ label: 'Contact', href: '/contact' }}
+      />
     </article>
   );
 }

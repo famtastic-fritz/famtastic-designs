@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getNodesRaw } from '../api/drupal.js';
-import { nodeSlug, textValue } from '../utils/content.js';
+import { transformServiceNode } from '../lib/drupalAdapter.js';
+import { Hero, Section, ServiceCard, CTABanner, Stagger, Item } from '../components/v1/index.js';
 
 /**
- * /services — hub listing every service_page as a card grid.
- * Cards link to /services/<slug> (alias segment, title-slug fallback).
+ * /services — hub listing every service_page as v1 ServiceCards.
  */
 export default function ServicesHubPage() {
   const [services, setServices] = useState(null); // null = loading
@@ -13,7 +13,14 @@ export default function ServicesHubPage() {
   useEffect(() => {
     let cancelled = false;
     getNodesRaw('service_page').then(({ data }) => {
-      if (!cancelled) setServices(data);
+      if (!cancelled) {
+        setServices(
+          data
+            .map((node) => transformServiceNode(node))
+            .filter(Boolean)
+            .sort((a, b) => a.sortOrder - b.sortOrder),
+        );
+      }
     });
     return () => {
       cancelled = true;
@@ -22,48 +29,43 @@ export default function ServicesHubPage() {
 
   return (
     <>
-      <section className="hero">
-        <span className="hero__eyebrow">Services</span>
-        <h1 className="hero__title">
-          Our <span className="accent">Solutions</span>
-        </h1>
-        <p className="hero__lede">
-          Agentic AI systems engineered for your specific business challenge.
-        </p>
-      </section>
+      <Hero
+        eyebrow="Services"
+        title="Systems that capture, answer, and"
+        accent="grow"
+        lede="Agentic AI systems engineered for your specific business challenge — websites, chatbots, lead capture, and client systems built to support growth."
+        primaryCta={{ label: 'Start Your Project', href: '/contact' }}
+        secondaryCta={{ label: 'See packages', href: '/packages' }}
+      />
 
-      {services === null && <div className="loading" role="status">Loading services…</div>}
+      <Section>
+        {services === null && <div className="v1-loading" role="status">Loading services…</div>}
 
-      {services !== null && services.length === 0 && (
-        <div className="status">
-          <p>
+        {services !== null && services.length === 0 && (
+          <div className="v1-empty">
             <strong>Solutions are on the way.</strong>
             <br />
             We are publishing our service lineup right now — check back shortly, or{' '}
             <Link to="/contact">book a call</Link> and we will walk you through it live.
-          </p>
-        </div>
-      )}
+          </div>
+        )}
 
-      {services !== null && services.length > 0 && (
-        <ul className="node-list">
-          {services.map((node) => {
-            const attrs = node.attributes ?? {};
-            return (
-              <li key={node.id}>
-                <Link to={`/services/${nodeSlug(node)}`} className="node-card">
-                  <span className="node-card__type">Service</span>
-                  <h3 className="node-card__title">{attrs.title ?? 'Untitled service'}</h3>
-                  <p className="node-card__summary">
-                    {textValue(attrs.field_hero_subheadline) || 'Learn how this system works for your business.'}
-                  </p>
-                  <span className="node-card__cta">Learn More →</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+        {services !== null && services.length > 0 && (
+          <Stagger className="v1-grid v1-grid--3">
+            {services.map((service) => (
+              <Item key={service.id}>
+                <ServiceCard service={service} />
+              </Item>
+            ))}
+          </Stagger>
+        )}
+      </Section>
+
+      <CTABanner
+        title="Not sure which system fits?"
+        body="A short consultation maps your workflow to the right build — fixed scope, fixed price, verified before launch."
+        primaryCta={{ label: 'Book a Call', href: '/contact' }}
+      />
     </>
   );
 }

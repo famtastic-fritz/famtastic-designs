@@ -1,29 +1,25 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getNodesRaw } from '../api/drupal.js';
-import { textValue } from '../utils/content.js';
+import { transformFaqNodes } from '../lib/drupalAdapter.js';
+import { Hero, Section, FAQAccordion, CTABanner, FadeUp } from '../components/v1/index.js';
 
 /**
- * /faq — every faq_item grouped by field_faq_category, each rendered as an
- * expand/collapse accordion. Uncategorized items fall back to "General".
+ * /faq — every faq_item grouped by its taxonomy category, rendered with the
+ * v1 smooth-height FAQAccordion. Uncategorized items fall back to "General".
  */
 export default function FAQHubPage() {
   const [groups, setGroups] = useState(null); // null = loading
 
   useEffect(() => {
     let cancelled = false;
-    getNodesRaw('faq_item').then(({ data }) => {
+    getNodesRaw('faq_item', { include: 'field_faq_category' }).then(({ data, included }) => {
       if (cancelled) return;
+      const items = transformFaqNodes(data, included);
       const byCategory = new Map();
-      for (const node of data) {
-        const attrs = node.attributes ?? {};
-        const category = textValue(attrs.field_faq_category) || 'General';
-        if (!byCategory.has(category)) byCategory.set(category, []);
-        byCategory.get(category).push({
-          id: node.id,
-          question: textValue(attrs.field_question) || attrs.title || 'Question',
-          answer: textValue(attrs.field_answer) || textValue(attrs.body),
-        });
+      for (const item of items) {
+        if (!byCategory.has(item.category)) byCategory.set(item.category, []);
+        byCategory.get(item.category).push(item);
       }
       setGroups([...byCategory.entries()]);
     });
@@ -34,72 +30,40 @@ export default function FAQHubPage() {
 
   return (
     <>
-      <section className="hero">
-        <span className="hero__eyebrow">FAQ</span>
-        <h1 className="hero__title">
-          Questions, <span className="accent">answered</span>
-        </h1>
-        <p className="hero__lede">
-          Everything you need to know before we start building together.
-        </p>
-      </section>
+      <Hero
+        eyebrow="FAQ"
+        title="Questions,"
+        accent="answered"
+        lede="Everything you need to know before we start building together."
+        primaryCta={{ label: 'Ask us anything', href: '/contact' }}
+      />
 
-      {groups === null && <div className="loading" role="status">Loading FAQ…</div>}
+      {groups === null && <div className="v1-loading" role="status">Loading FAQ…</div>}
 
       {groups !== null && groups.length === 0 && (
-        <div className="status">
-          <p>
+        <Section>
+          <div className="v1-empty">
             <strong>Answers are on the way.</strong>
             <br />
             Our FAQ is being published right now — meanwhile,{' '}
             <Link to="/contact">ask us anything</Link> directly.
-          </p>
-        </div>
+          </div>
+        </Section>
       )}
 
       {groups !== null &&
         groups.map(([category, items]) => (
-          <section key={category} className="feature-section" aria-labelledby={`faq-${category}`}>
-            <h2 id={`faq-${category}`} className="feature-section__title">
-              {category}
-            </h2>
-            <FaqGroup items={items} />
-          </section>
+          <Section key={category} eyebrow={category} title={`${category} questions`}>
+            <FadeUp>
+              <FAQAccordion items={items} />
+            </FadeUp>
+          </Section>
         ))}
+
+      <CTABanner
+        title="Still have a question?"
+        primaryCta={{ label: 'Contact us', href: '/contact' }}
+      />
     </>
-  );
-}
-
-/** One accordion group; a single open item at a time within the group. */
-function FaqGroup({ items }) {
-  const [openIndex, setOpenIndex] = useState(null);
-
-  return (
-    <div className="accordion">
-      {items.map((item, i) => {
-        const open = openIndex === i;
-        return (
-          <div key={item.id} className={`accordion__item${open ? ' accordion__item--open' : ''}`}>
-            <button
-              type="button"
-              className="accordion__question"
-              aria-expanded={open}
-              onClick={() => setOpenIndex(open ? null : i)}
-            >
-              <span>{item.question}</span>
-              <span className="accordion__chevron" aria-hidden="true">
-                {open ? '−' : '+'}
-              </span>
-            </button>
-            {open && item.answer && (
-              <div
-                className="accordion__answer"
-                dangerouslySetInnerHTML={{ __html: item.answer }}
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
   );
 }
