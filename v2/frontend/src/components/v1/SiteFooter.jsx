@@ -61,7 +61,7 @@ export default function SiteFooter({ services = [], packages = [] }) {
 
       <div className="v1-container v1-footer__bottom">
         <p>© {year} FAMtastic Designs. All rights reserved.</p>
-        <p className="v1-footer__stack">Headless Drupal 11 + React 18</p>
+        <p className="v1-footer__stack">Design that glows in the dark.</p>
       </div>
     </footer>
   );
