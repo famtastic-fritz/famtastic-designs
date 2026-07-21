@@ -1057,3 +1057,131 @@ body th .tablesaw-sort-ascending,
 body th .tablesaw-sort-descending {
   color: var(--fam-lime);
 }
+
+/* ---------------------------------------------------------------------------
+ * 17. Readability pass — content panel, surfaces, contrast (QA 2026-07)
+ *
+ * The main content column becomes a raised panel (like the status page's
+ * cards), inner widgets sit on a darker inset surface, the node-edit meta
+ * sidebar gets real contrast, and dim utility text is brightened.
+ * ------------------------------------------------------------------------ */
+
+/* Main content panel (Claro wraps content in .page-content). */
+body .page-content {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+
+/* Inner widgets inset against the panel. */
+body .page-content table,
+body .page-content fieldset,
+body .page-content .fieldset,
+body .page-content .claro-details,
+body .page-content .system-status-report__entry {
+  background-color: #0f0f0f;
+}
+
+/* Node edit meta sidebar: real surface + readable text. */
+body .layout-region-node-secondary,
+body .entity-meta {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  border-radius: 8px;
+}
+
+body .entity-meta .entity-meta__header {
+  background-color: #0f0f0f;
+  border-bottom: 1px solid var(--fam-border);
+  color: var(--fam-text);
+}
+
+body .entity-meta .entity-meta__title,
+body .entity-meta h2,
+body .entity-meta h3,
+body .entity-meta label {
+  color: var(--fam-text);
+}
+
+body .entity-meta .entity-meta__header .form-item,
+body .entity-meta .form-item {
+  color: var(--fam-text);
+}
+
+/* "Last saved / Author" style label+value pairs. */
+body .entity-meta .entity-meta__header p,
+body .entity-meta p,
+body .entity-meta .field--name-changed,
+body .entity-meta .field--name-uid {
+  color: #cccccc;
+}
+
+body .entity-meta .entity-meta__header strong,
+body .entity-meta strong {
+  color: var(--fam-text);
+}
+
+/* Details/summary inside the sidebar (Menu settings, URL alias, …). */
+body .entity-meta details summary,
+body .entity-meta .claro-details__summary {
+  color: var(--fam-text);
+}
+
+body .entity-meta details .details-description,
+body .entity-meta .claro-details__description {
+  color: #aaaaaa;
+}
+
+/* Dim utility text → readable muted. */
+body .tabledrag-toggle-weight,
+body .tabledrag-toggle-weight a,
+body .show-row-weights,
+body .form-item .description,
+body .description,
+body .form-item__description {
+  color: #9a9a9a;
+}
+
+/* Drag handles + chevron-only buttons get visible borders. */
+body .tabledrag-handle,
+body td .dropbutton-toggle button,
+body td.operations .dropbutton-arrow {
+  border: 1px solid var(--fam-border);
+  border-radius: 4px;
+  color: var(--fam-text-muted);
+}
+
+body .tabledrag-handle:hover {
+  color: var(--fam-lime);
+  border-color: var(--fam-lime);
+}
+
+/* Multi-value table Remove buttons (were washed-out light pills). */
+body .field-multiple-table .button,
+body .field-multiple-table input[type="submit"],
+body .tabledrag .button {
+  background-color: var(--fam-surface-raised);
+  border: 1px solid var(--fam-border);
+  color: var(--fam-text);
+  text-shadow: none;
+  box-shadow: none;
+}
+
+body .field-multiple-table .button:hover,
+body .field-multiple-table input[type="submit"]:hover {
+  border-color: var(--fam-lime);
+  color: var(--fam-lime);
+}
+
+/* Breadcrumbs: lift the muted gray a notch. */
+body .breadcrumb,
+body .breadcrumb a {
+  color: #a5a5a5;
+}
+
+body .breadcrumb a:hover,
+body .breadcrumb a:focus {
+  color: var(--fam-lime);
+}
