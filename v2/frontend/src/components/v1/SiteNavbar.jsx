@@ -82,11 +82,28 @@ function Dropdown({ label, to, items, basePath }) {
 export default function SiteNavbar({ menuItems = [], services = [], packages = [], authSlot = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Only render menu links that are not already covered by the dropdowns or
-  // the auth area, so the Drupal menu stays the source of truth without
-  // duplicating Services/Packages entries.
-  const covered = new Set(['/services', '/packages', '/contact', '/login', '/admin']);
-  const extraLinks = menuItems.filter((item) => !covered.has(item.url));
+  // Normalize menu items from any source (Drupal menu or stub fallback):
+  // drop "Pages" entries, rename "Articles" → "Blog", and map legacy
+  // /content/* URLs to their clean routes.
+  const normalized = menuItems
+    .map((item) => {
+      if (item.title === 'Pages' || item.url === '/content/page') return null;
+      if (item.title === 'Articles' || item.url === '/content/article') {
+        return { ...item, title: 'Blog', url: '/blog' };
+      }
+      return item;
+    })
+    .filter(Boolean);
+
+  // The primary nav structure is explicit (Home + dropdowns + ordered links);
+  // the Drupal menu only contributes EXTRA links not already covered, so it
+  // stays a source of truth without duplicating entries.
+  const covered = new Set([
+    '/', '/services', '/packages', '/work', '/blog', '/faq',
+    '/about', '/contact', '/login', '/admin',
+  ]);
+  const extraLinks = normalized.filter((item) => !covered.has(item.url));
+  const homeItem = normalized.find((item) => item.url === '/');
 
   return (
     <header className="v1-header">
@@ -97,34 +114,37 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
         </Link>
 
         <nav className="v1-nav" aria-label="Main navigation">
-          {extraLinks
-            .filter((item) => item.url === '/')
-            .map((item) => (
-              <NavLink key={item.id} to="/" end className="v1-nav__link">
-                {item.title}
-              </NavLink>
-            ))}
+          <NavLink to="/" end className="v1-nav__link">
+            {homeItem?.title ?? 'Home'}
+          </NavLink>
           <Dropdown label="Services" to="/services" basePath="/services" items={services} />
           <Dropdown label="Packages" to="/packages" basePath="/packages" items={packages} />
-          {extraLinks
-            .filter((item) => item.url !== '/')
-            .map((item) =>
-              /^https?:\/\//i.test(item.url) ? (
-                <a key={item.id} className="v1-nav__link" href={item.url}>
-                  {item.title}
-                </a>
-              ) : (
-                <NavLink key={item.id} className="v1-nav__link" to={item.url} end={item.url === '/'}>
-                  {item.title}
-                </NavLink>
-              ),
-            )}
           <NavLink to="/work" className="v1-nav__link">
             Work
+          </NavLink>
+          <NavLink to="/blog" className="v1-nav__link">
+            Blog
           </NavLink>
           <NavLink to="/faq" className="v1-nav__link">
             FAQ
           </NavLink>
+          <NavLink to="/about" className="v1-nav__link">
+            About
+          </NavLink>
+          <NavLink to="/contact" className="v1-nav__link">
+            Contact
+          </NavLink>
+          {extraLinks.map((item) =>
+            /^https?:\/\//i.test(item.url) ? (
+              <a key={item.id} className="v1-nav__link" href={item.url}>
+                {item.title}
+              </a>
+            ) : (
+              <NavLink key={item.id} className="v1-nav__link" to={item.url}>
+                {item.title}
+              </NavLink>
+            ),
+          )}
         </nav>
 
         <div className="v1-header__actions">

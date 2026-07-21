@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import HomePage from './pages/HomePage.jsx';
 import ContentPage from './pages/ContentPage.jsx';
@@ -52,6 +52,9 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/start" element={<StartPage />} />
 
+          {/* Legacy /content/* URLs → clean routes. */}
+          <Route path="/content/page" element={<Navigate to="/" replace />} />
+          <Route path="/content/article" element={<Navigate to="/blog" replace />} />
           <Route path="/content/:type" element={<ContentPage />} />
           <Route path="/node/:uuid" element={<NodeView />} />
           <Route path="/login" element={<LoginPage />} />

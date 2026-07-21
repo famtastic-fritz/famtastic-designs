@@ -40,7 +40,7 @@ export default function SiteFooter({ services = [], packages = [] }) {
 
         <nav className="v1-footer__col" aria-label="Packages">
           <p className="v1-footer__heading">Packages</p>
-          {packages.slice(0, 5).map((item) => (
+          {packages.slice(0, 7).map((item) => (
             <Link key={item.slug} to={`/packages/${item.slug}`}>
               {item.title}
             </Link>
