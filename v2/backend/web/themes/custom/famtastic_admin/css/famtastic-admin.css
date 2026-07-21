@@ -991,3 +991,69 @@ body .views-exposed-form.views-exposed-form {
 body .views-exposed-form .form-item label {
   color: var(--fam-text);
 }
+
+/* ---------------------------------------------------------------------------
+ * 16. Dropbuttons & table links — contrast fixes
+ *
+ * Claro's dropbutton renders the primary action as a light pill with faint
+ * text; sortable table headers keep Claro's blue. Force brand contrast.
+ * ------------------------------------------------------------------------ */
+
+body .dropbutton-action > a,
+body .dropbutton-action > input,
+body .dropbutton-action > button,
+body .dropbutton-single .dropbutton-action a,
+body .dropbutton-multiple .dropbutton-action a {
+  background-color: var(--fam-surface-raised);
+  border: 1px solid var(--fam-border);
+  color: var(--fam-lime);
+  text-shadow: none;
+  box-shadow: none;
+}
+
+body .dropbutton-action > a:hover,
+body .dropbutton-action > a:focus,
+body .dropbutton-multiple .dropbutton-action a:hover,
+body .dropbutton-multiple .dropbutton-action a:focus {
+  background-color: var(--fam-bg);
+  border-color: var(--fam-lime);
+  color: var(--fam-lime-hover);
+  text-shadow: none;
+}
+
+/* The toggle (chevron) half of the split button. */
+body .dropbutton-toggle button,
+body .dropbutton-toggle .dropbutton-arrow {
+  background-color: var(--fam-surface-raised);
+  border-color: var(--fam-border);
+  color: var(--fam-text);
+}
+
+body .dropbutton-toggle button:hover {
+  background-color: var(--fam-bg);
+  border-color: var(--fam-lime);
+}
+
+/* Sortable table header links: kill Claro blue, use lime. */
+body th a,
+body th a:link,
+body th a:visited,
+body th.is-active a,
+body th.is-active a:link,
+body th.is-active a:visited {
+  color: var(--fam-lime);
+}
+
+body th a:hover,
+body th a:focus,
+body th.is-active a:hover,
+body th.is-active a:focus {
+  color: var(--fam-lime-hover);
+}
+
+/* Sort arrow icon tint (border-based triangle inherits currentColor). */
+body th.is-active img,
+body th .tablesaw-sort-ascending,
+body th .tablesaw-sort-descending {
+  color: var(--fam-lime);
+}
