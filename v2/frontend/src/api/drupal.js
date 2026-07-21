@@ -506,5 +506,70 @@ export async function deleteProject(uuid, token) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Raw JSON:API helpers (field-level access for the marketing pages)   */
+/*                                                                     */
+/* These are ADDITIVE: getNodes()/getNode()/getMenus() above keep      */
+/* their normalized flat shapes and stub fallbacks untouched. The raw  */
+/* helpers below expose the full JSON:API resource objects (attributes */
+/* + relationships + `included`) so pages can render custom fields.    */
+/* They never return stub data — on failure they resolve to empty      */
+/* collections with the error attached, and pages render friendly      */
+/* empty/fallback states instead.                                      */
+/* ------------------------------------------------------------------ */
+
+/**
+ * List published nodes of a bundle as RAW JSON:API resources.
+ * @param {string} type Drupal node bundle (e.g. 'service_page').
+ * @param {object} [options] { include: 'field_a,field_b', limit: 50 }.
+ * @returns {Promise<{data: Array, included: Array, error: Error|null}>}
+ */
+export async function getNodesRaw(type, { include = '', limit = 50 } = {}) {
+  try {
+    let path = `/jsonapi/node/${encodeURIComponent(type)}?filter[status]=1&sort=title&page[limit]=${limit}`;
+    if (include) path += `&include=${encodeURIComponent(include)}`;
+    const json = await apiFetch(path);
+    return { data: json.data ?? [], included: json.included ?? [], error: null };
+  } catch (err) {
+    console.warn(`[drupal] getNodesRaw("${type}") failed:`, err.message);
+    return { data: [], included: [], error: err };
+  }
+}
+
+/**
+ * Fetch a single node of a bundle by its URL alias (e.g. '/services/seo').
+ * Falls back to client-side matching because core JSON:API cannot filter
+ * on the computed path.alias field directly.
+ * @param {string} type Drupal node bundle.
+ * @param {string} alias URL alias to match (leading slash optional).
+ * @param {object} [options] { include } — passed to getNodesRaw.
+ * @returns {Promise<{node: object|null, included: Array, error: Error|null}>}
+ */
+export async function getNodeByAlias(type, alias, { include = '' } = {}) {
+  const { data, included, error } = await getNodesRaw(type, { include });
+  const clean = `/${String(alias).replace(/^\/+|\/+$/g, '')}`;
+  const node =
+    data.find(
+      (n) =>
+        (n.attributes?.path?.alias ?? '').replace(/\/+$/, '') === clean,
+    ) ?? null;
+  return { node, included, error };
+}
+
+/**
+ * Resolve a paragraph/entity-reference relationship on a raw node against
+ * the JSON:API `included` array, preserving relationship order.
+ * @param {object} node Raw JSON:API resource.
+ * @param {Array} included JSON:API included array.
+ * @param {string} relName Relationship field name (e.g. 'field_faq_qa').
+ * @returns {Array} Resolved included resources ([] when unresolved).
+ */
+export function resolveIncluded(node, included, relName) {
+  const refs = node?.relationships?.[relName]?.data;
+  if (!Array.isArray(refs)) return [];
+  const byKey = new Map((included ?? []).map((r) => [`${r.type}:${r.id}`, r]));
+  return refs.map((r) => byKey.get(`${r.type}:${r.id}`)).filter(Boolean);
+}
+
 /** Exported for diagnostics (e.g. footer/debug display). */
 export { DRUPAL_BASE, JSONAPI_BASE, STUB_FLAG, TOKEN_STORAGE_KEY, AUTH_EVENT };
