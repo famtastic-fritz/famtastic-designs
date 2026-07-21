@@ -102,7 +102,13 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
     '/', '/services', '/packages', '/work', '/blog', '/faq',
     '/about', '/contact', '/login', '/admin',
   ]);
-  const extraLinks = normalized.filter((item) => !covered.has(item.url));
+  const extraLinks = normalized.filter((item) => {
+    if (covered.has(item.url)) return false;
+    // Dropdown children (/services/<slug>, /packages/<slug>) are covered by
+    // the dropdowns themselves — never render them as top-level extras.
+    if (item.url.startsWith('/services/') || item.url.startsWith('/packages/')) return false;
+    return true;
+  });
   const homeItem = normalized.find((item) => item.url === '/');
 
   return (
