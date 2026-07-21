@@ -1,31 +1,41 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getNodesRaw, resolveIncluded } from '../api/drupal.js';
+import { getNodesRaw } from '../api/drupal.js';
+import { matchBySlug } from '../utils/content.js';
+import { transformServiceNode } from '../lib/drupalAdapter.js';
 import {
-  isExternalHref,
-  linkHref,
-  listValues,
-  matchBySlug,
-  paraField,
-  textValue,
-} from '../utils/content.js';
+  Hero,
+  Section,
+  TestimonialCard,
+  FAQAccordion,
+  CTABanner,
+  FadeUp,
+  Stagger,
+  Item,
+} from '../components/v1/index.js';
+import SolutionFinder, { branchForServiceSlug } from '../components/SolutionFinder.jsx';
 
 /**
- * /services/:slug — full landing page for one service_page node.
+ * /services/:slug — full v1 detail layout for one service_page node:
+ * Hero → PainPoints → Solution → Process → Testimonial → Features → FAQ → CTA.
  * Sections render only when their fields have content, so partially-seeded
  * nodes still produce a clean page.
  */
 export default function ServicePage() {
   const { slug } = useParams();
-  const [state, setState] = useState({ node: null, included: [], loading: true });
+  const [state, setState] = useState({ service: null, loading: true });
+  const [finderOpen, setFinderOpen] = useState(false);
+  const finderRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
+    setState({ service: null, loading: true });
     getNodesRaw('service_page', {
       include: 'field_faq_qa,field_process_steps',
     }).then(({ data, included }) => {
       if (!cancelled) {
-        setState({ node: matchBySlug(data, slug), included, loading: false });
+        const node = matchBySlug(data, slug);
+        setState({ service: transformServiceNode(node, included), loading: false });
       }
     });
     return () => {
@@ -34,207 +44,144 @@ export default function ServicePage() {
   }, [slug]);
 
   if (state.loading) {
-    return <div className="loading" role="status">Loading service…</div>;
+    return <div className="v1-loading" role="status">Loading service…</div>;
   }
 
-  if (!state.node) {
+  const service = state.service;
+
+  if (!service) {
     return (
-      <div className="status">
-        <p>
+      <Section>
+        <div className="v1-empty">
           <strong>We could not find that service.</strong>
           <br />
           It may have been renamed or is still being published.{' '}
           <Link to="/services">Browse all solutions</Link>.
-        </p>
-      </div>
+        </div>
+      </Section>
     );
   }
 
-  const attrs = state.node.attributes ?? {};
-  const faqItems = resolveIncluded(state.node, state.included, 'field_faq_qa');
-  const processSteps = resolveIncluded(state.node, state.included, 'field_process_steps');
+  const cta = { label: service.ctaText, href: service.ctaHref };
+  const serviceBranch = branchForServiceSlug(slug);
 
-  const heroHeadline = textValue(attrs.field_hero_headline) || attrs.title || 'Service';
-  const heroSub = textValue(attrs.field_hero_subheadline);
-  const painTitle = textValue(attrs.field_pain_points_title);
-  const painPoints = listValues(attrs.field_pain_points);
-  const solutionTitle = textValue(attrs.field_solution_title);
-  const solutionBullets = listValues(attrs.field_solution_bullets);
-  const processTitle = textValue(attrs.field_process_title);
-  const quote = textValue(attrs.field_testimonial_quote);
-  const attribution = textValue(attrs.field_testimonial_attribution);
-  const featuresTitle = textValue(attrs.field_features_title);
-  const features = listValues(attrs.field_features);
-  const faqTitle = textValue(attrs.field_faq_title);
-  const ctaText = textValue(attrs.field_cta_text) || 'Book a Call';
-  const ctaHref = linkHref(attrs.field_cta_link);
+  function openFinder() {
+    setFinderOpen(true);
+    // Let the finder render, then bring it into view.
+    requestAnimationFrame(() => finderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
 
   return (
-    <article className="service-page">
+    <article>
       {/* 1 — HERO */}
-      <section className="hero">
-        <span className="hero__eyebrow">Service</span>
-        <h1 className="hero__title">
-          <span className="accent">{heroHeadline}</span>
-        </h1>
-        {heroSub && <p className="hero__lede">{heroSub}</p>}
-        <p className="hero__actions">
-          <CtaButton href={ctaHref} label={ctaText} />
-        </p>
-      </section>
+      <Hero
+        eyebrow="Service"
+        title={service.headline}
+        lede={service.subheadline}
+        primaryCta={cta}
+        secondaryCta={{ label: 'All services', href: '/services' }}
+      />
 
       {/* 2 — PAIN POINTS */}
-      {(painTitle || painPoints.length > 0) && (
-        <section className="feature-section" aria-labelledby="pain-heading">
-          <h2 id="pain-heading" className="feature-section__title">
-            {painTitle || 'The Challenge'}
-          </h2>
-          {painPoints.length > 0 && (
-            <ul className="bullet-list">
-              {painPoints.map((point, i) => (
-                <li key={i}>{point}</li>
-              ))}
-            </ul>
-          )}
-        </section>
+      {(service.painPointsTitle || service.painPoints.length > 0) && (
+        <Section eyebrow="The Challenge" title={service.painPointsTitle || 'The Challenge'}>
+          <Stagger className="v1-grid v1-grid--2">
+            {service.painPoints.map((point) => (
+              <Item key={point} className="v1-panel v1-panel--soft">
+                <p className="v1-card__text" style={{ margin: 0 }}>{point}</p>
+              </Item>
+            ))}
+          </Stagger>
+        </Section>
       )}
 
       {/* 3 — SOLUTION */}
-      {(solutionTitle || solutionBullets.length > 0) && (
-        <section className="feature-section" aria-labelledby="solution-heading">
-          <h2 id="solution-heading" className="feature-section__title">
-            {solutionTitle || 'The Solution'}
-          </h2>
-          {solutionBullets.length > 0 && (
-            <ul className="bullet-list bullet-list--lime">
-              {solutionBullets.map((item, i) => (
-                <li key={i}>{item}</li>
+      {(service.solutionTitle || service.solutionBullets.length > 0) && (
+        <Section eyebrow="The Solution" title={service.solutionTitle || "Here's What Changes"}>
+          <FadeUp className="v1-panel">
+            <ul className="v1-dot-list" style={{ marginTop: 0 }}>
+              {service.solutionBullets.map((item) => (
+                <li key={item}>{item}</li>
               ))}
             </ul>
-          )}
-        </section>
+          </FadeUp>
+        </Section>
       )}
 
       {/* 4 — PROCESS */}
-      {(processTitle || processSteps.length > 0) && (
-        <section className="feature-section" aria-labelledby="process-heading">
-          <h2 id="process-heading" className="feature-section__title">
-            {processTitle || 'How It Works'}
-          </h2>
-          {processSteps.length > 0 && (
-            <ol className="process-list">
-              {processSteps.map((step, i) => {
-                const title = paraField(step, ['field_step_title', 'field_title']);
-                const body = paraField(step, ['field_step_description', 'field_description', 'field_body']);
-                const number = paraField(step, ['field_step_number']) || String(i + 1).padStart(2, '0');
-                return (
-                  <li key={step.id ?? i} className="process-list__item">
-                    <span className="process-list__number">{number}</span>
-                    <div>
-                      {title && <h3 className="process-list__title">{title}</h3>}
-                      {body && <p className="process-list__body">{body}</p>}
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-          )}
-        </section>
+      {(service.processTitle || service.processSteps.length > 0) && (
+        <Section eyebrow="Process" title={service.processTitle || 'How It Works'}>
+          <Stagger className={`v1-process v1-process--${Math.min(service.processSteps.length, 4)}`}>
+            {service.processSteps.map((step) => (
+              <Item key={step.id ?? step.number} className="v1-process__step">
+                <span className="v1-process__number">{step.number}</span>
+                <h3 className="v1-process__title">{step.title}</h3>
+                {step.body && <p className="v1-process__body">{step.body}</p>}
+              </Item>
+            ))}
+          </Stagger>
+        </Section>
       )}
 
       {/* 5 — TESTIMONIAL */}
-      {quote && (
-        <section className="feature-section" aria-label="Testimonial">
-          <blockquote className="testimonial">
-            <p className="testimonial__quote">“{quote}”</p>
-            {attribution && <cite className="testimonial__attribution">— {attribution}</cite>}
-          </blockquote>
-        </section>
+      {service.testimonial.quote && (
+        <Section>
+          <FadeUp>
+            <TestimonialCard
+              quote={service.testimonial.quote}
+              attribution={service.testimonial.attribution}
+            />
+          </FadeUp>
+        </Section>
       )}
 
       {/* 6 — FEATURES */}
-      {(featuresTitle || features.length > 0) && (
-        <section className="feature-section" aria-labelledby="features-heading">
-          <h2 id="features-heading" className="feature-section__title">
-            {featuresTitle || "What's Included"}
-          </h2>
-          {features.length > 0 && (
-            <ul className="check-list">
-              {features.map((feature, i) => (
-                <li key={i}>{feature}</li>
+      {(service.featuresTitle || service.features.length > 0) && (
+        <Section eyebrow="Deliverables" title={service.featuresTitle || "What's Included"}>
+          <FadeUp className="v1-panel">
+            <ul className="v1-dot-list" style={{ marginTop: 0 }}>
+              {service.features.map((feature) => (
+                <li key={feature}>{feature}</li>
               ))}
             </ul>
-          )}
-        </section>
+          </FadeUp>
+        </Section>
       )}
 
       {/* 7 — FAQ */}
-      {faqItems.length > 0 && (
-        <section className="feature-section" aria-labelledby="faq-heading">
-          <h2 id="faq-heading" className="feature-section__title">
-            {faqTitle || 'Frequently Asked Questions'}
-          </h2>
-          <FaqAccordion items={faqItems} />
-        </section>
+      {service.faqs.length > 0 && (
+        <Section eyebrow="FAQ" title={service.faqTitle || 'Frequently Asked Questions'}>
+          <FadeUp>
+            <FAQAccordion items={service.faqs} />
+          </FadeUp>
+        </Section>
       )}
 
-      {/* 8 — CTA BANNER */}
-      <section className="cta-banner">
-        <h2 className="cta-banner__title">Ready to put this system to work?</h2>
-        <CtaButton href={ctaHref} label={ctaText} />
-      </section>
+      {/* 8 — START WITH THIS SERVICE (SolutionFinder, branch pre-selected) */}
+      <Section
+        eyebrow="Start"
+        title="Start with this service"
+        intro="Answer a few quick questions and get an instant ballpark estimate — no phone call required."
+      >
+        <div ref={finderRef}>
+          {finderOpen ? (
+            <SolutionFinder key={slug} initialBranch={serviceBranch} />
+          ) : (
+            <FadeUp style={{ textAlign: 'center' }}>
+              <button type="button" className="v1-btn v1-btn--primary" onClick={openFinder}>
+                Start with this service →
+              </button>
+            </FadeUp>
+          )}
+        </div>
+      </Section>
+
+      {/* 9 — CTA BANNER */}
+      <CTABanner
+        title="Ready to put this system to work?"
+        primaryCta={cta}
+        secondaryCta={{ label: 'Contact', href: '/contact' }}
+      />
     </article>
-  );
-}
-
-/** Internal links use <Link>, external ones a plain anchor. */
-function CtaButton({ href, label }) {
-  if (isExternalHref(href)) {
-    return (
-      <a className="btn btn--lime" href={href}>
-        {label}
-      </a>
-    );
-  }
-  return (
-    <Link className="btn btn--lime" to={href}>
-      {label}
-    </Link>
-  );
-}
-
-/** Simple expand/collapse accordion driven by openIndex state. */
-function FaqAccordion({ items }) {
-  const [openIndex, setOpenIndex] = useState(null);
-
-  return (
-    <div className="accordion">
-      {items.map((item, i) => {
-        const question = paraField(item, ['field_question']) || `Question ${i + 1}`;
-        const answer = paraField(item, ['field_answer']);
-        const open = openIndex === i;
-        return (
-          <div key={item.id ?? i} className={`accordion__item${open ? ' accordion__item--open' : ''}`}>
-            <button
-              type="button"
-              className="accordion__question"
-              aria-expanded={open}
-              onClick={() => setOpenIndex(open ? null : i)}
-            >
-              <span>{question}</span>
-              <span className="accordion__chevron" aria-hidden="true">
-                {open ? '−' : '+'}
-              </span>
-            </button>
-            {open && answer && (
-              <div
-                className="accordion__answer"
-                dangerouslySetInnerHTML={{ __html: answer }}
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
   );
 }

@@ -66,6 +66,18 @@ export async function simulatePayment(token) {
   return parse(res);
 }
 
+// Public, unauthenticated intake for the SolutionFinder lead-capture form.
+// Same base + /intake path as the token-scoped submitIntake below, but for
+// anonymous prospects who have no link token yet.
+export async function postIntake(payload) {
+  const res = await fetch(`${API}/intake`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  return parse(res);
+}
+
 export async function submitIntake(token, payload) {
   const res = await fetch(`${API}/intake`, {
     method: 'POST',

@@ -21,6 +21,8 @@ import CaseStudyPage from './pages/CaseStudyPage.jsx';
 import BlogHubPage from './pages/BlogHubPage.jsx';
 import BlogPostPage from './pages/BlogPostPage.jsx';
 import FAQHubPage from './pages/FAQHubPage.jsx';
+import ContactPage from './pages/ContactPage.jsx';
+import StartPage from './pages/StartPage.jsx';
 import AliasPage from './pages/AliasPage.jsx';
 
 export default function App() {
@@ -47,6 +49,8 @@ export default function App() {
           <Route path="/blog" element={<BlogHubPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/faq" element={<FAQHubPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/start" element={<StartPage />} />
 
           <Route path="/content/:type" element={<ContentPage />} />
           <Route path="/node/:uuid" element={<NodeView />} />
