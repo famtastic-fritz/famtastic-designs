@@ -375,17 +375,42 @@ export async function getNode(uuid) {
 export async function getMenus() {
   try {
     const json = await apiFetch('/jsonapi/menu_items/main');
-    const items = (json.data ?? []).map((item) => ({
-      id: item.id,
-      title: item.attributes?.title ?? 'Link',
-      url: item.attributes?.url ?? item.attributes?.link?.uri ?? '/',
-      [STUB_FLAG]: false,
-    }));
+    const seen = new Set();
+    const items = [];
+    for (const item of json.data ?? []) {
+      const url = normalizeMenuUrl(item.attributes?.url ?? item.attributes?.link?.uri ?? '/');
+      const title = item.attributes?.title ?? 'Link';
+      // Dedupe identical entries (core plugin link vs entity link).
+      const key = `${title}|${url}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      items.push({ id: item.id, title, url, [STUB_FLAG]: false });
+    }
     return items.length ? items : STUB_MENU;
   } catch (err) {
     console.warn('[drupal] getMenus() failed, using stub menu:', err.message);
     return STUB_MENU;
   }
+}
+
+/**
+ * Normalize a Drupal menu URL for the SPA:
+ * - absolute same-origin URLs → path only
+ * - strip the backend base-path prefix (/web on prod, nothing in dev)
+ *   so Drupal-generated aliases map onto SPA routes.
+ */
+function normalizeMenuUrl(url) {
+  let out = String(url ?? '/');
+  if (/^https?:\/\//i.test(out)) {
+    try {
+      const u = new URL(out);
+      out = u.pathname + u.search + u.hash;
+    } catch {
+      return out;
+    }
+  }
+  out = out.replace(/^\/web(?=\/|$)/, '');
+  return out === '' ? '/' : out;
 }
 
 /* ------------------------------------------------------------------ */
