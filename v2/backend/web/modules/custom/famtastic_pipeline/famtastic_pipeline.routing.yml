@@ -59,6 +59,33 @@ famtastic_pipeline.approval:
   requirements:
     _access: 'TRUE'
 
+# --- Proof campaign API (anonymous; access is by link token) ---
+famtastic_pipeline.proof_campaign_create:
+  path: '/api/pipeline/proof-campaign'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ProofCampaignController::createCampaign'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+famtastic_pipeline.proof_campaign_show:
+  path: '/api/pipeline/proof-campaign'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ProofCampaignController::show'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.proof_campaign_select:
+  path: '/api/pipeline/proof-campaign/select'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ProofCampaignController::selectAction'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
 # --- Stripe webhook (signature-verified inside the controller) ---
 famtastic_pipeline.stripe_webhook:
   path: '/api/pipeline/stripe/webhook'

@@ -23,6 +23,7 @@ class StripeGateway implements PaymentGatewayInterface {
   public function __construct(
     protected ClientInterface $httpClient,
     protected LoggerInterface $logger,
+    protected ProofCampaignService $proofCampaigns,
   ) {}
 
   /**
@@ -64,6 +65,14 @@ class StripeGateway implements PaymentGatewayInterface {
     ];
     if (!empty($context['customer_email'])) {
       $form['customer_email'] = $context['customer_email'];
+    }
+    // Attach proof campaign selection metadata so the webhook can mark the
+    // campaign converted without touching the existing intake flow.
+    $prospect = $order->get('prospect_ref')->entity;
+    if ($prospect && ($selection = $this->proofCampaigns->activeSelection($prospect))) {
+      $form['metadata[campaign_id]'] = $selection['campaign_id'];
+      $form['metadata[selected_variant]'] = $selection['selected_variant'];
+      $form['metadata[selected_package]'] = $selection['selected_package'];
     }
     // Prefer a pre-created Price if provided (from stripe-setup.sh).
     if ($priceId = (getenv('STRIPE_PRICE_ID') ?: Settings::get('stripe_price_id'))) {

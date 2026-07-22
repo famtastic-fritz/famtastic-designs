@@ -107,6 +107,34 @@ export async function submitApproval(token, action, note = '') {
   return parse(res);
 }
 
+// --- Proof Campaign -------------------------------------------------------
+// Token-scoped proof-campaign endpoints: 3 auto-generated design directions
+// the prospect previews and picks from before checkout. Same X-Prospect-Token
+// auth style as the rest of the pipeline client — never fake success.
+
+export async function getProofCampaign(token) {
+  const res = await fetch(`${API}/proof-campaign`, { headers: tokenHeaders(token) });
+  return parse(res);
+}
+
+export async function createProofCampaign(token, payload = {}) {
+  const res = await fetch(`${API}/proof-campaign`, {
+    method: 'POST',
+    headers: tokenHeaders(token, { 'Content-Type': 'application/json' }),
+    body: JSON.stringify(payload),
+  });
+  return parse(res);
+}
+
+export async function selectProofVariant(token, selection) {
+  const res = await fetch(`${API}/proof-campaign/select`, {
+    method: 'POST',
+    headers: tokenHeaders(token, { 'Content-Type': 'application/json' }),
+    body: JSON.stringify(selection),
+  });
+  return parse(res);
+}
+
 export function formatPrice(minorUnits, currency = 'usd') {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency.toUpperCase() })
     .format((minorUnits || 0) / 100);

@@ -8,6 +8,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\famtastic_pipeline\Service\FulfillmentService;
 use Drupal\famtastic_pipeline\Service\PipelineRepository;
+use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drupal\famtastic_pipeline\Service\StripeGateway;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,6 +27,7 @@ class SimulateController extends ControllerBase {
     protected PipelineRepository $repository,
     protected FulfillmentService $fulfillment,
     protected TimeInterface $time,
+    protected ProofCampaignService $proofCampaigns,
   ) {}
 
   /**
@@ -36,6 +38,7 @@ class SimulateController extends ControllerBase {
       $container->get('famtastic_pipeline.repository'),
       $container->get('famtastic_pipeline.fulfillment'),
       $container->get('datetime.time'),
+      $container->get('famtastic_pipeline.proof_campaign_service'),
     );
   }
 
@@ -61,7 +64,12 @@ class SimulateController extends ControllerBase {
       'pi_test_stub_' . $order->id(),
       $eventId,
     );
-    return new JsonResponse(['ok' => TRUE, 'paid' => $result['paid']]);
+    // Stub-mode parity with the real webhook: convert the active selection.
+    $converted = FALSE;
+    if ($result['paid'] && ($selection = $this->proofCampaigns->activeSelection($prospect))) {
+      $converted = $this->fulfillment->markProofCampaignConverted($selection['campaign_id'], $order->get('stripe_checkout_session_id')->value);
+    }
+    return new JsonResponse(['ok' => TRUE, 'paid' => $result['paid'], 'campaign_converted' => $converted]);
   }
 
 }

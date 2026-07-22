@@ -89,6 +89,19 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Expires all active proof campaigns past their expiry timestamp.
+   */
+  #[CLI\Command(name: 'proof-campaign:expire', aliases: ['pce'])]
+  #[CLI\Usage(name: 'drush proof-campaign:expire', description: 'Mark expired proof campaigns and print the count.')]
+  public function proofCampaignExpire(): int {
+    /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $service */
+    $service = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+    $count = $service->expireActive();
+    $this->logger()->success(dt('Expired @count proof campaign(s).', ['@count' => $count]));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Generates the Site Studio request (brief + JSON) for a prospect.
    */
   #[CLI\Command(name: 'famtastic:studio-generate', aliases: ['fsg'])]

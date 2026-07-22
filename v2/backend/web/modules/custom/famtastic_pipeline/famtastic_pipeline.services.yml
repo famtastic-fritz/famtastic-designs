@@ -13,7 +13,7 @@ services:
 
   famtastic_pipeline.stripe_gateway:
     class: Drupal\famtastic_pipeline\Service\StripeGateway
-    arguments: ['@http_client', '@logger.channel.famtastic_pipeline']
+    arguments: ['@http_client', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service']
 
   famtastic_pipeline.stub_gateway:
     class: Drupal\famtastic_pipeline\Service\StubGateway
@@ -27,7 +27,7 @@ services:
 
   famtastic_pipeline.fulfillment:
     class: Drupal\famtastic_pipeline\Service\FulfillmentService
-    arguments: ['@entity_type.manager', '@datetime.time', '@logger.channel.famtastic_pipeline']
+    arguments: ['@entity_type.manager', '@datetime.time', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service']
 
   famtastic_pipeline.studio_builder:
     class: Drupal\famtastic_pipeline\Service\SiteStudioRequestBuilder
@@ -40,6 +40,10 @@ services:
   famtastic_pipeline.studio_generator:
     class: Drupal\famtastic_pipeline\Service\StudioRequestGenerator
     arguments: ['@famtastic_pipeline.repository', '@famtastic_pipeline.studio_builder', '@famtastic_pipeline.studio_adapter', '@entity_type.manager']
+
+  famtastic_pipeline.proof_campaign_service:
+    class: Drupal\famtastic_pipeline\Service\ProofCampaignService
+    arguments: ['@entity_type.manager', '@config.factory', '@datetime.time', '@file_system', '@famtastic_pipeline.studio_adapter', '@famtastic_pipeline.repository', '@logger.channel.famtastic_pipeline']
 
   famtastic_pipeline.mailer:
     class: Drupal\famtastic_pipeline\Service\OutreachMailer
