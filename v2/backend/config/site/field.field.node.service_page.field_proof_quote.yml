@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_proof_quote
+    - node.type.service_page
+  module:
+    - text
+id: node.service_page.field_proof_quote
+field_name: field_proof_quote
+entity_type: node
+bundle: service_page
+label: Proof Quote
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

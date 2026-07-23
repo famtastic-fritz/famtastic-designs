@@ -1,0 +1,22 @@
+{
+  "name": "famtastic-designs-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "FAMtastic Designs — React 18 SPA consuming a headless Drupal 11 JSON:API backend.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/generate-seo-shells.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "framer-motion": "^12.42.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.2",
+    "vite": "^5.4.8"
+  }
+}

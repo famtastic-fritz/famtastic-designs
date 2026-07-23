@@ -1,0 +1,12 @@
+# FAMtastic Designs v2 — Platform.sh routes (Phase 2 deployment scaffold).
+#
+# All traffic lands on the Drupal backend app (name: backend in
+# .platform.app.yaml). Response caching is disabled: this origin serves
+# JSON:API + OAuth for the decoupled SPA, which is deployed separately
+# (static hosting/CDN) and points here via VITE_DRUPAL_BASE_URL.
+
+"https://{default}/":
+  type: upstream
+  upstream: "backend:http"
+  cache:
+    enabled: false

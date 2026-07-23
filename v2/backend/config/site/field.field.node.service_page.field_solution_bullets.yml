@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_solution_bullets
+    - node.type.service_page
+id: node.service_page.field_solution_bullets
+field_name: field_solution_bullets
+entity_type: node
+bundle: service_page
+label: Solution Bullets
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

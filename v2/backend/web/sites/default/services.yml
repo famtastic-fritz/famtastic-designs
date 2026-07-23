@@ -1,0 +1,24 @@
+# FAMtastic Designs v2 — site service overrides.
+#
+# CORS for the headless React 18 + Vite dev server (http://localhost:5173).
+# Drupal 11 reads the cors.config container parameter from this file
+# (sites/default/services.yml), NOT from $settings['cors.config'].
+# Run `vendor/bin/drush cr` after changing this file.
+
+parameters:
+  cors.config:
+    enabled: true
+    # Headers the SPA may send (JSON:API content-negotiation + future auth).
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Accept', 'X-Requested-With']
+    # Methods allowed for cross-origin requests.
+    allowedMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
+    # Explicit origin required because supportsCredentials is true
+    # (wildcards are invalid with credentials).
+    allowedOrigins: ['http://localhost:5173']
+    allowedOriginsPatterns: []
+    # No custom response headers need exposing for Phase 1.
+    exposedHeaders: false
+    # Preflight cache lifetime (seconds).
+    maxAge: 1000
+    # Allow cookie-based sessions for authenticated JSON:API later.
+    supportsCredentials: true

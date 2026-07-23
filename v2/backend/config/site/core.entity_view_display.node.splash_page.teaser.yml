@@ -1,0 +1,48 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.splash_page
+    - field.field.node.splash_page.body
+    - field.field.node.splash_page.field_path_alias
+    - field.field.node.splash_page.field_splash_status
+    - field.field.node.splash_page.field_publish_date
+    - field.field.node.splash_page.field_unpublish_date
+    - field.field.node.splash_page.field_hero_media
+    - field.field.node.splash_page.field_hero_headline
+    - field.field.node.splash_page.field_hero_subheadline
+    - field.field.node.splash_page.field_cta_text
+    - field.field.node.splash_page.field_cta_link
+    - field.field.node.splash_page.field_social_links
+    - field.field.node.splash_page.field_theme_override
+    - field.field.node.splash_page.field_meta_title
+    - field.field.node.splash_page.field_meta_description
+  module:
+    - text
+id: node.splash_page.teaser
+targetEntityType: node
+bundle: splash_page
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_path_alias: true
+  field_splash_status: true
+  field_publish_date: true
+  field_unpublish_date: true
+  field_hero_media: true
+  field_hero_headline: true
+  field_hero_subheadline: true
+  field_cta_text: true
+  field_cta_link: true
+  field_social_links: true
+  field_theme_override: true
+  field_meta_title: true
+  field_meta_description: true

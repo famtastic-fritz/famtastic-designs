@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_quote
+    - node.type.testimonial
+  module:
+    - text
+id: node.testimonial.field_quote
+field_name: field_quote
+entity_type: node
+bundle: testimonial
+label: Quote
+description: ''
+required: true
+translatable: true
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: text_long

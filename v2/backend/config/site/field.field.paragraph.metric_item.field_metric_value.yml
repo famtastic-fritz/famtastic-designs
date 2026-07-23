@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - field.storage.paragraph.field_metric_value
+  - paragraphs.paragraphs_type.metric_item
+  module:
+  - paragraphs
+id: paragraph.metric_item.field_metric_value
+field_name: field_metric_value
+entity_type: paragraph
+bundle: metric_item
+label: Metric value
+description: ''
+required: true
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

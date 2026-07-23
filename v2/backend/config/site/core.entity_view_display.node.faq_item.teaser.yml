@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.faq_item
+    - core.entity_view_mode.node.teaser
+    - field.field.node.faq_item.field_answer
+    - field.field.node.faq_item.field_faq_category
+    - field.field.node.faq_item.field_related_service
+    - field.field.node.faq_item.field_sort_order
+    - field.field.node.faq_item.field_meta_title
+  module:
+    - node
+    - taxonomy_term
+    - text
+    - user
+id: node.faq_item.teaser
+targetEntityType: node
+bundle: faq_item
+mode: teaser
+content:
+  links:
+    weight: 0
+    region: content
+hidden: {}

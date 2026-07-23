@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_whats_included
+    - node.type.service_page
+id: node.service_page.field_whats_included
+field_name: field_whats_included
+entity_type: node
+bundle: service_page
+label: What's Included
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_rating
+    - node.type.testimonial
+  module:
+    - options
+id: node.testimonial.field_rating
+field_name: field_rating
+entity_type: node
+bundle: testimonial
+label: Rating
+description: 'Star rating from 1 (poor) to 5 (excellent).'
+required: false
+translatable: false
+default_value:
+  -
+    value: 5
+default_value_callback: ''
+settings: {  }
+field_type: list_integer

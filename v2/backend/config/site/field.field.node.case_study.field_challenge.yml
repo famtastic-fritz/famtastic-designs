@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_challenge
+    - node.type.case_study
+  module:
+    - text
+id: node.case_study.field_challenge
+field_name: field_challenge
+entity_type: node
+bundle: case_study
+label: Challenge
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

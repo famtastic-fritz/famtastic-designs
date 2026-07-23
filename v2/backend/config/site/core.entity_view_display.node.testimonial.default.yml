@@ -1,0 +1,89 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.testimonial
+    - field.field.node.testimonial.field_client_name
+    - field.field.node.testimonial.field_client_title
+    - field.field.node.testimonial.field_location
+    - field.field.node.testimonial.field_quote
+    - field.field.node.testimonial.field_related_service
+    - field.field.node.testimonial.field_related_case_study
+    - field.field.node.testimonial.field_photo
+    - field.field.node.testimonial.field_sort_order
+  module:
+    - image
+    - node
+    - text
+    - user
+id: node.testimonial.default
+targetEntityType: node
+bundle: testimonial
+mode: default
+content:
+  field_client_name:
+    type: string
+    label: above
+    settings: &id001 {}
+    third_party_settings: {}
+    weight: 0
+    region: content
+  field_client_title:
+    type: string
+    label: above
+    settings: *id001
+    third_party_settings: {}
+    weight: 1
+    region: content
+  field_location:
+    type: string
+    label: above
+    settings: *id001
+    third_party_settings: {}
+    weight: 2
+    region: content
+  field_quote:
+    type: text_default
+    label: above
+    settings: {}
+    third_party_settings: {}
+    weight: 3
+    region: content
+  field_related_service:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {}
+    weight: 4
+    region: content
+  field_related_case_study:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {}
+    weight: 5
+    region: content
+  field_photo:
+    type: image
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {}
+    weight: 6
+    region: content
+  field_sort_order:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: false
+    third_party_settings: {}
+    weight: 7
+    region: content
+  links:
+    weight: 8
+    region: content
+hidden: {}

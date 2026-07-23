@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - node
+  - pathauto
+id: case_study
+label: Case study
+type: canonical_entities:node
+pattern: work/[node:title]
+selection_criteria:
+  case_study:
+    id: entity_bundle:node
+    bundles:
+      case_study: case_study
+    negate: false
+    context_mapping:
+      node: node
+selection_logic: and
+weight: 0
+relationships: {}

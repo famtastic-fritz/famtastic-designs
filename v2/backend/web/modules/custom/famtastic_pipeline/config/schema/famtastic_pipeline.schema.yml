@@ -1,0 +1,41 @@
+famtastic_pipeline.settings:
+  type: config_object
+  label: 'FAMtastic Pipeline settings'
+  mapping:
+    token_ttl_days:
+      type: integer
+      label: 'Prospect link token TTL (days)'
+    frontend_base_url:
+      type: string
+      label: 'Frontend base URL'
+    support_from_email:
+      type: string
+      label: 'Support from email'
+    notification_to_email:
+      type: string
+      label: 'Notification recipient email'
+    package:
+      type: mapping
+      label: 'Offer package'
+      mapping:
+        id:
+          type: string
+          label: 'Package id'
+        name:
+          type: string
+          label: 'Package name'
+        tagline:
+          type: string
+          label: 'Tagline'
+        amount:
+          type: integer
+          label: 'Amount (minor units)'
+        currency:
+          type: string
+          label: 'Currency'
+        inclusions:
+          type: sequence
+          label: 'Inclusions'
+          sequence:
+            type: string
+            label: 'Inclusion'

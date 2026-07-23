@@ -1,0 +1,16 @@
+# Build-context hygiene: derived/local paths are rebuilt inside the image
+# (composer stage re-downloads core + contrib + vendor), keeping the context
+# small and the image reproducible.
+vendor/
+web/core/
+web/modules/contrib/
+web/themes/contrib/
+web/profiles/contrib/
+web/sites/default/files/
+web/sites/default/settings.local.php
+private/
+
+# Docker packaging itself.
+Dockerfile
+.dockerignore
+docker/

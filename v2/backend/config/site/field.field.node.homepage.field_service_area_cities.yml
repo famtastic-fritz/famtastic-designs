@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_service_area_cities
+    - node.type.homepage
+  module:
+
+id: node.homepage.field_service_area_cities
+field_name: field_service_area_cities
+entity_type: node
+bundle: homepage
+label: 'Service Area Cities'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:   {  }
+field_type: string_long

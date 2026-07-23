@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies: {  }
+name: Package Page
+type: package_page
+description: A fixed-scope design package with pricing for FAMtastic Designs.
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false
