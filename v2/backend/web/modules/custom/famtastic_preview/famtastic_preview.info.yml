@@ -1,7 +1,0 @@
-name: 'FAMtastic Preview Links'
-type: module
-description: 'Adds a "View on Frontend" tab to node pages, linking to the headless React frontend.'
-package: FAMtastic
-core_version_requirement: ^10 || ^11
-dependencies:
-  - drupal:node

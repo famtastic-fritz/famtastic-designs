@@ -15,7 +15,6 @@ const packages = computed(() => [...(content.value.packages || [])].sort((a, b) 
 const addons = computed(() => content.value.addons || []);
 const faqs = computed(() => content.value.faqs || []);
 const portfolio = computed(() => content.value.portfolio || []);
-const testimonials = computed(() => content.value.testimonials || []);
 const platformStrip = computed(() => content.value.platformStrip || []);
 const portalPreview = computed(() => content.value.portalPreview || []);
 
@@ -173,12 +172,12 @@ useHead({
     </section>
 
     <section class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-      <div class="grid gap-4 lg:grid-cols-3">
-        <article v-for="item in testimonials" :key="item.quote" class="rounded-[24px] border border-white/8 bg-white/[0.03] p-6">
-          <p class="text-sm leading-7 text-white/72">“{{ item.quote }}”</p>
-          <p class="mt-4 text-sm font-semibold text-white">{{ item.name }}</p>
-          <p class="text-xs text-white/52">{{ item.titleCompany }}</p>
-        </article>
+      <div class="rounded-[28px] border border-white/8 bg-white/[0.03] p-8 lg:p-10">
+        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Why businesses hire FAMtastic Designs</p>
+        <h2 class="mt-3 text-3xl font-bold text-white">{{ home.credibilityHeadline }}</h2>
+        <div class="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <div v-for="item in home.credibilityBullets" :key="item" class="rounded-2xl border border-white/8 bg-[#0D1210] px-4 py-4 text-sm text-white/76">{{ item }}</div>
+        </div>
       </div>
     </section>
 

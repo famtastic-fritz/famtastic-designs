@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="famtastic-logo-title">
-  <title id="famtastic-logo-title">FAMtastic</title>
-  <rect width="64" height="64" rx="14" fill="#0a0a0a"/>
-  <rect x="1.5" y="1.5" width="61" height="61" rx="12.5" fill="none" stroke="#2a2a2a" stroke-width="3"/>
-  <path d="M20 48V16h24v7H28v5.5h13V35H28v13h-8z" fill="#7CFC00"/>
-  <circle cx="47" cy="46" r="3.5" fill="#7CFC00"/>
-</svg>

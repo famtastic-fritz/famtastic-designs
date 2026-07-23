@@ -19,8 +19,8 @@ useSeoMeta({
   <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
     <div class="max-w-3xl">
       <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Services</p>
-      <h1 class="mt-3 text-4xl font-black text-white">Web design, development, CMS/admin setup, automation, and website care.</h1>
-      <p class="mt-5 text-base leading-8 text-white/72">The service stack stays direct: build a stronger website, tighten the lead flow, and create a cleaner client-facing experience.</p>
+      <h1 class="mt-3 text-4xl font-black text-white">Websites, landing pages, branding, lead capture, and client systems built to support growth.</h1>
+      <p class="mt-5 text-base leading-8 text-white/72">FAMtastic Designs helps businesses create a sharper online presence with websites, landing pages, branding, lead capture, and client systems that are built to be clear, mobile-friendly, and easy to grow.</p>
     </div>
 
     <div class="mt-12 grid gap-5">

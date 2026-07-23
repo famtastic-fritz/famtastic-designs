@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { createMailto } from '~/utils/links';
+import { useFamtasticContent } from '~/composables/useFamtasticContent';
 
 const router = useRouter();
 const config = useRuntimeConfig();
 const leadCaptureMode = computed(() => (config.public.leadCaptureMode || 'manual').toLowerCase());
 const manualSubmit = computed(() => leadCaptureMode.value !== 'api');
+const { fallback } = useFamtasticContent();
+const contactEmail = computed(() => fallback.siteSettings.contactEmail || 'hello@famtasticdesigns.com');
 
 const props = withDefaults(
   defineProps<{
@@ -74,7 +77,7 @@ async function submitForm() {
         `UTM medium: ${form.utm_medium}`,
         `UTM campaign: ${form.utm_campaign}`,
       ].filter(Boolean).join('\n');
-      window.location.href = createMailto('hello@famtasticdesigns.com', {
+      window.location.href = createMailto(contactEmail.value, {
         subject: `Consultation request from ${form.name}`,
         body,
       });
@@ -104,7 +107,7 @@ async function submitForm() {
       <label class="grid gap-2 text-sm text-white/75"><span>Budget</span><input v-model="form.budget" class="rounded-2xl border border-white/10 bg-[#050807] px-4 py-3 text-white" /></label>
       <label class="grid gap-2 text-sm text-white/75 sm:col-span-2"><span>Message</span><textarea v-model="form.message" rows="4" class="rounded-2xl border border-white/10 bg-[#050807] px-4 py-3 text-white"></textarea></label>
     </div>
-    <p class="mt-4 text-xs text-white/55">{{ manualSubmit ? 'This request opens an email draft so nothing disappears into a broken pipeline.' : 'Use this form to request a consultation. If direct scheduling is not enabled yet, the next step continues by email.' }}</p>
+    <p class="mt-4 text-xs text-white/55">{{ manualSubmit ? 'This request opens an email draft so your inquiry goes straight into a visible follow-up path.' : 'Use this form to request a consultation. If direct scheduling is not enabled yet, the next step continues by email.' }}</p>
     <div v-if="errorMessage" class="mt-4 rounded-2xl border border-[#EF4444]/30 bg-[#EF4444]/10 px-4 py-3 text-sm text-[#ffd3d3]">{{ errorMessage }}</div>
     <button type="submit" :disabled="submitting" class="mt-5 inline-flex items-center justify-center rounded-full bg-[#79FF00] px-6 py-3 text-sm font-bold text-[#050807] disabled:cursor-not-allowed disabled:opacity-60">{{ submitting ? 'Submitting...' : (manualSubmit ? 'Email My Consultation Request' : 'Request Free Consultation') }}</button>
   </form>

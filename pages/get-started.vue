@@ -122,8 +122,8 @@ async function submitForm() {
       <div>
         <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Get Started</p>
         <h1 class="mt-3 text-4xl font-black text-white">Full project intake for the serious version of the conversation.</h1>
-        <p class="mt-5 text-base leading-8 text-white/72">This intake captures project details, campaign source data, and contact information so the project can move into a real consultation without a messy back-and-forth.</p>
-        <p class="mt-3 text-sm leading-7 text-white/60" v-if="manualSubmit">For the public rescue launch, this intake opens an email draft instead of pretending a hidden backend is already live.</p>
+        <p class="mt-5 text-base leading-8 text-white/72">This intake captures project details and contact information so the project can move into a real consultation without a messy back-and-forth.</p>
+        <p class="mt-3 text-sm leading-7 text-white/60" v-if="manualSubmit">Project requests are reviewed manually so nothing gets lost before the next step is confirmed.</p>
         <div class="mt-8 grid gap-4">
           <div class="rounded-[24px] border border-white/8 bg-[#0D1210] p-5 text-sm leading-7 text-white/72">
             <p class="text-xs uppercase tracking-[0.24em] text-[#79FF00]">What happens next</p>
@@ -192,14 +192,8 @@ async function submitForm() {
           </section>
 
           <section class="rounded-[24px] border border-dashed border-white/12 bg-[#0D1210] p-5 text-sm text-white/65">
-            <h2 class="text-lg font-bold text-white">Hidden Campaign Fields</h2>
-            <p class="mt-2 leading-7">Campaign fields capture attribution, referrer, landing page, device type, and submit time so project context does not get lost.</p>
-            <div class="mt-4 grid gap-2 sm:grid-cols-2">
-              <code>utm_source={{ form.utm_source || '—' }}</code>
-              <code>utm_medium={{ form.utm_medium || '—' }}</code>
-              <code>utm_campaign={{ form.utm_campaign || '—' }}</code>
-              <code>device_type={{ form.device_type || '—' }}</code>
-            </div>
+            <h2 class="text-lg font-bold text-white">Project context</h2>
+            <p class="mt-2 leading-7">Inquiry details help FAMtastic Designs understand where the request came from and what kind of follow-up makes the most sense.</p>
           </section>
 
           <div v-if="errorMessage" class="rounded-2xl border border-[#EF4444]/30 bg-[#EF4444]/10 px-4 py-3 text-sm text-[#ffd3d3]">{{ errorMessage }}</div>

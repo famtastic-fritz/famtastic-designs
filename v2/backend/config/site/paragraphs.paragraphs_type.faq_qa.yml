@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies: {}
-id: faq_qa
-label: FAQ Q&A
-icon_uuid: null
-icon_default: null
-description: ''
-behavior_plugins: {}

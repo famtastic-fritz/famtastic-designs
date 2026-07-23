@@ -13,9 +13,9 @@ useSeoMeta({ title: 'Work | FAMtastic Designs', description: 'Selected website d
 <template>
   <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
     <div class="max-w-3xl">
-      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Work / Portfolio</p>
-      <h1 class="mt-3 text-4xl font-black text-white">Launch concepts and website directions built to move a brand forward.</h1>
-      <p class="mt-5 text-base leading-8 text-white/72">A mix of launch concepts, offer packaging, and site directions that show how FAMtastic Designs approaches clarity, conversion, and visual impact.</p>
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-[#79FF00]">Project Types We Build</p>
+      <h1 class="mt-3 text-4xl font-black text-white">Project types we build for growing businesses.</h1>
+      <p class="mt-5 text-base leading-8 text-white/72">Every business starts from a different place. These examples show the kinds of outcomes FAMtastic Designs can help plan, design, and build.</p>
     </div>
 
     <div class="mt-10 grid gap-5 lg:grid-cols-3">
@@ -27,6 +27,6 @@ useSeoMeta({ title: 'Work | FAMtastic Designs', description: 'Selected website d
       </article>
     </div>
 
-    <div class="mt-12 rounded-[28px] border border-dashed border-white/12 bg-white/[0.03] p-8 text-sm leading-7 text-white/72">Need a portfolio direction that matches your business? Use the contact or intake flow to request examples tailored to your niche, offer ladder, and launch goals.</div>
+    <div class="mt-12 rounded-[28px] border border-dashed border-white/12 bg-white/[0.03] p-8 text-sm leading-7 text-white/72">Need a project direction that matches your business? Use the contact or intake flow to start your project.</div>
   </div>
 </template>

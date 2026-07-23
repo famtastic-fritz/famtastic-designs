@@ -87,6 +87,26 @@ export default defineNuxtConfig({
         { property: 'og:title', content: 'FAMtastic Designs' },
         { property: 'og:description', content: 'Websites that look expensive, load fast, and convert.' },
         { property: 'og:url', content: siteUrl },
+        { property: 'og:image', content: `${siteUrl}/og-image.png` },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'FAMtastic Designs' },
+        { name: 'twitter:description', content: 'Websites that look expensive, load fast, and convert.' },
+        { name: 'twitter:image', content: `${siteUrl}/og-image.png` },
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/png', sizes: '512x512', href: '/favicon.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+      ],
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'FAMtastic Designs helps businesses launch professional websites, branding, and client systems without messy tech or scattered tools.' },
+        { property: 'og:site_name', content: 'FAMtastic Designs' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: 'FAMtastic Designs' },
+        { property: 'og:description', content: 'Websites that look expensive, load fast, and convert.' },
+        { property: 'og:url', content: siteUrl },
       ],
       link: [{ rel: 'icon', type: 'image/png', href: '/favicon.ico' }],
     },
@@ -112,6 +132,11 @@ export default defineNuxtConfig({
   },
   build: {
     transpile: ['v-perfect-signature'],
+  },
+  nitro: {
+    prerender: {
+      ignore: ['/admin-proof', '/payment-proof'],
+    },
   },
   compatibilityDate: '2024-07-28',
 });

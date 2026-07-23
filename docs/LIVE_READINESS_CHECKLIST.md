@@ -1,8 +1,8 @@
 # Live Readiness Checklist
 
-## 2026-06-25 — Public rescue readiness pass
+## 2026-07-06 — Public stabilization readiness pass
 
-Status: local rescue build is ready for authenticated production cutover; live deployment is still blocked by missing verified host access.
+Status: the stabilization branch is locally ready for authenticated production cutover, but live deployment remains blocked by missing verified GoDaddy host access.
 
 ### Passed locally
 - Homepage loads
@@ -22,7 +22,7 @@ Status: local rescue build is ready for authenticated production cutover; live d
 - `sitemap.xml` loads
 - `robots.txt` loads
 - `/admin-proof` returns 404 when `ENABLE_ADMIN_PROOF=false`
-- Cookie banner renders and dismisses
+- Public contact email resolves as `hello@famtasticdesigns.com`
 - Public CTA links for consultation/audit route safely to `/get-started` paths
 - Form posture is manual fallback, not fake success
 
@@ -31,8 +31,15 @@ Status: local rescue build is ready for authenticated production cutover; live d
 - No public fake PayPal checkout
 - No public fake booking links
 - No fake portal-auth claims
-- No dependency on Directus for the public rescue site
+- No dependency on Directus for the public stabilization site
 - No requirement to deploy `.env`, `.data`, Directus DB, uploads, or `node_modules`
+- `robots.txt` disallows `/admin-proof` and `/payment-proof`
+- Legal/privacy routes exist in the branch and load locally
+
+### Live production mismatch still visible
+- Live `/privacy-policy/` returns `404`
+- Live `robots.txt` does not yet disallow `/admin-proof` and `/payment-proof`
+- Live site therefore does not match the verified stabilization branch
 
 ### Remaining blockers before live
 - Authenticated production deployment lane not verified from this session

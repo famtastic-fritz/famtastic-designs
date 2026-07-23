@@ -18,6 +18,15 @@ export const homepageContent = {
   shortFormIntro: 'Tell us what you need and we will point you to the right package or next step.',
   shortFormDetailLinkLabel: 'Need more detail? Complete the full project intake.',
   shortFormDetailLinkHref: '/get-started',
+  credibilityHeadline: 'Built for businesses that need to look ready.',
+  credibilityBullets: [
+    'Clear service pages',
+    'Mobile-first layouts',
+    'Lead capture built in',
+    'CMS-ready content structure',
+    'Practical launch support',
+    'Client workflow planning',
+  ],
   whyFamtastic: [
     'Clean design that helps your business look established.',
     'Mobile-first page structure that respects real visitors.',

@@ -41,3 +41,29 @@
 
 ### Next required step before live cutover
 Provide verified production access for the actual FAMtastic Designs host lane (cPanel/SFTP/SSH/process manager or documented auto-deploy path), then re-run backup -> deploy -> live verification from this prepared branch.
+
+## 2026-07-06 — Stabilization re-audit and deploy-lane recheck
+- Timestamp: 2026-07-06 local session
+- Repo: `~/famtastic/sites/site-famtastic-designs`
+- Active branch during audit: `famtastic/prod-stabilization-tv-review`
+- Intended production URL: `https://famtasticdesigns.com`
+- Live deploy status: still blocked before live
+
+### What changed in this pass
+- Re-anchored the repo and re-ran `pnpm install`, `pnpm typecheck`, `pnpm lint`, and `pnpm build` successfully.
+- Re-verified the production-safe local preview with admin proof disabled and manual/mock public posture enabled.
+- Patched the public contact email mismatch so the site content and consultation form now resolve to `hello@famtasticdesigns.com` instead of the stale `.co` address.
+- Added `docs/PRODUCTION_STABILIZATION_AUDIT.md` and `docs/PRODUCTION_FORM_BEHAVIOR.md` to record live-vs-local gaps plus honest public form/admin/payment behavior.
+
+### Live mismatches still present
+1. `https://famtasticdesigns.com/privacy-policy/` still returns `404` while the stabilization branch serves it locally.
+2. Live `robots.txt` still does not disallow `/admin-proof` and `/payment-proof`.
+3. Live production therefore still does not match the verified stabilization branch.
+
+### Deploy-lane recheck
+- GoDaddy dashboard visit still resolved to the sign-in page, not an authenticated session.
+- `ssh-add -l` returned `The agent has no identities.`
+- SSH to `xrdj7j99xhzt@p3plzcpnl497512.prod.phx3.secureserver.net` still returned `Permission denied (publickey,password)`.
+
+### Decision
+No deployment was attempted. The blocker remains authenticated production access, not branch readiness.
