@@ -6,7 +6,7 @@
   "description": "FAMtastic Designs — React 18 SPA consuming a headless Drupal 11 JSON:API backend.",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-seo-shells.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
