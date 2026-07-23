@@ -47,4 +47,4 @@ services:
 
   famtastic_pipeline.mailer:
     class: Drupal\famtastic_pipeline\Service\OutreachMailer
-    arguments: ['@config.factory', '@logger.channel.famtastic_pipeline']
+    arguments: ['@config.factory', '@plugin.manager.mail', '@language_manager', '@logger.channel.famtastic_pipeline']

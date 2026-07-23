@@ -1,4 +1,20 @@
 # --- Public, token-scoped prospect API (anonymous; access is by link token) ---
+famtastic_pipeline.public_quote:
+  path: '/api/public/quote'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PublicRequestController::quote'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+famtastic_pipeline.public_contact:
+  path: '/api/public/contact'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PublicRequestController::contact'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
 famtastic_pipeline.session:
   path: '/api/pipeline/session'
   defaults:

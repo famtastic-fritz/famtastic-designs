@@ -7,6 +7,7 @@
 
 const BASE = (import.meta.env.VITE_DRUPAL_BASE_URL ?? '').replace(/\/+$/, '');
 const API = `${BASE}/api/pipeline`;
+const PUBLIC_API = `${BASE}/api/public`;
 
 function tokenHeaders(token, extra = {}) {
   return { 'X-Prospect-Token': token, ...extra };
@@ -66,11 +67,23 @@ export async function simulatePayment(token) {
   return parse(res);
 }
 
-// Public, unauthenticated intake for the SolutionFinder lead-capture form.
-// Same base + /intake path as the token-scoped submitIntake below, but for
-// anonymous prospects who have no link token yet.
+// Public, unauthenticated quote capture for SolutionFinder. This must never
+// require an existing /p/:token prospect link.
+export async function postQuoteRequest(payload) {
+  const res = await fetch(`${PUBLIC_API}/quote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  return parse(res);
+}
+
 export async function postIntake(payload) {
-  const res = await fetch(`${API}/intake`, {
+  return postQuoteRequest(payload);
+}
+
+export async function postContactRequest(payload) {
+  const res = await fetch(`${PUBLIC_API}/contact`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

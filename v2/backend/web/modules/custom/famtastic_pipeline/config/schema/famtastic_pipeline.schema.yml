@@ -11,6 +11,9 @@ famtastic_pipeline.settings:
     support_from_email:
       type: string
       label: 'Support from email'
+    notification_to_email:
+      type: string
+      label: 'Notification recipient email'
     package:
       type: mapping
       label: 'Offer package'
