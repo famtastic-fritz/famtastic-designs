@@ -31,6 +31,11 @@ function renderShell(path) {
   );
   html = replaceTag(
     html,
+    /<meta\s+name=["']keywords["']\s+content=["'][^"']*["']\s*\/?>/i,
+    `<meta name="keywords" content="${escapeHtml(seo.keywords)}" />`,
+  );
+  html = replaceTag(
+    html,
     /<link\s+rel=["']canonical["']\s+href=["'][^"']*["']\s*\/?>/i,
     `<link rel="canonical" href="${escapeHtml(seo.canonical)}" />`,
   );
@@ -39,8 +44,9 @@ function renderShell(path) {
     'og:site_name': seo.siteName,
     'og:type': 'website',
     'og:title': seo.title,
-    'og:description': seo.description,
+    'og:description': seo.ogDescription,
     'og:url': seo.canonical,
+    'og:image': seo.image,
   };
   for (const [property, content] of Object.entries(tags)) {
     html = replaceTag(
@@ -53,7 +59,8 @@ function renderShell(path) {
   const twitter = {
     'twitter:card': 'summary_large_image',
     'twitter:title': seo.title,
-    'twitter:description': seo.description,
+    'twitter:description': seo.twitterDescription,
+    'twitter:image': seo.image,
   };
   for (const [name, content] of Object.entries(twitter)) {
     html = replaceTag(

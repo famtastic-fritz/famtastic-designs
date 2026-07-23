@@ -9,8 +9,10 @@ import {
   startCheckout,
 } from '../api/pipeline.js';
 import PipelineShell from '../components/PipelineShell.jsx';
+import { applySeo } from '../components/SEO.jsx';
 import { FadeUp, Item, Stagger } from '../components/v1/motion.jsx';
 import ProspectLandingPage from './ProspectLandingPage.jsx';
+import { proofSeo } from '../seo.js';
 import '../pipeline.css';
 
 // Mirror of ProspectLandingPage's paid-status list: prospects who already paid
@@ -172,6 +174,10 @@ export default function ProofHub() {
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    if (campaign) applySeo(proofSeo(campaign, token));
+  }, [campaign, token]);
 
   // Cycle the staged "generating" messages while the server builds variants.
   useEffect(() => {

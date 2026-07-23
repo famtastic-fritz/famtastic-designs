@@ -24,19 +24,25 @@ export default function SEO() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const seo = seoForPath(pathname);
-    document.title = seo.title;
-    upsertMeta('meta[name="description"]', { name: 'description', content: seo.description });
-    upsertLink('link[rel="canonical"]', { rel: 'canonical', href: seo.canonical });
-    upsertMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: seo.siteName });
-    upsertMeta('meta[property="og:type"]', { property: 'og:type', content: 'website' });
-    upsertMeta('meta[property="og:title"]', { property: 'og:title', content: seo.title });
-    upsertMeta('meta[property="og:description"]', { property: 'og:description', content: seo.description });
-    upsertMeta('meta[property="og:url"]', { property: 'og:url', content: seo.canonical });
-    upsertMeta('meta[name="twitter:card"]', { name: 'twitter:card', content: 'summary_large_image' });
-    upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: seo.title });
-    upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: seo.description });
+    applySeo(seoForPath(pathname));
   }, [pathname]);
 
   return null;
+}
+
+export function applySeo(seo) {
+  document.title = seo.title;
+  upsertMeta('meta[name="description"]', { name: 'description', content: seo.description });
+  upsertMeta('meta[name="keywords"]', { name: 'keywords', content: seo.keywords });
+  upsertLink('link[rel="canonical"]', { rel: 'canonical', href: seo.canonical });
+  upsertMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: seo.siteName });
+  upsertMeta('meta[property="og:type"]', { property: 'og:type', content: 'website' });
+  upsertMeta('meta[property="og:title"]', { property: 'og:title', content: seo.title });
+  upsertMeta('meta[property="og:description"]', { property: 'og:description', content: seo.ogDescription });
+  upsertMeta('meta[property="og:url"]', { property: 'og:url', content: seo.canonical });
+  upsertMeta('meta[property="og:image"]', { property: 'og:image', content: seo.image });
+  upsertMeta('meta[name="twitter:card"]', { name: 'twitter:card', content: 'summary_large_image' });
+  upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: seo.title });
+  upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: seo.twitterDescription });
+  upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: seo.image });
 }
