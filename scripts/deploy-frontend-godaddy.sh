@@ -144,9 +144,11 @@ cd "$source_dir"
 # nvm is a shell function and must be loaded explicitly in noninteractive SSH.
 export NVM_DIR="$HOME/.nvm"
 # shellcheck disable=SC1090
+set +u
 . "$NVM_DIR/nvm.sh"
 nvm install
 nvm use
+set -u
 
 npm --prefix "$frontend_dir" ci
 npm --prefix "$frontend_dir" run build
