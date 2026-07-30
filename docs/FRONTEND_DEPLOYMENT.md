@@ -6,19 +6,31 @@ The React frontend in `v2/frontend` is the canonical public frontend. Git tracks
 its source and the deployment tooling; Vite's generated `dist/` directory stays
 untracked.
 
-Shay is the primary deployment orchestrator. Codex, Claude, Hermes workers, and
-other agents may prepare changes, review, build, verify, and run deployment dry
-runs, but they hand the production decision and evidence back to Shay. Only
-Shay runs `--apply` by default; another agent requires explicit user authority
-for that specific production deployment.
+Shay is the usual deployment orchestrator, but the lane is agent-agnostic.
+Codex, Claude, Hermes workers, Shay, and other agents use the same commands,
+safeguards, and evidence contract. Any agent may prepare, review, build, verify,
+and dry-run. Any agent explicitly authorized by the user or active task for the
+production change may run `--apply`.
 
-This is one lane, not separate Shay/Codex/Hermes deploy implementations. Every
-orchestrator invokes the same Git-tracked script and receives the same backup,
-transfer, and verification behavior.
+Authorization is based on the task, not agent identity. This is one lane, not
+separate Shay/Codex/Hermes implementations. Every orchestrator invokes the same
+Git-tracked script and receives the same backup, transfer, and verification
+behavior.
 
 Production is a mixed GoDaddy document root containing the frontend, Drupal,
 and runtime files. Deploy only the contents of `v2/frontend/dist/`, preserve
 its directory structure, and never use `rsync --delete`.
+
+The artifact boundary has identical relative paths:
+
+```text
+v2/frontend/dist/index.html       -> public_html/index.html
+v2/frontend/dist/assets/<file>    -> public_html/assets/<file>
+```
+
+Do not flatten the artifact and do not create production symlinks to compensate
+for an incorrect transfer. If `index.html` requests `/assets/<file>`, that file
+must physically exist at `public_html/assets/<file>`.
 
 ## Local development
 
