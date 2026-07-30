@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ###############################################################################
-# FAMtastic Designs v2 — React 18 SPA image (Phase 2 deployment scaffold).
+# FAMtastic Designs — React 18 SPA image (Phase 2 deployment scaffold).
 #
 #   Stage 1 (build):   node:20-alpine — npm ci + vite build → dist/
 #   Stage 2 (runtime): nginx:alpine — serves dist/ and proxies /jsonapi +
