@@ -3,15 +3,20 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-FRONTEND_DIR="$REPO_ROOT/frontend"
-DIST_DIR="$FRONTEND_DIR/dist"
 SSH_TARGET="${FAMTASTIC_SSH_TARGET:-xrdj7j99xhzt@p3plzcpnl497512.prod.phx3.secureserver.net}"
 REMOTE_ROOT="${FAMTASTIC_REMOTE_ROOT:-public_html}"
+REMOTE_DEPLOY_BASE="${FAMTASTIC_REMOTE_DEPLOY_BASE:-deploy/famtastic-designs}"
+REPOSITORY_URL="${FAMTASTIC_REPOSITORY_URL:-https://github.com/famtastic-fritz/famtastic-designs.git}"
 APPLY=false
 
 usage() {
-  echo "Usage: $0 [--apply]"
-  echo "Without --apply, builds and shows an rsync dry run."
+  cat <<USAGE
+Usage: $0 [--apply]
+
+Without --apply, performs read-only local and remote preflight checks.
+With --apply, builds the exact Git commit on the server, backs up the current
+frontend, promotes the validated artifact, and verifies live asset MIME types.
+USAGE
 }
 
 case "${1:-}" in
@@ -21,7 +26,7 @@ case "${1:-}" in
   *) usage >&2; exit 2 ;;
 esac
 
-for required_command in git npm rsync ssh curl; do
+for required_command in git ssh curl; do
   command -v "$required_command" >/dev/null || {
     echo "Missing required command: $required_command" >&2
     exit 1
@@ -29,7 +34,6 @@ for required_command in git npm rsync ssh curl; do
 done
 
 cd "$REPO_ROOT"
-
 if [[ -n "$(git status --porcelain)" ]]; then
   echo "Refusing deployment from a dirty Git worktree." >&2
   git status --short >&2
@@ -37,58 +41,164 @@ if [[ -n "$(git status --porcelain)" ]]; then
 fi
 
 COMMIT_SHA="$(git rev-parse HEAD)"
-echo "Preparing frontend from commit $COMMIT_SHA"
-
-npm --prefix "$FRONTEND_DIR" ci
-npm --prefix "$FRONTEND_DIR" run build
-
-if grep -qE '(src|href)="/src/' "$DIST_DIR/index.html"; then
-  echo "Build rejected: dist/index.html contains a raw /src/ reference." >&2
+REMOTE_MAIN_SHA="$(git ls-remote "$REPOSITORY_URL" refs/heads/main | awk '{print $1}')"
+if [[ "$COMMIT_SHA" != "$REMOTE_MAIN_SHA" ]]; then
+  echo "Refusing deployment: local HEAD is not the current origin/main commit." >&2
+  echo "local HEAD:  $COMMIT_SHA" >&2
+  echo "origin/main: $REMOTE_MAIN_SHA" >&2
   exit 1
 fi
 
-ASSET_PATHS=()
-while IFS= read -r asset_path; do
-  ASSET_PATHS+=("$asset_path")
-done < <(
-  grep -oE '(src|href)="/assets/[^"]+"' "$DIST_DIR/index.html" |
-    sed -E 's/^(src|href)="\/(assets\/[^"]+)"$/\2/'
-)
-
-if [[ "${#ASSET_PATHS[@]}" -eq 0 ]]; then
-  echo "Build rejected: dist/index.html contains no compiled assets." >&2
-  exit 1
-fi
-
-VERIFY_BODY="$(mktemp)"
-trap 'rm -f "$VERIFY_BODY"' EXIT
-
-for asset_path in "${ASSET_PATHS[@]}"; do
-  if [[ ! -f "$DIST_DIR/$asset_path" ]]; then
-    echo "Build rejected: missing dist/$asset_path" >&2
-    exit 1
-  fi
-done
-
-echo "Transfer preview:"
-rsync -az --itemize-changes --dry-run \
-  "$DIST_DIR/" "$SSH_TARGET:~/$REMOTE_ROOT/"
+echo "Deployment candidate: $COMMIT_SHA"
+echo "Build location:       ~/$REMOTE_DEPLOY_BASE/releases/$COMMIT_SHA/source"
+echo "Document root:        ~/$REMOTE_ROOT"
 
 if [[ "$APPLY" != true ]]; then
-  echo "Dry run complete. Re-run with --apply after reviewing the transfer."
+  ssh -T "$SSH_TARGET" bash -s -- \
+    "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" <<'REMOTE_PREFLIGHT'
+set -euo pipefail
+remote_root="$1"
+deploy_base="$2"
+repository_url="$3"
+commit_sha="$4"
+
+for command_name in git npm node rsync tar curl; do
+  command -v "$command_name" >/dev/null || {
+    echo "Remote prerequisite missing: $command_name" >&2
+    exit 1
+  }
+done
+test -r "$HOME/.nvm/nvm.sh" || {
+  echo "Remote prerequisite missing: ~/.nvm/nvm.sh" >&2
+  exit 1
+}
+test -d "$HOME/$remote_root" || {
+  echo "Remote document root missing: ~/$remote_root" >&2
+  exit 1
+}
+remote_sha="$(git ls-remote "$repository_url" refs/heads/main | awk '{print $1}')"
+test "$remote_sha" = "$commit_sha" || {
+  echo "Remote cannot resolve requested commit as current main." >&2
+  exit 1
+}
+printf 'Remote Node: %s\n' "$(node --version)"
+printf 'Remote npm:  %s\n' "$(npm --version)"
+printf 'Free space:  %s\n' "$(df -h "$HOME" | awk 'NR == 2 {print $4}')"
+printf 'Current release: '
+if test -f "$HOME/$remote_root/.frontend-release"; then
+  tr '\n' ' ' < "$HOME/$remote_root/.frontend-release"
+  echo
+else
+  echo "unrecorded"
+fi
+echo "Preflight passed. No production files changed."
+echo "Apply plan: private Git worktree -> pinned Node build -> backup -> assets first -> index.html last."
+REMOTE_PREFLIGHT
   exit 0
 fi
 
-BACKUP_NAME="famtastic-frontend-$(date -u +%Y%m%dT%H%M%SZ).tgz"
-echo "Creating remote backup: ~/backups/$BACKUP_NAME"
-ssh -T "$SSH_TARGET" \
-  "set -eu; cd ~; mkdir -p backups; tar -czf \"backups/$BACKUP_NAME\" \"$REMOTE_ROOT/index.html\" \"$REMOTE_ROOT/assets\""
+ssh -T "$SSH_TARGET" bash -s -- \
+  "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" <<'REMOTE_APPLY'
+set -euo pipefail
+remote_root="$1"
+deploy_base="$2"
+repository_url="$3"
+commit_sha="$4"
+deploy_dir="$HOME/$deploy_base"
+mirror_dir="$deploy_dir/repository.git"
+release_dir="$deploy_dir/releases/$commit_sha"
+source_dir="$release_dir/source"
+frontend_dir="$source_dir/frontend"
+dist_dir="$frontend_dir/dist"
+production_dir="$HOME/$remote_root"
+backup_dir="$HOME/backups"
+timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+backup_path="$backup_dir/famtastic-frontend-$timestamp-$commit_sha.tgz"
 
-rsync -az --itemize-changes "$DIST_DIR/" "$SSH_TARGET:~/$REMOTE_ROOT/"
-printf '%s\n' "$COMMIT_SHA" |
-  ssh -T "$SSH_TARGET" "cat > ~/$REMOTE_ROOT/.frontend-release"
+mkdir -p "$deploy_dir/releases" "$backup_dir"
+if [[ ! -d "$mirror_dir" ]]; then
+  git clone --mirror "$repository_url" "$mirror_dir"
+else
+  git --git-dir="$mirror_dir" remote set-url origin "$repository_url"
+  git --git-dir="$mirror_dir" fetch --prune origin
+fi
 
-for asset_path in "${ASSET_PATHS[@]}"; do
+git --git-dir="$mirror_dir" cat-file -e "$commit_sha^{commit}"
+resolved_main="$(git --git-dir="$mirror_dir" rev-parse refs/heads/main)"
+[[ "$resolved_main" == "$commit_sha" ]] || {
+  echo "Refusing deployment: requested commit is no longer current main." >&2
+  exit 1
+}
+
+if [[ ! -d "$source_dir/.git" && ! -f "$source_dir/.git" ]]; then
+  rm -rf "$release_dir"
+  mkdir -p "$release_dir"
+  git --git-dir="$mirror_dir" worktree add --detach "$source_dir" "$commit_sha"
+fi
+
+cd "$source_dir"
+[[ -f .nvmrc ]] || {
+  echo "Release is missing the repository .nvmrc runtime pin." >&2
+  exit 1
+}
+# nvm is a shell function and must be loaded explicitly in noninteractive SSH.
+export NVM_DIR="$HOME/.nvm"
+# shellcheck disable=SC1090
+. "$NVM_DIR/nvm.sh"
+nvm install
+nvm use
+
+npm --prefix "$frontend_dir" ci
+npm --prefix "$frontend_dir" run build
+
+[[ -f "$dist_dir/index.html" ]] || {
+  echo "Build rejected: frontend/dist/index.html is missing." >&2
+  exit 1
+}
+if grep -qE '(src|href)="/src/' "$dist_dir/index.html"; then
+  echo "Build rejected: index.html contains a raw /src/ reference." >&2
+  exit 1
+fi
+
+mapfile -t asset_paths < <(
+  grep -oE '(src|href)="/assets/[^"]+"' "$dist_dir/index.html" |
+    sed -E 's/^(src|href)="\/(assets\/[^"]+)"$/\2/'
+)
+[[ "${#asset_paths[@]}" -gt 0 ]] || {
+  echo "Build rejected: index.html references no compiled assets." >&2
+  exit 1
+}
+for asset_path in "${asset_paths[@]}"; do
+  [[ -f "$dist_dir/$asset_path" ]] || {
+    echo "Build rejected: missing frontend/dist/$asset_path" >&2
+    exit 1
+  }
+done
+
+backup_items=()
+[[ -e "$production_dir/index.html" ]] && backup_items+=("index.html")
+[[ -e "$production_dir/assets" ]] && backup_items+=("assets")
+[[ -e "$production_dir/.frontend-release" ]] && backup_items+=(".frontend-release")
+if [[ "${#backup_items[@]}" -gt 0 ]]; then
+  tar -C "$production_dir" -czf "$backup_path" "${backup_items[@]}"
+else
+  tar -czf "$backup_path" --files-from /dev/null
+fi
+
+# Promote versioned assets and other public files before changing index.html.
+# Never use --delete: public_html also contains Drupal and hosting runtime files.
+mkdir -p "$production_dir/assets"
+rsync -a "$dist_dir/assets/" "$production_dir/assets/"
+rsync -a --exclude='index.html' --exclude='assets/' "$dist_dir/" "$production_dir/"
+install -m 0644 "$dist_dir/index.html" "$production_dir/index.html"
+{
+  printf 'commit=%s\n' "$commit_sha"
+  printf 'deployed_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  printf 'node=%s\n' "$(node --version)"
+  printf 'backup=%s\n' "$backup_path"
+} > "$production_dir/.frontend-release"
+
+for asset_path in "${asset_paths[@]}"; do
   live_url="https://famtasticdesigns.com/$asset_path"
   headers="$(curl -fsSI "$live_url")"
   content_type="$(
@@ -97,29 +207,20 @@ for asset_path in "${ASSET_PATHS[@]}"; do
       tr -d '\r' |
       tail -1
   )"
-
   case "$asset_path" in
-    *.js)
-      [[ "$content_type" == *javascript* ]] || {
-        echo "Verification failed: $live_url returned $content_type" >&2
-        exit 1
-      }
-      ;;
-    *.css)
-      [[ "$content_type" == text/css* ]] || {
-        echo "Verification failed: $live_url returned $content_type" >&2
-        exit 1
-      }
-      ;;
-  esac
-
-  curl -fsS "$live_url" -o "$VERIFY_BODY"
-  if head -c 256 "$VERIFY_BODY" | grep -qi '<!doctype html'; then
-    echo "Verification failed: $live_url returned HTML." >&2
+    *.js) [[ "$content_type" == *javascript* ]] ;;
+    *.css) [[ "$content_type" == text/css* ]] ;;
+  esac || {
+    echo "Verification failed: $live_url returned $content_type" >&2
     exit 1
-  fi
+  }
 done
 
-echo "Deployment complete for commit $COMMIT_SHA"
-echo "Rollback archive: ~/backups/$BACKUP_NAME"
+echo "Deployment complete."
+echo "Commit: $commit_sha"
+echo "Node: $(node --version)"
+echo "Backup: $backup_path"
+REMOTE_APPLY
+
+echo "Server-side deployment completed for $COMMIT_SHA."
 echo "Complete real-browser acceptance for apex and www before closing the deployment."

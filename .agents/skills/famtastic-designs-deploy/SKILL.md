@@ -14,8 +14,9 @@ primitive, regardless of which agent runs it.
 1. Work in `/Users/famtasticfritz/famtastic/sites/site-famtastic-designs`.
 2. Read `AGENTS.md` and `docs/FRONTEND_DEPLOYMENT.md`.
 3. Require source changes to be committed and merged through Git.
-4. Run `./scripts/deploy-frontend-godaddy.sh` and review the dry-run transfer.
-5. Report the commit, changed files, backup plan, and dry-run result.
+4. Run `./scripts/deploy-frontend-godaddy.sh` and review the read-only preflight.
+5. Report the commit, server runtime, private build path, backup plan, and
+   preflight result.
 6. Obtain explicit deployment authorization unless the active user request
    already clearly authorizes production deployment.
 7. Run `./scripts/deploy-frontend-godaddy.sh --apply`.
@@ -30,6 +31,8 @@ primitive, regardless of which agent runs it.
 - Any agent may build, review, test, and run the dry-run.
 - Any agent explicitly authorized by the user/task may execute `--apply`.
 - Do not invent a separate upload command or flatten `dist/`.
+- Build the exact Git commit outside `public_html`; never use its legacy
+  production checkout as the source workspace.
 - Record deployment evidence in the active task for the next agent.
 
 ## Hard stops
