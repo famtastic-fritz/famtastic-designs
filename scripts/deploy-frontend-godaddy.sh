@@ -163,20 +163,19 @@ if grep -qE '(src|href)="/src/' "$dist_dir/index.html"; then
   exit 1
 fi
 
-mapfile -t asset_paths < <(
-  grep -oE '(src|href)="/assets/[^"]+"' "$dist_dir/index.html" |
-    sed -E 's/^(src|href)="\/(assets\/[^"]+)"$/\2/'
-)
-[[ "${#asset_paths[@]}" -gt 0 ]] || {
+asset_manifest="$release_dir/referenced-assets.txt"
+grep -oE '(src|href)="/assets/[^"]+"' "$dist_dir/index.html" |
+  sed -E 's/^(src|href)="\/(assets\/[^"]+)"$/\2/' > "$asset_manifest"
+[[ -s "$asset_manifest" ]] || {
   echo "Build rejected: index.html references no compiled assets." >&2
   exit 1
 }
-for asset_path in "${asset_paths[@]}"; do
+while IFS= read -r asset_path; do
   [[ -f "$dist_dir/$asset_path" ]] || {
     echo "Build rejected: missing frontend/dist/$asset_path" >&2
     exit 1
   }
-done
+done < "$asset_manifest"
 
 backup_items=()
 [[ -e "$production_dir/index.html" ]] && backup_items+=("index.html")
@@ -201,7 +200,7 @@ install -m 0644 "$dist_dir/index.html" "$production_dir/index.html"
   printf 'backup=%s\n' "$backup_path"
 } > "$production_dir/.frontend-release"
 
-for asset_path in "${asset_paths[@]}"; do
+while IFS= read -r asset_path; do
   live_url="https://famtasticdesigns.com/$asset_path"
   headers="$(curl -fsSI "$live_url")"
   content_type="$(
@@ -217,7 +216,7 @@ for asset_path in "${asset_paths[@]}"; do
     echo "Verification failed: $live_url returned $content_type" >&2
     exit 1
   }
-done
+done < "$asset_manifest"
 
 echo "Deployment complete."
 echo "Commit: $commit_sha"
