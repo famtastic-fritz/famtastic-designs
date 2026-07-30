@@ -1,3 +1,24 @@
+# FAMtastic Designs
+
+The approved production architecture now lives directly at the repository root:
+
+```text
+frontend/             React 18 + Vite public frontend
+backend/              Drupal 11 headless CMS
+docs/                 Architecture, operations, and proof records
+scripts/              Deployment and end-to-end utilities
+docker-compose.yml    Local full-stack environment
+.platform/            Platform deployment configuration
+```
+
+The public frontend builds from `frontend/` and deploys
+`frontend/dist/` to GoDaddy `public_html/` with relative paths preserved.
+See [docs/FRONTEND_DEPLOYMENT.md](docs/FRONTEND_DEPLOYMENT.md).
+
+The AgencyOS/Nuxt material below is retained as legacy repository context.
+
+---
+
 <a href="https://directus.io" target="_blank">
   <img alt="Agency OS - Complete Nuxt3 + Directus project" src="./public/logos/agencyos.png">
   <h1 align="center">AgencyOS</h1>
