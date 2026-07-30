@@ -6,6 +6,16 @@ The React frontend in `v2/frontend` is the canonical public frontend. Git tracks
 its source and the deployment tooling; Vite's generated `dist/` directory stays
 untracked.
 
+Shay is the primary deployment orchestrator. Codex, Claude, Hermes workers, and
+other agents may prepare changes, review, build, verify, and run deployment dry
+runs, but they hand the production decision and evidence back to Shay. Only
+Shay runs `--apply` by default; another agent requires explicit user authority
+for that specific production deployment.
+
+This is one lane, not separate Shay/Codex/Hermes deploy implementations. Every
+orchestrator invokes the same Git-tracked script and receives the same backup,
+transfer, and verification behavior.
+
 Production is a mixed GoDaddy document root containing the frontend, Drupal,
 and runtime files. Deploy only the contents of `v2/frontend/dist/`, preserve
 its directory structure, and never use `rsync --delete`.

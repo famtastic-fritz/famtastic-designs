@@ -1,0 +1,4 @@
+interface:
+  display_name: "FAMtastic Designs Deploy"
+  short_description: "Safely orchestrate FAMtastic Designs production deployments"
+  default_prompt: "Deploy FAMtastic Designs through the canonical Shay-controlled Git workflow."
