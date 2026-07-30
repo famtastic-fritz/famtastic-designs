@@ -1,12 +1,13 @@
 ---
 name: famtastic-designs-deploy
-description: Orchestrate safe production deployments for famtasticdesigns.com through Shay or the Hermes host body. Use for requests to deploy, publish, release, roll back, repair, or verify the FAMtastic Designs site on GoDaddy, including delegated deployment work from Codex, Claude, or other agents.
+description: Orchestrate agent-agnostic production deployments for famtasticdesigns.com. Use for requests to deploy, publish, release, roll back, repair, or verify the FAMtastic Designs site on GoDaddy from Shay, Hermes, Codex, Claude, or another authorized agent.
 ---
 
 # FAMtastic Designs Deploy
 
-Treat Shay as the deployment authority. Treat the Git repository as the source
-of truth and `scripts/deploy-frontend-godaddy.sh` as the execution primitive.
+Treat the active user/task as the deployment authority. Treat the Git repository
+as the source of truth and `scripts/deploy-frontend-godaddy.sh` as the execution
+primitive, regardless of which agent runs it.
 
 ## Workflow
 
@@ -21,16 +22,15 @@ of truth and `scripts/deploy-frontend-godaddy.sh` as the execution primitive.
 8. Capture the printed remote backup path and deployed commit.
 9. Verify apex and `www` with a real browser, including console, exceptions,
    failed requests, MIME types, final URL, and nonempty `#root`.
-10. Record the result in the active Shay task/session.
+10. Record the result in the active task/session.
 
 ## Delegation rules
 
-- Codex, Claude, Hermes workers, and other agents may build, review, test, and
-  run the dry-run.
-- They must not invent a separate upload command or flatten `dist/`.
-- They must hand deployment evidence back to Shay.
-- Only Shay executes `--apply` by default. Another agent may do so only when the
-  user explicitly appoints that agent for the production deployment.
+- Shay, Hermes, Codex, Claude, and other agents use the same workflow.
+- Any agent may build, review, test, and run the dry-run.
+- Any agent explicitly authorized by the user/task may execute `--apply`.
+- Do not invent a separate upload command or flatten `dist/`.
+- Record deployment evidence in the active task for the next agent.
 
 ## Hard stops
 

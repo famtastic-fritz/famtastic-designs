@@ -5,10 +5,11 @@
 - React frontend in `v2/frontend`: use **npm** and its committed `package-lock.json`.
 
 ## Production Frontend
-- Shay is the primary production deployment orchestrator and authority.
-- Other agents may implement, review, test, and run deployment dry-runs.
-- Hand production evidence back to Shay; do not create a parallel deployment lane.
-- Only Shay runs `--apply` by default. Another agent needs explicit user authorization.
+- Shay is the usual deployment orchestrator, but the deployment lane is agent-agnostic.
+- Any agent may implement, review, test, and run deployment dry-runs.
+- Any agent explicitly authorized for the production change may run `--apply`.
+- Authorization comes from the user/task, never from the agent's identity.
+- Report production evidence to the active task; do not create a parallel deployment lane.
 - Canonical source: `v2/frontend`.
 - Canonical build output: `v2/frontend/dist`.
 - Production document root: `~/public_html` on GoDaddy.
