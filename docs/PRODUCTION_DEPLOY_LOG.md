@@ -1,5 +1,66 @@
 # Production Deploy Log
 
+## 2026-07-30 — Fresh Git-to-GoDaddy frontend release completed
+
+- Repository: `famtastic-fritz/famtastic-designs`
+- Source branch: `main`
+- Deployed commit:
+  `ebbbfa0c0e521e7d9de675eaafaf4cdf2a4e39ca`
+- Build location:
+  `~/deploy/famtastic-designs/releases/ebbbfa0c0e521e7d9de675eaafaf4cdf2a4e39ca/source`
+- Production document root: `~/public_html`
+- Build runtime: Node `v22.23.2`, selected from repository `.nvmrc`
+- Deployment command: `./scripts/deploy-frontend-godaddy.sh --apply`
+- Release record: `~/public_html/.frontend-release`
+- Rollback archive:
+  `~/backups/famtastic-frontend-20260730T192809Z-ebbbfa0c0e521e7d9de675eaafaf4cdf2a4e39ca.tgz`
+- Result: successful
+
+### Why this release was required
+
+The July 30 blank page traced to historical script commit `7825009e`, which
+copied `v2/frontend/dist/assets/` into the production root. Production
+`index.html` correctly requested `/assets/<bundle>`, but the bundles existed at
+`/<bundle>`. The SPA fallback returned HTML for the missing JavaScript request,
+so the browser rejected the module and React did not mount.
+
+The earlier direct SSH/SCP lane was a contributing source-of-truth problem but
+was not the immediate path error. Full evidence and the five-whys analysis are
+in `docs/INCIDENT-2026-07-30-BLANK-PAGE-RCA.md`.
+
+### Permanent release controls
+
+1. Git `main` is the only deployable source of truth.
+2. The exact commit is built in a private server directory outside
+   `public_html`.
+3. Node is pinned by `.nvmrc`.
+4. Every asset referenced by `dist/index.html` must exist before promotion.
+5. The frontend is backed up without touching Drupal or hosting runtime files.
+6. Assets and other public files are promoted before `index.html`.
+7. The deployment never flattens `dist` and never uses `rsync --delete`.
+8. `.frontend-release` must match the requested commit before success is
+   reported.
+9. Apex and `www` require real-browser acceptance after deployment.
+
+### Production acceptance evidence
+
+Both `https://famtasticdesigns.com` and
+`https://www.famtasticdesigns.com` returned HTTP 200 and rendered:
+
+- a populated React `#root`;
+- heading `Agentic AI Business Solutions Engineering Studio`;
+- no browser console errors;
+- no page exceptions;
+- no failed network requests;
+- JavaScript as JavaScript and CSS as CSS.
+
+### Nonblocking follow-up
+
+- `npm audit` reported three moderate and one high finding.
+- Vite reported a legacy root Nuxt TypeScript configuration warning.
+- The legacy checkout and stale root bundles in `public_html` require a
+  separately backed-up ownership audit before removal.
+
 ## 2026-06-25 — Public rescue deploy attempt (blocked before live)
 - Timestamp: 2026-06-25 local session
 - Repo: `~/famtastic/sites/site-famtastic-designs`
