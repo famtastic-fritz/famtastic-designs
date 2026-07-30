@@ -100,6 +100,7 @@ fi
 ssh -T "$SSH_TARGET" bash -s -- \
   "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" <<'REMOTE_APPLY'
 set -euo pipefail
+remote_apply() {
 remote_root="$1"
 deploy_base="$2"
 repository_url="$3"
@@ -222,7 +223,20 @@ echo "Deployment complete."
 echo "Commit: $commit_sha"
 echo "Node: $(node --version)"
 echo "Backup: $backup_path"
+}
+remote_apply "$@"
 REMOTE_APPLY
+
+DEPLOYED_COMMIT="$(
+  ssh -T "$SSH_TARGET" \
+    "sed -n 's/^commit=//p' ~/$REMOTE_ROOT/.frontend-release"
+)"
+if [[ "$DEPLOYED_COMMIT" != "$COMMIT_SHA" ]]; then
+  echo "Deployment verification failed: production release record does not match." >&2
+  echo "expected: $COMMIT_SHA" >&2
+  echo "recorded: ${DEPLOYED_COMMIT:-missing}" >&2
+  exit 1
+fi
 
 echo "Server-side deployment completed for $COMMIT_SHA."
 echo "Complete real-browser acceptance for apex and www before closing the deployment."
