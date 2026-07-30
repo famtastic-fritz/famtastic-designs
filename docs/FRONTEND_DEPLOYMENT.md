@@ -1,0 +1,93 @@
+# Frontend Deployment
+
+## Deployment contract
+
+The React frontend in `v2/frontend` is the canonical public frontend. Git tracks
+its source and the deployment tooling; Vite's generated `dist/` directory stays
+untracked.
+
+Production is a mixed GoDaddy document root containing the frontend, Drupal,
+and runtime files. Deploy only the contents of `v2/frontend/dist/`, preserve
+its directory structure, and never use `rsync --delete`.
+
+## Local development
+
+```bash
+npm --prefix v2/frontend ci
+npm --prefix v2/frontend run dev
+```
+
+Production-build verification:
+
+```bash
+npm --prefix v2/frontend run build
+npm --prefix v2/frontend run preview -- --host 127.0.0.1
+```
+
+Open the preview in a real browser. Confirm that `#root` is populated and that
+there are no uncaught exceptions or failed JavaScript/CSS requests.
+
+## Production deployment
+
+Deploy only from a clean worktree at a committed SHA.
+
+First inspect the exact transfer without changing production:
+
+```bash
+./scripts/deploy-frontend-godaddy.sh
+```
+
+Review the file list, then apply it:
+
+```bash
+./scripts/deploy-frontend-godaddy.sh --apply
+```
+
+The script:
+
+1. requires a clean Git worktree;
+2. runs `npm ci` and the Vite production build;
+3. rejects raw `/src/` references or missing compiled assets;
+4. creates a timestamped remote backup of `index.html` and `assets/`;
+5. transfers `dist/` without flattening directories or deleting unrelated files;
+6. records the deployed commit in `~/public_html/.frontend-release`;
+7. verifies live asset status codes, MIME types, and response bodies.
+
+Override the SSH destination only when the hosting account changes:
+
+```bash
+FAMTASTIC_SSH_TARGET=user@host \
+FAMTASTIC_REMOTE_ROOT=public_html \
+./scripts/deploy-frontend-godaddy.sh --apply
+```
+
+## Browser acceptance
+
+After every applied deployment, test both:
+
+- `https://famtasticdesigns.com`
+- `https://www.famtasticdesigns.com`
+
+For each hostname, record the final URL and confirm:
+
+- `#root` is nonempty;
+- the main heading renders;
+- JavaScript is served as JavaScript and CSS as CSS;
+- there are no page exceptions, console errors, or failed asset requests.
+
+HTTP 200 alone is not acceptance: the SPA fallback can return `index.html` with
+status 200 for a missing asset.
+
+## Rollback
+
+The apply command prints the timestamped backup path. Restore only the frontend
+files from that backup:
+
+```bash
+ssh "$FAMTASTIC_SSH_TARGET"
+cd ~
+tar -xzf backups/famtastic-frontend-TIMESTAMP.tgz
+```
+
+Then repeat browser acceptance on both hostnames. Do not replace Drupal or the
+rest of `public_html` during a frontend rollback.
