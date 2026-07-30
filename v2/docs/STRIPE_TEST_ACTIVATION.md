@@ -93,7 +93,7 @@ export STRIPE_WEBHOOK_SECRET=<whsec_… printed by `stripe listen`>
 cd v2/backend && ./vendor/bin/drush runserver 127.0.0.1:8080
 
 # Terminal C — frontend pinned to the IPv4 backend:
-cd v2/frontend && VITE_DRUPAL_PROXY_TARGET=http://127.0.0.1:8080 npm run dev
+cd frontend && VITE_DRUPAL_PROXY_TARGET=http://127.0.0.1:8080 npm run dev
 
 # Create a prospect, open /p/<token>, confirm, Pay $199, use test card 4242…
 ```

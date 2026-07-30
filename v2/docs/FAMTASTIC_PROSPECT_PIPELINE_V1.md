@@ -60,7 +60,7 @@ Confirmed from `backend/composer.json`, `backend/setup.sh`, `backend/phase2-setu
 - **No lead / prospect / order / payment / Stripe / intake / campaign / customer / Site Studio code
   anywhere** in the backend. This is greenfield.
 
-### 1.3 Frontend — React 18 SPA (`v2/frontend`)
+### 1.3 Frontend — React 18 SPA (`frontend`)
 
 Confirmed from `frontend/src/**`, `frontend/vite.config.js`, `frontend/.env`:
 
@@ -365,7 +365,7 @@ Each numbered step is a logical checkpoint commit. No push, no deploy, no merge.
 ## 12. Bounded local proof — 20-deliverable traceability matrix
 
 All backend code lives in one custom module: `v2/backend/web/modules/custom/famtastic_pipeline`.
-All frontend code lives in `v2/frontend/src`. Tests: PHPUnit under the module's `tests/`, plus one
+All frontend code lives in `frontend/src`. Tests: PHPUnit under the module's `tests/`, plus one
 executed end-to-end script `v2/scripts/e2e-proof.sh` (curl against a locally-served Drupal + a signed
 webhook). "DoD" = definition of done.
 

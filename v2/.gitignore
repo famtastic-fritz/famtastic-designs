@@ -22,9 +22,3 @@ backend/web/themes/contrib/
 backend/web/sites/default/files/*
 !backend/web/sites/default/files/.gitkeep
 backend/web/sites/default/settings.local.php
-
-# ── Frontend (React/Vite) ─────────────────────────────────
-frontend/node_modules/
-frontend/dist/
-frontend/.env
-frontend/.env.local

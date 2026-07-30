@@ -36,26 +36,29 @@ v2/
 │           ├── css/famtastic-admin.css
 │           └── logo.svg
 │
-└── frontend/                          # React 18 + Vite SPA
-    ├── package.json
-    ├── vite.config.js                 # Dev server :5173 + /jsonapi proxy fallback
-    ├── index.html
-    ├── .env.example                   # VITE_DRUPAL_BASE_URL template (copy to .env)
-    ├── .env                           # Local env (git-ignored)
-    └── src/
-        ├── main.jsx                   # React root mount
-        ├── App.jsx                    # Router shell
-        ├── index.css                  # Global styles
-        ├── api/
-        │   └── drupal.js              # JSON:API fetch client (base URL, serializers)
-        ├── components/
-        │   ├── Layout.jsx             # Page shell
-        │   ├── Header.jsx             # Site header / nav
-        │   ├── NodeList.jsx           # Article list from JSON:API
-        │   └── NodeView.jsx           # Single article view
-        └── pages/
-            ├── HomePage.jsx           # Landing page (NodeList)
-            └── ContentPage.jsx        # Article detail page (NodeView)
+└── ...                                # Frontend promoted to top-level ../frontend/
+```
+
+```text
+frontend/                              # Canonical React 18 + Vite SPA
+├── package.json
+├── vite.config.js                     # Dev server :5173 + /jsonapi proxy fallback
+├── index.html
+├── .env.example                       # VITE_DRUPAL_BASE_URL template
+└── src/
+    ├── main.jsx                       # React root mount
+    ├── App.jsx                        # Router shell
+    ├── index.css                      # Global styles
+    ├── api/
+    │   └── drupal.js                  # JSON:API fetch client
+    └── components/
+        ├── Layout.jsx
+        ├── Header.jsx
+        ├── NodeList.jsx
+        └── NodeView.jsx
+    └── pages/
+        ├── HomePage.jsx               # Landing page
+        └── ContentPage.jsx            # Article detail page
 ```
 
 ---
@@ -121,7 +124,7 @@ All commands run from `v2/backend/` unless noted.
 
 ## Frontend setup
 
-All commands run from `v2/frontend/`.
+All frontend commands run from the repository's top-level `frontend/`.
 
 ```bash
 cd frontend
@@ -247,11 +250,15 @@ v2/
 │       ├── nginx.conf               # Drupal vhost: clean URLs, /sites/default/files → index.php fallback
 │       ├── php-fpm.conf             # www pool on /run/php-fpm/php-fpm.sock, clear_env=no
 │       └── entrypoint.sh            # php-fpm (background) + nginx (foreground)
-└── frontend/
-    ├── Dockerfile                   # node:20-alpine build (npm ci + vite build) → nginx:alpine
-    ├── .dockerignore
-    └── docker/
-        └── nginx.conf               # SPA fallback + /jsonapi & /oauth proxy → backend:80
+└── backend/                         # Frontend build context is ../frontend
+```
+
+```text
+frontend/
+├── Dockerfile                       # node:20-alpine build → nginx:alpine
+├── .dockerignore
+└── docker/
+    └── nginx.conf                   # SPA fallback + API proxy → backend:80
 ```
 
 `backend/web/sites/default/settings.php` gained a small bridge: `DB_*` env vars (Compose) or `PLATFORM_RELATIONSHIPS` (Platform.sh) override the local SQLite default when present.
