@@ -1,6 +1,6 @@
 # FAMtastic Designs — Backend (Drupal 11 Headless)
 
-Headless Drupal 11 CMS serving JSON:API to the React SPA in `../frontend/`.
+Headless Drupal 11 CMS serving JSON:API to the React SPA in `../../frontend/`.
 Full monorepo docs live in [`../README.md`](../README.md); this file is the
 backend-only quickstart.
 

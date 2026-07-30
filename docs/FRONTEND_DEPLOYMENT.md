@@ -2,7 +2,7 @@
 
 ## Deployment contract
 
-The React frontend in `v2/frontend` is the canonical public frontend. Git tracks
+The React frontend in `frontend` is the canonical public frontend. Git tracks
 its source and the deployment tooling; Vite's generated `dist/` directory stays
 untracked.
 
@@ -18,14 +18,14 @@ Git-tracked script and receives the same backup, transfer, and verification
 behavior.
 
 Production is a mixed GoDaddy document root containing the frontend, Drupal,
-and runtime files. Deploy only the contents of `v2/frontend/dist/`, preserve
+and runtime files. Deploy only the contents of `frontend/dist/`, preserve
 its directory structure, and never use `rsync --delete`.
 
 The artifact boundary has identical relative paths:
 
 ```text
-v2/frontend/dist/index.html       -> public_html/index.html
-v2/frontend/dist/assets/<file>    -> public_html/assets/<file>
+frontend/dist/index.html       -> public_html/index.html
+frontend/dist/assets/<file>    -> public_html/assets/<file>
 ```
 
 Do not flatten the artifact and do not create production symlinks to compensate
@@ -35,15 +35,15 @@ must physically exist at `public_html/assets/<file>`.
 ## Local development
 
 ```bash
-npm --prefix v2/frontend ci
-npm --prefix v2/frontend run dev
+npm --prefix frontend ci
+npm --prefix frontend run dev
 ```
 
 Production-build verification:
 
 ```bash
-npm --prefix v2/frontend run build
-npm --prefix v2/frontend run preview -- --host 127.0.0.1
+npm --prefix frontend run build
+npm --prefix frontend run preview -- --host 127.0.0.1
 ```
 
 Open the preview in a real browser. Confirm that `#root` is populated and that

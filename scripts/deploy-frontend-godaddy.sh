@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-FRONTEND_DIR="$REPO_ROOT/v2/frontend"
+FRONTEND_DIR="$REPO_ROOT/frontend"
 DIST_DIR="$FRONTEND_DIR/dist"
 SSH_TARGET="${FAMTASTIC_SSH_TARGET:-xrdj7j99xhzt@p3plzcpnl497512.prod.phx3.secureserver.net}"
 REMOTE_ROOT="${FAMTASTIC_REMOTE_ROOT:-public_html}"

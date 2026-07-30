@@ -2,7 +2,7 @@
 
 ## Package Managers
 - Root Nuxt app: use **pnpm**.
-- React frontend in `v2/frontend`: use **npm** and its committed `package-lock.json`.
+- React frontend in `frontend`: use **npm** and its committed `package-lock.json`.
 
 ## Production Frontend
 - Shay is the usual deployment orchestrator, but the deployment lane is agent-agnostic.
@@ -10,8 +10,8 @@
 - Any agent explicitly authorized for the production change may run `--apply`.
 - Authorization comes from the user/task, never from the agent's identity.
 - Report production evidence to the active task; do not create a parallel deployment lane.
-- Canonical source: `v2/frontend`.
-- Canonical build output: `v2/frontend/dist`.
+- Canonical source: `frontend`.
+- Canonical build output: `frontend/dist`.
 - Production document root: `~/public_html` on GoDaddy.
 - Never flatten `dist`; `dist/assets/*` must deploy as `public_html/assets/*`.
 - Never upload source directories, run `git pull` in `public_html`, or edit production files manually.
@@ -24,10 +24,10 @@
 ## Frontend Commands
 | Task | Command |
 |---|---|
-| Install | `npm --prefix v2/frontend ci` |
-| Develop | `npm --prefix v2/frontend run dev` |
-| Build | `npm --prefix v2/frontend run build` |
-| Preview | `npm --prefix v2/frontend run preview -- --host 127.0.0.1` |
+| Install | `npm --prefix frontend ci` |
+| Develop | `npm --prefix frontend run dev` |
+| Build | `npm --prefix frontend run build` |
+| Preview | `npm --prefix frontend run preview -- --host 127.0.0.1` |
 | Deploy dry run | `./scripts/deploy-frontend-godaddy.sh` |
 | Deploy | `./scripts/deploy-frontend-godaddy.sh --apply` |
 

@@ -105,5 +105,5 @@ brief rendering (`SiteStudioBuilderTest`).
 ## Frontend build
 
 ```
-cd v2/frontend && npm run build   # → built, 0 errors
+cd frontend && npm run build   # → built, 0 errors
 ```

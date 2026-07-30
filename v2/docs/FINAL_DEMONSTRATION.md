@@ -119,12 +119,12 @@ composer install                      # first time only
 ./vendor/bin/drush runserver 127.0.0.1:8080 &
 
 # 2. Frontend (Vite on :5173)
-cd ../frontend
+cd ../../frontend
 npm install                           # first time only
 npm run dev &
 
 # 3. Create a prospect and open the secure link
-cd ../backend
+cd ../v2/backend
 ./vendor/bin/drush fpc --business-name="Sunrise Cafe" --category="Coffee Shop" --source=google
 # → open the printed http://localhost:5173/p/<token>
 #   confirm → Pay $199 (test) → intake + upload → (admin records proof) → approve
