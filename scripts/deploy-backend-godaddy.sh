@@ -74,6 +74,8 @@ source_dir="$release_dir/source"
 backend_dir="$source_dir/backend"
 source_module="$backend_dir/web/modules/custom/famtastic_pipeline"
 production_module="$production_dir/web/modules/custom/famtastic_pipeline"
+source_services="$backend_dir/web/sites/default/services.yml"
+production_services="$production_dir/web/sites/default/services.yml"
 drush="$production_dir/vendor/bin/drush"
 
 for command_name in git php composer tar rsync; do
@@ -92,6 +94,10 @@ test -x "$drush" || {
 }
 test -d "$production_module" || {
   echo "Production custom module missing: $production_module" >&2
+  exit 1
+}
+test -f "$production_services" || {
+  echo "Production Drupal services file missing: $production_services" >&2
   exit 1
 }
 remote_sha="$(git ls-remote "$repository_url" refs/heads/main | awk '{print $1}')"
@@ -138,6 +144,7 @@ if [[ ! -e "$source_dir/.git" ]]; then
 fi
 test -f "$backend_dir/composer.lock"
 test -f "$source_module/famtastic_pipeline.info.yml"
+test -f "$source_services"
 composer --working-dir="$backend_dir" install \
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
 find "$source_module" -type f -name '*.php' -print0 |
@@ -145,12 +152,16 @@ find "$source_module" -type f -name '*.php' -print0 |
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 module_backup="$HOME/backups/famtastic-pipeline-$timestamp-$commit_sha.tgz"
+services_backup="$HOME/backups/famtastic-services-$timestamp-$commit_sha.yml"
 database_backup="$HOME/backups/famtastic-database-$timestamp-$commit_sha.sql.gz"
 database_dump_target="${database_backup%.gz}"
 stage_module="$production_dir/web/modules/custom/.famtastic_pipeline-$commit_sha"
+stage_services="$production_dir/web/sites/default/.services-$commit_sha.yml"
 previous_module="$production_dir/web/modules/custom/.famtastic_pipeline-previous-$timestamp"
+previous_services="$production_dir/web/sites/default/.services-previous-$timestamp.yml"
 
 tar -C "$(dirname "$production_module")" -czf "$module_backup" "$(basename "$production_module")"
+cp -p "$production_services" "$services_backup"
 cd "$production_dir"
 "$drush" sql:dump --gzip --result-file="$database_dump_target"
 test -s "$database_backup" || {
@@ -161,14 +172,21 @@ test -s "$database_backup" || {
 rm -rf "$stage_module"
 mkdir -p "$stage_module"
 rsync -a "$source_module/" "$stage_module/"
+install -m 0644 "$source_services" "$stage_services"
 mv "$production_module" "$previous_module"
 mv "$stage_module" "$production_module"
+mv "$production_services" "$previous_services"
+mv "$stage_services" "$production_services"
 
 rollback_code() {
   if [[ -d "$previous_module" ]]; then
     failed_module="$production_dir/web/modules/custom/.famtastic_pipeline-failed-$timestamp"
     mv "$production_module" "$failed_module" 2>/dev/null || true
     mv "$previous_module" "$production_module"
+    if [[ -f "$previous_services" ]]; then
+      mv "$production_services" "$production_services.failed-$timestamp" 2>/dev/null || true
+      mv "$previous_services" "$production_services"
+    fi
     "$drush" cr >/dev/null 2>&1 || true
   fi
   echo "Code was restored after a failed deployment." >&2
@@ -190,10 +208,12 @@ trap rollback_code ERR
   printf 'deployed_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   printf 'php=%s\n' "$(php -r 'echo PHP_VERSION;')"
   printf 'module_backup=%s\n' "$module_backup"
+  printf 'services_backup=%s\n' "$services_backup"
   printf 'database_backup=%s\n' "$database_backup"
 } > "$production_dir/.backend-release"
 
 rm -rf "$previous_module"
+rm -f "$previous_services"
 trap - ERR
 echo "Backend deployment complete."
 cat "$production_dir/.backend-release"
