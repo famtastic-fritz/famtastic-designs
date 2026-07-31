@@ -43,8 +43,11 @@ http_code() { curl -s -o /dev/null -w '%{http_code}' "$@"; }
 # ---------------------------------------------------------------------------
 say "0. Start local Drupal server on :${PORT}"
 if [ "$(http_code "${BASE}/" )" = "000" ]; then
-  ( cd "$BACKEND_DIR" && "$DRUSH" runserver "127.0.0.1:${PORT}" >/tmp/famtastic-e2e-server.log 2>&1 ) &
+  caller_dir="$PWD"
+  cd "$BACKEND_DIR"
+  "$DRUSH" runserver "127.0.0.1:${PORT}" >/tmp/famtastic-e2e-server.log 2>&1 &
   SERVER_PID=$!
+  cd "$caller_dir"
   for _ in $(seq 1 20); do
     [ "$(http_code "${BASE}/robots.txt")" != "000" ] && break
     sleep 0.5

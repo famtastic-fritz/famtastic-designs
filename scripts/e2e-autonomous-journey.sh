@@ -65,8 +65,11 @@ FAMTASTIC_EMAIL_TRANSPORT=memory "$DRUSH" famtastic:jobs-run --type=outreach.sen
 tracking_key="$("$DRUSH" sqlq "SELECT tracking_key FROM famtastic_email_message WHERE prospect_id = $prospect_id ORDER BY id DESC LIMIT 1;" | tr -d '[:space:]')"
 test -n "$tracking_key"
 
-(cd "$REPO_ROOT/backend" && "$DRUSH" runserver "127.0.0.1:$PORT" > "$server_log" 2>&1) &
+caller_dir="$PWD"
+cd "$REPO_ROOT/backend"
+"$DRUSH" runserver "127.0.0.1:$PORT" > "$server_log" 2>&1 &
 server_pid=$!
+cd "$caller_dir"
 for _ in $(seq 1 40); do
   test "$(http_code "$BASE/robots.txt")" != "000" && break
   sleep 0.25
