@@ -1,8 +1,8 @@
 # FAMtastic Pipeline
 
-Prospect → confirm → pay ($199 test) → intake → Site Studio request →
-project/approval pipeline for FAMtastic Designs. This is the bounded local proof
-(V1) described in `docs/FAMTASTIC_PROSPECT_PIPELINE_V1.md`.
+Attributed lead → three proofs → gated outreach → proof/package selection →
+versioned terms → payment → intake → Site Studio fulfillment → revisions →
+approval → deployment/domain/hosting/renewal pipeline for FAMtastic Designs.
 
 ## What it adds
 
@@ -30,7 +30,9 @@ project/approval pipeline for FAMtastic Designs. This is the bounded local proof
 | POST | `/api/pipeline/stripe/simulate` | Local-test payment simulation; disabled unless explicitly enabled and always disabled with a real key |
 | POST | `/api/pipeline/intake` | Save intake (requires paid order) |
 | POST | `/api/pipeline/asset` | Upload logo/photo (requires paid order) |
-| POST | `/api/pipeline/approval` | Approve / request one revision |
+| POST | `/api/pipeline/approval` | Approve or request a package-controlled revision |
+| POST | `/api/pipeline/revision-checkout` | Purchase one separately consented revision add-on |
+| POST | `/api/pipeline/hosting-renewal` | Separately authorize disclosed month-13 hosting |
 
 Admin: `/admin/famtastic/{prospect,order,intake,project}` and
 `/admin/famtastic/prospect/{id}/generate-studio`,
@@ -74,9 +76,25 @@ Read from `getenv()` or Drupal settings; secrets never live in config.
 | `STRIPE_SECRET_KEY` | Real Stripe test API (sk_test_…). If unset → stub gateway. | *(unset → stub)* |
 | `STRIPE_PRICE_ID_ESSENTIAL_199` | Optional pre-created Essential price. | *(inline price_data)* |
 | `STRIPE_PRICE_ID_BUSINESS_499` | Optional pre-created Business price. | *(inline price_data)* |
+| `STRIPE_PRICE_ID_REVISION_ADDON_75` | Optional pre-created revision add-on price. | *(inline price_data)* |
 | `STRIPE_WEBHOOK_SECRET` | Webhook signature verification. | `whsec_local_dev_secret` (local dev only) |
 | `FAMTASTIC_ALLOW_PAYMENT_SIMULATION` | Enables the local-only simulation endpoint when truthy. Never enable in production. | `false` |
 | `FRONTEND_BASE_URL` | Success/cancel + outreach links. | `frontend_base_url` config (`http://localhost:5173`) |
+| `FAMTASTIC_PUBLIC_BASE_URL` | Public tracking and Site Studio callback base. | configured frontend URL |
+| `SITE_STUDIO_URL` | Remote proof-job endpoint; unset uses the local deterministic adapter. | *(unset)* |
+| `SITE_STUDIO_DISPATCH_SECRET` | HMAC for remote proof dispatch. | *(unset)* |
+| `SITE_STUDIO_CALLBACK_SECRET` | HMAC for asynchronous proof callbacks. | *(unset)* |
+| `FAMTASTIC_EMAIL_TRANSPORT` | Campaign transport (`disabled`, `memory`, or configured real adapter). | `disabled` |
+| `FAMTASTIC_EMAIL_WEBHOOK_SECRET` | HMAC for provider delivery events. | *(unset)* |
+| `FAMTASTIC_ALLOW_REAL_OUTREACH` | Independent real-send approval gate. | `false` |
+| `FAMTASTIC_CUSTOMER_RELEASE_ROOT` | Private immutable customer releases. | Drupal private path |
+| `FAMTASTIC_CUSTOMER_DEPLOY_ROOT` | Isolated customer deployment roots. | *(required for deployment)* |
+| `FAMTASTIC_CUSTOMER_PUBLIC_BASE` | Public customer-site URL base. | *(unset)* |
+| `FAMTASTIC_DEPLOY_TRANSPORT` | Customer deployment transport. | `disabled` |
+| `FAMTASTIC_ALLOW_CUSTOMER_DEPLOYMENTS` | Independent customer deployment gate. | `false` |
+| `FAMTASTIC_DOMAIN_VERIFY_MODE` | Read-only DNS/TLS verifier. | `disabled` |
+| `FAMTASTIC_HOSTING_MONTHLY_AMOUNT` | Disclosed recurring hosting price in minor units. | `0` (unavailable) |
+| `FAMTASTIC_HOSTING_BILLING_PROVIDER` | Recurring billing adapter (`memory` is acceptance-test only; no live adapter exists yet). | `disabled` |
 
 Non-secret settings live in `config/install/famtastic_pipeline.settings.yml`
 (package name/price/inclusions, token TTL, support email).
@@ -95,7 +113,7 @@ composer install
 Run the full local proof from the repo:
 
 ```bash
-scripts/e2e-proof.sh          # 26 assertions, exits 0 when green
+scripts/acceptance-autonomous-pipeline.sh
 ```
 
 ## Tests

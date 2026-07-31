@@ -1,55 +1,107 @@
-# Live Readiness Checklist
+# Live readiness checklist
 
-## 2026-06-25 — Public rescue readiness pass
+This is the release boundary for every human or agent. The canonical application
+is the React/Vite `frontend/` plus the Drupal `backend/`. The historical root
+Nuxt/Directus project is not deployed and its commands are not release gates.
 
-Status: local rescue build is ready for authenticated production cutover; live deployment is still blocked by missing verified host access.
+## Current evidence — 2026-07-31
 
-### Passed locally
-- Homepage loads
-- Services loads
-- Pricing loads
-- Packages loads
-- Work loads
-- Contact loads
-- Get Started loads
-- Portal loads with access-info posture
-- Client Portal Login loads with invitation-only posture
-- Thank You loads
-- Privacy Policy loads
-- Terms of Service loads
-- Cookie Policy loads
-- Sitemap page loads
-- `sitemap.xml` loads
-- `robots.txt` loads
-- `/admin-proof` returns 404 when `ENABLE_ADMIN_PROOF=false`
-- Cookie banner renders and dismisses
-- Public CTA links for consultation/audit route safely to `/get-started` paths
-- Form posture is manual fallback, not fake success
+- PR #16 head: `3e31e3fbe7f5d6cc67a0f323375c372f1488d263`
+- GitHub `main`: `7d40d52e87cc6df36dab0ee8043edfffd3220152`
+- recorded production frontend: `ebbbfa0c0e521e7d9de675eaafaf4cdf2a4e39ca`
+- recorded production backend: unrecorded
+- production Drupal: bootstrapped, database connected, Drupal 11.4.4, no
+  pending database updates at the time of the audit
+- local `scripts/acceptance-autonomous-pipeline.sh`: PASS
+- canonical frontend audit: zero vulnerabilities
+- backend Composer audit: no advisories
 
-### Verified production-safe posture in this branch
-- No public `/admin-proof` access by default
-- No public fake PayPal checkout
-- No public fake booking links
-- No fake portal-auth claims
-- No dependency on Directus for the public rescue site
-- No requirement to deploy `.env`, `.data`, Directus DB, uploads, or `node_modules`
+The autonomous software is therefore a verified release candidate, but it is
+not on `main` or production. Do not describe it as live until the release
+markers and post-deployment checks prove otherwise.
 
-### Remaining blockers before live
-- Authenticated production deployment lane not verified from this session
-- No live backup path created yet because host access is unavailable
-- Live form-delivery behavior is intentionally manual fallback until a real production capture/notification lane is enabled
+## Mandatory order
 
-### Required production env posture for cutover
-- `NUXT_PUBLIC_SITE_NAME=FAMtastic Designs`
-- `NUXT_PUBLIC_SITE_URL=https://famtasticdesigns.com`
-- `NUXT_PUBLIC_CMS_MODE=local`
-- `NUXT_PUBLIC_LEAD_CAPTURE_MODE=manual`
-- `NUXT_PUBLIC_PAYMENT_MODE=mock`
-- `NUXT_PUBLIC_PORTAL_MODE=preview`
-- `ENABLE_ADMIN_PROOF=false`
-- `NUXT_PUBLIC_ENABLE_ADMIN_PROOF=false`
-- `NUXT_PUBLIC_ENABLE_PAYMENT_PROOF=false`
-- `BOOKING_PROVIDER=manual`
+1. Obtain explicit approval to merge and deploy.
+2. Review and merge PR #16.
+3. Check out the exact resulting GitHub `main` SHA in a clean worktree.
+4. Run `scripts/acceptance-autonomous-pipeline.sh`.
+5. Run both deployment scripts without `--apply`; preflight must pass.
+6. Configure approved provider credentials in the server environment or
+   `settings.php`, never in Git.
+7. Run `scripts/deploy-backend-godaddy.sh --apply`.
+8. Run `scripts/deploy-frontend-godaddy.sh --apply`.
+9. Confirm `.backend-release` and `.frontend-release` both contain the exact
+   merged `main` SHA.
+10. Complete the production-safe verification below.
 
-### Decision
-Do not cut over live production until the GoDaddy/cPanel/host lane is authenticated and a rollback backup is created first.
+Never upload individual source or build files by SSH/SCP as a normal release.
+Never deploy a PR SHA directly. Both scripts reject anything other than current
+GitHub `main`.
+
+## Production configuration contract
+
+Keep all live-action gates disabled until their specific approval is granted.
+
+| Setting | Purpose | Safe pre-activation value |
+|---|---|---|
+| `FRONTEND_BASE_URL` | Customer return and portal links | `https://famtasticdesigns.com` |
+| `FAMTASTIC_PUBLIC_BASE_URL` | Public tracking and Site Studio callback base | `https://famtasticdesigns.com` |
+| `STRIPE_SECRET_KEY` | Stripe API; use test mode during verification | unset until approved |
+| `STRIPE_WEBHOOK_SECRET` | Stripe signature verification | required before Stripe activation |
+| `STRIPE_PRICE_ID_ESSENTIAL_199` | Authoritative $199 Checkout price | approved test/live Price ID |
+| `STRIPE_PRICE_ID_BUSINESS_499` | Authoritative $499 Checkout price | approved test/live Price ID |
+| `STRIPE_PRICE_ID_REVISION_ADDON_75` | Authoritative $75 revision price | approved test/live Price ID |
+| `SITE_STUDIO_URL` | Remote proof-job endpoint | approved HTTPS endpoint |
+| `SITE_STUDIO_DISPATCH_SECRET` | HMAC for outbound proof jobs | required for remote mode |
+| `SITE_STUDIO_CALLBACK_SECRET` | HMAC for proof callbacks | required for remote mode |
+| `FAMTASTIC_EMAIL_TRANSPORT` | Outreach adapter | `disabled` |
+| `FAMTASTIC_EMAIL_WEBHOOK_SECRET` | Provider event HMAC | required before provider events |
+| `FAMTASTIC_ALLOW_REAL_OUTREACH` | Separate bulk-send gate | `false` |
+| `FAMTASTIC_ALLOW_PAYMENT_SIMULATION` | Browser payment simulation | `false` in production |
+| `FAMTASTIC_CUSTOMER_RELEASE_ROOT` | Private immutable releases | approved path outside web root |
+| `FAMTASTIC_CUSTOMER_DEPLOY_ROOT` | Isolated customer document roots | approved path |
+| `FAMTASTIC_CUSTOMER_PUBLIC_BASE` | Customer-site URL base | approved HTTPS base |
+| `FAMTASTIC_DEPLOY_TRANSPORT` | Customer-site deployment adapter | `disabled` |
+| `FAMTASTIC_ALLOW_CUSTOMER_DEPLOYMENTS` | Separate customer deployment gate | `false` |
+| `FAMTASTIC_DOMAIN_VERIFY_MODE` | Read-only DNS/TLS adapter | `disabled` until configured |
+| `FAMTASTIC_HOSTING_MONTHLY_AMOUNT` | Disclosed month-13 price in minor units | `0` until approved |
+| `FAMTASTIC_HOSTING_BILLING_PROVIDER` | Recurring billing adapter | `disabled`; only test `memory` exists today |
+
+`memory`, `fixture`, `local`, and the stub payment gateway are test adapters,
+not production providers.
+
+Live recurring hosting remains intentionally unavailable until a separately
+reviewed provider adapter is implemented. The current code proves consent,
+scheduling, retry, cancellation, and suspension with the time-compressed
+`memory` adapter; it cannot charge a real renewal.
+
+## Production-safe verification
+
+These checks must not send outreach, charge a card, buy a domain, mutate DNS, or
+create paid cloud resources:
+
+- Confirm both release marker SHAs equal GitHub `main`.
+- Run `drush status`, `drush updatedb:status`, and a cache rebuild.
+- Confirm all pipeline entity definitions load.
+- Verify the apex and `www` frontend in a real browser.
+- Confirm populated React root, expected heading, no console exceptions, no
+  failed asset requests, and JavaScript/CSS MIME types.
+- Verify public quote/contact capture and token-invalid/expired responses.
+- Confirm payment simulation, real outreach, customer deployment, domain
+  mutation, and recurring billing gates remain disabled.
+- Review recent Drupal error logs.
+- Record the release SHA, backup paths, verifier, and results in
+  `docs/PRODUCTION_DEPLOY_LOG.md`.
+
+## Separate approvals still required
+
+- qualified legal review of terms, privacy, outreach, refund, domain, hosting,
+  renewal, suspension, and data-retention language;
+- real outreach campaign and sending identity;
+- live Stripe charges or subscriptions;
+- customer-site production deployment;
+- domain purchase or DNS mutation;
+- paid cloud resources.
+
+Passing test-mode acceptance does not grant any of these approvals.
