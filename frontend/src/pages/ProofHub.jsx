@@ -105,6 +105,8 @@ export default function ProofHub() {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [notice, setNotice] = useState(null);
   const [confirming, setConfirming] = useState(false);
+  const [terms, setTerms] = useState(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   function applyCampaign(next) {
     setCampaign(next);
@@ -144,6 +146,7 @@ export default function ProofHub() {
     setError(null);
     try {
       const session = await getSession(token);
+      setTerms(session?.terms ?? null);
       if (PAID_STATUSES.includes(session?.prospect?.status)) {
         setPhase('passthrough');
         return;
@@ -192,7 +195,11 @@ export default function ProofHub() {
     try {
       await selectProofVariant(token, { variant_id: selectedVariant, package: selectedPackage });
       // Hand off to the EXISTING checkout flow, honoring its response shape.
-      const res = await startCheckout(token);
+      const res = await startCheckout(token, {
+        package: selectedPackage,
+        terms_accepted: termsAccepted,
+        terms_checksum: terms?.checksum,
+      });
       if (res.already_paid) {
         navigate(`/p/${token}/return`);
         return;
@@ -371,7 +378,7 @@ export default function ProofHub() {
           </div>
           <button
             className="fp-btn fp-btn--lime fp-btn--lg"
-            disabled={!selectedPackage || confirming}
+            disabled={!selectedPackage || !termsAccepted || confirming}
             onClick={handleConfirmSelection}
           >
             {confirming
@@ -380,6 +387,17 @@ export default function ProofHub() {
                 ? `Confirm Selection — ${PACKAGES.find((p) => p.id === selectedPackage)?.name}`
                 : 'Select a package to continue'}
           </button>
+          <label className="fp-check">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(event) => setTermsAccepted(event.target.checked)}
+            />
+            <span>
+              I accept Website Service Terms v{terms?.version}. The selected package includes 12 months of hosting;
+              recurring hosting requires separate authorization before month 13.
+            </span>
+          </label>
           <p className="fp-fineprint">Secure payment via Stripe. You’ll be redirected to Stripe Checkout.</p>
         </FadeUp>
       )}

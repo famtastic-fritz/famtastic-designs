@@ -111,6 +111,10 @@ class Order extends ContentEntityBase {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['offer_version_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel('Offer version ID')
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['amount'] = BaseFieldDefinition::create('integer')
       ->setLabel('Amount (minor units / cents)')
       ->setDefaultValue(19900)
@@ -138,6 +142,18 @@ class Order extends ContentEntityBase {
       ->setSetting('max_length', 32)
       ->setDefaultValue('pending')
       ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['terms_version_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel('Terms version ID')
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['terms_acceptance_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel('Terms acceptance record ID')
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['terms_accepted_at'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel('Terms accepted at')
       ->setDisplayConfigurable('view', TRUE);
 
     // JSON array of processed Stripe event ids (webhook idempotency).

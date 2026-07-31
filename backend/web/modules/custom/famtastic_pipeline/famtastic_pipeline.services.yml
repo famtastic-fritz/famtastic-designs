@@ -11,6 +11,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\PipelineRepository
     arguments: ['@entity_type.manager', '@famtastic_pipeline.token_manager', '@datetime.time']
 
+  famtastic_pipeline.operational_ledger:
+    class: Drupal\famtastic_pipeline\Service\OperationalLedger
+    arguments: ['@database', '@datetime.time']
+
   famtastic_pipeline.stripe_gateway:
     class: Drupal\famtastic_pipeline\Service\StripeGateway
     arguments: ['@http_client', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service']
@@ -39,7 +43,7 @@ services:
 
   famtastic_pipeline.studio_generator:
     class: Drupal\famtastic_pipeline\Service\StudioRequestGenerator
-    arguments: ['@famtastic_pipeline.repository', '@famtastic_pipeline.studio_builder', '@famtastic_pipeline.studio_adapter', '@entity_type.manager']
+    arguments: ['@famtastic_pipeline.repository', '@famtastic_pipeline.studio_builder', '@famtastic_pipeline.studio_adapter', '@entity_type.manager', '@famtastic_pipeline.operational_ledger']
 
   famtastic_pipeline.proof_campaign_service:
     class: Drupal\famtastic_pipeline\Service\ProofCampaignService

@@ -44,11 +44,11 @@ export async function confirmProspect(token, payload) {
   return parse(res);
 }
 
-export async function startCheckout(token) {
+export async function startCheckout(token, payload) {
   const res = await fetch(`${API}/checkout`, {
     method: 'POST',
     headers: tokenHeaders(token, { 'Content-Type': 'application/json' }),
-    body: '{}',
+    body: JSON.stringify(payload),
   });
   return parse(res);
 }

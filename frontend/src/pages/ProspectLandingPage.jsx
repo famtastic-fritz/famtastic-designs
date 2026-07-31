@@ -35,6 +35,7 @@ export default function ProspectLandingPage() {
   const [saving, setSaving] = useState(false);
   const [paying, setPaying] = useState(false);
   const [notice, setNotice] = useState(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -97,7 +98,11 @@ export default function ProspectLandingPage() {
     setPaying(true);
     setNotice(null);
     try {
-      const res = await startCheckout(token);
+      const res = await startCheckout(token, {
+        package: 'essential_199',
+        terms_accepted: termsAccepted,
+        terms_checksum: data?.terms?.checksum,
+      });
       if (res.already_paid) {
         navigate(`/p/${token}/return`);
         return;
@@ -221,9 +226,20 @@ export default function ProspectLandingPage() {
           <ul className="fp-list">
             {(offer.inclusions || []).map((item) => <li key={item}>{item}</li>)}
           </ul>
-          <button className="fp-btn fp-btn--lime fp-btn--lg" onClick={handlePay} disabled={paying}>
+          <button className="fp-btn fp-btn--lime fp-btn--lg" onClick={handlePay} disabled={paying || !termsAccepted}>
             {paying ? 'Starting secure checkout…' : `Pay ${formatPrice(offer.amount, offer.currency)} & get started`}
           </button>
+          <label className="fp-check">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(event) => setTermsAccepted(event.target.checked)}
+            />
+            <span>
+              I accept Website Service Terms v{data?.terms?.version}. The first 12 months of hosting are included;
+              recurring hosting requires separate authorization before month 13.
+            </span>
+          </label>
           <p className="fp-fineprint">
             {data.gateway_mode === 'stub'
               ? 'Secure checkout is temporarily unavailable.'

@@ -87,8 +87,13 @@ assert_eq "confirm without authorization → 422" \
   "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{"authorized":false}' "${BASE}/api/pipeline/confirm")" "422"
 
 # ---------------------------------------------------------------------------
-say "5. Present + purchase the \$199 offer → Stripe test checkout (deliverables 6,8)"
-CO="$(curl -s -X POST "${TH[@]}" "${BASE}/api/pipeline/checkout")"
+say "5. Present + accept versioned terms + purchase the \$199 offer → Stripe test checkout"
+TERMS_CHECKSUM="$(echo "$SESS" | sed -n 's/.*"terms":{[^}]*"checksum":"\([^"]*\)".*/\1/p')"
+assert_eq "checkout without terms → 422" \
+  "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{}' "${BASE}/api/pipeline/checkout")" "422"
+CO="$(curl -s -X POST "${TH[@]}" "${JH[@]}" \
+  -d "{\"package\":\"essential_199\",\"terms_accepted\":true,\"terms_checksum\":\"${TERMS_CHECKSUM}\"}" \
+  "${BASE}/api/pipeline/checkout")"
 assert_contains "checkout returns a session id" "$CO" '"session_id":"cs_'
 SID="$(echo "$CO" | sed -n 's/.*"session_id":"\([^"]*\)".*/\1/p')"
 
@@ -170,6 +175,9 @@ say "13. Customer requests revision, then approves (deliverable 19)"
 assert_contains "request revision" \
   "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"Please use a bigger hero photo."}' "${BASE}/api/pipeline/approval")" \
   '"approval_status":"revision_requested"'
+assert_eq "\$199 second included revision is blocked" \
+  "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"One more change."}' "${BASE}/api/pipeline/approval")" \
+  "402"
 assert_contains "approve" \
   "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"approve"}' "${BASE}/api/pipeline/approval")" \
   '"approval_status":"approved"'

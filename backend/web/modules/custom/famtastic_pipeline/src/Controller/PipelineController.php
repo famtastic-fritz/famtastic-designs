@@ -11,8 +11,10 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\famtastic_pipeline\Entity\Order;
 use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\FulfillmentService;
+use Drupal\famtastic_pipeline\Service\OperationalLedger;
 use Drupal\famtastic_pipeline\Service\PaymentGatewayManager;
 use Drupal\famtastic_pipeline\Service\PipelineRepository;
+use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drupal\famtastic_pipeline\Service\StripeGateway;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,6 +37,8 @@ class PipelineController extends ControllerBase {
     protected EntityTypeManagerInterface $entityTypeManagerService,
     protected FileSystemInterface $fileSystem,
     protected TimeInterface $time,
+    protected OperationalLedger $ledger,
+    protected ProofCampaignService $proofCampaigns,
   ) {}
 
   /**
@@ -48,6 +52,8 @@ class PipelineController extends ControllerBase {
       $container->get('entity_type.manager'),
       $container->get('file_system'),
       $container->get('datetime.time'),
+      $container->get('famtastic_pipeline.operational_ledger'),
+      $container->get('famtastic_pipeline.proof_campaign_service'),
     );
   }
 
@@ -115,22 +121,66 @@ class PipelineController extends ControllerBase {
     if (!in_array($prospect->get('status')->value, $leadOrBeyond, TRUE)) {
       return $this->error('confirm_first', 409, 'Please confirm your business before purchasing.');
     }
+    $data = $this->jsonBody($request);
+    $terms = $this->ledger->activeTerms();
+    if (!$terms) {
+      return $this->error('terms_unavailable', 503, 'Checkout terms are temporarily unavailable.');
+    }
+    if (
+      empty($data['terms_accepted'])
+      || !hash_equals($terms['checksum'], (string) ($data['terms_checksum'] ?? ''))
+    ) {
+      return $this->error('terms_acceptance_required', 422, 'Please accept the current service terms before checkout.');
+    }
+
+    $selection = $this->proofCampaigns->activeSelection($prospect);
+    $offerKey = (string) ($selection['selected_package'] ?? $data['package'] ?? 'essential_199');
+    if ($offerKey === 'basic_199') {
+      $offerKey = 'essential_199';
+    }
+    $offer = $this->ledger->activeOffer($offerKey);
+    if (!$offer || str_starts_with($offerKey, 'revision_')) {
+      return $this->error('invalid_package', 422, 'Select a valid launch package.');
+    }
 
     $order = $this->repository->getOrder($prospect);
     if ($order && $order->isPaid()) {
       return new JsonResponse(['ok' => TRUE, 'already_paid' => TRUE]);
     }
     if (!$order) {
-      $pkg = $this->config('famtastic_pipeline.settings')->get('package');
       $order = Order::create([
         'prospect_ref' => $prospect->id(),
-        'package' => $pkg['id'] ?? 'basic_199',
-        'amount' => (int) ($pkg['amount'] ?? 19900),
-        'currency' => $pkg['currency'] ?? 'usd',
+        'package' => $offer['offer_key'],
+        'offer_version_id' => $offer['id'],
+        'amount' => $offer['amount_minor'],
+        'currency' => $offer['currency'],
         'payment_status' => 'pending',
       ]);
-      $order->save();
     }
+    $contact = (string) ($prospect->get('contact_value')->value ?: $prospect->get('public_email')->value);
+    $acceptanceId = $this->ledger->recordConsent(
+      $contact,
+      'accepted',
+      (int) $prospect->id(),
+      'website_terms',
+      $terms['id'],
+      [
+        'terms_checksum' => $terms['checksum'],
+        'offer_key' => $offer['offer_key'],
+        'offer_version_id' => $offer['id'],
+        'ip_hash' => hash('sha256', (string) ($request->getClientIp() ?: 'unknown')),
+        'user_agent_hash' => hash('sha256', (string) $request->headers->get('User-Agent', '')),
+      ],
+    );
+    $order
+      ->set('package', $offer['offer_key'])
+      ->set('offer_version_id', $offer['id'])
+      ->set('amount', $offer['amount_minor'])
+      ->set('currency', $offer['currency'])
+      ->set('terms_version_id', $terms['id'])
+      ->set('terms_acceptance_id', $acceptanceId)
+      ->set('terms_accepted_at', $this->time->getRequestTime())
+      ->save();
 
     $token = $this->readToken($request);
     $frontend = $this->frontendBase();
@@ -140,7 +190,7 @@ class PipelineController extends ControllerBase {
       'customer_email' => $prospect->get('contact_value')->value && $prospect->get('contact_method')->value === 'email'
         ? $prospect->get('contact_value')->value
         : $prospect->get('public_email')->value,
-      'product_name' => (string) ($this->config('famtastic_pipeline.settings')->get('package')['name'] ?? 'FAMtastic Basic Website'),
+      'product_name' => $offer['name'],
     ];
 
     try {
@@ -294,20 +344,81 @@ class PipelineController extends ControllerBase {
     $data = $this->jsonBody($request);
     $action = $data['action'] ?? '';
     if ($action === 'approve') {
+      $approvedAt = $this->time->getRequestTime();
+      $artifactChecksum = hash('sha256', (string) $project->get('studio_json')->value);
+      $releaseSha = hash('sha256', implode(':', [
+        $project->id(),
+        $prospect->id(),
+        $project->get('proof_url')->value,
+        $artifactChecksum,
+        $approvedAt,
+      ]));
       $project->set('approval_status', 'approved');
-      $project->set('approved_at', $this->time->getRequestTime());
+      $project->set('approved_at', $approvedAt);
       $project->set('delivery_status', 'approved');
+      $project->set('release_sha', $releaseSha);
+      $project->set('artifact_checksum', $artifactChecksum);
       $project->save();
       $prospect->set('status', 'approved')->save();
-      return new JsonResponse(['ok' => TRUE, 'approval_status' => 'approved']);
+      $jobId = $this->ledger->enqueue(
+        'deployment.prepare:' . $project->id() . ':' . $releaseSha,
+        'deployment.prepare',
+        [
+          'project_id' => (int) $project->id(),
+          'release_sha' => $releaseSha,
+          'artifact_checksum' => $artifactChecksum,
+        ],
+        (int) $prospect->id(),
+      );
+      $this->ledger->recordEvent(
+        'project.approved:' . $project->id() . ':' . $releaseSha,
+        'project.approved',
+        ['release_sha' => $releaseSha, 'deployment_job_id' => $jobId],
+        (int) $prospect->id(),
+        projectId: (int) $project->id(),
+      );
+      return new JsonResponse([
+        'ok' => TRUE,
+        'approval_status' => 'approved',
+        'release_sha' => $releaseSha,
+        'deployment_job_id' => $jobId,
+      ]);
     }
     if ($action === 'request_revision') {
+      $used = (int) $project->get('revision_count')->value;
+      $limit = max(1, (int) $project->get('revision_limit')->value);
+      if ($used >= $limit) {
+        $addon = $this->ledger->activeOffer('revision_addon_75');
+        return $this->error(
+          'revision_addon_required',
+          402,
+          sprintf(
+            'Your package includes %d revision round%s. An additional revision is available for $%0.2f.',
+            $limit,
+            $limit === 1 ? '' : 's',
+            ((int) ($addon['amount_minor'] ?? 7500)) / 100,
+          ),
+        );
+      }
       $project->set('approval_status', 'revision_requested');
       $project->set('delivery_status', 'revision');
+      $project->set('revision_count', $used + 1);
       $project->set('revision_notes', $this->sanitize((string) ($data['note'] ?? ''), TRUE));
       $project->save();
       $prospect->set('status', 'revision_requested')->save();
-      return new JsonResponse(['ok' => TRUE, 'approval_status' => 'revision_requested']);
+      $this->ledger->recordEvent(
+        'project.revision:' . $project->id() . ':' . ($used + 1),
+        'project.revision_requested',
+        ['revision_number' => $used + 1, 'revision_limit' => $limit],
+        (int) $prospect->id(),
+        projectId: (int) $project->id(),
+      );
+      return new JsonResponse([
+        'ok' => TRUE,
+        'approval_status' => 'revision_requested',
+        'revision_count' => $used + 1,
+        'revision_limit' => $limit,
+      ]);
     }
     return $this->error('bad_action', 422, 'Action must be approve or request_revision.');
   }
@@ -360,7 +471,11 @@ class PipelineController extends ControllerBase {
     foreach (Prospect::PUBLIC_BUSINESS_FIELDS as $field) {
       $business[$field] = $prospect->get($field)->value;
     }
-    $pkg = $this->config('famtastic_pipeline.settings')->get('package');
+    $offers = array_values(array_filter([
+      $this->ledger->activeOffer('essential_199'),
+      $this->ledger->activeOffer('business_499'),
+    ]));
+    $terms = $this->ledger->activeTerms();
     $order = $this->repository->getOrder($prospect);
     $intake = $this->repository->getIntake($prospect);
     $project = $this->repository->getProject($prospect);
@@ -377,9 +492,21 @@ class PipelineController extends ControllerBase {
         ],
         'authorized' => (bool) $prospect->get('authorized')->value,
       ],
-      'offer' => $pkg,
+      'offer' => $offers[0] ?? NULL,
+      'offers' => $offers,
+      'terms' => $terms ? [
+        'id' => $terms['id'],
+        'version' => $terms['version'],
+        'checksum' => $terms['checksum'],
+        'document_url' => $terms['document_url'],
+        'body' => $terms['body'],
+      ] : NULL,
       'order' => $order ? [
         'payment_status' => $order->get('payment_status')->value,
+        'package' => $order->get('package')->value,
+        'amount' => (int) $order->get('amount')->value,
+        'currency' => $order->get('currency')->value,
+        'terms_accepted_at' => $order->get('terms_accepted_at')->value ? (int) $order->get('terms_accepted_at')->value : NULL,
       ] : NULL,
       'gateway_mode' => $this->gatewayManager->active()->getMode(),
       'intake' => $intake ? ['submitted' => (bool) $intake->get('submitted_at')->value] : NULL,
@@ -389,6 +516,9 @@ class PipelineController extends ControllerBase {
         'delivery_status' => $project->get('delivery_status')->value,
         'approval_status' => $project->get('approval_status')->value,
         'revision_notes' => $project->get('revision_notes')->value,
+        'revision_count' => (int) $project->get('revision_count')->value,
+        'revision_limit' => (int) $project->get('revision_limit')->value,
+        'release_sha' => $project->get('release_sha')->value,
       ] : NULL,
     ];
   }
