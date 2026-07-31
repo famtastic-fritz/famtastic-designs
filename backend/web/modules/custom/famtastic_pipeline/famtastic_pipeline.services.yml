@@ -63,7 +63,7 @@ services:
 
   famtastic_pipeline.fulfillment:
     class: Drupal\famtastic_pipeline\Service\FulfillmentService
-    arguments: ['@entity_type.manager', '@datetime.time', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service']
+    arguments: ['@entity_type.manager', '@datetime.time', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service', '@famtastic_pipeline.operational_ledger']
 
   famtastic_pipeline.studio_builder:
     class: Drupal\famtastic_pipeline\Service\SiteStudioRequestBuilder

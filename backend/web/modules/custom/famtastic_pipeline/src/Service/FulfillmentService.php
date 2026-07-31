@@ -23,6 +23,7 @@ class FulfillmentService {
     protected TimeInterface $time,
     protected LoggerInterface $logger,
     protected ProofCampaignService $proofCampaigns,
+    protected OperationalLedger $ledger,
   ) {}
 
   /**
@@ -63,9 +64,29 @@ class FulfillmentService {
       if ($paymentIntent) {
         $order->set('stripe_payment_intent_id', $paymentIntent);
       }
-      $this->advanceProspect($order);
+      if ($order->get('package')->value === 'revision_addon_75') {
+        $this->fulfillRevisionAddOn($order);
+      }
+      else {
+        $this->advanceProspect($order);
+      }
     }
     $order->save();
+    $prospect = $order->get('prospect_ref')->entity;
+    $this->ledger->recordEvent(
+      'payment.verified:' . $eventId,
+      'payment.verified',
+      [
+        'order_id' => (int) $order->id(),
+        'package' => $order->get('package')->value,
+        'amount_minor' => (int) $order->get('amount')->value,
+        'currency' => $order->get('currency')->value,
+      ],
+      $prospect ? (int) $prospect->id() : NULL,
+      orderId: (int) $order->id(),
+      provider: 'stripe',
+      providerEventId: $eventId,
+    );
 
     $this->logger->info('Fulfillment: order @id paid (event @e).', ['@id' => $order->id(), '@e' => $eventId]);
     return ['found' => TRUE, 'newly_processed' => TRUE, 'paid' => TRUE, 'order' => $order];
@@ -108,6 +129,42 @@ class FulfillmentService {
       $prospect->set('status', 'paid');
       $prospect->save();
     }
+  }
+
+  /**
+   * Adds exactly one revision allowance after verified add-on payment.
+   */
+  protected function fulfillRevisionAddOn(Order $order): void {
+    $prospect = $order->get('prospect_ref')->entity;
+    if (!$prospect) {
+      throw new \RuntimeException('Revision add-on order has no prospect.');
+    }
+    $storage = $this->entityTypeManager->getStorage('famtastic_project');
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('prospect_ref', $prospect->id())
+      ->sort('id', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    $project = $ids ? $storage->load(reset($ids)) : NULL;
+    if (!$project || $project->get('approval_status')->value !== 'revision_requested') {
+      throw new \RuntimeException('Revision add-on has no eligible project.');
+    }
+    $oldLimit = max(1, (int) $project->get('revision_limit')->value);
+    $project->set('revision_limit', $oldLimit + 1);
+    $project->save();
+    $this->ledger->recordEvent(
+      'revision_addon.fulfilled:' . $order->id(),
+      'revision_addon.fulfilled',
+      [
+        'order_id' => (int) $order->id(),
+        'old_revision_limit' => $oldLimit,
+        'new_revision_limit' => $oldLimit + 1,
+      ],
+      (int) $prospect->id(),
+      orderId: (int) $order->id(),
+      projectId: (int) $project->id(),
+    );
   }
 
 }

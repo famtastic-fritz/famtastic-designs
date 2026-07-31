@@ -73,6 +73,14 @@ final class HostingLifecycleService {
       throw new \InvalidArgumentException('Recurring hosting amount must be positive.');
     }
     $entitlement = $this->loadEntitlement($entitlementId);
+    $existing = $this->database->select('famtastic_subscription', 's')
+      ->fields('s')
+      ->condition('entitlement_id', $entitlementId)
+      ->execute()
+      ->fetchAssoc();
+    if ($existing) {
+      return $existing;
+    }
     $project = $this->entityTypeManager->getStorage('famtastic_project')->load($entitlement['project_id']);
     $prospectId = $project?->get('prospect_ref')->target_id;
     $consentId = $this->ledger->recordConsent(
@@ -91,14 +99,6 @@ final class HostingLifecycleService {
     $provider = getenv('FAMTASTIC_HOSTING_BILLING_PROVIDER') ?: Settings::get('famtastic_hosting_billing_provider', 'disabled');
     if ($provider !== 'memory') {
       throw new \RuntimeException('Live recurring billing is disabled; only the acceptance-test memory provider is configured.');
-    }
-    $existing = $this->database->select('famtastic_subscription', 's')
-      ->fields('s')
-      ->condition('entitlement_id', $entitlementId)
-      ->execute()
-      ->fetchAssoc();
-    if ($existing) {
-      return $existing;
     }
     $now = $this->time->getRequestTime();
     $id = (int) $this->database->insert('famtastic_subscription')

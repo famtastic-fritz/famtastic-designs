@@ -53,6 +53,24 @@ export async function startCheckout(token, payload) {
   return parse(res);
 }
 
+export async function startRevisionCheckout(token, payload) {
+  const res = await fetch(`${API}/revision-checkout`, {
+    method: 'POST',
+    headers: tokenHeaders(token, { 'Content-Type': 'application/json' }),
+    body: JSON.stringify(payload),
+  });
+  return parse(res);
+}
+
+export async function authorizeHostingRenewal(token, payload) {
+  const res = await fetch(`${API}/hosting-renewal`, {
+    method: 'POST',
+    headers: tokenHeaders(token, { 'Content-Type': 'application/json' }),
+    body: JSON.stringify(payload),
+  });
+  return parse(res);
+}
+
 export async function getOrderStatus(token) {
   const res = await fetch(`${API}/order-status`, { headers: tokenHeaders(token) });
   return parse(res);

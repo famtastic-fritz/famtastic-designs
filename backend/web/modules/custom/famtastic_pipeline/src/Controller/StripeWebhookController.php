@@ -36,6 +36,9 @@ class StripeWebhookController extends ControllerBase {
    */
   public function handle(Request $request): JsonResponse {
     $payload = $request->getContent();
+    if (strlen($payload) > 1024 * 1024) {
+      return new JsonResponse(['error' => 'request_too_large'], 413);
+    }
     $sig = $request->headers->get('Stripe-Signature', '');
 
     if (!$this->verifier->verify($payload, $sig)) {

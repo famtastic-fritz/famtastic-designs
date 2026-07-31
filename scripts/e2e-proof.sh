@@ -221,6 +221,19 @@ fi
 assert_eq "revision beyond package allowance is blocked" \
   "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"An extra change."}' "${BASE}/api/pipeline/approval")" \
   "402"
+ADDON_CHECKOUT="$(curl -s -X POST "${TH[@]}" "${JH[@]}" \
+  -d "{\"terms_accepted\":true,\"terms_checksum\":\"${TERMS_CHECKSUM}\"}" \
+  "${BASE}/api/pipeline/revision-checkout")"
+assert_contains "revision add-on checkout uses authoritative 7500-cent amount" "$ADDON_CHECKOUT" '"amount":7500'
+ADDON_SID="$(echo "$ADDON_CHECKOUT" | sed -n 's/.*"session_id":"\([^"]*\)".*/\1/p')"
+ADDON_TS=$((TS + 1))
+ADDON_PAYLOAD="$(printf '{"id":"evt_e2e_addon_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_addon","payment_status":"paid","amount_total":7500,"currency":"usd"}}}' "$ADDON_TS" "$ADDON_SID")"
+ADDON_SIG="$(printf '%s.%s' "$ADDON_TS" "$ADDON_PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | sed 's/^.*= //')"
+ADDON_WEBHOOK="$(curl -s -X POST -H "Stripe-Signature: t=${ADDON_TS},v1=${ADDON_SIG}" "${JH[@]}" -d "$ADDON_PAYLOAD" "${BASE}/api/pipeline/stripe/webhook")"
+assert_contains "signed add-on payment is fulfilled" "$ADDON_WEBHOOK" '"paid":true'
+assert_contains "purchased revision becomes available" \
+  "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"Purchased revision."}' "${BASE}/api/pipeline/approval")" \
+  "\"revision_count\":$((EXPECTED_REVISIONS + 1))"
 assert_contains "approve" \
   "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"approve"}' "${BASE}/api/pipeline/approval")" \
   '"approval_status":"approved"'

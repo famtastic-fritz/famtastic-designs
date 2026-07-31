@@ -103,6 +103,11 @@
 .fp-notice--error { background: rgba(255, 92, 92, 0.1); border: 1px solid #ff5c5c; }
 
 .fp-divider { height: 1px; background: var(--fam-border, #2a2a2a); margin: 1.25rem 0; }
+.fp-addon { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--fam-border, #2a2a2a); }
+.fp-status-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin: 1rem 0 0; }
+.fp-status-grid div { background: #0f0f0f; border: 1px solid var(--fam-border, #2a2a2a); border-radius: 8px; padding: 0.75rem; }
+.fp-status-grid dt { color: var(--fam-text-muted, #888); font-size: 0.78rem; margin-bottom: 0.2rem; }
+.fp-status-grid dd { margin: 0; font-weight: 650; overflow-wrap: anywhere; }
 .fp-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 .fp-footer { padding: 1.5rem; text-align: center; color: var(--fam-text-muted, #888); font-size: 0.8rem; border-top: 1px solid var(--fam-border, #2a2a2a); }
 
@@ -116,6 +121,7 @@
 
 @media (max-width: 620px) {
   .fp-grid { grid-template-columns: 1fr; }
+  .fp-status-grid { grid-template-columns: 1fr; }
   .fp-steps__label { display: none; }
 }
 

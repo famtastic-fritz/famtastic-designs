@@ -21,13 +21,17 @@ scripts/e2e-site-studio-callback.sh
 scripts/e2e-email-campaign.sh
 PORT=8899 scripts/e2e-proof.sh
 PORT=8900 PACKAGE=business_499 EXPECTED_AMOUNT=49900 EXPECTED_REVISIONS=2 scripts/e2e-proof.sh
+PORT=8920 PACKAGE=essential_199 EXPECTED_AMOUNT=19900 EXPECTED_REVISIONS=1 scripts/e2e-autonomous-journey.sh
+PORT=8921 PACKAGE=business_499 EXPECTED_AMOUNT=49900 EXPECTED_REVISIONS=2 scripts/e2e-autonomous-journey.sh
 scripts/e2e-customer-deployment.sh
 scripts/e2e-domain-lifecycle.sh
 scripts/e2e-hosting-lifecycle.sh
 scripts/e2e-analytics.sh
+scripts/e2e-exception-queue.sh
 
 npm --prefix frontend audit --audit-level=high
 npm --prefix frontend run build
+composer --working-dir=backend validate --strict
 composer --working-dir=backend audit
 
 echo "PASS: autonomous lead-to-launch acceptance suite completed."

@@ -319,6 +319,13 @@ class ProofCampaignService {
       $campaign->set('stripe_order_id', $stripeOrderId);
     }
     $campaign->save();
+    $prospectId = (int) $campaign->get('prospect_id')->target_id;
+    $this->ledger->recordEvent(
+      'proof.converted:' . $campaignId,
+      'proof.converted',
+      ['campaign_id' => $campaignId, 'checkout_session_id' => $stripeOrderId],
+      $prospectId,
+    );
     $this->logger->info('Proof campaign @cid marked converted.', ['@cid' => $campaignId]);
     return TRUE;
   }

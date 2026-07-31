@@ -11,14 +11,17 @@
 - versioned $199 and $499 offers, versioned terms acceptance, exact amount
   verification, and signed idempotent Stripe-style webhooks;
 - paid intake, verified image upload, package-specific revisions, approval, and
-  immutable release fingerprint;
+  immutable release fingerprint, including separately purchased $75 revisions;
 - isolated customer release, backup, atomic promotion, verification, and
   rollback;
 - customer-owned domain records, delegated authorization, read-only DNS/TLS
   evidence, and no automated purchase or mutation;
 - twelve included hosting months beginning at verified launch, separate
   recurring consent, month-13 renewal, retry, cancellation, and suspension;
-- token-scoped customer lifecycle status and campaign/source/revenue analytics;
+- token-scoped customer lifecycle status, customer-authorized recurring
+  hosting, and campaign/source/proof/revenue analytics;
+- correlated $199 and $499 journeys from imported lead through launch and
+  renewal, plus bounded retry and actionable exception evidence;
 - GitHub acceptance workflow for the canonical React frontend and Drupal
   backend.
 
@@ -35,14 +38,18 @@ scripts/e2e-lead-import.sh
 scripts/e2e-fresh-backend-install.sh
 scripts/e2e-site-studio-callback.sh
 scripts/e2e-email-campaign.sh
+PORT=8920 PACKAGE=essential_199 EXPECTED_AMOUNT=19900 EXPECTED_REVISIONS=1 scripts/e2e-autonomous-journey.sh
+PORT=8921 PACKAGE=business_499 EXPECTED_AMOUNT=49900 EXPECTED_REVISIONS=2 scripts/e2e-autonomous-journey.sh
 PORT=8899 scripts/e2e-proof.sh
 PORT=8900 PACKAGE=business_499 EXPECTED_AMOUNT=49900 EXPECTED_REVISIONS=2 scripts/e2e-proof.sh
 scripts/e2e-customer-deployment.sh
 scripts/e2e-domain-lifecycle.sh
 scripts/e2e-hosting-lifecycle.sh
 scripts/e2e-analytics.sh
+scripts/e2e-exception-queue.sh
 npm --prefix frontend audit --audit-level=high
 npm --prefix frontend run build
+composer --working-dir=backend validate --strict
 composer --working-dir=backend audit
 backend/vendor/bin/phpunit -c backend/web/core/phpunit.xml.dist backend/web/modules/custom/famtastic_pipeline/tests/src/Unit
 ```

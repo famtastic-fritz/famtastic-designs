@@ -55,7 +55,18 @@ domain_id="$(jq -r '.domain_id' "$result")"
 fixture="$(jq -nc --arg domain "$domain" '{($domain): {expected_target:"customer-host.example", observed_targets:["customer-host.example"], ssl_valid:true, certificate_expires_at:4102444800}}')"
 FAMTASTIC_DOMAIN_VERIFY_MODE=fixture \
 FAMTASTIC_DOMAIN_VERIFY_FIXTURE="$fixture" \
-  "$DRUSH" famtastic:jobs-run --type=domain.verify --limit=100 >/dev/null
+  "$DRUSH" eval "
+    \$service = \\Drupal::service('famtastic_pipeline.domain_lifecycle');
+    \$service->verifyDeployment($(jq -r '.deployment_id' "$result"), $domain_id);
+    \$db = \\Drupal::database();
+    \$ledger = \\Drupal::service('famtastic_pipeline.operational_ledger');
+    foreach (['domain.verify:domain:$domain_id'] as \$jobKey) {
+      \$jobId = \$db->select('famtastic_job', 'j')->fields('j', ['id'])->condition('job_key', \$jobKey)->execute()->fetchField();
+      if (\$jobId) {
+        \$ledger->completeJob((int) \$jobId, ['status' => 'verified_directly']);
+      }
+    }
+  "
 
 "$DRUSH" eval "
   \$db = \\Drupal::database();

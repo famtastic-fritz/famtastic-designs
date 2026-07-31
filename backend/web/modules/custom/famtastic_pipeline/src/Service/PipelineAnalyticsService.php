@@ -31,6 +31,7 @@ final class PipelineAnalyticsService {
         'proofs_ready' => 0,
         'sales' => 0,
         'revenue_minor' => 0,
+        'addon_revenue_minor' => 0,
         'launches' => 0,
         'renewals_paid' => 0,
         'conversion_rate' => 0.0,
@@ -51,11 +52,12 @@ final class PipelineAnalyticsService {
         'campaign_key' => $key, 'status' => 'unregistered', 'spend_minor' => 0,
         'currency' => 'usd', 'leads' => 0, 'qualified' => 0, 'proofs_ready' => 0,
         'sales' => 0, 'revenue_minor' => 0, 'launches' => 0, 'renewals_paid' => 0,
+        'addon_revenue_minor' => 0,
         'conversion_rate' => 0.0, 'cost_per_sale_minor' => NULL,
         'average_time_to_launch_seconds' => NULL,
       ];
       $campaigns[$key]['leads']++;
-      $sources[$source] ??= ['source' => $source, 'leads' => 0, 'sales' => 0, 'revenue_minor' => 0];
+      $sources[$source] ??= ['source' => $source, 'leads' => 0, 'sales' => 0, 'revenue_minor' => 0, 'addon_revenue_minor' => 0];
       $sources[$source]['leads']++;
 
       $qualified = (bool) $this->database->select('famtastic_lead_import', 'l')
@@ -66,30 +68,46 @@ final class PipelineAnalyticsService {
       $campaigns[$key]['proofs_ready'] += $this->eventExists('proof.ready', (int) $prospect['id']) ? 1 : 0;
 
       $orders = $this->database->select('famtastic_order', 'o')
-        ->fields('o', ['id', 'amount', 'payment_status'])
+        ->fields('o', ['id', 'package', 'amount', 'payment_status'])
         ->condition('prospect_ref', $prospect['id'])
         ->execute()->fetchAll(\PDO::FETCH_ASSOC);
       foreach ($orders as $order) {
         if ($order['payment_status'] === 'paid') {
-          $campaigns[$key]['sales']++;
           $campaigns[$key]['revenue_minor'] += (int) $order['amount'];
-          $sources[$source]['sales']++;
           $sources[$source]['revenue_minor'] += (int) $order['amount'];
+          if (in_array($order['package'], ['essential_199', 'business_499'], TRUE)) {
+            $campaigns[$key]['sales']++;
+            $sources[$source]['sales']++;
+          }
+          else {
+            $campaigns[$key]['addon_revenue_minor'] += (int) $order['amount'];
+            $sources[$source]['addon_revenue_minor'] += (int) $order['amount'];
+          }
         }
       }
-      $launch = $this->database->select('famtastic_event', 'e')
-        ->fields('e', ['occurred_at'])
-        ->condition('prospect_id', $prospect['id'])
-        ->condition('event_type', 'deployment.deployed')
-        ->orderBy('occurred_at')->range(0, 1)->execute()->fetchField();
+      $projectIds = $this->database->select('famtastic_project', 'p')
+        ->fields('p', ['id'])
+        ->condition('prospect_ref', $prospect['id'])
+        ->execute()
+        ->fetchCol();
+      $launch = FALSE;
+      if ($projectIds) {
+        $launch = $this->database->select('famtastic_event', 'e')
+          ->fields('e', ['occurred_at'])
+          ->condition('project_id', $projectIds, 'IN')
+          ->condition('event_type', 'deployment.deployed')
+          ->orderBy('occurred_at')->range(0, 1)->execute()->fetchField();
+      }
       if ($launch) {
         $campaigns[$key]['launches']++;
         $campaigns[$key]['launch_seconds'][] = max(0, (int) $launch - (int) $prospect['created']);
       }
-      $campaigns[$key]['renewals_paid'] += (int) $this->database->select('famtastic_event', 'e')
-        ->condition('prospect_id', $prospect['id'])
-        ->condition('event_type', 'hosting.renewal_paid')
-        ->countQuery()->execute()->fetchField();
+      if ($projectIds) {
+        $campaigns[$key]['renewals_paid'] += (int) $this->database->select('famtastic_event', 'e')
+          ->condition('project_id', $projectIds, 'IN')
+          ->condition('event_type', 'hosting.renewal_paid')
+          ->countQuery()->execute()->fetchField();
+      }
     }
 
     foreach ($campaigns as &$campaign) {
@@ -123,6 +141,7 @@ final class PipelineAnalyticsService {
           ->fields('o', ['amount'])
           ->condition('prospect_ref', $prospectId)
           ->condition('payment_status', 'paid')
+          ->condition('package', ['essential_199', 'business_499'], 'IN')
           ->execute()
           ->fetchCol();
         $sales += count($paidOrders);

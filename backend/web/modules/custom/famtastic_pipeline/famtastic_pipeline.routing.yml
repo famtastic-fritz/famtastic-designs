@@ -88,6 +88,22 @@ famtastic_pipeline.checkout:
   requirements:
     _access: 'TRUE'
 
+famtastic_pipeline.revision_checkout:
+  path: '/api/pipeline/revision-checkout'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PipelineController::revisionCheckout'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+famtastic_pipeline.hosting_renewal:
+  path: '/api/pipeline/hosting-renewal'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PipelineController::hostingRenewal'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
 famtastic_pipeline.order_status:
   path: '/api/pipeline/order-status'
   defaults:
