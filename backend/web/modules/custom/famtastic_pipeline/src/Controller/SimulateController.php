@@ -6,19 +6,20 @@ namespace Drupal\famtastic_pipeline\Controller;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Service\FulfillmentService;
 use Drupal\famtastic_pipeline\Service\PipelineRepository;
+use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drupal\famtastic_pipeline\Service\StripeGateway;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Stub-mode ONLY: simulates a successful test payment.
+ * Explicitly enabled local-test mode ONLY: simulates a successful test payment.
  *
- * When no Stripe key is configured, the UI has no real Stripe to redirect to,
- * so this clearly-labeled test control drives the exact same fulfillment code
- * path the webhook uses. It refuses to run when a real Stripe key is present.
+ * The endpoint defaults to disabled and refuses to run when a real Stripe key
+ * is present. Tests must opt in with FAMTASTIC_ALLOW_PAYMENT_SIMULATION.
  */
 class SimulateController extends ControllerBase {
 
@@ -26,6 +27,7 @@ class SimulateController extends ControllerBase {
     protected PipelineRepository $repository,
     protected FulfillmentService $fulfillment,
     protected TimeInterface $time,
+    protected ProofCampaignService $proofCampaigns,
   ) {}
 
   /**
@@ -36,6 +38,7 @@ class SimulateController extends ControllerBase {
       $container->get('famtastic_pipeline.repository'),
       $container->get('famtastic_pipeline.fulfillment'),
       $container->get('datetime.time'),
+      $container->get('famtastic_pipeline.proof_campaign_service'),
     );
   }
 
@@ -43,6 +46,13 @@ class SimulateController extends ControllerBase {
    * POST /api/pipeline/stripe/simulate.
    */
   public function handle(Request $request): JsonResponse {
+    $simulationAllowed = filter_var(
+      getenv('FAMTASTIC_ALLOW_PAYMENT_SIMULATION') ?: Settings::get('famtastic_allow_payment_simulation', FALSE),
+      FILTER_VALIDATE_BOOL,
+    );
+    if (!$simulationAllowed) {
+      return new JsonResponse(['ok' => FALSE, 'error' => 'simulation_disabled', 'message' => 'Payment simulation is disabled.'], 403);
+    }
     if (StripeGateway::isConfigured()) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'stub_only', 'message' => 'Simulation is disabled when a real Stripe key is configured.'], 403);
     }
@@ -61,7 +71,12 @@ class SimulateController extends ControllerBase {
       'pi_test_stub_' . $order->id(),
       $eventId,
     );
-    return new JsonResponse(['ok' => TRUE, 'paid' => $result['paid']]);
+    // Stub-mode parity with the real webhook: convert the active selection.
+    $converted = FALSE;
+    if ($result['paid'] && ($selection = $this->proofCampaigns->activeSelection($prospect))) {
+      $converted = $this->fulfillment->markProofCampaignConverted($selection['campaign_id'], $order->get('stripe_checkout_session_id')->value);
+    }
+    return new JsonResponse(['ok' => TRUE, 'paid' => $result['paid'], 'campaign_converted' => $converted]);
   }
 
 }

@@ -7,6 +7,7 @@
 
 const BASE = (import.meta.env.VITE_DRUPAL_BASE_URL ?? '').replace(/\/+$/, '');
 const API = `${BASE}/api/pipeline`;
+const PUBLIC_API = `${BASE}/api/public`;
 
 function tokenHeaders(token, extra = {}) {
   return { 'X-Prospect-Token': token, ...extra };
@@ -66,11 +67,23 @@ export async function simulatePayment(token) {
   return parse(res);
 }
 
-// Public, unauthenticated intake for the SolutionFinder lead-capture form.
-// Same base + /intake path as the token-scoped submitIntake below, but for
-// anonymous prospects who have no link token yet.
+// Public, unauthenticated quote capture for SolutionFinder. This must never
+// require an existing /p/:token prospect link.
+export async function postQuoteRequest(payload) {
+  const res = await fetch(`${PUBLIC_API}/quote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  return parse(res);
+}
+
 export async function postIntake(payload) {
-  const res = await fetch(`${API}/intake`, {
+  return postQuoteRequest(payload);
+}
+
+export async function postContactRequest(payload) {
+  const res = await fetch(`${PUBLIC_API}/contact`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -103,6 +116,34 @@ export async function submitApproval(token, action, note = '') {
     method: 'POST',
     headers: tokenHeaders(token, { 'Content-Type': 'application/json' }),
     body: JSON.stringify({ action, note }),
+  });
+  return parse(res);
+}
+
+// --- Proof Campaign -------------------------------------------------------
+// Token-scoped proof-campaign endpoints: 3 auto-generated design directions
+// the prospect previews and picks from before checkout. Same X-Prospect-Token
+// auth style as the rest of the pipeline client — never fake success.
+
+export async function getProofCampaign(token) {
+  const res = await fetch(`${API}/proof-campaign`, { headers: tokenHeaders(token) });
+  return parse(res);
+}
+
+export async function createProofCampaign(token, payload = {}) {
+  const res = await fetch(`${API}/proof-campaign`, {
+    method: 'POST',
+    headers: tokenHeaders(token, { 'Content-Type': 'application/json' }),
+    body: JSON.stringify(payload),
+  });
+  return parse(res);
+}
+
+export async function selectProofVariant(token, selection) {
+  const res = await fetch(`${API}/proof-campaign/select`, {
+    method: 'POST',
+    headers: tokenHeaders(token, { 'Content-Type': 'application/json' }),
+    body: JSON.stringify(selection),
   });
   return parse(res);
 }

@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { getNodesRaw } from '../api/drupal.js';
 import { matchBySlug } from '../utils/content.js';
 import { transformServiceNode } from '../lib/drupalAdapter.js';
+import { applySeo } from '../components/SEO.jsx';
+import { serviceSeo } from '../seo.js';
 import {
   Hero,
   Section,
@@ -43,11 +45,14 @@ export default function ServicePage() {
     };
   }, [slug]);
 
+  const service = state.service;
+  useEffect(() => {
+    if (service) applySeo(serviceSeo(service, slug));
+  }, [service, slug]);
+
   if (state.loading) {
     return <div className="v1-loading" role="status">Loading service…</div>;
   }
-
-  const service = state.service;
 
   if (!service) {
     return (

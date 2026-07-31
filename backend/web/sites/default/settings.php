@@ -118,15 +118,6 @@ $settings['entity_update_batch_size'] = 50;
  */
 $settings['skip_permissions_hardening'] = FALSE;
 
-/**
- * Load local environment overrides, if present.
- *
- * settings.local.php is gitignored; use it for real secrets and any
- * per-machine overrides of the values above.
- */
-if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
-  include $app_root . '/' . $site_path . '/settings.local.php';
-}
 $databases['default']['default'] = array (
   // Absolute path via $app_root — SQLite resolves relative DSNs against the
   // process CWD, which is unstable under php -S with a router script.
@@ -136,6 +127,16 @@ $databases['default']['default'] = array (
   'namespace' => 'Drupal\\sqlite\\Driver\\Database\\sqlite',
   'autoload' => 'core/modules/sqlite/src/Driver/Database/sqlite/',
 );
+
+/**
+ * Load local environment overrides, if present.
+ *
+ * settings.local.php is gitignored; use it for real secrets and any
+ * per-machine overrides of the values above.
+ */
+if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
+  include $app_root . '/' . $site_path . '/settings.local.php';
+}
 
 /**
  * Phase 2 deployment scaffold — environment-driven database + host config.

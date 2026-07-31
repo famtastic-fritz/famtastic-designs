@@ -4,7 +4,6 @@ import {
   confirmProspect,
   formatPrice,
   getSession,
-  simulatePayment,
   startCheckout,
 } from '../api/pipeline.js';
 import PipelineShell from '../components/PipelineShell.jsx';
@@ -104,12 +103,9 @@ export default function ProspectLandingPage() {
         return;
       }
       if (res.gateway_mode === 'stub') {
-        // No real Stripe configured: drive the same fulfillment path a webhook would.
-        await simulatePayment(token);
-        navigate(`/p/${token}/return`);
-      } else {
-        window.location.href = res.url;
+        throw new Error('Secure checkout is temporarily unavailable. Please try again later.');
       }
+      window.location.href = res.url;
     } catch (err) {
       setNotice({ type: 'error', text: err.message });
       setPaying(false);
@@ -230,7 +226,7 @@ export default function ProspectLandingPage() {
           </button>
           <p className="fp-fineprint">
             {data.gateway_mode === 'stub'
-              ? 'Test mode: no card is charged. Clicking simulates a successful payment.'
+              ? 'Secure checkout is temporarily unavailable.'
               : 'Secure payment via Stripe. You’ll be redirected to Stripe Checkout.'}
           </p>
         </div>

@@ -4,6 +4,12 @@
 token_ttl_days: 14
 frontend_base_url: 'http://localhost:5173'
 support_from_email: 'support@famtasticdesigns.com'
+notification_to_email: 'hello@famtasticdesigns.com'
+# Site Studio proof generation endpoint. Empty = built-in stub generator.
+studio_url: ''
+# Public base URL for proof previews (scheme+host+path prefix, no trailing
+# slash). Empty = {request scheme+host}/web/proofs.
+proofs_base_url: ''
 package:
   id: basic_199
   name: 'FAMtastic Basic Website'

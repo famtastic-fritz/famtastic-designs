@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Advances an order to paid — the single fulfillment code path.
  *
- * Both the signature-verified webhook and the (stub-mode) simulate control call
+ * Both the signature-verified webhook and the explicitly enabled test simulator call
  * this. Idempotency is enforced by recording processed Stripe event ids on the
  * order, so a re-delivered webhook never fulfills twice.
  */
@@ -22,6 +22,7 @@ class FulfillmentService {
     protected EntityTypeManagerInterface $entityTypeManager,
     protected TimeInterface $time,
     protected LoggerInterface $logger,
+    protected ProofCampaignService $proofCampaigns,
   ) {}
 
   /**
@@ -54,6 +55,17 @@ class FulfillmentService {
 
     $this->logger->info('Fulfillment: order @id paid (event @e).', ['@id' => $order->id(), '@e' => $eventId]);
     return ['found' => TRUE, 'newly_processed' => TRUE, 'paid' => TRUE, 'order' => $order];
+  }
+
+  /**
+   * Marks a proof campaign converted after a successful payment.
+   *
+   * Called by the Stripe webhook when the checkout session metadata carries a
+   * campaign_id, and by the stub-mode simulator for the prospect's active
+   * selection. The existing intake-unlock flow is untouched.
+   */
+  public function markProofCampaignConverted(string $campaignId, ?string $sessionId = NULL): bool {
+    return $this->proofCampaigns->markConverted($campaignId, $sessionId);
   }
 
   /**

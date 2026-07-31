@@ -59,7 +59,7 @@ export default function ContactPage() {
             <div className="v1-card">
               <p className="v1-pricing-card__label">What happens next</p>
               <ul className="v1-dot-list">
-                <li>You send the form — it opens your email client pre-filled.</li>
+                <li>You send the form, and your request is saved securely.</li>
                 <li>We reply within one business day with a scoped, fixed-price plan.</li>
                 <li>Every engagement starts with a $199 verified discovery build.</li>
               </ul>

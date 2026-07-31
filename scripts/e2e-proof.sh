@@ -92,6 +92,10 @@ CO="$(curl -s -X POST "${TH[@]}" "${BASE}/api/pipeline/checkout")"
 assert_contains "checkout returns a session id" "$CO" '"session_id":"cs_'
 SID="$(echo "$CO" | sed -n 's/.*"session_id":"\([^"]*\)".*/\1/p')"
 
+say "5b. Browser-accessible payment simulation is disabled by default"
+assert_eq "payment simulation → 403" \
+  "$(http_code -X POST "${TH[@]}" "${BASE}/api/pipeline/stripe/simulate")" "403"
+
 say "6. Signature-verified webhook fulfills the order (deliverables 10,11)"
 TS="$(date +%s)"
 PAYLOAD="$(printf '{"id":"evt_e2e_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_e2e"}}}' "$TS" "$SID")"

@@ -7,7 +7,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import AdminDashboardPage from './pages/AdminDashboardPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { UserProvider } from './auth/UserContext.jsx';
-import ProspectLandingPage from './pages/ProspectLandingPage.jsx';
+import ProofHub from './pages/ProofHub.jsx';
 import PaymentReturnPage from './pages/PaymentReturnPage.jsx';
 import PaymentCancelPage from './pages/PaymentCancelPage.jsx';
 import IntakePage from './pages/IntakePage.jsx';
@@ -24,13 +24,17 @@ import FAQHubPage from './pages/FAQHubPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import StartPage from './pages/StartPage.jsx';
 import AliasPage from './pages/AliasPage.jsx';
+import SEO from './components/SEO.jsx';
 
 export default function App() {
   return (
     <UserProvider>
+      <SEO />
       <Routes>
         {/* Public, token-scoped prospect pipeline (no marketing chrome, no auth). */}
-        <Route path="/p/:token" element={<ProspectLandingPage />} />
+        {/* /p/:token enters via ProofHub: active proof campaign → proof hub;
+            converted/paid/no-campaign prospects fall through to the existing flow. */}
+        <Route path="/p/:token" element={<ProofHub />} />
         <Route path="/p/:token/return" element={<PaymentReturnPage />} />
         <Route path="/p/:token/cancel" element={<PaymentCancelPage />} />
         <Route path="/p/:token/intake" element={<IntakePage />} />
