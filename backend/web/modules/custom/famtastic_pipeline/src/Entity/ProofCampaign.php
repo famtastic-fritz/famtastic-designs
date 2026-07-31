@@ -149,6 +149,28 @@ class ProofCampaign extends ContentEntityBase {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['generation_status'] = BaseFieldDefinition::create('string')
+      ->setLabel('Generation status')
+      ->setSetting('max_length', 32)
+      ->setDefaultValue('ready')
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['studio_job_id'] = BaseFieldDefinition::create('string')
+      ->setLabel('Site Studio job ID')
+      ->setSetting('max_length', 255)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['callback_event_ids'] = BaseFieldDefinition::create('string_long')
+      ->setLabel('Processed callback event IDs');
+
+    $fields['dispatched_at'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel('Dispatched at')
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['ready_at'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel('Proofs ready at')
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['selected_at'] = BaseFieldDefinition::create('timestamp')
       ->setLabel('Selected at')
       ->setDisplayConfigurable('view', TRUE);

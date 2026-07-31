@@ -110,6 +110,10 @@ export default function ProofHub() {
 
   function applyCampaign(next) {
     setCampaign(next);
+    if (next.generation_status === 'waiting_callback' || next.generation_status === 'dispatching') {
+      setPhase('generating');
+      return;
+    }
     if (next.status === 'converted') {
       // Paid via the proof flow — hand off to the existing landing/intake flow.
       setPhase('passthrough');
@@ -187,6 +191,22 @@ export default function ProofHub() {
     const id = setInterval(() => setGenStep((s) => (s + 1) % GENERATION_STEPS.length), 2600);
     return () => clearInterval(id);
   }, [phase]);
+
+  useEffect(() => {
+    if (phase !== 'generating' || campaign?.generation_status !== 'waiting_callback') return undefined;
+    const id = setInterval(async () => {
+      try {
+        const next = normalizeCampaign(await getProofCampaign(token));
+        if (next?.generation_status === 'ready' && next.variants.length === 3) {
+          applyCampaign(next);
+        }
+      } catch {
+        // The main generation state remains visible; the next poll retries.
+      }
+    }, 3000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, campaign?.generation_status, token]);
 
   async function handleConfirmSelection() {
     if (!selectedVariant || !selectedPackage || confirming) return;

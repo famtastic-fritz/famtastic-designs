@@ -182,6 +182,7 @@ class ProofCampaignController extends ControllerBase {
       'campaign_id' => $campaign->get('campaign_id')->value,
       'business_name' => $campaign->get('business_name')->value,
       'status' => $campaign->get('status')->value,
+      'generation_status' => $campaign->get('generation_status')->value,
       'expires_at' => (int) $campaign->get('expires_at')->value,
       'selected_variant' => $campaign->get('selected_variant')->value,
       'selected_package' => $campaign->get('selected_package')->value,

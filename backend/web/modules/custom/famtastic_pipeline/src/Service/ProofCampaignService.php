@@ -52,6 +52,8 @@ class ProofCampaignService {
     protected SiteStudioAdapterInterface $studioAdapter,
     protected PipelineRepository $repository,
     protected LoggerInterface $logger,
+    protected SiteStudioProofClient $studioClient,
+    protected OperationalLedger $ledger,
   ) {}
 
   /**
@@ -74,11 +76,28 @@ class ProofCampaignService {
       'prospect_id' => $prospect->id(),
       'business_name' => $businessName,
       'status' => 'active',
+      'generation_status' => $this->studioClient->isRemote() ? 'dispatching' : 'ready',
       'expires_at' => $now + self::TTL,
     ]);
     $campaign->save();
 
-    $source = $this->dispatchToStudio($prospect, $campaign) ? 'site_studio' : 'stub';
+    if ($this->studioClient->isRemote()) {
+      $jobId = $this->studioClient->dispatch($prospect, $campaign);
+      $campaign
+        ->set('generation_status', 'waiting_callback')
+        ->set('studio_job_id', $jobId)
+        ->set('dispatched_at', $now)
+        ->save();
+      $this->ledger->recordEvent(
+        'proof.dispatched:' . $campaignId,
+        'proof.dispatched',
+        ['campaign_id' => $campaignId, 'studio_job_id' => $jobId],
+        (int) $prospect->id(),
+      );
+      return ['campaign' => $campaign, 'variants' => []];
+    }
+
+    $source = 'local';
 
     $variants = [];
     $variantStorage = $this->entityTypeManager->getStorage('proof_variant');
@@ -113,8 +132,94 @@ class ProofCampaignService {
       '@p' => $prospect->id(),
       '@src' => $source,
     ]);
+    $campaign->set('ready_at', $now)->save();
 
     return ['campaign' => $campaign, 'variants' => $variants];
+  }
+
+  /**
+   * Accepts one idempotent exactly-three Site Studio callback.
+   */
+  public function acceptCallback(string $eventId, string $campaignId, string $studioJobId, array $variants): array {
+    if ($eventId === '' || strlen($eventId) > 255) {
+      throw new \InvalidArgumentException('callback event_id is required.');
+    }
+    $campaign = $this->loadByCampaignId($campaignId);
+    if (!$campaign || !hash_equals((string) $campaign->get('studio_job_id')->value, $studioJobId)) {
+      throw new \InvalidArgumentException('Unknown campaign or Site Studio job.');
+    }
+    $processed = json_decode((string) $campaign->get('callback_event_ids')->value ?: '[]', TRUE);
+    if (in_array($eventId, (array) $processed, TRUE)) {
+      return ['newly_processed' => FALSE, 'campaign' => $campaign, 'variants' => $this->loadVariants($campaign)];
+    }
+    if (count($variants) !== 3) {
+      throw new \InvalidArgumentException('Exactly three variants are required.');
+    }
+    $validated = [];
+    foreach ($variants as $variant) {
+      if (!is_array($variant)) {
+        throw new \InvalidArgumentException('Each variant must be an object.');
+      }
+      $direction = strtolower((string) ($variant['direction_id'] ?? ''));
+      $html = (string) ($variant['html'] ?? '');
+      if (!array_key_exists($direction, self::DIRECTIONS) || isset($validated[$direction])) {
+        throw new \InvalidArgumentException('Variants must contain unique directions a, b, and c.');
+      }
+      if ($html === '' || strlen($html) > 500000) {
+        throw new \InvalidArgumentException('Each proof HTML artifact is required and limited to 500 KB.');
+      }
+      if (preg_match('/<(script|iframe|object|embed|base)\b|on[a-z]+\s*=|javascript\s*:/i', $html)) {
+        throw new \InvalidArgumentException('Proof HTML contains disallowed active content.');
+      }
+      $validated[$direction] = [
+        'html' => $html,
+        'design_dna' => is_array($variant['design_dna'] ?? NULL) ? $variant['design_dna'] : [],
+      ];
+    }
+    if (array_keys($validated) !== ['a', 'b', 'c']) {
+      ksort($validated);
+    }
+    if (array_keys($validated) !== ['a', 'b', 'c']) {
+      throw new \InvalidArgumentException('Variants must contain directions a, b, and c.');
+    }
+    if ($this->loadVariants($campaign)) {
+      throw new \InvalidArgumentException('Campaign already has proof artifacts.');
+    }
+    $storage = $this->entityTypeManager->getStorage('proof_variant');
+    $created = [];
+    foreach ($validated as $direction => $variant) {
+      $path = $this->writeCallbackArtifact($campaignId, $direction, $variant['html']);
+      $entity = $storage->create([
+        'campaign_id' => $campaign->id(),
+        'direction_id' => $direction,
+        'direction_name' => self::DIRECTIONS[$direction],
+        'artifact_path' => $path,
+        'design_dna' => json_encode($variant['design_dna'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
+        'preview_url' => $this->previewUrl($campaignId, $direction),
+      ]);
+      $entity->save();
+      $created[] = $entity;
+    }
+    $processed[] = $eventId;
+    $campaign
+      ->set('callback_event_ids', json_encode(array_values($processed), JSON_THROW_ON_ERROR))
+      ->set('generation_status', 'ready')
+      ->set('ready_at', $this->time->getRequestTime())
+      ->save();
+    $prospectId = (int) $campaign->get('prospect_id')->target_id;
+    $this->ledger->recordEvent(
+      'proof.callback:' . $eventId,
+      'proof.ready',
+      ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => 3],
+      $prospectId,
+    );
+    $this->ledger->enqueue(
+      'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
+      'outreach.prepare',
+      ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
+      $prospectId,
+    );
+    return ['newly_processed' => TRUE, 'campaign' => $campaign, 'variants' => $created];
   }
 
   /**
@@ -325,6 +430,17 @@ class ProofCampaignService {
     $absolute = \Drupal::root() . '/proofs/' . $campaignId . '/' . $direction;
     $this->fileSystem->prepareDirectory($absolute, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     $this->fileSystem->saveData($this->stubHtml($direction, $directionName, $businessName, $prospect, $source), $absolute . '/index.html', FileSystemInterface::EXISTS_REPLACE);
+    return $relative;
+  }
+
+  /**
+   * Writes validated callback HTML into its isolated campaign/direction path.
+   */
+  protected function writeCallbackArtifact(string $campaignId, string $direction, string $html): string {
+    $relative = 'web/proofs/' . $campaignId . '/' . $direction . '/index.html';
+    $absolute = \Drupal::root() . '/proofs/' . $campaignId . '/' . $direction;
+    $this->fileSystem->prepareDirectory($absolute, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    $this->fileSystem->saveData($html, $absolute . '/index.html', FileSystemInterface::EXISTS_REPLACE);
     return $relative;
   }
 

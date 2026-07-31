@@ -127,6 +127,22 @@ function famtastic_pipeline_update_8006(&$sandbox) {
 }
 
 /**
+ * Adds asynchronous Site Studio dispatch and callback state.
+ */
+function famtastic_pipeline_update_8007(&$sandbox) {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entityType = \Drupal::entityTypeManager()->getDefinition('proof_campaign');
+  $class = $entityType->getClass();
+  $definitions = $class::baseFieldDefinitions($entityType);
+  foreach (['generation_status', 'studio_job_id', 'callback_event_ids', 'dispatched_at', 'ready_at'] as $fieldName) {
+    if (!$manager->getFieldStorageDefinition($fieldName, 'proof_campaign')) {
+      $manager->installFieldStorageDefinition($fieldName, 'proof_campaign', 'famtastic_pipeline', $definitions[$fieldName]);
+    }
+  }
+  return t('Added asynchronous Site Studio dispatch and callback fields.');
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {

@@ -66,6 +66,16 @@ final class AutomationWorker {
     $existing = $this->proofCampaigns->getForProspect($prospect);
     $created = $existing ?: $this->proofCampaigns->createForProspect($prospect);
     $variants = $created['variants'];
+    if (
+      count($variants) === 0
+      && $created['campaign']->get('generation_status')->value === 'waiting_callback'
+    ) {
+      return [
+        'campaign_id' => $created['campaign']->get('campaign_id')->value,
+        'status' => 'waiting_callback',
+        'studio_job_id' => $created['campaign']->get('studio_job_id')->value,
+      ];
+    }
     if (count($variants) !== 3) {
       throw new \RuntimeException(sprintf('Site Studio returned %d proof variants; exactly 3 are required.', count($variants)));
     }

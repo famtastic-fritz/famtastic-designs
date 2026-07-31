@@ -52,6 +52,16 @@ famtastic_pipeline.email_provider:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.site_studio_callback:
+  path: '/api/pipeline/site-studio/callback'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\SiteStudioCallbackController::handle'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.session:
   path: '/api/pipeline/session'
   defaults:
