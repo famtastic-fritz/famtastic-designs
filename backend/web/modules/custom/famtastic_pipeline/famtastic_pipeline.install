@@ -116,6 +116,17 @@ function famtastic_pipeline_update_8005(&$sandbox) {
 }
 
 /**
+ * Adds staged campaign email delivery and tracking records.
+ */
+function famtastic_pipeline_update_8006(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('famtastic_email_message')) {
+    $schema->createTable('famtastic_email_message', _famtastic_pipeline_email_message_schema());
+  }
+  return t('Added campaign email message and provider tracking table.');
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {
@@ -485,8 +496,53 @@ function _famtastic_pipeline_automation_schema(): array {
   ];
 
   $tables['famtastic_lead_import'] = _famtastic_pipeline_lead_import_schema();
+  $tables['famtastic_email_message'] = _famtastic_pipeline_email_message_schema();
 
   return $tables;
+}
+
+/**
+ * Defines staged email messages without storing raw recipient addresses.
+ */
+function _famtastic_pipeline_email_message_schema(): array {
+  return [
+    'description' => 'Campaign messages and delivery/tracking lifecycle.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'message_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'recipient_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'template_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'template_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'subject' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'provider' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'provider_message_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'tracking_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'unsubscribe_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'sent_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'delivered_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'opened_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'clicked_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'bounced_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'complained_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'unsubscribed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'message_key' => ['message_key'],
+      'tracking_key' => ['tracking_key'],
+      'unsubscribe_key' => ['unsubscribe_key'],
+    ],
+    'indexes' => [
+      'campaign_status' => ['campaign_id', 'status'],
+      'provider_message' => ['provider', 'provider_message_id'],
+      'prospect' => ['prospect_id'],
+    ],
+  ];
 }
 
 /**

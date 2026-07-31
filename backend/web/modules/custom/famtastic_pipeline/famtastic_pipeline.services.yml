@@ -21,7 +21,11 @@ services:
 
   famtastic_pipeline.automation_worker:
     class: Drupal\famtastic_pipeline\Service\AutomationWorker
-    arguments: ['@famtastic_pipeline.operational_ledger', '@entity_type.manager', '@famtastic_pipeline.proof_campaign_service']
+    arguments: ['@famtastic_pipeline.operational_ledger', '@entity_type.manager', '@famtastic_pipeline.proof_campaign_service', '@famtastic_pipeline.campaign_messages']
+
+  famtastic_pipeline.campaign_messages:
+    class: Drupal\famtastic_pipeline\Service\CampaignMessageService
+    arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.token_manager', '@famtastic_pipeline.mailer', '@datetime.time']
 
   famtastic_pipeline.stripe_gateway:
     class: Drupal\famtastic_pipeline\Service\StripeGateway

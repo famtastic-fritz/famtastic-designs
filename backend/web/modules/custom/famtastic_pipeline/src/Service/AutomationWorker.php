@@ -15,6 +15,7 @@ final class AutomationWorker {
     private readonly OperationalLedger $ledger,
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly ProofCampaignService $proofCampaigns,
+    private readonly CampaignMessageService $campaignMessages,
   ) {}
 
   /**
@@ -47,6 +48,8 @@ final class AutomationWorker {
   private function execute(array $job): array {
     return match ($job['job_type']) {
       'proof.generate' => $this->generateProofs($job),
+      'outreach.prepare' => $this->prepareOutreach($job),
+      'outreach.send' => $this->sendOutreach($job),
       default => throw new \RuntimeException('Unsupported job type: ' . $job['job_type']),
     };
   }
@@ -105,6 +108,31 @@ final class AutomationWorker {
       'campaign_id' => $campaign->get('campaign_id')->value,
       'variant_count' => 3,
       'directions' => $directions,
+    ];
+  }
+
+  private function prepareOutreach(array $job): array {
+    $prospectId = (int) ($job['payload']['prospect_id'] ?? $job['prospect_id'] ?? 0);
+    $proofCampaignId = (int) ($job['payload']['proof_campaign_id'] ?? 0);
+    $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
+    if (!$prospect || !$proofCampaignId) {
+      throw new \RuntimeException('Outreach preparation is missing its prospect or proof campaign.');
+    }
+    $message = $this->campaignMessages->prepare($prospect, $proofCampaignId);
+    return ['message_id' => (int) $message['id'], 'status' => $message['status']];
+  }
+
+  private function sendOutreach(array $job): array {
+    $messageId = (int) ($job['payload']['message_id'] ?? 0);
+    if (!$messageId) {
+      throw new \RuntimeException('Outreach send job is missing its message id.');
+    }
+    $message = $this->campaignMessages->send($messageId);
+    return [
+      'message_id' => (int) $message['id'],
+      'status' => $message['status'],
+      'provider' => $message['provider'],
+      'provider_message_id' => $message['provider_message_id'],
     ];
   }
 

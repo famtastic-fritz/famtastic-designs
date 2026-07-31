@@ -14,6 +14,44 @@ use Drush\Commands\DrushCommands;
 class PipelineCommands extends DrushCommands {
 
   /**
+   * Explicitly approves a campaign and queues its staged messages.
+   */
+  #[CLI\Command(name: 'famtastic:campaign-approve', aliases: ['fca'])]
+  #[CLI\Argument(name: 'campaignKey', description: 'Exact campaign attribution key.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the campaign key.')]
+  public function campaignApprove(string $campaignKey, array $options = ['confirm' => '']): int {
+    if (!hash_equals($campaignKey, (string) $options['confirm'])) {
+      $this->logger()->error('Approval requires --confirm=<exact-campaign-key>.');
+      return self::EXIT_FAILURE;
+    }
+    $database = \Drupal::database();
+    $updated = $database->update('famtastic_campaign')
+      ->fields(['status' => 'approved', 'changed' => \Drupal::time()->getRequestTime()])
+      ->condition('campaign_key', $campaignKey)
+      ->condition('status', ['draft', 'paused'], 'IN')
+      ->execute();
+    if (!$updated) {
+      $status = $database->select('famtastic_campaign', 'c')
+        ->fields('c', ['status'])
+        ->condition('campaign_key', $campaignKey)
+        ->execute()
+        ->fetchField();
+      if ($status !== 'approved') {
+        $this->logger()->error('Campaign does not exist or cannot be approved.');
+        return self::EXIT_FAILURE;
+      }
+    }
+    /** @var \Drupal\famtastic_pipeline\Service\CampaignMessageService $messages */
+    $messages = \Drupal::service('famtastic_pipeline.campaign_messages');
+    $count = $messages->queueApprovedCampaign($campaignKey);
+    $this->logger()->success(dt('Campaign @campaign approved; queued @count staged message(s).', [
+      '@campaign' => $campaignKey,
+      '@count' => $count,
+    ]));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Runs a bounded batch of durable automation jobs.
    */
   #[CLI\Command(name: 'famtastic:jobs-run', aliases: ['fjr'])]

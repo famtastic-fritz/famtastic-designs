@@ -15,6 +15,43 @@ famtastic_pipeline.public_contact:
   requirements:
     _access: 'TRUE'
 
+famtastic_pipeline.email_open:
+  path: '/api/pipeline/email/open/{tracking_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\EmailEventController::open'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    tracking_key: '[a-f0-9]{48}'
+
+famtastic_pipeline.email_click:
+  path: '/api/pipeline/email/click/{tracking_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\EmailEventController::click'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    tracking_key: '[a-f0-9]{48}'
+
+famtastic_pipeline.email_unsubscribe:
+  path: '/api/pipeline/email/unsubscribe/{unsubscribe_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\EmailEventController::unsubscribe'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    unsubscribe_key: '[a-f0-9]{48}'
+
+famtastic_pipeline.email_provider:
+  path: '/api/pipeline/email/provider-event'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\EmailEventController::provider'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.session:
   path: '/api/pipeline/session'
   defaults:
