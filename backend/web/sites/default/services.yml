@@ -9,7 +9,7 @@ parameters:
   cors.config:
     enabled: true
     # Headers the SPA may send (JSON:API content-negotiation + future auth).
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'Accept', 'X-Requested-With']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token', 'X-Prospect-Token', 'Accept', 'X-Requested-With']
     # Methods allowed for cross-origin requests.
     allowedMethods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
     # Explicit origin required because supportsCredentials is true
