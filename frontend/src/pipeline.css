@@ -103,6 +103,11 @@
 .fp-notice--error { background: rgba(255, 92, 92, 0.1); border: 1px solid #ff5c5c; }
 
 .fp-divider { height: 1px; background: var(--fam-border, #2a2a2a); margin: 1.25rem 0; }
+.fp-addon { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--fam-border, #2a2a2a); }
+.fp-status-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin: 1rem 0 0; }
+.fp-status-grid div { background: #0f0f0f; border: 1px solid var(--fam-border, #2a2a2a); border-radius: 8px; padding: 0.75rem; }
+.fp-status-grid dt { color: var(--fam-text-muted, #888); font-size: 0.78rem; margin-bottom: 0.2rem; }
+.fp-status-grid dd { margin: 0; font-weight: 650; overflow-wrap: anywhere; }
 .fp-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 .fp-footer { padding: 1.5rem; text-align: center; color: var(--fam-text-muted, #888); font-size: 0.8rem; border-top: 1px solid var(--fam-border, #2a2a2a); }
 
@@ -116,5 +121,156 @@
 
 @media (max-width: 620px) {
   .fp-grid { grid-template-columns: 1fr; }
+  .fp-status-grid { grid-template-columns: 1fr; }
   .fp-steps__label { display: none; }
+}
+
+
+/* --- Proof Hub (/p/:token proof campaign) -------------------------------- */
+
+.fp-expiry {
+  display: inline-block;
+  margin-top: 0.9rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--fam-lime, #7cfc00);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--fam-lime, #7cfc00);
+}
+.fp-expiry strong { font-weight: 700; }
+
+.fp-variants {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.fp-variant {
+  background: var(--fam-surface, #141414);
+  border: 1px solid var(--fam-border, #2a2a2a);
+  border-radius: var(--fam-radius, 12px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.fp-variant:hover { border-color: #444; transform: translateY(-2px); }
+.fp-variant--chosen { border-color: var(--fam-lime, #7cfc00); }
+
+.fp-variant__thumb {
+  aspect-ratio: 4 / 3;
+  background: #111;
+  border-bottom: 1px solid var(--fam-border, #2a2a2a);
+  overflow: hidden;
+}
+.fp-variant__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.fp-variant__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(124, 252, 0, 0.12), transparent 55%),
+    #111;
+}
+.fp-variant__placeholder-letter {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--fam-lime, #7cfc00);
+  letter-spacing: -0.03em;
+}
+
+.fp-variant__body { padding: 1rem; display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
+.fp-variant__body h3 { margin: 0; font-size: 1.05rem; letter-spacing: -0.01em; }
+.fp-variant__preview {
+  color: var(--fam-text-muted, #888);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+.fp-variant__preview:hover { color: var(--fam-lime, #7cfc00); }
+.fp-variant__choose { margin-top: auto; width: 100%; }
+
+.fp-generating h2 { margin: 0 0 0.5rem; }
+.fp-generating__step { min-height: 1.5em; transition: opacity 0.3s ease; }
+.fp-generating__bar {
+  height: 6px;
+  border-radius: 999px;
+  background: #1d1d1d;
+  overflow: hidden;
+  margin: 1rem auto 0;
+  max-width: 320px;
+}
+.fp-generating__bar-fill {
+  height: 100%;
+  width: 40%;
+  border-radius: 999px;
+  background: var(--fam-lime, #7cfc00);
+  animation: fp-generating-slide 1.6s ease-in-out infinite;
+}
+@keyframes fp-generating-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+.fp-packages { margin-bottom: 1.25rem; }
+.fp-packages h2 { margin: 0 0 0.35rem; font-size: 1.3rem; letter-spacing: -0.01em; }
+
+.fp-packages__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.fp-package {
+  position: relative;
+  text-align: left;
+  font: inherit;
+  color: var(--fam-text, #fff);
+  background: var(--fam-surface, #141414);
+  border: 1px solid var(--fam-border, #2a2a2a);
+  border-radius: var(--fam-radius, 12px);
+  padding: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.fp-package:hover { border-color: #444; transform: translateY(-2px); }
+.fp-package--highlight { border-color: rgba(124, 252, 0, 0.45); }
+.fp-package--picked { border-color: var(--fam-lime, #7cfc00); box-shadow: 0 0 0 1px var(--fam-lime, #7cfc00); }
+
+.fp-package__badge {
+  position: absolute;
+  top: -0.65rem;
+  right: 1rem;
+  background: var(--fam-lime, #7cfc00);
+  color: #0a0a0a;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+.fp-package__name { font-weight: 700; font-size: 1.05rem; }
+.fp-package__price { font-size: 2rem; font-weight: 800; color: var(--fam-lime, #7cfc00); }
+.fp-package__tagline { color: var(--fam-text-muted, #888); font-size: 0.85rem; }
+.fp-package__features { margin: 0.5rem 0 0; font-size: 0.88rem; }
+.fp-package__features li { text-align: left; }
+.fp-package__cta { margin-top: 0.75rem; width: 100%; }
+
+.fp-actions--center { justify-content: center; }
+
+.fp-alt { text-align: center; margin-top: 0.5rem; }
+.fp-alt a { text-decoration: none; font-weight: 600; }
+.fp-alt a:hover { text-decoration: underline; }
+
+@media (max-width: 760px) {
+  .fp-variants { grid-template-columns: 1fr; }
+  .fp-packages__grid { grid-template-columns: 1fr; }
 }

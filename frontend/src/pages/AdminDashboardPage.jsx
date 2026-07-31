@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useUser } from '../auth/UserContext.jsx';
 import { getMyProjects, createProject, deleteProject } from '../api/drupal.js';
 

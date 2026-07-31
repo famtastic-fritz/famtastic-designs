@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Advances an order to paid — the single fulfillment code path.
  *
- * Both the signature-verified webhook and the (stub-mode) simulate control call
+ * Both the signature-verified webhook and the explicitly enabled test simulator call
  * this. Idempotency is enforced by recording processed Stripe event ids on the
  * order, so a re-delivered webhook never fulfills twice.
  */
@@ -22,6 +22,8 @@ class FulfillmentService {
     protected EntityTypeManagerInterface $entityTypeManager,
     protected TimeInterface $time,
     protected LoggerInterface $logger,
+    protected ProofCampaignService $proofCampaigns,
+    protected OperationalLedger $ledger,
   ) {}
 
   /**
@@ -29,11 +31,25 @@ class FulfillmentService {
    *
    * @return array{found:bool,newly_processed:bool,paid:bool,order:?\Drupal\famtastic_pipeline\Entity\Order}
    */
-  public function markPaidBySession(string $sessionId, ?string $paymentIntent, string $eventId): array {
+  public function markPaidBySession(
+    string $sessionId,
+    ?string $paymentIntent,
+    string $eventId,
+    ?int $amountTotal = NULL,
+    ?string $currency = NULL,
+  ): array {
     $order = $this->loadOrderBySession($sessionId);
     if (!$order) {
       $this->logger->warning('Fulfillment: no order for session @s', ['@s' => $sessionId]);
       return ['found' => FALSE, 'newly_processed' => FALSE, 'paid' => FALSE, 'order' => NULL];
+    }
+    if ($amountTotal !== NULL && $amountTotal !== (int) $order->get('amount')->value) {
+      $this->logger->error('Fulfillment amount mismatch for order @id.', ['@id' => $order->id()]);
+      return ['found' => TRUE, 'newly_processed' => FALSE, 'paid' => FALSE, 'order' => $order, 'error' => 'amount_mismatch'];
+    }
+    if ($currency !== NULL && strtolower($currency) !== strtolower((string) $order->get('currency')->value)) {
+      $this->logger->error('Fulfillment currency mismatch for order @id.', ['@id' => $order->id()]);
+      return ['found' => TRUE, 'newly_processed' => FALSE, 'paid' => FALSE, 'order' => $order, 'error' => 'currency_mismatch'];
     }
 
     // Idempotency: duplicate event id is a no-op.
@@ -48,12 +64,43 @@ class FulfillmentService {
       if ($paymentIntent) {
         $order->set('stripe_payment_intent_id', $paymentIntent);
       }
-      $this->advanceProspect($order);
+      if ($order->get('package')->value === 'revision_addon_75') {
+        $this->fulfillRevisionAddOn($order);
+      }
+      else {
+        $this->advanceProspect($order);
+      }
     }
     $order->save();
+    $prospect = $order->get('prospect_ref')->entity;
+    $this->ledger->recordEvent(
+      'payment.verified:' . $eventId,
+      'payment.verified',
+      [
+        'order_id' => (int) $order->id(),
+        'package' => $order->get('package')->value,
+        'amount_minor' => (int) $order->get('amount')->value,
+        'currency' => $order->get('currency')->value,
+      ],
+      $prospect ? (int) $prospect->id() : NULL,
+      orderId: (int) $order->id(),
+      provider: 'stripe',
+      providerEventId: $eventId,
+    );
 
     $this->logger->info('Fulfillment: order @id paid (event @e).', ['@id' => $order->id(), '@e' => $eventId]);
     return ['found' => TRUE, 'newly_processed' => TRUE, 'paid' => TRUE, 'order' => $order];
+  }
+
+  /**
+   * Marks a proof campaign converted after a successful payment.
+   *
+   * Called by the Stripe webhook when the checkout session metadata carries a
+   * campaign_id, and by the stub-mode simulator for the prospect's active
+   * selection. The existing intake-unlock flow is untouched.
+   */
+  public function markProofCampaignConverted(string $campaignId, ?string $sessionId = NULL): bool {
+    return $this->proofCampaigns->markConverted($campaignId, $sessionId);
   }
 
   /**
@@ -82,6 +129,42 @@ class FulfillmentService {
       $prospect->set('status', 'paid');
       $prospect->save();
     }
+  }
+
+  /**
+   * Adds exactly one revision allowance after verified add-on payment.
+   */
+  protected function fulfillRevisionAddOn(Order $order): void {
+    $prospect = $order->get('prospect_ref')->entity;
+    if (!$prospect) {
+      throw new \RuntimeException('Revision add-on order has no prospect.');
+    }
+    $storage = $this->entityTypeManager->getStorage('famtastic_project');
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('prospect_ref', $prospect->id())
+      ->sort('id', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    $project = $ids ? $storage->load(reset($ids)) : NULL;
+    if (!$project || $project->get('approval_status')->value !== 'revision_requested') {
+      throw new \RuntimeException('Revision add-on has no eligible project.');
+    }
+    $oldLimit = max(1, (int) $project->get('revision_limit')->value);
+    $project->set('revision_limit', $oldLimit + 1);
+    $project->save();
+    $this->ledger->recordEvent(
+      'revision_addon.fulfilled:' . $order->id(),
+      'revision_addon.fulfilled',
+      [
+        'order_id' => (int) $order->id(),
+        'old_revision_limit' => $oldLimit,
+        'new_revision_limit' => $oldLimit + 1,
+      ],
+      (int) $prospect->id(),
+      orderId: (int) $order->id(),
+      projectId: (int) $project->id(),
+    );
   }
 
 }

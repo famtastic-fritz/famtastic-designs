@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { postContactRequest } from '../../api/pipeline.js';
 
 const CONTACT_EMAIL = 'hello@famtasticdesigns.com';
 
@@ -14,6 +15,9 @@ export default function ContactForm({ title = 'Tell us about your project', comp
   const [values, setValues] = useState(INITIAL);
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
+  const [message, setMessage] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [fallbackMailto, setFallbackMailto] = useState('');
 
   function update(field) {
     return (event) => {
@@ -30,13 +34,15 @@ export default function ContactForm({ title = 'Tell us about your project', comp
     return next;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     const next = validate();
     if (Object.keys(next).length > 0) {
       setErrors(next);
       return;
     }
+    if (submitting || sent) return;
+
     const subject = `Project inquiry — ${values.name.trim()}${values.business.trim() ? ` (${values.business.trim()})` : ''}`;
     const lines = [
       `Name: ${values.name.trim()}`,
@@ -47,27 +53,48 @@ export default function ContactForm({ title = 'Tell us about your project', comp
       values.message.trim(),
     ].filter((line) => line !== false && line !== undefined);
     const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
-    window.location.href = mailto;
-    setSent(true);
+    setFallbackMailto(mailto);
+    setSubmitting(true);
+    try {
+      const res = await postContactRequest({
+        source: 'contact-form',
+        name: values.name.trim(),
+        email: values.email.trim(),
+        phone: values.phone.trim(),
+        business_name: values.business.trim(),
+        message: values.message.trim(),
+        path: window.location.pathname,
+        referrer: document.referrer || null,
+      });
+      setMessage(res?.message || 'We received your request. Our team has been notified.');
+      setSent(true);
+    } catch {
+      setMessage('We could not reach the server. Your email client should open with your message ready to send.');
+      window.location.href = mailto;
+      setSent(true);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (sent) {
     return (
       <div className="v1-card v1-form-card" role="status">
-        <h2 className="v1-form-card__title">Thanks, {values.name.split(' ')[0]} — almost there.</h2>
+        <h2 className="v1-form-card__title">Thanks, {values.name.split(' ')[0]}.</h2>
         <p className="v1-card__text">
-          Your email client should have opened with your message ready to send. If it did not, write
-          to us directly at{' '}
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and we will reply within one
-          business day.
+          {message || 'We received your request. Our team has been notified.'}
+          {' '}If you need to send anything else, write to us directly at{' '}
+          <a href={fallbackMailto || `mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
         </p>
         <button
           type="button"
           className="v1-btn v1-btn--ghost"
           onClick={() => {
-            setSent(false);
-            setValues(INITIAL);
-          }}
+              setSent(false);
+              setMessage('');
+              setFallbackMailto('');
+              setValues(INITIAL);
+            }}
         >
           Send another message
         </button>
@@ -146,11 +173,11 @@ export default function ContactForm({ title = 'Tell us about your project', comp
         {errors.message && <span className="v1-field__error">{errors.message}</span>}
       </label>
 
-      <button type="submit" className="v1-btn v1-btn--primary v1-form__submit">
-        Send Message
+      <button type="submit" className="v1-btn v1-btn--primary v1-form__submit" disabled={submitting || sent}>
+        {submitting ? 'Sending...' : 'Send Message'}
       </button>
       <p className="v1-form__note">
-        Opens your email client with everything pre-filled — no accounts, no spam lists.
+        No accounts, no spam lists. If the server is unavailable, we will fall back to email.
       </p>
     </form>
   );

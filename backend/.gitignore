@@ -43,6 +43,10 @@
 /private/*
 !/private/.gitkeep
 
+# Generated proof campaign artifacts (static HTML proof sites).
+/web/proofs/*
+!/web/proofs/.gitkeep
+
 # Environment-specific settings and secrets (settings.php itself is tracked;
 # it contains only safe local-dev placeholders).
 /web/sites/*/settings.local.php

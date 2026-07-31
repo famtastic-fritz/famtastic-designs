@@ -24,6 +24,7 @@
         "drupal/paragraphs": "^1.21",
         "drupal/pathauto": "^1.15",
         "drupal/simple_oauth": "^6.0",
+        "drupal/smtp": "^1.4",
         "drupal/token": "^1.17",
         "drupal/webform": "^6.3",
         "drush/drush": "^13"

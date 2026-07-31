@@ -438,15 +438,25 @@ foreach ($node_storage->loadByProperties(['type' => 'faq_item']) as $faq) {
 // ===========================================================================
 echo "\n=== 6. MAIN MENU ===\n";
 
-$load_link = function ($title) use ($menu_storage) {
+$load_link = function ($title, $uri = NULL) use ($menu_storage) {
   $found = $menu_storage->loadByProperties(['menu_name' => 'main', 'title' => $title]);
-  return $found ? reset($found) : NULL;
+  if ($found) return reset($found);
+  if ($uri) {
+    $query = $menu_storage->getQuery()
+      ->condition('menu_name', 'main')
+      ->condition('link.uri', $uri)
+      ->accessCheck(FALSE);
+    $ids = $query->execute();
+    if ($ids) return $menu_storage->load(reset($ids));
+  }
+  return NULL;
 };
 
 // 6a. Retitle/reposition existing top-level links.
 $top_level = [
   // old title => [new title, uri, weight, expanded]
-  'Home' => ['Home', 'internal:/', 1, FALSE],
+  // NOTE: no 'Home' — core provides it via the standard.front_page plugin
+  // link (not an entity); creating an entity one duplicates it in the nav.
   'Services' => ['Solutions', 'internal:/services', 2, TRUE],
   'Packages' => ['Packages', 'internal:/packages', 3, TRUE],
   'Work' => ['Work', 'internal:/work', 4, FALSE],
@@ -457,7 +467,7 @@ $top_level = [
 
 $parents = [];
 foreach ($top_level as $old_title => [$new_title, $uri, $weight, $expanded]) {
-  $link = $load_link($old_title) ?: $load_link($new_title);
+  $link = $load_link($old_title, $uri) ?: $load_link($new_title, $uri);
   if (!$link) {
     $link = MenuLinkContent::create([
       'menu_name' => 'main',

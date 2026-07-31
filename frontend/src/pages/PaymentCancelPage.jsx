@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import PipelineShell from '../components/PipelineShell.jsx';
 
 export default function PaymentCancelPage() {

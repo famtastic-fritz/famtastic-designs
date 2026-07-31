@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { getNodesRaw } from '../api/drupal.js';
 import { transformCaseStudyNode } from '../lib/drupalAdapter.js';
 import { Hero, Section, CTABanner, Stagger, Item } from '../components/v1/index.js';

@@ -1,0 +1,596 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall hooks for the FAMtastic Pipeline module.
+ */
+
+/**
+ * Install the ProofCampaign and ProofVariant entity types on existing sites.
+ *
+ * On fresh installs the entity listener creates the tables automatically;
+ * sites that already had famtastic_pipeline enabled (e.g. production) need
+ * this update to create the proof_campaign and proof_variant base tables.
+ */
+function famtastic_pipeline_update_8001(&$sandbox) {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $etm = \Drupal::entityTypeManager();
+
+  foreach (['proof_campaign', 'proof_variant'] as $entity_type_id) {
+    if ($manager->getEntityType($entity_type_id) === NULL) {
+      $entity_type = $etm->getDefinition($entity_type_id);
+      $manager->installEntityType($entity_type);
+    }
+  }
+
+  return t('Installed proof_campaign and proof_variant entity tables.');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function famtastic_pipeline_schema(): array {
+  return _famtastic_pipeline_automation_schema();
+}
+
+/**
+ * Implements hook_install().
+ */
+function famtastic_pipeline_install(): void {
+  _famtastic_pipeline_seed_commercial_versions();
+}
+
+/**
+ * Adds the durable automation ledger to existing installations.
+ */
+function famtastic_pipeline_update_8002(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $created = [];
+  foreach (_famtastic_pipeline_automation_schema() as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+      $created[] = $table;
+    }
+  }
+  return t('Created automation ledger tables: @tables.', [
+    '@tables' => $created ? implode(', ', $created) : 'none (already present)',
+  ]);
+}
+
+/**
+ * Seeds the immutable launch offers and test terms version.
+ */
+function famtastic_pipeline_update_8003(&$sandbox) {
+  _famtastic_pipeline_seed_commercial_versions();
+  return t('Seeded Essential Launch, Business Launch, and website service terms v1.');
+}
+
+/**
+ * Adds immutable offer/terms and revision/release facts to transactions.
+ */
+function famtastic_pipeline_update_8004(&$sandbox) {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entityTypeManager = \Drupal::entityTypeManager();
+  $fieldSets = [
+    'famtastic_order' => [
+      'offer_version_id',
+      'terms_version_id',
+      'terms_acceptance_id',
+      'terms_accepted_at',
+    ],
+    'famtastic_project' => [
+      'revision_count',
+      'revision_limit',
+      'release_sha',
+      'artifact_checksum',
+    ],
+  ];
+  foreach ($fieldSets as $entityTypeId => $fieldNames) {
+    $entityType = $entityTypeManager->getDefinition($entityTypeId);
+    $class = $entityType->getClass();
+    $definitions = $class::baseFieldDefinitions($entityType);
+    foreach ($fieldNames as $fieldName) {
+      if (!$manager->getFieldStorageDefinition($fieldName, $entityTypeId)) {
+        $manager->installFieldStorageDefinition(
+          $fieldName,
+          $entityTypeId,
+          'famtastic_pipeline',
+          $definitions[$fieldName],
+        );
+      }
+    }
+  }
+  return t('Added immutable commercial, revision, and release fields.');
+}
+
+/**
+ * Adds normalized lead-import provenance and deduplication.
+ */
+function famtastic_pipeline_update_8005(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_lead_import_schema();
+  if (!$schema->tableExists('famtastic_lead_import')) {
+    $schema->createTable('famtastic_lead_import', $definition);
+  }
+  return t('Added lead import provenance and deduplication table.');
+}
+
+/**
+ * Adds staged campaign email delivery and tracking records.
+ */
+function famtastic_pipeline_update_8006(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('famtastic_email_message')) {
+    $schema->createTable('famtastic_email_message', _famtastic_pipeline_email_message_schema());
+  }
+  return t('Added campaign email message and provider tracking table.');
+}
+
+/**
+ * Adds asynchronous Site Studio dispatch and callback state.
+ */
+function famtastic_pipeline_update_8007(&$sandbox) {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entityType = \Drupal::entityTypeManager()->getDefinition('proof_campaign');
+  $class = $entityType->getClass();
+  $definitions = $class::baseFieldDefinitions($entityType);
+  foreach (['generation_status', 'studio_job_id', 'callback_event_ids', 'dispatched_at', 'ready_at'] as $fieldName) {
+    if (!$manager->getFieldStorageDefinition($fieldName, 'proof_campaign')) {
+      $manager->installFieldStorageDefinition($fieldName, 'proof_campaign', 'famtastic_pipeline', $definitions[$fieldName]);
+    }
+  }
+  return t('Added asynchronous Site Studio dispatch and callback fields.');
+}
+
+/**
+ * Seeds versioned commercial facts without overwriting existing versions.
+ */
+function _famtastic_pipeline_seed_commercial_versions(): void {
+  $database = \Drupal::database();
+  $now = \Drupal::time()->getRequestTime();
+  $offers = [
+    'essential_199' => [
+      'name' => 'Essential Launch',
+      'amount_minor' => 19900,
+      'included_revisions' => 1,
+      'definition' => [
+        'one_page_site',
+        'five_content_sections',
+        'mobile_responsive',
+        'ssl',
+        'twelve_months_hosting',
+      ],
+    ],
+    'business_499' => [
+      'name' => 'Business Launch',
+      'amount_minor' => 49900,
+      'included_revisions' => 2,
+      'definition' => [
+        'essential_launch',
+        'lead_capture',
+        'seo_setup',
+        'analytics',
+        'custom_domain_connection',
+        'twelve_months_hosting',
+      ],
+    ],
+    'revision_addon_75' => [
+      'name' => 'Additional revision',
+      'amount_minor' => 7500,
+      'included_revisions' => 1,
+      'definition' => ['one_additional_revision_round'],
+    ],
+  ];
+  foreach ($offers as $offerKey => $offer) {
+    $database->merge('famtastic_offer_version')
+      ->key('offer_key', $offerKey)
+      ->key('version', 1)
+      ->insertFields([
+        'offer_key' => $offerKey,
+        'version' => 1,
+        'name' => $offer['name'],
+        'amount_minor' => $offer['amount_minor'],
+        'currency' => 'usd',
+        'included_revisions' => $offer['included_revisions'],
+        'hosting_months' => str_starts_with($offerKey, 'revision_') ? 0 : 12,
+        'active' => 1,
+        'definition' => json_encode($offer['definition'], JSON_THROW_ON_ERROR),
+        'created' => $now,
+      ])
+      ->execute();
+  }
+
+  $termsBody = <<<'TERMS'
+FAMtastic Designs Website Service Terms v1
+
+The selected launch package, included work, revision allowance, and price are
+shown before checkout. The customer confirms they are authorized to supply the
+business content and assets. The customer owns their supplied content and
+controls their domain. FAMtastic receives only the permission needed to build,
+host, and support the site.
+
+The purchase includes twelve months of hosting beginning at launch. Continued
+hosting after that period requires separately disclosed recurring billing
+authorization and may be cancelled before renewal. Domain registration or DNS
+management performed by FAMtastic is delegated work for the customer and does
+not transfer domain ownership to FAMtastic.
+
+Package-specific revision limits apply. Additional work requires a separately
+accepted add-on. Acceptance of a proof authorizes deployment of that release.
+
+This operational draft must be reviewed by qualified counsel before live sales.
+TERMS;
+  $checksum = hash('sha256', $termsBody);
+  $database->merge('famtastic_terms_version')
+    ->key('terms_key', 'website_service')
+    ->key('version', 1)
+    ->insertFields([
+      'terms_key' => 'website_service',
+      'version' => 1,
+      'checksum' => $checksum,
+      'document_url' => '/terms/website-service-v1',
+      'body' => $termsBody,
+      'effective_at' => $now,
+      'active' => 1,
+      'created' => $now,
+    ])
+    ->execute();
+}
+
+/**
+ * Defines normalized operational records used across the autonomous pipeline.
+ */
+function _famtastic_pipeline_automation_schema(): array {
+  $id = [
+    'type' => 'serial',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+  ];
+  $entityId = [
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => FALSE,
+  ];
+  $short = [
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => TRUE,
+    'default' => '',
+  ];
+  $long = [
+    'type' => 'text',
+    'size' => 'big',
+    'not null' => FALSE,
+  ];
+  $time = [
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ];
+
+  $tables['famtastic_campaign'] = [
+    'description' => 'Versioned outreach campaigns and aggregate cost.',
+    'fields' => [
+      'id' => $id,
+      'campaign_key' => $short,
+      'name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'status' => $short,
+      'channel' => $short,
+      'source_filter' => $long,
+      'budget_minor' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+      'spent_minor' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+      'currency' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE, 'default' => 'usd'],
+      'created' => $time,
+      'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['campaign_key' => ['campaign_key']],
+    'indexes' => ['status' => ['status']],
+  ];
+
+  $tables['famtastic_offer_version'] = [
+    'description' => 'Immutable commercial offer versions.',
+    'fields' => [
+      'id' => $id,
+      'offer_key' => $short,
+      'version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'amount_minor' => ['type' => 'int', 'not null' => TRUE],
+      'currency' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE, 'default' => 'usd'],
+      'included_revisions' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'hosting_months' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 12],
+      'active' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'definition' => $long,
+      'created' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['offer_version' => ['offer_key', 'version']],
+    'indexes' => ['active_offer' => ['offer_key', 'active']],
+  ];
+
+  $tables['famtastic_terms_version'] = [
+    'description' => 'Immutable customer terms and policy snapshots.',
+    'fields' => [
+      'id' => $id,
+      'terms_key' => $short,
+      'version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'checksum' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'document_url' => ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE],
+      'body' => $long,
+      'effective_at' => $time,
+      'active' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'created' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'terms_version' => ['terms_key', 'version'],
+      'checksum' => ['checksum'],
+    ],
+  ];
+
+  $tables['famtastic_consent'] = [
+    'description' => 'Auditable consent, terms acceptance, and suppression records.',
+    'fields' => [
+      'id' => $id,
+      'prospect_id' => $entityId,
+      'contact_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'consent_type' => $short,
+      'status' => $short,
+      'terms_version_id' => $entityId,
+      'evidence' => $long,
+      'ip_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'user_agent_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'recorded_at' => $time,
+      'revoked_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'contact_status' => ['contact_hash', 'consent_type', 'status'],
+      'prospect' => ['prospect_id'],
+    ],
+  ];
+
+  $tables['famtastic_event'] = [
+    'description' => 'Append-only business and provider event ledger.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'size' => 'big', 'unsigned' => TRUE, 'not null' => TRUE],
+      'event_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'event_type' => $short,
+      'prospect_id' => $entityId,
+      'campaign_id' => $entityId,
+      'order_id' => $entityId,
+      'project_id' => $entityId,
+      'provider' => $short,
+      'provider_event_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'payload' => $long,
+      'occurred_at' => $time,
+      'recorded_at' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['event_key' => ['event_key']],
+    'indexes' => [
+      'type_time' => ['event_type', 'occurred_at'],
+      'prospect_time' => ['prospect_id', 'occurred_at'],
+      'campaign_time' => ['campaign_id', 'occurred_at'],
+    ],
+  ];
+
+  $tables['famtastic_job'] = [
+    'description' => 'Idempotent asynchronous work and callback state.',
+    'fields' => [
+      'id' => $id,
+      'job_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'job_type' => $short,
+      'prospect_id' => $entityId,
+      'status' => $short,
+      'attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'max_attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 5],
+      'available_at' => $time,
+      'locked_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'completed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'payload' => $long,
+      'result' => $long,
+      'last_error' => $long,
+      'created' => $time,
+      'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['job_key' => ['job_key']],
+    'indexes' => ['claimable' => ['status', 'available_at']],
+  ];
+
+  $tables['famtastic_deployment'] = [
+    'description' => 'Immutable customer-site releases and verification evidence.',
+    'fields' => [
+      'id' => $id,
+      'deployment_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'project_id' => $entityId,
+      'customer_key' => $short,
+      'release_sha' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'artifact_checksum' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'status' => $short,
+      'target_path' => ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE],
+      'public_url' => ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE, 'default' => ''],
+      'backup_path' => ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE, 'default' => ''],
+      'verification' => $long,
+      'deployed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'rolled_back_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['deployment_key' => ['deployment_key']],
+    'indexes' => ['project_status' => ['project_id', 'status']],
+  ];
+
+  $tables['famtastic_domain'] = [
+    'description' => 'Customer-owned domain and delegated DNS/SSL lifecycle.',
+    'fields' => [
+      'id' => $id,
+      'project_id' => $entityId,
+      'domain_name' => ['type' => 'varchar', 'length' => 253, 'not null' => TRUE],
+      'owner_type' => $short,
+      'owner_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'registrar' => $short,
+      'management_mode' => $short,
+      'authorization_evidence' => $long,
+      'dns_status' => $short,
+      'ssl_status' => $short,
+      'expires_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'last_verified_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time,
+      'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['domain_name' => ['domain_name']],
+    'indexes' => ['project' => ['project_id']],
+  ];
+
+  $tables['famtastic_hosting_entitlement'] = [
+    'description' => 'Included and recurring hosting service periods.',
+    'fields' => [
+      'id' => $id,
+      'project_id' => $entityId,
+      'order_id' => $entityId,
+      'status' => $short,
+      'starts_at' => $time,
+      'included_until' => $time,
+      'renews_at' => $time,
+      'suspended_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'ended_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time,
+      'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['project' => ['project_id']],
+    'indexes' => ['renewals' => ['status', 'renews_at']],
+  ];
+
+  $tables['famtastic_subscription'] = [
+    'description' => 'Month-13 recurring hosting subscription state.',
+    'fields' => [
+      'id' => $id,
+      'entitlement_id' => $entityId,
+      'provider' => $short,
+      'provider_customer_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'provider_subscription_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'status' => $short,
+      'amount_minor' => ['type' => 'int', 'not null' => TRUE],
+      'currency' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE, 'default' => 'usd'],
+      'retry_count' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'next_attempt_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'cancel_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time,
+      'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['entitlement' => ['entitlement_id']],
+    'indexes' => ['status_attempt' => ['status', 'next_attempt_at']],
+  ];
+
+  $tables['famtastic_exception'] = [
+    'description' => 'Actionable failures requiring retry or operator handling.',
+    'fields' => [
+      'id' => $id,
+      'exception_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'category' => $short,
+      'severity' => $short,
+      'status' => $short,
+      'prospect_id' => $entityId,
+      'job_id' => $entityId,
+      'summary' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
+      'details' => $long,
+      'retryable' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'retry_after' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'resolved_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time,
+      'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['exception_key' => ['exception_key']],
+    'indexes' => ['queue' => ['status', 'severity', 'created']],
+  ];
+
+  $tables['famtastic_lead_import'] = _famtastic_pipeline_lead_import_schema();
+  $tables['famtastic_email_message'] = _famtastic_pipeline_email_message_schema();
+
+  return $tables;
+}
+
+/**
+ * Defines staged email messages without storing raw recipient addresses.
+ */
+function _famtastic_pipeline_email_message_schema(): array {
+  return [
+    'description' => 'Campaign messages and delivery/tracking lifecycle.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'message_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'recipient_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'template_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'template_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'subject' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'provider' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'provider_message_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'tracking_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'unsubscribe_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'sent_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'delivered_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'opened_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'clicked_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'bounced_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'complained_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'unsubscribed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'message_key' => ['message_key'],
+      'tracking_key' => ['tracking_key'],
+      'unsubscribe_key' => ['unsubscribe_key'],
+    ],
+    'indexes' => [
+      'campaign_status' => ['campaign_id', 'status'],
+      'provider_message' => ['provider', 'provider_message_id'],
+      'prospect' => ['prospect_id'],
+    ],
+  ];
+}
+
+/**
+ * Defines the lead import table independently for update-hook reuse.
+ */
+function _famtastic_pipeline_lead_import_schema(): array {
+  return [
+    'description' => 'Normalized lead source, dedupe, qualification, and import result.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'import_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'dedupe_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'source_name' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'source_record_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'campaign_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'contact_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'business_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'score' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+      'target_offer' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'reasons' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'imported_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'import_key' => ['import_key'],
+      'dedupe_key' => ['dedupe_key'],
+    ],
+    'indexes' => [
+      'campaign_status' => ['campaign_key', 'status'],
+      'prospect' => ['prospect_id'],
+    ],
+  ];
+}

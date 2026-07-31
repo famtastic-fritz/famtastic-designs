@@ -23,6 +23,7 @@ class StripeGateway implements PaymentGatewayInterface {
   public function __construct(
     protected ClientInterface $httpClient,
     protected LoggerInterface $logger,
+    protected ProofCampaignService $proofCampaigns,
   ) {}
 
   /**
@@ -65,8 +66,19 @@ class StripeGateway implements PaymentGatewayInterface {
     if (!empty($context['customer_email'])) {
       $form['customer_email'] = $context['customer_email'];
     }
-    // Prefer a pre-created Price if provided (from stripe-setup.sh).
-    if ($priceId = (getenv('STRIPE_PRICE_ID') ?: Settings::get('stripe_price_id'))) {
+    // Attach proof campaign selection metadata so the webhook can mark the
+    // campaign converted without touching the existing intake flow.
+    $prospect = $order->get('prospect_ref')->entity;
+    if ($prospect && ($selection = $this->proofCampaigns->activeSelection($prospect))) {
+      $form['metadata[campaign_id]'] = $selection['campaign_id'];
+      $form['metadata[selected_variant]'] = $selection['selected_variant'];
+      $form['metadata[selected_package]'] = $selection['selected_package'];
+    }
+    // A pre-created Price must be package-specific so a $199 price can never
+    // silently replace a $499 server-authoritative order amount.
+    $packageEnv = 'STRIPE_PRICE_ID_' . strtoupper((string) preg_replace('/[^A-Za-z0-9]+/', '_', $order->get('package')->value));
+    $priceId = getenv($packageEnv) ?: Settings::get(strtolower($packageEnv));
+    if ($priceId) {
       unset($form['line_items[0][price_data][currency]'], $form['line_items[0][price_data][unit_amount]'], $form['line_items[0][price_data][product_data][name]']);
       $form['line_items[0][price]'] = $priceId;
     }
@@ -88,6 +100,8 @@ class StripeGateway implements PaymentGatewayInterface {
       'id' => $data['id'] ?? $sessionId,
       'payment_status' => $data['payment_status'] ?? 'unpaid',
       'payment_intent' => $data['payment_intent'] ?? NULL,
+      'amount_total' => isset($data['amount_total']) ? (int) $data['amount_total'] : NULL,
+      'currency' => $data['currency'] ?? NULL,
     ];
   }
 

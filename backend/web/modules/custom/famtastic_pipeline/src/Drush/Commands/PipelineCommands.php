@@ -14,6 +14,121 @@ use Drush\Commands\DrushCommands;
 class PipelineCommands extends DrushCommands {
 
   /**
+   * Prints campaign, source, funnel, revenue, launch, and renewal metrics.
+   */
+  #[CLI\Command(name: 'famtastic:analytics-report', aliases: ['far'])]
+  public function analyticsReport(): int {
+    /** @var \Drupal\famtastic_pipeline\Service\PipelineAnalyticsService $analytics */
+    $analytics = \Drupal::service('famtastic_pipeline.analytics');
+    $this->io()->writeln(json_encode($analytics->report(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Explicitly approves a campaign and queues its staged messages.
+   */
+  #[CLI\Command(name: 'famtastic:campaign-approve', aliases: ['fca'])]
+  #[CLI\Argument(name: 'campaignKey', description: 'Exact campaign attribution key.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the campaign key.')]
+  public function campaignApprove(string $campaignKey, array $options = ['confirm' => '']): int {
+    if (!hash_equals($campaignKey, (string) $options['confirm'])) {
+      $this->logger()->error('Approval requires --confirm=<exact-campaign-key>.');
+      return self::EXIT_FAILURE;
+    }
+    $database = \Drupal::database();
+    $updated = $database->update('famtastic_campaign')
+      ->fields(['status' => 'approved', 'changed' => \Drupal::time()->getRequestTime()])
+      ->condition('campaign_key', $campaignKey)
+      ->condition('status', ['draft', 'paused'], 'IN')
+      ->execute();
+    if (!$updated) {
+      $status = $database->select('famtastic_campaign', 'c')
+        ->fields('c', ['status'])
+        ->condition('campaign_key', $campaignKey)
+        ->execute()
+        ->fetchField();
+      if ($status !== 'approved') {
+        $this->logger()->error('Campaign does not exist or cannot be approved.');
+        return self::EXIT_FAILURE;
+      }
+    }
+    /** @var \Drupal\famtastic_pipeline\Service\CampaignMessageService $messages */
+    $messages = \Drupal::service('famtastic_pipeline.campaign_messages');
+    $count = $messages->queueApprovedCampaign($campaignKey);
+    $this->logger()->success(dt('Campaign @campaign approved; queued @count staged message(s).', [
+      '@campaign' => $campaignKey,
+      '@count' => $count,
+    ]));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Runs a bounded batch of durable automation jobs.
+   */
+  #[CLI\Command(name: 'famtastic:jobs-run', aliases: ['fjr'])]
+  #[CLI\Option(name: 'limit', description: 'Maximum jobs to process (1-100).')]
+  #[CLI\Option(name: 'type', description: 'Optional exact job type filter.')]
+  public function jobsRun(array $options = [
+    'limit' => 25,
+    'type' => '',
+  ]): int {
+    /** @var \Drupal\famtastic_pipeline\Service\AutomationWorker $worker */
+    $worker = \Drupal::service('famtastic_pipeline.automation_worker');
+    $results = $worker->run((int) $options['limit'], $options['type'] !== '' ? (string) $options['type'] : NULL);
+    $this->io()->writeln(json_encode($results, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $failures = array_filter($results, fn (array $result) => $result['status'] === 'failed');
+    if ($failures) {
+      $this->logger()->error(dt('@count job(s) exhausted retries.', ['@count' => count($failures)]));
+      return self::EXIT_FAILURE;
+    }
+    $this->logger()->success(dt('Processed @count automation job(s).', ['@count' => count($results)]));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Imports, normalizes, deduplicates, suppresses, and scores a lead CSV.
+   */
+  #[CLI\Command(name: 'famtastic:leads-import', aliases: ['fli'])]
+  #[CLI\Argument(name: 'path', description: 'Absolute or current-working-directory CSV path.')]
+  #[CLI\Option(name: 'source', description: 'Lawful public or licensed source identifier.')]
+  #[CLI\Option(name: 'campaign', description: 'Campaign attribution key.')]
+  #[CLI\Option(name: 'dry-run', description: 'Validate and score without writing records.')]
+  #[CLI\Usage(name: 'drush fli leads.csv --source=licensed-directory --campaign=az-launch-01 --dry-run', description: 'Preview a bounded lead import.')]
+  public function leadsImport(string $path, array $options = [
+    'source' => '',
+    'campaign' => '',
+    'dry-run' => FALSE,
+  ]): int {
+    if ($options['source'] === '' || $options['campaign'] === '') {
+      $this->logger()->error('--source and --campaign are required.');
+      return self::EXIT_FAILURE;
+    }
+    /** @var \Drupal\famtastic_pipeline\Service\LeadIngestionService $ingestion */
+    $ingestion = \Drupal::service('famtastic_pipeline.lead_ingestion');
+    try {
+      $result = $ingestion->importCsv(
+        $path,
+        (string) $options['source'],
+        (string) $options['campaign'],
+        (bool) $options['dry-run'],
+      );
+    }
+    catch (\Throwable $e) {
+      $this->logger()->error($e->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success(dt(
+      'Processed @total row(s): @counts.',
+      [
+        '@total' => $result['total'],
+        '@counts' => json_encode($result['counts']),
+      ],
+    ));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Creates a prospect from publicly discovered info and issues a secure link.
    */
   #[CLI\Command(name: 'famtastic:prospect-create', aliases: ['fpc'])]
@@ -85,6 +200,19 @@ class PipelineCommands extends DrushCommands {
     $this->io()->writeln('');
     $this->io()->writeln('<comment>Only the SHA-256 hash of the token is stored. Send the link once.</comment>');
 
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Expires all active proof campaigns past their expiry timestamp.
+   */
+  #[CLI\Command(name: 'proof-campaign:expire', aliases: ['pce'])]
+  #[CLI\Usage(name: 'drush proof-campaign:expire', description: 'Mark expired proof campaigns and print the count.')]
+  public function proofCampaignExpire(): int {
+    /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $service */
+    $service = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+    $count = $service->expireActive();
+    $this->logger()->success(dt('Expired @count proof campaign(s).', ['@count' => $count]));
     return self::EXIT_SUCCESS;
   }
 

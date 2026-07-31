@@ -1,0 +1,195 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SSH_TARGET="${FAMTASTIC_SSH_TARGET:-xrdj7j99xhzt@p3plzcpnl497512.prod.phx3.secureserver.net}"
+REMOTE_ROOT="${FAMTASTIC_REMOTE_ROOT:-public_html}"
+REMOTE_DEPLOY_BASE="${FAMTASTIC_REMOTE_DEPLOY_BASE:-deploy/famtastic-designs}"
+REPOSITORY_URL="${FAMTASTIC_REPOSITORY_URL:-https://github.com/famtastic-fritz/famtastic-designs.git}"
+APPLY=false
+
+usage() {
+  cat <<USAGE
+Usage: $0 [--apply]
+
+Without --apply, performs read-only local and remote preflight checks.
+With --apply, validates the exact current main commit in a private server
+worktree, backs up the database and current custom module, promotes the module,
+runs Drupal database updates and cache rebuild, and records the release.
+USAGE
+}
+
+case "${1:-}" in
+  "") ;;
+  --apply) APPLY=true ;;
+  -h|--help) usage; exit 0 ;;
+  *) usage >&2; exit 2 ;;
+esac
+
+for required_command in git ssh; do
+  command -v "$required_command" >/dev/null || {
+    echo "Missing required command: $required_command" >&2
+    exit 1
+  }
+done
+
+cd "$REPO_ROOT"
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo "Refusing deployment from a dirty Git worktree." >&2
+  git status --short >&2
+  exit 1
+fi
+
+COMMIT_SHA="$(git rev-parse HEAD)"
+REMOTE_MAIN_SHA="$(git ls-remote "$REPOSITORY_URL" refs/heads/main | awk '{print $1}')"
+if [[ "$COMMIT_SHA" != "$REMOTE_MAIN_SHA" ]]; then
+  echo "Refusing deployment: local HEAD is not the current origin/main commit." >&2
+  echo "local HEAD:  $COMMIT_SHA" >&2
+  echo "origin/main: $REMOTE_MAIN_SHA" >&2
+  exit 1
+fi
+
+echo "Backend deployment candidate: $COMMIT_SHA"
+echo "Private validation source:    ~/$REMOTE_DEPLOY_BASE/releases/$COMMIT_SHA/source/backend"
+echo "Drupal runtime:               ~/$REMOTE_ROOT"
+
+remote_mode="preflight"
+[[ "$APPLY" == true ]] && remote_mode="apply"
+
+ssh -T "$SSH_TARGET" bash -s -- \
+  "$remote_mode" "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" <<'REMOTE'
+set -euo pipefail
+
+mode="$1"
+remote_root="$2"
+deploy_base="$3"
+repository_url="$4"
+commit_sha="$5"
+production_dir="$HOME/$remote_root"
+deploy_dir="$HOME/$deploy_base"
+mirror_dir="$deploy_dir/repository.git"
+release_dir="$deploy_dir/releases/$commit_sha"
+source_dir="$release_dir/source"
+backend_dir="$source_dir/backend"
+source_module="$backend_dir/web/modules/custom/famtastic_pipeline"
+production_module="$production_dir/web/modules/custom/famtastic_pipeline"
+drush="$production_dir/vendor/bin/drush"
+
+for command_name in git php composer tar rsync; do
+  command -v "$command_name" >/dev/null || {
+    echo "Remote prerequisite missing: $command_name" >&2
+    exit 1
+  }
+done
+test -d "$production_dir" || {
+  echo "Remote Drupal root missing: $production_dir" >&2
+  exit 1
+}
+test -x "$drush" || {
+  echo "Remote Drush missing: $drush" >&2
+  exit 1
+}
+test -d "$production_module" || {
+  echo "Production custom module missing: $production_module" >&2
+  exit 1
+}
+remote_sha="$(git ls-remote "$repository_url" refs/heads/main | awk '{print $1}')"
+test "$remote_sha" = "$commit_sha" || {
+  echo "Remote cannot resolve requested commit as current main." >&2
+  exit 1
+}
+
+cd "$production_dir"
+"$drush" status --fields=bootstrap,db-status,drupal-version --format=list
+printf 'Remote PHP: %s\n' "$(php -r 'echo PHP_VERSION;')"
+printf 'Free space: %s\n' "$(df -h "$HOME" | awk 'NR == 2 {print $4}')"
+printf 'Current backend release: '
+if test -f "$production_dir/.backend-release"; then
+  tr '\n' ' ' < "$production_dir/.backend-release"
+  echo
+else
+  echo "unrecorded"
+fi
+
+if [[ "$mode" == "preflight" ]]; then
+  echo "Preflight passed. No production files changed."
+  echo "Apply plan: exact Git SHA -> private Composer validation -> database/module backups -> module promotion -> updatedb -> cache rebuild -> release record."
+  exit 0
+fi
+
+mkdir -p "$deploy_dir/releases" "$HOME/backups"
+if [[ ! -d "$mirror_dir" ]]; then
+  git clone --mirror "$repository_url" "$mirror_dir"
+else
+  git --git-dir="$mirror_dir" remote set-url origin "$repository_url"
+  git --git-dir="$mirror_dir" fetch --prune origin
+fi
+git --git-dir="$mirror_dir" cat-file -e "$commit_sha^{commit}"
+resolved_main="$(git --git-dir="$mirror_dir" rev-parse refs/heads/main)"
+[[ "$resolved_main" == "$commit_sha" ]] || {
+  echo "Refusing deployment: requested commit is no longer current main." >&2
+  exit 1
+}
+if [[ ! -e "$source_dir/.git" ]]; then
+  rm -rf "$release_dir"
+  mkdir -p "$release_dir"
+  git --git-dir="$mirror_dir" worktree add --detach "$source_dir" "$commit_sha"
+fi
+test -f "$backend_dir/composer.lock"
+test -f "$source_module/famtastic_pipeline.info.yml"
+composer --working-dir="$backend_dir" install \
+  --no-dev --no-interaction --prefer-dist --optimize-autoloader
+find "$source_module" -type f -name '*.php' -print0 |
+  xargs -0 -n1 php -l >/dev/null
+
+timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
+module_backup="$HOME/backups/famtastic-pipeline-$timestamp-$commit_sha.tgz"
+database_backup="$HOME/backups/famtastic-database-$timestamp-$commit_sha.sql.gz"
+stage_module="$production_dir/web/modules/custom/.famtastic_pipeline-$commit_sha"
+previous_module="$production_dir/web/modules/custom/.famtastic_pipeline-previous-$timestamp"
+
+tar -C "$(dirname "$production_module")" -czf "$module_backup" "$(basename "$production_module")"
+cd "$production_dir"
+"$drush" sql:dump --gzip --result-file="$database_backup"
+
+rm -rf "$stage_module"
+mkdir -p "$stage_module"
+rsync -a "$source_module/" "$stage_module/"
+mv "$production_module" "$previous_module"
+mv "$stage_module" "$production_module"
+
+rollback_code() {
+  if [[ -d "$previous_module" ]]; then
+    failed_module="$production_dir/web/modules/custom/.famtastic_pipeline-failed-$timestamp"
+    mv "$production_module" "$failed_module" 2>/dev/null || true
+    mv "$previous_module" "$production_module"
+    "$drush" cr >/dev/null 2>&1 || true
+  fi
+  echo "Code was restored after a failed deployment." >&2
+  echo "Database backup (manual restore if an update partially ran): $database_backup" >&2
+}
+trap rollback_code ERR
+
+"$drush" updatedb -y
+"$drush" cr
+"$drush" eval '
+  foreach (["famtastic_prospect", "famtastic_order", "famtastic_intake", "famtastic_project", "proof_campaign", "proof_variant"] as $entity_type_id) {
+    \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+  }
+  print "Pipeline entity definitions verified.\n";
+'
+
+{
+  printf 'commit=%s\n' "$commit_sha"
+  printf 'deployed_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  printf 'php=%s\n' "$(php -r 'echo PHP_VERSION;')"
+  printf 'module_backup=%s\n' "$module_backup"
+  printf 'database_backup=%s\n' "$database_backup"
+} > "$production_dir/.backend-release"
+
+rm -rf "$previous_module"
+trap - ERR
+echo "Backend deployment complete."
+cat "$production_dir/.backend-release"
+REMOTE

@@ -112,6 +112,16 @@ class Project extends ContentEntityBase {
     $fields['revision_notes'] = BaseFieldDefinition::create('string_long')
       ->setLabel('Revision notes')
       ->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', TRUE);
+    $fields['revision_count'] = BaseFieldDefinition::create('integer')
+      ->setLabel('Revision rounds used')
+      ->setDefaultValue(0)
+      ->setDisplayConfigurable('view', TRUE);
+    $fields['revision_limit'] = BaseFieldDefinition::create('integer')
+      ->setLabel('Included revision rounds')
+      ->setDefaultValue(1)
+      ->setDisplayConfigurable('view', TRUE);
+    $fields['release_sha'] = $short('Approved release SHA');
+    $fields['artifact_checksum'] = $short('Approved artifact checksum');
     $fields['approval_status'] = $short('Approval status')
       ->setDefaultValue('pending')
       ->setDescription(t('pending, revision_requested, approved.'));

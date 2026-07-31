@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import {
   confirmProspect,
   formatPrice,
   getSession,
-  simulatePayment,
   startCheckout,
 } from '../api/pipeline.js';
 import PipelineShell from '../components/PipelineShell.jsx';
@@ -36,6 +35,7 @@ export default function ProspectLandingPage() {
   const [saving, setSaving] = useState(false);
   const [paying, setPaying] = useState(false);
   const [notice, setNotice] = useState(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -98,18 +98,19 @@ export default function ProspectLandingPage() {
     setPaying(true);
     setNotice(null);
     try {
-      const res = await startCheckout(token);
+      const res = await startCheckout(token, {
+        package: 'essential_199',
+        terms_accepted: termsAccepted,
+        terms_checksum: data?.terms?.checksum,
+      });
       if (res.already_paid) {
         navigate(`/p/${token}/return`);
         return;
       }
       if (res.gateway_mode === 'stub') {
-        // No real Stripe configured: drive the same fulfillment path a webhook would.
-        await simulatePayment(token);
-        navigate(`/p/${token}/return`);
-      } else {
-        window.location.href = res.url;
+        throw new Error('Secure checkout is temporarily unavailable. Please try again later.');
       }
+      window.location.href = res.url;
     } catch (err) {
       setNotice({ type: 'error', text: err.message });
       setPaying(false);
@@ -225,12 +226,23 @@ export default function ProspectLandingPage() {
           <ul className="fp-list">
             {(offer.inclusions || []).map((item) => <li key={item}>{item}</li>)}
           </ul>
-          <button className="fp-btn fp-btn--lime fp-btn--lg" onClick={handlePay} disabled={paying}>
+          <button className="fp-btn fp-btn--lime fp-btn--lg" onClick={handlePay} disabled={paying || !termsAccepted}>
             {paying ? 'Starting secure checkout…' : `Pay ${formatPrice(offer.amount, offer.currency)} & get started`}
           </button>
+          <label className="fp-check">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(event) => setTermsAccepted(event.target.checked)}
+            />
+            <span>
+              I accept Website Service Terms v{data?.terms?.version}. The first 12 months of hosting are included;
+              recurring hosting requires separate authorization before month 13.
+            </span>
+          </label>
           <p className="fp-fineprint">
             {data.gateway_mode === 'stub'
-              ? 'Test mode: no card is charged. Clicking simulates a successful payment.'
+              ? 'Secure checkout is temporarily unavailable.'
               : 'Secure payment via Stripe. You’ll be redirected to Stripe Checkout.'}
           </p>
         </div>

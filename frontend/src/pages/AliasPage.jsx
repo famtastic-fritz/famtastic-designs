@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router';
 import { getNodeByAlias } from '../api/drupal.js';
 import { textValue } from '../utils/content.js';
 

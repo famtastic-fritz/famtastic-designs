@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { AnimatePresence, motion } from 'framer-motion';
 import { postIntake } from '../api/pipeline.js';
 
@@ -497,6 +497,8 @@ export default function SolutionFinder({ initialBranch = null }) {
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
   const [submitError, setSubmitError] = useState(null);
+  const [serverMessage, setServerMessage] = useState(null);
+  const [requestId, setRequestId] = useState(null);
   const [offlineEstimate, setOfflineEstimate] = useState(false);
   const searchRef = useRef(null);
 
@@ -519,6 +521,8 @@ export default function SolutionFinder({ initialBranch = null }) {
     setErrors({});
     setStatus('idle');
     setSubmitError(null);
+    setServerMessage(null);
+    setRequestId(null);
     setOfflineEstimate(false);
     setStage('branch');
   }
@@ -595,11 +599,15 @@ export default function SolutionFinder({ initialBranch = null }) {
   }
 
   async function doSubmit() {
+    if (status === 'submitting' || requestId) return;
     setStatus('submitting');
     setSubmitError(null);
+    setServerMessage(null);
     const { payload } = buildPayload();
     try {
-      await postIntake(payload);
+      const res = await postIntake(payload);
+      setRequestId(res?.request_id || null);
+      setServerMessage(res?.message || 'We received your request. Your estimate is being prepared, and our team has been notified.');
       setStatus('success');
       setStage('result');
     } catch (err) {
@@ -785,7 +793,7 @@ export default function SolutionFinder({ initialBranch = null }) {
               <div className="sf__error" role="alert">
                 <p><strong>We couldn't reach the server</strong> — your request was <em>not</em> sent. ({submitError})</p>
                 <div className="sf__error-actions">
-                  <button type="button" className="v1-btn v1-btn--primary v1-btn--sm" onClick={() => void doSubmit()}>
+                  <button type="button" className="v1-btn v1-btn--primary v1-btn--sm" onClick={() => void doSubmit()} disabled={status === 'submitting'}>
                     Retry
                   </button>
                   <button
@@ -842,6 +850,9 @@ export default function SolutionFinder({ initialBranch = null }) {
             )}
             <h3 className="sf__step-title">Your custom estimate</h3>
             <p className="sf__price">{range(result.estimate.low, result.estimate.high)}</p>
+            {!offlineEstimate && serverMessage && (
+              <p className="sf__note">{serverMessage}</p>
+            )}
             {result.estimate.review && (
               <p className="sf__note">Flagged for review — a custom system needs a human eye, so we'll prepare a tailored quote.</p>
             )}
@@ -869,7 +880,7 @@ export default function SolutionFinder({ initialBranch = null }) {
               <button
                 type="button"
                 className="v1-btn v1-btn--ghost"
-                onClick={() => { setStage('entry'); setValues({}); setBranch(null); setStepIndex(0); setStatus('idle'); setOfflineEstimate(false); setQuery(''); }}
+                onClick={() => { setStage('entry'); setValues({}); setBranch(null); setStepIndex(0); setStatus('idle'); setSubmitError(null); setServerMessage(null); setRequestId(null); setOfflineEstimate(false); setQuery(''); }}
               >
                 Start over
               </button>

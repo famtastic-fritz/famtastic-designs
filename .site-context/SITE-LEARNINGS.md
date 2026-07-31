@@ -5,6 +5,49 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-07-31 — Autonomous lead-to-launch acceptance
+
+Observation:
+
+- Independent component tests can all pass without proving that one attributed
+  lead actually travels through the complete business lifecycle.
+- A revision add-on that only returns `402` and advertises a price is not
+  purchasable until checkout, signed fulfillment, idempotency, and allowance
+  mutation are connected.
+- Returning lifecycle fields from an API is insufficient if the customer
+  frontend does not render them or cannot submit recurring authorization.
+
+Action taken:
+
+- Added correlated $199 and $499 journeys that retain the same campaign,
+  prospect, proof selection, orders, project, deployment, domain, hosting
+  entitlement, and subscription from import through renewal.
+- Added authoritative $75 revision add-on checkout and signed webhook
+  fulfillment that increases the project revision allowance exactly once.
+- Added persisted payment and proof-conversion events and corrected analytics
+  so add-on revenue does not inflate new-site conversion counts.
+- Added customer-visible deployment, domain, DNS, SSL, included-hosting, and
+  subscription status.
+- Added separate customer recurring-hosting authorization. The monthly price is
+  server-configured and the endpoint remains unavailable when pricing or the
+  billing provider is not configured.
+- Added bounded retry/exhaustion evidence for the actionable exception queue.
+
+Permanent rules:
+
+- A full-journey acceptance claim requires correlated identifiers across every
+  stage; a collection of unrelated fixtures is supporting evidence only.
+- New-site sales and add-on purchases are separate commercial events. Revenue
+  may include both, but conversion and cost-per-sale use new-site orders only.
+- Recurring hosting may never be inferred from the original website purchase.
+  It requires a separately disclosed amount, start date, and customer consent.
+- CI must operate on the canonical `frontend/` and `backend/` trees. The
+  historical root Nuxt/pnpm project is not a production quality gate; retaining
+  its old `pnpm lint` and `pnpm typecheck` workflows falsely implies that it is
+  still an active application.
+- Live providers, outreach, DNS mutation, domain purchase, and production
+  release remain explicit approval gates.
+
 ## 2026-07-30 — Blank page caused by flattened Vite assets
 
 Observation:
@@ -82,13 +125,11 @@ Permanent rules:
 
 Open follow-up:
 
-- The frontend dependency audit currently reports four findings: three
-  moderate and one high. Review them independently rather than applying a
-  breaking forced upgrade during a deployment incident.
+- The canonical React frontend dependency audit now reports zero
+  vulnerabilities after the separately tested React, router, and Vite upgrade.
 - The Vite build reports a legacy root Nuxt TypeScript configuration warning.
   It does not block the React build, but the configuration boundary should be
   cleaned up separately.
 - The legacy Git checkout and stale root-level bundles in `public_html` are no
   longer part of the release lane. Remove them only through a separately
   backed-up ownership audit so Drupal and hosting files are not disturbed.
-

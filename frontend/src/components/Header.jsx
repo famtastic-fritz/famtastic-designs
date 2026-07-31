@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router';
 import { useUser } from '../auth/UserContext.jsx';
 import { getMenus, getNodesRaw, STUB_FLAG } from '../api/drupal.js';
 import { transformServiceNode, transformPackageNode } from '../lib/drupalAdapter.js';

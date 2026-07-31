@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 import { getNodesRaw } from '../api/drupal.js';
 import { matchBySlug } from '../utils/content.js';
 import { transformPackageNode } from '../lib/drupalAdapter.js';
+import { applySeo } from '../components/SEO.jsx';
+import { packageSeo } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp, Stagger, Item } from '../components/v1/index.js';
 
 /**
@@ -28,11 +30,14 @@ export default function PackagePage() {
     };
   }, [slug]);
 
+  const plan = state.plan;
+  useEffect(() => {
+    if (plan) applySeo(packageSeo(plan, slug));
+  }, [plan, slug]);
+
   if (state.loading) {
     return <div className="v1-loading" role="status">Loading package…</div>;
   }
-
-  const plan = state.plan;
 
   if (!plan) {
     return (

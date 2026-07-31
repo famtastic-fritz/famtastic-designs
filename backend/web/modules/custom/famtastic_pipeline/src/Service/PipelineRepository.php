@@ -65,6 +65,21 @@ class PipelineRepository {
   }
 
   /**
+   * Returns the newest primary website order, excluding add-ons.
+   */
+  public function getLaunchOrder(Prospect $prospect): ?Order {
+    $storage = $this->entityTypeManager->getStorage('famtastic_order');
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('prospect_ref', $prospect->id())
+      ->condition('package', ['essential_199', 'business_499', 'basic_199'], 'IN')
+      ->sort('id', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    return $ids ? $storage->load(reset($ids)) : NULL;
+  }
+
+  /**
    * Returns the most recent intake for a prospect, if any.
    */
   public function getIntake(Prospect $prospect): ?Intake {

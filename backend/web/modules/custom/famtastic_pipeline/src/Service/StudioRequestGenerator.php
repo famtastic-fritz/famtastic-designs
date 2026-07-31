@@ -21,6 +21,7 @@ class StudioRequestGenerator {
     protected SiteStudioRequestBuilder $builder,
     protected SiteStudioAdapterInterface $adapter,
     protected EntityTypeManagerInterface $entityTypeManager,
+    protected OperationalLedger $ledger,
   ) {}
 
   /**
@@ -40,6 +41,8 @@ class StudioRequestGenerator {
     }
     if ($order) {
       $project->set('order_ref', $order->id());
+      $offer = $this->ledger->activeOffer((string) $order->get('package')->value);
+      $project->set('revision_limit', (int) ($offer['included_revisions'] ?? 1));
     }
     if ($intake) {
       $project->set('intake_ref', $intake->id());

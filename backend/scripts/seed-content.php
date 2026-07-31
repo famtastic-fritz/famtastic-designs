@@ -30,11 +30,22 @@ $term_exists = function ($vid, $name) use ($etm) {
   ]);
 };
 
-$menu_link_exists = function ($title) use ($etm) {
-  return (bool) $etm->getStorage('menu_link_content')->loadByProperties([
+$menu_link_exists = function ($title, $uri = NULL) use ($etm) {
+  // Title match OR same-URI match (titles get retitled by later scripts).
+  if ($etm->getStorage('menu_link_content')->loadByProperties([
     'menu_name' => 'main',
     'title' => $title,
-  ]);
+  ])) {
+    return TRUE;
+  }
+  if ($uri) {
+    $query = $etm->getStorage('menu_link_content')->getQuery()
+      ->condition('menu_name', 'main')
+      ->condition('link.uri', $uri)
+      ->accessCheck(FALSE);
+    return (bool) $query->execute();
+  }
+  return FALSE;
 };
 
 $node_exists = function ($type, $title) use ($etm) {
@@ -105,7 +116,7 @@ $menu_items = [
 $weight = 0;
 foreach ($menu_items as [$title, $uri]) {
   $weight++;
-  if ($menu_link_exists($title)) {
+  if ($menu_link_exists($title, $uri)) {
     $skipped[] = "menu link '$title'";
     echo "SKIP  menu link $title (exists)\n";
     continue;

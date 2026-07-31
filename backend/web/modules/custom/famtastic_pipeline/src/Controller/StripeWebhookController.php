@@ -36,6 +36,9 @@ class StripeWebhookController extends ControllerBase {
    */
   public function handle(Request $request): JsonResponse {
     $payload = $request->getContent();
+    if (strlen($payload) > 1024 * 1024) {
+      return new JsonResponse(['error' => 'request_too_large'], 413);
+    }
     $sig = $request->headers->get('Stripe-Signature', '');
 
     if (!$this->verifier->verify($payload, $sig)) {
@@ -55,7 +58,32 @@ class StripeWebhookController extends ControllerBase {
       if ($sessionId === '') {
         return new JsonResponse(['error' => 'missing_session'], 400);
       }
-      $result = $this->fulfillment->markPaidBySession($sessionId, $paymentIntent, $event['id']);
+      if (($sessionObj['payment_status'] ?? '') !== 'paid') {
+        return new JsonResponse(['received' => TRUE, 'paid' => FALSE, 'reason' => 'payment_not_paid']);
+      }
+      $result = $this->fulfillment->markPaidBySession(
+        $sessionId,
+        $paymentIntent,
+        $event['id'],
+        isset($sessionObj['amount_total']) ? (int) $sessionObj['amount_total'] : NULL,
+        isset($sessionObj['currency']) ? (string) $sessionObj['currency'] : NULL,
+      );
+      if (!empty($result['error'])) {
+        return new JsonResponse(['received' => TRUE, 'paid' => FALSE, 'error' => $result['error']], 409);
+      }
+      // When the checkout session was created with a proof campaign
+      // selection, mark that campaign converted (intake flow untouched).
+      $campaignId = (string) ($sessionObj['metadata']['campaign_id'] ?? '');
+      if ($result['paid'] && $campaignId !== '') {
+        $converted = $this->fulfillment->markProofCampaignConverted($campaignId, $sessionId);
+        return new JsonResponse([
+          'received' => TRUE,
+          'found' => $result['found'],
+          'newly_processed' => $result['newly_processed'],
+          'paid' => $result['paid'],
+          'campaign_converted' => $converted,
+        ]);
+      }
       return new JsonResponse([
         'received' => TRUE,
         'found' => $result['found'],

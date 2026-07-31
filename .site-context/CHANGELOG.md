@@ -1,5 +1,23 @@
 # FAMtastic Designs production changelog
 
+## 2026-07-31 — Autonomous pipeline completion candidate
+
+Completed the Git-tracked lead-to-launch implementation on PR #16. The branch
+now includes attributed lead ingestion, three proofs, gated outreach,
+proof/package selection, versioned terms, signed payment fulfillment, paid
+intake, revision limits and purchasable add-ons, immutable customer deployment,
+domain/TLS verification, included-year hosting, separately authorized month-13
+renewal, customer lifecycle status, analytics, exception handling, and one
+agent-agnostic acceptance command.
+
+The $199 and $499 acceptance journeys correlate a single imported lead through
+launch and renewal instead of relying only on independent component fixtures.
+Removed the obsolete root-Nuxt lint/typecheck workflows and their pnpm setup
+action. The remaining GitHub workflow validates only the canonical React
+frontend and Drupal backend, matching the production deployment source.
+No production release or live provider action is included in this changelog
+entry; those remain approval-gated.
+
 ## 2026-07-30 — Blank-page recovery and permanent deployment correction
 
 Recovered the React frontend after a historical deployment flattened
@@ -42,4 +60,3 @@ Committed public quote/contact capture and route-specific SEO improvements in
 transported through direct SSH/SCP rather than an authenticated Git release
 lane, which contributed to production/source drift. The content changes were
 not the direct cause of the later blank page.
-

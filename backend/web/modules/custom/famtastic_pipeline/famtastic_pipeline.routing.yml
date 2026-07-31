@@ -1,4 +1,67 @@
 # --- Public, token-scoped prospect API (anonymous; access is by link token) ---
+famtastic_pipeline.public_quote:
+  path: '/api/public/quote'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PublicRequestController::quote'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+famtastic_pipeline.public_contact:
+  path: '/api/public/contact'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PublicRequestController::contact'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+famtastic_pipeline.email_open:
+  path: '/api/pipeline/email/open/{tracking_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\EmailEventController::open'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    tracking_key: '[a-f0-9]{48}'
+
+famtastic_pipeline.email_click:
+  path: '/api/pipeline/email/click/{tracking_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\EmailEventController::click'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    tracking_key: '[a-f0-9]{48}'
+
+famtastic_pipeline.email_unsubscribe:
+  path: '/api/pipeline/email/unsubscribe/{unsubscribe_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\EmailEventController::unsubscribe'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    unsubscribe_key: '[a-f0-9]{48}'
+
+famtastic_pipeline.email_provider:
+  path: '/api/pipeline/email/provider-event'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\EmailEventController::provider'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.site_studio_callback:
+  path: '/api/pipeline/site-studio/callback'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\SiteStudioCallbackController::handle'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.session:
   path: '/api/pipeline/session'
   defaults:
@@ -21,6 +84,22 @@ famtastic_pipeline.checkout:
   path: '/api/pipeline/checkout'
   defaults:
     _controller: 'Drupal\famtastic_pipeline\Controller\PipelineController::checkout'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+famtastic_pipeline.revision_checkout:
+  path: '/api/pipeline/revision-checkout'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PipelineController::revisionCheckout'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+famtastic_pipeline.hosting_renewal:
+  path: '/api/pipeline/hosting-renewal'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PipelineController::hostingRenewal'
   methods: [POST]
   requirements:
     _access: 'TRUE'
@@ -55,6 +134,33 @@ famtastic_pipeline.approval:
   path: '/api/pipeline/approval'
   defaults:
     _controller: 'Drupal\famtastic_pipeline\Controller\PipelineController::approval'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+# --- Proof campaign API (anonymous; access is by link token) ---
+famtastic_pipeline.proof_campaign_create:
+  path: '/api/pipeline/proof-campaign'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ProofCampaignController::createCampaign'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+famtastic_pipeline.proof_campaign_show:
+  path: '/api/pipeline/proof-campaign'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ProofCampaignController::show'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.proof_campaign_select:
+  path: '/api/pipeline/proof-campaign/select'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ProofCampaignController::selectAction'
   methods: [POST]
   requirements:
     _access: 'TRUE'

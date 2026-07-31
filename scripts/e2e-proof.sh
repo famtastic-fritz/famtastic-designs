@@ -20,6 +20,9 @@ BACKEND_DIR="$(cd "$(dirname "$0")/../backend" && pwd)"
 PORT="${PORT:-8899}"
 BASE="http://127.0.0.1:${PORT}"
 SECRET="${STRIPE_WEBHOOK_SECRET:-whsec_local_dev_secret}"
+PACKAGE="${PACKAGE:-essential_199}"
+EXPECTED_AMOUNT="${EXPECTED_AMOUNT:-19900}"
+EXPECTED_REVISIONS="${EXPECTED_REVISIONS:-1}"
 DRUSH="${BACKEND_DIR}/vendor/bin/drush"
 PASS=0
 FAIL=0
@@ -68,9 +71,27 @@ say "2. Prospect landing session shows discovered business (deliverable 3)"
 SESS="$(curl -s "${TH[@]}" "${BASE}/api/pipeline/session")"
 assert_contains "session returns business name" "$SESS" "E2E Diner"
 assert_contains "session does NOT leak internal notes" "$( [ "${SESS/INTERNAL/}" = "$SESS" ] && echo CLEAN || echo LEAK )" "CLEAN"
+assert_contains "session exposes lifecycle portal contract" "$SESS" '"deployment":null'
 
 say "2b. Bad token is rejected (security)"
 assert_eq "bad token → 404" "$(http_code -H 'X-Prospect-Token: nope' "${BASE}/api/pipeline/session")" "404"
+
+say "2c. A second prospect is isolated and its token is revocable"
+SECOND_OUT="$(cd "$BACKEND_DIR" && "$DRUSH" famtastic:prospect-create \
+  --business-name="Isolated Prospect ${RANDOM}" \
+  --email="isolated-${RANDOM}@example.test" --source=synthetic --campaign=e2e-isolation 2>&1)"
+SECOND_TOKEN="$(echo "$SECOND_OUT" | awk -F': ' '/Raw token/ {print $2}' | tr -d ' ')"
+SECOND_PID="$(echo "$SECOND_OUT" | awk -F': ' '/Prospect ID/ {print $2}' | tr -d ' ')"
+SECOND_SESSION="$(curl -s -H "X-Prospect-Token: ${SECOND_TOKEN}" "${BASE}/api/pipeline/session")"
+assert_contains "second token sees only second prospect" "$SECOND_SESSION" "Isolated Prospect"
+assert_contains "second token cannot see first prospect" "$( [ "${SECOND_SESSION/E2E Diner/}" = "$SECOND_SESSION" ] && echo ISOLATED || echo LEAK )" "ISOLATED"
+assert_eq "second token cannot select first prospect proof" \
+  "$(http_code -X POST -H "X-Prospect-Token: ${SECOND_TOKEN}" "${JH[@]}" -d '{"variant_id":"a","package":"essential_199"}' "${BASE}/api/pipeline/proof-campaign/select")" \
+  "404"
+"$DRUSH" eval "\$p = \\Drupal::entityTypeManager()->getStorage('famtastic_prospect')->load($SECOND_PID); \$p->set('token_revoked', TRUE)->save();"
+assert_eq "revoked token → 404" \
+  "$(http_code -H "X-Prospect-Token: ${SECOND_TOKEN}" "${BASE}/api/pipeline/session")" \
+  "404"
 
 say "3. Paid gate BEFORE payment blocks intake (deliverable 12)"
 assert_eq "intake before pay → 402" "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{}' "${BASE}/api/pipeline/intake")" "402"
@@ -87,14 +108,35 @@ assert_eq "confirm without authorization → 422" \
   "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{"authorized":false}' "${BASE}/api/pipeline/confirm")" "422"
 
 # ---------------------------------------------------------------------------
-say "5. Present + purchase the \$199 offer → Stripe test checkout (deliverables 6,8)"
-CO="$(curl -s -X POST "${TH[@]}" "${BASE}/api/pipeline/checkout")"
+say "5. Present + accept versioned terms + purchase ${PACKAGE} → Stripe test checkout"
+TERMS_CHECKSUM="$(echo "$SESS" | sed -n 's/.*"terms":{[^}]*"checksum":"\([^"]*\)".*/\1/p')"
+assert_eq "checkout without terms → 422" \
+  "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{}' "${BASE}/api/pipeline/checkout")" "422"
+CO="$(curl -s -X POST "${TH[@]}" "${JH[@]}" \
+  -d "{\"package\":\"${PACKAGE}\",\"terms_accepted\":true,\"terms_checksum\":\"${TERMS_CHECKSUM}\"}" \
+  "${BASE}/api/pipeline/checkout")"
 assert_contains "checkout returns a session id" "$CO" '"session_id":"cs_'
 SID="$(echo "$CO" | sed -n 's/.*"session_id":"\([^"]*\)".*/\1/p')"
+"$DRUSH" eval "
+  \$order = \\Drupal::entityTypeManager()->getStorage('famtastic_order')->loadByProperties(['prospect_ref' => $PID]);
+  \$order = reset(\$order);
+  assert(\$order->get('package')->value === '$PACKAGE');
+  assert((int) \$order->get('amount')->value === $EXPECTED_AMOUNT);
+  assert((int) \$order->get('terms_version_id')->value > 0);
+" && ok "order snapshots authoritative package, amount, and terms" || bad "order commercial snapshot mismatch"
+
+say "5b. Browser-accessible payment simulation is disabled by default"
+assert_eq "payment simulation → 403" \
+  "$(http_code -X POST "${TH[@]}" "${BASE}/api/pipeline/stripe/simulate")" "403"
 
 say "6. Signature-verified webhook fulfills the order (deliverables 10,11)"
 TS="$(date +%s)"
-PAYLOAD="$(printf '{"id":"evt_e2e_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_e2e"}}}' "$TS" "$SID")"
+BAD_AMOUNT=$((EXPECTED_AMOUNT + 100))
+BAD_PAYLOAD="$(printf '{"id":"evt_e2e_bad_amount_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_bad","payment_status":"paid","amount_total":%s,"currency":"usd"}}}' "$TS" "$SID" "$BAD_AMOUNT")"
+BAD_SIG="$(printf '%s.%s' "$TS" "$BAD_PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | sed 's/^.*= //')"
+assert_eq "signed webhook with wrong amount → 409" \
+  "$(http_code -X POST -H "Stripe-Signature: t=${TS},v1=${BAD_SIG}" "${JH[@]}" -d "$BAD_PAYLOAD" "${BASE}/api/pipeline/stripe/webhook")" "409"
+PAYLOAD="$(printf '{"id":"evt_e2e_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_e2e","payment_status":"paid","amount_total":%s,"currency":"usd"}}}' "$TS" "$SID" "$EXPECTED_AMOUNT")"
 SIG="$(printf '%s.%s' "$TS" "$PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | sed 's/^.*= //')"
 WH="$(curl -s -X POST -H "Stripe-Signature: t=${TS},v1=${SIG}" "${JH[@]}" -d "$PAYLOAD" "${BASE}/api/pipeline/stripe/webhook")"
 assert_contains "webhook fulfilled (paid)" "$WH" '"paid":true'
@@ -128,6 +170,11 @@ PNG=/tmp/famtastic-e2e-logo.png
 python3 -c "import base64,sys;sys.stdout.buffer.write(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M8AAAMBAQDJ/pLvAAAAAElFTkSuQmCC'))" > "$PNG"
 ASSET="$(curl -s -X POST "${TH[@]}" -F "file=@${PNG};type=image/png;filename=logo.png" "${BASE}/api/pipeline/asset")"
 assert_contains "asset stored + returns file id" "$ASSET" '"file_id":'
+FAKE_PNG=/tmp/famtastic-e2e-fake.png
+printf '<script>alert(1)</script>' > "$FAKE_PNG"
+assert_eq "spoofed image MIME is rejected" \
+  "$(http_code -X POST "${TH[@]}" -F "file=@${FAKE_PNG};type=image/png;filename=logo.png" "${BASE}/api/pipeline/asset")" \
+  "422"
 
 # ---------------------------------------------------------------------------
 say "10. Generate Site Studio request: brief + JSON (deliverables 15,16)"
@@ -166,6 +213,27 @@ say "13. Customer requests revision, then approves (deliverable 19)"
 assert_contains "request revision" \
   "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"Please use a bigger hero photo."}' "${BASE}/api/pipeline/approval")" \
   '"approval_status":"revision_requested"'
+if [ "$EXPECTED_REVISIONS" -ge 2 ]; then
+  assert_contains "second included revision is accepted" \
+    "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"One more included change."}' "${BASE}/api/pipeline/approval")" \
+    '"revision_count":2'
+fi
+assert_eq "revision beyond package allowance is blocked" \
+  "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"An extra change."}' "${BASE}/api/pipeline/approval")" \
+  "402"
+ADDON_CHECKOUT="$(curl -s -X POST "${TH[@]}" "${JH[@]}" \
+  -d "{\"terms_accepted\":true,\"terms_checksum\":\"${TERMS_CHECKSUM}\"}" \
+  "${BASE}/api/pipeline/revision-checkout")"
+assert_contains "revision add-on checkout uses authoritative 7500-cent amount" "$ADDON_CHECKOUT" '"amount":7500'
+ADDON_SID="$(echo "$ADDON_CHECKOUT" | sed -n 's/.*"session_id":"\([^"]*\)".*/\1/p')"
+ADDON_TS=$((TS + 1))
+ADDON_PAYLOAD="$(printf '{"id":"evt_e2e_addon_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_addon","payment_status":"paid","amount_total":7500,"currency":"usd"}}}' "$ADDON_TS" "$ADDON_SID")"
+ADDON_SIG="$(printf '%s.%s' "$ADDON_TS" "$ADDON_PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | sed 's/^.*= //')"
+ADDON_WEBHOOK="$(curl -s -X POST -H "Stripe-Signature: t=${ADDON_TS},v1=${ADDON_SIG}" "${JH[@]}" -d "$ADDON_PAYLOAD" "${BASE}/api/pipeline/stripe/webhook")"
+assert_contains "signed add-on payment is fulfilled" "$ADDON_WEBHOOK" '"paid":true'
+assert_contains "purchased revision becomes available" \
+  "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"Purchased revision."}' "${BASE}/api/pipeline/approval")" \
+  "\"revision_count\":$((EXPECTED_REVISIONS + 1))"
 assert_contains "approve" \
   "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"approve"}' "${BASE}/api/pipeline/approval")" \
   '"approval_status":"approved"'

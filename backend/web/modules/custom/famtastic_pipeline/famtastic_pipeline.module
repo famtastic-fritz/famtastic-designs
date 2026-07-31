@@ -16,3 +16,19 @@ function famtastic_pipeline_help(string $route_name): ?string {
   }
   return NULL;
 }
+
+/**
+ * Implements hook_mail().
+ */
+function famtastic_pipeline_mail(string $key, array &$message, array $params): void {
+  if ($key !== 'outreach') {
+    return;
+  }
+
+  $message['subject'] = (string) ($params['subject'] ?? 'FAMtastic Designs notification');
+  $message['body'][] = (string) ($params['body'] ?? '');
+
+  if (!empty($params['from'])) {
+    $message['headers']['From'] = (string) $params['from'];
+  }
+}
