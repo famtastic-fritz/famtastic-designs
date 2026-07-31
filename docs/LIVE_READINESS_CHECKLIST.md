@@ -6,7 +6,8 @@ Nuxt/Directus project is not deployed and its commands are not release gates.
 
 ## Current evidence — 2026-07-31
 
-- PR #16 head: `3e31e3fbe7f5d6cc67a0f323375c372f1488d263`
+- release candidate: PR #16, branch
+  `codex/issue-15-phase-1-source-truth` (resolve its current SHA at review time)
 - GitHub `main`: `7d40d52e87cc6df36dab0ee8043edfffd3220152`
 - recorded production frontend: `ebbbfa0c0e521e7d9de675eaafaf4cdf2a4e39ca`
 - recorded production backend: unrecorded
