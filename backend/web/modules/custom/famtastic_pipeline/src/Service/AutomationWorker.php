@@ -17,6 +17,8 @@ final class AutomationWorker {
     private readonly ProofCampaignService $proofCampaigns,
     private readonly CampaignMessageService $campaignMessages,
     private readonly CustomerDeploymentService $deployments,
+    private readonly DomainLifecycleService $domains,
+    private readonly HostingLifecycleService $hosting,
   ) {}
 
   /**
@@ -53,6 +55,8 @@ final class AutomationWorker {
       'outreach.send' => $this->sendOutreach($job),
       'deployment.prepare' => $this->prepareDeployment($job),
       'deployment.apply' => $this->applyDeployment($job),
+      'domain.verify' => $this->verifyDomain($job),
+      'hosting.activate' => $this->activateHosting($job),
       default => throw new \RuntimeException('Unsupported job type: ' . $job['job_type']),
     };
   }
@@ -176,6 +180,25 @@ final class AutomationWorker {
       'public_url' => $deployment['public_url'],
       'backup_path' => $deployment['backup_path'],
     ];
+  }
+
+  private function verifyDomain(array $job): array {
+    $deploymentId = (int) ($job['payload']['deployment_id'] ?? 0);
+    if (!$deploymentId) {
+      throw new \RuntimeException('Domain verification is missing its deployment id.');
+    }
+    return $this->domains->verifyDeployment(
+      $deploymentId,
+      isset($job['payload']['domain_id']) ? (int) $job['payload']['domain_id'] : NULL,
+    );
+  }
+
+  private function activateHosting(array $job): array {
+    $projectId = (int) ($job['payload']['project_id'] ?? 0);
+    if (!$projectId) {
+      throw new \RuntimeException('Hosting activation is missing its project id.');
+    }
+    return $this->hosting->activate($projectId);
   }
 
 }
