@@ -33,6 +33,19 @@
 | Deploy preflight | `./scripts/deploy-frontend-godaddy.sh` |
 | Deploy | `./scripts/deploy-frontend-godaddy.sh --apply` |
 
+## Production Backend
+
+- Canonical transactional source:
+  `backend/web/modules/custom/famtastic_pipeline`.
+- Follow `docs/BACKEND_DEPLOYMENT.md` for every backend production change.
+- Use `./scripts/deploy-backend-godaddy.sh`; all agents use the same primitive.
+- A production deployment requires a clean Git worktree at the current
+  GitHub `main` SHA and explicit production authorization.
+- Never edit or directly upload module files in production.
+- The script must create code and database backups before `drush updatedb`.
+- Runtime dependency additions require a reviewed platform migration; do not
+  assume a private Composer validation changes the live vendor tree.
+
 ## Commit Attribution
 AI commits MUST include:
 ```text

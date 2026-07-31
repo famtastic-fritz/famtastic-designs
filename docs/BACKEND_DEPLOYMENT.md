@@ -1,0 +1,87 @@
+# Backend Deployment
+
+## Contract
+
+The Drupal custom module in
+`backend/web/modules/custom/famtastic_pipeline` is the canonical transactional
+backend source. Production is not edited or uploaded manually. Any authorized
+agent uses the same checked-in deployment script.
+
+Production currently has a mixed Drupal runtime in `~/public_html` with its
+vendor tree but no root `composer.json`. The deployment lane therefore validates
+the complete backend dependency lock in a private Git worktree and promotes the
+custom module surface. A future change that adds a runtime dependency not
+already installed on production is a separate reviewed platform migration; the
+module release must fail preflight until that dependency is present.
+
+## Preflight
+
+Run from a clean checkout whose `HEAD` equals GitHub `main`:
+
+```bash
+./scripts/deploy-backend-godaddy.sh
+```
+
+This verifies GitHub main, remote PHP/Composer/Drush, Drupal bootstrap and
+database connectivity, paths, and disk space without changing production.
+
+## Apply
+
+Production apply requires explicit authorization:
+
+```bash
+./scripts/deploy-backend-godaddy.sh --apply
+```
+
+The script:
+
+1. resolves the exact current `main` SHA on both machines;
+2. checks it out outside the document root;
+3. runs production Composer installation and PHP lint in the private release;
+4. backs up the current custom module and Drupal database;
+5. stages and swaps the custom module;
+6. runs `drush updatedb -y` and `drush cr`;
+7. verifies all six pipeline entity definitions;
+8. records the commit, timestamp, PHP version, module backup, and database
+   backup in `~/public_html/.backend-release`.
+
+If code promotion or a Drupal command fails, the script restores the prior
+module and rebuilds cache. Database updates cannot be assumed reversible, so
+the pre-update SQL dump is retained and its path is printed.
+
+## Verification
+
+After apply:
+
+```bash
+ssh "$FAMTASTIC_SSH_TARGET"
+cat ~/public_html/.backend-release
+cd ~/public_html
+vendor/bin/drush updatedb:status
+vendor/bin/drush watchdog:show --severity=Error --count=20
+```
+
+Then exercise the production-safe read paths and the public forms. Do not run a
+live charge, real campaign, domain purchase, or DNS change without its explicit
+approval.
+
+## Rollback
+
+Use the exact paths in `.backend-release`. Restore code first:
+
+```bash
+tar -xzf ~/backups/famtastic-pipeline-TIMESTAMP-SHA.tgz \
+  -C ~/public_html/web/modules/custom
+cd ~/public_html
+vendor/bin/drush cr
+```
+
+Restore the database only when the failed release executed a database update
+that is incompatible with the old code. This is destructive and requires a
+separate explicit approval:
+
+```bash
+gunzip -c ~/backups/famtastic-database-TIMESTAMP-SHA.sql.gz |
+  vendor/bin/drush sql:cli
+vendor/bin/drush cr
+```
