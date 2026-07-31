@@ -16,6 +16,7 @@ final class AutomationWorker {
     private readonly EntityTypeManagerInterface $entityTypeManager,
     private readonly ProofCampaignService $proofCampaigns,
     private readonly CampaignMessageService $campaignMessages,
+    private readonly CustomerDeploymentService $deployments,
   ) {}
 
   /**
@@ -50,6 +51,8 @@ final class AutomationWorker {
       'proof.generate' => $this->generateProofs($job),
       'outreach.prepare' => $this->prepareOutreach($job),
       'outreach.send' => $this->sendOutreach($job),
+      'deployment.prepare' => $this->prepareDeployment($job),
+      'deployment.apply' => $this->applyDeployment($job),
       default => throw new \RuntimeException('Unsupported job type: ' . $job['job_type']),
     };
   }
@@ -143,6 +146,35 @@ final class AutomationWorker {
       'status' => $message['status'],
       'provider' => $message['provider'],
       'provider_message_id' => $message['provider_message_id'],
+    ];
+  }
+
+  private function prepareDeployment(array $job): array {
+    $projectId = (int) ($job['payload']['project_id'] ?? 0);
+    if (!$projectId) {
+      throw new \RuntimeException('Deployment preparation is missing its project id.');
+    }
+    $deployment = $this->deployments->prepare($projectId);
+    return [
+      'deployment_id' => (int) $deployment['id'],
+      'status' => $deployment['status'],
+      'release_sha' => $deployment['release_sha'],
+      'artifact_checksum' => $deployment['artifact_checksum'],
+    ];
+  }
+
+  private function applyDeployment(array $job): array {
+    $deploymentId = (int) ($job['payload']['deployment_id'] ?? 0);
+    if (!$deploymentId) {
+      throw new \RuntimeException('Deployment apply is missing its deployment id.');
+    }
+    $deployment = $this->deployments->apply($deploymentId);
+    return [
+      'deployment_id' => (int) $deployment['id'],
+      'status' => $deployment['status'],
+      'target_path' => $deployment['target_path'],
+      'public_url' => $deployment['public_url'],
+      'backup_path' => $deployment['backup_path'],
     ];
   }
 
