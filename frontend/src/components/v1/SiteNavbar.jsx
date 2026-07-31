@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router';
 
 /**
  * v1 site navbar — sticky blurred bar, FAM/tastic Designs wordmark, top-level

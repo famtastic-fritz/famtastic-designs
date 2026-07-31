@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 /**
  * v1 service card — dark #111 card, lime dot deliverables, "Learn more →"

@@ -7,6 +7,7 @@ namespace Drupal\famtastic_pipeline\Controller;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\famtastic_pipeline\Entity\Order;
 use Drupal\famtastic_pipeline\Entity\Prospect;
@@ -39,6 +40,7 @@ class PipelineController extends ControllerBase {
     protected TimeInterface $time,
     protected OperationalLedger $ledger,
     protected ProofCampaignService $proofCampaigns,
+    protected Connection $database,
   ) {}
 
   /**
@@ -54,6 +56,7 @@ class PipelineController extends ControllerBase {
       $container->get('datetime.time'),
       $container->get('famtastic_pipeline.operational_ledger'),
       $container->get('famtastic_pipeline.proof_campaign_service'),
+      $container->get('database'),
     );
   }
 
@@ -302,10 +305,17 @@ class PipelineController extends ControllerBase {
     if (!$uploaded) {
       return $this->error('no_file', 422, 'No file uploaded.');
     }
-    $allowedExt = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
+    $allowedTypes = [
+      'png' => 'image/png',
+      'jpg' => 'image/jpeg',
+      'jpeg' => 'image/jpeg',
+      'webp' => 'image/webp',
+    ];
     $ext = strtolower($uploaded->getClientOriginalExtension());
-    if (!in_array($ext, $allowedExt, TRUE)) {
-      return $this->error('bad_file_type', 422, 'Only image files are accepted.');
+    $realPath = $uploaded->getRealPath();
+    $detectedType = $realPath ? (new \finfo(FILEINFO_MIME_TYPE))->file($realPath) : FALSE;
+    if (!isset($allowedTypes[$ext]) || $detectedType !== $allowedTypes[$ext]) {
+      return $this->error('bad_file_type', 422, 'Only verified PNG, JPEG, and WebP images are accepted.');
     }
     if ($uploaded->getSize() > 8 * 1024 * 1024) {
       return $this->error('file_too_large', 422, 'Max file size is 8 MB.');
@@ -344,6 +354,32 @@ class PipelineController extends ControllerBase {
       return $this->error('invalid_or_expired_token', 404);
     }
     $project = $this->repository->getProject($prospect);
+    $proof = $this->proofCampaigns->getForProspect($prospect);
+    $deployment = $project ? $this->database->select('famtastic_deployment', 'd')
+      ->fields('d', ['id', 'status', 'public_url', 'deployed_at', 'rolled_back_at'])
+      ->condition('project_id', (int) $project->id())
+      ->orderBy('created', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchAssoc() : FALSE;
+    $domain = $project ? $this->database->select('famtastic_domain', 'd')
+      ->fields('d', ['id', 'domain_name', 'owner_type', 'management_mode', 'dns_status', 'ssl_status', 'last_verified_at'])
+      ->condition('project_id', (int) $project->id())
+      ->range(0, 1)
+      ->execute()
+      ->fetchAssoc() : FALSE;
+    $hosting = $project ? $this->database->select('famtastic_hosting_entitlement', 'h')
+      ->fields('h', ['id', 'status', 'starts_at', 'included_until', 'renews_at', 'suspended_at'])
+      ->condition('project_id', (int) $project->id())
+      ->range(0, 1)
+      ->execute()
+      ->fetchAssoc() : FALSE;
+    $subscription = $hosting ? $this->database->select('famtastic_subscription', 's')
+      ->fields('s', ['status', 'amount_minor', 'currency', 'retry_count', 'next_attempt_at'])
+      ->condition('entitlement_id', (int) $hosting['id'])
+      ->range(0, 1)
+      ->execute()
+      ->fetchAssoc() : FALSE;
     if (!$project || !$project->get('proof_url')->value) {
       return $this->error('no_proof_yet', 409, 'There is no proof to review yet.');
     }
@@ -516,6 +552,13 @@ class PipelineController extends ControllerBase {
       ] : NULL,
       'gateway_mode' => $this->gatewayManager->active()->getMode(),
       'intake' => $intake ? ['submitted' => (bool) $intake->get('submitted_at')->value] : NULL,
+      'proof' => $proof ? [
+        'campaign_id' => $proof['campaign']->get('campaign_id')->value,
+        'generation_status' => $proof['campaign']->get('generation_status')->value,
+        'selected_direction' => $proof['campaign']->get('selected_direction')->value,
+        'selected_package' => $proof['campaign']->get('selected_package')->value,
+        'variant_count' => count($proof['variants']),
+      ] : NULL,
       'project' => $project ? [
         'proof_url' => $project->get('proof_url')->value,
         'live_url' => $project->get('live_url')->value,
@@ -526,6 +569,10 @@ class PipelineController extends ControllerBase {
         'revision_limit' => (int) $project->get('revision_limit')->value,
         'release_sha' => $project->get('release_sha')->value,
       ] : NULL,
+      'deployment' => $deployment ?: NULL,
+      'domain' => $domain ?: NULL,
+      'hosting' => $hosting ?: NULL,
+      'subscription' => $subscription ?: NULL,
     ];
   }
 

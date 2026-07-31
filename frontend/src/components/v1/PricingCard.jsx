@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 /**
  * v1 pricing card — package name, big price, description, "Best for",

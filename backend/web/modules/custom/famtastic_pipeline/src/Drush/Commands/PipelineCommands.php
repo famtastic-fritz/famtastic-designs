@@ -14,6 +14,17 @@ use Drush\Commands\DrushCommands;
 class PipelineCommands extends DrushCommands {
 
   /**
+   * Prints campaign, source, funnel, revenue, launch, and renewal metrics.
+   */
+  #[CLI\Command(name: 'famtastic:analytics-report', aliases: ['far'])]
+  public function analyticsReport(): int {
+    /** @var \Drupal\famtastic_pipeline\Service\PipelineAnalyticsService $analytics */
+    $analytics = \Drupal::service('famtastic_pipeline.analytics');
+    $this->io()->writeln(json_encode($analytics->report(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Explicitly approves a campaign and queues its staged messages.
    */
   #[CLI\Command(name: 'famtastic:campaign-approve', aliases: ['fca'])]

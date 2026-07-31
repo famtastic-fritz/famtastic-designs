@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 import Header from './Header.jsx';
 import { getNodesRaw } from '../api/drupal.js';
 import { transformServiceNode, transformPackageNode } from '../lib/drupalAdapter.js';

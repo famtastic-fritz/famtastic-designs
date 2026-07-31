@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { getSession, submitIntake, uploadAsset } from '../api/pipeline.js';
 import PipelineShell from '../components/PipelineShell.jsx';
 import '../pipeline.css';

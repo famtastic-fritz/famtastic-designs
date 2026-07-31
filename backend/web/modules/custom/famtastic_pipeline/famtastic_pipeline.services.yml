@@ -43,6 +43,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\HostingLifecycleService
     arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@datetime.time']
 
+  famtastic_pipeline.analytics:
+    class: Drupal\famtastic_pipeline\Service\PipelineAnalyticsService
+    arguments: ['@database']
+
   famtastic_pipeline.stripe_gateway:
     class: Drupal\famtastic_pipeline\Service\StripeGateway
     arguments: ['@http_client', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service']

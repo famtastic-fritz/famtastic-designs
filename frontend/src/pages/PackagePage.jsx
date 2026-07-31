@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router';
 import { getNodesRaw } from '../api/drupal.js';
 import { matchBySlug } from '../utils/content.js';
 import { transformPackageNode } from '../lib/drupalAdapter.js';

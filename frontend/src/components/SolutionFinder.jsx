@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { AnimatePresence, motion } from 'framer-motion';
 import { postIntake } from '../api/pipeline.js';
 

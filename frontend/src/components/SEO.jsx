@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { seoForPath } from '../seo.js';
 
 function upsertMeta(selector, attributes) {

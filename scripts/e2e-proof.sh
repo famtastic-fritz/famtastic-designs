@@ -71,6 +71,7 @@ say "2. Prospect landing session shows discovered business (deliverable 3)"
 SESS="$(curl -s "${TH[@]}" "${BASE}/api/pipeline/session")"
 assert_contains "session returns business name" "$SESS" "E2E Diner"
 assert_contains "session does NOT leak internal notes" "$( [ "${SESS/INTERNAL/}" = "$SESS" ] && echo CLEAN || echo LEAK )" "CLEAN"
+assert_contains "session exposes lifecycle portal contract" "$SESS" '"deployment":null'
 
 say "2b. Bad token is rejected (security)"
 assert_eq "bad token → 404" "$(http_code -H 'X-Prospect-Token: nope' "${BASE}/api/pipeline/session")" "404"
@@ -152,6 +153,11 @@ PNG=/tmp/famtastic-e2e-logo.png
 python3 -c "import base64,sys;sys.stdout.buffer.write(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M8AAAMBAQDJ/pLvAAAAAElFTkSuQmCC'))" > "$PNG"
 ASSET="$(curl -s -X POST "${TH[@]}" -F "file=@${PNG};type=image/png;filename=logo.png" "${BASE}/api/pipeline/asset")"
 assert_contains "asset stored + returns file id" "$ASSET" '"file_id":'
+FAKE_PNG=/tmp/famtastic-e2e-fake.png
+printf '<script>alert(1)</script>' > "$FAKE_PNG"
+assert_eq "spoofed image MIME is rejected" \
+  "$(http_code -X POST "${TH[@]}" -F "file=@${FAKE_PNG};type=image/png;filename=logo.png" "${BASE}/api/pipeline/asset")" \
+  "422"
 
 # ---------------------------------------------------------------------------
 say "10. Generate Site Studio request: brief + JSON (deliverables 15,16)"
