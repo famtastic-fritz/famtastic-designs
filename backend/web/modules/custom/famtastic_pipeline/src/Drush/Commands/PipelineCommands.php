@@ -14,6 +14,72 @@ use Drush\Commands\DrushCommands;
 class PipelineCommands extends DrushCommands {
 
   /**
+   * Runs a bounded batch of durable automation jobs.
+   */
+  #[CLI\Command(name: 'famtastic:jobs-run', aliases: ['fjr'])]
+  #[CLI\Option(name: 'limit', description: 'Maximum jobs to process (1-100).')]
+  #[CLI\Option(name: 'type', description: 'Optional exact job type filter.')]
+  public function jobsRun(array $options = [
+    'limit' => 25,
+    'type' => '',
+  ]): int {
+    /** @var \Drupal\famtastic_pipeline\Service\AutomationWorker $worker */
+    $worker = \Drupal::service('famtastic_pipeline.automation_worker');
+    $results = $worker->run((int) $options['limit'], $options['type'] !== '' ? (string) $options['type'] : NULL);
+    $this->io()->writeln(json_encode($results, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $failures = array_filter($results, fn (array $result) => $result['status'] === 'failed');
+    if ($failures) {
+      $this->logger()->error(dt('@count job(s) exhausted retries.', ['@count' => count($failures)]));
+      return self::EXIT_FAILURE;
+    }
+    $this->logger()->success(dt('Processed @count automation job(s).', ['@count' => count($results)]));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Imports, normalizes, deduplicates, suppresses, and scores a lead CSV.
+   */
+  #[CLI\Command(name: 'famtastic:leads-import', aliases: ['fli'])]
+  #[CLI\Argument(name: 'path', description: 'Absolute or current-working-directory CSV path.')]
+  #[CLI\Option(name: 'source', description: 'Lawful public or licensed source identifier.')]
+  #[CLI\Option(name: 'campaign', description: 'Campaign attribution key.')]
+  #[CLI\Option(name: 'dry-run', description: 'Validate and score without writing records.')]
+  #[CLI\Usage(name: 'drush fli leads.csv --source=licensed-directory --campaign=az-launch-01 --dry-run', description: 'Preview a bounded lead import.')]
+  public function leadsImport(string $path, array $options = [
+    'source' => '',
+    'campaign' => '',
+    'dry-run' => FALSE,
+  ]): int {
+    if ($options['source'] === '' || $options['campaign'] === '') {
+      $this->logger()->error('--source and --campaign are required.');
+      return self::EXIT_FAILURE;
+    }
+    /** @var \Drupal\famtastic_pipeline\Service\LeadIngestionService $ingestion */
+    $ingestion = \Drupal::service('famtastic_pipeline.lead_ingestion');
+    try {
+      $result = $ingestion->importCsv(
+        $path,
+        (string) $options['source'],
+        (string) $options['campaign'],
+        (bool) $options['dry-run'],
+      );
+    }
+    catch (\Throwable $e) {
+      $this->logger()->error($e->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success(dt(
+      'Processed @total row(s): @counts.',
+      [
+        '@total' => $result['total'],
+        '@counts' => json_encode($result['counts']),
+      ],
+    ));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Creates a prospect from publicly discovered info and issues a secure link.
    */
   #[CLI\Command(name: 'famtastic:prospect-create', aliases: ['fpc'])]

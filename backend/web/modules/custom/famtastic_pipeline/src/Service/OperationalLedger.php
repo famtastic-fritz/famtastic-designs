@@ -210,6 +210,41 @@ final class OperationalLedger {
   }
 
   /**
+   * Atomically claims the next available job, optionally constrained by type.
+   */
+  public function claimNext(?string $jobType = NULL): ?array {
+    $now = $this->time->getRequestTime();
+    $query = $this->database->select('famtastic_job', 'j')
+      ->fields('j')
+      ->condition('status', 'queued')
+      ->condition('available_at', $now, '<=')
+      ->orderBy('available_at', 'ASC')
+      ->orderBy('id', 'ASC')
+      ->range(0, 1);
+    if ($jobType !== NULL) {
+      $query->condition('job_type', $jobType);
+    }
+    $job = $query->execute()->fetchAssoc();
+    if (!$job) {
+      return NULL;
+    }
+    $claimed = $this->database->update('famtastic_job')
+      ->fields(['status' => 'running', 'locked_at' => $now, 'changed' => $now])
+      ->condition('id', $job['id'])
+      ->condition('status', 'queued')
+      ->execute();
+    if ($claimed !== 1) {
+      return NULL;
+    }
+    foreach (['id', 'prospect_id', 'attempts', 'max_attempts', 'available_at', 'created', 'changed'] as $field) {
+      $job[$field] = $job[$field] === NULL ? NULL : (int) $job[$field];
+    }
+    $job['payload'] = json_decode((string) $job['payload'], TRUE, flags: JSON_THROW_ON_ERROR);
+    $job['status'] = 'running';
+    return $job;
+  }
+
+  /**
    * Marks a job complete. Repeated completion is harmless.
    */
   public function completeJob(int $jobId, array $result): void {

@@ -1,0 +1,5 @@
+source_record_id,business_name,business_category,email,phone,website_url,website_quality,address,service_area
+lead-001,Fixture Bakery,Bakery,bakery-owner@example.test,602-555-0101,,,101 Main St,Phoenix AZ
+lead-002,Fixture Electric,Electrician,electric-owner@example.test,602-555-0102,https://fixture-electric.example,outdated,202 Main St,Mesa AZ
+lead-003,Fixture Dental,Dentist,dental-owner@example.test,602-555-0103,https://fixture-dental.example,good,303 Main St,Tempe AZ
+lead-004,Fixture Invalid,Consultant,not-an-email,602-555-0104,,,404 Main St,Scottsdale AZ

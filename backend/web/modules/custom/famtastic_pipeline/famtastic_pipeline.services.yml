@@ -15,6 +15,14 @@ services:
     class: Drupal\famtastic_pipeline\Service\OperationalLedger
     arguments: ['@database', '@datetime.time']
 
+  famtastic_pipeline.lead_ingestion:
+    class: Drupal\famtastic_pipeline\Service\LeadIngestionService
+    arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@datetime.time']
+
+  famtastic_pipeline.automation_worker:
+    class: Drupal\famtastic_pipeline\Service\AutomationWorker
+    arguments: ['@famtastic_pipeline.operational_ledger', '@entity_type.manager', '@famtastic_pipeline.proof_campaign_service']
+
   famtastic_pipeline.stripe_gateway:
     class: Drupal\famtastic_pipeline\Service\StripeGateway
     arguments: ['@http_client', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service']

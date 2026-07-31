@@ -104,6 +104,18 @@ function famtastic_pipeline_update_8004(&$sandbox) {
 }
 
 /**
+ * Adds normalized lead-import provenance and deduplication.
+ */
+function famtastic_pipeline_update_8005(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_lead_import_schema();
+  if (!$schema->tableExists('famtastic_lead_import')) {
+    $schema->createTable('famtastic_lead_import', $definition);
+  }
+  return t('Added lead import provenance and deduplication table.');
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {
@@ -472,5 +484,41 @@ function _famtastic_pipeline_automation_schema(): array {
     'indexes' => ['queue' => ['status', 'severity', 'created']],
   ];
 
+  $tables['famtastic_lead_import'] = _famtastic_pipeline_lead_import_schema();
+
   return $tables;
+}
+
+/**
+ * Defines the lead import table independently for update-hook reuse.
+ */
+function _famtastic_pipeline_lead_import_schema(): array {
+  return [
+    'description' => 'Normalized lead source, dedupe, qualification, and import result.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'import_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'dedupe_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'source_name' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'source_record_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'campaign_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'contact_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'business_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'score' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+      'target_offer' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'reasons' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'imported_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'import_key' => ['import_key'],
+      'dedupe_key' => ['dedupe_key'],
+    ],
+    'indexes' => [
+      'campaign_status' => ['campaign_key', 'status'],
+      'prospect' => ['prospect_id'],
+    ],
+  ];
 }

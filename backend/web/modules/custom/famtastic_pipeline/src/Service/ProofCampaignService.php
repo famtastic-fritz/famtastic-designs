@@ -268,7 +268,7 @@ class ProofCampaignService {
     $slug = strtolower((string) preg_replace('/[^a-zA-Z0-9]+/', '-', $businessName));
     $slug = trim($slug, '-');
     $slug = $slug === '' ? 'business' : substr($slug, 0, 32);
-    return sprintf('pc-%s-%s', $slug, bin2hex(random_bytes(2)));
+    return sprintf('pc-%s-%s', $slug, bin2hex(random_bytes(8)));
   }
 
   /**
