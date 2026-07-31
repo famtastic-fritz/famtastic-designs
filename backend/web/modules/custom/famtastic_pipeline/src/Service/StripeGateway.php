@@ -74,8 +74,11 @@ class StripeGateway implements PaymentGatewayInterface {
       $form['metadata[selected_variant]'] = $selection['selected_variant'];
       $form['metadata[selected_package]'] = $selection['selected_package'];
     }
-    // Prefer a pre-created Price if provided (from stripe-setup.sh).
-    if ($priceId = (getenv('STRIPE_PRICE_ID') ?: Settings::get('stripe_price_id'))) {
+    // A pre-created Price must be package-specific so a $199 price can never
+    // silently replace a $499 server-authoritative order amount.
+    $packageEnv = 'STRIPE_PRICE_ID_' . strtoupper((string) preg_replace('/[^A-Za-z0-9]+/', '_', $order->get('package')->value));
+    $priceId = getenv($packageEnv) ?: Settings::get(strtolower($packageEnv));
+    if ($priceId) {
       unset($form['line_items[0][price_data][currency]'], $form['line_items[0][price_data][unit_amount]'], $form['line_items[0][price_data][product_data][name]']);
       $form['line_items[0][price]'] = $priceId;
     }
@@ -97,6 +100,8 @@ class StripeGateway implements PaymentGatewayInterface {
       'id' => $data['id'] ?? $sessionId,
       'payment_status' => $data['payment_status'] ?? 'unpaid',
       'payment_intent' => $data['payment_intent'] ?? NULL,
+      'amount_total' => isset($data['amount_total']) ? (int) $data['amount_total'] : NULL,
+      'currency' => $data['currency'] ?? NULL,
     ];
   }
 

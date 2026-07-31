@@ -63,7 +63,9 @@ class SiteStudioRequestBuilder {
       'schema_version' => self::SCHEMA_VERSION,
       'project_id' => NULL,
       'customer_id' => (int) $prospect->id(),
-      'package' => is_array($pkg) ? ($pkg['id'] ?? 'basic_199') : 'basic_199',
+      'package' => $order
+        ? (string) $order->get('package')->value
+        : (is_array($pkg) ? ($pkg['id'] ?? 'essential_199') : 'essential_199'),
       'order' => $order ? [
         'id' => (int) $order->id(),
         'amount' => (int) $order->get('amount')->value,

@@ -72,7 +72,8 @@ Read from `getenv()` or Drupal settings; secrets never live in config.
 | Variable | Used for | Default |
 |---|---|---|
 | `STRIPE_SECRET_KEY` | Real Stripe test API (sk_test_…). If unset → stub gateway. | *(unset → stub)* |
-| `STRIPE_PRICE_ID` | Optional pre-created $199 price (from `scripts/stripe-setup.sh`). | *(inline price_data)* |
+| `STRIPE_PRICE_ID_ESSENTIAL_199` | Optional pre-created Essential price. | *(inline price_data)* |
+| `STRIPE_PRICE_ID_BUSINESS_499` | Optional pre-created Business price. | *(inline price_data)* |
 | `STRIPE_WEBHOOK_SECRET` | Webhook signature verification. | `whsec_local_dev_secret` (local dev only) |
 | `FAMTASTIC_ALLOW_PAYMENT_SIMULATION` | Enables the local-only simulation endpoint when truthy. Never enable in production. | `false` |
 | `FRONTEND_BASE_URL` | Success/cancel + outreach links. | `frontend_base_url` config (`http://localhost:5173`) |

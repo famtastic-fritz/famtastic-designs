@@ -55,7 +55,19 @@ class StripeWebhookController extends ControllerBase {
       if ($sessionId === '') {
         return new JsonResponse(['error' => 'missing_session'], 400);
       }
-      $result = $this->fulfillment->markPaidBySession($sessionId, $paymentIntent, $event['id']);
+      if (($sessionObj['payment_status'] ?? '') !== 'paid') {
+        return new JsonResponse(['received' => TRUE, 'paid' => FALSE, 'reason' => 'payment_not_paid']);
+      }
+      $result = $this->fulfillment->markPaidBySession(
+        $sessionId,
+        $paymentIntent,
+        $event['id'],
+        isset($sessionObj['amount_total']) ? (int) $sessionObj['amount_total'] : NULL,
+        isset($sessionObj['currency']) ? (string) $sessionObj['currency'] : NULL,
+      );
+      if (!empty($result['error'])) {
+        return new JsonResponse(['received' => TRUE, 'paid' => FALSE, 'error' => $result['error']], 409);
+      }
       // When the checkout session was created with a proof campaign
       // selection, mark that campaign converted (intake flow untouched).
       $campaignId = (string) ($sessionObj['metadata']['campaign_id'] ?? '');

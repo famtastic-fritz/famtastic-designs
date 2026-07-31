@@ -30,11 +30,25 @@ class FulfillmentService {
    *
    * @return array{found:bool,newly_processed:bool,paid:bool,order:?\Drupal\famtastic_pipeline\Entity\Order}
    */
-  public function markPaidBySession(string $sessionId, ?string $paymentIntent, string $eventId): array {
+  public function markPaidBySession(
+    string $sessionId,
+    ?string $paymentIntent,
+    string $eventId,
+    ?int $amountTotal = NULL,
+    ?string $currency = NULL,
+  ): array {
     $order = $this->loadOrderBySession($sessionId);
     if (!$order) {
       $this->logger->warning('Fulfillment: no order for session @s', ['@s' => $sessionId]);
       return ['found' => FALSE, 'newly_processed' => FALSE, 'paid' => FALSE, 'order' => NULL];
+    }
+    if ($amountTotal !== NULL && $amountTotal !== (int) $order->get('amount')->value) {
+      $this->logger->error('Fulfillment amount mismatch for order @id.', ['@id' => $order->id()]);
+      return ['found' => TRUE, 'newly_processed' => FALSE, 'paid' => FALSE, 'order' => $order, 'error' => 'amount_mismatch'];
+    }
+    if ($currency !== NULL && strtolower($currency) !== strtolower((string) $order->get('currency')->value)) {
+      $this->logger->error('Fulfillment currency mismatch for order @id.', ['@id' => $order->id()]);
+      return ['found' => TRUE, 'newly_processed' => FALSE, 'paid' => FALSE, 'order' => $order, 'error' => 'currency_mismatch'];
     }
 
     // Idempotency: duplicate event id is a no-op.

@@ -20,6 +20,9 @@ BACKEND_DIR="$(cd "$(dirname "$0")/../backend" && pwd)"
 PORT="${PORT:-8899}"
 BASE="http://127.0.0.1:${PORT}"
 SECRET="${STRIPE_WEBHOOK_SECRET:-whsec_local_dev_secret}"
+PACKAGE="${PACKAGE:-essential_199}"
+EXPECTED_AMOUNT="${EXPECTED_AMOUNT:-19900}"
+EXPECTED_REVISIONS="${EXPECTED_REVISIONS:-1}"
 DRUSH="${BACKEND_DIR}/vendor/bin/drush"
 PASS=0
 FAIL=0
@@ -87,15 +90,22 @@ assert_eq "confirm without authorization → 422" \
   "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{"authorized":false}' "${BASE}/api/pipeline/confirm")" "422"
 
 # ---------------------------------------------------------------------------
-say "5. Present + accept versioned terms + purchase the \$199 offer → Stripe test checkout"
+say "5. Present + accept versioned terms + purchase ${PACKAGE} → Stripe test checkout"
 TERMS_CHECKSUM="$(echo "$SESS" | sed -n 's/.*"terms":{[^}]*"checksum":"\([^"]*\)".*/\1/p')"
 assert_eq "checkout without terms → 422" \
   "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{}' "${BASE}/api/pipeline/checkout")" "422"
 CO="$(curl -s -X POST "${TH[@]}" "${JH[@]}" \
-  -d "{\"package\":\"essential_199\",\"terms_accepted\":true,\"terms_checksum\":\"${TERMS_CHECKSUM}\"}" \
+  -d "{\"package\":\"${PACKAGE}\",\"terms_accepted\":true,\"terms_checksum\":\"${TERMS_CHECKSUM}\"}" \
   "${BASE}/api/pipeline/checkout")"
 assert_contains "checkout returns a session id" "$CO" '"session_id":"cs_'
 SID="$(echo "$CO" | sed -n 's/.*"session_id":"\([^"]*\)".*/\1/p')"
+"$DRUSH" eval "
+  \$order = \\Drupal::entityTypeManager()->getStorage('famtastic_order')->loadByProperties(['prospect_ref' => $PID]);
+  \$order = reset(\$order);
+  assert(\$order->get('package')->value === '$PACKAGE');
+  assert((int) \$order->get('amount')->value === $EXPECTED_AMOUNT);
+  assert((int) \$order->get('terms_version_id')->value > 0);
+" && ok "order snapshots authoritative package, amount, and terms" || bad "order commercial snapshot mismatch"
 
 say "5b. Browser-accessible payment simulation is disabled by default"
 assert_eq "payment simulation → 403" \
@@ -103,7 +113,12 @@ assert_eq "payment simulation → 403" \
 
 say "6. Signature-verified webhook fulfills the order (deliverables 10,11)"
 TS="$(date +%s)"
-PAYLOAD="$(printf '{"id":"evt_e2e_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_e2e"}}}' "$TS" "$SID")"
+BAD_AMOUNT=$((EXPECTED_AMOUNT + 100))
+BAD_PAYLOAD="$(printf '{"id":"evt_e2e_bad_amount_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_bad","payment_status":"paid","amount_total":%s,"currency":"usd"}}}' "$TS" "$SID" "$BAD_AMOUNT")"
+BAD_SIG="$(printf '%s.%s' "$TS" "$BAD_PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | sed 's/^.*= //')"
+assert_eq "signed webhook with wrong amount → 409" \
+  "$(http_code -X POST -H "Stripe-Signature: t=${TS},v1=${BAD_SIG}" "${JH[@]}" -d "$BAD_PAYLOAD" "${BASE}/api/pipeline/stripe/webhook")" "409"
+PAYLOAD="$(printf '{"id":"evt_e2e_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_e2e","payment_status":"paid","amount_total":%s,"currency":"usd"}}}' "$TS" "$SID" "$EXPECTED_AMOUNT")"
 SIG="$(printf '%s.%s' "$TS" "$PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | sed 's/^.*= //')"
 WH="$(curl -s -X POST -H "Stripe-Signature: t=${TS},v1=${SIG}" "${JH[@]}" -d "$PAYLOAD" "${BASE}/api/pipeline/stripe/webhook")"
 assert_contains "webhook fulfilled (paid)" "$WH" '"paid":true'
@@ -175,8 +190,13 @@ say "13. Customer requests revision, then approves (deliverable 19)"
 assert_contains "request revision" \
   "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"Please use a bigger hero photo."}' "${BASE}/api/pipeline/approval")" \
   '"approval_status":"revision_requested"'
-assert_eq "\$199 second included revision is blocked" \
-  "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"One more change."}' "${BASE}/api/pipeline/approval")" \
+if [ "$EXPECTED_REVISIONS" -ge 2 ]; then
+  assert_contains "second included revision is accepted" \
+    "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"One more included change."}' "${BASE}/api/pipeline/approval")" \
+    '"revision_count":2'
+fi
+assert_eq "revision beyond package allowance is blocked" \
+  "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"request_revision","note":"An extra change."}' "${BASE}/api/pipeline/approval")" \
   "402"
 assert_contains "approve" \
   "$(curl -s -X POST "${TH[@]}" "${JH[@]}" -d '{"action":"approve"}' "${BASE}/api/pipeline/approval")" \

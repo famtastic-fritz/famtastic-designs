@@ -234,7 +234,13 @@ class PipelineController extends ControllerBase {
       try {
         $remote = $this->gatewayManager->active()->retrieveSession($order->get('stripe_checkout_session_id')->value);
         if (($remote['payment_status'] ?? '') === 'paid') {
-          $this->fulfillment->markPaidBySession($order->get('stripe_checkout_session_id')->value, $remote['payment_intent'] ?? NULL, 'retrieve_' . $order->get('stripe_checkout_session_id')->value);
+          $this->fulfillment->markPaidBySession(
+            $order->get('stripe_checkout_session_id')->value,
+            $remote['payment_intent'] ?? NULL,
+            'retrieve_' . $order->get('stripe_checkout_session_id')->value,
+            $remote['amount_total'] ?? NULL,
+            $remote['currency'] ?? NULL,
+          );
           $order = $this->repository->getOrder($prospect);
         }
       }
