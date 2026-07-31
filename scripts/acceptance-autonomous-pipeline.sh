@@ -4,6 +4,11 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
+if git grep -nE '(sk_live_[A-Za-z0-9]{16,}|whsec_[A-Za-z0-9]{16,}|AKIA[0-9A-Z]{16}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----)' -- ':!docs/**' ':!*.lock'; then
+  echo "FAIL: probable production secret found in tracked source." >&2
+  exit 1
+fi
+
 find backend/web/modules/custom/famtastic_pipeline -name '*.php' -print0 |
   xargs -0 -n1 php -l >/dev/null
 backend/vendor/bin/phpunit \

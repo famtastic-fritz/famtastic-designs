@@ -76,6 +76,23 @@ assert_contains "session exposes lifecycle portal contract" "$SESS" '"deployment
 say "2b. Bad token is rejected (security)"
 assert_eq "bad token → 404" "$(http_code -H 'X-Prospect-Token: nope' "${BASE}/api/pipeline/session")" "404"
 
+say "2c. A second prospect is isolated and its token is revocable"
+SECOND_OUT="$(cd "$BACKEND_DIR" && "$DRUSH" famtastic:prospect-create \
+  --business-name="Isolated Prospect ${RANDOM}" \
+  --email="isolated-${RANDOM}@example.test" --source=synthetic --campaign=e2e-isolation 2>&1)"
+SECOND_TOKEN="$(echo "$SECOND_OUT" | awk -F': ' '/Raw token/ {print $2}' | tr -d ' ')"
+SECOND_PID="$(echo "$SECOND_OUT" | awk -F': ' '/Prospect ID/ {print $2}' | tr -d ' ')"
+SECOND_SESSION="$(curl -s -H "X-Prospect-Token: ${SECOND_TOKEN}" "${BASE}/api/pipeline/session")"
+assert_contains "second token sees only second prospect" "$SECOND_SESSION" "Isolated Prospect"
+assert_contains "second token cannot see first prospect" "$( [ "${SECOND_SESSION/E2E Diner/}" = "$SECOND_SESSION" ] && echo ISOLATED || echo LEAK )" "ISOLATED"
+assert_eq "second token cannot select first prospect proof" \
+  "$(http_code -X POST -H "X-Prospect-Token: ${SECOND_TOKEN}" "${JH[@]}" -d '{"variant_id":"a","package":"essential_199"}' "${BASE}/api/pipeline/proof-campaign/select")" \
+  "404"
+"$DRUSH" eval "\$p = \\Drupal::entityTypeManager()->getStorage('famtastic_prospect')->load($SECOND_PID); \$p->set('token_revoked', TRUE)->save();"
+assert_eq "revoked token → 404" \
+  "$(http_code -H "X-Prospect-Token: ${SECOND_TOKEN}" "${BASE}/api/pipeline/session")" \
+  "404"
+
 say "3. Paid gate BEFORE payment blocks intake (deliverable 12)"
 assert_eq "intake before pay → 402" "$(http_code -X POST "${TH[@]}" "${JH[@]}" -d '{}' "${BASE}/api/pipeline/intake")" "402"
 

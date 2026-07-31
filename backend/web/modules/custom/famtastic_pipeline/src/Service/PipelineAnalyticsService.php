@@ -109,10 +109,39 @@ final class PipelineAnalyticsService {
       $source['conversion_rate'] = $source['leads'] > 0 ? round($source['sales'] / $source['leads'], 4) : 0.0;
     }
 
+    $proofPerformance = [];
+    foreach (['a', 'b', 'c'] as $direction) {
+      $selectedProspects = $this->database->select('proof_campaign', 'p')
+        ->fields('p', ['prospect_id'])
+        ->condition('selected_variant', $direction)
+        ->execute()
+        ->fetchCol();
+      $sales = 0;
+      $revenue = 0;
+      foreach ($selectedProspects as $prospectId) {
+        $paidOrders = $this->database->select('famtastic_order', 'o')
+          ->fields('o', ['amount'])
+          ->condition('prospect_ref', $prospectId)
+          ->condition('payment_status', 'paid')
+          ->execute()
+          ->fetchCol();
+        $sales += count($paidOrders);
+        $revenue += array_sum(array_map('intval', $paidOrders));
+      }
+      $proofPerformance[] = [
+        'direction' => $direction,
+        'selections' => count($selectedProspects),
+        'sales' => $sales,
+        'revenue_minor' => $revenue,
+        'selection_to_sale_rate' => count($selectedProspects) > 0 ? round($sales / count($selectedProspects), 4) : 0.0,
+      ];
+    }
+
     return [
       'generated_at' => time(),
       'campaigns' => array_values($campaigns),
       'sources' => array_values($sources),
+      'proof_performance' => $proofPerformance,
       'definitions' => [
         'conversion_rate' => 'paid orders divided by attributed prospects',
         'cost_per_sale_minor' => 'campaign spend divided by paid orders',

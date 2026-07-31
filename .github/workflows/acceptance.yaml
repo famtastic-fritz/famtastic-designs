@@ -10,6 +10,14 @@ permissions:
   contents: read
 
 jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reject probable production secrets
+        run: |
+          ! git grep -nE '(sk_live_[A-Za-z0-9]{16,}|whsec_[A-Za-z0-9]{16,}|AKIA[0-9A-Z]{16}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----)' -- ':!docs/**' ':!*.lock'
+
   frontend:
     runs-on: ubuntu-latest
     steps:

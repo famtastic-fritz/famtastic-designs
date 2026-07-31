@@ -262,6 +262,17 @@ class ProofCampaignService {
     $campaign->set('selected_package', $package);
     $campaign->set('selected_at', $this->time->getRequestTime());
     $campaign->save();
+    $prospectId = (int) $campaign->get('prospect_id')->target_id;
+    $this->ledger->recordEvent(
+      'proof.selected:' . $campaign->get('campaign_id')->value,
+      'proof.selected',
+      [
+        'campaign_id' => $campaign->get('campaign_id')->value,
+        'variant_id' => $variantId,
+        'package' => $package,
+      ],
+      $prospectId,
+    );
     return $campaign;
   }
 
