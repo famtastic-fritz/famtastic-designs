@@ -41,6 +41,10 @@ Permanent rules:
   may include both, but conversion and cost-per-sale use new-site orders only.
 - Recurring hosting may never be inferred from the original website purchase.
   It requires a separately disclosed amount, start date, and customer consent.
+- CI must operate on the canonical `frontend/` and `backend/` trees. The
+  historical root Nuxt/pnpm project is not a production quality gate; retaining
+  its old `pnpm lint` and `pnpm typecheck` workflows falsely implies that it is
+  still an active application.
 - Live providers, outreach, DNS mutation, domain purchase, and production
   release remain explicit approval gates.
 

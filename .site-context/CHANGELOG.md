@@ -12,6 +12,9 @@ agent-agnostic acceptance command.
 
 The $199 and $499 acceptance journeys correlate a single imported lead through
 launch and renewal instead of relying only on independent component fixtures.
+Removed the obsolete root-Nuxt lint/typecheck workflows and their pnpm setup
+action. The remaining GitHub workflow validates only the canonical React
+frontend and Drupal backend, matching the production deployment source.
 No production release or live provider action is included in this changelog
 entry; those remain approval-gated.
 
