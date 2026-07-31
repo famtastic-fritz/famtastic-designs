@@ -146,12 +146,17 @@ find "$source_module" -type f -name '*.php' -print0 |
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 module_backup="$HOME/backups/famtastic-pipeline-$timestamp-$commit_sha.tgz"
 database_backup="$HOME/backups/famtastic-database-$timestamp-$commit_sha.sql.gz"
+database_dump_target="${database_backup%.gz}"
 stage_module="$production_dir/web/modules/custom/.famtastic_pipeline-$commit_sha"
 previous_module="$production_dir/web/modules/custom/.famtastic_pipeline-previous-$timestamp"
 
 tar -C "$(dirname "$production_module")" -czf "$module_backup" "$(basename "$production_module")"
 cd "$production_dir"
-"$drush" sql:dump --gzip --result-file="$database_backup"
+"$drush" sql:dump --gzip --result-file="$database_dump_target"
+test -s "$database_backup" || {
+  echo "Database backup was not created at the recorded rollback path: $database_backup" >&2
+  exit 1
+}
 
 rm -rf "$stage_module"
 mkdir -p "$stage_module"
