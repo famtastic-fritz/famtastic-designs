@@ -32,6 +32,7 @@ The suite runs:
 
 ```bash
 scripts/e2e-lead-import.sh
+scripts/e2e-fresh-backend-install.sh
 scripts/e2e-site-studio-callback.sh
 scripts/e2e-email-campaign.sh
 PORT=8899 scripts/e2e-proof.sh

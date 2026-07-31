@@ -9,6 +9,7 @@ find backend/web/modules/custom/famtastic_pipeline -name '*.php' -print0 |
 backend/vendor/bin/phpunit \
   -c backend/web/core/phpunit.xml.dist \
   backend/web/modules/custom/famtastic_pipeline/tests/src/Unit
+scripts/e2e-fresh-backend-install.sh
 
 scripts/e2e-lead-import.sh
 scripts/e2e-site-studio-callback.sh
