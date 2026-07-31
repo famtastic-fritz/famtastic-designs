@@ -54,11 +54,12 @@ unsubscribe_key="$(jq -r '.unsubscribe_key' "$message_result")"
 provider_message_id="$(jq -r '.provider_message_id' "$message_result")"
 
 port=$((9100 + ($$ % 500)))
-(
-  cd "$REPO_ROOT/backend"
-  FAMTASTIC_EMAIL_WEBHOOK_SECRET=e2e-email-secret "$DRUSH" runserver "127.0.0.1:$port" > "$server_log" 2>&1
-) &
+caller_dir="$PWD"
+cd "$REPO_ROOT/backend"
+FAMTASTIC_EMAIL_WEBHOOK_SECRET=e2e-email-secret \
+  "$DRUSH" runserver "127.0.0.1:$port" > "$server_log" 2>&1 &
 server_pid=$!
+cd "$caller_dir"
 for _ in $(seq 1 40); do
   curl -sf "http://127.0.0.1:$port/robots.txt" >/dev/null && break
   sleep 0.25

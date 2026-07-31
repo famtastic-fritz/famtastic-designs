@@ -62,11 +62,12 @@ campaign_id="$(jq -r '.campaign_id' "$campaign_result")"
 job_id="$(jq -r '.job_id' "$campaign_result")"
 
 "$DRUSH" cr >/dev/null
-(
-  cd "$REPO_ROOT/backend"
-  SITE_STUDIO_CALLBACK_SECRET=callback-e2e-secret "$DRUSH" runserver "127.0.0.1:$drupal_port" > "$drupal_log" 2>&1
-) &
+caller_dir="$PWD"
+cd "$REPO_ROOT/backend"
+SITE_STUDIO_CALLBACK_SECRET=callback-e2e-secret \
+  "$DRUSH" runserver "127.0.0.1:$drupal_port" > "$drupal_log" 2>&1 &
 drupal_pid=$!
+cd "$caller_dir"
 for _ in $(seq 1 40); do
   curl -sf "http://127.0.0.1:$drupal_port/robots.txt" >/dev/null && break
   sleep 0.25
