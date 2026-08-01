@@ -68,13 +68,41 @@ class PipelineCommands extends DrushCommands {
   #[CLI\Command(name: 'famtastic:jobs-run', aliases: ['fjr'])]
   #[CLI\Option(name: 'limit', description: 'Maximum jobs to process (1-100).')]
   #[CLI\Option(name: 'type', description: 'Optional exact job type filter.')]
+  #[CLI\Option(name: 'prospect', description: 'Optional exact prospect id filter.')]
+  #[CLI\Option(name: 'campaign', description: 'Optional exact campaign key filter.')]
   public function jobsRun(array $options = [
     'limit' => 25,
     'type' => '',
+    'prospect' => 0,
+    'campaign' => '',
   ]): int {
+    if ((int) $options['prospect'] > 0 && (string) $options['campaign'] !== '') {
+      $this->logger()->error('--prospect and --campaign are mutually exclusive.');
+      return self::EXIT_FAILURE;
+    }
+    $prospectIds = NULL;
+    if ((int) $options['prospect'] > 0) {
+      $prospectIds = [(int) $options['prospect']];
+    }
+    elseif ((string) $options['campaign'] !== '') {
+      $prospectIds = array_map('intval', \Drupal::entityQuery('famtastic_prospect')
+        ->accessCheck(FALSE)
+        ->condition('campaign', (string) $options['campaign'])
+        ->execute());
+      if ($prospectIds === []) {
+        $this->logger()->error(dt('No prospects belong to campaign @campaign.', [
+          '@campaign' => (string) $options['campaign'],
+        ]));
+        return self::EXIT_FAILURE;
+      }
+    }
     /** @var \Drupal\famtastic_pipeline\Service\AutomationWorker $worker */
     $worker = \Drupal::service('famtastic_pipeline.automation_worker');
-    $results = $worker->run((int) $options['limit'], $options['type'] !== '' ? (string) $options['type'] : NULL);
+    $results = $worker->run(
+      (int) $options['limit'],
+      $options['type'] !== '' ? (string) $options['type'] : NULL,
+      $prospectIds,
+    );
     $this->io()->writeln(json_encode($results, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     $failures = array_filter($results, fn (array $result) => $result['status'] === 'failed');
     if ($failures) {

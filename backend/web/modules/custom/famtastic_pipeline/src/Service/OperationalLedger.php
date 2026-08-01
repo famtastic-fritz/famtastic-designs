@@ -210,9 +210,9 @@ final class OperationalLedger {
   }
 
   /**
-   * Atomically claims the next available job, optionally constrained by type.
+   * Atomically claims the next available job with optional scope constraints.
    */
-  public function claimNext(?string $jobType = NULL): ?array {
+  public function claimNext(?string $jobType = NULL, ?array $prospectIds = NULL): ?array {
     $now = $this->time->getRequestTime();
     $query = $this->database->select('famtastic_job', 'j')
       ->fields('j')
@@ -223,6 +223,13 @@ final class OperationalLedger {
       ->range(0, 1);
     if ($jobType !== NULL) {
       $query->condition('job_type', $jobType);
+    }
+    if ($prospectIds !== NULL) {
+      $prospectIds = array_values(array_unique(array_filter(array_map('intval', $prospectIds))));
+      if ($prospectIds === []) {
+        return NULL;
+      }
+      $query->condition('prospect_id', $prospectIds, 'IN');
     }
     $job = $query->execute()->fetchAssoc();
     if (!$job) {

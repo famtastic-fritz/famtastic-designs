@@ -41,10 +41,21 @@ configuration:
 FAMTASTIC_EMAIL_TRANSPORT=real
 FAMTASTIC_ALLOW_REAL_OUTREACH=true
 FAMTASTIC_PUBLIC_BASE_URL=https://famtasticdesigns.com
+FAMTASTIC_OUTREACH_POSTAL_ADDRESS='A valid street address, registered PO box, or registered private mailbox'
 ```
 
 Do not commit these values. Enabling real outreach is an explicit production
-approval, not a routine deployment step.
+approval, not a routine deployment step. The postal address is mandatory for
+real transport; the sender fails closed when it is absent. The proof-ready
+template identifies the message as an advertisement, explains why the public
+business contact was selected, includes the postal address, and provides the
+one-click suppression link.
+
+The configured `support_from_email` must be a real mailbox or permitted alias
+that matches the authenticated SMTP account. The install default is
+`hello@famtasticdesigns.com`. A successful Drupal mail call proves only that
+the transport accepted the message; delivery requires either inbox evidence or
+a provider delivery event.
 
 ## Tracking and provider events
 

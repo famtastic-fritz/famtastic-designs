@@ -24,11 +24,11 @@ final class AutomationWorker {
   /**
    * Runs up to the requested number of available jobs.
    */
-  public function run(int $limit = 25, ?string $jobType = NULL): array {
+  public function run(int $limit = 25, ?string $jobType = NULL, ?array $prospectIds = NULL): array {
     $limit = max(1, min(100, $limit));
     $results = [];
     for ($i = 0; $i < $limit; $i++) {
-      $job = $this->ledger->claimNext($jobType);
+      $job = $this->ledger->claimNext($jobType, $prospectIds);
       if (!$job) {
         break;
       }

@@ -15,6 +15,8 @@ use Drupal\famtastic_pipeline\Entity\Prospect;
  */
 final class CampaignMessageService {
 
+  private const TEMPLATE_VERSION = 2;
+
   public function __construct(
     private readonly Connection $database,
     private readonly EntityTypeManagerInterface $entityTypeManager,
@@ -39,7 +41,7 @@ final class CampaignMessageService {
     if (!$campaignId) {
       throw new \RuntimeException('Prospect campaign attribution is missing.');
     }
-    $messageKey = sprintf('proof-ready:%d:%d:%d', $campaignId, $prospect->id(), $proofCampaignId);
+    $messageKey = sprintf('proof-ready-v%d:%d:%d:%d', self::TEMPLATE_VERSION, $campaignId, $prospect->id(), $proofCampaignId);
     $existing = $this->loadBy('message_key', $messageKey);
     if ($existing) {
       return $existing;
@@ -52,7 +54,7 @@ final class CampaignMessageService {
         'campaign_id' => $campaignId,
         'recipient_hash' => $this->ledger->contactHash($email),
         'template_key' => 'proof_ready',
-        'template_version' => 1,
+        'template_version' => self::TEMPLATE_VERSION,
         'subject' => sprintf('Three website directions for %s', $prospect->label()),
         'status' => 'staged',
         'tracking_key' => bin2hex(random_bytes(24)),
@@ -64,7 +66,7 @@ final class CampaignMessageService {
     $this->ledger->recordEvent(
       'email.staged:' . $id,
       'email.staged',
-      ['message_id' => $id, 'template' => 'proof_ready', 'template_version' => 1],
+      ['message_id' => $id, 'template' => 'proof_ready', 'template_version' => self::TEMPLATE_VERSION],
       (int) $prospect->id(),
       $campaignId,
     );
@@ -145,11 +147,20 @@ final class CampaignMessageService {
         throw new \RuntimeException('Real outreach requires explicit environment approval.');
       }
       $base = rtrim((string) (getenv('FAMTASTIC_PUBLIC_BASE_URL') ?: 'https://famtasticdesigns.com'), '/');
+      $postalAddress = trim((string) (
+        getenv('FAMTASTIC_OUTREACH_POSTAL_ADDRESS')
+        ?: Settings::get('famtastic_outreach_postal_address', '')
+      ));
+      if ($postalAddress === '') {
+        throw new \RuntimeException('Real outreach requires a valid physical postal address.');
+      }
+      $postalAddress = str_replace("\r", '', $postalAddress);
       $body = sprintf(
-        "We created three website directions for %s.\n\nView them: %s/api/pipeline/email/click/%s\n\nUnsubscribe: %s/api/pipeline/email/unsubscribe/%s",
+        "Advertisement from FAMtastic Designs\n\nWe created three website directions for %s.\n\nView them: %s/api/pipeline/email/click/%s\n\nWhy you are receiving this: we found your business contact information in a public business listing while researching local businesses that may benefit from a stronger web presence.\n\nFAMtastic Designs\n%s\n\nTo stop receiving commercial email from us, unsubscribe here: %s/api/pipeline/email/unsubscribe/%s",
         $prospect->label(),
         $base,
         $message['tracking_key'],
+        $postalAddress,
         $base,
         $message['unsubscribe_key'],
       );

@@ -34,16 +34,38 @@ trap cleanup EXIT
 "$DRUSH" famtastic:leads-import "$csv_path" --source=licensed-e2e --campaign="$campaign" > "$import_result"
 prospect_id="$(jq -r '.rows[0].prospect_id' "$import_result")"
 test "$prospect_id" != "null"
+unrelated_jobs_before="$("$DRUSH" eval "
+  print (int) \\Drupal::database()->select('famtastic_job', 'j')
+    ->condition('status', 'queued')
+    ->condition('prospect_id', $prospect_id, '<>')
+    ->countQuery()->execute()->fetchField();
+")"
 
-"$DRUSH" famtastic:jobs-run --type=proof.generate --limit=100 >/dev/null
-"$DRUSH" famtastic:jobs-run --type=outreach.prepare --limit=100 >/dev/null
+"$DRUSH" famtastic:jobs-run --type=proof.generate --prospect="$prospect_id" --limit=100 >/dev/null
+"$DRUSH" famtastic:jobs-run --type=outreach.prepare --prospect="$prospect_id" --limit=100 >/dev/null
 
 if "$DRUSH" famtastic:campaign-approve "$campaign" --confirm=wrong >/dev/null 2>&1; then
   echo "Campaign approval unexpectedly accepted a mismatched confirmation." >&2
   exit 1
 fi
 "$DRUSH" famtastic:campaign-approve "$campaign" --confirm="$campaign" >/dev/null
-FAMTASTIC_EMAIL_TRANSPORT=memory "$DRUSH" famtastic:jobs-run --type=outreach.send --limit=100 >/dev/null
+message_id="$("$DRUSH" eval "
+  print (int) \\Drupal::database()->select('famtastic_email_message', 'm')->fields('m', ['id'])->condition('prospect_id', $prospect_id)->execute()->fetchField();
+")"
+test "$message_id" -gt 0
+FAMTASTIC_EMAIL_TRANSPORT=real \
+FAMTASTIC_ALLOW_REAL_OUTREACH=true \
+FAMTASTIC_OUTREACH_POSTAL_ADDRESS= \
+  "$DRUSH" eval "
+    try {
+      \\Drupal::service('famtastic_pipeline.campaign_messages')->send($message_id);
+      throw new \\RuntimeException('Real outreach unexpectedly accepted a missing postal address.');
+    }
+    catch (\\RuntimeException \$error) {
+      assert(\$error->getMessage() === 'Real outreach requires a valid physical postal address.', \$error->getMessage());
+    }
+  "
+FAMTASTIC_EMAIL_TRANSPORT=memory "$DRUSH" famtastic:jobs-run --type=outreach.send --prospect="$prospect_id" --limit=100 >/dev/null
 
 "$DRUSH" eval "
   \$db = \\Drupal::database();
@@ -53,6 +75,13 @@ FAMTASTIC_EMAIL_TRANSPORT=memory "$DRUSH" famtastic:jobs-run --type=outreach.sen
 
 test "$(jq -r '.status' "$message_result")" = "delivered"
 test "$(jq -r '.provider' "$message_result")" = "memory"
+unrelated_jobs_after="$("$DRUSH" eval "
+  print (int) \\Drupal::database()->select('famtastic_job', 'j')
+    ->condition('status', 'queued')
+    ->condition('prospect_id', $prospect_id, '<>')
+    ->countQuery()->execute()->fetchField();
+")"
+test "$unrelated_jobs_after" = "$unrelated_jobs_before"
 tracking_key="$(jq -r '.tracking_key' "$message_result")"
 unsubscribe_key="$(jq -r '.unsubscribe_key' "$message_result")"
 provider_message_id="$(jq -r '.provider_message_id' "$message_result")"
@@ -89,4 +118,4 @@ test "$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$port/api/pipel
   }
 "
 
-echo "PASS: gated campaign approval, memory delivery, open/click, signed bounce, idempotency, and unsubscribe verified."
+echo "PASS: scoped workers, campaign approval, missing-address fail-close, delivery lifecycle, and suppression verified."

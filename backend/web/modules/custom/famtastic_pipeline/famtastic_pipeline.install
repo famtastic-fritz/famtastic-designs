@@ -143,6 +143,18 @@ function famtastic_pipeline_update_8007(&$sandbox) {
 }
 
 /**
+ * Aligns the pipeline sender with the authenticated production mailbox.
+ */
+function famtastic_pipeline_update_8008(&$sandbox) {
+  $config = \Drupal::configFactory()->getEditable('famtastic_pipeline.settings');
+  if ($config->get('support_from_email') === 'support@famtasticdesigns.com') {
+    $config->set('support_from_email', 'hello@famtasticdesigns.com')->save(TRUE);
+    return t('Aligned the pipeline sender with hello@famtasticdesigns.com.');
+  }
+  return t('Preserved the existing customized pipeline sender.');
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {
