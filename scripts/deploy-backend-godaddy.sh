@@ -145,8 +145,10 @@ fi
 test -f "$backend_dir/composer.lock"
 test -f "$source_module/famtastic_pipeline.info.yml"
 test -f "$source_services"
-TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" install \
-  --no-dev --no-interaction --prefer-dist --optimize-autoloader
+TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" validate \
+  --no-check-publish --no-interaction
+TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" check-platform-reqs \
+  --lock --no-dev
 find "$source_module" -type f -name '*.php' -print0 |
   xargs -0 -n1 php -l >/dev/null
 

@@ -37,7 +37,9 @@ The script:
 
 1. resolves the exact current `main` SHA on both machines;
 2. checks it out outside the document root;
-3. runs production Composer installation and PHP lint in the private release;
+3. validates `composer.json`/`composer.lock`, checks locked production platform
+   requirements, and PHP-lints the module in the private release without
+   installing a duplicate Drupal vendor tree;
 4. backs up the current custom module and Drupal database;
 5. stages and swaps the custom module;
 6. runs `drush updatedb -y` and `drush cr`;
@@ -47,7 +49,10 @@ The script:
 
 Composer validation uses the deployment-owned writable temporary directory at
 `~/deploy/famtastic-designs/tmp`; shared-host `/tmp` permissions are not part of
-the release contract.
+the release contract. The production runtime already owns its vendor tree, so a
+module-only release does not duplicate all Drupal dependencies under every Git
+release. Adding a new runtime dependency remains a separately reviewed platform
+migration.
 
 If code promotion or a Drupal command fails, the script restores the prior
 module and rebuilds cache. Database updates cannot be assumed reversible, so
