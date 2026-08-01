@@ -1,0 +1,98 @@
+{
+  "generatedFrom": "sample — committed so the tool can be exercised without a running Drupal",
+  "services": [
+    {
+      "title": "Custom Website Development",
+      "path": "/services/custom-website-development",
+      "headline": "A website built for your business, not a template",
+      "summary": "Custom-built business websites, mobile-first, with lead capture wired in.",
+      "painPoints": [
+        "No website at all, so customers find competitors instead",
+        "An old site that looks broken on phones",
+        "A site that gets visitors but produces no enquiries"
+      ],
+      "included": [
+        "Custom mobile-responsive design",
+        "Contact and quote forms",
+        "On-page SEO foundation",
+        "Training so you can update it yourself"
+      ]
+    },
+    {
+      "title": "Site Rebuild & Redesign",
+      "path": "/services/site-rebuild",
+      "headline": "Keep your content. Lose the dated design.",
+      "summary": "Rebuilds that migrate existing content, images, and SEO value.",
+      "painPoints": ["Dated design", "Slow load times", "Not mobile friendly"],
+      "included": [
+        "Full content migration",
+        "Design approval before any code is written",
+        "SEO value preserved"
+      ]
+    },
+    {
+      "title": "Landing Page Design",
+      "path": "/services/landing-page-design",
+      "headline": "One page, one goal",
+      "summary": "Conversion-focused pages built around a single action: call, form, or purchase.",
+      "painPoints": ["Ad spend going to a homepage that converts poorly"],
+      "included": ["Conversion goal definition", "Copy and design", "CRM and ads integration", "Launch and performance tracking"]
+    },
+    {
+      "title": "AI Chatbot Solutions",
+      "path": "/services/ai-chatbot",
+      "headline": "Answer customers when you can't",
+      "summary": "A chatbot trained on your actual business language, available around the clock.",
+      "painPoints": ["Missed enquiries outside business hours"],
+      "included": ["Trained on your business information", "Conversation dashboard", "48-hour setup once information is provided"]
+    }
+  ],
+  "packages": [
+    {
+      "title": "$199 Quick Start",
+      "path": "/packages/199-quick-start",
+      "price": "$199",
+      "timeline": "48 hours",
+      "bestFor": "Businesses with no website that need to be online quickly",
+      "included": [
+        "Custom mobile-responsive website (core pages)",
+        "Your business info, services, and contact details",
+        "Contact / lead capture form",
+        "Basic SEO foundation",
+        "One included revision",
+        "Launch support"
+      ]
+    },
+    {
+      "title": "$499 Site Upgrade",
+      "path": "/packages/499-site-upgrade",
+      "price": "$499",
+      "timeline": "About 1 week",
+      "bestFor": "Businesses with a dated site that needs rebuilding",
+      "included": ["3-page rebuild", "Content and image migration", "SEO value preserved"]
+    },
+    {
+      "title": "Starter Website",
+      "path": "/packages/starter-website",
+      "price": "$1,999",
+      "timeline": "",
+      "bestFor": "Growing businesses needing more than the essentials",
+      "included": []
+    }
+  ],
+  "faqs": [
+    { "question": "How much does a website cost?", "answer": "$199 one-time setup for the Quick Start package. We also offer ongoing optimization plans." },
+    { "question": "How long does a website take?", "answer": "Depends on package. $199 = 48hrs. Business = 4-6 weeks." },
+    { "question": "Do you use templates?", "answer": "Never. Every site is custom-built." },
+    { "question": "Will my site work on mobile?", "answer": "Yes. Mobile-first is our standard." },
+    { "question": "Do you offer payment plans?", "answer": "Yes. Contact us to discuss options." },
+    { "question": "What do you need from me to get started?", "answer": "Logo, brand colors, content preferences, and any photos you want included." },
+    { "question": "How many revisions do I get?", "answer": "2-3 depending on your package." },
+    { "question": "Can I update my site myself?", "answer": "Yes. Every project includes training." },
+    { "question": "Will my site show up on Google?", "answer": "Yes. SEO is built into every site." },
+    { "question": "Do you provide ongoing support?", "answer": "Yes. Our Care Plan covers everything." },
+    { "question": "Do you work with clients outside Port St. Lucie?", "answer": "Yes. We work with businesses anywhere." },
+    { "question": "What platforms do you use?", "answer": "React, Next.js, Drupal, WordPress custom themes. We pick the right tool." }
+  ],
+  "caseStudies": []
+}
