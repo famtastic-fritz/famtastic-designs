@@ -57,6 +57,21 @@ that matches the authenticated SMTP account. The install default is
 the transport accepted the message; delivery requires either inbox evidence or
 a provider delivery event.
 
+When the contributed SMTP module is enabled, `system.mail` must select
+`SMTPMailSystem`. Setting `smtp.settings:smtp_on` alone is insufficient; a
+drifted `php_mail` default bypasses the configured SMTP transport. Verify both
+settings before a live campaign:
+
+```bash
+drush config:get smtp.settings smtp_on
+drush config:get system.mail interface.default
+```
+
+For the current cPanel mailbox, the proven production settings are authenticated
+SSL/TLS on `famtasticdesigns.com:465`, using
+`hello@famtasticdesigns.com`. Keep the password in environment-owned Drupal
+configuration and never in Git.
+
 ## Tracking and provider events
 
 Messages store only a recipient hash. Opaque random keys support:

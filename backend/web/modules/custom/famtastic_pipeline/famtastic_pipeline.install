@@ -155,6 +155,28 @@ function famtastic_pipeline_update_8008(&$sandbox) {
 }
 
 /**
+ * Repairs an enabled SMTP configuration whose active mail system drifted.
+ */
+function famtastic_pipeline_update_8009(&$sandbox) {
+  if (!\Drupal::moduleHandler()->moduleExists('smtp')) {
+    return t('SMTP is not installed; the active mail system was not changed.');
+  }
+
+  $smtp = \Drupal::config('smtp.settings');
+  if (!$smtp->get('smtp_on')) {
+    return t('SMTP is disabled; the active mail system was not changed.');
+  }
+
+  $mail = \Drupal::configFactory()->getEditable('system.mail');
+  if ($mail->get('interface.default') !== 'SMTPMailSystem') {
+    $mail->set('interface.default', 'SMTPMailSystem')->save(TRUE);
+    return t('Selected SMTPMailSystem for the enabled SMTP transport.');
+  }
+
+  return t('SMTPMailSystem was already selected.');
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {

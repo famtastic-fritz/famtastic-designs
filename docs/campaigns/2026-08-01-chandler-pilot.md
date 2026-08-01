@@ -51,10 +51,22 @@ Campaign key: `chandler-landing-pilot-2026-08-01-b1`
   supports exact `--prospect` and `--campaign` scopes, and the test uses the
   exact fixture prospect. The accidentally generated local fixtures are not
   accepted customer proofs.
-- Production SMTP accepted internal tests from both the prior pipeline sender
-  and the authenticated `hello@famtasticdesigns.com` identity. Neither test is
-  yet visible in the destination Gmail account, including spam/all-mail search,
-  so delivery has not passed.
+- The mailbox screenshots confirmed that `hello@famtasticdesigns.com` is a
+  cPanel/Roundcube mailbox, not Microsoft 365 or Titan. GoDaddy's authoritative
+  DNS still published the old Microsoft 365 MX and an incomplete SPF record,
+  while cPanel's inactive local zone contained its intended MX, SPF, and DKIM.
+- The GoDaddy zone was backed up and aligned to cPanel: apex MX to the cPanel
+  host, cPanel SPF, the existing cPanel DKIM public key, and monitoring-only
+  DMARC (`p=none`). Both authoritative nameservers returned the new records.
+- Internal delivery then passed in both directions: authenticated cPanel SMTP
+  delivered `hello@` mail to Gmail Inbox, and Gmail delivered into the cPanel
+  `hello@` mailbox. Gmail reported SPF pass and DMARC pass. The received message
+  had no DKIM signature, so DKIM signing remains an improvement even though the
+  public key is now published.
+- Drupal had a second configuration defect: SMTP was enabled, but
+  `system.mail:interface.default` still selected `php_mail`. Production now
+  selects `SMTPMailSystem`; a Drupal-generated message delivered into the local
+  cPanel mailbox. Its external Gmail copy is still awaiting inbox evidence.
 
 ## Findings before any live send
 
@@ -69,19 +81,20 @@ Campaign key: `chandler-landing-pilot-2026-08-01-b1`
    integration must also complete and be visually proven before production
    promotion. Its media provider must be made selectable and proven end to end;
    selecting Shay for HTML does not currently select the proof-media provider.
-3. Drupal SMTP is enabled and authenticates as `hello@famtasticdesigns.com`.
-   The pipeline install default previously used `support@`; it is now aligned
-   to `hello@` in source.
-4. SPF is present. DKIM and DMARC are not currently published, which must be
-   addressed before relying on cold-outreach deliverability.
-5. The domain's MX points to Microsoft 365, while Drupal SMTP uses GoDaddy's
-   `smtpout.secureserver.net:465` Professional/Titan settings. SMTP accepted
-   the tests, so this is not enough to declare the configuration wrong, but the
-   mailbox product and correct outbound server must be confirmed in GoDaddy's
-   Email & Office dashboard before changing it or sending prospects.
-6. Real outreach now fails closed without an environment-owned physical postal
-   address. The address has not been supplied, so this gate is intentionally
-   red.
+3. Drupal SMTP is enabled and authenticates as `hello@famtasticdesigns.com` on
+   the documented cPanel endpoint `famtasticdesigns.com:465`. The pipeline
+   install default previously used `support@`; it is now aligned to `hello@`
+   in source. Enabled SMTP must also select `SMTPMailSystem`; update 8009 repairs
+   that drift without hard-coding an environment-specific SMTP host.
+4. SPF, the cPanel DKIM public key, and monitoring-only DMARC are published.
+   SPF and DMARC passed at Gmail. DKIM signing did not occur and must not be
+   reported as passed.
+5. Public MX now points to cPanel/Roundcube, matching the confirmed mailbox and
+   cPanel's local routing configuration. The obsolete Microsoft 365 verification
+   TXT was preserved because it does not control routing.
+6. The physical postal address was supplied and remains environment-owned. It
+   is not recorded in Git. The production runtime value must be installed with
+   the compliant template deployment before real outreach is enabled.
 7. Drupal cron is recent on production, but no module `hook_cron()` invokes the
    automation worker. Use controlled manual Drush execution for this first
    smoke and a bounded cPanel cron only after the first delivery is proven.
@@ -98,12 +111,14 @@ Campaign key: `chandler-landing-pilot-2026-08-01-b1`
 | Local dry-run import | Pass |
 | Local tracked import | Pass |
 | Three real proofs per lead | Fail: content repair failed once; second proof reached HTML but Imagen media failed; failure callback absent |
-| Internal inbox delivery | Fail: SMTP accepted, inbox delivery unverified |
-| Compliant postal address | Blocked: value not provided |
-| DKIM and DMARC | Blocked: DNS records absent |
+| Internal inbox delivery | Partial pass: direct cPanel SMTP passed both directions; Drupal passed locally; Drupal-to-Gmail evidence pending |
+| Compliant postal address | Pass: supplied for environment-only configuration |
+| SPF and DMARC | Pass at Gmail |
+| DKIM | Partial: public key published; outbound message was not signed |
 | Exact campaign approval | Not attempted |
 | Prospect messages sent | 0 |
 
 The next legal state transition is proof callback plus visual acceptance,
-followed by internal delivery evidence and postal-address configuration. Only
+followed by external Drupal-to-Gmail delivery evidence and installation of the
+environment-owned postal value with the compliant template deployment. Only
 then can the exact ten-recipient campaign be reviewed and approved.
