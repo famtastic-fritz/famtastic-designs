@@ -171,8 +171,22 @@ class ProofCampaignService {
       if (preg_match('/<(script|iframe|object|embed|base)\b|\son[a-z]+\s*=|javascript\s*:/i', $html)) {
         throw new \InvalidArgumentException('Proof HTML contains disallowed active content.');
       }
+      $thumbnail = NULL;
+      $thumbnailBase64 = (string) ($variant['thumbnail_base64'] ?? '');
+      if ($thumbnailBase64 !== '') {
+        $mediaType = strtolower((string) ($variant['thumbnail_media_type'] ?? ''));
+        if (!in_array($mediaType, ['image/jpeg', 'image/png'], TRUE)) {
+          throw new \InvalidArgumentException('Proof thumbnail must be JPEG or PNG.');
+        }
+        $thumbnail = base64_decode($thumbnailBase64, TRUE);
+        if ($thumbnail === FALSE || strlen($thumbnail) > 1500000) {
+          throw new \InvalidArgumentException('Proof thumbnail is invalid or exceeds 1.5 MB.');
+        }
+      }
       $validated[$direction] = [
         'html' => $html,
+        'thumbnail' => $thumbnail,
+        'thumbnail_extension' => (($variant['thumbnail_media_type'] ?? '') === 'image/png') ? 'png' : 'jpg',
         'design_dna' => is_array($variant['design_dna'] ?? NULL) ? $variant['design_dna'] : [],
       ];
     }
@@ -189,11 +203,15 @@ class ProofCampaignService {
     $created = [];
     foreach ($validated as $direction => $variant) {
       $path = $this->writeCallbackArtifact($campaignId, $direction, $variant['html']);
+      $thumbnailPath = $variant['thumbnail'] === NULL
+        ? NULL
+        : $this->writeCallbackThumbnail($campaignId, $direction, $variant['thumbnail'], $variant['thumbnail_extension']);
       $entity = $storage->create([
         'campaign_id' => $campaign->id(),
         'direction_id' => $direction,
         'direction_name' => self::DIRECTIONS[$direction],
         'artifact_path' => $path,
+        'thumbnail_path' => $thumbnailPath,
         'design_dna' => json_encode($variant['design_dna'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
         'preview_url' => $this->previewUrl($campaignId, $direction),
       ]);
@@ -460,6 +478,17 @@ class ProofCampaignService {
     $this->fileSystem->prepareDirectory($absolute, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     $this->fileSystem->saveData($html, $absolute . '/index.html', FileSystemInterface::EXISTS_REPLACE);
     return $relative;
+  }
+
+  /**
+   * Writes a generated proof screenshot and returns its public URL path.
+   */
+  protected function writeCallbackThumbnail(string $campaignId, string $direction, string $binary, string $extension): string {
+    $filename = 'thumbnail.' . ($extension === 'png' ? 'png' : 'jpg');
+    $absolute = \Drupal::root() . '/proofs/' . $campaignId . '/' . $direction;
+    $this->fileSystem->prepareDirectory($absolute, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    $this->fileSystem->saveData($binary, $absolute . '/' . $filename, FileSystemInterface::EXISTS_REPLACE);
+    return '/proofs/' . $campaignId . '/' . $direction . '/' . $filename;
   }
 
   /**

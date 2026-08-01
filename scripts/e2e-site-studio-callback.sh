@@ -82,9 +82,9 @@ payload="$(jq -nc \
     campaign_id:$campaign,
     job_id:$job,
     variants:[
-      {direction_id:"a",html:"<!doctype html><html><head><meta name=\"description\" content=\"Bold bakery proof\"></head><body><h1>Bold</h1></body></html>",design_dna:{palette:"bold"}},
-      {direction_id:"b",html:"<!doctype html><html><body><h1>Professional</h1></body></html>",design_dna:{palette:"trust"}},
-      {direction_id:"c",html:"<!doctype html><html><body><h1>Local</h1></body></html>",design_dna:{palette:"local"}}
+      {direction_id:"a",html:"<!doctype html><html><head><meta name=\"description\" content=\"Bold bakery proof\"></head><body><h1>Bold</h1></body></html>",thumbnail_media_type:"image/png",thumbnail_base64:"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",design_dna:{palette:"bold"}},
+      {direction_id:"b",html:"<!doctype html><html><body><h1>Professional</h1></body></html>",thumbnail_media_type:"image/png",thumbnail_base64:"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",design_dna:{palette:"trust"}},
+      {direction_id:"c",html:"<!doctype html><html><body><h1>Local</h1></body></html>",thumbnail_media_type:"image/png",thumbnail_base64:"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",design_dna:{palette:"local"}}
     ]
   }')"
 endpoint="http://127.0.0.1:$drupal_port/api/pipeline/site-studio/callback"
@@ -106,6 +106,10 @@ test "$(printf '%s' "$duplicate" | jq -r '.newly_processed')" = "false"
   assert(\$campaign->get('generation_status')->value === 'ready');
   \$variants = \\Drupal::entityTypeManager()->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', \$campaign->id())->execute();
   assert(count(\$variants) === 3);
+  foreach (\\Drupal::entityTypeManager()->getStorage('proof_variant')->loadMultiple(\$variants) as \$variant) {
+    assert(str_ends_with((string) \$variant->get('thumbnail_path')->value, '/thumbnail.png'));
+    assert(file_exists(\\Drupal::root() . (string) \$variant->get('thumbnail_path')->value));
+  }
   \$outreach = \\Drupal::database()->select('famtastic_job', 'j')->condition('job_type', 'outreach.prepare')->condition('prospect_id', $prospect_id)->countQuery()->execute()->fetchField();
   assert((int) \$outreach === 1);
 "

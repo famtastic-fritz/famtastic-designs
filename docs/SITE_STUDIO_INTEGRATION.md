@@ -47,7 +47,10 @@ FAMTASTIC_PROOF_PROVIDER=shay
 The supported proof path routes generation through `shay -z`; it has no
 direct Claude or OpenAI API dependency. Site Studio packages every proof as
 portable, script-free HTML by inlining shared CSS before page CSS, embedding
-the required layered-hero rules, and safely resolving local image references.
+the required layered-hero rules, replacing empty media slots with intentional
+brand-colored visuals, and safely resolving local image references. It also
+renders a 1280x800 screenshot of each packaged direction for the selection
+card; the signed callback carries the JPEG/PNG thumbnail beside the HTML.
 
 ## Callback contract
 
@@ -72,6 +75,8 @@ The callback:
 - writes each artifact to its isolated
   `web/proofs/<campaign>/<direction>/index.html` filesystem path, publicly
   served as `/proofs/<campaign>/<direction>/`;
+- validates and stores each screenshot as
+  `/proofs/<campaign>/<direction>/thumbnail.<jpg|png>`;
 - creates all three proof records before marking the campaign ready;
 - records callback event IDs so replay is harmless;
 - appends a `proof.ready` event and queues outreach preparation.
