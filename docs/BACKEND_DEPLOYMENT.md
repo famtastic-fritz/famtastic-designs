@@ -45,6 +45,10 @@ The script:
 8. records the commit, timestamp, PHP version, module backup, and database
    backup in `~/public_html/.backend-release`.
 
+Composer validation uses the deployment-owned writable temporary directory at
+`~/deploy/famtastic-designs/tmp`; shared-host `/tmp` permissions are not part of
+the release contract.
+
 If code promotion or a Drupal command fails, the script restores the prior
 module and rebuilds cache. Database updates cannot be assumed reversible, so
 the pre-update SQL dump is retained and its path is printed.

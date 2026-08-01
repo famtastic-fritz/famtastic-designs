@@ -124,7 +124,7 @@ if [[ "$mode" == "preflight" ]]; then
   exit 0
 fi
 
-mkdir -p "$deploy_dir/releases" "$HOME/backups"
+mkdir -p "$deploy_dir/releases" "$deploy_dir/tmp" "$HOME/backups"
 if [[ ! -d "$mirror_dir" ]]; then
   git clone --mirror "$repository_url" "$mirror_dir"
 else
@@ -145,7 +145,7 @@ fi
 test -f "$backend_dir/composer.lock"
 test -f "$source_module/famtastic_pipeline.info.yml"
 test -f "$source_services"
-composer --working-dir="$backend_dir" install \
+TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" install \
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
 find "$source_module" -type f -name '*.php' -print0 |
   xargs -0 -n1 php -l >/dev/null
