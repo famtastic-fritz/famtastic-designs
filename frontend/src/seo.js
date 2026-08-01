@@ -62,11 +62,88 @@ export const SEO_PAGES = {
 };
 
 /**
- * JSON-LD describing the $199 package, present only on /199. The prerendered
- * shell writes this block with the same id, so the runtime updates it in place
- * rather than emitting a second copy for crawlers to reconcile.
+ * Structured-data blocks are keyed by element id so a page can add its own
+ * without disturbing another's, and so the prerendered shell and the runtime
+ * update the same node instead of emitting duplicates for crawlers to
+ * reconcile.
  */
 export const OFFER_JSONLD_ID = 'famtastic-offer-jsonld';
+export const FAQ_JSONLD_ID = 'famtastic-faq-jsonld';
+export const POST_JSONLD_ID = 'famtastic-post-jsonld';
+
+/** Upsert a JSON-LD script tag by id. Safe to call on every render. */
+export function applyJsonLd(id, data) {
+  if (typeof document === 'undefined') return;
+  let node = document.getElementById(id);
+  if (!node) {
+    node = document.createElement('script');
+    node.type = 'application/ld+json';
+    node.id = id;
+    document.head.appendChild(node);
+  }
+  node.textContent = JSON.stringify(data);
+}
+
+export function removeJsonLd(id) {
+  if (typeof document === 'undefined') return;
+  document.getElementById(id)?.remove();
+}
+
+/**
+ * FAQPage markup for /faq. Google can surface these as expandable results,
+ * which is why the questions are worth marking up rather than just rendering.
+ */
+export function faqPageJsonLd(faqs = []) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs
+      .filter((item) => item.question && item.answer)
+      .map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+  };
+}
+
+/** BlogPosting markup for a single post. */
+export function blogPostingJsonLd(post, slug) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post?.title ?? 'FAMtastic Designs',
+    description: post?.summary ?? '',
+    datePublished: post?.created ?? undefined,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${slug}/` },
+    author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    image: DEFAULT_IMAGE,
+  };
+}
+
+/**
+ * Per-post metadata. Without this every blog post inherited the homepage
+ * title, description, and canonical URL — which reads to a search engine as
+ * one page duplicated N times.
+ */
+export function blogSeo(post, slug) {
+  const title = post?.title ? `${post.title} | FAMtastic Designs` : 'Blog | FAMtastic Designs';
+  const description =
+    post?.summary ||
+    `Notes from FAMtastic Designs on websites, SEO, and getting small businesses online.`;
+  return {
+    siteName: SITE_NAME,
+    title,
+    description,
+    ogDescription: description,
+    twitterDescription: description,
+    keywords: DEFAULT_KEYWORDS,
+    canonical: `${SITE_URL}/blog/${slug}/`,
+    image: DEFAULT_IMAGE,
+    path: `/blog/${slug}`,
+  };
+}
 
 export function offerJsonLd() {
   return {
@@ -90,20 +167,11 @@ export function offerJsonLd() {
 }
 
 export function applyOfferJsonLd() {
-  if (typeof document === 'undefined') return;
-  let node = document.getElementById(OFFER_JSONLD_ID);
-  if (!node) {
-    node = document.createElement('script');
-    node.type = 'application/ld+json';
-    node.id = OFFER_JSONLD_ID;
-    document.head.appendChild(node);
-  }
-  node.textContent = JSON.stringify(offerJsonLd());
+  applyJsonLd(OFFER_JSONLD_ID, offerJsonLd());
 }
 
 export function removeOfferJsonLd() {
-  if (typeof document === 'undefined') return;
-  document.getElementById(OFFER_JSONLD_ID)?.remove();
+  removeJsonLd(OFFER_JSONLD_ID);
 }
 
 export function normalizePath(pathname = '/') {

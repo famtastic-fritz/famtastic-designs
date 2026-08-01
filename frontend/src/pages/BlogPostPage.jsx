@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router';
 import { getNodesRaw } from '../api/drupal.js';
 import { matchBySlug } from '../utils/content.js';
 import { transformBlogNode } from '../lib/drupalAdapter.js';
+import { applySeo } from '../components/SEO.jsx';
+import { applyJsonLd, blogPostingJsonLd, blogSeo, POST_JSONLD_ID, removeJsonLd } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp } from '../components/v1/index.js';
 
 /**
@@ -16,12 +18,19 @@ export default function BlogPostPage() {
     let cancelled = false;
     setState({ post: null, loading: true });
     getNodesRaw('blog_post').then(({ data }) => {
-      if (!cancelled) {
-        setState({ post: transformBlogNode(matchBySlug(data, slug)), loading: false });
+      if (cancelled) return;
+      const post = transformBlogNode(matchBySlug(data, slug));
+      setState({ post, loading: false });
+      // Without this the post inherits the homepage title, description, and
+      // canonical — every post looking to a crawler like the same page.
+      if (post) {
+        applySeo(blogSeo(post, slug));
+        applyJsonLd(POST_JSONLD_ID, blogPostingJsonLd(post, slug));
       }
     });
     return () => {
       cancelled = true;
+      removeJsonLd(POST_JSONLD_ID);
     };
   }, [slug]);
 

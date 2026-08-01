@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { getNodesRaw } from '../api/drupal.js';
 import { transformFaqNodes } from '../lib/drupalAdapter.js';
+import { applyJsonLd, faqPageJsonLd, FAQ_JSONLD_ID, removeJsonLd } from '../seo.js';
 import { Hero, Section, FAQAccordion, CTABanner, FadeUp } from '../components/v1/index.js';
 
 /**
@@ -22,9 +23,13 @@ export default function FAQHubPage() {
         byCategory.get(item.category).push(item);
       }
       setGroups([...byCategory.entries()]);
+      // FAQPage markup can earn expandable results in search, so the questions
+      // are worth publishing as structured data and not just as UI.
+      if (items.length) applyJsonLd(FAQ_JSONLD_ID, faqPageJsonLd(items));
     });
     return () => {
       cancelled = true;
+      removeJsonLd(FAQ_JSONLD_ID);
     };
   }, []);
 

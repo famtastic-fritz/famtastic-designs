@@ -97,3 +97,81 @@ for (const path of Object.keys(SEO_PAGES)) {
   await mkdir(dirname(target), { recursive: true });
   await writeFile(target, renderShell(path));
 }
+
+/* ------------------------------------------------------------------ */
+/* robots.txt + sitemap.xml                                            */
+/* ------------------------------------------------------------------ */
+
+const SITE_URL = 'https://famtasticdesigns.com';
+
+/**
+ * CMS-backed URLs (services, packages, posts, case studies) are only known at
+ * build time if a Drupal is reachable. Set SITEMAP_SOURCE_URL to include them;
+ * without it the sitemap still ships with every static route rather than not
+ * shipping at all.
+ */
+async function dynamicUrls() {
+  const base = (process.env.SITEMAP_SOURCE_URL ?? '').replace(/\/+$/, '');
+  if (!base) return [];
+
+  const bundles = [
+    ['service_page', '/services'],
+    ['package_page', '/packages'],
+    ['blog_post', '/blog'],
+    ['case_study', '/work'],
+  ];
+  const urls = [];
+
+  for (const [bundle, prefix] of bundles) {
+    try {
+      const res = await fetch(`${base}/jsonapi/node/${bundle}?filter[status]=1&page[limit]=200`, {
+        headers: { Accept: 'application/vnd.api+json' },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      for (const node of json.data ?? []) {
+        const aliasPath = node?.attributes?.path?.alias;
+        const slug = aliasPath ? aliasPath.split('/').filter(Boolean).pop() : null;
+        if (slug) urls.push(`${prefix}/${slug}`);
+      }
+    } catch (err) {
+      console.warn(`[sitemap] skipped ${bundle}: ${err.message}`);
+    }
+  }
+
+  return urls;
+}
+
+const staticUrls = ['/', ...Object.keys(SEO_PAGES).filter((path) => path !== '/')];
+const allUrls = [...new Set([...staticUrls, ...(await dynamicUrls())])];
+
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${allUrls
+  .map((path) => {
+    const loc = `${SITE_URL}${path === '/' ? '/' : `${path}/`}`;
+    // The offer page is the campaign destination, so it outranks the rest.
+    const priority = path === '/' ? '1.0' : path === '/199' ? '0.9' : '0.7';
+    return `  <url>\n    <loc>${loc}</loc>\n    <priority>${priority}</priority>\n  </url>`;
+  })
+  .join('\n')}
+</urlset>
+`;
+
+await writeFile(join(distDir, 'sitemap.xml'), sitemap);
+
+await writeFile(
+  join(distDir, 'robots.txt'),
+  `User-agent: *
+Allow: /
+
+# Token-scoped prospect pages are private to one customer and must not be indexed.
+Disallow: /p/
+Disallow: /login
+Disallow: /admin
+
+Sitemap: ${SITE_URL}/sitemap.xml
+`,
+);
+
+console.log(`[seo] ${allUrls.length} urls in sitemap.xml, robots.txt written`);

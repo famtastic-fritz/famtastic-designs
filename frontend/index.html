@@ -18,6 +18,41 @@
     <meta name="twitter:description" content="We engineer intelligent systems that capture leads, automate operations, and grow businesses — worldwide." />
     <meta name="twitter:image" content="https://famtasticdesigns.com/og-image.jpg" />
     <title>FAMtastic Designs | Agentic AI Business Solutions Engineering Studio</title>
+    <!--
+      Organization + local-search markup. Static so every crawler sees it on
+      first byte, without waiting for the SPA bundle.
+      TODO (owner): add telephone, streetAddress, postalCode, and openingHours
+      once confirmed — deliberately omitted rather than guessed.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "FAMtastic Designs",
+        "url": "https://famtasticdesigns.com",
+        "image": "https://famtasticdesigns.com/og-image.jpg",
+        "description": "Custom websites, intelligent applications, and AI-powered systems for small businesses. Website builds start at $199.",
+        "email": "hello@famtasticdesigns.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Port St. Lucie",
+          "addressRegion": "FL",
+          "addressCountry": "US"
+        },
+        "areaServed": [
+          { "@type": "City", "name": "Port St. Lucie" },
+          { "@type": "Country", "name": "United States" }
+        ],
+        "priceRange": "$$",
+        "makesOffer": {
+          "@type": "Offer",
+          "name": "FAMtastic Basic Website",
+          "price": "199.00",
+          "priceCurrency": "USD",
+          "url": "https://famtasticdesigns.com/199/"
+        }
+      }
+    </script>
     <!-- v1 type system: Space Grotesk (display) + Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
