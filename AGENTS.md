@@ -1,8 +1,17 @@
 # Agent Instructions
 
 ## Package Managers
-- Root Nuxt app: use **pnpm**.
 - React frontend in `frontend`: use **npm** and its committed `package-lock.json`.
+- Drupal backend in `backend`: use **Composer** and its committed `composer.lock`.
+
+## Repository Source of Truth
+- `frontend/` is the only public frontend source. There is no root frontend.
+- `backend/` is the only API, CMS, and pipeline source.
+- Do not recreate the removed root Nuxt/AgencyOS/Directus prototype or copy code
+  from it without a newly approved architecture decision.
+- Treat `frontend/dist/` as generated output. Change `frontend/src/`, rebuild,
+  commit the source change, and deploy the exact committed SHA.
+- Follow `docs/SOURCE_OF_TRUTH.md` when adding tooling or documentation.
 
 ## Production Frontend
 - Shay is the usual deployment orchestrator, but the deployment lane is agent-agnostic.

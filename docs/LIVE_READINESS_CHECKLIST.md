@@ -4,27 +4,26 @@ This is the release boundary for every human or agent. The canonical application
 is the React/Vite `frontend/` plus the Drupal `backend/`. The historical root
 Nuxt/Directus project is not deployed and its commands are not release gates.
 
-## Current evidence — 2026-07-31
+## Accepted baseline — 2026-07-31
 
-- release candidate: PR #16, branch
-  `codex/issue-15-phase-1-source-truth` (resolve its current SHA at review time)
-- GitHub `main`: `7d40d52e87cc6df36dab0ee8043edfffd3220152`
-- recorded production frontend: `ebbbfa0c0e521e7d9de675eaafaf4cdf2a4e39ca`
-- recorded production backend: unrecorded
-- production Drupal: bootstrapped, database connected, Drupal 11.4.4, no
-  pending database updates at the time of the audit
-- local `scripts/acceptance-autonomous-pipeline.sh`: PASS
-- canonical frontend audit: zero vulnerabilities
-- backend Composer audit: no advisories
+- GitHub `main`, tag `v3.0.3`, production frontend marker, and production
+  backend marker: `69a7b6cba4d53231d22493fc0c2b89b647a8479b`
+- production Drupal: database connected, Drupal 11.4.4, no pending database
+  updates at acceptance time
+- autonomous acceptance: Essential 40/40 and Business 41/41
+- apex and `www` React roots populated with no browser exceptions or failed
+  requests
+- portal token CORS verified for apex and `www`
+- real outreach, live payment, customer deployment, and recurring-hosting
+  provider gates remained disabled
 
-The autonomous software is therefore a verified release candidate, but it is
-not on `main` or production. Do not describe it as live until the release
-markers and post-deployment checks prove otherwise.
+This is the accepted baseline, not permission to skip validation. Resolve the
+current GitHub `main` SHA and repeat all applicable checks for every release.
 
 ## Mandatory order
 
 1. Obtain explicit approval to merge and deploy.
-2. Review and merge PR #16.
+2. Review and merge the approved change.
 3. Check out the exact resulting GitHub `main` SHA in a clean worktree.
 4. Run `scripts/acceptance-autonomous-pipeline.sh`.
 5. Run both deployment scripts without `--apply`; preflight must pass.

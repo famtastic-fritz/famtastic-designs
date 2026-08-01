@@ -27,7 +27,7 @@ a file path. Every proposal explains why it fits the existing project.
 | Thing | What it is | Where | Role |
 |---|---|---|---|
 | **Current application** | Headless **Drupal 11** backend + **React 18 / Vite** SPA | `backend/` + `frontend/` | Canonical architecture and deployment source. |
-| **Legacy material** | Original **Nuxt / Vue** marketing app | root `pages/*.vue`, `data/famtastic/*.ts` | Retained reference; not the production frontend source. |
+| **Legacy material** | Original **Nuxt / Vue** marketing app | Git history before the canonical frontend cleanup | Removed from the working tree; not a build or deployment source. |
 
 This document was originally written while the headless stack was staged in a
 temporary versioned directory. That stack has since been promoted to the root
@@ -306,8 +306,8 @@ This covers every field in the assignment's "Minimum information to structure fo
    directly (no new SDK), keeping composer light while preserving a clean gateway interface.
 6. **`config/sync` empty:** entity definitions are code, not config, so this mostly doesn't bite; any new
    settings config for the module will be exported.
-7. **Two divergent pricing files** on the Nuxt site (`packages.ts` vs `pricing.ts`) — noted, **out of
-   scope** (non-goal), flagged for later cleanup.
+7. **Two divergent pricing files** existed in the former Nuxt site (`packages.ts` vs `pricing.ts`).
+   The obsolete Nuxt tree was later removed, eliminating this ambiguity.
 8. **No existing test framework** → plan adds `drupal/core-dev` (dev-only) and unit tests for the pure
    services (token hashing, Site Studio JSON builder, payment-status gating). Confirm this is acceptable.
 
@@ -338,7 +338,8 @@ Not built in V1 (per spec): a Site Studio replacement; a crawler / Google scrape
 marketing-automation suite; automatic domain purchase / registrar-credential collection / DNS changes;
 the 1,000-project platform; every FAMtastic product; **production** Stripe payments; a production
 deployment; a full visual rebrand beyond the screens implemented; any television-show content;
-reconciliation of the live Nuxt site's divergent pricing files.
+reconciliation of the former Nuxt site's divergent pricing files. That tree was subsequently removed
+when `frontend/` became the sole public frontend source.
 
 ---
 
