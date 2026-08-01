@@ -10,6 +10,10 @@ const proxyOpts = { target: backend, changeOrigin: true, secure: false };
 
 export default defineConfig({
   plugins: [react()],
+  // This frontend lives beneath a separate Nuxt workspace. Vite 8's Oxc
+  // development transform otherwise discovers the ancestor Nuxt tsconfig and
+  // fails when that app has not generated its local .nuxt directory.
+  oxc: false,
   server: {
     port: 5173,
     strictPort: true,

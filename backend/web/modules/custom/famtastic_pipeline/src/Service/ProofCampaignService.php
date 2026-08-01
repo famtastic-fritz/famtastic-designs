@@ -168,7 +168,7 @@ class ProofCampaignService {
       if ($html === '' || strlen($html) > 500000) {
         throw new \InvalidArgumentException('Each proof HTML artifact is required and limited to 500 KB.');
       }
-      if (preg_match('/<(script|iframe|object|embed|base)\b|on[a-z]+\s*=|javascript\s*:/i', $html)) {
+      if (preg_match('/<(script|iframe|object|embed|base)\b|\son[a-z]+\s*=|javascript\s*:/i', $html)) {
         throw new \InvalidArgumentException('Proof HTML contains disallowed active content.');
       }
       $validated[$direction] = [
@@ -465,14 +465,14 @@ class ProofCampaignService {
   /**
    * Builds the public preview URL for a direction.
    *
-   * Default: {scheme}{host}/web/proofs/<campaign_id>/<direction>/. The full
-   * base (including the /web/proofs prefix) is overridable via the
+   * Default: {scheme}{host}/proofs/<campaign_id>/<direction>/. The full
+   * base (including the /proofs prefix) is overridable via the
    * famtastic_pipeline.settings.proofs_base_url config for prod.
    */
   protected function previewUrl(string $campaignId, string $direction): string {
     $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('proofs_base_url'), '/');
     if ($base === '') {
-      $base = \Drupal::request()->getSchemeAndHttpHost() . '/web/proofs';
+      $base = \Drupal::request()->getSchemeAndHttpHost() . '/proofs';
     }
     return $base . '/' . $campaignId . '/' . $direction . '/';
   }

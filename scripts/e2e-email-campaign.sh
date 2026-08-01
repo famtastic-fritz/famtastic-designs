@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# This acceptance fixture intentionally exercises the deterministic local
+# placeholder path. Customer outreach remains blocked unless a test opts in.
+export FAMTASTIC_ALLOW_STUB_OUTREACH=1
+
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DRUSH="$REPO_ROOT/backend/vendor/bin/drush"
 run_id="$(date +%s)-$$"

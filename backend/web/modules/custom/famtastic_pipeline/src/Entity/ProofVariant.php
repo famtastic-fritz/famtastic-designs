@@ -111,7 +111,7 @@ class ProofVariant extends ContentEntityBase {
 
     $fields['preview_url'] = BaseFieldDefinition::create('string')
       ->setLabel('Preview URL')
-      ->setDescription(t('<host>/web/proofs/<campaign_id>/<direction>/'))
+      ->setDescription(t('<host>/proofs/<campaign_id>/<direction>/'))
       ->setSetting('max_length', 512)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);

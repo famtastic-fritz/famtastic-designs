@@ -82,7 +82,7 @@ payload="$(jq -nc \
     campaign_id:$campaign,
     job_id:$job,
     variants:[
-      {direction_id:"a",html:"<!doctype html><html><body><h1>Bold</h1></body></html>",design_dna:{palette:"bold"}},
+      {direction_id:"a",html:"<!doctype html><html><head><meta name=\"description\" content=\"Bold bakery proof\"></head><body><h1>Bold</h1></body></html>",design_dna:{palette:"bold"}},
       {direction_id:"b",html:"<!doctype html><html><body><h1>Professional</h1></body></html>",design_dna:{palette:"trust"}},
       {direction_id:"c",html:"<!doctype html><html><body><h1>Local</h1></body></html>",design_dna:{palette:"local"}}
     ]
@@ -92,6 +92,9 @@ test "$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: applica
 partial="$(printf '%s' "$payload" | jq -c '.event_id = "partial-callback" | .variants = .variants[0:2]')"
 partial_signature="sha256=$(printf '%s' "$partial" | openssl dgst -sha256 -hmac callback-e2e-secret | sed 's/^.*= //')"
 test "$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' -H "X-FAMtastic-Signature: $partial_signature" -d "$partial" "$endpoint")" = "422"
+active="$(printf '%s' "$payload" | jq -c '.event_id = "active-content-callback" | .variants[0].html = "<!doctype html><html><body onload=\"alert(1)\"><h1>Unsafe</h1></body></html>"')"
+active_signature="sha256=$(printf '%s' "$active" | openssl dgst -sha256 -hmac callback-e2e-secret | sed 's/^.*= //')"
+test "$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' -H "X-FAMtastic-Signature: $active_signature" -d "$active" "$endpoint")" = "422"
 signature="sha256=$(printf '%s' "$payload" | openssl dgst -sha256 -hmac callback-e2e-secret | sed 's/^.*= //')"
 result="$(curl -s -X POST -H 'Content-Type: application/json' -H "X-FAMtastic-Signature: $signature" -d "$payload" "$endpoint")"
 test "$(printf '%s' "$result" | jq -r '.variant_count')" = "3"
@@ -107,4 +110,4 @@ test "$(printf '%s' "$duplicate" | jq -r '.newly_processed')" = "false"
   assert((int) \$outreach === 1);
 "
 
-echo "PASS: signed Site Studio dispatch, async exactly-three callback, isolation, and callback idempotency verified."
+echo "PASS: signed Site Studio dispatch, async exactly-three callback, active-content isolation, meta content acceptance, and callback idempotency verified."

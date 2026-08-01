@@ -3,7 +3,9 @@
 ## Modes
 
 - Local mode: with no `SITE_STUDIO_URL`, the worker deterministically creates
-  three isolated HTML proof artifacts for development and acceptance tests.
+  three isolated placeholder artifacts for development and acceptance tests.
+  They are blocked from customer-ready and outreach states unless a test
+  explicitly sets `FAMTASTIC_ALLOW_STUB_OUTREACH=1`.
 - Remote mode: the worker sends one signed, idempotent generation request to
   Site Studio and records `waiting_callback`. No placeholder is presented as a
   completed remote proof.
@@ -13,9 +15,10 @@
 Remote configuration is environment-owned:
 
 ```text
-SITE_STUDIO_URL=https://studio.example/jobs
+SITE_STUDIO_URL=https://studio.example/api/integrations/famtastic/proof-jobs
 SITE_STUDIO_DISPATCH_SECRET=...
 FAMTASTIC_PUBLIC_BASE_URL=https://famtasticdesigns.com
+SITE_STUDIO_CALLBACK_SECRET=...
 ```
 
 The JSON request includes:
@@ -30,6 +33,21 @@ The JSON request includes:
 The raw JSON is signed with HMAC-SHA256 in
 `X-FAMtastic-Signature`. The same idempotency key is sent in
 `Idempotency-Key`. Site Studio must return a nonempty `job_id`.
+
+Site Studio owns the matching runtime settings:
+
+```text
+FAMTASTIC_PROOF_DISPATCH_SECRET=...
+FAMTASTIC_PROOF_CALLBACK_SECRET=...
+FAMTASTIC_PROOF_JOBS_DIR=~/.config/famtastic/proof-jobs
+FAMTASTIC_PROOF_OUTPUT_ROOT=~/.config/famtastic/proof-output
+FAMTASTIC_PROOF_PROVIDER=shay
+```
+
+The supported proof path routes generation through `shay -z`; it has no
+direct Claude or OpenAI API dependency. Site Studio packages every proof as
+portable, script-free HTML by inlining shared CSS before page CSS, embedding
+the required layered-hero rules, and safely resolving local image references.
 
 ## Callback contract
 
@@ -52,7 +70,8 @@ The callback:
   JavaScript URLs;
 - verifies the callback job belongs to the campaign;
 - writes each artifact to its isolated
-  `web/proofs/<campaign>/<direction>/index.html` path;
+  `web/proofs/<campaign>/<direction>/index.html` filesystem path, publicly
+  served as `/proofs/<campaign>/<direction>/`;
 - creates all three proof records before marking the campaign ready;
 - records callback event IDs so replay is harmless;
 - appends a `proof.ready` event and queues outreach preparation.
@@ -66,5 +85,6 @@ An invalid or partial callback never marks proofs ready.
 ```
 
 The synthetic test runs a signed mock Site Studio endpoint, proves remote
-dispatch state, rejects a bad signature and a partial callback, accepts exactly
-three isolated artifacts, and proves callback replay idempotency.
+dispatch state, rejects a bad signature, partial callback, and active content,
+accepts normal metadata plus exactly three isolated artifacts, and proves
+callback replay idempotency.

@@ -104,6 +104,13 @@ final class AutomationWorker {
     if (count(array_unique($directions)) !== 3 || count(array_unique($paths)) !== 3) {
       throw new \RuntimeException('Proof variants are not distinct and isolated.');
     }
+    $stubSources = array_filter($variants, static function ($variant): bool {
+      $dna = json_decode((string) $variant->get('design_dna')->value, TRUE);
+      return is_array($dna) && ($dna['source'] ?? NULL) === 'local';
+    });
+    if ($stubSources && getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') !== '1') {
+      throw new \RuntimeException('Local placeholder proofs are development fixtures and cannot become customer-ready or queue outreach. Configure SITE_STUDIO_URL for real generation.');
+    }
     $campaign = $created['campaign'];
     $this->ledger->recordEvent(
       'proof.ready:' . $campaign->get('campaign_id')->value,
