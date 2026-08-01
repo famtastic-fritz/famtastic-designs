@@ -1,0 +1,42 @@
+{
+  "posts": [
+    {
+      "id": "price-led",
+      "seed": 20260801,
+      "eyebrow": "Launch offer",
+      "price": "$199",
+      "headline": "A professional website for your *business*.",
+      "support": "Custom built, mobile-ready, and set up to bring you customers. One fixed price, no monthly surprises.",
+      "sizes": ["square", "portrait", "link"],
+      "caption": "Most small businesses I talk to don't have a website because every quote came back at $3,000+.\n\nI build them for $199. One time. Custom, works on phones, has a contact form so customers can actually reach you, and I get it live for you.\n\nNot a template you have to finish yourself. Not a monthly subscription.\n\nfamtasticdesigns.com/199"
+    },
+    {
+      "id": "found-by-google",
+      "seed": 71144,
+      "eyebrow": "Why it matters",
+      "headline": "Your customers are searching right now. They're finding your *competitor*.",
+      "support": "A professional site, built for your business, for $199 — launch support included.",
+      "sizes": ["square", "story"],
+      "caption": "Your customers are Googling what you do right now. If you don't have a website, they're finding your competitor instead.\n\nA professional site, built for your business, for $199 — launch support included.\n\nfamtasticdesigns.com/199"
+    },
+    {
+      "id": "rented-ground",
+      "seed": 30582,
+      "eyebrow": "Own your corner",
+      "headline": "A Facebook page is *rented ground*.",
+      "support": "The algorithm decides who sees you, and the rules can change tomorrow. A website is the one thing online that's actually yours.",
+      "sizes": ["square", "story"],
+      "caption": "A Facebook page is rented ground. The algorithm decides who sees you, and the rules can change tomorrow.\n\nA website is the one thing online that's actually yours. $199, custom-built, live in days.\n\nfamtasticdesigns.com/199"
+    },
+    {
+      "id": "whats-included",
+      "seed": 90417,
+      "eyebrow": "What you get",
+      "price": "$199",
+      "headline": "Site, contact form, SEO basics, *launch support*.",
+      "support": "One fixed price covers the whole build — designed, built, and launched. One revision included.",
+      "sizes": ["square", "portrait"],
+      "caption": "What the $199 actually covers:\n\n• Custom mobile-responsive website\n• Your services and contact details\n• A contact form so enquiries reach you\n• Basic SEO foundation\n• One revision\n• Launch support — we get it live, not just built\n\nfamtasticdesigns.com/199"
+    }
+  ]
+}
