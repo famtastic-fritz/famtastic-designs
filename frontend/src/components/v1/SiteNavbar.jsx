@@ -155,7 +155,7 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
 
         <div className="v1-header__actions">
           {authSlot}
-          <NavLink to="/contact" className="v1-btn v1-btn--primary v1-btn--sm">
+          <NavLink to="/contact" className="v1-btn v1-btn--primary v1-btn--sm v1-header__cta">
             Book a Call
           </NavLink>
           <button

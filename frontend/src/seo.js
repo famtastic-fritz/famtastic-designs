@@ -48,7 +48,63 @@ export const SEO_PAGES = {
     description:
       'Use the FAMtastic Designs Solution Finder to describe your custom website, application, AI-powered system, or digital solution project.',
   },
+  '/199': {
+    title: 'Professional Website for $199 | FAMtastic Designs',
+    description:
+      'Get a custom, mobile-ready website for your business for a one-time $199. Lead capture form, SEO foundation, one revision, and launch support included.',
+    ogDescription:
+      'A custom, mobile-ready website for your business — one-time $199, launch support included. No monthly surprises.',
+    twitterDescription:
+      'A custom, mobile-ready website for your business — one-time $199, launch support included.',
+    keywords:
+      'affordable website design, $199 website, small business website, cheap website design, mobile responsive website, local business web design',
+  },
 };
+
+/**
+ * JSON-LD describing the $199 package, present only on /199. The prerendered
+ * shell writes this block with the same id, so the runtime updates it in place
+ * rather than emitting a second copy for crawlers to reconcile.
+ */
+export const OFFER_JSONLD_ID = 'famtastic-offer-jsonld';
+
+export function offerJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'FAMtastic Basic Website',
+    description:
+      'A custom, mobile-responsive website for your business including core pages, a lead capture form, a basic SEO foundation, one revision, and launch support.',
+    brand: { '@type': 'Brand', name: SITE_NAME },
+    url: `${SITE_URL}/199/`,
+    image: DEFAULT_IMAGE,
+    offers: {
+      '@type': 'Offer',
+      price: '199.00',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: `${SITE_URL}/199/`,
+      seller: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    },
+  };
+}
+
+export function applyOfferJsonLd() {
+  if (typeof document === 'undefined') return;
+  let node = document.getElementById(OFFER_JSONLD_ID);
+  if (!node) {
+    node = document.createElement('script');
+    node.type = 'application/ld+json';
+    node.id = OFFER_JSONLD_ID;
+    document.head.appendChild(node);
+  }
+  node.textContent = JSON.stringify(offerJsonLd());
+}
+
+export function removeOfferJsonLd() {
+  if (typeof document === 'undefined') return;
+  document.getElementById(OFFER_JSONLD_ID)?.remove();
+}
 
 export function normalizePath(pathname = '/') {
   const path = pathname.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';

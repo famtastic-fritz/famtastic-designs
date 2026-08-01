@@ -1,7 +1,12 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SEO_PAGES, seoForPath } from '../src/seo.js';
+import { SEO_PAGES, seoForPath, offerJsonLd, OFFER_JSONLD_ID } from '../src/seo.js';
+
+/** Paths whose shell carries structured data crawlers must see without JS. */
+const JSON_LD_BY_PATH = {
+  '/199': offerJsonLd,
+};
 
 const root = dirname(fileURLToPath(import.meta.url));
 const distDir = join(root, '..', 'dist');
@@ -69,6 +74,20 @@ function renderShell(path) {
       `<meta name="${name}" content="${escapeHtml(content)}" />`,
     );
   }
+
+  const jsonLd = JSON_LD_BY_PATH[path];
+  if (jsonLd) {
+    // JSON-LD is escaped only for `<`, which is all that can break out of a
+    // script block; escaping quotes here would corrupt the JSON itself.
+    const payload = JSON.stringify(jsonLd()).replaceAll('<', '\\u003c');
+    // Carries the same id the runtime injector looks up, so the client updates
+    // this block in place instead of appending a duplicate Product graph.
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json" id="${OFFER_JSONLD_ID}">${payload}</script>\n  </head>`,
+    );
+  }
+
   return html;
 }
 

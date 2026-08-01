@@ -24,6 +24,7 @@ import FAQHubPage from './pages/FAQHubPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import StartPage from './pages/StartPage.jsx';
 import AliasPage from './pages/AliasPage.jsx';
+import OfferPage from './pages/OfferPage.jsx';
 import SEO from './components/SEO.jsx';
 
 export default function App() {
@@ -55,6 +56,13 @@ export default function App() {
           <Route path="/faq" element={<FAQHubPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/start" element={<StartPage />} />
+
+          {/* Campaign destination for the $199 offer. Short, speakable, and
+              printable — every promotional channel points here. */}
+          <Route path="/199" element={<OfferPage />} />
+          <Route path="/deal" element={<Navigate to="/199" replace />} />
+          <Route path="/offer" element={<Navigate to="/199" replace />} />
+          <Route path="/website" element={<Navigate to="/199" replace />} />
 
           {/* Legacy /content/* URLs → clean routes. */}
           <Route path="/content/page" element={<Navigate to="/" replace />} />

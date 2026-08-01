@@ -2080,6 +2080,34 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 0.8rem;
+  min-width: 0;
+}
+
+/* Below the burger breakpoint the brand, auth link, CTA and burger cannot all
+   fit — on a 320px viewport the row overflowed the page by ~100px and scrolled
+   the whole site sideways. The CTA collapses into the mobile menu, which
+   already carries a Contact link. */
+@media (max-width: 959px) {
+  .v1-header__cta {
+    display: none;
+  }
+
+  .v1-header__inner {
+    gap: 0.75rem;
+  }
+}
+
+/* The widely-tracked wordmark still crowds the burger on 320px devices. */
+@media (max-width: 359px) {
+  .v1-brand {
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+  }
+
+  .v1-header__inner {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 .v1-header__burger {

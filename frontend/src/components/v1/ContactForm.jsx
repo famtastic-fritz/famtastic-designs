@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { postContactRequest } from '../../api/pipeline.js';
+import { attributionFields, attributionSource } from '../../lib/attribution.js';
 
 const CONTACT_EMAIL = 'hello@famtasticdesigns.com';
 
@@ -57,7 +58,7 @@ export default function ContactForm({ title = 'Tell us about your project', comp
     setSubmitting(true);
     try {
       const res = await postContactRequest({
-        source: 'contact-form',
+        source: attributionSource('contact-form'),
         name: values.name.trim(),
         email: values.email.trim(),
         phone: values.phone.trim(),
@@ -65,6 +66,7 @@ export default function ContactForm({ title = 'Tell us about your project', comp
         message: values.message.trim(),
         path: window.location.pathname,
         referrer: document.referrer || null,
+        ...attributionFields(),
       });
       setMessage(res?.message || 'We received your request. Our team has been notified.');
       setSent(true);
