@@ -164,14 +164,14 @@ final class CampaignMessageService {
         $base,
         $message['unsubscribe_key'],
       );
-      $this->mailer->send($email, $message['subject'], $body);
-      $provider = 'drupal_mail';
+      $providerMessageId = $this->mailer->send($email, $message['subject'], $body);
+      $provider = 'cpanel_smtp';
     }
     else {
       $provider = 'memory';
     }
     $now = $this->time->getRequestTime();
-    $providerMessageId = $provider . '_' . $messageId . '_' . bin2hex(random_bytes(8));
+    $providerMessageId ??= $provider . '_' . $messageId . '_' . bin2hex(random_bytes(8));
     $this->database->update('famtastic_email_message')
       ->fields([
         'status' => $transport === 'memory' ? 'delivered' : 'sent',

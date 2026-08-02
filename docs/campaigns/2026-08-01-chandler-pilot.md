@@ -101,6 +101,15 @@ Campaign key: `chandler-landing-pilot-2026-08-01-b1`
 8. The open endpoint exists and its acceptance test passes, but the current
    plain-text message does not embed it. Open rate is therefore not measurable
    in this configuration; click/reply/purchase signals remain usable.
+9. Campaign outreach uses PHPMailer directly against the configured cPanel
+   SMTP account. This boundary fails on an SMTP rejection and records the real
+   SMTP Message-ID; it does not treat Drupal mail-plugin acceptance as external
+   delivery evidence. Other Drupal-generated mail remains on Drupal's selected
+   mail system.
+10. A bounded image-free proof mode is available for this pilot. It creates
+    three category-aware directions and layout thumbnails without stock-image
+    dependencies, and requires the per-run
+    `FAMTASTIC_ALLOW_NO_IMAGE_PILOT_PROOFS=1` approval flag.
 
 ## Gate state
 

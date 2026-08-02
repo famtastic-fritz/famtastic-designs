@@ -18,9 +18,8 @@ use Psr\Log\LoggerInterface;
  *
  * On first creation the service generates three proof variants. When a Site
  * Studio URL is configured the generation request is handed off through the
- * module's Site Studio adapter interface (and local placeholder artifacts are
- * written so previews work immediately); otherwise a built-in stub generator
- * writes three distinct, presentable static proof sites under
+ * module's Site Studio adapter interface. Otherwise a deliberately opt-in,
+ * image-free pilot renderer writes three distinct static proof sites under
  * backend/web/proofs/<campaign_id>/<a|b|c>/index.html.
  */
 class ProofCampaignService {
@@ -97,12 +96,13 @@ class ProofCampaignService {
       return ['campaign' => $campaign, 'variants' => []];
     }
 
-    $source = 'local';
+    $source = 'no_image_pilot_v1';
 
     $variants = [];
     $variantStorage = $this->entityTypeManager->getStorage('proof_variant');
     foreach (self::DIRECTIONS as $direction => $directionName) {
       $artifact = $this->writeStubArtifact($campaignId, $direction, $directionName, $businessName, $prospect, $source);
+      $thumbnail = $this->writePilotThumbnail($campaignId, $direction, $directionName, $businessName);
       $dna = [
         'source' => $source,
         'direction' => $direction,
@@ -120,7 +120,7 @@ class ProofCampaignService {
         'direction_name' => $directionName,
         'artifact_path' => $artifact,
         'design_dna' => json_encode($dna, JSON_UNESCAPED_SLASHES),
-        'thumbnail_path' => NULL,
+        'thumbnail_path' => $thumbnail,
         'preview_url' => $this->previewUrl($campaignId, $direction),
       ]);
       $variant->save();
@@ -470,6 +470,28 @@ class ProofCampaignService {
   }
 
   /**
+   * Writes a truthful layout thumbnail for an image-free pilot proof.
+   */
+  protected function writePilotThumbnail(string $campaignId, string $direction, string $directionName, string $businessName): string {
+    $absolute = \Drupal::root() . '/proofs/' . $campaignId . '/' . $direction;
+    $this->fileSystem->prepareDirectory($absolute, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+    $p = $this->palette($direction);
+    $e = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_XML1, 'UTF-8');
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="' . $e($directionName . ' preview for ' . $businessName) . '">
+<rect width="640" height="400" fill="' . $p['bg'] . '"/>
+<rect x="36" y="32" width="112" height="10" rx="5" fill="' . $p['accent'] . '"/>
+<rect x="36" y="76" width="470" height="28" rx="5" fill="' . $p['ink'] . '" opacity=".95"/>
+<rect x="36" y="116" width="350" height="12" rx="6" fill="' . $p['ink'] . '" opacity=".5"/>
+<rect x="36" y="154" width="118" height="38" rx="' . ($direction === 'c' ? '19' : '5') . '" fill="' . $p['accent'] . '"/>
+<rect x="36" y="235" width="174" height="112" rx="10" fill="#ffffff" opacity=".08" stroke="' . $p['accent'] . '"/>
+<rect x="233" y="235" width="174" height="112" rx="10" fill="#ffffff" opacity=".08" stroke="' . $p['accent'] . '"/>
+<rect x="430" y="235" width="174" height="112" rx="10" fill="#ffffff" opacity=".08" stroke="' . $p['accent'] . '"/>
+</svg>';
+    $this->fileSystem->saveData($svg, $absolute . '/thumbnail.svg', FileSystemInterface::EXISTS_REPLACE);
+    return '/proofs/' . $campaignId . '/' . $direction . '/thumbnail.svg';
+  }
+
+  /**
    * Writes validated callback HTML into its isolated campaign/direction path.
    */
   protected function writeCallbackArtifact(string $campaignId, string $direction, string $html): string {
@@ -520,33 +542,25 @@ class ProofCampaignService {
   }
 
   /**
-   * Renders a complete, presentable stub proof page.
+   * Renders a complete, image-free pilot proof page.
    */
   protected function stubHtml(string $direction, string $directionName, string $businessName, Prospect $prospect, string $source): string {
     $p = $this->palette($direction);
     $e = static fn(?string $v): string => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
-    $tagline = $e($prospect->get('business_description')->value) ?: 'A local business ready to grow online.';
+    $category = trim((string) $prospect->get('business_category')->value) ?: 'Local business';
+    $content = $this->pilotContent($category, (string) $prospect->get('business_description')->value);
+    $tagline = $e($content['tagline']);
     $phone = $e($prospect->get('public_phone')->value);
     $area = $e($prospect->get('service_area')->value ?: $prospect->get('address')->value);
-
-    $fonts = match ($direction) {
-      'b' => "font-family: Georgia, 'Times New Roman', serif;",
-      default => "font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;",
-    };
-    $heroAlign = $direction === 'c' ? 'text-align:center;' : 'text-align:left;';
-    $radius = $direction === 'a' ? '0' : ($direction === 'b' ? '4px' : '18px');
-    $letter = $direction === 'a' ? 'letter-spacing:-0.03em;text-transform:uppercase;' : '';
-    $services = match ($direction) {
-      'a' => ['Web Presence', 'Brand Identity', 'Growth Campaigns'],
-      'b' => ['Reliable Service', 'Proven Results', 'Free Estimates'],
-      default => ['Friendly Local Team', 'Fast Response', 'Fair Pricing'],
-    };
     $items = '';
-    foreach ($services as $s) {
-      $items .= '<div class="card"><h3>' . $e($s) . '</h3><p>Everything ' . $e($businessName) . ' needs, handled with care from first call to final sign-off.</p></div>';
+    foreach ($content['services'] as $service) {
+      $items .= '<article class="card"><span class="number">0' . (substr_count($items, 'class="card"') + 1) . '</span><h3>' . $e($service[0]) . '</h3><p>' . $e($service[1]) . '</p></article>';
     }
     $contactBits = trim($phone . ($phone && $area ? ' &middot; ' : '') . $area);
-    $note = $source === 'site_studio' ? 'Concept preview — final design in production.' : 'Design concept preview.';
+    $phoneHref = preg_replace('/[^0-9+]/', '', (string) $prospect->get('public_phone')->value);
+    $ctaHref = $phoneHref ? 'tel:' . $phoneHref : '#contact';
+    $ctaLabel = $phoneHref ? 'Call today' : 'Get in touch';
+    $bodyClass = 'direction-' . $direction;
 
     return '<!DOCTYPE html>
 <html lang="en">
@@ -556,34 +570,102 @@ class ProofCampaignService {
 <title>' . $e($businessName) . ' — ' . $e($directionName) . '</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:' . $p['bg'] . '; color:' . $p['ink'] . '; ' . $fonts . ' line-height:1.6; }
-  header { padding:48px 24px 24px; max-width:960px; margin:0 auto; ' . $heroAlign . ' }
-  .kicker { color:' . $p['accent'] . '; font-size:14px; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:16px; }
-  h1 { font-size:clamp(34px,6vw,64px); line-height:1.05; ' . $letter . ' margin-bottom:16px; }
+  :root { --bg:' . $p['bg'] . '; --accent:' . $p['accent'] . '; --ink:' . $p['ink'] . '; }
+  body { background:var(--bg); color:var(--ink); font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; min-height:100vh; }
+  nav { max-width:1160px; margin:auto; padding:26px 28px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ffffff1c; }
+  .brand { font-size:15px; font-weight:850; letter-spacing:-.02em; }
+  .nav-note { font-size:12px; letter-spacing:.14em; text-transform:uppercase; opacity:.62; }
+  header { min-height:540px; max-width:1160px; margin:auto; padding:84px 28px 70px; display:grid; grid-template-columns:minmax(0,1.45fr) minmax(250px,.55fr); gap:68px; align-items:end; }
+  .kicker { color:var(--accent); font-size:12px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; margin-bottom:22px; }
+  h1 { font-size:clamp(46px,8vw,94px); line-height:.91; letter-spacing:-.065em; max-width:900px; margin-bottom:28px; }
   h1 span { color:' . $p['accent'] . '; }
-  .tag { font-size:18px; opacity:0.85; max-width:640px; ' . ($direction === 'c' ? 'margin:0 auto;' : '') . ' }
-  .cta { display:inline-block; margin-top:28px; background:' . $p['accent'] . '; color:' . $p['bg'] . '; font-weight:700; padding:14px 30px; border-radius:' . $radius . '; text-decoration:none; }
-  section { max-width:960px; margin:0 auto; padding:32px 24px 64px; display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
-  .card { border:1px solid ' . $p['accent'] . '33; border-radius:' . $radius . '; padding:24px; background:#ffffff08; }
-  .card h3 { color:' . $p['accent'] . '; margin-bottom:8px; }
-  .card p { font-size:15px; opacity:0.8; }
-  footer { border-top:1px solid #ffffff1a; padding:24px; text-align:center; font-size:14px; opacity:0.7; }
+  .tag { font-size:clamp(18px,2.3vw,25px); opacity:.8; max-width:690px; }
+  .cta { display:inline-flex; margin-top:34px; background:var(--accent); color:var(--bg); font-weight:850; padding:16px 28px; border-radius:4px; text-decoration:none; }
+  .hero-aside { border-left:1px solid #ffffff28; padding-left:26px; font-size:14px; opacity:.76; }
+  .hero-aside strong { display:block; color:var(--accent); font-size:38px; line-height:1; margin-bottom:12px; }
+  section { max-width:1160px; margin:0 auto; padding:0 28px 92px; display:grid; gap:18px; grid-template-columns:repeat(3,1fr); }
+  .card { min-height:230px; border:1px solid #ffffff22; padding:30px; background:#ffffff08; }
+  .number { color:var(--accent); font-size:12px; font-weight:800; }
+  .card h3 { font-size:22px; margin:44px 0 10px; }
+  .card p { font-size:15px; opacity:.7; }
+  footer { border-top:1px solid #ffffff1a; padding:28px; text-align:center; font-size:13px; opacity:.68; }
+  .direction-b { --bg:#f4f0e7; --ink:#18231e; --accent:#275b46; }
+  .direction-b nav { border-color:#18231e22; }
+  .direction-b header { grid-template-columns:1fr; text-align:center; max-width:980px; min-height:570px; align-content:center; }
+  .direction-b h1 { font-family:Georgia,"Times New Roman",serif; letter-spacing:-.045em; margin-left:auto; margin-right:auto; }
+  .direction-b .tag { margin:auto; }
+  .direction-b .hero-aside { display:none; }
+  .direction-b .card { border-color:#18231e22; background:#ffffff66; border-radius:6px; }
+  .direction-b footer { border-color:#18231e22; }
+  .direction-c { --bg:#fff8e9; --ink:#252014; --accent:#cf5b32; }
+  .direction-c nav { border-color:#2520141f; }
+  .direction-c header { min-height:500px; align-items:center; }
+  .direction-c h1 { letter-spacing:-.05em; }
+  .direction-c .cta { border-radius:999px; }
+  .direction-c .hero-aside { border:0; border-radius:28px; padding:30px; background:#cf5b3212; }
+  .direction-c .card { border-color:#2520141f; background:#ffffff85; border-radius:24px; }
+  .direction-c footer { border-color:#2520141f; }
+  @media (max-width:760px) { header { grid-template-columns:1fr; min-height:auto; padding-top:58px; } .hero-aside { display:none; } section { grid-template-columns:1fr; } .nav-note { display:none; } }
 </style>
 </head>
-<body>
+<body class="' . $bodyClass . '">
+<nav><div class="brand">' . $e($businessName) . '</div><div class="nav-note">' . $e($directionName) . '</div></nav>
 <header>
-  <div class="kicker">' . $e($directionName) . '</div>
+  <div><div class="kicker">' . $e($category) . ($area ? ' · ' . $area : '') . '</div>
   <h1>' . $e($businessName) . '<span>.</span></h1>
   <p class="tag">' . $tagline . '</p>
-  <a class="cta" href="#contact">Get in touch</a>
+  <a class="cta" href="' . $e($ctaHref) . '">' . $e($ctaLabel) . ' &nbsp;→</a></div>
+  <aside class="hero-aside"><strong>Local.</strong>A focused site concept designed to help customers quickly understand what you offer and how to reach you.</aside>
 </header>
 <section>' . $items . '</section>
 <footer id="contact">
-  ' . ($contactBits !== '' ? $contactBits . '<br>' : '') . $note . '
+  ' . ($contactBits !== '' ? $contactBits . '<br>' : '') . 'Website concept prepared for ' . $e($businessName) . '.
 </footer>
 </body>
 </html>
 ';
+  }
+
+  /**
+   * Returns category-aware, factual copy without inventing business claims.
+   *
+   * @return array{tagline:string,services:array<int,array{0:string,1:string}>}
+   */
+  protected function pilotContent(string $category, string $description): array {
+    $key = strtolower($category . ' ' . $description);
+    if (preg_match('/coffee|cafe|bakery/', $key)) {
+      return ['tagline' => 'A welcoming online home for local favorites, current hours, and the next visit.', 'services' => [
+        ['What is fresh', 'Give customers a clear place to discover signature drinks, baked goods, and seasonal highlights.'],
+        ['Plan a visit', 'Put hours, location, and contact details where guests can find them without digging.'],
+        ['Stay connected', 'Create a simple destination for announcements, catering questions, and local updates.'],
+      ]];
+    }
+    if (preg_match('/hydraulic|repair|equipment/', $key)) {
+      return ['tagline' => 'A direct, capable site that makes specialized service easier to understand and request.', 'services' => [
+        ['Repair expertise', 'Explain the equipment and components your team is equipped to evaluate and rebuild.'],
+        ['Clear next steps', 'Help customers know what information to provide before requesting service.'],
+        ['Reach the shop', 'Keep service area, phone, and location easy to find for time-sensitive work.'],
+      ]];
+    }
+    if (preg_match('/auto|motor|vehicle|car/', $key)) {
+      return ['tagline' => 'A polished destination that helps shoppers move from discovery to a real conversation.', 'services' => [
+        ['Featured inventory', 'Create space to highlight available vehicles and the details buyers care about.'],
+        ['A simpler inquiry', 'Give shoppers one clear route to ask a question or arrange their next step.'],
+        ['Local confidence', 'Present contact details and business information in a consistent, credible format.'],
+      ]];
+    }
+    if (preg_match('/hair|lash|skin|beauty|salon|wellness|studio|loc/', $key)) {
+      return ['tagline' => 'A refined, welcoming site concept built around services, appointments, and local discovery.', 'services' => [
+        ['Signature services', 'Organize the treatments and services customers want to understand before booking.'],
+        ['Booking made clear', 'Create a focused path from first impression to an appointment request.'],
+        ['Your local presence', 'Keep location, contact details, and important visit information in one place.'],
+      ]];
+    }
+    return ['tagline' => 'A clear, modern home for services, contact details, and the next customer conversation.', 'services' => [
+      ['What you offer', 'Explain your core services in plain language that customers can scan quickly.'],
+      ['Why customers call', 'Bring the most useful decision-making details into one focused experience.'],
+      ['Easy contact', 'Make location, service area, and contact information simple to find on any device.'],
+    ]];
   }
 
 }

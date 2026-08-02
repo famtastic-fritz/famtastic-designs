@@ -2,10 +2,13 @@
 
 ## Modes
 
-- Local mode: with no `SITE_STUDIO_URL`, the worker deterministically creates
-  three isolated placeholder artifacts for development and acceptance tests.
-  They are blocked from customer-ready and outreach states unless a test
-  explicitly sets `FAMTASTIC_ALLOW_STUB_OUTREACH=1`.
+- Image-free pilot mode: with no `SITE_STUDIO_URL`, the worker deterministically
+  creates three isolated, category-aware landing-page directions without stock
+  images or image placeholders. Each direction also receives a truthful SVG
+  layout thumbnail. The mode is fail-closed for outreach unless the executing
+  environment explicitly sets `FAMTASTIC_ALLOW_NO_IMAGE_PILOT_PROOFS=1`.
+- Test compatibility: acceptance fixtures may continue to use
+  `FAMTASTIC_ALLOW_STUB_OUTREACH=1`; that alias is not the production runbook.
 - Remote mode: the worker sends one signed, idempotent generation request to
   Site Studio and records `waiting_callback`. No placeholder is presented as a
   completed remote proof.
@@ -82,6 +85,15 @@ The callback:
 - appends a `proof.ready` event and queues outreach preparation.
 
 An invalid or partial callback never marks proofs ready.
+
+## Pilot boundary
+
+The image-free pilot is an intentional temporary production option for a
+small, explicitly approved campaign. It uses only the prospect's supplied
+business category, description, public phone, and service area; it does not
+invent testimonials, pricing, inventory, ratings, or performance claims. Site
+Studio remains the full-media production path once its provider and failure
+callback are proven.
 
 ## Verification
 

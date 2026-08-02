@@ -104,12 +104,14 @@ final class AutomationWorker {
     if (count(array_unique($directions)) !== 3 || count(array_unique($paths)) !== 3) {
       throw new \RuntimeException('Proof variants are not distinct and isolated.');
     }
-    $stubSources = array_filter($variants, static function ($variant): bool {
+    $pilotSources = array_filter($variants, static function ($variant): bool {
       $dna = json_decode((string) $variant->get('design_dna')->value, TRUE);
-      return is_array($dna) && ($dna['source'] ?? NULL) === 'local';
+      return is_array($dna) && ($dna['source'] ?? NULL) === 'no_image_pilot_v1';
     });
-    if ($stubSources && getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') !== '1') {
-      throw new \RuntimeException('Local placeholder proofs are development fixtures and cannot become customer-ready or queue outreach. Configure SITE_STUDIO_URL for real generation.');
+    $pilotAllowed = getenv('FAMTASTIC_ALLOW_NO_IMAGE_PILOT_PROOFS') === '1'
+      || getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') === '1';
+    if ($pilotSources && !$pilotAllowed) {
+      throw new \RuntimeException('Image-free pilot proofs require explicit environment approval before outreach can be queued.');
     }
     $campaign = $created['campaign'];
     $this->ledger->recordEvent(
