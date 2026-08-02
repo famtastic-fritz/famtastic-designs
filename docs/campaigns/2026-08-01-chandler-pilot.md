@@ -86,6 +86,21 @@ Campaign key: `chandler-landing-pilot-2026-08-01-b1`
   zero queued messages, 30 completed campaign jobs, and no immediate delivery
   failure notice in the sending mailbox. SMTP acceptance is not the same as
   confirmed recipient inbox placement.
+- Production update 8010 added exact recipient, From, message-body, proof-id,
+  and proof-URL snapshots. An explicit campaign-key-confirmed backfill recorded
+  all ten historical sent messages without resending any email.
+- The authenticated `/web/admin/famtastic` operations dashboard now renders
+  this campaign, its ten recipient messages, ten ready proof sets, lifecycle
+  states, and ten build records. Message and build drill-down pages expose the
+  exact audit snapshots.
+- Historical build telemetry correctly records the pilot provider as
+  `drupal_deterministic_renderer` and agent as `none`. No Shay prompt existed
+  for these original ten proof builds, so none was invented during backfill.
+- The Git-tracked offline Site Studio bridge now exports both new and refresh
+  jobs and imports only an exact three-direction, checksum-validated bundle.
+  Refresh import preserves the public campaign and variant identities. The ten
+  current pilot proofs remain the bounded deterministic versions until actual
+  local Site Studio refresh artifacts are generated, reviewed, and promoted.
 
 ## Findings and controls
 
@@ -146,6 +161,9 @@ Campaign key: `chandler-landing-pilot-2026-08-01-b1`
 | DKIM | Partial: public key published; outbound message was not signed |
 | Exact campaign approval | Pass |
 | Prospect messages sent | Pass: 10 of 10 recorded sent; queue empty |
+| Exact recipient/message snapshots | Pass: 10 of 10 backfilled without resend |
+| Operator campaign/build dashboard | Pass: authenticated production render and drill-down verification |
+| Offline Site Studio promotion bridge | Pass for tested new and refresh bundle contracts; current ten pilot proofs have not yet been refreshed |
 
 Do not automatically start a second batch yet. First monitor bounce, reply,
 click, unsubscribe, and purchase signals from this campaign, review contact

@@ -1,5 +1,67 @@
 # Production Deploy Log
 
+## 2026-08-02 — Operations telemetry, contact correction, and route-shell release
+
+- Repository: `famtastic-fritz/famtastic-designs`
+- Source branch: `main`
+- Released implementation commit:
+  `06725ab88b06c70234ba24365fb43c9d1f303c45`
+- Final frontend and backend release markers are required to match the current
+  GitHub `main` commit after this evidence entry is committed.
+- Frontend release record: `~/public_html/.frontend-release`
+- Backend release record: `~/public_html/.backend-release`
+- Frontend rollback archive:
+  `~/backups/famtastic-frontend-20260802T183407Z-06725ab88b06c70234ba24365fb43c9d1f303c45.tgz`
+- Backend database rollback archive:
+  `~/backups/famtastic-database-20260802T183439Z-06725ab88b06c70234ba24365fb43c9d1f303c45.sql.gz`
+- Result: successful
+
+### Released behavior
+
+- The public contact flow is email-first, uses
+  `hello@famtasticdesigns.com`, contains no storefront hours, and requires no
+  sales call.
+- The duplicate `Book a Call` header action is replaced by `Start a Project`;
+  the desktop and mobile navigation have distinct project and contact anchors.
+- Authenticated Drupal operations pages expose campaign, recipient message,
+  proof, build, prompt, agent, task, job, event, and sale evidence.
+- The first pilot campaign has ten exact historical email snapshots and ten
+  build records correctly attributed to the deterministic renderer with agent
+  `none`.
+- An offline, checksum-gated Site Studio bridge supports new proof bundles and
+  in-place refreshes without treating the local workstation as an Internet
+  service.
+
+### Route-shell deployment finding and permanent control
+
+The first frontend apply updated the root `index.html`, but `/contact/` still
+loaded an older JavaScript bundle. Vite generates route-specific SEO shells
+such as `dist/contact/index.html`; the deployment filter
+`--exclude='index.html'` excluded every matching basename, so those nested
+shells were never promoted.
+
+The canonical deployment now excludes only `/index.html` at the artifact root,
+promotes nested route shells before the root cutover, and verifies every route
+shell byte-for-byte through a normal manifest that works on GoDaddy without
+`/dev/fd`. The acceptance suite also proves that all generated route shells
+reference the current release assets and that the anchored rsync filter copies
+nested `index.html` files.
+
+### Production acceptance evidence
+
+- Frontend and backend release markers both matched the final commit.
+- Seven route-specific SEO shells were promoted and verified.
+- Apex and `www` `/contact/` returned 200, populated React `#root`, loaded the
+  current JavaScript bundle, and produced no console errors or failed requests.
+- Desktop and mobile showed the correct email, no hours, no `Book a Call`, and
+  no horizontal overflow; the opened mobile menu showed both `Start a Project`
+  and `Contact`.
+- Drupal reported no pending database updates. The operations route, dashboard,
+  message drill-down, build drill-down, message/build schema, and corrected
+  contact source all rendered successfully.
+- Campaign `chandler-landing-pilot-2026-08-01-b1` reported ten messages, ten
+  sent, ten exact snapshots, ten ready proof sets, and ten build records.
+
 ## 2026-07-30 — Fresh Git-to-GoDaddy frontend release completed
 
 - Repository: `famtastic-fritz/famtastic-designs`
