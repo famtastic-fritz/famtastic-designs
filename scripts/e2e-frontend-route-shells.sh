@@ -30,6 +30,10 @@ while IFS= read -r route_shell; do
 done < <(find "$DIST_DIR" -mindepth 2 -type f -name index.html -print)
 
 grep -Fq -- "--exclude='/index.html' --exclude='/assets/'" "$DEPLOY_SCRIPT"
+if grep -Fq 'done < <(find "$dist_dir"' "$DEPLOY_SCRIPT"; then
+  echo "Deploy verification must not depend on /dev/fd process substitution." >&2
+  exit 1
+fi
 
 mkdir -p "$SANDBOX/source/contact" "$SANDBOX/source/assets" "$SANDBOX/target"
 printf 'root\n' > "$SANDBOX/source/index.html"

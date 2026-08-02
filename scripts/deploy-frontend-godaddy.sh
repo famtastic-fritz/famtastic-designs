@@ -203,13 +203,20 @@ install -m 0644 "$dist_dir/index.html" "$production_dir/index.html"
   printf 'backup=%s\n' "$backup_path"
 } > "$production_dir/.frontend-release"
 
+route_shell_manifest="$release_dir/route-shells.txt"
+find "$dist_dir" -mindepth 2 -type f -name index.html -print > "$route_shell_manifest"
+[[ -s "$route_shell_manifest" ]] || {
+  echo "Verification failed: build contains no route-specific SEO shells." >&2
+  exit 1
+}
 while IFS= read -r route_shell; do
   relative_shell="${route_shell#"$dist_dir/"}"
   cmp -s "$route_shell" "$production_dir/$relative_shell" || {
     echo "Verification failed: route shell $relative_shell was not promoted exactly." >&2
     exit 1
   }
-done < <(find "$dist_dir" -mindepth 2 -type f -name index.html -print)
+done < "$route_shell_manifest"
+echo "Verified $(wc -l < "$route_shell_manifest" | tr -d ' ') route-specific SEO shell(s)."
 
 while IFS= read -r asset_path; do
   live_url="https://famtasticdesigns.com/$asset_path"
