@@ -1,6 +1,6 @@
 # Chandler Lead Outreach Pilot — 2026-08-01
 
-Status: **staged locally; no prospects contacted**
+Status: **first production batch sent on 2026-08-02**
 
 Campaign key: `chandler-landing-pilot-2026-08-01-b1`
 
@@ -67,8 +67,27 @@ Campaign key: `chandler-landing-pilot-2026-08-01-b1`
   `system.mail:interface.default` still selected `php_mail`. Production now
   selects `SMTPMailSystem`; a Drupal-generated message delivered into the local
   cPanel mailbox. Its external Gmail copy is still awaiting inbox evidence.
+- Commit `18088151` replaced the campaign delivery boundary with direct,
+  authenticated PHPMailer delivery through the configured cPanel account. A
+  production canary was accepted by SMTP and arrived in the local `hello@`
+  mailbox before the campaign was approved.
+- Production's stale `frontend_base_url` was corrected from localhost to
+  `https://famtasticdesigns.com`. A generated prospect token loaded the live
+  customer hub in a real browser with three thumbnails and three working proof
+  links.
+- The exact ten-row source file passed a production dry run, then imported ten
+  qualified prospects. The image-free pilot renderer created 30 isolated HTML
+  proofs and 30 SVG layout thumbnails. Live HTTPS checks found three service
+  cards per direction and no image tags, placeholder copy, or legacy `web
+  presence` copy.
+- Campaign `chandler-landing-pilot-2026-08-01-b1` was approved with its exact
+  confirmation key. One canary and nine additional messages were released at
+  60-second intervals. Final state: ten `sent`, ten unique SMTP Message-IDs,
+  zero queued messages, 30 completed campaign jobs, and no immediate delivery
+  failure notice in the sending mailbox. SMTP acceptance is not the same as
+  confirmed recipient inbox placement.
 
-## Findings before any live send
+## Findings and controls
 
 1. Lead source, normalization, deterministic scoring, offer routing,
    deduplication, campaign attribution, and job creation work.
@@ -93,8 +112,8 @@ Campaign key: `chandler-landing-pilot-2026-08-01-b1`
    cPanel's local routing configuration. The obsolete Microsoft 365 verification
    TXT was preserved because it does not control routing.
 6. The physical postal address was supplied and remains environment-owned. It
-   is not recorded in Git. The production runtime value must be installed with
-   the compliant template deployment before real outreach is enabled.
+   is not recorded in Git. It was provided to the explicitly approved send
+   process and rendered in every campaign message.
 7. Drupal cron is recent on production, but no module `hook_cron()` invokes the
    automation worker. Use controlled manual Drush execution for this first
    smoke and a bounded cPanel cron only after the first delivery is proven.
@@ -119,15 +138,15 @@ Campaign key: `chandler-landing-pilot-2026-08-01-b1`
 | Ten leads qualified | Pass |
 | Local dry-run import | Pass |
 | Local tracked import | Pass |
-| Three real proofs per lead | Fail: content repair failed once; second proof reached HTML but Imagen media failed; failure callback absent |
-| Internal inbox delivery | Partial pass: direct cPanel SMTP passed both directions; Drupal passed locally; Drupal-to-Gmail evidence pending |
-| Compliant postal address | Pass: supplied for environment-only configuration |
+| Three real proofs per lead | Pass for bounded image-free pilot: 30 live HTML proofs and 30 thumbnails; full-media Site Studio remains deferred |
+| Campaign SMTP acceptance | Pass: production canary plus ten campaign messages accepted with unique Message-IDs |
+| Recipient inbox placement | Unverified: no recipient inbox access; zero immediate bounce notices at closeout |
+| Compliant postal address | Pass: environment-owned value included at send time |
 | SPF and DMARC | Pass at Gmail |
 | DKIM | Partial: public key published; outbound message was not signed |
-| Exact campaign approval | Not attempted |
-| Prospect messages sent | 0 |
+| Exact campaign approval | Pass |
+| Prospect messages sent | Pass: 10 of 10 recorded sent; queue empty |
 
-The next legal state transition is proof callback plus visual acceptance,
-followed by external Drupal-to-Gmail delivery evidence and installation of the
-environment-owned postal value with the compliant template deployment. Only
-then can the exact ten-recipient campaign be reviewed and approved.
+Do not automatically start a second batch yet. First monitor bounce, reply,
+click, unsubscribe, and purchase signals from this campaign, review contact
+relevance, and use those results to refine the next bounded group of ten.
