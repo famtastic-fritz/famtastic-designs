@@ -6,6 +6,8 @@
 - Source branch: `main`
 - Released implementation commit:
   `06725ab88b06c70234ba24365fb43c9d1f303c45`
+- Clickable operations metric implementation commit:
+  `84a21e799a7df52f2167fe78a0b47b980fbe3322`
 - Final frontend and backend release markers are required to match the current
   GitHub `main` commit after this evidence entry is committed.
 - Frontend release record: `~/public_html/.frontend-release`
@@ -14,6 +16,12 @@
   `~/backups/famtastic-frontend-20260802T183407Z-06725ab88b06c70234ba24365fb43c9d1f303c45.tgz`
 - Backend database rollback archive:
   `~/backups/famtastic-database-20260802T183439Z-06725ab88b06c70234ba24365fb43c9d1f303c45.sql.gz`
+- Operations drill-down frontend rollback archive:
+  `~/backups/famtastic-frontend-20260802T190554Z-84a21e799a7df52f2167fe78a0b47b980fbe3322.tgz`
+- Operations drill-down backend module rollback archive:
+  `~/backups/famtastic-pipeline-20260802T190534Z-84a21e799a7df52f2167fe78a0b47b980fbe3322.tgz`
+- Operations drill-down database rollback archive:
+  `~/backups/famtastic-database-20260802T190534Z-84a21e799a7df52f2167fe78a0b47b980fbe3322.sql.gz`
 - Result: successful
 
 ### Released behavior
@@ -62,6 +70,11 @@ nested `index.html` files.
 - Drupal reported no pending database updates. The operations route, dashboard,
   message drill-down, build drill-down, message/build schema, and corrected
   contact source all rendered successfully.
+- All eight operations metric links and their exact-record pages rendered on
+  the production Drupal runtime. **Paid Orders** matched and exposed the one
+  verified paid order in production; anonymous dashboard access returned 403.
+- Chrome rendered populated React roots with the production heading on both
+  apex and `www` after the metric release.
 - Campaign `chandler-landing-pilot-2026-08-01-b1` reported ten messages, ten
   sent, ten exact snapshots, ten ready proof sets, and ten build records.
 
