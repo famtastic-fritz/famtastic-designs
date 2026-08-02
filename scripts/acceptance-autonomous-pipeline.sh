@@ -30,11 +30,12 @@ scripts/e2e-domain-lifecycle.sh
 scripts/e2e-hosting-lifecycle.sh
 scripts/e2e-analytics.sh
 scripts/e2e-exception-queue.sh
+scripts/e2e-operations-dashboard.sh
 
 npm --prefix frontend audit --audit-level=high
 npm --prefix frontend run build
 scripts/e2e-frontend-route-shells.sh
-composer --working-dir=backend validate --strict
-composer --working-dir=backend audit
+COMPOSER_NO_INTERACTION=1 composer --working-dir=backend validate --strict
+COMPOSER_NO_INTERACTION=1 composer --working-dir=backend audit
 
 echo "PASS: autonomous lead-to-launch acceptance suite completed."

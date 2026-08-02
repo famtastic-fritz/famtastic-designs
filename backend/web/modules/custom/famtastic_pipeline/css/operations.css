@@ -25,6 +25,31 @@
   background: #fff;
 }
 
+.famtastic-ops__metric--link {
+  display: block;
+  color: inherit !important;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.famtastic-ops__metric--link:hover {
+  border-color: #3d9900;
+  background: #f5ffef;
+  color: inherit !important;
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.famtastic-ops__metric--link:active {
+  transform: none;
+}
+
+.famtastic-ops__metric--link:focus-visible {
+  outline: 3px solid #357f00;
+  outline-offset: 3px;
+}
+
 .famtastic-ops__metric strong,
 .famtastic-ops__metric span {
   display: block;
@@ -45,6 +70,23 @@
   text-transform: uppercase;
 }
 
+.famtastic-ops__metric .famtastic-ops__metric-action {
+  margin-top: 0.8rem;
+  color: #2c6f00 !important;
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.famtastic-ops__metric .famtastic-ops__metric-action span {
+  display: inline;
+  margin: 0;
+  color: inherit !important;
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
 .famtastic-ops__table {
   margin-bottom: 2.25rem;
 }
@@ -52,6 +94,11 @@
 .famtastic-ops__table td,
 .famtastic-ops__table th {
   vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.famtastic-ops h2[id] {
+  scroll-margin-top: 2rem;
 }
 
 .famtastic-ops__badge {

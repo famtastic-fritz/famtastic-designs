@@ -5,6 +5,49 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-02 — Operator totals require exact-record drill-downs
+
+Observation:
+
+- The first operations dashboard exposed useful totals but rendered its metric
+  tiles as static containers. An operator could see a paid-order count without
+  being able to open the orders that produced it.
+- A reporting number without its records is not sufficient evidence for
+  operating or auditing the pipeline.
+- The same production release also showed that Vite's route-specific
+  `index.html` shells are first-class deployment artifacts: excluding every
+  basename named `index.html` left nested routes on stale JavaScript even when
+  the root route was current.
+
+Action taken:
+
+- Made all eight dashboard metrics semantic links to admin-only, paginated,
+  filtered record pages.
+- Added exact paid-order details and equivalent evidence views for campaigns,
+  prospects, proofs, send/click events, jobs, and exceptions.
+- Added permanent acceptance that renders every metric page and verifies that
+  the paid-order tile count agrees with the stored paid orders.
+- Anchored the frontend deploy exclusion to the artifact-root `index.html`,
+  promoted nested route shells, and verified them using a normal manifest that
+  works on the GoDaddy host without `/dev/fd`.
+
+Permanent rules:
+
+- Every operations KPI must link to the exact records represented by its
+  current filter; totals alone are not an operator source of truth.
+- Use semantic URLs and links for board navigation so keyboard access, browser
+  history, direct links, and authorization all behave normally.
+- Keep metric definitions and drill-down filters identical and acceptance-test
+  their count-to-record relationship.
+- Route-specific frontend shells belong to the release artifact and must be
+  promoted and verified with the bundles they reference.
+- Historical deterministic proof builds must remain attributed to the
+  deterministic renderer with agent `none`; never invent a Shay prompt or
+  agent run that did not occur.
+- Local Site Studio refreshes become production truth only through the
+  checksum-gated export/import lane. Existing public proof URLs can be updated
+  in place without emailing a new link.
+
 ## 2026-07-31 — Autonomous lead-to-launch acceptance
 
 Observation:

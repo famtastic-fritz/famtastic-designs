@@ -26,6 +26,9 @@ final class OperationsController extends ControllerBase {
     private readonly DateFormatterInterface $dateFormatter,
   ) {}
 
+  /**
+   * Creates the controller from the service container.
+   */
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('database'),
@@ -48,14 +51,29 @@ final class OperationsController extends ControllerBase {
       ->fetchAll(\PDO::FETCH_ASSOC);
 
     $summary = [
-      'Campaigns' => $campaignTotal,
-      'Prospects' => $this->count('famtastic_prospect'),
-      'Proofs Ready' => $this->count('proof_campaign', ['generation_status' => 'ready']),
-      'Emails Sent' => $this->count('famtastic_event', ['event_type' => 'email.sent']),
-      'Clicks' => $this->count('famtastic_event', ['event_type' => 'email.clicked']),
-      'Paid Orders' => $this->count('famtastic_order', ['payment_status' => 'paid']),
-      'Open Jobs' => $this->countIn('famtastic_job', 'status', ['queued', 'retry', 'running']),
-      'Open Exceptions' => $this->countIn('famtastic_exception', 'status', ['open', 'retry']),
+      'campaigns' => ['label' => 'Campaigns', 'value' => $campaignTotal],
+      'prospects' => ['label' => 'Prospects', 'value' => $this->count('famtastic_prospect')],
+      'proofs-ready' => [
+        'label' => 'Proofs Ready',
+        'value' => $this->count('proof_campaign', ['generation_status' => 'ready']),
+      ],
+      'emails-sent' => [
+        'label' => 'Emails Sent',
+        'value' => $this->count('famtastic_event', ['event_type' => 'email.sent']),
+      ],
+      'clicks' => ['label' => 'Clicks', 'value' => $this->count('famtastic_event', ['event_type' => 'email.clicked'])],
+      'paid-orders' => [
+        'label' => 'Paid Orders',
+        'value' => $this->count('famtastic_order', ['payment_status' => 'paid']),
+      ],
+      'open-jobs' => [
+        'label' => 'Open Jobs',
+        'value' => $this->countIn('famtastic_job', 'status', ['queued', 'retry', 'running']),
+      ],
+      'open-exceptions' => [
+        'label' => 'Open Exceptions',
+        'value' => $this->countIn('famtastic_exception', 'status', ['open', 'retry']),
+      ],
     ];
 
     $rows = [];
@@ -82,7 +100,7 @@ final class OperationsController extends ControllerBase {
         '#markup' => '<p class="famtastic-ops__lede">One place to inspect every campaign, recipient message, proof, build prompt, agent, job, event, and sale.</p>',
       ],
       'summary' => $this->metricCards($summary),
-      'campaign_heading' => ['#markup' => '<h2>Campaigns</h2>'],
+      'campaign_heading' => ['#markup' => '<h2 id="campaigns">Campaigns</h2>'],
       'campaigns' => [
         '#type' => 'table',
         '#header' => ['Campaign', 'Status', 'Source', 'Prospects', 'Proofs', 'Sent', 'Clicks', 'Sales', 'Builds'],
@@ -92,6 +110,23 @@ final class OperationsController extends ControllerBase {
       ],
       'pager' => ['#type' => 'pager'],
     ], 'FAMtastic Operations');
+  }
+
+  /**
+   * Renders the exact records behind one dashboard metric.
+   */
+  public function metric(string $metric): array {
+    return match ($metric) {
+      'campaigns' => $this->campaignMetric(),
+      'prospects' => $this->prospectMetric(),
+      'proofs-ready' => $this->proofMetric(),
+      'emails-sent' => $this->eventMetric('email.sent', 'Emails Sent', 'Every recorded campaign send event.'),
+      'clicks' => $this->eventMetric('email.clicked', 'Proof-Link Clicks', 'Every recorded proof-link click event.'),
+      'paid-orders' => $this->paidOrderMetric(),
+      'open-jobs' => $this->jobMetric(),
+      'open-exceptions' => $this->exceptionMetric(),
+      default => throw new NotFoundHttpException('Operations metric not found.'),
+    };
   }
 
   /**
@@ -135,7 +170,9 @@ final class OperationsController extends ControllerBase {
         $firstVariant = $variants[0] ?? NULL;
         $preview = $firstVariant ? (string) $firstVariant->get('preview_url')->value : '';
         if ($preview !== '') {
-          $proofLink = Link::fromTextAndUrl('Open Proof', Url::fromUri((string) $preview, ['attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']]))->toRenderable();
+          $proofLink = Link::fromTextAndUrl('Open Proof', Url::fromUri((string) $preview, [
+            'attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer'],
+          ]))->toRenderable();
         }
       }
       $messageRows[] = [
@@ -161,7 +198,12 @@ final class OperationsController extends ControllerBase {
         foreach ($variants as $variant) {
           $url = (string) $variant->get('preview_url')->value;
           if ($url !== '') {
-            $links[] = Link::fromTextAndUrl(strtoupper((string) $variant->get('direction_id')->value), Url::fromUri($url, ['attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']]))->toString();
+            $links[] = Link::fromTextAndUrl(
+              strtoupper((string) $variant->get('direction_id')->value),
+              Url::fromUri($url, [
+                'attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer'],
+              ]),
+            )->toString();
           }
         }
         $proofRows[] = [
@@ -269,7 +311,18 @@ final class OperationsController extends ControllerBase {
       throw new NotFoundHttpException('Build run not found.');
     }
     $facts = [];
-    foreach (['build_key', 'campaign_key', 'flow_key', 'task_key', 'provider', 'agent_name', 'status', 'source_sha', 'artifact_checksum'] as $field) {
+    $factFields = [
+      'build_key',
+      'campaign_key',
+      'flow_key',
+      'task_key',
+      'provider',
+      'agent_name',
+      'status',
+      'source_sha',
+      'artifact_checksum',
+    ];
+    foreach ($factFields as $field) {
       $facts[] = [ucwords(str_replace('_', ' ', $field)), (string) ($record[$field] ?: '—')];
     }
     $facts[] = ['Started', $this->date((int) $record['started_at'])];
@@ -288,6 +341,273 @@ final class OperationsController extends ControllerBase {
     ], 'Build Run #' . $build_run);
   }
 
+  /**
+   * Renders the campaign records behind the dashboard total.
+   */
+  private function campaignMetric(): array {
+    $records = $this->database->select('famtastic_campaign', 'c')
+      ->extend(PagerSelectExtender::class)
+      ->fields('c')
+      ->orderBy('created', 'DESC')
+      ->limit(50)
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+    $rows = [];
+    foreach ($records as $record) {
+      $key = (string) $record['campaign_key'];
+      $rows[] = [
+        'campaign' => $this->linkCell(Link::fromTextAndUrl($key, Url::fromRoute('famtastic_pipeline.operations_campaign', ['campaign_key' => $key]))),
+        'status' => ['data' => ['#markup' => $this->badge((string) $record['status'])]],
+        'source' => $this->sourceLabel((string) ($record['source_filter'] ?? '')),
+        'prospects' => count($this->prospectIds($key)),
+        'created' => $this->date((int) $record['created']),
+      ];
+    }
+    return $this->recordsPage(
+      'Campaigns',
+      'Every tracked outreach campaign. Open a campaign to inspect its recipients, messages, proofs, builds, and outcomes.',
+      ['Campaign', 'Status', 'Source', 'Prospects', 'Created'],
+      $rows,
+      'No campaigns have been recorded.',
+    );
+  }
+
+  /**
+   * Renders the prospect records behind the dashboard total.
+   */
+  private function prospectMetric(): array {
+    $storage = $this->pipelineEntityTypeManager->getStorage('famtastic_prospect');
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->sort('created', 'DESC')
+      ->pager(50)
+      ->execute();
+    $rows = [];
+    foreach ($storage->loadMultiple($ids) as $prospect) {
+      $rows[] = [
+        'business' => $this->linkCell($prospect->toLink($prospect->label() ?: '(no name)')),
+        'status' => ['data' => ['#markup' => $this->badge((string) $prospect->get('status')->value)]],
+        'campaign' => $this->campaignLinkCell((string) $prospect->get('campaign')->value),
+        'category' => (string) ($prospect->get('business_category')->value ?: '—'),
+        'email' => (string) ($prospect->get('public_email')->value ?: '—'),
+        'created' => $this->date((int) $prospect->get('created')->value),
+      ];
+    }
+    return $this->recordsPage(
+      'Prospects',
+      'Every discovered business in the pipeline, including its source campaign and current lifecycle state.',
+      ['Business', 'Status', 'Campaign', 'Category', 'Public Email', 'Created'],
+      $rows,
+      'No prospects have been recorded.',
+    );
+  }
+
+  /**
+   * Renders the ready-proof records behind the dashboard total.
+   */
+  private function proofMetric(): array {
+    $proofStorage = $this->pipelineEntityTypeManager->getStorage('proof_campaign');
+    $prospectStorage = $this->pipelineEntityTypeManager->getStorage('famtastic_prospect');
+    $ids = $proofStorage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('generation_status', 'ready')
+      ->sort('ready_at', 'DESC')
+      ->sort('id', 'DESC')
+      ->pager(50)
+      ->execute();
+    $rows = [];
+    foreach ($proofStorage->loadMultiple($ids) as $proof) {
+      $prospect = $prospectStorage->load((int) $proof->get('prospect_id')->target_id);
+      $selected = (string) ($proof->get('selected_variant')->value ?: '—');
+      $package = (string) ($proof->get('selected_package')->value ?: '—');
+      $rows[] = [
+        'business' => (string) ($proof->get('business_name')->value ?: '—'),
+        'proof' => $this->linkCell($proof->toLink((string) $proof->get('campaign_id')->value)),
+        'campaign' => $this->campaignLinkCell($prospect ? (string) $prospect->get('campaign')->value : ''),
+        'status' => ['data' => ['#markup' => $this->badge((string) $proof->get('status')->value)]],
+        'selection' => $selected . ' / ' . $package,
+        'ready' => $this->date((int) ($proof->get('ready_at')->value ?? 0)),
+      ];
+    }
+    return $this->recordsPage(
+      'Proofs Ready',
+      'Every proof campaign with a completed three-direction proof set.',
+      ['Business', 'Proof Campaign', 'Lead Campaign', 'Status', 'Selection / Package', 'Ready'],
+      $rows,
+      'No ready proofs have been recorded.',
+    );
+  }
+
+  /**
+   * Renders event records for one dashboard event metric.
+   */
+  private function eventMetric(string $eventType, string $title, string $description): array {
+    $events = $this->database->select('famtastic_event', 'e')
+      ->extend(PagerSelectExtender::class)
+      ->fields('e')
+      ->condition('event_type', $eventType)
+      ->orderBy('occurred_at', 'DESC')
+      ->limit(50)
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+    $prospectStorage = $this->pipelineEntityTypeManager->getStorage('famtastic_prospect');
+    $rows = [];
+    foreach ($events as $event) {
+      $prospect = $prospectStorage->load((int) $event['prospect_id']);
+      $payload = json_decode((string) $event['payload'], TRUE);
+      $messageId = (int) ($payload['message_id'] ?? 0);
+      $message = $messageId > 0 ? $this->database->select('famtastic_email_message', 'm')
+        ->fields('m', ['id', 'subject'])
+        ->condition('id', $messageId)
+        ->execute()
+        ->fetchAssoc() : FALSE;
+      $messageCell = $message
+        ? $this->linkCell(Link::fromTextAndUrl((string) $message['subject'], Url::fromRoute('famtastic_pipeline.operations_message', ['message' => (int) $message['id']])))
+        : '—';
+      $rows[] = [
+        'business' => $prospect ? $this->linkCell($prospect->toLink($prospect->label())) : 'Missing prospect',
+        'campaign' => $this->campaignIdLinkCell((int) $event['campaign_id']),
+        'message' => $messageCell,
+        'provider' => (string) ($event['provider'] ?: '—'),
+        'occurred' => $this->date((int) $event['occurred_at']),
+      ];
+    }
+    return $this->recordsPage(
+      $title,
+      $description,
+      ['Business', 'Campaign', 'Message', 'Provider', 'Occurred'],
+      $rows,
+      'No matching events have been recorded.',
+    );
+  }
+
+  /**
+   * Renders the verified paid orders behind the dashboard total.
+   */
+  private function paidOrderMetric(): array {
+    $orderStorage = $this->pipelineEntityTypeManager->getStorage('famtastic_order');
+    $prospectStorage = $this->pipelineEntityTypeManager->getStorage('famtastic_prospect');
+    $ids = $orderStorage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('payment_status', 'paid')
+      ->sort('paid_at', 'DESC')
+      ->sort('id', 'DESC')
+      ->pager(50)
+      ->execute();
+    $rows = [];
+    foreach ($orderStorage->loadMultiple($ids) as $order) {
+      $prospect = $prospectStorage->load((int) $order->get('prospect_ref')->target_id);
+      $rows[] = [
+        'order' => $this->linkCell($order->toLink('Order #' . $order->id())),
+        'business' => $prospect ? $this->linkCell($prospect->toLink($prospect->label())) : 'Missing prospect',
+        'campaign' => $this->campaignLinkCell($prospect ? (string) $prospect->get('campaign')->value : ''),
+        'package' => (string) $order->get('package')->value,
+        'amount' => $this->formatCurrency((int) $order->get('amount')->value, (string) $order->get('currency')->value),
+        'status' => ['data' => ['#markup' => $this->badge((string) $order->get('payment_status')->value)]],
+        'paid' => $this->date((int) ($order->get('paid_at')->value ?? 0)),
+      ];
+    }
+    return $this->recordsPage(
+      'Paid Orders',
+      'Every order whose payment was verified by the server-side payment lifecycle.',
+      ['Order', 'Business', 'Campaign', 'Package', 'Amount', 'Status', 'Paid'],
+      $rows,
+      'No paid orders have been recorded.',
+    );
+  }
+
+  /**
+   * Renders jobs that still need processing.
+   */
+  private function jobMetric(): array {
+    $jobs = $this->database->select('famtastic_job', 'j')
+      ->extend(PagerSelectExtender::class)
+      ->fields('j')
+      ->condition('status', ['queued', 'retry', 'running'], 'IN')
+      ->orderBy('changed', 'DESC')
+      ->limit(50)
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+    $prospectStorage = $this->pipelineEntityTypeManager->getStorage('famtastic_prospect');
+    $rows = [];
+    foreach ($jobs as $job) {
+      $prospect = $prospectStorage->load((int) $job['prospect_id']);
+      $rows[] = [
+        'job' => (string) $job['job_key'],
+        'type' => (string) $job['job_type'],
+        'business' => $prospect ? $this->linkCell($prospect->toLink($prospect->label())) : 'Missing prospect',
+        'status' => ['data' => ['#markup' => $this->badge((string) $job['status'])]],
+        'attempts' => (int) $job['attempts'] . ' / ' . (int) $job['max_attempts'],
+        'available' => $this->date((int) $job['available_at']),
+        'error' => $this->truncate((string) ($job['last_error'] ?? '')),
+      ];
+    }
+    return $this->recordsPage(
+      'Open Jobs',
+      'Queued, retrying, or currently running automation work that still needs completion.',
+      ['Job', 'Type', 'Business', 'Status', 'Attempts', 'Available', 'Last Error'],
+      $rows,
+      'No open jobs are waiting.',
+    );
+  }
+
+  /**
+   * Renders actionable exceptions that are still open.
+   */
+  private function exceptionMetric(): array {
+    $exceptions = $this->database->select('famtastic_exception', 'e')
+      ->extend(PagerSelectExtender::class)
+      ->fields('e')
+      ->condition('status', ['open', 'retry'], 'IN')
+      ->orderBy('severity', 'DESC')
+      ->orderBy('created', 'DESC')
+      ->limit(50)
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+    $prospectStorage = $this->pipelineEntityTypeManager->getStorage('famtastic_prospect');
+    $rows = [];
+    foreach ($exceptions as $exception) {
+      $prospect = $prospectStorage->load((int) $exception['prospect_id']);
+      $rows[] = [
+        'category' => (string) $exception['category'],
+        'severity' => ['data' => ['#markup' => $this->badge((string) $exception['severity'])]],
+        'status' => ['data' => ['#markup' => $this->badge((string) $exception['status'])]],
+        'business' => $prospect ? $this->linkCell($prospect->toLink($prospect->label())) : 'Missing prospect',
+        'summary' => (string) $exception['summary'],
+        'retry' => $this->date((int) ($exception['retry_after'] ?? 0)),
+        'created' => $this->date((int) $exception['created']),
+      ];
+    }
+    return $this->recordsPage(
+      'Open Exceptions',
+      'Actionable failures that still require an automated retry or operator decision.',
+      ['Category', 'Severity', 'Status', 'Business', 'Summary', 'Retry After', 'Created'],
+      $rows,
+      'No open exceptions require attention.',
+    );
+  }
+
+  /**
+   * Builds a standard paginated metric records page.
+   */
+  private function recordsPage(string $title, string $description, array $header, array $rows, string $empty): array {
+    return $this->page([
+      'back' => Link::fromTextAndUrl('← Operations Dashboard', Url::fromRoute('famtastic_pipeline.operations'))->toRenderable(),
+      'intro' => ['#markup' => '<p class="famtastic-ops__lede">' . Html::escape($description) . '</p>'],
+      'records' => [
+        '#type' => 'table',
+        '#header' => $header,
+        '#rows' => $rows,
+        '#empty' => $empty,
+        '#attributes' => ['class' => ['famtastic-ops__table']],
+      ],
+      'pager' => ['#type' => 'pager'],
+    ], $title);
+  }
+
+  /**
+   * Wraps operator content in the shared page presentation.
+   */
   private function page(array $content, string $title): array {
     return [
       '#title' => $title,
@@ -299,34 +619,138 @@ final class OperationsController extends ControllerBase {
     ];
   }
 
+  /**
+   * Builds dashboard metric cards, with optional record links.
+   */
   private function metricCards(array $metrics): array {
     $cards = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__metrics']]];
-    foreach ($metrics as $label => $value) {
-      $cards[Html::getClass($label)] = [
-        '#type' => 'container',
-        '#attributes' => ['class' => ['famtastic-ops__metric']],
+    foreach ($metrics as $key => $metric) {
+      $linked = is_array($metric);
+      $label = $linked ? (string) $metric['label'] : (string) $key;
+      $value = $linked ? (int) $metric['value'] : $metric;
+      $content = [
         'value' => ['#markup' => '<strong>' . Html::escape((string) $value) . '</strong>'],
         'label' => ['#markup' => '<span>' . Html::escape($label) . '</span>'],
       ];
+      if ($linked) {
+        $content['action'] = ['#markup' => '<span class="famtastic-ops__metric-action">View records <span aria-hidden="true">→</span></span>'];
+        $cards[Html::getClass((string) $key)] = [
+          '#type' => 'link',
+          '#title' => $content,
+          '#url' => Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => (string) $key]),
+          '#attributes' => [
+            'class' => ['famtastic-ops__metric', 'famtastic-ops__metric--link'],
+            'aria-label' => $this->t('View @label records (@count)', [
+              '@label' => $label,
+              '@count' => $value,
+            ]),
+          ],
+        ];
+        continue;
+      }
+      $cards[Html::getClass((string) $key)] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['famtastic-ops__metric']],
+      ] + $content;
     }
     return $cards;
   }
 
+  /**
+   * Wraps a Drupal link render array for use in a table cell.
+   */
+  private function linkCell(Link $link): array {
+    return ['data' => $link->toRenderable()];
+  }
+
+  /**
+   * Links a campaign key to its operator detail page when available.
+   */
+  private function campaignLinkCell(string $campaignKey): array|string {
+    if ($campaignKey === '') {
+      return '—';
+    }
+    return $this->linkCell(Link::fromTextAndUrl(
+      $campaignKey,
+      Url::fromRoute('famtastic_pipeline.operations_campaign', ['campaign_key' => $campaignKey]),
+    ));
+  }
+
+  /**
+   * Resolves an internal campaign id to its operator detail link.
+   */
+  private function campaignIdLinkCell(int $campaignId): array|string {
+    if ($campaignId <= 0) {
+      return '—';
+    }
+    $campaignKey = (string) $this->database->select('famtastic_campaign', 'c')
+      ->fields('c', ['campaign_key'])
+      ->condition('id', $campaignId)
+      ->execute()
+      ->fetchField();
+    return $this->campaignLinkCell($campaignKey);
+  }
+
+  /**
+   * Formats a stored minor-unit amount for an operator table.
+   */
+  private function formatCurrency(int $minorAmount, string $currency): string {
+    $currency = strtoupper($currency ?: 'USD');
+    if (class_exists(\NumberFormatter::class)) {
+      $locale = class_exists(\Locale::class) ? (\Locale::getDefault() ?: 'en_US') : 'en_US';
+      $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+      $formatted = $formatter->formatCurrency($minorAmount / 100, $currency);
+      if ($formatted !== FALSE) {
+        return $formatted;
+      }
+    }
+    return $currency . ' ' . number_format($minorAmount / 100, 2);
+  }
+
+  /**
+   * Keeps long job errors readable in the drill-down table.
+   */
+  private function truncate(string $text, int $limit = 160): string {
+    $text = trim($text);
+    if ($text === '') {
+      return '—';
+    }
+    return mb_strlen($text) <= $limit ? $text : mb_substr($text, 0, $limit - 1) . '…';
+  }
+
+  /**
+   * Builds a safely escaped snapshot block.
+   */
   private function snapshot(string $text, string $empty): array {
     if ($text === '') {
       return ['#markup' => '<p class="famtastic-ops__empty">' . Html::escape($empty) . '</p>'];
     }
-    return ['#type' => 'html_tag', '#tag' => 'pre', '#value' => Html::escape($text), '#attributes' => ['class' => ['famtastic-ops__snapshot']]];
+    return [
+      '#type' => 'html_tag',
+      '#tag' => 'pre',
+      '#value' => Html::escape($text),
+      '#attributes' => ['class' => ['famtastic-ops__snapshot']],
+    ];
   }
 
+  /**
+   * Formats a lifecycle status as a presentation badge.
+   */
   private function badge(string $status): string {
-    return '<span class="famtastic-ops__badge famtastic-ops__badge--' . Html::getClass($status) . '">' . Html::escape($status ?: 'unknown') . '</span>';
+    return '<span class="famtastic-ops__badge famtastic-ops__badge--' . Html::getClass($status) . '">' .
+      Html::escape($status ?: 'unknown') . '</span>';
   }
 
+  /**
+   * Formats a timestamp for the operator interface.
+   */
   private function date(int $timestamp): string {
     return $timestamp > 0 ? $this->dateFormatter->format($timestamp, 'short') : '—';
   }
 
+  /**
+   * Extracts a readable source from a stored source filter.
+   */
   private function sourceLabel(string $sourceFilter): string {
     if ($sourceFilter === '') {
       return '—';
@@ -338,6 +762,9 @@ final class OperationsController extends ControllerBase {
     return $sourceFilter;
   }
 
+  /**
+   * Counts records matching equality conditions.
+   */
   private function count(string $table, array $conditions = []): int {
     $query = $this->database->select($table, 't');
     foreach ($conditions as $field => $value) {
@@ -346,6 +773,9 @@ final class OperationsController extends ControllerBase {
     return (int) $query->countQuery()->execute()->fetchField();
   }
 
+  /**
+   * Counts records whose field is in a set of values.
+   */
   private function countIn(string $table, string $field, array $values, array $conditions = []): int {
     if ($values === []) {
       return 0;
@@ -357,6 +787,9 @@ final class OperationsController extends ControllerBase {
     return (int) $query->countQuery()->execute()->fetchField();
   }
 
+  /**
+   * Groups matching records into status counts.
+   */
   private function groupCounts(string $table, string $groupField, array $conditions = []): array {
     $query = $this->database->select($table, 't');
     $query->addField('t', $groupField);
@@ -367,6 +800,9 @@ final class OperationsController extends ControllerBase {
     return array_map('intval', $query->groupBy($groupField)->execute()->fetchAllKeyed());
   }
 
+  /**
+   * Groups records selected through an IN condition.
+   */
   private function groupCountsIn(string $table, string $groupField, string $filterField, array $values): array {
     if ($values === []) {
       return [];
@@ -378,10 +814,16 @@ final class OperationsController extends ControllerBase {
     return array_map('intval', $query->groupBy($groupField)->execute()->fetchAllKeyed());
   }
 
+  /**
+   * Counts one lifecycle event type for a campaign.
+   */
   private function eventCount(int $campaignId, string $type): int {
     return $this->count('famtastic_event', ['campaign_id' => $campaignId, 'event_type' => $type]);
   }
 
+  /**
+   * Returns prospect ids attributed to a campaign key.
+   */
   private function prospectIds(string $campaignKey): array {
     return array_map('intval', array_values($this->pipelineEntityTypeManager->getStorage('famtastic_prospect')->getQuery()
       ->accessCheck(FALSE)
@@ -389,6 +831,9 @@ final class OperationsController extends ControllerBase {
       ->execute()));
   }
 
+  /**
+   * Loads a proof by id, or the latest proof for a prospect.
+   */
   private function loadProof(int $proofId, int $prospectId): mixed {
     $storage = $this->pipelineEntityTypeManager->getStorage('proof_campaign');
     if ($proofId > 0 && ($proof = $storage->load($proofId))) {
@@ -398,12 +843,18 @@ final class OperationsController extends ControllerBase {
     return $ids ? $storage->load(reset($ids)) : NULL;
   }
 
+  /**
+   * Loads the ordered variants for one proof campaign.
+   */
   private function loadProofVariants(int $proofId): array {
     $storage = $this->pipelineEntityTypeManager->getStorage('proof_variant');
     $ids = $storage->getQuery()->accessCheck(FALSE)->condition('campaign_id', $proofId)->sort('direction_id')->execute();
     return $ids ? array_values($storage->loadMultiple($ids)) : [];
   }
 
+  /**
+   * Builds operator table rows for campaign build telemetry.
+   */
   private function buildRows(string $campaignKey): array {
     $records = $this->database->select('famtastic_build_run', 'b')
       ->fields('b')
@@ -425,6 +876,9 @@ final class OperationsController extends ControllerBase {
     return $rows;
   }
 
+  /**
+   * Builds lifecycle event rows for one exact message.
+   */
   private function messageEvents(array $message): array {
     $records = $this->database->select('famtastic_event', 'e')
       ->fields('e', ['event_type', 'provider', 'payload', 'recorded_at'])
@@ -439,7 +893,11 @@ final class OperationsController extends ControllerBase {
       if ((int) ($payload['message_id'] ?? 0) !== (int) $message['id']) {
         continue;
       }
-      $rows[] = [(string) $record['event_type'], (string) ($record['provider'] ?: '—'), $this->date((int) $record['recorded_at'])];
+      $rows[] = [
+        (string) $record['event_type'],
+        (string) ($record['provider'] ?: '—'),
+        $this->date((int) $record['recorded_at']),
+      ];
     }
     return $rows;
   }

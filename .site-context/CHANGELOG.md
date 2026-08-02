@@ -1,5 +1,22 @@
 # FAMtastic Designs production changelog
 
+## 2026-08-02 — Operations observability and clickable metric evidence
+
+Expanded the authenticated Drupal operations surface so every dashboard total
+is now a semantic drill-down link to the exact records represented by the
+number. Campaigns, prospects, ready proofs, sent emails, proof-link clicks,
+paid orders, open jobs, and open exceptions each have an admin-only paginated
+record page. In particular, **Paid Orders** now exposes the order, business,
+source campaign, package, amount, verified payment state, and paid timestamp
+behind the tile.
+
+Added focused acceptance coverage for all eight links and pages, including a
+count-to-record assertion for paid orders. The full autonomous acceptance lane
+now runs this operator-board check. This release builds on the same-day contact
+correction, exact message/build telemetry, checksum-gated offline Site Studio
+bridge, and route-shell deployment correction already recorded in the
+production deploy log.
+
 ## 2026-07-31 — Autonomous pipeline completion candidate
 
 Completed the Git-tracked lead-to-launch implementation on PR #16. The branch

@@ -18,6 +18,9 @@
 
 ### Released behavior
 
+- Operations summary tiles are semantic drill-down links. Campaigns,
+  prospects, ready proofs, sent emails, clicks, paid orders, open jobs, and
+  open exceptions each expose the exact admin-only records behind their count.
 - The public contact flow is email-first, uses
   `hello@famtasticdesigns.com`, contains no storefront hours, and requires no
   sales call.
