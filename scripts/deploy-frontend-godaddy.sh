@@ -92,7 +92,7 @@ else
   echo "unrecorded"
 fi
 echo "Preflight passed. No production files changed."
-echo "Apply plan: private Git worktree -> pinned Node build -> backup -> assets first -> index.html last."
+echo "Apply plan: private Git worktree -> pinned Node build -> backup -> assets and route shells first -> root index.html last."
 REMOTE_PREFLIGHT
   exit 0
 fi
@@ -191,7 +191,10 @@ fi
 # Never use --delete: public_html also contains Drupal and hosting runtime files.
 mkdir -p "$production_dir/assets"
 rsync -a "$dist_dir/assets/" "$production_dir/assets/"
-rsync -a --exclude='index.html' --exclude='assets/' "$dist_dir/" "$production_dir/"
+# Anchor exclusions at the dist root. Route-specific SEO shells such as
+# contact/index.html must be promoted; excluding every basename index.html
+# leaves those routes loading stale JavaScript from an older release.
+rsync -a --exclude='/index.html' --exclude='/assets/' "$dist_dir/" "$production_dir/"
 install -m 0644 "$dist_dir/index.html" "$production_dir/index.html"
 {
   printf 'commit=%s\n' "$commit_sha"
@@ -199,6 +202,14 @@ install -m 0644 "$dist_dir/index.html" "$production_dir/index.html"
   printf 'node=%s\n' "$(node --version)"
   printf 'backup=%s\n' "$backup_path"
 } > "$production_dir/.frontend-release"
+
+while IFS= read -r route_shell; do
+  relative_shell="${route_shell#"$dist_dir/"}"
+  cmp -s "$route_shell" "$production_dir/$relative_shell" || {
+    echo "Verification failed: route shell $relative_shell was not promoted exactly." >&2
+    exit 1
+  }
+done < <(find "$dist_dir" -mindepth 2 -type f -name index.html -print)
 
 while IFS= read -r asset_path; do
   live_url="https://famtasticdesigns.com/$asset_path"

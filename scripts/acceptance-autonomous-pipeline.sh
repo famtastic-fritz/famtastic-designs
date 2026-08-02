@@ -33,6 +33,7 @@ scripts/e2e-exception-queue.sh
 
 npm --prefix frontend audit --audit-level=high
 npm --prefix frontend run build
+scripts/e2e-frontend-route-shells.sh
 composer --working-dir=backend validate --strict
 composer --working-dir=backend audit
 

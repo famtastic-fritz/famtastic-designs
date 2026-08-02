@@ -28,6 +28,8 @@ The artifact boundary has identical relative paths:
 ```text
 frontend/dist/index.html       -> public_html/index.html
 frontend/dist/assets/<file>    -> public_html/assets/<file>
+frontend/dist/contact/index.html -> public_html/contact/index.html
+frontend/dist/<route>/index.html -> public_html/<route>/index.html
 ```
 
 Do not flatten the artifact and do not create production symlinks to compensate
@@ -76,7 +78,9 @@ The script:
 5. rejects raw `/src/` references or missing compiled assets;
 6. creates a timestamped remote backup of `index.html`, `assets/`, and the
    previous release record;
-7. promotes assets and non-index files first, then installs `index.html` last;
+7. promotes assets, route-specific SEO shells, and other non-root files first,
+   verifies each route shell byte-for-byte, then installs the root `index.html`
+   last;
 8. preserves directory structure and never deletes unrelated runtime files;
 9. records the commit, timestamp, Node version, and backup path in
    `~/public_html/.frontend-release`;
