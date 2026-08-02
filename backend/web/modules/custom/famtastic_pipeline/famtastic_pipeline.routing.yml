@@ -188,6 +188,41 @@ famtastic_pipeline.stripe_simulate:
     no_cache: 'TRUE'
 
 # --- Admin: generate & export the Site Studio request ---
+famtastic_pipeline.operations:
+  path: '/admin/famtastic'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::dashboard'
+    _title: 'FAMtastic Operations'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+
+famtastic_pipeline.operations_campaign:
+  path: '/admin/famtastic/campaign/{campaign_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::campaign'
+    _title: 'Campaign'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    campaign_key: '[a-zA-Z0-9._-]+'
+
+famtastic_pipeline.operations_message:
+  path: '/admin/famtastic/message/{message}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::message'
+    _title: 'Email Message'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    message: '\d+'
+
+famtastic_pipeline.operations_build:
+  path: '/admin/famtastic/build/{build_run}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::build'
+    _title: 'Build Run'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    build_run: '\d+'
+
 famtastic_pipeline.studio_generate:
   path: '/admin/famtastic/prospect/{famtastic_prospect}/generate-studio'
   defaults:

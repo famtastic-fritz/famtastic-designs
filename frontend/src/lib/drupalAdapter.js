@@ -88,7 +88,7 @@ export function transformServiceNode(node, included = []) {
       : listValues(attrs.field_whats_included),
     faqTitle: textValue(attrs.field_faq_title),
     faqs: resolveIncluded(node, included, 'field_faq_qa').map(faqItem),
-    ctaText: textValue(attrs.field_cta_text) || 'Book a Call',
+    ctaText: textValue(attrs.field_cta_text) || 'Start a Project',
     ctaHref: linkHref(attrs.field_cta_link),
     metaTitle: textValue(attrs.field_meta_title),
     metaDescription: textValue(attrs.field_meta_description),

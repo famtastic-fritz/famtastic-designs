@@ -27,13 +27,13 @@ export default function ContactPage() {
   return (
     <>
     {/* SolutionFinder leads — the intake is the primary action on /contact. */}
-    <Section className="v1-section--flush-top">
+    <Section className="v1-section--flush-top" id="project-fit">
       <div style={{ paddingTop: '3rem' }}>
         <SolutionFinder />
       </div>
     </Section>
 
-    <Section>
+    <Section id="contact-form">
       <div className="v1-split" style={{ paddingTop: '3rem' }}>
         <FadeUp>
           <p className="v1-eyebrow">Contact</p>
@@ -45,16 +45,15 @@ export default function ContactPage() {
               'Tell us about the website, system, or automation you need — we reply within one business day with next steps and a fixed-price scope.'}
           </p>
 
-          {page?.bodyHtml && (
-            <div className="v1-prose" style={{ marginTop: '1.4rem' }} dangerouslySetInnerHTML={{ __html: page.bodyHtml }} />
-          )}
-
           <div className="v1-grid" style={{ marginTop: '2rem' }}>
             <div className="v1-card">
               <p className="v1-pricing-card__label">Email</p>
               <a href={`mailto:${CONTACT_EMAIL}`} className="v1-card__title" style={{ display: 'block' }}>
                 {CONTACT_EMAIL}
               </a>
+              <p className="v1-card__text" style={{ marginTop: '0.75rem' }}>
+                Send a note whenever it works for you. We respond by email within 1 business day.
+              </p>
             </div>
             <div className="v1-card">
               <p className="v1-pricing-card__label">What happens next</p>
@@ -68,7 +67,7 @@ export default function ContactPage() {
         </FadeUp>
 
         <FadeUp delay={0.12}>
-          <ContactForm title="Prefer to write it out?" />
+          <ContactForm title="Send Us a Message" />
         </FadeUp>
       </div>
     </Section>

@@ -876,7 +876,7 @@ export default function SolutionFinder({ initialBranch = null }) {
             )}
 
             <div className="sf__result-actions">
-              <Link to="/contact" className="v1-btn v1-btn--primary">Book a 15-min call (optional)</Link>
+              <Link to="/contact#contact-form" className="v1-btn v1-btn--primary">Email Your Questions</Link>
               <button
                 type="button"
                 className="v1-btn v1-btn--ghost"

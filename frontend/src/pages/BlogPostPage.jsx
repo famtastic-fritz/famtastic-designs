@@ -62,7 +62,7 @@ export default function BlogPostPage() {
 
       <CTABanner
         title="Want a system like this for your business?"
-        primaryCta={{ label: 'Book a Call', href: '/contact' }}
+        primaryCta={{ label: 'Explore Your Options', href: '/contact#project-fit' }}
       />
     </article>
   );

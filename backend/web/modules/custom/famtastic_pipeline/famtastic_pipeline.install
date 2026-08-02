@@ -177,6 +177,122 @@ function famtastic_pipeline_update_8009(&$sandbox) {
 }
 
 /**
+ * Adds operator-visible message snapshots and proof-build telemetry.
+ */
+function famtastic_pipeline_update_8010(&$sandbox) {
+  $database = \Drupal::database();
+  $schema = $database->schema();
+  $emailFields = _famtastic_pipeline_email_message_schema()['fields'];
+  foreach (['recipient_address', 'from_address', 'body_snapshot', 'proof_campaign_id', 'proof_url'] as $field) {
+    if (!$schema->fieldExists('famtastic_email_message', $field)) {
+      $schema->addField('famtastic_email_message', $field, $emailFields[$field]);
+    }
+  }
+  if (!$schema->tableExists('famtastic_build_run')) {
+    $schema->createTable('famtastic_build_run', _famtastic_pipeline_build_run_schema());
+  }
+
+  $prospectStorage = \Drupal::entityTypeManager()->getStorage('famtastic_prospect');
+  $proofStorage = \Drupal::entityTypeManager()->getStorage('proof_campaign');
+  $messages = $database->select('famtastic_email_message', 'm')
+    ->fields('m', ['id', 'prospect_id'])
+    ->execute()
+    ->fetchAll(\PDO::FETCH_ASSOC);
+  foreach ($messages as $message) {
+    $prospect = $prospectStorage->load((int) $message['prospect_id']);
+    $proofIds = $proofStorage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('prospect_id', (int) $message['prospect_id'])
+      ->sort('id', 'DESC')
+      ->range(0, 1)
+      ->execute();
+    $database->update('famtastic_email_message')
+      ->fields([
+        'recipient_address' => $prospect ? (string) $prospect->get('public_email')->value : '',
+        'proof_campaign_id' => $proofIds ? (int) reset($proofIds) : NULL,
+      ])
+      ->condition('id', (int) $message['id'])
+      ->execute();
+  }
+
+  /** @var \Drupal\famtastic_pipeline\Service\BuildTelemetryService $telemetry */
+  $telemetry = \Drupal::service('famtastic_pipeline.build_telemetry');
+  $variantStorage = \Drupal::entityTypeManager()->getStorage('proof_variant');
+  $proofIds = $proofStorage->getQuery()->accessCheck(FALSE)->execute();
+  foreach ($proofStorage->loadMultiple($proofIds) as $proof) {
+    $prospect = $prospectStorage->load((int) $proof->get('prospect_id')->target_id);
+    if (!$prospect || $proof->get('generation_status')->value !== 'ready') {
+      continue;
+    }
+    $variantIds = $variantStorage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('campaign_id', (int) $proof->id())
+      ->sort('direction_id')
+      ->execute();
+    $variants = array_values($variantStorage->loadMultiple($variantIds));
+    if (count($variants) !== 3) {
+      continue;
+    }
+    $dna = json_decode((string) $variants[0]->get('design_dna')->value, TRUE);
+    if (($dna['source'] ?? '') === 'no_image_pilot_v1') {
+      $telemetry->recordPilotProof($prospect, $proof, $variants);
+    }
+    else {
+      $telemetry->recordStudioProof($prospect, $proof, $variants, [
+        'provider' => $dna['provider'] ?? ($dna['source'] ?? 'historical_import'),
+        'agent_name' => $dna['agent'] ?? 'unknown',
+      ]);
+    }
+  }
+
+  return t('Added exact email snapshots, recipient audit fields, and proof-build telemetry.');
+}
+
+/**
+ * Removes storefront and required-call language from the contact source node.
+ */
+function famtastic_pipeline_update_8011(&$sandbox) {
+  $path = \Drupal::service('path_alias.manager')->getPathByAlias('/contact');
+  $contact = NULL;
+  if (preg_match('#^/node/(\d+)$#', $path, $matches)) {
+    $contact = \Drupal::entityTypeManager()->getStorage('node')->load((int) $matches[1]);
+  }
+  if (!$contact) {
+    $matches = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'page', 'title' => 'Contact']);
+    $contact = $matches ? reset($matches) : NULL;
+  }
+  if (!$contact) {
+    return t('The /contact source node was not found; no content was changed.');
+  }
+
+  $contact->set('body', [
+    'value' => <<<'HTML'
+<p>Tell us what you need your website or automation to accomplish. We will reply by email with clear next steps and a scoped price.</p>
+<h3>Reach the Team</h3>
+<ul>
+  <li><strong>Email:</strong> <a href="mailto:hello@famtasticdesigns.com">hello@famtasticdesigns.com</a></li>
+  <li><strong>Response:</strong> Within one business day.</li>
+</ul>
+<p>No sales call is required. Use the form or email us whenever it works for you.</p>
+HTML,
+    'format' => 'full_html',
+  ]);
+  $fields = [
+    'field_hero_subheadline' => 'Share what you need and receive a clear, fixed-price next step without a required sales call.',
+    'field_cta_text' => 'Send Message',
+    'field_cta_link' => ['uri' => 'internal:/contact#contact-form', 'title' => 'Send Message'],
+    'field_meta_description' => 'Contact FAMtastic Designs by secure form or email at hello@famtasticdesigns.com. Get a clear scope and fixed-price next step without a required sales call.',
+  ];
+  foreach ($fields as $field => $value) {
+    if ($contact->hasField($field)) {
+      $contact->set($field, $value);
+    }
+  }
+  $contact->save();
+  return t('Updated /contact to email-first, non-storefront contact language.');
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {
@@ -547,6 +663,7 @@ function _famtastic_pipeline_automation_schema(): array {
 
   $tables['famtastic_lead_import'] = _famtastic_pipeline_lead_import_schema();
   $tables['famtastic_email_message'] = _famtastic_pipeline_email_message_schema();
+  $tables['famtastic_build_run'] = _famtastic_pipeline_build_run_schema();
 
   return $tables;
 }
@@ -563,9 +680,14 @@ function _famtastic_pipeline_email_message_schema(): array {
       'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'recipient_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'recipient_address' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE, 'default' => ''],
+      'from_address' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE, 'default' => ''],
       'template_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
       'template_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'subject' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
+      'body_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'proof_campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'proof_url' => ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE, 'default' => ''],
       'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
       'provider' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
       'provider_message_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
@@ -591,6 +713,47 @@ function _famtastic_pipeline_email_message_schema(): array {
       'campaign_status' => ['campaign_id', 'status'],
       'provider_message' => ['provider', 'provider_message_id'],
       'prospect' => ['prospect_id'],
+      'proof_campaign' => ['proof_campaign_id'],
+    ],
+  ];
+}
+
+/**
+ * Defines build and agent telemetry for local and deterministic proof work.
+ */
+function _famtastic_pipeline_build_run_schema(): array {
+  return [
+    'description' => 'Auditable proof build runs, prompts, agents, tasks, and artifact manifests.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'build_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'campaign_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'proof_campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'project_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'flow_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'task_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'provider' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'agent_name' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'prompt_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'input_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'output_manifest' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'source_sha' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'artifact_checksum' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'error' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'started_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'completed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['build_key' => ['build_key']],
+    'indexes' => [
+      'campaign_status' => ['campaign_key', 'status'],
+      'prospect' => ['prospect_id'],
+      'proof_campaign' => ['proof_campaign_id'],
+      'project' => ['project_id'],
     ],
   ];
 }

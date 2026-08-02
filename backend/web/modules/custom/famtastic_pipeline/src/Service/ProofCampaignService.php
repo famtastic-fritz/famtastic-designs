@@ -53,6 +53,7 @@ class ProofCampaignService {
     protected LoggerInterface $logger,
     protected SiteStudioProofClient $studioClient,
     protected OperationalLedger $ledger,
+    protected BuildTelemetryService $buildTelemetry,
   ) {}
 
   /**
@@ -133,8 +134,87 @@ class ProofCampaignService {
       '@src' => $source,
     ]);
     $campaign->set('ready_at', $now)->save();
+    $this->buildTelemetry->recordPilotProof($prospect, $campaign, $variants);
 
     return ['campaign' => $campaign, 'variants' => $variants];
+  }
+
+  /**
+   * Creates an idempotent waiting campaign for an offline/local Site Studio.
+   */
+  public function createLocalHandoff(Prospect $prospect): ProofCampaign {
+    $existing = $this->getForProspect($prospect);
+    if ($existing && $existing['campaign']->get('status')->value === 'active') {
+      $campaign = $existing['campaign'];
+      $jobId = (string) $campaign->get('studio_job_id')->value;
+      if ($campaign->get('generation_status')->value === 'waiting_callback' && str_starts_with($jobId, 'local-')) {
+        return $campaign;
+      }
+      throw new \RuntimeException('Prospect already has an active proof campaign. Expire or complete it before creating a local Site Studio handoff.');
+    }
+
+    $businessName = (string) ($prospect->get('business_name')->value ?: 'Your Business');
+    $campaignId = $this->buildCampaignId($businessName);
+    $jobId = 'local-' . bin2hex(random_bytes(16));
+    $now = $this->time->getRequestTime();
+    /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign $campaign */
+    $campaign = $this->entityTypeManager->getStorage('proof_campaign')->create([
+      'campaign_id' => $campaignId,
+      'prospect_id' => $prospect->id(),
+      'business_name' => $businessName,
+      'status' => 'active',
+      'generation_status' => 'waiting_callback',
+      'studio_job_id' => $jobId,
+      'dispatched_at' => $now,
+      'expires_at' => $now + self::TTL,
+    ]);
+    $campaign->save();
+    $this->ledger->recordEvent(
+      'proof.local_exported:' . $campaignId,
+      'proof.dispatched',
+      ['campaign_id' => $campaignId, 'studio_job_id' => $jobId, 'transport' => 'offline_ssh_bundle'],
+      (int) $prospect->id(),
+    );
+    return $campaign;
+  }
+
+  /**
+   * Prepares an in-place local refresh while the current pilot stays public.
+   */
+  public function prepareLocalRefresh(Prospect $prospect, string $campaignId): ProofCampaign {
+    $existing = $this->getForProspect($prospect);
+    if (!$existing || !hash_equals((string) $existing['campaign']->get('campaign_id')->value, $campaignId)) {
+      throw new \RuntimeException('The confirmed proof campaign is not the prospect current campaign.');
+    }
+    $campaign = $existing['campaign'];
+    if ($campaign->get('status')->value !== 'active' || $campaign->get('generation_status')->value !== 'ready') {
+      throw new \RuntimeException('Only an active, ready proof campaign can be refreshed.');
+    }
+    if (count($existing['variants']) !== 3) {
+      throw new \RuntimeException('The current campaign does not contain exactly three proof variants.');
+    }
+    foreach ($existing['variants'] as $variant) {
+      $dna = json_decode((string) $variant->get('design_dna')->value, TRUE);
+      if (!is_array($dna) || ($dna['source'] ?? '') !== 'no_image_pilot_v1') {
+        throw new \RuntimeException('Only a deterministic image-free pilot can be refreshed through this command.');
+      }
+    }
+    $jobId = (string) $campaign->get('studio_job_id')->value;
+    if (str_starts_with($jobId, 'local-refresh-')) {
+      return $campaign;
+    }
+    $jobId = 'local-refresh-' . bin2hex(random_bytes(16));
+    $campaign
+      ->set('studio_job_id', $jobId)
+      ->set('dispatched_at', $this->time->getRequestTime())
+      ->save();
+    $this->ledger->recordEvent(
+      'proof.local_refresh_exported:' . $campaignId,
+      'proof.refresh_dispatched',
+      ['campaign_id' => $campaignId, 'studio_job_id' => $jobId, 'transport' => 'offline_ssh_bundle'],
+      (int) $prospect->id(),
+    );
+    return $campaign;
   }
 
   /**
@@ -182,6 +262,12 @@ class ProofCampaignService {
         if ($thumbnail === FALSE || strlen($thumbnail) > 1500000) {
           throw new \InvalidArgumentException('Proof thumbnail is invalid or exceeds 1.5 MB.');
         }
+        $validSignature = $mediaType === 'image/png'
+          ? str_starts_with($thumbnail, "\x89PNG\r\n\x1a\n")
+          : str_starts_with($thumbnail, "\xff\xd8\xff");
+        if (!$validSignature) {
+          throw new \InvalidArgumentException('Proof thumbnail bytes do not match the declared media type.');
+        }
       }
       $validated[$direction] = [
         'html' => $html,
@@ -196,25 +282,43 @@ class ProofCampaignService {
     if (array_keys($validated) !== ['a', 'b', 'c']) {
       throw new \InvalidArgumentException('Variants must contain directions a, b, and c.');
     }
-    if ($this->loadVariants($campaign)) {
+    $currentVariants = $this->loadVariants($campaign);
+    $isRefresh = str_starts_with($studioJobId, 'local-refresh-');
+    if ($currentVariants && !$isRefresh) {
       throw new \InvalidArgumentException('Campaign already has proof artifacts.');
     }
+    if ($isRefresh) {
+      if (count($currentVariants) !== 3) {
+        throw new \InvalidArgumentException('A local refresh requires exactly three existing pilot artifacts.');
+      }
+      foreach ($currentVariants as $currentVariant) {
+        $dna = json_decode((string) $currentVariant->get('design_dna')->value, TRUE);
+        if (!is_array($dna) || ($dna['source'] ?? '') !== 'no_image_pilot_v1') {
+          throw new \InvalidArgumentException('Only deterministic pilot artifacts may be refreshed in place.');
+        }
+      }
+    }
     $storage = $this->entityTypeManager->getStorage('proof_variant');
+    $currentByDirection = [];
+    foreach ($currentVariants as $currentVariant) {
+      $currentByDirection[(string) $currentVariant->get('direction_id')->value] = $currentVariant;
+    }
     $created = [];
     foreach ($validated as $direction => $variant) {
       $path = $this->writeCallbackArtifact($campaignId, $direction, $variant['html']);
       $thumbnailPath = $variant['thumbnail'] === NULL
         ? NULL
         : $this->writeCallbackThumbnail($campaignId, $direction, $variant['thumbnail'], $variant['thumbnail_extension']);
-      $entity = $storage->create([
+      $entity = $currentByDirection[$direction] ?? $storage->create([
         'campaign_id' => $campaign->id(),
         'direction_id' => $direction,
-        'direction_name' => self::DIRECTIONS[$direction],
-        'artifact_path' => $path,
-        'thumbnail_path' => $thumbnailPath,
-        'design_dna' => json_encode($variant['design_dna'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
-        'preview_url' => $this->previewUrl($campaignId, $direction),
       ]);
+      $entity
+        ->set('direction_name', self::DIRECTIONS[$direction])
+        ->set('artifact_path', $path)
+        ->set('thumbnail_path', $thumbnailPath)
+        ->set('design_dna', json_encode($variant['design_dna'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))
+        ->set('preview_url', $this->previewUrl($campaignId, $direction));
       $entity->save();
       $created[] = $entity;
     }
@@ -228,7 +332,7 @@ class ProofCampaignService {
     $this->ledger->recordEvent(
       'proof.callback:' . $eventId,
       'proof.ready',
-      ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => 3],
+      ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => 3, 'refresh' => $isRefresh],
       $prospectId,
     );
     $this->ledger->enqueue(
@@ -237,6 +341,20 @@ class ProofCampaignService {
       ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
       $prospectId,
     );
+    $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
+    if ($prospect) {
+      $dna = $validated['a']['design_dna'] ?? [];
+      $telemetry = is_array($dna['telemetry'] ?? NULL) ? $dna['telemetry'] : [];
+      $this->buildTelemetry->recordStudioProof($prospect, $campaign, $created, [
+        'flow_key' => $telemetry['flow_key'] ?? 'site-studio-local-promotion',
+        'task_key' => $telemetry['task_key'] ?? 'proof.generate',
+        'provider' => $telemetry['provider'] ?? ($dna['provider'] ?? 'site_studio_local'),
+        'agent_name' => $telemetry['agent_name'] ?? ($dna['agent'] ?? 'shay'),
+        'prompt_snapshot' => $telemetry['prompt_snapshot'] ?? '',
+        'input_snapshot' => $telemetry['input_snapshot'] ?? [],
+        'source_sha' => $telemetry['source_sha'] ?? '',
+      ]);
+    }
     return ['newly_processed' => TRUE, 'campaign' => $campaign, 'variants' => $created];
   }
 

@@ -65,7 +65,7 @@ export default function WorkHubPage() {
 
       <CTABanner
         title="Need a project direction that matches your business?"
-        primaryCta={{ label: 'Book a Call', href: '/contact' }}
+        primaryCta={{ label: 'Start Your Project', href: '/contact#project-fit' }}
       />
     </>
   );

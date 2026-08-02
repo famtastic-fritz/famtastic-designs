@@ -2,6 +2,12 @@
 
 ## Modes
 
+- Offline local mode: production Drupal creates a private request and a
+  `waiting_callback` proof campaign. The request is pulled to the local machine
+  over authenticated SSH, Site Studio/Shay creates and reviews the three
+  directions locally, and a checksum-verified bundle is promoted back through
+  Drupal's normal callback validator. Site Studio does not need to be exposed
+  to the internet.
 - Image-free pilot mode: with no `SITE_STUDIO_URL`, the worker deterministically
   creates three isolated, category-aware landing-page directions without stock
   images or image placeholders. Each direction also receives a truthful SVG
@@ -12,6 +18,55 @@
 - Remote mode: the worker sends one signed, idempotent generation request to
   Site Studio and records `waiting_callback`. No placeholder is presented as a
   completed remote proof.
+
+## Offline production-to-local bridge
+
+Use the offline path while Site Studio runs only on the local workstation. Both
+scripts are dry-run by default.
+
+```bash
+# Creates an idempotent waiting proof campaign in production and pulls its
+# private machine request + human brief into a mode-0700 local directory.
+./scripts/fetch-local-proof-job-godaddy.sh PROSPECT_ID \
+  ~/.config/famtastic/proof-jobs/PROSPECT_ID --apply
+
+# To improve an already-sent image-free pilot, keep its current URLs live
+# while the replacement is generated, then refresh the same three artifacts.
+./scripts/fetch-local-proof-job-godaddy.sh PROSPECT_ID \
+  ~/.config/famtastic/proof-jobs/PROSPECT_ID \
+  --refresh-campaign=EXACT_PC_CAMPAIGN_ID --apply
+
+# After local generation and visual review, validate without changing prod.
+./scripts/promote-local-proof-godaddy.sh BUNDLE_DIR
+
+# Promote the exact reviewed bundle through the Drupal import boundary.
+./scripts/promote-local-proof-godaddy.sh BUNDLE_DIR --apply
+```
+
+The first command downloads `request.json`, `request.md`, and `handoff.json`.
+The generated bundle must contain:
+
+```text
+BUNDLE_DIR/
+  manifest.json
+  a/index.html                 a/thumbnail.png|jpg
+  b/index.html                 b/thumbnail.png|jpg
+  c/index.html                 c/thumbnail.png|jpg
+  a|b|c/design-dna.json        optional
+```
+
+`manifest.json` must repeat the `campaign_id` and `job_id` from
+`handoff.json`, add a unique `event_id`, and record the actual local execution
+facts: `provider`, `agent_name`, `flow_key`, `task_key`, `prompt_snapshot`,
+`input_snapshot`, and `source_sha`. Do not label a run as Shay unless Shay
+actually generated it.
+
+Promotion does not SCP files into the public proof directory. It uploads one
+private callback payload, verifies its SHA-256, exact campaign confirmation,
+job identity, three unique directions, HTML/content limits, and image
+signatures, then lets Drupal publish the artifacts and queue outreach. Replays
+of the same event are harmless. The private payload is retained as an audit
+artifact.
 
 ## Dispatch contract
 
@@ -99,9 +154,14 @@ callback are proven.
 
 ```bash
 ./scripts/e2e-site-studio-callback.sh
+./scripts/e2e-local-proof-promotion.sh
+MODE=refresh ./scripts/e2e-local-proof-promotion.sh
 ```
 
 The synthetic test runs a signed mock Site Studio endpoint, proves remote
 dispatch state, rejects a bad signature, partial callback, and active content,
 accepts normal metadata plus exactly three isolated artifacts, and proves
-callback replay idempotency.
+callback replay idempotency. The offline tests separately prove new-request and
+in-place pilot-refresh exports, bundle validation, checksum rejection,
+exact-three local import, replay safety, stable public variant identities, and
+persisted Shay/prompt/build telemetry.

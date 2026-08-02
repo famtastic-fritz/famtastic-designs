@@ -377,15 +377,13 @@ if ($node_exists('page', 'Contact')) {
 else {
   try {
     $contact_body = <<<'HTML'
-<p>Every great website starts with a conversation. Tell us about your business, what you need your site to do, and where you want to be in six months — we will take it from there.</p>
-<h3>Reach Fritz Directly</h3>
+<p>Tell us what you need your website or automation to accomplish. We will reply by email with clear next steps and a scoped price.</p>
+<h3>Reach the Team</h3>
 <ul>
-  <li><strong>Phone:</strong> <a href="tel:+17725550142">(772) 555-0142</a></li>
-  <li><strong>Email:</strong> <a href="mailto:hello@famtastic.design">hello@famtastic.design</a></li>
-  <li><strong>Location:</strong> Port St. Lucie, Florida</li>
-  <li><strong>Hours:</strong> Mon–Fri 9am–6pm ET</li>
+  <li><strong>Email:</strong> <a href="mailto:hello@famtasticdesigns.com">hello@famtasticdesigns.com</a></li>
+  <li><strong>Response:</strong> Within one business day.</li>
 </ul>
-<p>Prefer to write it down? Use the form below and you will hear back within one business day — usually faster.</p>
+<p>No sales call is required. Use the form or email us whenever it works for you.</p>
 HTML;
     $contact = Node::create([
       'type' => 'page',
@@ -394,20 +392,20 @@ HTML;
       'status' => 1,
       'field_page_type' => 'contact',
       'field_hero_headline' => 'Let\'s Build Something Great Together',
-      'field_hero_subheadline' => 'A free, no-pressure consultation about what your business needs from the web.',
+      'field_hero_subheadline' => 'Share what you need and receive a clear, fixed-price next step without a required sales call.',
       'body' => [
         'value' => $contact_body,
         'format' => 'full_html',
       ],
       'field_cta_text' => 'Send Message',
       'field_cta_link' => [
-        'uri' => 'internal:/contact#form',
+        'uri' => 'internal:/contact#contact-form',
         'title' => 'Send Message',
       ],
       'field_sort_order' => 20,
       'field_meta_title' => 'Contact FAMtastic Designs | Port St. Lucie Web Design',
       'field_meta_description' => [
-        'value' => 'Get in touch with FAMtastic Designs. Call (772) 555-0142 or email hello@famtastic.design. Port St. Lucie web design, Mon–Fri 9am–6pm ET.',
+        'value' => 'Contact FAMtastic Designs by secure form or email at hello@famtasticdesigns.com. Get a clear scope and fixed-price next step without a required sales call.',
       ],
     ]);
     $contact->save();

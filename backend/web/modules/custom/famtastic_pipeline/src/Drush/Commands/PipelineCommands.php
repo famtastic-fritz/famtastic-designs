@@ -63,6 +63,173 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Backfills exact recipient/from/body/proof snapshots for a named campaign.
+   */
+  #[CLI\Command(name: 'famtastic:campaign-snapshot-backfill', aliases: ['fcsb'])]
+  #[CLI\Argument(name: 'campaignKey', description: 'Exact campaign attribution key.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the campaign key.')]
+  #[CLI\Option(name: 'postal-address', description: 'Physical postal address rendered in the sent message.')]
+  public function campaignSnapshotBackfill(string $campaignKey, array $options = [
+    'confirm' => '',
+    'postal-address' => '',
+  ]): int {
+    if (!hash_equals($campaignKey, (string) $options['confirm'])) {
+      $this->logger()->error('Snapshot backfill requires --confirm=<exact-campaign-key>.');
+      return self::EXIT_FAILURE;
+    }
+    $postalAddress = trim((string) $options['postal-address']);
+    if ($postalAddress === '') {
+      $this->logger()->error('Snapshot backfill requires --postal-address.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\CampaignMessageService $messages */
+      $messages = \Drupal::service('famtastic_pipeline.campaign_messages');
+      $count = $messages->backfillCampaignSnapshots($campaignKey, $postalAddress);
+    }
+    catch (\Throwable $e) {
+      $this->logger()->error($e->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->logger()->success(dt('Backfilled @count exact message snapshot(s) for @campaign.', [
+      '@count' => $count,
+      '@campaign' => $campaignKey,
+    ]));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Exports an offline Site Studio job for a prospect.
+   */
+  #[CLI\Command(name: 'famtastic:proof-local-export', aliases: ['fple'])]
+  #[CLI\Argument(name: 'prospectId', description: 'Exact prospect entity id.')]
+  public function proofLocalExport(int $prospectId): int {
+    $prospect = \Drupal::entityTypeManager()->getStorage('famtastic_prospect')->load($prospectId);
+    if (!$prospect) {
+      $this->logger()->error('Prospect does not exist.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
+      $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+      $campaign = $proofs->createLocalHandoff($prospect);
+      /** @var \Drupal\famtastic_pipeline\Service\StudioRequestGenerator $generator */
+      $generator = \Drupal::service('famtastic_pipeline.studio_generator');
+      $request = $generator->generate($prospect);
+    }
+    catch (\Throwable $e) {
+      $this->logger()->error($e->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode([
+      'schema_version' => 1,
+      'transport' => 'offline_ssh_bundle',
+      'prospect_id' => $prospectId,
+      'project_id' => (int) $request['project']->id(),
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'job_id' => (string) $campaign->get('studio_job_id')->value,
+      'request_location' => (string) ($request['handoff']['location'] ?? ''),
+      'required_directions' => ['a', 'b', 'c'],
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success('Local Site Studio handoff exported.');
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Exports a local refresh while an image-free pilot remains publicly usable.
+   */
+  #[CLI\Command(name: 'famtastic:proof-local-refresh-export', aliases: ['fplre'])]
+  #[CLI\Argument(name: 'prospectId', description: 'Exact prospect entity id.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the current public proof campaign id.')]
+  public function proofLocalRefreshExport(int $prospectId, array $options = ['confirm' => '']): int {
+    $prospect = \Drupal::entityTypeManager()->getStorage('famtastic_prospect')->load($prospectId);
+    if (!$prospect) {
+      $this->logger()->error('Prospect does not exist.');
+      return self::EXIT_FAILURE;
+    }
+    $confirmedCampaign = trim((string) $options['confirm']);
+    if ($confirmedCampaign === '') {
+      $this->logger()->error('Refresh export requires --confirm=<exact-current-campaign-id>.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
+      $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+      $campaign = $proofs->prepareLocalRefresh($prospect, $confirmedCampaign);
+      /** @var \Drupal\famtastic_pipeline\Service\StudioRequestGenerator $generator */
+      $generator = \Drupal::service('famtastic_pipeline.studio_generator');
+      $request = $generator->generate($prospect);
+    }
+    catch (\Throwable $e) {
+      $this->logger()->error($e->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode([
+      'schema_version' => 1,
+      'transport' => 'offline_ssh_bundle_refresh',
+      'prospect_id' => $prospectId,
+      'project_id' => (int) $request['project']->id(),
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'job_id' => (string) $campaign->get('studio_job_id')->value,
+      'request_location' => (string) ($request['handoff']['location'] ?? ''),
+      'required_directions' => ['a', 'b', 'c'],
+      'public_proof_remains_live' => TRUE,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success('Local Site Studio pilot refresh handoff exported.');
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Imports an SSH-delivered local proof payload through callback validation.
+   */
+  #[CLI\Command(name: 'famtastic:proof-local-import', aliases: ['fpli'])]
+  #[CLI\Argument(name: 'path', description: 'Absolute private path to the callback JSON payload.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat payload campaign_id.')]
+  #[CLI\Option(name: 'checksum', description: 'Expected SHA-256 of the payload file.')]
+  public function proofLocalImport(string $path, array $options = [
+    'confirm' => '',
+    'checksum' => '',
+  ]): int {
+    if (!is_file($path) || !is_readable($path) || filesize($path) > 8 * 1024 * 1024) {
+      $this->logger()->error('Payload is missing, unreadable, or larger than 8 MB.');
+      return self::EXIT_FAILURE;
+    }
+    $expectedChecksum = strtolower(trim((string) $options['checksum']));
+    $actualChecksum = hash_file('sha256', $path);
+    if (!preg_match('/^[a-f0-9]{64}$/', $expectedChecksum) || !hash_equals($expectedChecksum, $actualChecksum)) {
+      $this->logger()->error('Payload checksum does not match.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      $payload = json_decode((string) file_get_contents($path), TRUE, flags: JSON_THROW_ON_ERROR);
+      $campaignId = (string) ($payload['campaign_id'] ?? '');
+      if ($campaignId === '' || !hash_equals($campaignId, (string) $options['confirm'])) {
+        throw new \InvalidArgumentException('Import requires --confirm=<exact-campaign-id>.');
+      }
+      /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
+      $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+      $result = $proofs->acceptCallback(
+        (string) ($payload['event_id'] ?? ''),
+        $campaignId,
+        (string) ($payload['job_id'] ?? ''),
+        is_array($payload['variants'] ?? NULL) ? $payload['variants'] : [],
+      );
+    }
+    catch (\Throwable $e) {
+      $this->logger()->error($e->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode([
+      'campaign_id' => $campaignId,
+      'newly_processed' => (bool) $result['newly_processed'],
+      'variant_count' => count($result['variants']),
+      'payload_checksum' => $actualChecksum,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success('Local Site Studio proof bundle imported.');
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Runs a bounded batch of durable automation jobs.
    */
   #[CLI\Command(name: 'famtastic:jobs-run', aliases: ['fjr'])]

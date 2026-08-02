@@ -47,6 +47,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\PipelineAnalyticsService
     arguments: ['@database']
 
+  famtastic_pipeline.build_telemetry:
+    class: Drupal\famtastic_pipeline\Service\BuildTelemetryService
+    arguments: ['@database', '@datetime.time']
+
   famtastic_pipeline.stripe_gateway:
     class: Drupal\famtastic_pipeline\Service\StripeGateway
     arguments: ['@http_client', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service']
@@ -75,11 +79,11 @@ services:
 
   famtastic_pipeline.studio_generator:
     class: Drupal\famtastic_pipeline\Service\StudioRequestGenerator
-    arguments: ['@famtastic_pipeline.repository', '@famtastic_pipeline.studio_builder', '@famtastic_pipeline.studio_adapter', '@entity_type.manager', '@famtastic_pipeline.operational_ledger']
+    arguments: ['@famtastic_pipeline.repository', '@famtastic_pipeline.studio_builder', '@famtastic_pipeline.studio_adapter', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.build_telemetry']
 
   famtastic_pipeline.proof_campaign_service:
     class: Drupal\famtastic_pipeline\Service\ProofCampaignService
-    arguments: ['@entity_type.manager', '@config.factory', '@datetime.time', '@file_system', '@famtastic_pipeline.studio_adapter', '@famtastic_pipeline.repository', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.site_studio_proof_client', '@famtastic_pipeline.operational_ledger']
+    arguments: ['@entity_type.manager', '@config.factory', '@datetime.time', '@file_system', '@famtastic_pipeline.studio_adapter', '@famtastic_pipeline.repository', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.site_studio_proof_client', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.build_telemetry']
 
   famtastic_pipeline.mailer:
     class: Drupal\famtastic_pipeline\Service\OutreachMailer

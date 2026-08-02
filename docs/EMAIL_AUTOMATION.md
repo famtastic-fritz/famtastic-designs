@@ -72,9 +72,13 @@ SSL/TLS on `famtasticdesigns.com:465`, using
 `hello@famtasticdesigns.com`. Keep the password in environment-owned Drupal
 configuration and never in Git.
 
-## Tracking and provider events
+## Tracking, snapshots, and provider events
 
-Messages store only a recipient hash. Opaque random keys support:
+Messages keep the recipient hash used by suppression checks and, for operator
+audit, the exact recipient, envelope From, subject, rendered body, proof click
+URL, proof campaign, provider Message-ID, and lifecycle timestamps. These
+records are restricted to pipeline administrators at `/admin/famtastic`; they
+must not be exposed through the public API. Opaque random keys support:
 
 - open: `/api/pipeline/email/open/{tracking_key}`;
 - click/magic-link issuance: `/api/pipeline/email/click/{tracking_key}`;
@@ -90,6 +94,20 @@ X-FAMtastic-Signature: sha256=<HMAC-SHA256(raw body)>
 The secret is `FAMTASTIC_EMAIL_WEBHOOK_SECRET`. Event IDs are idempotency keys.
 Bounces, complaints, and unsubscribes write suppression records that are checked
 during import, staging, and immediately before send.
+
+Historical messages created before exact snapshots were added can be rebuilt
+only for a deliberately named campaign. The command requires the exact campaign
+key twice and an environment-supplied postal address:
+
+```bash
+vendor/bin/drush famtastic:campaign-snapshot-backfill CAMPAIGN \
+  --confirm=CAMPAIGN \
+  --postal-address='environment-owned postal address'
+```
+
+The current plain-text message tracks proof-link clicks, replies, provider
+delivery events, unsubscribe, and purchase. It does not embed an open pixel, so
+an open rate must not be claimed.
 
 ## Verification
 

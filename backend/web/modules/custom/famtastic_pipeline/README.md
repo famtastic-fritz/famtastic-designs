@@ -15,8 +15,16 @@ approval → deployment/domain/hosting/renewal pipeline for FAMtastic Designs.
   (`StripeGateway` when a key is set, `StubGateway` otherwise) + a
   **signature-verified, idempotent webhook**.
 - **Site Studio request builder** — human brief + versioned machine JSON, behind
-  a `SiteStudioAdapterInterface` (V1 = file export for manual handoff).
-- **Drush commands:** `famtastic:prospect-create` (fpc), `famtastic:studio-generate` (fsg).
+  a `SiteStudioAdapterInterface`, plus a private offline SSH bridge for local
+  Site Studio/Shay generation and checksum-validated production import.
+- **Operations dashboard** — campaign funnel, exact recipient/message snapshot,
+  proof links, build prompt/input/output, provider, agent, task, checksum, and
+  source-SHA drill-down at `/admin/famtastic`.
+- **Drush commands:** `famtastic:prospect-create` (fpc),
+  `famtastic:studio-generate` (fsg), `famtastic:proof-local-export` (fple),
+  `famtastic:proof-local-refresh-export` (fplre),
+  `famtastic:proof-local-import` (fpli), and
+  `famtastic:campaign-snapshot-backfill` (fcsb).
 
 ## API (all token-scoped via the `X-Prospect-Token` header)
 
@@ -34,7 +42,8 @@ approval → deployment/domain/hosting/renewal pipeline for FAMtastic Designs.
 | POST | `/api/pipeline/revision-checkout` | Purchase one separately consented revision add-on |
 | POST | `/api/pipeline/hosting-renewal` | Separately authorize disclosed month-13 hosting |
 
-Admin: `/admin/famtastic/{prospect,order,intake,project}` and
+Admin operations: `/admin/famtastic`. Entity lists remain at
+`/admin/famtastic/{prospect,order,intake,project}` and
 `/admin/famtastic/prospect/{id}/generate-studio`,
 `/admin/famtastic/project/{id}/export.json|.md`.
 
@@ -115,6 +124,10 @@ Run the full local proof from the repo:
 ```bash
 scripts/acceptance-autonomous-pipeline.sh
 ```
+
+The production/local proof handoff is documented in
+`docs/SITE_STUDIO_INTEGRATION.md`. Neither its fetch nor promotion script
+changes production without an explicit `--apply`.
 
 ## Tests
 

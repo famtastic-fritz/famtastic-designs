@@ -1,9 +1,15 @@
 famtastic_pipeline.admin:
   title: 'FAMtastic Pipeline'
-  description: 'Prospects, orders, intakes, and projects.'
-  route_name: entity.famtastic_prospect.collection
+  description: 'Campaigns, messages, proofs, builds, jobs, sales, and projects.'
+  route_name: famtastic_pipeline.operations
   parent: system.admin
   weight: 0
+
+famtastic_pipeline.operations:
+  title: 'Operations Dashboard'
+  route_name: famtastic_pipeline.operations
+  parent: famtastic_pipeline.admin
+  weight: -20
 
 famtastic_pipeline.prospects:
   title: 'Prospects'

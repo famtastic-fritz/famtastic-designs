@@ -81,7 +81,7 @@ export default function CaseStudyPage() {
 
       <CTABanner
         title="Want results like these?"
-        primaryCta={{ label: 'Book a Call', href: '/contact' }}
+        primaryCta={{ label: 'Start Your Project', href: '/contact#project-fit' }}
       />
     </article>
   );

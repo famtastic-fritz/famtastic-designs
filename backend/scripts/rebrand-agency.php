@@ -259,16 +259,13 @@ else {
 // ===========================================================================
 echo "\n=== 3. CONTACT PAGE ===\n";
 $contact_body = <<<HTML
-<p>Tell us what you're building. We'll send you a quote within 24 hours.</p>
-<h3>Start With Our 60-Second Intake</h3>
-<p>Start with our 60-second intake — tell us what you need and get an instant estimate. No obligation, no sales pitch — just a clear scope and a number.</p>
+<p>Tell us what you need your website or automation to accomplish. We will reply by email with clear next steps and a scoped price.</p>
 <h3>Reach the Team</h3>
 <ul>
-  <li><strong>Email:</strong> <a href="mailto:hello@famtastic.design">hello@famtastic.design</a></li>
-  <li><strong>Hours:</strong> Mon–Fri 9am–6pm ET</li>
-  <li><strong>Location:</strong> Based in Florida — serving clients worldwide</li>
+  <li><strong>Email:</strong> <a href="mailto:hello@famtasticdesigns.com">hello@famtasticdesigns.com</a></li>
+  <li><strong>Response:</strong> Within one business day.</li>
 </ul>
-<p>Prefer to talk? Schedule a 15-minute call — mention it in your message and our team will set it up. Optional, never required.</p>
+<p>No sales call is required. Use the form or email us whenever it works for you.</p>
 HTML;
 
 $contact = NULL;
@@ -287,8 +284,17 @@ elseif (trim((string) $contact->get('body')->value) === trim($contact_body)) {
 }
 else {
   $contact->set('body', ['value' => $contact_body, 'format' => 'full_html']);
+  if ($contact->hasField('field_hero_subheadline')) {
+    $contact->set('field_hero_subheadline', 'Share what you need and receive a clear, fixed-price next step without a required sales call.');
+  }
+  if ($contact->hasField('field_cta_text')) {
+    $contact->set('field_cta_text', 'Send Message');
+  }
+  if ($contact->hasField('field_cta_link')) {
+    $contact->set('field_cta_link', ['uri' => 'internal:/contact#contact-form', 'title' => 'Send Message']);
+  }
   $contact->save();
-  echo "SET   Contact body rewritten (quote in 24h, email primary, intake mention, no 'Call Fritz')\n";
+  echo "SET   Contact rewritten (email primary, no storefront hours, no required call)\n";
   $summary[] = 'contact nid ' . $contact->id() . ': body rewritten';
 }
 

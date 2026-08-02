@@ -44,7 +44,7 @@ prospect_id="$(jq -r '.rows[0].prospect_id' "$import_result")"
 SITE_STUDIO_URL="http://127.0.0.1:$mock_port/jobs" \
 SITE_STUDIO_DISPATCH_SECRET=dispatch-e2e-secret \
 FAMTASTIC_PUBLIC_BASE_URL="http://127.0.0.1:$drupal_port" \
-  "$DRUSH" famtastic:jobs-run --type=proof.generate --limit=100 >/dev/null
+  "$DRUSH" famtastic:jobs-run --type=proof.generate --prospect="$prospect_id" --limit=10 >/dev/null
 
 "$DRUSH" eval "
   \$storage = \\Drupal::entityTypeManager()->getStorage('proof_campaign');

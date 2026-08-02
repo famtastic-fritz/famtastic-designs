@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# This acceptance fixture intentionally exercises the deterministic local
-# placeholder path. Customer outreach remains blocked unless a test opts in.
+# This acceptance fixture intentionally exercises the deterministic image-free
+# pilot path. Customer outreach remains blocked unless a test opts in.
 export FAMTASTIC_ALLOW_STUB_OUTREACH=1
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -66,6 +66,9 @@ FAMTASTIC_OUTREACH_POSTAL_ADDRESS= \
     }
   "
 FAMTASTIC_EMAIL_TRANSPORT=memory "$DRUSH" famtastic:jobs-run --type=outreach.send --prospect="$prospect_id" --limit=100 >/dev/null
+"$DRUSH" famtastic:campaign-snapshot-backfill "$campaign" \
+  --confirm="$campaign" \
+  --postal-address="1 Acceptance Test Street, Test City, FL 00000" >/dev/null
 
 "$DRUSH" eval "
   \$db = \\Drupal::database();
@@ -75,6 +78,11 @@ FAMTASTIC_EMAIL_TRANSPORT=memory "$DRUSH" famtastic:jobs-run --type=outreach.sen
 
 test "$(jq -r '.status' "$message_result")" = "delivered"
 test "$(jq -r '.provider' "$message_result")" = "memory"
+test "$(jq -r '.recipient_address' "$message_result")" = "$email"
+test "$(jq -r '.from_address' "$message_result")" = "hello@famtasticdesigns.com"
+test "$(jq -r '.proof_campaign_id > 0' "$message_result")" = "true"
+test "$(jq -r '.body_snapshot | contains("Advertisement from FAMtastic Designs")' "$message_result")" = "true"
+test "$(jq -r '.body_snapshot | contains("/unsubscribe/")' "$message_result")" = "true"
 unrelated_jobs_after="$("$DRUSH" eval "
   print (int) \\Drupal::database()->select('famtastic_job', 'j')
     ->condition('status', 'queued')
@@ -118,4 +126,4 @@ test "$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$port/api/pipel
   }
 "
 
-echo "PASS: scoped workers, campaign approval, missing-address fail-close, delivery lifecycle, and suppression verified."
+echo "PASS: scoped workers, campaign approval, exact message snapshot, missing-address fail-close, delivery lifecycle, and suppression verified."

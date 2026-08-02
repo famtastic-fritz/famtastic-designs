@@ -1,0 +1,117 @@
+.famtastic-ops {
+  --ops-lime: #5ee500;
+  --ops-ink: #172017;
+  --ops-muted: #5b665b;
+  --ops-border: #d8e0d5;
+}
+
+.famtastic-ops__lede {
+  max-width: 76ch;
+  color: var(--ops-muted);
+  font-size: 1rem;
+}
+
+.famtastic-ops__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin: 1.25rem 0 2rem;
+}
+
+.famtastic-ops__metric {
+  padding: 1rem;
+  border: 1px solid var(--ops-border);
+  border-radius: 0.6rem;
+  background: #fff;
+}
+
+.famtastic-ops__metric strong,
+.famtastic-ops__metric span {
+  display: block;
+}
+
+.famtastic-ops__metric strong {
+  color: var(--ops-ink) !important;
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.famtastic-ops__metric span {
+  margin-top: 0.25rem;
+  color: var(--ops-muted) !important;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.famtastic-ops__table {
+  margin-bottom: 2.25rem;
+}
+
+.famtastic-ops__table td,
+.famtastic-ops__table th {
+  vertical-align: top;
+}
+
+.famtastic-ops__badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #edf1eb;
+  color: #344134;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.famtastic-ops__badge--completed,
+.famtastic-ops__badge--ready,
+.famtastic-ops__badge--sent,
+.famtastic-ops__badge--approved {
+  background: #dcf8cc;
+  color: #215c09;
+}
+
+.famtastic-ops__badge--failed,
+.famtastic-ops__badge--bounced,
+.famtastic-ops__badge--complained {
+  background: #ffe0dd;
+  color: #8b1910;
+}
+
+.famtastic-ops__badge--queued,
+.famtastic-ops__badge--retry,
+.famtastic-ops__badge--waiting-callback {
+  background: #fff1c7;
+  color: #6d4c00;
+}
+
+.famtastic-ops__snapshot {
+  max-height: 34rem;
+  overflow: auto;
+  padding: 1rem;
+  border: 1px solid var(--ops-border);
+  border-radius: 0.5rem;
+  background: #f7f9f6;
+  color: var(--ops-ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.famtastic-ops__empty {
+  padding: 1rem;
+  border-left: 4px solid var(--ops-border);
+  color: var(--ops-muted);
+}
+
+@media (max-width: 720px) {
+  .famtastic-ops__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .famtastic-ops__table {
+    display: block;
+    overflow-x: auto;
+  }
+}

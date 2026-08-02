@@ -20,6 +20,18 @@ class OutreachMailer {
   ) {}
 
   /**
+   * Returns the exact configured envelope From address without its password.
+   */
+  public function fromAddress(): string {
+    $smtp = $this->configFactory->get('smtp.settings');
+    return trim((string) (
+      $smtp->get('smtp_from')
+      ?: $smtp->get('smtp_username')
+      ?: $this->configFactory->get('famtastic_pipeline.settings')->get('support_from_email')
+    ));
+  }
+
+  /**
    * Sends a transactional message through the configured cPanel SMTP account.
    *
    * The campaign boundary uses PHPMailer directly so a provider message id is
@@ -35,7 +47,7 @@ class OutreachMailer {
     $port = (int) $smtp->get('smtp_port');
     $username = trim((string) $smtp->get('smtp_username'));
     $password = (string) $smtp->get('smtp_password');
-    $from = trim((string) ($smtp->get('smtp_from') ?: $username));
+    $from = $this->fromAddress();
     $fromName = trim((string) ($smtp->get('smtp_fromname') ?: 'FAMtastic Designs'));
 
     if (!$smtp->get('smtp_on') || $host === '' || $port < 1 || $port > 65535) {

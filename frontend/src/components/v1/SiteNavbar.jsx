@@ -137,7 +137,7 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
           <NavLink to="/about" className="v1-nav__link">
             About
           </NavLink>
-          <NavLink to="/contact" className="v1-nav__link">
+          <NavLink to="/contact#contact-form" className="v1-nav__link">
             Contact
           </NavLink>
           {extraLinks.map((item) =>
@@ -155,8 +155,8 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
 
         <div className="v1-header__actions">
           {authSlot}
-          <NavLink to="/contact" className="v1-btn v1-btn--primary v1-btn--sm">
-            Book a Call
+          <NavLink to="/contact#project-fit" className="v1-btn v1-btn--primary v1-btn--sm v1-header__primary-cta">
+            Start a Project
           </NavLink>
           <button
             type="button"
@@ -172,6 +172,9 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
 
       {mobileOpen && (
         <nav className="v1-nav-mobile" aria-label="Mobile navigation" onClick={() => setMobileOpen(false)}>
+          <NavLink to="/contact#project-fit" className="v1-btn v1-btn--primary v1-nav-mobile__primary">
+            Start a Project
+          </NavLink>
           <NavLink to="/" end className="v1-nav__link">
             Home
           </NavLink>
@@ -203,7 +206,7 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
           <NavLink to="/about" className="v1-nav__link">
             About
           </NavLink>
-          <NavLink to="/contact" className="v1-nav__link">
+          <NavLink to="/contact#contact-form" className="v1-nav__link">
             Contact
           </NavLink>
         </nav>

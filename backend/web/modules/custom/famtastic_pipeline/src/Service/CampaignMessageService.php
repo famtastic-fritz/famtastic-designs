@@ -53,6 +53,8 @@ final class CampaignMessageService {
         'prospect_id' => (int) $prospect->id(),
         'campaign_id' => $campaignId,
         'recipient_hash' => $this->ledger->contactHash($email),
+        'recipient_address' => $email,
+        'proof_campaign_id' => $proofCampaignId,
         'template_key' => 'proof_ready',
         'template_version' => self::TEMPLATE_VERSION,
         'subject' => sprintf('Three website directions for %s', $prospect->label()),
@@ -155,15 +157,18 @@ final class CampaignMessageService {
         throw new \RuntimeException('Real outreach requires a valid physical postal address.');
       }
       $postalAddress = str_replace("\r", '', $postalAddress);
-      $body = sprintf(
-        "Advertisement from FAMtastic Designs\n\nWe created three website directions for %s.\n\nView them: %s/api/pipeline/email/click/%s\n\nWhy you are receiving this: we found your business contact information in a public business listing while researching local businesses that may benefit from a stronger web presence.\n\nFAMtastic Designs\n%s\n\nTo stop receiving commercial email from us, unsubscribe here: %s/api/pipeline/email/unsubscribe/%s",
-        $prospect->label(),
-        $base,
-        $message['tracking_key'],
-        $postalAddress,
-        $base,
-        $message['unsubscribe_key'],
-      );
+      $body = $this->messageBody($prospect, $message, $postalAddress, $base);
+      $proofUrl = $base . '/api/pipeline/email/click/' . $message['tracking_key'];
+      $this->database->update('famtastic_email_message')
+        ->fields([
+          'recipient_address' => $email,
+          'from_address' => $this->mailer->fromAddress(),
+          'body_snapshot' => $body,
+          'proof_url' => $proofUrl,
+          'changed' => $this->time->getRequestTime(),
+        ])
+        ->condition('id', $messageId)
+        ->execute();
       $providerMessageId = $this->mailer->send($email, $message['subject'], $body);
       $provider = 'cpanel_smtp';
     }
@@ -204,6 +209,54 @@ final class CampaignMessageService {
       );
     }
     return $this->load($messageId);
+  }
+
+  /**
+   * Backfills exact snapshots for a previously sent, explicitly named batch.
+   */
+  public function backfillCampaignSnapshots(string $campaignKey, string $postalAddress, ?string $base = NULL): int {
+    $postalAddress = trim(str_replace("\r", '', $postalAddress));
+    if ($postalAddress === '') {
+      throw new \InvalidArgumentException('A physical postal address is required.');
+    }
+    $campaignId = $this->campaignId($campaignKey);
+    if (!$campaignId) {
+      throw new \InvalidArgumentException('Campaign does not exist.');
+    }
+    $base = rtrim((string) ($base ?: getenv('FAMTASTIC_PUBLIC_BASE_URL') ?: 'https://famtasticdesigns.com'), '/');
+    $messages = $this->database->select('famtastic_email_message', 'm')
+      ->fields('m')
+      ->condition('campaign_id', $campaignId)
+      ->condition('sent_at', 0, '>')
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+    $updated = 0;
+    foreach ($messages as $message) {
+      $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load((int) $message['prospect_id']);
+      if (!$prospect) {
+        continue;
+      }
+      $email = mb_strtolower(trim((string) $prospect->get('public_email')->value));
+      $proofIds = $this->entityTypeManager->getStorage('proof_campaign')->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('prospect_id', (int) $prospect->id())
+        ->sort('id', 'DESC')
+        ->range(0, 1)
+        ->execute();
+      $this->database->update('famtastic_email_message')
+        ->fields([
+          'recipient_address' => $email,
+          'from_address' => $this->mailer->fromAddress(),
+          'body_snapshot' => $this->messageBody($prospect, $message, $postalAddress, $base),
+          'proof_campaign_id' => $proofIds ? (int) reset($proofIds) : NULL,
+          'proof_url' => $base . '/api/pipeline/email/click/' . $message['tracking_key'],
+          'changed' => $this->time->getRequestTime(),
+        ])
+        ->condition('id', (int) $message['id'])
+        ->execute();
+      $updated++;
+    }
+    return $updated;
   }
 
   /**
@@ -307,6 +360,18 @@ final class CampaignMessageService {
       ->execute()
       ->fetchField();
     return $id ? (int) $id : NULL;
+  }
+
+  private function messageBody(Prospect $prospect, array $message, string $postalAddress, string $base): string {
+    return sprintf(
+      "Advertisement from FAMtastic Designs\n\nWe created three website directions for %s.\n\nView them: %s/api/pipeline/email/click/%s\n\nWhy you are receiving this: we found your business contact information in a public business listing while researching local businesses that may benefit from a stronger web presence.\n\nFAMtastic Designs\n%s\n\nTo stop receiving commercial email from us, unsubscribe here: %s/api/pipeline/email/unsubscribe/%s",
+      $prospect->label(),
+      $base,
+      $message['tracking_key'],
+      $postalAddress,
+      $base,
+      $message['unsubscribe_key'],
+    );
   }
 
   private function setStatus(int $messageId, string $status): void {

@@ -36,7 +36,7 @@ export default function PackagesHubPage() {
         accent="pricing"
         lede="Fixed-scope packages engineered to ship — pick a starting lane and final scope is confirmed after a short consultation so the project fits your goals, timeline, and budget."
         primaryCta={{ label: 'Start — $199', href: '/packages/199-quick-start' }}
-        secondaryCta={{ label: 'Book a Call', href: '/contact' }}
+        secondaryCta={{ label: 'Find Your Fit', href: '/contact#project-fit' }}
       />
 
       <Section>
@@ -47,7 +47,7 @@ export default function PackagesHubPage() {
             <strong>Packages are being finalized.</strong>
             <br />
             Pricing details are being published right now — meanwhile,{' '}
-            <Link to="/contact">book a call</Link> for a same-day quote.
+            <Link to="/contact#contact-form">send us a message</Link> for a scoped quote.
           </div>
         )}
 

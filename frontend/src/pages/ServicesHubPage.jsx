@@ -46,7 +46,7 @@ export default function ServicesHubPage() {
             <strong>Solutions are on the way.</strong>
             <br />
             We are publishing our service lineup right now — check back shortly, or{' '}
-            <Link to="/contact">book a call</Link> and we will walk you through it live.
+            <Link to="/contact#contact-form">send us your questions</Link> and we will reply with clear next steps.
           </div>
         )}
 
@@ -64,7 +64,7 @@ export default function ServicesHubPage() {
       <CTABanner
         title="Not sure which system fits?"
         body="A short consultation maps your workflow to the right build — fixed scope, fixed price, verified before launch."
-        primaryCta={{ label: 'Book a Call', href: '/contact' }}
+        primaryCta={{ label: 'Start Your Project', href: '/contact#project-fit' }}
       />
     </>
   );

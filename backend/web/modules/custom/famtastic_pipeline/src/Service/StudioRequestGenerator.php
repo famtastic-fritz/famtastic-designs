@@ -22,6 +22,7 @@ class StudioRequestGenerator {
     protected SiteStudioAdapterInterface $adapter,
     protected EntityTypeManagerInterface $entityTypeManager,
     protected OperationalLedger $ledger,
+    protected BuildTelemetryService $buildTelemetry,
   ) {}
 
   /**
@@ -60,6 +61,7 @@ class StudioRequestGenerator {
     $project->save();
 
     $handoff = $this->adapter->submit($json, $brief, $project);
+    $this->buildTelemetry->recordStudioRequest($prospect, $project, $json, $brief, $handoff);
 
     return ['project' => $project, 'handoff' => $handoff];
   }
