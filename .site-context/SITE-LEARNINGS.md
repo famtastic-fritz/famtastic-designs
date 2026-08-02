@@ -18,6 +18,10 @@ Observation:
   `index.html` shells are first-class deployment artifacts: excluding every
   basename named `index.html` left nested routes on stale JavaScript even when
   the root route was current.
+- GoDaddy reported ample filesystem space and inodes while the account still
+  rejected `npm ci` writes with system error `-122`. Eight private release
+  worktrees retained about 800 MB of reproducible `node_modules` data, so the
+  effective constraint was the hosting account quota rather than the disk.
 
 Action taken:
 
@@ -30,6 +34,9 @@ Action taken:
 - Anchored the frontend deploy exclusion to the artifact-root `index.html`,
   promoted nested route shells, and verified them using a normal manifest that
   works on the GoDaddy host without `/dev/fd`.
+- Removed only the disposable dependency trees from superseded/failed private
+  release worktrees and added an exit trap to the shared deploy script so each
+  future build cleans its own `node_modules`, whether it succeeds or fails.
 
 Permanent rules:
 
@@ -41,6 +48,9 @@ Permanent rules:
   their count-to-record relationship.
 - Route-specific frontend shells belong to the release artifact and must be
   promoted and verified with the bundles they reference.
+- Private release source and compiled `dist` output may be retained for audit;
+  `node_modules` is a reproducible build cache and must be removed after every
+  remote deployment attempt to prevent account-quota exhaustion.
 - Historical deterministic proof builds must remain attributed to the
   deterministic renderer with agent `none`; never invent a Shay prompt or
   agent run that did not occur.

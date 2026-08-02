@@ -17,6 +17,12 @@ correction, exact message/build telemetry, checksum-gated offline Site Studio
 bridge, and route-shell deployment correction already recorded in the
 production deploy log.
 
+The final marker-only frontend apply exposed a separate hosting-account quota:
+each private Git release retained a reproducible `frontend/node_modules` tree.
+The shared deploy script now removes that dependency tree on every remote exit,
+including a failed `npm ci`, while preserving source, compiled release output,
+production assets, and rollback backups.
+
 ## 2026-07-31 — Autonomous pipeline completion candidate
 
 Completed the Git-tracked lead-to-launch implementation on PR #16. The branch

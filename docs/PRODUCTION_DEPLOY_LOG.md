@@ -58,6 +58,17 @@ shell byte-for-byte through a normal manifest that works on GoDaddy without
 reference the current release assets and that the anchored rsync filter copies
 nested `index.html` files.
 
+### Private release dependency cleanup
+
+The final evidence-marker apply initially stopped during `npm ci`, before any
+live frontend mutation, with hosting system error `-122`. Filesystem capacity
+and inodes were healthy; private release worktrees had accumulated eight
+reproducible `frontend/node_modules` trees totaling roughly 800 MB. Those build
+caches were removed without touching source, compiled releases, production,
+proofs, customer data, or backups. The canonical frontend deploy now removes
+its release-local `node_modules` on every remote exit, including failed builds,
+so every agent receives the same quota-safe behavior.
+
 ### Production acceptance evidence
 
 - Frontend and backend release markers both matched the final commit.

@@ -116,6 +116,21 @@ backup_dir="$HOME/backups"
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 backup_path="$backup_dir/famtastic-frontend-$timestamp-$commit_sha.tgz"
 
+# Dependencies are reproducible build inputs, not release artifacts. Always
+# remove them when this remote apply exits, including after an interrupted or
+# failed npm install, so per-account hosting quotas do not grow by roughly one
+# node_modules tree for every commit deployed.
+cleanup_build_dependencies() {
+  dependencies_dir="$frontend_dir/node_modules"
+  expected_dependencies_dir="$HOME/$deploy_base/releases/$commit_sha/source/frontend/node_modules"
+  [[ "$dependencies_dir" == "$expected_dependencies_dir" ]] || {
+    echo "Refusing unexpected dependency cleanup target: $dependencies_dir" >&2
+    return 1
+  }
+  rm -rf -- "$dependencies_dir"
+}
+trap cleanup_build_dependencies EXIT
+
 mkdir -p "$deploy_dir/releases" "$backup_dir"
 if [[ ! -d "$mirror_dir" ]]; then
   git clone --mirror "$repository_url" "$mirror_dir"
