@@ -158,6 +158,8 @@ services_backup="$HOME/backups/famtastic-services-$timestamp-$commit_sha.yml"
 database_backup="$HOME/backups/famtastic-database-$timestamp-$commit_sha.sql.gz"
 database_dump_target="${database_backup%.gz}"
 stage_module="$production_dir/web/modules/custom/.famtastic_pipeline-$commit_sha"
+settings_dir="$production_dir/web/sites/default"
+settings_mode="$(stat -c '%a' "$settings_dir")"
 stage_services="$production_dir/web/sites/default/.services-$commit_sha.yml"
 previous_module="$production_dir/web/modules/custom/.famtastic_pipeline-previous-$timestamp"
 previous_services="$production_dir/web/sites/default/.services-previous-$timestamp.yml"
@@ -174,14 +176,19 @@ test -s "$database_backup" || {
 rm -rf "$stage_module"
 mkdir -p "$stage_module"
 rsync -a "$source_module/" "$stage_module/"
+chmod u+w "$settings_dir"
+trap 'chmod "$settings_mode" "$settings_dir" 2>/dev/null || true' ERR
 install -m 0644 "$source_services" "$stage_services"
 mv "$production_module" "$previous_module"
 mv "$stage_module" "$production_module"
 mv "$production_services" "$previous_services"
 mv "$stage_services" "$production_services"
+chmod "$settings_mode" "$settings_dir"
+trap - ERR
 
 rollback_code() {
   if [[ -d "$previous_module" ]]; then
+    chmod u+w "$settings_dir" 2>/dev/null || true
     failed_module="$production_dir/web/modules/custom/.famtastic_pipeline-failed-$timestamp"
     mv "$production_module" "$failed_module" 2>/dev/null || true
     mv "$previous_module" "$production_module"
@@ -189,6 +196,7 @@ rollback_code() {
       mv "$production_services" "$production_services.failed-$timestamp" 2>/dev/null || true
       mv "$previous_services" "$production_services"
     fi
+    chmod "$settings_mode" "$settings_dir" 2>/dev/null || true
     "$drush" cr >/dev/null 2>&1 || true
   fi
   echo "Code was restored after a failed deployment." >&2
