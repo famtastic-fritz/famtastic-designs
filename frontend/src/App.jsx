@@ -25,11 +25,13 @@ import ContactPage from './pages/ContactPage.jsx';
 import StartPage from './pages/StartPage.jsx';
 import AliasPage from './pages/AliasPage.jsx';
 import SEO from './components/SEO.jsx';
+import GoogleAnalytics from './components/GoogleAnalytics.jsx';
 
 export default function App() {
   return (
     <UserProvider>
       <SEO />
+      <GoogleAnalytics />
       <Routes>
         {/* Public, token-scoped prospect pipeline (no marketing chrome, no auth). */}
         {/* /p/:token enters via ProofHub: active proof campaign → proof hub;
