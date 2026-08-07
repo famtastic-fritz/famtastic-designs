@@ -6,7 +6,7 @@ namespace Drupal\famtastic_pipeline\Service;
 
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Datetime\TimeInterface;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\user\UserInterface;
 use Drupal\famtastic_pipeline\Entity\Order;
