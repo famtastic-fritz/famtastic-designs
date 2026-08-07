@@ -1,5 +1,39 @@
 # Production Deploy Log
 
+## 2026-08-07 — Customer lifecycle portal and Commerce catalog
+
+- Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
+- Customer platform implementation: `756bffc558681888a2cc7a96cde42f3fc3304f97`
+- Runtime corrections: `c9aa182a`, `781733f1`, `45adc9e0`
+- Drupal update `famtastic_pipeline_update_8012` created nine customer,
+  organization, entitlement, collaboration, and activity tables.
+- Commerce catalog created `FAM-FOOT-199` ($199), `FAM-HOST-999` ($9.99), and
+  inactive/configurable `FAM-ANALYTICS`.
+- Backend database rollback archive:
+  `~/backups/famtastic-database-20260807T202048Z-781733f1ea40e1d560abb6fc5e49ffe4995213ac.sql.gz`
+- Frontend rollback archive:
+  `~/backups/famtastic-frontend-20260807T202122Z-45adc9e0973c52d06c5580a06f30be84db9cfddd.tgz`
+- Final frontend and backend release markers must match the Git commit that
+  records this evidence entry.
+- Result: successful
+
+### Acceptance evidence
+
+- Apex and `www` display the branded email/password customer login; the legacy
+  private-link wording is removed.
+- Anonymous `/portal` access redirects to `/login`; anonymous session API
+  returns 401 and invalid registration returns a structured 422.
+- A verified production QA customer authenticated through Drupal session
+  cookies and opened its organization-scoped React workspace.
+- Home, project, file/approval, message, purchase, service, domain/hosting,
+  support, team, account, growth, and analytics-entitlement surfaces rendered.
+- CSRF-protected persistent project threads were created and read back.
+- CSRF-protected profile update and sign-out completed successfully.
+- Mobile acceptance at 390×844 showed no horizontal overflow; the apex and
+  `www` login routes used the current release assets.
+- All changed PHP passed PHP 8.3 syntax validation; Composer/platform checks,
+  Drupal database updates, cache rebuild, npm audit, and Vite build passed.
+
 ## 2026-08-02 — Operations telemetry, contact correction, and route-shell release
 
 - Repository: `famtastic-fritz/famtastic-designs`
