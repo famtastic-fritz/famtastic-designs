@@ -73,7 +73,7 @@ famtastic_pipeline.customer_logout:
   methods: [POST]
   requirements:
     _access: 'TRUE'
-    _csrf_token: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
   options:
     no_cache: 'TRUE'
 
@@ -104,7 +104,7 @@ famtastic_pipeline.customer_profile:
   methods: [PATCH]
   requirements:
     _access: 'TRUE'
-    _csrf_token: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
   options:
     no_cache: 'TRUE'
 
@@ -115,7 +115,7 @@ famtastic_pipeline.customer_threads:
   methods: [POST]
   requirements:
     _access: 'TRUE'
-    _csrf_token: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
   options:
     no_cache: 'TRUE'
 
@@ -137,7 +137,7 @@ famtastic_pipeline.customer_thread_reply:
   methods: [POST]
   requirements:
     _access: 'TRUE'
-    _csrf_token: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
     thread: '[0-9a-f-]{36}'
   options:
     no_cache: 'TRUE'
