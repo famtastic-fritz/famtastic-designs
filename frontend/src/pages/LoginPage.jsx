@@ -1,107 +1,79 @@
 import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router';
-import { useUser } from '../auth/UserContext.jsx';
+import { useNavigate } from 'react-router';
+
+function extractPortalToken(value) {
+  const input = value.trim();
+  if (/^[A-Za-z0-9_-]{43}$/.test(input)) return input;
+
+  try {
+    const url = new URL(input);
+    const match = url.pathname.match(/^\/(?:portal|p)\/([A-Za-z0-9_-]{43})(?:\/|$)/);
+    return match?.[1] || '';
+  } catch {
+    return '';
+  }
+}
 
 /**
- * Dark-branded login form (Drupal email + password → OAuth password grant).
- * On success, navigates back to the ?redirect= target (default /admin).
+ * Customer portal entry. Customers authenticate with the private, random link
+ * delivered for their project; Drupal staff authentication stays separate.
  */
 export default function LoginPage() {
-  const { login, isAuthenticated } = useUser();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [portalLink, setPortalLink] = useState('');
   const [error, setError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
 
-  // Only allow internal redirects — never bounce to an external origin.
-  const rawRedirect = searchParams.get('redirect') || '/admin';
-  const redirectTo = rawRedirect.startsWith('/') && !rawRedirect.startsWith('//')
-    ? rawRedirect
-    : '/admin';
-
-  async function handleSubmit(event) {
+  function openPortal(event) {
     event.preventDefault();
-    setError('');
-    setSubmitting(true);
-    try {
-      await login(email.trim(), password);
-      navigate(redirectTo, { replace: true });
-    } catch (err) {
-      setError(err.message || 'Login failed. Please try again.');
-      setSubmitting(false);
+    const token = extractPortalToken(portalLink);
+    if (!token) {
+      setError('Paste the complete private portal link from your FAMtastic email.');
+      return;
     }
-  }
-
-  if (isAuthenticated) {
-    return (
-      <section className="login-card" aria-labelledby="login-heading">
-        <h1 id="login-heading" className="login-card__title">
-          Already signed <span className="accent">in</span>
-        </h1>
-        <p className="login-card__lede">
-          You have an active session. Head to the{' '}
-          <Link to="/admin">admin dashboard</Link> or{' '}
-          <Link to="/">back to the site</Link>.
-        </p>
-      </section>
-    );
+    navigate(`/portal/${token}`);
   }
 
   return (
-    <section className="login-card" aria-labelledby="login-heading">
-      <h1 id="login-heading" className="login-card__title">
-        Client <span className="accent">Login</span>
+    <section className="login-card login-card--portal" aria-labelledby="portal-heading">
+      <span className="login-card__eyebrow">Private project workspace</span>
+      <h1 id="portal-heading" className="login-card__title">
+        Client <span className="accent">Portal</span>
       </h1>
       <p className="login-card__lede">
-        Sign in with your Drupal account to manage client projects.
+        Your project portal uses a secure private link—there is no customer password to remember.
+        Open the link from your FAMtastic project email, or paste it below.
       </p>
 
-      {error && (
-        <div className="alert alert--error" role="alert">
-          {error}
-        </div>
-      )}
+      {error && <div className="alert alert--error" role="alert">{error}</div>}
 
-      <form className="form" onSubmit={handleSubmit} noValidate>
+      <form className="form" onSubmit={openPortal} noValidate>
         <div className="form__field">
-          <label className="form__label" htmlFor="login-email">
-            Email
-          </label>
+          <label className="form__label" htmlFor="portal-link">Private portal link</label>
           <input
-            id="login-email"
+            id="portal-link"
             className="form__input"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            type="text"
+            autoComplete="off"
+            spellCheck="false"
+            value={portalLink}
+            onChange={(event) => setPortalLink(event.target.value)}
+            placeholder="https://famtasticdesigns.com/portal/…"
           />
         </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="login-password">
-            Password
-          </label>
-          <input
-            id="login-password"
-            className="form__input"
-            type="password"
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-          />
-        </div>
-
-        <button className="btn btn--lime" type="submit" disabled={submitting}>
-          {submitting ? 'Signing in…' : 'Sign in'}
-        </button>
+        <button className="btn btn--lime" type="submit">Open my portal</button>
       </form>
+
+      <div className="login-card__help">
+        <div>
+          <strong>Can’t find your link?</strong>
+          <span>We’ll verify your project and resend it securely.</span>
+        </div>
+        <a href="mailto:support@famtasticdesigns.com?subject=Please%20resend%20my%20client%20portal%20link">Request my link</a>
+      </div>
+
+      <p className="login-card__staff">
+        FAMtastic staff? <a href="/web/user/login?destination=/admin/famtastic">Open Drupal administration</a>
+      </p>
     </section>
   );
 }

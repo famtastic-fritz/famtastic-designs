@@ -671,6 +671,66 @@ a:hover {
   font-size: 0.95rem;
 }
 
+.login-card--portal {
+  max-width: 680px;
+  background:
+    radial-gradient(circle at 90% 0, rgba(124, 252, 0, 0.09), transparent 18rem),
+    var(--fam-surface);
+}
+
+.login-card__eyebrow {
+  color: var(--fam-lime);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.login-card--portal .form__input {
+  padding: 0.85rem 1rem;
+}
+
+.login-card__help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1rem;
+  border: 1px solid var(--fam-border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.login-card__help div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.login-card__help span,
+.login-card__staff {
+  color: var(--fam-text-muted);
+  font-size: 0.85rem;
+}
+
+.login-card__help a,
+.login-card__staff a {
+  color: var(--fam-lime);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-card__staff {
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .login-card__help {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Admin dashboard                                                     */
 /* ------------------------------------------------------------------ */

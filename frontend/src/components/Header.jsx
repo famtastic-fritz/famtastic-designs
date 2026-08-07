@@ -10,7 +10,7 @@ import { SiteNavbar } from './v1/index.js';
  * Keeps the original data sources: top-level links come from the Drupal main
  * menu via getMenus() (with its stub fallback), dropdown items are live
  * service_page / package_page nodes, and the auth block is unchanged
- * (Login for guests; email + Admin/Logout for authenticated users).
+ * (Client Portal for guests; email + Admin/Logout for authenticated users).
  */
 export default function Header() {
   const { user, isAuthenticated, logout } = useUser();
@@ -73,7 +73,7 @@ export default function Header() {
         </>
       ) : (
         <NavLink to="/login" className="v1-nav__link">
-          Login
+          Client Portal
         </NavLink>
       )}
     </>
