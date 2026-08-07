@@ -11,6 +11,7 @@ use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\famtastic_pipeline\Service\GoogleAnalyticsReportingService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,7 +45,6 @@ final class OperationsController extends ControllerBase {
    * Renders the operations dashboard and campaign rollup.
    */
   public function dashboard(): array {
-    $webAnalytics = $this->googleAnalytics->dashboardReport();
     $campaignTotal = $this->count('famtastic_campaign');
     $campaigns = $this->database->select('famtastic_campaign', 'c')
       ->extend(PagerSelectExtender::class)
@@ -104,8 +104,6 @@ final class OperationsController extends ControllerBase {
         '#markup' => '<p class="famtastic-ops__lede">One place to inspect every campaign, recipient message, proof, build prompt, agent, job, event, and sale.</p>',
       ],
       'summary' => $this->metricCards($summary),
-      'web_analytics_heading' => ['#markup' => '<h2 id="web-analytics">Website Analytics <small>(last 30 days)</small></h2>'],
-      'web_analytics' => $this->webAnalytics($webAnalytics),
       'campaign_heading' => ['#markup' => '<h2 id="campaigns">Campaigns</h2>'],
       'campaigns' => [
         '#type' => 'table',
@@ -115,7 +113,45 @@ final class OperationsController extends ControllerBase {
         '#attributes' => ['class' => ['famtastic-ops__table']],
       ],
       'pager' => ['#type' => 'pager'],
-    ], 'FAMtastic Operations');
+    ], 'Campaign Operations');
+  }
+
+  /**
+   * Renders the standalone website analytics dashboard.
+   */
+  public function analytics(): array {
+    $propertyId = (string) Settings::get('famtastic_google_analytics_property_id', '');
+    $googleAnalyticsUrl = $propertyId === ''
+      ? 'https://analytics.google.com/'
+      : 'https://analytics.google.com/analytics/web/#/p' . rawurlencode($propertyId) . '/reports/intelligenthome';
+
+    return $this->page([
+      'intro' => [
+        '#markup' => '<p class="famtastic-ops__lede">A focused 30-day view of website traffic and engagement. Use Google Analytics for realtime data, custom date ranges, comparisons, explorations, and account settings.</p>',
+      ],
+      'actions' => [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['famtastic-ops__actions']],
+        'google_analytics' => [
+          '#type' => 'link',
+          '#title' => $this->t('Open Google Analytics'),
+          '#url' => Url::fromUri($googleAnalyticsUrl),
+          '#attributes' => [
+            'class' => ['button', 'button--primary'],
+            'target' => '_blank',
+            'rel' => 'noopener noreferrer',
+          ],
+        ],
+        'campaigns' => [
+          '#type' => 'link',
+          '#title' => $this->t('View Campaign Operations'),
+          '#url' => Url::fromRoute('famtastic_pipeline.operations'),
+          '#attributes' => ['class' => ['button']],
+        ],
+      ],
+      'heading' => ['#markup' => '<h2>Website Analytics <small>(last 30 days)</small></h2>'],
+      'report' => $this->webAnalytics($this->googleAnalytics->dashboardReport()),
+    ], 'Website Analytics');
   }
 
   /**

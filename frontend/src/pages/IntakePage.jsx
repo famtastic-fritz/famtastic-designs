@@ -101,7 +101,7 @@ export default function IntakePage() {
     setNotice(null);
     try {
       await submitIntake(token, { ...values, asset_ownership_confirmed: ownership });
-      navigate(`/p/${token}/status`);
+      navigate(`/portal/${token}`);
     } catch (err) {
       setNotice({ type: 'error', text: err.message });
       setSaving(false);

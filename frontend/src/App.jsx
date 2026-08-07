@@ -26,6 +26,7 @@ import StartPage from './pages/StartPage.jsx';
 import AliasPage from './pages/AliasPage.jsx';
 import SEO from './components/SEO.jsx';
 import GoogleAnalytics from './components/GoogleAnalytics.jsx';
+import ClientPortalPage from './pages/ClientPortalPage.jsx';
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/p/:token/cancel" element={<PaymentCancelPage />} />
         <Route path="/p/:token/intake" element={<IntakePage />} />
         <Route path="/p/:token/status" element={<ProofStatusPage />} />
+        <Route path="/portal/:token" element={<ClientPortalPage />} />
 
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />

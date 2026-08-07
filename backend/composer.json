@@ -14,6 +14,7 @@
         "composer/installers": "^2.0",
         "drupal/admin_toolbar": "^3.6",
         "drupal/consumers": "^1.24",
+        "drupal/commerce": "^3.3",
         "drupal/core-composer-scaffold": "^11",
         "drupal/core-project-message": "^11",
         "drupal/core-recommended": "^11",

@@ -6,10 +6,17 @@ famtastic_pipeline.admin:
   weight: 0
 
 famtastic_pipeline.operations:
-  title: 'Operations Dashboard'
+  title: 'Campaign Operations'
   route_name: famtastic_pipeline.operations
   parent: famtastic_pipeline.admin
   weight: -20
+
+famtastic_pipeline.analytics:
+  title: 'Website Analytics'
+  description: 'GA4 traffic and engagement summary.'
+  route_name: famtastic_pipeline.analytics
+  parent: famtastic_pipeline.admin
+  weight: -19
 
 famtastic_pipeline.prospects:
   title: 'Prospects'

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import {
   authorizeHostingRenewal,
   formatPrice,
@@ -97,6 +97,7 @@ export default function ProofStatusPage() {
 
   return (
     <PipelineShell step={4}>
+      <Link className="fp-portal-back" to={`/portal/${token}`}>← Back to client portal</Link>
       <div className="fp-hero">
         <span className="fp-eyebrow">Your website proof</span>
         <h1>{data?.prospect?.business?.business_name || 'Your website'}</h1>

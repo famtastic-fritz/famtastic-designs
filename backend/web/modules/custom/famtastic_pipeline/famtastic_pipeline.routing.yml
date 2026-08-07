@@ -196,6 +196,14 @@ famtastic_pipeline.operations:
   requirements:
     _permission: 'administer famtastic pipeline'
 
+famtastic_pipeline.analytics:
+  path: '/admin/famtastic/analytics'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::analytics'
+    _title: 'Website Analytics'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+
 famtastic_pipeline.operations_metric:
   path: '/admin/famtastic/metric/{metric}'
   defaults:
