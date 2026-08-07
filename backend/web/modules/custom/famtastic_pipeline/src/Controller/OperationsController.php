@@ -12,6 +12,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\famtastic_pipeline\Service\GoogleAnalyticsReportingService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -24,6 +25,7 @@ final class OperationsController extends ControllerBase {
     private readonly Connection $database,
     private readonly EntityTypeManagerInterface $pipelineEntityTypeManager,
     private readonly DateFormatterInterface $dateFormatter,
+    private readonly GoogleAnalyticsReportingService $googleAnalytics,
   ) {}
 
   /**
@@ -34,6 +36,7 @@ final class OperationsController extends ControllerBase {
       $container->get('database'),
       $container->get('entity_type.manager'),
       $container->get('date.formatter'),
+      $container->get('famtastic_pipeline.google_analytics_reporting'),
     );
   }
 
@@ -41,6 +44,7 @@ final class OperationsController extends ControllerBase {
    * Renders the operations dashboard and campaign rollup.
    */
   public function dashboard(): array {
+    $webAnalytics = $this->googleAnalytics->dashboardReport();
     $campaignTotal = $this->count('famtastic_campaign');
     $campaigns = $this->database->select('famtastic_campaign', 'c')
       ->extend(PagerSelectExtender::class)
@@ -100,6 +104,8 @@ final class OperationsController extends ControllerBase {
         '#markup' => '<p class="famtastic-ops__lede">One place to inspect every campaign, recipient message, proof, build prompt, agent, job, event, and sale.</p>',
       ],
       'summary' => $this->metricCards($summary),
+      'web_analytics_heading' => ['#markup' => '<h2 id="web-analytics">Website Analytics <small>(last 30 days)</small></h2>'],
+      'web_analytics' => $this->webAnalytics($webAnalytics),
       'campaign_heading' => ['#markup' => '<h2 id="campaigns">Campaigns</h2>'],
       'campaigns' => [
         '#type' => 'table',
@@ -110,6 +116,27 @@ final class OperationsController extends ControllerBase {
       ],
       'pager' => ['#type' => 'pager'],
     ], 'FAMtastic Operations');
+  }
+
+  /**
+   * Builds the cached Google Analytics summary and detail tables.
+   */
+  private function webAnalytics(array $report): array {
+    if (empty($report['available'])) {
+      return ['#markup' => '<p class="famtastic-ops__empty">' . Html::escape((string) ($report['message'] ?? 'Analytics unavailable.')) . '</p>'];
+    }
+    $build = ['metrics' => $this->metricCards($report['metrics'])];
+    foreach (['pages' => ['Top Pages', ['Page', 'Views']], 'sources' => ['Traffic Channels', ['Channel', 'Sessions']]] as $key => [$title, $header]) {
+      $build[$key . '_heading'] = ['#markup' => '<h3>' . Html::escape($title) . '</h3>'];
+      $build[$key] = [
+        '#type' => 'table',
+        '#header' => $header,
+        '#rows' => array_values($report[$key] ?? []),
+        '#empty' => $this->t('No Analytics data has been recorded yet.'),
+        '#attributes' => ['class' => ['famtastic-ops__table']],
+      ];
+    }
+    return $build;
   }
 
   /**

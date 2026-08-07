@@ -47,6 +47,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\PipelineAnalyticsService
     arguments: ['@database']
 
+  famtastic_pipeline.google_analytics_reporting:
+    class: Drupal\famtastic_pipeline\Service\GoogleAnalyticsReportingService
+    arguments: ['@http_client', '@cache.default', '@logger.channel.famtastic_pipeline']
+
   famtastic_pipeline.build_telemetry:
     class: Drupal\famtastic_pipeline\Service\BuildTelemetryService
     arguments: ['@database', '@datetime.time']
