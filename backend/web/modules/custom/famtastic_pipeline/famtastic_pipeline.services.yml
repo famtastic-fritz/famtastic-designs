@@ -71,7 +71,7 @@ services:
 
   famtastic_pipeline.fulfillment:
     class: Drupal\famtastic_pipeline\Service\FulfillmentService
-    arguments: ['@entity_type.manager', '@datetime.time', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service', '@famtastic_pipeline.operational_ledger']
+    arguments: ['@entity_type.manager', '@datetime.time', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.customer_portal']
 
   famtastic_pipeline.studio_builder:
     class: Drupal\famtastic_pipeline\Service\SiteStudioRequestBuilder
@@ -92,3 +92,7 @@ services:
   famtastic_pipeline.mailer:
     class: Drupal\famtastic_pipeline\Service\OutreachMailer
     arguments: ['@config.factory', '@logger.channel.famtastic_pipeline']
+
+  famtastic_pipeline.customer_portal:
+    class: Drupal\famtastic_pipeline\Service\CustomerPortalService
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid']

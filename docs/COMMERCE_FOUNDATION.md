@@ -45,6 +45,21 @@ Before sending any customer through Commerce checkout:
 6. Obtain explicit approval before changing to live credentials or charging a
    real customer.
 
+## Customer lifecycle catalog
+
+`backend/scripts/setup-commerce.php` idempotently seeds:
+
+- `FAM-FOOT-199`: $199 Foot in the Door single-page website, including one
+  year of managed hosting and either first-year new-domain registration or an
+  existing-domain connection.
+- `FAM-HOST-999`: $9.99 monthly managed-hosting renewal after the included year.
+- `FAM-ANALYTICS`: an inactive/configurable Growth Analytics add-on; publish and
+  price it only after its packaging is approved.
+
+Domain and hosting are separate entitlements. Domains remain customer-owned and
+renew annually at the disclosed registrar price. Hosting is FAMtastic-managed
+and may renew monthly only after explicit recurring-payment authorization.
+
 ## Production constraint
 
 Commerce is a runtime dependency addition, so it requires a reviewed platform

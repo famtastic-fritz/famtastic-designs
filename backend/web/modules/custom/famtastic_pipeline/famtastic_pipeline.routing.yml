@@ -15,6 +15,133 @@ famtastic_pipeline.public_contact:
   requirements:
     _access: 'TRUE'
 
+# --- Branded customer account API (Drupal session cookie; never exposes CMS UI) ---
+famtastic_pipeline.customer_register:
+  path: '/api/customer/register'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::register'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_verify:
+  path: '/api/customer/verify'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::verify'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_login:
+  path: '/api/customer/login'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::login'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_forgot_password:
+  path: '/api/customer/forgot-password'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::forgotPassword'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_reset_password:
+  path: '/api/customer/reset-password'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::resetPassword'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_logout:
+  path: '/api/customer/logout'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::logout'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_token: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_session:
+  path: '/api/customer/session'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::session'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_workspace:
+  path: '/api/customer/workspace'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::workspace'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_profile:
+  path: '/api/customer/profile'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::profile'
+  methods: [PATCH]
+  requirements:
+    _access: 'TRUE'
+    _csrf_token: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_threads:
+  path: '/api/customer/threads'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::createThread'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_token: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_thread:
+  path: '/api/customer/threads/{thread}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::thread'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    thread: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_thread_reply:
+  path: '/api/customer/threads/{thread}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::reply'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_token: 'TRUE'
+    thread: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.email_open:
   path: '/api/pipeline/email/open/{tracking_key}'
   defaults:
@@ -211,7 +338,7 @@ famtastic_pipeline.operations_metric:
     _title: 'Operations Records'
   requirements:
     _permission: 'administer famtastic pipeline'
-    metric: 'campaigns|prospects|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions'
+    metric: 'campaigns|prospects|customers|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions'
 
 famtastic_pipeline.operations_campaign:
   path: '/admin/famtastic/campaign/{campaign_key}'

@@ -24,6 +24,7 @@ class FulfillmentService {
     protected LoggerInterface $logger,
     protected ProofCampaignService $proofCampaigns,
     protected OperationalLedger $ledger,
+    protected CustomerPortalService $customerPortal,
   ) {}
 
   /**
@@ -72,6 +73,7 @@ class FulfillmentService {
       }
     }
     $order->save();
+    $this->customerPortal->syncPaidOrder($order);
     $prospect = $order->get('prospect_ref')->entity;
     $this->ledger->recordEvent(
       'payment.verified:' . $eventId,

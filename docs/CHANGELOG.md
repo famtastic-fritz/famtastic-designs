@@ -1,0 +1,20 @@
+# Product changelog
+
+## 2026-08-07 — Customer lifecycle foundation
+
+- Replaced permanent project-link login with a branded customer account model.
+- Added verified customer identities, individual/business workspaces,
+  memberships, resource ownership, entitlements, activity, and project/support
+  conversations.
+- Added customer registration, verification, sign-in, sign-out, recovery,
+  profile, workspace, and message APIs backed by Drupal sessions.
+- Added the full React customer workspace navigation for projects, purchases,
+  services, domains/hosting, support, team, account preferences, contextual
+  offers, and entitled analytics.
+- Preserved prospect-token routes as a temporary pre-sale and compatibility
+  path.
+- Added Commerce catalog seeds for the $199 Foot in the Door product, $9.99
+  monthly hosting renewal, and configurable Growth Analytics entitlement.
+- Connected verified pipeline payments to customer-owned orders, projects, and
+  first-year hosting entitlements.
+- Added staff customer lookup to FAMtastic Operations.

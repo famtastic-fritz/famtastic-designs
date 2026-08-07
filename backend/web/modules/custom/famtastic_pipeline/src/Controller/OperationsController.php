@@ -57,6 +57,7 @@ final class OperationsController extends ControllerBase {
     $summary = [
       'campaigns' => ['label' => 'Campaigns', 'value' => $campaignTotal],
       'prospects' => ['label' => 'Prospects', 'value' => $this->count('famtastic_prospect')],
+      'customers' => ['label' => 'Customers', 'value' => $this->count('famtastic_customer')],
       'proofs-ready' => [
         'label' => 'Proofs Ready',
         'value' => $this->count('proof_campaign', ['generation_status' => 'ready']),
@@ -182,6 +183,7 @@ final class OperationsController extends ControllerBase {
     return match ($metric) {
       'campaigns' => $this->campaignMetric(),
       'prospects' => $this->prospectMetric(),
+      'customers' => $this->customerMetric(),
       'proofs-ready' => $this->proofMetric(),
       'emails-sent' => $this->eventMetric('email.sent', 'Emails Sent', 'Every recorded campaign send event.'),
       'clicks' => $this->eventMetric('email.clicked', 'Proof-Link Clicks', 'Every recorded proof-link click event.'),
@@ -462,6 +464,36 @@ final class OperationsController extends ControllerBase {
       ['Business', 'Status', 'Campaign', 'Category', 'Public Email', 'Created'],
       $rows,
       'No prospects have been recorded.',
+    );
+  }
+
+  /**
+   * Staff customer lookup across identity, acquisition, and retention state.
+   */
+  private function customerMetric(): array {
+    $query = $this->database->select('famtastic_customer', 'c')->extend(PagerSelectExtender::class);
+    $query->leftJoin('famtastic_membership', 'm', 'm.customer_id = c.id AND m.status = :member_status', [':member_status' => 'active']);
+    $query->leftJoin('famtastic_organization', 'o', 'o.id = m.organization_id');
+    $query->fields('c', ['display_name', 'email', 'phone', 'acquisition_source', 'marketing_status', 'verified_at', 'created']);
+    $query->addField('o', 'name', 'organization_name');
+    $query->addField('m', 'role');
+    $records = $query->orderBy('c.created', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $rows = [];
+    foreach ($records as $record) {
+      $rows[] = [
+        $record['display_name'], $record['organization_name'] ?: 'Individual', $record['email'],
+        $record['phone'] ?: '—', $record['role'] ?: '—', $record['acquisition_source'],
+        ['data' => ['#markup' => $this->badge($record['verified_at'] ? 'verified' : 'unverified')]],
+        ['data' => ['#markup' => $this->badge((string) $record['marketing_status'])]],
+        $this->date((int) $record['created']),
+      ];
+    }
+    return $this->recordsPage(
+      'Customers',
+      'Durable customer accounts and their business workspaces, searchable by the browser table filter.',
+      ['Customer', 'Business', 'Email', 'Phone', 'Role', 'Source', 'Identity', 'Marketing', 'Created'],
+      $rows,
+      'No customer accounts have been created.',
     );
   }
 

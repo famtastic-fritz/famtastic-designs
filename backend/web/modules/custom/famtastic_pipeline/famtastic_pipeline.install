@@ -293,6 +293,23 @@ HTML,
 }
 
 /**
+ * Adds durable customer accounts, organizations, portal collaboration, and entitlements.
+ */
+function famtastic_pipeline_update_8012(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $created = [];
+  foreach (_famtastic_pipeline_customer_portal_schema() as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+      $created[] = $table;
+    }
+  }
+  return t('Created customer portal tables: @tables.', [
+    '@tables' => $created ? implode(', ', $created) : 'none (already present)',
+  ]);
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {
@@ -665,6 +682,150 @@ function _famtastic_pipeline_automation_schema(): array {
   $tables['famtastic_email_message'] = _famtastic_pipeline_email_message_schema();
   $tables['famtastic_build_run'] = _famtastic_pipeline_build_run_schema();
 
+  foreach (_famtastic_pipeline_customer_portal_schema() as $table => $definition) {
+    $tables[$table] = $definition;
+  }
+
+  return $tables;
+}
+
+/**
+ * Defines the durable customer lifecycle and branded portal records.
+ */
+function _famtastic_pipeline_customer_portal_schema(): array {
+  $id = ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE];
+  $entity = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
+  $public = ['type' => 'varchar', 'length' => 36, 'not null' => TRUE];
+  $status = ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'active'];
+
+  $tables['famtastic_customer'] = [
+    'description' => 'Durable customer identity linked to a Drupal user and acquisition history.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'prospect_id' => $entity,
+      'commerce_profile_id' => $entity,
+      'display_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'email' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE],
+      'phone' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'acquisition_source' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => 'direct'],
+      'marketing_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'subscribed'],
+      'verified_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id'], 'uid' => ['uid'], 'email' => ['email']],
+    'indexes' => ['prospect' => ['prospect_id'], 'marketing' => ['marketing_status']],
+  ];
+  $tables['famtastic_organization'] = [
+    'description' => 'Individual or business customer workspace.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'type' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'individual'],
+      'name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'status' => $status, 'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => ['name' => ['name']],
+  ];
+  $tables['famtastic_membership'] = [
+    'description' => 'Customer membership and role within an organization.',
+    'fields' => [
+      'id' => $id,
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'role' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'member'],
+      'status' => $status, 'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['organization_customer' => ['organization_id', 'customer_id']],
+    'indexes' => ['customer' => ['customer_id']],
+  ];
+  $tables['famtastic_customer_resource'] = [
+    'description' => 'Ownership map from a customer workspace to orders, projects, and prospects.',
+    'fields' => [
+      'id' => $id,
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'resource_type' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'resource_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'created' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['resource' => ['resource_type', 'resource_id']],
+    'indexes' => ['organization' => ['organization_id', 'resource_type']],
+  ];
+  $tables['famtastic_portal_token'] = [
+    'description' => 'Single-use verification, recovery, and invitation tokens stored only as hashes.',
+    'fields' => [
+      'id' => $id, 'customer_id' => $entity, 'organization_id' => $entity,
+      'email' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE],
+      'purpose' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'token_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'payload' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'expires_at' => $time,
+      'used_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['token_hash' => ['token_hash']],
+    'indexes' => ['email_purpose' => ['email', 'purpose'], 'expiry' => ['expires_at']],
+  ];
+  $tables['famtastic_entitlement'] = [
+    'description' => 'Commerce-controlled customer service and feature access.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'order_id' => $entity, 'project_id' => $entity,
+      'entitlement_type' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'status' => $status, 'starts_at' => $time,
+      'included_until' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'renews_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'amount_minor' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+      'billing_interval' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => 'none'],
+      'provider_subscription_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => ['organization_type' => ['organization_id', 'entitlement_type', 'status'], 'renewals' => ['status', 'renews_at']],
+  ];
+  $tables['famtastic_portal_thread'] = [
+    'description' => 'Project and support conversation threads.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'project_id' => $entity,
+      'kind' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'support'],
+      'subject' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'open'],
+      'created_by' => $entity, 'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => ['organization_status' => ['organization_id', 'status']],
+  ];
+  $tables['famtastic_portal_message'] = [
+    'description' => 'Persistent messages attached to a portal thread.',
+    'fields' => [
+      'id' => $id,
+      'thread_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'author_uid' => $entity,
+      'author_type' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => 'customer'],
+      'body' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'created' => $time,
+    ],
+    'primary key' => ['id'], 'indexes' => ['thread_time' => ['thread_id', 'created']],
+  ];
+  $tables['famtastic_portal_activity'] = [
+    'description' => 'Customer-visible lifecycle activity.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'size' => 'big', 'unsigned' => TRUE, 'not null' => TRUE],
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'event_type' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'summary' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
+      'metadata' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'created' => $time,
+    ],
+    'primary key' => ['id'], 'indexes' => ['organization_time' => ['organization_id', 'created']],
+  ];
   return $tables;
 }
 

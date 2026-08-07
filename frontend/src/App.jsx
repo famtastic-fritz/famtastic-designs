@@ -27,6 +27,9 @@ import AliasPage from './pages/AliasPage.jsx';
 import SEO from './components/SEO.jsx';
 import GoogleAnalytics from './components/GoogleAnalytics.jsx';
 import ClientPortalPage from './pages/ClientPortalPage.jsx';
+import CustomerPortalDashboard from './pages/CustomerPortalDashboard.jsx';
+import VerifyEmailPage from './pages/VerifyEmailPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 
 export default function App() {
   return (
@@ -43,6 +46,7 @@ export default function App() {
         <Route path="/p/:token/intake" element={<IntakePage />} />
         <Route path="/p/:token/status" element={<ProofStatusPage />} />
         <Route path="/portal/:token" element={<ClientPortalPage />} />
+        <Route path="/portal" element={<CustomerPortalDashboard />} />
 
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -66,6 +70,8 @@ export default function App() {
           <Route path="/content/:type" element={<ContentPage />} />
           <Route path="/node/:uuid" element={<NodeView />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route
             path="/admin"
             element={
