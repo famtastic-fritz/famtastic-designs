@@ -228,7 +228,7 @@ final class CustomerPortalService {
       'topic_keys' => json_encode($topics), 'consent_version' => 'portal-v1', 'changed' => $now,
     ];
     $this->database->merge('famtastic_portal_preference')->key('customer_id', $customerId)
-      ->insertFields($fields + ['created' => $now])->updateFields($fields)->execute();
+      ->insertFields(['customer_id' => $customerId] + $fields + ['created' => $now])->updateFields($fields)->execute();
     $this->database->update('famtastic_customer')->fields([
       'marketing_status' => $fields['deals_promotions'] ? 'subscribed' : 'unsubscribed', 'changed' => $now,
     ])->condition('id', $customerId)->execute();
