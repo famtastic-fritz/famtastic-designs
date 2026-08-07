@@ -310,6 +310,22 @@ function famtastic_pipeline_update_8012(&$sandbox) {
 }
 
 /**
+ * Adds customer communication preferences and auditable referrals.
+ */
+function famtastic_pipeline_update_8013(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definitions = _famtastic_pipeline_portal_engagement_schema();
+  $created = [];
+  foreach ($definitions as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+      $created[] = $table;
+    }
+  }
+  return t('Added portal engagement tables: @tables.', ['@tables' => implode(', ', $created) ?: 'none']);
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {
@@ -685,7 +701,52 @@ function _famtastic_pipeline_automation_schema(): array {
   foreach (_famtastic_pipeline_customer_portal_schema() as $table => $definition) {
     $tables[$table] = $definition;
   }
+  foreach (_famtastic_pipeline_portal_engagement_schema() as $table => $definition) {
+    $tables[$table] = $definition;
+  }
 
+  return $tables;
+}
+
+/**
+ * Defines customer-controlled content preferences and referral records.
+ */
+function _famtastic_pipeline_portal_engagement_schema(): array {
+  $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
+  $tables['famtastic_portal_preference'] = [
+    'description' => 'Customer-controlled portal, education, and promotional preferences.',
+    'fields' => [
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'project_email' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'support_email' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'billing_email' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'analytics_digest' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => 'monthly'],
+      'product_education' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'deals_promotions' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'topic_keys' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE],
+      'consent_version' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'portal-v1'],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['customer_id'],
+  ];
+  $tables['famtastic_referral'] = [
+    'description' => 'Privacy-safe customer referrals and reward lifecycle.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'referral_code' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE],
+      'friend_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'friend_email_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'shared'],
+      'reward_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_earned'],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => ['customer' => ['customer_id', 'created'], 'code' => ['referral_code']],
+  ];
   return $tables;
 }
 

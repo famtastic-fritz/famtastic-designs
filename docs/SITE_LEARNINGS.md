@@ -23,6 +23,16 @@ architecture decisions; this file captures what future work must remember.
 - A portal section is not complete when its summary data renders. QA must follow
   the action through its full read/write loop—for example: list a conversation,
   open it, reply, refresh it, and verify authorization failures.
+- Organize the customer portal around customer jobs—get help, understand owned
+  services, learn, grow, and manage the relationship—not around internal product
+  tables. A grouped hamburger drawer supports future capabilities without
+  reserving mobile space for services the customer does not own.
+- Content is a retention surface. Published Drupal articles and FAQs should
+  appear inside the authenticated experience, while topic subscriptions and
+  promotional consent remain explicit and independently customer-controlled.
+- Referrals must be durable and privacy-safe: require permission confirmation,
+  avoid exposing the referred person's activity, and store only what the reward
+  lifecycle actually needs.
 
 ## Commerce and recurring services
 

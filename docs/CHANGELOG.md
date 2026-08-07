@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-08-07 — Customer operating hub
+
+- Replaced the fixed mobile portal navigation with an expandable, grouped
+  hamburger drawer designed for an evolving service catalog.
+- Added Drupal-backed personalized learning and FAQ surfaces populated from
+  published Blog Post and FAQ content.
+- Added durable customer topic subscriptions, educational-email choices,
+  analytics digest frequency, and separate deals/promotions consent controls.
+- Added service-aware support entry points, searchable FAQs, activity/value
+  history, owned-service cards, and evidence-based growth recommendations.
+- Added privacy-safe customer referrals with permission confirmation, hashed
+  referred-email storage, lifecycle history, and reward-ready status.
+- Added customer-facing Google Analytics access, profile/team separation, and
+  secure billing explanations.
+
 ## 2026-08-07 — Portal mobile and workflow QA
 
 - Contained the customer workspace at phone and tablet widths so its horizontal

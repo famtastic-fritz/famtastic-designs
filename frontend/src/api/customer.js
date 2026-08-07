@@ -29,6 +29,8 @@ export const forgotCustomerPassword = (email) => request('/forgot-password', { m
 export const resetCustomerPassword = (token, password) => request('/reset-password', { method: 'POST', body: JSON.stringify({ token, password }) });
 export const getCustomerWorkspace = (organization = '') => request(`/workspace${organization ? `?organization=${encodeURIComponent(organization)}` : ''}`);
 export const updateCustomerProfile = (payload) => request('/profile', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
+export const updateCustomerPreferences = (payload) => request('/preferences', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
+export const createCustomerReferral = (payload) => request('/referrals', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const createCustomerThread = (payload) => request('/threads', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const getCustomerThread = (id) => request(`/threads/${encodeURIComponent(id)}`);
 export const replyCustomerThread = (id, body) => request(`/threads/${encodeURIComponent(id)}`, { method: 'POST', csrf: true, body: JSON.stringify({ body }) });

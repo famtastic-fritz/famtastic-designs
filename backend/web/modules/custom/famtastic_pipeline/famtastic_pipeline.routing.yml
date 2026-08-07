@@ -108,6 +108,28 @@ famtastic_pipeline.customer_profile:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.customer_preferences:
+  path: '/api/customer/preferences'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::preferences'
+  methods: [PATCH]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_referral:
+  path: '/api/customer/referrals'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::referral'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_threads:
   path: '/api/customer/threads'
   defaults:

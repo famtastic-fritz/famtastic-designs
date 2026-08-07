@@ -176,6 +176,11 @@ final class CustomerPortalService {
       'threads' => $threads, 'activity' => $activity, 'members' => $members,
       'analytics' => ['entitled' => (bool) $analytics],
       'offers' => $this->contextualOffers($entitlements, $projects),
+      'preferences' => $this->preferences($customerId),
+      'topics' => $this->topics(),
+      'articles' => $this->articles(),
+      'faqs' => $this->faqs(),
+      'referrals' => $this->referrals($customerId),
     ];
   }
 
@@ -190,6 +195,106 @@ final class CustomerPortalService {
       $fields['marketing_status'] = $input['marketing_status'];
     }
     $this->database->update('famtastic_customer')->fields($fields)->condition('id', $customerId)->execute();
+  }
+
+  public function preferences(int $customerId): array {
+    $defaults = [
+      'project_email' => 1, 'support_email' => 1, 'billing_email' => 1,
+      'analytics_digest' => 'monthly', 'product_education' => 1,
+      'deals_promotions' => 1, 'topic_keys' => '[]', 'consent_version' => 'portal-v1',
+    ];
+    $row = $this->database->select('famtastic_portal_preference', 'p')->fields('p')
+      ->condition('customer_id', $customerId)->execute()->fetchAssoc() ?: [];
+    $values = array_replace($defaults, $row);
+    $values['topics'] = array_values(array_filter((array) json_decode((string) $values['topic_keys'], TRUE)));
+    unset($values['customer_id'], $values['topic_keys'], $values['created'], $values['changed']);
+    foreach (['project_email', 'support_email', 'billing_email', 'product_education', 'deals_promotions'] as $key) {
+      $values[$key] = (bool) $values[$key];
+    }
+    return $values;
+  }
+
+  public function updatePreferences(int $customerId, array $input): array {
+    $topics = array_values(array_intersect(array_keys($this->topics()), array_map('strval', (array) ($input['topics'] ?? []))));
+    $digest = in_array($input['analytics_digest'] ?? '', ['off', 'weekly', 'monthly'], TRUE) ? $input['analytics_digest'] : 'monthly';
+    $now = $this->time->getRequestTime();
+    $fields = [
+      'project_email' => !empty($input['project_email']) ? 1 : 0,
+      'support_email' => !empty($input['support_email']) ? 1 : 0,
+      'billing_email' => !empty($input['billing_email']) ? 1 : 0,
+      'analytics_digest' => $digest,
+      'product_education' => !empty($input['product_education']) ? 1 : 0,
+      'deals_promotions' => !empty($input['deals_promotions']) ? 1 : 0,
+      'topic_keys' => json_encode($topics), 'consent_version' => 'portal-v1', 'changed' => $now,
+    ];
+    $this->database->merge('famtastic_portal_preference')->key(['customer_id' => $customerId])
+      ->insertFields($fields + ['created' => $now])->updateFields($fields)->execute();
+    $this->database->update('famtastic_customer')->fields([
+      'marketing_status' => $fields['deals_promotions'] ? 'subscribed' : 'unsubscribed', 'changed' => $now,
+    ])->condition('id', $customerId)->execute();
+    return $this->preferences($customerId);
+  }
+
+  public function createReferral(int $customerId, string $organizationPublicId, array $input): array {
+    $organization = $this->authorizedOrganization($customerId, $organizationPublicId);
+    $email = mb_strtolower(trim((string) ($input['friend_email'] ?? '')));
+    $name = mb_substr(trim(strip_tags((string) ($input['friend_name'] ?? ''))), 0, 255);
+    if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($input['permission_confirmed'])) {
+      throw new \InvalidArgumentException('Add your friend’s name, a valid email, and confirm they agreed to be referred.');
+    }
+    $now = $this->time->getRequestTime();
+    $publicId = $this->uuid->generate();
+    $code = strtoupper(substr(hash('sha256', $customerId . '|' . $publicId), 0, 10));
+    $this->database->insert('famtastic_referral')->fields([
+      'public_id' => $publicId, 'customer_id' => $customerId, 'organization_id' => $organization['id'],
+      'referral_code' => $code, 'friend_name' => $name, 'friend_email_hash' => hash('sha256', $email),
+      'status' => 'shared', 'reward_status' => 'not_earned', 'created' => $now, 'changed' => $now,
+    ])->execute();
+    $this->activity((int) $organization['id'], 'referral.shared', 'You shared FAMtastic Designs with a friend.');
+    return ['public_id' => $publicId, 'friend_name' => $name, 'status' => 'shared', 'reward_status' => 'not_earned', 'created' => $now];
+  }
+
+  private function referrals(int $customerId): array {
+    return $this->database->select('famtastic_referral', 'r')
+      ->fields('r', ['public_id', 'friend_name', 'status', 'reward_status', 'created'])
+      ->condition('customer_id', $customerId)->orderBy('created', 'DESC')->execute()->fetchAll(\PDO::FETCH_ASSOC);
+  }
+
+  private function topics(): array {
+    return [
+      'website_growth' => 'Website growth', 'ai_agents' => 'AI agents', 'lead_generation' => 'Lead generation',
+      'automation' => 'Business automation', 'seo' => 'SEO', 'analytics' => 'Analytics',
+      'ecommerce' => 'Ecommerce', 'security' => 'Hosting & security', 'reviews' => 'Reviews & reputation',
+      'campaigns' => 'Marketing campaigns', 'accessibility' => 'Accessibility',
+    ];
+  }
+
+  private function articles(): array {
+    $ids = $this->entities->getStorage('node')->getQuery()->accessCheck(FALSE)
+      ->condition('type', 'blog_post')->condition('status', 1)->sort('created', 'DESC')->range(0, 8)->execute();
+    $articles = [];
+    foreach ($this->entities->getStorage('node')->loadMultiple($ids) as $node) {
+      $category = $node->hasField('field_blog_category') && !$node->get('field_blog_category')->isEmpty()
+        ? ($node->get('field_blog_category')->entity?->label() ?? 'Business growth') : 'Business growth';
+      $articles[] = [
+        'id' => $node->uuid(), 'title' => $node->label(),
+        'excerpt' => $node->hasField('field_excerpt') ? (string) $node->get('field_excerpt')->value : '',
+        'topic' => $category, 'url' => $node->toUrl()->toString(), 'created' => (int) $node->getCreatedTime(),
+      ];
+    }
+    return $articles;
+  }
+
+  private function faqs(): array {
+    $ids = $this->entities->getStorage('node')->getQuery()->accessCheck(FALSE)
+      ->condition('type', 'faq_item')->condition('status', 1)->sort('field_sort_order')->range(0, 30)->execute();
+    $faqs = [];
+    foreach ($this->entities->getStorage('node')->loadMultiple($ids) as $node) {
+      $category = $node->hasField('field_faq_category') && !$node->get('field_faq_category')->isEmpty()
+        ? ($node->get('field_faq_category')->entity?->label() ?? 'General') : 'General';
+      $faqs[] = ['id' => $node->uuid(), 'question' => $node->label(), 'answer' => trim(strip_tags((string) $node->get('field_answer')->value)), 'category' => $category];
+    }
+    return $faqs;
   }
 
   public function createThread(int $customerId, string $organizationPublicId, array $input, int $uid): array {

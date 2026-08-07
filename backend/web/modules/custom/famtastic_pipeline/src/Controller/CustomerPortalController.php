@@ -159,6 +159,27 @@ final class CustomerPortalController extends ControllerBase {
     return $this->sessionPayload($this->portal->customerForUid((int) $this->account->id()) ?? $customer);
   }
 
+  public function preferences(Request $request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    return $this->noStore(new JsonResponse(['ok' => TRUE, 'preferences' => $this->portal->updatePreferences((int) $customer['id'], $this->body($request))]));
+  }
+
+  public function referral(Request $request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    $data = $this->body($request);
+    try {
+      return new JsonResponse(['ok' => TRUE, 'referral' => $this->portal->createReferral((int) $customer['id'], (string) ($data['organization'] ?? ''), $data)], 201);
+    }
+    catch (\InvalidArgumentException $e) {
+      return $this->error('invalid_referral', 422, $e->getMessage());
+    }
+    catch (\RuntimeException) {
+      return $this->error('workspace_not_found', 404, 'Customer workspace not found.');
+    }
+  }
+
   public function createThread(Request $request): JsonResponse {
     $customer = $this->currentCustomer();
     if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
