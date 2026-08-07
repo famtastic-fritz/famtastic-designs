@@ -8,6 +8,8 @@
   published Blog Post and FAQ content.
 - Added durable customer topic subscriptions, educational-email choices,
   analytics digest frequency, and separate deals/promotions consent controls.
+- Verified and corrected the Drupal merge write path so preference changes
+  persist successfully under the production database driver.
 - Added service-aware support entry points, searchable FAQs, activity/value
   history, owned-service cards, and evidence-based growth recommendations.
 - Added privacy-safe customer referrals with permission confirmation, hashed
