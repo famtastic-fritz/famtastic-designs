@@ -27,7 +27,7 @@ export default function CustomerPortalDashboard() {
   const nextAction = useMemo(() => !order ? 'Choose your first service' : order.payment_status !== 'paid' ? 'Complete your purchase' : !project ? 'Complete your project brief' : project.approval_status !== 'approved' ? 'Review your project' : 'See your growth opportunities', [order, project]);
   if (state === 'loading') return <div className="portal-state"><i />Opening your customer command center…</div>;
   const saveProfile = async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); const result = await updateCustomerProfile(Object.fromEntries(form)); setSession(result); setNotice('Account updated.'); };
-  const openThread = async (event) => { event.preventDefault(); const form = new FormData(event.currentTarget); await createCustomerThread({ ...Object.fromEntries(form), organization: org.public_id }); const refreshed = await getCustomerWorkspace(org.public_id); setWorkspace(refreshed); setNotice('Your message was sent.'); event.currentTarget.reset(); };
+  const openThread = async (event) => { event.preventDefault(); const formElement = event.currentTarget; const form = new FormData(formElement); await createCustomerThread({ ...Object.fromEntries(form), organization: org.public_id }); const refreshed = await getCustomerWorkspace(org.public_id); setWorkspace(refreshed); setNotice('Your message was sent.'); formElement.reset(); };
   return <div className="portal-app">
     <aside className="portal-nav">
       <Link className="portal-logo" to="/">FAM<span>tastic</span></Link>
