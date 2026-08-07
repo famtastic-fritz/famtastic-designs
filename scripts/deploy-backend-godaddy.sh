@@ -223,7 +223,9 @@ trap rollback_code ERR
 } > "$production_dir/.backend-release"
 
 rm -rf "$previous_module"
+chmod u+w "$settings_dir"
 rm -f "$previous_services"
+chmod "$settings_mode" "$settings_dir"
 trap - ERR
 echo "Backend deployment complete."
 cat "$production_dir/.backend-release"
