@@ -2365,6 +2365,24 @@ a:hover {
   padding-right: 1.25rem;
 }
 
+/* The shared legacy centering rule above must not widen account forms to the
+   full marketing-site content width. */
+.layout__main--v1 > .login-card {
+  width: min(calc(100% - 2.5rem), 460px);
+  max-width: 460px;
+  box-sizing: border-box;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (max-width: 560px) {
+  .layout__main--v1 > .login-card {
+    width: min(calc(100% - 1.5rem), 460px);
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* SolutionFinder — lead-capture intake                                */
 /* ------------------------------------------------------------------ */
