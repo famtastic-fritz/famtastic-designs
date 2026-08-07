@@ -17,6 +17,12 @@ architecture decisions; this file captures what future work must remember.
   about what the customer owns and needs, not appear as generic advertisements.
 - Customer-facing language and URLs must not reveal Drupal or ask customers to
   enter the CMS administration interface.
+- A horizontally scrolling mobile navigation must be contained by `min-width: 0`
+  at every grid/flex boundary. Without that containment, the navigation's
+  min-content width can silently make the entire page desktop-width on a phone.
+- A portal section is not complete when its summary data renders. QA must follow
+  the action through its full read/write loop—for example: list a conversation,
+  open it, reply, refresh it, and verify authorization failures.
 
 ## Commerce and recurring services
 

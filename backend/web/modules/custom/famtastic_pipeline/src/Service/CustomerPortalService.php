@@ -129,7 +129,7 @@ final class CustomerPortalService {
 
   public function workspace(int $customerId, ?string $organizationPublicId = NULL): array {
     $organizations = $this->organizations($customerId);
-    $organization = $organizations[0] ?? NULL;
+    $organization = $organizationPublicId ? NULL : ($organizations[0] ?? NULL);
     if ($organizationPublicId) {
       foreach ($organizations as $candidate) {
         if (hash_equals($candidate['public_id'], $organizationPublicId)) {

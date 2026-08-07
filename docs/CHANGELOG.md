@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-08-07 — Portal mobile and workflow QA
+
+- Contained the customer workspace at phone and tablet widths so its horizontal
+  navigation no longer widens the document beyond the viewport.
+- Added 44-pixel touch targets, single-column mobile panels, compact workspace
+  chrome, long-content wrapping, and accessible navigation state.
+- Completed customer message-thread reading and replying with actionable error
+  and busy states.
+- Replaced prompt-based password recovery with an accessible inline form and
+  labelled all customer account fields.
+- Reject unknown organization workspace identifiers instead of silently
+  returning another workspace available to the signed-in customer.
+
 ## 2026-08-07 — Customer lifecycle foundation
 
 - Replaced permanent project-link login with a branded customer account model.
