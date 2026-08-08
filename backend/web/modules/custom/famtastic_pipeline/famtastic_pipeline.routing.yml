@@ -340,8 +340,16 @@ famtastic_pipeline.stripe_simulate:
 famtastic_pipeline.operations:
   path: '/admin/famtastic'
   defaults:
-    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::dashboard'
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::hub'
     _title: 'FAMtastic Operations'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+
+famtastic_pipeline.campaign_operations:
+  path: '/admin/famtastic/campaigns'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::dashboard'
+    _title: 'Campaign Operations'
   requirements:
     _permission: 'administer famtastic pipeline'
 
@@ -360,7 +368,7 @@ famtastic_pipeline.operations_metric:
     _title: 'Operations Records'
   requirements:
     _permission: 'administer famtastic pipeline'
-    metric: 'campaigns|prospects|customers|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions'
+    metric: 'campaigns|prospects|customers|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services'
 
 famtastic_pipeline.operations_campaign:
   path: '/admin/famtastic/campaign/{campaign_key}'

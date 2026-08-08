@@ -1,5 +1,17 @@
 # Product changelog
 
+## 2026-08-08 — Drupal operations experience
+
+- Replaced the campaign-only `/admin/famtastic` landing page with a task-based
+  Operations Home for Analytics, customers, Commerce, support, content,
+  services, referrals, and campaigns.
+- Kept Website Analytics and Campaign Operations as distinct dashboards while
+  making both immediately discoverable from the staff home.
+- Added staff records for customer support conversations, referrals, and active
+  service entitlements.
+- Reworked custom Operations styling for the dark FAMtastic admin theme,
+  removing mismatched white metric cards and improving responsive navigation.
+
 ## 2026-08-07 — Customer operating hub
 
 - Replaced the fixed mobile portal navigation with an expandable, grouped

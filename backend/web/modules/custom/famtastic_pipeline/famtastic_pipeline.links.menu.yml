@@ -1,15 +1,21 @@
 famtastic_pipeline.admin:
-  title: 'FAMtastic Pipeline'
-  description: 'Campaigns, messages, proofs, builds, jobs, sales, and projects.'
+  title: 'FAMtastic Operations'
+  description: 'Customers, analytics, Commerce, content, support, services, referrals, and campaigns.'
   route_name: famtastic_pipeline.operations
   parent: system.admin
   weight: 0
 
 famtastic_pipeline.operations:
-  title: 'Campaign Operations'
+  title: 'Operations Home'
   route_name: famtastic_pipeline.operations
   parent: famtastic_pipeline.admin
   weight: -20
+
+famtastic_pipeline.campaign_operations:
+  title: 'Campaign Operations'
+  route_name: famtastic_pipeline.campaign_operations
+  parent: famtastic_pipeline.admin
+  weight: -18
 
 famtastic_pipeline.analytics:
   title: 'Website Analytics'

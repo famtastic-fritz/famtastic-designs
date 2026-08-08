@@ -42,6 +42,40 @@ final class OperationsController extends ControllerBase {
   }
 
   /**
+   * Renders the staff operating home without mixing campaign and GA reports.
+   */
+  public function hub(): array {
+    $analytics = $this->googleAnalytics->dashboardReport();
+    $published = (int) $this->database->select('node_field_data', 'n')
+      ->condition('status', 1)->countQuery()->execute()->fetchField();
+    $openSupport = $this->count('famtastic_portal_thread', ['status' => 'open']);
+    $cards = [
+      ['Website Analytics', !empty($analytics['available']) ? 'Connected · 30-day reporting ready' : 'Connection needs attention', 'Traffic, engagement, top pages, and acquisition channels.', Url::fromRoute('famtastic_pipeline.analytics'), 'analytics'],
+      ['Customers', $this->count('famtastic_customer') . ' customer accounts', 'Customer identity, contact details, consent, and business workspaces.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'customers']), 'customers'],
+      ['Commerce', $this->count('famtastic_order', ['payment_status' => 'paid']) . ' paid orders', 'Products, orders, payment status, subscriptions, and fulfillment.', Url::fromUserInput('/admin/commerce'), 'commerce'],
+      ['Support', $openSupport . ' open conversations', 'Customer requests, project questions, replies, and service issues.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support']), 'support'],
+      ['Content', $published . ' published items', 'Website pages, articles, FAQs, services, and packages.', Url::fromUserInput('/admin/content'), 'content'],
+      ['Services', $this->count('famtastic_entitlement', ['status' => 'active']) . ' active entitlements', 'Hosting, domains, analytics, websites, and customer capabilities.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'services']), 'services'],
+      ['Referrals', $this->count('famtastic_referral') . ' customer referrals', 'Introductions, privacy-safe status, and reward readiness.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'referrals']), 'referrals'],
+      ['Campaign Operations', $this->count('famtastic_campaign') . ' campaigns', 'Prospects, proof builds, outreach, clicks, and campaign sales.', Url::fromRoute('famtastic_pipeline.campaign_operations'), 'campaigns'],
+    ];
+    $cardBuild = [];
+    foreach ($cards as [$title, $status, $description, $url, $icon]) {
+      $cardBuild[] = [
+        '#type' => 'link', '#title' => [
+          '#markup' => '<span class="famtastic-hub__icon famtastic-hub__icon--' . Html::escape($icon) . '" aria-hidden="true"></span><span class="famtastic-hub__copy"><strong>' . Html::escape($title) . '</strong><em>' . Html::escape($status) . '</em><span>' . Html::escape($description) . '</span><b>Open →</b></span>',
+        ], '#url' => $url, '#attributes' => ['class' => ['famtastic-hub__card']],
+      ];
+    }
+    return $this->page([
+      'hero' => ['#markup' => '<section class="famtastic-hub__hero"><span>FAMtastic Designs</span><h2>Run the business from one place.</h2><p>Choose the area you need. Website analytics and campaign operations remain focused, separate workspaces.</p></section>'],
+      'attention' => ['#markup' => '<div class="famtastic-hub__attention"><strong>Needs attention</strong><span>' . $openSupport . ' open support conversation' . ($openSupport === 1 ? '' : 's') . '</span></div>'],
+      'heading' => ['#markup' => '<h2 class="famtastic-hub__heading">Operations</h2>'],
+      'cards' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-hub__grid']], 'items' => $cardBuild],
+    ], 'Operations Home');
+  }
+
+  /**
    * Renders the operations dashboard and campaign rollup.
    */
   public function dashboard(): array {
@@ -146,7 +180,7 @@ final class OperationsController extends ControllerBase {
         'campaigns' => [
           '#type' => 'link',
           '#title' => $this->t('View Campaign Operations'),
-          '#url' => Url::fromRoute('famtastic_pipeline.operations'),
+          '#url' => Url::fromRoute('famtastic_pipeline.campaign_operations'),
           '#attributes' => ['class' => ['button']],
         ],
       ],
@@ -190,8 +224,44 @@ final class OperationsController extends ControllerBase {
       'paid-orders' => $this->paidOrderMetric(),
       'open-jobs' => $this->jobMetric(),
       'open-exceptions' => $this->exceptionMetric(),
+      'support' => $this->supportMetric(),
+      'referrals' => $this->referralMetric(),
+      'services' => $this->serviceMetric(),
       default => throw new NotFoundHttpException('Operations metric not found.'),
     };
+  }
+
+  private function supportMetric(): array {
+    $query = $this->database->select('famtastic_portal_thread', 't')->extend(PagerSelectExtender::class);
+    $query->leftJoin('famtastic_organization', 'o', 'o.id = t.organization_id');
+    $query->fields('t', ['kind', 'subject', 'status', 'created', 'changed'])->addField('o', 'name', 'organization');
+    $rows = [];
+    foreach ($query->orderBy('t.changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $rows[] = [$record['organization'] ?: 'Individual', $record['subject'], ['data' => ['#markup' => $this->badge($record['kind'])]], ['data' => ['#markup' => $this->badge($record['status'])]], $this->date((int) $record['changed'])];
+    }
+    return $this->recordsPage('Customer Support', 'Customer-visible project, service, billing, and support conversations.', ['Customer', 'Subject', 'Area', 'Status', 'Updated'], $rows, 'No support conversations have been recorded.');
+  }
+
+  private function referralMetric(): array {
+    $query = $this->database->select('famtastic_referral', 'r')->extend(PagerSelectExtender::class);
+    $query->leftJoin('famtastic_customer', 'c', 'c.id = r.customer_id');
+    $query->fields('r', ['friend_name', 'status', 'reward_status', 'created'])->addField('c', 'display_name', 'customer');
+    $rows = [];
+    foreach ($query->orderBy('r.created', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $rows[] = [$record['customer'] ?: 'Unknown', $record['friend_name'], ['data' => ['#markup' => $this->badge($record['status'])]], ['data' => ['#markup' => $this->badge($record['reward_status'])]], $this->date((int) $record['created'])];
+    }
+    return $this->recordsPage('Customer Referrals', 'Permission-confirmed referrals without exposing referred-customer activity.', ['Referred by', 'Friend', 'Status', 'Reward', 'Created'], $rows, 'No customer referrals have been recorded.');
+  }
+
+  private function serviceMetric(): array {
+    $query = $this->database->select('famtastic_entitlement', 'e')->extend(PagerSelectExtender::class);
+    $query->leftJoin('famtastic_organization', 'o', 'o.id = e.organization_id');
+    $query->fields('e', ['entitlement_type', 'status', 'included_until', 'renews_at', 'amount_minor', 'billing_interval'])->addField('o', 'name', 'organization');
+    $rows = [];
+    foreach ($query->orderBy('e.changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $rows[] = [$record['organization'] ?: 'Individual', ucwords(str_replace('_', ' ', $record['entitlement_type'])), ['data' => ['#markup' => $this->badge($record['status'])]], $this->date((int) $record['included_until']), $this->date((int) $record['renews_at']), $record['amount_minor'] ? $this->formatCurrency((int) $record['amount_minor'], 'usd') . ' / ' . $record['billing_interval'] : 'Included'];
+    }
+    return $this->recordsPage('Customer Services', 'Commerce-controlled capabilities, coverage, and renewal timing.', ['Customer', 'Service', 'Status', 'Included through', 'Renews', 'Renewal'], $rows, 'No customer services have been granted.');
   }
 
   /**
@@ -287,7 +357,7 @@ final class OperationsController extends ControllerBase {
     $jobText = implode(', ', array_map(static fn ($status, $count): string => "$status: $count", array_keys($jobCounts), $jobCounts)) ?: 'none';
 
     return $this->page([
-      'back' => Link::fromTextAndUrl('← All Campaigns', Url::fromRoute('famtastic_pipeline.operations'))->toRenderable(),
+      'back' => Link::fromTextAndUrl('← All Campaigns', Url::fromRoute('famtastic_pipeline.campaign_operations'))->toRenderable(),
       'meta' => ['#markup' => '<p class="famtastic-ops__lede">Status: ' . Html::escape((string) $campaign['status']) . ' · Source: ' . Html::escape((string) $campaign['source_filter']) . ' · Message states: ' . Html::escape($statusText) . ' · Job states: ' . Html::escape($jobText) . '</p>'],
       'summary' => $this->metricCards($summary),
       'messages_heading' => ['#markup' => '<h2>Recipient Messages</h2><p>Exact recipient, subject, body snapshot, provider ID, proof link, and lifecycle state.</p>'],

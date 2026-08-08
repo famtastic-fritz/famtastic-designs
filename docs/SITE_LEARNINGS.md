@@ -55,6 +55,10 @@ architecture decisions; this file captures what future work must remember.
 - On this host, disabling aggregation restored all admin stylesheets. Retain the
   known-good file permissions and verify stylesheet response codes after cache
   or deployment changes.
+- A technically complete reporting page is still undiscoverable if the staff
+  landing page is named for one subsystem. The Drupal operations home should
+  route by staff job, while detailed campaign and website analytics reports
+  remain separate to avoid mixing unlike metrics.
 
 ## Deployment discipline
 
