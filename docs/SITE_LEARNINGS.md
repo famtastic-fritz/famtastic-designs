@@ -59,6 +59,10 @@ architecture decisions; this file captures what future work must remember.
   landing page is named for one subsystem. The Drupal operations home should
   route by staff job, while detailed campaign and website analytics reports
   remain separate to avoid mixing unlike metrics.
+- Analytics page-view events must redact personalized route tokens and
+  verification/recovery query parameters from both `page_path` and
+  `page_location`; client-side routing otherwise leaks secret-bearing URLs into
+  third-party reporting.
 
 ## Deployment discipline
 

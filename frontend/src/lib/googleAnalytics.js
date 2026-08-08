@@ -2,6 +2,17 @@ const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim();
 
 let initialized = false;
 
+function safeLocation(path) {
+  const url = new URL(window.location.href);
+  const cleanPath = String(path || url.pathname)
+    .replace(/^\/portal\/[^/]+/, '/portal/personalized')
+    .replace(/^\/p\/[^/]+/, '/p/personalized');
+  url.pathname = cleanPath;
+  ['token', 'key', 'code', 'session', 'secret'].forEach((key) => url.searchParams.delete(key));
+  url.hash = '';
+  return { path: `${cleanPath}${url.search}`, location: url.toString() };
+}
+
 export function initializeGoogleAnalytics() {
   if (!measurementId || initialized || typeof window === 'undefined') return false;
 
@@ -24,10 +35,11 @@ export function initializeGoogleAnalytics() {
 
 export function trackPageView(path) {
   if (!initializeGoogleAnalytics() && !initialized) return;
+  const safe = safeLocation(path);
 
   window.gtag('event', 'page_view', {
-    page_location: window.location.href,
-    page_path: path,
+    page_location: safe.location,
+    page_path: safe.path,
     page_title: document.title,
   });
 }

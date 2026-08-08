@@ -11,6 +11,8 @@
   service entitlements.
 - Reworked custom Operations styling for the dark FAMtastic admin theme,
   removing mismatched white metric cards and improving responsive navigation.
+- Sanitized personalized proof routes and sensitive query parameters before
+  sending page paths or locations to Google Analytics.
 
 ## 2026-08-07 — Customer operating hub
 
