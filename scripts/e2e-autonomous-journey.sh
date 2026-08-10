@@ -25,6 +25,11 @@ csv="$sandbox/lead.csv"
 import_json="$sandbox/import.json"
 headers="$sandbox/click.headers"
 server_log="$sandbox/server.log"
+mail_capture="$sandbox/transactional-email.jsonl"
+cookie_jar="$sandbox/customer.cookies"
+customer_password="Synthetic-${run_id}-Pass!"
+evidence_root="${EVIDENCE_DIR:-$REPO_ROOT/.artifacts/proof-runs}"
+evidence_dir="$evidence_root/$campaign"
 server_pid=""
 
 cleanup() {
@@ -49,6 +54,7 @@ assert_json() {
 }
 
 mkdir -p "$sandbox/releases" "$sandbox/sites"
+mkdir -p "$evidence_dir"
 printf 'source_record_id,business_name,email,website_url,website_quality\n' > "$csv"
 if test "$PACKAGE" = "business_499"; then
   printf 'one,Autonomous Journey %s,%s,https://outdated-%s.example,outdated\n' "$run_id" "$email" "$run_id" >> "$csv"
@@ -71,7 +77,9 @@ test -n "$tracking_key"
 
 caller_dir="$PWD"
 cd "$REPO_ROOT/backend"
-"$DRUSH" runserver "127.0.0.1:$PORT" > "$server_log" 2>&1 &
+FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT=memory \
+FAMTASTIC_TRANSACTIONAL_EMAIL_CAPTURE="$mail_capture" \
+  "$DRUSH" runserver "127.0.0.1:$PORT" > "$server_log" 2>&1 &
 server_pid=$!
 cd "$caller_dir"
 for _ in $(seq 1 40); do
@@ -228,6 +236,50 @@ renews_at="$(jq -r '.entitlement.renews_at' "$hosting_json")"
   assert(\$renewed['status'] === 'active');
 "
 
+registration="$(curl -s -X POST "${JH[@]}" -d "{
+  \"email\":\"$email\",
+  \"password\":\"$customer_password\",
+  \"name\":\"Synthetic Journey Customer\",
+  \"business_name\":\"Autonomous Journey $run_id\",
+  \"source\":\"synthetic-proof-agent\",
+  \"marketing_opt_out\":true
+}" "$BASE/api/customer/register")"
+assert_json "$registration" '.ok == true and .verification_required == true'
+verification_url="$(jq -rsr --arg email "$email" '[.[] | select(.to == $email and (.subject | test("Verify")))] | last.body' "$mail_capture" | sed -nE 's#.*(https?://[^ ]+/verify-email\?token=[^ ]+).*#\1#p')"
+verification_token="${verification_url##*token=}"
+test -n "$verification_token"
+verified="$(curl -s -X POST "${JH[@]}" -d "{\"token\":\"$verification_token\"}" "$BASE/api/customer/verify")"
+assert_json "$verified" '.ok == true'
+login="$(curl -s -c "$cookie_jar" -X POST "${JH[@]}" -d "{\"email\":\"$email\",\"password\":\"$customer_password\"}" "$BASE/api/customer/login")"
+assert_json "$login" '.customer.verified == true and (.organizations | length) == 1'
+organization_id="$(jq -r '.organizations[0].public_id' <<<"$login")"
+customer_workspace="$(curl -s -b "$cookie_jar" "$BASE/api/customer/workspace")"
+assert_json "$customer_workspace" '
+  (.orders | length) == 2 and
+  (.projects | length) == 1 and
+  ([.entitlements[] | select(.entitlement_type == "website_service" and .status == "active")] | length) == 1 and
+  ([.entitlements[] | select(.entitlement_type == "hosting" and .status == "active")] | length) == 1
+'
+csrf="$(curl -s -b "$cookie_jar" "$BASE/session/token")"
+preferences="$(curl -s -b "$cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{
+  "project_email":true,
+  "support_email":true,
+  "billing_email":true,
+  "analytics_digest":"monthly",
+  "product_education":false,
+  "deals_promotions":false,
+  "topics":["websites"]
+}' "$BASE/api/customer/preferences")"
+assert_json "$preferences" '.preferences.support_email == true and .preferences.deals_promotions == false'
+support="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
+  \"organization\":\"$organization_id\",
+  \"kind\":\"support\",
+  \"subject\":\"Synthetic proof request $run_id\",
+  \"body\":\"Please confirm that the complete customer-support notification path works.\"
+}" "$BASE/api/customer/threads")"
+assert_json "$support" '.ok == true and .thread.status == "open"'
+test "$(jq -rs --arg email "$email" '[.[] | select(.to == $email)] | length >= 2' "$mail_capture")" = "true"
+
 portal="$(curl -s "${TH[@]}" "$BASE/api/pipeline/session")"
 assert_json "$portal" --arg package "$PACKAGE" '
   .order.payment_status == "paid" and
@@ -281,4 +333,31 @@ assert_json "$portal" --arg package "$PACKAGE" '
   assert((int) \$recurringConsent === 1);
 "
 
-echo "PASS: correlated $PACKAGE lead-to-three-proofs-to-sale-to-launch-to-renewal journey verified."
+jq -n \
+  --arg run_id "$run_id" \
+  --arg campaign "$campaign" \
+  --arg package "$PACKAGE" \
+  --arg email_hash "$(printf '%s' "$email" | shasum -a 256 | awk '{print $1}')" \
+  --argjson prospect_id "$prospect_id" \
+  --argjson project_id "$project_id" \
+  --argjson deployment_id "$deployment_id" \
+  --arg organization "$organization_id" \
+  --arg generated_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  --argjson captured_messages "$(jq -s 'length' "$mail_capture")" \
+  '{
+    schema:"famtastic.synthetic-proof.v1",
+    status:"passed",
+    run_id:$run_id,
+    campaign:$campaign,
+    package:$package,
+    synthetic_customer_email_sha256:$email_hash,
+    records:{prospect_id:$prospect_id,project_id:$project_id,deployment_id:$deployment_id,organization_public_id:$organization},
+    checks:{proofs:3,payment_verified:true,intake:true,revision_add_on:true,approval:true,deployment:true,domain:true,hosting_renewal:true,account_verified:true,portal_ownership:true,preferences:true,support_notifications:true},
+    captured_transactional_messages:$captured_messages,
+    generated_at:$generated_at
+  }' > "$evidence_dir/evidence.json"
+printf '# FAMtastic synthetic customer proof\n\n- Status: PASS\n- Run: `%s`\n- Package: `%s`\n- Evidence: `evidence.json`\n- Safety: memory email, signed local payment webhook, isolated deployment root, fixture DNS, memory renewal provider.\n' \
+  "$campaign" "$PACKAGE" > "$evidence_dir/README.md"
+
+echo "PASS: correlated $PACKAGE lead-to-proof-to-sale-to-account-to-portal-to-launch-to-renewal journey verified."
+echo "Evidence: $evidence_dir/evidence.json"

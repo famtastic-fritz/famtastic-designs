@@ -188,6 +188,14 @@ class PublicRequestController extends ControllerBase {
 
     try {
       $this->mailer->send($to, $subject, $body);
+      $customerEmail = (string) $prospect->get('public_email')->value;
+      $customerSubject = $type === 'quote'
+        ? 'We received your FAMtastic Designs quote request'
+        : 'We received your message — FAMtastic Designs';
+      $customerBody = "Thanks for reaching out to FAMtastic Designs.\n\n"
+        . "Your request #" . $intake->id() . " is safely recorded. We will review it and reply within one business day with the next useful step.\n\n"
+        . "You can reply directly to this email if you need to add context.\n\nFAMtastic Designs";
+      $this->mailer->send($customerEmail, $customerSubject, $customerBody);
       return ['ok' => TRUE];
     }
     catch (\Throwable $e) {

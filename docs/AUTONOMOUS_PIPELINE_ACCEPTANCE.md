@@ -1,5 +1,19 @@
 # Autonomous pipeline acceptance record
 
+## Canonical proof command
+
+Run `scripts/run-customer-proof-agent.sh`. It validates the idempotent Commerce
+catalog, then exercises a correlated synthetic customer from imported lead
+through proof, consent, stub payment, intake, add-on, approval, isolated deploy,
+domain fixture, hosting lifecycle, verified account login, portal data,
+preferences, support acknowledgement, and evidence generation.
+
+The runner deliberately uses memory email, a signed stub payment webhook,
+fixture DNS, and a temporary deployment root. It does not prove Stripe TEST
+Checkout, real mailbox delivery, DNS purchase, or production renewal billing.
+Evidence is written under `.artifacts/proof-runs/<run-id>/`. Synthetic database
+records are preserved for now; strict run-ID cleanup remains a launch gate.
+
 ## Implemented and locally proven
 
 - lawful-source CSV lead ingestion, provenance, normalization, scoring,

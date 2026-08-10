@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\famtastic_pipeline\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Site\Settings;
 use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -40,6 +41,14 @@ class OutreachMailer {
   public function send(string $to, string $subject, string $body): string {
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
       throw new RuntimeException('notification_recipient_invalid');
+    }
+
+    $transport = (string) (getenv('FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT') ?: Settings::get('famtastic_transactional_email_transport', 'smtp'));
+    if ($transport === 'memory') {
+      return $this->captureMemoryMessage($to, $subject, $body);
+    }
+    if ($transport !== 'smtp') {
+      throw new RuntimeException('notification_transport_invalid');
     }
 
     $smtp = $this->configFactory->get('smtp.settings');
@@ -104,6 +113,33 @@ class OutreachMailer {
       '@message_id' => $providerMessageId,
     ]);
     return $providerMessageId;
+  }
+
+  /**
+   * Captures deterministic test messages without contacting an SMTP server.
+   */
+  private function captureMemoryMessage(string $to, string $subject, string $body): string {
+    $path = trim((string) (getenv('FAMTASTIC_TRANSACTIONAL_EMAIL_CAPTURE') ?: Settings::get('famtastic_transactional_email_capture', '')));
+    if ($path === '' || !is_dir(dirname($path)) || !is_writable(dirname($path))) {
+      throw new RuntimeException('notification_capture_path_invalid');
+    }
+    $messageId = sprintf('<famtastic-test-%s@memory.invalid>', bin2hex(random_bytes(16)));
+    $record = json_encode([
+      'message_id' => $messageId,
+      'to' => mb_strtolower($to),
+      'subject' => $subject,
+      'body' => $body,
+      'captured_at' => gmdate(DATE_ATOM),
+    ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . "\n";
+    if (file_put_contents($path, $record, FILE_APPEND | LOCK_EX) === FALSE) {
+      throw new RuntimeException('notification_capture_failed');
+    }
+    $this->logger->info('TRANSACTIONAL TEST EMAIL captured for @to: @subject [@message_id]', [
+      '@to' => $to,
+      '@subject' => $subject,
+      '@message_id' => $messageId,
+    ]);
+    return $messageId;
   }
 
 }

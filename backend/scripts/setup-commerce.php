@@ -19,6 +19,8 @@ use Drupal\commerce_product\Entity\Product;
 use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_store\Entity\Store;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 $required_modules = [
   'commerce_cart',
@@ -71,6 +73,38 @@ $ensure_product_type(
   'Optional upgrades and post-purchase upsells attached to a primary service.',
 );
 
+$ensure_field = static function (
+  string $entityType,
+  string $bundle,
+  string $name,
+  string $label,
+  string $type,
+  int $cardinality = 1,
+): void {
+  if (!FieldStorageConfig::loadByName($entityType, $name)) {
+    FieldStorageConfig::create([
+      'field_name' => $name,
+      'entity_type' => $entityType,
+      'type' => $type,
+      'cardinality' => $cardinality,
+    ])->save();
+  }
+  if (!FieldConfig::loadByName($entityType, $bundle, $name)) {
+    FieldConfig::create([
+      'field_name' => $name,
+      'entity_type' => $entityType,
+      'bundle' => $bundle,
+      'label' => $label,
+    ])->save();
+  }
+};
+
+foreach (['service', 'add_on'] as $catalog_type) {
+  $ensure_field('commerce_product', $catalog_type, 'field_famtastic_summary', 'Customer-facing summary', 'string_long');
+  $ensure_field('commerce_product_variation', $catalog_type, 'field_entitlement_keys', 'Entitlement grants', 'string', -1);
+  $ensure_field('commerce_product_variation', $catalog_type, 'field_intake_schema', 'Intake schema key', 'string');
+}
+
 $store_storage = \Drupal::entityTypeManager()->getStorage('commerce_store');
 if (!$store_storage->getQuery()->accessCheck(FALSE)->count()->execute()) {
   $address_json = trim((string) getenv('FAMTASTIC_COMMERCE_STORE_ADDRESS_JSON'));
@@ -109,34 +143,77 @@ else {
 }
 
 $store = $store ?? $store_storage->load(reset($store_storage->getQuery()->accessCheck(FALSE)->range(0, 1)->execute()));
-$ensure_product = static function (string $sku, string $type, string $title, string $price, array $metadata) use ($store): void {
+$ensure_product = static function (
+  string $sku,
+  string $type,
+  string $title,
+  string $price,
+  bool $published,
+  array $metadata,
+) use ($store): void {
   $variation_storage = \Drupal::entityTypeManager()->getStorage('commerce_product_variation');
   $existing = $variation_storage->loadByProperties(['sku' => $sku]);
   if ($existing) {
-    echo "Commerce product {$sku} already exists; left unchanged.\n";
-    return;
+    $variation = reset($existing);
+    $product = $variation->getProduct();
+    $variation->setTitle($title)->setPrice(new Price($price, 'USD'))->set('status', $published ? 1 : 0);
+    $product?->setTitle($title)->set('status', $published ? 1 : 0);
   }
-  $variation = ProductVariation::create([
-    'type' => $type, 'sku' => $sku, 'title' => $title,
-    'price' => new Price($price, 'USD'), 'status' => $sku !== 'FAM-ANALYTICS',
-  ]);
+  else {
+    $variation = ProductVariation::create([
+      'type' => $type, 'sku' => $sku, 'title' => $title,
+      'price' => new Price($price, 'USD'), 'status' => $published,
+    ]);
+    $variation->save();
+    $product = Product::create([
+      'type' => $type, 'title' => $title, 'stores' => [$store],
+      'variations' => [$variation], 'status' => $published,
+    ]);
+  }
+  $variation->set('field_entitlement_keys', array_map(static fn(string $key): array => ['value' => $key], $metadata['entitlements'] ?? []));
+  $variation->set('field_intake_schema', (string) ($metadata['intake_schema'] ?? ''));
   $variation->save();
-  $product = Product::create([
-    'type' => $type, 'title' => $title, 'stores' => [$store],
-    'variations' => [$variation], 'status' => $sku !== 'FAM-ANALYTICS',
-  ]);
+  $product->set('field_famtastic_summary', (string) ($metadata['description'] ?? ''));
   $product->save();
-  echo "Created {$title} ({$sku}).\n";
+  $variation->set('status', $published ? 1 : 0)->save();
+  $product->set('status', $published ? 1 : 0)->save();
+  echo "Synchronized {$title} ({$sku}).\n";
 };
 
-$ensure_product('FAM-FOOT-199', 'service', 'Foot in the Door — Single-Page Website', '199.00', [
+$ensure_product('FAM-FOOT-199', 'service', 'Web Basics Bundle — Website Launch', '199.00', TRUE, [
   'description' => 'One focused landing-page website with one year of FAMtastic-managed hosting. Includes first-year new-domain registration when needed or connection of an existing customer-owned domain.',
+  'entitlements' => ['website_service', 'hosting_included_year', 'domain_choice'],
+  'intake_schema' => 'web_basics_v1',
 ]);
-$ensure_product('FAM-HOST-999', 'add_on', 'Basic Managed Hosting — Monthly Renewal', '9.99', [
+$ensure_product('FAM-HOST-999', 'add_on', 'Basic Managed Hosting — Monthly Renewal', '9.99', TRUE, [
   'description' => 'Monthly managed-hosting renewal after the included first year. Recurring billing requires separately recorded customer authorization.',
+  'entitlements' => ['hosting_recurring'],
+  'intake_schema' => 'hosting_renewal_v1',
 ]);
-$ensure_product('FAM-ANALYTICS', 'add_on', 'Growth Analytics', '0.00', [
-  'description' => 'Configurable analytics entitlement. Keep unpublished from direct sale until final packaging and pricing are approved.',
+$ensure_product('FAM-REVISION-75', 'add_on', 'Additional Revision Round', '75.00', TRUE, [
+  'description' => 'One additional revision round after the revisions included with the selected website service.',
+  'entitlements' => ['revision_round'],
+  'intake_schema' => 'revision_request_v1',
 ]);
+
+foreach ([
+  ['FAM-PAGE-EXTRA', 'Additional Website Page', 'Additional page design and implementation.', 'additional_page'],
+  ['FAM-COPY', 'Copywriting Assistance', 'Professional help shaping clear website copy.', 'copywriting'],
+  ['FAM-BRAND', 'Logo and Brand Starter', 'A focused visual identity starter for the website launch.', 'brand_starter'],
+  ['FAM-SCHEDULING', 'Appointment Scheduling', 'Customer-facing appointment scheduling connected to the website.', 'appointment_scheduling'],
+  ['FAM-LEAD-AUTOMATION', 'Lead Automation', 'Lead routing, acknowledgments, notifications, and follow-up automation.', 'lead_automation'],
+  ['FAM-AI-AGENT', 'AI Website Agent', 'An AI website assistant trained around approved business content.', 'ai_site_agent'],
+  ['FAM-ANALYTICS', 'Growth Analytics', 'Customer analytics entitlement with traffic, lead, and conversion reporting.', 'customer_analytics'],
+  ['FAM-LOCAL-SEO', 'Local SEO Setup', 'Local search foundation, business signals, and measurement setup.', 'local_seo'],
+  ['FAM-MAINTENANCE', 'Website Maintenance', 'Ongoing website care and managed updates.', 'maintenance'],
+  ['FAM-BUSINESS-EMAIL', 'Business Email Setup', 'Branded business email configuration and handoff.', 'business_email'],
+  ['FAM-ECOMMERCE-DISCOVERY', 'Ecommerce Discovery', 'A scoped discovery engagement for a larger ecommerce build.', 'ecommerce_discovery'],
+] as [$sku, $title, $description, $catalog_key]) {
+  $ensure_product($sku, 'add_on', $title, '0.00', FALSE, [
+    'description' => $description . ' Pricing remains unpublished until approved.',
+    'entitlements' => [$catalog_key],
+    'intake_schema' => $catalog_key . '_v1',
+  ]);
+}
 
 echo "Commerce setup complete: Service and Add-on catalogs are available.\n";

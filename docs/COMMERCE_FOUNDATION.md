@@ -1,5 +1,19 @@
 # Drupal Commerce foundation
 
+## 2026-08-10 catalog contract
+
+The setup script now seeds an idempotent catalog. The $199 customer-facing offer
+is **Web Basics Bundle — Website Launch**; legacy SKU `FAM-FOOT-199` is retained
+to protect historical references. Published items are the $199 bundle, $9.99
+monthly hosting renewal, and $75 revision add-on. Future add-ons remain drafts
+until pricing and terms are approved. Variations store entitlement keys and an
+intake schema identifier.
+
+This is still a catalog foundation, not the financial source of truth. The
+personalized proof checkout creates custom orders. Commerce Stripe,
+account-required cart checkout, Commerce-order fulfillment, refunds, failed
+subscriptions, and saved payment methods must pass test mode before activation.
+
 Drupal Commerce is the catalog, cart, promotion, checkout, and order foundation
 for future FAMtastic offers and upsells. The existing pipeline checkout remains
 the live payment path until Commerce Stripe is installed, configured in test

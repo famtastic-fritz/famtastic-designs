@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-10 — Customer proof pipeline hardening
+
+- The canonical proof now covers account creation, captured verification email,
+  verification, cookie login, organization-scoped workspace, preferences,
+  support confirmation, and durable evidence—not only payment.
+- The journey found two dormant portal defects: a Merge query used `key()` with
+  an array, and FAQ retrieval sorted on a field that is not installed.
+- Revision add-ons were incorrectly granting another base website and hosting
+  entitlement. They now remain in order history without duplicating services.
+- Transactional email now has deterministic memory capture for safe tests.
+  Quote/contact submissions acknowledge customers; support requests notify
+  staff and acknowledge customers without losing a saved request if mail fails.
+- Commerce and the custom proof checkout remain separate financial paths.
+  Catalog consistency is proven; Commerce-order and Stripe test-mode convergence
+  remain launch gates.
+
 This is the canonical record for reusable production discoveries and product
 lessons. Implementation facts still belong in their subsystem runbooks and
 architecture decisions; this file captures what future work must remember.

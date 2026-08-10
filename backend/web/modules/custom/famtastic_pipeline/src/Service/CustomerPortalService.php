@@ -96,6 +96,11 @@ final class CustomerPortalService {
     $projectIds = $this->entities->getStorage('famtastic_project')->getQuery()->accessCheck(FALSE)
       ->condition('prospect_ref', $prospectId)->execute();
     foreach ($projectIds as $projectId) $this->claimResource($organizationId, 'project', (int) $projectId);
+    $package = (string) $order->get('package')->value;
+    if (!in_array($package, ['essential_199', 'business_499'], TRUE)) {
+      $this->activity($organizationId, 'purchase.fulfilled', 'Your add-on purchase was verified and added to your order history.');
+      return;
+    }
     $now = $this->time->getRequestTime();
     $includedUntil = strtotime('+1 year', $now);
     foreach ([
@@ -287,12 +292,13 @@ final class CustomerPortalService {
 
   private function faqs(): array {
     $ids = $this->entities->getStorage('node')->getQuery()->accessCheck(FALSE)
-      ->condition('type', 'faq_item')->condition('status', 1)->sort('field_sort_order')->range(0, 30)->execute();
+      ->condition('type', 'faq_item')->condition('status', 1)->sort('created', 'DESC')->range(0, 30)->execute();
     $faqs = [];
     foreach ($this->entities->getStorage('node')->loadMultiple($ids) as $node) {
       $category = $node->hasField('field_faq_category') && !$node->get('field_faq_category')->isEmpty()
         ? ($node->get('field_faq_category')->entity?->label() ?? 'General') : 'General';
-      $faqs[] = ['id' => $node->uuid(), 'question' => $node->label(), 'answer' => trim(strip_tags((string) $node->get('field_answer')->value)), 'category' => $category];
+      $answer = $node->hasField('field_answer') ? (string) $node->get('field_answer')->value : '';
+      $faqs[] = ['id' => $node->uuid(), 'question' => $node->label(), 'answer' => trim(strip_tags($answer)), 'category' => $category];
     }
     return $faqs;
   }
@@ -384,7 +390,7 @@ final class CustomerPortalService {
   }
 
   private function claimResource(int $organizationId, string $type, int $id): void {
-    $this->database->merge('famtastic_customer_resource')->key(['resource_type' => $type, 'resource_id' => $id])
+    $this->database->merge('famtastic_customer_resource')->keys(['resource_type' => $type, 'resource_id' => $id])
       ->fields(['organization_id' => $organizationId, 'created' => $this->time->getRequestTime()])->execute();
   }
 
