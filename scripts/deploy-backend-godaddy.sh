@@ -74,6 +74,8 @@ source_dir="$release_dir/source"
 backend_dir="$source_dir/backend"
 source_module="$backend_dir/web/modules/custom/famtastic_pipeline"
 production_module="$production_dir/web/modules/custom/famtastic_pipeline"
+source_admin_theme="$backend_dir/web/themes/custom/famtastic_admin"
+production_admin_theme="$production_dir/web/themes/custom/famtastic_admin"
 source_services="$backend_dir/web/sites/default/services.yml"
 production_services="$production_dir/web/sites/default/services.yml"
 drush="$production_dir/vendor/bin/drush"
@@ -94,6 +96,10 @@ test -x "$drush" || {
 }
 test -d "$production_module" || {
   echo "Production custom module missing: $production_module" >&2
+  exit 1
+}
+test -d "$production_admin_theme" || {
+  echo "Production custom admin theme missing: $production_admin_theme" >&2
   exit 1
 }
 test -f "$production_services" || {
@@ -120,7 +126,7 @@ fi
 
 if [[ "$mode" == "preflight" ]]; then
   echo "Preflight passed. No production files changed."
-  echo "Apply plan: exact Git SHA -> private Composer validation -> database/module backups -> module promotion -> updatedb -> cache rebuild -> release record."
+  echo "Apply plan: exact Git SHA -> private Composer validation -> database/module/theme backups -> code promotion -> updatedb -> cache rebuild -> release record."
   exit 0
 fi
 
@@ -144,6 +150,7 @@ if [[ ! -e "$source_dir/.git" ]]; then
 fi
 test -f "$backend_dir/composer.lock"
 test -f "$source_module/famtastic_pipeline.info.yml"
+test -f "$source_admin_theme/famtastic_admin.info.yml"
 test -f "$source_services"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" validate \
   --no-check-publish --no-interaction
@@ -154,17 +161,21 @@ find "$source_module" -type f -name '*.php' -print0 |
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 module_backup="$HOME/backups/famtastic-pipeline-$timestamp-$commit_sha.tgz"
+admin_theme_backup="$HOME/backups/famtastic-admin-$timestamp-$commit_sha.tgz"
 services_backup="$HOME/backups/famtastic-services-$timestamp-$commit_sha.yml"
 database_backup="$HOME/backups/famtastic-database-$timestamp-$commit_sha.sql.gz"
 database_dump_target="${database_backup%.gz}"
 stage_module="$production_dir/web/modules/custom/.famtastic_pipeline-$commit_sha"
+stage_admin_theme="$production_dir/web/themes/custom/.famtastic_admin-$commit_sha"
 settings_dir="$production_dir/web/sites/default"
 settings_mode="$(stat -c '%a' "$settings_dir")"
 stage_services="$production_dir/web/sites/default/.services-$commit_sha.yml"
 previous_module="$production_dir/web/modules/custom/.famtastic_pipeline-previous-$timestamp"
+previous_admin_theme="$production_dir/web/themes/custom/.famtastic_admin-previous-$timestamp"
 previous_services="$production_dir/web/sites/default/.services-previous-$timestamp.yml"
 
 tar -C "$(dirname "$production_module")" -czf "$module_backup" "$(basename "$production_module")"
+tar -C "$(dirname "$production_admin_theme")" -czf "$admin_theme_backup" "$(basename "$production_admin_theme")"
 cp -p "$production_services" "$services_backup"
 cd "$production_dir"
 "$drush" sql:dump --gzip --result-file="$database_dump_target"
@@ -176,11 +187,16 @@ test -s "$database_backup" || {
 rm -rf "$stage_module"
 mkdir -p "$stage_module"
 rsync -a "$source_module/" "$stage_module/"
+rm -rf "$stage_admin_theme"
+mkdir -p "$stage_admin_theme"
+rsync -a "$source_admin_theme/" "$stage_admin_theme/"
 chmod u+w "$settings_dir"
 trap 'chmod "$settings_mode" "$settings_dir" 2>/dev/null || true' ERR
 install -m 0644 "$source_services" "$stage_services"
 mv "$production_module" "$previous_module"
 mv "$stage_module" "$production_module"
+mv "$production_admin_theme" "$previous_admin_theme"
+mv "$stage_admin_theme" "$production_admin_theme"
 mv "$production_services" "$previous_services"
 mv "$stage_services" "$production_services"
 chmod "$settings_mode" "$settings_dir"
@@ -192,6 +208,11 @@ rollback_code() {
     failed_module="$production_dir/web/modules/custom/.famtastic_pipeline-failed-$timestamp"
     mv "$production_module" "$failed_module" 2>/dev/null || true
     mv "$previous_module" "$production_module"
+    if [[ -d "$previous_admin_theme" ]]; then
+      failed_admin_theme="$production_dir/web/themes/custom/.famtastic_admin-failed-$timestamp"
+      mv "$production_admin_theme" "$failed_admin_theme" 2>/dev/null || true
+      mv "$previous_admin_theme" "$production_admin_theme"
+    fi
     if [[ -f "$previous_services" ]]; then
       mv "$production_services" "$production_services.failed-$timestamp" 2>/dev/null || true
       mv "$previous_services" "$production_services"
@@ -218,11 +239,13 @@ trap rollback_code ERR
   printf 'deployed_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   printf 'php=%s\n' "$(php -r 'echo PHP_VERSION;')"
   printf 'module_backup=%s\n' "$module_backup"
+  printf 'admin_theme_backup=%s\n' "$admin_theme_backup"
   printf 'services_backup=%s\n' "$services_backup"
   printf 'database_backup=%s\n' "$database_backup"
 } > "$production_dir/.backend-release"
 
 rm -rf "$previous_module"
+rm -rf "$previous_admin_theme"
 chmod u+w "$settings_dir"
 rm -f "$previous_services"
 chmod "$settings_mode" "$settings_dir"
