@@ -160,6 +160,15 @@ class Prospect extends ContentEntityBase {
     $fields['sla_alerted_at'] = BaseFieldDefinition::create('timestamp')
       ->setLabel('SLA alert sent at')
       ->setDisplayConfigurable('view', TRUE);
+    $fields['owner_uid'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel('Lead owner')->setSetting('target_type', 'user')->setDefaultValue(1)
+      ->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', TRUE);
+    $fields['next_followup_due'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel('Next follow-up due')->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', TRUE);
+    $fields['lost_reason'] = $string('Lost reason')->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', TRUE);
+    $fields['nurture_eligible'] = BaseFieldDefinition::create('boolean')
+      ->setLabel('Eligible for nurture')->setDefaultValue(FALSE)
+      ->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel('Created');

@@ -8,6 +8,7 @@ use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\user\UserInterface;
 use Drupal\famtastic_pipeline\Entity\Order;
 
@@ -21,6 +22,7 @@ final class CustomerPortalService {
     private readonly EntityTypeManagerInterface $entities,
     private readonly TimeInterface $time,
     private readonly UuidInterface $uuid,
+    private readonly ConfigFactoryInterface $configFactory,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -155,15 +157,31 @@ final class CustomerPortalService {
     $orders = $this->serializeEntities('famtastic_order', $resourceIds('order'), [
       'uuid', 'label', 'package', 'amount', 'currency', 'payment_status', 'paid_at', 'created',
     ]);
+    foreach ($this->entities->getStorage('commerce_order')->loadMultiple($resourceIds('commerce_order')) as $commerceOrder) {
+      $orders[] = [
+        'uuid' => $commerceOrder->uuid(),
+        'label' => 'Order ' . $commerceOrder->getOrderNumber(),
+        'package' => implode(', ', array_map(static fn($item): string => $item->getTitle(), $commerceOrder->getItems())),
+        'amount' => (int) round((float) $commerceOrder->getTotalPrice()->getNumber() * 100),
+        'currency' => strtolower($commerceOrder->getTotalPrice()->getCurrencyCode()),
+        'payment_status' => $commerceOrder->getState()->value === 'completed' ? 'paid' : $commerceOrder->getState()->value,
+        'paid_at' => $commerceOrder->getPlacedTime(),
+        'created' => $commerceOrder->getCreatedTime(),
+        'source' => 'commerce',
+      ];
+    }
     $projects = $this->serializeEntities('famtastic_project', $resourceIds('project'), [
       'uuid', 'label', 'proof_url', 'live_url', 'delivery_status', 'approval_status', 'revision_count', 'revision_limit', 'created', 'changed',
     ]);
     $entitlements = $this->database->select('famtastic_entitlement', 'e')->fields('e')
       ->condition('organization_id', $organizationId)->execute()->fetchAll(\PDO::FETCH_ASSOC);
-    $threads = $this->database->select('famtastic_portal_thread', 't')
-      ->fields('t', ['public_id', 'project_id', 'kind', 'subject', 'status', 'created', 'changed'])
-      ->condition('organization_id', $organizationId)->orderBy('changed', 'DESC')
-      ->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $threadQuery = $this->database->select('famtastic_portal_thread', 't');
+    $threadQuery->leftJoin('famtastic_support_case', 's', 's.thread_id = t.id');
+    $threadQuery->fields('t', ['public_id', 'project_id', 'kind', 'subject', 'status', 'created', 'changed'])
+      ->condition('t.organization_id', $organizationId)->orderBy('t.changed', 'DESC');
+    foreach (['case_number', 'category', 'priority', 'response_due', 'resolved_at'] as $field) $threadQuery->addField('s', $field, $field);
+    $threadQuery->addField('s', 'status', 'case_status');
+    $threads = $threadQuery->execute()->fetchAll(\PDO::FETCH_ASSOC);
     $activity = $this->database->select('famtastic_portal_activity', 'a')
       ->fields('a', ['event_type', 'summary', 'metadata', 'created'])
       ->condition('organization_id', $organizationId)->orderBy('created', 'DESC')->range(0, 20)
@@ -319,8 +337,25 @@ final class CustomerPortalService {
     $this->database->insert('famtastic_portal_message')->fields([
       'thread_id' => $threadId, 'author_uid' => $uid, 'author_type' => 'customer', 'body' => $body, 'created' => $now,
     ])->execute();
+    $caseNumber = 'FAM-' . gmdate('ymd', $now) . '-' . str_pad((string) $threadId, 5, '0', STR_PAD_LEFT);
+    $priority = in_array($input['priority'] ?? '', ['urgent', 'high', 'normal', 'low'], TRUE) ? $input['priority'] : 'normal';
+    $responseHours = ['urgent' => 4, 'high' => 24, 'normal' => 72, 'low' => 120][$priority];
+    $this->database->insert('famtastic_support_case')->fields([
+      'case_number' => $caseNumber, 'thread_id' => $threadId,
+      'category' => preg_replace('/[^a-z0-9_-]/', '', strtolower((string) ($input['category'] ?? 'general'))) ?: 'general',
+      'priority' => $priority, 'status' => 'new', 'owner_uid' => 1,
+      'service_key' => preg_replace('/[^a-z0-9_-]/', '', strtolower((string) ($input['service_key'] ?? ''))),
+      'response_due' => $now + ($responseHours * 3600), 'created' => $now, 'changed' => $now,
+    ])->execute();
+    $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $replyAddress = 'support+' . $publicId . '@famtasticdesigns.com';
+    $this->queueNotification('support:' . $threadId . ':customer-created', 'transactional', (string) $customer['email'],
+      "Support request {$caseNumber} received", "We received your request: {$subject}\nCase: {$caseNumber}\nReply address: {$replyAddress}");
+    $this->queueNotification('support:' . $threadId . ':staff-created', 'operational', $admin,
+      "New support case {$caseNumber} — {$subject}", "Customer: {$customer['display_name']}\nPriority: {$priority}\nCase: {$caseNumber}\nPortal thread: {$publicId}");
     $this->activity((int) $organization['id'], 'support.created', 'A new support conversation was opened.');
-    return ['public_id' => $publicId, 'subject' => $subject, 'status' => 'open', 'created' => $now];
+    return ['public_id' => $publicId, 'case_number' => $caseNumber, 'subject' => $subject, 'status' => 'open', 'case_status' => 'new', 'priority' => $priority, 'created' => $now];
   }
 
   public function thread(int $customerId, string $publicId): array {
@@ -341,6 +376,8 @@ final class CustomerPortalService {
     $now = $this->time->getRequestTime();
     $this->database->insert('famtastic_portal_message')->fields(['thread_id' => $thread['id'], 'author_uid' => $uid, 'author_type' => 'customer', 'body' => $body, 'created' => $now])->execute();
     $this->database->update('famtastic_portal_thread')->fields(['changed' => $now])->condition('id', $thread['id'])->execute();
+    $this->database->update('famtastic_support_case')->fields(['status' => 'waiting_on_famtastic', 'changed' => $now])
+      ->condition('thread_id', $thread['id'])->condition('status', 'resolved', '<>')->execute();
   }
 
   public function issueToken(int $customerId, string $email, string $purpose, array $payload = []): string {
@@ -389,7 +426,7 @@ final class CustomerPortalService {
     }
   }
 
-  private function claimResource(int $organizationId, string $type, int $id): void {
+  public function claimResource(int $organizationId, string $type, int $id): void {
     $this->database->merge('famtastic_customer_resource')->keys(['resource_type' => $type, 'resource_id' => $id])
       ->fields(['organization_id' => $organizationId, 'created' => $this->time->getRequestTime()])->execute();
   }
@@ -404,8 +441,16 @@ final class CustomerPortalService {
     return $out;
   }
 
-  private function activity(int $organizationId, string $type, string $summary): void {
+  public function activity(int $organizationId, string $type, string $summary): void {
     $this->database->insert('famtastic_portal_activity')->fields(['organization_id' => $organizationId, 'event_type' => $type, 'summary' => $summary, 'created' => $this->time->getRequestTime()])->execute();
+  }
+
+  private function queueNotification(string $key, string $category, string $recipient, string $subject, string $body): void {
+    $now = $this->time->getRequestTime();
+    $this->database->merge('famtastic_notification_outbox')->key('notification_key', $key)->insertFields([
+      'notification_key' => $key, 'category' => $category, 'recipient' => mb_strtolower($recipient), 'subject' => $subject, 'body' => $body,
+      'status' => 'queued', 'attempts' => 0, 'max_attempts' => 5, 'available_at' => $now, 'created' => $now, 'changed' => $now,
+    ])->execute();
   }
 
   private function contextualOffers(array $entitlements, array $projects): array {

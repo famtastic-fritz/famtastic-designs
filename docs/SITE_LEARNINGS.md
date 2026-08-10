@@ -1,5 +1,23 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-10 — Product factory and unified lifecycle
+
+- Product setup cannot stop at a Commerce SKU and price. A valid product now
+  requires billing, eligibility, entitlement, intake, fulfillment,
+  communication, portal, upsell, reporting, acceptance, and launch definitions.
+- Commerce fulfillment is now idempotent and SKU-driven. Completed orders join
+  one permanent customer workspace; failed/refunded states are reconciled rather
+  than treated as unrelated webhook events.
+- Support and email are one timeline only when outgoing messages contain a
+  thread address and inbound messages verify both the Message-ID and sender's
+  organization membership.
+- Worker success is not enough without heartbeat, bounded retry, dead-letter,
+  overdue-case, lead-follow-up, project-staleness, renewal, and exception-summary
+  visibility.
+- Provider proof and fixture proof remain separately classified. The local
+  lifecycle runner proves behavior; the Stripe sandbox checkout proves the
+  payment provider; live activation is still an explicit gate.
+
 ## 2026-08-10 — Commerce Stripe sandbox proof
 
 - Stripe authentication must be classified by environment, not merely by

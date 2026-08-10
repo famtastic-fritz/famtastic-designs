@@ -404,6 +404,34 @@ TERMS;
 }
 
 /**
+ * Adds the unified product, Commerce, mailbox, support, and worker lifecycle.
+ */
+function famtastic_pipeline_update_8016(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $created = [];
+  foreach (_famtastic_pipeline_lifecycle_schema() as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+      $created[] = $table;
+    }
+  }
+  return t('Added unified lifecycle tables: @tables.', ['@tables' => $created ? implode(', ', $created) : 'none']);
+}
+
+/** Adds canonical lead ownership and follow-up fields. */
+function famtastic_pipeline_update_8017(&$sandbox) {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entityType = \Drupal::entityTypeManager()->getDefinition('famtastic_prospect');
+  $definitions = $entityType->getClass()::baseFieldDefinitions($entityType);
+  foreach (['owner_uid', 'next_followup_due', 'lost_reason', 'nurture_eligible'] as $name) {
+    if (!$manager->getFieldStorageDefinition($name, 'famtastic_prospect')) {
+      $manager->installFieldStorageDefinition($name, 'famtastic_prospect', 'famtastic_pipeline', $definitions[$name]);
+    }
+  }
+  return t('Added canonical lead ownership, follow-up, loss, and nurture fields.');
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {
@@ -782,7 +810,88 @@ function _famtastic_pipeline_automation_schema(): array {
   foreach (_famtastic_pipeline_portal_engagement_schema() as $table => $definition) {
     $tables[$table] = $definition;
   }
+  foreach (_famtastic_pipeline_lifecycle_schema() as $table => $definition) {
+    $tables[$table] = $definition;
+  }
 
+  return $tables;
+}
+
+/**
+ * Defines records shared by Commerce fulfillment and customer operations.
+ */
+function _famtastic_pipeline_lifecycle_schema(): array {
+  $id = ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE];
+  $entity = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
+  $short = ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''];
+  $tables['famtastic_commerce_fulfillment'] = [
+    'description' => 'Idempotent bridge from Commerce orders to customer lifecycle records.',
+    'fields' => [
+      'id' => $id, 'commerce_order_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'status' => $short, 'sku_snapshot' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+      'amount_minor' => ['type' => 'int', 'not null' => TRUE], 'currency' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE],
+      'fulfilled_at' => $time, 'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['commerce_order' => ['commerce_order_id']],
+    'indexes' => ['organization' => ['organization_id', 'created']],
+  ];
+  $tables['famtastic_notification_outbox'] = [
+    'description' => 'Idempotent transactional and promotional notification outbox.',
+    'fields' => [
+      'id' => $id, 'notification_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'category' => $short, 'recipient' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE],
+      'subject' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
+      'body' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE], 'status' => $short,
+      'attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'max_attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 5],
+      'available_at' => $time, 'sent_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'provider_message_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'last_error' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE], 'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['notification_key' => ['notification_key']],
+    'indexes' => ['queue' => ['status', 'available_at'], 'recipient' => ['recipient', 'created']],
+  ];
+  $tables['famtastic_support_case'] = [
+    'description' => 'Operational support case workflow linked to a portal thread.',
+    'fields' => [
+      'id' => $id, 'case_number' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE],
+      'thread_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE], 'category' => $short,
+      'priority' => $short, 'status' => $short, 'owner_uid' => $entity, 'service_key' => $short,
+      'response_due' => $time, 'responded_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'resolved_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'satisfaction' => ['type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['case_number' => ['case_number'], 'thread' => ['thread_id']],
+    'indexes' => ['queue' => ['status', 'response_due'], 'owner' => ['owner_uid', 'status']],
+  ];
+  $tables['famtastic_inbound_message'] = [
+    'description' => 'Validated inbound mailbox messages and matching results.',
+    'fields' => [
+      'id' => $id, 'message_id_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'thread_public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE, 'default' => ''],
+      'sender_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE], 'subject' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
+      'body' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE], 'attachment_manifest' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'status' => $short, 'rejection_reason' => $short, 'received_at' => $time, 'created' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['message_id' => ['message_id_hash']],
+    'indexes' => ['thread' => ['thread_public_id', 'received_at'], 'status' => ['status', 'received_at']],
+  ];
+  $tables['famtastic_worker_heartbeat'] = [
+    'description' => 'Worker health, throughput, retry, and failure telemetry.',
+    'fields' => [
+      'worker_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE], 'status' => $short,
+      'last_started' => $time, 'last_finished' => $time, 'next_due' => $time,
+      'processed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'failed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'retried' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'last_error' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE], 'changed' => $time,
+    ],
+    'primary key' => ['worker_key'], 'indexes' => ['due' => ['status', 'next_due']],
+  ];
   return $tables;
 }
 

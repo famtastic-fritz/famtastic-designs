@@ -114,7 +114,9 @@ class PublicRequestController extends ControllerBase {
         'contact_method' => 'email',
         'contact_value' => $email,
         'status' => 'lead',
+        'owner_uid' => 1,
         'first_response_due' => $this->time->getRequestTime() + ($slaDays * 86400),
+        'next_followup_due' => $this->time->getRequestTime() + ($slaDays * 86400),
       ]);
       $prospect->save();
     }
@@ -194,10 +196,12 @@ class PublicRequestController extends ControllerBase {
       $customerSubject = $type === 'quote'
         ? 'We received your FAMtastic Designs quote request'
         : 'We received your message — FAMtastic Designs';
+      $slaDays = max(1, (int) ($settings->get('lead_response_sla_days') ?: 3));
       $customerBody = "Thanks for reaching out to FAMtastic Designs.\n\n"
-        . "Your request #" . $intake->id() . " is safely recorded. We will review it and reply within one business day with the next useful step.\n\n"
+        . "Your request #" . $intake->id() . " is safely recorded. We will review it and reply within {$slaDays} business days with the next useful step.\n\n"
         . "You can reply directly to this email if you need to add context.\n\nFAMtastic Designs";
       $this->mailer->send($customerEmail, $customerSubject, $customerBody);
+      $prospect->set('status', 'acknowledged')->save();
       return ['ok' => TRUE];
     }
     catch (\Throwable $e) {

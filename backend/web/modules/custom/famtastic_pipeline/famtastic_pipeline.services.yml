@@ -95,4 +95,12 @@ services:
 
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory']
+
+  famtastic_pipeline.commerce_lifecycle:
+    class: Drupal\famtastic_pipeline\Service\CommerceLifecycleService
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@famtastic_pipeline.customer_portal', '@config.factory']
+
+  famtastic_pipeline.lifecycle_operations:
+    class: Drupal\famtastic_pipeline\Service\LifecycleOperationsService
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.mailer', '@config.factory', '@file_system']

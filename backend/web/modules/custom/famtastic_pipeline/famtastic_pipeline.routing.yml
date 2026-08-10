@@ -336,6 +336,16 @@ famtastic_pipeline.stripe_simulate:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.inbound_mail:
+  path: '/api/pipeline/mail/inbound'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\InboundMailController::receive'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
 # --- Admin: generate & export the Site Studio request ---
 famtastic_pipeline.operations:
   path: '/admin/famtastic'
@@ -376,7 +386,7 @@ famtastic_pipeline.operations_metric:
     _title: 'Operations Records'
   requirements:
     _permission: 'administer famtastic pipeline'
-    metric: 'campaigns|prospects|customers|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services'
+    metric: 'campaigns|prospects|customers|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers'
 
 famtastic_pipeline.operations_campaign:
   path: '/admin/famtastic/campaign/{campaign_key}'

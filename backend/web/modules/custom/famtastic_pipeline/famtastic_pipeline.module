@@ -7,6 +7,8 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_page_attachments().
  *
@@ -17,6 +19,50 @@ function famtastic_pipeline_page_attachments(array &$attachments): void {
   $routeName = (string) \Drupal::routeMatch()->getRouteName();
   if (str_starts_with($routeName, 'commerce_checkout.')) {
     $attachments['#attached']['library'][] = 'famtastic_pipeline/commerce_checkout';
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function famtastic_pipeline_entity_insert(EntityInterface $entity): void {
+  _famtastic_pipeline_maybe_fulfill_commerce_order($entity);
+  _famtastic_pipeline_maybe_reconcile_commerce_payment($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function famtastic_pipeline_entity_update(EntityInterface $entity): void {
+  _famtastic_pipeline_maybe_fulfill_commerce_order($entity);
+  _famtastic_pipeline_maybe_reconcile_commerce_payment($entity);
+}
+
+/** Reconciles Commerce payment state into the lifecycle and notification outbox. */
+function _famtastic_pipeline_maybe_reconcile_commerce_payment(EntityInterface $entity): void {
+  if ($entity->getEntityTypeId() !== 'commerce_payment') return;
+  try {
+    \Drupal::service('famtastic_pipeline.commerce_lifecycle')->reconcilePayment($entity);
+  }
+  catch (\Throwable $error) {
+    \Drupal::logger('famtastic_pipeline')->error('Commerce payment reconciliation failed for payment @id: @error', ['@id' => $entity->id(), '@error' => $error->getMessage()]);
+  }
+}
+
+/**
+ * Bridges only completed Commerce orders into the customer lifecycle.
+ */
+function _famtastic_pipeline_maybe_fulfill_commerce_order(EntityInterface $entity): void {
+  if ($entity->getEntityTypeId() !== 'commerce_order' || $entity->getState()->value !== 'completed') {
+    return;
+  }
+  try {
+    \Drupal::service('famtastic_pipeline.commerce_lifecycle')->fulfill($entity);
+  }
+  catch (\Throwable $error) {
+    \Drupal::logger('famtastic_pipeline')->error('Commerce lifecycle fulfillment failed for order @id: @error', [
+      '@id' => $entity->id(), '@error' => $error->getMessage(),
+    ]);
   }
 }
 
@@ -52,6 +98,14 @@ function famtastic_pipeline_mail(string $key, array &$message, array $params): v
  * Sends one durable alert when a public lead misses its first-response SLA.
  */
 function famtastic_pipeline_cron(): void {
+  try {
+    $operations = \Drupal::service('famtastic_pipeline.lifecycle_operations');
+    $operations->runProtection();
+    $operations->dispatchNotifications(50);
+  }
+  catch (\Throwable $error) {
+    \Drupal::logger('famtastic_pipeline')->error('Lifecycle worker failed: @error', ['@error' => $error->getMessage()]);
+  }
   $config = \Drupal::config('famtastic_pipeline.settings');
   if (!$config->get('sla_alerts_enabled')) {
     return;

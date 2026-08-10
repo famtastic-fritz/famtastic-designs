@@ -54,6 +54,8 @@ final class OperationsController extends ControllerBase {
       ['Customers', $this->count('famtastic_customer') . ' customer accounts', 'Customer identity, contact details, consent, and business workspaces.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'customers']), 'customers'],
       ['Commerce', $this->count('famtastic_order', ['payment_status' => 'paid']) . ' paid orders', 'Products, orders, payment status, subscriptions, and fulfillment.', Url::fromUserInput('/admin/commerce'), 'commerce'],
       ['Support', $openSupport . ' open conversations', 'Customer requests, project questions, replies, and service issues.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support']), 'support'],
+      ['Notifications', $this->countIn('famtastic_notification_outbox', 'status', ['queued', 'retry', 'dead_letter']) . ' need attention', 'Receipts, acknowledgments, reminders, delivery attempts, and failures.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'notifications']), 'emails-sent'],
+      ['Automation', $this->count('famtastic_worker_heartbeat') . ' monitored workers', 'Scheduled protection, last runs, retries, and worker health.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'workers']), 'open-jobs'],
       ['Content', $published . ' published items', 'Website pages, articles, FAQs, services, and packages.', Url::fromUserInput('/admin/content'), 'content'],
       ['Services', $this->count('famtastic_entitlement', ['status' => 'active']) . ' active entitlements', 'Hosting, domains, analytics, websites, and customer capabilities.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'services']), 'services'],
       ['Referrals', $this->count('famtastic_referral') . ' customer referrals', 'Introductions, privacy-safe status, and reward readiness.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'referrals']), 'referrals'],
@@ -113,6 +115,13 @@ final class OperationsController extends ControllerBase {
         'label' => 'Open Exceptions',
         'value' => $this->countIn('famtastic_exception', 'status', ['open', 'retry']),
       ],
+      'support' => [
+        'label' => 'Open Support',
+        'value' => $this->countIn('famtastic_support_case', 'status', ['new', 'assigned', 'waiting_on_customer', 'waiting_on_famtastic']),
+      ],
+      'services' => ['label' => 'Active Services', 'value' => $this->count('famtastic_entitlement', ['status' => 'active'])],
+      'notifications' => ['label' => 'Notification Issues', 'value' => $this->countIn('famtastic_notification_outbox', 'status', ['retry', 'dead_letter'])],
+      'workers' => ['label' => 'Monitored Workers', 'value' => $this->count('famtastic_worker_heartbeat')],
     ];
 
     $rows = [];
@@ -227,6 +236,8 @@ final class OperationsController extends ControllerBase {
       'support' => $this->supportMetric(),
       'referrals' => $this->referralMetric(),
       'services' => $this->serviceMetric(),
+      'notifications' => $this->notificationMetric(),
+      'workers' => $this->workerMetric(),
       default => throw new NotFoundHttpException('Operations metric not found.'),
     };
   }
@@ -234,12 +245,31 @@ final class OperationsController extends ControllerBase {
   private function supportMetric(): array {
     $query = $this->database->select('famtastic_portal_thread', 't')->extend(PagerSelectExtender::class);
     $query->leftJoin('famtastic_organization', 'o', 'o.id = t.organization_id');
-    $query->fields('t', ['kind', 'subject', 'status', 'created', 'changed'])->addField('o', 'name', 'organization');
+    $query->leftJoin('famtastic_support_case', 's', 's.thread_id = t.id');
+    $query->fields('t', ['kind', 'subject', 'created', 'changed'])->fields('s', ['case_number', 'priority', 'status', 'response_due'])->addField('o', 'name', 'organization');
     $rows = [];
     foreach ($query->orderBy('t.changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
-      $rows[] = [$record['organization'] ?: 'Individual', $record['subject'], ['data' => ['#markup' => $this->badge($record['kind'])]], ['data' => ['#markup' => $this->badge($record['status'])]], $this->date((int) $record['changed'])];
+      $rows[] = [$record['case_number'] ?: 'Legacy', $record['organization'] ?: 'Individual', $record['subject'], ['data' => ['#markup' => $this->badge($record['priority'] ?: $record['kind'])]], ['data' => ['#markup' => $this->badge($record['status'] ?: 'open')]], $this->date((int) $record['response_due']), $this->date((int) $record['changed'])];
     }
-    return $this->recordsPage('Customer Support', 'Customer-visible project, service, billing, and support conversations.', ['Customer', 'Subject', 'Area', 'Status', 'Updated'], $rows, 'No support conversations have been recorded.');
+    return $this->recordsPage('Customer Support', 'Customer-visible cases with ownership, priority, response targets, and conversation history.', ['Case', 'Customer', 'Subject', 'Priority', 'Status', 'Response due', 'Updated'], $rows, 'No support conversations have been recorded.');
+  }
+
+  private function notificationMetric(): array {
+    $rows = [];
+    $query = $this->database->select('famtastic_notification_outbox', 'n')->extend(PagerSelectExtender::class);
+    foreach ($query->fields('n', ['category', 'recipient', 'subject', 'status', 'attempts', 'last_error', 'changed'])->orderBy('changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $rows[] = [$record['category'], $record['recipient'], $record['subject'], ['data' => ['#markup' => $this->badge($record['status'])]], $record['attempts'], $record['last_error'] ?: '—', $this->date((int) $record['changed'])];
+    }
+    return $this->recordsPage('Notifications', 'Transactional and operational delivery state, retries, and dead letters.', ['Category', 'Recipient', 'Subject', 'Status', 'Attempts', 'Last error', 'Updated'], $rows, 'No notifications have been queued.');
+  }
+
+  private function workerMetric(): array {
+    $rows = [];
+    $query = $this->database->select('famtastic_worker_heartbeat', 'w')->extend(PagerSelectExtender::class);
+    foreach ($query->fields('w')->orderBy('worker_key')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $rows[] = [$record['worker_key'], ['data' => ['#markup' => $this->badge($record['status'])]], $this->date((int) $record['last_started']), $this->date((int) $record['last_finished']), $this->date((int) $record['next_due']), $record['processed'], $record['failed'], $record['last_error'] ?: '—'];
+    }
+    return $this->recordsPage('Automation Workers', 'Worker heartbeat, schedules, processing totals, and failures.', ['Worker', 'Status', 'Started', 'Finished', 'Next due', 'Processed', 'Failed', 'Last error'], $rows, 'No worker heartbeat has been recorded.');
   }
 
   private function referralMetric(): array {

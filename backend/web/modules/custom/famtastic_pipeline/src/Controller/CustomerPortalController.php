@@ -192,7 +192,6 @@ final class CustomerPortalController extends ControllerBase {
     $data = $this->body($request);
     try {
       $thread = $this->portal->createThread((int) $customer['id'], (string) ($data['organization'] ?? ''), $data, (int) $this->account->id());
-      $this->notifyCustomerMessage($customer, $thread, $data, TRUE);
       return new JsonResponse(['ok' => TRUE, 'thread' => $thread], 201);
     }
     catch (\InvalidArgumentException $e) {
@@ -216,8 +215,6 @@ final class CustomerPortalController extends ControllerBase {
     try {
       $data = $this->body($request);
       $this->portal->addMessage((int) $customer['id'], $thread, (string) ($data['body'] ?? ''), (int) $this->account->id());
-      $threadRecord = $this->portal->thread((int) $customer['id'], $thread)['thread'];
-      $this->notifyCustomerMessage($customer, $threadRecord, $data, FALSE);
       return new JsonResponse(['ok' => TRUE]);
     }
     catch (\InvalidArgumentException $e) { return $this->error('invalid_message', 422, $e->getMessage()); }
@@ -240,35 +237,6 @@ final class CustomerPortalController extends ControllerBase {
     $token = $this->portal->issueToken((int) $customer['id'], (string) $customer['email'], 'verify');
     $url = $request->getSchemeAndHttpHost() . '/verify-email?token=' . rawurlencode($token);
     $this->mailer->send((string) $customer['email'], 'Verify your FAMtastic Designs account', "Verify your customer account:\n\n{$url}\n\nThis link expires in 24 hours.");
-  }
-
-  /**
-   * Alerts staff about portal messages and confirms newly opened requests.
-   */
-  private function notifyCustomerMessage(array $customer, array $thread, array $data, bool $opened): void {
-    $subject = trim(strip_tags((string) ($thread['subject'] ?? $data['subject'] ?? 'Customer support request')));
-    $body = trim(strip_tags((string) ($data['body'] ?? '')));
-    $recipient = (string) ($this->portalConfigFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'hello@famtasticdesigns.com');
-    try {
-      $this->mailer->send(
-        $recipient,
-        sprintf('Portal %s: %s', $opened ? 'request opened' : 'customer reply', $subject),
-        "Customer: " . ($customer['display_name'] ?: $customer['email']) . "\nEmail: " . $customer['email'] . "\n\n" . $body . "\n\nOpen support: https://famtasticdesigns.com/web/admin/famtastic/metric/support",
-      );
-      if ($opened) {
-        $this->mailer->send(
-          (string) $customer['email'],
-          'We received your support request — FAMtastic Designs',
-          "Your request \"{$subject}\" is recorded in your customer portal. We will reply there and notify you by email.\n\nFAMtastic Designs",
-        );
-      }
-    }
-    catch (\Throwable $error) {
-      $this->logger->error('Portal message notification failed for customer @customer: @error', [
-        '@customer' => $customer['public_id'] ?? 'unknown',
-        '@error' => $error->getMessage(),
-      ]);
-    }
   }
 
   private function body(Request $request): array {

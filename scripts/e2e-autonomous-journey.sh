@@ -278,6 +278,7 @@ support="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" 
   \"body\":\"Please confirm that the complete customer-support notification path works.\"
 }" "$BASE/api/customer/threads")"
 assert_json "$support" '.ok == true and .thread.status == "open"'
+FAMTASTIC_TRANSACTIONAL_EMAIL_CAPTURE="$mail_capture" FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT=memory "$DRUSH" php:eval '\Drupal::service("famtastic_pipeline.lifecycle_operations")->dispatchNotifications(100);' >/dev/null
 test "$(jq -rs --arg email "$email" '[.[] | select(.to == $email)] | length >= 2' "$mail_capture")" = "true"
 
 portal="$(curl -s "${TH[@]}" "$BASE/api/pipeline/session")"

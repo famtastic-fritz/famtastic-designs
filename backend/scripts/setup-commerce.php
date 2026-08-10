@@ -180,40 +180,24 @@ $ensure_product = static function (
   echo "Synchronized {$title} ({$sku}).\n";
 };
 
-$ensure_product('FAM-FOOT-199', 'service', 'Web Basics Bundle — Website Launch', '199.00', TRUE, [
-  'description' => 'One focused landing-page website with one year of FAMtastic-managed hosting. Includes first-year new-domain registration when needed or connection of an existing customer-owned domain.',
-  'entitlements' => ['website_service', 'hosting_included_year', 'domain_choice'],
-  'intake_schema' => 'web_basics_v1',
-]);
-$ensure_product('FAM-HOST-999', 'add_on', 'Basic Managed Hosting — Monthly Renewal', '9.99', TRUE, [
-  'description' => 'Monthly managed-hosting renewal after the included first year. Recurring billing requires separately recorded customer authorization.',
-  'entitlements' => ['hosting_recurring'],
-  'intake_schema' => 'hosting_renewal_v1',
-]);
-$ensure_product('FAM-REVISION-75', 'add_on', 'Additional Revision Round', '75.00', TRUE, [
-  'description' => 'One additional revision round after the revisions included with the selected website service.',
-  'entitlements' => ['revision_round'],
-  'intake_schema' => 'revision_request_v1',
-]);
-
-foreach ([
-  ['FAM-PAGE-EXTRA', 'Additional Website Page', '149.00', 'Additional page design and implementation.', 'additional_page'],
-  ['FAM-COPY', 'Copywriting Assistance', '199.00', 'Professional help shaping clear website copy.', 'copywriting'],
-  ['FAM-BRAND', 'Logo and Brand Starter', '249.00', 'A focused visual identity starter for the website launch.', 'brand_starter'],
-  ['FAM-SCHEDULING', 'Appointment Scheduling', '149.00', 'Customer-facing appointment scheduling connected to the website.', 'appointment_scheduling'],
-  ['FAM-LEAD-AUTOMATION', 'Lead Automation', '299.00', 'Lead routing, acknowledgments, notifications, and follow-up automation.', 'lead_automation'],
-  ['FAM-AI-AGENT', 'AI Website Agent Setup', '499.00', 'An AI website assistant configured around approved business content.', 'ai_site_agent'],
-  ['FAM-ANALYTICS', 'Growth Analytics — Monthly', '29.99', 'Customer analytics entitlement with traffic, lead, and conversion reporting.', 'customer_analytics'],
-  ['FAM-LOCAL-SEO', 'Local SEO Setup', '299.00', 'Local search foundation, business signals, and measurement setup.', 'local_seo'],
-  ['FAM-MAINTENANCE', 'Website Maintenance — Monthly', '49.99', 'Ongoing website care and managed updates.', 'maintenance'],
-  ['FAM-BUSINESS-EMAIL', 'Business Email Setup', '99.00', 'Branded business email configuration and handoff.', 'business_email'],
-  ['FAM-ECOMMERCE-DISCOVERY', 'Ecommerce Discovery', '149.00', 'A scoped discovery engagement for a larger ecommerce build.', 'ecommerce_discovery'],
-] as [$sku, $title, $price, $description, $catalog_key]) {
-  $ensure_product($sku, 'add_on', $title, $price, TRUE, [
-    'description' => $description,
-    'entitlements' => [$catalog_key],
-    'intake_schema' => $catalog_key . '_v1',
-  ]);
+$definitionPath = dirname(__DIR__) . '/config/famtastic-products.json';
+$catalog = json_decode((string) file_get_contents($definitionPath), TRUE, 512, JSON_THROW_ON_ERROR);
+if (($catalog['schema'] ?? '') !== 'famtastic.product-pipeline.v1') {
+  throw new RuntimeException('The product onboarding definition is missing or unsupported.');
+}
+foreach ($catalog['products'] ?? [] as $definition) {
+  $ensure_product(
+    (string) $definition['sku'],
+    (string) $definition['type'],
+    (string) $definition['title'],
+    (string) $definition['price'],
+    (bool) $definition['published'],
+    [
+      'description' => (string) $definition['summary'],
+      'entitlements' => (array) $definition['entitlements'],
+      'intake_schema' => (string) $definition['intake_schema'],
+    ],
+  );
 }
 
-echo "Commerce setup complete: Service and Add-on catalogs are available.\n";
+echo "Commerce setup complete: versioned product pipeline synchronized.\n";
