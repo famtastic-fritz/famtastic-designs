@@ -2,3 +2,8 @@ operations:
   css:
     theme:
       css/operations.css: {}
+
+commerce_checkout:
+  css:
+    theme:
+      css/commerce-checkout.css: {}

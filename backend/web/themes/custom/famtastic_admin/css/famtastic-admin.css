@@ -1267,3 +1267,68 @@ body .page-content .admin-item__description {
 body .page-content .admin-item__link::before {
   filter: brightness(0) saturate(100%) invert(84%) sepia(64%) saturate(1722%) hue-rotate(48deg) brightness(104%) contrast(101%);
 }
+
+/* Mobile entity collections (proofs, variants, leads, orders and metrics).
+   Keep the record identity visible while the remaining columns scroll. */
+@media (max-width: 767px) {
+  body .layout-container,
+  body .page-content,
+  body .region-content,
+  body .view,
+  body .views-element-container {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body .views-form,
+  body .views-form form,
+  body .views-form .form-wrapper {
+    min-width: 0;
+  }
+
+  body .views-table,
+  body table.responsive-enabled,
+  body .famtastic-ops__table {
+    display: block;
+    width: 100%;
+    max-width: calc(100vw - 2rem);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+  }
+
+  body .views-table {
+    min-width: 42rem;
+    font-size: .875rem;
+  }
+
+  body .views-table th,
+  body .views-table td {
+    min-width: 8rem;
+    padding: .65rem;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  body .views-table th:first-child,
+  body .views-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    min-width: 10rem;
+    background: var(--fam-surface);
+    box-shadow: 1px 0 var(--fam-border);
+  }
+
+  body .dropbutton-wrapper,
+  body .form-actions,
+  body .action-links {
+    max-width: 100%;
+  }
+
+  body .button,
+  body .action-link {
+    min-height: 44px;
+  }
+}

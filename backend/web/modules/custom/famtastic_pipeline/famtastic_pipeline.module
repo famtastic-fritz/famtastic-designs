@@ -8,6 +8,19 @@
 declare(strict_types=1);
 
 /**
+ * Implements hook_page_attachments().
+ *
+ * Gives Drupal Commerce checkout a branded, responsive presentation while the
+ * rest of the public site remains React-owned.
+ */
+function famtastic_pipeline_page_attachments(array &$attachments): void {
+  $routeName = (string) \Drupal::routeMatch()->getRouteName();
+  if (str_starts_with($routeName, 'commerce_checkout.')) {
+    $attachments['#attached']['library'][] = 'famtastic_pipeline/commerce_checkout';
+  }
+}
+
+/**
  * Implements hook_help().
  */
 function famtastic_pipeline_help(string $route_name): ?string {
