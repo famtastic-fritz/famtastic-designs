@@ -78,7 +78,7 @@ final class CommerceLifecycleService {
     $fields = [
       'commerce_order_id' => (int) $order->id(), 'organization_id' => $organizationId,
       'customer_id' => (int) $customer['id'], 'status' => 'fulfilling',
-      'sku_snapshot' => json_encode(array_values($skus), JSON_THROW_ON_ERROR),
+      'sku_snapshot' => json_encode($this->dealSnapshot($skus, $definitions), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
       'amount_minor' => (int) round((float) $total->getNumber() * 100),
       'currency' => strtolower($total->getCurrencyCode()), 'fulfilled_at' => 0,
       'created' => $existing ? (int) $existing['created'] : $now, 'changed' => $now,
@@ -157,5 +157,19 @@ final class CommerceLifecycleService {
     $definitions = [];
     foreach ($catalog['products'] ?? [] as $product) $definitions[$product['sku']] = $product;
     return $definitions;
+  }
+
+  /** Captures the exact catalog and promise presented for immutable fulfillment evidence. */
+  private function dealSnapshot(array $skus, array $definitions): array {
+    $path = dirname(\Drupal::root()) . '/config/famtastic-deal-terms.json';
+    $registry = json_decode((string) file_get_contents($path), TRUE, 512, JSON_THROW_ON_ERROR);
+    $items = [];
+    foreach ($skus as $sku) {
+      if (empty($registry['deals'][$sku])) throw new \RuntimeException('commerce_deal_definition_missing:' . $sku);
+      $items[] = ['sku' => $sku, 'product' => $definitions[$sku], 'deal' => $registry['deals'][$sku]];
+    }
+    $snapshot = ['policy' => $registry['policy'], 'items' => $items];
+    $snapshot['checksum'] = hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
+    return $snapshot;
   }
 }

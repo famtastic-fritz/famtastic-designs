@@ -60,6 +60,24 @@ final class OperationalLedger {
     return $record;
   }
 
+  /** Returns an immutable checksum-ready snapshot of the exact SKU promises. */
+  public function dealSnapshotForSkus(array $skus): array {
+    $catalogPath = dirname(\Drupal::root()) . '/config/famtastic-products.json';
+    $dealPath = dirname(\Drupal::root()) . '/config/famtastic-deal-terms.json';
+    $catalog = json_decode((string) file_get_contents($catalogPath), TRUE, 512, JSON_THROW_ON_ERROR);
+    $registry = json_decode((string) file_get_contents($dealPath), TRUE, 512, JSON_THROW_ON_ERROR);
+    $products = [];
+    foreach ($catalog['products'] ?? [] as $product) $products[$product['sku']] = $product;
+    $items = [];
+    foreach (array_values(array_unique($skus)) as $sku) {
+      if (empty($products[$sku]) || empty($registry['deals'][$sku])) throw new \RuntimeException('deal_definition_missing:' . $sku);
+      $items[] = ['sku' => $sku, 'product' => $products[$sku], 'deal' => $registry['deals'][$sku]];
+    }
+    $snapshot = ['policy' => $registry['policy'], 'items' => $items];
+    $snapshot['checksum'] = hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
+    return $snapshot;
+  }
+
   /**
    * Hashes a normalized contact value so suppression does not require raw PII.
    */

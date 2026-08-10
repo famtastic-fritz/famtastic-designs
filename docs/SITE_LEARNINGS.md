@@ -2,6 +2,9 @@
 
 ## 2026-08-10 — Product factory and unified lifecycle
 
+- Product configuration is incomplete until the customer-facing deal is also
+  versioned. Store the full per-SKU promise and checksum with fulfillment; a
+  title, price, and entitlement list cannot prove what was sold.
 - Product setup cannot stop at a Commerce SKU and price. A valid product now
   requires billing, eligibility, entitlement, intake, fulfillment,
   communication, portal, upsell, reporting, acceptance, and launch definitions.

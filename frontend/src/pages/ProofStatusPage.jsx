@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   authorizeHostingRenewal,
+  cancelHostingRenewal,
   formatPrice,
   getSession,
   startRevisionCheckout,
@@ -86,6 +87,16 @@ export default function ProofStatusPage() {
     } finally {
       setBusy(false);
     }
+  }
+
+  async function cancelRenewal() {
+    setBusy(true); setNotice(null);
+    try {
+      await cancelHostingRenewal(token);
+      setNotice({ type: 'success', text: 'Future monthly hosting renewal is canceled. Included or already paid hosting remains available through its end date.' });
+      await load();
+    } catch (err) { setNotice({ type: 'error', text: err.message }); }
+    finally { setBusy(false); }
   }
 
   if (loading) return <PipelineShell step={4}><p className="fp-muted">Loading…</p></PipelineShell>;
@@ -235,6 +246,13 @@ export default function ProofStatusPage() {
               <button className="fp-btn fp-btn--lime" disabled={busy || !renewalAuthorized} onClick={authorizeRenewal}>
                 Authorize monthly hosting
               </button>
+            </div>
+          )}
+          {data?.subscription && data.subscription.status !== 'canceled' && (
+            <div className="fp-addon">
+              <h3>Manage monthly hosting</h3>
+              <p className="fp-muted">Cancellation stops future charges. Included or already paid service remains available through its current end date.</p>
+              <button className="fp-btn" disabled={busy} onClick={cancelRenewal}>Cancel future monthly renewal</button>
             </div>
           )}
         </div>

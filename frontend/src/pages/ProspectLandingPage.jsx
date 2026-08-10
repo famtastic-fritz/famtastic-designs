@@ -7,6 +7,7 @@ import {
   startCheckout,
 } from '../api/pipeline.js';
 import PipelineShell from '../components/PipelineShell.jsx';
+import DealDisclosure from '../components/DealDisclosure.jsx';
 import '../pipeline.css';
 
 const BUSINESS_FIELDS = [
@@ -226,6 +227,7 @@ export default function ProspectLandingPage() {
           <ul className="fp-list">
             {(offer.inclusions || []).map((item) => <li key={item}>{item}</li>)}
           </ul>
+          <DealDisclosure snapshot={data?.terms?.deal} />
           <button className="fp-btn fp-btn--lime fp-btn--lg" onClick={handlePay} disabled={paying || !termsAccepted}>
             {paying ? 'Starting secure checkout…' : `Pay ${formatPrice(offer.amount, offer.currency)} & get started`}
           </button>
@@ -236,8 +238,9 @@ export default function ProspectLandingPage() {
               onChange={(event) => setTermsAccepted(event.target.checked)}
             />
             <span>
-              I accept Website Service Terms v{data?.terms?.version}. The first 12 months of hosting are included;
-              recurring hosting requires separate authorization before month 13.
+              I accept Customer Service Terms v{data?.terms?.version} and the deal scope shown above. The $199 bundle includes
+              12 months of basic hosting and either one standard first-year domain when needed or connection of my existing domain.
+              Hosting at $9.99/month and the separately priced annual domain renewal require their disclosed authorization.
             </span>
           </label>
           <p className="fp-fineprint">

@@ -355,3 +355,4 @@
   .fp-variants { grid-template-columns: 1fr; }
   .fp-packages__grid { grid-template-columns: 1fr; }
 }
+.fp-deal{margin:1rem 0;border:1px solid rgba(124,252,0,.3);border-radius:14px;background:rgba(124,252,0,.04);overflow:hidden}.fp-deal summary{cursor:pointer;padding:1rem;font-weight:800;color:#dfffca}.fp-deal__body{padding:0 1rem 1rem}.fp-deal__body h3{font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .4rem}.fp-deal__body ul{margin:.35rem 0 1rem;padding-left:1.25rem}.fp-deal__body li,.fp-deal__body p{line-height:1.55}.fp-deal__body .fp-muted{font-size:.78rem;overflow-wrap:anywhere}

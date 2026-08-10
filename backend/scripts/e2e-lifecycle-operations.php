@@ -70,12 +70,14 @@ $protection = $operations->runProtection();
 
 $db = \Drupal::database();
 $fulfillment = $db->select('famtastic_commerce_fulfillment', 'f')->fields('f')->condition('commerce_order_id', $order->id())->execute()->fetchAssoc();
+$dealSnapshot = json_decode((string) ($fulfillment['sku_snapshot'] ?? ''), TRUE);
 $entitlements = (int) $db->select('famtastic_entitlement', 'e')->condition('organization_id', $organization['id'])->condition('order_id', $order->id())->countQuery()->execute()->fetchField();
 $suspended = (int) $db->select('famtastic_entitlement', 'e')->condition('organization_id', $organization['id'])->condition('order_id', $order->id())->condition('status', 'suspended')->countQuery()->execute()->fetchField();
 $messages = (int) $db->select('famtastic_portal_message', 'm')->condition('thread_id', $db->select('famtastic_portal_thread', 't')->fields('t', ['id'])->condition('public_id', $thread['public_id']))->countQuery()->execute()->fetchField();
 $checks = [
   'commerce_completed' => $order->getState()->value === 'completed',
   'commerce_fulfilled_once' => $commerce['fulfilled'] && (int) ($fulfillment['fulfilled_at'] ?? 0) > 0,
+  'immutable_deal_snapshot' => !empty($dealSnapshot['checksum']) && ($dealSnapshot['items'][0]['sku'] ?? '') === 'FAM-FOOT-199' && ($dealSnapshot['policy']['version'] ?? '') === 'customer_terms_v3_provisional',
   'sku_entitlements' => $entitlements === 3,
   'failed_payment_attention' => $paymentAttention === 'payment_attention',
   'refund_suspends_entitlements' => $suspended === 3,

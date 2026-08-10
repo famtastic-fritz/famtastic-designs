@@ -53,7 +53,7 @@ FAMTASTIC_HOSTING_BILLING_PROVIDER=memory "$DRUSH" eval "
   \$subscription = \$service->authorizeRecurring(
     (int) \$entitlement['id'],
     'hosting-$run_id@example.test',
-    2900,
+    999,
     ['method' => 'acceptance-test-checkbox', 'accepted_at' => gmdate(DATE_ATOM)]
   );
   print json_encode([
@@ -81,6 +81,14 @@ FAMTASTIC_HOSTING_BILLING_PROVIDER=memory "$DRUSH" eval "
   assert((int) \$entitlement['suspended_at'] > 0);
   \$consent = \\Drupal::database()->select('famtastic_consent', 'c')->condition('consent_type', 'recurring_hosting')->condition('status', 'accepted')->countQuery()->execute()->fetchField();
   assert((int) \$consent >= 1);
+  // Reset the time-compressed failure fixture, then prove customer-initiated
+  // cancellation independently from payment-failure cancellation.
+  \Drupal::database()->update('famtastic_subscription')->fields(['status' => 'active', 'cancel_at' => NULL])->condition('id', $subscription_id)->execute();
+  \Drupal::database()->update('famtastic_hosting_entitlement')->fields(['status' => 'recurring', 'suspended_at' => NULL])->condition('id', $entitlement_id)->execute();
+  \$canceled = \$service->cancelRecurring($entitlement_id, 'hosting-$run_id@example.test');
+  assert(\$canceled['status'] === 'canceled');
+  \$revoked = \Drupal::database()->select('famtastic_consent', 'c')->condition('consent_type', 'recurring_hosting')->condition('status', 'unsubscribed')->countQuery()->execute()->fetchField();
+  assert((int) \$revoked >= 1);
 "
 
-echo "PASS: included year, separate recurring consent, month-13 payment, retry, cancellation, and suspension verified."
+echo "PASS: included year, separate USD 9.99 recurring consent, month-13 payment, retry, customer cancellation, and suspension verified."

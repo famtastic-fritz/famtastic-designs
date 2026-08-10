@@ -38,6 +38,7 @@ function famtastic_pipeline_schema(): array {
  */
 function famtastic_pipeline_install(): void {
   _famtastic_pipeline_seed_commercial_versions();
+  _famtastic_pipeline_seed_customer_terms_v3();
 }
 
 /**
@@ -429,6 +430,91 @@ function famtastic_pipeline_update_8017(&$sandbox) {
     }
   }
   return t('Added canonical lead ownership, follow-up, loss, and nurture fields.');
+}
+
+/** Activates the product-driven provisional customer terms used by sandbox checkout. */
+function famtastic_pipeline_update_8018(&$sandbox) {
+  _famtastic_pipeline_seed_customer_terms_v3();
+  return t('Activated provisional customer terms v3 with product scope, domain, renewal, cancellation, refund, and communication rules.');
+}
+
+/** Seeds the immutable v3 operational draft without representing legal approval. */
+function _famtastic_pipeline_seed_customer_terms_v3(): void {
+  $body = <<<'TERMS'
+FAMtastic Designs Customer Service Terms — Provisional Business Policy v3
+
+ORDER AND SCOPE. The checkout summary identifies every product and add-on by
+name, SKU, price, scope version, included deliverables, exclusions, intake,
+revision allowance, and delivery milestones. That accepted snapshot controls
+the order. Anything outside it requires a separately priced and accepted add-on
+or change order. FAMtastic normally responds within three business days; this is
+a response target, not a guaranteed completion or resolution time.
+
+WEB BASICS BUNDLE. The $199 Web Basics Bundle purchases one custom, focused
+single-page or landing-page website. It includes twelve months of basic
+FAMtastic-managed hosting beginning at launch. If the customer needs a domain,
+it also includes first-year registration of one standard, available domain. A
+premium, aftermarket, brokered, or unusually priced domain is not included and
+will not be purchased without a separate quote and approval. A customer who
+already controls a domain receives domain connection instead of a new domain.
+
+OWNERSHIP AND HOSTING. The customer owns customer-supplied content and any
+domain registered for the customer. FAMtastic owns and manages its hosting
+infrastructure and may deliver hosting under FAMtastic branding or a white-label
+presentation. The customer receives the service and access described by the
+order, not ownership of the underlying shared server account or infrastructure.
+
+HOSTING RENEWAL. After the included first year, basic hosting is $9.99 per month.
+It will begin only after the customer separately authorizes the amount, monthly
+frequency, start date, and cancellation method. The authorization and exact
+wording are recorded. The customer may cancel before the next billing date to
+stop future charges. Service remains available through the paid period; completed
+hosting periods are not prorated. Failed payments enter notice, retry, grace,
+and possible suspension workflows before service is ended.
+
+DOMAIN RENEWAL. A new domain's next registration year is due prepaid at the
+beginning of year two, and annually thereafter. The registrar price and due date
+will be disclosed before payment because registry pricing varies. Domain renewal
+is separate from hosting. Existing-domain customers are not charged a domain
+renewal by FAMtastic. A domain is not renewed or purchased without the recorded
+authority and payment required for that transaction.
+
+CANCELLATION AND REFUNDS. Before FAMtastic begins work, the FAMtastic service
+price is refundable. Once work begins, completed work may be deducted from any
+approved refund. Completed milestones, delivered digital work, registered
+domains, and other irreversible third-party costs are nonrefundable. Recurring
+services may be cancelled before the next billing date; cancellation stops
+future charges and does not reverse service already delivered. Product-specific
+rules shown in the accepted deal snapshot supplement this policy.
+
+CUSTOMER RESPONSIBILITIES. The customer confirms authority to supply content,
+brands, accounts, domains, instructions, and personal data used for the work.
+The customer is responsible for factual and legal accuracy of supplied content
+and for timely intake, review, and approvals. Proof approval authorizes launch
+of that release. AI, analytics, SEO, advertising, automation, and third-party
+services do not guarantee traffic, rankings, sales, error-free output, or
+continuous availability unless an order expressly says otherwise.
+
+PAYMENTS AND COMMUNICATIONS. Stripe handles payment methods; FAMtastic does not
+store full card numbers. Transactional security, account, project, support,
+billing, and renewal messages may be sent as needed to operate purchased
+services. Promotional education, deals, and offers require a separate choice
+and can be disabled without stopping transactional messages.
+
+FAMtastic Designs, 1729 NW St. Lucie West Blvd #1181, Port Saint Lucie, Florida
+34986, United States.
+
+STATUS. This is a provisional business policy for test-mode implementation. It
+is not represented as attorney-approved. Qualified legal review and final owner
+approval remain required before live recurring charges or unrestricted public
+checkout.
+TERMS;
+  $database = \Drupal::database();
+  $database->update('famtastic_terms_version')->fields(['active' => 0])->condition('terms_key', 'website_service')->execute();
+  $database->merge('famtastic_terms_version')->key('terms_key', 'website_service')->key('version', 3)->fields([
+    'checksum' => hash('sha256', $body), 'document_url' => '/terms/website-service-v3', 'body' => $body,
+    'effective_at' => 0, 'active' => 1, 'created' => \Drupal::time()->getRequestTime(),
+  ])->execute();
 }
 
 /**

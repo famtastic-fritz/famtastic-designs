@@ -181,6 +181,29 @@ final class HostingLifecycleService {
     return $this->loadSubscription($subscriptionId);
   }
 
+  /** Cancels a scheduled/active test subscription while preserving paid access. */
+  public function cancelRecurring(int $entitlementId, string $customerEmail): array {
+    $subscription = $this->database->select('famtastic_subscription', 's')->fields('s')
+      ->condition('entitlement_id', $entitlementId)->execute()->fetchAssoc();
+    if (!$subscription) throw new \InvalidArgumentException('Hosting subscription not found.');
+    if ($subscription['provider'] !== 'memory') throw new \RuntimeException('Provider cancellation adapter is not enabled.');
+    if ($subscription['status'] === 'canceled') return $subscription;
+    $now = $this->time->getRequestTime();
+    $this->database->update('famtastic_subscription')->fields(['status' => 'canceled', 'cancel_at' => $now, 'next_attempt_at' => NULL, 'changed' => $now])
+      ->condition('id', $subscription['id'])->execute();
+    $entitlement = $this->loadEntitlement($entitlementId);
+    $included = $now < (int) $entitlement['included_until'];
+    $this->database->update('famtastic_hosting_entitlement')->fields(['status' => $included ? 'included' : 'canceled', 'changed' => $now])
+      ->condition('id', $entitlementId)->execute();
+    $this->ledger->recordConsent($customerEmail, 'unsubscribed', consentType: 'recurring_hosting', evidence: [
+      'subscription_id' => (int) $subscription['id'], 'entitlement_id' => $entitlementId, 'method' => 'customer_portal', 'cancelled_at' => gmdate(DATE_ATOM, $now),
+    ]);
+    $this->ledger->recordEvent('hosting.recurring_canceled:' . $subscription['id'], 'hosting.recurring_canceled', [
+      'subscription_id' => (int) $subscription['id'], 'effective' => 'end_of_paid_period',
+    ], projectId: (int) $entitlement['project_id']);
+    return $this->loadSubscription((int) $subscription['id']);
+  }
+
   private function loadEntitlementByProject(int $projectId): ?array {
     $record = $this->database->select('famtastic_hosting_entitlement', 'h')
       ->fields('h')->condition('project_id', $projectId)->execute()->fetchAssoc();

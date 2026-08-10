@@ -13,4 +13,5 @@ scripts/e2e-commerce-catalog.sh
 scripts/e2e-autonomous-journey.sh
 php scripts/validate-product-pipeline.php
 scripts/e2e-lifecycle-operations.sh
+scripts/e2e-hosting-lifecycle.sh
 echo "PASS: catalog and complete synthetic customer lifecycle are internally consistent."

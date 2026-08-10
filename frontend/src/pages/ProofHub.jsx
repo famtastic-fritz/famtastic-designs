@@ -8,6 +8,7 @@ import {
   startCheckout,
 } from '../api/pipeline.js';
 import PipelineShell from '../components/PipelineShell.jsx';
+import DealDisclosure from '../components/DealDisclosure.jsx';
 import { applySeo } from '../components/SEO.jsx';
 import { FadeUp, Item, Stagger } from '../components/v1/motion.jsx';
 import ProspectLandingPage from './ProspectLandingPage.jsx';
@@ -407,6 +408,7 @@ export default function ProofHub() {
                 ? `Confirm Selection — ${PACKAGES.find((p) => p.id === selectedPackage)?.name}`
                 : 'Select a package to continue'}
           </button>
+          <DealDisclosure snapshot={terms?.deal} />
           <label className="fp-check">
             <input
               type="checkbox"
@@ -414,8 +416,9 @@ export default function ProofHub() {
               onChange={(event) => setTermsAccepted(event.target.checked)}
             />
             <span>
-              I accept Website Service Terms v{terms?.version}. The selected package includes 12 months of hosting;
-              recurring hosting requires separate authorization before month 13.
+              I accept Customer Service Terms v{terms?.version} and the recorded deal scope. The $199 bundle includes 12 months
+              of basic hosting and either one standard first-year domain when needed or connection of an existing domain. Hosting
+              at $9.99/month and the separately priced annual domain renewal require their disclosed authorization.
             </span>
           </label>
           <p className="fp-fineprint">Secure payment via Stripe. You’ll be redirected to Stripe Checkout.</p>

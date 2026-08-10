@@ -165,6 +165,7 @@ class PipelineController extends ControllerBase {
       ]);
     }
     $contact = (string) ($prospect->get('contact_value')->value ?: $prospect->get('public_email')->value);
+    $dealSnapshot = $this->ledger->dealSnapshotForSkus(['FAM-FOOT-199']);
     $acceptanceId = $this->ledger->recordConsent(
       $contact,
       'accepted',
@@ -175,6 +176,8 @@ class PipelineController extends ControllerBase {
         'terms_checksum' => $terms['checksum'],
         'offer_key' => $offer['offer_key'],
         'offer_version_id' => $offer['id'],
+        'deal_snapshot' => $dealSnapshot,
+        'deal_checksum' => $dealSnapshot['checksum'],
         'ip_hash' => hash('sha256', (string) ($request->getClientIp() ?: 'unknown')),
         'user_agent_hash' => hash('sha256', (string) $request->headers->get('User-Agent', '')),
       ],
@@ -264,6 +267,7 @@ class PipelineController extends ControllerBase {
       return $this->error('revision_addon_checkout_pending', 409, 'A revision add-on checkout is already pending.');
     }
     $contact = (string) ($prospect->get('contact_value')->value ?: $prospect->get('public_email')->value);
+    $renewalDeal = $this->ledger->dealSnapshotForSkus(['FAM-HOST-999']);
     $acceptanceId = $this->ledger->recordConsent(
       $contact,
       'accepted',
@@ -367,6 +371,8 @@ class PipelineController extends ControllerBase {
         [
           'method' => 'customer_portal',
           'accepted_at' => gmdate(DATE_ATOM, $this->time->getRequestTime()),
+          'deal_snapshot' => $renewalDeal,
+          'deal_checksum' => $renewalDeal['checksum'],
           'ip_hash' => hash('sha256', (string) ($request->getClientIp() ?: 'unknown')),
           'user_agent_hash' => hash('sha256', (string) $request->headers->get('User-Agent', '')),
         ],
@@ -383,6 +389,24 @@ class PipelineController extends ControllerBase {
       'currency' => $subscription['currency'],
       'starts_at' => (int) $entitlement['renews_at'],
     ]);
+  }
+
+  /** POST /api/pipeline/hosting-renewal/cancel — customer cancellation control. */
+  public function cancelHostingRenewal(Request $request): JsonResponse {
+    $prospect = $this->resolveProspect($request);
+    if (!$prospect) return $this->error('invalid_or_expired_token', 404);
+    $project = $this->repository->getProject($prospect);
+    if (!$project) return $this->error('hosting_unavailable', 409);
+    $entitlementId = $this->database->select('famtastic_hosting_entitlement', 'h')->fields('h', ['id'])
+      ->condition('project_id', (int) $project->id())->execute()->fetchField();
+    if (!$entitlementId) return $this->error('hosting_unavailable', 409);
+    $contact = (string) ($prospect->get('contact_value')->value ?: $prospect->get('public_email')->value);
+    try {
+      $subscription = $this->hostingLifecycle->cancelRecurring((int) $entitlementId, $contact);
+    }
+    catch (\InvalidArgumentException $e) { return $this->error('subscription_not_found', 404, $e->getMessage()); }
+    catch (\Throwable $e) { return $this->error('cancellation_unavailable', 503, $e->getMessage()); }
+    return new JsonResponse(['ok' => TRUE, 'status' => $subscription['status'], 'effective' => 'end_of_paid_period']);
   }
 
   /**
@@ -716,6 +740,7 @@ class PipelineController extends ControllerBase {
         'checksum' => $terms['checksum'],
         'document_url' => $terms['document_url'],
         'body' => $terms['body'],
+        'deal' => $this->ledger->dealSnapshotForSkus(['FAM-FOOT-199']),
       ] : NULL,
       'order' => $order ? [
         'payment_status' => $order->get('payment_status')->value,

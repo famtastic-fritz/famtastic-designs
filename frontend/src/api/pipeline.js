@@ -71,6 +71,11 @@ export async function authorizeHostingRenewal(token, payload) {
   return parse(res);
 }
 
+export async function cancelHostingRenewal(token) {
+  const res = await fetch(`${API}/hosting-renewal/cancel`, { method: 'POST', headers: tokenHeaders(token) });
+  return parse(res);
+}
+
 export async function getOrderStatus(token) {
   const res = await fetch(`${API}/order-status`, { headers: tokenHeaders(token) });
   return parse(res);

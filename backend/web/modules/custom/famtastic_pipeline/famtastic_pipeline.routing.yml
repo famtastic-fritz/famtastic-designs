@@ -253,6 +253,14 @@ famtastic_pipeline.hosting_renewal:
   requirements:
     _access: 'TRUE'
 
+famtastic_pipeline.hosting_renewal_cancel:
+  path: '/api/pipeline/hosting-renewal/cancel'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PipelineController::cancelHostingRenewal'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
 famtastic_pipeline.order_status:
   path: '/api/pipeline/order-status'
   defaults:
@@ -387,6 +395,14 @@ famtastic_pipeline.operations_metric:
   requirements:
     _permission: 'administer famtastic pipeline'
     metric: 'campaigns|prospects|customers|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers'
+
+famtastic_pipeline.launch_approval:
+  path: '/admin/famtastic/launch-approval'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\LaunchApprovalForm'
+    _title: 'Customer Terms & Launch Approval'
+  requirements:
+    _permission: 'administer famtastic pipeline'
 
 famtastic_pipeline.operations_campaign:
   path: '/admin/famtastic/campaign/{campaign_key}'

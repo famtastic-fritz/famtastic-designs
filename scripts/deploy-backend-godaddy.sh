@@ -78,6 +78,9 @@ source_admin_theme="$backend_dir/web/themes/custom/famtastic_admin"
 production_admin_theme="$production_dir/web/themes/custom/famtastic_admin"
 source_services="$backend_dir/web/sites/default/services.yml"
 production_services="$production_dir/web/sites/default/services.yml"
+source_product_config="$backend_dir/config/famtastic-products.json"
+source_deal_config="$backend_dir/config/famtastic-deal-terms.json"
+production_config_dir="$production_dir/config"
 drush="$production_dir/vendor/bin/drush"
 
 for command_name in git php composer tar rsync; do
@@ -152,6 +155,8 @@ test -f "$backend_dir/composer.lock"
 test -f "$source_module/famtastic_pipeline.info.yml"
 test -f "$source_admin_theme/famtastic_admin.info.yml"
 test -f "$source_services"
+test -f "$source_product_config"
+test -f "$source_deal_config"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" validate \
   --no-check-publish --no-interaction
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" check-platform-reqs \
@@ -163,6 +168,8 @@ timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 module_backup="$HOME/backups/famtastic-pipeline-$timestamp-$commit_sha.tgz"
 admin_theme_backup="$HOME/backups/famtastic-admin-$timestamp-$commit_sha.tgz"
 services_backup="$HOME/backups/famtastic-services-$timestamp-$commit_sha.yml"
+commercial_config_backup="$HOME/backups/famtastic-commercial-config-$timestamp-$commit_sha.tgz"
+commercial_config_backup_stage="$deploy_dir/tmp/commercial-config-$timestamp"
 database_backup="$HOME/backups/famtastic-database-$timestamp-$commit_sha.sql.gz"
 database_dump_target="${database_backup%.gz}"
 stage_module="$production_dir/web/modules/custom/.famtastic_pipeline-$commit_sha"
@@ -177,6 +184,13 @@ previous_services="$production_dir/web/sites/default/.services-previous-$timesta
 tar -C "$(dirname "$production_module")" -czf "$module_backup" "$(basename "$production_module")"
 tar -C "$(dirname "$production_admin_theme")" -czf "$admin_theme_backup" "$(basename "$production_admin_theme")"
 cp -p "$production_services" "$services_backup"
+mkdir -p "$production_config_dir"
+rm -rf "$commercial_config_backup_stage"
+mkdir -p "$commercial_config_backup_stage"
+test ! -f "$production_config_dir/famtastic-products.json" || cp -p "$production_config_dir/famtastic-products.json" "$commercial_config_backup_stage/"
+test ! -f "$production_config_dir/famtastic-deal-terms.json" || cp -p "$production_config_dir/famtastic-deal-terms.json" "$commercial_config_backup_stage/"
+tar -C "$commercial_config_backup_stage" -czf "$commercial_config_backup" .
+rm -rf "$commercial_config_backup_stage"
 cd "$production_dir"
 "$drush" sql:dump --gzip --result-file="$database_dump_target"
 test -s "$database_backup" || {
@@ -199,6 +213,8 @@ mv "$production_admin_theme" "$previous_admin_theme"
 mv "$stage_admin_theme" "$production_admin_theme"
 mv "$production_services" "$previous_services"
 mv "$stage_services" "$production_services"
+install -m 0644 "$source_product_config" "$production_config_dir/famtastic-products.json"
+install -m 0644 "$source_deal_config" "$production_config_dir/famtastic-deal-terms.json"
 chmod "$settings_mode" "$settings_dir"
 trap - ERR
 
@@ -217,6 +233,8 @@ rollback_code() {
       mv "$production_services" "$production_services.failed-$timestamp" 2>/dev/null || true
       mv "$previous_services" "$production_services"
     fi
+    rm -f "$production_config_dir/famtastic-products.json" "$production_config_dir/famtastic-deal-terms.json"
+    tar -C "$production_config_dir" -xzf "$commercial_config_backup" 2>/dev/null || true
     chmod "$settings_mode" "$settings_dir" 2>/dev/null || true
     "$drush" cr >/dev/null 2>&1 || true
   fi
@@ -242,6 +260,7 @@ trap rollback_code ERR
   printf 'admin_theme_backup=%s\n' "$admin_theme_backup"
   printf 'services_backup=%s\n' "$services_backup"
   printf 'database_backup=%s\n' "$database_backup"
+  printf 'commercial_config_backup=%s\n' "$commercial_config_backup"
 } > "$production_dir/.backend-release"
 
 rm -rf "$previous_module"

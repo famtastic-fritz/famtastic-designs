@@ -21,6 +21,11 @@ Every product must define all twelve areas before it can pass validation:
 11. Acceptance: success, failure, authorization, security, and mobile proofs.
 12. Launch control: sandbox acceptance before publication or live activation.
 
+The companion `backend/config/famtastic-deal-terms.json` is also mandatory. It
+holds the exact customer promise, deliverables, exclusions, ownership boundary,
+cancellation/refund treatment, renewal disclosure, and required consent keys for
+every SKU. A SKU without exactly one matching deal definition fails closed.
+
 Run `php scripts/validate-product-pipeline.php` before catalog synchronization.
 Then run `drush php:script scripts/setup-commerce.php` from `backend/`. Both are
 idempotent. Unknown upsells, renewal SKUs, malformed prices, duplicate SKUs, or
@@ -34,7 +39,8 @@ fulfillment. `CommerceLifecycleService`:
 - requires an authenticated Drupal customer;
 - creates/reuses one customer and organization;
 - records the Commerce billing profile bridge;
-- snapshots every purchased SKU and total;
+- snapshots every purchased SKU, product definition, customer deal, policy,
+  checksum, and total;
 - grants only entitlements listed by those SKU definitions;
 - adds the Commerce order to portal Purchases;
 - adds granted capabilities to portal Services;
