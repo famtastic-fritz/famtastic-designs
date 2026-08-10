@@ -22,6 +22,8 @@ use Drupal\commerce_store\Entity\Store;
 use Drupal\commerce_order\Entity\OrderItemType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 $required_modules = [
   'commerce_cart',
@@ -51,6 +53,18 @@ if (!OrderItemType::load('default')) {
     'orderType' => 'default',
   ])->save();
   echo "Created default Commerce order item type.\n";
+}
+
+// Branded portal accounts are ordinary authenticated Drupal users. Commerce
+// still requires these explicit permissions before an account can enter its
+// own checkout or view its own receipt/order history.
+if ($authenticated = Role::load(RoleInterface::AUTHENTICATED_ID)) {
+  foreach (['access checkout', 'view own commerce_order'] as $permission) {
+    if (!$authenticated->hasPermission($permission)) {
+      $authenticated->grantPermission($permission);
+    }
+  }
+  $authenticated->save();
 }
 
 $ensure_product_type = static function (string $id, string $label, string $description): void {

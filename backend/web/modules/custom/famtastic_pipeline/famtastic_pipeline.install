@@ -460,6 +460,21 @@ function famtastic_pipeline_update_8020(&$sandbox) {
   return t('Verified the default Commerce order-item bundle used by the FAMtastic catalog.');
 }
 
+/** Allows verified portal accounts to use Commerce checkout and receipts. */
+function famtastic_pipeline_update_8021(&$sandbox) {
+  $role = \Drupal\user\Entity\Role::load(\Drupal\user\RoleInterface::AUTHENTICATED_ID);
+  if (!$role) {
+    throw new \RuntimeException('Authenticated role is unavailable.');
+  }
+  foreach (['access checkout', 'view own commerce_order'] as $permission) {
+    if (!$role->hasPermission($permission)) {
+      $role->grantPermission($permission);
+    }
+  }
+  $role->save();
+  return t('Granted portal customers checkout and own-order access.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
