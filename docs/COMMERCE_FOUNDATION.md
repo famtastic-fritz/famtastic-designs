@@ -5,14 +5,35 @@
 The setup script now seeds an idempotent catalog. The $199 customer-facing offer
 is **Web Basics Bundle — Website Launch**; legacy SKU `FAM-FOOT-199` is retained
 to protect historical references. Published items are the $199 bundle, $9.99
-monthly hosting renewal, and $75 revision add-on. Future add-ons remain drafts
-until pricing and terms are approved. Variations store entitlement keys and an
-intake schema identifier.
+monthly hosting renewal, and $75 revision add-on. The initial add-on catalog now
+uses provisional launch prices selected for testing and can be edited in Drupal.
+Variations store entitlement keys and an intake schema identifier.
 
 This is still a catalog foundation, not the financial source of truth. The
 personalized proof checkout creates custom orders. Commerce Stripe,
 account-required cart checkout, Commerce-order fulfillment, refunds, failed
 subscriptions, and saved payment methods must pass test mode before activation.
+
+## Provisional launch pricing (2026-08-10)
+
+- Additional website page: $149
+- Copywriting assistance: $199
+- Logo and brand starter: $249
+- Appointment scheduling: $149
+- Lead automation: $299
+- AI website agent setup: $499
+- Growth Analytics: $29.99/month
+- Local SEO setup: $299
+- Website maintenance: $49.99/month
+- Business email setup: $99
+- Ecommerce discovery: $149
+
+These are administrator-editable catalog prices and working launch assumptions,
+not a promise that recurring Commerce billing is enabled. Operational terms v2
+records the $199 scope, the separate $9.99 hosting renewal authorization,
+domain-renewal separation, cancellation, notification categories, and postal
+address. It remains explicitly marked for qualified legal review before live
+recurring charges.
 
 Drupal Commerce is the catalog, cart, promotion, checkout, and order foundation
 for future FAMtastic offers and upsells. The existing pipeline checkout remains

@@ -97,6 +97,7 @@ class PublicRequestController extends ControllerBase {
     $duplicate = (bool) $prospect;
     if (!$prospect) {
       $token = $this->tokenManager->generate();
+      $slaDays = max(1, (int) ($this->pipelineConfigFactory->get('famtastic_pipeline.settings')->get('lead_response_sla_days') ?: 3));
       $prospect = Prospect::create([
         'business_name' => $businessName,
         'business_category' => $this->sanitize((string) ($answers['industry'] ?? $data['branch'] ?? '')),
@@ -113,6 +114,7 @@ class PublicRequestController extends ControllerBase {
         'contact_method' => 'email',
         'contact_value' => $email,
         'status' => 'lead',
+        'first_response_due' => $this->time->getRequestTime() + ($slaDays * 86400),
       ]);
       $prospect->save();
     }

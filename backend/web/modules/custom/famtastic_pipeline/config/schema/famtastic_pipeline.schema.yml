@@ -14,6 +14,12 @@ famtastic_pipeline.settings:
     notification_to_email:
       type: string
       label: 'Notification recipient email'
+    lead_response_sla_days:
+      type: integer
+      label: 'Lead first-response SLA in days'
+    sla_alerts_enabled:
+      type: boolean
+      label: 'Send overdue lead alerts'
     package:
       type: mapping
       label: 'Offer package'

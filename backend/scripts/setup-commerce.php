@@ -197,20 +197,20 @@ $ensure_product('FAM-REVISION-75', 'add_on', 'Additional Revision Round', '75.00
 ]);
 
 foreach ([
-  ['FAM-PAGE-EXTRA', 'Additional Website Page', 'Additional page design and implementation.', 'additional_page'],
-  ['FAM-COPY', 'Copywriting Assistance', 'Professional help shaping clear website copy.', 'copywriting'],
-  ['FAM-BRAND', 'Logo and Brand Starter', 'A focused visual identity starter for the website launch.', 'brand_starter'],
-  ['FAM-SCHEDULING', 'Appointment Scheduling', 'Customer-facing appointment scheduling connected to the website.', 'appointment_scheduling'],
-  ['FAM-LEAD-AUTOMATION', 'Lead Automation', 'Lead routing, acknowledgments, notifications, and follow-up automation.', 'lead_automation'],
-  ['FAM-AI-AGENT', 'AI Website Agent', 'An AI website assistant trained around approved business content.', 'ai_site_agent'],
-  ['FAM-ANALYTICS', 'Growth Analytics', 'Customer analytics entitlement with traffic, lead, and conversion reporting.', 'customer_analytics'],
-  ['FAM-LOCAL-SEO', 'Local SEO Setup', 'Local search foundation, business signals, and measurement setup.', 'local_seo'],
-  ['FAM-MAINTENANCE', 'Website Maintenance', 'Ongoing website care and managed updates.', 'maintenance'],
-  ['FAM-BUSINESS-EMAIL', 'Business Email Setup', 'Branded business email configuration and handoff.', 'business_email'],
-  ['FAM-ECOMMERCE-DISCOVERY', 'Ecommerce Discovery', 'A scoped discovery engagement for a larger ecommerce build.', 'ecommerce_discovery'],
-] as [$sku, $title, $description, $catalog_key]) {
-  $ensure_product($sku, 'add_on', $title, '0.00', FALSE, [
-    'description' => $description . ' Pricing remains unpublished until approved.',
+  ['FAM-PAGE-EXTRA', 'Additional Website Page', '149.00', 'Additional page design and implementation.', 'additional_page'],
+  ['FAM-COPY', 'Copywriting Assistance', '199.00', 'Professional help shaping clear website copy.', 'copywriting'],
+  ['FAM-BRAND', 'Logo and Brand Starter', '249.00', 'A focused visual identity starter for the website launch.', 'brand_starter'],
+  ['FAM-SCHEDULING', 'Appointment Scheduling', '149.00', 'Customer-facing appointment scheduling connected to the website.', 'appointment_scheduling'],
+  ['FAM-LEAD-AUTOMATION', 'Lead Automation', '299.00', 'Lead routing, acknowledgments, notifications, and follow-up automation.', 'lead_automation'],
+  ['FAM-AI-AGENT', 'AI Website Agent Setup', '499.00', 'An AI website assistant configured around approved business content.', 'ai_site_agent'],
+  ['FAM-ANALYTICS', 'Growth Analytics — Monthly', '29.99', 'Customer analytics entitlement with traffic, lead, and conversion reporting.', 'customer_analytics'],
+  ['FAM-LOCAL-SEO', 'Local SEO Setup', '299.00', 'Local search foundation, business signals, and measurement setup.', 'local_seo'],
+  ['FAM-MAINTENANCE', 'Website Maintenance — Monthly', '49.99', 'Ongoing website care and managed updates.', 'maintenance'],
+  ['FAM-BUSINESS-EMAIL', 'Business Email Setup', '99.00', 'Branded business email configuration and handoff.', 'business_email'],
+  ['FAM-ECOMMERCE-DISCOVERY', 'Ecommerce Discovery', '149.00', 'A scoped discovery engagement for a larger ecommerce build.', 'ecommerce_discovery'],
+] as [$sku, $title, $price, $description, $catalog_key]) {
+  $ensure_product($sku, 'add_on', $title, $price, TRUE, [
+    'description' => $description,
     'entitlements' => [$catalog_key],
     'intake_schema' => $catalog_key . '_v1',
   ]);

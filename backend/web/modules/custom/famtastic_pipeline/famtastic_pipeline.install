@@ -326,6 +326,84 @@ function famtastic_pipeline_update_8013(&$sandbox) {
 }
 
 /**
+ * Adds lead-response SLA fields and administrator-controlled alert settings.
+ */
+function famtastic_pipeline_update_8014(&$sandbox) {
+  $entityType = 'famtastic_prospect';
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entityType);
+  foreach (['first_response_due', 'first_responded_at', 'sla_alerted_at'] as $fieldName) {
+    if (!$manager->getFieldStorageDefinition($fieldName, $entityType)) {
+      $manager->installFieldStorageDefinition($fieldName, $entityType, 'famtastic_pipeline', $definitions[$fieldName]);
+    }
+  }
+  \Drupal::configFactory()->getEditable('famtastic_pipeline.settings')
+    ->set('notification_to_email', 'fritz.medine@gmail.com')
+    ->set('lead_response_sla_days', 3)
+    ->set('sla_alerts_enabled', TRUE)
+    ->save(TRUE);
+  return t('Added three-day lead response deadlines and editable Fritz alerts.');
+}
+
+/**
+ * Adds the second operational website-service terms draft.
+ */
+function famtastic_pipeline_update_8015(&$sandbox) {
+  $body = <<<'TERMS'
+FAMtastic Designs Website Service Terms — Operational Draft v2
+
+The Web Basics Bundle is a one-time $199 purchase for one focused single-page
+or landing-page website. It includes one year of FAMtastic-managed basic hosting
+and, when needed, first-year registration of one new standard domain. Customers
+using an existing domain receive domain connection instead. The customer owns
+the domain and customer-supplied content; FAMtastic manages its hosting systems.
+
+Hosting renewal is optional. If the customer separately authorizes automatic
+renewal, basic hosting begins billing at $9.99 per month after the included year.
+Before authorization, checkout must clearly display the amount, billing
+frequency, start date, and cancellation method. Recurring billing may be
+cancelled through the customer portal using the same general method used to
+accept it. Cancellation stops future charges and does not retroactively refund
+service already delivered. Required renewal notices will be sent electronically
+before an applicable cancellation deadline.
+
+Domain renewal is a separate annual prepaid charge disclosed before billing.
+Customers connecting an existing domain are not charged a domain-renewal fee.
+FAMtastic will not store card numbers; payment details are handled by the
+configured payment provider.
+
+The selected package, add-ons, price, scope, revision allowance, and estimated
+delivery timing are shown before checkout. Work outside that recorded scope
+requires separately accepted pricing. Approval of a proof authorizes deployment
+of that release. Customers must have authority to provide all submitted content,
+brands, and account access.
+
+Transactional account, project, security, billing, support, and renewal notices
+may be sent as necessary to provide purchased services. Promotional messages are
+separate, may be disabled in portal settings, and include an unsubscribe method
+and FAMtastic Designs' postal address: 1729 NW St. Lucie West Blvd #1181,
+Port Saint Lucie, FL 34986, United States.
+
+This is an operational draft for test-mode implementation and must receive
+qualified legal review before live recurring charges or public launch.
+TERMS;
+  $database = \Drupal::database();
+  $database->update('famtastic_terms_version')->fields(['active' => 0])
+    ->condition('terms_key', 'website_service')->execute();
+  $database->merge('famtastic_terms_version')
+    ->key('terms_key', 'website_service')->key('version', 2)
+    ->fields([
+      'checksum' => hash('sha256', $body),
+      'document_url' => '/terms/website-service-v2',
+      'body' => $body,
+      'effective_at' => 0,
+      'active' => 1,
+      'created' => \Drupal::time()->getRequestTime(),
+    ])->execute();
+  return t('Added website service operational terms draft v2 for test-mode checkout.');
+}
+
+/**
  * Seeds versioned commercial facts without overwriting existing versions.
  */
 function _famtastic_pipeline_seed_commercial_versions(): void {

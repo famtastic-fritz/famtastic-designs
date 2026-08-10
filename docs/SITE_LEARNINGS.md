@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-10 — Opportunity protection defaults
+
+- Operational alerts initially route to `fritz.medine@gmail.com`, but the
+  recipient and response deadline are editable at `/admin/famtastic/settings`.
+- New public leads receive a three-day first-response deadline. Drupal cron
+  sends one overdue alert and records the alert timestamp to prevent duplicates.
+- A controlled Gmail message proved the connector can send to Fritz; production
+  SMTP receipt and two-way reply ingestion remain separate proofs.
+
 ## 2026-08-10 — Customer proof pipeline hardening
 
 - The canonical proof now covers account creation, captured verification email,

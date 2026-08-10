@@ -11,6 +11,13 @@ famtastic_pipeline.operations:
   parent: famtastic_pipeline.admin
   weight: -20
 
+famtastic_pipeline.settings:
+  title: 'Notification Settings'
+  description: 'Configure Fritz alerts and lead response deadlines.'
+  route_name: famtastic_pipeline.settings
+  parent: famtastic_pipeline.admin
+  weight: -17
+
 famtastic_pipeline.campaign_operations:
   title: 'Campaign Operations'
   route_name: famtastic_pipeline.campaign_operations

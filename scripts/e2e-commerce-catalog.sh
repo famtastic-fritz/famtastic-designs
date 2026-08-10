@@ -27,11 +27,17 @@ test "$count_before" = "$count_after"
   $assert("FAM-FOOT-199", "Web Basics Bundle — Website Launch", "199.00", TRUE, ["website_service", "hosting_included_year", "domain_choice"]);
   $assert("FAM-HOST-999", "Basic Managed Hosting — Monthly Renewal", "9.99", TRUE, ["hosting_recurring"]);
   $assert("FAM-REVISION-75", "Additional Revision Round", "75.00", TRUE, ["revision_round"]);
-  foreach (["FAM-PAGE-EXTRA", "FAM-COPY", "FAM-BRAND", "FAM-SCHEDULING", "FAM-LEAD-AUTOMATION", "FAM-AI-AGENT", "FAM-ANALYTICS", "FAM-LOCAL-SEO", "FAM-MAINTENANCE", "FAM-BUSINESS-EMAIL", "FAM-ECOMMERCE-DISCOVERY"] as $sku) {
-    $matches = $storage->loadByProperties(["sku" => $sku]);
-    assert(count($matches) === 1, "$sku must exist exactly once");
-    assert(reset($matches)->isPublished() === FALSE, "$sku must remain draft until pricing is approved");
-  }
+  $assert("FAM-PAGE-EXTRA", "Additional Website Page", "149.00", TRUE, ["additional_page"]);
+  $assert("FAM-COPY", "Copywriting Assistance", "199.00", TRUE, ["copywriting"]);
+  $assert("FAM-BRAND", "Logo and Brand Starter", "249.00", TRUE, ["brand_starter"]);
+  $assert("FAM-SCHEDULING", "Appointment Scheduling", "149.00", TRUE, ["appointment_scheduling"]);
+  $assert("FAM-LEAD-AUTOMATION", "Lead Automation", "299.00", TRUE, ["lead_automation"]);
+  $assert("FAM-AI-AGENT", "AI Website Agent Setup", "499.00", TRUE, ["ai_site_agent"]);
+  $assert("FAM-ANALYTICS", "Growth Analytics — Monthly", "29.99", TRUE, ["customer_analytics"]);
+  $assert("FAM-LOCAL-SEO", "Local SEO Setup", "299.00", TRUE, ["local_seo"]);
+  $assert("FAM-MAINTENANCE", "Website Maintenance — Monthly", "49.99", TRUE, ["maintenance"]);
+  $assert("FAM-BUSINESS-EMAIL", "Business Email Setup", "99.00", TRUE, ["business_email"]);
+  $assert("FAM-ECOMMERCE-DISCOVERY", "Ecommerce Discovery", "149.00", TRUE, ["ecommerce_discovery"]);
 '
 
-echo "PASS: Commerce catalog is idempotent, the Web Basics Bundle is canonical, approved prices are exact, and unpriced add-ons remain drafts."
+echo "PASS: Commerce catalog is idempotent and every launch product has the expected price, publication state, and entitlement."

@@ -149,6 +149,17 @@ class Prospect extends ContentEntityBase {
     $fields['status'] = $string('Status')
       ->setDefaultValue('new')
       ->setDescription(t('new, viewed, confirmed, lead, paid, intake_started, intake_complete, submitted_to_studio, proof_ready, revision_requested, approved, launched.'));
+    $fields['first_response_due'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel('First response due')
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+    $fields['first_responded_at'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel('First responded at')
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+    $fields['sla_alerted_at'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel('SLA alert sent at')
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel('Created');

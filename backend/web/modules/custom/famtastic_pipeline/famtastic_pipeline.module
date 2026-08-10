@@ -32,3 +32,47 @@ function famtastic_pipeline_mail(string $key, array &$message, array $params): v
     $message['headers']['From'] = (string) $params['from'];
   }
 }
+
+/**
+ * Implements hook_cron().
+ *
+ * Sends one durable alert when a public lead misses its first-response SLA.
+ */
+function famtastic_pipeline_cron(): void {
+  $config = \Drupal::config('famtastic_pipeline.settings');
+  if (!$config->get('sla_alerts_enabled')) {
+    return;
+  }
+  $recipient = (string) ($config->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+  $now = \Drupal::time()->getRequestTime();
+  $storage = \Drupal::entityTypeManager()->getStorage('famtastic_prospect');
+  $ids = $storage->getQuery()->accessCheck(FALSE)
+    ->condition('status', 'lead')
+    ->condition('first_response_due', 0, '>')
+    ->condition('first_response_due', $now, '<=')
+    ->notExists('first_responded_at')
+    ->notExists('sla_alerted_at')
+    ->sort('first_response_due', 'ASC')
+    ->range(0, 25)
+    ->execute();
+  foreach ($storage->loadMultiple($ids) as $prospect) {
+    try {
+      \Drupal::service('famtastic_pipeline.mailer')->send(
+        $recipient,
+        'Overdue lead response — ' . $prospect->label(),
+        "A FAMtastic lead has passed its three-day response deadline.\n\n"
+          . 'Lead: ' . $prospect->label() . "\n"
+          . 'Email: ' . $prospect->get('public_email')->value . "\n"
+          . 'Deadline: ' . gmdate(DATE_ATOM, (int) $prospect->get('first_response_due')->value) . "\n\n"
+          . 'Open lead: https://famtasticdesigns.com/web/admin/famtastic/prospect/' . $prospect->id() . '/edit',
+      );
+      $prospect->set('sla_alerted_at', $now)->save();
+    }
+    catch (\Throwable $error) {
+      \Drupal::logger('famtastic_pipeline')->error('SLA alert failed for prospect @id: @error', [
+        '@id' => $prospect->id(),
+        '@error' => $error->getMessage(),
+      ]);
+    }
+  }
+}

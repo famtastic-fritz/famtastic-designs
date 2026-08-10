@@ -345,6 +345,14 @@ famtastic_pipeline.operations:
   requirements:
     _permission: 'administer famtastic pipeline'
 
+famtastic_pipeline.settings:
+  path: '/admin/famtastic/settings'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\PipelineSettingsForm'
+    _title: 'FAMtastic notification settings'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+
 famtastic_pipeline.campaign_operations:
   path: '/admin/famtastic/campaigns'
   defaults:
