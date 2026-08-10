@@ -1236,3 +1236,34 @@ body .commerce-dashboard .inbox-message .close {
 body .commerce-dashboard .inbox-footer__message {
   color: var(--fam-text-muted);
 }
+
+/* Commerce configuration index uses Claro's generic admin panels, including
+   fixed light headings and dark descriptions that disappear in dark mode. */
+body .page-content .panel {
+  background-color: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+body .page-content .panel__title {
+  background-color: var(--fam-surface-raised);
+  border-bottom: 1px solid var(--fam-border);
+  color: var(--fam-text);
+}
+
+body .page-content .panel__content {
+  background-color: var(--fam-surface);
+}
+
+body .page-content .admin-item {
+  border-color: var(--fam-border);
+}
+
+body .page-content .admin-item__description {
+  color: var(--fam-text-muted);
+}
+
+body .page-content .admin-item__link::before {
+  filter: brightness(0) saturate(100%) invert(84%) sepia(64%) saturate(1722%) hue-rotate(48deg) brightness(104%) contrast(101%);
+}
