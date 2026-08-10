@@ -25,7 +25,7 @@
   --fam-lime-press: #64d600;
   --fam-lime-soft: rgba(124, 252, 0, 0.12);
   --fam-text: #ffffff;
-  --fam-text-muted: #888888;
+  --fam-text-muted: #b8b8b8;
   --fam-danger: #ff5c5c;
   --fam-warning: #ffc94d;
   --fam-focus-ring: 0 0 0 1px var(--fam-lime), 0 0 0 4px rgba(124, 252, 0, 0.18);
@@ -1184,4 +1184,55 @@ body .breadcrumb a {
 body .breadcrumb a:hover,
 body .breadcrumb a:focus {
   color: var(--fam-lime);
+}
+
+/* ---------------------------------------------------------------------------
+ * 18. Drupal Commerce dashboard — dark-theme compatibility
+ *
+ * Commerce ships fixed white dashboard surfaces. Those declarations conflict
+ * with this Claro sub-theme's white text, especially in the inbox and help
+ * panel. Keep Commerce's layout while restoring the shared admin palette.
+ * ------------------------------------------------------------------------ */
+
+body .commerce-dashboard .management-link .card,
+body .commerce-dashboard .inbox-message--wrapper,
+body .commerce-dashboard .inbox-footer--wrapper {
+  background: var(--fam-surface-raised);
+  border-color: var(--fam-border);
+  color: var(--fam-text);
+}
+
+body .commerce-dashboard .management-link .card:hover,
+body .commerce-dashboard .management-link .card:focus {
+  background: var(--fam-lime-soft);
+  border-color: var(--fam-lime);
+  color: var(--fam-lime);
+}
+
+body .commerce-dashboard .inbox-message,
+body .commerce-dashboard .inbox-message__status,
+body .commerce-dashboard .inbox-message__subject,
+body .commerce-dashboard .inbox-message__message,
+body .commerce-dashboard .inbox-footer,
+body .commerce-dashboard .inbox-footer__subject,
+body .commerce-dashboard .inbox-footer__message {
+  color: var(--fam-text);
+}
+
+body .commerce-dashboard .inbox-message,
+body .commerce-dashboard .inbox-message + .inbox-message {
+  border-color: var(--fam-border);
+}
+
+body .commerce-dashboard .inbox-message__status {
+  color: var(--fam-text-muted);
+}
+
+body .commerce-dashboard .inbox-message .close {
+  background-color: transparent;
+  color: var(--fam-text);
+}
+
+body .commerce-dashboard .inbox-footer__message {
+  color: var(--fam-text-muted);
 }
