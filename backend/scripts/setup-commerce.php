@@ -20,6 +20,7 @@ use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_store\Entity\Store;
 use Drupal\commerce_order\Entity\OrderItemType;
+use Drupal\commerce_checkout\Entity\CheckoutFlow;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\Entity\Role;
@@ -53,6 +54,15 @@ if (!OrderItemType::load('default')) {
     'orderType' => 'default',
   ])->save();
   echo "Created default Commerce order item type.\n";
+}
+
+if (!CheckoutFlow::load('default')) {
+  CheckoutFlow::create([
+    'id' => 'default',
+    'label' => 'FAMtastic customer checkout',
+    'plugin' => 'multistep_default',
+  ])->save();
+  echo "Created default Commerce checkout flow.\n";
 }
 
 // Branded portal accounts are ordinary authenticated Drupal users. Commerce

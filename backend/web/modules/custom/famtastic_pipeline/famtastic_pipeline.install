@@ -475,6 +475,21 @@ function famtastic_pipeline_update_8021(&$sandbox) {
   return t('Granted portal customers checkout and own-order access.');
 }
 
+/** Repairs the default multistep Commerce checkout flow. */
+function famtastic_pipeline_update_8022(&$sandbox) {
+  if (!\Drupal::moduleHandler()->moduleExists('commerce_checkout')) {
+    return t('Commerce Checkout is not enabled; no checkout flow repair was required.');
+  }
+  if (!\Drupal\commerce_checkout\Entity\CheckoutFlow::load('default')) {
+    \Drupal\commerce_checkout\Entity\CheckoutFlow::create([
+      'id' => 'default',
+      'label' => 'FAMtastic customer checkout',
+      'plugin' => 'multistep_default',
+    ])->save();
+  }
+  return t('Verified the default multistep Commerce checkout flow.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
