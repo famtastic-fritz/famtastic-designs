@@ -38,7 +38,7 @@ function famtastic_pipeline_schema(): array {
  */
 function famtastic_pipeline_install(): void {
   _famtastic_pipeline_seed_commercial_versions();
-  _famtastic_pipeline_seed_customer_terms_v3();
+  _famtastic_pipeline_seed_customer_terms_v4();
 }
 
 /**
@@ -436,6 +436,30 @@ function famtastic_pipeline_update_8017(&$sandbox) {
 function famtastic_pipeline_update_8018(&$sandbox) {
   _famtastic_pipeline_seed_customer_terms_v3();
   return t('Activated provisional customer terms v3 with product scope, domain, renewal, cancellation, refund, and communication rules.');
+}
+
+/** Activates the owner-approved v4 customer terms for controlled test checkout. */
+function famtastic_pipeline_update_8019(&$sandbox) {
+  _famtastic_pipeline_seed_customer_terms_v4();
+  return t('Activated owner-approved customer terms v4 for controlled test checkout.');
+}
+
+/** Preserves v3 and creates the approved v4 terms snapshot. */
+function _famtastic_pipeline_seed_customer_terms_v4(): void {
+  _famtastic_pipeline_seed_customer_terms_v3();
+  $database = \Drupal::database();
+  $v3 = $database->select('famtastic_terms_version', 't')->fields('t')->condition('terms_key', 'website_service')->condition('version', 3)->execute()->fetchAssoc();
+  if (!$v3) throw new \RuntimeException('customer_terms_v3_missing');
+  $body = str_replace(
+    ['Provisional Business Policy v3', 'STATUS. This is a provisional business policy for test-mode implementation. It\nis not represented as attorney-approved. Qualified legal review and final owner\napproval remain required before live recurring charges or unrestricted public\ncheckout.'],
+    ['Approved Customer Policy v4', 'STATUS. Fritz Medine recorded final legal and business approval for this customer policy. Live charging remains separately gated by provider, checkout, notification, and launch acceptance evidence.'],
+    (string) $v3['body'],
+  );
+  $database->update('famtastic_terms_version')->fields(['active' => 0])->condition('terms_key', 'website_service')->execute();
+  $database->merge('famtastic_terms_version')->key('terms_key', 'website_service')->key('version', 4)->fields([
+    'checksum' => hash('sha256', $body), 'document_url' => '/terms/website-service-v4', 'body' => $body,
+    'effective_at' => \Drupal::time()->getRequestTime(), 'active' => 1, 'created' => \Drupal::time()->getRequestTime(),
+  ])->execute();
 }
 
 /** Seeds the immutable v3 operational draft without representing legal approval. */

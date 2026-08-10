@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { customerLogin, customerRegister, forgotCustomerPassword } from '../api/customer.js';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [mode, setMode] = useState('login');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
@@ -12,7 +13,7 @@ export default function LoginPage() {
     event.preventDefault(); setError(''); setNotice(''); setBusy(true);
     const data = Object.fromEntries(new FormData(event.currentTarget));
     try {
-      if (mode === 'login') { await customerLogin(data.email, data.password); navigate('/portal'); }
+      if (mode === 'login') { await customerLogin(data.email, data.password); navigate(searchParams.get('redirect') || '/portal'); }
       else if (mode === 'recover') { const result = await forgotCustomerPassword(data.email); setNotice(result.message); }
       else { await customerRegister(data); setNotice('Check your email to verify your account, then sign in.'); setMode('login'); }
     } catch (e) { setError(e.message); } finally { setBusy(false); }

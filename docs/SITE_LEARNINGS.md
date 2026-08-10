@@ -145,3 +145,11 @@ architecture decisions; this file captures what future work must remember.
 - After first-time module discovery on this host, sitemap generation requires a
   fresh router rebuild and an explicit route assertion before queue processing;
   otherwise Simple Sitemap can fail on a stale XSL route cache.
+- A primary-route sitemap is not enough for a content-driven React frontend.
+  The production build now discovers published Drupal service, package, work,
+  and blog aliases, emits route-specific canonical shells, and includes those
+  aliases in the public XML sitemap.
+- Account-required Commerce checkout closes the financial-source-of-truth seam:
+  customer, organization, selected SKUs, domain branch, approved terms,
+  recurring authorization, and marketing choice are captured before handing
+  the same order to Drupal Commerce checkout.

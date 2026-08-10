@@ -30,6 +30,7 @@ import ClientPortalPage from './pages/ClientPortalPage.jsx';
 import CustomerPortalDashboard from './pages/CustomerPortalDashboard.jsx';
 import VerifyEmailPage from './pages/VerifyEmailPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
+import PurchasePage from './pages/PurchasePage.jsx';
 
 export default function App() {
   return (
@@ -63,6 +64,7 @@ export default function App() {
           <Route path="/faq" element={<FAQHubPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/start" element={<StartPage />} />
+          <Route path="/buy" element={<PurchasePage />} />
 
           {/* Legacy /content/* URLs → clean routes. */}
           <Route path="/content/page" element={<Navigate to="/" replace />} />

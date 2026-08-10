@@ -97,6 +97,27 @@ famtastic_pipeline.customer_workspace:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.customer_catalog:
+  path: '/api/customer/catalog'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::catalog'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_checkout:
+  path: '/api/customer/checkout'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::commerceCheckout'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_profile:
   path: '/api/customer/profile'
   defaults:

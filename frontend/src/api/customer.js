@@ -28,6 +28,8 @@ export const verifyCustomerEmail = (token) => request('/verify', { method: 'POST
 export const forgotCustomerPassword = (email) => request('/forgot-password', { method: 'POST', body: JSON.stringify({ email }) });
 export const resetCustomerPassword = (token, password) => request('/reset-password', { method: 'POST', body: JSON.stringify({ token, password }) });
 export const getCustomerWorkspace = (organization = '') => request(`/workspace${organization ? `?organization=${encodeURIComponent(organization)}` : ''}`);
+export const getCustomerCatalog = () => request('/catalog');
+export const createCommerceCheckout = (payload) => request('/checkout', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const updateCustomerProfile = (payload) => request('/profile', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const updateCustomerPreferences = (payload) => request('/preferences', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const createCustomerReferral = (payload) => request('/referrals', { method: 'POST', csrf: true, body: JSON.stringify(payload) });

@@ -712,6 +712,8 @@ a:hover {
   font-size: 0.85rem;
 }
 
+.purchase-shell{width:min(760px,calc(100% - 2rem));margin:clamp(2rem,7vw,6rem) auto;padding:clamp(1.25rem,4vw,2.5rem);border:1px solid #2a2f2a;border-radius:20px;background:#101310;color:#f5f7f5;box-sizing:border-box}.purchase-shell>span{color:#7cfc00;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;font-weight:800}.purchase-shell h1{font-size:clamp(2rem,7vw,4rem);margin:.5rem 0}.purchase-shell>p,.purchase-shell small{display:block;color:#aab2aa;line-height:1.55}.purchase-shell fieldset{display:grid;gap:.8rem;margin:1.5rem 0;padding:1rem;border:1px solid #2a2f2a;border-radius:14px;min-width:0}.purchase-shell legend{padding:0 .4rem;font-weight:800}.purchase-shell label{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:.65rem;align-items:start;line-height:1.45}.purchase-shell label input{margin-top:.25rem}.purchase-shell label small{grid-column:2}.purchase-consent{margin:1rem 0}.purchase-total{display:flex;justify-content:space-between;align-items:center;margin:1.5rem 0;padding:1rem;border-top:1px solid #2a2f2a;border-bottom:1px solid #2a2f2a}.purchase-total strong{font-size:1.8rem;color:#7cfc00}
+
 .login-card__help a,
 .login-card__staff a {
   color: var(--fam-lime);

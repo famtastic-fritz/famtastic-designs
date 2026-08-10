@@ -1,10 +1,12 @@
 {
   "schema": "famtastic.deal-terms.v1",
   "policy": {
-    "version": "customer_terms_v3_provisional",
-    "status": "provisional_business_policy",
-    "legal_review_required": true,
-    "business_approved": false,
+    "version": "customer_terms_v4_approved",
+    "status": "approved_for_test_checkout",
+    "legal_review_required": false,
+    "business_approved": true,
+    "approved_at": "2026-08-10T00:00:00-04:00",
+    "approved_by": "Fritz Medine",
     "support_response": "FAMtastic normally responds within three business days; this is a response target, not a guaranteed resolution time.",
     "marketing_default": "off_unless_separately_selected",
     "payment_security": "Payment methods are handled by Stripe. FAMtastic does not store full card numbers.",

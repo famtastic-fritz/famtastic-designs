@@ -72,6 +72,39 @@ function renderShell(path) {
   return html;
 }
 
+function renderDynamicShell(path, title, description) {
+  let html = renderShell('/');
+  const canonical = `https://famtasticdesigns.com${path}/`;
+  html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)} | FAMtastic Designs</title>`);
+  html = html.replace(/<meta name="description" content="[^"]*" \/>/i, `<meta name="description" content="${escapeHtml(description)}" />`);
+  html = html.replace(/<link rel="canonical" href="[^"]*" \/>/i, `<link rel="canonical" href="${escapeHtml(canonical)}" />`);
+  html = html.replace(/<meta property="og:url" content="[^"]*" \/>/i, `<meta property="og:url" content="${escapeHtml(canonical)}" />`);
+  html = html.replace(/<meta property="og:title" content="[^"]*" \/>/i, `<meta property="og:title" content="${escapeHtml(title)} | FAMtastic Designs" />`);
+  return html;
+}
+
+async function dynamicRoutes() {
+  const source = process.env.FAMTASTIC_SITEMAP_SOURCE_URL || 'https://famtasticdesigns.com/web/jsonapi/node';
+  const types = ['service_page', 'package_page', 'case_study', 'article'];
+  const routes = [];
+  for (const type of types) {
+    const response = await fetch(`${source}/${type}?page%5Blimit%5D=50`, { signal: AbortSignal.timeout(10000) });
+    if (!response.ok) throw new Error(`Sitemap source failed for ${type}: ${response.status}`);
+    const payload = await response.json();
+    for (const node of payload.data || []) {
+      const attributes = node.attributes || {};
+      const path = attributes.path?.alias;
+      if (!attributes.status || !/^\/(services|packages|work|blog)\/[a-z0-9][a-z0-9/-]*$/.test(path || '')) continue;
+      routes.push({
+        path,
+        title: attributes.field_meta_title || attributes.title || 'FAMtastic Designs',
+        description: attributes.field_meta_description || `Learn about ${attributes.title || 'this solution'} from FAMtastic Designs.`,
+      });
+    }
+  }
+  return routes;
+}
+
 for (const path of Object.keys(SEO_PAGES)) {
   if (path === '/') continue;
   const target = join(distDir, path.replace(/^\//, ''), 'index.html');
@@ -79,8 +112,16 @@ for (const path of Object.keys(SEO_PAGES)) {
   await writeFile(target, renderShell(path));
 }
 
-const sitemapUrls = Object.keys(SEO_PAGES).map((path) => {
-  const { canonical } = seoForPath(path);
+const discoveredRoutes = await dynamicRoutes();
+for (const route of discoveredRoutes) {
+  const target = join(distDir, route.path.replace(/^\//, ''), 'index.html');
+  await mkdir(dirname(target), { recursive: true });
+  await writeFile(target, renderDynamicShell(route.path, route.title, route.description));
+}
+
+const sitemapPaths = [...new Set([...Object.keys(SEO_PAGES), ...discoveredRoutes.map((route) => route.path)])];
+const sitemapUrls = sitemapPaths.map((path) => {
+  const canonical = `https://famtasticdesigns.com${path === '/' ? '/' : `${path}/`}`;
   return `  <url>\n    <loc>${escapeHtml(canonical)}</loc>\n  </url>`;
 });
 

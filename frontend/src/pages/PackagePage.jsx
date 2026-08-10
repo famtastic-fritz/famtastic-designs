@@ -53,7 +53,8 @@ export default function PackagePage() {
   }
 
   const included = plan.whatsIncluded.length ? plan.whatsIncluded : plan.features;
-  const cta = { label: plan.ctaText, href: plan.ctaHref };
+  const isWebBasics = /199|web basics|landing page/i.test(`${plan.price} ${plan.title}`);
+  const cta = isWebBasics ? { label: 'Buy Web Basics securely', href: '/buy' } : { label: plan.ctaText, href: plan.ctaHref };
 
   return (
     <article>

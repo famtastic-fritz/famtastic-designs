@@ -261,6 +261,28 @@ assert_json "$customer_workspace" '
   ([.entitlements[] | select(.entitlement_type == "hosting" and .status == "active")] | length) == 1
 '
 csrf="$(curl -s -b "$cookie_jar" "$BASE/session/token")"
+catalog="$(curl -s -b "$cookie_jar" "$BASE/api/customer/catalog")"
+assert_json "$catalog" '.terms.version == "customer_terms_v4_approved" and ([.products[].sku] | index("FAM-FOOT-199")) != null'
+commerce_checkout="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
+  \"organization\":\"$organization_id\",
+  \"skus\":[\"FAM-FOOT-199\",\"FAM-REVISION-75\"],
+  \"domain_choice\":\"existing_domain\",
+  \"recurring_authorized\":true,
+  \"accept_terms\":true,
+  \"terms_version\":\"customer_terms_v4_approved\",
+  \"marketing_opt_in\":false
+}" "$BASE/api/customer/checkout")"
+assert_json "$commerce_checkout" '.ok == true and .order_id > 0 and (.checkout_url | test("/web/checkout/[0-9]+$"))'
+commerce_order_id="$(jq -r '.order_id' <<<"$commerce_checkout")"
+"$DRUSH" eval "
+  \$order = \Drupal::entityTypeManager()->getStorage('commerce_order')->load($commerce_order_id);
+  assert(\$order && \$order->getState()->value === 'draft');
+  assert((float) \$order->getTotalPrice()->getNumber() === 274.0);
+  \$context = \$order->getData('famtastic_checkout');
+  assert(\$context['organization_public_id'] === '$organization_id');
+  assert(\$context['domain_choice'] === 'existing_domain');
+  assert(\$context['recurring_authorized'] === TRUE);
+"
 preferences="$(curl -s -b "$cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{
   "project_email":true,
   "support_email":true,

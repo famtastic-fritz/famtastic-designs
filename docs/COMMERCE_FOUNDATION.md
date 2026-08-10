@@ -128,3 +128,19 @@ Commerce Stripe, and records the dependency backup in `.backend-release`. A
 gateway remains disabled until test credentials
 or an approved Stripe Connect authorization are supplied; installing the module
 must never activate live charging.
+
+## Branded account checkout
+
+New direct and organic purchases enter through `/buy`. The customer must create
+and verify a branded account before the API will create a Drupal Commerce order.
+`POST /api/customer/checkout` accepts only published catalog SKUs, requires an
+owned organization, records the new-domain/existing-domain branch, captures the
+active terms version and separate marketing choice, and requires the disclosed
+month-13 hosting authorization for the Web Basics Bundle. The resulting order
+is the order sent to Drupal Commerce checkout; the legacy prospect order is not
+created for this path.
+
+The payment gateway stays in test mode and disabled outside a controlled proof.
+Turning it on is not a launch approval. Stripe webhooks, payment outcomes,
+fulfillment, notification delivery, portal visibility, and browser acceptance
+must all pass before a gateway can remain enabled.

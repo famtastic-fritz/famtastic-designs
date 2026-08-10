@@ -4,7 +4,7 @@
     "currency": "USD",
     "owner": "fritz",
     "support_response_days": 3,
-    "legal_terms_version": "customer_terms_v3_provisional",
+    "legal_terms_version": "customer_terms_v4_approved",
     "publication_gate": "sandbox_acceptance_required"
   },
   "products": [

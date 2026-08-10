@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\famtastic_pipeline\Controller;
 
+use Drupal\commerce_order\Entity\Order;
+use Drupal\commerce_order\Entity\OrderItem;
+use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Flood\FloodInterface;
@@ -158,6 +161,94 @@ final class CustomerPortalController extends ControllerBase {
     }
   }
 
+  /** Returns the administrator-controlled public Commerce catalog. */
+  public function catalog(): JsonResponse {
+    $definitions = $this->productDefinitions();
+    $policy = $this->dealRegistry()['policy'];
+    $items = [];
+    foreach ($definitions as $definition) {
+      if (empty($definition['published'])) continue;
+      $items[] = array_intersect_key($definition, array_flip([
+        'sku', 'type', 'title', 'summary', 'price', 'currency', 'billing',
+        'included', 'exclusions', 'intake_schema',
+      ]));
+    }
+    return $this->noStore(new JsonResponse(['products' => $items, 'terms' => [
+      'version' => $policy['version'], 'status' => $policy['status'],
+      'support_response' => $policy['support_response'], 'marketing_default' => $policy['marketing_default'],
+      'payment_security' => $policy['payment_security'],
+    ]]));
+  }
+
+  /** Creates an account-owned Commerce order and hands off to Commerce checkout. */
+  public function commerceCheckout(Request $request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    if (empty($customer['verified_at'])) return $this->error('verification_required', 403, 'Verify your email before purchasing.');
+    $data = $this->body($request);
+    $organizationPublicId = (string) ($data['organization'] ?? '');
+    $organizations = $this->portal->organizations((int) $customer['id']);
+    $organization = NULL;
+    foreach ($organizations as $candidate) {
+      if (hash_equals((string) $candidate['public_id'], $organizationPublicId)) $organization = $candidate;
+    }
+    if (!$organization) return $this->error('workspace_not_found', 404, 'Customer workspace not found.');
+
+    $skus = array_values(array_unique(array_filter(array_map('strval', (array) ($data['skus'] ?? [])))));
+    if (!$skus || count($skus) > 12) return $this->error('invalid_cart', 422, 'Choose at least one available service.');
+    $definitions = $this->productDefinitions();
+    foreach ($skus as $sku) {
+      if (empty($definitions[$sku]['published'])) return $this->error('product_unavailable', 422, 'One selected service is unavailable.');
+    }
+    if (in_array('FAM-FOOT-199', $skus, TRUE)) {
+      if (!in_array((string) ($data['domain_choice'] ?? ''), ['new_domain', 'existing_domain'], TRUE)) {
+        return $this->error('domain_choice_required', 422, 'Choose a new domain or connect an existing domain.');
+      }
+      if (empty($data['recurring_authorized'])) {
+        return $this->error('renewal_authorization_required', 422, 'Authorize the disclosed month-13 hosting renewal or contact us for a non-renewing arrangement.');
+      }
+    }
+    $terms = $this->dealRegistry();
+    if (empty($data['accept_terms']) || (string) ($data['terms_version'] ?? '') !== (string) $terms['policy']['version']) {
+      return $this->error('terms_required', 422, 'Accept the current purchase and renewal terms.');
+    }
+
+    $storeIds = $this->entityTypeManager()->getStorage('commerce_store')->getQuery()->accessCheck(FALSE)->condition('status', 1)->range(0, 1)->execute();
+    if (!$storeIds) return $this->error('store_unavailable', 503, 'Checkout is temporarily unavailable.');
+    $items = [];
+    foreach ($skus as $sku) {
+      $variationIds = $this->entityTypeManager()->getStorage('commerce_product_variation')->getQuery()->accessCheck(FALSE)
+        ->condition('sku', $sku)->condition('status', 1)->range(0, 1)->execute();
+      /** @var \Drupal\commerce_product\Entity\ProductVariationInterface|null $variation */
+      $variation = $variationIds ? ProductVariation::load(reset($variationIds)) : NULL;
+      if (!$variation) return $this->error('product_unavailable', 422, 'One selected service is unavailable.');
+      $item = OrderItem::create([
+        'type' => 'default', 'purchased_entity' => $variation, 'quantity' => 1,
+        'unit_price' => $variation->getPrice(), 'title' => $variation->getTitle(),
+      ]);
+      $item->save();
+      $items[] = $item;
+    }
+    $order = Order::create([
+      'type' => 'default', 'store_id' => reset($storeIds), 'uid' => (int) $this->account->id(),
+      'mail' => (string) $customer['email'], 'order_items' => $items, 'state' => 'draft',
+    ]);
+    $order->setData('famtastic_checkout', [
+      'organization_public_id' => $organizationPublicId,
+      'domain_choice' => (string) ($data['domain_choice'] ?? 'not_applicable'),
+      'terms_version' => (string) $terms['policy']['version'],
+      'recurring_authorized' => !empty($data['recurring_authorized']),
+      'marketing_opt_in' => !empty($data['marketing_opt_in']),
+      'selected_skus' => $skus,
+      'captured_at' => gmdate(DATE_ATOM),
+    ]);
+    $order->save();
+    return $this->noStore(new JsonResponse([
+      'ok' => TRUE, 'order_id' => (int) $order->id(),
+      'checkout_url' => $request->getSchemeAndHttpHost() . '/web/checkout/' . $order->id(),
+    ], 201));
+  }
+
   public function profile(Request $request): JsonResponse {
     $customer = $this->currentCustomer();
     if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
@@ -251,5 +342,19 @@ final class CustomerPortalController extends ControllerBase {
   private function noStore(JsonResponse $response): JsonResponse {
     $response->headers->set('Cache-Control', 'no-store, private');
     return $response;
+  }
+
+  /** @return array<string, array<string, mixed>> */
+  private function productDefinitions(): array {
+    $path = dirname(\Drupal::root()) . '/config/famtastic-products.json';
+    $catalog = json_decode((string) file_get_contents($path), TRUE, 512, JSON_THROW_ON_ERROR);
+    $definitions = [];
+    foreach ($catalog['products'] ?? [] as $product) $definitions[(string) $product['sku']] = $product;
+    return $definitions;
+  }
+
+  private function dealRegistry(): array {
+    $path = dirname(\Drupal::root()) . '/config/famtastic-deal-terms.json';
+    return json_decode((string) file_get_contents($path), TRUE, 512, JSON_THROW_ON_ERROR);
   }
 }

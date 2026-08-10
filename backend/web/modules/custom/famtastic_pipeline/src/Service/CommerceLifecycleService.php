@@ -48,7 +48,14 @@ final class CommerceLifecycleService {
     ]);
     $organizations = $this->portal->organizations((int) $customer['id']);
     if (!$organizations) throw new \RuntimeException('commerce_customer_organization_missing');
-    $organizationId = (int) $organizations[0]['id'];
+    $checkout = (array) ($order->getData('famtastic_checkout') ?? []);
+    $organization = $organizations[0];
+    if (!empty($checkout['organization_public_id'])) {
+      foreach ($organizations as $candidate) {
+        if (hash_equals((string) $candidate['public_id'], (string) $checkout['organization_public_id'])) $organization = $candidate;
+      }
+    }
+    $organizationId = (int) $organization['id'];
     $profile = $order->getBillingProfile();
     if ($profile) {
       $this->database->update('famtastic_customer')->fields(['commerce_profile_id' => (int) $profile->id(), 'changed' => $this->time->getRequestTime()])
@@ -68,6 +75,9 @@ final class CommerceLifecycleService {
       $definition = $definitions[$sku];
       $intakeSchemas[] = $definition['intake_schema'];
       foreach ($definition['entitlements'] as $type) {
+        if ($type === 'domain_choice') {
+          $type = ($checkout['domain_choice'] ?? '') === 'new_domain' ? 'domain_registration' : 'domain_connection';
+        }
         $grants[$type] = $definition;
       }
     }
@@ -78,7 +88,7 @@ final class CommerceLifecycleService {
     $fields = [
       'commerce_order_id' => (int) $order->id(), 'organization_id' => $organizationId,
       'customer_id' => (int) $customer['id'], 'status' => 'fulfilling',
-      'sku_snapshot' => json_encode($this->dealSnapshot($skus, $definitions), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+      'sku_snapshot' => json_encode($this->dealSnapshot($skus, $definitions, $checkout), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
       'amount_minor' => (int) round((float) $total->getNumber() * 100),
       'currency' => strtolower($total->getCurrencyCode()), 'fulfilled_at' => 0,
       'created' => $existing ? (int) $existing['created'] : $now, 'changed' => $now,
@@ -160,7 +170,7 @@ final class CommerceLifecycleService {
   }
 
   /** Captures the exact catalog and promise presented for immutable fulfillment evidence. */
-  private function dealSnapshot(array $skus, array $definitions): array {
+  private function dealSnapshot(array $skus, array $definitions, array $checkout = []): array {
     $path = dirname(\Drupal::root()) . '/config/famtastic-deal-terms.json';
     $registry = json_decode((string) file_get_contents($path), TRUE, 512, JSON_THROW_ON_ERROR);
     $items = [];
@@ -168,7 +178,9 @@ final class CommerceLifecycleService {
       if (empty($registry['deals'][$sku])) throw new \RuntimeException('commerce_deal_definition_missing:' . $sku);
       $items[] = ['sku' => $sku, 'product' => $definitions[$sku], 'deal' => $registry['deals'][$sku]];
     }
-    $snapshot = ['policy' => $registry['policy'], 'items' => $items];
+    $snapshot = ['policy' => $registry['policy'], 'items' => $items, 'customer_selection' => array_intersect_key($checkout, array_flip([
+      'organization_public_id', 'domain_choice', 'terms_version', 'recurring_authorized', 'marketing_opt_in', 'selected_skus', 'captured_at',
+    ]))];
     $snapshot['checksum'] = hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
     return $snapshot;
   }
