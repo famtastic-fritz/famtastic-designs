@@ -10,6 +10,9 @@ test -d "$mail_root" || exit 0
 test -x "$pipe" || exit 78
 
 processed=0
+message_list="$(mktemp "${TMPDIR:-/tmp}/famtastic-support-mail.XXXXXX")"
+trap 'rm -f -- "$message_list"' EXIT
+find "$mail_root" -type f -path '*/new/*' -print0 | sort -z > "$message_list"
 while IFS= read -r -d '' message; do
   new_dir="$(dirname "$message")"
   test "$(basename "$new_dir")" = "new" || continue
@@ -22,4 +25,4 @@ while IFS= read -r -d '' message; do
   fi
   processed=$((processed + 1))
   test "$processed" -lt 50 || break
-done < <(find "$mail_root" -type f -path '*/new/*' -print0 | sort -z)
+done < "$message_list"
