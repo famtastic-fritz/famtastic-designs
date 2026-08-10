@@ -253,6 +253,10 @@ TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-
 "$drush" updatedb -y
 "$drush" pm:enable commerce_stripe metatag redirect simple_sitemap -y
 "$drush" cr
+# A second process-level rebuild is required on this host after first-time
+# module discovery; otherwise the sitemap writer can see stale router state.
+"$drush" cr
+"$drush" eval '\Drupal::service("router.route_provider")->getRouteByName("simple_sitemap.sitemap_xsl"); print "Sitemap route verified.\n";'
 "$drush" simple-sitemap:generate
 "$drush" eval '
   foreach (["famtastic_prospect", "famtastic_order", "famtastic_intake", "famtastic_project", "proof_campaign", "proof_variant"] as $entity_type_id) {

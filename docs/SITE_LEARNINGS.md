@@ -142,3 +142,6 @@ architecture decisions; this file captures what future work must remember.
   backs up the live dependency tree and installs the exact locked tree with a
   rollback path before enabling modules. Building a duplicate dependency tree
   on inode-limited shared hosting can fail even when disk-capacity checks pass.
+- After first-time module discovery on this host, sitemap generation requires a
+  fresh router rebuild and an explicit route assertion before queue processing;
+  otherwise Simple Sitemap can fail on a stale XSL route cache.
