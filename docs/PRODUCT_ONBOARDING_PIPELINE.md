@@ -66,6 +66,11 @@ dead-letter state. It monitors overdue support cases, lead follow-ups, stale
 projects, upcoming renewals, late worker heartbeats, and daily delivery
 exceptions. Transactional notifications are independent of promotional consent.
 
+On cPanel, mail is stored in the `support` Maildir, including plus-addressed
+case subfolders. The scheduled `bin/process-support-maildir.sh` worker imports a
+bounded batch through the same signed endpoint and moves only accepted messages
+from `new/` to `cur/`. Message-ID hashing keeps retries idempotent.
+
 ## Safety and activation
 
 All automated acceptance runs use memory email, local Commerce records, fixture
