@@ -1,5 +1,32 @@
 # FAMtastic Designs — Real Stripe Test-Mode Activation Report
 
+## Drupal Commerce sandbox path (2026-08-10)
+
+The canonical Commerce sandbox is configured without checking credentials into
+Git:
+
+1. Authenticate Stripe CLI to the dedicated FAMtastic sandbox project.
+2. Run `scripts/stripe-sandbox-catalog.sh` to synchronize the 14 SKU-keyed test
+   products and prices. The script refuses a Stripe account reporting
+   `livemode=true` and is safe to rerun.
+3. Export the test-only Commerce Stripe credential variables at runtime.
+4. Set `FAMTASTIC_STRIPE_GATEWAY_ENABLED=1` only during an attended sandbox
+   checkout, then run
+   `drush php:script scripts/setup-commerce-stripe-sandbox.php` from `backend/`.
+5. Forward test events to
+   `/payment/notify/famtastic_stripe_sandbox` and complete checkout with an
+   official Stripe test card.
+6. Verify the Commerce order and payment both report `completed`, the amount and
+   currency match, and every forwarded webhook returns HTTP 200.
+7. Disable the gateway when the attended test window closes.
+
+Acceptance evidence recorded on 2026-08-10: one browser checkout for
+`FAM-FOOT-199` completed at USD 199.00, Stripe returned a test PaymentIntent,
+and the signed webhook deliveries were accepted. No live key or card was used.
+This proves payment-provider integration in sandbox; it does not yet prove the
+production deployment, fulfillment adapter, recurring renewal, refund, decline,
+or customer-notification paths.
+
 Branch: `feat/famtastic-prospect-pipeline-v1` — not pushed, merged, or deployed.
 Mode: **Stripe TEST mode only.** No live credentials were used; `--live` was
 never passed; live keys are hard-refused.

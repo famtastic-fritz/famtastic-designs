@@ -35,6 +35,25 @@ domain-renewal separation, cancellation, notification categories, and postal
 address. It remains explicitly marked for qualified legal review before live
 recurring charges.
 
+The matching Stripe sandbox catalog is managed by
+`scripts/stripe-sandbox-catalog.sh`. The script first verifies `livemode=false`,
+then idempotently creates products and one-time/monthly prices keyed by the
+Drupal SKU. It never passes Stripe's `--live` flag and records non-secret product
+and price IDs under `.artifacts/stripe/`.
+
+`backend/scripts/setup-commerce-stripe-sandbox.php` creates the Drupal Commerce
+Payment Element gateway from environment-only test credentials. It rejects live
+key prefixes, configures Commerce mode `test`, verifies Stripe reports
+`livemode=false`, and disables the gateway automatically if that proof fails.
+The script defaults to a disabled gateway until checkout and webhook tests pass.
+
+On 2026-08-10 the sandbox path was browser-proven with a real Stripe test-mode
+Payment Element transaction: a $199 `FAM-FOOT-199` Commerce order reached
+`completed`, its Commerce payment reached `completed`, and Stripe CLI forwarded
+the signed `payment_intent`, `charge`, `customer`, and `payment_method` events to
+Drupal's gateway webhook. Drupal returned HTTP 200 for every event. This is test
+provider proof only; it does not authorize or activate production charges.
+
 Drupal Commerce is the catalog, cart, promotion, checkout, and order foundation
 for future FAMtastic offers and upsells. The existing pipeline checkout remains
 the live payment path until Commerce Stripe is installed, configured in test

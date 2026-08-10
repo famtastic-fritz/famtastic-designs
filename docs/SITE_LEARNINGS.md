@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-10 — Commerce Stripe sandbox proof
+
+- Stripe authentication must be classified by environment, not merely by
+  whether a connector responds. The installed connector exposed live mode, so
+  all mutations were refused and an isolated Stripe sandbox plus official CLI
+  test authentication were used instead.
+- A payment foundation is not proven by a handcrafted webhook. The stronger
+  proof is a real Payment Element browser checkout, a completed Commerce order
+  and payment, and signed provider events accepted by Drupal.
+- Test credentials remain runtime-only. Catalog scripts must verify
+  `livemode=false`, be idempotent by SKU, and never contain a `--live` path.
+- The review page exposed a noisy SQLite shutdown error after rendering, but the
+  Payment Element and checkout still completed. Production uses MySQL; the
+  SQLite-only failure remains a local test-runtime defect to eliminate rather
+  than a reason to claim the full launch gate has passed.
+
 ## 2026-08-10 — Opportunity protection defaults
 
 - Operational alerts initially route to `fritz.medine@gmail.com`, but the
