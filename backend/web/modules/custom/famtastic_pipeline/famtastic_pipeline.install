@@ -444,6 +444,22 @@ function famtastic_pipeline_update_8019(&$sandbox) {
   return t('Activated owner-approved customer terms v4 for controlled test checkout.');
 }
 
+/** Repairs the Commerce order-item bundle required by product variations. */
+function famtastic_pipeline_update_8020(&$sandbox) {
+  if (!\Drupal::moduleHandler()->moduleExists('commerce_order')) {
+    return t('Commerce Order is not enabled; no order-item bundle repair was required.');
+  }
+  if (!\Drupal\commerce_order\Entity\OrderItemType::load('default')) {
+    \Drupal\commerce_order\Entity\OrderItemType::create([
+      'id' => 'default',
+      'label' => 'Default',
+      'purchasableEntityType' => 'commerce_product_variation',
+      'orderType' => 'default',
+    ])->save();
+  }
+  return t('Verified the default Commerce order-item bundle used by the FAMtastic catalog.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();

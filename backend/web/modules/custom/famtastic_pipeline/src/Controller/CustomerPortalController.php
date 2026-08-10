@@ -223,7 +223,7 @@ final class CustomerPortalController extends ControllerBase {
       $variation = $variationIds ? ProductVariation::load(reset($variationIds)) : NULL;
       if (!$variation) return $this->error('product_unavailable', 422, 'One selected service is unavailable.');
       $item = OrderItem::create([
-        'type' => 'default', 'purchased_entity' => $variation, 'quantity' => 1,
+        'type' => $variation->getOrderItemTypeId(), 'purchased_entity' => $variation, 'quantity' => 1,
         'unit_price' => $variation->getPrice(), 'title' => $variation->getTitle(),
       ]);
       $item->save();

@@ -19,6 +19,7 @@ use Drupal\commerce_product\Entity\Product;
 use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_store\Entity\Store;
+use Drupal\commerce_order\Entity\OrderItemType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -36,6 +37,20 @@ foreach ($required_modules as $module) {
   if (!\Drupal::moduleHandler()->moduleExists($module)) {
     throw new RuntimeException("Required module {$module} is not enabled.");
   }
+}
+
+// Some long-lived installations can have the default order type while missing
+// the matching order-item type (for example, after modules were enabled during
+// an interrupted deployment). Product variations reference this bundle, so
+// repair it before creating or updating any catalog entities.
+if (!OrderItemType::load('default')) {
+  OrderItemType::create([
+    'id' => 'default',
+    'label' => 'Default',
+    'purchasableEntityType' => 'commerce_product_variation',
+    'orderType' => 'default',
+  ])->save();
+  echo "Created default Commerce order item type.\n";
 }
 
 $ensure_product_type = static function (string $id, string $label, string $description): void {
