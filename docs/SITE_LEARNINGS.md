@@ -139,5 +139,6 @@ architecture decisions; this file captures what future work must remember.
   HTTP 200 with application HTML. Acceptance must verify the content type and
   XML/text body of `/sitemap.xml` and `/robots.txt`, not only their status code.
 - Composer declarations are not production capability. Backend deployment now
-  installs the locked dependency tree in a private release, backs up the live
-  dependency tree, and promotes it with rollback paths before enabling modules.
+  backs up the live dependency tree and installs the exact locked tree with a
+  rollback path before enabling modules. Building a duplicate dependency tree
+  on inode-limited shared hosting can fail even when disk-capacity checks pass.

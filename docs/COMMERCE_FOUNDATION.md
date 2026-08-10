@@ -122,9 +122,9 @@ enough disk headroom for Composer installation, backup creation, database
 updates, and rollback artifacts before the migration starts.
 
 The canonical backend deployment performs that migration from the exact locked
-Git release. It installs dependencies privately, archives the live Composer
-tree, promotes `vendor`, Drupal core, and contributed modules as one versioned
-set, runs database updates, enables Commerce Stripe, and records the dependency
-backup in `.backend-release`. A gateway remains disabled until test credentials
+Git release. It archives the live Composer tree, installs the locked dependency
+set into the runtime with rollback protection, runs database updates, enables
+Commerce Stripe, and records the dependency backup in `.backend-release`. A
+gateway remains disabled until test credentials
 or an approved Stripe Connect authorization are supplied; installing the module
 must never activate live charging.
