@@ -78,3 +78,18 @@ for (const path of Object.keys(SEO_PAGES)) {
   await mkdir(dirname(target), { recursive: true });
   await writeFile(target, renderShell(path));
 }
+
+const sitemapUrls = Object.keys(SEO_PAGES).map((path) => {
+  const { canonical } = seoForPath(path);
+  return `  <url>\n    <loc>${escapeHtml(canonical)}</loc>\n  </url>`;
+});
+
+await writeFile(
+  join(distDir, 'sitemap.xml'),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls.join('\n')}\n</urlset>\n`,
+);
+
+await writeFile(
+  join(distDir, 'robots.txt'),
+  `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /login\nDisallow: /portal\nDisallow: /p/\nDisallow: /reset-password\nDisallow: /verify-email\nDisallow: /web/admin\n\nSitemap: https://famtasticdesigns.com/sitemap.xml\n`,
+);

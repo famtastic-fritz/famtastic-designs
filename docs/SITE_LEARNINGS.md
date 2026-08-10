@@ -135,3 +135,9 @@ architecture decisions; this file captures what future work must remember.
   only a custom-module code deployment.
 - Proof means browser-visible behavior plus server/API evidence, not a successful
   upload alone.
+- A React catch-all can make missing crawler files look healthy by returning
+  HTTP 200 with application HTML. Acceptance must verify the content type and
+  XML/text body of `/sitemap.xml` and `/robots.txt`, not only their status code.
+- Composer declarations are not production capability. Backend deployment now
+  installs the locked dependency tree in a private release, backs up the live
+  dependency tree, and promotes it with rollback paths before enabling modules.

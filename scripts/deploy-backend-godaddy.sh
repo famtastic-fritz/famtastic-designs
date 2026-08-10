@@ -161,6 +161,8 @@ TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-
   --no-check-publish --no-interaction
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" check-platform-reqs \
   --lock --no-dev
+TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" install \
+  --no-dev --no-interaction --prefer-dist --optimize-autoloader
 find "$source_module" -type f -name '*.php' -print0 |
   xargs -0 -n1 php -l >/dev/null
 
@@ -172,6 +174,13 @@ commercial_config_backup="$HOME/backups/famtastic-commercial-config-$timestamp-$
 commercial_config_backup_stage="$deploy_dir/tmp/commercial-config-$timestamp"
 database_backup="$HOME/backups/famtastic-database-$timestamp-$commit_sha.sql.gz"
 database_dump_target="${database_backup%.gz}"
+dependency_backup="$HOME/backups/famtastic-dependencies-$timestamp-$commit_sha.tgz"
+stage_vendor="$production_dir/.vendor-$commit_sha"
+stage_core="$production_dir/web/.core-$commit_sha"
+stage_contrib="$production_dir/web/modules/.contrib-$commit_sha"
+previous_vendor="$production_dir/.vendor-previous-$timestamp"
+previous_core="$production_dir/web/.core-previous-$timestamp"
+previous_contrib="$production_dir/web/modules/.contrib-previous-$timestamp"
 stage_module="$production_dir/web/modules/custom/.famtastic_pipeline-$commit_sha"
 stage_admin_theme="$production_dir/web/themes/custom/.famtastic_admin-$commit_sha"
 settings_dir="$production_dir/web/sites/default"
@@ -183,6 +192,7 @@ previous_services="$production_dir/web/sites/default/.services-previous-$timesta
 
 tar -C "$(dirname "$production_module")" -czf "$module_backup" "$(basename "$production_module")"
 tar -C "$(dirname "$production_admin_theme")" -czf "$admin_theme_backup" "$(basename "$production_admin_theme")"
+tar -C "$production_dir" -czf "$dependency_backup" vendor web/core web/modules/contrib composer.json composer.lock
 cp -p "$production_services" "$services_backup"
 mkdir -p "$production_config_dir"
 rm -rf "$commercial_config_backup_stage"
@@ -204,6 +214,11 @@ rsync -a "$source_module/" "$stage_module/"
 rm -rf "$stage_admin_theme"
 mkdir -p "$stage_admin_theme"
 rsync -a "$source_admin_theme/" "$stage_admin_theme/"
+rm -rf "$stage_vendor" "$stage_core" "$stage_contrib"
+mkdir -p "$stage_vendor" "$stage_core" "$stage_contrib"
+rsync -a "$backend_dir/vendor/" "$stage_vendor/"
+rsync -a "$backend_dir/web/core/" "$stage_core/"
+rsync -a "$backend_dir/web/modules/contrib/" "$stage_contrib/"
 chmod u+w "$settings_dir"
 trap 'chmod "$settings_mode" "$settings_dir" 2>/dev/null || true' ERR
 install -m 0644 "$source_services" "$stage_services"
@@ -211,6 +226,14 @@ mv "$production_module" "$previous_module"
 mv "$stage_module" "$production_module"
 mv "$production_admin_theme" "$previous_admin_theme"
 mv "$stage_admin_theme" "$production_admin_theme"
+mv "$production_dir/vendor" "$previous_vendor"
+mv "$stage_vendor" "$production_dir/vendor"
+mv "$production_dir/web/core" "$previous_core"
+mv "$stage_core" "$production_dir/web/core"
+mv "$production_dir/web/modules/contrib" "$previous_contrib"
+mv "$stage_contrib" "$production_dir/web/modules/contrib"
+install -m 0644 "$backend_dir/composer.json" "$production_dir/composer.json"
+install -m 0644 "$backend_dir/composer.lock" "$production_dir/composer.lock"
 mv "$production_services" "$previous_services"
 mv "$stage_services" "$production_services"
 install -m 0644 "$source_product_config" "$production_config_dir/famtastic-products.json"
@@ -229,6 +252,19 @@ rollback_code() {
       mv "$production_admin_theme" "$failed_admin_theme" 2>/dev/null || true
       mv "$previous_admin_theme" "$production_admin_theme"
     fi
+    if [[ -d "$previous_vendor" ]]; then
+      rm -rf "$production_dir/vendor"
+      mv "$previous_vendor" "$production_dir/vendor"
+    fi
+    if [[ -d "$previous_core" ]]; then
+      rm -rf "$production_dir/web/core"
+      mv "$previous_core" "$production_dir/web/core"
+    fi
+    if [[ -d "$previous_contrib" ]]; then
+      rm -rf "$production_dir/web/modules/contrib"
+      mv "$previous_contrib" "$production_dir/web/modules/contrib"
+    fi
+    tar -C "$production_dir" -xzf "$dependency_backup" composer.json composer.lock 2>/dev/null || true
     if [[ -f "$previous_services" ]]; then
       mv "$production_services" "$production_services.failed-$timestamp" 2>/dev/null || true
       mv "$previous_services" "$production_services"
@@ -244,7 +280,9 @@ rollback_code() {
 trap rollback_code ERR
 
 "$drush" updatedb -y
+"$drush" pm:enable commerce_stripe metatag redirect simple_sitemap -y
 "$drush" cr
+"$drush" simple-sitemap:generate
 "$drush" eval '
   foreach (["famtastic_prospect", "famtastic_order", "famtastic_intake", "famtastic_project", "proof_campaign", "proof_variant"] as $entity_type_id) {
     \Drupal::entityTypeManager()->getDefinition($entity_type_id);
@@ -260,11 +298,13 @@ trap rollback_code ERR
   printf 'admin_theme_backup=%s\n' "$admin_theme_backup"
   printf 'services_backup=%s\n' "$services_backup"
   printf 'database_backup=%s\n' "$database_backup"
+  printf 'dependency_backup=%s\n' "$dependency_backup"
   printf 'commercial_config_backup=%s\n' "$commercial_config_backup"
 } > "$production_dir/.backend-release"
 
 rm -rf "$previous_module"
 rm -rf "$previous_admin_theme"
+rm -rf "$previous_vendor" "$previous_core" "$previous_contrib"
 chmod u+w "$settings_dir"
 rm -f "$previous_services"
 chmod "$settings_mode" "$settings_dir"

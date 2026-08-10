@@ -10,6 +10,7 @@ command -v jq >/dev/null || { echo "ERROR: jq is required." >&2; exit 1; }
 echo "FAMtastic customer proof agent"
 echo "Safety: local DB, memory email, stub payment, fixture DNS, isolated deploy."
 scripts/e2e-commerce-catalog.sh
+scripts/e2e-seo-discovery.sh
 scripts/e2e-autonomous-journey.sh
 php scripts/validate-product-pipeline.php
 scripts/e2e-lifecycle-operations.sh
