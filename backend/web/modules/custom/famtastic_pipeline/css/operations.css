@@ -1,8 +1,8 @@
 .famtastic-ops {
   --ops-lime: #5ee500;
   --ops-ink: #f4f7f4;
-  --ops-muted: #9ba69b;
-  --ops-border: #2a332a;
+  --ops-muted: #c3cbc3;
+  --ops-border: #3a463a;
   max-width: 1480px;
   margin: 0 auto;
 }
@@ -149,8 +149,8 @@
   padding: 1rem;
   border: 1px solid var(--ops-border);
   border-radius: 0.5rem;
-  background: #f7f9f6;
-  color: var(--ops-ink);
+  background: #0d110d;
+  color: #f4f7f4;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -172,7 +172,7 @@
 .famtastic-hub__hero h2{max-width:760px;margin:.4rem 0;font-size:clamp(1.8rem,4vw,3.5rem);line-height:1.06}
 .famtastic-hub__hero p{max-width:720px;margin:.8rem 0 0;color:var(--ops-muted);font-size:1rem;line-height:1.6}
 .famtastic-hub__attention{display:flex;align-items:center;gap:.8rem;margin:0 0 1.5rem;padding:.85rem 1rem;border:1px solid rgba(255,201,77,.35);border-radius:.75rem;background:rgba(255,201,77,.07)}
-.famtastic-hub__attention strong{color:#ffd979}.famtastic-hub__attention span{color:#d4d9d4}
+.famtastic-hub__attention strong{color:#ffe194}.famtastic-hub__attention span{color:#eef2ee}
 .famtastic-hub__heading{margin:1.5rem 0 .75rem}
 .famtastic-hub__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:.9rem}
 .famtastic-hub__card{min-height:190px;padding:1.2rem;border:1px solid var(--ops-border);border-radius:.9rem;background:#121612;color:inherit!important;text-decoration:none!important;display:flex;gap:1rem;transition:transform .15s ease,border-color .15s ease,background .15s ease}
