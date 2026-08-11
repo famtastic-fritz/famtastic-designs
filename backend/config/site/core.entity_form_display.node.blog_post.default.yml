@@ -19,12 +19,14 @@ dependencies:
     - field.field.node.blog_post.field_cta_text
     - field.field.node.blog_post.field_related_faqs
     - field.field.node.blog_post.field_series_order
+    - field.field.node.blog_post.field_seo_brief
+    - field.field.node.blog_post.field_word_count
   module:
     - datetime
     - image
     - link
     - path
-    - taxonomy_term
+    - taxonomy
     - text
     - user
 id: node.blog_post.default
@@ -173,6 +175,21 @@ content:
     region: content
     settings:
       size: 60
+      placeholder: ''
+    third_party_settings: {}
+  field_seo_brief:
+    type: string_textarea
+    weight: 17
+    region: content
+    settings:
+      rows: 12
+      placeholder: ''
+    third_party_settings: {}
+  field_word_count:
+    type: number
+    weight: 18
+    region: content
+    settings:
       placeholder: ''
     third_party_settings: {}
   created:

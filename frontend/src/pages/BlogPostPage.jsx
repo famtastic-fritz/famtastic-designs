@@ -19,6 +19,7 @@ export default function BlogPostPage() {
     setState({ post: null, seriesPosts: [], loading: true });
     getNodesRaw('blog_post', {
       include: 'field_blog_category,field_blog_tags,field_blog_series,field_related_faqs',
+      limit: 100,
     }).then(({ data, included }) => {
       if (!cancelled) {
         const posts = data.map((node) => transformBlogNode(node, included)).filter(Boolean);
@@ -46,10 +47,32 @@ export default function BlogPostPage() {
       headline: state.post.title,
       description: state.post.metaDescription || state.post.summary,
       datePublished: state.post.created,
+      dateModified: state.post.changed,
       author: { '@type': 'Organization', name: 'FAMtastic Designs' },
-      publisher: { '@type': 'Organization', name: 'FAMtastic Designs' },
+      publisher: { '@type': 'Organization', name: 'FAMtastic Designs', url: 'https://famtasticdesigns.com/' },
       mainEntityOfPage: canonical,
+      keywords: [state.post.seoBrief?.primary_keyword, ...(state.post.seoBrief?.secondary_keywords ?? [])].filter(Boolean),
     }];
+    graph.push({
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Blog', item: 'https://famtasticdesigns.com/blog/' },
+        ...(state.post.series ? [{ '@type': 'ListItem', position: 2, name: state.post.series, item: canonical }] : []),
+        { '@type': 'ListItem', position: state.post.series ? 3 : 2, name: state.post.title, item: canonical },
+      ],
+    });
+    if (state.post.seriesOrder === 1 && state.seriesPosts.length > 1) {
+      graph.push({
+        '@type': 'ItemList',
+        name: state.post.series,
+        itemListElement: state.seriesPosts.map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: item.title,
+          url: `https://famtasticdesigns.com/blog/${item.slug}/`,
+        })),
+      });
+    }
     if (state.post.faqs.length) {
       graph.push({
         '@type': 'FAQPage',

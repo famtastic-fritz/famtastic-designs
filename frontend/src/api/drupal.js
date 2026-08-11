@@ -556,10 +556,29 @@ export async function deleteProject(uuid, token) {
  */
 export async function getNodesRaw(type, { include = '', limit = 50 } = {}) {
   try {
-    let path = `/jsonapi/node/${encodeURIComponent(type)}?filter[status]=1&sort=title&page[limit]=${limit}`;
+    const pageSize = Math.min(Math.max(Number(limit) || 50, 1), 50);
+    let path = `/jsonapi/node/${encodeURIComponent(type)}?filter[status]=1&sort=title&page[limit]=${pageSize}`;
     if (include) path += `&include=${encodeURIComponent(include)}`;
-    const json = await apiFetch(path);
-    return { data: json.data ?? [], included: json.included ?? [], error: null };
+    const data = [];
+    const includedByKey = new Map();
+    let pages = 0;
+    while (path && data.length < limit && pages < 20) {
+      const json = await apiFetch(path);
+      data.push(...(json.data ?? []));
+      for (const resource of json.included ?? []) {
+        includedByKey.set(`${resource.type}:${resource.id}`, resource);
+      }
+      const next = json.links?.next?.href ?? json.links?.next ?? '';
+      if (!next) break;
+      const parsed = new URL(next, window.location.origin);
+      path = `${parsed.pathname}${parsed.search}`;
+      pages += 1;
+    }
+    return {
+      data: data.slice(0, limit),
+      included: [...includedByKey.values()],
+      error: null,
+    };
   } catch (err) {
     console.warn(`[drupal] getNodesRaw("${type}") failed:`, err.message);
     return { data: [], included: [], error: err };

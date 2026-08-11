@@ -121,6 +121,7 @@ export function blogSeo(post) {
     canonical: `${SITE_URL}/blog/${post?.slug || ''}/`,
     image: DEFAULT_IMAGE,
     path: `/blog/${post?.slug || ''}`,
+    type: 'article',
   };
 }
 

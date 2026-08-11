@@ -4,20 +4,20 @@
 
 The FAMtastic Demand Engine is implemented as a repeatable, draft-first system. It translates evidence-backed capabilities into ordered blog series, controlled taxonomy, reusable FAQs, contextual CTAs, Drupal content, React presentation, SEO metadata, internal links, and QA evidence.
 
-## Initial editorial release
+## Editorial library
 
-Series: **Your Website Should Do More Than Exist**
+The initial eight-topic pilot has been expanded into eight complete pillar-and-spoke series with 64 full article drafts:
 
-1. What Should a Small-Business Website Actually Do? (pillar)
-2. How a Website Turns a Visitor Into a Real Lead
-3. What Should Happen After a Website Lead Arrives?
-4. What Happens After an Online Purchase?
-5. How a Customer Portal Helps a Small Business
-6. How Automation Prevents Lost Opportunities
-7. The Website Numbers a Small Business Should Watch
-8. When Is an AI Website Agent Actually Useful?
+1. Small-Business Website Strategy
+2. Website Lead Capture
+3. Lead Response and Follow-Up
+4. Ecommerce and Post-Purchase
+5. Customer Portal Experience
+6. Small-Business Automation
+7. Website Analytics and Decisions
+8. AI Website Agents
 
-The release also contains seven canonical FAQs, five customer-job categories, fourteen controlled tags, capability provenance, search intent, reader problem, promised outcome, evidence boundary, contextual CTA, internal-link map, metadata, and sequence for every article.
+Each series contains one pillar and seven focused supporting articles. The library contains 67,100 validated article words, 32 canonical FAQs, five customer-job categories, fourteen controlled tags, unique primary keywords, secondary keywords, search intent, content template, audience, reader problem, promised outcome, evidence boundary, contextual CTA, bidirectional internal-link plans, source records, Open Graph metadata, canonical URLs, and Article/Breadcrumb schema declarations. The full inventory is in `docs/DEMAND_LIBRARY_INVENTORY_2026-08-11.md`.
 
 ## Approval state
 
@@ -30,10 +30,11 @@ Publication requires review of the release as a whole, explicit approval, a mani
 
 ## Local proof
 
-- Manifest validation: 1 series, 8 posts, 7 FAQs, 5 categories, 14 tags.
-- First Drupal seed: 25 terms, 7 FAQs, and 8 posts created.
-- Second Drupal seed: zero new records; the same 25 terms, 7 FAQs, and 8 posts updated.
-- Draft safety: all 15 generated nodes verified unpublished after QA.
+- Manifest validation: 8 series, 64 posts, 32 FAQs, 5 categories, 14 tags.
+- Article depth: 67,100 total words; 1,038-1,059 words per draft.
+- Upgrade seed: 56 posts created and 8 pilot posts upgraded in place.
+- Second Drupal seed: zero new posts; all 64 records updated in place.
+- Draft safety: all 64 managed blog records verified unpublished after QA.
 - Production frontend build: passed with Vite 8.2.0.
 - PHP syntax: seed script passed.
 - Skill validation: repository and installed Codex copies passed the official validator.
@@ -43,7 +44,7 @@ Publication requires review of the release as a whole, explicit approval, a mani
 
 At a mobile viewport request of 390×844 (375 CSS-pixel layout viewport):
 
-- All 8 cards and 6 category controls rendered.
+- All series, cards, category controls, and the mobile series selector rendered.
 - Hub body width equaled viewport width; no horizontal document overflow.
 - Pillar article body width equaled viewport width; no horizontal document overflow.
 - Contextual CTA rendered as “Find out what your website needs.”
@@ -58,9 +59,11 @@ The local fixture lacks unrelated service/package content types and the menu-ite
 - Canonical manifest: `backend/config/famtastic-content-series.json`
 - Drupal seed: `backend/scripts/seed-demand-content.php`
 - Validator: `scripts/validate-demand-content.py`
+- Library builder: `scripts/build-demand-library.py`
+- Inventory and scorecard: `scripts/audit-demand-library.py`
 - Shared skill installer: `scripts/install-demand-agent-skills.sh`
 - Skill: `agent-skills/famtastic-demand-engine/`
 
 ## Next gate
 
-The system is complete through publication preparation. The next external action is an editorial review and explicit broad-publication approval. After approval, update the selected manifest item statuses and `approval.broad_publish_approved`, rerun validation and seed in the intended environment, clear caches, deploy the frontend, smoke-test public URLs, and monitor content/CTA events.
+The system is complete through publication preparation. The next external action is staged editorial review and explicit publication approval by series or article. Do not publish all 64 at once merely because the drafts exist. After approval, update only selected item statuses and the controlled publication gate, rerun validation and seed in the intended environment, clear caches, deploy the frontend, smoke-test public URLs, and monitor content/CTA events.

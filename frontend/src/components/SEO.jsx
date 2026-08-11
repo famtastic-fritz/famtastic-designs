@@ -36,7 +36,7 @@ export function applySeo(seo) {
   upsertMeta('meta[name="keywords"]', { name: 'keywords', content: seo.keywords });
   upsertLink('link[rel="canonical"]', { rel: 'canonical', href: seo.canonical });
   upsertMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: seo.siteName });
-  upsertMeta('meta[property="og:type"]', { property: 'og:type', content: 'website' });
+  upsertMeta('meta[property="og:type"]', { property: 'og:type', content: seo.type || 'website' });
   upsertMeta('meta[property="og:title"]', { property: 'og:title', content: seo.title });
   upsertMeta('meta[property="og:description"]', { property: 'og:description', content: seo.ogDescription });
   upsertMeta('meta[property="og:url"]', { property: 'og:url', content: seo.canonical });

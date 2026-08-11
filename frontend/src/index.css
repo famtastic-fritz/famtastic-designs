@@ -1555,6 +1555,37 @@ a:hover {
   color: var(--v1-lime);
 }
 
+.blog-series-filter {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0 0 1.5rem;
+  color: var(--v1-text-62);
+  font-size: 0.78rem;
+}
+
+.blog-series-filter label {
+  color: var(--v1-text);
+  font-weight: 600;
+}
+
+.blog-series-filter select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--v1-border-strong);
+  border-radius: 0.55rem;
+  background: var(--v1-surface);
+  color: var(--v1-text);
+  padding: 0.65rem 2.2rem 0.65rem 0.75rem;
+  font: inherit;
+}
+
+@media (min-width: 768px) {
+  .blog-series-filter {
+    grid-template-columns: auto minmax(18rem, 32rem) auto;
+    align-items: center;
+  }
+}
+
 .blog-series-label {
   margin: 1rem 0 0;
   color: var(--v1-text-62);

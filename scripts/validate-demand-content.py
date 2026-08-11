@@ -15,6 +15,21 @@ ALLOWED_STATUS = {"draft", "review", "approved", "published", "archived"}
 ALLOWED_STAGE = {"awareness", "consideration", "decision", "customer"}
 SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 EVENT = re.compile(r"^[a-z][a-z0-9_]*$")
+REQUIRED_SEO_FIELDS = {
+    "primary_keyword",
+    "secondary_keywords",
+    "search_intent",
+    "content_template",
+    "target_audience",
+    "og_title",
+    "og_description",
+    "canonical_url",
+    "schema_types",
+    "author",
+    "review_status",
+    "sources",
+    "word_count",
+}
 
 
 def fail(errors: list[str], message: str) -> None:
@@ -70,11 +85,23 @@ def main() -> int:
     dupes = duplicates(post_slugs)
     if dupes:
         fail(errors, f"duplicate post slugs: {', '.join(dupes)}")
+    keyword_dupes = duplicates([post.get("primary_keyword", "").lower().strip() for post in posts])
+    if keyword_dupes:
+        fail(errors, f"duplicate primary keywords: {', '.join(keyword_dupes)}")
+    inbound_links = Counter(
+        link
+        for post in posts
+        for link in post.get("internal_links", [])
+        if str(link).startswith("/blog/")
+    )
 
     series_sequences: dict[str, list[int]] = {key: [] for key in series}
     pillar_counts: Counter[str] = Counter()
     for post in posts:
         key = post.get("key", "<missing>")
+        missing_seo = sorted(REQUIRED_SEO_FIELDS - set(post))
+        if missing_seo:
+            fail(errors, f"{key}: missing SEO/editorial fields: {', '.join(missing_seo)}")
         status = post.get("status")
         if status not in ALLOWED_STATUS:
             fail(errors, f"{key}: invalid status {status!r}")
@@ -107,10 +134,29 @@ def main() -> int:
         if not 110 <= description_length <= 165:
             fail(errors, f"{key}: meta description must be 110-165 characters (got {description_length})")
         body = post.get("body_html", "")
-        if len(body) < 900:
-            fail(errors, f"{key}: body_html is too short for a complete draft")
+        body_words = len(re.findall(r"\b[\w'-]+\b", re.sub(r"<[^>]+>", " ", body)))
+        minimum_words = 1000 if post.get("pillar") else 900
+        if body_words < minimum_words:
+            fail(errors, f"{key}: complete draft needs at least {minimum_words} words (got {body_words})")
+        if post.get("word_count") != body_words:
+            fail(errors, f"{key}: recorded word_count does not match body ({post.get('word_count')} != {body_words})")
+        if len(re.findall(r"<h2\b", body, re.I)) < 6:
+            fail(errors, f"{key}: complete draft needs at least six H2 sections")
         if re.search(r"<\s*(script|iframe)\b", body, re.I):
             fail(errors, f"{key}: body_html contains a forbidden executable/embed tag")
+        if not post.get("primary_keyword") or len(post.get("secondary_keywords", [])) < 2:
+            fail(errors, f"{key}: primary keyword and at least two secondary keywords are required")
+        if post.get("search_intent") not in {"informational", "commercial-investigation", "transactional", "navigational"}:
+            fail(errors, f"{key}: invalid search intent {post.get('search_intent')!r}")
+        if post.get("canonical_url") != f"https://famtasticdesigns.com/blog/{slug}/":
+            fail(errors, f"{key}: canonical URL does not match slug")
+        if not {"Article", "BreadcrumbList"}.issubset(set(post.get("schema_types", []))):
+            fail(errors, f"{key}: Article and BreadcrumbList schema declarations are required")
+        if post.get("og_title") != post.get("title") or post.get("og_description") != post.get("meta_description"):
+            fail(errors, f"{key}: Open Graph title/description must match the reviewed article metadata")
+        sources = post.get("sources", [])
+        if not sources or not all(str(source.get("url", "")).startswith("https://") for source in sources):
+            fail(errors, f"{key}: at least one HTTPS primary source is required")
         cta = post.get("cta", {})
         if cta.get("stage") not in ALLOWED_STAGE:
             fail(errors, f"{key}: invalid CTA stage {cta.get('stage')!r}")
@@ -119,13 +165,19 @@ def main() -> int:
         if not EVENT.match(cta.get("event", "")):
             fail(errors, f"{key}: invalid CTA event name")
         links = post.get("internal_links", [])
-        if not links or not all(str(link).startswith("/") for link in links):
-            fail(errors, f"{key}: internal_links must contain same-origin routes")
+        if len(links) < 5 or not all(str(link).startswith("/") for link in links):
+            fail(errors, f"{key}: internal_links must contain at least five same-origin routes")
+        if f"/blog/{slug}" in links:
+            fail(errors, f"{key}: internal_links contains a self-link")
+        if inbound_links[f"/blog/{slug}"] < 2:
+            fail(errors, f"{key}: article needs at least two planned inbound links")
+        if len(post.get("faqs", [])) < 3:
+            fail(errors, f"{key}: at least three related FAQs are required")
 
     for series_key, item in series.items():
         sequences = series_sequences.get(series_key, [])
-        if len(sequences) < 3:
-            fail(errors, f"{series_key}: a series needs at least three posts")
+        if len(sequences) < 8:
+            fail(errors, f"{series_key}: a complete series needs at least eight posts")
         if any(not isinstance(number, int) or number < 1 for number in sequences):
             fail(errors, f"{series_key}: all post sequence values must be positive integers")
         if duplicates([str(number) for number in sequences]):

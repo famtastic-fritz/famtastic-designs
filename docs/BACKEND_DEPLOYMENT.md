@@ -4,8 +4,10 @@
 
 The Drupal custom module in
 `backend/web/modules/custom/famtastic_pipeline` is the canonical transactional
-backend source. Production is not edited or uploaded manually. Any authorized
-agent uses the same checked-in deployment script.
+backend source. The checked-in `famtastic_admin` theme is the canonical admin
+presentation source. Governed editorial fields and the draft demand library are
+promoted by the same deployment lane. Production is not edited or uploaded
+manually. Any authorized agent uses the same checked-in deployment script.
 
 Production currently has a mixed Drupal runtime in `~/public_html` with its
 vendor tree but no root `composer.json`. The deployment lane therefore validates
@@ -40,12 +42,19 @@ The script:
 3. validates `composer.json`/`composer.lock`, checks locked production platform
    requirements, and PHP-lints the module in the private release without
    installing a duplicate Drupal vendor tree;
-4. backs up the current custom module and Drupal database;
-5. stages and swaps the custom module;
-6. runs `drush updatedb -y` and `drush cr`;
-7. verifies all six pipeline entity definitions;
-8. records the commit, timestamp, PHP version, module backup, and database
-   backup in `~/public_html/.backend-release`.
+4. backs up the current custom module, admin theme, dependencies, configuration,
+   and Drupal database;
+5. stages and swaps the custom module and admin theme;
+6. runs `drush updatedb -y`, imports only the governed demand-library field
+   configuration, and seeds the idempotent draft library;
+7. rebuilds caches and verifies the sitemap route and pipeline entity definitions;
+8. records the commit, timestamp, PHP version, code/config backup paths, database
+   backup, and demand-manifest version in `~/public_html/.backend-release`.
+
+The demand seed is intentionally fail-closed: generated content remains
+unpublished unless both the item and the manifest-wide publication approval are
+explicitly enabled. Re-running the deployment updates matching records rather
+than duplicating them.
 
 Composer validation uses the deployment-owned writable temporary directory at
 `~/deploy/famtastic-designs/tmp`; shared-host `/tmp` permissions are not part of

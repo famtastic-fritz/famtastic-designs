@@ -15,7 +15,7 @@ dependencies:
   module:
     - datetime
     - image
-    - taxonomy_term
+    - taxonomy
     - text
     - user
 id: node.blog_post.teaser

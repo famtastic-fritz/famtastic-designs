@@ -6,7 +6,7 @@ dependencies:
     - node.type.faq_item
     - taxonomy.vocabulary.faq_categories
   module:
-    - taxonomy_term
+    - taxonomy
 id: node.faq_item.field_faq_category
 field_name: field_faq_category
 entity_type: node

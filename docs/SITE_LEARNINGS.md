@@ -18,6 +18,17 @@
   body scroll width to the layout viewport caught no horizontal overflow on
   the blog hub or article, while semantic checks proved the CTA, FAQ, series,
   canonical URL, and structured data were actually present.
+- Eight topics are not a demand library. When each topic represents a durable
+  buyer problem, promote it into its own pillar-and-spoke series and require
+  enough depth, unique intent, reciprocal links, and editorial metadata for
+  the resulting drafts to be genuinely reviewable.
+- Character-count validation allowed thin drafts to look complete. The demand
+  gate now measures body words, heading depth, keywords, intent, canonical and
+  social metadata, schemas, sources, FAQs, and inbound/outbound link coverage.
+- Dark admin theming must set both foreground and surface colors on rendered
+  nodes, field wrappers, metadata, tables, and preview containers. Setting text
+  color alone lets Claro's light contextual backgrounds create unreadable
+  white-on-light combinations.
 
 ## 2026-08-11 — Stripe live activation
 

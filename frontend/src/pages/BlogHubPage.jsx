@@ -10,11 +10,13 @@ import { Hero, Section, Stagger, Item } from '../components/v1/index.js';
 export default function BlogHubPage() {
   const [posts, setPosts] = useState(null); // null = loading
   const [category, setCategory] = useState('All');
+  const [series, setSeries] = useState('All');
 
   useEffect(() => {
     let cancelled = false;
     getNodesRaw('blog_post', {
       include: 'field_blog_category,field_blog_tags,field_blog_series',
+      limit: 100,
     }).then(({ data, included }) => {
       if (!cancelled) {
         setPosts(
@@ -31,7 +33,10 @@ export default function BlogHubPage() {
   }, []);
 
   const categories = ['All', ...new Set((posts ?? []).map((post) => post.category).filter(Boolean))];
-  const visiblePosts = category === 'All' ? posts : posts?.filter((post) => post.category === category);
+  const seriesOptions = ['All', ...new Set((posts ?? []).map((post) => post.series).filter(Boolean))];
+  const visiblePosts = posts?.filter(
+    (post) => (category === 'All' || post.category === category) && (series === 'All' || post.series === series),
+  );
 
   return (
     <>
@@ -67,6 +72,15 @@ export default function BlogHubPage() {
                   {item}
                 </button>
               ))}
+            </div>
+            <div className="blog-series-filter">
+              <label htmlFor="blog-series">Browse a complete series</label>
+              <select id="blog-series" value={series} onChange={(event) => setSeries(event.target.value)}>
+                {seriesOptions.map((item) => (
+                  <option key={item} value={item}>{item}</option>
+                ))}
+              </select>
+              <span>{visiblePosts.length} article{visiblePosts.length === 1 ? '' : 's'}</span>
             </div>
             <Stagger className="v1-grid v1-grid--3">
             {visiblePosts.map((post) => (

@@ -11,7 +11,7 @@ dependencies:
     - field.field.node.faq_item.field_meta_title
   module:
     - node
-    - taxonomy_term
+    - taxonomy
     - text
     - user
 id: node.faq_item.teaser

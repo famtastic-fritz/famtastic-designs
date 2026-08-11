@@ -11,6 +11,10 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px;
+  background: var(--fam-surface);
+  border: 1px solid var(--fam-border);
+  border-radius: 8px;
+  color: var(--fam-text);
 }
 
 .node__title,
@@ -21,8 +25,42 @@
 }
 
 .node__content {
+  background: var(--fam-surface);
   color: #EAEAEA;
   line-height: 1.6;
+  padding: 24px;
+}
+
+.node__meta,
+.node__submitted,
+.node__content .field,
+.node__content .field__items,
+.node__content .field__item,
+.node--view-mode-full .text-content {
+  background: transparent !important;
+  color: #EAEAEA !important;
+}
+
+.node__meta,
+.node__submitted {
+  color: var(--fam-text-muted) !important;
+}
+
+.node--view-mode-full p,
+.node--view-mode-full li,
+.node--view-mode-full dd,
+.node--view-mode-full dt {
+  color: #EAEAEA;
+}
+
+.node--view-mode-full table,
+.node--view-mode-full tbody,
+.node--view-mode-full tr,
+.node--view-mode-full td,
+.node--view-mode-full th {
+  background: var(--fam-surface-raised) !important;
+  border-color: var(--fam-border) !important;
+  color: var(--fam-text) !important;
 }
 
 .node__content h2,
@@ -53,4 +91,18 @@
 
 .field__item {
   color: #EAEAEA;
+}
+
+/* Claro adds light preview/edit backgrounds in several node routes. Keep
+   those contextual wrappers in the same dark surface system. */
+.page-wrapper .node,
+.page-wrapper .node-preview-container,
+.page-wrapper .layout-region-node-main,
+.page-wrapper .layout-region-node-secondary,
+.page-wrapper .entity-meta,
+.page-wrapper .entity-meta__header,
+.page-wrapper .seven-details {
+  background-color: var(--fam-surface) !important;
+  border-color: var(--fam-border) !important;
+  color: var(--fam-text) !important;
 }

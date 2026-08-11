@@ -27,6 +27,7 @@ $required_blog_fields = [
   'field_capability_keys', 'field_content_key', 'field_cta_link',
   'field_cta_text', 'field_excerpt', 'field_meta_description',
   'field_meta_title', 'field_related_faqs', 'field_series_order',
+  'field_seo_brief', 'field_word_count',
 ];
 $blog_fields = $field_manager->getFieldDefinitions('node', 'blog_post');
 $missing = array_values(array_filter($required_blog_fields, fn ($name) => !isset($blog_fields[$name])));
@@ -49,9 +50,21 @@ $upsert_term = function (string $vid, string $name, string $description = '') us
   return $term;
 };
 
-$load_by_key = function (string $bundle, string $key) use ($node_storage) {
+$load_by_key = function (string $bundle, string $key, string $title = '') use ($node_storage) {
   $matches = $node_storage->loadByProperties(['type' => $bundle, 'field_content_key' => $key]);
-  return $matches ? reset($matches) : NULL;
+  if ($matches) {
+    return reset($matches);
+  }
+  // Version-one demand records used different machine keys for several pillar
+  // articles. Reuse an exact-title match so upgrading the library does not
+  // duplicate those drafts.
+  if ($title !== '') {
+    $matches = $node_storage->loadByProperties(['type' => $bundle, 'title' => $title]);
+    if ($matches) {
+      return reset($matches);
+    }
+  }
+  return NULL;
 };
 
 $categories = [];
@@ -75,7 +88,7 @@ foreach ($manifest['faqs'] as $index => $item) {
     $label = $categories[$category_key]?->label() ?? ucwords(str_replace('-', ' ', $category_key));
     $faq_categories[$category_key] = $upsert_term('faq_categories', $label);
   }
-  $node = $load_by_key('faq_item', $item['key']) ?: Node::create(['type' => 'faq_item']);
+  $node = $load_by_key('faq_item', $item['key'], $item['question']) ?: Node::create(['type' => 'faq_item']);
   $created = $node->isNew();
   $node->setTitle($item['question']);
   $node->set('field_content_key', $item['key']);
@@ -95,7 +108,7 @@ foreach ($manifest['faqs'] as $index => $item) {
 }
 
 foreach ($manifest['posts'] as $item) {
-  $node = $load_by_key('blog_post', $item['key']) ?: Node::create(['type' => 'blog_post']);
+  $node = $load_by_key('blog_post', $item['key'], $item['title']) ?: Node::create(['type' => 'blog_post']);
   $created = $node->isNew();
   $node->setTitle($item['title']);
   $node->set('field_content_key', $item['key']);
@@ -108,6 +121,20 @@ foreach ($manifest['posts'] as $item) {
   $node->set('field_capability_keys', array_map(fn ($key) => ['value' => $key], $item['capabilities']));
   $node->set('field_meta_title', $item['meta_title']);
   $node->set('field_meta_description', $item['meta_description']);
+  $node->set('field_word_count', $item['word_count']);
+  $node->set('field_seo_brief', json_encode([
+    'primary_keyword' => $item['primary_keyword'],
+    'secondary_keywords' => $item['secondary_keywords'],
+    'search_intent' => $item['search_intent'],
+    'content_template' => $item['content_template'],
+    'target_audience' => $item['target_audience'],
+    'evidence_boundary' => $item['evidence_boundary'],
+    'canonical_url' => $item['canonical_url'],
+    'open_graph' => ['title' => $item['og_title'], 'description' => $item['og_description']],
+    'schema_types' => $item['schema_types'],
+    'sources' => $item['sources'],
+    'review_status' => $item['review_status'],
+  ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
   $node->set('field_cta_text', $item['cta']['label']);
   $node->set('field_cta_link', ['uri' => 'internal:' . $item['cta']['href'], 'title' => $item['cta']['label']]);
   $node->set('field_related_faqs', array_values(array_map(fn ($key) => ['target_id' => $faq_nodes[$key]->id()], $item['faqs'])));

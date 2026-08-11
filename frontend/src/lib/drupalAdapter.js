@@ -246,6 +246,12 @@ export function transformBlogNode(node, included = []) {
   if (!node) return null;
   const attrs = node.attributes ?? {};
   const created = attrs.created ?? null;
+  let seoBrief = {};
+  try {
+    seoBrief = JSON.parse(textValue(attrs.field_seo_brief) || '{}');
+  } catch {
+    seoBrief = {};
+  }
   const includedByKey = new Map(
     (included ?? []).map((resource) => [`${resource.type}:${resource.id}`, resource]),
   );
@@ -282,7 +288,9 @@ export function transformBlogNode(node, included = []) {
     ctaHref: linkHref(attrs.field_cta_link, '/start'),
     metaTitle: textValue(attrs.field_meta_title),
     metaDescription: textValue(attrs.field_meta_description),
+    seoBrief,
     created,
+    changed: attrs.changed ?? created,
     dateLabel: created
       ? new Date(created).toLocaleDateString(undefined, {
           year: 'numeric',

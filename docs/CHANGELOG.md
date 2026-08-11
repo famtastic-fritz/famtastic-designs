@@ -5,8 +5,12 @@
 - Added one authoritative workflow that turns proven FAMtastic capabilities
   into ordered content series, reusable FAQs, controlled taxonomy, contextual
   CTAs, internal links, SEO metadata, and Drupal drafts.
-- Added an eight-article “Your Website Should Do More Than Exist” series with
-  seven canonical FAQs, five customer-job categories, and fourteen tags.
+- Expanded the eight-topic pilot into eight full pillar-and-spoke series with
+  64 complete article drafts, 32 canonical FAQs, 67,100 article words, five
+  customer-job categories, and fourteen controlled tags.
+- Added per-article primary and secondary keywords, intent, template, audience,
+  source records, evidence boundary, Open Graph data, canonical URL, schema
+  declarations, review state, validated word count, and reciprocal link plans.
 - Added idempotent Drupal seeding and validation with a fail-closed broad-
   publication gate; generated content remains unpublished until approved.
 - Added mobile blog categories, tags, series navigation, related FAQs,
@@ -15,6 +19,8 @@
   for Codex, Claude, and Shay, with a repeatable shared installer and doctrine.
 - Browser-proved the hub and pillar article at mobile width with no horizontal
   overflow, and verified a second seed produces no duplicate content.
+- Corrected light node-preview panels and low-contrast field/meta text across
+  the branded Drupal admin theme rather than patching one blog page.
 
 ## 2026-08-10 — Needs-led intake, $499 lifecycle, and private pricing
 

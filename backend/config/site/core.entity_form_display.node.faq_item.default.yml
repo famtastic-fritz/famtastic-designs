@@ -13,7 +13,7 @@ dependencies:
   module:
     - node
     - path
-    - taxonomy_term
+    - taxonomy
     - text
 id: node.faq_item.default
 targetEntityType: node
