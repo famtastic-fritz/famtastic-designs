@@ -75,6 +75,7 @@
 .portal-check{grid-template-columns:22px 1fr!important;align-items:start!important;line-height:1.45}.portal-check input{width:18px!important;height:18px!important;min-height:0!important;margin:.12rem 0}
 .portal-topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
 .portal-share{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1rem}.portal-share a{padding:.65rem .85rem;border:1px solid rgba(124,252,0,.35);border-radius:9px;text-decoration:none}
+.portal-project-hero{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:clamp(1.3rem,3vw,2.3rem);margin-bottom:1rem;border:1px solid rgba(124,252,0,.38);border-radius:20px;background:linear-gradient(135deg,rgba(124,252,0,.13),#101310)}.portal-project-hero span{color:var(--p-lime);font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;font-weight:800}.portal-project-hero h2{margin:.4rem 0;font-size:clamp(1.6rem,4vw,2.6rem)}.portal-project-hero p{max-width:720px;color:#b1bab1;line-height:1.55}.portal-project-hero button{flex:0 0 auto;min-height:48px;padding:.8rem 1rem;border:0;border-radius:10px;background:var(--p-lime);color:#071000;font-weight:850;cursor:pointer}.portal-request-form{margin-bottom:1rem}.portal-request-form form{gap:1rem}.portal-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.portal-form-actions{display:flex;flex-wrap:wrap;gap:.65rem}.portal-form-actions button{margin:0!important}.portal-panel button.secondary{background:transparent;color:var(--p-lime);border:1px solid rgba(124,252,0,.45)}.portal-panel button.quiet{background:transparent;color:#aab2aa;border:1px solid var(--p-line)}.portal-request-list .portal-panel{min-height:0}.purchase-context{padding:.8rem 1rem;border-left:3px solid #7cfc00;background:rgba(124,252,0,.08)}
 
 @media(max-width:900px){
   .portal-app{display:block;padding-top:64px}
@@ -96,6 +97,7 @@
   .portal-topic-grid{grid-template-columns:minmax(0,1fr)}
   .portal-welcome>div{padding:1.15rem}.portal-welcome>div:first-child h2{font-size:1.8rem}
   .portal-panel button{max-width:100%;white-space:normal;text-align:left}
+  .portal-project-hero{align-items:stretch;flex-direction:column}.portal-project-hero button{width:100%}.portal-form-grid{grid-template-columns:minmax(0,1fr)}.portal-form-actions{display:grid}.portal-form-actions button{width:100%;text-align:center}
 }
 
 @media(prefers-reduced-motion:reduce){.portal-nav{transition:none}.portal-app *{scroll-behavior:auto!important}}

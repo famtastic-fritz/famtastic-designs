@@ -118,6 +118,29 @@ famtastic_pipeline.customer_checkout:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.customer_website_requests:
+  path: '/api/customer/website-requests'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::createWebsiteRequest'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_website_request:
+  path: '/api/customer/website-requests/{website_request}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::updateWebsiteRequest'
+  methods: [PATCH]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    website_request: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_profile:
   path: '/api/customer/profile'
   defaults:
@@ -415,7 +438,7 @@ famtastic_pipeline.operations_metric:
     _title: 'Operations Records'
   requirements:
     _permission: 'administer famtastic pipeline'
-    metric: 'campaigns|prospects|customers|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers'
+    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers'
 
 famtastic_pipeline.launch_approval:
   path: '/admin/famtastic/launch-approval'

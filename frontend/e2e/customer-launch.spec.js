@@ -26,12 +26,24 @@ async function signIn(page, redirect = '/portal') {
 
 test('customer account, portal, support, settings, and purchase UI are mobile-safe', async ({ page }, testInfo) => {
   await signIn(page);
-  for (const path of ['/portal', '/portal/support', '/portal/settings', '/buy']) {
-    await page.goto(path);
-    await expect(page.locator('body')).toBeVisible();
+  for (const section of ['Support', 'Settings', 'Projects & approvals']) {
+    const menu = page.getByRole('button', { name: 'Menu', exact: true });
+    if (await menu.isVisible()) await menu.click();
+    await page.getByRole('button', { name: section, exact: true }).click();
+    await expect(page.getByRole('heading', { name: section, exact: true })).toBeVisible();
     await assertNoHorizontalOverflow(page);
-    await page.screenshot({ path: testInfo.outputPath(`${path.replaceAll('/', '-') || 'home'}.png`), fullPage: true });
+    await page.screenshot({ path: testInfo.outputPath(`${section.toLowerCase().replaceAll(/[^a-z]+/g, '-')}.png`), fullPage: true });
   }
+  await page.getByRole('button', { name: /Start a new website/i }).click();
+  await expect(page.getByRole('heading', { name: /Tell us what you want to build/i })).toBeVisible();
+  await page.getByLabel('Request name').fill('Mobile bakery website');
+  await page.getByLabel('What are we building?').selectOption('online_store');
+  await page.getByLabel('What should this website accomplish?').fill('Accept bakery orders for pickup.');
+  await page.getByLabel('What does the business sell or provide?').fill('Cakes and pastries.');
+  await assertNoHorizontalOverflow(page);
+  await page.screenshot({ path: testInfo.outputPath('website-request-mobile-form.png'), fullPage: true });
+  await page.goto('/buy');
+  await assertNoHorizontalOverflow(page);
   await expect(page.getByRole('heading', { name: /Web Basics/i })).toBeVisible();
   await expect(page.getByText('$199.00', { exact: true })).toBeVisible();
   await expect(page.getByText(/\$9\.99\/month/i)).toBeVisible();

@@ -543,6 +543,16 @@ function famtastic_pipeline_update_8026(&$sandbox) {
   return t('Disabled the legacy prospect-token payment path; purchases now use account-owned Commerce checkout.');
 }
 
+/** Adds reusable, customer-owned website request and pre-purchase intake records. */
+function famtastic_pipeline_update_8027(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_customer_portal_schema()['famtastic_project_request'];
+  if (!$schema->tableExists('famtastic_project_request')) {
+    $schema->createTable('famtastic_project_request', $definition);
+  }
+  return t('Added reusable customer website requests that bind pre-purchase intake to Commerce fulfillment.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
@@ -1245,6 +1255,32 @@ function _famtastic_pipeline_customer_portal_schema(): array {
     ],
     'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id']],
     'indexes' => ['organization_type' => ['organization_id', 'entitlement_type', 'status'], 'renewals' => ['status', 'renews_at']],
+  ];
+  $tables['famtastic_project_request'] = [
+    'description' => 'Customer-owned website request and pre-purchase intake, convertible into one Commerce project.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'prospect_id' => $entity, 'commerce_order_id' => $entity, 'intake_id' => $entity, 'project_id' => $entity,
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'draft'],
+      'project_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'business_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'project_type' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'new_website'],
+      'domain_choice' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'undecided'],
+      'existing_domain' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'recommendation_requested' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'intake_data' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'submitted_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id'], 'commerce_order' => ['commerce_order_id']],
+    'indexes' => [
+      'organization_status' => ['organization_id', 'status'],
+      'customer' => ['customer_id', 'changed'],
+      'prospect' => ['prospect_id'], 'project' => ['project_id'],
+    ],
   ];
   $tables['famtastic_portal_thread'] = [
     'description' => 'Project and support conversation threads.',

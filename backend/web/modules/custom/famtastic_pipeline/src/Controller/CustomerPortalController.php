@@ -194,6 +194,24 @@ final class CustomerPortalController extends ControllerBase {
     }
     if (!$organization) return $this->error('workspace_not_found', 404, 'Customer workspace not found.');
 
+    $websiteRequest = NULL;
+    if (!empty($data['website_request'])) {
+      $websiteRequest = $this->portal->ownedWebsiteRequest((int) $customer['id'], (string) $data['website_request']);
+      if (!$websiteRequest || (int) $websiteRequest['organization_id'] !== (int) $organization['id']) {
+        return $this->error('website_request_not_found', 404, 'Website request not found.');
+      }
+      if (!in_array($websiteRequest['status'], ['submitted', 'checkout_started'], TRUE)) {
+        return $this->error('website_request_not_ready', 422, 'Submit the website request before purchasing.');
+      }
+      $directCheckout = empty($websiteRequest['recommendation_requested']) && in_array($websiteRequest['project_type'], ['new_website', 'landing_page'], TRUE);
+      if (!$directCheckout) {
+        return $this->error('website_request_review_required', 422, 'This request needs a FAMtastic recommendation or private offer before checkout.');
+      }
+      if (!empty($websiteRequest['commerce_order_id'])) {
+        return $this->error('website_request_already_ordered', 409, 'This website request already has a purchase in progress.');
+      }
+    }
+
     $skus = array_values(array_unique(array_filter(array_map('strval', (array) ($data['skus'] ?? [])))));
     if (!$skus || count($skus) > 12) return $this->error('invalid_cart', 422, 'Choose at least one available service.');
     $definitions = $this->productDefinitions();
@@ -240,13 +258,38 @@ final class CustomerPortalController extends ControllerBase {
       'recurring_authorized' => !empty($data['recurring_authorized']),
       'marketing_opt_in' => !empty($data['marketing_opt_in']),
       'selected_skus' => $skus,
+      'website_request_public_id' => $websiteRequest['public_id'] ?? '',
       'captured_at' => gmdate(DATE_ATOM),
     ]);
     $order->save();
+    if ($websiteRequest) {
+      $this->portal->bindWebsiteRequestToOrder((int) $customer['id'], (string) $websiteRequest['public_id'], (int) $order->id());
+    }
     return $this->noStore(new JsonResponse([
       'ok' => TRUE, 'order_id' => (int) $order->id(),
       'checkout_url' => $request->getSchemeAndHttpHost() . '/web/checkout/' . $order->id(),
     ], 201));
+  }
+
+  public function createWebsiteRequest(Request $request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    try {
+      $data = $this->body($request);
+      return new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->createWebsiteRequest((int) $customer['id'], (string) ($data['organization'] ?? ''), $data)], 201);
+    }
+    catch (\InvalidArgumentException $e) { return $this->error('invalid_website_request', 422, $e->getMessage()); }
+    catch (\RuntimeException) { return $this->error('workspace_not_found', 404, 'Customer workspace not found.'); }
+  }
+
+  public function updateWebsiteRequest(Request $request, string $website_request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    try {
+      return new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->updateWebsiteRequest((int) $customer['id'], $website_request, $this->body($request))]);
+    }
+    catch (\InvalidArgumentException $e) { return $this->error('invalid_website_request', 422, $e->getMessage()); }
+    catch (\RuntimeException) { return $this->error('website_request_not_found', 404, 'Website request not found.'); }
   }
 
   public function profile(Request $request): JsonResponse {

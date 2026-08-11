@@ -36,3 +36,9 @@ The current intentional block is real charging. Stripe Commerce stays in test
 mode and the legacy custom checkout is disabled. Moving to live mode is a
 separate owner action after reviewing the latest gate artifact; it is never an
 automatic result of running this script.
+
+The matrix also covers repeat website purchases. A customer can save and submit
+multiple independent portal requests; the proof verifies that one request binds
+to one Commerce order and project while another remains a draft, and that a
+different customer receives a not-found response instead of learning whether
+the request exists.

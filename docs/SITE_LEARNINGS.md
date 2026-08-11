@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-11 — Reusable website requests
+
+- Intake belongs to a project/request, never directly to a customer. A durable
+  customer can own several businesses, domains, purchases, and website builds.
+- Pre-purchase questions must be resumable and useful for recommendations,
+  while payment still controls activation and purchased-service fulfillment.
+- A submitted portal request creates a distinct Drupal lead. Commerce records
+  its public UUID in the immutable checkout snapshot and fulfillment converts
+  that exact request into its own intake and project.
+- Account ownership is checked both when editing a request and when attaching it
+  to checkout. The canonical proof now rejects a second customer's attempt to
+  modify the first customer's request.
+
 ## 2026-08-10/11 — Commerce and launch-gate closure
 
 - A configured catalog does not prove checkout. Production was missing the

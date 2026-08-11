@@ -52,6 +52,7 @@ final class OperationsController extends ControllerBase {
     $cards = [
       ['Website Analytics', !empty($analytics['available']) ? 'Connected · 30-day reporting ready' : 'Connection needs attention', 'Traffic, engagement, top pages, and acquisition channels.', Url::fromRoute('famtastic_pipeline.analytics'), 'analytics'],
       ['Customers', $this->count('famtastic_customer') . ' customer accounts', 'Customer identity, contact details, consent, and business workspaces.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'customers']), 'customers'],
+      ['Website Requests', $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started']) . ' active requests', 'Pre-purchase interviews, recommendations, private-offer candidates, and Commerce conversion.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), 'prospects'],
       ['Commerce', $this->count('famtastic_order', ['payment_status' => 'paid']) . ' paid orders', 'Products, orders, payment status, subscriptions, and fulfillment.', Url::fromUserInput('/admin/commerce'), 'commerce'],
       ['Support', $openSupport . ' open conversations', 'Customer requests, project questions, replies, and service issues.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support']), 'support'],
       ['Notifications', $this->countIn('famtastic_notification_outbox', 'status', ['queued', 'retry', 'dead_letter']) . ' need attention', 'Receipts, acknowledgments, reminders, delivery attempts, and failures.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'notifications']), 'emails-sent'],
@@ -228,6 +229,7 @@ final class OperationsController extends ControllerBase {
       'campaigns' => $this->campaignMetric(),
       'prospects' => $this->prospectMetric(),
       'customers' => $this->customerMetric(),
+      'website-requests' => $this->websiteRequestMetric(),
       'proofs-ready' => $this->proofMetric(),
       'emails-sent' => $this->eventMetric('email.sent', 'Emails Sent', 'Every recorded campaign send event.'),
       'clicks' => $this->eventMetric('email.clicked', 'Proof-Link Clicks', 'Every recorded proof-link click event.'),
@@ -241,6 +243,36 @@ final class OperationsController extends ControllerBase {
       'workers' => $this->workerMetric(),
       default => throw new NotFoundHttpException('Operations metric not found.'),
     };
+  }
+
+  private function websiteRequestMetric(): array {
+    $query = $this->database->select('famtastic_project_request', 'r')->extend(PagerSelectExtender::class);
+    $query->leftJoin('famtastic_customer', 'c', 'c.id = r.customer_id');
+    $query->leftJoin('famtastic_organization', 'o', 'o.id = r.organization_id');
+    $query->fields('r', ['project_name', 'business_name', 'project_type', 'domain_choice', 'existing_domain', 'recommendation_requested', 'status', 'prospect_id', 'commerce_order_id', 'intake_data', 'submitted_at', 'changed']);
+    $query->addField('c', 'display_name', 'customer_name');
+    $query->addField('c', 'email', 'customer_email');
+    $query->addField('o', 'name', 'organization_name');
+    $rows = [];
+    foreach ($query->orderBy('r.changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $intake = json_decode((string) $record['intake_data'], TRUE) ?: [];
+      $summary = array_filter([
+        'Goal: ' . ($intake['primary_goal'] ?? ''),
+        'Offers: ' . ($intake['products_services'] ?? ''),
+        'Features: ' . ($intake['required_features'] ?? ''),
+        'Timing: ' . ($intake['launch_timing'] ?? ''),
+        'Notes: ' . ($intake['notes'] ?? ''),
+      ], static fn(string $line): bool => !str_ends_with($line, ': '));
+      $prospect = $record['prospect_id'] ? Link::fromTextAndUrl('#' . $record['prospect_id'], Url::fromUserInput('/admin/famtastic/prospect/' . $record['prospect_id'] . '/edit'))->toRenderable() : ['#markup' => '—'];
+      $rows[] = [
+        $record['project_name'], $record['organization_name'] ?: $record['business_name'],
+        $record['customer_name'] . ' · ' . $record['customer_email'], ucwords(str_replace('_', ' ', $record['project_type'])),
+        ['data' => ['#markup' => $this->badge($record['status'])]],
+        $record['recommendation_requested'] ? 'Recommendation' : 'Direct Web Basics',
+        ['data' => $prospect], implode("\n", $summary) ?: 'Draft details not added yet', $this->date((int) $record['changed']),
+      ];
+    }
+    return $this->recordsPage('Website Requests', 'Customer-owned, resumable website interviews. Online stores, redesigns, and recommendation requests require review before a package or private offer is presented.', ['Request', 'Business', 'Customer', 'Type', 'Status', 'Path', 'Lead', 'Brief', 'Updated'], $rows, 'No website requests have been recorded.');
   }
 
   private function supportMetric(): array {

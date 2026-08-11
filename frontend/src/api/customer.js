@@ -1,4 +1,5 @@
-const API = '/web/api/customer';
+const WEB_PREFIX = import.meta.env.DEV ? '' : '/web';
+const API = `${WEB_PREFIX}/api/customer`;
 
 export class CustomerApiError extends Error {
   constructor(message, status, code) { super(message); this.status = status; this.code = code; }
@@ -7,7 +8,7 @@ export class CustomerApiError extends Error {
 async function request(path, options = {}) {
   let csrfHeaders = {};
   if (options.csrf) {
-    const token = await fetch('/web/session/token', { credentials: 'same-origin' }).then((response) => response.text());
+    const token = await fetch(`${WEB_PREFIX}/session/token`, { credentials: 'same-origin' }).then((response) => response.text());
     csrfHeaders = { 'X-CSRF-Token': token };
   }
   const response = await fetch(`${API}${path}`, {
@@ -30,6 +31,8 @@ export const resetCustomerPassword = (token, password) => request('/reset-passwo
 export const getCustomerWorkspace = (organization = '') => request(`/workspace${organization ? `?organization=${encodeURIComponent(organization)}` : ''}`);
 export const getCustomerCatalog = () => request('/catalog');
 export const createCommerceCheckout = (payload) => request('/checkout', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
+export const createWebsiteRequest = (payload) => request('/website-requests', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
+export const updateWebsiteRequest = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}`, { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const updateCustomerProfile = (payload) => request('/profile', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const updateCustomerPreferences = (payload) => request('/preferences', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const createCustomerReferral = (payload) => request('/referrals', { method: 'POST', csrf: true, body: JSON.stringify(payload) });

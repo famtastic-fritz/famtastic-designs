@@ -125,7 +125,16 @@ final class CommerceLifecycleService {
   private function ensureOperationalRecords(OrderInterface $order, array $customer, int $organizationId, array $fulfillment): array {
     $prospectStorage = $this->entities->getStorage('famtastic_prospect');
     $prospect = !empty($fulfillment['prospect_id']) ? $prospectStorage->load((int) $fulfillment['prospect_id']) : NULL;
-    if (!$prospect) {
+    $checkout = (array) ($order->getData('famtastic_checkout') ?? []);
+    $request = NULL;
+    if (!empty($checkout['website_request_public_id'])) {
+      $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
+        ->condition('public_id', (string) $checkout['website_request_public_id'])
+        ->condition('organization_id', $organizationId)->condition('commerce_order_id', (int) $order->id())->execute()->fetchAssoc();
+      if (!$request) throw new \RuntimeException('commerce_website_request_missing_or_unowned');
+      if (!empty($request['prospect_id'])) $prospect = $prospectStorage->load((int) $request['prospect_id']);
+    }
+    if (!$prospect && !$request) {
       $ids = $prospectStorage->getQuery()->accessCheck(FALSE)
         ->condition('public_email', mb_strtolower((string) $customer['email']))->sort('id', 'DESC')->range(0, 1)->execute();
       $prospect = $ids ? $prospectStorage->load(reset($ids)) : NULL;
@@ -144,12 +153,17 @@ final class CommerceLifecycleService {
 
     $intakeStorage = $this->entities->getStorage('famtastic_intake');
     $intake = !empty($fulfillment['intake_id']) ? $intakeStorage->load((int) $fulfillment['intake_id']) : NULL;
-    $checkout = (array) ($order->getData('famtastic_checkout') ?? []);
     if (!$intake) {
+      $requestIntake = $request ? (json_decode((string) $request['intake_data'], TRUE) ?: []) : [];
       $intake = $intakeStorage->create([
         'prospect_ref' => $prospect->id(),
-        'primary_goal' => 'Complete purchased-service onboarding',
-        'services' => json_encode(['skus' => array_values((array) ($checkout['selected_skus'] ?? [])), 'domain_choice' => $checkout['domain_choice'] ?? ''], JSON_THROW_ON_ERROR),
+        'primary_goal' => $requestIntake['primary_goal'] ?? 'Complete purchased-service onboarding',
+        'ideal_customer' => $requestIntake['ideal_customer'] ?? '',
+        'services' => ($requestIntake['products_services'] ?? '') . "\n\nPurchased configuration: " . json_encode(['skus' => array_values((array) ($checkout['selected_skus'] ?? [])), 'domain_choice' => $checkout['domain_choice'] ?? ''], JSON_THROW_ON_ERROR),
+        'required_sections' => $requestIntake['required_features'] ?? '',
+        'style_preferences' => $requestIntake['style_preferences'] ?? '',
+        'reference_sites' => $requestIntake['reference_sites'] ?? '',
+        'existing_domain' => $request['existing_domain'] ?? '',
       ]);
       $intake->save();
     }
@@ -170,6 +184,11 @@ final class CommerceLifecycleService {
       'prospect_id' => (int) $prospect->id(), 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id(),
       'changed' => $this->time->getRequestTime(),
     ])->condition('commerce_order_id', (int) $order->id())->execute();
+    if ($request) {
+      $this->database->update('famtastic_project_request')->fields([
+        'status' => 'converted', 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id(), 'changed' => $this->time->getRequestTime(),
+      ])->condition('id', $request['id'])->execute();
+    }
     return ['prospect_id' => (int) $prospect->id(), 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id()];
   }
 
@@ -235,6 +254,7 @@ final class CommerceLifecycleService {
     }
     $snapshot = ['policy' => $registry['policy'], 'items' => $items, 'customer_selection' => array_intersect_key($checkout, array_flip([
       'organization_public_id', 'domain_choice', 'terms_version', 'recurring_authorized', 'marketing_opt_in', 'selected_skus', 'captured_at',
+      'website_request_public_id',
     ]))];
     $snapshot['checksum'] = hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
     return $snapshot;

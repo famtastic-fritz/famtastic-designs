@@ -157,3 +157,29 @@ The payment gateway stays in test mode and disabled outside a controlled proof.
 Turning it on is not a launch approval. Stripe webhooks, payment outcomes,
 fulfillment, notification delivery, portal visibility, and browser acceptance
 must all pass before a gateway can remain enabled.
+
+## Reusable portal website requests
+
+A verified customer can start, save, resume, and submit any number of website
+requests from **Portal → Projects & approvals**. Each request belongs to the
+selected customer organization and creates its own Drupal prospect/lead. It is
+not stored as one mutable “customer intake,” because one customer may own
+several businesses and websites.
+
+The pre-purchase interview captures project type, business, goals, audience,
+products/services, requested features, content readiness, style, references,
+timing, domain intent, and notes. Submitting it queues a customer
+acknowledgement and Fritz notification. A submitted request can be handed to
+`/buy?request=<public UUID>` when it is a direct Web Basics request with no
+recommendation pending. Redesigns, online stores, and recommendation requests
+remain in review until FAMtastic presents the appropriate scope or private
+offer; they cannot silently purchase the $199 scope as if it included those
+features. Checkout validates ownership, records the request
+UUID in the immutable order context, and reserves that request for one Commerce
+order. Completed fulfillment reuses the request's distinct lead, copies its
+answers into the staff-visible intake, links the resulting project, and marks
+the request converted. A second request remains independent and resumable.
+
+The synthetic proof covers draft/save, submit, repeat requests, cross-customer
+write rejection, Commerce order binding, conversion, intake transfer, and
+portal visibility. No sequential request identifier is exposed to customers.

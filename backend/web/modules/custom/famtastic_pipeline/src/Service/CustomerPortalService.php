@@ -196,6 +196,7 @@ final class CustomerPortalService {
       'organization' => array_diff_key($organization, ['id' => TRUE]),
       'organizations' => array_map(fn(array $o): array => array_diff_key($o, ['id' => TRUE]), $organizations),
       'orders' => $orders, 'projects' => $projects, 'entitlements' => $entitlements,
+      'website_requests' => $this->websiteRequests($customerId, $organizationId),
       'threads' => $threads, 'activity' => $activity, 'members' => $members,
       'analytics' => ['entitled' => (bool) $analytics],
       'offers' => $this->contextualOffers($entitlements, $projects),
@@ -205,6 +206,129 @@ final class CustomerPortalService {
       'faqs' => $this->faqs(),
       'referrals' => $this->referrals($customerId),
     ];
+  }
+
+  /** Returns resumable pre-purchase website requests for one owned workspace. */
+  public function websiteRequests(int $customerId, int $organizationId): array {
+    if (!$this->isMember($customerId, $organizationId)) throw new \RuntimeException('Workspace not found.');
+    $rows = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('organization_id', $organizationId)->orderBy('changed', 'DESC')->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    return array_map([$this, 'serializeWebsiteRequest'], $rows);
+  }
+
+  /** Creates a draft or submitted request and its distinct Drupal lead record. */
+  public function createWebsiteRequest(int $customerId, string $organizationPublicId, array $input): array {
+    $organization = $this->authorizedOrganization($customerId, $organizationPublicId);
+    $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
+    $clean = $this->validateWebsiteRequest($input);
+    $now = $this->time->getRequestTime();
+    $prospect = $this->entities->getStorage('famtastic_prospect')->create([
+      'business_name' => $clean['business_name'] ?: $clean['project_name'],
+      'public_email' => (string) $customer['email'], 'contact_name' => (string) $customer['display_name'],
+      'contact_method' => 'email', 'contact_value' => (string) $customer['email'],
+      'campaign' => 'customer_portal', 'source' => 'customer_portal', 'authorized' => TRUE,
+      'confirmed_at' => $now, 'status' => $clean['status'] === 'submitted' ? 'lead' : 'new', 'owner_uid' => 1,
+    ]);
+    $prospect->save();
+    $publicId = $this->uuid->generate();
+    $id = (int) $this->database->insert('famtastic_project_request')->fields([
+      'public_id' => $publicId, 'organization_id' => (int) $organization['id'], 'customer_id' => $customerId,
+      'prospect_id' => (int) $prospect->id(), 'status' => $clean['status'],
+      'project_name' => $clean['project_name'], 'business_name' => $clean['business_name'],
+      'project_type' => $clean['project_type'], 'domain_choice' => $clean['domain_choice'],
+      'existing_domain' => $clean['existing_domain'], 'recommendation_requested' => $clean['recommendation_requested'],
+      'intake_data' => json_encode($clean['intake'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+      'submitted_at' => $clean['status'] === 'submitted' ? $now : NULL, 'created' => $now, 'changed' => $now,
+    ])->execute();
+    $this->claimResource((int) $organization['id'], 'prospect', (int) $prospect->id());
+    $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
+    if ($clean['status'] === 'submitted') $this->queueWebsiteRequestNotifications($id, $customer, $clean);
+    return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
+  }
+
+  /** Saves or submits an existing request, enforcing customer and organization ownership. */
+  public function updateWebsiteRequest(int $customerId, string $publicId, array $input): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
+    if (!$row || (int) $row['customer_id'] !== $customerId || !$this->isMember($customerId, (int) $row['organization_id'])) throw new \RuntimeException('Website request not found.');
+    if (in_array($row['status'], ['converted', 'cancelled'], TRUE)) throw new \InvalidArgumentException('This request can no longer be edited.');
+    $clean = $this->validateWebsiteRequest($input);
+    $wasSubmitted = $row['status'] === 'submitted';
+    if (in_array($row['status'], ['submitted', 'checkout_started'], TRUE) && $clean['status'] === 'draft') {
+      $clean['status'] = $row['status'];
+    }
+    $now = $this->time->getRequestTime();
+    $this->database->update('famtastic_project_request')->fields([
+      'status' => $clean['status'], 'project_name' => $clean['project_name'], 'business_name' => $clean['business_name'],
+      'project_type' => $clean['project_type'], 'domain_choice' => $clean['domain_choice'], 'existing_domain' => $clean['existing_domain'],
+      'recommendation_requested' => $clean['recommendation_requested'],
+      'intake_data' => json_encode($clean['intake'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+      'submitted_at' => $clean['status'] === 'submitted' ? ((int) $row['submitted_at'] ?: $now) : NULL, 'changed' => $now,
+    ])->condition('id', $row['id'])->execute();
+    if ($clean['status'] === 'submitted' && !$wasSubmitted) {
+      $prospect = $this->entities->getStorage('famtastic_prospect')->load((int) $row['prospect_id']);
+      if ($prospect) {
+        $prospect->set('status', 'lead');
+        $prospect->save();
+      }
+      $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
+      $this->queueWebsiteRequestNotifications((int) $row['id'], $customer, $clean);
+      $this->activity((int) $row['organization_id'], 'website_request.submitted', 'A website request was submitted for review.');
+    }
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
+    return $this->serializeWebsiteRequest($updated);
+  }
+
+  /** Loads one request only when it belongs to the signed-in customer workspace. */
+  public function ownedWebsiteRequest(int $customerId, string $publicId): ?array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
+    return $row && (int) $row['customer_id'] === $customerId && $this->isMember($customerId, (int) $row['organization_id']) ? $row : NULL;
+  }
+
+  /** Atomically reserves a submitted request for one Commerce order. */
+  public function bindWebsiteRequestToOrder(int $customerId, string $publicId, int $commerceOrderId): void {
+    $row = $this->ownedWebsiteRequest($customerId, $publicId);
+    if (!$row || !in_array($row['status'], ['submitted', 'checkout_started'], TRUE) || !empty($row['commerce_order_id'])) {
+      throw new \RuntimeException('Website request is not available for checkout.');
+    }
+    $updated = $this->database->update('famtastic_project_request')->fields([
+      'commerce_order_id' => $commerceOrderId, 'status' => 'checkout_started', 'changed' => $this->time->getRequestTime(),
+    ])->condition('id', $row['id'])->isNull('commerce_order_id')->execute();
+    if ($updated !== 1) throw new \RuntimeException('Website request checkout was already started.');
+  }
+
+  private function validateWebsiteRequest(array $input): array {
+    $projectName = mb_substr(trim(strip_tags((string) ($input['project_name'] ?? ''))), 0, 255);
+    if ($projectName === '') throw new \InvalidArgumentException('Give this website request a name so you can find it later.');
+    $status = ($input['action'] ?? 'save') === 'submit' ? 'submitted' : 'draft';
+    $type = in_array($input['project_type'] ?? '', ['new_website', 'landing_page', 'redesign', 'online_store'], TRUE) ? $input['project_type'] : 'new_website';
+    $domain = in_array($input['domain_choice'] ?? '', ['undecided', 'new_domain', 'existing_domain'], TRUE) ? $input['domain_choice'] : 'undecided';
+    $text = fn(string $key, int $max = 5000): string => mb_substr(trim(strip_tags((string) ($input[$key] ?? ''))), 0, $max);
+    $intake = [];
+    foreach (['primary_goal', 'ideal_customer', 'products_services', 'required_features', 'content_status', 'style_preferences', 'reference_sites', 'launch_timing', 'notes'] as $key) $intake[$key] = $text($key);
+    if ($status === 'submitted' && ($intake['primary_goal'] === '' || $intake['products_services'] === '')) throw new \InvalidArgumentException('Add the primary goal and what the business sells before submitting.');
+    return [
+      'status' => $status, 'project_name' => $projectName, 'business_name' => $text('business_name', 255),
+      'project_type' => $type, 'domain_choice' => $domain, 'existing_domain' => $text('existing_domain', 255),
+      'recommendation_requested' => !empty($input['recommendation_requested']) ? 1 : 0, 'intake' => $intake,
+    ];
+  }
+
+  private function serializeWebsiteRequest(array $row): array {
+    $row['intake'] = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    $row['direct_checkout_available'] = $row['status'] === 'submitted'
+      && empty($row['recommendation_requested'])
+      && in_array($row['project_type'], ['new_website', 'landing_page'], TRUE);
+    foreach (['id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id', 'intake_data'] as $key) unset($row[$key]);
+    return $row;
+  }
+
+  private function queueWebsiteRequestNotifications(int $id, array $customer, array $request): void {
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $subject = 'Website request received — ' . $request['project_name'];
+    $this->queueNotification("website-request:{$id}:customer", 'transactional', (string) $customer['email'], $subject,
+      "We received your website request for {$request['project_name']}. Fritz will review it within 3 business days. You can continue or review it from your customer portal.");
+    $this->queueNotification("website-request:{$id}:staff", 'operational', $admin, 'New portal website request — ' . $request['project_name'],
+      "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nType: {$request['project_type']}\nReview in Drupal: /web/admin/famtastic/metric/website-requests");
   }
 
   public function updateCustomer(int $customerId, array $input): void {
