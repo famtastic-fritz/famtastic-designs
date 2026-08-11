@@ -525,6 +525,18 @@ function famtastic_pipeline_update_8024(&$sandbox) {
   return t('Verified Commerce Stripe payment-method bundle storage.');
 }
 
+/** Links Commerce fulfillment to the prospect, intake, and project it creates. */
+function famtastic_pipeline_update_8025(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $field = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  foreach (['prospect_id', 'intake_id', 'project_id'] as $name) {
+    if (!$schema->fieldExists('famtastic_commerce_fulfillment', $name)) {
+      $schema->addField('famtastic_commerce_fulfillment', $name, $field);
+    }
+  }
+  return t('Added durable Commerce fulfillment links to prospect, intake, and project records.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
@@ -1022,6 +1034,7 @@ function _famtastic_pipeline_lifecycle_schema(): array {
       'id' => $id, 'commerce_order_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'prospect_id' => $entity, 'intake_id' => $entity, 'project_id' => $entity,
       'status' => $short, 'sku_snapshot' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
       'amount_minor' => ['type' => 'int', 'not null' => TRUE], 'currency' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE],
       'fulfilled_at' => $time, 'created' => $time, 'changed' => $time,

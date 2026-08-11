@@ -60,7 +60,7 @@ test('sandbox Commerce order completes with Stripe test payment', async ({ page 
   await expect(page).toHaveURL(/\/review/);
   await expect(page.getByRole('heading', { name: 'Review' })).toBeVisible();
   await assertNoHorizontalOverflow(page);
-  const stripe = page.frameLocator('iframe[title*="Secure payment input frame" i]');
+  const stripe = page.locator('iframe[title*="Secure payment input frame" i]').first().contentFrame();
   await stripe.getByLabel(/Card number/i).fill('4242424242424242');
   await stripe.getByLabel(/Expiration date/i).fill('1230');
   await stripe.getByLabel(/Security code/i).fill('123');

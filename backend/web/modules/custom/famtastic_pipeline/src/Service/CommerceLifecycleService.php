@@ -34,9 +34,6 @@ final class CommerceLifecycleService {
     }
     $existing = $this->database->select('famtastic_commerce_fulfillment', 'f')->fields('f')
       ->condition('commerce_order_id', (int) $order->id())->execute()->fetchAssoc();
-    if ($existing && $existing['status'] === 'fulfilled') {
-      return ['fulfilled' => TRUE, 'existing' => TRUE, 'record' => $existing];
-    }
     $user = $order->getCustomer();
     if (!$user || $user->isAnonymous()) {
       throw new \RuntimeException('commerce_customer_account_required');
@@ -56,6 +53,10 @@ final class CommerceLifecycleService {
       }
     }
     $organizationId = (int) $organization['id'];
+    if ($existing && $existing['status'] === 'fulfilled') {
+      $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing);
+      return ['fulfilled' => TRUE, 'existing' => TRUE, 'record' => $existing, 'operations' => $operations];
+    }
     $profile = $order->getBillingProfile();
     if ($profile) {
       $this->database->update('famtastic_customer')->fields(['commerce_profile_id' => (int) $profile->id(), 'changed' => $this->time->getRequestTime()])
@@ -111,11 +112,65 @@ final class CommerceLifecycleService {
       ])->execute();
     }
 
+    $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing ?: []);
+
     $this->portal->activity($organizationId, 'commerce.fulfilled', 'Your purchase is confirmed and your services are ready for intake.');
     $this->queueNotifications($order, $customer, $skus, array_values(array_unique($intakeSchemas)));
     $this->database->update('famtastic_commerce_fulfillment')->fields(['status' => 'fulfilled', 'fulfilled_at' => $now, 'changed' => $now])
       ->condition('commerce_order_id', (int) $order->id())->execute();
-    return ['fulfilled' => TRUE, 'existing' => FALSE, 'skus' => $skus, 'entitlements' => array_keys($grants)];
+    return ['fulfilled' => TRUE, 'existing' => FALSE, 'skus' => $skus, 'entitlements' => array_keys($grants), 'operations' => $operations];
+  }
+
+  /** Creates the staff-GUI intake and project records once for each order. */
+  private function ensureOperationalRecords(OrderInterface $order, array $customer, int $organizationId, array $fulfillment): array {
+    $prospectStorage = $this->entities->getStorage('famtastic_prospect');
+    $prospect = !empty($fulfillment['prospect_id']) ? $prospectStorage->load((int) $fulfillment['prospect_id']) : NULL;
+    if (!$prospect) {
+      $ids = $prospectStorage->getQuery()->accessCheck(FALSE)
+        ->condition('public_email', mb_strtolower((string) $customer['email']))->sort('id', 'DESC')->range(0, 1)->execute();
+      $prospect = $ids ? $prospectStorage->load(reset($ids)) : NULL;
+    }
+    if (!$prospect) {
+      $prospect = $prospectStorage->create([
+        'business_name' => (string) ($customer['display_name'] ?: $customer['email']),
+        'public_email' => mb_strtolower((string) $customer['email']),
+        'contact_name' => (string) $customer['display_name'],
+        'contact_method' => 'email', 'contact_value' => mb_strtolower((string) $customer['email']),
+        'campaign' => 'direct_commerce', 'source' => 'commerce', 'authorized' => TRUE,
+        'confirmed_at' => $this->time->getRequestTime(), 'status' => 'paid', 'owner_uid' => 1,
+      ]);
+      $prospect->save();
+    }
+
+    $intakeStorage = $this->entities->getStorage('famtastic_intake');
+    $intake = !empty($fulfillment['intake_id']) ? $intakeStorage->load((int) $fulfillment['intake_id']) : NULL;
+    $checkout = (array) ($order->getData('famtastic_checkout') ?? []);
+    if (!$intake) {
+      $intake = $intakeStorage->create([
+        'prospect_ref' => $prospect->id(),
+        'primary_goal' => 'Complete purchased-service onboarding',
+        'services' => json_encode(['skus' => array_values((array) ($checkout['selected_skus'] ?? [])), 'domain_choice' => $checkout['domain_choice'] ?? ''], JSON_THROW_ON_ERROR),
+      ]);
+      $intake->save();
+    }
+
+    $projectStorage = $this->entities->getStorage('famtastic_project');
+    $project = !empty($fulfillment['project_id']) ? $projectStorage->load((int) $fulfillment['project_id']) : NULL;
+    if (!$project) {
+      $revisionLimit = 1 + (in_array('FAM-REVISION-75', (array) ($checkout['selected_skus'] ?? []), TRUE) ? 1 : 0);
+      $project = $projectStorage->create([
+        'prospect_ref' => $prospect->id(), 'intake_ref' => $intake->id(),
+        'delivery_status' => 'intake_pending', 'approval_status' => 'pending', 'revision_limit' => $revisionLimit,
+      ]);
+      $project->save();
+    }
+    $this->portal->claimResource($organizationId, 'prospect', (int) $prospect->id());
+    $this->portal->claimResource($organizationId, 'project', (int) $project->id());
+    $this->database->update('famtastic_commerce_fulfillment')->fields([
+      'prospect_id' => (int) $prospect->id(), 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id(),
+      'changed' => $this->time->getRequestTime(),
+    ])->condition('commerce_order_id', (int) $order->id())->execute();
+    return ['prospect_id' => (int) $prospect->id(), 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id()];
   }
 
   /** Reconciles refund, void, and failed-payment states into service access. */
