@@ -515,6 +515,16 @@ function famtastic_pipeline_update_8023(&$sandbox) {
   return t('Verified the Commerce Payment remote-customer field on portal accounts.');
 }
 
+/** Repairs Commerce Stripe payment-method bundle storage. */
+function famtastic_pipeline_update_8024(&$sandbox) {
+  if (!\Drupal::moduleHandler()->moduleExists('commerce_stripe')) {
+    return t('Commerce Stripe is not enabled; no Stripe bundle-field repair was required.');
+  }
+  $entityType = \Drupal::entityTypeManager()->getDefinition('commerce_payment_method');
+  \Drupal::service('entity.bundle_plugin_installer')->installBundles($entityType, ['commerce_stripe']);
+  return t('Verified Commerce Stripe payment-method bundle storage.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();

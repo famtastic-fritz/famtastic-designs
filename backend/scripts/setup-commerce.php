@@ -86,6 +86,11 @@ if (!FieldConfig::loadByName('user', 'user', 'commerce_remote_id')) {
   ])->save();
 }
 
+if (\Drupal::moduleHandler()->moduleExists('commerce_stripe')) {
+  $paymentMethodEntityType = \Drupal::entityTypeManager()->getDefinition('commerce_payment_method');
+  \Drupal::service('entity.bundle_plugin_installer')->installBundles($paymentMethodEntityType, ['commerce_stripe']);
+}
+
 // Branded portal accounts are ordinary authenticated Drupal users. Commerce
 // still requires these explicit permissions before an account can enter its
 // own checkout or view its own receipt/order history.

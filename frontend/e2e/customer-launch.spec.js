@@ -37,7 +37,7 @@ test('customer account, portal, support, settings, and purchase UI are mobile-sa
   await expect(page.getByText(/\$9\.99\/month/i)).toBeVisible();
 });
 
-test('sandbox Commerce order reaches Stripe payment form', async ({ page }) => {
+test('sandbox Commerce order completes with Stripe test payment', async ({ page }) => {
   test.skip(process.env.FAMTASTIC_RUN_SANDBOX_PAYMENT !== '1', 'Explicit sandbox-payment gate is required.');
   await signIn(page, '/buy');
   await page.getByLabel(/Connect a domain I already own/i).check();
@@ -60,5 +60,14 @@ test('sandbox Commerce order reaches Stripe payment form', async ({ page }) => {
   await expect(page).toHaveURL(/\/review/);
   await expect(page.getByRole('heading', { name: 'Review' })).toBeVisible();
   await assertNoHorizontalOverflow(page);
-  await expect(page.getByRole('button', { name: /Pay and complete purchase/i })).toBeVisible();
+  const stripe = page.frameLocator('iframe[title*="Secure payment input frame" i]');
+  await stripe.getByLabel(/Card number/i).fill('4242424242424242');
+  await stripe.getByLabel(/Expiration date/i).fill('1230');
+  await stripe.getByLabel(/Security code/i).fill('123');
+  const saveForFasterCheckout = stripe.getByLabel(/Save my information for faster checkout/i);
+  if (await saveForFasterCheckout.isChecked().catch(() => false)) await saveForFasterCheckout.uncheck();
+  await page.getByRole('button', { name: /Pay and complete purchase/i }).click();
+  await expect(page).toHaveURL(/\/complete/, { timeout: 30_000 });
+  await expect(page.getByRole('heading', { name: /complete|thank/i })).toBeVisible();
+  await assertNoHorizontalOverflow(page);
 });
