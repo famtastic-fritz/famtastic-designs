@@ -308,7 +308,7 @@ function normalizeNode(resource) {
   const bundle = resource.type?.split('--')[1] ?? 'node';
   const bodyHtml = attributes.body?.processed ?? attributes.body?.value ?? '';
   const summary =
-    attributes.body?.summary ||
+    stripHtml(attributes.body?.summary) ||
     (bodyHtml ? `${stripHtml(bodyHtml).slice(0, 220)}…` : '');
 
   return {

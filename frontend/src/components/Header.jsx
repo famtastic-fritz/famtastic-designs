@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router';
 import { useUser } from '../auth/UserContext.jsx';
-import { getMenus, getNodesRaw, STUB_FLAG } from '../api/drupal.js';
+import { getMenus, getNodesRaw } from '../api/drupal.js';
 import { transformServiceNode, transformPackageNode } from '../lib/drupalAdapter.js';
 import { SiteNavbar } from './v1/index.js';
 
@@ -49,8 +49,6 @@ export default function Header() {
     };
   }, []);
 
-  const isStub = menuItems.some((item) => item[STUB_FLAG]);
-
   function handleLogout() {
     logout();
     navigate('/', { replace: true });
@@ -58,7 +56,6 @@ export default function Header() {
 
   const authSlot = (
     <>
-      {isStub && <span className="stub-badge">stub nav</span>}
       {isAuthenticated ? (
         <>
           <NavLink to="/admin" className="v1-nav__link">
