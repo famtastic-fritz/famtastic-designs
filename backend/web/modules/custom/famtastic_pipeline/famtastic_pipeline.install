@@ -490,6 +490,31 @@ function famtastic_pipeline_update_8022(&$sandbox) {
   return t('Verified the default multistep Commerce checkout flow.');
 }
 
+/** Repairs the Commerce Payment remote-customer field on portal accounts. */
+function famtastic_pipeline_update_8023(&$sandbox) {
+  if (!\Drupal::moduleHandler()->moduleExists('commerce_payment')) {
+    return t('Commerce Payment is not enabled; no remote-customer field repair was required.');
+  }
+  if (!\Drupal\field\Entity\FieldStorageConfig::loadByName('user', 'commerce_remote_id')) {
+    \Drupal\field\Entity\FieldStorageConfig::create([
+      'field_name' => 'commerce_remote_id',
+      'entity_type' => 'user',
+      'type' => 'commerce_remote_id',
+      'cardinality' => -1,
+      'locked' => TRUE,
+    ])->save();
+  }
+  if (!\Drupal\field\Entity\FieldConfig::loadByName('user', 'user', 'commerce_remote_id')) {
+    \Drupal\field\Entity\FieldConfig::create([
+      'field_name' => 'commerce_remote_id',
+      'entity_type' => 'user',
+      'bundle' => 'user',
+      'label' => 'Remote ID',
+    ])->save();
+  }
+  return t('Verified the Commerce Payment remote-customer field on portal accounts.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();

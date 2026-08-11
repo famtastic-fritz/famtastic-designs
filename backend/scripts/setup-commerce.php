@@ -65,6 +65,27 @@ if (!CheckoutFlow::load('default')) {
   echo "Created default Commerce checkout flow.\n";
 }
 
+// Payment gateways map a Drupal account to its provider customer through this
+// Commerce-managed field. Repair installs where Commerce Payment was enabled
+// without its field configuration being imported.
+if (!FieldStorageConfig::loadByName('user', 'commerce_remote_id')) {
+  FieldStorageConfig::create([
+    'field_name' => 'commerce_remote_id',
+    'entity_type' => 'user',
+    'type' => 'commerce_remote_id',
+    'cardinality' => -1,
+    'locked' => TRUE,
+  ])->save();
+}
+if (!FieldConfig::loadByName('user', 'user', 'commerce_remote_id')) {
+  FieldConfig::create([
+    'field_name' => 'commerce_remote_id',
+    'entity_type' => 'user',
+    'bundle' => 'user',
+    'label' => 'Remote ID',
+  ])->save();
+}
+
 // Branded portal accounts are ordinary authenticated Drupal users. Commerce
 // still requires these explicit permissions before an account can enter its
 // own checkout or view its own receipt/order history.
