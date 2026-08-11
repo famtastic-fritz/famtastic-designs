@@ -242,17 +242,46 @@ export function transformCaseStudyNode(node) {
 /* ------------------------------------------------------------------ */
 
 /** blog_post/article node → props for BlogHubPage cards / BlogPostPage. */
-export function transformBlogNode(node) {
+export function transformBlogNode(node, included = []) {
   if (!node) return null;
   const attrs = node.attributes ?? {};
   const created = attrs.created ?? null;
+  const includedByKey = new Map(
+    (included ?? []).map((resource) => [`${resource.type}:${resource.id}`, resource]),
+  );
+  const related = (name) => {
+    const refs = node.relationships?.[name]?.data;
+    const list = Array.isArray(refs) ? refs : refs ? [refs] : [];
+    return list
+      .map((ref) => includedByKey.get(`${ref.type}:${ref.id}`))
+      .filter(Boolean);
+  };
+  const termNames = (name) => related(name).map((resource) => textValue(resource.attributes?.name)).filter(Boolean);
+  const faqItems = related('field_related_faqs').map((resource) => ({
+    id: resource.id,
+    question: textValue(resource.attributes?.field_question) || resource.attributes?.title,
+    answer: textValue(resource.attributes?.field_answer) || textValue(resource.attributes?.body),
+  }));
 
   return {
     id: node.id,
     slug: nodeSlug(node) || titleSlug(attrs.title),
     title: attrs.title ?? 'Untitled post',
-    summary: textValue(attrs.field_summary) || textValue(attrs.body?.summary),
+    summary:
+      plainTextValue(attrs.field_excerpt) ||
+      plainTextValue(attrs.field_summary) ||
+      plainTextValue(attrs.body?.summary),
     bodyHtml: textValue(attrs.body),
+    category: termNames('field_blog_category')[0] || '',
+    tags: termNames('field_blog_tags'),
+    series: termNames('field_blog_series')[0] || '',
+    seriesOrder: Number(attrs.field_series_order) || 0,
+    capabilityKeys: listValues(attrs.field_capability_keys),
+    faqs: faqItems,
+    ctaText: textValue(attrs.field_cta_text) || 'Explore your options',
+    ctaHref: linkHref(attrs.field_cta_link, '/start'),
+    metaTitle: textValue(attrs.field_meta_title),
+    metaDescription: textValue(attrs.field_meta_description),
     created,
     dateLabel: created
       ? new Date(created).toLocaleDateString(undefined, {

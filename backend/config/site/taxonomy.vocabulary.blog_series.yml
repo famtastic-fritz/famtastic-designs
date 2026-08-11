@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+name: Blog Series
+vid: blog_series
+description: Ordered learning journeys that connect pillar and supporting blog posts.
+weight: 0
+new_revision: false

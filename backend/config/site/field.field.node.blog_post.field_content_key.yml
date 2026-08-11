@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - field.storage.node.field_content_key
+  - node.type.blog_post
+id: node.blog_post.field_content_key
+field_name: field_content_key
+entity_type: node
+bundle: blog_post
+label: Content key
+description: Stable machine key used by the demand engine.
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

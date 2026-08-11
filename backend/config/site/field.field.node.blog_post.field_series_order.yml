@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - field.storage.node.field_series_order
+  - node.type.blog_post
+id: node.blog_post.field_series_order
+field_name: field_series_order
+entity_type: node
+bundle: blog_post
+label: Series order
+description: Position of this post inside its series.
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  min: 1
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

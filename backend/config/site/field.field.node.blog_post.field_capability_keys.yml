@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - field.storage.node.field_capability_keys
+  - node.type.blog_post
+id: node.blog_post.field_capability_keys
+field_name: field_capability_keys
+entity_type: node
+bundle: blog_post
+label: Capability evidence keys
+description: Capability registry keys supporting this content.
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

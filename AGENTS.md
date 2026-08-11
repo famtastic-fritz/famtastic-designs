@@ -7,20 +7,23 @@
   Shay, and every other CLI agent.
 - Use `docs/CAPABILITY_REGISTRY.md` to distinguish implemented, provider-proven,
   and production-proven capabilities.
-
-## Required operating context
-
-- Read `docs/AGENT_OPERATING_CONTRACT.md` before product, customer, Commerce,
-  intake, mail, proof, or deployment work. It applies equally to Codex, Claude,
-  Shay, and every other CLI agent.
-- Use `docs/CAPABILITY_REGISTRY.md` to distinguish implemented, provider-proven,
-  and production-proven capabilities.
+- For marketing strategy, demand generation, blog series, SEO content, FAQs,
+  CTAs, product explanations, or pricing recommendations, read
+  `docs/DEMAND_ENGINE_DOCTRINE.md` and use
+  `agent-skills/famtastic-demand-engine/SKILL.md`.
+- Installed `blog-*`, `seo-*`, and marketing skills are supporting references.
+  FAMtastic's repository contracts override generic skill guidance.
+- New generated marketing content is draft-first. Live prices, recurring
+  charges, legal promises, real promotional sends, advertising spend, and
+  broad publication remain explicit approval gates.
 
 ## Package Managers
+
 - React frontend in `frontend`: use **npm** and its committed `package-lock.json`.
 - Drupal backend in `backend`: use **Composer** and its committed `composer.lock`.
 
 ## Repository Source of Truth
+
 - `frontend/` is the only public frontend source. There is no root frontend.
 - `backend/` is the only API, CMS, and pipeline source.
 - Do not recreate the removed root Nuxt/AgencyOS/Directus prototype or copy code
@@ -30,6 +33,7 @@
 - Follow `docs/SOURCE_OF_TRUTH.md` when adding tooling or documentation.
 
 ## Production Frontend
+
 - Shay is the usual deployment orchestrator, but the deployment lane is agent-agnostic.
 - Any agent may implement, review, test, and run deployment dry-runs.
 - Any agent explicitly authorized for the production change may run `--apply`.
@@ -49,6 +53,7 @@
 - Verify both `https://famtasticdesigns.com` and `https://www.famtasticdesigns.com` with a real browser after deployment.
 
 ## Frontend Commands
+
 | Task | Command |
 |---|---|
 | Install | `npm --prefix frontend ci` |
@@ -72,7 +77,9 @@
   assume a private Composer validation changes the live vendor tree.
 
 ## Commit Attribution
+
 AI commits MUST include:
+
 ```text
 Co-Authored-By: (the agent model's name and attribution byline)
 ```

@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-08-11 — Evidence-led demand engine
+
+- Added one authoritative workflow that turns proven FAMtastic capabilities
+  into ordered content series, reusable FAQs, controlled taxonomy, contextual
+  CTAs, internal links, SEO metadata, and Drupal drafts.
+- Added an eight-article “Your Website Should Do More Than Exist” series with
+  seven canonical FAQs, five customer-job categories, and fourteen tags.
+- Added idempotent Drupal seeding and validation with a fail-closed broad-
+  publication gate; generated content remains unpublished until approved.
+- Added mobile blog categories, tags, series navigation, related FAQs,
+  contextual CTAs, canonical metadata, and article structured data.
+- Installed a repository-owned demand skill and 31 pinned specialist skills
+  for Codex, Claude, and Shay, with a repeatable shared installer and doctrine.
+- Browser-proved the hub and pillar article at mobile width with no horizontal
+  overflow, and verified a second seed produces no duplicate content.
+
 ## 2026-08-10 — Needs-led intake, $499 lifecycle, and private pricing
 
 - Replaced the “new website means $199” shortcut with an exhaustive, versioned

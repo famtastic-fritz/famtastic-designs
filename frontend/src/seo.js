@@ -108,6 +108,22 @@ export function packageSeo(plan, slug) {
   };
 }
 
+export function blogSeo(post) {
+  const title = post?.metaTitle || `${post?.title || 'Article'} | FAMtastic Designs`;
+  const description = post?.metaDescription || post?.summary || SEO_PAGES['/blog'].description;
+  return {
+    siteName: SITE_NAME,
+    title,
+    description,
+    ogDescription: description,
+    twitterDescription: description,
+    keywords: [DEFAULT_KEYWORDS, ...(post?.tags ?? [])].join(', '),
+    canonical: `${SITE_URL}/blog/${post?.slug || ''}/`,
+    image: DEFAULT_IMAGE,
+    path: `/blog/${post?.slug || ''}`,
+  };
+}
+
 export function proofSeo(campaign, token) {
   const businessName = campaign?.business_name || 'Your Business';
   const canonical = token ? `${SITE_URL}/p/${token}` : SITE_URL;

@@ -11,9 +11,18 @@ dependencies:
     - field.field.node.blog_post.field_published_date
     - field.field.node.blog_post.field_meta_title
     - field.field.node.blog_post.field_meta_description
+    - field.field.node.blog_post.field_blog_series
+    - field.field.node.blog_post.field_blog_tags
+    - field.field.node.blog_post.field_capability_keys
+    - field.field.node.blog_post.field_content_key
+    - field.field.node.blog_post.field_cta_link
+    - field.field.node.blog_post.field_cta_text
+    - field.field.node.blog_post.field_related_faqs
+    - field.field.node.blog_post.field_series_order
   module:
     - datetime
     - image
+    - link
     - path
     - taxonomy_term
     - text
@@ -96,6 +105,75 @@ content:
     weight: 8
     region: content
     settings: *id001
+    third_party_settings: {}
+  field_blog_series:
+    type: entity_reference_autocomplete
+    weight: 9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  field_series_order:
+    type: number
+    weight: 10
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {}
+  field_blog_tags:
+    type: entity_reference_autocomplete_tags
+    weight: 11
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  field_capability_keys:
+    type: string_textfield
+    weight: 12
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  field_related_faqs:
+    type: entity_reference_autocomplete
+    weight: 13
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  field_cta_text:
+    type: string_textfield
+    weight: 14
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  field_cta_link:
+    type: link_default
+    weight: 15
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {}
+  field_content_key:
+    type: string_textfield
+    weight: 16
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {}
   created:
     type: datetime_timestamp

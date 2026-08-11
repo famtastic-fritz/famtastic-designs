@@ -9,14 +9,17 @@ import { Hero, Section, Stagger, Item } from '../components/v1/index.js';
  */
 export default function BlogHubPage() {
   const [posts, setPosts] = useState(null); // null = loading
+  const [category, setCategory] = useState('All');
 
   useEffect(() => {
     let cancelled = false;
-    getNodesRaw('blog_post').then(({ data }) => {
+    getNodesRaw('blog_post', {
+      include: 'field_blog_category,field_blog_tags,field_blog_series',
+    }).then(({ data, included }) => {
       if (!cancelled) {
         setPosts(
           data
-            .map((node) => transformBlogNode(node))
+            .map((node) => transformBlogNode(node, included))
             .filter(Boolean)
             .sort((a, b) => new Date(b.created ?? 0) - new Date(a.created ?? 0)),
         );
@@ -26,6 +29,9 @@ export default function BlogHubPage() {
       cancelled = true;
     };
   }, []);
+
+  const categories = ['All', ...new Set((posts ?? []).map((post) => post.category).filter(Boolean))];
+  const visiblePosts = category === 'All' ? posts : posts?.filter((post) => post.category === category);
 
   return (
     <>
@@ -48,20 +54,41 @@ export default function BlogHubPage() {
         )}
 
         {posts !== null && posts.length > 0 && (
-          <Stagger className="v1-grid v1-grid--3">
-            {posts.map((post) => (
+          <>
+            <div className="blog-filters" aria-label="Filter articles by category">
+              {categories.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  className={`blog-filter${category === item ? ' blog-filter--active' : ''}`}
+                  onClick={() => setCategory(item)}
+                  aria-pressed={category === item}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+            <Stagger className="v1-grid v1-grid--3">
+            {visiblePosts.map((post) => (
               <Item key={post.id}>
                 <article className="v1-card">
-                  <span className="v1-card__kicker">{post.dateLabel || 'Post'}</span>
+                  <span className="v1-card__kicker">{post.category || post.dateLabel || 'Post'}</span>
                   <h3 className="v1-card__title">{post.title}</h3>
                   <p className="v1-card__text">{post.summary || 'Read the full post.'}</p>
+                  {post.series && <p className="blog-series-label">Series: {post.series}</p>}
+                  {post.tags.length > 0 && (
+                    <div className="blog-tags" aria-label="Topics">
+                      {post.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                    </div>
+                  )}
                   <Link to={`/blog/${post.slug}`} className="v1-card__cta">
                     Read Post →
                   </Link>
                 </article>
               </Item>
             ))}
-          </Stagger>
+            </Stagger>
+          </>
         )}
       </Section>
     </>

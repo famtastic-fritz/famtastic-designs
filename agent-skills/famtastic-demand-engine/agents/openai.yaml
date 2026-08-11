@@ -1,0 +1,4 @@
+interface:
+  display_name: "FAMtastic Demand Engine"
+  short_description: "Build proof-led demand and offer systems"
+  default_prompt: "Use $famtastic-demand-engine to turn a proven capability into a validated content series, CTA path, and draft offer."

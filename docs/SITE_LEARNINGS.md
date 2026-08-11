@@ -1,5 +1,24 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-11 — Demand creation as a governed product system
+
+- Content generation needs the same source-of-truth discipline as Commerce.
+  A canonical manifest prevents taxonomy drift, duplicate posts, disconnected
+  CTAs, and claims that outrun capability proof.
+- A series is a customer learning journey, not a pile of posts. Store sequence,
+  pillar relationship, intent, evidence boundary, FAQs, internal links, and
+  the next action together.
+- Draft-first safety must be enforced at persistence time. In the lean local
+  fixture, `Node::setPublished(FALSE)` retained a bundle default; explicitly
+  setting the status base field to zero made the publication gate reliable.
+- Shared agent behavior requires both installation and repository authority.
+  Pinned third-party skills provide specialist techniques, while the local
+  doctrine controls claims, products, publication, and commercial gates.
+- Mobile QA should verify document geometry as well as appearance. Matching
+  body scroll width to the layout viewport caught no horizontal overflow on
+  the blog hub or article, while semantic checks proved the CTA, FAQ, series,
+  canonical URL, and structured data were actually present.
+
 ## 2026-08-11 — Stripe live activation
 
 - Promote Commerce by creating a separate live gateway and disabling the test

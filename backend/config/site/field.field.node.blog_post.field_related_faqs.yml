@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - field.storage.node.field_related_faqs
+  - node.type.blog_post
+id: node.blog_post.field_related_faqs
+field_name: field_related_faqs
+entity_type: node
+bundle: blog_post
+label: Related FAQs
+description: Canonical FAQ answers displayed with this article.
+required: false
+translatable: true
+default_value: {}
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      faq_item: faq_item
+    sort:
+      field: title
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

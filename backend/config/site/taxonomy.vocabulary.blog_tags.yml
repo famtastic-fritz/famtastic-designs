@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+name: Blog Tags
+vid: blog_tags
+description: Controlled reusable topics for FAMtastic blog content.
+weight: 0
+new_revision: false
