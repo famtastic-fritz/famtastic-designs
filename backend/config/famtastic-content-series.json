@@ -1,10 +1,10 @@
 {
   "version": 2,
   "approval": {
-    "broad_publish_approved": false,
+    "broad_publish_approved": true,
     "live_price_changes_approved": false,
     "promotional_send_approved": false,
-    "notes": "Infrastructure and full drafts may be built and tested. Publication, live price changes, and promotional sends remain gated."
+    "notes": "Fritz explicitly approved publication of all 64 articles and their supporting FAQs on 2026-08-11. Live price changes and promotional sends remain gated."
   },
   "capabilities": [
     {
@@ -152,7 +152,7 @@
         "seo-sitemap",
         "synthetic-proof"
       ],
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-lead-capture",
@@ -172,7 +172,7 @@
         "lead-response",
         "analytics-reporting"
       ],
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "lead-response-operations",
@@ -192,7 +192,7 @@
         "product-onboarding",
         "synthetic-proof"
       ],
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "commerce-customer-lifecycle",
@@ -213,7 +213,7 @@
         "product-onboarding",
         "synthetic-proof"
       ],
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "customer-portal-experience",
@@ -234,7 +234,7 @@
         "commerce-lifecycle",
         "lead-response"
       ],
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "small-business-automation",
@@ -254,7 +254,7 @@
         "product-onboarding",
         "synthetic-proof"
       ],
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-analytics-decisions",
@@ -275,7 +275,7 @@
         "seo-sitemap",
         "lead-response"
       ],
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "ai-agents-for-websites",
@@ -296,7 +296,7 @@
         "product-onboarding",
         "synthetic-proof"
       ],
-      "status": "draft"
+      "status": "published"
     }
   ],
   "faqs": [
@@ -305,224 +305,224 @@
       "question": "Does every business need website strategy?",
       "answer_html": "<p>No. The right decision depends on the customer job, operational risk, current volume, and the smallest useful improvement. FAMtastic starts with discovery and recommends only the capabilities supported by the need.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "small-business-website-strategy-start",
       "question": "What is the safest way to start with website strategy?",
       "answer_html": "<p>Start with one bounded workflow, define ownership and success, document the current process, test the normal and failure paths, and expand only after the evidence shows the foundation works.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "small-business-website-strategy-measure",
       "question": "How should a business measure website strategy?",
       "answer_html": "<p>Measure the customer action, the staff response, the completed outcome, exceptions, and trend over time. Pageviews or activity counts alone cannot show whether the system helped the business or customer.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "small-business-website-strategy-proof",
       "question": "How does FAMtastic prove website strategy works?",
       "answer_html": "<p>FAMtastic separates implemented capability, local proof, provider proof, and production smoke testing. Acceptance scenarios record what was exercised and preserve any approval or production boundary.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-lead-capture-fit",
       "question": "Does every business need website lead capture?",
       "answer_html": "<p>No. The right decision depends on the customer job, operational risk, current volume, and the smallest useful improvement. FAMtastic starts with discovery and recommends only the capabilities supported by the need.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-lead-capture-start",
       "question": "What is the safest way to start with website lead capture?",
       "answer_html": "<p>Start with one bounded workflow, define ownership and success, document the current process, test the normal and failure paths, and expand only after the evidence shows the foundation works.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-lead-capture-measure",
       "question": "How should a business measure website lead capture?",
       "answer_html": "<p>Measure the customer action, the staff response, the completed outcome, exceptions, and trend over time. Pageviews or activity counts alone cannot show whether the system helped the business or customer.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-lead-capture-proof",
       "question": "How does FAMtastic prove website lead capture works?",
       "answer_html": "<p>FAMtastic separates implemented capability, local proof, provider proof, and production smoke testing. Acceptance scenarios record what was exercised and preserve any approval or production boundary.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "lead-response-operations-fit",
       "question": "Does every business need lead response operations?",
       "answer_html": "<p>No. The right decision depends on the customer job, operational risk, current volume, and the smallest useful improvement. FAMtastic starts with discovery and recommends only the capabilities supported by the need.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "lead-response-operations-start",
       "question": "What is the safest way to start with lead response operations?",
       "answer_html": "<p>Start with one bounded workflow, define ownership and success, document the current process, test the normal and failure paths, and expand only after the evidence shows the foundation works.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "lead-response-operations-measure",
       "question": "How should a business measure lead response operations?",
       "answer_html": "<p>Measure the customer action, the staff response, the completed outcome, exceptions, and trend over time. Pageviews or activity counts alone cannot show whether the system helped the business or customer.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "lead-response-operations-proof",
       "question": "How does FAMtastic prove lead response operations works?",
       "answer_html": "<p>FAMtastic separates implemented capability, local proof, provider proof, and production smoke testing. Acceptance scenarios record what was exercised and preserve any approval or production boundary.</p>",
       "category": "get-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "commerce-customer-lifecycle-fit",
       "question": "Does every business need commerce and post-purchase operations?",
       "answer_html": "<p>No. The right decision depends on the customer job, operational risk, current volume, and the smallest useful improvement. FAMtastic starts with discovery and recommends only the capabilities supported by the need.</p>",
       "category": "get-paid",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "commerce-customer-lifecycle-start",
       "question": "What is the safest way to start with commerce and post-purchase operations?",
       "answer_html": "<p>Start with one bounded workflow, define ownership and success, document the current process, test the normal and failure paths, and expand only after the evidence shows the foundation works.</p>",
       "category": "get-paid",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "commerce-customer-lifecycle-measure",
       "question": "How should a business measure commerce and post-purchase operations?",
       "answer_html": "<p>Measure the customer action, the staff response, the completed outcome, exceptions, and trend over time. Pageviews or activity counts alone cannot show whether the system helped the business or customer.</p>",
       "category": "get-paid",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "commerce-customer-lifecycle-proof",
       "question": "How does FAMtastic prove commerce and post-purchase operations works?",
       "answer_html": "<p>FAMtastic separates implemented capability, local proof, provider proof, and production smoke testing. Acceptance scenarios record what was exercised and preserve any approval or production boundary.</p>",
       "category": "get-paid",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "customer-portal-experience-fit",
       "question": "Does every business need customer portal design?",
       "answer_html": "<p>No. The right decision depends on the customer job, operational risk, current volume, and the smallest useful improvement. FAMtastic starts with discovery and recommends only the capabilities supported by the need.</p>",
       "category": "serve-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "customer-portal-experience-start",
       "question": "What is the safest way to start with customer portal design?",
       "answer_html": "<p>Start with one bounded workflow, define ownership and success, document the current process, test the normal and failure paths, and expand only after the evidence shows the foundation works.</p>",
       "category": "serve-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "customer-portal-experience-measure",
       "question": "How should a business measure customer portal design?",
       "answer_html": "<p>Measure the customer action, the staff response, the completed outcome, exceptions, and trend over time. Pageviews or activity counts alone cannot show whether the system helped the business or customer.</p>",
       "category": "serve-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "customer-portal-experience-proof",
       "question": "How does FAMtastic prove customer portal design works?",
       "answer_html": "<p>FAMtastic separates implemented capability, local proof, provider proof, and production smoke testing. Acceptance scenarios record what was exercised and preserve any approval or production boundary.</p>",
       "category": "serve-customers",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "small-business-automation-fit",
       "question": "Does every business need small-business workflow automation?",
       "answer_html": "<p>No. The right decision depends on the customer job, operational risk, current volume, and the smallest useful improvement. FAMtastic starts with discovery and recommends only the capabilities supported by the need.</p>",
       "category": "grow-and-automate",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "small-business-automation-start",
       "question": "What is the safest way to start with small-business workflow automation?",
       "answer_html": "<p>Start with one bounded workflow, define ownership and success, document the current process, test the normal and failure paths, and expand only after the evidence shows the foundation works.</p>",
       "category": "grow-and-automate",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "small-business-automation-measure",
       "question": "How should a business measure small-business workflow automation?",
       "answer_html": "<p>Measure the customer action, the staff response, the completed outcome, exceptions, and trend over time. Pageviews or activity counts alone cannot show whether the system helped the business or customer.</p>",
       "category": "grow-and-automate",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "small-business-automation-proof",
       "question": "How does FAMtastic prove small-business workflow automation works?",
       "answer_html": "<p>FAMtastic separates implemented capability, local proof, provider proof, and production smoke testing. Acceptance scenarios record what was exercised and preserve any approval or production boundary.</p>",
       "category": "grow-and-automate",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-analytics-decisions-fit",
       "question": "Does every business need website analytics and measurement?",
       "answer_html": "<p>No. The right decision depends on the customer job, operational risk, current volume, and the smallest useful improvement. FAMtastic starts with discovery and recommends only the capabilities supported by the need.</p>",
       "category": "get-found",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-analytics-decisions-start",
       "question": "What is the safest way to start with website analytics and measurement?",
       "answer_html": "<p>Start with one bounded workflow, define ownership and success, document the current process, test the normal and failure paths, and expand only after the evidence shows the foundation works.</p>",
       "category": "get-found",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-analytics-decisions-measure",
       "question": "How should a business measure website analytics and measurement?",
       "answer_html": "<p>Measure the customer action, the staff response, the completed outcome, exceptions, and trend over time. Pageviews or activity counts alone cannot show whether the system helped the business or customer.</p>",
       "category": "get-found",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "website-analytics-decisions-proof",
       "question": "How does FAMtastic prove website analytics and measurement works?",
       "answer_html": "<p>FAMtastic separates implemented capability, local proof, provider proof, and production smoke testing. Acceptance scenarios record what was exercised and preserve any approval or production boundary.</p>",
       "category": "get-found",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "ai-agents-for-websites-fit",
       "question": "Does every business need AI agents for business websites?",
       "answer_html": "<p>No. The right decision depends on the customer job, operational risk, current volume, and the smallest useful improvement. FAMtastic starts with discovery and recommends only the capabilities supported by the need.</p>",
       "category": "grow-and-automate",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "ai-agents-for-websites-start",
       "question": "What is the safest way to start with AI agents for business websites?",
       "answer_html": "<p>Start with one bounded workflow, define ownership and success, document the current process, test the normal and failure paths, and expand only after the evidence shows the foundation works.</p>",
       "category": "grow-and-automate",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "ai-agents-for-websites-measure",
       "question": "How should a business measure AI agents for business websites?",
       "answer_html": "<p>Measure the customer action, the staff response, the completed outcome, exceptions, and trend over time. Pageviews or activity counts alone cannot show whether the system helped the business or customer.</p>",
       "category": "grow-and-automate",
-      "status": "draft"
+      "status": "published"
     },
     {
       "key": "ai-agents-for-websites-proof",
       "question": "How does FAMtastic prove AI agents for business websites works?",
       "answer_html": "<p>FAMtastic separates implemented capability, local proof, provider proof, and production smoke testing. Acceptance scenarios record what was exercised and preserve any approval or production boundary.</p>",
       "category": "grow-and-automate",
-      "status": "draft"
+      "status": "published"
     }
   ],
   "posts": [
@@ -533,7 +533,7 @@
       "pillar": true,
       "title": "What Should a Small-Business Website Actually Do?",
       "slug": "what-should-a-small-business-website-do",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "website-strategy",
@@ -602,7 +602,13 @@
           "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/website-strategy.webp",
+        "alt": "A connected small-business website system linking search, customer information, communication, and measurement.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Strategy"
+      }
     },
     {
       "key": "how-many-pages-small-business-website",
@@ -611,7 +617,7 @@
       "pillar": false,
       "title": "How Many Pages Does a Small-Business Website Need?",
       "slug": "how-many-pages-small-business-website",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "website-strategy",
@@ -679,7 +685,8 @@
           "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "one-page-vs-multi-page-website",
@@ -688,7 +695,7 @@
       "pillar": false,
       "title": "One-Page Website or Multi-Page Website: Which Fits?",
       "slug": "one-page-vs-multi-page-website",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "website-strategy",
@@ -756,7 +763,13 @@
           "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/website-strategy.webp",
+        "alt": "A connected small-business website system linking search, customer information, communication, and measurement.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Strategy"
+      }
     },
     {
       "key": "website-project-information-checklist",
@@ -765,7 +778,7 @@
       "pillar": false,
       "title": "What Information Should You Gather Before Building a Website?",
       "slug": "website-project-information-checklist",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "website-strategy",
@@ -833,7 +846,8 @@
           "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "plan-website-around-customer-questions",
@@ -842,7 +856,7 @@
       "pillar": false,
       "title": "How to Plan a Website Around Customer Questions",
       "slug": "plan-website-around-customer-questions",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "website-strategy",
@@ -910,7 +924,13 @@
           "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/website-strategy.webp",
+        "alt": "A connected small-business website system linking search, customer information, communication, and measurement.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Strategy"
+      }
     },
     {
       "key": "what-makes-business-website-trustworthy",
@@ -919,7 +939,7 @@
       "pillar": false,
       "title": "What Makes a Business Website Feel Trustworthy?",
       "slug": "what-makes-business-website-trustworthy",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "website-strategy",
@@ -987,7 +1007,8 @@
           "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "custom-website-vs-package",
@@ -996,7 +1017,7 @@
       "pillar": false,
       "title": "When Should a Website Be Custom Instead of Packaged?",
       "slug": "custom-website-vs-package",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "website-strategy",
@@ -1064,7 +1085,13 @@
           "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/website-strategy.webp",
+        "alt": "A connected small-business website system linking search, customer information, communication, and measurement.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Strategy"
+      }
     },
     {
       "key": "measure-whether-website-works",
@@ -1073,7 +1100,7 @@
       "pillar": false,
       "title": "How to Measure Whether a Website Is Doing Its Job",
       "slug": "measure-whether-website-works",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "website-strategy",
@@ -1141,7 +1168,8 @@
           "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "how-a-website-captures-a-lead",
@@ -1150,7 +1178,7 @@
       "pillar": true,
       "title": "How a Website Turns a Visitor Into a Real Lead",
       "slug": "how-a-website-captures-a-lead",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-capture",
@@ -1219,7 +1247,13 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/lead-capture.webp",
+        "alt": "Website visitors moving through an organized lead-capture pipeline toward a visible opportunity.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Lead Capture"
+      }
     },
     {
       "key": "what-should-website-contact-form-ask",
@@ -1228,7 +1262,7 @@
       "pillar": false,
       "title": "What Should a Website Contact Form Ask?",
       "slug": "what-should-website-contact-form-ask",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-capture",
@@ -1296,7 +1330,8 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "contact-form-vs-quote-form-vs-assessment",
@@ -1305,7 +1340,7 @@
       "pillar": false,
       "title": "Contact Form, Quote Form, or Assessment: Which Should You Use?",
       "slug": "contact-form-vs-quote-form-vs-assessment",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-capture",
@@ -1373,7 +1408,13 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/lead-capture.webp",
+        "alt": "Website visitors moving through an organized lead-capture pipeline toward a visible opportunity.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Lead Capture"
+      }
     },
     {
       "key": "reduce-form-friction-without-bad-leads",
@@ -1382,7 +1423,7 @@
       "pillar": false,
       "title": "How to Reduce Friction Without Collecting Bad Leads",
       "slug": "reduce-form-friction-without-bad-leads",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-capture",
@@ -1450,7 +1491,8 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "what-should-thank-you-page-do",
@@ -1459,7 +1501,7 @@
       "pillar": false,
       "title": "What Should a Thank-You Page Do After Form Submission?",
       "slug": "what-should-thank-you-page-do",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-capture",
@@ -1527,7 +1569,13 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/lead-capture.webp",
+        "alt": "Website visitors moving through an organized lead-capture pipeline toward a visible opportunity.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Lead Capture"
+      }
     },
     {
       "key": "track-pages-campaigns-create-leads",
@@ -1536,7 +1584,7 @@
       "pillar": false,
       "title": "How to Track Which Pages and Campaigns Create Leads",
       "slug": "track-pages-campaigns-create-leads",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-capture",
@@ -1604,7 +1652,8 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "why-website-leads-get-lost",
@@ -1613,7 +1662,7 @@
       "pillar": false,
       "title": "Why Website Leads Get Lost Between the Form and the Inbox",
       "slug": "why-website-leads-get-lost",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-capture",
@@ -1681,7 +1730,13 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/lead-capture.webp",
+        "alt": "Website visitors moving through an organized lead-capture pipeline toward a visible opportunity.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Lead Capture"
+      }
     },
     {
       "key": "mobile-lead-capture-design",
@@ -1690,7 +1745,7 @@
       "pillar": false,
       "title": "How to Design a Mobile Lead-Capture Experience",
       "slug": "mobile-lead-capture-design",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-capture",
@@ -1758,7 +1813,8 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "what-happens-after-a-website-lead",
@@ -1767,7 +1823,7 @@
       "pillar": true,
       "title": "What Should Happen After a Website Lead Arrives?",
       "slug": "what-happens-after-a-website-lead",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-response",
@@ -1836,7 +1892,13 @@
           "url": "https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/lead-response.webp",
+        "alt": "A timed lead-response workflow connecting a new message, follow-up checkpoints, and a completed handoff.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Lead Response Operations"
+      }
     },
     {
       "key": "small-business-lead-stages",
@@ -1845,7 +1907,7 @@
       "pillar": false,
       "title": "What Lead Stages Does a Small Business Actually Need?",
       "slug": "small-business-lead-stages",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-response",
@@ -1913,7 +1975,8 @@
           "url": "https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "small-business-lead-response-time",
@@ -1922,7 +1985,7 @@
       "pillar": false,
       "title": "How Fast Should a Small Business Respond to a Website Lead?",
       "slug": "small-business-lead-response-time",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-response",
@@ -1990,7 +2053,13 @@
           "url": "https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/lead-response.webp",
+        "alt": "A timed lead-response workflow connecting a new message, follow-up checkpoints, and a completed handoff.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Lead Response Operations"
+      }
     },
     {
       "key": "lead-follow-up-schedule",
@@ -1999,7 +2068,7 @@
       "pillar": false,
       "title": "How to Build a Lead Follow-Up Schedule That Does Not Feel Robotic",
       "slug": "lead-follow-up-schedule",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-response",
@@ -2067,7 +2136,8 @@
           "url": "https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "new-lead-notification-checklist",
@@ -2076,7 +2146,7 @@
       "pillar": false,
       "title": "What Should Be in a New-Lead Notification?",
       "slug": "new-lead-notification-checklist",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-response",
@@ -2144,7 +2214,13 @@
           "url": "https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/lead-response.webp",
+        "alt": "A timed lead-response workflow connecting a new message, follow-up checkpoints, and a completed handoff.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Lead Response Operations"
+      }
     },
     {
       "key": "lead-email-reply-ingestion",
@@ -2153,7 +2229,7 @@
       "pillar": false,
       "title": "How to Handle Leads That Reply by Email",
       "slug": "lead-email-reply-ingestion",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-response",
@@ -2221,7 +2297,8 @@
           "url": "https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "overdue-lead-alerts",
@@ -2230,7 +2307,7 @@
       "pillar": false,
       "title": "How to Know When a Lead Is Overdue",
       "slug": "overdue-lead-alerts",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-response",
@@ -2298,7 +2375,13 @@
           "url": "https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/lead-response.webp",
+        "alt": "A timed lead-response workflow connecting a new message, follow-up checkpoints, and a completed handoff.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Lead Response Operations"
+      }
     },
     {
       "key": "lead-nurture-not-ready-to-buy",
@@ -2307,7 +2390,7 @@
       "pillar": false,
       "title": "What Should Happen to Leads That Are Not Ready to Buy?",
       "slug": "lead-nurture-not-ready-to-buy",
-      "status": "draft",
+      "status": "published",
       "category": "get-customers",
       "tags": [
         "lead-response",
@@ -2375,7 +2458,8 @@
           "url": "https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "what-happens-after-an-online-purchase",
@@ -2384,7 +2468,7 @@
       "pillar": true,
       "title": "What Happens After an Online Purchase?",
       "slug": "what-happens-after-an-online-purchase",
-      "status": "draft",
+      "status": "published",
       "category": "get-paid",
       "tags": [
         "ecommerce",
@@ -2454,7 +2538,13 @@
           "url": "https://docs.stripe.com/payments/checkout",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/ecommerce-lifecycle.webp",
+        "alt": "A connected ecommerce lifecycle spanning product, secure checkout, fulfillment, and customer retention.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Commerce And Post-Purchase Operations"
+      }
     },
     {
       "key": "product-addon-entitlement-difference",
@@ -2463,7 +2553,7 @@
       "pillar": false,
       "title": "What Is the Difference Between a Product, Add-On, and Entitlement?",
       "slug": "product-addon-entitlement-difference",
-      "status": "draft",
+      "status": "published",
       "category": "get-paid",
       "tags": [
         "ecommerce",
@@ -2532,7 +2622,8 @@
           "url": "https://docs.stripe.com/payments/checkout",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "connect-checkout-to-customer-intake",
@@ -2541,7 +2632,7 @@
       "pillar": false,
       "title": "How Should Checkout Connect to Customer Intake?",
       "slug": "connect-checkout-to-customer-intake",
-      "status": "draft",
+      "status": "published",
       "category": "get-paid",
       "tags": [
         "ecommerce",
@@ -2610,7 +2701,13 @@
           "url": "https://docs.stripe.com/payments/checkout",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/ecommerce-lifecycle.webp",
+        "alt": "A connected ecommerce lifecycle spanning product, secure checkout, fulfillment, and customer retention.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Commerce And Post-Purchase Operations"
+      }
     },
     {
       "key": "account-specific-special-pricing",
@@ -2619,7 +2716,7 @@
       "pillar": false,
       "title": "How to Handle Special Pricing Without Breaking the Catalog",
       "slug": "account-specific-special-pricing",
-      "status": "draft",
+      "status": "published",
       "category": "get-paid",
       "tags": [
         "ecommerce",
@@ -2688,7 +2785,8 @@
           "url": "https://docs.stripe.com/payments/checkout",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "customer-receipt-content",
@@ -2697,7 +2795,7 @@
       "pillar": false,
       "title": "What Should a Customer Receipt Explain?",
       "slug": "customer-receipt-content",
-      "status": "draft",
+      "status": "published",
       "category": "get-paid",
       "tags": [
         "ecommerce",
@@ -2766,7 +2864,13 @@
           "url": "https://docs.stripe.com/payments/checkout",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/ecommerce-lifecycle.webp",
+        "alt": "A connected ecommerce lifecycle spanning product, secure checkout, fulfillment, and customer retention.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Commerce And Post-Purchase Operations"
+      }
     },
     {
       "key": "failed-payments-refunds-cancellations",
@@ -2775,7 +2879,7 @@
       "pillar": false,
       "title": "How Should Failed Payments, Refunds, and Cancellations Work?",
       "slug": "failed-payments-refunds-cancellations",
-      "status": "draft",
+      "status": "published",
       "category": "get-paid",
       "tags": [
         "ecommerce",
@@ -2844,7 +2948,8 @@
           "url": "https://docs.stripe.com/payments/checkout",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "hosting-domain-renewal-design",
@@ -2853,7 +2958,7 @@
       "pillar": false,
       "title": "How to Design Hosting and Domain Renewals Clearly",
       "slug": "hosting-domain-renewal-design",
-      "status": "draft",
+      "status": "published",
       "category": "get-paid",
       "tags": [
         "ecommerce",
@@ -2922,7 +3027,13 @@
           "url": "https://docs.stripe.com/payments/checkout",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/ecommerce-lifecycle.webp",
+        "alt": "A connected ecommerce lifecycle spanning product, secure checkout, fulfillment, and customer retention.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Commerce And Post-Purchase Operations"
+      }
     },
     {
       "key": "prove-ecommerce-before-live-payments",
@@ -2931,7 +3042,7 @@
       "pillar": false,
       "title": "How to Prove an Ecommerce Workflow Before Taking Real Payments",
       "slug": "prove-ecommerce-before-live-payments",
-      "status": "draft",
+      "status": "published",
       "category": "get-paid",
       "tags": [
         "ecommerce",
@@ -3000,7 +3111,8 @@
           "url": "https://docs.stripe.com/payments/checkout",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "how-a-customer-portal-helps",
@@ -3009,7 +3121,7 @@
       "pillar": true,
       "title": "How a Customer Portal Helps a Small Business",
       "slug": "how-a-customer-portal-helps",
-      "status": "draft",
+      "status": "published",
       "category": "serve-customers",
       "tags": [
         "customer-portal",
@@ -3079,7 +3191,13 @@
           "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/customer-portal.webp",
+        "alt": "A mobile customer portal connecting files, support, purchases, learning, and account growth.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Customer Portal Design"
+      }
     },
     {
       "key": "customer-portal-home-screen",
@@ -3088,7 +3206,7 @@
       "pillar": false,
       "title": "What Should Be on a Customer Portal Home Screen?",
       "slug": "customer-portal-home-screen",
-      "status": "draft",
+      "status": "published",
       "category": "serve-customers",
       "tags": [
         "customer-portal",
@@ -3157,7 +3275,8 @@
           "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "portal-projects-files-approvals",
@@ -3166,7 +3285,7 @@
       "pillar": false,
       "title": "How Should Customers Find Projects, Files, and Approvals?",
       "slug": "portal-projects-files-approvals",
-      "status": "draft",
+      "status": "published",
       "category": "serve-customers",
       "tags": [
         "customer-portal",
@@ -3235,7 +3354,13 @@
           "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/customer-portal.webp",
+        "alt": "A mobile customer portal connecting files, support, purchases, learning, and account growth.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Customer Portal Design"
+      }
     },
     {
       "key": "portal-support-vs-contact-form",
@@ -3244,7 +3369,7 @@
       "pillar": false,
       "title": "What Makes Portal Support Better Than a Contact Form?",
       "slug": "portal-support-vs-contact-form",
-      "status": "draft",
+      "status": "published",
       "category": "serve-customers",
       "tags": [
         "customer-portal",
@@ -3313,7 +3438,8 @@
           "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "portal-team-members-business-accounts",
@@ -3322,7 +3448,7 @@
       "pillar": false,
       "title": "How Should a Portal Handle Team Members and Business Accounts?",
       "slug": "portal-team-members-business-accounts",
-      "status": "draft",
+      "status": "published",
       "category": "serve-customers",
       "tags": [
         "customer-portal",
@@ -3391,7 +3517,13 @@
           "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/customer-portal.webp",
+        "alt": "A mobile customer portal connecting files, support, purchases, learning, and account growth.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Customer Portal Design"
+      }
     },
     {
       "key": "portal-communication-preferences",
@@ -3400,7 +3532,7 @@
       "pillar": false,
       "title": "What Communication Settings Should Customers Control?",
       "slug": "portal-communication-preferences",
-      "status": "draft",
+      "status": "published",
       "category": "serve-customers",
       "tags": [
         "customer-portal",
@@ -3469,7 +3601,8 @@
           "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "portal-product-documentation-learning",
@@ -3478,7 +3611,7 @@
       "pillar": false,
       "title": "How Can a Portal Teach Customers to Use What They Bought?",
       "slug": "portal-product-documentation-learning",
-      "status": "draft",
+      "status": "published",
       "category": "serve-customers",
       "tags": [
         "customer-portal",
@@ -3547,7 +3680,13 @@
           "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/customer-portal.webp",
+        "alt": "A mobile customer portal connecting files, support, purchases, learning, and account growth.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Customer Portal Design"
+      }
     },
     {
       "key": "mobile-customer-portal-design",
@@ -3556,7 +3695,7 @@
       "pillar": false,
       "title": "How to Design a Customer Portal for Mobile Use",
       "slug": "mobile-customer-portal-design",
-      "status": "draft",
+      "status": "published",
       "category": "serve-customers",
       "tags": [
         "customer-portal",
@@ -3625,7 +3764,8 @@
           "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "how-automation-prevents-lost-opportunities",
@@ -3634,7 +3774,7 @@
       "pillar": true,
       "title": "How Automation Prevents Lost Opportunities",
       "slug": "how-automation-prevents-lost-opportunities",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "business-automation",
@@ -3703,7 +3843,13 @@
           "url": "https://www.drupal.org/docs/drupal-apis/queue-api/overview",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/workflow-automation.webp",
+        "alt": "Scattered manual tasks becoming a controlled business workflow with checks and completed outcomes.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Small-Business Workflow Automation"
+      }
     },
     {
       "key": "what-small-business-should-automate-first",
@@ -3712,7 +3858,7 @@
       "pillar": false,
       "title": "What Should a Small Business Automate First?",
       "slug": "what-small-business-should-automate-first",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "business-automation",
@@ -3780,7 +3926,8 @@
           "url": "https://www.drupal.org/docs/drupal-apis/queue-api/overview",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "what-not-to-fully-automate",
@@ -3789,7 +3936,7 @@
       "pillar": false,
       "title": "What Should Never Be Fully Automated?",
       "slug": "what-not-to-fully-automate",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "business-automation",
@@ -3857,7 +4004,13 @@
           "url": "https://www.drupal.org/docs/drupal-apis/queue-api/overview",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/workflow-automation.webp",
+        "alt": "Scattered manual tasks becoming a controlled business workflow with checks and completed outcomes.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Small-Business Workflow Automation"
+      }
     },
     {
       "key": "scheduled-workers-customer-work",
@@ -3866,7 +4019,7 @@
       "pillar": false,
       "title": "How Do Scheduled Workers Protect Customer Work?",
       "slug": "scheduled-workers-customer-work",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "business-automation",
@@ -3934,7 +4087,8 @@
           "url": "https://www.drupal.org/docs/drupal-apis/queue-api/overview",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "idempotency-business-automation",
@@ -3943,7 +4097,7 @@
       "pillar": false,
       "title": "What Is Idempotency and Why Does Business Automation Need It?",
       "slug": "idempotency-business-automation",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "business-automation",
@@ -4011,7 +4165,13 @@
           "url": "https://www.drupal.org/docs/drupal-apis/queue-api/overview",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/workflow-automation.webp",
+        "alt": "Scattered manual tasks becoming a controlled business workflow with checks and completed outcomes.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Small-Business Workflow Automation"
+      }
     },
     {
       "key": "automation-failures-retries-dead-letter",
@@ -4020,7 +4180,7 @@
       "pillar": false,
       "title": "How Should Automation Handle Failures and Retries?",
       "slug": "automation-failures-retries-dead-letter",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "business-automation",
@@ -4088,7 +4248,8 @@
           "url": "https://www.drupal.org/docs/drupal-apis/queue-api/overview",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "website-events-business-workflows",
@@ -4097,7 +4258,7 @@
       "pillar": false,
       "title": "How to Connect Website Events to Real Business Workflows",
       "slug": "website-events-business-workflows",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "business-automation",
@@ -4165,7 +4326,13 @@
           "url": "https://www.drupal.org/docs/drupal-apis/queue-api/overview",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/workflow-automation.webp",
+        "alt": "Scattered manual tasks becoming a controlled business workflow with checks and completed outcomes.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Small-Business Workflow Automation"
+      }
     },
     {
       "key": "test-business-automation-safely",
@@ -4174,7 +4341,7 @@
       "pillar": false,
       "title": "How to Test Automation Without Risking Customers",
       "slug": "test-business-automation-safely",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "business-automation",
@@ -4242,7 +4409,8 @@
           "url": "https://www.drupal.org/docs/drupal-apis/queue-api/overview",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "website-numbers-that-matter",
@@ -4251,7 +4419,7 @@
       "pillar": true,
       "title": "The Website Numbers a Small Business Should Watch",
       "slug": "website-numbers-that-matter",
-      "status": "draft",
+      "status": "published",
       "category": "get-found",
       "tags": [
         "analytics",
@@ -4321,7 +4489,13 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/analytics-decisions.webp",
+        "alt": "Website data moving through a conversion funnel toward a clear business decision.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Analytics And Measurement"
+      }
     },
     {
       "key": "small-business-website-conversion",
@@ -4330,7 +4504,7 @@
       "pillar": false,
       "title": "What Is a Website Conversion for a Small Business?",
       "slug": "small-business-website-conversion",
-      "status": "draft",
+      "status": "published",
       "category": "get-found",
       "tags": [
         "analytics",
@@ -4399,7 +4573,8 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "track-website-calls-to-action",
@@ -4408,7 +4583,7 @@
       "pillar": false,
       "title": "How to Track Calls to Action Across a Website",
       "slug": "track-website-calls-to-action",
-      "status": "draft",
+      "status": "published",
       "category": "get-found",
       "tags": [
         "analytics",
@@ -4477,7 +4652,13 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/analytics-decisions.webp",
+        "alt": "Website data moving through a conversion funnel toward a clear business decision.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Analytics And Measurement"
+      }
     },
     {
       "key": "understand-website-traffic-sources",
@@ -4486,7 +4667,7 @@
       "pillar": false,
       "title": "How to Read Traffic Sources Without Fooling Yourself",
       "slug": "understand-website-traffic-sources",
-      "status": "draft",
+      "status": "published",
       "category": "get-found",
       "tags": [
         "analytics",
@@ -4555,7 +4736,8 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "small-business-analytics-dashboard",
@@ -4564,7 +4746,7 @@
       "pillar": false,
       "title": "What Should a Small-Business Analytics Dashboard Show?",
       "slug": "small-business-analytics-dashboard",
-      "status": "draft",
+      "status": "published",
       "category": "get-found",
       "tags": [
         "analytics",
@@ -4633,7 +4815,13 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/analytics-decisions.webp",
+        "alt": "Website data moving through a conversion funnel toward a clear business decision.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Analytics And Measurement"
+      }
     },
     {
       "key": "analytics-and-customer-data",
@@ -4642,7 +4830,7 @@
       "pillar": false,
       "title": "How Do Analytics and CRM Data Work Together?",
       "slug": "analytics-and-customer-data",
-      "status": "draft",
+      "status": "published",
       "category": "get-found",
       "tags": [
         "analytics",
@@ -4711,7 +4899,8 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "measure-blog-content-performance",
@@ -4720,7 +4909,7 @@
       "pillar": false,
       "title": "How to Measure Content and Blog Performance",
       "slug": "measure-blog-content-performance",
-      "status": "draft",
+      "status": "published",
       "category": "get-found",
       "tags": [
         "analytics",
@@ -4789,7 +4978,13 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/analytics-decisions.webp",
+        "alt": "Website data moving through a conversion funnel toward a clear business decision.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Website Analytics And Measurement"
+      }
     },
     {
       "key": "when-to-change-website-from-analytics",
@@ -4798,7 +4993,7 @@
       "pillar": false,
       "title": "When Should You Change a Website Based on Analytics?",
       "slug": "when-to-change-website-from-analytics",
-      "status": "draft",
+      "status": "published",
       "category": "get-found",
       "tags": [
         "analytics",
@@ -4867,7 +5062,8 @@
           "url": "https://support.google.com/analytics/answer/9322688",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "when-an-ai-website-agent-is-useful",
@@ -4876,7 +5072,7 @@
       "pillar": true,
       "title": "When Is an AI Website Agent Actually Useful?",
       "slug": "when-an-ai-website-agent-is-useful",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "ai-agents",
@@ -4946,7 +5142,13 @@
           "url": "https://www.nist.gov/itl/ai-risk-management-framework",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/ai-website-agent.webp",
+        "alt": "An AI website agent grounded in approved content with customer conversations and human support handoff.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Ai Agents For Business Websites"
+      }
     },
     {
       "key": "ai-chatbot-vs-ai-agent",
@@ -4955,7 +5157,7 @@
       "pillar": false,
       "title": "AI Chatbot or AI Agent: What Is the Difference?",
       "slug": "ai-chatbot-vs-ai-agent",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "ai-agents",
@@ -5024,7 +5226,8 @@
           "url": "https://www.nist.gov/itl/ai-risk-management-framework",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "ai-agent-knowledge-base",
@@ -5033,7 +5236,7 @@
       "pillar": false,
       "title": "What Knowledge Should an AI Website Agent Use?",
       "slug": "ai-agent-knowledge-base",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "ai-agents",
@@ -5102,7 +5305,13 @@
           "url": "https://www.nist.gov/itl/ai-risk-management-framework",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/ai-website-agent.webp",
+        "alt": "An AI website agent grounded in approved content with customer conversations and human support handoff.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Ai Agents For Business Websites"
+      }
     },
     {
       "key": "safe-ai-agent-actions",
@@ -5111,7 +5320,7 @@
       "pillar": false,
       "title": "What Actions Should an AI Website Agent Be Allowed to Take?",
       "slug": "safe-ai-agent-actions",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "ai-agents",
@@ -5180,7 +5389,8 @@
           "url": "https://www.nist.gov/itl/ai-risk-management-framework",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "ai-agent-human-handoff",
@@ -5189,7 +5399,7 @@
       "pillar": false,
       "title": "How Should an AI Agent Hand Off to a Person?",
       "slug": "ai-agent-human-handoff",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "ai-agents",
@@ -5258,7 +5468,13 @@
           "url": "https://www.nist.gov/itl/ai-risk-management-framework",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/ai-website-agent.webp",
+        "alt": "An AI website agent grounded in approved content with customer conversations and human support handoff.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Ai Agents For Business Websites"
+      }
     },
     {
       "key": "measure-ai-agent-performance",
@@ -5267,7 +5483,7 @@
       "pillar": false,
       "title": "How to Measure Whether an AI Agent Is Helping",
       "slug": "measure-ai-agent-performance",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "ai-agents",
@@ -5336,7 +5552,8 @@
           "url": "https://www.nist.gov/itl/ai-risk-management-framework",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     },
     {
       "key": "ai-agent-customer-documentation",
@@ -5345,7 +5562,7 @@
       "pillar": false,
       "title": "What Documentation Do Customers Need for an AI Agent?",
       "slug": "ai-agent-customer-documentation",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "ai-agents",
@@ -5414,7 +5631,13 @@
           "url": "https://www.nist.gov/itl/ai-risk-management-framework",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": {
+        "src": "/blog-images/ai-website-agent.webp",
+        "alt": "An AI website agent grounded in approved content with customer conversations and human support handoff.",
+        "brand_mark": "/brand/famtastic-mark.svg",
+        "caption": "FAMtastic Designs field guide: Ai Agents For Business Websites"
+      }
     },
     {
       "key": "test-ai-website-agent",
@@ -5423,7 +5646,7 @@
       "pillar": false,
       "title": "How to Test an AI Website Agent Before Launch",
       "slug": "test-ai-website-agent",
-      "status": "draft",
+      "status": "published",
       "category": "grow-and-automate",
       "tags": [
         "ai-agents",
@@ -5492,7 +5715,8 @@
           "url": "https://www.nist.gov/itl/ai-risk-management-framework",
           "type": "primary"
         }
-      ]
+      ],
+      "visual": null
     }
   ]
 }

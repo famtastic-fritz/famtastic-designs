@@ -289,6 +289,7 @@ export function transformBlogNode(node, included = []) {
     metaTitle: textValue(attrs.field_meta_title),
     metaDescription: textValue(attrs.field_meta_description),
     seoBrief,
+    visual: seoBrief.visual ?? null,
     created,
     changed: attrs.changed ?? created,
     dateLabel: created

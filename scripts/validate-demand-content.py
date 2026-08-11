@@ -173,6 +173,16 @@ def main() -> int:
             fail(errors, f"{key}: article needs at least two planned inbound links")
         if len(post.get("faqs", [])) < 3:
             fail(errors, f"{key}: at least three related FAQs are required")
+        visual = post.get("visual")
+        if visual:
+            if not visual.get("alt") or not visual.get("caption"):
+                fail(errors, f"{key}: visual requires descriptive alt text and a caption")
+            src = str(visual.get("src", ""))
+            if not src.startswith("/blog-images/") or not (ROOT / "frontend/public" / src.lstrip("/")).is_file():
+                fail(errors, f"{key}: visual asset is missing from frontend/public: {src!r}")
+            brand_mark = str(visual.get("brand_mark", ""))
+            if not brand_mark.startswith("/brand/") or not (ROOT / "frontend/public" / brand_mark.lstrip("/")).is_file():
+                fail(errors, f"{key}: brand mark is missing from frontend/public: {brand_mark!r}")
 
     for series_key, item in series.items():
         sequences = series_sequences.get(series_key, [])

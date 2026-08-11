@@ -2,6 +2,12 @@
 
 ## 2026-08-11 — Demand creation as a governed product system
 
+- A large editorial library still feels unfinished when its presentation is
+  text-only. Build the visual system as part of the content contract: original
+  series art, selective use rather than mechanical repetition, real brand assets
+  over model-generated lettering, descriptive alt text, mobile aspect ratios,
+  compressed delivery formats, and structured-data image references.
+
 - Content generation needs the same source-of-truth discipline as Commerce.
   A canonical manifest prevents taxonomy drift, duplicate posts, disconnected
   CTAs, and claims that outrun capability proof.

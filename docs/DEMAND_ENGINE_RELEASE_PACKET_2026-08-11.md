@@ -2,11 +2,11 @@
 
 ## Outcome
 
-The FAMtastic Demand Engine is implemented as a repeatable, draft-first system. It translates evidence-backed capabilities into ordered blog series, controlled taxonomy, reusable FAQs, contextual CTAs, Drupal content, React presentation, SEO metadata, internal links, and QA evidence.
+The FAMtastic Demand Engine is implemented as a repeatable, approval-gated system. It translates evidence-backed capabilities into ordered blog series, controlled taxonomy, reusable FAQs, contextual CTAs, Drupal content, React presentation, SEO metadata, internal links, and QA evidence.
 
 ## Editorial library
 
-The initial eight-topic pilot has been expanded into eight complete pillar-and-spoke series with 64 full article drafts:
+The initial eight-topic pilot has been expanded into eight complete pillar-and-spoke series with 64 full articles:
 
 1. Small-Business Website Strategy
 2. Website Lead Capture
@@ -21,20 +21,35 @@ Each series contains one pillar and seven focused supporting articles. The libra
 
 ## Approval state
 
-- Broad publication: not approved; every generated node is a Drupal draft.
+- Broad publication: explicitly approved by Fritz on 2026-08-11 for all 64
+  articles and 32 supporting FAQs.
 - Live price changes: not approved and not changed.
 - Promotional sends: not approved and not sent.
 - Recurring terms, legal promises, advertising spend, and unsupported proof upgrades: untouched.
 
-Publication requires review of the release as a whole, explicit approval, a manifest status change, and the broad-publication flag. The seed refuses to publish from an article status alone.
+The manifest and every included item now record the approval. The seed still
+refuses to publish from an item status alone, preserving the two-part gate for
+future libraries.
+
+## Visual system
+
+- Eight original series visuals were generated with the built-in GPT Image
+  workflow in a consistent black, charcoal, white, and FAMtastic-lime system.
+- Assets were optimized to 1,600-pixel WebP files; the complete set is roughly
+  600 KB rather than shipping the original multi-megabyte PNG sources.
+- Thirty-two articles use visuals selectively. Each visible figure carries
+  descriptive alternative text, a caption, and the repository-owned FAMtastic
+  SVG mark. Illustrated cards use empty alt text to avoid repeating the linked
+  title to screen-reader users.
 
 ## Local proof
 
 - Manifest validation: 8 series, 64 posts, 32 FAQs, 5 categories, 14 tags.
-- Article depth: 67,100 total words; 1,038-1,059 words per draft.
+- Article depth: 67,100 total words; 1,038-1,059 words per article.
 - Upgrade seed: 56 posts created and 8 pilot posts upgraded in place.
 - Second Drupal seed: zero new posts; all 64 records updated in place.
-- Draft safety: all 64 managed blog records verified unpublished after QA.
+- Publication safety: the two-part item and library approval gate was verified
+  locally before all 64 managed articles and 32 FAQs were approved.
 - Production frontend build: passed with Vite 8.2.0.
 - PHP syntax: seed script passed.
 - Skill validation: repository and installed Codex copies passed the official validator.
@@ -66,4 +81,8 @@ The local fixture lacks unrelated service/package content types and the menu-ite
 
 ## Next gate
 
-The system is complete through publication preparation. The next external action is staged editorial review and explicit publication approval by series or article. Do not publish all 64 at once merely because the drafts exist. After approval, update only selected item statuses and the controlled publication gate, rerun validation and seed in the intended environment, clear caches, deploy the frontend, smoke-test public URLs, and monitor content/CTA events.
+Publication is approved. Deploy the exact committed release, seed Drupal,
+regenerate the sitemap and route-specific shells, smoke-test representative
+visual and text-only articles on mobile and desktop, and monitor crawl,
+content-view, series-navigation, and CTA events. Price changes and promotional
+sends remain separate approval decisions.

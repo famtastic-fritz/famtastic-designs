@@ -86,6 +86,9 @@ export default function BlogHubPage() {
             {visiblePosts.map((post) => (
               <Item key={post.id}>
                 <article className="v1-card">
+                  {post.visual?.src && (
+                    <img className="blog-card-visual" src={post.visual.src} alt="" width="640" height="360" loading="lazy" />
+                  )}
                   <span className="v1-card__kicker">{post.category || post.dateLabel || 'Post'}</span>
                   <h3 className="v1-card__title">{post.title}</h3>
                   <p className="v1-card__text">{post.summary || 'Read the full post.'}</p>

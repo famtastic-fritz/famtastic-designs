@@ -51,6 +51,7 @@ export default function BlogPostPage() {
       author: { '@type': 'Organization', name: 'FAMtastic Designs' },
       publisher: { '@type': 'Organization', name: 'FAMtastic Designs', url: 'https://famtasticdesigns.com/' },
       mainEntityOfPage: canonical,
+      ...(state.post.visual?.src ? { image: `https://famtasticdesigns.com${state.post.visual.src}` } : {}),
       keywords: [state.post.seoBrief?.primary_keyword, ...(state.post.seoBrief?.secondary_keywords ?? [])].filter(Boolean),
     }];
     graph.push({
@@ -119,6 +120,15 @@ export default function BlogPostPage() {
         <Link to="/blog" className="v1-back-link">
           ← All posts
         </Link>
+        {post.visual?.src && (
+          <figure className="blog-visual">
+            <img src={post.visual.src} alt={post.visual.alt} width="1600" height="900" loading="eager" />
+            <figcaption>
+              <img src={post.visual.brand_mark || '/brand/famtastic-mark.svg'} alt="" width="32" height="32" />
+              <span>{post.visual.caption}</span>
+            </figcaption>
+          </figure>
+        )}
         {post.bodyHtml ? (
           <FadeUp className="v1-panel">
             <div className="v1-prose" dangerouslySetInnerHTML={{ __html: post.bodyHtml }} />

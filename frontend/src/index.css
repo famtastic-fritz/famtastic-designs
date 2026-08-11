@@ -1611,6 +1611,49 @@ a:hover {
   margin-top: 1.25rem;
 }
 
+.blog-visual {
+  position: relative;
+  overflow: hidden;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--v1-border);
+  border-radius: var(--v1-radius-card);
+  background: #050505;
+}
+
+.blog-visual > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.blog-visual figcaption {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.75rem 1rem;
+  color: var(--v1-text-72);
+  font-size: 0.78rem;
+}
+
+.blog-visual figcaption img {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+}
+
+.blog-card-visual {
+  display: block;
+  width: calc(100% + 2.5rem);
+  max-width: none;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin: -1.25rem -1.25rem 1.1rem;
+  border-bottom: 1px solid var(--v1-border);
+}
+
 .blog-series-nav {
   display: grid;
   gap: 1rem;

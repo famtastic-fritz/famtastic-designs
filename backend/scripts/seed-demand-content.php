@@ -134,6 +134,7 @@ foreach ($manifest['posts'] as $item) {
     'schema_types' => $item['schema_types'],
     'sources' => $item['sources'],
     'review_status' => $item['review_status'],
+    'visual' => $item['visual'] ?? NULL,
   ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
   $node->set('field_cta_text', $item['cta']['label']);
   $node->set('field_cta_link', ['uri' => 'internal:' . $item['cta']['href'], 'title' => $item['cta']['label']]);

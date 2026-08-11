@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Build the canonical 64-article FAMtastic demand library.
 
-The output is intentionally draft-only. This is a deterministic editorial
-factory: topic architecture is curated here, while the JSON manifest remains
-the deployable Drupal seed contract.
+This is a deterministic editorial factory: topic architecture is curated here,
+while the JSON manifest remains the deployable Drupal seed contract.
 """
 
 from __future__ import annotations
@@ -15,6 +14,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "backend/config/famtastic-content-series.json"
+
+VISUALS = {
+    "small-business-website-strategy": ("website-strategy.webp", "A connected small-business website system linking search, customer information, communication, and measurement."),
+    "website-lead-capture": ("lead-capture.webp", "Website visitors moving through an organized lead-capture pipeline toward a visible opportunity."),
+    "lead-response-operations": ("lead-response.webp", "A timed lead-response workflow connecting a new message, follow-up checkpoints, and a completed handoff."),
+    "commerce-customer-lifecycle": ("ecommerce-lifecycle.webp", "A connected ecommerce lifecycle spanning product, secure checkout, fulfillment, and customer retention."),
+    "customer-portal-experience": ("customer-portal.webp", "A mobile customer portal connecting files, support, purchases, learning, and account growth."),
+    "small-business-automation": ("workflow-automation.webp", "Scattered manual tasks becoming a controlled business workflow with checks and completed outcomes."),
+    "website-analytics-decisions": ("analytics-decisions.webp", "Website data moving through a conversion funnel toward a clear business decision."),
+    "ai-agents-for-websites": ("ai-website-agent.webp", "An AI website agent grounded in approved content with customer conversations and human support handoff."),
+}
 
 
 def words(text: str) -> int:
@@ -295,7 +305,7 @@ def main() -> None:
                 "question": question.format(context=series["context"]),
                 "answer_html": f"<p>{answer.format(context=series['context'])}</p>",
                 "category": series["category"],
-                "status": "draft",
+                "status": "published",
             })
         slugs = [topic[1] for topic in series["topics"]]
         series_records.append({
@@ -308,7 +318,7 @@ def main() -> None:
             "category": series["category"],
             "tags": series["tags"],
             "capabilities": series["capabilities"],
-            "status": "draft",
+            "status": "published",
         })
         for sequence, topic in enumerate(series["topics"], 1):
             title, slug, keyword, angle = topic
@@ -327,7 +337,7 @@ def main() -> None:
                 "pillar": sequence == 1,
                 "title": title,
                 "slug": slug,
-                "status": "draft",
+                "status": "published",
                 "category": series["category"],
                 "tags": series["tags"],
                 "capabilities": series["capabilities"],
@@ -361,15 +371,21 @@ def main() -> None:
                 "faqs": faq_keys,
                 "internal_links": links,
                 "sources": [{"name": series["source"][0], "url": series["source"][1], "type": "primary"}],
+                "visual": ({
+                    "src": f"/blog-images/{VISUALS[series['key']][0]}",
+                    "alt": VISUALS[series["key"]][1],
+                    "brand_mark": "/brand/famtastic-mark.svg",
+                    "caption": f"FAMtastic Designs field guide: {series['context'].title()}",
+                } if sequence in {1, 3, 5, 7} else None),
             })
 
     output = {
         "version": 2,
         "approval": {
-            "broad_publish_approved": False,
+            "broad_publish_approved": True,
             "live_price_changes_approved": False,
             "promotional_send_approved": False,
-            "notes": "Infrastructure and full drafts may be built and tested. Publication, live price changes, and promotional sends remain gated.",
+            "notes": "Fritz explicitly approved publication of all 64 articles and their supporting FAQs on 2026-08-11. Live price changes and promotional sends remain gated.",
         },
         "capabilities": current["capabilities"],
         "categories": current["categories"],

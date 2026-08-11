@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-08-11 — Branded demand library publication
+
+- Recorded Fritz's explicit approval to publish all 64 demand-library articles
+  and 32 supporting FAQs while leaving price and promotional-send gates closed.
+- Added eight original FAMtastic visual concepts, optimized them to responsive
+  WebP assets, and applied them selectively to 32 articles.
+- Added the real FAMtastic mark, descriptive image alternatives, branded
+  captions, mobile-safe image treatment, card imagery, and Article image schema.
+- Verified 64 cards, 32 illustrated cards, branded article presentation, image
+  schema, and zero horizontal overflow at a 375 CSS-pixel mobile viewport.
+
 ## 2026-08-11 — Evidence-led demand engine
 
 - Added one authoritative workflow that turns proven FAMtastic capabilities
