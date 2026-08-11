@@ -31,6 +31,24 @@ Then run `drush php:script scripts/setup-commerce.php` from `backend/`. Both are
 idempotent. Unknown upsells, renewal SKUs, malformed prices, duplicate SKUs, or
 missing required lifecycle definitions fail closed.
 
+## Launch website bundles
+
+- `FAM-FOOT-199` is the Web Basics Bundle: one focused page, one included
+  revision round, domain choice, and one included year of basic hosting;
+  continued hosting is separately authorized through `FAM-HOST-999` at $9.99
+  monthly.
+- `FAM-BUSINESS-499` is the Business Website Bundle: up to five focused pages,
+  lead capture, foundational SEO, analytics connection, two revision rounds,
+  domain choice, and one included year of business hosting; continued hosting
+  is separately authorized through `FAM-HOST-BUSINESS-1999` at $19.99 monthly.
+- Ecommerce, membership, custom integrations, regulated requirements, and
+  requests beyond five pages do not silently fall into either bundle. They are
+  held for scope review and may lead to a custom product or approved private
+  offer.
+- Private prices are one-request, one-account records. Both list and offered
+  amounts are snapshotted into the Commerce order; the base product scope and
+  renewal price do not silently change with the initial discount.
+
 ## Commerce fulfillment contract
 
 A completed Drupal Commerce order is the only trigger for new financial

@@ -553,6 +553,14 @@ function famtastic_pipeline_update_8027(&$sandbox) {
   return t('Added reusable customer website requests that bind pre-purchase intake to Commerce fulfillment.');
 }
 
+/** Adds auditable, account-scoped special prices for website requests. */
+function famtastic_pipeline_update_8028(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_customer_portal_schema()['famtastic_private_offer'];
+  if (!$schema->tableExists('famtastic_private_offer')) $schema->createTable('famtastic_private_offer', $definition);
+  return t('Added account-scoped private Commerce offers.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
@@ -1281,6 +1289,27 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'customer' => ['customer_id', 'changed'],
       'prospect' => ['prospect_id'], 'project' => ['project_id'],
     ],
+  ];
+  $tables['famtastic_private_offer'] = [
+    'description' => 'Account- and request-scoped special Commerce prices with a durable audit trail.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'website_request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'sku' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'list_amount_minor' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'offered_amount_minor' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'currency' => ['type' => 'varchar', 'length' => 3, 'not null' => TRUE, 'default' => 'usd'],
+      'reason' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE, 'default' => ''],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'active'],
+      'expires_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created_by_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'commerce_order_id' => $entity, 'accepted_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => ['request_status' => ['website_request_id', 'status'], 'customer' => ['customer_id', 'status']],
   ];
   $tables['famtastic_portal_thread'] = [
     'description' => 'Project and support conversation threads.',

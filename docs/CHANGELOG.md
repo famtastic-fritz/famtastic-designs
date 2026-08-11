@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-08-10 — Needs-led intake, $499 lifecycle, and private pricing
+
+- Replaced the “new website means $199” shortcut with an exhaustive, versioned
+  discovery interview and explainable package recommendation.
+- Added the $499 Business Website Bundle, business hosting renewal, SKU-driven
+  entitlements, and two-round project delivery contract.
+- Added staff-administered, account/request-scoped private offers that preserve
+  list price, customer price, reason, expiry, ownership, and accepted order.
+- Added a common agent operating contract for Codex, Claude, Shay, and future
+  CLIs plus an evidence-classified FAMtastic capability registry.
+- Expanded synthetic acceptance to prove needs-led $199/$499 routing, ecommerce
+  review gating, and an account-scoped $499-to-$199 private-price order.
+- Browser-verified the 41-control discovery form at a 390×844 mobile viewport
+  with no document overflow.
+
 ## 2026-08-08 — Drupal operations experience
 
 - Replaced the campaign-only `/admin/famtastic` landing page with a task-based

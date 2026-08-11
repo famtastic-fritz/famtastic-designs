@@ -135,6 +135,21 @@ architecture decisions; this file captures what future work must remember.
 
 ## Commerce and recurring services
 
+- Website intake must recommend from needs, not acquisition price. A campaign
+  may introduce $199, but page count, ecommerce, integrations, risk, and desired
+  outcomes decide whether the customer receives Web Basics, Business Website,
+  or a custom scope review.
+- Relationship pricing is safest as an expiring, account/request-scoped offer.
+  Preserve list and offered prices in the Commerce snapshot; reusable public
+  discount codes are the wrong primitive for a one-customer promise.
+- The responsive intake proof at 390×844 rendered 41 controls with no horizontal
+  overflow (`body.scrollWidth` 375 at an inner viewport width of 390). Mobile QA
+  must still validate the browser-visible form, not infer usability from CSS.
+- A Commerce order item's constructor price is recalculated from its purchased
+  variation unless the special unit price is explicitly marked overridden.
+  Account-scoped prices must call `setUnitPrice($price, TRUE)` and retain their
+  list/offer snapshot for audit.
+
 - The $199 Foot in the Door offer is a normal Commerce product reachable from
   any acquisition source, not a campaign-only transaction path.
 - Domain ownership and hosting service are distinct. The customer owns the

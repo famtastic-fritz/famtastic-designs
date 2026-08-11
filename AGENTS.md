@@ -1,5 +1,21 @@
 # Agent Instructions
 
+## Required operating context
+
+- Read `docs/AGENT_OPERATING_CONTRACT.md` before product, customer, Commerce,
+  intake, mail, proof, or deployment work. It applies equally to Codex, Claude,
+  Shay, and every other CLI agent.
+- Use `docs/CAPABILITY_REGISTRY.md` to distinguish implemented, provider-proven,
+  and production-proven capabilities.
+
+## Required operating context
+
+- Read `docs/AGENT_OPERATING_CONTRACT.md` before product, customer, Commerce,
+  intake, mail, proof, or deployment work. It applies equally to Codex, Claude,
+  Shay, and every other CLI agent.
+- Use `docs/CAPABILITY_REGISTRY.md` to distinguish implemented, provider-proven,
+  and production-proven capabilities.
+
 ## Package Managers
 - React frontend in `frontend`: use **npm** and its committed `package-lock.json`.
 - Drupal backend in `backend`: use **Composer** and its committed `composer.lock`.

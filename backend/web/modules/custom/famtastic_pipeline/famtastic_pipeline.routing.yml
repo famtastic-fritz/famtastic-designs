@@ -448,6 +448,15 @@ famtastic_pipeline.launch_approval:
   requirements:
     _permission: 'administer famtastic pipeline'
 
+famtastic_pipeline.website_request_offer:
+  path: '/admin/famtastic/website-request/{website_request}/offer'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\WebsiteRequestOfferForm'
+    _title: 'Create a private website offer'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    website_request: '\d+'
+
 famtastic_pipeline.operations_campaign:
   path: '/admin/famtastic/campaign/{campaign_key}'
   defaults:

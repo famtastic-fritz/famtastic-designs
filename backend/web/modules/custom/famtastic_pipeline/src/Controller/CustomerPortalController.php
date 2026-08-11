@@ -7,8 +7,10 @@ namespace Drupal\famtastic_pipeline\Controller;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
 use Drupal\commerce_product\Entity\ProductVariation;
+use Drupal\commerce_price\Price;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
@@ -33,6 +35,7 @@ final class CustomerPortalController extends ControllerBase {
     private readonly OutreachMailer $mailer,
     private readonly ConfigFactoryInterface $portalConfigFactory,
     private readonly LoggerInterface $logger,
+    private readonly Connection $database,
   ) {}
 
   public static function create(ContainerInterface $container): self {
@@ -44,6 +47,7 @@ final class CustomerPortalController extends ControllerBase {
       $container->get('famtastic_pipeline.mailer'),
       $container->get('config.factory'),
       $container->get('logger.channel.famtastic_pipeline'),
+      $container->get('database'),
     );
   }
 
@@ -195,6 +199,7 @@ final class CustomerPortalController extends ControllerBase {
     if (!$organization) return $this->error('workspace_not_found', 404, 'Customer workspace not found.');
 
     $websiteRequest = NULL;
+    $privateOffer = NULL;
     if (!empty($data['website_request'])) {
       $websiteRequest = $this->portal->ownedWebsiteRequest((int) $customer['id'], (string) $data['website_request']);
       if (!$websiteRequest || (int) $websiteRequest['organization_id'] !== (int) $organization['id']) {
@@ -203,8 +208,13 @@ final class CustomerPortalController extends ControllerBase {
       if (!in_array($websiteRequest['status'], ['submitted', 'checkout_started'], TRUE)) {
         return $this->error('website_request_not_ready', 422, 'Submit the website request before purchasing.');
       }
-      $directCheckout = empty($websiteRequest['recommendation_requested']) && in_array($websiteRequest['project_type'], ['new_website', 'landing_page'], TRUE);
-      if (!$directCheckout) {
+      $requestIntake = json_decode((string) $websiteRequest['intake_data'], TRUE) ?: [];
+      $recommendedSku = (string) ($requestIntake['recommendation']['recommended_sku'] ?? '');
+      $privateOffer = $this->database->select('famtastic_private_offer', 'o')->fields('o')
+        ->condition('website_request_id', (int) $websiteRequest['id'])->condition('customer_id', (int) $customer['id'])
+        ->condition('status', 'active')->condition('expires_at', time(), '>')->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+      if ($privateOffer) $recommendedSku = (string) $privateOffer['sku'];
+      if (!empty($requestIntake['recommendation']['review_required']) || !in_array($recommendedSku, ['FAM-FOOT-199', 'FAM-BUSINESS-499'], TRUE)) {
         return $this->error('website_request_review_required', 422, 'This request needs a FAMtastic recommendation or private offer before checkout.');
       }
       if (!empty($websiteRequest['commerce_order_id'])) {
@@ -218,7 +228,12 @@ final class CustomerPortalController extends ControllerBase {
     foreach ($skus as $sku) {
       if (empty($definitions[$sku]['published'])) return $this->error('product_unavailable', 422, 'One selected service is unavailable.');
     }
-    if (in_array('FAM-FOOT-199', $skus, TRUE)) {
+    if ($websiteRequest && !in_array($recommendedSku, $skus, TRUE)) {
+      return $this->error('recommended_package_required', 422, 'The package in this checkout does not match the website recommendation.');
+    }
+    $websiteSkus = array_values(array_intersect($skus, ['FAM-FOOT-199', 'FAM-BUSINESS-499']));
+    if (count($websiteSkus) > 1) return $this->error('invalid_cart', 422, 'Choose one website bundle per request.');
+    if ($websiteSkus) {
       if (!in_array((string) ($data['domain_choice'] ?? ''), ['new_domain', 'existing_domain'], TRUE)) {
         return $this->error('domain_choice_required', 422, 'Choose a new domain or connect an existing domain.');
       }
@@ -244,6 +259,9 @@ final class CustomerPortalController extends ControllerBase {
         'type' => $variation->getOrderItemTypeId(), 'purchased_entity' => $variation, 'quantity' => 1,
         'unit_price' => $variation->getPrice(), 'title' => $variation->getTitle(),
       ]);
+      if ($privateOffer && $sku === $privateOffer['sku']) {
+        $item->setUnitPrice(new Price(number_format(((int) $privateOffer['offered_amount_minor']) / 100, 2, '.', ''), strtoupper((string) $privateOffer['currency'])), TRUE);
+      }
       $item->save();
       $items[] = $item;
     }
@@ -259,12 +277,14 @@ final class CustomerPortalController extends ControllerBase {
       'marketing_opt_in' => !empty($data['marketing_opt_in']),
       'selected_skus' => $skus,
       'website_request_public_id' => $websiteRequest['public_id'] ?? '',
+      'private_offer' => $privateOffer ? ['public_id' => $privateOffer['public_id'], 'sku' => $privateOffer['sku'], 'list_amount_minor' => (int) $privateOffer['list_amount_minor'], 'offered_amount_minor' => (int) $privateOffer['offered_amount_minor'], 'reason' => $privateOffer['reason']] : NULL,
       'captured_at' => gmdate(DATE_ATOM),
     ]);
     $order->save();
     if ($websiteRequest) {
       $this->portal->bindWebsiteRequestToOrder((int) $customer['id'], (string) $websiteRequest['public_id'], (int) $order->id());
     }
+    if ($privateOffer) $this->database->update('famtastic_private_offer')->fields(['status' => 'accepted', 'commerce_order_id' => (int) $order->id(), 'accepted_at' => time(), 'changed' => time()])->condition('id', $privateOffer['id'])->condition('status', 'active')->execute();
     return $this->noStore(new JsonResponse([
       'ok' => TRUE, 'order_id' => (int) $order->id(),
       'checkout_url' => $request->getSchemeAndHttpHost() . '/web/checkout/' . $order->id(),

@@ -25,7 +25,9 @@ test "$count_before" = "$count_after"
     assert(array_column($variation->get("field_entitlement_keys")->getValue(), "value") === $entitlements, "$sku entitlements");
   };
   $assert("FAM-FOOT-199", "Web Basics Bundle — Website Launch", "199.00", TRUE, ["website_service", "hosting_included_year", "domain_choice"]);
+  $assert("FAM-BUSINESS-499", "Business Website Bundle — Growth Launch", "499.00", TRUE, ["business_website_service", "hosting_business_included_year", "domain_choice", "lead_capture", "foundational_seo", "analytics_connection"]);
   $assert("FAM-HOST-999", "Basic Managed Hosting — Monthly Renewal", "9.99", TRUE, ["hosting_recurring"]);
+  $assert("FAM-HOST-BUSINESS-1999", "Business Managed Hosting — Monthly Renewal", "19.99", TRUE, ["hosting_business_recurring"]);
   $assert("FAM-REVISION-75", "Additional Revision Round", "75.00", TRUE, ["revision_round"]);
   $assert("FAM-PAGE-EXTRA", "Additional Website Page", "149.00", TRUE, ["additional_page"]);
   $assert("FAM-COPY", "Copywriting Assistance", "199.00", TRUE, ["copywriting"]);

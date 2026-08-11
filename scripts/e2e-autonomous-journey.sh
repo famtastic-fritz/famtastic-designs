@@ -272,11 +272,11 @@ website_draft="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $
   \"existing_domain\":\"bakery-$run_id.example\",
   \"primary_goal\":\"Accept cake orders and explain pickup\",
   \"products_services\":\"Cakes, pastries, and custom orders\",
-  \"required_features\":\"Shopping cart, pickup dates, and product options\",
+  \"required_features\":\"Lead form and photo gallery\",
   \"recommendation_requested\":false,
   \"action\":\"save\"
 }" "$BASE/api/customer/website-requests")"
-assert_json "$website_draft" '.ok == true and .website_request.status == "draft" and .website_request.project_type == "landing_page"'
+assert_json "$website_draft" '.ok == true and .website_request.status == "draft" and .website_request.project_type == "landing_page" and .website_request.recommended_sku == "FAM-FOOT-199"'
 website_request_id="$(jq -r '.website_request.public_id' <<<"$website_draft")"
 website_submitted="$(curl -s -b "$cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
   \"project_name\":\"Bakery website $run_id\",
@@ -286,11 +286,11 @@ website_submitted="$(curl -s -b "$cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Tok
   \"existing_domain\":\"bakery-$run_id.example\",
   \"primary_goal\":\"Accept cake orders and explain pickup\",
   \"products_services\":\"Cakes, pastries, and custom orders\",
-  \"required_features\":\"Shopping cart, pickup dates, and product options\",
+  \"required_features\":\"Lead form and photo gallery\",
   \"recommendation_requested\":false,
   \"action\":\"submit\"
 }" "$BASE/api/customer/website-requests/$website_request_id")"
-assert_json "$website_submitted" '.website_request.status == "submitted" and .website_request.submitted_at > 0 and .website_request.direct_checkout_available == true'
+assert_json "$website_submitted" '.website_request.status == "submitted" and .website_request.submitted_at > 0 and .website_request.direct_checkout_available == true and .website_request.recommended_sku == "FAM-FOOT-199"'
 second_request="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
   \"organization\":\"$organization_id\",\"project_name\":\"Second independent site $run_id\",\"business_name\":\"Second Business\",\"project_type\":\"new_website\",\"primary_goal\":\"Generate leads\",\"products_services\":\"Consulting\",\"action\":\"save\"
 }" "$BASE/api/customer/website-requests")"
@@ -301,6 +301,17 @@ review_request="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: 
 assert_json "$review_request" '.website_request.status == "submitted" and .website_request.direct_checkout_available == false'
 review_request_id="$(jq -r '.website_request.public_id' <<<"$review_request")"
 test "$(http_code -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"website_request\":\"$review_request_id\",\"skus\":[\"FAM-FOOT-199\"],\"domain_choice\":\"existing_domain\",\"recurring_authorized\":true,\"accept_terms\":true,\"terms_version\":\"customer_terms_v4_approved\"}" "$BASE/api/customer/checkout")" = "422"
+business_request="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"project_name\":\"Business site $run_id\",\"business_name\":\"Synthetic Growth Co\",\"project_type\":\"new_website\",\"page_count\":4,\"primary_goal\":\"Generate qualified leads\",\"products_services\":\"Professional services\",\"required_features\":\"Lead form, analytics, and SEO\",\"domain_choice\":\"existing_domain\",\"action\":\"submit\"}" "$BASE/api/customer/website-requests")"
+assert_json "$business_request" '.website_request.recommended_sku == "FAM-BUSINESS-499" and .website_request.direct_checkout_available == true'
+business_request_id="$(jq -r '.website_request.public_id' <<<"$business_request")"
+"$DRUSH" eval "
+  \$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$business_request_id')->execute()->fetchAssoc(); \$now = \Drupal::time()->getRequestTime();
+  \$db->insert('famtastic_private_offer')->fields(['public_id' => \Drupal::service('uuid')->generate(), 'website_request_id' => \$request['id'], 'organization_id' => \$request['organization_id'], 'customer_id' => \$request['customer_id'], 'sku' => 'FAM-BUSINESS-499', 'list_amount_minor' => 49900, 'offered_amount_minor' => 19900, 'currency' => 'usd', 'reason' => 'Approved friend launch price', 'status' => 'active', 'expires_at' => \$now + 86400, 'created_by_uid' => 1, 'created' => \$now, 'changed' => \$now])->execute();
+"
+business_checkout="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"website_request\":\"$business_request_id\",\"skus\":[\"FAM-BUSINESS-499\"],\"domain_choice\":\"existing_domain\",\"recurring_authorized\":true,\"accept_terms\":true,\"terms_version\":\"customer_terms_v4_approved\"}" "$BASE/api/customer/checkout")"
+assert_json "$business_checkout" '.ok == true and .order_id > 0'
+business_order_id="$(jq -r '.order_id' <<<"$business_checkout")"
+"$DRUSH" eval "\$order = \Drupal::entityTypeManager()->getStorage('commerce_order')->load($business_order_id); assert((float) \$order->getTotalPrice()->getNumber() === 199.0); \$context = \$order->getData('famtastic_checkout'); assert(\$context['private_offer']['list_amount_minor'] === 49900); assert(\$context['private_offer']['offered_amount_minor'] === 19900);"
 other_email="other-$email"
 other_password="Other-$customer_password"
 other_cookie_jar="$sandbox/other-customer.cookies"

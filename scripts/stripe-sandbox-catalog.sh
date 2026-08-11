@@ -46,7 +46,9 @@ ensure_item() {
 }
 
 ensure_item FAM-FOOT-199 'Web Basics Bundle — Website Launch' 19900 one_time 'One focused landing-page website with one year of managed hosting and a first-year domain choice.'
+ensure_item FAM-BUSINESS-499 'Business Website Bundle — Growth Launch' 49900 one_time 'Up to five focused pages with lead capture, foundational SEO, analytics connection, two revision rounds, and one year of managed hosting.'
 ensure_item FAM-HOST-999 'Basic Managed Hosting — Monthly Renewal' 999 month 'Managed hosting after the included first year; activated only with separate recurring authorization.'
+ensure_item FAM-HOST-BUSINESS-1999 'Business Managed Hosting — Monthly Renewal' 1999 month 'Managed business-site hosting after the included first year; activated only with separate recurring authorization.'
 ensure_item FAM-REVISION-75 'Additional Revision Round' 7500 one_time 'One additional revision round.'
 ensure_item FAM-PAGE-EXTRA 'Additional Website Page' 14900 one_time 'Additional page design and implementation.'
 ensure_item FAM-COPY 'Copywriting Assistance' 19900 one_time 'Professional website copy assistance.'

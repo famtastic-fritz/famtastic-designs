@@ -102,13 +102,14 @@ final class CommerceLifecycleService {
         ->condition('order_id', (int) $order->id())->condition('entitlement_type', $type)->countQuery()->execute()->fetchField();
       if ($exists) continue;
       $billing = $definition['billing'];
+      $renewal = !empty($definition['renewal_sku']) ? ($definitions[$definition['renewal_sku']] ?? NULL) : NULL;
       $includedUntil = !empty($billing['included_period_days']) ? $now + ((int) $billing['included_period_days'] * 86400) : NULL;
       $this->database->insert('famtastic_entitlement')->fields([
         'public_id' => $this->uuid->generate(), 'organization_id' => $organizationId,
         'order_id' => (int) $order->id(), 'entitlement_type' => $type, 'status' => 'active', 'starts_at' => $now,
         'included_until' => $includedUntil, 'renews_at' => $includedUntil,
-        'amount_minor' => $billing['kind'] === 'recurring' ? (int) round(((float) $definition['price']) * 100) : 0,
-        'billing_interval' => $billing['interval'] ?? 'none', 'created' => $now, 'changed' => $now,
+        'amount_minor' => $renewal ? (int) round(((float) $renewal['price']) * 100) : ($billing['kind'] === 'recurring' ? (int) round(((float) $definition['price']) * 100) : 0),
+        'billing_interval' => $renewal['billing']['interval'] ?? $billing['interval'] ?? 'none', 'created' => $now, 'changed' => $now,
       ])->execute();
     }
 
@@ -171,7 +172,8 @@ final class CommerceLifecycleService {
     $projectStorage = $this->entities->getStorage('famtastic_project');
     $project = !empty($fulfillment['project_id']) ? $projectStorage->load((int) $fulfillment['project_id']) : NULL;
     if (!$project) {
-      $revisionLimit = 1 + (in_array('FAM-REVISION-75', (array) ($checkout['selected_skus'] ?? []), TRUE) ? 1 : 0);
+      $revisionLimit = (in_array('FAM-BUSINESS-499', (array) ($checkout['selected_skus'] ?? []), TRUE) ? 2 : 1)
+        + (in_array('FAM-REVISION-75', (array) ($checkout['selected_skus'] ?? []), TRUE) ? 1 : 0);
       $project = $projectStorage->create([
         'prospect_ref' => $prospect->id(), 'intake_ref' => $intake->id(),
         'delivery_status' => 'intake_pending', 'approval_status' => 'pending', 'revision_limit' => $revisionLimit,

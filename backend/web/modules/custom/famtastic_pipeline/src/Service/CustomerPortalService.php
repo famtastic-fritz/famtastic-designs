@@ -303,8 +303,18 @@ final class CustomerPortalService {
     $type = in_array($input['project_type'] ?? '', ['new_website', 'landing_page', 'redesign', 'online_store'], TRUE) ? $input['project_type'] : 'new_website';
     $domain = in_array($input['domain_choice'] ?? '', ['undecided', 'new_domain', 'existing_domain'], TRUE) ? $input['domain_choice'] : 'undecided';
     $text = fn(string $key, int $max = 5000): string => mb_substr(trim(strip_tags((string) ($input[$key] ?? ''))), 0, $max);
-    $intake = [];
-    foreach (['primary_goal', 'ideal_customer', 'products_services', 'required_features', 'content_status', 'style_preferences', 'reference_sites', 'launch_timing', 'notes'] as $key) $intake[$key] = $text($key);
+    $intake = ['schema_version' => 'website_discovery_v2'];
+    foreach ([
+      'primary_goal', 'secondary_goals', 'success_metrics', 'ideal_customer', 'customer_pain_points',
+      'products_services', 'desired_actions', 'required_features', 'integrations', 'page_list',
+      'content_status', 'copywriting_needs', 'photo_asset_status', 'brand_status', 'style_preferences',
+      'reference_sites', 'competitors', 'seo_keywords', 'service_locations', 'business_hours',
+      'contact_details', 'social_profiles', 'accessibility_needs', 'privacy_legal_needs',
+      'ecommerce_details', 'product_count', 'shipping_pickup', 'booking_details', 'ai_agent_goals',
+      'maintenance_needs', 'launch_timing', 'budget_context', 'decision_makers', 'notes',
+    ] as $key) $intake[$key] = $text($key);
+    $intake['page_count'] = max(1, min(100, (int) ($input['page_count'] ?? 1)));
+    $intake['recommendation'] = $this->recommendWebsitePackage($type, $intake);
     if ($status === 'submitted' && ($intake['primary_goal'] === '' || $intake['products_services'] === '')) throw new \InvalidArgumentException('Add the primary goal and what the business sells before submitting.');
     return [
       'status' => $status, 'project_name' => $projectName, 'business_name' => $text('business_name', 255),
@@ -313,11 +323,48 @@ final class CustomerPortalService {
     ];
   }
 
+  /** Creates an explainable recommendation without turning every intake into $199. */
+  private function recommendWebsitePackage(string $type, array $intake): array {
+    $features = mb_strtolower(implode(' ', [
+      $intake['required_features'], $intake['integrations'], $intake['ecommerce_details'],
+      $intake['booking_details'], $intake['ai_agent_goals'],
+    ]));
+    $complexTerms = ['shop', 'cart', 'checkout', 'ecommerce', 'membership', 'portal', 'custom api', 'hipaa', 'inventory', 'subscription'];
+    $complex = $type === 'online_store';
+    foreach ($complexTerms as $term) $complex = $complex || str_contains($features, $term);
+    $pages = (int) ($intake['page_count'] ?? 1);
+    $reasons = [];
+    $addons = [];
+    if ($complex || $pages > 5) {
+      $reasons[] = $complex ? 'The requested functionality needs scope and integration review.' : 'The requested page count exceeds the packaged five-page scope.';
+      return ['recommended_sku' => '', 'label' => 'Custom scope review', 'complexity_score' => 100, 'review_required' => TRUE, 'reasons' => $reasons, 'suggested_addon_skus' => []];
+    }
+    $score = $pages > 1 ? 35 : 0;
+    if ($type === 'redesign') $score += 20;
+    foreach (['lead', 'quote', 'form', 'gallery', 'analytics', 'seo'] as $term) if (str_contains($features, $term)) $score += 8;
+    if ($intake['content_status'] === 'help_needed' || $intake['copywriting_needs'] !== '') $addons[] = 'FAM-COPY';
+    if ($intake['brand_status'] === 'help_needed') $addons[] = 'FAM-BRAND';
+    if ($intake['ai_agent_goals'] !== '') $addons[] = 'FAM-AI-AGENT';
+    if ($pages > 1 || $score >= 30) {
+      $reasons[] = 'A multi-page business presence benefits from structured navigation, lead capture, SEO, and analytics.';
+      return ['recommended_sku' => 'FAM-BUSINESS-499', 'label' => 'Business Website Bundle', 'complexity_score' => min(99, $score), 'review_required' => FALSE, 'reasons' => $reasons, 'suggested_addon_skus' => array_values(array_unique($addons))];
+    }
+    $reasons[] = 'The stated need fits a focused one-page website or landing page.';
+    return ['recommended_sku' => 'FAM-FOOT-199', 'label' => 'Web Basics Bundle', 'complexity_score' => $score, 'review_required' => FALSE, 'reasons' => $reasons, 'suggested_addon_skus' => array_values(array_unique($addons))];
+  }
+
   private function serializeWebsiteRequest(array $row): array {
     $row['intake'] = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    $recommendation = (array) ($row['intake']['recommendation'] ?? []);
+    $offer = $this->database->select('famtastic_private_offer', 'o')->fields('o', ['public_id', 'sku', 'list_amount_minor', 'offered_amount_minor', 'currency', 'reason', 'expires_at'])
+      ->condition('website_request_id', (int) $row['id'])->condition('status', 'active')
+      ->condition('expires_at', $this->time->getRequestTime(), '>')->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    $row['private_offer'] = $offer ?: NULL;
+    $row['recommended_sku'] = (string) ($recommendation['recommended_sku'] ?? '');
+    if ($offer) $row['recommended_sku'] = (string) $offer['sku'];
     $row['direct_checkout_available'] = $row['status'] === 'submitted'
-      && empty($row['recommendation_requested'])
-      && in_array($row['project_type'], ['new_website', 'landing_page'], TRUE);
+      && empty($recommendation['review_required'])
+      && in_array($row['recommended_sku'], ['FAM-FOOT-199', 'FAM-BUSINESS-499'], TRUE);
     foreach (['id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id', 'intake_data'] as $key) unset($row[$key]);
     return $row;
   }

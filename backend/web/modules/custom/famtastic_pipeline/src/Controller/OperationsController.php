@@ -249,7 +249,7 @@ final class OperationsController extends ControllerBase {
     $query = $this->database->select('famtastic_project_request', 'r')->extend(PagerSelectExtender::class);
     $query->leftJoin('famtastic_customer', 'c', 'c.id = r.customer_id');
     $query->leftJoin('famtastic_organization', 'o', 'o.id = r.organization_id');
-    $query->fields('r', ['project_name', 'business_name', 'project_type', 'domain_choice', 'existing_domain', 'recommendation_requested', 'status', 'prospect_id', 'commerce_order_id', 'intake_data', 'submitted_at', 'changed']);
+    $query->fields('r', ['id', 'project_name', 'business_name', 'project_type', 'domain_choice', 'existing_domain', 'recommendation_requested', 'status', 'prospect_id', 'commerce_order_id', 'intake_data', 'submitted_at', 'changed']);
     $query->addField('c', 'display_name', 'customer_name');
     $query->addField('c', 'email', 'customer_email');
     $query->addField('o', 'name', 'organization_name');
@@ -268,7 +268,7 @@ final class OperationsController extends ControllerBase {
         $record['project_name'], $record['organization_name'] ?: $record['business_name'],
         $record['customer_name'] . ' · ' . $record['customer_email'], ucwords(str_replace('_', ' ', $record['project_type'])),
         ['data' => ['#markup' => $this->badge($record['status'])]],
-        $record['recommendation_requested'] ? 'Recommendation' : 'Direct Web Basics',
+        ['data' => Link::fromTextAndUrl('Package / special price', Url::fromRoute('famtastic_pipeline.website_request_offer', ['website_request' => $record['id']]))->toRenderable()],
         ['data' => $prospect], implode("\n", $summary) ?: 'Draft details not added yet', $this->date((int) $record['changed']),
       ];
     }
