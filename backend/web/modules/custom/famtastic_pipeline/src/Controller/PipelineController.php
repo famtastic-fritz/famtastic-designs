@@ -124,6 +124,13 @@ class PipelineController extends ControllerBase {
     if (!$prospect) {
       return $this->error('invalid_or_expired_token', 404);
     }
+    if (!$this->legacyCheckoutEnabled()) {
+      return new JsonResponse([
+        'ok' => FALSE, 'error' => 'account_checkout_required',
+        'message' => 'Create or sign in to your customer account to purchase securely.',
+        'checkout_url' => $this->frontendBase() . '/login?redirect=%2Fbuy',
+      ], 409);
+    }
     $leadOrBeyond = ['lead', 'paid', 'intake_started', 'intake_complete', 'submitted_to_studio', 'proof_ready', 'revision_requested', 'approved', 'launched'];
     if (!in_array($prospect->get('status')->value, $leadOrBeyond, TRUE)) {
       return $this->error('confirm_first', 409, 'Please confirm your business before purchasing.');
@@ -234,6 +241,13 @@ class PipelineController extends ControllerBase {
     if (!$prospect) {
       return $this->error('invalid_or_expired_token', 404);
     }
+    if (!$this->legacyCheckoutEnabled()) {
+      return new JsonResponse([
+        'ok' => FALSE, 'error' => 'account_checkout_required',
+        'message' => 'Purchase add-ons from your customer account so they stay with your order history.',
+        'checkout_url' => $this->frontendBase() . '/login?redirect=%2Fbuy',
+      ], 409);
+    }
     $project = $this->repository->getProject($prospect);
     if (!$project || $project->get('approval_status')->value !== 'revision_requested') {
       return $this->error('revision_addon_unavailable', 409, 'An additional revision is not currently required.');
@@ -331,6 +345,13 @@ class PipelineController extends ControllerBase {
       'currency' => $offer['currency'],
       'gateway_mode' => $gateway->getMode(),
     ]);
+  }
+
+  /** Legacy checkout is allowed only when explicitly configured or local. */
+  private function legacyCheckoutEnabled(): bool {
+    if ((bool) \Drupal::config('famtastic_pipeline.settings')->get('legacy_checkout_enabled')) return TRUE;
+    $host = (string) parse_url($this->frontendBase(), PHP_URL_HOST);
+    return in_array($host, ['localhost', '127.0.0.1'], TRUE);
   }
 
   /**

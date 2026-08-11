@@ -1,5 +1,17 @@
 # Drupal Commerce foundation
 
+## Production sandbox acceptance — 2026-08-11
+
+The branded account checkout is now the active financial path; the legacy token
+checkout is disabled outside local proof runs. Production completed Commerce
+order `1` in Stripe test mode for Web Basics plus one revision add-on ($274).
+The acceptance proved billing address, Payment Element, completed/paid state,
+immutable deal selection, website/hosting/domain-connection/revision
+entitlements, prospect/intake/project creation, customer receipt, and Fritz sale
+notification. Real charging remains intentionally blocked until the owner
+changes the gateway from test to live after reviewing a fresh launch-gate
+report.
+
 ## 2026-08-10 catalog contract
 
 The setup script now seeds an idempotent catalog. The $199 customer-facing offer
@@ -9,10 +21,11 @@ monthly hosting renewal, and $75 revision add-on. The initial add-on catalog now
 uses provisional launch prices selected for testing and can be edited in Drupal.
 Variations store entitlement keys and an intake schema identifier.
 
-This is still a catalog foundation, not the financial source of truth. The
-personalized proof checkout creates custom orders. Commerce Stripe,
-account-required cart checkout, Commerce-order fulfillment, refunds, failed
-subscriptions, and saved payment methods must pass test mode before activation.
+Drupal Commerce is now the financial source of truth for new purchases. The
+custom order ledger remains readable for historical proof-pipeline records but
+cannot start payment outside local testing. Provider-sandbox decline, 3DS,
+subscription, cancellation, and refund behavior is covered by the repeatable
+launch gate; live money remains separately gated.
 
 ## Provisional launch pricing (2026-08-10)
 

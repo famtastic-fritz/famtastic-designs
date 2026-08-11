@@ -20,6 +20,9 @@ famtastic_pipeline.settings:
     sla_alerts_enabled:
       type: boolean
       label: 'Send overdue lead alerts'
+    legacy_checkout_enabled:
+      type: boolean
+      label: 'Allow the legacy prospect-token checkout'
     package:
       type: mapping
       label: 'Offer package'

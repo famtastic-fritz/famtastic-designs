@@ -537,6 +537,12 @@ function famtastic_pipeline_update_8025(&$sandbox) {
   return t('Added durable Commerce fulfillment links to prospect, intake, and project records.');
 }
 
+/** Retires the parallel custom financial checkout outside local proof runs. */
+function famtastic_pipeline_update_8026(&$sandbox) {
+  \Drupal::configFactory()->getEditable('famtastic_pipeline.settings')->set('legacy_checkout_enabled', FALSE)->save();
+  return t('Disabled the legacy prospect-token payment path; purchases now use account-owned Commerce checkout.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();

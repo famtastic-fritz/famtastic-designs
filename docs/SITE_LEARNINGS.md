@@ -1,5 +1,29 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-10/11 — Commerce and launch-gate closure
+
+- A configured catalog does not prove checkout. Production was missing the
+  default order-item type, checkout flow, customer checkout permissions,
+  payment remote-ID field, and Stripe payment-method storage. Update hooks
+  8020–8024 now repair those install-time dependencies idempotently.
+- Stripe Connect had authorized a different account than the authenticated
+  FAMtastic sandbox. Commerce now uses the controlled sandbox credentials,
+  remains in `test` mode, and has a signed endpoint for supported webhooks.
+- A real mobile sandbox purchase proved a $274 order ($199 Web Basics plus a
+  $75 revision), recurring consent, Payment Element completion, exact
+  entitlements, customer receipt, and Fritz alert.
+- Fulfillment now creates and links prospect, intake, and project records. A
+  payment therefore becomes staff-operable onboarding work instead of stopping
+  at an order and entitlement.
+- The parallel prospect-token payment path is disabled outside localhost.
+  Personalized links remain pre-sale proof routes; purchasing uses the branded,
+  account-owned `/buy` and Drupal Commerce flow.
+- `backend/config/famtastic-scenarios.json` is the canonical “what happens if”
+  registry. `scripts/run-launch-gate.sh` produces dated, classified evidence.
+- GA4 reporting is connected and returning real data. Personalized URLs are
+  normalized before analytics dispatch so new token values are not reported as
+  page paths.
+
 ## 2026-08-10 — Product factory and unified lifecycle
 
 - Product configuration is incomplete until the customer-facing deal is also

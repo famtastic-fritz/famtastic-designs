@@ -7,6 +7,7 @@ support_from_email: 'hello@famtasticdesigns.com'
 notification_to_email: 'fritz.medine@gmail.com'
 lead_response_sla_days: 3
 sla_alerts_enabled: true
+legacy_checkout_enabled: false
 # Site Studio proof generation endpoint. Empty = built-in stub generator.
 studio_url: ''
 # Public base URL for proof previews (scheme+host+path prefix, no trailing
