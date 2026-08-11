@@ -85,21 +85,27 @@ function renderDynamicShell(path, title, description) {
 
 async function dynamicRoutes() {
   const source = process.env.FAMTASTIC_SITEMAP_SOURCE_URL || 'https://famtasticdesigns.com/web/jsonapi/node';
-  const types = ['service_page', 'package_page', 'case_study', 'article'];
+  const types = ['service_page', 'package_page', 'case_study', 'blog_post'];
   const routes = [];
   for (const type of types) {
-    const response = await fetch(`${source}/${type}?page%5Blimit%5D=50`, { signal: AbortSignal.timeout(10000) });
-    if (!response.ok) throw new Error(`Sitemap source failed for ${type}: ${response.status}`);
-    const payload = await response.json();
-    for (const node of payload.data || []) {
-      const attributes = node.attributes || {};
-      const path = attributes.path?.alias;
-      if (!attributes.status || !/^\/(services|packages|work|blog)\/[a-z0-9][a-z0-9/-]*$/.test(path || '')) continue;
-      routes.push({
-        path,
-        title: attributes.field_meta_title || attributes.title || 'FAMtastic Designs',
-        description: attributes.field_meta_description || `Learn about ${attributes.title || 'this solution'} from FAMtastic Designs.`,
-      });
+    let next = `${source}/${type}?page%5Blimit%5D=50`;
+    let pages = 0;
+    while (next && pages < 20) {
+      const response = await fetch(next, { signal: AbortSignal.timeout(10000) });
+      if (!response.ok) throw new Error(`Sitemap source failed for ${type}: ${response.status}`);
+      const payload = await response.json();
+      for (const node of payload.data || []) {
+        const attributes = node.attributes || {};
+        const path = attributes.path?.alias;
+        if (!attributes.status || !/^\/(services|packages|work|blog)\/[a-z0-9][a-z0-9/-]*$/.test(path || '')) continue;
+        routes.push({
+          path,
+          title: attributes.field_meta_title || attributes.title || 'FAMtastic Designs',
+          description: attributes.field_meta_description || `Learn about ${attributes.title || 'this solution'} from FAMtastic Designs.`,
+        });
+      }
+      next = payload.links?.next?.href || '';
+      pages += 1;
     }
   }
   return routes;

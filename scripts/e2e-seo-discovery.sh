@@ -11,6 +11,8 @@ grep -q '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' dist/site
 grep -q '<loc>https://famtasticdesigns.com/</loc>' dist/sitemap.xml
 grep -q '<loc>https://famtasticdesigns.com/start/</loc>' dist/sitemap.xml
 grep -q '<loc>https://famtasticdesigns.com/services/ai-chatbot/</loc>' dist/sitemap.xml
+grep -q '<loc>https://famtasticdesigns.com/blog/what-should-a-small-business-website-do/</loc>' dist/sitemap.xml
+test "$(grep -c '<loc>' dist/sitemap.xml)" -ge 80
 grep -q '^Sitemap: https://famtasticdesigns.com/sitemap.xml$' dist/robots.txt
 grep -q '^Disallow: /portal$' dist/robots.txt
 grep -q '<link rel="canonical" href="https://famtasticdesigns.com/services/"' dist/services/index.html

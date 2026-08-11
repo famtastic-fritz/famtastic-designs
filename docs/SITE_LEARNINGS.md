@@ -7,6 +7,10 @@
   series art, selective use rather than mechanical repetition, real brand assets
   over model-generated lettering, descriptive alt text, mobile aspect ratios,
   compressed delivery formats, and structured-data image references.
+- Dynamic sitemap discovery must use the deployed Drupal bundle name and follow
+  JSON:API pagination. Querying the legacy `article` bundle or accepting the
+  first 50 records silently excludes a large governed blog library from search
+  discovery even though the articles are publicly reachable.
 
 - Content generation needs the same source-of-truth discipline as Commerce.
   A canonical manifest prevents taxonomy drift, duplicate posts, disconnected
