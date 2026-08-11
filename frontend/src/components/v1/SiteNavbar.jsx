@@ -95,21 +95,29 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
     })
     .filter(Boolean);
 
-  // The primary nav structure is explicit (Home + dropdowns + ordered links);
-  // the Drupal menu only contributes EXTRA links not already covered, so it
-  // stays a source of truth without duplicating entries.
-  const covered = new Set([
-    '/', '/services', '/packages', '/work', '/blog', '/faq',
-    '/about', '/contact', '/login', '/admin',
-  ]);
-  const extraLinks = normalized.filter((item) => {
-    if (covered.has(item.url)) return false;
-    // Dropdown children (/services/<slug>, /packages/<slug>) are covered by
-    // the dropdowns themselves — never render them as top-level extras.
+  // Drupal owns top-level presence, label, and order. Service/package child
+  // links are represented by the richer dropdown data and are not duplicated.
+  const primaryItems = normalized.filter((item) => {
+    if (item.parent) return false;
     if (item.url.startsWith('/services/') || item.url.startsWith('/packages/')) return false;
-    return true;
+    return !['/login', '/admin'].includes(item.url);
   });
-  const homeItem = normalized.find((item) => item.url === '/');
+
+  function renderPrimaryItem(item, mobile = false) {
+    if (item.url === '/services') {
+      if (mobile) return <NavLink key={item.id} to="/services" className="v1-nav__link">{item.title}</NavLink>;
+      return <Dropdown key={item.id} label={item.title} to="/services" basePath="/services" items={services} />;
+    }
+    if (item.url === '/packages') {
+      if (mobile) return <NavLink key={item.id} to="/packages" className="v1-nav__link">{item.title}</NavLink>;
+      return <Dropdown key={item.id} label={item.title} to="/packages" basePath="/packages" items={packages} />;
+    }
+    if (/^https?:\/\//i.test(item.url)) {
+      return <a key={item.id} className="v1-nav__link" href={item.url}>{item.title}</a>;
+    }
+    const target = item.url === '/contact' ? '/contact#contact-form' : item.url;
+    return <NavLink key={item.id} to={target} end={item.url === '/'} className="v1-nav__link">{item.title}</NavLink>;
+  }
 
   return (
     <header className="v1-header">
@@ -120,37 +128,7 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
         </Link>
 
         <nav className="v1-nav" aria-label="Main navigation">
-          <NavLink to="/" end className="v1-nav__link">
-            {homeItem?.title ?? 'Home'}
-          </NavLink>
-          <Dropdown label="Services" to="/services" basePath="/services" items={services} />
-          <Dropdown label="Packages" to="/packages" basePath="/packages" items={packages} />
-          <NavLink to="/work" className="v1-nav__link">
-            Work
-          </NavLink>
-          <NavLink to="/blog" className="v1-nav__link">
-            Blog
-          </NavLink>
-          <NavLink to="/faq" className="v1-nav__link">
-            FAQ
-          </NavLink>
-          <NavLink to="/about" className="v1-nav__link">
-            About
-          </NavLink>
-          <NavLink to="/contact#contact-form" className="v1-nav__link">
-            Contact
-          </NavLink>
-          {extraLinks.map((item) =>
-            /^https?:\/\//i.test(item.url) ? (
-              <a key={item.id} className="v1-nav__link" href={item.url}>
-                {item.title}
-              </a>
-            ) : (
-              <NavLink key={item.id} className="v1-nav__link" to={item.url}>
-                {item.title}
-              </NavLink>
-            ),
-          )}
+          {primaryItems.map((item) => renderPrimaryItem(item))}
         </nav>
 
         <div className="v1-header__actions">
@@ -175,40 +153,24 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
           <NavLink to="/contact#project-fit" className="v1-btn v1-btn--primary v1-nav-mobile__primary">
             Start a Project
           </NavLink>
-          <NavLink to="/" end className="v1-nav__link">
-            Home
-          </NavLink>
-          <NavLink to="/services" className="v1-nav__link">
-            Services
-          </NavLink>
-          {services.map((item) => (
-            <NavLink key={item.slug} to={`/services/${item.slug}`} className="v1-nav__link v1-nav__link--sub">
-              {item.title}
-            </NavLink>
-          ))}
-          <NavLink to="/packages" className="v1-nav__link">
-            Packages
-          </NavLink>
-          {packages.map((item) => (
-            <NavLink key={item.slug} to={`/packages/${item.slug}`} className="v1-nav__link v1-nav__link--sub">
-              {item.title}
-            </NavLink>
-          ))}
-          <NavLink to="/work" className="v1-nav__link">
-            Work
-          </NavLink>
-          <NavLink to="/blog" className="v1-nav__link">
-            Blog
-          </NavLink>
-          <NavLink to="/faq" className="v1-nav__link">
-            FAQ
-          </NavLink>
-          <NavLink to="/about" className="v1-nav__link">
-            About
-          </NavLink>
-          <NavLink to="/contact#contact-form" className="v1-nav__link">
-            Contact
-          </NavLink>
+          {primaryItems.flatMap((item) => {
+            const links = [renderPrimaryItem(item, true)];
+            if (item.url === '/services') {
+              links.push(...services.map((service) => (
+                <NavLink key={`service-${service.slug}`} to={`/services/${service.slug}`} className="v1-nav__link v1-nav__link--sub">
+                  {service.title}
+                </NavLink>
+              )));
+            }
+            if (item.url === '/packages') {
+              links.push(...packages.map((pkg) => (
+                <NavLink key={`package-${pkg.slug}`} to={`/packages/${pkg.slug}`} className="v1-nav__link v1-nav__link--sub">
+                  {pkg.title}
+                </NavLink>
+              )));
+            }
+            return links;
+          })}
         </nav>
       )}
     </header>

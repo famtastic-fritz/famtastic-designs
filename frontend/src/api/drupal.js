@@ -61,12 +61,12 @@ const STUB_NODES = [
 
 const STUB_MENU = [
   { id: 'stub-menu-home', title: 'Home', url: '/', [STUB_FLAG]: true },
+  { id: 'stub-menu-about', title: 'About', url: '/about', [STUB_FLAG]: true },
   { id: 'stub-menu-services', title: 'Services', url: '/services', [STUB_FLAG]: true },
   { id: 'stub-menu-packages', title: 'Packages', url: '/packages', [STUB_FLAG]: true },
   { id: 'stub-menu-work', title: 'Work', url: '/work', [STUB_FLAG]: true },
   { id: 'stub-menu-blog', title: 'Blog', url: '/blog', [STUB_FLAG]: true },
   { id: 'stub-menu-faq', title: 'FAQ', url: '/faq', [STUB_FLAG]: true },
-  { id: 'stub-menu-about', title: 'About', url: '/about', [STUB_FLAG]: true },
   { id: 'stub-menu-contact', title: 'Contact', url: '/contact', [STUB_FLAG]: true },
 ];
 
@@ -389,7 +389,14 @@ export async function getMenus() {
       const key = `${title}|${url}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      items.push({ id: item.id, title, url, [STUB_FLAG]: false });
+      items.push({
+        id: item.id,
+        title,
+        url,
+        weight: Number(item.attributes?.weight ?? 0),
+        parent: item.attributes?.parent ?? '',
+        [STUB_FLAG]: false,
+      });
     }
     return items.length ? items : STUB_MENU;
   } catch (err) {

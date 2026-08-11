@@ -376,7 +376,7 @@ def main() -> None:
                     "alt": VISUALS[series["key"]][1],
                     "brand_mark": "/brand/famtastic-mark.svg",
                     "caption": f"FAMtastic Designs field guide: {series['context'].title()}",
-                } if sequence in {1, 3, 5, 7} else None),
+                }),
             })
 
     output = {

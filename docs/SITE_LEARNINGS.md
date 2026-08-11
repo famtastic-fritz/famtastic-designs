@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-11 — Headless navigation must have one ordering authority
+
+- Fetching a CMS menu while hardcoding the familiar links in React does not
+  make the menu CMS-controlled. Render the ordered top-level records returned
+  by Drupal, then enhance recognized destinations such as Services and
+  Packages in place.
+- Desktop and mobile navigation must consume the same ordered collection so a
+  Drupal menu edit cannot produce two different customer experiences.
+- A series-level visual is useful brand architecture: applying its image to
+  every article makes the full library visually complete while keeping each
+  eight-part learning journey recognizable.
+
 ## 2026-08-11 — Drupal JSON:API pagination links include the backend base path
 
 - Production Drupal returns absolute `links.next` URLs containing `/web`.

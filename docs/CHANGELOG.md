@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-08-11 — Complete article imagery and Drupal-owned navigation
+
+- Extended the branded series visual system to all 64 published articles so
+  every blog card and article has a consistent, relevant visual treatment.
+- Made Drupal's Main navigation order, labels, and top-level visibility the
+  source of truth for both desktop and mobile React navigation.
+- Preserved enhanced service and package dropdowns while positioning them at
+  the locations configured by Drupal; the production menu places Home first
+  and About second.
+
 ## 2026-08-11 — Public blog pagination repair
 
 - Fixed the frontend JSON:API client to follow Drupal's absolute pagination
