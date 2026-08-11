@@ -16,6 +16,7 @@ import {
   Item,
 } from '../components/v1/index.js';
 import SolutionFinder, { branchForServiceSlug } from '../components/SolutionFinder.jsx';
+import RelatedEducation from '../components/RelatedEducation.jsx';
 
 /**
  * /services/:slug — full v1 detail layout for one service_page node:
@@ -161,6 +162,8 @@ export default function ServicePage() {
           </FadeUp>
         </Section>
       )}
+
+      <RelatedEducation kind="service" slug={slug} />
 
       {/* 8 — START WITH THIS SERVICE (SolutionFinder, branch pre-selected) */}
       <Section

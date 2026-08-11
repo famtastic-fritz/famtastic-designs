@@ -1393,6 +1393,28 @@ a:hover {
   color: var(--v1-text-72);
 }
 
+/* ------------------------------------------------------- 55-cent campaign */
+.campaign-hero { position: relative; min-height: min(760px, 88vh); display: grid; align-items: center; overflow: hidden; }
+.campaign-hero__image, .campaign-hero__shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+.campaign-hero__image { object-fit: cover; }
+.campaign-hero__shade { background: linear-gradient(90deg, rgba(5, 7, 6, .97) 0%, rgba(5, 7, 6, .83) 45%, rgba(5, 7, 6, .18) 100%); }
+.campaign-hero__content { position: relative; z-index: 1; padding-block: 5rem; }
+.campaign-brand-mark { display: block; margin-bottom: 1rem; filter: drop-shadow(0 0 18px rgba(124,252,0,.35)); }
+.campaign-hero h1 { max-width: 760px; margin: 1rem 0 0; font-size: clamp(2.5rem, 6vw, 5.5rem); line-height: .98; letter-spacing: -.045em; color: #fff; }
+.campaign-hero__declaration { max-width: 760px; margin: 1rem 0 0; color: var(--v1-lime); font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: 800; }
+.campaign-hero__lede { max-width: 650px; color: rgba(255,255,255,.82); font-size: clamp(1.05rem, 2vw, 1.35rem); line-height: 1.65; }
+.campaign-disclosure { max-width: 620px; color: rgba(255,255,255,.58); font-size: .82rem; }
+.campaign-explainer-grid { display: grid; gap: 1.2rem; }
+.campaign-explainer { overflow: hidden; border: 1px solid var(--v1-border); border-radius: 24px; background: var(--v1-surface); }
+.campaign-explainer img { display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.campaign-explainer > div { padding: 1.5rem; }
+.campaign-explainer h2 { margin: 0; color: var(--v1-text); }
+.campaign-explainer p { color: var(--v1-text-72); line-height: 1.7; }
+.campaign-anatomy { display: grid; gap: 1.2rem; }
+.campaign-anatomy > img { width: 100%; border-radius: 24px; border: 1px solid var(--v1-border); }
+@media (min-width: 800px) { .campaign-explainer-grid { grid-template-columns: 1fr 1fr; } .campaign-anatomy { grid-template-columns: 1.35fr .65fr; align-items: center; } }
+@media (max-width: 640px) { .campaign-hero { min-height: 720px; align-items: end; } .campaign-hero__image { object-position: 67% center; } .campaign-hero__shade { background: linear-gradient(0deg, rgba(5,7,6,.99) 12%, rgba(5,7,6,.82) 72%, rgba(5,7,6,.32)); } .campaign-hero__content { padding-block: 3rem; } .campaign-hero .v1-hero__actions { flex-direction: column; } .campaign-hero .v1-btn { width: 100%; text-align: center; } }
+
 /* ------------------------------------------------------------ section */
 
 .v1-section {

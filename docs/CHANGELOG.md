@@ -1,5 +1,22 @@
 # Product changelog
 
+## 2026-08-11 — $199 affordability campaign and complete package education
+
+- Added the dedicated `/55-cents-a-day-website` campaign experience around
+  “Cost is not one of them. Period.” with honest annualized math, scope,
+  domain, hosting, renewal, fit, intake, and launch explanations.
+- Expanded the demand library from 64 to 80 published articles across ten
+  connected series, including eight package guides and eight $199 Web Basics
+  education articles with 40 supporting FAQs total.
+- Added four original black, charcoal, and lime campaign visual concepts,
+  applied the real FAMtastic mark in presentation, and reused the images across
+  the campaign articles where relevant.
+- Added Drupal-backed related education to every service and package page.
+- Stopped rendering unsupported legacy seed testimonials; only explicitly
+  reviewed proof fields can now appear on service pages.
+- Added correct `/about` metadata, Organization/WebSite structured data, the
+  campaign route to SEO discovery, and `lastmod` dates to generated sitemaps.
+
 ## 2026-08-11 — Blogs label and production SEO baseline
 
 - Changed the customer-facing section label from Blog/Insights to Blogs while

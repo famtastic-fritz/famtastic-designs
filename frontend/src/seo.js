@@ -18,6 +18,15 @@ export const SEO_PAGES = {
     description:
       'Explore custom websites, intelligent applications, AI-powered systems, and digital experiences engineered by FAMtastic Designs for businesses worldwide.',
   },
+  '/about': {
+    title: 'About FAMtastic Designs | Systems Built Around Your Business',
+    description: 'Meet FAMtastic Designs, an engineering-led studio building useful websites, customer systems, automation, commerce, analytics, and AI experiences.',
+  },
+  '/55-cents-a-day-website': {
+    title: '$199 Website | About 55 Cents a Day | FAMtastic Designs',
+    description: 'Get a professional one-page business website for $199—about 55 cents a day across one year—with first-year basic hosting and a domain path included.',
+    keywords: '$199 website, 55 cents a day website, affordable small business website, domain and hosting included, one page website',
+  },
   '/packages': {
     title: 'Packages | Custom Website & AI Solution Builds',
     description:

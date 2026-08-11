@@ -79,9 +79,10 @@ export function transformServiceNode(node, included = []) {
     processTitle: textValue(attrs.field_process_title),
     processSteps: resolveIncluded(node, included, 'field_process_steps').map(processStep),
     testimonial: {
-      quote: textValue(attrs.field_testimonial_quote) || textValue(attrs.field_proof_quote),
-      attribution:
-        textValue(attrs.field_testimonial_attribution) || textValue(attrs.field_proof_attribution),
+      // Only explicitly reviewed proof fields render. Legacy seed testimonial
+      // fields contained unsupported performance claims and are intentionally ignored.
+      quote: textValue(attrs.field_proof_quote),
+      attribution: textValue(attrs.field_proof_attribution),
     },
     featuresTitle: textValue(attrs.field_features_title),
     features: listValues(attrs.field_features).length

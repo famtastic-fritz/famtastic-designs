@@ -24,6 +24,8 @@ VISUALS = {
     "small-business-automation": ("workflow-automation.webp", "Scattered manual tasks becoming a controlled business workflow with checks and completed outcomes."),
     "website-analytics-decisions": ("analytics-decisions.webp", "Website data moving through a conversion funnel toward a clear business decision."),
     "ai-agents-for-websites": ("ai-website-agent.webp", "An AI website agent grounded in approved content with customer conversations and human support handoff."),
+    "website-packages-explained": ("package-system.webp", "A complete branded website package connecting planning, design, mobile experience, launch, and measurable growth."),
+    "fifty-five-cents-a-day": ("55-cent-website-hero.webp", "A small-business owner crossing from an idea into a polished, professional website."),
 }
 
 
@@ -208,6 +210,50 @@ SERIES = [
             ("How to Test an AI Website Agent Before Launch", "test-ai-website-agent", "test ai agent before launch", "Use scenario suites for normal tasks, ambiguity, unsafe requests, stale data, authorization, failures, and human recovery."),
         ],
     },
+    {
+        "key": "website-packages-explained",
+        "title": "The FAMtastic Website Packages Explained Series",
+        "category": "get-customers",
+        "tags": ["website-packages", "website-strategy", "small-business"],
+        "capabilities": ["website-discovery", "product-onboarding", "commerce-lifecycle"],
+        "thesis": "A useful website package makes scope, deliverables, fit, ownership, next steps, and growth options understandable before a customer buys.",
+        "audience": "Business owners comparing a focused website launch, a broader business site, a landing page, ongoing care, or a custom build.",
+        "context": "website packages and deliverables",
+        "proof": "FAMtastic has implemented structured product definitions, account-aware Commerce checkout, needs-led intake, entitlements, project onboarding, and customer portal delivery.",
+        "source": ["Google Search Central", "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"],
+        "topics": [
+            ("How to Choose the Right FAMtastic Website Package", "choose-the-right-famtastic-website-package", "choose a website package", "Compare each package by customer need, included deliverables, operational complexity, and the next stage of growth."),
+            ("What Is Included in the $199 Web Basics Bundle?", "what-is-included-199-web-basics-bundle", "$199 website package", "Understand the focused one-page build, included first-year hosting, domain choice, intake, launch path, and boundaries of the offer."),
+            ("What Is Included in the $499 Business Website Bundle?", "what-is-included-499-business-website-bundle", "$499 business website package", "See how a broader business website supports more services, customer questions, content, and conversion paths than a basic one-page launch."),
+            ("What Is a Starter Website Package?", "starter-website-package-explained", "starter website package", "Learn when a structured starter site is a better fit than a landing page or a more complex custom build."),
+            ("What Is a Business Website Package?", "business-website-package-explained", "business website package", "Understand how a business website organizes multiple services, trust signals, customer journeys, and lead capture."),
+            ("What Is a Premium Website Plus AI Package?", "premium-website-ai-package-explained", "premium website AI package", "Learn when custom experience, automation, governed AI assistance, and deeper integrations belong in one scoped solution."),
+            ("What Is a Landing Page Package?", "landing-page-package-explained", "landing page package", "Use a focused landing page for one audience, one promise, one campaign, and one measurable next action."),
+            ("What Does a Website Care Plan Include?", "website-care-plan-explained", "website care plan", "Separate ongoing maintenance, monitoring, updates, support, and improvement from the original website build."),
+        ],
+    },
+    {
+        "key": "fifty-five-cents-a-day",
+        "title": "The 55 Cents a Day Website Series",
+        "category": "get-customers",
+        "tags": ["55-cents-a-day", "web-basics", "domain", "hosting", "small-business"],
+        "capabilities": ["website-discovery", "commerce-lifecycle", "product-onboarding"],
+        "thesis": "There may be many reasons a business is still offline; with a $199 professional one-page website offer, cost is not one of them. Period.",
+        "audience": "New and small-business owners who need a credible first website and a clear explanation of what it takes to get online.",
+        "context": "the $199 Web Basics offer",
+        "proof": "FAMtastic has implemented the $199 Web Basics product, secure Commerce checkout, customer intake, first-year hosting entitlement, domain-choice workflow, and project onboarding.",
+        "source": ["ICANN Registrant Program", "https://www.icann.org/resources/pages/registrant-2013-09-17-en"],
+        "topics": [
+            ("A Professional Website for About 55 Cents a Day", "professional-website-55-cents-a-day", "55 cents a day website", "See how a one-time $199 Web Basics purchase averages to about 55 cents per day across one year without pretending it is daily billing."),
+            ("What Is a Domain Name and Why Does Your Business Need One?", "what-is-a-domain-name", "what is a domain name", "Understand the memorable web address customers use to find your business and how registration differs from website ownership and hosting."),
+            ("What Is Website Hosting and What Does It Actually Do?", "what-is-website-hosting", "what is website hosting", "Learn how hosting keeps website files available online and what managed basic hosting means in the Web Basics offer."),
+            ("The Parts of a One-Page Business Website", "parts-of-a-one-page-business-website", "parts of a one page website", "See how a focused page combines identity, offer, proof, customer questions, contact, and a clear next action."),
+            ("What the $199 Website Includes—and What It Does Not", "199-website-inclusions-and-boundaries", "$199 website includes", "Set clear expectations for the one-page build, first-year hosting, domain choice, content intake, and separately scoped ecommerce or custom systems."),
+            ("What Happens After You Buy the $199 Website?", "after-buying-199-website", "$199 website process", "Follow the path from account and payment through intake, content, design, review, launch, and customer portal support."),
+            ("Who Is the $199 Website For?", "who-is-199-website-for", "who needs a basic website", "Decide whether a focused first website fits now or whether ecommerce, multiple services, integrations, or custom workflows need a broader scope."),
+            ("How Your First Website Can Grow With Your Business", "grow-beyond-first-website", "upgrade a basic website", "Start with a useful foundation, then add pages, lead automation, analytics, commerce, portals, support, or AI only when the need is real."),
+        ],
+    },
 ]
 
 
@@ -232,11 +278,25 @@ def build_body(series: dict, topic: tuple, sequence: int, slugs: list[str]) -> s
         f'<li><a href="/blog/{item}">{item.replace("-", " ").title()}</a></li>' for item in related
     )
     role = "pillar guide" if sequence == 1 else "focused guide"
+    campaign_detail = ""
+    if series["key"] == "fifty-five-cents-a-day":
+        campaign_sections = {
+            1: """<h2>The math—and the honest meaning</h2><p>$199 divided across 365 days is approximately $0.545 per day, which rounds to about 55 cents. The Web Basics Bundle is still a <strong>one-time $199 purchase</strong>; FAMtastic does not charge 55 cents each day. The comparison makes the cost easier to understand without changing the way the purchase is billed.</p><p>The offer includes one focused one-page website and one year of basic FAMtastic-managed hosting. If the customer needs a new domain, first-year registration is included when the requested domain is available; customers with a domain already receive connection help instead. After the included year, basic hosting renews at $9.99 per month. Domain renewal is separate, annual, and disclosed before it becomes due.</p>""",
+            2: """<h2>Domain, website, and hosting are different</h2><p>A domain is the address people type or tap. The website is the content and experience they see. Hosting is the managed infrastructure that makes the website available online. A customer owns the registered domain; FAMtastic manages the hosting environment. Keeping those roles separate makes future renewal, transfer, and support decisions clearer.</p>""",
+            3: """<h2>What the included hosting covers</h2><p>Web Basics includes the first year of FAMtastic-managed basic hosting for the purchased site. Beginning after that included term, the basic plan is currently configured to renew at $9.99 per month unless canceled under the disclosed terms. Domain registration is not the same service and renews separately each year.</p>""",
+            4: """<h2>A focused page still has a complete job</h2><p>A strong one-page site normally needs a clear business identity, an understandable offer, reasons to trust the business, answers to common questions, contact information, and one primary next action. The page should also work on a phone, use an owned domain, load securely, and connect inquiries to a real response process.</p>""",
+            5: """<h2>Included, conditional, and separately scoped</h2><p>The $199 Web Basics Bundle includes one focused one-page or landing-page website, responsive implementation, essential contact path, secure launch, one year of basic managed hosting, and either first-year registration of an available new domain or connection of an existing domain. Ecommerce, large catalogs, multi-page content programs, custom applications, complex integrations, and ongoing marketing are not silently folded into the basic price; the intake identifies when one of those needs requires a different package or add-on.</p>""",
+            6: """<h2>From purchase to launch</h2><ol><li>Create or use the customer account and complete secure checkout.</li><li>Choose a new-domain or existing-domain path.</li><li>Complete the website intake with business, audience, offer, content, and contact details.</li><li>FAMtastic confirms scope and builds the focused site.</li><li>The customer reviews the work and supplies required feedback or missing content.</li><li>The approved site is launched and its service details remain visible in the customer portal.</li></ol><p>Delivery timing begins when the required intake and customer materials are complete and is confirmed in the project; this article does not promise an unsupported universal turnaround time.</p>""",
+            7: """<h2>A fit decision, not a forced sale</h2><p>The offer is designed for a business that needs a credible, focused web presence and can tell its core story on one page. A bakery that needs a shopping cart, a company with many distinct services, or a workflow that needs customer accounts and integrations may need a broader package. The intake should identify that need and let FAMtastic recommend the correct scope, while account-specific pricing or a documented discount can be applied without pretending the work is smaller.</p>""",
+            8: """<h2>The first site is a foundation</h2><p>A customer can begin with the smallest complete site, then add capabilities because the business needs them—not because the original offer hid them. Common growth paths include extra pages, local SEO, content, lead automation, analytics, scheduling, ecommerce, maintenance, customer portals, and governed AI assistance. Every addition should define its deliverable, price or approval state, intake questions, entitlement, support path, and proof scenario.</p>""",
+        }
+        campaign_detail = campaign_sections[sequence]
     body = f"""
 <p><strong>{html.escape(sentence(angle))}</strong> That is the practical answer behind this {role}. The useful question is not whether a business can add another page, form, dashboard, automation, or AI feature. It is whether the change makes an important customer decision easier and gives the business a reliable way to respond.</p>
 <p>{html.escape(series['audience'])} can use this guide to define the work before choosing software or approving a build. The examples follow FAMtastic's evidence boundary: {html.escape(series['proof'])} This article explains a repeatable method and does not claim that the same configuration or result fits every business.</p>
 <h2>Key takeaways</h2>
 <ul><li>Begin with the customer action and the business responsibility that follows it.</li><li>Record ownership, timing, data, exceptions, and the definition of done before automating the path.</li><li>Choose the smallest useful implementation that can be tested without blocking later growth.</li><li>Measure completed outcomes and customer effort, not activity alone.</li><li>Keep commercial promises and production changes behind an explicit approval step.</li></ul>
+{campaign_detail}
 <h2>What does {html.escape(keyword)} mean in practice?</h2>
 <p>{html.escape(sentence(angle))} In practice, that means describing the starting condition, the person who needs help, the decision or task they are trying to complete, and what must happen afterward. A page is not complete because it looks polished. A workflow is not complete because one happy-path test passes. The system must make the next action understandable and preserve enough context for the business to follow through.</p>
 <p>The strongest design starts in ordinary language. Write down what the customer sees, what they need to know, what they can do, what confirmation they receive, and who owns the next step. Then map the data and system behavior underneath that experience. This order keeps technology subordinate to the customer and prevents internal labels from leaking into the public experience.</p>
@@ -288,6 +348,11 @@ def main() -> None:
         "ai-agents": "AI Agents",
         "drupal": "Drupal",
         "react": "React",
+        "website-packages": "Website Packages",
+        "55-cents-a-day": "55 Cents a Day",
+        "web-basics": "Web Basics",
+        "domain": "Domains",
+        "hosting": "Hosting",
     }
     for key, label in extra_tags.items():
         tags[key] = {"key": key, "label": label}
@@ -330,6 +395,15 @@ def main() -> None:
                 f"how to plan {series['context']}",
                 f"{series['context']} best practices",
             ]
+            visual_file, visual_alt = VISUALS[series["key"]]
+            if series["key"] == "fifty-five-cents-a-day":
+                campaign_visuals = [
+                    ("55-cent-website-hero.webp", "A small-business owner crossing from an idea into a polished professional website."),
+                    ("domain-explained.webp", "A business location connected through a clear digital address to its website."),
+                    ("hosting-explained.webp", "Protected managed hosting infrastructure keeping a business website available online."),
+                    ("one-page-anatomy.webp", "The connected sections and systems that make a one-page business website useful."),
+                ]
+                visual_file, visual_alt = campaign_visuals[(sequence - 1) % len(campaign_visuals)]
             posts.append({
                 "key": slug,
                 "series": series["key"],
@@ -372,8 +446,8 @@ def main() -> None:
                 "internal_links": links,
                 "sources": [{"name": series["source"][0], "url": series["source"][1], "type": "primary"}],
                 "visual": ({
-                    "src": f"/blog-images/{VISUALS[series['key']][0]}",
-                    "alt": VISUALS[series["key"]][1],
+                    "src": f"/blog-images/{visual_file}",
+                    "alt": visual_alt,
                     "brand_mark": "/brand/famtastic-mark.svg",
                     "caption": f"FAMtastic Designs field guide: {series['context'].title()}",
                 }),
@@ -385,7 +459,7 @@ def main() -> None:
             "broad_publish_approved": True,
             "live_price_changes_approved": False,
             "promotional_send_approved": False,
-            "notes": "Fritz explicitly approved publication of all 64 articles and their supporting FAQs on 2026-08-11. Live price changes and promotional sends remain gated.",
+            "notes": "Fritz explicitly approved the 64-article library and requested the website-package and 55-cents-a-day series for immediate publication on 2026-08-11. Live price changes and promotional sends remain gated.",
         },
         "capabilities": current["capabilities"],
         "categories": current["categories"],

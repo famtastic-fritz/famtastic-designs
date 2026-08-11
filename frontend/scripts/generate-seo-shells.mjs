@@ -102,6 +102,7 @@ async function dynamicRoutes() {
           path,
           title: attributes.field_meta_title || attributes.title || 'FAMtastic Designs',
           description: attributes.field_meta_description || `Learn about ${attributes.title || 'this solution'} from FAMtastic Designs.`,
+          lastmod: attributes.changed?.slice(0, 10) || '',
         });
       }
       next = payload.links?.next?.href || '';
@@ -125,10 +126,13 @@ for (const route of discoveredRoutes) {
   await writeFile(target, renderDynamicShell(route.path, route.title, route.description));
 }
 
+const changedByPath = new Map(discoveredRoutes.map((route) => [route.path, route.lastmod]));
+const buildDate = new Date().toISOString().slice(0, 10);
 const sitemapPaths = [...new Set([...Object.keys(SEO_PAGES), ...discoveredRoutes.map((route) => route.path)])];
 const sitemapUrls = sitemapPaths.map((path) => {
   const canonical = `https://famtasticdesigns.com${path === '/' ? '/' : `${path}/`}`;
-  return `  <url>\n    <loc>${escapeHtml(canonical)}</loc>\n  </url>`;
+  const lastmod = changedByPath.get(path) || buildDate;
+  return `  <url>\n    <loc>${escapeHtml(canonical)}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`;
 });
 
 await writeFile(

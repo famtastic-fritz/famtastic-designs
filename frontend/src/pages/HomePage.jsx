@@ -142,6 +142,13 @@ export default function HomePage() {
         <SolutionFinder />
       </Section>
 
+      <CTABanner
+        title="A professional website for about 55 cents a day."
+        body="There may be a hundred reasons your business still doesn’t have a website. Cost is not one of them. Period. See what the $199 Web Basics offer includes before you decide."
+        primaryCta={{ label: 'Explore the $199 website', href: '/55-cents-a-day-website' }}
+        secondaryCta={{ label: 'Start my website', href: '/buy' }}
+      />
+
       <StatsBar items={stats} />
 
       <Section

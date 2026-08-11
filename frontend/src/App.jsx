@@ -31,6 +31,7 @@ import CustomerPortalDashboard from './pages/CustomerPortalDashboard.jsx';
 import VerifyEmailPage from './pages/VerifyEmailPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PurchasePage from './pages/PurchasePage.jsx';
+import FiftyFiveCentWebsitePage from './pages/FiftyFiveCentWebsitePage.jsx';
 
 export default function App() {
   return (
@@ -65,6 +66,7 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/start" element={<StartPage />} />
           <Route path="/buy" element={<PurchasePage />} />
+          <Route path="/55-cents-a-day-website" element={<FiftyFiveCentWebsitePage />} />
 
           {/* Legacy /content/* URLs → clean routes. */}
           <Route path="/content/page" element={<Navigate to="/" replace />} />

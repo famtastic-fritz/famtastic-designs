@@ -6,6 +6,7 @@ import { transformPackageNode } from '../lib/drupalAdapter.js';
 import { applySeo } from '../components/SEO.jsx';
 import { packageSeo } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp, Stagger, Item } from '../components/v1/index.js';
+import RelatedEducation from '../components/RelatedEducation.jsx';
 
 /**
  * /packages/:slug — v1 detail page for one package_page node: hero with
@@ -53,7 +54,7 @@ export default function PackagePage() {
   }
 
   const included = plan.whatsIncluded.length ? plan.whatsIncluded : plan.features;
-  const isWebBasics = /199|web basics|landing page/i.test(`${plan.price} ${plan.title}`);
+  const isWebBasics = /199|web basics/i.test(`${plan.price} ${plan.title}`);
   const cta = isWebBasics ? { label: 'Buy Web Basics securely', href: '/buy' } : { label: plan.ctaText, href: plan.ctaHref };
 
   return (
@@ -108,9 +109,11 @@ export default function PackagePage() {
         </Section>
       )}
 
+      <RelatedEducation kind="package" slug={slug} />
+
       <CTABanner
         title="Ready to get started?"
-        body="Final scope is confirmed after a short consultation — the price you see is the price you pay."
+        body="The listed package price applies to its defined scope. Intake confirms fit, and any different scope or optional add-on is explained before approval."
         primaryCta={cta}
         secondaryCta={{ label: 'Contact', href: '/contact' }}
       />

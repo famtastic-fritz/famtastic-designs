@@ -35,8 +35,8 @@ export default function PackagesHubPage() {
         title="Simple, honest"
         accent="pricing"
         lede="Fixed-scope packages engineered to ship — pick a starting lane and final scope is confirmed after a short consultation so the project fits your goals, timeline, and budget."
-        primaryCta={{ label: 'Start — $199', href: '/packages/199-quick-start' }}
-        secondaryCta={{ label: 'Find Your Fit', href: '/contact#project-fit' }}
+        primaryCta={{ label: 'See the $199 website offer', href: '/55-cents-a-day-website' }}
+        secondaryCta={{ label: 'Find Your Fit', href: '/start' }}
       />
 
       <Section>
@@ -63,10 +63,10 @@ export default function PackagesHubPage() {
       </Section>
 
       <CTABanner
-        title="Every engagement starts at $199."
-        body="A fixed-price discovery build: a working proof of your system, verified before you commit to the full build."
-        primaryCta={{ label: 'Start Your Project — $199', href: '/packages/199-quick-start' }}
-        secondaryCta={{ label: 'Contact', href: '/contact' }}
+        title="Need a focused first website? Start at $199."
+        body="Web Basics is a defined one-page website offer—not the default price for every project. Learn what it includes, then use the assessment when your business needs more."
+        primaryCta={{ label: 'Understand the $199 offer', href: '/55-cents-a-day-website' }}
+        secondaryCta={{ label: 'Find the right package', href: '/start' }}
       />
     </>
   );
