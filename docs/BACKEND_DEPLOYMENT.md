@@ -45,8 +45,8 @@ The script:
 4. backs up the current custom module, admin theme, dependencies, configuration,
    and Drupal database;
 5. stages and swaps the custom module and admin theme;
-6. runs `drush updatedb -y`, imports only the governed demand-library field
-   configuration, and seeds the idempotent draft library;
+6. runs `drush updatedb -y`, idempotently installs the governed demand-library
+   fields through Drupal's entity API, and seeds the idempotent draft library;
 7. rebuilds caches and verifies the sitemap route and pipeline entity definitions;
 8. records the commit, timestamp, PHP version, code/config backup paths, database
    backup, and demand-manifest version in `~/public_html/.backend-release`.
@@ -55,6 +55,11 @@ The demand seed is intentionally fail-closed: generated content remains
 unpublished unless both the item and the manifest-wide publication approval are
 explicitly enabled. Re-running the deployment updates matching records rather
 than duplicating them.
+
+The field installer mirrors the checked-in field configuration but uses
+Drupal's entity API. This avoids partial-import dependency failures caused by a
+form display legitimately depending on configuration outside the small import
+set.
 
 Composer validation uses the deployment-owned writable temporary directory at
 `~/deploy/famtastic-designs/tmp`; shared-host `/tmp` permissions are not part of

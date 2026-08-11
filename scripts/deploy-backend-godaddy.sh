@@ -83,6 +83,7 @@ production_services="$production_dir/web/sites/default/services.yml"
 source_product_config="$backend_dir/config/famtastic-products.json"
 source_deal_config="$backend_dir/config/famtastic-deal-terms.json"
 source_demand_manifest="$backend_dir/config/famtastic-content-series.json"
+source_demand_fields="$backend_dir/scripts/install-demand-content-fields.php"
 source_demand_seed="$backend_dir/scripts/seed-demand-content.php"
 production_config_dir="$production_dir/config"
 drush="$production_dir/vendor/bin/drush"
@@ -162,6 +163,7 @@ test -f "$source_services"
 test -f "$source_product_config"
 test -f "$source_deal_config"
 test -f "$source_demand_manifest"
+test -f "$source_demand_fields"
 test -f "$source_demand_seed"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" validate \
   --no-check-publish --no-interaction
@@ -258,20 +260,8 @@ TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
 "$drush" updatedb -y
 "$drush" pm:enable commerce_stripe metatag redirect simple_sitemap -y
-demand_config_stage="$deploy_dir/tmp/demand-config-$commit_sha"
-rm -rf "$demand_config_stage"
-mkdir -p "$demand_config_stage"
-for config_name in \
-  field.storage.node.field_seo_brief.yml \
-  field.storage.node.field_word_count.yml \
-  field.field.node.blog_post.field_seo_brief.yml \
-  field.field.node.blog_post.field_word_count.yml \
-  core.entity_form_display.node.blog_post.default.yml; do
-  install -m 0644 "$backend_dir/config/site/$config_name" "$demand_config_stage/$config_name"
-done
-"$drush" config:import --partial --source="$demand_config_stage" -y
+"$drush" php:script "$source_demand_fields"
 "$drush" php:script "$source_demand_seed"
-rm -rf "$demand_config_stage"
 "$drush" cr
 # A second process-level rebuild is required on this host after first-time
 # module discovery; otherwise the sitemap writer can see stale router state.
