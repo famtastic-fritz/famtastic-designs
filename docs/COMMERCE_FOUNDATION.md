@@ -68,9 +68,19 @@ Drupal's gateway webhook. Drupal returned HTTP 200 for every event. This is test
 provider proof only; it does not authorize or activate production charges.
 
 Drupal Commerce is the catalog, cart, promotion, checkout, and order foundation
-for future FAMtastic offers and upsells. The existing pipeline checkout remains
-the live payment path until Commerce Stripe is installed, configured in test
-mode, verified by webhook, and explicitly promoted to live mode.
+for FAMtastic offers and upsells. On 2026-08-11 the production Commerce gateway
+was explicitly promoted to Stripe live mode after the sandbox browser proof.
+The live gateway is `famtastic_stripe_live`; the historical sandbox gateway is
+retained but disabled. Its dedicated live webhook is
+`/web/payment/notify/famtastic_stripe_live` and subscribes to the seven events
+required by Commerce Stripe. Credentials remain server-owned and are never
+stored in Git.
+
+This is **production configuration proof**, not proof of a completed live
+financial transaction. No real card was charged during promotion. The first
+real order must therefore be monitored in Stripe and Drupal through payment,
+webhook, receipt, fulfillment, and notification before live transaction proof
+can be claimed.
 
 ## Product architecture
 
@@ -111,6 +121,12 @@ Before sending any customer through Commerce checkout:
 5. Map a paid Commerce order to the pipeline project/fulfillment record.
 6. Obtain explicit approval before changing to live credentials or charging a
    real customer.
+
+Steps 1–6 were completed for gateway activation on 2026-08-11. Promotion also
+found and repaired missing `stripe_card` payment-method field tables after a
+timestamped pre-change database backup. The live gateway verified its server
+credential against a Stripe response with `livemode=true`; the sandbox gateway
+was then disabled. A real live charge remains intentionally unperformed.
 
 ## Customer lifecycle catalog
 

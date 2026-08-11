@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-11 — Stripe live activation
+
+- Promote Commerce by creating a separate live gateway and disabling the test
+  gateway, rather than overwriting the historical sandbox entity. This keeps
+  old test orders intelligible and gives live webhooks a stable, explicit URL.
+- Reuse the server-owned live credential already held outside configuration;
+  never move it through Git or documentation. Verify Stripe itself returns
+  `livemode=true` before enabling the gateway.
+- Gateway activation exposed missing Commerce Stripe bundle-field tables even
+  though Drupal reported no pending database updates. The safe repair was a
+  timestamped database backup followed by the module's bundle installer and a
+  cache rebuild.
+- “Live enabled” is production configuration proof. It is not live transaction
+  proof until a real customer payment, signed webhook, Commerce payment/order,
+  receipt, fulfillment, and staff notification are observed together.
+
 ## 2026-08-11 — Reusable website requests
 
 - Intake belongs to a project/request, never directly to a customer. A durable
