@@ -52,11 +52,32 @@ export function textValue(v) {
   return String(v);
 }
 
+/** Plain text for cards, headings, labels, metadata, and other text nodes. */
+export function plainTextValue(v) {
+  const raw = textValue(v);
+  if (!raw) return '';
+
+  return String(raw)
+    .replace(/<\s*br\s*\/?>/gi, ' ')
+    .replace(/<\/(p|div|li|h[1-6])\s*>/gi, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;|&#160;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;|&#34;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(parseInt(code, 16)))
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 /** Normalize a multi-value text field into a clean string array. */
 export function listValues(v) {
   if (!Array.isArray(v)) return [];
   return v
-    .map((item) => textValue(item).trim())
+    .map((item) => plainTextValue(item))
     .filter(Boolean);
 }
 
@@ -84,7 +105,7 @@ export function isExternalHref(href) {
 export function paraField(resource, keys) {
   const attrs = resource?.attributes ?? {};
   for (const key of keys) {
-    const val = textValue(attrs[key]);
+    const val = plainTextValue(attrs[key]);
     if (val) return val;
   }
   return '';

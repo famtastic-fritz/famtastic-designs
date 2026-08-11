@@ -15,6 +15,7 @@ import {
   listValues,
   nodeSlug,
   paraField,
+  plainTextValue,
   textValue,
   titleSlug,
 } from '../utils/content.js';
@@ -70,7 +71,7 @@ export function transformServiceNode(node, included = []) {
     icon: textValue(attrs.field_service_icon),
     sortOrder: Number(attrs.field_sort_order) || 0,
     headline: textValue(attrs.field_hero_headline) || attrs.title || 'Service',
-    subheadline: textValue(attrs.field_hero_subheadline),
+    subheadline: plainTextValue(attrs.field_hero_subheadline),
     painPointsTitle: textValue(attrs.field_pain_points_title),
     painPoints: listValues(attrs.field_pain_points),
     solutionTitle: textValue(attrs.field_solution_title),
@@ -118,7 +119,7 @@ export function transformPackageNode(node, included = []) {
     features: listValues(attrs.field_features),
     whatsIncluded: listValues(attrs.field_whats_included),
     headline: textValue(attrs.field_hero_headline) || attrs.title || 'Package',
-    subheadline: textValue(attrs.field_hero_subheadline),
+    subheadline: plainTextValue(attrs.field_hero_subheadline),
     ctaText: textValue(attrs.field_cta_text) || 'Get Started',
     ctaHref: linkHref(attrs.field_cta_link),
     addons: resolveIncluded(node, included, 'field_addons').map((addon, i) => ({
@@ -146,8 +147,8 @@ export function transformHomepageNode(node, included = []) {
 
   return {
     id: node.id,
-    headline: textValue(attrs.field_hero_headline),
-    subheadline: textValue(attrs.field_hero_subheadline),
+    headline: plainTextValue(attrs.field_hero_headline),
+    subheadline: plainTextValue(attrs.field_hero_subheadline),
     primaryCta: {
       label: textValue(attrs.field_cta_primary_text) || 'Start Your Project',
       href: linkHref(attrs.field_cta_primary_link, '/contact'),
