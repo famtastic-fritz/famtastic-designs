@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-11 — Drupal JSON:API pagination links include the backend base path
+
+- Production Drupal returns absolute `links.next` URLs containing `/web`.
+  Request those links directly; prefixing `VITE_DRUPAL_BASE_URL` again creates
+  `/web/web/jsonapi` and can make a successful first page appear empty.
+- Public collections expected to exceed Drupal's 50-item page limit must be
+  acceptance-tested in an anonymous browser, not only counted through the API
+  or sitemap.
+
 ## 2026-08-11 — Demand creation as a governed product system
 
 - A large editorial library still feels unfinished when its presentation is

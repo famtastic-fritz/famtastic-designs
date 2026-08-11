@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-08-11 — Public blog pagination repair
+
+- Fixed the frontend JSON:API client to follow Drupal's absolute pagination
+  links without duplicating the production `/web` base path.
+- Restored all 64 published articles on the anonymous `/blog` listing and
+  direct article routes.
+- Rebuilt the frontend and reran SEO discovery acceptance before deployment.
+
 ## 2026-08-11 — Branded demand library publication
 
 - Recorded Fritz's explicit approval to publish all 64 demand-library articles

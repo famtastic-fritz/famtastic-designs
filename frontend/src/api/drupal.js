@@ -81,7 +81,12 @@ const STUB_MENU = [
  * @returns {Promise<object>} Parsed JSON:API document.
  */
 async function apiFetch(path) {
-  const res = await fetch(`${DRUPAL_BASE}${path}`, {
+  // Drupal's JSON:API pagination links are absolute URLs and already include
+  // the backend base path ("/web" in production). Accept those links as-is;
+  // prefixing DRUPAL_BASE again would request /web/web/jsonapi and discard an
+  // otherwise successful first page of results.
+  const requestUrl = /^https?:\/\//i.test(path) ? path : `${DRUPAL_BASE}${path}`;
+  const res = await fetch(requestUrl, {
     headers: { Accept: 'application/vnd.api+json' },
     credentials: 'omit', // anonymous access only — never send cookies.
   });
@@ -570,8 +575,7 @@ export async function getNodesRaw(type, { include = '', limit = 50 } = {}) {
       }
       const next = json.links?.next?.href ?? json.links?.next ?? '';
       if (!next) break;
-      const parsed = new URL(next, window.location.origin);
-      path = `${parsed.pathname}${parsed.search}`;
+      path = new URL(next, window.location.origin).href;
       pages += 1;
     }
     return {
