@@ -29,7 +29,7 @@ export const SEO_PAGES = {
       'See FAMtastic Designs project examples, case studies, and custom AI business solutions engineered for real outcomes.',
   },
   '/blog': {
-    title: 'Blog | Agentic AI, Web Engineering & Digital Solutions',
+    title: 'Blogs | Agentic AI, Web Engineering & Digital Solutions',
     description:
       'Read practical notes from FAMtastic Designs on agentic AI, custom websites, business applications, digital transformation, and solution engineering.',
   },

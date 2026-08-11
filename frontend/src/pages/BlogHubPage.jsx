@@ -41,7 +41,7 @@ export default function BlogHubPage() {
   return (
     <>
       <Hero
-        eyebrow="Blog"
+        eyebrow="Blogs"
         title="Notes from the"
         accent="studio"
         lede="Practical thinking on agentic AI, automation, and engineering systems that sell."

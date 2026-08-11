@@ -440,7 +440,7 @@ foreach ($node_storage->loadByProperties(['type' => 'faq_item']) as $faq) {
 // ===========================================================================
 // 6. Main menu restructure.
 //    Home | Solutions (6 children) | Packages (7 children) | Work |
-//    Insights (/blog) | About | Contact. FAQ link removed.
+//    Blogs (/blog) | About | Contact. FAQ link removed.
 // ===========================================================================
 echo "\n=== 6. MAIN MENU ===\n";
 
@@ -466,7 +466,7 @@ $top_level = [
   'Services' => ['Solutions', 'internal:/services', 2, TRUE],
   'Packages' => ['Packages', 'internal:/packages', 3, TRUE],
   'Work' => ['Work', 'internal:/work', 4, FALSE],
-  'Blog' => ['Insights', 'internal:/blog', 5, FALSE],
+  'Blog' => ['Blogs', 'internal:/blog', 5, FALSE],
   'About' => ['About', 'internal:/about', 6, FALSE],
   'Contact' => ['Contact', 'internal:/contact', 7, FALSE],
 ];

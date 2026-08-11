@@ -83,13 +83,13 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Normalize menu items from any source (Drupal menu or stub fallback):
-  // drop "Pages" entries, rename "Articles" → "Blog", and map legacy
+  // drop "Pages" entries, rename legacy "Articles" → "Blogs", and map legacy
   // /content/* URLs to their clean routes.
   const normalized = menuItems
     .map((item) => {
       if (item.title === 'Pages' || item.url === '/content/page') return null;
       if (item.title === 'Articles' || item.url === '/content/article') {
-        return { ...item, title: 'Blog', url: '/blog' };
+        return { ...item, title: 'Blogs', url: '/blog' };
       }
       return item;
     })

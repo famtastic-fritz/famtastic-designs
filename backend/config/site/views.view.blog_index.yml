@@ -10,7 +10,7 @@ dependencies:
     - node
     - user
 id: blog_index
-label: Blog
+label: Blogs
 module: views
 description: 'Public blog index listing all blog posts, newest first.'
 tag: default
@@ -23,7 +23,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: Blog
+      title: Blogs
       fields:
         title:
           id: title

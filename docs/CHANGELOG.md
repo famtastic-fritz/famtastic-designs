@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-08-11 — Blogs label and production SEO baseline
+
+- Changed the customer-facing section label from Blog/Insights to Blogs while
+  preserving the established `/blog` URL and canonical paths.
+- Added a production SEO audit covering 85 sitemap URLs, rendered/raw metadata,
+  schema, crawlability, security, mobile/desktop Lighthouse, content quality,
+  local visibility, and a prioritized remediation sequence.
+
 ## 2026-08-11 — Complete article imagery and Drupal-owned navigation
 
 - Extended the branded series visual system to all 64 published articles so

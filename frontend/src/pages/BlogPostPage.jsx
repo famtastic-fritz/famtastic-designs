@@ -57,7 +57,7 @@ export default function BlogPostPage() {
     graph.push({
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Blog', item: 'https://famtasticdesigns.com/blog/' },
+        { '@type': 'ListItem', position: 1, name: 'Blogs', item: 'https://famtasticdesigns.com/blog/' },
         ...(state.post.series ? [{ '@type': 'ListItem', position: 2, name: state.post.series, item: canonical }] : []),
         { '@type': 'ListItem', position: state.post.series ? 3 : 2, name: state.post.title, item: canonical },
       ],
@@ -114,7 +114,7 @@ export default function BlogPostPage() {
 
   return (
     <article>
-      <Hero eyebrow={post.dateLabel || 'Blog'} title={post.title} lede={post.summary} />
+      <Hero eyebrow={post.dateLabel || 'Blogs'} title={post.title} lede={post.summary} />
 
       <Section>
         <Link to="/blog" className="v1-back-link">

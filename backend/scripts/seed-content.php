@@ -107,7 +107,7 @@ $menu_items = [
   ['Services', 'internal:/services'],
   ['Work', 'internal:/work'],
   ['Packages', 'internal:/packages'],
-  ['Blog', 'internal:/blog'],
+  ['Blogs', 'internal:/blog'],
   ['FAQ', 'internal:/faq'],
   ['About', 'internal:/about'],
   ['Contact', 'internal:/contact'],

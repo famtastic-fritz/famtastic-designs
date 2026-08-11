@@ -52,7 +52,7 @@ export default function SiteFooter({ services = [], packages = [] }) {
           <p className="v1-footer__heading">Company</p>
           <Link to="/about">About</Link>
           <Link to="/work">Work</Link>
-          <Link to="/blog">Blog</Link>
+          <Link to="/blog">Blogs</Link>
           <Link to="/faq">FAQ</Link>
           <Link to="/contact">Contact</Link>
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
