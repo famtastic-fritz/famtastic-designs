@@ -21,6 +21,13 @@ Use `http://127.0.0.1:4007` consistently. The runtime's `MAIN_URL`,
 cookie is accepted; mixing `localhost` and `127.0.0.1` causes a successful API
 login to appear as an endless browser spinner.
 
+If the Keychain credential and the database password hash become inconsistent,
+reset the single LOCAL owner's password to a newly generated value, bcrypt-hash
+it using the pinned Postiz runtime, update only the exact LOCAL user row, replace
+the Keychain item, and verify `/api/auth/login` returns HTTP 200. Never print the
+credential, put it in shell history, or store it in Git. This recovery was
+performed successfully on 2026-08-12 for `fritz.medine@gmail.com`.
+
 The local owner is `fritz.medine@gmail.com`. Its generated password is stored in
 macOS Keychain under service `FAMtastic Postiz Local`; it is not written to the
 repository. Registration has been disabled after owner creation.
