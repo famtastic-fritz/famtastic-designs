@@ -126,6 +126,44 @@ final class OperationsController extends ControllerBase {
       'workers' => ['label' => 'Monitored Workers', 'value' => $this->count('famtastic_worker_heartbeat')],
     ];
 
+    $socialEvents = $this->socialCampaignEventCounts();
+    $planned = 68;
+    $approved = $socialEvents['approved'];
+    $scheduled = $socialEvents['scheduled'];
+    $publishedSocial = $socialEvents['published'];
+    $failedSocial = $socialEvents['failed'];
+    $socialVisits = $socialEvents['visits'];
+    $socialLeads = $socialEvents['leads'];
+    $socialSales = $socialEvents['sales'];
+    $conversionRate = $socialVisits > 0 ? round(($socialLeads / $socialVisits) * 100, 1) . '%' : '—';
+    $campaignDays = $this->fiftyFiveCentCampaignDays();
+
+    $todayCards = [
+      ['Planned moments', (string) $planned, '17 days × four distinct content moments', 'neutral'],
+      ['Awaiting approval', (string) max(0, $planned - $approved), 'Content, media, and publish approval remain separate', $approved < $planned ? 'attention' : 'good'],
+      ['Scheduled', (string) $scheduled, 'Provider-confirmed jobs in the publishing queue', 'neutral'],
+      ['Published', (string) $publishedSocial, 'Verified provider deliveries—not attempted sends', 'good'],
+      ['Needs attention', (string) $failedSocial, 'Failed, rejected, or unverified social deliveries', $failedSocial > 0 ? 'danger' : 'good'],
+      ['Website visits', (string) $socialVisits, 'Social-attributed sessions joined by stable content ID', 'neutral'],
+      ['Leads', (string) $socialLeads, 'Quote, contact, registration, and intake conversions', 'good'],
+      ['Lead conversion', $conversionRate, 'Attributed leads divided by social visits', 'neutral'],
+      ['Purchases', (string) $socialSales, 'Paid orders attributed to campaign content', 'good'],
+    ];
+
+    $attentionItems = [];
+    if ($approved === 0) {
+      $attentionItems[] = ['Approve the first batch', 'Days 1–3 need content, media, and publish approval before scheduling.', 'Review calendar'];
+    }
+    if ($scheduled === 0) {
+      $attentionItems[] = ['Connect publishing channels', 'Facebook and Instagram OAuth are not yet represented by a verified provider event.', 'Connect Meta'];
+    }
+    if ($failedSocial > 0) {
+      $attentionItems[] = ['Resolve delivery failures', $failedSocial . ' social item(s) failed or remain unverified.', 'Open failures'];
+    }
+    if ($socialVisits === 0) {
+      $attentionItems[] = ['Prove attribution', 'Publish one private or controlled post and verify its UTM content ID reaches GA4 and Drupal.', 'Run proof'];
+    }
+
     $rows = [];
     foreach ($campaigns as $campaign) {
       $key = (string) $campaign['campaign_key'];
@@ -146,20 +184,98 @@ final class OperationsController extends ControllerBase {
     }
 
     return $this->page([
-      'intro' => [
-        '#markup' => '<p class="famtastic-ops__lede">One place to inspect every campaign, recipient message, proof, build prompt, agent, job, event, and sale.</p>',
+      'hero' => ['#markup' => '<section class="famtastic-command__hero"><div><span>FAMtastic Marketing Command Center</span><h2>Know what is ready, what needs you, and what makes money.</h2><p>Review the 17-day campaign, approve creative, monitor publishing, respond to engagement, and connect every post to visits, leads, and sales.</p></div><div class="famtastic-command__hero-status"><b>Draft-first safety</b><strong>PUBLIC PUBLISHING OFF</strong><small>Nothing goes live without explicit publish approval.</small></div></section>'],
+      'actions' => [
+        '#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions', 'famtastic-command__actions']],
+        'scheduler' => ['#type' => 'link', '#title' => $this->t('Open Postiz Scheduler ↗'), '#url' => Url::fromUri('http://127.0.0.1:4007'), '#attributes' => ['class' => ['button', 'button--primary'], 'target' => '_blank', 'rel' => 'noopener noreferrer']],
+        'analytics' => ['#type' => 'link', '#title' => $this->t('Website Analytics'), '#url' => Url::fromRoute('famtastic_pipeline.analytics'), '#attributes' => ['class' => ['button']]],
+        'content' => ['#type' => 'link', '#title' => $this->t('Content Library'), '#url' => Url::fromUserInput('/admin/content'), '#attributes' => ['class' => ['button']]],
       ],
+      'today_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Owner view</span><h2>Campaign pulse</h2></div><p>Provider and business outcomes update as verified events arrive.</p></div>'],
+      'today' => $this->commandCards($todayCards),
+      'attention_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Next actions</span><h2>Needs your attention</h2></div></div>'],
+      'attention' => $this->attentionList($attentionItems),
+      'calendar_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>17-day launch</span><h2>Content calendar</h2></div><p>Teach · Challenge · Prove · Invite every day, adapted per channel.</p></div>'],
+      'calendar' => $this->campaignCalendar($campaignDays),
+      'operations_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Lifecycle evidence</span><h2>Campaign operations</h2></div></div>'],
       'summary' => $this->metricCards($summary),
       'campaign_heading' => ['#markup' => '<h2 id="campaigns">Campaigns</h2>'],
       'campaigns' => [
-        '#type' => 'table',
-        '#header' => ['Campaign', 'Status', 'Source', 'Prospects', 'Proofs', 'Sent', 'Clicks', 'Sales', 'Builds'],
-        '#rows' => $rows,
-        '#empty' => $this->t('No campaigns have been recorded.'),
-        '#attributes' => ['class' => ['famtastic-ops__table']],
+        '#type' => 'container',
+        '#attributes' => ['class' => ['famtastic-ops__table-scroll']],
+        'table' => [
+          '#type' => 'table',
+          '#header' => ['Campaign', 'Status', 'Source', 'Prospects', 'Proofs', 'Sent', 'Clicks', 'Sales', 'Builds'],
+          '#rows' => $rows,
+          '#empty' => $this->t('No campaigns have been recorded.'),
+          '#attributes' => ['class' => ['famtastic-ops__table']],
+        ],
       ],
       'pager' => ['#type' => 'pager'],
     ], 'Campaign Operations');
+  }
+
+  /** Returns verified social/content events without treating attempts as proof. */
+  private function socialCampaignEventCounts(): array {
+    $types = [
+      'approved' => ['social.content.approved', 'social.media.approved', 'social.publish.approved'],
+      'scheduled' => ['social.post.scheduled'],
+      'published' => ['social.post.verified', 'social.post.published'],
+      'failed' => ['social.post.failed', 'social.post.rejected', 'social.post.unverified'],
+      'visits' => ['social.visit.attributed'],
+      'leads' => ['social.lead.attributed'],
+      'sales' => ['social.sale.attributed'],
+    ];
+    $counts = [];
+    foreach ($types as $key => $eventTypes) {
+      $counts[$key] = $this->countIn('famtastic_event', 'event_type', $eventTypes);
+    }
+    return $counts;
+  }
+
+  /** Builds compact, mobile-first owner KPI cards. */
+  private function commandCards(array $items): array {
+    $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-command__pulse']]];
+    foreach ($items as $index => [$label, $value, $detail, $tone]) {
+      $build['item_' . $index] = ['#markup' => '<article class="famtastic-command__pulse-card famtastic-command__pulse-card--' . Html::getClass($tone) . '"><span>' . Html::escape($label) . '</span><strong>' . Html::escape($value) . '</strong><p>' . Html::escape($detail) . '</p></article>'];
+    }
+    return $build;
+  }
+
+  /** Builds the prioritized owner action queue. */
+  private function attentionList(array $items): array {
+    if ($items === []) {
+      return ['#markup' => '<div class="famtastic-command__all-clear"><strong>All clear.</strong><span>No campaign exception currently needs owner action.</span></div>'];
+    }
+    $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-command__attention-list']]];
+    foreach ($items as $index => [$title, $detail, $action]) {
+      $build['item_' . $index] = ['#markup' => '<article><span aria-hidden="true">!</span><div><strong>' . Html::escape($title) . '</strong><p>' . Html::escape($detail) . '</p></div><b>' . Html::escape($action) . ' →</b></article>'];
+    }
+    return $build;
+  }
+
+  /** Renders the canonical 17-day campaign spine. */
+  private function campaignCalendar(array $days): array {
+    $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-command__calendar']]];
+    foreach ($days as $day => [$theme, $promise]) {
+      $build['day_' . $day] = ['#markup' => '<article><div class="famtastic-command__day"><span>Day</span><strong>' . $day . '</strong></div><div><span>' . Html::escape($theme) . '</span><h3>' . Html::escape($promise) . '</h3><p>08:00 Teach · 12:30 Challenge · 17:30 Prove · 20:30 Invite</p></div><b>0/4 approved</b></article>'];
+    }
+    return $build;
+  }
+
+  /** Canonical themes mirror the stable campaign manifest. */
+  private function fiftyFiveCentCampaignDays(): array {
+    return [
+      1 => ['Declaration', 'What 55 cents a day means'], 2 => ['Excuses', 'Why owners delay getting a website'],
+      3 => ['Trust', 'What customers see when a business has no website'], 4 => ['Ownership', 'A website is a business home—not another rented profile'],
+      5 => ['Discovery', 'How customers decide who to trust'], 6 => ['Domain', 'What a domain is and why your business needs one'],
+      7 => ['Hosting', 'What hosting does and what the first year includes'], 8 => ['Offer', 'What the $199 Web Basics Bundle includes'],
+      9 => ['Scope', 'Who the Web Basics Bundle is—and is not—for'], 10 => ['Mobile', 'Why the customer experience starts on a phone'],
+      11 => ['Proof', 'From business idea to a useful online presence'], 12 => ['Action', 'Make it easy for customers to contact you'],
+      13 => ['Objections', 'Your business is doing fine—until the customer cannot verify it'], 14 => ['Growth', 'A basic website can be the beginning, not the ceiling'],
+      15 => ['Investment', 'FAMtastic invests in the first year with you'], 16 => ['Urgency', 'The cost objection has been removed'],
+      17 => ['Invitation', 'Cost is not one of them. Period.'],
+    ];
   }
 
   /**

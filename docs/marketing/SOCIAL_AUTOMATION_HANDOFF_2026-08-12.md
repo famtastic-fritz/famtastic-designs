@@ -9,6 +9,10 @@ Date: 2026-08-12
 - **Remotion 4.0.332** provides reusable, branded motion templates alongside the existing FFmpeg pipeline.
 - The canonical 17-day manifest remains the source for 68 content moments, stable IDs, UTMs, approval state, and evidence.
 - Public publishing remains disabled. Provider credentials are stored only in an untracked local environment file.
+- Drupal Campaign Operations now provides the FAMtastic owner command center:
+  campaign pulse, approval/action queue, all 17 campaign days, Postiz launch,
+  verified delivery failures, attributed visits, leads, conversion, and sales.
+  Website Analytics remains a separate workspace.
 
 The Postiz scheduler is bound to `127.0.0.1:4007`; it is not exposed to the public internet. The upstream deployment repository is installed at `/Users/famtastic-fritz/Development/FAMtastic/tools/postiz-docker-compose`, and the source snapshot used for inspection is installed at `/Users/famtastic-fritz/Development/FAMtastic/tools/postiz-app` at tag `v2.22.1`.
 
@@ -32,6 +36,29 @@ For each channel FAMtastic wants enabled, collect the account identity and compl
 | X | `@handle` | X developer API key/secret and a plan with write access |
 
 Also decide the first-wave channel order. Recommended: Facebook Page + Instagram, then TikTok and YouTube Shorts, followed by LinkedIn. This reduces simultaneous OAuth and review variables while preserving the same campaign IDs and assets.
+
+## Owner review model
+
+Postiz is the publishing workspace: composer, channel previews, media library,
+calendar, scheduling, provider delivery, inbox, and platform analytics. Drupal
+is the management workspace: approval readiness, exceptions, stable content
+IDs, GA4/lead/order attribution, revenue, and the decision trail. A publishing
+attempt never counts as delivered until a provider-verification event exists.
+
+The command center is mobile-first and keeps the dense historical campaign
+table in an independently scrollable region. The 390px browser proof recorded
+zero document-level horizontal overflow, nine visible pulse cards, all 17
+campaign days, and 76px-high primary actions.
+
+## Meta connection status
+
+The official Meta for Developers flow is open in Chrome. Chrome was not signed
+into Facebook, so setup paused at the official Facebook login screen. Fritz
+must enter the Facebook password and complete any 2FA/security challenge. The
+Google email alone cannot authorize a Facebook Page. After login, the remaining
+steps are developer-app creation/configuration, Page and Instagram identity
+selection, least-privilege OAuth, a private/draft provider proof, and only then
+an approved public batch.
 
 ## Connection and launch procedure
 

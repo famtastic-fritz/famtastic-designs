@@ -225,3 +225,15 @@
 - Connected verified pipeline payments to customer-owned orders, projects, and
   first-year hosting entitlements.
 - Added staff customer lookup to FAMtastic Operations.
+# 2026-08-12 — Marketing command center
+
+- Expanded Drupal Campaign Operations into a mobile-first owner command center
+  for the 17-day, 68-moment campaign.
+- Added approval readiness, publishing exceptions, attributed visits, leads,
+  conversion, sales, and separate Postiz/GA4 workspace links.
+- Added the complete 17-day Teach/Challenge/Prove/Invite calendar and preserved
+  verified-event semantics: attempted posts do not count as delivered.
+- Contained dense historical campaign tables in a mobile scroll region; 390px
+  browser QA found no document-level horizontal overflow.
+- Began the official Meta developer connection and paused at Facebook login for
+  Fritz's password/2FA rather than handling or storing Facebook credentials.
