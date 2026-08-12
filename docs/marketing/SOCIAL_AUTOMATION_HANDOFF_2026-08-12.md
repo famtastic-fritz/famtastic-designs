@@ -20,6 +20,24 @@ The local owner is `fritz.medine@gmail.com`. Its generated password is stored in
 macOS Keychain under service `FAMtastic Postiz Local`; it is not written to the
 repository. Registration has been disabled after owner creation.
 
+## Verified channel ownership and account map
+
+The Meta inventory was inspected through Fritz's authenticated account on
+2026-08-12. Do not create a second Facebook Page: the existing Page is the
+canonical Facebook business presence.
+
+| Channel | Verified or declared identity | Operating decision |
+|---|---|---|
+| Facebook personal | Meta developer identity uses `nineoo@yahoo.com` | Warm-audience/friends activity remains personal and assisted; never automate a personal profile through the business publisher. |
+| Facebook Page | `FAMTastic Designs`, Page asset ID `179965042038743` | Existing canonical business Page; 0 followers and no recent posts at inspection. Connect this Page to the business publisher. |
+| Instagram | Existing FAMtastic account declared under `fritz.medine@gmail.com` | Connect the existing account, not a new profile. It must be Professional/Business. Meta's unified Inbox access is enabled in the pending connection flow. |
+| TikTok | Existing FAMtastic account declared under `fritz.medine@gmail.com` | Connect after Meta proof; confirm handle and business/creator state during OAuth. |
+| YouTube | Existing channel currently owned through `nineoo@yahoo.com` | Keep the channel; use YouTube Brand Account/channel permissions to add `fritz.medine@gmail.com` as manager/owner instead of sharing credentials. |
+
+The login email does not determine the public brand. All business-facing
+profiles, media, captions, links, and sender identity must present FAMtastic
+Designs consistently.
+
 ## Remaining social-account information
 
 For each channel FAMtastic wants enabled, collect the account identity and complete the official OAuth/developer-app authorization. Never paste account passwords into the repository.
@@ -52,24 +70,49 @@ campaign days, and 76px-high primary actions.
 
 ## Meta connection status
 
-The official Meta for Developers flow is open in Chrome. Chrome was not signed
-into Facebook, so setup paused at the official Facebook login screen. Fritz
-must enter the Facebook password and complete any 2FA/security challenge. The
-Google email alone cannot authorize a Facebook Page. After login, the remaining
-steps are developer-app creation/configuration, Page and Instagram identity
-selection, least-privilege OAuth, a private/draft provider proof, and only then
-an approved public batch.
+Completed and verified on 2026-08-12:
+
+- Meta developer registration is complete under `nineoo@yahoo.com`.
+- The unpublished app **FAMtastic Social Publishing** was created with app ID
+  `1761267725205283`.
+- Its selected use cases are **Manage everything on your Page** and **Manage
+  messaging & content on Instagram**. Advertising-management access was not
+  requested.
+- Meta Business Suite already contains the canonical `FAMTastic Designs` Page
+  with asset ID `179965042038743`; no duplicate Page was created.
+- The existing-Instagram connection flow was started with unified Instagram
+  message access enabled.
+
+Current owner checkpoint: Meta opened the official Instagram authentication
+screen. Fritz must sign in to the existing FAMtastic Instagram account and
+complete any password, 2FA, consent, or professional-account conversion prompt.
+The authenticated tab has been left open. No social post, ad, invitation, or
+public campaign action has been created.
+
+After that checkpoint, verify the linked Instagram handle in Meta Business
+Suite, inspect Page/business access, connect the Meta provider values to Postiz,
+perform an unpublished/draft proof, and retain provider evidence. Publishing
+remains disabled until Fritz separately approves a bounded public batch.
 
 ## Connection and launch procedure
 
-1. Open the local scheduler at `http://127.0.0.1:4007` and create the one local owner account.
-2. Change `POSTIZ_DISABLE_REGISTRATION=true` in `~/.config/famtastic-marketing/postiz.env`, then restart Postiz.
-3. Add only the provider app values for the first channel and restart.
-4. Complete official OAuth in Postiz; passwords remain with the social provider.
-5. Schedule one private/draft test using a stable campaign content ID.
-6. Verify crop, caption, link, UTM, provider ID, and removal/rollback evidence.
-7. Approve days 1–3 before any public scheduling.
-8. Enable bounded public publishing only after Fritz explicitly approves the batch.
+1. Complete the open Instagram owner-authentication checkpoint and confirm the
+   existing FAMtastic account is Professional/Business.
+2. Verify that Meta Business Suite shows both the canonical Facebook Page and
+   the correct Instagram handle, with Fritz retaining full control.
+3. Inspect/create the FAMtastic Meta Business Portfolio and assign the Page,
+   Instagram account, and developer app without duplicating assets.
+4. Add only the Meta app ID/secret to the untracked Postiz environment and
+   restart the local service. Never store the secret in Git or documentation.
+5. Complete official OAuth in Postiz; passwords remain with Meta.
+6. Create one unpublished/draft connection proof using a stable campaign
+   content ID. Do not publish to the personal Facebook profile.
+7. Verify account identity, crop, caption, link, UTM, provider ID, Inbox access,
+   and removal/rollback evidence.
+8. Repeat least-privilege OAuth for TikTok and YouTube only after the Meta proof
+   passes; keep platform audit/private-only restrictions explicit.
+9. Approve days 1–3 before any public scheduling.
+10. Enable bounded public publishing only after Fritz explicitly approves the batch.
 
 ## Safety and operating commands
 
