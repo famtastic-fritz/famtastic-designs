@@ -128,6 +128,14 @@ social provider is connected and no public post is authorized. See
   Stories; deepen only strong topics into long-form YouTube and blogs.
 - Days 1–3 are assisted publishing. Later automation is earned by evidence.
 
+## Two-post channel proof
+
+The first distribution milestone is two verified posts per target network,
+across both founder/personal and FAMtastic/business lanes where supported. See
+`TWO_POST_CHANNEL_PROOF_PLAN_2026-08-12.md` for the acceptance matrix,
+platform constraints, evidence requirements, and definition of done. This
+proof is also the foundation for a future FAMtastic social automation service.
+
 ## What requires Fritz
 
 - Approve avatar/voice identity and any HeyGen paid plan.
