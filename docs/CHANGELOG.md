@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-08-12 — 17-day campaign and independent QA-agent contracts
+
+- Added a 17-day, four-content-moment campaign plan covering 68 core pieces,
+  platform adaptation, video formats, publishing stages, measurement, and
+  approval boundaries.
+- Defined independent Content QA and SEO/Discovery QA release contracts for
+  product descriptions, articles, scripts, social copy, and rendered media.
+- Recorded a hybrid video/distribution recommendation: selective HeyGen avatar
+  explainers, reusable Remotion motion graphics, and a controlled scheduler
+  pilot rather than unreviewed direct auto-publishing.
+
 ## 2026-08-12 — CMS-neutral editorial library and route scroll reset
 
 - Rebuilt the 72 general-interest demand articles around distinct reader-decision
