@@ -7,6 +7,32 @@ import { applySeo } from '../components/SEO.jsx';
 import { blogSeo } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp, FAQAccordion } from '../components/v1/index.js';
 
+const CAMPAIGN_ARTICLES = [
+  'professional-website-55-cents-a-day', 'what-is-a-domain-name', 'what-is-website-hosting',
+  'parts-of-a-one-page-business-website', '199-website-inclusions-and-boundaries',
+  'after-buying-199-website', 'who-is-199-website-for', 'grow-beyond-first-website',
+];
+const CAMPAIGN_VISUALS = [
+  ['55-cent-website-hero.webp', 'A small-business owner stepping from an idea toward a professional website', 'The first step is a credible place for customers to find and understand the business.'],
+  ['domain-explained.webp', 'A business connected to its website through a clear digital address', 'The domain is the customer-owned address that points people to the website.'],
+  ['hosting-explained.webp', 'Protected managed infrastructure keeping a business website available online', 'Hosting is the managed infrastructure that keeps the website available.'],
+  ['one-page-anatomy.webp', 'The connected sections and systems of a useful one-page business website', 'A focused page still connects identity, trust, action, measurement, and response.'],
+];
+
+function campaignBodyHtml(post) {
+  if (!post?.bodyHtml || !post.series?.includes('55 Cents a Day')) return post?.bodyHtml || '';
+  const articleIndex = Math.max(0, CAMPAIGN_ARTICLES.indexOf(post.slug));
+  const selected = [CAMPAIGN_VISUALS[articleIndex % 4], CAMPAIGN_VISUALS[(articleIndex + 2) % 4]];
+  const figures = selected.map(([file, alt, caption]) => `<figure class="article-inline-visual"><img src="/blog-images/${file}" alt="${alt}" width="1600" height="900" loading="lazy"><figcaption><img src="/brand/famtastic-mark.svg" alt="" width="28" height="28">FAMtastic Designs — ${caption}</figcaption></figure>`);
+  let paragraph = 0;
+  return post.bodyHtml.replace(/<\/p>/g, (closing) => {
+    paragraph += 1;
+    if (paragraph === 3) return closing + figures[0];
+    if (paragraph === 9) return closing + figures[1];
+    return closing;
+  });
+}
+
 /**
  * /blog/:slug — single blog_post node: hero, date, full body.
  */
@@ -111,6 +137,7 @@ export default function BlogPostPage() {
   const seriesIndex = state.seriesPosts.findIndex((item) => item.id === post.id);
   const previous = seriesIndex > 0 ? state.seriesPosts[seriesIndex - 1] : null;
   const next = seriesIndex >= 0 ? state.seriesPosts[seriesIndex + 1] : null;
+  const renderedBodyHtml = campaignBodyHtml(post);
 
   return (
     <article>
@@ -129,9 +156,9 @@ export default function BlogPostPage() {
             </figcaption>
           </figure>
         )}
-        {post.bodyHtml ? (
+        {renderedBodyHtml ? (
           <FadeUp className="v1-panel">
-            <div className="v1-prose" dangerouslySetInnerHTML={{ __html: post.bodyHtml }} />
+            <div className="v1-prose" dangerouslySetInnerHTML={{ __html: renderedBodyHtml }} />
           </FadeUp>
         ) : (
           <div className="v1-empty">This post is being published — check back soon.</div>
