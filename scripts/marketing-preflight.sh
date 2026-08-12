@@ -42,9 +42,13 @@ if [[ "${FAMTASTIC_MARKETING_PUBLISH:-false}" == "true" ]]; then
 fi
 
 printf 'PASS safety  public publishing disabled\n'
+postiz_status=absent
+if curl --fail --silent --max-time 3 http://127.0.0.1:4007/api/auth/can-register >/dev/null; then
+  postiz_status=local-healthy
+fi
 printf 'INFO optional Poe=%s HeyGen=%s Postiz=%s\n' \
   "$([[ -n "${POE_API_KEY:-}" ]] && printf configured || printf absent)" \
   "$([[ -n "${HEYGEN_API_KEY:-}" ]] && printf configured || printf absent)" \
-  "$([[ -n "${POSTIZ_API_KEY:-}" ]] && printf configured || printf absent)"
+  "$postiz_status"
 
 exit "$status"

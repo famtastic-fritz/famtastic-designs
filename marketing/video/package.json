@@ -1,0 +1,21 @@
+{
+  "name": "@famtastic/marketing-video",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:proof": "remotion render src/index.ts Famtastic55CentsPortrait out/famtastic-55-cents-remotion.mp4",
+    "still": "remotion still src/index.ts Famtastic55CentsPortrait out/famtastic-55-cents-cover.png --frame=30"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.509",
+    "@remotion/google-fonts": "4.0.509",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "remotion": "4.0.509"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.10",
+    "typescript": "5.9.2"
+  }
+}

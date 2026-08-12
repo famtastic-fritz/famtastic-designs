@@ -38,11 +38,11 @@ are `idea`, `briefed`, `drafted`, `content_qa`, `seo_qa`, `media_ready`,
 | Campaign truth and records | Drupal + repository JSON | None | Keeps offers, consent, leads, and evidence connected. |
 | Drafting and variations | Ollama + Qwen3 8B, challenged by GLM4 9B | Poe API / Codex | Local, private, and no per-call cost for routine work. |
 | Final factual and offer QA | Repository validators + agent review | Strong cloud model | A small local model is an assistant, not final authority. |
-| Branded motion | FFmpeg now; Remotion templates next | Managed render service | Better for price cards, diagrams, captions, timelines, and CTAs than an avatar. |
+| Branded motion | FFmpeg + installed Remotion templates | Managed render service | Better for price cards, diagrams, captions, timelines, and CTAs than an avatar. |
 | Presenter video | Founder footage or voiceover | HeyGen eight-video pilot | Use only when a face and consistent delivery increase trust. |
 | Local image review | Gemma 3 4B | Codex/cloud vision | Adds a small multimodal lane without exhausting workstation memory. |
 | Local speech/captions | Kokoro + whisper.cpp evaluation | Cloud voice/caption service | Small permissive components; voice and dependency licenses still require recording. |
-| Scheduling | Approval manifest first | Patched Postiz pilot | Platform OAuth and audits remain unavoidable. |
+| Scheduling | Pinned local Postiz v2.22.1 pilot | Hosted scheduler later | Platform OAuth and audits remain unavoidable. |
 | Workflow automation | Existing Drupal workers/scripts | Activepieces Community Edition | Add only when the manifest workflow is stable. |
 | Measurement | Existing GA4 + Drupal campaign/lead ledger | PostHog later | Avoid a second analytics system until it answers a distinct question. |
 | Email | Existing transactional pipeline; consented promotional list | Dedicated bulk provider later | Transactional and promotional messages stay separate. |
@@ -109,11 +109,11 @@ business-account/OAuth setup. Therefore rollout is:
 5. Approve the first public batch.
 6. Add automated posting only after bounded retries and Fritz alerts work.
 
-Postiz remains the best self-hosted scheduling candidate, but it is not being
-installed on the rebuilt laptop yet: Docker is absent, self-hosting exposes
-social tokens, and recent security advisories make version pinning and patch
-discipline mandatory. A disposable non-production pilot should use a version at
-or above every published fix, TLS, strong secrets, backups, and no public posts.
+Postiz v2.22.1, Docker, Compose, and Colima are installed on the rebuilt laptop.
+The pilot uses strong generated secrets, a pinned image, an untracked local
+credential file, and a loopback-only listener. It remains a local pilot: no
+social provider is connected and no public post is authorized. See
+`SOCIAL_AUTOMATION_HANDOFF_2026-08-12.md` for the account/OAuth handoff.
 
 ## 17-day operating rules
 

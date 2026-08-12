@@ -23,3 +23,6 @@ directus/uploads/
 .eslintcache
 .netlify
 .artifacts/
+marketing/video/node_modules/
+marketing/video/out/
+marketing/runtime/
