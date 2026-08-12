@@ -4,111 +4,14 @@
     "scope": "independent site-wide content QA",
     "pages_scored": 156,
     "blogs_scored": 80,
-    "average_score": 94.8,
-    "pass": 149,
-    "review": 7,
+    "average_score": 95.5,
+    "pass": 156,
+    "review": 0,
     "fail": 0,
     "safe_corrections": 159,
     "skipped": []
   },
   "pages": [
-    {
-      "type": "service",
-      "key": "2b0ca1c6-2fe8-4a1d-9af0-aa46e2086835",
-      "title": "AI Chatbot Solutions",
-      "route": "/services/ai-chatbot",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Missing explicit meta title",
-        "Meta description length is 0 characters",
-        "Conversion CTA is incomplete"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "service",
-      "key": "a2781e04-6df5-404e-b804-d5d057aeeb19",
-      "title": "Client Portal Systems",
-      "route": "/services/client-portal-systems",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Missing explicit meta title",
-        "Meta description length is 0 characters",
-        "Conversion CTA is incomplete"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "service",
-      "key": "65450a2b-f7f3-4c38-b806-11769b25e7b4",
-      "title": "Custom Website Development",
-      "route": "/services/custom-website-development",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Missing explicit meta title",
-        "Meta description length is 0 characters",
-        "Conversion CTA is incomplete"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "service",
-      "key": "62414e0e-5fcd-4650-aaf7-3cfb63207357",
-      "title": "E-Commerce Solutions",
-      "route": "/services/e-commerce-solutions",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Missing explicit meta title",
-        "Meta description length is 0 characters",
-        "Conversion CTA is incomplete"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "service",
-      "key": "6fa413f3-8049-41aa-96fd-88c1ca7bbce2",
-      "title": "Landing Page Design",
-      "route": "/services/landing-page-design",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Missing explicit meta title",
-        "Meta description length is 0 characters",
-        "Conversion CTA is incomplete"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "service",
-      "key": "3ae104ed-f458-4ceb-8d32-807ebbef6dbf",
-      "title": "Site Rebuild & Redesign",
-      "route": "/services/site-rebuild",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Missing explicit meta title",
-        "Meta description length is 0 characters",
-        "Conversion CTA is incomplete"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "package",
-      "key": "60449381-e8c0-4783-8c48-d2ac6ed4c492",
-      "title": "Web Basics Bundle — $199",
-      "route": "/packages/199-quick-start",
-      "score": 80,
-      "status": "review",
-      "issues": [
-        "Meta description length is 69 characters",
-        "Conversion CTA is incomplete"
-      ],
-      "corrections": []
-    },
     {
       "type": "package",
       "key": "be1ff21f-916e-42ca-bb38-ab330b0c5537",
@@ -171,9 +74,93 @@
     },
     {
       "type": "package",
+      "key": "60449381-e8c0-4783-8c48-d2ac6ed4c492",
+      "title": "Web Basics Bundle — $199",
+      "route": "/packages/199-quick-start",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "package",
       "key": "52185497-e840-4377-a028-59d156b8ad71",
       "title": "Website Care & Maintenance — $149/month",
       "route": "/packages/website-care-plan",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "2b0ca1c6-2fe8-4a1d-9af0-aa46e2086835",
+      "title": "AI Chatbot Solutions",
+      "route": "/services/ai-chatbot",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "a2781e04-6df5-404e-b804-d5d057aeeb19",
+      "title": "Client Portal Systems",
+      "route": "/services/client-portal-systems",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "65450a2b-f7f3-4c38-b806-11769b25e7b4",
+      "title": "Custom Website Development",
+      "route": "/services/custom-website-development",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "62414e0e-5fcd-4650-aaf7-3cfb63207357",
+      "title": "E-Commerce Solutions",
+      "route": "/services/e-commerce-solutions",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "6fa413f3-8049-41aa-96fd-88c1ca7bbce2",
+      "title": "Landing Page Design",
+      "route": "/services/landing-page-design",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "3ae104ed-f458-4ceb-8d32-807ebbef6dbf",
+      "title": "Site Rebuild & Redesign",
+      "route": "/services/site-rebuild",
       "score": 88,
       "status": "pass",
       "issues": [

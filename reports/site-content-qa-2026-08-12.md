@@ -6,8 +6,8 @@ This review is separate from campaign production. Scores cover factual boundarie
 
 - Pages/items scored: 156
 - Blog articles scored individually: 80
-- Average: 94.8/100
-- Pass/review/fail: 149/7/0
+- Average: 95.5/100
+- Pass/review/fail: 156/0/0
 - Safe corrections applied during this QA cycle: 159
 
 ## Highest-priority findings
@@ -21,19 +21,19 @@ This review is separate from campaign production. Scores cover factual boundarie
 
 | Score | Status | Type | Page | Findings | Corrections |
 |---:|---|---|---|---|---|
-| 70 | review | service | [AI Chatbot Solutions](https://famtasticdesigns.com/services/ai-chatbot) | Missing explicit meta title; Meta description length is 0 characters; Conversion CTA is incomplete | — |
-| 70 | review | service | [Client Portal Systems](https://famtasticdesigns.com/services/client-portal-systems) | Missing explicit meta title; Meta description length is 0 characters; Conversion CTA is incomplete | — |
-| 70 | review | service | [Custom Website Development](https://famtasticdesigns.com/services/custom-website-development) | Missing explicit meta title; Meta description length is 0 characters; Conversion CTA is incomplete | — |
-| 70 | review | service | [E-Commerce Solutions](https://famtasticdesigns.com/services/e-commerce-solutions) | Missing explicit meta title; Meta description length is 0 characters; Conversion CTA is incomplete | — |
-| 70 | review | service | [Landing Page Design](https://famtasticdesigns.com/services/landing-page-design) | Missing explicit meta title; Meta description length is 0 characters; Conversion CTA is incomplete | — |
-| 70 | review | service | [Site Rebuild & Redesign](https://famtasticdesigns.com/services/site-rebuild) | Missing explicit meta title; Meta description length is 0 characters; Conversion CTA is incomplete | — |
-| 80 | review | package | [Web Basics Bundle — $199](https://famtasticdesigns.com/packages/199-quick-start) | Meta description length is 69 characters; Conversion CTA is incomplete | — |
 | 88 | pass | package | [Business Growth System — $3,999](https://famtasticdesigns.com/packages/business-website) | Conversion CTA is incomplete | — |
 | 88 | pass | package | [Business Website Bundle — $499](https://famtasticdesigns.com/packages/499-site-upgrade) | Conversion CTA is incomplete | — |
 | 88 | pass | package | [Campaign Landing Page System — $1,499](https://famtasticdesigns.com/packages/landing-page) | Conversion CTA is incomplete | — |
 | 88 | pass | package | [Custom Website — $1,999](https://famtasticdesigns.com/packages/starter-website) | Conversion CTA is incomplete | — |
 | 88 | pass | package | [Premium Website + AI System — $6,999](https://famtasticdesigns.com/packages/premium-website-ai) | Conversion CTA is incomplete | — |
+| 88 | pass | package | [Web Basics Bundle — $199](https://famtasticdesigns.com/packages/199-quick-start) | Conversion CTA is incomplete | — |
 | 88 | pass | package | [Website Care & Maintenance — $149/month](https://famtasticdesigns.com/packages/website-care-plan) | Conversion CTA is incomplete | — |
+| 88 | pass | service | [AI Chatbot Solutions](https://famtasticdesigns.com/services/ai-chatbot) | Conversion CTA is incomplete | — |
+| 88 | pass | service | [Client Portal Systems](https://famtasticdesigns.com/services/client-portal-systems) | Conversion CTA is incomplete | — |
+| 88 | pass | service | [Custom Website Development](https://famtasticdesigns.com/services/custom-website-development) | Conversion CTA is incomplete | — |
+| 88 | pass | service | [E-Commerce Solutions](https://famtasticdesigns.com/services/e-commerce-solutions) | Conversion CTA is incomplete | — |
+| 88 | pass | service | [Landing Page Design](https://famtasticdesigns.com/services/landing-page-design) | Conversion CTA is incomplete | — |
+| 88 | pass | service | [Site Rebuild & Redesign](https://famtasticdesigns.com/services/site-rebuild) | Conversion CTA is incomplete | — |
 | 90 | pass | core-page | [FAQs](https://famtasticdesigns.com/faq) | No deterministic content issue found | — |
 | 90 | pass | core-page | [Packages](https://famtasticdesigns.com/packages) | No deterministic content issue found | — |
 | 90 | pass | core-page | [Services](https://famtasticdesigns.com/services) | No deterministic content issue found | — |

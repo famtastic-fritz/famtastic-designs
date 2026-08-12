@@ -16,6 +16,10 @@
 - New generated marketing content is draft-first. Live prices, recurring
   charges, legal promises, real promotional sends, advertising spend, and
   broad publication remain explicit approval gates.
+- For HeyGen campaign video work, use the official skills in
+  `.agents/skills/heygen-*` and `docs/marketing/HEYGEN_CAMPAIGN_AUTOMATION.md`.
+  Codex, Claude Code, and Shay share one brief, asset ledger, QA gate, and
+  publishing record; never create an untracked parallel video workflow.
 
 ## Package Managers
 
