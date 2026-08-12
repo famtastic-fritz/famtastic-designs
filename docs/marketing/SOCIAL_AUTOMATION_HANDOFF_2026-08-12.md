@@ -30,7 +30,8 @@ canonical Facebook business presence.
 |---|---|---|
 | Facebook personal | Meta developer identity uses `nineoo@yahoo.com` | Warm-audience/friends activity remains personal and assisted; never automate a personal profile through the business publisher. |
 | Facebook Page | `FAMTastic Designs`, Page asset ID `179965042038743` | Existing canonical business Page; 0 followers and no recent posts at inspection. Connect this Page to the business publisher. |
-| Instagram | Existing `@famtastic` account declared under `fritz.medine@gmail.com` | Converted from Personal to Business, category `Product/service`, on 2026-08-12. Public contact details were intentionally left hidden. Meta Page linkage is still pending provider confirmation. |
+| Instagram personal | `@famtstic` (Fritz's personal identity) | Keep personal and separate. It was mistakenly converted to Business during discovery and Fritz is switching it back to Personal. Never connect or auto-publish this identity. |
+| Instagram business | `@famtasticdesigns`, associated with `fritz.medine@gmail.com` | Canonical FAMtastic Designs Instagram. This is the only Instagram identity authorized for Meta Business Suite and Postiz connection. |
 | TikTok | Existing FAMtastic account declared under `fritz.medine@gmail.com` | Connect after Meta proof; confirm handle and business/creator state during OAuth. |
 | YouTube | Existing channel currently owned through `nineoo@yahoo.com` | Keep the channel; use YouTube Brand Account/channel permissions to add `fritz.medine@gmail.com` as manager/owner instead of sharing credentials. |
 
@@ -80,19 +81,19 @@ Completed and verified on 2026-08-12:
   requested.
 - Meta Business Suite already contains the canonical `FAMTastic Designs` Page
   with asset ID `179965042038743`; no duplicate Page was created.
-- `@famtastic` was successfully converted from a Personal account to a public
-  Business account with the `Product/service` category. Personal contact
-  information was not exposed. Unified Instagram message access was selected
-  in the linking flow.
+- Account identity was corrected after the first linking attempt:
+  `@famtstic` is Fritz's personal account, while `@famtasticdesigns` is the
+  canonical business account. The personal account was mistakenly converted to
+  Business during discovery; Fritz is reversing that change. Personal contact
+  information was never exposed and no content was posted.
 
-Current provider blocker: the authenticated Instagram OIDC flow completed and
-closed twice, but Meta Business Suite still shows **Connect Instagram**, its
-onboarding counter remains `0 / 1`, and Settings > Profiles lists only Facebook
-Pages. Therefore the Page-to-Instagram relationship is **not verified** and
-must not be reported as connected. Retry from the Instagram mobile app via
-Edit profile > Page, select the existing `FAMTastic Designs` Page, and then
-recheck Business Suite. No social post, ad, invitation, or public campaign
-action was created.
+Current provider blocker: Meta Business Suite still shows **Connect
+Instagram**, its onboarding counter remains `0 / 1`, and Settings > Profiles
+lists only Facebook Pages. Therefore no Instagram relationship is verified.
+The next attempt must explicitly authenticate `@famtasticdesigns`; do not use
+the saved personal `@famtstic` profile. If Meta reuses the personal session,
+choose **Switch accounts** and authenticate the business account. No social
+post, ad, invitation, or public campaign action was created.
 
 After that checkpoint, verify the linked Instagram handle in Meta Business
 Suite, inspect Page/business access, connect the Meta provider values to Postiz,
@@ -101,8 +102,8 @@ remains disabled until Fritz separately approves a bounded public batch.
 
 ## Connection and launch procedure
 
-1. Complete the open Instagram owner-authentication checkpoint and confirm the
-   existing FAMtastic account is Professional/Business.
+1. Confirm `@famtstic` is restored to Personal, then authenticate the distinct
+   `@famtasticdesigns` account and confirm it is Professional/Business.
 2. Verify that Meta Business Suite shows both the canonical Facebook Page and
    the correct Instagram handle, with Fritz retaining full control.
 3. Inspect/create the FAMtastic Meta Business Portfolio and assign the Page,
