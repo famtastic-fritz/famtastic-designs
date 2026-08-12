@@ -35,6 +35,21 @@ function injectJsonLd(html, graph) {
     : html.replace('</head>', `    ${script}\n  </head>`);
 }
 
+function safePrerenderMarkup(value) {
+  return String(value || '')
+    .replace(/<script\b[\s\S]*?<\/script>/gi, '')
+    .replace(/<style\b[\s\S]*?<\/style>/gi, '')
+    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*')/gi, '')
+    .replace(/\s(?:src|href)\s*=\s*("|')\s*javascript:[\s\S]*?\1/gi, '');
+}
+
+function injectPrerenderedContent(html, { title, description, body = '', contentType = 'page' }) {
+  const articleBody = safePrerenderMarkup(body);
+  const tag = contentType === 'blog_post' || contentType === 'case_study' ? 'article' : 'section';
+  const fallback = `<${tag} class="seo-prerender" data-seo-prerender="true"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${articleBody}</${tag}>`;
+  return html.replace(/<div id="root">[\s\S]*?<\/div>/i, `<div id="root">${fallback}</div>`);
+}
+
 function organizationEntities() {
   return [
     {
@@ -143,10 +158,13 @@ function renderShell(path) {
     isPartOf: { '@id': 'https://famtasticdesigns.com/#website' },
     ...(breadcrumb ? { breadcrumb: { '@id': `${seo.canonical}#breadcrumb` } } : {}),
   });
-  return injectJsonLd(html, graph);
+  return injectPrerenderedContent(injectJsonLd(html, graph), {
+    title: seo.title.split(' | ')[0],
+    description: seo.description,
+  });
 }
 
-function renderDynamicShell(path, title, description, contentType, changed) {
+function renderDynamicShell(path, title, description, contentType, changed, body) {
   let html = renderShell('/');
   const canonical = `https://famtasticdesigns.com${path}/`;
   const brandSuffix = ' | FAMtastic Designs';
@@ -181,7 +199,29 @@ function renderDynamicShell(path, title, description, contentType, changed) {
     ...(entityType === 'Service' ? { provider: { '@id': 'https://famtasticdesigns.com/#organization' } } : {}),
     ...(entityType === 'Product' ? { brand: { '@id': 'https://famtasticdesigns.com/#organization' } } : {}),
   };
-  return injectJsonLd(html, [...organizationEntities(), breadcrumb, entity].filter(Boolean));
+  return injectPrerenderedContent(
+    injectJsonLd(html, [...organizationEntities(), breadcrumb, entity].filter(Boolean)),
+    { title, description, body, contentType },
+  );
+}
+
+function fieldMarkup(attributes, contentType) {
+  if (contentType === 'blog_post' || contentType === 'case_study') {
+    return attributes.body?.processed || attributes.body?.value || '';
+  }
+  const sections = [
+    ['Overview', attributes.field_hero_subheadline],
+    ['The challenge', attributes.field_pain_points],
+    ['How FAMtastic helps', attributes.field_solution_bullets],
+    ['Deliverables', attributes.field_features || attributes.field_whats_included],
+    ['Best fit', attributes.field_best_for],
+  ];
+  return sections.map(([heading, value]) => {
+    const items = Array.isArray(value) ? value.filter(Boolean) : [];
+    if (items.length) return `<h2>${escapeHtml(heading)}</h2><ul>${items.map((item) => `<li>${escapeHtml(typeof item === 'string' ? item : item.value || item.title || '')}</li>`).join('')}</ul>`;
+    const text = typeof value === 'string' ? value : value?.value || '';
+    return text ? `<h2>${escapeHtml(heading)}</h2><p>${escapeHtml(text)}</p>` : '';
+  }).join('');
 }
 
 async function dynamicRoutes() {
@@ -205,6 +245,7 @@ async function dynamicRoutes() {
           description: attributes.field_meta_description || `Learn about ${attributes.title || 'this solution'} from FAMtastic Designs.`,
           lastmod: attributes.changed?.slice(0, 10) || '',
           contentType: type,
+          body: fieldMarkup(attributes, type),
         });
       }
       next = payload.links?.next?.href || '';
@@ -229,7 +270,7 @@ const discoveredRoutes = await dynamicRoutes();
 for (const route of discoveredRoutes) {
   const target = join(distDir, route.path.replace(/^\//, ''), 'index.html');
   await mkdir(dirname(target), { recursive: true });
-  await writeFile(target, renderDynamicShell(route.path, route.title, route.description, route.contentType, route.lastmod));
+  await writeFile(target, renderDynamicShell(route.path, route.title, route.description, route.contentType, route.lastmod, route.body));
 }
 
 const changedByPath = new Map(discoveredRoutes.map((route) => [route.path, route.lastmod]));

@@ -4,118 +4,14 @@
     "scope": "independent site-wide content QA",
     "pages_scored": 156,
     "blogs_scored": 80,
-    "average_score": 93.3,
-    "pass": 139,
-    "review": 17,
+    "average_score": 94.6,
+    "pass": 147,
+    "review": 9,
     "fail": 0,
-    "safe_corrections": 0,
+    "safe_corrections": 159,
     "skipped": []
   },
   "pages": [
-    {
-      "type": "blog",
-      "key": "professional-website-55-cents-a-day",
-      "title": "A Professional Website for About 55 Cents a Day",
-      "route": "/blog/professional-website-55-cents-a-day",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Contains 12 long paragraph(s) reused across more than three articles",
-        "Editorial state remains editorial-review-required"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "blog",
-      "key": "grow-beyond-first-website",
-      "title": "How Your First Website Can Grow With Your Business",
-      "route": "/blog/grow-beyond-first-website",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Contains 12 long paragraph(s) reused across more than three articles",
-        "Editorial state remains editorial-review-required"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "blog",
-      "key": "parts-of-a-one-page-business-website",
-      "title": "The Parts of a One-Page Business Website",
-      "route": "/blog/parts-of-a-one-page-business-website",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Contains 12 long paragraph(s) reused across more than three articles",
-        "Editorial state remains editorial-review-required"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "blog",
-      "key": "after-buying-199-website",
-      "title": "What Happens After You Buy the $199 Website?",
-      "route": "/blog/after-buying-199-website",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Contains 12 long paragraph(s) reused across more than three articles",
-        "Editorial state remains editorial-review-required"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "blog",
-      "key": "what-is-website-hosting",
-      "title": "What Is Website Hosting and What Does It Actually Do?",
-      "route": "/blog/what-is-website-hosting",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Contains 12 long paragraph(s) reused across more than three articles",
-        "Editorial state remains editorial-review-required"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "blog",
-      "key": "what-is-a-domain-name",
-      "title": "What Is a Domain Name and Why Does Your Business Need One?",
-      "route": "/blog/what-is-a-domain-name",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Contains 12 long paragraph(s) reused across more than three articles",
-        "Editorial state remains editorial-review-required"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "blog",
-      "key": "199-website-inclusions-and-boundaries",
-      "title": "What the $199 Website Includes—and What It Does Not",
-      "route": "/blog/199-website-inclusions-and-boundaries",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Contains 12 long paragraph(s) reused across more than three articles",
-        "Editorial state remains editorial-review-required"
-      ],
-      "corrections": []
-    },
-    {
-      "type": "blog",
-      "key": "who-is-199-website-for",
-      "title": "Who Is the $199 Website For?",
-      "route": "/blog/who-is-199-website-for",
-      "score": 70,
-      "status": "review",
-      "issues": [
-        "Contains 12 long paragraph(s) reused across more than three articles",
-        "Editorial state remains editorial-review-required"
-      ],
-      "corrections": []
-    },
     {
       "type": "service",
       "key": "2b0ca1c6-2fe8-4a1d-9af0-aa46e2086835",
@@ -463,6 +359,20 @@
     },
     {
       "type": "blog",
+      "key": "professional-website-55-cents-a-day",
+      "title": "A Professional Website for About 55 Cents a Day",
+      "route": "/blog/professional-website-55-cents-a-day",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
+    },
+    {
+      "type": "blog",
       "key": "ai-chatbot-vs-ai-agent",
       "title": "AI Chatbot or AI Agent: What Is the Difference?",
       "route": "/blog/ai-chatbot-vs-ai-agent",
@@ -471,7 +381,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -483,7 +395,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -495,7 +409,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -507,7 +423,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -519,7 +437,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -531,7 +451,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -543,7 +465,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -555,7 +479,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -567,7 +493,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -579,7 +507,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -591,7 +521,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -603,7 +535,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -615,7 +549,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -627,7 +563,23 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
+    },
+    {
+      "type": "blog",
+      "key": "grow-beyond-first-website",
+      "title": "How Your First Website Can Grow With Your Business",
+      "route": "/blog/grow-beyond-first-website",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -639,7 +591,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -651,7 +605,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -663,7 +619,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -687,7 +645,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -699,7 +659,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -711,7 +673,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -723,7 +687,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -735,7 +701,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -747,7 +715,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -759,7 +729,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -771,7 +743,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -783,7 +757,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -795,7 +771,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -807,7 +785,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -831,7 +811,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -843,7 +825,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -855,7 +839,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -867,7 +853,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -879,7 +867,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -891,7 +881,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -903,7 +895,23 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
+    },
+    {
+      "type": "blog",
+      "key": "parts-of-a-one-page-business-website",
+      "title": "The Parts of a One-Page Business Website",
+      "route": "/blog/parts-of-a-one-page-business-website",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -915,7 +923,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -927,7 +937,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -939,7 +951,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -951,7 +965,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -963,7 +979,23 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
+    },
+    {
+      "type": "blog",
+      "key": "after-buying-199-website",
+      "title": "What Happens After You Buy the $199 Website?",
+      "route": "/blog/after-buying-199-website",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -975,7 +1007,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -987,7 +1021,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -999,7 +1035,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1011,7 +1049,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1023,7 +1063,23 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
+    },
+    {
+      "type": "blog",
+      "key": "what-is-website-hosting",
+      "title": "What Is Website Hosting and What Does It Actually Do?",
+      "route": "/blog/what-is-website-hosting",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1035,7 +1091,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1047,7 +1105,23 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
+    },
+    {
+      "type": "blog",
+      "key": "what-is-a-domain-name",
+      "title": "What Is a Domain Name and Why Does Your Business Need One?",
+      "route": "/blog/what-is-a-domain-name",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1059,7 +1133,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1071,7 +1147,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1083,7 +1161,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1095,7 +1175,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1107,7 +1189,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1119,7 +1203,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1131,7 +1217,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1143,7 +1231,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1167,7 +1257,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1179,7 +1271,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1191,7 +1285,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1203,7 +1299,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1215,7 +1313,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1227,7 +1327,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1239,7 +1341,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1251,7 +1355,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1263,7 +1369,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1275,7 +1383,23 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
+    },
+    {
+      "type": "blog",
+      "key": "199-website-inclusions-and-boundaries",
+      "title": "What the $199 Website Includes—and What It Does Not",
+      "route": "/blog/199-website-inclusions-and-boundaries",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1287,7 +1411,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1299,7 +1425,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1311,7 +1439,23 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
+    },
+    {
+      "type": "blog",
+      "key": "who-is-199-website-for",
+      "title": "Who Is the $199 Website For?",
+      "route": "/blog/who-is-199-website-for",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "blog",
@@ -1323,7 +1467,9 @@
       "issues": [
         "Editorial state remains editorial-review-required"
       ],
-      "corrections": []
+      "corrections": [
+        "Replaced generated meta and Open Graph descriptions with the article's specific promised outcome"
+      ]
     },
     {
       "type": "core-page",

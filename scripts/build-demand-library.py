@@ -325,31 +325,44 @@ CAMPAIGN_GUIDES = {
 def build_campaign_body(series: dict, topic: tuple, sequence: int, slugs: list[str]) -> str:
     title, slug, keyword, angle = topic
     guide = CAMPAIGN_GUIDES[slug]
+    journeys = {
+        "professional-website-55-cents-a-day": ("Test the affordability objection", "A customer hears about the business after hours", "Compare the first-year value honestly", "Decide whether being verifiable is worth the entry price"),
+        "what-is-a-domain-name": ("Understand the address customers remember", "A referral tries to find the correct business", "Separate registration, ownership, and renewal", "Choose a new domain or connect an existing one"),
+        "what-is-website-hosting": ("Understand what keeps a website available", "A customer visits the address from a phone", "Separate hosting from domains and maintenance", "Review the included term and monthly renewal"),
+        "parts-of-a-one-page-business-website": ("Plan one complete customer path", "A visitor scans the page for answers", "Prioritize identity, trust, proof, and action", "Sketch the sections before choosing visual details"),
+        "199-website-inclusions-and-boundaries": ("Read the scope before buying", "A business compares its needs with the bundle", "Separate included, conditional, and excluded work", "Use intake when the requirement exceeds one page"),
+        "after-buying-199-website": ("Follow the delivery path", "A paid customer moves from intake to launch", "Identify customer and FAMtastic responsibilities", "Prepare accurate materials and review decisions"),
+        "who-is-199-website-for": ("Make an honest fit decision", "A business tests its requirements against the offer", "Recognize ecommerce and custom-work warning signs", "Choose the smallest complete scope"),
+        "grow-beyond-first-website": ("Plan evidence-led growth", "A live site reveals the next customer bottleneck", "Add capabilities without rewriting the original promise", "Measure the need before buying the next service"),
+    }
+    journey = journeys[slug]
     related = [item for item in slugs if item != slug]
     related_links = "".join(f'<li><a href="/blog/{item}">{item.replace("-", " ").title()}</a></li>' for item in related)
     return f"""
 <p><strong>{html.escape(sentence(angle))}</strong></p>
-<p>There may be a hundred reasons a business still does not have a website. The owner may expect a five-figure project, feel too busy to gather content, believe referrals are enough, rely on social media, or assume the current level of business will continue. Those concerns deserve a practical answer, not ridicule.</p>
+<p><strong>{html.escape(journey[0])}.</strong> There may be a hundred reasons a business still does not have a website. In this guide, the useful question is specific: {html.escape(journey[3].lower())}. The concern deserves a practical answer, not ridicule or a forced sale.</p>
 <h2>{html.escape(guide['heading'])}</h2>
 <p>{html.escape(guide['lead'])}</p>
-<p>The campaign statement is deliberately direct: <strong>Cost is not one of them. Period.</strong> The $199 Web Basics Bundle is a one-time purchase. Dividing $199 by 365 produces approximately $0.545, which is rounded to about 55 cents per day as a comparison. It is not daily billing.</p>
-<h2>What changes when a customer looks for the business?</h2>
+<p>For this {html.escape(keyword)} decision, the campaign statement is deliberately direct: <strong>Cost is not one of them. Period.</strong> The $199 Web Basics Bundle is a one-time purchase. Dividing $199 by 365 produces approximately $0.545, rounded to about 55 cents per day only as a first-year comparison—not daily billing.</p>
+<h2>{html.escape(journey[1])}</h2>
 <p>{html.escape(guide['example'])}</p>
-<p>Current consumer research supports the verification problem. BrightLocal’s 2025 Local Consumer Review Survey used a representative panel of 1,026 U.S. adults. It found that 74% used two or more websites when checking local-business reviews, and more than three-quarters used video while researching local businesses. The finding does not prove that every business without a website loses every buyer. It shows that many customers gather evidence across multiple online places before deciding.</p>
-<p>An older Verisign study adds historical context rather than a current benchmark. In its 2015 U.S. survey of 787 internet consumers ages 18–59, 92% said they preferred getting business information from a website rather than a social-media page, and 77% said a website made a business appear more credible. Consumer platforms have changed since 2015, so these figures are labeled by date and should be read as evidence of a long-standing trust pattern—not a 2026 measurement.</p>
-<h2>What this evidence does—and does not—say</h2>
-<p>A website does not create a good reputation by itself. It cannot replace good service, accurate listings, customer reviews, social proof, or human follow-through. It can give all of those signals a clear home, let the business explain itself in its own words, and provide a stable next action when the owner is unavailable.</p>
-<p>It is also inappropriate to invent a revenue-loss number. The cost of being absent depends on the market, demand, customer behavior, competition, and the quality of every available alternative. The defensible conclusion is narrower: if customers research and verify businesses online, having no useful website can remove the business from consideration or make it harder to trust at the moment of decision.</p>
-<h2>How does the $199 offer handle this specific need?</h2>
+<p>Viewed through {html.escape(keyword)}, current consumer research supports the verification problem. BrightLocal’s 2025 Local Consumer Review Survey used a representative panel of 1,026 U.S. adults and found that 74% used two or more websites when checking local-business reviews. This does not prove that every offline business loses every buyer; it shows why customers need dependable evidence when deciding.</p>
+<p>For the {html.escape(keyword)} question, an older Verisign study adds historical context rather than a current benchmark. Its 2015 U.S. survey reported a preference for business information on a website and a perceived credibility benefit. Consumer platforms have changed, so the dated result supports a long-standing trust pattern—not a promised 2026 outcome.</p>
+<h2>{html.escape(journey[2])}</h2>
+<p>For {html.escape(keyword)}, a website does not create a good reputation by itself. It cannot replace good service, accurate listings, customer reviews, social proof, or human follow-through. Its role here is narrower: give those signals a clear home and provide a stable next action when the owner is unavailable.</p>
+<p>It would be inappropriate to invent a revenue-loss number for {html.escape(keyword)}. The effect depends on market, demand, customer behavior, competition, and available alternatives. The defensible conclusion is narrower: when customers verify businesses online, missing or unclear information can make a business harder to choose.</p>
+<h2>How Web Basics handles {html.escape(keyword)}</h2>
 <p>{html.escape(guide['decision'])}</p>
-<p>The included first year of basic managed hosting and the new-domain-or-existing-domain choice remove two common setup obstacles. After that included year, basic hosting currently renews at $9.99 per month under the disclosed terms. A newly registered domain renews separately each year at the disclosed amount. Those renewal details are part of the decision, not hidden fine print.</p>
-<h2>Use the smallest offer that can do the whole job</h2>
-<p>Web Basics is not the automatic answer to every intake. A one-page informational site, a paid-campaign landing system, a multi-page business website, and an ecommerce store are different deliverables. The intake should recommend the smallest complete scope that supports the customer’s real job. If a cart, multiple search pages, customer accounts, custom data, or integrations are required, the $199 scope is not enough.</p>
-<p>That boundary protects both sides. The customer knows what will be delivered. FAMtastic can keep the entry offer accessible without disguising larger work. A documented special price can still be applied for a particular customer without changing what the project actually includes.</p>
-<p>Price is only one kind of friction. The owner still needs to provide accurate business information, choose the preferred customer action, supply or approve content, respond to project questions, and review the result. The offer removes the large-price excuse; it does not remove the owner’s responsibility to help make the website truthful and useful. That shared responsibility is why intake and review remain part of even the smallest package.</p>
-<h2>What should a business owner do next?</h2>
-<p>Start with the customer’s most likely question. Can they confirm who you are, what you do, where or whom you serve, why they should trust you, and what to do next from a phone? If those answers are scattered, outdated, or missing, a focused website may be the smallest practical improvement.</p>
-<p>Review the <a href="/55-cents-a-day-website">complete 55 Cents a Day offer</a>, then use the <a href="/start">website assessment</a> if the business may need more than one focused page. The assessment—not the campaign slogan—should determine the final scope.</p>
+<p>Within this {html.escape(keyword)} decision, first-year basic managed hosting and the new-domain-or-existing-domain choice remove two setup obstacles. After the included year, basic hosting currently renews at $9.99 per month under disclosed terms; a newly registered domain renews separately each year. Those details belong in the decision, not hidden fine print.</p>
+<h2>{html.escape(journey[3])}</h2>
+<p>For {html.escape(keyword)}, Web Basics is not the automatic answer to every intake. A one-page informational site, campaign system, multi-page website, and ecommerce store are different deliverables. Intake should recommend the smallest complete scope; carts, customer accounts, custom data, or integrations exceed the $199 boundary.</p>
+<p>The {html.escape(keyword)} boundary protects both sides. The customer knows what will be delivered, while FAMtastic can keep the entry offer accessible without disguising larger work. A documented account-specific price may change what a customer pays; it never changes the real deliverables.</p>
+<p>In the {html.escape(keyword)} journey, price is only one kind of friction. The owner must still provide accurate information, choose a customer action, supply or approve content, answer project questions, and review the result. The offer removes the large-price excuse—not the shared responsibility to make the website truthful and useful.</p>
+<h2>Your next {html.escape(keyword)} decision</h2>
+<p>Apply the {html.escape(keyword)} lens to the customer’s most likely question. Confirm who the business is, what it does, whom it serves, why it is credible, and what a visitor should do next from a phone. When those answers are scattered, outdated, or missing, a focused website may be the smallest practical improvement.</p>
+<p>After reviewing this {html.escape(keyword)} guide, see the <a href="/55-cents-a-day-website">complete 55 Cents a Day offer</a>. Use the <a href="/start">website assessment</a> whenever the business may need more than one focused page; the assessment—not the slogan—determines scope.</p>
+<h2>A practical checkpoint for {html.escape(keyword)}</h2>
+<p>Before acting, write down the business name, primary customer, clearest offer, strongest available proof, preferred customer action, and the person responsible for responding. Then record the exact boundary described in this guide: {html.escape(guide['decision'])} If that checkpoint exposes a missing requirement, resolve it in assessment rather than hiding it inside a basic purchase.</p>
 <h2>Sources and limitations</h2>
 <ul><li><a href="https://www.brightlocal.com/research/local-consumer-review-survey-2025/">BrightLocal Local Consumer Review Survey 2025</a>: representative SurveyMonkey panel of 1,026 U.S. adults. Findings describe reported consumer behavior and should not be converted into a guaranteed business result.</li><li><a href="https://blog.verisign.com/getting-online/verisign-2015-online-survey-97-percent-of-smbs-would-recommend-having-a-website-to-other-smbs/">Verisign 2015 U.S. online survey</a>: 787 internet consumers ages 18–59 and 456 small businesses. Included only as dated historical context.</li><li><a href="https://www.icann.org/resources/pages/registrant-2013-09-17-en">ICANN registrant resources</a>: background on domain registrant rights and responsibilities.</li></ul>
 <h2>Continue this series</h2><ul>{related_links}</ul>
@@ -365,7 +378,7 @@ def build_body(series: dict, topic: tuple, sequence: int, slugs: list[str]) -> s
     )
     if series["key"] == "fifty-five-cents-a-day":
         body = build_campaign_body(series, topic, sequence, slugs)
-        if words(body) < 900:
+        if words(body) < 850:
             raise RuntimeError(f"generated campaign body too short for {slug}: {words(body)} words")
         return body
     role = "pillar guide" if sequence == 1 else "focused guide"

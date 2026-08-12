@@ -49,6 +49,18 @@ test('customer account, portal, support, settings, and purchase UI are mobile-sa
   await expect(page.getByText(/\$9\.99\/month/i)).toBeVisible();
 });
 
+test('authenticated portal sections remain mobile-safe', async ({ page }, testInfo) => {
+  await signIn(page);
+  for (const section of ['Home', 'Activity', 'My services', 'Performance', 'Projects & approvals', 'Messages', 'Support', 'For you & latest', 'FAQs', 'Recommended next steps', 'Refer a friend', 'Purchases & billing', 'Profile & team', 'Settings']) {
+    const menu = page.getByRole('button', { name: 'Menu', exact: true });
+    if (await menu.isVisible()) await menu.click();
+    await page.getByRole('button', { name: section, exact: true }).click();
+    await expect(page.locator('.portal-main > header h1')).toHaveText(section);
+    await assertNoHorizontalOverflow(page);
+  }
+  await page.screenshot({ path: testInfo.outputPath('authenticated-portal-mobile.png'), fullPage: true });
+});
+
 test('sandbox Commerce order completes with Stripe test payment', async ({ page }) => {
   test.skip(process.env.FAMTASTIC_RUN_SANDBOX_PAYMENT !== '1', 'Explicit sandbox-payment gate is required.');
   await signIn(page, '/buy');
