@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "future_repository": "famtastic-marketing-engine",
+  "portable_now": [
+    "marketing/engine/"
+  ],
+  "portable_after_generalization": [
+    "scripts/local-model-router.sh",
+    "scripts/marketing-preflight.sh"
+  ],
+  "remain_with_famtastic": [
+    "marketing/brands/famtastic/",
+    "marketing/campaigns/",
+    "marketing/55-cent-campaign/",
+    "backend/",
+    "docs/CAPABILITY_REGISTRY.md",
+    "docs/marketing/"
+  ],
+  "never_portable": [
+    "customer records",
+    "recipient lists",
+    "OAuth tokens",
+    "API keys",
+    "payment data",
+    "production cookies",
+    "private offer records"
+  ],
+  "extraction_gates_document": "docs/architecture/MARKETING_ENGINE_INCUBATION_AND_EXTRACTION.md"
+}

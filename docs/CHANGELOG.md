@@ -15,6 +15,10 @@
 - Added GLM4 9B as a local multilingual/challenger model, Gemma 3 4B as the
   local vision lane, a fail-closed task router, and shared Shay/Claude/Codex
   rules distinguishing local execution from cloud invoked through a local CLI.
+- Accepted the incubate-then-extract architecture, added a portable engine
+  schema boundary and replaceable FAMtastic brand configuration, and created a
+  fail-closed campaign readiness audit covering 68 records, UTMs, approvals,
+  local tools, local models, and shared agent contracts.
 
 ## 2026-08-12 — 17-day campaign and independent QA-agent contracts
 

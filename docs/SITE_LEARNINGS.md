@@ -23,6 +23,10 @@
 - Four daily content moments should become channel-native adaptations, not the
   same post blasted four times to every network. Email frequency remains
   relationship-based, not synchronized to social volume.
+- Reusable marketing logic should be incubated beside the first real proof but
+  separated structurally from brand, customer, Commerce, Drupal, and credential
+  data. Extract only after a second brand and real delivery evidence prove the
+  abstraction; early repository duplication creates competing truths.
 
 ## 2026-08-11 — Headless navigation must have one ordering authority
 

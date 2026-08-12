@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "brand_key": "famtastic_designs",
+  "display_name": "FAMtastic Designs",
+  "canonical_url": "https://famtasticdesigns.com",
+  "position": "Connected digital business systems that help small and growing businesses get found, get customers, get paid, serve customers, and grow.",
+  "voice": ["clear", "direct", "confident", "practical", "human"],
+  "visual": {
+    "primary_background": "#080808",
+    "surface": "#141414",
+    "text": "#f7f7f7",
+    "accent": "#73ff00"
+  },
+  "claim_sources": [
+    "docs/CAPABILITY_REGISTRY.md",
+    "backend/config/famtastic-products.json",
+    "backend/config/famtastic-deal-terms.json"
+  ],
+  "approval_required": [
+    "public_publish",
+    "promotional_send",
+    "advertising_spend",
+    "price_or_discount_change",
+    "recurring_charge_change",
+    "final_legal_promise"
+  ]
+}

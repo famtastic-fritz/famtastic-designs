@@ -30,6 +30,12 @@
   `marketing/local-models.json`. The same contract applies to Shay, Claude,
   Codex, and scripts. A model name ending in `:cloud` is cloud execution even
   when invoked through a local CLI; never report it as private/local inference.
+- The marketing engine incubates here but must respect
+  `docs/architecture/MARKETING_ENGINE_INCUBATION_AND_EXTRACTION.md`. Keep
+  provider-neutral code in `marketing/engine`, FAMtastic brand configuration in
+  `marketing/brands/famtastic`, and campaign/customer/Drupal truth outside the
+  portable boundary. Run `python3 scripts/campaign-readiness.py` before saying
+  campaign production is ready.
 
 ## Package Managers
 
