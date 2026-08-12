@@ -27,12 +27,14 @@ else
   status=1
 fi
 
-if ollama list 2>/dev/null | awk 'NR > 1 {print $1}' | grep -Eq '^qwen3:8b$'; then
-  printf 'PASS model   qwen3:8b\n'
-else
-  printf 'MISS model   qwen3:8b (run: ollama pull qwen3:8b)\n'
-  status=1
-fi
+for model in qwen3:8b glm4:9b gemma3:4b; do
+  if ollama list 2>/dev/null | awk 'NR > 1 {print $1}' | grep -Fxq "$model"; then
+    printf 'PASS model   %s\n' "$model"
+  else
+    printf 'MISS model   %s (run: ollama pull %s)\n' "$model" "$model"
+    status=1
+  fi
+done
 
 if [[ "${FAMTASTIC_MARKETING_PUBLISH:-false}" == "true" ]]; then
   printf 'BLOCK publishing is enabled; this preflight is draft-only\n'
@@ -46,4 +48,3 @@ printf 'INFO optional Poe=%s HeyGen=%s Postiz=%s\n' \
   "$([[ -n "${POSTIZ_API_KEY:-}" ]] && printf configured || printf absent)"
 
 exit "$status"
-

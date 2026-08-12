@@ -5,6 +5,12 @@
 - Open weights do not imply local fit. Kimi K2 activates 32 billion of one
   trillion total parameters and is not a practical 16 GB laptop model; select
   models by measured memory, latency, license, and task quality.
+- Kimi K3 increases the mismatch to 2.8 trillion total and roughly 104 billion
+  active parameters. Ollama's `:cloud` tag is a transport label, not local
+  inference; tool location and compute location must be recorded separately.
+- Local agents need task routing rather than one favorite model. Qwen handles
+  routine text, GLM provides an independent multilingual challenger, and a
+  smaller Gemma vision model preserves memory for the browser and media tools.
 - A presenter generator is one production format, not the campaign engine.
   Branded motion, diagrams, screen proof, founder voice, articles, email, and
   landing pages must share one campaign record and offer truth.

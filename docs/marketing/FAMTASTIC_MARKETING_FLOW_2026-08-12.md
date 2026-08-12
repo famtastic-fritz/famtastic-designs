@@ -36,10 +36,11 @@ are `idea`, `briefed`, `drafted`, `content_qa`, `seo_qa`, `media_ready`,
 | Job | Default | Optional upgrade | Why |
 |---|---|---|---|
 | Campaign truth and records | Drupal + repository JSON | None | Keeps offers, consent, leads, and evidence connected. |
-| Drafting and variations | Ollama + Qwen3 8B | Poe API / Codex | Local, private, and no per-call cost for routine work. |
+| Drafting and variations | Ollama + Qwen3 8B, challenged by GLM4 9B | Poe API / Codex | Local, private, and no per-call cost for routine work. |
 | Final factual and offer QA | Repository validators + agent review | Strong cloud model | A small local model is an assistant, not final authority. |
 | Branded motion | FFmpeg now; Remotion templates next | Managed render service | Better for price cards, diagrams, captions, timelines, and CTAs than an avatar. |
 | Presenter video | Founder footage or voiceover | HeyGen eight-video pilot | Use only when a face and consistent delivery increase trust. |
+| Local image review | Gemma 3 4B | Codex/cloud vision | Adds a small multimodal lane without exhausting workstation memory. |
 | Local speech/captions | Kokoro + whisper.cpp evaluation | Cloud voice/caption service | Small permissive components; voice and dependency licenses still require recording. |
 | Scheduling | Approval manifest first | Patched Postiz pilot | Platform OAuth and audits remain unavoidable. |
 | Workflow automation | Existing Drupal workers/scripts | Activepieces Community Edition | Add only when the manifest workflow is stable. |
@@ -79,9 +80,12 @@ memory; an 8B quantized model leaves room for the operating system and editing
 tools. Do not give it unattended publishing authority.
 
 Kimi K2 is open, but the official model has one trillion total parameters and
-32 billion active parameters. It is not a realistic local model for this Mac.
-Kimi can still be evaluated through a hosted API or Poe if its cost and output
-beat the existing tools. Open weights does not mean fits locally.
+32 billion active parameters. Kimi K3 is larger: 2.8 trillion total and about
+104 billion activated parameters. Neither is a realistic local model for this
+Mac. Ollama's official Kimi K3 entry is `kimi-k3:cloud`, currently requires a
+Pro or Max plan, and consumes extra usage credits. Kimi can still be evaluated
+through hosted access if its cost and output beat existing tools. Open weights
+does not mean fits locally, and a local CLI does not guarantee local inference.
 
 ## Poe
 
@@ -134,4 +138,3 @@ or above every published fix, TLS, strong secrets, backups, and no public posts.
 
 Everything before those gates—briefs, manifests, draft assets, variants, QA,
 private test jobs, UTM construction, and reports—can be automated.
-

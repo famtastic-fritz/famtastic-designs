@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "machine_profile": {
+    "platform": "Apple Silicon",
+    "unified_memory_gb": 16,
+    "runtime": "Ollama"
+  },
+  "routes": {
+    "draft_copy": {
+      "primary": "qwen3:8b",
+      "challenger": "glm4:9b",
+      "cloud_escalation": "poe"
+    },
+    "multilingual_copy": {
+      "primary": "glm4:9b",
+      "challenger": "qwen3:8b",
+      "cloud_escalation": "poe"
+    },
+    "image_review": {
+      "primary": "gemma3:4b",
+      "cloud_escalation": "codex"
+    },
+    "caption_variants": {
+      "primary": "qwen3:8b",
+      "challenger": "glm4:9b"
+    },
+    "final_claim_approval": {
+      "primary": null,
+      "requires_repository_evidence": true,
+      "requires_agent_or_human_review": true
+    },
+    "public_publish_approval": {
+      "primary": null,
+      "requires_human_approval": true
+    }
+  },
+  "prohibited_local_aliases": [
+    "kimi-k3:cloud",
+    "glm-4.7:cloud"
+  ],
+  "notes": {
+    "kimi-k3": "Cloud-only in Ollama's official library; 2.8T total and 104B activated parameters. Do not represent it as locally executed.",
+    "glm-4.7-flash": "The official local Q4 is approximately 19GB and exceeds this machine's practical memory budget. Use smaller GLM4 9B locally or hosted GLM through Poe/cloud.",
+    "qwen3-14b": "A 9.3GB model may load, but leaves less headroom for context, browser, media, and agent tools; benchmark before adopting.",
+    "gemma3-12b": "An 8.1GB model may load, but 4B is the default local vision reviewer to preserve operating headroom."
+  }
+}

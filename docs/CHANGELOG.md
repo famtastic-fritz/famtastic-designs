@@ -12,6 +12,9 @@
 - Recorded why Kimi K2, LivePortrait, MuseTalk, Postiz, and HeyGen are optional
   or gated rather than silently treating every open repository as commercially
   deployable on this computer.
+- Added GLM4 9B as a local multilingual/challenger model, Gemma 3 4B as the
+  local vision lane, a fail-closed task router, and shared Shay/Claude/Codex
+  rules distinguishing local execution from cloud invoked through a local CLI.
 
 ## 2026-08-12 — 17-day campaign and independent QA-agent contracts
 

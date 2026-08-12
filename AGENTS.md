@@ -25,6 +25,11 @@
   content IDs in `marketing/campaigns/55-cents-17-day/manifest.json`. Local
   models may draft and classify; they may not approve claims or publish. Never
   commit Poe, HeyGen, scheduler, social OAuth, or customer-list credentials.
+- For local or Poe-backed model work, read
+  `docs/marketing/LOCAL_MODEL_AND_AGENT_ROUTING_2026-08-12.md` and route through
+  `marketing/local-models.json`. The same contract applies to Shay, Claude,
+  Codex, and scripts. A model name ending in `:cloud` is cloud execution even
+  when invoked through a local CLI; never report it as private/local inference.
 
 ## Package Managers
 
