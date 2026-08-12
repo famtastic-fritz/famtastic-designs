@@ -89,3 +89,19 @@ safe-zone QA, platform-length copy, and descriptive alt text where supported.
 - Drupal Campaign Operations reports the delivery and attribution evidence.
 - The repository contains the reusable onboarding, credential, QA, failure,
   and reporting doctrine needed to sell this workflow responsibly.
+
+## Facebook Page proof — 2026-08-12
+
+- Connected identity: `FAMTastic Designs` (`179965042038743`)
+- Postiz channel connection: passed
+- Post 1 provider ID: `179965042038743_1718361166119882`
+- Post 2 provider ID: `179965042038743_1718361229453209`
+- Meta Graph verification: both records returned `is_published: true`
+- Public URLs:
+  - https://www.facebook.com/1718361399453192/posts/1718361166119882
+  - https://www.facebook.com/1718361399453192/posts/1718361229453209
+- Operational note: Postiz's composer defaulted the proof drafts to its next
+  posting slots. For this explicitly authorized immediate proof, delivery was
+  completed through the same connected Page token and the returned provider
+  IDs/URLs were written back to the local Postiz records. The reusable runner
+  must expose an explicit `now` mode instead of rewriting scheduler state.

@@ -24,6 +24,7 @@ if [[ ! -f "$env_file" ]]; then
     printf 'POSTIZ_JWT_SECRET=%s\n' "$jwt_secret"
     printf 'POSTIZ_DB_PASSWORD=%s\n' "$db_password"
     printf 'POSTIZ_DISABLE_REGISTRATION=false\n'
+    printf 'POSTIZ_PUBLIC_URL=http://127.0.0.1:4007\n'
     printf 'FACEBOOK_APP_ID=\nFACEBOOK_APP_SECRET=\n'
     printf 'THREADS_APP_ID=\nTHREADS_APP_SECRET=\n'
     printf 'TIKTOK_CLIENT_ID=\nTIKTOK_CLIENT_SECRET=\n'
@@ -65,4 +66,3 @@ case "${1:-status}" in
     exit 2
     ;;
 esac
-
