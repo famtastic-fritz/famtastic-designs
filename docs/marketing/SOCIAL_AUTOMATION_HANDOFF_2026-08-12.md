@@ -30,7 +30,7 @@ canonical Facebook business presence.
 |---|---|---|
 | Facebook personal | Meta developer identity uses `nineoo@yahoo.com` | Warm-audience/friends activity remains personal and assisted; never automate a personal profile through the business publisher. |
 | Facebook Page | `FAMTastic Designs`, Page asset ID `179965042038743` | Existing canonical business Page; 0 followers and no recent posts at inspection. Connect this Page to the business publisher. |
-| Instagram | Existing FAMtastic account declared under `fritz.medine@gmail.com` | Connect the existing account, not a new profile. It must be Professional/Business. Meta's unified Inbox access is enabled in the pending connection flow. |
+| Instagram | Existing `@famtastic` account declared under `fritz.medine@gmail.com` | Converted from Personal to Business, category `Product/service`, on 2026-08-12. Public contact details were intentionally left hidden. Meta Page linkage is still pending provider confirmation. |
 | TikTok | Existing FAMtastic account declared under `fritz.medine@gmail.com` | Connect after Meta proof; confirm handle and business/creator state during OAuth. |
 | YouTube | Existing channel currently owned through `nineoo@yahoo.com` | Keep the channel; use YouTube Brand Account/channel permissions to add `fritz.medine@gmail.com` as manager/owner instead of sharing credentials. |
 
@@ -80,14 +80,19 @@ Completed and verified on 2026-08-12:
   requested.
 - Meta Business Suite already contains the canonical `FAMTastic Designs` Page
   with asset ID `179965042038743`; no duplicate Page was created.
-- The existing-Instagram connection flow was started with unified Instagram
-  message access enabled.
+- `@famtastic` was successfully converted from a Personal account to a public
+  Business account with the `Product/service` category. Personal contact
+  information was not exposed. Unified Instagram message access was selected
+  in the linking flow.
 
-Current owner checkpoint: Meta opened the official Instagram authentication
-screen. Fritz must sign in to the existing FAMtastic Instagram account and
-complete any password, 2FA, consent, or professional-account conversion prompt.
-The authenticated tab has been left open. No social post, ad, invitation, or
-public campaign action has been created.
+Current provider blocker: the authenticated Instagram OIDC flow completed and
+closed twice, but Meta Business Suite still shows **Connect Instagram**, its
+onboarding counter remains `0 / 1`, and Settings > Profiles lists only Facebook
+Pages. Therefore the Page-to-Instagram relationship is **not verified** and
+must not be reported as connected. Retry from the Instagram mobile app via
+Edit profile > Page, select the existing `FAMTastic Designs` Page, and then
+recheck Business Suite. No social post, ad, invitation, or public campaign
+action was created.
 
 After that checkpoint, verify the linked Instagram handle in Meta Business
 Suite, inspect Page/business access, connect the Meta provider values to Postiz,
