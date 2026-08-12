@@ -32,12 +32,14 @@ import VerifyEmailPage from './pages/VerifyEmailPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PurchasePage from './pages/PurchasePage.jsx';
 import FiftyFiveCentWebsitePage from './pages/FiftyFiveCentWebsitePage.jsx';
+import ScrollToTop from './components/ScrollToTop.jsx';
 
 export default function App() {
   return (
     <UserProvider>
       <SEO />
       <GoogleAnalytics />
+      <ScrollToTop />
       <Routes>
         {/* Public, token-scoped prospect pipeline (no marketing chrome, no auth). */}
         {/* /p/:token enters via ProofHub: active proof campaign → proof hub;

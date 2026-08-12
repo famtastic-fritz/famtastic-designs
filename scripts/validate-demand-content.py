@@ -59,6 +59,7 @@ def main() -> int:
     series = {item.get("key"): item for item in data.get("series", [])}
     faqs = {item.get("key"): item for item in data.get("faqs", [])}
     posts = data.get("posts", [])
+    paragraph_owners: dict[str, set[str]] = {}
 
     for collection_name, collection in (
         ("capabilities", data.get("capabilities", [])),
@@ -134,6 +135,22 @@ def main() -> int:
         if not 110 <= description_length <= 165:
             fail(errors, f"{key}: meta description must be 110-165 characters (got {description_length})")
         body = post.get("body_html", "")
+        for paragraph in re.findall(r"<p\b[^>]*>(.*?)</p>", body, re.I | re.S):
+            normalized = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", paragraph)).strip().lower()
+            if len(normalized.split()) >= 35:
+                paragraph_owners.setdefault(normalized, set()).add(key)
+        if post.get("series") != "fifty-five-cents-a-day":
+            plain_general = re.sub(r"<[^>]+>", " ", body).lower()
+            biased_phrases = [
+                "drupal can serve as",
+                "drupal interface",
+                "drupal + react",
+                "drupal and react",
+                "react interface provides",
+            ]
+            for phrase in biased_phrases:
+                if phrase in plain_general:
+                    fail(errors, f"{key}: general-interest article contains CMS-biased boilerplate: {phrase!r}")
         if post.get("series") == "fifty-five-cents-a-day":
             plain_campaign = re.sub(r"<[^>]+>", " ", body).lower()
             for forbidden_scope in ["drupal", "react", "ai-optimized", "48-hour delivery", "live in 48 hours"]:
@@ -213,6 +230,18 @@ def main() -> int:
             fail(errors, f"{faq_key}: unknown category {faq.get('category')!r}")
         if len(faq.get("answer_html", "")) < 80:
             fail(errors, f"{faq_key}: answer is too short")
+
+    repeated = [
+        (paragraph, owners)
+        for paragraph, owners in paragraph_owners.items()
+        if len(owners) > 3 and not all(
+            next((post.get("series") for post in posts if post.get("key") == owner), "") == "fifty-five-cents-a-day"
+            for owner in owners
+        )
+    ]
+    for paragraph, owners in sorted(repeated, key=lambda item: -len(item[1])):
+        preview = paragraph[:90] + ("..." if len(paragraph) > 90 else "")
+        fail(errors, f"long paragraph reused across {len(owners)} posts: {preview!r}")
 
     if errors:
         print("Demand content validation FAILED", file=sys.stderr)

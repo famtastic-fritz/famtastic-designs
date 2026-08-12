@@ -65,7 +65,7 @@ SERIES = [
         "thesis": "Lead capture is a complete decision path from relevance and trust through a useful form, acknowledgment, attribution, and next step.",
         "audience": "Businesses that need their website to create qualified conversations rather than passive traffic.",
         "context": "website lead capture",
-        "proof": "FAMtastic has built public intake, quote, campaign, referral, attribution, acknowledgment, and Drupal lead-record workflows.",
+        "proof": "FAMtastic has built public intake, quote, campaign, referral, attribution, acknowledgment, and structured lead-record workflows.",
         "source": ["Google Analytics Help", "https://support.google.com/analytics/answer/9322688"],
         "topics": [
             ("How a Website Turns a Visitor Into a Real Lead", "how-a-website-captures-a-lead", "website lead capture", "Connect the page promise, evidence, form, acknowledgment, and staff workflow into one path."),
@@ -88,7 +88,7 @@ SERIES = [
         "audience": "Owner-led and small teams that cannot afford to lose opportunities inside inboxes and informal handoffs.",
         "context": "lead response operations",
         "proof": "FAMtastic has test-provider proof for acknowledgments, Fritz alerts, lead stages, deadlines, escalations, worker protection, and evidence-led acceptance.",
-        "source": ["Drupal Cron Documentation", "https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks"],
+        "source": ["Google Site Reliability Engineering", "https://sre.google/sre-book/monitoring-distributed-systems/"],
         "topics": [
             ("What Should Happen After a Website Lead Arrives?", "what-happens-after-a-website-lead", "website lead response process", "Give every new lead an acknowledgment, owner, deadline, stage, and visible next action."),
             ("What Lead Stages Does a Small Business Actually Need?", "small-business-lead-stages", "small business lead stages", "Use a small, canonical stage model that describes reality and supports action."),
@@ -109,7 +109,7 @@ SERIES = [
         "thesis": "Checkout is the beginning of fulfillment: identity, payment, receipt, intake, entitlements, delivery, renewals, and exceptions must share one commercial truth.",
         "audience": "Service businesses and ecommerce operators that need payment to start reliable work rather than create administrative cleanup.",
         "context": "commerce and post-purchase operations",
-        "proof": "FAMtastic has test-provider proof for Drupal Commerce checkout, Stripe payment, receipt, entitlement, intake, staff alerts, and account-scoped pricing.",
+        "proof": "FAMtastic has test-provider proof for structured checkout, Stripe payment, receipt, entitlement, intake, staff alerts, and account-scoped pricing.",
         "source": ["Stripe Checkout Documentation", "https://docs.stripe.com/payments/checkout"],
         "topics": [
             ("What Happens After an Online Purchase?", "what-happens-after-an-online-purchase", "post purchase ecommerce workflow", "Treat payment completion as the trigger for customer identity, receipt, fulfillment, and service access."),
@@ -126,7 +126,7 @@ SERIES = [
         "key": "customer-portal-experience",
         "title": "The Customer Portal Experience Series",
         "category": "serve-customers",
-        "tags": ["customer-portal", "customer-experience", "drupal", "react"],
+        "tags": ["customer-portal", "customer-experience", "business-automation"],
         "capabilities": ["drupal-react-portals", "commerce-lifecycle", "lead-response"],
         "thesis": "A customer portal should reduce effort across service, support, files, purchases, knowledge, preferences, referrals, and relevant growth.",
         "audience": "Businesses considering a branded portal or trying to make an existing login useful to customers.",
@@ -154,7 +154,7 @@ SERIES = [
         "audience": "Small teams looking to reduce dropped work without automating customer relationships into a dead end.",
         "context": "small-business workflow automation",
         "proof": "FAMtastic has implemented workers, deadlines, retries, dead-letter handling, notifications, lifecycle events, and synthetic journey validation.",
-        "source": ["Drupal Queue API", "https://www.drupal.org/docs/drupal-apis/queue-api/overview"],
+        "source": ["Google Site Reliability Engineering", "https://sre.google/sre-book/addressing-cascading-failures/"],
         "topics": [
             ("How Automation Prevents Lost Opportunities", "how-automation-prevents-lost-opportunities", "small business workflow automation", "Automate acknowledgment, deadlines, reminders, retries, and exception visibility while keeping a person accountable."),
             ("What Should a Small Business Automate First?", "what-small-business-should-automate-first", "what should a small business automate", "Start with repetitive, observable work where delay or omission causes real customer or revenue risk."),
@@ -394,33 +394,56 @@ def build_body(series: dict, topic: tuple, sequence: int, slugs: list[str]) -> s
             8: """<h2>The first site is a foundation</h2><p>A customer can begin with the smallest complete site, then add capabilities because the business needs them—not because the original offer hid them. Common growth paths include extra pages, local SEO, content, lead automation, analytics, scheduling, ecommerce, maintenance, customer portals, and governed AI assistance. Every addition should define its deliverable, price or approval state, intake questions, entitlement, support path, and proof scenario.</p>""",
         }
         campaign_detail = campaign_sections[sequence] + inline_campaign_visuals
+    # Each position in a series has a distinct reader job. Keeping these lenses
+    # separate prevents the old factory pattern in which every article repeated
+    # the same customer-experience, workflow, risk, and measurement paragraphs.
+    lenses = [
+        ("the business decision", "purpose, audience, desired action, ownership, and a defensible definition of success"),
+        ("the minimum useful scope", "the information that changes the decision, the boundary of the work, and what can wait"),
+        ("the available choices", "fit, tradeoffs, customer effort, operating effort, and the cost of choosing the wrong path"),
+        ("the information required", "inputs, sources, owners, permissions, missing-data handling, and approval"),
+        ("the customer journey", "questions, trust, friction, accessibility, mobile use, confirmation, and recovery"),
+        ("the operating handoff", "record ownership, notifications, deadlines, replies, exceptions, and a visible timeline"),
+        ("the fit boundary", "conditions that make the approach appropriate, warning signs, alternatives, and escalation"),
+        ("the evidence loop", "observable outcomes, instrumentation, review cadence, limitations, and the next experiment"),
+    ]
+    lens_name, lens_details = lenses[sequence - 1]
+    escaped_angle = html.escape(sentence(angle))
+    escaped_context = html.escape(series["context"])
+    escaped_thesis = html.escape(series["thesis"])
+    escaped_audience = html.escape(series["audience"])
+    escaped_proof = html.escape(series["proof"])
+    escaped_keyword = html.escape(keyword)
     body = f"""
-<p><strong>{html.escape(sentence(angle))}</strong> That is the practical answer behind this {role}. The useful question is not whether a business can add another page, form, dashboard, automation, or AI feature. It is whether the change makes an important customer decision easier and gives the business a reliable way to respond.</p>
-<p>{html.escape(series['audience'])} can use this guide to define the work before choosing software or approving a build. The examples follow FAMtastic's evidence boundary: {html.escape(series['proof'])} This article explains a repeatable method and does not claim that the same configuration or result fits every business.</p>
-<h2>Key takeaways</h2>
-<ul><li>Begin with the customer action and the business responsibility that follows it.</li><li>Record ownership, timing, data, exceptions, and the definition of done before automating the path.</li><li>Choose the smallest useful implementation that can be tested without blocking later growth.</li><li>Measure completed outcomes and customer effort, not activity alone.</li><li>Keep commercial promises and production changes behind an explicit approval step.</li></ul>
-{campaign_detail}
-<h2>What does {html.escape(keyword)} mean in practice?</h2>
-<p>{html.escape(sentence(angle))} In practice, that means describing the starting condition, the person who needs help, the decision or task they are trying to complete, and what must happen afterward. A page is not complete because it looks polished. A workflow is not complete because one happy-path test passes. The system must make the next action understandable and preserve enough context for the business to follow through.</p>
-<p>The strongest design starts in ordinary language. Write down what the customer sees, what they need to know, what they can do, what confirmation they receive, and who owns the next step. Then map the data and system behavior underneath that experience. This order keeps technology subordinate to the customer and prevents internal labels from leaking into the public experience.</p>
-<h2>How does this affect the customer experience?</h2>
-<p>Customers experience a business as one continuous relationship even when the company uses separate tools behind the scenes. They do not care which system owns a form, payment, file, message, or report. They care whether information is clear, whether the action worked, whether they know what happens next, and whether the business remembers the context later.</p>
-<p>For {html.escape(series['context'])}, the design should reduce uncertainty at the moment it matters. Use visible labels, short paths, mobile-safe controls, useful confirmation, and a recovery route when something fails. Do not make the customer repeat information that the business already collected. Do not hide a real limitation behind vague marketing language. Clarity is part of the service.</p>
-<h2>What business workflow must exist behind the screen?</h2>
-<p>Every customer-facing action creates an operational commitment. A request needs an owner and deadline. A payment needs a receipt, order state, and fulfillment path. A support message needs a case timeline and response target. An automated event needs idempotency, retries, and exception handling. An analytics event needs a defined business meaning. Without that operating layer, the website merely moves uncertainty from the customer to the staff.</p>
-<p>Drupal can serve as the structured operational record while a React interface provides the branded experience. That architecture is useful when content, identity, Commerce, projects, entitlements, support, preferences, or reporting need to share customer context. Simpler businesses may need less. The architecture should follow the workflow rather than becoming the reason for it.</p>
-<h2>A five-step implementation framework</h2>
-<ol><li><strong>Define the job.</strong> Name the customer, the situation, the action, and the desired outcome.</li><li><strong>Map the lifecycle.</strong> Record what happens before, during, and after the visible interaction.</li><li><strong>Set the rules.</strong> Define ownership, permissions, deadlines, consent, exceptions, and customer promises.</li><li><strong>Build the smallest complete path.</strong> Connect the public experience to the operational record and notification path.</li><li><strong>Prove and improve.</strong> Test normal, mobile, failure, security, and recovery scenarios, then use evidence to decide what changes next.</li></ol>
-<p>This framework prevents a common failure: building the visible screen while leaving the handoff to memory. It also makes additions easier to evaluate. A proposed feature should identify which step it improves and which acceptance scenario will prove that improvement.</p>
-<h2>What mistakes create the most risk?</h2>
-<p>The first mistake is choosing features before understanding the workflow. The second is treating an email notification as a durable business record. The third is using one generic call to action for readers with different levels of intent. The fourth is automating without a clear owner for exceptions. The fifth is publishing claims, prices, or promises that the delivery system cannot yet support.</p>
-<p>Another risk is measuring only the easiest number. Traffic, messages sent, chatbot turns, and form submissions may be useful diagnostic signals, but none proves a good customer outcome. Connect activity to a meaningful next state such as a qualified lead, response, completed purchase, approved deliverable, resolved case, retained customer, or documented learning.</p>
-<h2>How should this be measured?</h2>
-<p>Use a small measurement chain: source, customer action, acknowledgment, staff action, completed outcome, and exception. Review trends rather than isolated daily movement. Segment where the difference changes a decision, such as mobile versus desktop, new versus returning customer, service owned, campaign, project stage, or renewal timing.</p>
-<p>The measurement plan should also define what must not be collected. Avoid placing secrets or unnecessary personal information in analytics. Keep the customer database authoritative for identity and service history. Use analytics to understand behavior and acquisition, then connect it to operational outcomes through controlled identifiers and access checks.</p>
-<h2>What should the business do next?</h2>
-<p>Start by documenting the current path on one page. Mark every place where the customer waits, repeats information, changes channels, or depends on someone remembering a task. Choose the failure that causes the greatest customer or business cost. That becomes the first bounded improvement and the first acceptance test.</p>
-<p>For source-grounded platform guidance, review <a href="{html.escape(source_url)}">{html.escape(source_name)}</a>. For FAMtastic-specific decisions, the next step is a needs-led assessment that can recommend a bounded package, a scoped custom project, or no immediate build when the evidence does not support one.</p>
+<p><strong>{escaped_angle}</strong></p>
+<p>This {role} is for {escaped_audience[0].lower() + escaped_audience[1:]} Its focus is {html.escape(lens_name)}: {html.escape(lens_details)}. The platform comes later. A hosted site builder, general-purpose CMS, commerce platform, headless CMS, or custom application can each be right when the requirement justifies it.</p>
+<h2>The decision this guide helps you make</h2>
+<p>{escaped_thesis} For <strong>{escaped_keyword}</strong>, begin by writing the decision in one sentence: who needs to do what, what must they understand first, and what should the business do when that action occurs? That sentence is more useful than a software preference because it can be tested against any proposed solution.</p>
+<p>{escaped_angle} Treat that statement as a boundary. If a requested feature does not help the reader complete this job, reduce risk, or make follow-through more reliable, it belongs in a later phase or a different scope.</p>
+<h2>Questions to answer before choosing a platform</h2>
+<ul><li>Who is the primary customer, and what situation brings them here?</li><li>Which facts or proof change that customer's decision?</li><li>What action should be easiest on a phone?</li><li>Who owns the response, and how quickly must it happen?</li><li>Which information must remain editable by staff?</li><li>What happens when data, payment, email, or an integration fails?</li></ul>
+<p>For {escaped_keyword}, these answers narrow the architecture naturally. Content-heavy publishing may favor a familiar CMS. A straightforward campaign may need only a focused managed page. Ecommerce may favor a commerce platform. Complex identity, workflows, or integrations may justify a structured backend and a custom interface. FAMtastic is not limited to one CMS; the recommendation follows fit, maintainability, budget, ownership, and future change.</p>
+<h2>Apply {html.escape(lens_name)} to {escaped_context}</h2>
+<p>The practical work for {escaped_keyword} is to document {html.escape(lens_details)}. Name the current behavior, the desired behavior, and the gap between them. Then separate facts from assumptions. Facts can be verified now; assumptions become questions, prototypes, or tests rather than hidden project risk.</p>
+<p>For this article, the central working rule is: {escaped_angle} Use it to review proposed pages, fields, automations, integrations, and reports. A choice that cannot explain how it supports that rule should not be treated as a requirement.</p>
+<h2>What the customer should experience</h2>
+<p>In a {escaped_keyword} journey, the customer should immediately understand where they are, whether the information applies to them, and what to do next. On mobile, the primary action must remain readable and reachable without horizontal scrolling or precision tapping. Confirmation should say what succeeded, what happens next, and how to recover if the result is missing or wrong.</p>
+<p>For {escaped_keyword}, remove steps that exist only because internal systems are disconnected. Do not ask customers to repeat known details. Do not expose implementation jargon when plain language will do. A customer buys an outcome and a dependable experience—not a CMS brand.</p>
+<h2>What the business must operate</h2>
+<p>Behind the visible {escaped_keyword} experience, assign an owner, a record, a deadline, and an exception path. Decide which changes staff can make, which events trigger notifications, where replies and files belong, and how a missed handoff becomes visible. This operating model can be implemented with different platforms; its responsibilities do not disappear when the technology changes.</p>
+<p>FAMtastic's evidence for “{html.escape(title)}” is bounded: {escaped_proof} That proves relevant implementation experience, not that every customer needs the same stack or will achieve a guaranteed commercial result.</p>
+<h2>Common mistakes for this decision</h2>
+<ol><li><strong>Starting with software.</strong> A preferred tool becomes a constraint before the customer job is understood.</li><li><strong>Confusing a screen with a process.</strong> The page exists, but acknowledgment, ownership, and follow-through do not.</li><li><strong>Designing only the happy path.</strong> Missing data, failed delivery, duplicate events, and recovery are ignored.</li><li><strong>Using activity as success.</strong> Views or submissions are counted without checking whether a useful outcome followed.</li><li><strong>Hiding scope.</strong> Customers cannot tell what is included, conditional, recurring, or separately priced.</li></ol>
+<p>Review those mistakes through this article's specific rule—{escaped_angle[0].lower() + escaped_angle[1:]}—rather than applying a generic feature checklist.</p>
+<h2>A platform-neutral acceptance test</h2>
+<p>Test {escaped_keyword} as a customer on a phone, as the staff member responsible for the next step, and as a person trying to recover from a failure. Confirm that the right information is visible, the primary action works, acknowledgment arrives, the record is attributable, access is scoped correctly, and the outcome can be measured. Repeat the test with incomplete data and a failed dependency.</p>
+<p>The “{html.escape(title)}” implementation passes because the journey works—not because it uses any particular named platform. Platform-specific proof belongs in technical case studies and implementation documentation where that detail helps the reader make a real technology decision.</p>
+<h2>What to do next</h2>
+<p>Write a one-page brief for {escaped_keyword}: customer, situation, required information, primary action, staff owner, response expectation, failure path, and measurable outcome. Compare possible solutions against that brief. Choose the smallest maintainable option that completes the path and leaves a sensible route for growth.</p>
+<p>For an external reference relevant to {escaped_keyword}, review <a href="{html.escape(source_url)}">{html.escape(source_name)}</a>. For a FAMtastic recommendation, use the needs-led assessment; it can point to a bounded package, a platform-specific implementation, a custom scope, or no immediate build.</p>
+<h2>A concise brief to carry into discovery</h2>
+<p>Bring the following statements into a scoping conversation for {escaped_keyword}: “Our primary customer is …”; “They arrive when …”; “Before acting, they need to know …”; “The action we want is …”; “Our team member responsible afterward is …”; “We will acknowledge it by …”; and “We will know it worked when …”. Add the information the business already owns, the information the customer must provide, and the constraints that cannot be changed.</p>
+<p>This short {escaped_keyword} brief helps a designer, developer, marketer, or platform specialist challenge assumptions without losing the customer goal. It also makes proposals easier to compare. Two vendors may recommend different technology, but both should be able to explain how their approach satisfies the same requirements, how staff will maintain it, what remains outside scope, and how the completed path will be tested.</p>
 <h2>Continue this series</h2><ul>{related_links}</ul>
 """.strip()
     if words(body) < 900:

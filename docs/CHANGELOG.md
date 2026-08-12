@@ -1,5 +1,17 @@
 # Product changelog
 
+## 2026-08-12 — CMS-neutral editorial library and route scroll reset
+
+- Rebuilt the 72 general-interest demand articles around distinct reader-decision
+  lenses and removed the repeated Drupal/React implementation paragraph.
+- Made customer-facing CMS guidance platform-neutral: FAMtastic recommends a
+  hosted builder, general-purpose CMS, commerce platform, headless CMS, or
+  custom application according to fit rather than promoting one default.
+- Added validation that rejects CMS-biased boilerplate and long paragraphs
+  reused across more than three non-campaign articles.
+- Added client-side route scroll restoration so links open new pages at the top
+  while preserving intentional in-page anchors.
+
 ## 2026-08-11 — 55 Cents a Day editorial and visual correction
 
 - Rewrote all eight campaign posts after a scope audit found generic platform
