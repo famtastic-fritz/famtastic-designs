@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-08-11 — 55 Cents a Day editorial and visual correction
+
+- Rewrote all eight campaign posts after a scope audit found generic platform
+  language that incorrectly implied systems beyond the $199 Web Basics offer.
+- Added real buyer objections, concrete small-business examples, explicit
+  ecommerce and custom-system boundaries, and a clear explanation of how an
+  absent website can create a verification and trust gap.
+- Added properly dated and qualified original-research findings from
+  BrightLocal's 2025 U.S. consumer panel and Verisign's historical 2015 U.S.
+  survey; no revenue-loss or guaranteed-outcome statistic was invented.
+- Replaced general technology visuals with campaign-specific character,
+  objection, trust, and 55-cent value graphics.
+
 ## 2026-08-11 — Package ladder naming and scope clarification
 
 - Aligned the $199 and $499 page names with their canonical Commerce products:

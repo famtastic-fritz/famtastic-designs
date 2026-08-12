@@ -270,6 +270,92 @@ def sentence(value: str) -> str:
     return value if value.endswith((".", "?", "!")) else value + "."
 
 
+CAMPAIGN_GUIDES = {
+    "professional-website-55-cents-a-day": {
+        "heading": "The excuses are understandable. The cost objection is removable.",
+        "lead": "“It is too expensive.” “I do not need one.” “My business is fine as it is.” “Most customers already know me.” “I have a social page.” Each statement can feel reasonable when the business is busy and a website sounds like a large, technical project. Web Basics exists to make the first step smaller and clearer.",
+        "example": "Imagine a customer hears about a bakery from a friend at 9:30 p.m. The bakery is closed, the owner is asleep, and the customer wants to see the menu, location, style, and ordering options. A focused website cannot guarantee the sale, but it can answer those questions while the customer is interested. Without one, the customer must keep searching, trust scattered information, send a message and wait, or choose another business that is easier to verify.",
+        "decision": "The question is not whether a $199 page can replace every marketing or sales system. It cannot. The question is whether a credible, customer-owned address and focused explanation are worth roughly the cost of 55 cents per day when averaged across the first year.",
+    },
+    "what-is-a-domain-name": {
+        "heading": "A domain gives the business an address it can carry forward.",
+        "lead": "A social profile is a space inside another company’s platform. A domain is the customer-controlled address that can point to a website today and move to another compatible host later. It gives signs, cards, email, search results, ads, and referrals one stable destination.",
+        "example": "Consider two referrals: “Search for us on social media and choose the account with our logo” versus “Visit yourbakery.com.” The second instruction is easier to repeat and gives the business a clearer identity. Domain ownership does not automatically create trust, but it removes ambiguity and gives the business a consistent place to earn it.",
+        "decision": "Web Basics includes either first-year registration of one available standard new domain when needed or connection of a domain the customer already controls. Availability must be checked. Registration and hosting are separate services, and annual domain renewal is separate after the included first year.",
+    },
+    "what-is-website-hosting": {
+        "heading": "A domain points. Hosting keeps the site available.",
+        "lead": "The domain is the address; hosting is the managed infrastructure serving the website files when a customer visits. They work together but are not interchangeable. A business can own a domain without a website, and it can have website files without a useful public address.",
+        "example": "Think of a storefront. The domain is the street address customers remember. The website is the signs, information, and experience inside. Hosting is the physical space and utilities that allow the storefront to operate. The comparison is not perfect, but it explains why renewal and ownership are handled separately.",
+        "decision": "The first year of basic FAMtastic-managed hosting is included with Web Basics. After the included year, the configured basic hosting plan renews at $9.99 per month only under the disclosed terms and authorization. Website edits, business email, premium infrastructure, and unrelated subscriptions are not silently included in hosting.",
+    },
+    "parts-of-a-one-page-business-website": {
+        "heading": "One page should still answer a complete set of customer questions.",
+        "lead": "A useful one-page business site is not one giant advertisement. It should quickly establish who the business is, who it helps, what it offers, why the visitor should believe it, what questions commonly block action, and exactly how to take the next step.",
+        "example": "For a bakery, that might mean a strong visual introduction, specialties, service area, a small proof gallery, hours, location, common ordering questions, and an inquiry or call action. It does not mean pretending a one-page site includes a shopping cart. If customers need online ordering, product inventory, shipping, or payment, the intake should identify a broader commerce scope.",
+        "decision": "The best one-page structure removes the most important uncertainty first. It uses short sections, readable mobile type, clear calls to action, real business information, and a response path that someone actually owns.",
+    },
+    "199-website-inclusions-and-boundaries": {
+        "heading": "A low entry price only works when the boundary is honest.",
+        "lead": "Web Basics includes one focused business website, responsive implementation, a clear contact or lead action, foundational search setup, first-year basic managed hosting, and a new-domain or existing-domain path. The offer is intentionally narrow so the price can remain accessible.",
+        "example": "A consultant who needs an introduction, service summary, proof, FAQ, and booking link may fit. A restaurant that needs a live menu may fit if the content remains focused. A bakery needing a full cart, inventory, pickup scheduling, payment, and order management does not become a $199 project merely because the owner is a friend; FAMtastic can apply a documented special price while preserving the real scope.",
+        "decision": "Ecommerce, custom applications, complex integrations, large catalogs, extensive copywriting, many distinct pages, and unlimited revisions are not included. The intake exists to prevent a customer from buying the wrong solution.",
+    },
+    "after-buying-199-website": {
+        "heading": "Payment starts a defined service process.",
+        "lead": "After purchase, the customer completes a website intake covering the business, audience, offer, contact details, visual direction, content, domain choice, and required customer actions. That information shapes the page; the system does not assume every business needs the same design or message.",
+        "example": "A customer who provides a logo, accurate business details, preferred contact method, service description, and usable photographs gives the project a clear starting point. Missing or uncertain information becomes a visible next action rather than a silent assumption. Timing is confirmed after the required intake and materials are complete.",
+        "decision": "The path is account and checkout, intake, scope confirmation, build, customer review, required revisions, approval, launch, and support. The $199 offer does not include an ecommerce store, customer portal, custom application, or complex business system.",
+    },
+    "who-is-199-website-for": {
+        "heading": "Web Basics is for a focused first job—not every website job.",
+        "lead": "The offer fits an owner who needs a professional destination for referrals, local discovery, credibility, and contact and whose essential story can be told on one focused page. It is especially useful when the absence of a website—not a complex technology requirement—is the immediate problem.",
+        "example": "A barber may need services, examples, hours, location, and a booking link. A new consultant may need positioning, expertise, proof, and an inquiry form. A bakery may begin with story, specialties, gallery, location, and contact—but online ordering requires commerce scope. The format follows what the customer must do, not an arbitrary promise that one page solves everything.",
+        "decision": "Choose a broader package or assessment when separate services need search pages, customers need accounts, products need a cart, staff need workflow automation, or the business requires integrations. Recommending the larger scope is not an upsell when the smaller offer cannot do the job; it is accurate scoping.",
+    },
+    "grow-beyond-first-website": {
+        "heading": "A first website should make the next improvement easier to choose.",
+        "lead": "Starting small does not mean staying small. It means building the first complete customer path, observing what people need, and adding capabilities when evidence supports them. Growth might mean more service pages, local search work, content, analytics, scheduling, lead follow-up, maintenance, commerce, a customer portal, or AI assistance.",
+        "example": "A service business may first learn that visitors repeatedly ask about pricing, then add a detailed service page. A bakery may discover strong demand for online preorders, then scope commerce and pickup workflow. A consultant may receive enough inquiries to justify lead routing and automated acknowledgment. Each addition responds to a real bottleneck.",
+        "decision": "The website is the public foundation, not a promise that every future capability is included in the original $199. Every addition should identify its deliverable, price, intake, customer access, support path, and proof test before it is sold.",
+    },
+}
+
+
+def build_campaign_body(series: dict, topic: tuple, sequence: int, slugs: list[str]) -> str:
+    title, slug, keyword, angle = topic
+    guide = CAMPAIGN_GUIDES[slug]
+    related = [item for item in slugs if item != slug]
+    related_links = "".join(f'<li><a href="/blog/{item}">{item.replace("-", " ").title()}</a></li>' for item in related)
+    return f"""
+<p><strong>{html.escape(sentence(angle))}</strong></p>
+<p>There may be a hundred reasons a business still does not have a website. The owner may expect a five-figure project, feel too busy to gather content, believe referrals are enough, rely on social media, or assume the current level of business will continue. Those concerns deserve a practical answer, not ridicule.</p>
+<h2>{html.escape(guide['heading'])}</h2>
+<p>{html.escape(guide['lead'])}</p>
+<p>The campaign statement is deliberately direct: <strong>Cost is not one of them. Period.</strong> The $199 Web Basics Bundle is a one-time purchase. Dividing $199 by 365 produces approximately $0.545, which is rounded to about 55 cents per day as a comparison. It is not daily billing.</p>
+<h2>What changes when a customer looks for the business?</h2>
+<p>{html.escape(guide['example'])}</p>
+<p>Current consumer research supports the verification problem. BrightLocal’s 2025 Local Consumer Review Survey used a representative panel of 1,026 U.S. adults. It found that 74% used two or more websites when checking local-business reviews, and more than three-quarters used video while researching local businesses. The finding does not prove that every business without a website loses every buyer. It shows that many customers gather evidence across multiple online places before deciding.</p>
+<p>An older Verisign study adds historical context rather than a current benchmark. In its 2015 U.S. survey of 787 internet consumers ages 18–59, 92% said they preferred getting business information from a website rather than a social-media page, and 77% said a website made a business appear more credible. Consumer platforms have changed since 2015, so these figures are labeled by date and should be read as evidence of a long-standing trust pattern—not a 2026 measurement.</p>
+<h2>What this evidence does—and does not—say</h2>
+<p>A website does not create a good reputation by itself. It cannot replace good service, accurate listings, customer reviews, social proof, or human follow-through. It can give all of those signals a clear home, let the business explain itself in its own words, and provide a stable next action when the owner is unavailable.</p>
+<p>It is also inappropriate to invent a revenue-loss number. The cost of being absent depends on the market, demand, customer behavior, competition, and the quality of every available alternative. The defensible conclusion is narrower: if customers research and verify businesses online, having no useful website can remove the business from consideration or make it harder to trust at the moment of decision.</p>
+<h2>How does the $199 offer handle this specific need?</h2>
+<p>{html.escape(guide['decision'])}</p>
+<p>The included first year of basic managed hosting and the new-domain-or-existing-domain choice remove two common setup obstacles. After that included year, basic hosting currently renews at $9.99 per month under the disclosed terms. A newly registered domain renews separately each year at the disclosed amount. Those renewal details are part of the decision, not hidden fine print.</p>
+<h2>Use the smallest offer that can do the whole job</h2>
+<p>Web Basics is not the automatic answer to every intake. A one-page informational site, a paid-campaign landing system, a multi-page business website, and an ecommerce store are different deliverables. The intake should recommend the smallest complete scope that supports the customer’s real job. If a cart, multiple search pages, customer accounts, custom data, or integrations are required, the $199 scope is not enough.</p>
+<p>That boundary protects both sides. The customer knows what will be delivered. FAMtastic can keep the entry offer accessible without disguising larger work. A documented special price can still be applied for a particular customer without changing what the project actually includes.</p>
+<p>Price is only one kind of friction. The owner still needs to provide accurate business information, choose the preferred customer action, supply or approve content, respond to project questions, and review the result. The offer removes the large-price excuse; it does not remove the owner’s responsibility to help make the website truthful and useful. That shared responsibility is why intake and review remain part of even the smallest package.</p>
+<h2>What should a business owner do next?</h2>
+<p>Start with the customer’s most likely question. Can they confirm who you are, what you do, where or whom you serve, why they should trust you, and what to do next from a phone? If those answers are scattered, outdated, or missing, a focused website may be the smallest practical improvement.</p>
+<p>Review the <a href="/55-cents-a-day-website">complete 55 Cents a Day offer</a>, then use the <a href="/start">website assessment</a> if the business may need more than one focused page. The assessment—not the campaign slogan—should determine the final scope.</p>
+<h2>Sources and limitations</h2>
+<ul><li><a href="https://www.brightlocal.com/research/local-consumer-review-survey-2025/">BrightLocal Local Consumer Review Survey 2025</a>: representative SurveyMonkey panel of 1,026 U.S. adults. Findings describe reported consumer behavior and should not be converted into a guaranteed business result.</li><li><a href="https://blog.verisign.com/getting-online/verisign-2015-online-survey-97-percent-of-smbs-would-recommend-having-a-website-to-other-smbs/">Verisign 2015 U.S. online survey</a>: 787 internet consumers ages 18–59 and 456 small businesses. Included only as dated historical context.</li><li><a href="https://www.icann.org/resources/pages/registrant-2013-09-17-en">ICANN registrant resources</a>: background on domain registrant rights and responsibilities.</li></ul>
+<h2>Continue this series</h2><ul>{related_links}</ul>
+""".strip()
+
+
 def build_body(series: dict, topic: tuple, sequence: int, slugs: list[str]) -> str:
     title, slug, keyword, angle = topic
     source_name, source_url = series["source"]
@@ -277,6 +363,11 @@ def build_body(series: dict, topic: tuple, sequence: int, slugs: list[str]) -> s
     related_links = "".join(
         f'<li><a href="/blog/{item}">{item.replace("-", " ").title()}</a></li>' for item in related
     )
+    if series["key"] == "fifty-five-cents-a-day":
+        body = build_campaign_body(series, topic, sequence, slugs)
+        if words(body) < 900:
+            raise RuntimeError(f"generated campaign body too short for {slug}: {words(body)} words")
+        return body
     role = "pillar guide" if sequence == 1 else "focused guide"
     campaign_detail = ""
     if series["key"] == "fifty-five-cents-a-day":
@@ -407,13 +498,20 @@ def main() -> None:
                 f"how to plan {series['context']}",
                 f"{series['context']} best practices",
             ]
+            source_records = [{"name": series["source"][0], "url": series["source"][1], "type": "primary"}]
+            if series["key"] == "fifty-five-cents-a-day":
+                source_records = [
+                    {"name": "BrightLocal Local Consumer Review Survey 2025", "url": "https://www.brightlocal.com/research/local-consumer-review-survey-2025/", "type": "original-research"},
+                    {"name": "Verisign 2015 U.S. Online Survey", "url": "https://blog.verisign.com/getting-online/verisign-2015-online-survey-97-percent-of-smbs-would-recommend-having-a-website-to-other-smbs/", "type": "dated-original-research"},
+                    {"name": "ICANN Registrant Resources", "url": "https://www.icann.org/resources/pages/registrant-2013-09-17-en", "type": "primary"},
+                ]
             visual_file, visual_alt = VISUALS[series["key"]]
             if series["key"] == "fifty-five-cents-a-day":
                 campaign_visuals = [
-                    ("55-cent-website-hero.webp", "A small-business owner crossing from an idea into a polished professional website."),
-                    ("domain-explained.webp", "A business location connected through a clear digital address to its website."),
-                    ("hosting-explained.webp", "Protected managed hosting infrastructure keeping a business website available online."),
-                    ("one-page-anatomy.webp", "The connected sections and systems that make a one-page business website useful."),
+                    ("campaign-55-cent-character.webp", "A business owner beside a glowing 55 cents a day graphic and professional website."),
+                    ("campaign-excuses.webp", "A baker, barber, and consultant considering common reasons for not having a website."),
+                    ("campaign-trust-gap.webp", "A customer comparing an uncertain business listing with a complete professional website."),
+                    ("campaign-55-cent-equation.webp", "A visual equation showing $199 divided by 365 equals about 55 cents a day."),
                 ]
                 visual_file, visual_alt = campaign_visuals[(sequence - 1) % len(campaign_visuals)]
             posts.append({
@@ -456,7 +554,7 @@ def main() -> None:
                 },
                 "faqs": faq_keys,
                 "internal_links": links,
-                "sources": [{"name": series["source"][0], "url": series["source"][1], "type": "primary"}],
+                "sources": source_records,
                 "visual": ({
                     "src": f"/blog-images/{visual_file}",
                     "alt": visual_alt,

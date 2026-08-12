@@ -13,16 +13,16 @@ const CAMPAIGN_ARTICLES = [
   'after-buying-199-website', 'who-is-199-website-for', 'grow-beyond-first-website',
 ];
 const CAMPAIGN_VISUALS = [
-  ['55-cent-website-hero.webp', 'A small-business owner stepping from an idea toward a professional website', 'The first step is a credible place for customers to find and understand the business.'],
-  ['domain-explained.webp', 'A business connected to its website through a clear digital address', 'The domain is the customer-owned address that points people to the website.'],
-  ['hosting-explained.webp', 'Protected managed infrastructure keeping a business website available online', 'Hosting is the managed infrastructure that keeps the website available.'],
-  ['one-page-anatomy.webp', 'The connected sections and systems of a useful one-page business website', 'A focused page still connects identity, trust, action, measurement, and response.'],
+  ['campaign-55-cent-character.webp', 'A business owner beside a glowing 55 cents a day graphic and professional website', 'A professional first website for about 55 cents a day when $199 is averaged across one year.'],
+  ['campaign-excuses.webp', 'A baker, barber, and consultant considering common excuses for not having a website', 'The concerns are real; the campaign removes price as the reason to stay offline.'],
+  ['campaign-trust-gap.webp', 'A customer comparing an uncertain business listing with a complete professional website', 'An absent website can create a verification and trust gap while a customer is deciding.'],
+  ['campaign-55-cent-equation.webp', 'A graphic showing 199 dollars divided by 365 equals about 55 cents a day', '$199 divided across 365 days is approximately 55 cents per day; checkout still charges one $199 payment.'],
 ];
 
 function campaignBodyHtml(post) {
   if (!post?.bodyHtml || !post.series?.includes('55 Cents a Day')) return post?.bodyHtml || '';
   const articleIndex = Math.max(0, CAMPAIGN_ARTICLES.indexOf(post.slug));
-  const selected = [CAMPAIGN_VISUALS[articleIndex % 4], CAMPAIGN_VISUALS[(articleIndex + 2) % 4]];
+  const selected = [CAMPAIGN_VISUALS[articleIndex % 4], CAMPAIGN_VISUALS[(articleIndex + 1) % 4]];
   const figures = selected.map(([file, alt, caption]) => `<figure class="article-inline-visual"><img src="/blog-images/${file}" alt="${alt}" width="1600" height="900" loading="lazy"><figcaption><img src="/brand/famtastic-mark.svg" alt="" width="28" height="28">FAMtastic Designs — ${caption}</figcaption></figure>`);
   let paragraph = 0;
   return post.bodyHtml.replace(/<\/p>/g, (closing) => {

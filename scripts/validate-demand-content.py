@@ -134,6 +134,15 @@ def main() -> int:
         if not 110 <= description_length <= 165:
             fail(errors, f"{key}: meta description must be 110-165 characters (got {description_length})")
         body = post.get("body_html", "")
+        if post.get("series") == "fifty-five-cents-a-day":
+            plain_campaign = re.sub(r"<[^>]+>", " ", body).lower()
+            for forbidden_scope in ["drupal", "react", "ai-optimized", "48-hour delivery", "live in 48 hours"]:
+                if forbidden_scope in plain_campaign:
+                    fail(errors, f"{key}: $199 campaign contains out-of-scope language: {forbidden_scope!r}")
+            if len(post.get("sources", [])) < 3:
+                fail(errors, f"{key}: $199 campaign requires three reviewed source records")
+            if not str(post.get("visual", {}).get("src", "")).startswith("/blog-images/campaign-"):
+                fail(errors, f"{key}: $199 campaign requires a purpose-built campaign header visual")
         body_words = len(re.findall(r"\b[\w'-]+\b", re.sub(r"<[^>]+>", " ", body)))
         minimum_words = 1000 if post.get("pillar") else 900
         if body_words < minimum_words:
