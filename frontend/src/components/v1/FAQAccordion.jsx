@@ -16,12 +16,16 @@ export default function FAQAccordion({ items = [] }) {
         const open = openIndex === i;
         const answer = item.answer ?? '';
         const isHtml = /<[a-z][\s\S]*>/i.test(answer);
+        const questionId = `faq-question-${i}`;
+        const answerId = `faq-answer-${i}`;
         return (
           <div key={item.id ?? item.question ?? i} className={`v1-faq__item${open ? ' v1-faq__item--open' : ''}`}>
             <button
               type="button"
               className="v1-faq__question"
               aria-expanded={open}
+              aria-controls={answerId}
+              id={questionId}
               onClick={() => setOpenIndex(open ? null : i)}
             >
               <span>{item.question}</span>
@@ -37,6 +41,9 @@ export default function FAQAccordion({ items = [] }) {
             <AnimatePresence initial={false}>
               {open && answer && (
                 <motion.div
+                  id={answerId}
+                  role="region"
+                  aria-labelledby={questionId}
                   className="v1-faq__answer-wrap"
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}

@@ -20,6 +20,68 @@ function replaceTag(html, pattern, replacement) {
   return pattern.test(html) ? html.replace(pattern, replacement) : html.replace('</head>', `    ${replacement}\n  </head>`);
 }
 
+function safeJsonLd(value) {
+  return JSON.stringify(value).replaceAll('<', '\\u003c');
+}
+
+function injectJsonLd(html, graph) {
+  const script = `<script type="application/ld+json">${safeJsonLd({
+    '@context': 'https://schema.org',
+    '@graph': graph,
+  })}</script>`;
+  const existing = /<script type="application\/ld\+json">[\s\S]*?<\/script>/i;
+  return existing.test(html)
+    ? html.replace(existing, script)
+    : html.replace('</head>', `    ${script}\n  </head>`);
+}
+
+function organizationEntities() {
+  return [
+    {
+      '@type': 'Organization',
+      '@id': 'https://famtasticdesigns.com/#organization',
+      name: 'FAMtastic Designs',
+      url: 'https://famtasticdesigns.com/',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://famtasticdesigns.com/brand/famtastic-mark.svg',
+      },
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '1729 NW St. Lucie West Blvd #1181',
+        addressLocality: 'Port Saint Lucie',
+        addressRegion: 'FL',
+        postalCode: '34986',
+        addressCountry: 'US',
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://famtasticdesigns.com/#website',
+      url: 'https://famtasticdesigns.com/',
+      name: 'FAMtastic Designs',
+      publisher: { '@id': 'https://famtasticdesigns.com/#organization' },
+      inLanguage: 'en-US',
+    },
+  ];
+}
+
+function breadcrumbEntity(path, title) {
+  if (path === '/') return null;
+  const pieces = path.split('/').filter(Boolean);
+  const items = [{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://famtasticdesigns.com/' }];
+  pieces.forEach((piece, index) => {
+    const itemPath = `/${pieces.slice(0, index + 1).join('/')}/`;
+    items.push({
+      '@type': 'ListItem',
+      position: index + 2,
+      name: index === pieces.length - 1 ? title : piece.replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()),
+      item: `https://famtasticdesigns.com${itemPath}`,
+    });
+  });
+  return { '@type': 'BreadcrumbList', '@id': `https://famtasticdesigns.com${path}/#breadcrumb`, itemListElement: items };
+}
+
 function renderShell(path) {
   const seo = seoForPath(path);
   let html = template;
@@ -69,18 +131,57 @@ function renderShell(path) {
       `<meta name="${name}" content="${escapeHtml(content)}" />`,
     );
   }
-  return html;
+  const graph = organizationEntities();
+  const breadcrumb = breadcrumbEntity(path, seo.title.split(' | ')[0]);
+  if (breadcrumb) graph.push(breadcrumb);
+  graph.push({
+    '@type': path === '/' ? 'WebPage' : path === '/contact' ? 'ContactPage' : 'WebPage',
+    '@id': `${seo.canonical}#webpage`,
+    url: seo.canonical,
+    name: seo.title,
+    description: seo.description,
+    isPartOf: { '@id': 'https://famtasticdesigns.com/#website' },
+    ...(breadcrumb ? { breadcrumb: { '@id': `${seo.canonical}#breadcrumb` } } : {}),
+  });
+  return injectJsonLd(html, graph);
 }
 
-function renderDynamicShell(path, title, description) {
+function renderDynamicShell(path, title, description, contentType, changed) {
   let html = renderShell('/');
   const canonical = `https://famtasticdesigns.com${path}/`;
-  html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(title)} | FAMtastic Designs</title>`);
+  const brandSuffix = ' | FAMtastic Designs';
+  const fullTitle = title.includes('FAMtastic Designs') || title.length + brandSuffix.length > 70
+    ? title
+    : `${title}${brandSuffix}`;
+  html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(fullTitle)}</title>`);
   html = html.replace(/<meta name="description" content="[^"]*" \/>/i, `<meta name="description" content="${escapeHtml(description)}" />`);
   html = html.replace(/<link rel="canonical" href="[^"]*" \/>/i, `<link rel="canonical" href="${escapeHtml(canonical)}" />`);
   html = html.replace(/<meta property="og:url" content="[^"]*" \/>/i, `<meta property="og:url" content="${escapeHtml(canonical)}" />`);
-  html = html.replace(/<meta property="og:title" content="[^"]*" \/>/i, `<meta property="og:title" content="${escapeHtml(title)} | FAMtastic Designs" />`);
-  return html;
+  html = html.replace(/<meta property="og:title" content="[^"]*" \/>/i, `<meta property="og:title" content="${escapeHtml(fullTitle)}" />`);
+  html = html.replace(/<meta property="og:description" content="[^"]*" \/>/i, `<meta property="og:description" content="${escapeHtml(description)}" />`);
+  html = html.replace(/<meta property="og:type" content="[^"]*" \/>/i, `<meta property="og:type" content="${contentType === 'blog_post' ? 'article' : 'website'}" />`);
+  html = html.replace(/<meta name="twitter:title" content="[^"]*" \/>/i, `<meta name="twitter:title" content="${escapeHtml(fullTitle)}" />`);
+  html = html.replace(/<meta name="twitter:description" content="[^"]*" \/>/i, `<meta name="twitter:description" content="${escapeHtml(description)}" />`);
+
+  const breadcrumb = breadcrumbEntity(path, title);
+  const typeByContent = { blog_post: 'BlogPosting', service_page: 'Service', package_page: 'Product', case_study: 'Article' };
+  const entityType = typeByContent[contentType] || 'WebPage';
+  const entity = {
+    '@type': entityType,
+    '@id': `${canonical}#primary`,
+    url: canonical,
+    name: title,
+    description,
+    ...(entityType === 'BlogPosting' || entityType === 'Article' ? {
+      headline: title,
+      dateModified: changed || undefined,
+      author: { '@type': 'Organization', '@id': 'https://famtasticdesigns.com/#organization' },
+      publisher: { '@id': 'https://famtasticdesigns.com/#organization' },
+    } : {}),
+    ...(entityType === 'Service' ? { provider: { '@id': 'https://famtasticdesigns.com/#organization' } } : {}),
+    ...(entityType === 'Product' ? { brand: { '@id': 'https://famtasticdesigns.com/#organization' } } : {}),
+  };
+  return injectJsonLd(html, [...organizationEntities(), breadcrumb, entity].filter(Boolean));
 }
 
 async function dynamicRoutes() {
@@ -103,6 +204,7 @@ async function dynamicRoutes() {
           title: attributes.field_meta_title || attributes.title || 'FAMtastic Designs',
           description: attributes.field_meta_description || `Learn about ${attributes.title || 'this solution'} from FAMtastic Designs.`,
           lastmod: attributes.changed?.slice(0, 10) || '',
+          contentType: type,
         });
       }
       next = payload.links?.next?.href || '';
@@ -111,6 +213,10 @@ async function dynamicRoutes() {
   }
   return routes;
 }
+
+// Vite writes the root document first; normalize it through the same metadata
+// and structured-data path as every other public shell.
+await writeFile(templatePath, renderShell('/'));
 
 for (const path of Object.keys(SEO_PAGES)) {
   if (path === '/') continue;
@@ -123,7 +229,7 @@ const discoveredRoutes = await dynamicRoutes();
 for (const route of discoveredRoutes) {
   const target = join(distDir, route.path.replace(/^\//, ''), 'index.html');
   await mkdir(dirname(target), { recursive: true });
-  await writeFile(target, renderDynamicShell(route.path, route.title, route.description));
+  await writeFile(target, renderDynamicShell(route.path, route.title, route.description, route.contentType, route.lastmod));
 }
 
 const changedByPath = new Map(discoveredRoutes.map((route) => [route.path, route.lastmod]));

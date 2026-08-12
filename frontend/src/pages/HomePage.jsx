@@ -24,7 +24,7 @@ import SolutionFinder from '../components/SolutionFinder.jsx';
  * HARDCODED FALLBACK renders the same messaging so the page never ships empty.
  */
 const FALLBACK = {
-  headline: 'Agentic AI Business Solutions Engineering Studio',
+  headline: 'Websites and Digital Systems Built Around Your Business',
   subheadline:
     'We design and build intelligent systems that automate the busywork, answer your customers, and grow your revenue — engineered for your specific business, not a template.',
   primaryCta: { label: 'Start Your Project', href: '/contact' },
@@ -35,9 +35,9 @@ const FALLBACK = {
   ],
   stats: [
     { id: 'years', value: '22+', label: 'Years engineering systems' },
-    { id: 'systems', value: '100+', label: 'Systems designed & built' },
+    { id: 'systems', value: 'Mobile', label: 'Designed for how customers browse' },
     { id: 'beya', value: '2024', label: 'BEYA STEM Leader' },
-    { id: 'response', value: '24h', label: 'Response time, every inquiry' },
+    { id: 'response', value: 'End-to-end', label: 'From discovery through support' },
   ],
   whyTitle: 'Why FAMtastic Designs?',
   whyItems: [
@@ -53,21 +53,21 @@ const FALLBACK = {
     },
     {
       id: 'w3',
-      title: 'Proof before commitment',
-      body: 'Every engagement starts with a fixed-price $199 discovery build — a working proof of your system.',
+      title: 'The right scope before the sale',
+      body: 'We start by understanding the job, then recommend the smallest complete scope that can accomplish it.',
     },
   ],
   processTitle: 'How We Build Your System',
   processSteps: [
     { id: 'p1', number: '01', title: 'Discover', body: 'A short call to map your workflow, goals, and the system that fits.' },
-    { id: 'p2', number: '02', title: 'Prove', body: 'The $199 discovery build: a working proof of your system, verified before you commit.' },
+    { id: 'p2', number: '02', title: 'Scope', body: 'We match the work to a clear package or define the custom requirements before the build begins.' },
     { id: 'p3', number: '03', title: 'Build', body: 'Fixed-scope build with weekly check-ins — you always know where things stand.' },
     { id: 'p4', number: '04', title: 'Launch & Support', body: 'We launch, monitor, and keep your system sharp with care plans.' },
   ],
   finalCta: {
     title: 'Your System Should Work As Hard As You Do',
     bodyHtml:
-      '<p>Every engagement starts with a fixed-price, $199 discovery build: a working proof of your system, verified before you commit to the full build.</p>',
+      '<p>Start with the website assessment. We will use what your business actually needs—not one default price—to shape the right next step.</p>',
   },
 };
 

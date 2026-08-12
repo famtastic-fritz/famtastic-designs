@@ -43,9 +43,10 @@ export default function Layout() {
 
   return (
     <div className="layout">
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <Header />
 
-      <main className="layout__main layout__main--v1">
+      <main id="main-content" className="layout__main layout__main--v1" tabIndex="-1">
         <Outlet />
       </main>
 

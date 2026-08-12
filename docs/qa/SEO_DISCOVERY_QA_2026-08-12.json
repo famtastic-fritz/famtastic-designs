@@ -1,0 +1,4081 @@
+{
+  "audit_date": "2026-08-12",
+  "origin": "https://famtasticdesigns.com",
+  "scope": {
+    "sitemap_urls": 103,
+    "canonical_posts": 80
+  },
+  "robots": {
+    "sitemap_declared": true,
+    "body": "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /login\nDisallow: /portal\nDisallow: /p/\nDisallow: /reset-password\nDisallow: /verify-email\nDisallow: /web/admin\n\nSitemap: https://famtasticdesigns.com/sitemap.xml\n"
+  },
+  "sitemap": {
+    "status": 200,
+    "valid_xml": true,
+    "url_count": 103
+  },
+  "summary": {
+    "page_average": 85.1,
+    "content_average": 93.8,
+    "page_results": {
+      "revise": 48,
+      "pass": 55
+    },
+    "content_results": {
+      "pass": 73,
+      "revise": 7
+    },
+    "intent_conflicts": 0
+  },
+  "pages": [
+    {
+      "url": "https://famtasticdesigns.com/",
+      "type": "home",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "FAMtastic Designs | Agentic AI Business Solutions Engineering Studio",
+      "title_length": 68,
+      "description": "FAMtastic Designs is an agentic AI business solutions engineering studio. We build custom websites, intelligent applications, AI-powered systems, and digital experiences that grow businesses worldwide.",
+      "description_length": 201,
+      "canonical": "https://famtasticdesigns.com/",
+      "og_title": "FAMtastic Designs | Agentic AI Business Solutions Engineering Studio",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 201 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/services/",
+      "type": "services",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Services | Custom AI Business Solutions Engineering",
+      "title_length": 51,
+      "description": "Explore custom websites, intelligent applications, AI-powered systems, and digital experiences engineered by FAMtastic Designs for businesses worldwide.",
+      "description_length": 152,
+      "canonical": "https://famtasticdesigns.com/services/",
+      "og_title": "Services | Custom AI Business Solutions Engineering",
+      "og_description": "Explore custom websites, intelligent applications, AI-powered systems, and digital experiences engineered by FAMtastic Designs for businesses worldwide.",
+      "og_url": "https://famtasticdesigns.com/services/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/about/",
+      "type": "about",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "About FAMtastic Designs | Systems Built Around Your Business",
+      "title_length": 60,
+      "description": "Meet FAMtastic Designs, an engineering-led studio building useful websites, customer systems, automation, commerce, analytics, and AI experiences.",
+      "description_length": 146,
+      "canonical": "https://famtasticdesigns.com/about/",
+      "og_title": "About FAMtastic Designs | Systems Built Around Your Business",
+      "og_description": "Meet FAMtastic Designs, an engineering-led studio building useful websites, customer systems, automation, commerce, analytics, and AI experiences.",
+      "og_url": "https://famtasticdesigns.com/about/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/55-cents-a-day-website/",
+      "type": "55-cents-a-day-website",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "$199 Website | About 55 Cents a Day | FAMtastic Designs",
+      "title_length": 55,
+      "description": "Get a professional one-page business website for $199\u2014about 55 cents a day across one year\u2014with first-year basic hosting and a domain path included.",
+      "description_length": 148,
+      "canonical": "https://famtasticdesigns.com/55-cents-a-day-website/",
+      "og_title": "$199 Website | About 55 Cents a Day | FAMtastic Designs",
+      "og_description": "Get a professional one-page business website for $199\u2014about 55 cents a day across one year\u2014with first-year basic hosting and a domain path included.",
+      "og_url": "https://famtasticdesigns.com/55-cents-a-day-website/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/packages/",
+      "type": "packages",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Packages | Custom Website &amp; AI Solution Builds",
+      "title_length": 50,
+      "description": "Review FAMtastic Designs packages for custom websites, business applications, AI-powered systems, and digital solution builds.",
+      "description_length": 126,
+      "canonical": "https://famtasticdesigns.com/packages/",
+      "og_title": "Packages | Custom Website &amp; AI Solution Builds",
+      "og_description": "Review FAMtastic Designs packages for custom websites, business applications, AI-powered systems, and digital solution builds.",
+      "og_url": "https://famtasticdesigns.com/packages/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/work/",
+      "type": "work",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Work | FAMtastic Designs Case Studies",
+      "title_length": 37,
+      "description": "See FAMtastic Designs project examples, case studies, and custom AI business solutions engineered for real outcomes.",
+      "description_length": 116,
+      "canonical": "https://famtasticdesigns.com/work/",
+      "og_title": "Work | FAMtastic Designs Case Studies",
+      "og_description": "See FAMtastic Designs project examples, case studies, and custom AI business solutions engineered for real outcomes.",
+      "og_url": "https://famtasticdesigns.com/work/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Blogs | Agentic AI, Web Engineering &amp; Digital Solutions",
+      "title_length": 59,
+      "description": "Read practical notes from FAMtastic Designs on agentic AI, custom websites, business applications, digital transformation, and solution engineering.",
+      "description_length": 148,
+      "canonical": "https://famtasticdesigns.com/blog/",
+      "og_title": "Blogs | Agentic AI, Web Engineering &amp; Digital Solutions",
+      "og_description": "Read practical notes from FAMtastic Designs on agentic AI, custom websites, business applications, digital transformation, and solution engineering.",
+      "og_url": "https://famtasticdesigns.com/blog/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/faq/",
+      "type": "faq",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "FAQ | FAMtastic Designs Questions Answered",
+      "title_length": 42,
+      "description": "Get answers about FAMtastic Designs pricing, process, timelines, discovery builds, custom websites, AI systems, and support.",
+      "description_length": 124,
+      "canonical": "https://famtasticdesigns.com/faq/",
+      "og_title": "FAQ | FAMtastic Designs Questions Answered",
+      "og_description": "Get answers about FAMtastic Designs pricing, process, timelines, discovery builds, custom websites, AI systems, and support.",
+      "og_url": "https://famtasticdesigns.com/faq/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/contact/",
+      "type": "contact",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Request a Quote | FAMtastic Designs",
+      "title_length": 35,
+      "description": "Request a quote from FAMtastic Designs for a custom website, intelligent application, AI-powered system, or digital business solution.",
+      "description_length": 134,
+      "canonical": "https://famtasticdesigns.com/contact/",
+      "og_title": "Request a Quote | FAMtastic Designs",
+      "og_description": "Request a quote from FAMtastic Designs for a custom website, intelligent application, AI-powered system, or digital business solution.",
+      "og_url": "https://famtasticdesigns.com/contact/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/start/",
+      "type": "start",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Start Your Project | FAMtastic Designs",
+      "title_length": 38,
+      "description": "Use the FAMtastic Designs Solution Finder to describe your custom website, application, AI-powered system, or digital solution project.",
+      "description_length": 135,
+      "canonical": "https://famtasticdesigns.com/start/",
+      "og_title": "Start Your Project | FAMtastic Designs",
+      "og_description": "Use the FAMtastic Designs Solution Finder to describe your custom website, application, AI-powered system, or digital solution project.",
+      "og_url": "https://famtasticdesigns.com/start/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/services/ai-chatbot/",
+      "type": "services",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "AI Chatbot Solutions | FAMtastic Designs",
+      "title_length": 40,
+      "description": "Learn about AI Chatbot Solutions from FAMtastic Designs.",
+      "description_length": 56,
+      "canonical": "https://famtasticdesigns.com/services/ai-chatbot/",
+      "og_title": "AI Chatbot Solutions | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/services/ai-chatbot/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 56 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/services/site-rebuild/",
+      "type": "services",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Site Rebuild &amp; Redesign | FAMtastic Designs",
+      "title_length": 47,
+      "description": "Learn about Site Rebuild &amp; Redesign from FAMtastic Designs.",
+      "description_length": 63,
+      "canonical": "https://famtasticdesigns.com/services/site-rebuild/",
+      "og_title": "Site Rebuild &amp; Redesign | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/services/site-rebuild/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 63 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/services/custom-website-development/",
+      "type": "services",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Custom Website Development | FAMtastic Designs",
+      "title_length": 46,
+      "description": "Learn about Custom Website Development from FAMtastic Designs.",
+      "description_length": 62,
+      "canonical": "https://famtasticdesigns.com/services/custom-website-development/",
+      "og_title": "Custom Website Development | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/services/custom-website-development/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 62 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/services/landing-page-design/",
+      "type": "services",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Landing Page Design | FAMtastic Designs",
+      "title_length": 39,
+      "description": "Learn about Landing Page Design from FAMtastic Designs.",
+      "description_length": 55,
+      "canonical": "https://famtasticdesigns.com/services/landing-page-design/",
+      "og_title": "Landing Page Design | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/services/landing-page-design/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 55 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/services/client-portal-systems/",
+      "type": "services",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Client Portal Systems | FAMtastic Designs",
+      "title_length": 41,
+      "description": "Learn about Client Portal Systems from FAMtastic Designs.",
+      "description_length": 57,
+      "canonical": "https://famtasticdesigns.com/services/client-portal-systems/",
+      "og_title": "Client Portal Systems | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/services/client-portal-systems/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 57 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/services/e-commerce-solutions/",
+      "type": "services",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "E-Commerce Solutions | FAMtastic Designs",
+      "title_length": 40,
+      "description": "Learn about E-Commerce Solutions from FAMtastic Designs.",
+      "description_length": 56,
+      "canonical": "https://famtasticdesigns.com/services/e-commerce-solutions/",
+      "og_title": "E-Commerce Solutions | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/services/e-commerce-solutions/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 56 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/packages/199-quick-start/",
+      "type": "packages",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Web Basics Bundle \u2014 $199 | FAMtastic Designs | FAMtastic Designs",
+      "title_length": 64,
+      "description": "One focused page, one year of basic hosting, and a clear domain path.",
+      "description_length": 69,
+      "canonical": "https://famtasticdesigns.com/packages/199-quick-start/",
+      "og_title": "Web Basics Bundle \u2014 $199 | FAMtastic Designs | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/packages/199-quick-start/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 69 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/packages/499-site-upgrade/",
+      "type": "packages",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Business Website Bundle \u2014 $499 | FAMtastic Designs | FAMtastic Designs",
+      "title_length": 70,
+      "description": "Up to five focused pages with lead capture, analytics, SEO foundations, and a structured launch path.",
+      "description_length": 101,
+      "canonical": "https://famtasticdesigns.com/packages/499-site-upgrade/",
+      "og_title": "Business Website Bundle \u2014 $499 | FAMtastic Designs | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/packages/499-site-upgrade/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 101 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/packages/starter-website/",
+      "type": "packages",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Custom Website \u2014 $1,999 | FAMtastic Designs | FAMtastic Designs",
+      "title_length": 63,
+      "description": "Custom discovery, information architecture, visual design, implementation, and handoff for a distinctive business presence.",
+      "description_length": 123,
+      "canonical": "https://famtasticdesigns.com/packages/starter-website/",
+      "og_title": "Custom Website \u2014 $1,999 | FAMtastic Designs | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/packages/starter-website/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/packages/business-website/",
+      "type": "packages",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Business Growth System \u2014 $3,999 | FAMtastic Designs | FAMtastic Designs",
+      "title_length": 71,
+      "description": "A broader website connected to lead capture, automation, customer experience, and business reporting.",
+      "description_length": 101,
+      "canonical": "https://famtasticdesigns.com/packages/business-website/",
+      "og_title": "Business Growth System \u2014 $3,999 | FAMtastic Designs | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/packages/business-website/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 70,
+      "result": "revise",
+      "issues": [
+        "Title length is 71 characters",
+        "Meta description length is 101 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/packages/premium-website-ai/",
+      "type": "packages",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Premium Website + AI System \u2014 $6,999 | FAMtastic Designs | FAMtastic Designs",
+      "title_length": 76,
+      "description": "A custom digital business system with deeper content, customer workflows, integrations, and governed AI assistance.",
+      "description_length": 115,
+      "canonical": "https://famtasticdesigns.com/packages/premium-website-ai/",
+      "og_title": "Premium Website + AI System \u2014 $6,999 | FAMtastic Designs | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/packages/premium-website-ai/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 76 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/packages/landing-page/",
+      "type": "packages",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Campaign Landing Page System \u2014 $1,499 | FAMtastic Designs | FAMtastic Designs",
+      "title_length": 77,
+      "description": "A conversion-focused campaign destination with attribution, routing, measurement, and follow-up\u2014not a basic business website.",
+      "description_length": 125,
+      "canonical": "https://famtasticdesigns.com/packages/landing-page/",
+      "og_title": "Campaign Landing Page System \u2014 $1,499 | FAMtastic Designs | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/packages/landing-page/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 77 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/packages/website-care-plan/",
+      "type": "packages",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Website Care &amp; Maintenance \u2014 $149/month | FAMtastic Designs | FAMtastic Designs",
+      "title_length": 83,
+      "description": "Keep an existing site maintained, monitored, supported, and ready for measured improvement.",
+      "description_length": 91,
+      "canonical": "https://famtasticdesigns.com/packages/website-care-plan/",
+      "og_title": "Website Care &amp; Maintenance \u2014 $149/month | FAMtastic Designs | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/packages/website-care-plan/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 70,
+      "result": "revise",
+      "issues": [
+        "Title length is 83 characters",
+        "Meta description length is 91 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-should-a-small-business-website-do/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should a Small-Business Website Actually Do? | FAMtastic Designs",
+      "title_length": 69,
+      "description": "Learn define the jobs a website should perform before choosing pages or technology. This practical FAMtastic guide covers customer experience, workflow, proof, and.",
+      "description_length": 164,
+      "canonical": "https://famtasticdesigns.com/blog/what-should-a-small-business-website-do/",
+      "og_title": "What Should a Small-Business Website Actually Do? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-should-a-small-business-website-do/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/how-many-pages-small-business-website/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Many Pages Does a Small-Business Website Need? | FAMtastic Designs",
+      "title_length": 70,
+      "description": "Learn choose page count from customer questions and actions instead of copying a competitor",
+      "description_length": 91,
+      "canonical": "https://famtasticdesigns.com/blog/how-many-pages-small-business-website/",
+      "og_title": "How Many Pages Does a Small-Business Website Need? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/how-many-pages-small-business-website/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 91 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/one-page-vs-multi-page-website/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "One-Page Website or Multi-Page Website: Which Fits? | FAMtastic Designs",
+      "title_length": 71,
+      "description": "Learn match site structure to search needs, sales complexity, and the number of distinct customer decisions. This practical FAMtastic guide covers customer.",
+      "description_length": 156,
+      "canonical": "https://famtasticdesigns.com/blog/one-page-vs-multi-page-website/",
+      "og_title": "One-Page Website or Multi-Page Website: Which Fits? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/one-page-vs-multi-page-website/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 71 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/website-project-information-checklist/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Information Should You Gather Before Building a Website? | FAMtastic Designs",
+      "title_length": 81,
+      "description": "Learn collect goals, audiences, proof, content, integrations, ownership, and operational requirements before design starts. This practical FAMtastic guide covers.",
+      "description_length": 162,
+      "canonical": "https://famtasticdesigns.com/blog/website-project-information-checklist/",
+      "og_title": "What Information Should You Gather Before Building a Website? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/website-project-information-checklist/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 81 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/plan-website-around-customer-questions/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Plan a Website Around Customer Questions | FAMtastic Designs",
+      "title_length": 67,
+      "description": "Learn turn repeated buyer questions into navigation, content, FAQs, and calls to action. This practical FAMtastic guide covers customer experience, workflow,.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/plan-website-around-customer-questions/",
+      "og_title": "How to Plan a Website Around Customer Questions | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/plan-website-around-customer-questions/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-makes-business-website-trustworthy/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Makes a Business Website Feel Trustworthy? | FAMtastic Designs",
+      "title_length": 67,
+      "description": "Learn build trust through clarity, identity, proof, security, accessibility, and honest expectations. This practical FAMtastic guide covers customer experience,.",
+      "description_length": 161,
+      "canonical": "https://famtasticdesigns.com/blog/what-makes-business-website-trustworthy/",
+      "og_title": "What Makes a Business Website Feel Trustworthy? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-makes-business-website-trustworthy/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/custom-website-vs-package/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "When Should a Website Be Custom Instead of Packaged? | FAMtastic Designs",
+      "title_length": 72,
+      "description": "Learn use bounded packages for known work and custom discovery when requirements, risk, or integrations are uncertain. This practical FAMtastic guide covers.",
+      "description_length": 157,
+      "canonical": "https://famtasticdesigns.com/blog/custom-website-vs-package/",
+      "og_title": "When Should a Website Be Custom Instead of Packaged? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/custom-website-vs-package/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 72 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/measure-whether-website-works/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Measure Whether a Website Is Doing Its Job | FAMtastic Designs",
+      "title_length": 69,
+      "description": "Learn connect website purpose to observable actions, response quality, purchases, service outcomes, and learning. This practical FAMtastic guide covers customer.",
+      "description_length": 161,
+      "canonical": "https://famtasticdesigns.com/blog/measure-whether-website-works/",
+      "og_title": "How to Measure Whether a Website Is Doing Its Job | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/measure-whether-website-works/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/how-a-website-captures-a-lead/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How a Website Turns a Visitor Into a Real Lead | FAMtastic Designs",
+      "title_length": 66,
+      "description": "Learn connect the page promise, evidence, form, acknowledgment, and staff workflow into one path. This practical FAMtastic guide covers customer experience,.",
+      "description_length": 157,
+      "canonical": "https://famtasticdesigns.com/blog/how-a-website-captures-a-lead/",
+      "og_title": "How a Website Turns a Visitor Into a Real Lead | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/how-a-website-captures-a-lead/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-should-website-contact-form-ask/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should a Website Contact Form Ask? | FAMtastic Designs",
+      "title_length": 59,
+      "description": "Learn ask only what improves routing, qualification, preparation, or the customer",
+      "description_length": 81,
+      "canonical": "https://famtasticdesigns.com/blog/what-should-website-contact-form-ask/",
+      "og_title": "What Should a Website Contact Form Ask? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-should-website-contact-form-ask/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 81 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/contact-form-vs-quote-form-vs-assessment/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Contact Form, Quote Form, or Assessment: Which Should You Use? | FAMtastic Designs",
+      "title_length": 82,
+      "description": "Learn choose the interaction that matches how much the customer knows and how complex the purchase decision is. This practical FAMtastic guide covers customer.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/contact-form-vs-quote-form-vs-assessment/",
+      "og_title": "Contact Form, Quote Form, or Assessment: Which Should You Use? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/contact-form-vs-quote-form-vs-assessment/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 82 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/reduce-form-friction-without-bad-leads/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Reduce Friction Without Collecting Bad Leads | FAMtastic Designs",
+      "title_length": 71,
+      "description": "Learn remove unnecessary effort while keeping the questions that protect fit, expectations, and follow-up. This practical FAMtastic guide covers customer.",
+      "description_length": 154,
+      "canonical": "https://famtasticdesigns.com/blog/reduce-form-friction-without-bad-leads/",
+      "og_title": "How to Reduce Friction Without Collecting Bad Leads | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/reduce-form-friction-without-bad-leads/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 71 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-should-thank-you-page-do/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should a Thank-You Page Do After Form Submission? | FAMtastic Designs",
+      "title_length": 74,
+      "description": "Learn confirm success, explain timing, preserve trust, and offer one relevant next action. This practical FAMtastic guide covers customer experience, workflow,.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/what-should-thank-you-page-do/",
+      "og_title": "What Should a Thank-You Page Do After Form Submission? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-should-thank-you-page-do/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 74 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/track-pages-campaigns-create-leads/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Track Which Pages and Campaigns Create Leads | FAMtastic Designs",
+      "title_length": 71,
+      "description": "Learn preserve source, campaign, page, CTA, and lifecycle outcome without collecting unnecessary personal data. This practical FAMtastic guide covers customer.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/track-pages-campaigns-create-leads/",
+      "og_title": "How to Track Which Pages and Campaigns Create Leads | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/track-pages-campaigns-create-leads/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 71 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/why-website-leads-get-lost/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Why Website Leads Get Lost Between the Form and the Inbox | FAMtastic Designs",
+      "title_length": 77,
+      "description": "Learn identify delivery, ownership, duplicate, routing, and response failures that make a working form operationally useless. This practical FAMtastic guide covers.",
+      "description_length": 164,
+      "canonical": "https://famtasticdesigns.com/blog/why-website-leads-get-lost/",
+      "og_title": "Why Website Leads Get Lost Between the Form and the Inbox | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/why-website-leads-get-lost/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 77 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/mobile-lead-capture-design/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Design a Mobile Lead-Capture Experience | FAMtastic Designs",
+      "title_length": 66,
+      "description": "Learn make the most important action reachable, readable, tappable, and recoverable on a phone. This practical FAMtastic guide covers customer experience,.",
+      "description_length": 155,
+      "canonical": "https://famtasticdesigns.com/blog/mobile-lead-capture-design/",
+      "og_title": "How to Design a Mobile Lead-Capture Experience | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/mobile-lead-capture-design/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-happens-after-a-website-lead/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should Happen After a Website Lead Arrives? | FAMtastic Designs",
+      "title_length": 68,
+      "description": "Learn give every new lead an acknowledgment, owner, deadline, stage, and visible next action. This practical FAMtastic guide covers customer experience, workflow,.",
+      "description_length": 163,
+      "canonical": "https://famtasticdesigns.com/blog/what-happens-after-a-website-lead/",
+      "og_title": "What Should Happen After a Website Lead Arrives? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-happens-after-a-website-lead/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/small-business-lead-stages/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Lead Stages Does a Small Business Actually Need? | FAMtastic Designs",
+      "title_length": 73,
+      "description": "Learn use a small, canonical stage model that describes reality and supports action. This practical FAMtastic guide covers customer experience, workflow, proof,.",
+      "description_length": 161,
+      "canonical": "https://famtasticdesigns.com/blog/small-business-lead-stages/",
+      "og_title": "What Lead Stages Does a Small Business Actually Need? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/small-business-lead-stages/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 73 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/small-business-lead-response-time/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Fast Should a Small Business Respond to a Website Lead? | FAMtastic Designs",
+      "title_length": 79,
+      "description": "Learn set a promise the team can keep, then escalate before the opportunity becomes invisible. This practical FAMtastic guide covers customer experience, workflow,.",
+      "description_length": 164,
+      "canonical": "https://famtasticdesigns.com/blog/small-business-lead-response-time/",
+      "og_title": "How Fast Should a Small Business Respond to a Website Lead? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/small-business-lead-response-time/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 79 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/lead-follow-up-schedule/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Build a Lead Follow-Up Schedule That Does Not Feel Robotic | FAMtastic Designs",
+      "title_length": 85,
+      "description": "Learn use timing, context, channel, and exit rules to help rather than harass. This practical FAMtastic guide covers customer experience, workflow, proof, and next.",
+      "description_length": 164,
+      "canonical": "https://famtasticdesigns.com/blog/lead-follow-up-schedule/",
+      "og_title": "How to Build a Lead Follow-Up Schedule That Does Not Feel Robotic | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/lead-follow-up-schedule/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 85 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/new-lead-notification-checklist/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should Be in a New-Lead Notification? | FAMtastic Designs",
+      "title_length": 62,
+      "description": "Learn send staff the customer context, source, deadline, owner, and direct action link they need. This practical FAMtastic guide covers customer experience,.",
+      "description_length": 157,
+      "canonical": "https://famtasticdesigns.com/blog/new-lead-notification-checklist/",
+      "og_title": "What Should Be in a New-Lead Notification? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/new-lead-notification-checklist/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/lead-email-reply-ingestion/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Handle Leads That Reply by Email | FAMtastic Designs",
+      "title_length": 59,
+      "description": "Learn attach validated replies to the right timeline while protecting against spoofing and unsafe attachments. This practical FAMtastic guide covers customer.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/lead-email-reply-ingestion/",
+      "og_title": "How to Handle Leads That Reply by Email | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/lead-email-reply-ingestion/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/overdue-lead-alerts/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Know When a Lead Is Overdue | FAMtastic Designs",
+      "title_length": 54,
+      "description": "Learn define untouched, stale, and missed follow-up conditions that workers can detect without duplicate alerts. This practical FAMtastic guide covers customer.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/overdue-lead-alerts/",
+      "og_title": "How to Know When a Lead Is Overdue | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/overdue-lead-alerts/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/lead-nurture-not-ready-to-buy/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should Happen to Leads That Are Not Ready to Buy? | FAMtastic Designs",
+      "title_length": 74,
+      "description": "Learn record why timing is wrong, obtain the right communication permission, and re-enter with useful context. This practical FAMtastic guide covers customer.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/lead-nurture-not-ready-to-buy/",
+      "og_title": "What Should Happen to Leads That Are Not Ready to Buy? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/lead-nurture-not-ready-to-buy/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 74 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-happens-after-an-online-purchase/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Happens After an Online Purchase? | FAMtastic Designs",
+      "title_length": 58,
+      "description": "Learn treat payment completion as the trigger for customer identity, receipt, fulfillment, and service access. This practical FAMtastic guide covers customer.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/what-happens-after-an-online-purchase/",
+      "og_title": "What Happens After an Online Purchase? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-happens-after-an-online-purchase/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/product-addon-entitlement-difference/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is the Difference Between a Product, Add-On, and... | FAMtastic Designs",
+      "title_length": 76,
+      "description": "Learn separate what is sold, what modifies the purchase, and what the customer is allowed to receive or use. This practical FAMtastic guide covers customer.",
+      "description_length": 156,
+      "canonical": "https://famtasticdesigns.com/blog/product-addon-entitlement-difference/",
+      "og_title": "What Is the Difference Between a Product, Add-On, and... | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/product-addon-entitlement-difference/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 76 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/connect-checkout-to-customer-intake/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Should Checkout Connect to Customer Intake? | FAMtastic Designs",
+      "title_length": 67,
+      "description": "Learn ask purchase questions once, then open only the onboarding sections required by the selected items. This practical FAMtastic guide covers customer.",
+      "description_length": 153,
+      "canonical": "https://famtasticdesigns.com/blog/connect-checkout-to-customer-intake/",
+      "og_title": "How Should Checkout Connect to Customer Intake? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/connect-checkout-to-customer-intake/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/account-specific-special-pricing/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Handle Special Pricing Without Breaking the Catalog | FAMtastic Designs",
+      "title_length": 78,
+      "description": "Learn keep the public product stable while recording an auditable, account-scoped adjustment with reason and expiry. This practical FAMtastic guide covers customer.",
+      "description_length": 164,
+      "canonical": "https://famtasticdesigns.com/blog/account-specific-special-pricing/",
+      "og_title": "How to Handle Special Pricing Without Breaking the Catalog | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/account-specific-special-pricing/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 78 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/customer-receipt-content/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should a Customer Receipt Explain? | FAMtastic Designs",
+      "title_length": 59,
+      "description": "Learn make the commercial record understandable by showing items, payment, terms, next steps, and support path. This practical FAMtastic guide covers customer.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/customer-receipt-content/",
+      "og_title": "What Should a Customer Receipt Explain? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/customer-receipt-content/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/failed-payments-refunds-cancellations/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Should Failed Payments, Refunds, and Cancellations Work? | FAMtastic Designs",
+      "title_length": 80,
+      "description": "Learn use explicit states and idempotent events so money problems do not create duplicate or contradictory fulfillment. This practical FAMtastic guide covers.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/failed-payments-refunds-cancellations/",
+      "og_title": "How Should Failed Payments, Refunds, and Cancellations Work? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/failed-payments-refunds-cancellations/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 80 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/hosting-domain-renewal-design/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Design Hosting and Domain Renewals Clearly | FAMtastic Designs",
+      "title_length": 69,
+      "description": "Learn separate ownership, included terms, billing cadence, advance notice, cancellation, and service consequences. This practical FAMtastic guide covers customer.",
+      "description_length": 162,
+      "canonical": "https://famtasticdesigns.com/blog/hosting-domain-renewal-design/",
+      "og_title": "How to Design Hosting and Domain Renewals Clearly | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/hosting-domain-renewal-design/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/prove-ecommerce-before-live-payments/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Prove an Ecommerce Workflow Before Taking Real Payments | FAMtastic Designs",
+      "title_length": 82,
+      "description": "Learn test success, decline, authentication, replay, refund, access, email, mobile, and cross-account isolation before launch. This practical FAMtastic guide.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/prove-ecommerce-before-live-payments/",
+      "og_title": "How to Prove an Ecommerce Workflow Before Taking Real Payments | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/prove-ecommerce-before-live-payments/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 82 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/how-a-customer-portal-helps/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How a Customer Portal Helps a Small Business | FAMtastic Designs",
+      "title_length": 64,
+      "description": "Learn use a portal when persistent customer context and self-service remove repeated work for both sides. This practical FAMtastic guide covers customer.",
+      "description_length": 153,
+      "canonical": "https://famtasticdesigns.com/blog/how-a-customer-portal-helps/",
+      "og_title": "How a Customer Portal Helps a Small Business | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/how-a-customer-portal-helps/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/customer-portal-home-screen/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should Be on a Customer Portal Home Screen? | FAMtastic Designs",
+      "title_length": 68,
+      "description": "Learn prioritize next actions, alerts, owned services, recent activity, and relevant help over a wall of navigation. This practical FAMtastic guide covers customer.",
+      "description_length": 164,
+      "canonical": "https://famtasticdesigns.com/blog/customer-portal-home-screen/",
+      "og_title": "What Should Be on a Customer Portal Home Screen? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/customer-portal-home-screen/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/portal-projects-files-approvals/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Should Customers Find Projects, Files, and Approvals? | FAMtastic Designs",
+      "title_length": 77,
+      "description": "Learn organize delivery around customer tasks and history rather than internal department names. This practical FAMtastic guide covers customer experience,.",
+      "description_length": 156,
+      "canonical": "https://famtasticdesigns.com/blog/portal-projects-files-approvals/",
+      "og_title": "How Should Customers Find Projects, Files, and Approvals? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/portal-projects-files-approvals/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 77 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/portal-support-vs-contact-form/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Makes Portal Support Better Than a Contact Form? | FAMtastic Designs",
+      "title_length": 73,
+      "description": "Learn preserve identity, service context, case history, files, status, and response expectations in one thread. This practical FAMtastic guide covers customer.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/portal-support-vs-contact-form/",
+      "og_title": "What Makes Portal Support Better Than a Contact Form? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/portal-support-vs-contact-form/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 73 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/portal-team-members-business-accounts/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Should a Portal Handle Team Members and Business Accounts? | FAMtastic Designs",
+      "title_length": 82,
+      "description": "Learn model organizations, owners, billing contacts, administrators, and members without sharing another customer",
+      "description_length": 113,
+      "canonical": "https://famtasticdesigns.com/blog/portal-team-members-business-accounts/",
+      "og_title": "How Should a Portal Handle Team Members and Business Accounts? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/portal-team-members-business-accounts/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 82 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/portal-communication-preferences/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Communication Settings Should Customers Control? | FAMtastic Designs",
+      "title_length": 73,
+      "description": "Learn separate security, project, billing, educational, and promotional choices with understandable consequences. This practical FAMtastic guide covers customer.",
+      "description_length": 161,
+      "canonical": "https://famtasticdesigns.com/blog/portal-communication-preferences/",
+      "og_title": "What Communication Settings Should Customers Control? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/portal-communication-preferences/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 73 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/portal-product-documentation-learning/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Can a Portal Teach Customers to Use What They Bought? | FAMtastic Designs",
+      "title_length": 77,
+      "description": "Learn show service-specific guides, FAQs, status, and next actions based on ownership and lifecycle stage. This practical FAMtastic guide covers customer.",
+      "description_length": 154,
+      "canonical": "https://famtasticdesigns.com/blog/portal-product-documentation-learning/",
+      "og_title": "How Can a Portal Teach Customers to Use What They Bought? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/portal-product-documentation-learning/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 77 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/mobile-customer-portal-design/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Design a Customer Portal for Mobile Use | FAMtastic Designs",
+      "title_length": 66,
+      "description": "Learn use an expandable information architecture, touch-safe actions, contained data, and short paths to urgent tasks. This practical FAMtastic guide covers.",
+      "description_length": 157,
+      "canonical": "https://famtasticdesigns.com/blog/mobile-customer-portal-design/",
+      "og_title": "How to Design a Customer Portal for Mobile Use | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/mobile-customer-portal-design/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/how-automation-prevents-lost-opportunities/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Automation Prevents Lost Opportunities | FAMtastic Designs",
+      "title_length": 62,
+      "description": "Learn automate acknowledgment, deadlines, reminders, retries, and exception visibility while keeping a person accountable. This practical FAMtastic guide covers.",
+      "description_length": 161,
+      "canonical": "https://famtasticdesigns.com/blog/how-automation-prevents-lost-opportunities/",
+      "og_title": "How Automation Prevents Lost Opportunities | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/how-automation-prevents-lost-opportunities/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-small-business-should-automate-first/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should a Small Business Automate First? | FAMtastic Designs",
+      "title_length": 64,
+      "description": "Learn start with repetitive, observable work where delay or omission causes real customer or revenue risk. This practical FAMtastic guide covers customer.",
+      "description_length": 154,
+      "canonical": "https://famtasticdesigns.com/blog/what-small-business-should-automate-first/",
+      "og_title": "What Should a Small Business Automate First? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-small-business-should-automate-first/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-not-to-fully-automate/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should Never Be Fully Automated? | FAMtastic Designs",
+      "title_length": 57,
+      "description": "Learn keep judgment, sensitive decisions, unusual exceptions, and relationship repair inside a human-controlled path. This practical FAMtastic guide covers.",
+      "description_length": 156,
+      "canonical": "https://famtasticdesigns.com/blog/what-not-to-fully-automate/",
+      "og_title": "What Should Never Be Fully Automated? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-not-to-fully-automate/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/scheduled-workers-customer-work/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Do Scheduled Workers Protect Customer Work? | FAMtastic Designs",
+      "title_length": 67,
+      "description": "Learn use workers for reminders, deadlines, renewals, retries, summaries, and heartbeat checks with idempotent execution. This practical FAMtastic guide covers.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/scheduled-workers-customer-work/",
+      "og_title": "How Do Scheduled Workers Protect Customer Work? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/scheduled-workers-customer-work/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/idempotency-business-automation/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is Idempotency and Why Does Business Automation Need It? | FAMtastic Designs",
+      "title_length": 81,
+      "description": "Learn design repeated events so they cannot send duplicate emails, create duplicate orders, or grant duplicate services. This practical FAMtastic guide covers.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/idempotency-business-automation/",
+      "og_title": "What Is Idempotency and Why Does Business Automation Need It? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/idempotency-business-automation/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 81 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/automation-failures-retries-dead-letter/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Should Automation Handle Failures and Retries? | FAMtastic Designs",
+      "title_length": 70,
+      "description": "Learn bound retries, preserve evidence, route exhausted work to a dead-letter record, and alert the right owner. This practical FAMtastic guide covers customer.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/automation-failures-retries-dead-letter/",
+      "og_title": "How Should Automation Handle Failures and Retries? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/automation-failures-retries-dead-letter/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/website-events-business-workflows/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Connect Website Events to Real Business Workflows | FAMtastic Designs",
+      "title_length": 76,
+      "description": "Learn translate forms, payments, replies, approvals, and usage signals into explicit business events and next actions. This practical FAMtastic guide covers.",
+      "description_length": 157,
+      "canonical": "https://famtasticdesigns.com/blog/website-events-business-workflows/",
+      "og_title": "How to Connect Website Events to Real Business Workflows | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/website-events-business-workflows/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 76 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/test-business-automation-safely/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Test Automation Without Risking Customers | FAMtastic Designs",
+      "title_length": 68,
+      "description": "Learn use synthetic identities, safe mail and payment drivers, run identifiers, cleanup, and evidence reports before production smoke tests. This practical.",
+      "description_length": 156,
+      "canonical": "https://famtasticdesigns.com/blog/test-business-automation-safely/",
+      "og_title": "How to Test Automation Without Risking Customers | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/test-business-automation-safely/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/website-numbers-that-matter/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "The Website Numbers a Small Business Should Watch | FAMtastic Designs",
+      "title_length": 69,
+      "description": "Learn focus on acquisition, meaningful actions, response, conversion, service health, and trends instead of isolated pageviews. This practical FAMtastic guide.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/website-numbers-that-matter/",
+      "og_title": "The Website Numbers a Small Business Should Watch | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/website-numbers-that-matter/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/small-business-website-conversion/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is a Website Conversion for a Small Business? | FAMtastic Designs",
+      "title_length": 70,
+      "description": "Learn define conversions from the business",
+      "description_length": 42,
+      "canonical": "https://famtasticdesigns.com/blog/small-business-website-conversion/",
+      "og_title": "What Is a Website Conversion for a Small Business? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/small-business-website-conversion/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Meta description length is 42 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/track-website-calls-to-action/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Track Calls to Action Across a Website | FAMtastic Designs",
+      "title_length": 65,
+      "description": "Learn give every important CTA a stable event, source context, destination, and lifecycle meaning. This practical FAMtastic guide covers customer experience,.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/track-website-calls-to-action/",
+      "og_title": "How to Track Calls to Action Across a Website | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/track-website-calls-to-action/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/understand-website-traffic-sources/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Read Traffic Sources Without Fooling Yourself | FAMtastic Designs",
+      "title_length": 72,
+      "description": "Learn use source, medium, campaign, landing page, consent, and attribution limitations together. This practical FAMtastic guide covers customer experience,.",
+      "description_length": 156,
+      "canonical": "https://famtasticdesigns.com/blog/understand-website-traffic-sources/",
+      "og_title": "How to Read Traffic Sources Without Fooling Yourself | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/understand-website-traffic-sources/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 72 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/small-business-analytics-dashboard/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Should a Small-Business Analytics Dashboard Show? | FAMtastic Designs",
+      "title_length": 74,
+      "description": "Learn show the few measures that support a recurring decision, with clear paths to deeper provider data. This practical FAMtastic guide covers customer experience,.",
+      "description_length": 164,
+      "canonical": "https://famtasticdesigns.com/blog/small-business-analytics-dashboard/",
+      "og_title": "What Should a Small-Business Analytics Dashboard Show? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/small-business-analytics-dashboard/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 74 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/analytics-and-customer-data/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Do Analytics and CRM Data Work Together? | FAMtastic Designs",
+      "title_length": 64,
+      "description": "Learn connect privacy-safe acquisition identifiers to lead, order, and service outcomes without treating analytics as the customer database. This practical.",
+      "description_length": 156,
+      "canonical": "https://famtasticdesigns.com/blog/analytics-and-customer-data/",
+      "og_title": "How Do Analytics and CRM Data Work Together? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/analytics-and-customer-data/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/measure-blog-content-performance/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Measure Content and Blog Performance | FAMtastic Designs",
+      "title_length": 63,
+      "description": "Learn track discovery, engagement, series progress, FAQ use, CTA action, qualified leads, and assisted outcomes. This practical FAMtastic guide covers customer.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/measure-blog-content-performance/",
+      "og_title": "How to Measure Content and Blog Performance | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/measure-blog-content-performance/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/when-to-change-website-from-analytics/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "When Should You Change a Website Based on Analytics? | FAMtastic Designs",
+      "title_length": 72,
+      "description": "Learn use sufficient evidence, segmentation, business context, and controlled changes instead of reacting to daily noise. This practical FAMtastic guide covers.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/when-to-change-website-from-analytics/",
+      "og_title": "When Should You Change a Website Based on Analytics? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/when-to-change-website-from-analytics/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 72 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/when-an-ai-website-agent-is-useful/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "When Is an AI Website Agent Actually Useful? | FAMtastic Designs",
+      "title_length": 64,
+      "description": "Learn choose an agent when a specific customer job can be improved with trusted knowledge, safe actions, and human escalation. This practical FAMtastic guide.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/when-an-ai-website-agent-is-useful/",
+      "og_title": "When Is an AI Website Agent Actually Useful? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/when-an-ai-website-agent-is-useful/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/ai-chatbot-vs-ai-agent/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "AI Chatbot or AI Agent: What Is the Difference? | FAMtastic Designs",
+      "title_length": 67,
+      "description": "Learn distinguish conversational answers from systems that can use tools, maintain context, and take governed actions. This practical FAMtastic guide covers.",
+      "description_length": 157,
+      "canonical": "https://famtasticdesigns.com/blog/ai-chatbot-vs-ai-agent/",
+      "og_title": "AI Chatbot or AI Agent: What Is the Difference? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/ai-chatbot-vs-ai-agent/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/ai-agent-knowledge-base/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Knowledge Should an AI Website Agent Use? | FAMtastic Designs",
+      "title_length": 66,
+      "description": "Learn ground answers in approved services, policies, documentation, FAQs, account context, and current operational data. This practical FAMtastic guide covers.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/ai-agent-knowledge-base/",
+      "og_title": "What Knowledge Should an AI Website Agent Use? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/ai-agent-knowledge-base/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/safe-ai-agent-actions/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Actions Should an AI Website Agent Be Allowed to Take? | FAMtastic Designs",
+      "title_length": 79,
+      "description": "Learn define read, suggest, draft, and execute permissions with confirmation, logging, scope, and reversibility. This practical FAMtastic guide covers customer.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/safe-ai-agent-actions/",
+      "og_title": "What Actions Should an AI Website Agent Be Allowed to Take? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/safe-ai-agent-actions/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 79 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/ai-agent-human-handoff/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Should an AI Agent Hand Off to a Person? | FAMtastic Designs",
+      "title_length": 64,
+      "description": "Learn transfer the conversation, identity, intent, attempted steps, urgency, and evidence without making the customer repeat everything. This practical FAMtastic.",
+      "description_length": 162,
+      "canonical": "https://famtasticdesigns.com/blog/ai-agent-human-handoff/",
+      "og_title": "How Should an AI Agent Hand Off to a Person? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/ai-agent-human-handoff/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/measure-ai-agent-performance/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Measure Whether an AI Agent Is Helping | FAMtastic Designs",
+      "title_length": 65,
+      "description": "Learn measure resolution, escalation quality, task success, safety, customer effort, cost, and business outcomes. This practical FAMtastic guide covers customer.",
+      "description_length": 161,
+      "canonical": "https://famtasticdesigns.com/blog/measure-ai-agent-performance/",
+      "og_title": "How to Measure Whether an AI Agent Is Helping | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/measure-ai-agent-performance/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/ai-agent-customer-documentation/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Documentation Do Customers Need for an AI Agent? | FAMtastic Designs",
+      "title_length": 73,
+      "description": "Learn give owners clear purpose, knowledge, permissions, limits, escalation, changes, monitoring, and support instructions. This practical FAMtastic guide covers.",
+      "description_length": 162,
+      "canonical": "https://famtasticdesigns.com/blog/ai-agent-customer-documentation/",
+      "og_title": "What Documentation Do Customers Need for an AI Agent? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/ai-agent-customer-documentation/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 73 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/test-ai-website-agent/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Test an AI Website Agent Before Launch | FAMtastic Designs",
+      "title_length": 65,
+      "description": "Learn use scenario suites for normal tasks, ambiguity, unsafe requests, stale data, authorization, failures, and human recovery. This practical FAMtastic guide.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/test-ai-website-agent/",
+      "og_title": "How to Test an AI Website Agent Before Launch | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/test-ai-website-agent/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/choose-the-right-famtastic-website-package/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How to Choose the Right FAMtastic Website Package | FAMtastic Designs",
+      "title_length": 69,
+      "description": "Learn compare each package by customer need, included deliverables, operational complexity, and the next stage of growth. This practical FAMtastic guide covers.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/choose-the-right-famtastic-website-package/",
+      "og_title": "How to Choose the Right FAMtastic Website Package | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/choose-the-right-famtastic-website-package/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-is-included-199-web-basics-bundle/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is Included in the $199 Web Basics Bundle? | FAMtastic Designs",
+      "title_length": 67,
+      "description": "Learn understand the focused one-page build, included first-year hosting, domain choice, intake, launch path, and boundaries of the offer. This practical FAMtastic.",
+      "description_length": 164,
+      "canonical": "https://famtasticdesigns.com/blog/what-is-included-199-web-basics-bundle/",
+      "og_title": "What Is Included in the $199 Web Basics Bundle? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-is-included-199-web-basics-bundle/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-is-included-499-business-website-bundle/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is Included in the $499 Business Website Bundle? | FAMtastic Designs",
+      "title_length": 73,
+      "description": "Learn see how a broader business website supports more services, customer questions, content, and conversion paths than a basic one-page launch. This practical.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/what-is-included-499-business-website-bundle/",
+      "og_title": "What Is Included in the $499 Business Website Bundle? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-is-included-499-business-website-bundle/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 73 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/starter-website-package-explained/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is a Starter Website Package? | FAMtastic Designs",
+      "title_length": 54,
+      "description": "Learn learn when a structured starter site is a better fit than a landing page or a more complex custom build. This practical FAMtastic guide covers customer.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/starter-website-package-explained/",
+      "og_title": "What Is a Starter Website Package? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/starter-website-package-explained/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/business-website-package-explained/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is a Business Website Package? | FAMtastic Designs",
+      "title_length": 55,
+      "description": "Learn understand how a business website organizes multiple services, trust signals, customer journeys, and lead capture. This practical FAMtastic guide covers.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/business-website-package-explained/",
+      "og_title": "What Is a Business Website Package? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/business-website-package-explained/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/premium-website-ai-package-explained/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is a Premium Website Plus AI Package? | FAMtastic Designs",
+      "title_length": 62,
+      "description": "Learn learn when custom experience, automation, governed AI assistance, and deeper integrations belong in one scoped solution. This practical FAMtastic guide.",
+      "description_length": 158,
+      "canonical": "https://famtasticdesigns.com/blog/premium-website-ai-package-explained/",
+      "og_title": "What Is a Premium Website Plus AI Package? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/premium-website-ai-package-explained/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/landing-page-package-explained/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is a Campaign Landing Page System? | FAMtastic Designs",
+      "title_length": 59,
+      "description": "Learn use a paid-campaign system for one audience, one offer, measurable attribution, lead routing, and one conversion path\u2014not as a substitute for the $199.",
+      "description_length": 157,
+      "canonical": "https://famtasticdesigns.com/blog/landing-page-package-explained/",
+      "og_title": "What Is a Campaign Landing Page System? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/landing-page-package-explained/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/website-care-plan-explained/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Does a Website Care Plan Include? | FAMtastic Designs",
+      "title_length": 58,
+      "description": "Learn separate ongoing maintenance, monitoring, updates, support, and improvement from the original website build. This practical FAMtastic guide covers customer.",
+      "description_length": 162,
+      "canonical": "https://famtasticdesigns.com/blog/website-care-plan-explained/",
+      "og_title": "What Does a Website Care Plan Include? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/website-care-plan-explained/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/professional-website-55-cents-a-day/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "A Professional Website for About 55 Cents a Day | FAMtastic Designs",
+      "title_length": 67,
+      "description": "Learn see how a one-time $199 Web Basics purchase averages to about 55 cents per day across one year without pretending it is daily billing. This practical.",
+      "description_length": 156,
+      "canonical": "https://famtasticdesigns.com/blog/professional-website-55-cents-a-day/",
+      "og_title": "A Professional Website for About 55 Cents a Day | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/professional-website-55-cents-a-day/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-is-a-domain-name/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is a Domain Name and Why Does Your Business Need One? | FAMtastic Designs",
+      "title_length": 78,
+      "description": "Learn understand the memorable web address customers use to find your business and how registration differs from website ownership and hosting. This practical.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/what-is-a-domain-name/",
+      "og_title": "What Is a Domain Name and Why Does Your Business Need One? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-is-a-domain-name/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 78 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/what-is-website-hosting/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Is Website Hosting and What Does It Actually Do? | FAMtastic Designs",
+      "title_length": 73,
+      "description": "Learn learn how hosting keeps website files available online and what managed basic hosting means in the Web Basics offer. This practical FAMtastic guide covers.",
+      "description_length": 161,
+      "canonical": "https://famtasticdesigns.com/blog/what-is-website-hosting/",
+      "og_title": "What Is Website Hosting and What Does It Actually Do? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/what-is-website-hosting/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 73 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/parts-of-a-one-page-business-website/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "The Parts of a One-Page Business Website | FAMtastic Designs",
+      "title_length": 60,
+      "description": "Learn see how a focused page combines identity, offer, proof, customer questions, contact, and a clear next action. This practical FAMtastic guide covers customer.",
+      "description_length": 163,
+      "canonical": "https://famtasticdesigns.com/blog/parts-of-a-one-page-business-website/",
+      "og_title": "The Parts of a One-Page Business Website | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/parts-of-a-one-page-business-website/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What the $199 Website Includes\u2014and What It Does Not | FAMtastic Designs",
+      "title_length": 71,
+      "description": "Learn set clear expectations for the one-page build, first-year hosting, domain choice, content intake, and separately scoped ecommerce or custom systems. This.",
+      "description_length": 160,
+      "canonical": "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/",
+      "og_title": "What the $199 Website Includes\u2014and What It Does Not | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 80,
+      "result": "revise",
+      "issues": [
+        "Title length is 71 characters",
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/after-buying-199-website/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "What Happens After You Buy the $199 Website? | FAMtastic Designs",
+      "title_length": 64,
+      "description": "Learn follow the path from account and payment through intake, content, design, review, launch, and customer portal support. This practical FAMtastic guide covers.",
+      "description_length": 163,
+      "canonical": "https://famtasticdesigns.com/blog/after-buying-199-website/",
+      "og_title": "What Happens After You Buy the $199 Website? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/after-buying-199-website/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/who-is-199-website-for/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "Who Is the $199 Website For? | FAMtastic Designs",
+      "title_length": 48,
+      "description": "Learn decide whether a focused first website fits now or whether ecommerce, multiple services, integrations, or custom workflows need a broader scope. This.",
+      "description_length": 156,
+      "canonical": "https://famtasticdesigns.com/blog/who-is-199-website-for/",
+      "og_title": "Who Is the $199 Website For? | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/who-is-199-website-for/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    },
+    {
+      "url": "https://famtasticdesigns.com/blog/grow-beyond-first-website/",
+      "type": "blog",
+      "status": 200,
+      "content_type": "text/html",
+      "title": "How Your First Website Can Grow With Your Business | FAMtastic Designs",
+      "title_length": 70,
+      "description": "Learn start with a useful foundation, then add pages, lead automation, analytics, commerce, portals, support, or AI only when the need is real. This practical.",
+      "description_length": 159,
+      "canonical": "https://famtasticdesigns.com/blog/grow-beyond-first-website/",
+      "og_title": "How Your First Website Can Grow With Your Business | FAMtastic Designs",
+      "og_description": "We engineer intelligent systems that capture leads, automate operations, and grow businesses \u2014 worldwide. Custom websites, AI applications, and digital solutions.",
+      "og_url": "https://famtasticdesigns.com/blog/grow-beyond-first-website/",
+      "schema_types": [
+        "Organization",
+        "WebSite"
+      ],
+      "initial_html_h1": false,
+      "score": 90,
+      "result": "pass",
+      "issues": [
+        "Primary H1/content is absent from initial HTML (client-rendered)"
+      ]
+    }
+  ],
+  "content_items": [
+    {
+      "content_id": "what-should-a-small-business-website-do",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-should-a-small-business-website-do/",
+      "series": "small-business-website-strategy",
+      "primary_intent": "informational",
+      "primary_keyword": "small business website strategy",
+      "title": "What Should a Small-Business Website Actually Do?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1147,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.064340+00:00"
+    },
+    {
+      "content_id": "how-many-pages-small-business-website",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/how-many-pages-small-business-website/",
+      "series": "small-business-website-strategy",
+      "primary_intent": "informational",
+      "primary_keyword": "how many pages does a small business website need",
+      "title": "How Many Pages Does a Small-Business Website Need?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1223,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.064554+00:00"
+    },
+    {
+      "content_id": "one-page-vs-multi-page-website",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/one-page-vs-multi-page-website/",
+      "series": "small-business-website-strategy",
+      "primary_intent": "informational",
+      "primary_keyword": "one page website vs multi page website",
+      "title": "One-Page Website or Multi-Page Website: Which Fits?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1199,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.064750+00:00"
+    },
+    {
+      "content_id": "website-project-information-checklist",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/website-project-information-checklist/",
+      "series": "small-business-website-strategy",
+      "primary_intent": "informational",
+      "primary_keyword": "website project information checklist",
+      "title": "What Information Should You Gather Before Building a Website?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1152,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.064932+00:00"
+    },
+    {
+      "content_id": "plan-website-around-customer-questions",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/plan-website-around-customer-questions/",
+      "series": "small-business-website-strategy",
+      "primary_intent": "informational",
+      "primary_keyword": "website customer questions",
+      "title": "How to Plan a Website Around Customer Questions",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1136,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.065108+00:00"
+    },
+    {
+      "content_id": "what-makes-business-website-trustworthy",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-makes-business-website-trustworthy/",
+      "series": "small-business-website-strategy",
+      "primary_intent": "informational",
+      "primary_keyword": "trustworthy business website",
+      "title": "What Makes a Business Website Feel Trustworthy?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1132,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.065283+00:00"
+    },
+    {
+      "content_id": "custom-website-vs-package",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/custom-website-vs-package/",
+      "series": "small-business-website-strategy",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "custom website vs website package",
+      "title": "When Should a Website Be Custom Instead of Packaged?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1181,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.065463+00:00"
+    },
+    {
+      "content_id": "measure-whether-website-works",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/measure-whether-website-works/",
+      "series": "small-business-website-strategy",
+      "primary_intent": "informational",
+      "primary_keyword": "how to measure website effectiveness",
+      "title": "How to Measure Whether a Website Is Doing Its Job",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1169,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.065650+00:00"
+    },
+    {
+      "content_id": "how-a-website-captures-a-lead",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/how-a-website-captures-a-lead/",
+      "series": "website-lead-capture",
+      "primary_intent": "informational",
+      "primary_keyword": "website lead capture",
+      "title": "How a Website Turns a Visitor Into a Real Lead",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1155,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.065829+00:00"
+    },
+    {
+      "content_id": "what-should-website-contact-form-ask",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-should-website-contact-form-ask/",
+      "series": "website-lead-capture",
+      "primary_intent": "informational",
+      "primary_keyword": "website contact form questions",
+      "title": "What Should a Website Contact Form Ask?",
+      "score": 88,
+      "result": "revise",
+      "issues": [
+        "Meta title length is 39; target 40-65",
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1166,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.066013+00:00"
+    },
+    {
+      "content_id": "contact-form-vs-quote-form-vs-assessment",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/contact-form-vs-quote-form-vs-assessment/",
+      "series": "website-lead-capture",
+      "primary_intent": "informational",
+      "primary_keyword": "contact form vs quote form",
+      "title": "Contact Form, Quote Form, or Assessment: Which Should You Use?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1198,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.066212+00:00"
+    },
+    {
+      "content_id": "reduce-form-friction-without-bad-leads",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/reduce-form-friction-without-bad-leads/",
+      "series": "website-lead-capture",
+      "primary_intent": "informational",
+      "primary_keyword": "reduce lead form friction",
+      "title": "How to Reduce Friction Without Collecting Bad Leads",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1156,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.066398+00:00"
+    },
+    {
+      "content_id": "what-should-thank-you-page-do",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-should-thank-you-page-do/",
+      "series": "website-lead-capture",
+      "primary_intent": "informational",
+      "primary_keyword": "thank you page best practices",
+      "title": "What Should a Thank-You Page Do After Form Submission?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1167,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.066585+00:00"
+    },
+    {
+      "content_id": "track-pages-campaigns-create-leads",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/track-pages-campaigns-create-leads/",
+      "series": "website-lead-capture",
+      "primary_intent": "informational",
+      "primary_keyword": "track website lead sources",
+      "title": "How to Track Which Pages and Campaigns Create Leads",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1163,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.066770+00:00"
+    },
+    {
+      "content_id": "why-website-leads-get-lost",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/why-website-leads-get-lost/",
+      "series": "website-lead-capture",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "website leads not receiving",
+      "title": "Why Website Leads Get Lost Between the Form and the Inbox",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1177,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.066955+00:00"
+    },
+    {
+      "content_id": "mobile-lead-capture-design",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/mobile-lead-capture-design/",
+      "series": "website-lead-capture",
+      "primary_intent": "informational",
+      "primary_keyword": "mobile lead capture form",
+      "title": "How to Design a Mobile Lead-Capture Experience",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1160,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.067138+00:00"
+    },
+    {
+      "content_id": "what-happens-after-a-website-lead",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-happens-after-a-website-lead/",
+      "series": "lead-response-operations",
+      "primary_intent": "informational",
+      "primary_keyword": "website lead response process",
+      "title": "What Should Happen After a Website Lead Arrives?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1157,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.067323+00:00"
+    },
+    {
+      "content_id": "small-business-lead-stages",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/small-business-lead-stages/",
+      "series": "lead-response-operations",
+      "primary_intent": "informational",
+      "primary_keyword": "small business lead stages",
+      "title": "What Lead Stages Does a Small Business Actually Need?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1167,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.067513+00:00"
+    },
+    {
+      "content_id": "small-business-lead-response-time",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/small-business-lead-response-time/",
+      "series": "lead-response-operations",
+      "primary_intent": "informational",
+      "primary_keyword": "small business lead response time",
+      "title": "How Fast Should a Small Business Respond to a Website Lead?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1185,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.067705+00:00"
+    },
+    {
+      "content_id": "lead-follow-up-schedule",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/lead-follow-up-schedule/",
+      "series": "lead-response-operations",
+      "primary_intent": "informational",
+      "primary_keyword": "lead follow up schedule",
+      "title": "How to Build a Lead Follow-Up Schedule That Does Not Feel Robotic",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1157,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.067883+00:00"
+    },
+    {
+      "content_id": "new-lead-notification-checklist",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/new-lead-notification-checklist/",
+      "series": "lead-response-operations",
+      "primary_intent": "informational",
+      "primary_keyword": "new lead notification",
+      "title": "What Should Be in a New-Lead Notification?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1146,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.068064+00:00"
+    },
+    {
+      "content_id": "lead-email-reply-ingestion",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/lead-email-reply-ingestion/",
+      "series": "lead-response-operations",
+      "primary_intent": "informational",
+      "primary_keyword": "email replies into crm",
+      "title": "How to Handle Leads That Reply by Email",
+      "score": 88,
+      "result": "revise",
+      "issues": [
+        "Meta title length is 39; target 40-65",
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1161,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.068247+00:00"
+    },
+    {
+      "content_id": "overdue-lead-alerts",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/overdue-lead-alerts/",
+      "series": "lead-response-operations",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "overdue lead alerts",
+      "title": "How to Know When a Lead Is Overdue",
+      "score": 88,
+      "result": "revise",
+      "issues": [
+        "Meta title length is 34; target 40-65",
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1153,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.068427+00:00"
+    },
+    {
+      "content_id": "lead-nurture-not-ready-to-buy",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/lead-nurture-not-ready-to-buy/",
+      "series": "lead-response-operations",
+      "primary_intent": "informational",
+      "primary_keyword": "lead nurture not ready to buy",
+      "title": "What Should Happen to Leads That Are Not Ready to Buy?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1191,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.068613+00:00"
+    },
+    {
+      "content_id": "what-happens-after-an-online-purchase",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-happens-after-an-online-purchase/",
+      "series": "commerce-customer-lifecycle",
+      "primary_intent": "informational",
+      "primary_keyword": "post purchase ecommerce workflow",
+      "title": "What Happens After an Online Purchase?",
+      "score": 88,
+      "result": "revise",
+      "issues": [
+        "Meta title length is 38; target 40-65",
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1160,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.068799+00:00"
+    },
+    {
+      "content_id": "product-addon-entitlement-difference",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/product-addon-entitlement-difference/",
+      "series": "commerce-customer-lifecycle",
+      "primary_intent": "informational",
+      "primary_keyword": "product add on entitlement",
+      "title": "What Is the Difference Between a Product, Add-On, and Entitlement?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1196,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.068987+00:00"
+    },
+    {
+      "content_id": "connect-checkout-to-customer-intake",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/connect-checkout-to-customer-intake/",
+      "series": "commerce-customer-lifecycle",
+      "primary_intent": "informational",
+      "primary_keyword": "checkout customer intake",
+      "title": "How Should Checkout Connect to Customer Intake?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1162,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.069170+00:00"
+    },
+    {
+      "content_id": "account-specific-special-pricing",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/account-specific-special-pricing/",
+      "series": "commerce-customer-lifecycle",
+      "primary_intent": "informational",
+      "primary_keyword": "customer specific pricing ecommerce",
+      "title": "How to Handle Special Pricing Without Breaking the Catalog",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1166,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.069354+00:00"
+    },
+    {
+      "content_id": "customer-receipt-content",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/customer-receipt-content/",
+      "series": "commerce-customer-lifecycle",
+      "primary_intent": "informational",
+      "primary_keyword": "what should ecommerce receipt include",
+      "title": "What Should a Customer Receipt Explain?",
+      "score": 88,
+      "result": "revise",
+      "issues": [
+        "Meta title length is 39; target 40-65",
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1174,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.069541+00:00"
+    },
+    {
+      "content_id": "failed-payments-refunds-cancellations",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/failed-payments-refunds-cancellations/",
+      "series": "commerce-customer-lifecycle",
+      "primary_intent": "informational",
+      "primary_keyword": "failed payment refund cancellation workflow",
+      "title": "How Should Failed Payments, Refunds, and Cancellations Work?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1183,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.069731+00:00"
+    },
+    {
+      "content_id": "hosting-domain-renewal-design",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/hosting-domain-renewal-design/",
+      "series": "commerce-customer-lifecycle",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "hosting domain renewal process",
+      "title": "How to Design Hosting and Domain Renewals Clearly",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1158,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.069918+00:00"
+    },
+    {
+      "content_id": "prove-ecommerce-before-live-payments",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/prove-ecommerce-before-live-payments/",
+      "series": "commerce-customer-lifecycle",
+      "primary_intent": "informational",
+      "primary_keyword": "ecommerce test checklist",
+      "title": "How to Prove an Ecommerce Workflow Before Taking Real Payments",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1156,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.070101+00:00"
+    },
+    {
+      "content_id": "how-a-customer-portal-helps",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/how-a-customer-portal-helps/",
+      "series": "customer-portal-experience",
+      "primary_intent": "informational",
+      "primary_keyword": "small business customer portal",
+      "title": "How a Customer Portal Helps a Small Business",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1162,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.070290+00:00"
+    },
+    {
+      "content_id": "customer-portal-home-screen",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/customer-portal-home-screen/",
+      "series": "customer-portal-experience",
+      "primary_intent": "informational",
+      "primary_keyword": "customer portal dashboard",
+      "title": "What Should Be on a Customer Portal Home Screen?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1168,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.070475+00:00"
+    },
+    {
+      "content_id": "portal-projects-files-approvals",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/portal-projects-files-approvals/",
+      "series": "customer-portal-experience",
+      "primary_intent": "informational",
+      "primary_keyword": "client portal projects files approvals",
+      "title": "How Should Customers Find Projects, Files, and Approvals?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1168,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.070661+00:00"
+    },
+    {
+      "content_id": "portal-support-vs-contact-form",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/portal-support-vs-contact-form/",
+      "series": "customer-portal-experience",
+      "primary_intent": "informational",
+      "primary_keyword": "customer portal support",
+      "title": "What Makes Portal Support Better Than a Contact Form?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1143,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.070843+00:00"
+    },
+    {
+      "content_id": "portal-team-members-business-accounts",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/portal-team-members-business-accounts/",
+      "series": "customer-portal-experience",
+      "primary_intent": "informational",
+      "primary_keyword": "customer portal team roles",
+      "title": "How Should a Portal Handle Team Members and Business Accounts?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1154,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.071029+00:00"
+    },
+    {
+      "content_id": "portal-communication-preferences",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/portal-communication-preferences/",
+      "series": "customer-portal-experience",
+      "primary_intent": "informational",
+      "primary_keyword": "customer portal communication preferences",
+      "title": "What Communication Settings Should Customers Control?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1142,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.071213+00:00"
+    },
+    {
+      "content_id": "portal-product-documentation-learning",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/portal-product-documentation-learning/",
+      "series": "customer-portal-experience",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "customer portal product documentation",
+      "title": "How Can a Portal Teach Customers to Use What They Bought?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1165,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.071401+00:00"
+    },
+    {
+      "content_id": "mobile-customer-portal-design",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/mobile-customer-portal-design/",
+      "series": "customer-portal-experience",
+      "primary_intent": "informational",
+      "primary_keyword": "mobile customer portal design",
+      "title": "How to Design a Customer Portal for Mobile Use",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1163,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.071585+00:00"
+    },
+    {
+      "content_id": "how-automation-prevents-lost-opportunities",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/how-automation-prevents-lost-opportunities/",
+      "series": "small-business-automation",
+      "primary_intent": "informational",
+      "primary_keyword": "small business workflow automation",
+      "title": "How Automation Prevents Lost Opportunities",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1149,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.071769+00:00"
+    },
+    {
+      "content_id": "what-small-business-should-automate-first",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-small-business-should-automate-first/",
+      "series": "small-business-automation",
+      "primary_intent": "informational",
+      "primary_keyword": "what should a small business automate",
+      "title": "What Should a Small Business Automate First?",
+      "score": 100,
+      "result": "pass",
+      "issues": [],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1192,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.071957+00:00"
+    },
+    {
+      "content_id": "what-not-to-fully-automate",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-not-to-fully-automate/",
+      "series": "small-business-automation",
+      "primary_intent": "informational",
+      "primary_keyword": "what business tasks should not be automated",
+      "title": "What Should Never Be Fully Automated?",
+      "score": 88,
+      "result": "revise",
+      "issues": [
+        "Meta title length is 37; target 40-65",
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1190,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.072149+00:00"
+    },
+    {
+      "content_id": "scheduled-workers-customer-work",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/scheduled-workers-customer-work/",
+      "series": "small-business-automation",
+      "primary_intent": "informational",
+      "primary_keyword": "scheduled task business workflow",
+      "title": "How Do Scheduled Workers Protect Customer Work?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1152,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.072336+00:00"
+    },
+    {
+      "content_id": "idempotency-business-automation",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/idempotency-business-automation/",
+      "series": "small-business-automation",
+      "primary_intent": "informational",
+      "primary_keyword": "idempotency business automation",
+      "title": "What Is Idempotency and Why Does Business Automation Need It?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1158,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.072551+00:00"
+    },
+    {
+      "content_id": "automation-failures-retries-dead-letter",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/automation-failures-retries-dead-letter/",
+      "series": "small-business-automation",
+      "primary_intent": "informational",
+      "primary_keyword": "automation retry dead letter",
+      "title": "How Should Automation Handle Failures and Retries?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1163,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.072798+00:00"
+    },
+    {
+      "content_id": "website-events-business-workflows",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/website-events-business-workflows/",
+      "series": "small-business-automation",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "website workflow automation",
+      "title": "How to Connect Website Events to Real Business Workflows",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1155,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.073019+00:00"
+    },
+    {
+      "content_id": "test-business-automation-safely",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/test-business-automation-safely/",
+      "series": "small-business-automation",
+      "primary_intent": "informational",
+      "primary_keyword": "test business automation",
+      "title": "How to Test Automation Without Risking Customers",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1161,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.073214+00:00"
+    },
+    {
+      "content_id": "website-numbers-that-matter",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/website-numbers-that-matter/",
+      "series": "website-analytics-decisions",
+      "primary_intent": "informational",
+      "primary_keyword": "small business website metrics",
+      "title": "The Website Numbers a Small Business Should Watch",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1165,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.073405+00:00"
+    },
+    {
+      "content_id": "small-business-website-conversion",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/small-business-website-conversion/",
+      "series": "website-analytics-decisions",
+      "primary_intent": "informational",
+      "primary_keyword": "small business website conversion",
+      "title": "What Is a Website Conversion for a Small Business?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1177,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.073596+00:00"
+    },
+    {
+      "content_id": "track-website-calls-to-action",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/track-website-calls-to-action/",
+      "series": "website-analytics-decisions",
+      "primary_intent": "informational",
+      "primary_keyword": "cta tracking website",
+      "title": "How to Track Calls to Action Across a Website",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1153,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.073782+00:00"
+    },
+    {
+      "content_id": "understand-website-traffic-sources",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/understand-website-traffic-sources/",
+      "series": "website-analytics-decisions",
+      "primary_intent": "informational",
+      "primary_keyword": "website traffic source analysis",
+      "title": "How to Read Traffic Sources Without Fooling Yourself",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1143,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.073967+00:00"
+    },
+    {
+      "content_id": "small-business-analytics-dashboard",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/small-business-analytics-dashboard/",
+      "series": "website-analytics-decisions",
+      "primary_intent": "informational",
+      "primary_keyword": "small business analytics dashboard",
+      "title": "What Should a Small-Business Analytics Dashboard Show?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1163,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.074152+00:00"
+    },
+    {
+      "content_id": "analytics-and-customer-data",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/analytics-and-customer-data/",
+      "series": "website-analytics-decisions",
+      "primary_intent": "informational",
+      "primary_keyword": "analytics crm integration",
+      "title": "How Do Analytics and CRM Data Work Together?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1160,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.074336+00:00"
+    },
+    {
+      "content_id": "measure-blog-content-performance",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/measure-blog-content-performance/",
+      "series": "website-analytics-decisions",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "measure blog performance",
+      "title": "How to Measure Content and Blog Performance",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1148,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.074522+00:00"
+    },
+    {
+      "content_id": "when-to-change-website-from-analytics",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/when-to-change-website-from-analytics/",
+      "series": "website-analytics-decisions",
+      "primary_intent": "informational",
+      "primary_keyword": "website analytics decision making",
+      "title": "When Should You Change a Website Based on Analytics?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1163,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.074707+00:00"
+    },
+    {
+      "content_id": "when-an-ai-website-agent-is-useful",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/when-an-ai-website-agent-is-useful/",
+      "series": "ai-agents-for-websites",
+      "primary_intent": "informational",
+      "primary_keyword": "ai agent for website",
+      "title": "When Is an AI Website Agent Actually Useful?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1187,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.074898+00:00"
+    },
+    {
+      "content_id": "ai-chatbot-vs-ai-agent",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/ai-chatbot-vs-ai-agent/",
+      "series": "ai-agents-for-websites",
+      "primary_intent": "informational",
+      "primary_keyword": "ai chatbot vs ai agent",
+      "title": "AI Chatbot or AI Agent: What Is the Difference?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1196,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.075088+00:00"
+    },
+    {
+      "content_id": "ai-agent-knowledge-base",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/ai-agent-knowledge-base/",
+      "series": "ai-agents-for-websites",
+      "primary_intent": "informational",
+      "primary_keyword": "ai agent knowledge base",
+      "title": "What Knowledge Should an AI Website Agent Use?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1176,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.075279+00:00"
+    },
+    {
+      "content_id": "safe-ai-agent-actions",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/safe-ai-agent-actions/",
+      "series": "ai-agents-for-websites",
+      "primary_intent": "informational",
+      "primary_keyword": "safe ai agent actions",
+      "title": "What Actions Should an AI Website Agent Be Allowed to Take?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1166,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.075469+00:00"
+    },
+    {
+      "content_id": "ai-agent-human-handoff",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/ai-agent-human-handoff/",
+      "series": "ai-agents-for-websites",
+      "primary_intent": "informational",
+      "primary_keyword": "ai agent human handoff",
+      "title": "How Should an AI Agent Hand Off to a Person?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1178,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.075653+00:00"
+    },
+    {
+      "content_id": "measure-ai-agent-performance",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/measure-ai-agent-performance/",
+      "series": "ai-agents-for-websites",
+      "primary_intent": "informational",
+      "primary_keyword": "ai agent performance metrics",
+      "title": "How to Measure Whether an AI Agent Is Helping",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1166,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.075859+00:00"
+    },
+    {
+      "content_id": "ai-agent-customer-documentation",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/ai-agent-customer-documentation/",
+      "series": "ai-agents-for-websites",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "ai agent documentation",
+      "title": "What Documentation Do Customers Need for an AI Agent?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1157,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.076043+00:00"
+    },
+    {
+      "content_id": "test-ai-website-agent",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/test-ai-website-agent/",
+      "series": "ai-agents-for-websites",
+      "primary_intent": "informational",
+      "primary_keyword": "test ai agent before launch",
+      "title": "How to Test an AI Website Agent Before Launch",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1189,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.076230+00:00"
+    },
+    {
+      "content_id": "choose-the-right-famtastic-website-package",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/choose-the-right-famtastic-website-package/",
+      "series": "website-packages-explained",
+      "primary_intent": "informational",
+      "primary_keyword": "choose a website package",
+      "title": "How to Choose the Right FAMtastic Website Package",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1181,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.076418+00:00"
+    },
+    {
+      "content_id": "what-is-included-199-web-basics-bundle",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-is-included-199-web-basics-bundle/",
+      "series": "website-packages-explained",
+      "primary_intent": "informational",
+      "primary_keyword": "$199 website package",
+      "title": "What Is Included in the $199 Web Basics Bundle?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1189,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.076606+00:00"
+    },
+    {
+      "content_id": "what-is-included-499-business-website-bundle",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-is-included-499-business-website-bundle/",
+      "series": "website-packages-explained",
+      "primary_intent": "informational",
+      "primary_keyword": "$499 business website package",
+      "title": "What Is Included in the $499 Business Website Bundle?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1204,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.076799+00:00"
+    },
+    {
+      "content_id": "starter-website-package-explained",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/starter-website-package-explained/",
+      "series": "website-packages-explained",
+      "primary_intent": "informational",
+      "primary_keyword": "starter website package",
+      "title": "What Is a Starter Website Package?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Meta title length is 34; target 40-65"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1178,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.076988+00:00"
+    },
+    {
+      "content_id": "business-website-package-explained",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/business-website-package-explained/",
+      "series": "website-packages-explained",
+      "primary_intent": "informational",
+      "primary_keyword": "business website package",
+      "title": "What Is a Business Website Package?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Meta title length is 35; target 40-65"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1160,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.077169+00:00"
+    },
+    {
+      "content_id": "premium-website-ai-package-explained",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/premium-website-ai-package-explained/",
+      "series": "website-packages-explained",
+      "primary_intent": "informational",
+      "primary_keyword": "premium website AI package",
+      "title": "What Is a Premium Website Plus AI Package?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1180,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.077352+00:00"
+    },
+    {
+      "content_id": "landing-page-package-explained",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/landing-page-package-explained/",
+      "series": "website-packages-explained",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "campaign landing page system",
+      "title": "What Is a Campaign Landing Page System?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Meta title length is 39; target 40-65"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1217,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.077542+00:00"
+    },
+    {
+      "content_id": "website-care-plan-explained",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/website-care-plan-explained/",
+      "series": "website-packages-explained",
+      "primary_intent": "informational",
+      "primary_keyword": "website care plan",
+      "title": "What Does a Website Care Plan Include?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Meta title length is 38; target 40-65"
+      ],
+      "internal_link_count": 8,
+      "source_count": 1,
+      "word_count": 1156,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.077724+00:00"
+    },
+    {
+      "content_id": "professional-website-55-cents-a-day",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/professional-website-55-cents-a-day/",
+      "series": "fifty-five-cents-a-day",
+      "primary_intent": "informational",
+      "primary_keyword": "55 cents a day website",
+      "title": "A Professional Website for About 55 Cents a Day",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 3,
+      "word_count": 1027,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.077903+00:00"
+    },
+    {
+      "content_id": "what-is-a-domain-name",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-is-a-domain-name/",
+      "series": "fifty-five-cents-a-day",
+      "primary_intent": "informational",
+      "primary_keyword": "what is a domain name",
+      "title": "What Is a Domain Name and Why Does Your Business Need One?",
+      "score": 100,
+      "result": "pass",
+      "issues": [],
+      "internal_link_count": 8,
+      "source_count": 3,
+      "word_count": 991,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.078068+00:00"
+    },
+    {
+      "content_id": "what-is-website-hosting",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/what-is-website-hosting/",
+      "series": "fifty-five-cents-a-day",
+      "primary_intent": "informational",
+      "primary_keyword": "what is website hosting",
+      "title": "What Is Website Hosting and What Does It Actually Do?",
+      "score": 100,
+      "result": "pass",
+      "issues": [],
+      "internal_link_count": 8,
+      "source_count": 3,
+      "word_count": 989,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.078230+00:00"
+    },
+    {
+      "content_id": "parts-of-a-one-page-business-website",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/parts-of-a-one-page-business-website/",
+      "series": "fifty-five-cents-a-day",
+      "primary_intent": "informational",
+      "primary_keyword": "parts of a one page website",
+      "title": "The Parts of a One-Page Business Website",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 3,
+      "word_count": 978,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.078393+00:00"
+    },
+    {
+      "content_id": "199-website-inclusions-and-boundaries",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/",
+      "series": "fifty-five-cents-a-day",
+      "primary_intent": "informational",
+      "primary_keyword": "$199 website includes",
+      "title": "What the $199 Website Includes\u2014and What It Does Not",
+      "score": 100,
+      "result": "pass",
+      "issues": [],
+      "internal_link_count": 8,
+      "source_count": 3,
+      "word_count": 986,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.078552+00:00"
+    },
+    {
+      "content_id": "after-buying-199-website",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/after-buying-199-website/",
+      "series": "fifty-five-cents-a-day",
+      "primary_intent": "informational",
+      "primary_keyword": "$199 website process",
+      "title": "What Happens After You Buy the $199 Website?",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 3,
+      "word_count": 969,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.078705+00:00"
+    },
+    {
+      "content_id": "who-is-199-website-for",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/who-is-199-website-for/",
+      "series": "fifty-five-cents-a-day",
+      "primary_intent": "commercial-investigation",
+      "primary_keyword": "who needs a basic website",
+      "title": "Who Is the $199 Website For?",
+      "score": 88,
+      "result": "revise",
+      "issues": [
+        "Meta title length is 28; target 40-65",
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 3,
+      "word_count": 1001,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.078869+00:00"
+    },
+    {
+      "content_id": "grow-beyond-first-website",
+      "revision": 2,
+      "url": "https://famtasticdesigns.com/blog/grow-beyond-first-website/",
+      "series": "fifty-five-cents-a-day",
+      "primary_intent": "informational",
+      "primary_keyword": "upgrade a basic website",
+      "title": "How Your First Website Can Grow With Your Business",
+      "score": 94,
+      "result": "pass",
+      "issues": [
+        "Primary keyword is not explicit in title, description, or opening copy"
+      ],
+      "internal_link_count": 8,
+      "source_count": 3,
+      "word_count": 992,
+      "reviewer": "FAMtastic SEO Discovery QA v1",
+      "reviewed_at": "2026-08-12T15:23:17.079025+00:00"
+    }
+  ],
+  "cannibalization_candidates": [],
+  "limitations": [
+    "Search Console, CrUX field data, backlink indexes, and live ranking data were unavailable.",
+    "Page checks evaluate initial HTML; rendered mobile/accessibility QA is reported by the separate visual QA lane.",
+    "Cannibalization candidates are heuristic and require Search Console query-to-page evidence before merge or redirect decisions."
+  ]
+}

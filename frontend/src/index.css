@@ -45,6 +45,31 @@ a:hover {
   color: #a5ff4d;
 }
 
+/* A single, high-contrast keyboard focus treatment across old and v1 UI. */
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--fam-lime);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1000;
+  transform: translateY(-180%);
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  background: var(--fam-lime);
+  color: var(--fam-bg);
+  font-weight: 800;
+  transition: transform 120ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  color: var(--fam-bg);
+}
+
 ::selection {
   background: var(--fam-lime);
   color: var(--fam-bg);
@@ -2369,6 +2394,11 @@ a:hover {
   border-top: 1px solid var(--v1-border);
 }
 
+.v1-nav-mobile .v1-nav__link {
+  min-height: 44px;
+  padding: 0.65rem 0.25rem;
+}
+
 .v1-nav-mobile__primary {
   justify-content: center;
   margin-bottom: 0.35rem;
@@ -2465,6 +2495,29 @@ a:hover {
 
 .v1-footer__col a:hover {
   color: var(--v1-lime);
+}
+
+@media (max-width: 639px) {
+  .v1-footer__col a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .v1-footer__bottom {

@@ -1,0 +1,1812 @@
+{
+  "summary": {
+    "audit_date": "2026-08-12",
+    "scope": "independent site-wide content QA",
+    "pages_scored": 156,
+    "blogs_scored": 80,
+    "average_score": 93.3,
+    "pass": 139,
+    "review": 17,
+    "fail": 0,
+    "safe_corrections": 0,
+    "skipped": []
+  },
+  "pages": [
+    {
+      "type": "blog",
+      "key": "professional-website-55-cents-a-day",
+      "title": "A Professional Website for About 55 Cents a Day",
+      "route": "/blog/professional-website-55-cents-a-day",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Contains 12 long paragraph(s) reused across more than three articles",
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "grow-beyond-first-website",
+      "title": "How Your First Website Can Grow With Your Business",
+      "route": "/blog/grow-beyond-first-website",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Contains 12 long paragraph(s) reused across more than three articles",
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "parts-of-a-one-page-business-website",
+      "title": "The Parts of a One-Page Business Website",
+      "route": "/blog/parts-of-a-one-page-business-website",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Contains 12 long paragraph(s) reused across more than three articles",
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "after-buying-199-website",
+      "title": "What Happens After You Buy the $199 Website?",
+      "route": "/blog/after-buying-199-website",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Contains 12 long paragraph(s) reused across more than three articles",
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-is-website-hosting",
+      "title": "What Is Website Hosting and What Does It Actually Do?",
+      "route": "/blog/what-is-website-hosting",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Contains 12 long paragraph(s) reused across more than three articles",
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-is-a-domain-name",
+      "title": "What Is a Domain Name and Why Does Your Business Need One?",
+      "route": "/blog/what-is-a-domain-name",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Contains 12 long paragraph(s) reused across more than three articles",
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "199-website-inclusions-and-boundaries",
+      "title": "What the $199 Website Includes—and What It Does Not",
+      "route": "/blog/199-website-inclusions-and-boundaries",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Contains 12 long paragraph(s) reused across more than three articles",
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "who-is-199-website-for",
+      "title": "Who Is the $199 Website For?",
+      "route": "/blog/who-is-199-website-for",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Contains 12 long paragraph(s) reused across more than three articles",
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "2b0ca1c6-2fe8-4a1d-9af0-aa46e2086835",
+      "title": "AI Chatbot Solutions",
+      "route": "/services/ai-chatbot",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Missing explicit meta title",
+        "Meta description length is 0 characters",
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "a2781e04-6df5-404e-b804-d5d057aeeb19",
+      "title": "Client Portal Systems",
+      "route": "/services/client-portal-systems",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Missing explicit meta title",
+        "Meta description length is 0 characters",
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "65450a2b-f7f3-4c38-b806-11769b25e7b4",
+      "title": "Custom Website Development",
+      "route": "/services/custom-website-development",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Missing explicit meta title",
+        "Meta description length is 0 characters",
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "62414e0e-5fcd-4650-aaf7-3cfb63207357",
+      "title": "E-Commerce Solutions",
+      "route": "/services/e-commerce-solutions",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Missing explicit meta title",
+        "Meta description length is 0 characters",
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "6fa413f3-8049-41aa-96fd-88c1ca7bbce2",
+      "title": "Landing Page Design",
+      "route": "/services/landing-page-design",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Missing explicit meta title",
+        "Meta description length is 0 characters",
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "service",
+      "key": "3ae104ed-f458-4ceb-8d32-807ebbef6dbf",
+      "title": "Site Rebuild & Redesign",
+      "route": "/services/site-rebuild",
+      "score": 70,
+      "status": "review",
+      "issues": [
+        "Missing explicit meta title",
+        "Meta description length is 0 characters",
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "package",
+      "key": "60449381-e8c0-4783-8c48-d2ac6ed4c492",
+      "title": "Web Basics Bundle — $199",
+      "route": "/packages/199-quick-start",
+      "score": 80,
+      "status": "review",
+      "issues": [
+        "Meta description length is 69 characters",
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-REVISION-75",
+      "title": "Additional Revision Round",
+      "route": "/buy",
+      "score": 82,
+      "status": "review",
+      "issues": [
+        "Missing product contract field: upsells",
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-ECOMMERCE-DISCOVERY",
+      "title": "Ecommerce Discovery",
+      "route": "/buy",
+      "score": 82,
+      "status": "review",
+      "issues": [
+        "Missing product contract field: upsells",
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "package",
+      "key": "be1ff21f-916e-42ca-bb38-ab330b0c5537",
+      "title": "Business Growth System — $3,999",
+      "route": "/packages/business-website",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "package",
+      "key": "64067cb5-3bb0-4e02-88ac-52290bf7cf57",
+      "title": "Business Website Bundle — $499",
+      "route": "/packages/499-site-upgrade",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "package",
+      "key": "36ad8286-f968-4d89-9c24-08388ec2a74a",
+      "title": "Campaign Landing Page System — $1,499",
+      "route": "/packages/landing-page",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "package",
+      "key": "cd75a780-b5b6-4239-9bbe-2b3a8886b95f",
+      "title": "Custom Website — $1,999",
+      "route": "/packages/starter-website",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "package",
+      "key": "15b687f2-a147-4cce-8003-715067b77d08",
+      "title": "Premium Website + AI System — $6,999",
+      "route": "/packages/premium-website-ai",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "package",
+      "key": "52185497-e840-4377-a028-59d156b8ad71",
+      "title": "Website Care & Maintenance — $149/month",
+      "route": "/packages/website-care-plan",
+      "score": 88,
+      "status": "pass",
+      "issues": [
+        "Conversion CTA is incomplete"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "core-page",
+      "key": "faq-hub",
+      "title": "FAQs",
+      "route": "/faq",
+      "score": 90,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "core-page",
+      "key": "packages-hub",
+      "title": "Packages",
+      "route": "/packages",
+      "score": 90,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "core-page",
+      "key": "services-hub",
+      "title": "Services",
+      "route": "/services",
+      "score": 90,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-AI-AGENT",
+      "title": "AI Website Agent Setup",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-PAGE-EXTRA",
+      "title": "Additional Website Page",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-SCHEDULING",
+      "title": "Appointment Scheduling",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-BUSINESS-EMAIL",
+      "title": "Business Email Setup",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-COPY",
+      "title": "Copywriting Assistance",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-ANALYTICS",
+      "title": "Growth Analytics — Monthly",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-LEAD-AUTOMATION",
+      "title": "Lead Automation",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-LOCAL-SEO",
+      "title": "Local SEO Setup",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-BRAND",
+      "title": "Logo and Brand Starter",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-MAINTENANCE",
+      "title": "Website Maintenance — Monthly",
+      "route": "/buy",
+      "score": 90,
+      "status": "pass",
+      "issues": [
+        "Summary is too short to communicate outcome and boundary"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "ai-chatbot-vs-ai-agent",
+      "title": "AI Chatbot or AI Agent: What Is the Difference?",
+      "route": "/blog/ai-chatbot-vs-ai-agent",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "contact-form-vs-quote-form-vs-assessment",
+      "title": "Contact Form, Quote Form, or Assessment: Which Should You Use?",
+      "route": "/blog/contact-form-vs-quote-form-vs-assessment",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "how-automation-prevents-lost-opportunities",
+      "title": "How Automation Prevents Lost Opportunities",
+      "route": "/blog/how-automation-prevents-lost-opportunities",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "portal-product-documentation-learning",
+      "title": "How Can a Portal Teach Customers to Use What They Bought?",
+      "route": "/blog/portal-product-documentation-learning",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "analytics-and-customer-data",
+      "title": "How Do Analytics and CRM Data Work Together?",
+      "route": "/blog/analytics-and-customer-data",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "scheduled-workers-customer-work",
+      "title": "How Do Scheduled Workers Protect Customer Work?",
+      "route": "/blog/scheduled-workers-customer-work",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "small-business-lead-response-time",
+      "title": "How Fast Should a Small Business Respond to a Website Lead?",
+      "route": "/blog/small-business-lead-response-time",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "how-many-pages-small-business-website",
+      "title": "How Many Pages Does a Small-Business Website Need?",
+      "route": "/blog/how-many-pages-small-business-website",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "automation-failures-retries-dead-letter",
+      "title": "How Should Automation Handle Failures and Retries?",
+      "route": "/blog/automation-failures-retries-dead-letter",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "connect-checkout-to-customer-intake",
+      "title": "How Should Checkout Connect to Customer Intake?",
+      "route": "/blog/connect-checkout-to-customer-intake",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "portal-projects-files-approvals",
+      "title": "How Should Customers Find Projects, Files, and Approvals?",
+      "route": "/blog/portal-projects-files-approvals",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "failed-payments-refunds-cancellations",
+      "title": "How Should Failed Payments, Refunds, and Cancellations Work?",
+      "route": "/blog/failed-payments-refunds-cancellations",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "portal-team-members-business-accounts",
+      "title": "How Should a Portal Handle Team Members and Business Accounts?",
+      "route": "/blog/portal-team-members-business-accounts",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "ai-agent-human-handoff",
+      "title": "How Should an AI Agent Hand Off to a Person?",
+      "route": "/blog/ai-agent-human-handoff",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "how-a-customer-portal-helps",
+      "title": "How a Customer Portal Helps a Small Business",
+      "route": "/blog/how-a-customer-portal-helps",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "how-a-website-captures-a-lead",
+      "title": "How a Website Turns a Visitor Into a Real Lead",
+      "route": "/blog/how-a-website-captures-a-lead",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "lead-follow-up-schedule",
+      "title": "How to Build a Lead Follow-Up Schedule That Does Not Feel Robotic",
+      "route": "/blog/lead-follow-up-schedule",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "choose-the-right-famtastic-website-package",
+      "title": "How to Choose the Right FAMtastic Website Package",
+      "route": "/blog/choose-the-right-famtastic-website-package",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "website-events-business-workflows",
+      "title": "How to Connect Website Events to Real Business Workflows",
+      "route": "/blog/website-events-business-workflows",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "hosting-domain-renewal-design",
+      "title": "How to Design Hosting and Domain Renewals Clearly",
+      "route": "/blog/hosting-domain-renewal-design",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "mobile-customer-portal-design",
+      "title": "How to Design a Customer Portal for Mobile Use",
+      "route": "/blog/mobile-customer-portal-design",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "mobile-lead-capture-design",
+      "title": "How to Design a Mobile Lead-Capture Experience",
+      "route": "/blog/mobile-lead-capture-design",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "lead-email-reply-ingestion",
+      "title": "How to Handle Leads That Reply by Email",
+      "route": "/blog/lead-email-reply-ingestion",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "account-specific-special-pricing",
+      "title": "How to Handle Special Pricing Without Breaking the Catalog",
+      "route": "/blog/account-specific-special-pricing",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "overdue-lead-alerts",
+      "title": "How to Know When a Lead Is Overdue",
+      "route": "/blog/overdue-lead-alerts",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "measure-blog-content-performance",
+      "title": "How to Measure Content and Blog Performance",
+      "route": "/blog/measure-blog-content-performance",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "measure-whether-website-works",
+      "title": "How to Measure Whether a Website Is Doing Its Job",
+      "route": "/blog/measure-whether-website-works",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "measure-ai-agent-performance",
+      "title": "How to Measure Whether an AI Agent Is Helping",
+      "route": "/blog/measure-ai-agent-performance",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "plan-website-around-customer-questions",
+      "title": "How to Plan a Website Around Customer Questions",
+      "route": "/blog/plan-website-around-customer-questions",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "prove-ecommerce-before-live-payments",
+      "title": "How to Prove an Ecommerce Workflow Before Taking Real Payments",
+      "route": "/blog/prove-ecommerce-before-live-payments",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "understand-website-traffic-sources",
+      "title": "How to Read Traffic Sources Without Fooling Yourself",
+      "route": "/blog/understand-website-traffic-sources",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "reduce-form-friction-without-bad-leads",
+      "title": "How to Reduce Friction Without Collecting Bad Leads",
+      "route": "/blog/reduce-form-friction-without-bad-leads",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "test-business-automation-safely",
+      "title": "How to Test Automation Without Risking Customers",
+      "route": "/blog/test-business-automation-safely",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "test-ai-website-agent",
+      "title": "How to Test an AI Website Agent Before Launch",
+      "route": "/blog/test-ai-website-agent",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "track-website-calls-to-action",
+      "title": "How to Track Calls to Action Across a Website",
+      "route": "/blog/track-website-calls-to-action",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "track-pages-campaigns-create-leads",
+      "title": "How to Track Which Pages and Campaigns Create Leads",
+      "route": "/blog/track-pages-campaigns-create-leads",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "one-page-vs-multi-page-website",
+      "title": "One-Page Website or Multi-Page Website: Which Fits?",
+      "route": "/blog/one-page-vs-multi-page-website",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "website-numbers-that-matter",
+      "title": "The Website Numbers a Small Business Should Watch",
+      "route": "/blog/website-numbers-that-matter",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "safe-ai-agent-actions",
+      "title": "What Actions Should an AI Website Agent Be Allowed to Take?",
+      "route": "/blog/safe-ai-agent-actions",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "portal-communication-preferences",
+      "title": "What Communication Settings Should Customers Control?",
+      "route": "/blog/portal-communication-preferences",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "ai-agent-customer-documentation",
+      "title": "What Documentation Do Customers Need for an AI Agent?",
+      "route": "/blog/ai-agent-customer-documentation",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "website-care-plan-explained",
+      "title": "What Does a Website Care Plan Include?",
+      "route": "/blog/website-care-plan-explained",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-happens-after-an-online-purchase",
+      "title": "What Happens After an Online Purchase?",
+      "route": "/blog/what-happens-after-an-online-purchase",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "website-project-information-checklist",
+      "title": "What Information Should You Gather Before Building a Website?",
+      "route": "/blog/website-project-information-checklist",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "idempotency-business-automation",
+      "title": "What Is Idempotency and Why Does Business Automation Need It?",
+      "route": "/blog/idempotency-business-automation",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-is-included-199-web-basics-bundle",
+      "title": "What Is Included in the $199 Web Basics Bundle?",
+      "route": "/blog/what-is-included-199-web-basics-bundle",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-is-included-499-business-website-bundle",
+      "title": "What Is Included in the $499 Business Website Bundle?",
+      "route": "/blog/what-is-included-499-business-website-bundle",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "business-website-package-explained",
+      "title": "What Is a Business Website Package?",
+      "route": "/blog/business-website-package-explained",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "landing-page-package-explained",
+      "title": "What Is a Campaign Landing Page System?",
+      "route": "/blog/landing-page-package-explained",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "premium-website-ai-package-explained",
+      "title": "What Is a Premium Website Plus AI Package?",
+      "route": "/blog/premium-website-ai-package-explained",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "starter-website-package-explained",
+      "title": "What Is a Starter Website Package?",
+      "route": "/blog/starter-website-package-explained",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "small-business-website-conversion",
+      "title": "What Is a Website Conversion for a Small Business?",
+      "route": "/blog/small-business-website-conversion",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "product-addon-entitlement-difference",
+      "title": "What Is the Difference Between a Product, Add-On, and Entitlement?",
+      "route": "/blog/product-addon-entitlement-difference",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "ai-agent-knowledge-base",
+      "title": "What Knowledge Should an AI Website Agent Use?",
+      "route": "/blog/ai-agent-knowledge-base",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "small-business-lead-stages",
+      "title": "What Lead Stages Does a Small Business Actually Need?",
+      "route": "/blog/small-business-lead-stages",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "portal-support-vs-contact-form",
+      "title": "What Makes Portal Support Better Than a Contact Form?",
+      "route": "/blog/portal-support-vs-contact-form",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-makes-business-website-trustworthy",
+      "title": "What Makes a Business Website Feel Trustworthy?",
+      "route": "/blog/what-makes-business-website-trustworthy",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "new-lead-notification-checklist",
+      "title": "What Should Be in a New-Lead Notification?",
+      "route": "/blog/new-lead-notification-checklist",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "customer-portal-home-screen",
+      "title": "What Should Be on a Customer Portal Home Screen?",
+      "route": "/blog/customer-portal-home-screen",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-happens-after-a-website-lead",
+      "title": "What Should Happen After a Website Lead Arrives?",
+      "route": "/blog/what-happens-after-a-website-lead",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "lead-nurture-not-ready-to-buy",
+      "title": "What Should Happen to Leads That Are Not Ready to Buy?",
+      "route": "/blog/lead-nurture-not-ready-to-buy",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-not-to-fully-automate",
+      "title": "What Should Never Be Fully Automated?",
+      "route": "/blog/what-not-to-fully-automate",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "customer-receipt-content",
+      "title": "What Should a Customer Receipt Explain?",
+      "route": "/blog/customer-receipt-content",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-small-business-should-automate-first",
+      "title": "What Should a Small Business Automate First?",
+      "route": "/blog/what-small-business-should-automate-first",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "small-business-analytics-dashboard",
+      "title": "What Should a Small-Business Analytics Dashboard Show?",
+      "route": "/blog/small-business-analytics-dashboard",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-should-a-small-business-website-do",
+      "title": "What Should a Small-Business Website Actually Do?",
+      "route": "/blog/what-should-a-small-business-website-do",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-should-thank-you-page-do",
+      "title": "What Should a Thank-You Page Do After Form Submission?",
+      "route": "/blog/what-should-thank-you-page-do",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "what-should-website-contact-form-ask",
+      "title": "What Should a Website Contact Form Ask?",
+      "route": "/blog/what-should-website-contact-form-ask",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "when-an-ai-website-agent-is-useful",
+      "title": "When Is an AI Website Agent Actually Useful?",
+      "route": "/blog/when-an-ai-website-agent-is-useful",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "when-to-change-website-from-analytics",
+      "title": "When Should You Change a Website Based on Analytics?",
+      "route": "/blog/when-to-change-website-from-analytics",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "custom-website-vs-package",
+      "title": "When Should a Website Be Custom Instead of Packaged?",
+      "route": "/blog/custom-website-vs-package",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "blog",
+      "key": "why-website-leads-get-lost",
+      "title": "Why Website Leads Get Lost Between the Form and the Inbox",
+      "route": "/blog/why-website-leads-get-lost",
+      "score": 95,
+      "status": "pass",
+      "issues": [
+        "Editorial state remains editorial-review-required"
+      ],
+      "corrections": []
+    },
+    {
+      "type": "core-page",
+      "key": "home",
+      "title": "Homepage",
+      "route": "/",
+      "score": 95,
+      "status": "pass",
+      "issues": [],
+      "corrections": [
+        "Corrected fallback to use needs-led assessment instead of presenting $199 as the universal engagement entry point",
+        "Removed unproven 100+ systems and 24-hour response claims"
+      ]
+    },
+    {
+      "type": "core-page",
+      "key": "campaign-55",
+      "title": "55 Cents a Day campaign",
+      "route": "/55-cents-a-day-website",
+      "score": 96,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "ai-agents-for-websites-fit",
+      "title": "Does every business need AI agents for business websites?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "commerce-customer-lifecycle-fit",
+      "title": "Does every business need commerce and post-purchase operations?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "customer-portal-experience-fit",
+      "title": "Does every business need customer portal design?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "lead-response-operations-fit",
+      "title": "Does every business need lead response operations?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "small-business-automation-fit",
+      "title": "Does every business need small-business workflow automation?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "fifty-five-cents-a-day-fit",
+      "title": "Does every business need the $199 Web Basics offer?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-analytics-decisions-fit",
+      "title": "Does every business need website analytics and measurement?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-lead-capture-fit",
+      "title": "Does every business need website lead capture?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-packages-explained-fit",
+      "title": "Does every business need website packages and deliverables?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "small-business-website-strategy-fit",
+      "title": "Does every business need website strategy?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "ai-agents-for-websites-proof",
+      "title": "How does FAMtastic prove AI agents for business websites works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "commerce-customer-lifecycle-proof",
+      "title": "How does FAMtastic prove commerce and post-purchase operations works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "customer-portal-experience-proof",
+      "title": "How does FAMtastic prove customer portal design works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "lead-response-operations-proof",
+      "title": "How does FAMtastic prove lead response operations works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "small-business-automation-proof",
+      "title": "How does FAMtastic prove small-business workflow automation works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "fifty-five-cents-a-day-proof",
+      "title": "How does FAMtastic prove the $199 Web Basics offer works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-analytics-decisions-proof",
+      "title": "How does FAMtastic prove website analytics and measurement works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-lead-capture-proof",
+      "title": "How does FAMtastic prove website lead capture works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-packages-explained-proof",
+      "title": "How does FAMtastic prove website packages and deliverables works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "small-business-website-strategy-proof",
+      "title": "How does FAMtastic prove website strategy works?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "ai-agents-for-websites-measure",
+      "title": "How should a business measure AI agents for business websites?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "commerce-customer-lifecycle-measure",
+      "title": "How should a business measure commerce and post-purchase operations?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "customer-portal-experience-measure",
+      "title": "How should a business measure customer portal design?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "lead-response-operations-measure",
+      "title": "How should a business measure lead response operations?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "small-business-automation-measure",
+      "title": "How should a business measure small-business workflow automation?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "fifty-five-cents-a-day-measure",
+      "title": "How should a business measure the $199 Web Basics offer?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-analytics-decisions-measure",
+      "title": "How should a business measure website analytics and measurement?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-lead-capture-measure",
+      "title": "How should a business measure website lead capture?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-packages-explained-measure",
+      "title": "How should a business measure website packages and deliverables?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "small-business-website-strategy-measure",
+      "title": "How should a business measure website strategy?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "ai-agents-for-websites-start",
+      "title": "What is the safest way to start with AI agents for business websites?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "commerce-customer-lifecycle-start",
+      "title": "What is the safest way to start with commerce and post-purchase operations?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "customer-portal-experience-start",
+      "title": "What is the safest way to start with customer portal design?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "lead-response-operations-start",
+      "title": "What is the safest way to start with lead response operations?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "small-business-automation-start",
+      "title": "What is the safest way to start with small-business workflow automation?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "fifty-five-cents-a-day-start",
+      "title": "What is the safest way to start with the $199 Web Basics offer?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-analytics-decisions-start",
+      "title": "What is the safest way to start with website analytics and measurement?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-lead-capture-start",
+      "title": "What is the safest way to start with website lead capture?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "website-packages-explained-start",
+      "title": "What is the safest way to start with website packages and deliverables?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "faq",
+      "key": "small-business-website-strategy-start",
+      "title": "What is the safest way to start with website strategy?",
+      "route": "/faq",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "page",
+      "key": "12fdcda1-4804-4431-91ca-296eab440d42",
+      "title": "About",
+      "route": "/about",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "page",
+      "key": "1a6beb1f-2465-465b-b551-02607dd472f7",
+      "title": "Contact",
+      "route": "/contact",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-HOST-999",
+      "title": "Basic Managed Hosting — Monthly Renewal",
+      "route": "/buy",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-HOST-BUSINESS-1999",
+      "title": "Business Managed Hosting — Monthly Renewal",
+      "route": "/buy",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-BUSINESS-499",
+      "title": "Business Website Bundle — Growth Launch",
+      "route": "/buy",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    },
+    {
+      "type": "product",
+      "key": "FAM-FOOT-199",
+      "title": "Web Basics Bundle — Website Launch",
+      "route": "/buy",
+      "score": 100,
+      "status": "pass",
+      "issues": [],
+      "corrections": []
+    }
+  ]
+}

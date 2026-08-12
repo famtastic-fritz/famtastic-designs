@@ -139,8 +139,9 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
           <button
             type="button"
             className="v1-header__burger"
-            aria-label="Toggle navigation"
+            aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
             aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
             onClick={() => setMobileOpen((prev) => !prev)}
           >
             {mobileOpen ? '✕' : '☰'}
@@ -149,7 +150,7 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
       </div>
 
       {mobileOpen && (
-        <nav className="v1-nav-mobile" aria-label="Mobile navigation" onClick={() => setMobileOpen(false)}>
+        <nav id="mobile-navigation" className="v1-nav-mobile" aria-label="Mobile navigation" onClick={() => setMobileOpen(false)}>
           <NavLink to="/contact#project-fit" className="v1-btn v1-btn--primary v1-nav-mobile__primary">
             Start a Project
           </NavLink>
