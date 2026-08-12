@@ -1,5 +1,23 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-12 — Marketing production and local AI
+
+- Open weights do not imply local fit. Kimi K2 activates 32 billion of one
+  trillion total parameters and is not a practical 16 GB laptop model; select
+  models by measured memory, latency, license, and task quality.
+- A presenter generator is one production format, not the campaign engine.
+  Branded motion, diagrams, screen proof, founder voice, articles, email, and
+  landing pages must share one campaign record and offer truth.
+- Free on GitHub requires separate review of code, model weights, training
+  assets, dependencies, and commercial use. LivePortrait's bundled InsightFace
+  detector is an example of a transitive non-commercial restriction.
+- Social automation cannot bypass provider OAuth, app review, visibility, and
+  posting limits. Prove private/draft delivery and rollback before public
+  scheduling, and keep generated content behind explicit approval states.
+- Four daily content moments should become channel-native adaptations, not the
+  same post blasted four times to every network. Email frequency remains
+  relationship-based, not synchronized to social volume.
+
 ## 2026-08-11 — Headless navigation must have one ordering authority
 
 - Fetching a CMS menu while hardcoding the familiar links in React does not

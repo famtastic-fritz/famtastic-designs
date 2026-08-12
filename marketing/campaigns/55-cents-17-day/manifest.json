@@ -1,0 +1,1982 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-08-12",
+  "campaign": "web_basics_55_cents_17d",
+  "public_publish_enabled": false,
+  "daily_content_moments": 4,
+  "record_count": 68,
+  "records": [
+    {
+      "content_id": "55c-d01-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 1,
+      "theme": "declaration",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "What 55 cents a day means",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d01-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d01-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 1,
+      "theme": "declaration",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "What 55 cents a day means",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d01-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d01-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 1,
+      "theme": "declaration",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "What 55 cents a day means",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d01-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d01-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 1,
+      "theme": "declaration",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "What 55 cents a day means",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d01-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d02-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 2,
+      "theme": "excuses",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "Why owners delay getting a website",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d02-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d02-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 2,
+      "theme": "excuses",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "Why owners delay getting a website",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d02-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d02-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 2,
+      "theme": "excuses",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "Why owners delay getting a website",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d02-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d02-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 2,
+      "theme": "excuses",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "Why owners delay getting a website",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d02-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d03-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 3,
+      "theme": "domain_basics",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "The difference between a domain, website, and hosting",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d03-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d03-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 3,
+      "theme": "domain_basics",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "The difference between a domain, website, and hosting",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d03-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d03-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 3,
+      "theme": "domain_basics",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "The difference between a domain, website, and hosting",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d03-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d03-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 3,
+      "theme": "domain_basics",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "The difference between a domain, website, and hosting",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d03-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d04-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 4,
+      "theme": "hosting_basics",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "What hosting does and what managed hosting changes",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d04-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d04-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 4,
+      "theme": "hosting_basics",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "What hosting does and what managed hosting changes",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d04-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d04-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 4,
+      "theme": "hosting_basics",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "What hosting does and what managed hosting changes",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d04-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d04-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 4,
+      "theme": "hosting_basics",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "What hosting does and what managed hosting changes",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d04-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d05-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 5,
+      "theme": "one_page_anatomy",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "The jobs a focused one-page website must do",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d05-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d05-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 5,
+      "theme": "one_page_anatomy",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "The jobs a focused one-page website must do",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d05-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d05-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 5,
+      "theme": "one_page_anatomy",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "The jobs a focused one-page website must do",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d05-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d05-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 5,
+      "theme": "one_page_anatomy",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "The jobs a focused one-page website must do",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d05-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d06-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 6,
+      "theme": "trust",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "How prospective customers verify a business",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d06-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d06-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 6,
+      "theme": "trust",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "How prospective customers verify a business",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d06-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d06-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 6,
+      "theme": "trust",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "How prospective customers verify a business",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d06-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d06-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 6,
+      "theme": "trust",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "How prospective customers verify a business",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d06-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d07-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 7,
+      "theme": "mobile",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "The mobile-first customer journey",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d07-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d07-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 7,
+      "theme": "mobile",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "The mobile-first customer journey",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d07-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d07-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 7,
+      "theme": "mobile",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "The mobile-first customer journey",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d07-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d07-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 7,
+      "theme": "mobile",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "The mobile-first customer journey",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d07-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d08-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 8,
+      "theme": "fit",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "Who Web Basics fits and who needs a different scope",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d08-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d08-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 8,
+      "theme": "fit",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "Who Web Basics fits and who needs a different scope",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d08-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d08-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 8,
+      "theme": "fit",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "Who Web Basics fits and who needs a different scope",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d08-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d08-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 8,
+      "theme": "fit",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "Who Web Basics fits and who needs a different scope",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d08-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d09-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 9,
+      "theme": "ecommerce_boundary",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "Why an online store is more than a shopping cart",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d09-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d09-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 9,
+      "theme": "ecommerce_boundary",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "Why an online store is more than a shopping cart",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d09-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d09-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 9,
+      "theme": "ecommerce_boundary",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "Why an online store is more than a shopping cart",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d09-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d09-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 9,
+      "theme": "ecommerce_boundary",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "Why an online store is more than a shopping cart",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d09-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d10-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 10,
+      "theme": "lead_capture",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "What should happen after a visitor submits a form",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d10-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d10-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 10,
+      "theme": "lead_capture",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "What should happen after a visitor submits a form",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d10-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d10-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 10,
+      "theme": "lead_capture",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "What should happen after a visitor submits a form",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d10-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d10-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 10,
+      "theme": "lead_capture",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "What should happen after a visitor submits a form",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d10-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d11-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 11,
+      "theme": "follow_up",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "Why inbox-only follow-up loses opportunities",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d11-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d11-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 11,
+      "theme": "follow_up",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "Why inbox-only follow-up loses opportunities",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d11-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d11-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 11,
+      "theme": "follow_up",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "Why inbox-only follow-up loses opportunities",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d11-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d11-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 11,
+      "theme": "follow_up",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "Why inbox-only follow-up loses opportunities",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d11-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d12-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 12,
+      "theme": "customer_portal",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "What a useful customer portal should accomplish",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d12-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d12-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 12,
+      "theme": "customer_portal",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "What a useful customer portal should accomplish",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d12-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d12-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 12,
+      "theme": "customer_portal",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "What a useful customer portal should accomplish",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d12-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d12-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 12,
+      "theme": "customer_portal",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "What a useful customer portal should accomplish",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d12-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d13-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 13,
+      "theme": "support_retention",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "How support workflows protect trust",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d13-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d13-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 13,
+      "theme": "support_retention",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "How support workflows protect trust",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d13-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d13-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 13,
+      "theme": "support_retention",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "How support workflows protect trust",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d13-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d13-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 13,
+      "theme": "support_retention",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "How support workflows protect trust",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d13-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d14-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 14,
+      "theme": "analytics",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "Which website metrics should change a decision",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d14-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d14-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 14,
+      "theme": "analytics",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "Which website metrics should change a decision",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d14-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d14-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 14,
+      "theme": "analytics",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "Which website metrics should change a decision",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d14-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d14-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 14,
+      "theme": "analytics",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "Which website metrics should change a decision",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d14-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d15-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 15,
+      "theme": "automation",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "What a small business should automate first",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d15-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d15-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 15,
+      "theme": "automation",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "What a small business should automate first",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d15-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d15-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 15,
+      "theme": "automation",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "What a small business should automate first",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d15-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d15-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 15,
+      "theme": "automation",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "What a small business should automate first",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d15-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d16-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 16,
+      "theme": "ai_assistance",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "When a website AI agent is actually useful",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d16-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d16-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 16,
+      "theme": "ai_assistance",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "When a website AI agent is actually useful",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d16-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d16-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 16,
+      "theme": "ai_assistance",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "When a website AI agent is actually useful",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d16-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d16-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 16,
+      "theme": "ai_assistance",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "When a website AI agent is actually useful",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d16-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d17-teach",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 17,
+      "theme": "recap_conversion",
+      "moment": "teach",
+      "intent": "education",
+      "promise": "How the complete FAMtastic system connects",
+      "suggested_time_et": "08:00",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d17-teach"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d17-challenge",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 17,
+      "theme": "recap_conversion",
+      "moment": "challenge",
+      "intent": "objection",
+      "promise": "How the complete FAMtastic system connects",
+      "suggested_time_et": "12:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d17-challenge"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d17-prove",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 17,
+      "theme": "recap_conversion",
+      "moment": "prove",
+      "intent": "evidence",
+      "promise": "How the complete FAMtastic system connects",
+      "suggested_time_et": "17:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d17-prove"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    },
+    {
+      "content_id": "55c-d17-invite",
+      "campaign": "web_basics_55_cents_17d",
+      "day": 17,
+      "theme": "recap_conversion",
+      "moment": "invite",
+      "intent": "cta",
+      "promise": "How the complete FAMtastic system connects",
+      "suggested_time_et": "20:30",
+      "state": "idea",
+      "channels": [],
+      "asset_variants": [
+        "9x16",
+        "4x5"
+      ],
+      "utm": {
+        "source": "pending_channel",
+        "medium": "organic_social",
+        "campaign": "web_basics_55_cents_17d",
+        "content": "55c-d17-invite"
+      },
+      "approval": {
+        "content": false,
+        "media": false,
+        "publish": false
+      },
+      "provider_ids": {},
+      "evidence": []
+    }
+  ]
+}

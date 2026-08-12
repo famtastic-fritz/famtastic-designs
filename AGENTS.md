@@ -20,6 +20,11 @@
   `.agents/skills/heygen-*` and `docs/marketing/HEYGEN_CAMPAIGN_AUTOMATION.md`.
   Codex, Claude Code, and Shay share one brief, asset ledger, QA gate, and
   publishing record; never create an untracked parallel video workflow.
+- For campaign automation, read
+  `docs/marketing/FAMTASTIC_MARKETING_FLOW_2026-08-12.md` and use the stable
+  content IDs in `marketing/campaigns/55-cents-17-day/manifest.json`. Local
+  models may draft and classify; they may not approve claims or publish. Never
+  commit Poe, HeyGen, scheduler, social OAuth, or customer-list credentials.
 
 ## Package Managers
 

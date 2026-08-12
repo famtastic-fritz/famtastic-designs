@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-08-12 — Hybrid marketing production foundation
+
+- Documented the lowest-cost credible production flow for the 17-day Web
+  Basics campaign, including local, Poe, HeyGen, scheduling, email, analytics,
+  approval, and platform-verification boundaries.
+- Installed Ollama, Qwen3 8B, and FFmpeg locally for no-per-call drafting and
+  dependable media encoding on the rebuilt 16 GB Apple Silicon workstation.
+- Added a fail-closed marketing preflight and a generated 68-record campaign
+  manifest with stable content IDs, UTM values, approvals, and evidence fields.
+- Recorded why Kimi K2, LivePortrait, MuseTalk, Postiz, and HeyGen are optional
+  or gated rather than silently treating every open repository as commercially
+  deployable on this computer.
+
 ## 2026-08-12 — 17-day campaign and independent QA-agent contracts
 
 - Added a 17-day, four-content-moment campaign plan covering 68 core pieces,
