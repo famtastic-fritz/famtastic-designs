@@ -85,6 +85,7 @@ source_deal_config="$backend_dir/config/famtastic-deal-terms.json"
 source_demand_manifest="$backend_dir/config/famtastic-content-series.json"
 source_demand_fields="$backend_dir/scripts/install-demand-content-fields.php"
 source_demand_seed="$backend_dir/scripts/seed-demand-content.php"
+source_package_normalizer="$backend_dir/scripts/normalize-package-ladder.php"
 production_config_dir="$production_dir/config"
 drush="$production_dir/vendor/bin/drush"
 
@@ -262,6 +263,7 @@ TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-
 "$drush" pm:enable commerce_stripe metatag redirect simple_sitemap -y
 "$drush" php:script "$source_demand_fields"
 "$drush" php:script "$source_demand_seed"
+"$drush" php:script "$source_package_normalizer"
 "$drush" cr
 # A second process-level rebuild is required on this host after first-time
 # module discovery; otherwise the sitemap writer can see stale router state.

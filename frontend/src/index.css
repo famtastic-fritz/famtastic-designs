@@ -1412,6 +1412,10 @@ a:hover {
 .campaign-explainer p { color: var(--v1-text-72); line-height: 1.7; }
 .campaign-anatomy { display: grid; gap: 1.2rem; }
 .campaign-anatomy > img { width: 100%; border-radius: 24px; border: 1px solid var(--v1-border); }
+.v1-prose .article-inline-visual { margin: 2rem 0; overflow: hidden; border: 1px solid var(--v1-border); border-radius: 22px; background: var(--v1-surface-soft); }
+.v1-prose .article-inline-visual > img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.v1-prose .article-inline-visual figcaption { display: flex; align-items: center; gap: .7rem; margin: 0; padding: .85rem 1rem; color: var(--v1-text-72); font-size: .82rem; line-height: 1.45; }
+.v1-prose .article-inline-visual figcaption img { flex: 0 0 auto; width: 28px; height: 28px; }
 @media (min-width: 800px) { .campaign-explainer-grid { grid-template-columns: 1fr 1fr; } .campaign-anatomy { grid-template-columns: 1.35fr .65fr; align-items: center; } }
 @media (max-width: 640px) { .campaign-hero { min-height: 720px; align-items: end; } .campaign-hero__image { object-position: 67% center; } .campaign-hero__shade { background: linear-gradient(0deg, rgba(5,7,6,.99) 12%, rgba(5,7,6,.82) 72%, rgba(5,7,6,.32)); } .campaign-hero__content { padding-block: 3rem; } .campaign-hero .v1-hero__actions { flex-direction: column; } .campaign-hero .v1-btn { width: 100%; text-align: center; } }
 

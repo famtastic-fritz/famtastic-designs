@@ -228,7 +228,7 @@ SERIES = [
             ("What Is a Starter Website Package?", "starter-website-package-explained", "starter website package", "Learn when a structured starter site is a better fit than a landing page or a more complex custom build."),
             ("What Is a Business Website Package?", "business-website-package-explained", "business website package", "Understand how a business website organizes multiple services, trust signals, customer journeys, and lead capture."),
             ("What Is a Premium Website Plus AI Package?", "premium-website-ai-package-explained", "premium website AI package", "Learn when custom experience, automation, governed AI assistance, and deeper integrations belong in one scoped solution."),
-            ("What Is a Landing Page Package?", "landing-page-package-explained", "landing page package", "Use a focused landing page for one audience, one promise, one campaign, and one measurable next action."),
+            ("What Is a Campaign Landing Page System?", "landing-page-package-explained", "campaign landing page system", "Use a paid-campaign system for one audience, one offer, measurable attribution, lead routing, and one conversion path—not as a substitute for the $199 first-website offer."),
             ("What Does a Website Care Plan Include?", "website-care-plan-explained", "website care plan", "Separate ongoing maintenance, monitoring, updates, support, and improvement from the original website build."),
         ],
     },
@@ -280,6 +280,18 @@ def build_body(series: dict, topic: tuple, sequence: int, slugs: list[str]) -> s
     role = "pillar guide" if sequence == 1 else "focused guide"
     campaign_detail = ""
     if series["key"] == "fifty-five-cents-a-day":
+        inline_visuals = [
+            ("55-cent-website-hero.webp", "A small-business owner stepping from an idea toward a professional website", "The first step is a credible place for customers to find and understand the business."),
+            ("domain-explained.webp", "A business connected to its website through a clear digital address", "The domain is the customer-owned address that points people to the website."),
+            ("hosting-explained.webp", "Protected managed infrastructure keeping a business website available online", "Hosting is the managed infrastructure that keeps the website available."),
+            ("one-page-anatomy.webp", "The connected sections and systems of a useful one-page business website", "A focused page still connects identity, trust, action, measurement, and response."),
+        ]
+        first_visual = inline_visuals[(sequence - 1) % len(inline_visuals)]
+        second_visual = inline_visuals[(sequence + 1) % len(inline_visuals)]
+        inline_campaign_visuals = f"""
+<figure class="article-inline-visual"><img src="/blog-images/{first_visual[0]}" alt="{html.escape(first_visual[1])}" width="1600" height="900" loading="lazy"><figcaption><img src="/brand/famtastic-mark.svg" alt="" width="28" height="28">FAMtastic Designs — {html.escape(first_visual[2])}</figcaption></figure>
+<figure class="article-inline-visual"><img src="/blog-images/{second_visual[0]}" alt="{html.escape(second_visual[1])}" width="1600" height="900" loading="lazy"><figcaption><img src="/brand/famtastic-mark.svg" alt="" width="28" height="28">FAMtastic Designs — {html.escape(second_visual[2])}</figcaption></figure>
+"""
         campaign_sections = {
             1: """<h2>The math—and the honest meaning</h2><p>$199 divided across 365 days is approximately $0.545 per day, which rounds to about 55 cents. The Web Basics Bundle is still a <strong>one-time $199 purchase</strong>; FAMtastic does not charge 55 cents each day. The comparison makes the cost easier to understand without changing the way the purchase is billed.</p><p>The offer includes one focused one-page website and one year of basic FAMtastic-managed hosting. If the customer needs a new domain, first-year registration is included when the requested domain is available; customers with a domain already receive connection help instead. After the included year, basic hosting renews at $9.99 per month. Domain renewal is separate, annual, and disclosed before it becomes due.</p>""",
             2: """<h2>Domain, website, and hosting are different</h2><p>A domain is the address people type or tap. The website is the content and experience they see. Hosting is the managed infrastructure that makes the website available online. A customer owns the registered domain; FAMtastic manages the hosting environment. Keeping those roles separate makes future renewal, transfer, and support decisions clearer.</p>""",
@@ -290,7 +302,7 @@ def build_body(series: dict, topic: tuple, sequence: int, slugs: list[str]) -> s
             7: """<h2>A fit decision, not a forced sale</h2><p>The offer is designed for a business that needs a credible, focused web presence and can tell its core story on one page. A bakery that needs a shopping cart, a company with many distinct services, or a workflow that needs customer accounts and integrations may need a broader package. The intake should identify that need and let FAMtastic recommend the correct scope, while account-specific pricing or a documented discount can be applied without pretending the work is smaller.</p>""",
             8: """<h2>The first site is a foundation</h2><p>A customer can begin with the smallest complete site, then add capabilities because the business needs them—not because the original offer hid them. Common growth paths include extra pages, local SEO, content, lead automation, analytics, scheduling, ecommerce, maintenance, customer portals, and governed AI assistance. Every addition should define its deliverable, price or approval state, intake questions, entitlement, support path, and proof scenario.</p>""",
         }
-        campaign_detail = campaign_sections[sequence]
+        campaign_detail = campaign_sections[sequence] + inline_campaign_visuals
     body = f"""
 <p><strong>{html.escape(sentence(angle))}</strong> That is the practical answer behind this {role}. The useful question is not whether a business can add another page, form, dashboard, automation, or AI feature. It is whether the change makes an important customer decision easier and gives the business a reliable way to respond.</p>
 <p>{html.escape(series['audience'])} can use this guide to define the work before choosing software or approving a build. The examples follow FAMtastic's evidence boundary: {html.escape(series['proof'])} This article explains a repeatable method and does not claim that the same configuration or result fits every business.</p>

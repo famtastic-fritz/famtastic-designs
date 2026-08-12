@@ -32,9 +32,9 @@ export default function PackagesHubPage() {
     <>
       <Hero
         eyebrow="Packages"
-        title="Simple, honest"
+        title="One clear starting point for each kind of need."
         accent="pricing"
-        lede="Fixed-scope packages engineered to ship — pick a starting lane and final scope is confirmed after a short consultation so the project fits your goals, timeline, and budget."
+        lede="Web Basics gets a business online. Business Website adds standard pages. Custom Website adds original discovery and design. Growth, campaign, AI, and care systems solve distinct operational needs. Intake confirms the right fit."
         primaryCta={{ label: 'See the $199 website offer', href: '/55-cents-a-day-website' }}
         secondaryCta={{ label: 'Find Your Fit', href: '/start' }}
       />

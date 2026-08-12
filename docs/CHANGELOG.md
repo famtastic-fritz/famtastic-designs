@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-08-11 — Package ladder naming and scope clarification
+
+- Aligned the $199 and $499 page names with their canonical Commerce products:
+  Web Basics Bundle and Business Website Bundle.
+- Renamed the higher-scope offers so their value boundaries are visible:
+  Custom Website, Business Growth System, Premium Website + AI System, Campaign
+  Landing Page System, and Website Care & Maintenance.
+- Clarified that the $1,499 Campaign Landing Page System includes campaign
+  strategy, attribution, conversion measurement, routing, and follow-up and is
+  not a duplicate of the $199 first-business-website offer.
+- Removed stale 48-hour and AI-optimized promises from the Web Basics page.
+- Added an idempotent Drupal package normalizer to the canonical deployment
+  lane so package naming cannot drift between repository and production.
+- Added two relevant, branded in-body campaign visuals to every article in the
+  eight-part 55 Cents a Day series, in addition to each article header image.
+
 ## 2026-08-11 — $199 affordability campaign and complete package education
 
 - Added the dedicated `/55-cents-a-day-website` campaign experience around
