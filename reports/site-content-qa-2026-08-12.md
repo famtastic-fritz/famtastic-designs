@@ -12,7 +12,7 @@ This review is separate from campaign production. Scores cover factual boundarie
 
 ## Highest-priority findings
 
-1. The eight 55 Cents a Day articles still reuse twelve long paragraphs each. They need distinct, intent-specific bodies before they can pass editorial QA.
+1. The eight 55 Cents a Day articles now follow distinct intent-specific reader journeys and pass the long-paragraph duplication gate.
 2. Six production service records are missing explicit metadata and complete CTA fields in Drupal.
 3. `editorial-review-required` remains an honest gate for articles that have not received source-by-source human fact confirmation.
 4. The homepage fallback and 77 generated metadata pairs were safely corrected in canonical source during this QA cycle.

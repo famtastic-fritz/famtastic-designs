@@ -15,15 +15,14 @@
     "url_count": 103
   },
   "summary": {
-    "page_average": 88.6,
-    "content_average": 92.6,
+    "page_average": 98.6,
+    "content_average": 93.8,
     "page_results": {
-      "revise": 14,
-      "pass": 89
+      "pass": 103
     },
     "content_results": {
-      "revise": 19,
-      "pass": 61
+      "pass": 73,
+      "revise": 7
     },
     "intent_conflicts": 0
   },
@@ -46,12 +45,11 @@
         "WebPage",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 201 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 201 characters"
       ]
     },
     {
@@ -73,12 +71,10 @@
         "WebPage",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/about/",
@@ -99,12 +95,10 @@
         "WebPage",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/55-cents-a-day-website/",
@@ -125,12 +119,10 @@
         "WebPage",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/packages/",
@@ -151,12 +143,10 @@
         "WebPage",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/work/",
@@ -177,12 +167,10 @@
         "WebPage",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/",
@@ -203,12 +191,10 @@
         "WebPage",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/faq/",
@@ -229,12 +215,10 @@
         "WebPage",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/contact/",
@@ -255,12 +239,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/start/",
@@ -281,12 +263,10 @@
         "WebPage",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/services/ai-chatbot/",
@@ -307,12 +287,11 @@
         "Service",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 56 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 56 characters"
       ]
     },
     {
@@ -334,12 +313,11 @@
         "Service",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 63 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 63 characters"
       ]
     },
     {
@@ -361,12 +339,11 @@
         "Service",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 62 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 62 characters"
       ]
     },
     {
@@ -388,12 +365,11 @@
         "Service",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 55 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 55 characters"
       ]
     },
     {
@@ -415,12 +391,11 @@
         "Service",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 57 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 57 characters"
       ]
     },
     {
@@ -442,12 +417,11 @@
         "Service",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 56 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 56 characters"
       ]
     },
     {
@@ -469,12 +443,11 @@
         "Product",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 69 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 69 characters"
       ]
     },
     {
@@ -496,12 +469,11 @@
         "Product",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 101 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 101 characters"
       ]
     },
     {
@@ -523,12 +495,10 @@
         "Product",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/packages/business-website/",
@@ -549,12 +519,11 @@
         "Product",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 101 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 101 characters"
       ]
     },
     {
@@ -576,12 +545,10 @@
         "Product",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/packages/landing-page/",
@@ -602,12 +569,10 @@
         "Product",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/packages/website-care-plan/",
@@ -628,12 +593,11 @@
         "Product",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 91 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 91 characters"
       ]
     },
     {
@@ -655,12 +619,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/how-many-pages-small-business-website/",
@@ -681,12 +643,11 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 85 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 85 characters"
       ]
     },
     {
@@ -708,12 +669,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/website-project-information-checklist/",
@@ -734,12 +693,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/plan-website-around-customer-questions/",
@@ -760,12 +717,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-makes-business-website-trustworthy/",
@@ -786,12 +741,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/custom-website-vs-package/",
@@ -812,12 +765,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/measure-whether-website-works/",
@@ -838,12 +789,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/how-a-website-captures-a-lead/",
@@ -864,12 +813,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-should-website-contact-form-ask/",
@@ -890,12 +837,11 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 75 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 75 characters"
       ]
     },
     {
@@ -917,12 +863,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/reduce-form-friction-without-bad-leads/",
@@ -943,12 +887,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-should-thank-you-page-do/",
@@ -969,12 +911,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/track-pages-campaigns-create-leads/",
@@ -995,12 +935,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/why-website-leads-get-lost/",
@@ -1021,12 +959,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/mobile-lead-capture-design/",
@@ -1047,12 +983,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-happens-after-a-website-lead/",
@@ -1073,12 +1007,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/small-business-lead-stages/",
@@ -1099,12 +1031,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/small-business-lead-response-time/",
@@ -1125,12 +1055,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/lead-follow-up-schedule/",
@@ -1151,12 +1079,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/new-lead-notification-checklist/",
@@ -1165,11 +1091,11 @@
       "content_type": "text/html",
       "title": "What Should Be in a New-Lead Notification? | FAMtastic Designs",
       "title_length": 62,
-      "description": "Send staff the customer context, source, deadline, owner, and direct action link they need. Learn what to consider before choosing your next step.",
-      "description_length": 146,
+      "description": "Learn send staff the customer context, source, deadline, owner, and direct action link they need. This practical FAMtastic guide covers customer experience,.",
+      "description_length": 157,
       "canonical": "https://famtasticdesigns.com/blog/new-lead-notification-checklist/",
       "og_title": "What Should Be in a New-Lead Notification? | FAMtastic Designs",
-      "og_description": "Send staff the customer context, source, deadline, owner, and direct action link they need. Learn what to consider before choosing your next step.",
+      "og_description": "Learn send staff the customer context, source, deadline, owner, and direct action link they need. This practical FAMtastic guide covers customer experience,.",
       "og_url": "https://famtasticdesigns.com/blog/new-lead-notification-checklist/",
       "schema_types": [
         "BlogPosting",
@@ -1177,12 +1103,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/lead-email-reply-ingestion/",
@@ -1203,12 +1127,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/overdue-lead-alerts/",
@@ -1229,12 +1151,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/lead-nurture-not-ready-to-buy/",
@@ -1255,12 +1175,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-happens-after-an-online-purchase/",
@@ -1281,12 +1199,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/product-addon-entitlement-difference/",
@@ -1307,12 +1223,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/connect-checkout-to-customer-intake/",
@@ -1333,12 +1247,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/account-specific-special-pricing/",
@@ -1359,12 +1271,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/customer-receipt-content/",
@@ -1385,12 +1295,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/failed-payments-refunds-cancellations/",
@@ -1411,12 +1319,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/hosting-domain-renewal-design/",
@@ -1437,12 +1343,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/prove-ecommerce-before-live-payments/",
@@ -1451,11 +1355,11 @@
       "content_type": "text/html",
       "title": "How to Prove an Ecommerce Workflow Before Taking Real Payments",
       "title_length": 62,
-      "description": "Test success, decline, authentication, replay, refund, access, email, mobile, and cross-account isolation before launch.",
-      "description_length": 120,
+      "description": "Learn test success, decline, authentication, replay, refund, access, email, mobile, and cross-account isolation before launch. This practical FAMtastic guide.",
+      "description_length": 158,
       "canonical": "https://famtasticdesigns.com/blog/prove-ecommerce-before-live-payments/",
       "og_title": "How to Prove an Ecommerce Workflow Before Taking Real Payments",
-      "og_description": "Test success, decline, authentication, replay, refund, access, email, mobile, and cross-account isolation before launch.",
+      "og_description": "Learn test success, decline, authentication, replay, refund, access, email, mobile, and cross-account isolation before launch. This practical FAMtastic guide.",
       "og_url": "https://famtasticdesigns.com/blog/prove-ecommerce-before-live-payments/",
       "schema_types": [
         "BlogPosting",
@@ -1463,12 +1367,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/how-a-customer-portal-helps/",
@@ -1489,12 +1391,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/customer-portal-home-screen/",
@@ -1515,12 +1415,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/portal-projects-files-approvals/",
@@ -1541,12 +1439,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/portal-support-vs-contact-form/",
@@ -1567,12 +1463,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/portal-team-members-business-accounts/",
@@ -1593,12 +1487,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/portal-communication-preferences/",
@@ -1619,12 +1511,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/portal-product-documentation-learning/",
@@ -1645,12 +1535,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/mobile-customer-portal-design/",
@@ -1671,12 +1559,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/how-automation-prevents-lost-opportunities/",
@@ -1697,12 +1583,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-small-business-should-automate-first/",
@@ -1723,12 +1607,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-not-to-fully-automate/",
@@ -1749,12 +1631,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/scheduled-workers-customer-work/",
@@ -1775,12 +1655,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/idempotency-business-automation/",
@@ -1801,12 +1679,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/automation-failures-retries-dead-letter/",
@@ -1827,12 +1703,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/website-events-business-workflows/",
@@ -1853,12 +1727,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/test-business-automation-safely/",
@@ -1879,12 +1751,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/website-numbers-that-matter/",
@@ -1905,12 +1775,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/small-business-website-conversion/",
@@ -1931,12 +1799,11 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 80,
-      "result": "revise",
+      "initial_html_h1": true,
+      "score": 90,
+      "result": "pass",
       "issues": [
-        "Meta description length is 36 characters",
-        "Primary H1/content is absent from initial HTML (client-rendered)"
+        "Meta description length is 36 characters"
       ]
     },
     {
@@ -1958,12 +1825,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/understand-website-traffic-sources/",
@@ -1984,12 +1849,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/small-business-analytics-dashboard/",
@@ -2010,12 +1873,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/analytics-and-customer-data/",
@@ -2036,12 +1897,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/measure-blog-content-performance/",
@@ -2062,12 +1921,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/when-to-change-website-from-analytics/",
@@ -2088,12 +1945,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/when-an-ai-website-agent-is-useful/",
@@ -2114,12 +1969,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/ai-chatbot-vs-ai-agent/",
@@ -2140,12 +1993,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/ai-agent-knowledge-base/",
@@ -2166,12 +2017,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/safe-ai-agent-actions/",
@@ -2192,12 +2041,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/ai-agent-human-handoff/",
@@ -2218,12 +2065,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/measure-ai-agent-performance/",
@@ -2244,12 +2089,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/ai-agent-customer-documentation/",
@@ -2270,12 +2113,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/test-ai-website-agent/",
@@ -2296,12 +2137,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/choose-the-right-famtastic-website-package/",
@@ -2310,11 +2149,11 @@
       "content_type": "text/html",
       "title": "How to Choose the Right FAMtastic Website Package | FAMtastic Designs",
       "title_length": 69,
-      "description": "Compare each package by customer need, included deliverables, operational complexity, and the next stage of growth.",
-      "description_length": 115,
+      "description": "Learn compare each package by customer need, included deliverables, operational complexity, and the next stage of growth. This practical FAMtastic guide covers.",
+      "description_length": 160,
       "canonical": "https://famtasticdesigns.com/blog/choose-the-right-famtastic-website-package/",
       "og_title": "How to Choose the Right FAMtastic Website Package | FAMtastic Designs",
-      "og_description": "Compare each package by customer need, included deliverables, operational complexity, and the next stage of growth.",
+      "og_description": "Learn compare each package by customer need, included deliverables, operational complexity, and the next stage of growth. This practical FAMtastic guide covers.",
       "og_url": "https://famtasticdesigns.com/blog/choose-the-right-famtastic-website-package/",
       "schema_types": [
         "BlogPosting",
@@ -2322,12 +2161,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-is-included-199-web-basics-bundle/",
@@ -2348,12 +2185,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-is-included-499-business-website-bundle/",
@@ -2374,12 +2209,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/starter-website-package-explained/",
@@ -2400,12 +2233,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/business-website-package-explained/",
@@ -2426,12 +2257,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/premium-website-ai-package-explained/",
@@ -2452,12 +2281,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/landing-page-package-explained/",
@@ -2478,12 +2305,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/website-care-plan-explained/",
@@ -2504,12 +2329,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/professional-website-55-cents-a-day/",
@@ -2530,12 +2353,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-is-a-domain-name/",
@@ -2556,12 +2377,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/what-is-website-hosting/",
@@ -2582,12 +2401,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/parts-of-a-one-page-business-website/",
@@ -2608,12 +2425,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/",
@@ -2634,12 +2449,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/after-buying-199-website/",
@@ -2660,12 +2473,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/who-is-199-website-for/",
@@ -2686,12 +2497,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     },
     {
       "url": "https://famtasticdesigns.com/blog/grow-beyond-first-website/",
@@ -2712,12 +2521,10 @@
         "Organization",
         "WebSite"
       ],
-      "initial_html_h1": false,
-      "score": 90,
+      "initial_html_h1": true,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Primary H1/content is absent from initial HTML (client-rendered)"
-      ]
+      "issues": []
     }
   ],
   "content_items": [
@@ -2729,18 +2536,16 @@
       "primary_intent": "informational",
       "primary_keyword": "small business website strategy",
       "title": "What Should a Small-Business Website Actually Do?",
-      "score": 82,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
-        "Meta description ends with a truncated conjunction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1147,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.032562+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.696439+00:00"
     },
     {
       "content_id": "how-many-pages-small-business-website",
@@ -2750,17 +2555,16 @@
       "primary_intent": "informational",
       "primary_keyword": "how many pages does a small business website need",
       "title": "How Many Pages Does a Small-Business Website Need?",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1223,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.033109+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.696892+00:00"
     },
     {
       "content_id": "one-page-vs-multi-page-website",
@@ -2779,7 +2583,7 @@
       "source_count": 1,
       "word_count": 1199,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.033588+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.697306+00:00"
     },
     {
       "content_id": "website-project-information-checklist",
@@ -2798,7 +2602,7 @@
       "source_count": 1,
       "word_count": 1152,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.034094+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.697699+00:00"
     },
     {
       "content_id": "plan-website-around-customer-questions",
@@ -2817,7 +2621,7 @@
       "source_count": 1,
       "word_count": 1136,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.034615+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.698106+00:00"
     },
     {
       "content_id": "what-makes-business-website-trustworthy",
@@ -2827,17 +2631,16 @@
       "primary_intent": "informational",
       "primary_keyword": "trustworthy business website",
       "title": "What Makes a Business Website Feel Trustworthy?",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1132,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.035123+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.698758+00:00"
     },
     {
       "content_id": "custom-website-vs-package",
@@ -2856,7 +2659,7 @@
       "source_count": 1,
       "word_count": 1181,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.035595+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.699820+00:00"
     },
     {
       "content_id": "measure-whether-website-works",
@@ -2875,7 +2678,7 @@
       "source_count": 1,
       "word_count": 1169,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.036027+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.700332+00:00"
     },
     {
       "content_id": "how-a-website-captures-a-lead",
@@ -2894,7 +2697,7 @@
       "source_count": 1,
       "word_count": 1155,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.036456+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.700616+00:00"
     },
     {
       "content_id": "what-should-website-contact-form-ask",
@@ -2914,7 +2717,7 @@
       "source_count": 1,
       "word_count": 1166,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.037021+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.700847+00:00"
     },
     {
       "content_id": "contact-form-vs-quote-form-vs-assessment",
@@ -2924,17 +2727,16 @@
       "primary_intent": "informational",
       "primary_keyword": "contact form vs quote form",
       "title": "Contact Form, Quote Form, or Assessment: Which Should You Use?",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1198,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.037538+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.701068+00:00"
     },
     {
       "content_id": "reduce-form-friction-without-bad-leads",
@@ -2953,7 +2755,7 @@
       "source_count": 1,
       "word_count": 1156,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.038009+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.701275+00:00"
     },
     {
       "content_id": "what-should-thank-you-page-do",
@@ -2972,7 +2774,7 @@
       "source_count": 1,
       "word_count": 1167,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.038482+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.701492+00:00"
     },
     {
       "content_id": "track-pages-campaigns-create-leads",
@@ -2991,7 +2793,7 @@
       "source_count": 1,
       "word_count": 1163,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.039106+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.701704+00:00"
     },
     {
       "content_id": "why-website-leads-get-lost",
@@ -3010,7 +2812,7 @@
       "source_count": 1,
       "word_count": 1177,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.039571+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.701911+00:00"
     },
     {
       "content_id": "mobile-lead-capture-design",
@@ -3029,7 +2831,7 @@
       "source_count": 1,
       "word_count": 1160,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.040013+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.702122+00:00"
     },
     {
       "content_id": "what-happens-after-a-website-lead",
@@ -3048,7 +2850,7 @@
       "source_count": 1,
       "word_count": 1157,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.040474+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.702326+00:00"
     },
     {
       "content_id": "small-business-lead-stages",
@@ -3067,7 +2869,7 @@
       "source_count": 1,
       "word_count": 1167,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.040933+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.702533+00:00"
     },
     {
       "content_id": "small-business-lead-response-time",
@@ -3086,7 +2888,7 @@
       "source_count": 1,
       "word_count": 1185,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.041410+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.702947+00:00"
     },
     {
       "content_id": "lead-follow-up-schedule",
@@ -3105,7 +2907,7 @@
       "source_count": 1,
       "word_count": 1157,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.041860+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.703381+00:00"
     },
     {
       "content_id": "new-lead-notification-checklist",
@@ -3124,7 +2926,7 @@
       "source_count": 1,
       "word_count": 1146,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.042293+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.703576+00:00"
     },
     {
       "content_id": "lead-email-reply-ingestion",
@@ -3144,7 +2946,7 @@
       "source_count": 1,
       "word_count": 1161,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.042730+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.703773+00:00"
     },
     {
       "content_id": "overdue-lead-alerts",
@@ -3154,18 +2956,17 @@
       "primary_intent": "commercial-investigation",
       "primary_keyword": "overdue lead alerts",
       "title": "How to Know When a Lead Is Overdue",
-      "score": 82,
+      "score": 88,
       "result": "revise",
       "issues": [
         "Meta title length is 34; target 40-65",
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1153,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.043162+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.703990+00:00"
     },
     {
       "content_id": "lead-nurture-not-ready-to-buy",
@@ -3184,7 +2985,7 @@
       "source_count": 1,
       "word_count": 1191,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.043557+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.704456+00:00"
     },
     {
       "content_id": "what-happens-after-an-online-purchase",
@@ -3204,7 +3005,7 @@
       "source_count": 1,
       "word_count": 1160,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.043945+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.704865+00:00"
     },
     {
       "content_id": "product-addon-entitlement-difference",
@@ -3223,7 +3024,7 @@
       "source_count": 1,
       "word_count": 1196,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.044381+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.705147+00:00"
     },
     {
       "content_id": "connect-checkout-to-customer-intake",
@@ -3242,7 +3043,7 @@
       "source_count": 1,
       "word_count": 1162,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.044787+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.705338+00:00"
     },
     {
       "content_id": "account-specific-special-pricing",
@@ -3261,7 +3062,7 @@
       "source_count": 1,
       "word_count": 1166,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.045175+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.705530+00:00"
     },
     {
       "content_id": "customer-receipt-content",
@@ -3281,7 +3082,7 @@
       "source_count": 1,
       "word_count": 1174,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.045559+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.705725+00:00"
     },
     {
       "content_id": "failed-payments-refunds-cancellations",
@@ -3300,7 +3101,7 @@
       "source_count": 1,
       "word_count": 1183,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.045954+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.705940+00:00"
     },
     {
       "content_id": "hosting-domain-renewal-design",
@@ -3319,7 +3120,7 @@
       "source_count": 1,
       "word_count": 1158,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.046340+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.706339+00:00"
     },
     {
       "content_id": "prove-ecommerce-before-live-payments",
@@ -3338,7 +3139,7 @@
       "source_count": 1,
       "word_count": 1156,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.046723+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.706737+00:00"
     },
     {
       "content_id": "how-a-customer-portal-helps",
@@ -3357,7 +3158,7 @@
       "source_count": 1,
       "word_count": 1162,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.047257+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.707136+00:00"
     },
     {
       "content_id": "customer-portal-home-screen",
@@ -3376,7 +3177,7 @@
       "source_count": 1,
       "word_count": 1168,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.047676+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.707537+00:00"
     },
     {
       "content_id": "portal-projects-files-approvals",
@@ -3395,7 +3196,7 @@
       "source_count": 1,
       "word_count": 1168,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.048077+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.707938+00:00"
     },
     {
       "content_id": "portal-support-vs-contact-form",
@@ -3414,7 +3215,7 @@
       "source_count": 1,
       "word_count": 1143,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.048479+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.708336+00:00"
     },
     {
       "content_id": "portal-team-members-business-accounts",
@@ -3433,7 +3234,7 @@
       "source_count": 1,
       "word_count": 1154,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.048885+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.708746+00:00"
     },
     {
       "content_id": "portal-communication-preferences",
@@ -3452,7 +3253,7 @@
       "source_count": 1,
       "word_count": 1142,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.049271+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.709092+00:00"
     },
     {
       "content_id": "portal-product-documentation-learning",
@@ -3471,7 +3272,7 @@
       "source_count": 1,
       "word_count": 1165,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.049652+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.709292+00:00"
     },
     {
       "content_id": "mobile-customer-portal-design",
@@ -3490,7 +3291,7 @@
       "source_count": 1,
       "word_count": 1163,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.050005+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.709491+00:00"
     },
     {
       "content_id": "how-automation-prevents-lost-opportunities",
@@ -3509,7 +3310,7 @@
       "source_count": 1,
       "word_count": 1149,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.050361+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.709691+00:00"
     },
     {
       "content_id": "what-small-business-should-automate-first",
@@ -3526,7 +3327,7 @@
       "source_count": 1,
       "word_count": 1192,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.050728+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.709895+00:00"
     },
     {
       "content_id": "what-not-to-fully-automate",
@@ -3546,7 +3347,7 @@
       "source_count": 1,
       "word_count": 1190,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.051083+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.710102+00:00"
     },
     {
       "content_id": "scheduled-workers-customer-work",
@@ -3565,7 +3366,7 @@
       "source_count": 1,
       "word_count": 1152,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.051423+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.710355+00:00"
     },
     {
       "content_id": "idempotency-business-automation",
@@ -3575,17 +3376,16 @@
       "primary_intent": "informational",
       "primary_keyword": "idempotency business automation",
       "title": "What Is Idempotency and Why Does Business Automation Need It?",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1158,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.051761+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.710755+00:00"
     },
     {
       "content_id": "automation-failures-retries-dead-letter",
@@ -3604,7 +3404,7 @@
       "source_count": 1,
       "word_count": 1163,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.052099+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.710978+00:00"
     },
     {
       "content_id": "website-events-business-workflows",
@@ -3623,7 +3423,7 @@
       "source_count": 1,
       "word_count": 1155,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.052435+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.711187+00:00"
     },
     {
       "content_id": "test-business-automation-safely",
@@ -3642,7 +3442,7 @@
       "source_count": 1,
       "word_count": 1161,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.052816+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.711386+00:00"
     },
     {
       "content_id": "website-numbers-that-matter",
@@ -3661,7 +3461,7 @@
       "source_count": 1,
       "word_count": 1165,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.053253+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.711589+00:00"
     },
     {
       "content_id": "small-business-website-conversion",
@@ -3671,17 +3471,16 @@
       "primary_intent": "informational",
       "primary_keyword": "small business website conversion",
       "title": "What Is a Website Conversion for a Small Business?",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1177,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.053619+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.711791+00:00"
     },
     {
       "content_id": "track-website-calls-to-action",
@@ -3700,7 +3499,7 @@
       "source_count": 1,
       "word_count": 1153,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.053969+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.711989+00:00"
     },
     {
       "content_id": "understand-website-traffic-sources",
@@ -3719,7 +3518,7 @@
       "source_count": 1,
       "word_count": 1143,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.054319+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.712186+00:00"
     },
     {
       "content_id": "small-business-analytics-dashboard",
@@ -3738,7 +3537,7 @@
       "source_count": 1,
       "word_count": 1163,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.054675+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.712385+00:00"
     },
     {
       "content_id": "analytics-and-customer-data",
@@ -3757,7 +3556,7 @@
       "source_count": 1,
       "word_count": 1160,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.055040+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.712582+00:00"
     },
     {
       "content_id": "measure-blog-content-performance",
@@ -3767,17 +3566,16 @@
       "primary_intent": "commercial-investigation",
       "primary_keyword": "measure blog performance",
       "title": "How to Measure Content and Blog Performance",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1148,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.055411+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.712779+00:00"
     },
     {
       "content_id": "when-to-change-website-from-analytics",
@@ -3796,7 +3594,7 @@
       "source_count": 1,
       "word_count": 1163,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.055712+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.713045+00:00"
     },
     {
       "content_id": "when-an-ai-website-agent-is-useful",
@@ -3806,17 +3604,16 @@
       "primary_intent": "informational",
       "primary_keyword": "ai agent for website",
       "title": "When Is an AI Website Agent Actually Useful?",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1187,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.056018+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.713395+00:00"
     },
     {
       "content_id": "ai-chatbot-vs-ai-agent",
@@ -3835,7 +3632,7 @@
       "source_count": 1,
       "word_count": 1196,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.056334+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.713703+00:00"
     },
     {
       "content_id": "ai-agent-knowledge-base",
@@ -3854,7 +3651,7 @@
       "source_count": 1,
       "word_count": 1176,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.056642+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.713911+00:00"
     },
     {
       "content_id": "safe-ai-agent-actions",
@@ -3864,17 +3661,16 @@
       "primary_intent": "informational",
       "primary_keyword": "safe ai agent actions",
       "title": "What Actions Should an AI Website Agent Be Allowed to Take?",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1166,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.056939+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.714118+00:00"
     },
     {
       "content_id": "ai-agent-human-handoff",
@@ -3893,7 +3689,7 @@
       "source_count": 1,
       "word_count": 1178,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.057246+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.714356+00:00"
     },
     {
       "content_id": "measure-ai-agent-performance",
@@ -3903,17 +3699,16 @@
       "primary_intent": "informational",
       "primary_keyword": "ai agent performance metrics",
       "title": "How to Measure Whether an AI Agent Is Helping",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1166,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.057542+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.714563+00:00"
     },
     {
       "content_id": "ai-agent-customer-documentation",
@@ -3932,7 +3727,7 @@
       "source_count": 1,
       "word_count": 1157,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.057838+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.714836+00:00"
     },
     {
       "content_id": "test-ai-website-agent",
@@ -3951,7 +3746,7 @@
       "source_count": 1,
       "word_count": 1189,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.058140+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.715076+00:00"
     },
     {
       "content_id": "choose-the-right-famtastic-website-package",
@@ -3970,7 +3765,7 @@
       "source_count": 1,
       "word_count": 1181,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.058442+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.715305+00:00"
     },
     {
       "content_id": "what-is-included-199-web-basics-bundle",
@@ -3980,17 +3775,16 @@
       "primary_intent": "informational",
       "primary_keyword": "$199 website package",
       "title": "What Is Included in the $199 Web Basics Bundle?",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1189,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.058743+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.715531+00:00"
     },
     {
       "content_id": "what-is-included-499-business-website-bundle",
@@ -4009,7 +3803,7 @@
       "source_count": 1,
       "word_count": 1204,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.059049+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.715755+00:00"
     },
     {
       "content_id": "starter-website-package-explained",
@@ -4028,7 +3822,7 @@
       "source_count": 1,
       "word_count": 1178,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.059348+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.715977+00:00"
     },
     {
       "content_id": "business-website-package-explained",
@@ -4038,17 +3832,16 @@
       "primary_intent": "informational",
       "primary_keyword": "business website package",
       "title": "What Is a Business Website Package?",
-      "score": 88,
-      "result": "revise",
+      "score": 94,
+      "result": "pass",
       "issues": [
-        "Meta title length is 35; target 40-65",
-        "Meta description has an ungrammatical 'Learn + base verb' construction"
+        "Meta title length is 35; target 40-65"
       ],
       "internal_link_count": 8,
       "source_count": 1,
       "word_count": 1160,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.059641+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.716401+00:00"
     },
     {
       "content_id": "premium-website-ai-package-explained",
@@ -4067,7 +3860,7 @@
       "source_count": 1,
       "word_count": 1180,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.059939+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.716814+00:00"
     },
     {
       "content_id": "landing-page-package-explained",
@@ -4086,7 +3879,7 @@
       "source_count": 1,
       "word_count": 1217,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.060253+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.717091+00:00"
     },
     {
       "content_id": "website-care-plan-explained",
@@ -4105,7 +3898,7 @@
       "source_count": 1,
       "word_count": 1156,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.060549+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.717300+00:00"
     },
     {
       "content_id": "professional-website-55-cents-a-day",
@@ -4122,9 +3915,9 @@
       ],
       "internal_link_count": 8,
       "source_count": 3,
-      "word_count": 1016,
+      "word_count": 1059,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.060870+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.717504+00:00"
     },
     {
       "content_id": "what-is-a-domain-name",
@@ -4134,16 +3927,14 @@
       "primary_intent": "informational",
       "primary_keyword": "what is a domain name",
       "title": "What Is a Domain Name and Why Does Your Business Need One?",
-      "score": 94,
+      "score": 100,
       "result": "pass",
-      "issues": [
-        "Meta description has an ungrammatical 'Learn + base verb' construction"
-      ],
+      "issues": [],
       "internal_link_count": 8,
       "source_count": 3,
-      "word_count": 981,
+      "word_count": 1024,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.061124+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.717742+00:00"
     },
     {
       "content_id": "what-is-website-hosting",
@@ -4158,9 +3949,9 @@
       "issues": [],
       "internal_link_count": 8,
       "source_count": 3,
-      "word_count": 971,
+      "word_count": 1010,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.061363+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.718013+00:00"
     },
     {
       "content_id": "parts-of-a-one-page-business-website",
@@ -4177,9 +3968,9 @@
       ],
       "internal_link_count": 8,
       "source_count": 3,
-      "word_count": 970,
+      "word_count": 1009,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.061598+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.718200+00:00"
     },
     {
       "content_id": "199-website-inclusions-and-boundaries",
@@ -4194,9 +3985,9 @@
       "issues": [],
       "internal_link_count": 8,
       "source_count": 3,
-      "word_count": 963,
+      "word_count": 976,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.061832+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.718385+00:00"
     },
     {
       "content_id": "after-buying-199-website",
@@ -4213,9 +4004,9 @@
       ],
       "internal_link_count": 8,
       "source_count": 3,
-      "word_count": 940,
+      "word_count": 958,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.062058+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.718564+00:00"
     },
     {
       "content_id": "who-is-199-website-for",
@@ -4225,18 +4016,17 @@
       "primary_intent": "commercial-investigation",
       "primary_keyword": "who needs a basic website",
       "title": "Who Is the $199 Website For?",
-      "score": 82,
+      "score": 88,
       "result": "revise",
       "issues": [
         "Meta title length is 28; target 40-65",
-        "Meta description has an ungrammatical 'Learn + base verb' construction",
         "Primary keyword is not explicit in title, description, or opening copy"
       ],
       "internal_link_count": 8,
       "source_count": 3,
-      "word_count": 984,
+      "word_count": 1031,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.062314+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.718853+00:00"
     },
     {
       "content_id": "grow-beyond-first-website",
@@ -4253,9 +4043,9 @@
       ],
       "internal_link_count": 8,
       "source_count": 3,
-      "word_count": 974,
+      "word_count": 1003,
       "reviewer": "FAMtastic SEO Discovery QA v1",
-      "reviewed_at": "2026-08-12T15:42:02.062546+00:00"
+      "reviewed_at": "2026-08-12T15:49:38.719122+00:00"
     }
   ],
   "cannibalization_candidates": [],
