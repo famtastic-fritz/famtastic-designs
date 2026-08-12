@@ -4,9 +4,9 @@ services:
     ports: !override
       - "127.0.0.1:4007:5000"
     environment:
-      MAIN_URL: "http://localhost:4007"
-      FRONTEND_URL: "http://localhost:4007"
-      NEXT_PUBLIC_BACKEND_URL: "http://localhost:4007/api"
+      MAIN_URL: "http://127.0.0.1:4007"
+      FRONTEND_URL: "http://127.0.0.1:4007"
+      NEXT_PUBLIC_BACKEND_URL: "http://127.0.0.1:4007/api"
       JWT_SECRET: "${POSTIZ_JWT_SECRET}"
       DATABASE_URL: "postgresql://postiz-user:${POSTIZ_DB_PASSWORD}@postiz-postgres:5432/postiz-db-local"
       DISABLE_REGISTRATION: "${POSTIZ_DISABLE_REGISTRATION:-false}"
@@ -28,4 +28,3 @@ services:
   postiz-postgres:
     environment:
       POSTGRES_PASSWORD: "${POSTIZ_DB_PASSWORD}"
-

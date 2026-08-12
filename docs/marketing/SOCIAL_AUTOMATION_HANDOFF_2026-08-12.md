@@ -16,6 +16,11 @@ Date: 2026-08-12
 
 The Postiz scheduler is bound to `127.0.0.1:4007`; it is not exposed to the public internet. The upstream deployment repository is installed at `/Users/famtastic-fritz/Development/FAMtastic/tools/postiz-docker-compose`, and the source snapshot used for inspection is installed at `/Users/famtastic-fritz/Development/FAMtastic/tools/postiz-app` at tag `v2.22.1`.
 
+Use `http://127.0.0.1:4007` consistently. The runtime's `MAIN_URL`,
+`FRONTEND_URL`, and browser URL must use the same hostname so the local auth
+cookie is accepted; mixing `localhost` and `127.0.0.1` causes a successful API
+login to appear as an endless browser spinner.
+
 The local owner is `fritz.medine@gmail.com`. Its generated password is stored in
 macOS Keychain under service `FAMtastic Postiz Local`; it is not written to the
 repository. Registration has been disabled after owner creation.
