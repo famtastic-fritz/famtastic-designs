@@ -20,6 +20,8 @@ check_command python3
 check_command ffmpeg
 check_command ollama
 
+python3 scripts/validate-campaign-links.py || status=1
+
 if curl --fail --silent --max-time 3 http://127.0.0.1:11434/api/tags >/dev/null; then
   printf 'PASS service ollama\n'
 else

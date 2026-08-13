@@ -126,3 +126,9 @@ Lesson: a provider connectivity proof is not a campaign acceptance proof. A
 campaign pass requires the approved media, account-specific copy, working CTA,
 public/provider evidence, and the intended personal/business distribution
 lanes.
+
+The original image captions used `/packages/web-basics`, which returned the
+generic React shell but was not a valid application route. Both live Page posts
+were corrected to the canonical `/55-cents-a-day-website` campaign page. The
+marketing preflight now verifies route-specific page markers so an HTTP 200 SPA
+fallback cannot be mistaken for a working campaign destination.
