@@ -105,3 +105,24 @@ safe-zone QA, platform-length copy, and descriptive alt text where supported.
   completed through the same connected Page token and the returned provider
   IDs/URLs were written back to the local Postiz records. The reusable runner
   must expose an explicit `now` mode instead of rewriting scheduler state.
+
+## Corrected Facebook creative proof — 2026-08-12
+
+The initial Page transport proof used text-only posts. That proved API delivery
+but did not satisfy campaign creative acceptance. The corrected proof used the
+approved branded campaign graphics and separate business/founder copy:
+
+- Business Page branded photo 1:
+  https://www.facebook.com/1718361399453192/posts/1718375802785085
+- Business Page branded photo 2:
+  https://www.facebook.com/1718361399453192/posts/1718375929451739
+- Meta Graph verification returned `is_published: true` and `media_type: photo`
+  for both Page posts.
+- Both Page posts were shared to Fitzgerald Médiné's personal timeline with
+  founder-adapted copy; Facebook confirmed each share to the `FRIENDS`
+  audience. This is an assisted personal-profile lane, not Page API automation.
+
+Lesson: a provider connectivity proof is not a campaign acceptance proof. A
+campaign pass requires the approved media, account-specific copy, working CTA,
+public/provider evidence, and the intended personal/business distribution
+lanes.
