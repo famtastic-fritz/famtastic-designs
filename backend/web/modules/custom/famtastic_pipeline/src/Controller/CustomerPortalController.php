@@ -174,7 +174,8 @@ final class CustomerPortalController extends ControllerBase {
       if (empty($definition['published'])) continue;
       $items[] = array_intersect_key($definition, array_flip([
         'sku', 'type', 'title', 'summary', 'price', 'currency', 'billing',
-        'included', 'exclusions', 'intake_schema',
+        'included', 'exclusions', 'entitlements', 'intake_schema', 'fulfillment',
+        'portal', 'upsells',
       ]));
     }
     return $this->noStore(new JsonResponse(['products' => $items, 'terms' => [

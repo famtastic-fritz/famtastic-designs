@@ -260,7 +260,7 @@ install -m 0644 "$backend_dir/composer.lock" "$production_dir/composer.lock"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$production_dir" install \
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
 "$drush" updatedb -y
-"$drush" pm:enable commerce_stripe metatag redirect simple_sitemap -y
+"$drush" pm:enable commerce_stripe metatag redirect simple_sitemap key ai ai_dashboard ai_api_explorer ai_agents ai_automators ai_logging ai_provider_openai -y
 "$drush" php:script "$source_demand_fields"
 "$drush" php:script "$source_demand_seed"
 "$drush" php:script "$source_package_normalizer"
@@ -275,6 +275,14 @@ TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-
     \Drupal::entityTypeManager()->getDefinition($entity_type_id);
   }
   print "Pipeline entity definitions verified.\n";
+'
+"$drush" eval '
+  foreach (["key", "ai", "ai_dashboard", "ai_api_explorer", "ai_agents", "ai_automators", "ai_logging", "ai_provider_openai"] as $module) {
+    if (!\Drupal::moduleHandler()->moduleExists($module)) {
+      throw new \RuntimeException("Required AI foundation module is not enabled: " . $module);
+    }
+  }
+  print "Drupal AI foundation verified.\n";
 '
 
 {
