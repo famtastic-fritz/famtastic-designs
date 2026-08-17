@@ -260,10 +260,15 @@ install -m 0644 "$backend_dir/composer.lock" "$production_dir/composer.lock"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$production_dir" install \
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
 echo "Backend dependencies promoted."
+# Drush exits 255 on this cPanel host even when the update run succeeds. Disable
+# the rollback trap only while capturing that unreliable status, then restore it
+# before the authoritative pending-update check and every remaining apply step.
+trap - ERR
 set +e
 "$drush" updatedb -y --strict=0
 updatedb_exit=$?
 set -e
+trap rollback_code ERR
 if [[ "$updatedb_exit" -ne 0 ]]; then
   echo "Database update command returned $updatedb_exit after dependency cold start; verifying authoritative pending-update status."
 fi
