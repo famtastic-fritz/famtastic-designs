@@ -259,17 +259,24 @@ install -m 0644 "$backend_dir/composer.json" "$production_dir/composer.json"
 install -m 0644 "$backend_dir/composer.lock" "$production_dir/composer.lock"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$production_dir" install \
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
+echo "Backend dependencies promoted."
 "$drush" updatedb -y
+echo "Database updates verified."
 "$drush" pm:enable commerce_stripe metatag redirect simple_sitemap key ai ai_dashboard ai_api_explorer ai_agents ai_automators ai_logging ai_provider_openai -y
+echo "Required Drupal modules enabled."
 "$drush" php:script "$source_demand_fields"
+echo "Demand fields verified."
 "$drush" php:script "$source_demand_seed"
+echo "Demand content verified."
 "$drush" php:script "$source_package_normalizer"
+echo "Package ladder verified."
 "$drush" cr
 # A second process-level rebuild is required on this host after first-time
 # module discovery; otherwise the sitemap writer can see stale router state.
 "$drush" cr
 "$drush" eval '\Drupal::service("router.route_provider")->getRouteByName("simple_sitemap.sitemap_xsl"); print "Sitemap route verified.\n";'
 "$drush" simple-sitemap:generate
+echo "Sitemap generation verified."
 "$drush" eval '
   foreach (["famtastic_prospect", "famtastic_order", "famtastic_intake", "famtastic_project", "proof_campaign", "proof_variant"] as $entity_type_id) {
     \Drupal::entityTypeManager()->getDefinition($entity_type_id);
