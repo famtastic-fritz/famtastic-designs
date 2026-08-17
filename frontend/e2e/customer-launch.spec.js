@@ -24,9 +24,39 @@ async function signIn(page, redirect = '/portal') {
   await expect(page).toHaveURL(new RegExp(redirect.replace('/', '\\/')));
 }
 
+async function mockNewCustomerPortal(page) {
+  await page.route('**/api/customer/session', (route) => route.fulfill({ json: { customer: { display_name: 'Fritz', email: 'fitzgerald.medine@gmail.com' } } }));
+  await page.route('**/api/customer/workspace*', (route) => route.fulfill({ json: {
+    organization: { public_id: 'org-proof', name: 'Fritzoo', role: 'owner' },
+    projects: [], orders: [], entitlements: [], website_requests: [], threads: [], activity: [], members: [], referrals: [], articles: [], faqs: [], offers: [],
+    analytics: { entitled: false }, preferences: { project_email: true, support_email: true, billing_email: true, product_education: true, deals_promotions: true, analytics_digest: 'monthly', topics: [] }, topics: {},
+  } }));
+}
+
+test('portal home makes the website-and-proofs revenue journey unmistakable', async ({ page }, testInfo) => {
+  await mockNewCustomerPortal(page);
+  await page.goto('/portal');
+  await expect(page.getByRole('heading', { name: 'Turn an idea into something customers can use.' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start my website & proofs', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'See how easy it is', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Register' })).toBeVisible();
+  await expect(page.getByText('Website launch in seven easy steps')).toBeVisible();
+  await page.getByRole('button', { name: 'Close website walkthrough' }).click();
+  await expect(page.getByRole('heading', { name: 'From brief to business system' })).toBeVisible();
+  await expect(page.getByText('Shay Shay', { exact: true })).toBeVisible();
+  await assertNoHorizontalOverflow(page);
+  await page.screenshot({ path: testInfo.outputPath('portal-ai-studio-home.png'), fullPage: true });
+  await page.getByRole('button', { name: 'Start my website & proofs', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Websites & proofs', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: '+ Start a new website', exact: true })).toBeVisible();
+});
+
 test('customer account, portal, support, settings, and purchase UI are mobile-safe', async ({ page }, testInfo) => {
   await signIn(page);
-  for (const section of ['Support', 'Settings', 'Projects & approvals']) {
+  await expect(page.getByRole('button', { name: 'Start my website & proofs', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Start my website & proofs', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Websites & proofs', exact: true })).toBeVisible();
+  for (const section of ['Support', 'Settings', 'Websites & proofs']) {
     const menu = page.getByRole('button', { name: 'Menu', exact: true });
     if (await menu.isVisible()) await menu.click();
     await page.getByRole('button', { name: section, exact: true }).click();
@@ -51,7 +81,7 @@ test('customer account, portal, support, settings, and purchase UI are mobile-sa
 
 test('authenticated portal sections remain mobile-safe', async ({ page }, testInfo) => {
   await signIn(page);
-  for (const section of ['Home', 'Activity', 'My services', 'Performance', 'Projects & approvals', 'Messages', 'Support', 'For you & latest', 'FAQs', 'Recommended next steps', 'Refer a friend', 'Purchases & billing', 'Profile & team', 'Settings']) {
+  for (const section of ['Home', 'Activity', 'My services', 'Performance', 'Websites & proofs', 'Messages', 'Support', 'For you & latest', 'FAQs', 'Recommended next steps', 'Refer a friend', 'Purchases & billing', 'Profile & team', 'Settings']) {
     const menu = page.getByRole('button', { name: 'Menu', exact: true });
     if (await menu.isVisible()) await menu.click();
     await page.getByRole('button', { name: section, exact: true }).click();

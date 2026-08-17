@@ -6,7 +6,7 @@ import '../portal.css';
 const GROUPS = [
   ['Overview', [['home', 'Home'], ['activity', 'Activity']]],
   ['My business', [['services', 'My services'], ['performance', 'Performance']]],
-  ['Work with FAMtastic', [['projects', 'Projects & approvals'], ['messages', 'Messages'], ['support', 'Support']]],
+  ['Work with FAMtastic', [['projects', 'Websites & proofs'], ['messages', 'Messages'], ['support', 'Support']]],
   ['Learn & discover', [['learn', 'For you & latest'], ['faq', 'FAQs']]],
   ['Grow', [['grow', 'Recommended next steps'], ['referrals', 'Refer a friend']]],
   ['Account', [['billing', 'Purchases & billing'], ['account', 'Profile & team'], ['settings', 'Settings']]],
@@ -18,6 +18,66 @@ const date = (stamp) => stamp ? new Date(Number(stamp) * 1000).toLocaleDateStrin
 
 function Panel({ eyebrow, title: heading, children, className = '' }) { return <article className={`portal-panel ${className}`}><span>{eyebrow}</span>{heading && <h2>{heading}</h2>}{children}</article>; }
 function Empty({ children }) { return <p className="portal-empty">{children}</p>; }
+
+function PortalHome({ workspace, org, order, project, nextAction, go }) {
+  const requests = workspace.website_requests || [];
+  const openThreads = workspace.threads.filter((thread) => thread.status === 'open').length;
+  const [tutorialOpen, setTutorialOpen] = useState(false);
+  const [tutorialStep, setTutorialStep] = useState(0);
+  const tutorialSteps = [
+    ['Register', 'Create your secure customer workspace.'],
+    ['Click Start', 'Open the guided website brief.'],
+    ['Fill out the form', 'Tell us about the business and desired outcome.'],
+    ['View three proofs', 'Compare genuinely different visual directions.'],
+    ['Select', 'Choose the direction that feels right.'],
+    ['Pay securely', 'Complete the approved package through Commerce.'],
+    ['That’s it', 'Follow the build, approval, and launch from your account.'],
+  ];
+  useEffect(() => {
+    if (!tutorialOpen) return undefined;
+    const timer = window.setInterval(() => setTutorialStep((step) => (step + 1) % tutorialSteps.length), 1700);
+    return () => window.clearInterval(timer);
+  }, [tutorialOpen, tutorialSteps.length]);
+  return <>
+    <section className="portal-ai-hero">
+      <div className="portal-ai-hero__content">
+        <span>FAMtastic AI solutions studio</span>
+        <h2>Turn an idea into something customers can use.</h2>
+        <p>Start with one guided website brief. Our AI-assisted studio turns it into research, three visual directions, a clear recommendation, and a project you can track here.</p>
+        <div className="portal-ai-hero__actions">
+          <button onClick={() => go('projects')}>{requests.length ? 'Continue my website' : 'Start my website & proofs'}</button>
+          <div className="portal-tutorial-trigger"><button className="secondary" onClick={() => { setTutorialStep(0); setTutorialOpen(true); }}>See how easy it is</button><span role="tooltip">New here? Watch the 20-second website walkthrough.</span></div>
+          <button className="quiet" onClick={() => go('support')}>Talk through an idea</button>
+        </div>
+        <small>No technical language required. Save your progress and return anytime.</small>
+      </div>
+      <div className="portal-ai-hero__signal" aria-hidden="true"><i /><i /><i /></div>
+    </section>
+
+    {tutorialOpen && <div className="portal-tutorial-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setTutorialOpen(false); }}><section className="portal-tutorial" role="dialog" aria-modal="true" aria-labelledby="portal-tutorial-title"><button className="portal-tutorial__close" aria-label="Close website walkthrough" onClick={() => setTutorialOpen(false)}>×</button><div className="portal-tutorial__visual" style={{ '--tutorial-position': `${tutorialStep * 16.666}%` }}><img className="portal-tutorial__poster" src="/portal/website-journey-clay-v1.png" alt="Clay artwork showing the simple journey from registration to a finished website" /><video src="/portal/website-journey-clay-v1.mp4" poster="/portal/website-journey-clay-v1.png" autoPlay muted loop playsInline aria-label="Clay animation showing how to register, complete a website brief, review proofs, select a design, pay, and launch" /><i aria-hidden="true" /></div><div className="portal-tutorial__copy"><span>Website launch in seven easy steps</span><h2 id="portal-tutorial-title">{tutorialSteps[tutorialStep][0]}</h2><p>{tutorialSteps[tutorialStep][1]}</p><ol aria-label="Tutorial progress">{tutorialSteps.map(([label], index) => <li key={label} className={index === tutorialStep ? 'active' : index < tutorialStep ? 'complete' : ''}><button aria-label={`Show step ${index + 1}: ${label}`} onClick={() => setTutorialStep(index)}>{index + 1}</button></li>)}</ol><div className="portal-tutorial__actions"><button onClick={() => { setTutorialOpen(false); go('projects'); }}>Start my website</button><button className="secondary" onClick={() => setTutorialOpen(false)}>Not yet</button></div></div></section></div>}
+
+    <section className="portal-journey" aria-labelledby="portal-journey-title">
+      <header><span>How your studio works</span><h2 id="portal-journey-title">From brief to business system</h2></header>
+      <ol>
+        <li className={requests.length ? 'complete' : 'active'}><b>1</b><div><strong>Tell us the outcome</strong><small>A guided intake captures the business, audience, goals, content, features, and timing.</small></div></li>
+        <li className={requests.some((request) => ['submitted', 'checkout_started', 'converted'].includes(request.status)) ? 'active' : ''}><b>2</b><div><strong>AI studio research</strong><small>Specialists organize the brief, check assumptions, and recommend the smallest useful solution.</small></div></li>
+        <li className={project?.proof_url ? 'active' : ''}><b>3</b><div><strong>Review visual proofs</strong><small>Compare distinct design directions, ask questions, and choose what feels right.</small></div></li>
+        <li className={project?.approval_status === 'approved' ? 'complete' : ''}><b>4</b><div><strong>Approve, build, and grow</strong><small>Your decision, delivery, support, and future AI solutions stay connected to this workspace.</small></div></li>
+      </ol>
+    </section>
+
+    <section className="portal-grid three portal-home-actions">
+      <Panel eyebrow="Your website studio" title={requests.length ? `${requests.length} active request${requests.length === 1 ? '' : 's'}` : 'Your revenue journey starts here'} className="lime"><p>{requests.length ? 'Continue the brief, view the recommendation, and follow proof or approval status.' : 'The website intake is the front door—not a hidden form. Start it now and we will keep the work attached to this account.'}</p><button onClick={() => go('projects')}>{requests.length ? 'Open websites & proofs' : 'Start website intake'}</button></Panel>
+      <Panel eyebrow="Needs your attention" title={nextAction}><p>{!order ? 'A complete brief gives the studio enough context to recommend and prove the right solution.' : 'Your next required action stays visible here until it is complete.'}</p><button onClick={() => go('projects')}>Open next action</button></Panel>
+      <Panel eyebrow="Shay Shay" title="Your studio guide is taking shape" className="portal-shay-card"><p>Shay will guide website visitors and customers with focused help, tutorials, proof explanations, and clear handoffs to the FAMtastic team.</p><button onClick={() => go('learn')}>See what AI can help with</button></Panel>
+    </section>
+
+    <section className="portal-grid two">
+      <Panel eyebrow="Recent activity" title="What FAMtastic has handled">{workspace.activity.length ? <ul>{workspace.activity.slice(0, 5).map((item, i) => <li key={i}><strong>{item.summary}</strong><small>{date(item.created)}</small></li>)}</ul> : <Empty>Start a website request and each saved brief, submission, proof, approval, and delivery milestone will appear here.</Empty>}</Panel>
+      <Panel eyebrow="Help when you need it" title={openThreads ? `${openThreads} open conversation${openThreads === 1 ? '' : 's'}` : `Welcome to ${org?.name}`}><p>Ask a question without repeating your business or project history. Messages stay connected to this workspace.</p><button onClick={() => go('support')}>{openThreads ? 'View support' : 'Ask FAMtastic'}</button></Panel>
+    </section>
+  </>;
+}
 
 export default function CustomerPortalDashboard() {
   const navigate = useNavigate();
@@ -65,7 +125,7 @@ export default function CustomerPortalDashboard() {
       {notice && <div className="portal-notice" role="status">{notice}<button aria-label="Dismiss" onClick={() => setNotice('')}>×</button></div>}
       {error && <div className="portal-notice portal-notice--error" role="alert">{error}<button aria-label="Dismiss" onClick={() => setError('')}>×</button></div>}
 
-      {section === 'home' && <><section className="portal-welcome"><div><span>Welcome back</span><h2>{org?.name}</h2><p>Your digital business, active work, support, and next opportunities—together in one place.</p></div><div><small>Needs your attention</small><strong>{nextAction}</strong><button onClick={() => go(!order ? 'grow' : 'projects')}>Take the next step →</button></div></section><section className="portal-grid three"><Panel eyebrow="Website & services" title={`${workspace.entitlements.length} active`}><p>See what you own, coverage, renewals, and help for each service.</p><button onClick={() => go('services')}>View services</button></Panel><Panel eyebrow="Support" title={`${workspace.threads.filter((t) => t.status === 'open').length} open`}><p>Get help without repeating your account or project history.</p><button onClick={() => go('support')}>Get help</button></Panel><Panel eyebrow="Learn" title={`${workspace.articles.length} latest articles`}><p>Practical guidance selected around the capabilities you own and can benefit from.</p><button onClick={() => go('learn')}>Read and follow topics</button></Panel></section><section className="portal-grid two"><Panel eyebrow="Recent activity" title="What FAMtastic has handled">{workspace.activity.length ? <ul>{workspace.activity.slice(0, 5).map((item, i) => <li key={i}><strong>{item.summary}</strong><small>{date(item.created)}</small></li>)}</ul> : <Empty>Your account activity will appear here.</Empty>}</Panel><Panel eyebrow="Recommended for you" title={workspace.offers[0]?.title || 'You’re all set'} className="lime"><p>{workspace.offers[0]?.description || 'We will recommend a next step only when it fits your business.'}</p><button onClick={() => go('grow')}>Why this matters →</button></Panel></section></>}
+      {section === 'home' && <PortalHome workspace={workspace} org={org} order={order} project={project} nextAction={nextAction} go={go} />}
 
       {section === 'activity' && <Panel eyebrow="Your history" title="Work, milestones, and account events">{workspace.activity.length ? <ul>{workspace.activity.map((item, i) => <li key={i}><strong>{item.summary}</strong><small>{date(item.created)}</small></li>)}</ul> : <Empty>No activity yet.</Empty>}</Panel>}
       {section === 'services' && <section className="portal-grid three">{workspace.entitlements.length ? workspace.entitlements.map((service) => <Panel key={service.public_id} eyebrow="Owned service" title={title(service.entitlement_type)}><p><strong>{title(service.status)}</strong></p><small>{service.included_until ? `Included through ${date(service.included_until)}` : 'Active on your account'}</small><button onClick={() => go('support')}>Get service help</button></Panel>) : <Panel eyebrow="Your services" title="Ready when you are"><p>Your active website, AI, automation, hosting, and analytics capabilities will appear here after purchase.</p><button onClick={() => go('grow')}>Explore what helps next</button></Panel>}</section>}
