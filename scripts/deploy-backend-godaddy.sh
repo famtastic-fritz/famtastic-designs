@@ -260,10 +260,17 @@ install -m 0644 "$backend_dir/composer.lock" "$production_dir/composer.lock"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$production_dir" install \
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
 echo "Backend dependencies promoted."
-if ! "$drush" updatedb -y --strict=0; then
-  echo "Initial database update check exited during the dependency cold start; rebuilding the container and retrying once."
-  "$drush" cr
-  "$drush" updatedb -y --strict=0
+set +e
+"$drush" updatedb -y --strict=0
+updatedb_exit=$?
+set -e
+if [[ "$updatedb_exit" -ne 0 ]]; then
+  echo "Database update command returned $updatedb_exit after dependency cold start; verifying authoritative pending-update status."
+fi
+pending_updates="$($drush updatedb:status --format=json)"
+if [[ -n "$pending_updates" && "$pending_updates" != "[]" && "$pending_updates" != "{}" ]]; then
+  echo "Database updates remain pending after apply: $pending_updates" >&2
+  exit 1
 fi
 echo "Database updates verified."
 "$drush" pm:enable commerce_stripe metatag redirect simple_sitemap key ai ai_dashboard ai_api_explorer ai_agents ai_automators ai_logging ai_provider_openai -y
