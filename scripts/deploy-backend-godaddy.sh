@@ -260,7 +260,11 @@ install -m 0644 "$backend_dir/composer.lock" "$production_dir/composer.lock"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$production_dir" install \
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
 echo "Backend dependencies promoted."
-"$drush" updatedb -y
+if ! "$drush" updatedb -y; then
+  echo "Initial database update check exited during the dependency cold start; rebuilding the container and retrying once."
+  "$drush" cr
+  "$drush" updatedb -y
+fi
 echo "Database updates verified."
 "$drush" pm:enable commerce_stripe metatag redirect simple_sitemap key ai ai_dashboard ai_api_explorer ai_agents ai_automators ai_logging ai_provider_openai -y
 echo "Required Drupal modules enabled."
