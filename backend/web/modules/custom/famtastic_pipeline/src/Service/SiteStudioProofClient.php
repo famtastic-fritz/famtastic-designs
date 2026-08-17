@@ -27,7 +27,7 @@ final class SiteStudioProofClient {
   /**
    * Dispatches an exactly-three proof request and returns the remote job id.
    */
-  public function dispatch(Prospect $prospect, ProofCampaign $campaign): string {
+  public function dispatch(Prospect $prospect, ProofCampaign $campaign, array $context = []): string {
     $endpoint = $this->endpoint();
     $secret = getenv('SITE_STUDIO_DISPATCH_SECRET') ?: Settings::get('site_studio_dispatch_secret');
     if ($endpoint === '' || !$secret) {
@@ -51,6 +51,12 @@ final class SiteStudioProofClient {
       'directions' => ProofCampaignService::DIRECTIONS,
       'required_variant_count' => 3,
       'callback_url' => $callbackBase . '/api/pipeline/site-studio/callback',
+      'project' => [
+        'project_id' => (int) ($context['project_id'] ?? 0),
+        'commerce_order_id' => (int) ($context['commerce_order_id'] ?? 0),
+        'website_request_public_id' => (string) ($context['website_request_public_id'] ?? ''),
+      ],
+      'website_discovery_v2' => (array) ($context['website_discovery_v2'] ?? []),
     ];
     $body = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     $signature = 'sha256=' . hash_hmac('sha256', $body, (string) $secret);

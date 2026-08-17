@@ -64,7 +64,7 @@ class ProofCampaignService {
    *
    * @return array{campaign:\Drupal\famtastic_pipeline\Entity\ProofCampaign,variants:\Drupal\famtastic_pipeline\Entity\ProofVariant[]}
    */
-  public function createForProspect(Prospect $prospect): array {
+  public function createForProspect(Prospect $prospect, array $context = []): array {
     $businessName = (string) ($prospect->get('business_name')->value ?: 'Your Business');
     $campaignId = $this->buildCampaignId($businessName);
     $now = $this->time->getRequestTime();
@@ -82,7 +82,7 @@ class ProofCampaignService {
     $campaign->save();
 
     if ($this->studioClient->isRemote()) {
-      $jobId = $this->studioClient->dispatch($prospect, $campaign);
+      $jobId = $this->studioClient->dispatch($prospect, $campaign, $context);
       $campaign
         ->set('generation_status', 'waiting_callback')
         ->set('studio_job_id', $jobId)

@@ -23,6 +23,7 @@ final class CommerceLifecycleService {
     private readonly UuidInterface $uuid,
     private readonly CustomerPortalService $portal,
     private readonly ConfigFactoryInterface $configFactory,
+    private readonly OperationalLedger $ledger,
   ) {}
 
   /**
@@ -55,6 +56,7 @@ final class CommerceLifecycleService {
     $organizationId = (int) $organization['id'];
     if ($existing && $existing['status'] === 'fulfilled') {
       $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing);
+      $this->enqueueProjectProofs($order, $operations, (array) ($order->getData('famtastic_checkout') ?? []));
       return ['fulfilled' => TRUE, 'existing' => TRUE, 'record' => $existing, 'operations' => $operations];
     }
     $profile = $order->getBillingProfile();
@@ -114,6 +116,7 @@ final class CommerceLifecycleService {
     }
 
     $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing ?: []);
+    $this->enqueueProjectProofs($order, $operations, $checkout);
 
     $this->portal->activity($organizationId, 'commerce.fulfilled', 'Your purchase is confirmed and your services are ready for intake.');
     $this->queueNotifications($order, $customer, $skus, array_values(array_unique($intakeSchemas)));
@@ -192,6 +195,30 @@ final class CommerceLifecycleService {
       ])->condition('id', $request['id'])->execute();
     }
     return ['prospect_id' => (int) $prospect->id(), 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id()];
+  }
+
+  /** Queues the three-proof studio job once, only after payment and conversion. */
+  private function enqueueProjectProofs(OrderInterface $order, array $operations, array $checkout): void {
+    $request = [];
+    if (!empty($checkout['website_request_public_id'])) {
+      $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+        ->condition('public_id', (string) $checkout['website_request_public_id'])->execute()->fetchAssoc();
+      if ($row) $request = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    }
+    $projectId = (int) $operations['project_id'];
+    $prospectId = (int) $operations['prospect_id'];
+    $this->ledger->enqueue(
+      'proof.generate:paid-project:' . $projectId,
+      'proof.generate',
+      [
+        'prospect_id' => $prospectId,
+        'project_id' => $projectId,
+        'commerce_order_id' => (int) $order->id(),
+        'website_request_public_id' => (string) ($checkout['website_request_public_id'] ?? ''),
+        'website_discovery_v2' => $request,
+      ],
+      $prospectId,
+    );
   }
 
   /** Reconciles refund, void, and failed-payment states into service access. */

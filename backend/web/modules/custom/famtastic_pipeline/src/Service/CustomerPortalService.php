@@ -173,6 +173,12 @@ final class CustomerPortalService {
     $projects = $this->serializeEntities('famtastic_project', $resourceIds('project'), [
       'uuid', 'label', 'proof_url', 'live_url', 'delivery_status', 'approval_status', 'revision_count', 'revision_limit', 'created', 'changed',
     ]);
+    $projectEntities = array_values($this->entities->getStorage('famtastic_project')->loadMultiple($resourceIds('project')));
+    foreach ($projects as $index => &$projectRow) {
+      $project = $projectEntities[$index] ?? NULL;
+      $projectRow['proofs'] = $project ? $this->projectProofs($project) : NULL;
+    }
+    unset($projectRow);
     $entitlements = $this->database->select('famtastic_entitlement', 'e')->fields('e')
       ->condition('organization_id', $organizationId)->execute()->fetchAll(\PDO::FETCH_ASSOC);
     $threadQuery = $this->database->select('famtastic_portal_thread', 't');
@@ -612,8 +618,59 @@ final class CustomerPortalService {
     return $out;
   }
 
+  /** Serializes the latest three-proof campaign attached to a claimed project. */
+  private function projectProofs(object $project): ?array {
+    $prospectId = (int) $project->get('prospect_ref')->target_id;
+    $campaignIds = $this->entities->getStorage('proof_campaign')->getQuery()->accessCheck(FALSE)
+      ->condition('prospect_id', $prospectId)->sort('id', 'DESC')->range(0, 1)->execute();
+    if (!$campaignIds) return NULL;
+    $campaign = $this->entities->getStorage('proof_campaign')->load(reset($campaignIds));
+    $variantIds = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
+      ->condition('campaign_id', (int) $campaign->id())->sort('direction_id')->execute();
+    $variants = [];
+    foreach ($this->entities->getStorage('proof_variant')->loadMultiple($variantIds) as $variant) {
+      $variants[] = [
+        'direction_id' => (string) $variant->get('direction_id')->value,
+        'direction_name' => (string) $variant->get('direction_name')->value,
+        'preview_url' => (string) $variant->get('preview_url')->value,
+        'thumbnail_path' => (string) $variant->get('thumbnail_path')->value,
+      ];
+    }
+    return [
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'generation_status' => (string) $campaign->get('generation_status')->value,
+      'selected_variant' => (string) $campaign->get('selected_variant')->value,
+      'variants' => $variants,
+    ];
+  }
+
   public function activity(int $organizationId, string $type, string $summary): void {
     $this->database->insert('famtastic_portal_activity')->fields(['organization_id' => $organizationId, 'event_type' => $type, 'summary' => $summary, 'created' => $this->time->getRequestTime()])->execute();
+  }
+
+  /** Publishes an account-owned proof set without entering marketing outreach. */
+  public function markProjectProofReady(int $projectId, object $campaign, array $variants): void {
+    if (count($variants) !== 3) throw new \RuntimeException('Exactly three proofs are required.');
+    $project = $this->entities->getStorage('famtastic_project')->load($projectId);
+    if (!$project) throw new \RuntimeException('Project no longer exists.');
+    $preview = (string) $variants[0]->get('preview_url')->value;
+    $project->set('proof_url', $preview)->set('delivery_status', 'proof_ready')->set('approval_status', 'pending')->save();
+    $resource = $this->database->select('famtastic_customer_resource', 'r')->fields('r')
+      ->condition('resource_type', 'project')->condition('resource_id', $projectId)->execute()->fetchAssoc();
+    if (!$resource) throw new \RuntimeException('Project is not attached to a customer workspace.');
+    $organizationId = (int) $resource['organization_id'];
+    $query = $this->database->select('famtastic_membership', 'm');
+    $query->join('famtastic_customer', 'c', 'c.id = m.customer_id');
+    $query->addField('c', 'email');
+    $email = (string) $query->condition('m.organization_id', $organizationId)->condition('m.status', 'active')
+      ->orderBy('m.id', 'ASC')->range(0, 1)->execute()->fetchField();
+    $campaignId = (string) $campaign->get('campaign_id')->value;
+    $this->activity($organizationId, 'project.proofs_ready', 'Three website concepts are ready for your review.');
+    if ($email !== '') {
+      $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+      $this->queueNotification('project:' . $projectId . ':proofs:' . $campaignId, 'transactional', $email,
+        'Your three FAMtastic website concepts are ready', "Review, compare, and select your concepts securely in your account:\n{$base}/portal/");
+    }
   }
 
   private function queueNotification(string $key, string $category, string $recipient, string $subject, string $body): void {

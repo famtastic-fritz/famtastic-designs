@@ -19,6 +19,7 @@ final class AutomationWorker {
     private readonly CustomerDeploymentService $deployments,
     private readonly DomainLifecycleService $domains,
     private readonly HostingLifecycleService $hosting,
+    private readonly CustomerPortalService $portal,
   ) {}
 
   /**
@@ -71,7 +72,7 @@ final class AutomationWorker {
       throw new \RuntimeException('Prospect no longer exists.');
     }
     $existing = $this->proofCampaigns->getForProspect($prospect);
-    $created = $existing ?: $this->proofCampaigns->createForProspect($prospect);
+    $created = $existing ?: $this->proofCampaigns->createForProspect($prospect, (array) ($job['payload'] ?? []));
     $variants = $created['variants'];
     if (
       count($variants) === 0
@@ -124,12 +125,18 @@ final class AutomationWorker {
       ],
       $prospectId,
     );
-    $this->ledger->enqueue(
-      'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
-      'outreach.prepare',
-      ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
-      $prospectId,
-    );
+    $projectId = (int) ($job['payload']['project_id'] ?? 0);
+    if ($projectId) {
+      $this->portal->markProjectProofReady($projectId, $campaign, $variants);
+    }
+    else {
+      $this->ledger->enqueue(
+        'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
+        'outreach.prepare',
+        ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
+        $prospectId,
+      );
+    }
     return [
       'campaign_id' => $campaign->get('campaign_id')->value,
       'variant_count' => 3,
