@@ -64,14 +64,45 @@ final class WebsiteRequestProofReviewForm extends FormBase {
     if ($complete && $this->requestRow['proof_review_status'] === 'owner_review') {
       $form['confirm'] = ['#type' => 'checkbox', '#title' => $this->t('I reviewed all @count working previews and approve showing them in this customer account.', ['@count' => $proofCount]), '#required' => TRUE];
       $form['actions']['#type'] = 'actions';
-      $form['actions']['submit'] = ['#type' => 'submit', '#value' => $this->t('Approve and queue customer email'), '#button_type' => 'primary'];
+      $form['actions']['submit'] = ['#type' => 'submit', '#value' => $this->t('Approve and queue customer email'), '#button_type' => 'primary', '#proof_action' => 'approve'];
+    }
+    elseif ($complete && in_array($this->requestRow['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) {
+      $share = $this->portal->websiteProofShareStatus((int) $this->requestRow['id']);
+      $status = $share['enabled'] ? '<strong>On.</strong> Anyone with the unlisted link can view the proofs.' : '<strong>Off.</strong> The proofs still require customer sign-in.';
+      $form['sharing'] = ['#type' => 'details', '#title' => $this->t('Unlisted proof sharing'), '#open' => TRUE];
+      $form['sharing']['status'] = ['#markup' => '<p>' . $status . ' Visitors cannot select, request revisions, purchase, or see account information.</p>'];
+      if ($share['enabled']) {
+        $form['sharing']['url'] = ['#type' => 'textfield', '#title' => $this->t('Share link'), '#value' => $share['url'], '#attributes' => ['readonly' => 'readonly']];
+      }
+      $form['sharing']['actions']['#type'] = 'actions';
+      $form['sharing']['actions']['toggle'] = [
+        '#type' => 'submit',
+        '#value' => $share['enabled'] ? $this->t('Turn off unlisted sharing') : $this->t('Create unlisted share link'),
+        '#proof_action' => $share['enabled'] ? 'disable' : 'enable',
+        '#limit_validation_errors' => [],
+      ];
+      if ($share['enabled']) {
+        $form['sharing']['actions']['rotate'] = [
+          '#type' => 'submit', '#value' => $this->t('Revoke and create a new link'), '#proof_action' => 'rotate', '#limit_validation_errors' => [],
+        ];
+      }
     }
     return $form;
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $this->portal->approveWebsiteRequestProof((int) $this->requestRow['id'], (int) $this->account->id());
-    $this->messenger()->addStatus($this->t('Proofs approved and one customer notification queued.'));
+    $trigger = $form_state->getTriggeringElement();
+    $action = (string) ($trigger['#proof_action'] ?? 'approve');
+    if ($action === 'approve') {
+      $this->portal->approveWebsiteRequestProof((int) $this->requestRow['id'], (int) $this->account->id());
+      $this->messenger()->addStatus($this->t('Proofs approved and one customer notification queued.'));
+    }
+    else {
+      $share = $this->portal->manageWebsiteProofShare((int) $this->requestRow['id'], $action, (int) $this->account->id());
+      $message = $action === 'disable' ? 'Unlisted sharing is off. The previous link has been revoked.' : ($action === 'rotate' ? 'The previous link was revoked and a new unlisted link was created.' : 'Unlisted proof sharing is on.');
+      $this->messenger()->addStatus($this->t($message));
+      if (!empty($share['url'])) $this->messenger()->addStatus($share['url']);
+    }
     $form_state->setRedirect('famtastic_pipeline.website_request_proof_review', ['website_request' => (int) $this->requestRow['id']]);
   }
 

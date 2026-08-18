@@ -388,6 +388,22 @@ final class CustomerPortalController extends ControllerBase {
     catch (\RuntimeException) { return $this->error('website_proofs_not_found', 404, 'Website proofs are not available.'); }
   }
 
+  public function websiteProofShare(Request $request, string $website_request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    try {
+      $data = $this->body($request);
+      return $this->noStore(new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->updateWebsiteProofShare(
+        (int) $customer['id'],
+        $website_request,
+        (string) ($data['action'] ?? ''),
+        (int) $this->account->id(),
+      )]));
+    }
+    catch (\InvalidArgumentException $error) { return $this->error('invalid_proof_share_action', 422, $error->getMessage()); }
+    catch (\RuntimeException) { return $this->error('website_proofs_not_found', 404, 'Website proofs are not available.'); }
+  }
+
   public function profile(Request $request): JsonResponse {
     $customer = $this->currentCustomer();
     if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');

@@ -65,6 +65,22 @@ export function normalizePath(pathname = '/') {
 }
 
 export function seoForPath(pathname = '/') {
+  if (pathname.startsWith('/proofs/share/')) {
+    const description = 'An unlisted website concept review shared through FAMtastic Designs.';
+    return {
+      siteName: SITE_NAME,
+      title: 'Unlisted Website Concept Review | FAMtastic Designs',
+      description,
+      ogDescription: description,
+      twitterDescription: description,
+      keywords: DEFAULT_KEYWORDS,
+      canonical: `${SITE_URL}/proofs/share/`,
+      image: DEFAULT_IMAGE,
+      path: '/proofs/share',
+      robots: 'noindex, nofollow, noarchive',
+      referrer: 'no-referrer',
+    };
+  }
   const path = normalizePath(pathname);
   const page = SEO_PAGES[path] || SEO_PAGES['/'];
   const canonical = `${SITE_URL}${path === '/' ? '/' : `${path}/`}`;

@@ -653,6 +653,18 @@ function famtastic_pipeline_update_8031(&$sandbox) {
   return t('Assigned narrowly scoped website proof-review access to the configured operational owner.');
 }
 
+/** Adds revocable, unlisted sharing for owner-approved website proof sets. */
+function famtastic_pipeline_update_8032(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $requestDefinition = _famtastic_pipeline_customer_portal_schema()['famtastic_project_request'];
+  foreach (['proof_share_enabled', 'proof_share_version', 'proof_share_changed_at', 'proof_share_changed_by_uid'] as $field) {
+    if (!$schema->fieldExists('famtastic_project_request', $field)) {
+      $schema->addField('famtastic_project_request', $field, $requestDefinition['fields'][$field]);
+    }
+  }
+  return t('Added revocable, non-indexable sharing controls for approved website proofs.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
@@ -1370,6 +1382,10 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'proof_notified_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'selected_proof_direction' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE, 'default' => ''],
       'selected_proof_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'proof_share_enabled' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+      'proof_share_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 1],
+      'proof_share_changed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'proof_share_changed_by_uid' => $entity,
       'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'draft'],
       'project_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
       'business_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],

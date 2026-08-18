@@ -301,6 +301,25 @@ assert_json "$website_submitted" '.website_request.status == "submitted" and .we
 test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "404"
 "$DRUSH" eval "\$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); \Drupal::service('famtastic_pipeline.customer_portal')->approveWebsiteRequestProof((int) \$request['id'], 1); \$pending = \$db->select('famtastic_notification_outbox', 'n')->condition('notification_key', 'website-request:' . \$request['id'] . ':owner-proof-review:%', 'LIKE')->condition('status', ['queued', 'retry'], 'IN')->countQuery()->execute()->fetchField(); assert((int) \$pending === 0); \$notice = \$db->select('famtastic_notification_outbox', 'n')->fields('n', ['body'])->condition('notification_key', 'website-request:' . \$request['id'] . ':proofs:%', 'LIKE')->execute()->fetchAssoc(); assert(str_contains((string) \$notice['body'], '/portal/?section=projects&request=$website_request_id'));"
 test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "200"
+assert_json "$(curl -s -b "$cookie_jar" "$BASE/api/customer/workspace")" --arg request "$website_request_id" '([.website_requests[] | select(.public_id == $request)][0].proof_share) == {"enabled":false,"url":"","changed_at":null}'
+test "$(http_code "$BASE/api/proof-shares/$website_request_id/$(printf '0%.0s' {1..64})")" = "404"
+proof_share_enabled="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"enable"}' "$BASE/api/customer/website-requests/$website_request_id/proof-share")"
+assert_json "$proof_share_enabled" '.website_request.proof_share.enabled == true and (.website_request.proof_share.url | contains("/proofs/share/"))'
+proof_share_url="$(jq -r '.website_request.proof_share.url' <<<"$proof_share_enabled")"
+proof_share_signature="${proof_share_url##*/}"
+test "${#proof_share_signature}" = "64"
+public_proofs="$(curl -s "$BASE/api/proof-shares/$website_request_id/$proof_share_signature")"
+assert_json "$public_proofs" '.proof_share.proof_count == 3 and (.proof_share.variants | length) == 3 and (.proof_share | has("customer_id") | not) and (.proof_share | has("email") | not) and (.proof_share | has("intake") | not) and (.proof_share | has("recommended_sku") | not)'
+test "$(http_code "$BASE/api/proof-shares/$website_request_id/$proof_share_signature/proofs/a")" = "200"
+proof_share_rotated="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"rotate"}' "$BASE/api/customer/website-requests/$website_request_id/proof-share")"
+new_proof_share_url="$(jq -r '.website_request.proof_share.url' <<<"$proof_share_rotated")"
+new_proof_share_signature="${new_proof_share_url##*/}"
+test "$new_proof_share_signature" != "$proof_share_signature"
+test "$(http_code "$BASE/api/proof-shares/$website_request_id/$proof_share_signature")" = "404"
+test "$(http_code "$BASE/api/proof-shares/$website_request_id/$new_proof_share_signature")" = "200"
+proof_share_disabled="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"disable"}' "$BASE/api/customer/website-requests/$website_request_id/proof-share")"
+assert_json "$proof_share_disabled" '.website_request.proof_share.enabled == false and .website_request.proof_share.url == "" and .website_request.proof_share.changed_at > 0'
+test "$(http_code "$BASE/api/proof-shares/$website_request_id/$new_proof_share_signature")" = "404"
 proof_decision="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"a"}' "$BASE/api/customer/website-requests/$website_request_id/proof-decision")"
 assert_json "$proof_decision" '.website_request.proof_review_status == "selected" and .website_request.direct_checkout_available == true and (.website_request.proofs.variants | length) == 3'
 second_request="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
@@ -361,6 +380,7 @@ assert_json "$(curl -s -c "$other_cookie_jar" -X POST "${JH[@]}" -d "{\"email\":
 other_csrf="$(curl -s -b "$other_cookie_jar" "$BASE/session/token")"
 test "$(http_code -b "$other_cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Token: $other_csrf" -d '{"project_name":"Stolen request","action":"save"}' "$BASE/api/customer/website-requests/$website_request_id")" = "404"
 test "$(http_code -b "$other_cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "404"
+test "$(http_code -b "$other_cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $other_csrf" -d '{"action":"enable"}' "$BASE/api/customer/website-requests/$website_request_id/proof-share")" = "404"
 commerce_checkout="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
   \"organization\":\"$organization_id\",
   \"website_request\":\"$website_request_id\",
@@ -491,7 +511,7 @@ jq -n \
     package:$package,
     synthetic_customer_email_sha256:$email_hash,
     records:{prospect_id:$prospect_id,project_id:$project_id,deployment_id:$deployment_id,organization_public_id:$organization},
-    checks:{proofs:3,payment_verified:true,intake:true,revision_add_on:true,approval:true,deployment:true,domain:true,hosting_renewal:true,account_verified:true,portal_ownership:true,website_request_draft:true,repeat_website_requests:true,review_required_for_complex_scope:true,owner_proof_gate:true,account_proof_selection:true,cross_account_proof_isolation:true,website_request_commerce_binding:true,scoped_zero_dollar_grant:true,cross_customer_request_isolation:true,preferences:true,support_notifications:true},
+    checks:{proofs:3,payment_verified:true,intake:true,revision_add_on:true,approval:true,deployment:true,domain:true,hosting_renewal:true,account_verified:true,portal_ownership:true,website_request_draft:true,repeat_website_requests:true,review_required_for_complex_scope:true,owner_proof_gate:true,account_proof_selection:true,cross_account_proof_isolation:true,unlisted_proof_share:true,proof_share_revocation:true,proof_share_privacy:true,website_request_commerce_binding:true,scoped_zero_dollar_grant:true,cross_customer_request_isolation:true,preferences:true,support_notifications:true},
     captured_transactional_messages:$captured_messages,
     generated_at:$generated_at
   }' > "$evidence_dir/evidence.json"

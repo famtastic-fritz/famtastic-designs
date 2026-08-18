@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-18 — Public proof access should be unlisted, revocable, and read-only
+
+- Requiring registration before every proof view creates friction for a lead
+  campaign and prevents a customer from asking another decision-maker for
+  feedback. A signed unlisted link is the appropriate middle state between a
+  private account and an indexable public portfolio page.
+- Possession of a view link must not grant the customer action surface. Proof
+  viewing can be anonymous while selection, revisions, pricing, checkout, and
+  account data remain authenticated and ownership-checked.
+- Store link state and a version, not a reusable raw secret. Disabling or
+  replacing a link must invalidate the previous signature immediately, and the
+  anonymous failure response must not confirm which customer or project existed.
+- `noindex` alone is not a privacy boundary. Unlisted proof responses also need
+  no-store caching, no-referrer handling, minimal payloads, and a default-off
+  publication control after the human quality gate.
+
 ## 2026-08-18 — Transactional links must preserve customer intent and identity
 
 - A successfully delivered email and a valid authenticated portal can still

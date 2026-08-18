@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-08-18 — Revocable unlisted proof rooms
+
+- Added private-by-default, owner-controlled share links for approved three- or
+  six-concept website proof sets.
+- Added a branded anonymous proof room that exposes working previews only;
+  selection, revisions, purchase, and all account or intake data remain behind
+  the authenticated portal.
+- Made links server-signed, non-indexable, non-cacheable, and immediately
+  revocable, with separate controls to turn sharing off or replace an existing
+  link.
+- Suppressed analytics on unlisted review routes and added defensive path
+  redaction so request UUIDs and share signatures never enter page-view data.
+- Added customer-portal and staff-review controls plus acceptance coverage for
+  ownership, anonymous privacy, rotation, revocation, and mobile rendering.
+
 ## 2026-08-18 — Account-safe proof email deep links
 
 - Changed proof-ready notifications from a generic portal link to an exact

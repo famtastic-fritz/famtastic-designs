@@ -252,6 +252,28 @@ used for account-owned project notifications.
 Customer selection and revision actions are account-owned and authorization-
 checked. Public prospect tokens remain restricted to the public-lead journey.
 
+### Revocable unlisted review links
+
+After owner approval, the request owner or an authorized FAMtastic proof
+reviewer may optionally create an unlisted, view-only proof link. Sharing is off
+by default. The link uses the request UUID plus a versioned, server-signed token;
+the raw secret is not stored. Turning sharing off or creating a new link rotates
+the version so every earlier link immediately fails.
+
+An anonymous visitor with the current link may see only the business/project
+label and the approved three- or six-direction proof set. The public response
+must never expose customer contact data, intake answers, account identifiers,
+recommendations, prices, private offers, grants, selection, revision, payment,
+or project-management controls. Shared pages and artifacts are non-indexable,
+non-cacheable, excluded from analytics, use a no-referrer policy, and remain read-only. Selection,
+revision, checkout, and account continuation always require an authenticated,
+owned customer request.
+
+Campaign emails may use an explicitly enabled unlisted link so a recipient can
+evaluate the approved work before registration. The link does not replace lead
+consent, registration, account-to-lead association, or the owner customer-send
+gate.
+
 ## Grant-code classes and zero-dollar orders
 
 Grant codes are private, hashed, scoped records—not public coupons. Supported
@@ -376,12 +398,16 @@ The production journey is releasable only when all of the following are true:
    keeps all six customer-hidden until a new owner approval.
 7. Owner approval reveals proofs and queues one account notification.
 8. Cross-account reads, proof views, selections, uploads, and grant redemption fail.
-9. A scoped free grant completes one $0 Commerce order without Stripe and
+9. Unlisted sharing is off by default; enable, rotate, and disable are
+   authorization-checked, and every revoked link fails without exposing request data.
+10. Anonymous proof payloads contain only approved view metadata and never
+    expose selection, revision, checkout, intake, pricing, account, or customer data.
+11. A scoped free grant completes one $0 Commerce order without Stripe and
    fulfills exactly once.
-10. A normal paid order still uses Commerce/Stripe and the same fulfillment boundary.
-11. The canonical customer-journey runner exits zero, emits all required PASS
+12. A normal paid order still uses Commerce/Stripe and the same fulfillment boundary.
+13. The canonical customer-journey runner exits zero, emits all required PASS
     markers, and records only true assertions.
-12. The exact clean Git SHA is deployed and production evidence is recorded.
+14. The exact clean Git SHA is deployed and production evidence is recorded.
 
 ## Current incident and corrective action
 

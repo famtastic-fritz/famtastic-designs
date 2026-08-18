@@ -38,6 +38,7 @@ async function mockProofReviewPortal(page) {
   let websiteRequest = {
     public_id: 'request-proof-review', project_name: 'Tighten Up Your Locs website', status: 'submitted', proof_review_status: 'notified', changed: 1787020000,
     intake: { recommendation: { label: 'Web Basics Bundle', reasons: ['A focused website is the smallest useful path.'] } }, direct_checkout_available: false,
+    proof_share: { enabled: false, url: '', changed_at: null },
     proofs: { campaign_id: 'campaign-proof-review', generation_status: 'ready', selected_variant: '', variants: [
       { direction_id: 'a', direction_name: 'Safe', preview_url: 'https://example.test/proofs/a' },
       { direction_id: 'b', direction_name: 'Wild', preview_url: 'https://example.test/proofs/b' },
@@ -60,6 +61,13 @@ async function mockProofReviewPortal(page) {
     } else {
       websiteRequest = { ...websiteRequest, proof_review_status: 'revision_requested', intake: { ...websiteRequest.intake, proof_revision_request: { notes: payload.notes, requested_at: '2026-08-18T04:00:00Z' } } };
     }
+    await route.fulfill({ json: { ok: true, website_request: websiteRequest } });
+  });
+  await page.route('**/api/customer/website-requests/*/proof-share', async (route) => {
+    const { action } = route.request().postDataJSON();
+    const enabled = action !== 'disable';
+    const suffix = action === 'rotate' ? 'new-signature' : 'first-signature';
+    websiteRequest = { ...websiteRequest, proof_share: { enabled, url: enabled ? `https://example.test/proofs/share/request-proof-review/${suffix}` : '', changed_at: 1787020100 } };
     await route.fulfill({ json: { ok: true, website_request: websiteRequest } });
   });
 }
@@ -121,6 +129,47 @@ test('proof email deep link opens the exact request and identifies a wrong signe
   await page.goto('/portal/?section=projects&request=request-proof-review');
   await expect(page.getByRole('alert')).toContainText('This proof link is not connected to the account signed in as fitzgerald.medine@gmail.com.');
   await expect(page.getByRole('alert')).toContainText('Sign out, then sign in with the email address that received the proof-ready message.');
+});
+
+test('proof owner can create, replace, and revoke a view-only share link', async ({ page }) => {
+  await mockProofReviewPortal(page);
+  await page.goto('/portal/?section=projects&request=request-proof-review');
+  const sharing = page.getByRole('switch', { name: 'Sharing off' });
+  await expect(sharing).toHaveAttribute('aria-checked', 'false');
+  await sharing.click();
+  await expect(page.getByRole('switch', { name: 'Sharing on' })).toHaveAttribute('aria-checked', 'true');
+  await expect(page.getByLabel('Unlisted link')).toHaveValue(/first-signature$/);
+  await page.getByRole('button', { name: 'Create a new link' }).click();
+  await expect(page.getByLabel('Unlisted link')).toHaveValue(/new-signature$/);
+  await page.getByRole('switch', { name: 'Sharing on' }).click();
+  await expect(page.getByRole('switch', { name: 'Sharing off' })).toHaveAttribute('aria-checked', 'false');
+  await expect(page.getByLabel('Unlisted link')).toHaveCount(0);
+});
+
+test('unlisted proof room works without an account and exposes view links only', async ({ page }, testInfo) => {
+  await page.route('**/api/proof-shares/request-proof-review/public-signature', (route) => route.fulfill({ json: { ok: true, proof_share: {
+    project_name: 'Church outreach website', business_name: 'Crown & Coast Church', proof_count: 3,
+    variants: [
+      { direction_id: 'a', direction_name: 'Safe', preview_url: '/web/api/proof-shares/request-proof-review/public-signature/proofs/a' },
+      { direction_id: 'b', direction_name: 'Wild', preview_url: '/web/api/proof-shares/request-proof-review/public-signature/proofs/b' },
+      { direction_id: 'c', direction_name: 'OMG', preview_url: '/web/api/proof-shares/request-proof-review/public-signature/proofs/c' },
+    ],
+  } } }));
+  await page.goto('/proofs/share/request-proof-review/public-signature');
+  await expect(page.getByRole('heading', { name: 'Crown & Coast Church' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Open working concept/ })).toHaveCount(3);
+  await expect(page.getByText('No account, pricing, selection, or revision access')).toBeVisible();
+  await expect(page.getByRole('button')).toHaveCount(0);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow, noarchive');
+  await assertNoHorizontalOverflow(page);
+  await page.screenshot({ path: testInfo.outputPath('unlisted-proof-room.png'), fullPage: true });
+});
+
+test('revoked or unknown proof link reveals no project data', async ({ page }) => {
+  await page.route('**/api/proof-shares/request-proof-review/revoked-signature', (route) => route.fulfill({ status: 404, json: { ok: false, error: 'proof_share_not_found' } }));
+  await page.goto('/proofs/share/request-proof-review/revoked-signature');
+  await expect(page.getByRole('heading', { name: 'This proof link is unavailable.' })).toBeVisible();
+  await expect(page.getByText('Crown & Coast Church')).toHaveCount(0);
 });
 
 test('customer account, portal, support, settings, and purchase UI are mobile-safe', async ({ page }, testInfo) => {

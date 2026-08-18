@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { createCustomerReferral, createCustomerThread, createWebsiteRequest, customerLogout, customerSession, decideWebsiteRequestProof, getCustomerCatalog, getCustomerThread, getCustomerWorkspace, replyCustomerThread, updateCustomerPreferences, updateCustomerProfile, updateWebsiteRequest, uploadWebsiteRequestAsset } from '../api/customer.js';
+import { createCustomerReferral, createCustomerThread, createWebsiteRequest, customerLogout, customerSession, decideWebsiteRequestProof, getCustomerCatalog, getCustomerThread, getCustomerWorkspace, replyCustomerThread, updateCustomerPreferences, updateCustomerProfile, updateWebsiteRequest, updateWebsiteRequestProofShare, uploadWebsiteRequestAsset } from '../api/customer.js';
 import '../portal.css';
 
 const GROUPS = [
@@ -14,15 +14,17 @@ const date = (stamp) => stamp ? new Date(Number(stamp) * 1000).toLocaleDateStrin
 function Panel({ eyebrow, title: heading, children, className = '', id, tabIndex }) { return <article id={id} tabIndex={tabIndex} className={`portal-panel ${className}`}><span>{eyebrow}</span>{heading && <h2>{heading}</h2>}{children}</article>; }
 function Empty({ children }) { return <p className="portal-empty">{children}</p>; }
 
-function WebsiteProofReview({ request, busy, onDecision }) {
+function WebsiteProofReview({ request, busy, onDecision, onShare }) {
   const [revisionOpen, setRevisionOpen] = useState(false);
   const [savingDirection, setSavingDirection] = useState('');
+  const [copied, setCopied] = useState(false);
   const nextActionRef = useRef(null);
   const revisionRef = useRef(null);
   const variants = request.proofs?.variants || [];
   const selectedDirection = request.proofs?.selected_variant || request.selected_proof_direction || '';
   const selectedProof = variants.find((proof) => proof.direction_id === selectedDirection);
   const revisionPending = request.proof_review_status === 'revision_requested';
+  const proofShare = request.proof_share || { enabled: false, url: '' };
 
   useEffect(() => {
     if (!revisionOpen) return;
@@ -51,6 +53,19 @@ function WebsiteProofReview({ request, busy, onDecision }) {
     }
   };
 
+  const copyShareLink = async () => {
+    if (!proofShare.url) return;
+    try {
+      await navigator.clipboard.writeText(proofShare.url);
+    } catch {
+      const input = document.getElementById(`proof-share-url-${request.public_id}`);
+      input?.select();
+      document.execCommand('copy');
+    }
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2200);
+  };
+
   return <section className="portal-proof-review" aria-label={`Review concepts for ${request.project_name}`}>
     <div className={`portal-proof-grid${selectedDirection ? ' has-selection' : ''}`}>
       {variants.map((proof) => {
@@ -77,6 +92,11 @@ function WebsiteProofReview({ request, busy, onDecision }) {
       <label htmlFor={`proof-revision-notes-${request.public_id}`}>Your change notes<textarea id={`proof-revision-notes-${request.public_id}`} name="notes" required placeholder="Example: Keep this layout, but use royal blue and warmer photography." defaultValue={request.intake?.proof_revision_request?.notes || ''} /></label>
       <div className="portal-form-actions"><button type="submit" disabled={busy}>{busy ? 'Sending changes…' : 'Send changes to Fritz'}</button><button className="quiet" type="button" onClick={() => setRevisionOpen(false)}>Cancel</button></div>
     </form>}
+    <section className={`portal-proof-share${proofShare.enabled ? ' is-enabled' : ''}`} aria-labelledby={`proof-share-title-${request.public_id}`}>
+      <div><span>Optional sharing</span><h3 id={`proof-share-title-${request.public_id}`}>Share these proofs without requiring sign-in</h3><p>{proofShare.enabled ? 'Anyone with this unlisted link can view the working concepts. They cannot choose a design, request changes, purchase, or see your account details.' : 'Create a revocable, unlisted link when you want a colleague or decision-maker to compare the concepts.'}</p></div>
+      <button className="portal-proof-share__switch" type="button" role="switch" aria-checked={proofShare.enabled} disabled={busy} onClick={() => onShare(request.public_id, proofShare.enabled ? 'disable' : 'enable')}><i aria-hidden="true" /><span>{proofShare.enabled ? 'Sharing on' : 'Sharing off'}</span></button>
+      {proofShare.enabled && <div className="portal-proof-share__link"><label htmlFor={`proof-share-url-${request.public_id}`}>Unlisted link</label><input id={`proof-share-url-${request.public_id}`} readOnly value={proofShare.url} onFocus={(event) => event.currentTarget.select()} /><div><button type="button" onClick={copyShareLink}>{copied ? 'Copied ✓' : 'Copy link'}</button><button className="quiet" type="button" disabled={busy} onClick={() => onShare(request.public_id, 'rotate')}>Create a new link</button></div><small>Creating a new link immediately revokes this one.</small></div>}
+    </section>
   </section>;
 }
 
@@ -231,6 +251,11 @@ export default function CustomerPortalDashboard() {
     const result = await act(async () => { const decision = await decideWebsiteRequestProof(requestId, payload); await refresh(); return decision; }, payload.action === 'revision' ? 'Changes requested. Fritz has your notes.' : 'Selection saved. Your chosen direction is highlighted below.');
     return result.ok;
   };
+  const shareProof = async (requestId, action) => {
+    const message = action === 'disable' ? 'Unlisted sharing is off. The previous link no longer works.' : action === 'rotate' ? 'A new unlisted link is ready. The previous link no longer works.' : 'Unlisted sharing is on. Copy the link below when you are ready.';
+    const result = await act(async () => { await updateWebsiteRequestProofShare(requestId, action); await refresh(); }, message);
+    return result.ok;
+  };
 
   return <div className={`portal-app ${menu ? 'menu-open' : ''}`}>
     <button className="portal-menu-toggle" type="button" aria-expanded={menu} aria-controls="portal-drawer" onClick={() => setMenu(!menu)}><span aria-hidden="true">☰</span><span>Menu</span></button>
@@ -285,7 +310,7 @@ export default function CustomerPortalDashboard() {
           <label className="portal-check"><input name="recommendation_requested" type="checkbox" defaultChecked={editingRequest.recommendation_requested !== 0} />Recommend the smallest useful package and add-ons for me.</label>
           <div className="portal-form-actions"><button name="action" value="save" disabled={busy}>{busy ? 'Saving…' : 'Save draft'}</button><button className="secondary" name="action" value="submit" disabled={busy}>Submit for review</button><button className="quiet" type="button" onClick={() => setEditingRequest(null)}>Close</button></div>
         </form>{editingRequest.public_id && <form className="portal-asset-upload" onSubmit={uploadReference}><h3>Add a flyer, logo, photo, or visual reference</h3><p>PNG, JPEG, WebP, or PDF up to 10 MB. Files stay private and attached to this request.</p><input name="asset" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" required /><label className="portal-check"><input name="ownership_confirmed" type="checkbox" value="1" required />I own this file or have permission to share it for this project.</label><label className="portal-check"><input name="ai_use_consent" type="checkbox" value="1" />FAMtastic may use this file as reference for approved AI-assisted concept generation.</label><button disabled={busy}>{busy ? 'Uploading…' : 'Upload reference securely'}</button>{editingRequest.assets?.length > 0 && <ul>{editingRequest.assets.map((asset) => <li key={asset.public_id}>{asset.name} · {Math.ceil(asset.size_bytes / 1024)} KB</li>)}</ul>}</form>}</Panel>}
-        <section className="portal-grid two portal-request-list">{workspace.website_requests?.map((request) => <Panel key={request.public_id} id={`website-request-${request.public_id}`} tabIndex={request.public_id === targetRequest ? -1 : undefined} className={request.public_id === targetRequest ? 'portal-request-target' : ''} eyebrow={request.status === 'converted' ? 'Purchased project request' : 'Website request'} title={request.project_name}><dl><div><dt>Status</dt><dd>{title(request.status)}</dd></div><div><dt>Proofs</dt><dd>{title(request.proof_review_status)}</dd></div><div><dt>Updated</dt><dd>{date(request.changed)}</dd></div></dl>{request.intake?.recommendation && <p><strong>Recommended path: {request.intake.recommendation.label}</strong><br /><small>{request.intake.recommendation.reasons?.join(' ')}</small></p>}{[3, 6].includes(request.proofs?.variants?.length) && <WebsiteProofReview request={request} busy={busy} onDecision={decideProof} />}{!request.proofs && request.status === 'submitted' && <p>{request.proof_review_status === 'owner_review' ? 'Your concepts are complete and in FAMtastic quality review. We’ll notify you when the complete set is approved.' : 'Your brief is in the studio queue. We’ll notify you when your working concepts are ready.'}</p>}{!['converted', 'cancelled'].includes(request.status) && <><button onClick={() => setEditingRequest(request)}>Continue request</button>{request.direct_checkout_available && <button className="secondary" onClick={() => navigate(`/buy?request=${encodeURIComponent(request.public_id)}`)}>Purchase {request.intake?.recommendation?.label}</button>}</>}{request.status === 'converted' && <p>This request is connected to its paid project below.</p>}</Panel>)}</section>
+        <section className="portal-grid two portal-request-list">{workspace.website_requests?.map((request) => <Panel key={request.public_id} id={`website-request-${request.public_id}`} tabIndex={request.public_id === targetRequest ? -1 : undefined} className={request.public_id === targetRequest ? 'portal-request-target' : ''} eyebrow={request.status === 'converted' ? 'Purchased project request' : 'Website request'} title={request.project_name}><dl><div><dt>Status</dt><dd>{title(request.status)}</dd></div><div><dt>Proofs</dt><dd>{title(request.proof_review_status)}</dd></div><div><dt>Updated</dt><dd>{date(request.changed)}</dd></div></dl>{request.intake?.recommendation && <p><strong>Recommended path: {request.intake.recommendation.label}</strong><br /><small>{request.intake.recommendation.reasons?.join(' ')}</small></p>}{[3, 6].includes(request.proofs?.variants?.length) && <WebsiteProofReview request={request} busy={busy} onDecision={decideProof} onShare={shareProof} />}{!request.proofs && request.status === 'submitted' && <p>{request.proof_review_status === 'owner_review' ? 'Your concepts are complete and in FAMtastic quality review. We’ll notify you when the complete set is approved.' : 'Your brief is in the studio queue. We’ll notify you when your working concepts are ready.'}</p>}{!['converted', 'cancelled'].includes(request.status) && <><button onClick={() => setEditingRequest(request)}>Continue request</button>{request.direct_checkout_available && <button className="secondary" onClick={() => navigate(`/buy?request=${encodeURIComponent(request.public_id)}`)}>Purchase {request.intake?.recommendation?.label}</button>}</>}{request.status === 'converted' && <p>This request is connected to its paid project below.</p>}</Panel>)}</section>
         <section className="portal-grid">{workspace.projects.length ? workspace.projects.map((p) => <Panel key={p.uuid} eyebrow="Project command center" title={title(p.delivery_status)}><div className="portal-stage-line"><span className="complete">Paid</span><span className={p.proofs ? 'complete' : 'active'}>{p.proofs?.variants?.length || 3} concepts</span><span className={p.approval_status === 'approved' ? 'complete' : ''}>Approval</span><span className={p.live_url ? 'complete' : ''}>Launch</span></div><dl><div><dt>Approval</dt><dd>{title(p.approval_status)}</dd></div><div><dt>Revisions</dt><dd>{p.revision_count || 0} of {p.revision_limit || 1}</dd></div></dl>{[3, 6].includes(p.proofs?.variants?.length) && <div className="portal-proof-grid">{p.proofs.variants.map((proof) => <a key={proof.direction_id} href={proof.preview_url} target="_blank" rel="noreferrer" className={p.proofs.selected_variant === proof.direction_id ? 'selected' : ''}><b>{proof.direction_id.toUpperCase()}</b><strong>{proof.direction_name}</strong><span>Open concept ↗</span></a>)}</div>}{p.proofs?.generation_status === 'waiting_callback' && <p>Your concepts are being created now. We’ll email you when review opens.</p>}{p.live_url && <a href={p.live_url}>Visit live site ↗</a>}</Panel>) : !workspace.website_requests?.length && <Panel eyebrow="Projects" title="No website requests yet"><p>Start with a short, reusable brief. Your detailed onboarding continues here after purchase.</p></Panel>}</section>
       </>}
       {section === 'messages' && <section className="portal-grid two"><Panel eyebrow="Conversations" title="Your history">{workspace.threads.length ? <ul className="portal-thread-list">{workspace.threads.map((thread) => <li key={thread.public_id}><button type="button" onClick={() => viewThread(thread.public_id)}><strong>{thread.subject}</strong><small>{title(thread.status)} · {date(thread.changed)}</small></button></li>)}</ul> : <Empty>No conversations yet.</Empty>}</Panel>{activeThread ? <Panel eyebrow={title(activeThread.thread.kind)} title={activeThread.thread.subject} className="portal-conversation"><button className="portal-back" onClick={() => setActiveThread(null)}>← All conversations</button><ol>{activeThread.messages.map((message, i) => <li key={i} className={`is-${message.author_type}`}><span>{message.author_type === 'customer' ? 'You' : 'FAMtastic team'}</span><p>{message.body}</p><small>{date(message.created)}</small></li>)}</ol><form onSubmit={replyThread}><label htmlFor="thread-reply">Reply</label><textarea id="thread-reply" name="body" required /><button disabled={busy}>{busy ? 'Sending…' : 'Send reply'}</button></form></Panel> : <Panel eyebrow="New conversation" title="Ask FAMtastic"><p>Choose the affected area so your request reaches us with the right context.</p><form onSubmit={openThread}><label>Area<select name="kind"><option value="support">Website or service issue</option><option value="project">Project or approval</option><option value="billing">Billing or renewal</option></select></label><label>Subject<input name="subject" required /></label><label>What happened?<textarea name="body" required /></label><button disabled={busy}>{busy ? 'Sending…' : 'Send request'}</button></form></Panel>}</section>}

@@ -45,4 +45,6 @@ export function applySeo(seo) {
   upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: seo.title });
   upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: seo.twitterDescription });
   upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: seo.image });
+  upsertMeta('meta[name="robots"]', { name: 'robots', content: seo.robots || 'index, follow' });
+  upsertMeta('meta[name="referrer"]', { name: 'referrer', content: seo.referrer || 'strict-origin-when-cross-origin' });
 }

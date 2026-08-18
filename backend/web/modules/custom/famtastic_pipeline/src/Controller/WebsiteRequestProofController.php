@@ -59,6 +59,17 @@ final class WebsiteRequestProofController extends ControllerBase {
     return $row ? $this->artifactResponse($row, $direction) : new Response('Proof not found.', 404);
   }
 
+  public function publicShare(Request $request, string $website_request, string $signature): JsonResponse {
+    $share = $this->portal->publicWebsiteProofShare($website_request, $signature);
+    $response = new JsonResponse($share ? ['ok' => TRUE, 'proof_share' => $share] : ['ok' => FALSE, 'error' => 'proof_share_not_found'], $share ? 200 : 404);
+    return $this->securePublicResponse($response);
+  }
+
+  public function publicPreview(Request $request, string $website_request, string $signature, string $direction): Response {
+    $row = $this->portal->sharedWebsiteRequest($website_request, $signature);
+    return $row ? $this->artifactResponse($row, $direction) : $this->securePublicResponse(new Response('Proof not found.', 404));
+  }
+
   public function uploadAsset(Request $request, string $website_request): JsonResponse {
     $customer = $this->account->isAuthenticated() ? $this->portal->customerForUid((int) $this->account->id()) : NULL;
     $row = $customer ? $this->portal->ownedWebsiteRequest((int) $customer['id'], $website_request) : NULL;
@@ -115,8 +126,20 @@ final class WebsiteRequestProofController extends ControllerBase {
     $response->setPrivate();
     $response->setMaxAge(0);
     $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    $response->headers->set('Referrer-Policy', 'no-referrer');
+    $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'none'; form-action 'none'");
     $response->headers->addCacheControlDirective('no-store', TRUE);
+    return $response;
+  }
+
+  private function securePublicResponse(Response $response): Response {
+    $response->setPrivate();
+    $response->setMaxAge(0);
+    $response->headers->set('Cache-Control', 'no-store, private');
+    $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    $response->headers->set('Referrer-Policy', 'no-referrer');
+    $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     return $response;
   }
 

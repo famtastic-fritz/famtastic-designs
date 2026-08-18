@@ -9,6 +9,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\user\UserInterface;
 use Drupal\famtastic_pipeline\Entity\Order;
 
@@ -379,6 +380,7 @@ final class CustomerPortalService {
       ->condition('expires_at', $this->time->getRequestTime(), '>')->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $row['private_offer'] = $offer ?: NULL;
     $row['proofs'] = $this->serializeRequestProof($row);
+    $row['proof_share'] = $this->proofSharePayload($row);
     $row['assets'] = $this->requestAssets((int) $row['id']);
     $row['recommended_sku'] = (string) ($recommendation['recommended_sku'] ?? '');
     if ($offer) $row['recommended_sku'] = (string) $offer['sku'];
@@ -386,8 +388,104 @@ final class CustomerPortalService {
       && $row['proof_review_status'] === 'selected'
       && empty($recommendation['review_required'])
       && in_array($row['recommended_sku'], ['FAM-FOOT-199', 'FAM-BUSINESS-499'], TRUE);
-    foreach (['id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id', 'intake_data', 'proof_campaign_id', 'proof_approved_by_uid'] as $key) unset($row[$key]);
+    foreach (['id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id', 'intake_data', 'proof_campaign_id', 'proof_approved_by_uid', 'proof_share_enabled', 'proof_share_version', 'proof_share_changed_at', 'proof_share_changed_by_uid'] as $key) unset($row[$key]);
     return $row;
+  }
+
+  /** Changes the unlisted proof link for one account-owned request. */
+  public function updateWebsiteProofShare(int $customerId, string $publicId, string $action, int $uid): array {
+    $row = $this->ownedWebsiteRequest($customerId, $publicId);
+    if (!$row) throw new \RuntimeException('Website proofs are not available.');
+    $this->changeWebsiteProofShare($row, $action, $uid);
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
+    return $this->serializeWebsiteRequest($updated ?: $row);
+  }
+
+  /** Changes an unlisted proof link from the staff proof-review screen. */
+  public function manageWebsiteProofShare(int $requestId, string $action, int $uid): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    if (!$row) throw new \RuntimeException('Website proofs are not available.');
+    $this->changeWebsiteProofShare($row, $action, $uid);
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    return $this->proofSharePayload($updated ?: $row);
+  }
+
+  /** Returns staff-safe share status for one request. */
+  public function websiteProofShareStatus(int $requestId): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    return $row ? $this->proofSharePayload($row) : ['enabled' => FALSE, 'url' => ''];
+  }
+
+  /** Resolves a valid, enabled share token to its request row. */
+  public function sharedWebsiteRequest(string $publicId, string $signature): ?array {
+    if (!preg_match('/^[0-9a-f]{64}$/', $signature)) return NULL;
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
+    if (!$row || empty($row['proof_share_enabled']) || !$this->requestProofsAreCustomerVisible($row)) return NULL;
+    return hash_equals($this->proofShareSignature($row), $signature) ? $row : NULL;
+  }
+
+  /** Returns the deliberately minimal, anonymous proof-share payload. */
+  public function publicWebsiteProofShare(string $publicId, string $signature): ?array {
+    $row = $this->sharedWebsiteRequest($publicId, $signature);
+    if (!$row) return NULL;
+    $proofs = $this->serializeRequestProof($row);
+    if (!$proofs) return NULL;
+    $base = '/web/api/proof-shares/' . rawurlencode($publicId) . '/' . rawurlencode($signature) . '/proofs/';
+    $variants = array_map(static fn(array $variant): array => [
+      'direction_id' => (string) $variant['direction_id'],
+      'direction_name' => (string) $variant['direction_name'],
+      'preview_url' => $base . rawurlencode((string) $variant['direction_id']),
+    ], $proofs['variants']);
+    return [
+      'project_name' => (string) $row['project_name'],
+      'business_name' => (string) ($row['business_name'] ?: $row['project_name']),
+      'proof_count' => count($variants),
+      'variants' => $variants,
+    ];
+  }
+
+  private function changeWebsiteProofShare(array $row, string $action, int $uid): void {
+    if (!$this->requestProofsAreCustomerVisible($row) || !$this->serializeRequestProof($row)) {
+      throw new \RuntimeException('Only a complete owner-approved proof set can be shared.');
+    }
+    if (!in_array($action, ['enable', 'disable', 'rotate'], TRUE)) {
+      throw new \InvalidArgumentException('Choose a valid proof-sharing action.');
+    }
+    $enabled = !empty($row['proof_share_enabled']);
+    if ($action === 'rotate' && !$enabled) throw new \InvalidArgumentException('Enable sharing before creating a new link.');
+    $version = max(1, (int) ($row['proof_share_version'] ?? 1));
+    if (($action === 'disable' && $enabled) || $action === 'rotate') $version++;
+    $newEnabled = $action !== 'disable';
+    $now = $this->time->getRequestTime();
+    $this->database->update('famtastic_project_request')->fields([
+      'proof_share_enabled' => $newEnabled ? 1 : 0,
+      'proof_share_version' => $version,
+      'proof_share_changed_at' => $now,
+      'proof_share_changed_by_uid' => $uid,
+      'changed' => $now,
+    ])->condition('id', $row['id'])->execute();
+    $event = $action === 'rotate' ? 'website_request.proof_share_rotated' : 'website_request.proof_share_' . ($newEnabled ? 'enabled' : 'disabled');
+    $summary = $action === 'rotate' ? 'A new unlisted website-proof link was created.' : 'Unlisted website-proof sharing was turned ' . ($newEnabled ? 'on.' : 'off.');
+    $this->activity((int) $row['organization_id'], $event, $summary);
+  }
+
+  private function requestProofsAreCustomerVisible(array $row): bool {
+    return in_array((string) ($row['proof_review_status'] ?? ''), ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE);
+  }
+
+  private function proofSharePayload(array $row): array {
+    $enabled = !empty($row['proof_share_enabled']) && $this->requestProofsAreCustomerVisible($row) && (bool) $this->serializeRequestProof($row);
+    $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+    return [
+      'enabled' => $enabled,
+      'url' => $enabled ? $base . '/proofs/share/' . rawurlencode((string) $row['public_id']) . '/' . $this->proofShareSignature($row) : '',
+      'changed_at' => !empty($row['proof_share_changed_at']) ? (int) $row['proof_share_changed_at'] : NULL,
+    ];
+  }
+
+  private function proofShareSignature(array $row): string {
+    $version = max(1, (int) ($row['proof_share_version'] ?? 1));
+    return hash_hmac('sha256', 'website-proof-share-v1|' . (string) $row['public_id'] . '|' . $version, Settings::getHashSalt());
   }
 
   /** Returns customer-safe proof metadata only after explicit owner approval. */
