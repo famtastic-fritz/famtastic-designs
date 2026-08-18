@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-08-18 — Account-safe proof email deep links
+
+- Changed proof-ready notifications from a generic portal link to an exact
+  request-scoped Projects link and told customers to use the same email address
+  that received the notification.
+- Made an unselected ready proof set the portal's immediate next action, so the
+  older generic portal link still opens the concepts for the correct account.
+- Added an explicit signed-in-account mismatch warning, visible account email,
+  exact request highlighting, and desktop/mobile acceptance coverage instead
+  of allowing a valid proof link to appear empty in the wrong workspace.
+
 ## 2026-08-17 — Owner-gated website proofs, reliable alerts, and private grants
 
 - Versioned the complete `website_proof.generate.v1` standard and upgraded the

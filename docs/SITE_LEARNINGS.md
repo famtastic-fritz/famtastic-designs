@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-18 — Transactional links must preserve customer intent and identity
+
+- A successfully delivered email and a valid authenticated portal can still
+  create a broken journey when the browser is signed into a different customer
+  account. The portal must show the active account email and explain an
+  ownership mismatch rather than displaying an apparently empty workspace.
+- Proof-ready messages must carry the account-owned request UUID and open the
+  Projects surface directly. A generic `/portal/` link discards the customer's
+  reason for arriving and forces them to rediscover the action promised in the
+  email.
+- Backward compatibility matters for messages already in an inbox. When the
+  correct account has one unselected approved proof set, a plain portal visit
+  should surface that set automatically without weakening organization-scoped
+  authorization.
+
 ## 2026-08-17 — A queued alert is not a delivered alert
 
 - Portal submission, outbox persistence, SMTP delivery, and owner receipt are

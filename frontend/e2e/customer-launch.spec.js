@@ -85,7 +85,8 @@ test('portal home makes the website-and-proofs revenue journey unmistakable', as
 test('proof selection is unmistakable and Make changes opens a working revision flow', async ({ page }, testInfo) => {
   await mockProofReviewPortal(page);
   await page.goto('/portal');
-  await page.getByRole('button', { name: 'Continue my website', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Projects', exact: true })).toBeVisible();
+  await expect(page.getByRole('status')).toContainText('Your 3 website concepts are ready below.');
   await page.getByRole('button', { name: 'Choose Wild', exact: true }).click();
 
   const selected = page.locator('[data-proof-direction="b"]');
@@ -105,6 +106,21 @@ test('proof selection is unmistakable and Make changes opens a working revision 
   await expect(page.getByText('Changes requested ✓', { exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'We received your changes for Wild' })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('proof-selection-and-revision.png'), fullPage: true });
+});
+
+test('proof email deep link opens the exact request and identifies a wrong signed-in account', async ({ page }) => {
+  await mockProofReviewPortal(page);
+  await page.goto('/portal/?section=projects&request=request-proof-review');
+  await expect(page.getByRole('heading', { name: 'Projects', exact: true })).toBeVisible();
+  await expect(page.locator('#website-request-request-proof-review')).toHaveClass(/portal-request-target/);
+  await expect(page.getByRole('status')).toContainText('Your 3 website concepts are ready below. Compare each direction and choose when you are ready.');
+  await expect(page.getByRole('button', { name: 'Choose Safe', exact: true })).toBeVisible();
+
+  await page.unrouteAll({ behavior: 'wait' });
+  await mockNewCustomerPortal(page);
+  await page.goto('/portal/?section=projects&request=request-proof-review');
+  await expect(page.getByRole('alert')).toContainText('This proof link is not connected to the account signed in as fitzgerald.medine@gmail.com.');
+  await expect(page.getByRole('alert')).toContainText('Sign out, then sign in with the email address that received the proof-ready message.');
 });
 
 test('customer account, portal, support, settings, and purchase UI are mobile-safe', async ({ page }, testInfo) => {
