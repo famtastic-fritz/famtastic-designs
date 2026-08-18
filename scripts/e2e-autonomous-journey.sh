@@ -299,7 +299,7 @@ assert_json "$website_submitted" '.website_request.status == "submitted" and .we
   assert(\$request['proof_review_status'] === 'owner_review');
 "
 test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "404"
-"$DRUSH" eval "\$request = \Drupal::database()->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); \Drupal::service('famtastic_pipeline.customer_portal')->approveWebsiteRequestProof((int) \$request['id'], 1);"
+"$DRUSH" eval "\$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); \Drupal::service('famtastic_pipeline.customer_portal')->approveWebsiteRequestProof((int) \$request['id'], 1); \$pending = \$db->select('famtastic_notification_outbox', 'n')->condition('notification_key', 'website-request:' . \$request['id'] . ':owner-proof-review:%', 'LIKE')->condition('status', ['queued', 'retry'], 'IN')->countQuery()->execute()->fetchField(); assert((int) \$pending === 0);"
 test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "200"
 proof_decision="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"a"}' "$BASE/api/customer/website-requests/$website_request_id/proof-decision")"
 assert_json "$proof_decision" '.website_request.proof_review_status == "selected" and .website_request.direct_checkout_available == true and (.website_request.proofs.variants | length) == 3'

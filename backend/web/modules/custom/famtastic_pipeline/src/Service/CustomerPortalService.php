@@ -494,6 +494,9 @@ final class CustomerPortalService {
     $this->database->update('famtastic_project_request')->fields([
       'proof_review_status' => 'customer_ready', 'proof_approved_by_uid' => $uid, 'proof_approved_at' => $now, 'changed' => $now,
     ])->condition('id', $requestId)->condition('proof_review_status', 'owner_review')->execute();
+    $this->database->update('famtastic_notification_outbox')->fields(['status' => 'superseded', 'changed' => $now])
+      ->condition('notification_key', 'website-request:' . $requestId . ':owner-proof-review:%', 'LIKE')
+      ->condition('status', ['queued', 'retry'], 'IN')->execute();
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', (int) $row['customer_id'])->execute()->fetchAssoc();
     $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
     $count = count($directionValues);
@@ -534,6 +537,11 @@ final class CustomerPortalService {
     ])->condition('id', $requestId)->execute();
     $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $count = count($directions);
+    if ($count === 6) {
+      $this->database->update('famtastic_notification_outbox')->fields(['status' => 'superseded', 'changed' => $now])
+        ->condition('notification_key', 'website-request:' . $requestId . ':owner-proof-review:%', 'LIKE')
+        ->condition('status', ['queued', 'retry'], 'IN')->execute();
+    }
     $description = $count === 6 ? 'Safe, Wild, OMG, Royal Current, Crownverse, and Shay Live' : 'Safe, Wild, and OMG';
     $this->queueNotification('website-request:' . $requestId . ':owner-proof-review:' . $campaignEntityId . ':' . $count, 'operational', $admin,
       $count . ' website proofs need your approval — ' . (string) $row['project_name'],
