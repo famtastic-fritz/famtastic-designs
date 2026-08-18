@@ -1,5 +1,23 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-17 — A queued alert is not a delivered alert
+
+- Portal submission, outbox persistence, SMTP delivery, and owner receipt are
+  separate states. Monitor queue age and worker heartbeat, then record the SMTP
+  message id before claiming an alert was delivered.
+- Never couple the core lifecycle runner to an unrelated mailbox command with
+  `&&`; a mail-ingest failure can otherwise suppress receipts, staff alerts,
+  proof jobs, and escalation for every customer.
+- Proof generation and proof delivery need separate gates. Exactly three
+  artifacts may be ready while remaining invisible to the customer until the
+  owner reviews all three and explicitly authorizes account disclosure.
+- A free customer purchase is still a Commerce order. Use a hashed, scoped,
+  auditable grant redemption and zero-dollar fulfillment rather than marking an
+  unpaid order as paid or bypassing entitlement creation.
+- A creative intake is incomplete when it only asks for generic style notes.
+  Structured intensity, preferred/avoided colors, desired feeling, references,
+  asset consent, and model-enrichment boundaries belong in the canonical brief.
+
 ## 2026-08-11 — Headless navigation must have one ordering authority
 
 - Fetching a CMS menu while hardcoding the familiar links in React does not

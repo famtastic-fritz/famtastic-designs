@@ -35,7 +35,8 @@ final class SiteStudioProofClient {
     }
     $callbackBase = rtrim((string) (getenv('FAMTASTIC_PUBLIC_BASE_URL') ?: $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')), '/');
     $payload = [
-      'schema_version' => 1,
+      'schema_version' => 2,
+      'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1'),
       'idempotency_key' => 'proof:' . $campaign->get('campaign_id')->value,
       'campaign_id' => $campaign->get('campaign_id')->value,
       'prospect' => [
@@ -50,6 +51,11 @@ final class SiteStudioProofClient {
       ],
       'directions' => ProofCampaignService::DIRECTIONS,
       'required_variant_count' => 3,
+      'direction_contract' => [
+        'a' => ['name' => 'Safe', 'intent' => 'polished, familiar, credible, low-risk'],
+        'b' => ['name' => 'Wild', 'intent' => 'expressive, energetic, clearly differentiated'],
+        'c' => ['name' => 'OMG', 'intent' => 'campaign-level concept with the strongest visual idea'],
+      ],
       'callback_url' => $callbackBase . '/api/pipeline/site-studio/callback',
       'project' => [
         'project_id' => (int) ($context['project_id'] ?? 0),
@@ -57,6 +63,7 @@ final class SiteStudioProofClient {
         'website_request_public_id' => (string) ($context['website_request_public_id'] ?? ''),
       ],
       'website_discovery_v2' => (array) ($context['website_discovery_v2'] ?? []),
+      'website_discovery_v3' => (array) ($context['website_discovery_v3'] ?? $context['website_discovery_v2'] ?? []),
     ];
     $body = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     $signature = 'sha256=' . hash_hmac('sha256', $body, (string) $secret);

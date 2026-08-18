@@ -561,6 +561,38 @@ function famtastic_pipeline_update_8028(&$sandbox) {
   return t('Added account-scoped private Commerce offers.');
 }
 
+/** Adds owner-gated proofs, reference assets, and scoped grant codes. */
+function famtastic_pipeline_update_8029(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $requestDefinition = _famtastic_pipeline_customer_portal_schema()['famtastic_project_request'];
+  foreach ([
+    'proof_campaign_id', 'proof_review_status', 'proof_approved_by_uid',
+    'proof_approved_at', 'proof_notified_at', 'selected_proof_direction',
+    'selected_proof_at',
+  ] as $field) {
+    if (!$schema->fieldExists('famtastic_project_request', $field)) {
+      $schema->addField('famtastic_project_request', $field, $requestDefinition['fields'][$field]);
+    }
+  }
+  foreach (['famtastic_request_asset', 'famtastic_grant_code', 'famtastic_grant_redemption'] as $table) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, _famtastic_pipeline_customer_portal_schema()[$table]);
+    }
+  }
+  $settings = \Drupal::configFactory()->getEditable('famtastic_pipeline.settings');
+  $currentNotificationAddress = mb_strtolower(trim((string) $settings->get('notification_to_email')));
+  if ($currentNotificationAddress === '' || $currentNotificationAddress === 'fritz.medine@gmail.com') {
+    $settings->set('notification_to_email', 'fitzgerald.medine@gmail.com')->save();
+    \Drupal::database()->update('famtastic_notification_outbox')
+      ->fields(['recipient' => 'fitzgerald.medine@gmail.com', 'changed' => \Drupal::time()->getRequestTime()])
+      ->condition('recipient', 'fritz.medine@gmail.com')
+      ->condition('category', 'operational')
+      ->condition('status', ['queued', 'retry'], 'IN')
+      ->execute();
+  }
+  return t('Added owner-gated request proofs, private reference assets, scoped grant codes, and corrected the operational alert inbox.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
@@ -1271,6 +1303,13 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'prospect_id' => $entity, 'commerce_order_id' => $entity, 'intake_id' => $entity, 'project_id' => $entity,
+      'proof_campaign_id' => $entity,
+      'proof_review_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_started'],
+      'proof_approved_by_uid' => $entity,
+      'proof_approved_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'proof_notified_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'selected_proof_direction' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE, 'default' => ''],
+      'selected_proof_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'draft'],
       'project_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
       'business_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
@@ -1288,6 +1327,7 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'organization_status' => ['organization_id', 'status'],
       'customer' => ['customer_id', 'changed'],
       'prospect' => ['prospect_id'], 'project' => ['project_id'],
+      'proof_review' => ['proof_review_status', 'changed'],
     ],
   ];
   $tables['famtastic_private_offer'] = [
@@ -1310,6 +1350,68 @@ function _famtastic_pipeline_customer_portal_schema(): array {
     ],
     'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id']],
     'indexes' => ['request_status' => ['website_request_id', 'status'], 'customer' => ['customer_id', 'status']],
+  ];
+  $tables['famtastic_request_asset'] = [
+    'description' => 'Private, request-owned visual references and documents with consent and integrity metadata.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'website_request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'file_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'kind' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'reference'],
+      'original_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'mime_type' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'size_bytes' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'ownership_confirmed' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+      'ai_use_consent' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'active'],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id'], 'request_hash' => ['website_request_id', 'sha256']],
+    'indexes' => ['request_status' => ['website_request_id', 'status'], 'customer' => ['customer_id', 'created']],
+  ];
+  $tables['famtastic_grant_code'] = [
+    'description' => 'Hashed, account- and request-scoped service grants and promotions.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'code_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'code_prefix' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'label' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'grant_class' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'customer_id' => $entity, 'organization_id' => $entity, 'website_request_id' => $entity,
+      'sku' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'discount_type' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE],
+      'discount_value' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'max_redemptions' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 1],
+      'redemptions' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'expires_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'covers_renewal' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'active'],
+      'created_by_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id'], 'code_hash' => ['code_hash']],
+    'indexes' => ['scope' => ['customer_id', 'organization_id', 'website_request_id'], 'status_expiry' => ['status', 'expires_at']],
+  ];
+  $tables['famtastic_grant_redemption'] = [
+    'description' => 'Immutable order-level redemption audit for scoped grant codes.',
+    'fields' => [
+      'id' => $id,
+      'grant_code_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'commerce_order_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'website_request_id' => $entity,
+      'sku' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'amount_minor' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'redeemed_at' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['commerce_order' => ['commerce_order_id'], 'grant_order' => ['grant_code_id', 'commerce_order_id']],
+    'indexes' => ['grant' => ['grant_code_id', 'redeemed_at'], 'customer' => ['customer_id', 'redeemed_at']],
   ];
   $tables['famtastic_portal_thread'] = [
     'description' => 'Project and support conversation threads.',

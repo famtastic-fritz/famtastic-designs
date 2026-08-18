@@ -6,6 +6,7 @@ namespace Drupal\famtastic_pipeline\Service;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\famtastic_pipeline\Entity\ProofCampaign;
@@ -28,9 +29,9 @@ class ProofCampaignService {
    * Direction id => human-facing direction name.
    */
   public const DIRECTIONS = [
-    'a' => 'Bold and Modern',
-    'b' => 'Trusted and Professional',
-    'c' => 'Local and Approachable',
+    'a' => 'Safe',
+    'b' => 'Wild',
+    'c' => 'OMG',
   ];
 
   /**
@@ -54,6 +55,8 @@ class ProofCampaignService {
     protected SiteStudioProofClient $studioClient,
     protected OperationalLedger $ledger,
     protected BuildTelemetryService $buildTelemetry,
+    protected Connection $database,
+    protected CustomerPortalService $portal,
   ) {}
 
   /**
@@ -69,6 +72,10 @@ class ProofCampaignService {
     $campaignId = $this->buildCampaignId($businessName);
     $now = $this->time->getRequestTime();
 
+    $allowPilot = getenv('FAMTASTIC_ALLOW_NO_IMAGE_PILOT_PROOFS') === '1'
+      || getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') === '1';
+    $remote = $this->studioClient->isRemote();
+    $localJobId = !$remote && !$allowPilot ? 'local-' . bin2hex(random_bytes(16)) : '';
     $storage = $this->entityTypeManager->getStorage('proof_campaign');
     /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign $campaign */
     $campaign = $storage->create([
@@ -76,12 +83,13 @@ class ProofCampaignService {
       'prospect_id' => $prospect->id(),
       'business_name' => $businessName,
       'status' => 'active',
-      'generation_status' => $this->studioClient->isRemote() ? 'dispatching' : 'ready',
+      'generation_status' => $remote ? 'dispatching' : ($allowPilot ? 'ready' : 'waiting_callback'),
+      'studio_job_id' => $localJobId,
       'expires_at' => $now + self::TTL,
     ]);
     $campaign->save();
 
-    if ($this->studioClient->isRemote()) {
+    if ($remote) {
       $jobId = $this->studioClient->dispatch($prospect, $campaign, $context);
       $campaign
         ->set('generation_status', 'waiting_callback')
@@ -92,6 +100,16 @@ class ProofCampaignService {
         'proof.dispatched:' . $campaignId,
         'proof.dispatched',
         ['campaign_id' => $campaignId, 'studio_job_id' => $jobId],
+        (int) $prospect->id(),
+      );
+      return ['campaign' => $campaign, 'variants' => []];
+    }
+
+    if (!$allowPilot) {
+      $this->ledger->recordEvent(
+        'proof.local_waiting:' . $campaignId,
+        'proof.waiting_for_creative_provider',
+        ['campaign_id' => $campaignId, 'studio_job_id' => $localJobId, 'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1')],
         (int) $prospect->id(),
       );
       return ['campaign' => $campaign, 'variants' => []];
@@ -313,8 +331,9 @@ class ProofCampaignService {
         'campaign_id' => $campaign->id(),
         'direction_id' => $direction,
       ]);
+      $directionName = mb_substr(trim(strip_tags((string) ($variant['design_dna']['direction_name'] ?? self::DIRECTIONS[$direction]))), 0, 255);
       $entity
-        ->set('direction_name', self::DIRECTIONS[$direction])
+        ->set('direction_name', $directionName ?: self::DIRECTIONS[$direction])
         ->set('artifact_path', $path)
         ->set('thumbnail_path', $thumbnailPath)
         ->set('design_dna', json_encode($variant['design_dna'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))
@@ -335,12 +354,19 @@ class ProofCampaignService {
       ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => 3, 'refresh' => $isRefresh],
       $prospectId,
     );
-    $this->ledger->enqueue(
-      'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
-      'outreach.prepare',
-      ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
-      $prospectId,
-    );
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('prospect_id', $prospectId)->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    if ($request) {
+      $this->portal->attachWebsiteRequestProof((int) $request['id'], $campaign, $created);
+    }
+    else {
+      $this->ledger->enqueue(
+        'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
+        'outreach.prepare',
+        ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
+        $prospectId,
+      );
+    }
     $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
     if ($prospect) {
       $dna = $validated['a']['design_dna'] ?? [];

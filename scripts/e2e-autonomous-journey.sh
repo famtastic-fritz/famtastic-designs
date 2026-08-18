@@ -290,7 +290,19 @@ website_submitted="$(curl -s -b "$cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Tok
   \"recommendation_requested\":false,
   \"action\":\"submit\"
 }" "$BASE/api/customer/website-requests/$website_request_id")"
-assert_json "$website_submitted" '.website_request.status == "submitted" and .website_request.submitted_at > 0 and .website_request.direct_checkout_available == true and .website_request.recommended_sku == "FAM-FOOT-199"'
+assert_json "$website_submitted" '.website_request.status == "submitted" and .website_request.submitted_at > 0 and .website_request.direct_checkout_available == false and .website_request.proof_review_status == "not_started" and .website_request.intake.schema_version == "website_discovery_v3" and .website_request.recommended_sku == "FAM-FOOT-199"'
+"$DRUSH" eval "
+  \$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc();
+  \$results = \Drupal::service('famtastic_pipeline.automation_worker')->run(10, 'proof.generate', [(int) \$request['prospect_id']]);
+  assert(count(\$results) === 1 && \$results[0]['status'] === 'completed');
+  \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('id', \$request['id'])->execute()->fetchAssoc();
+  assert(\$request['proof_review_status'] === 'owner_review');
+"
+test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "404"
+"$DRUSH" eval "\$request = \Drupal::database()->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); \Drupal::service('famtastic_pipeline.customer_portal')->approveWebsiteRequestProof((int) \$request['id'], 1);"
+test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "200"
+proof_decision="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"a"}' "$BASE/api/customer/website-requests/$website_request_id/proof-decision")"
+assert_json "$proof_decision" '.website_request.proof_review_status == "selected" and .website_request.direct_checkout_available == true and (.website_request.proofs.variants | length) == 3'
 second_request="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
   \"organization\":\"$organization_id\",\"project_name\":\"Second independent site $run_id\",\"business_name\":\"Second Business\",\"project_type\":\"new_website\",\"primary_goal\":\"Generate leads\",\"products_services\":\"Consulting\",\"action\":\"save\"
 }" "$BASE/api/customer/website-requests")"
@@ -302,16 +314,40 @@ assert_json "$review_request" '.website_request.status == "submitted" and .websi
 review_request_id="$(jq -r '.website_request.public_id' <<<"$review_request")"
 test "$(http_code -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"website_request\":\"$review_request_id\",\"skus\":[\"FAM-FOOT-199\"],\"domain_choice\":\"existing_domain\",\"recurring_authorized\":true,\"accept_terms\":true,\"terms_version\":\"customer_terms_v4_approved\"}" "$BASE/api/customer/checkout")" = "422"
 business_request="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"project_name\":\"Business site $run_id\",\"business_name\":\"Synthetic Growth Co\",\"project_type\":\"new_website\",\"page_count\":4,\"primary_goal\":\"Generate qualified leads\",\"products_services\":\"Professional services\",\"required_features\":\"Lead form, analytics, and SEO\",\"domain_choice\":\"existing_domain\",\"action\":\"submit\"}" "$BASE/api/customer/website-requests")"
-assert_json "$business_request" '.website_request.recommended_sku == "FAM-BUSINESS-499" and .website_request.direct_checkout_available == true'
+assert_json "$business_request" '.website_request.recommended_sku == "FAM-BUSINESS-499" and .website_request.direct_checkout_available == false'
 business_request_id="$(jq -r '.website_request.public_id' <<<"$business_request")"
 "$DRUSH" eval "
   \$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$business_request_id')->execute()->fetchAssoc(); \$now = \Drupal::time()->getRequestTime();
+  \Drupal::service('famtastic_pipeline.automation_worker')->run(10, 'proof.generate', [(int) \$request['prospect_id']]);
+  \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('id', \$request['id'])->execute()->fetchAssoc();
+  \Drupal::service('famtastic_pipeline.customer_portal')->approveWebsiteRequestProof((int) \$request['id'], 1);
   \$db->insert('famtastic_private_offer')->fields(['public_id' => \Drupal::service('uuid')->generate(), 'website_request_id' => \$request['id'], 'organization_id' => \$request['organization_id'], 'customer_id' => \$request['customer_id'], 'sku' => 'FAM-BUSINESS-499', 'list_amount_minor' => 49900, 'offered_amount_minor' => 19900, 'currency' => 'usd', 'reason' => 'Approved friend launch price', 'status' => 'active', 'expires_at' => \$now + 86400, 'created_by_uid' => 1, 'created' => \$now, 'changed' => \$now])->execute();
 "
+assert_json "$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"b"}' "$BASE/api/customer/website-requests/$business_request_id/proof-decision")" '.website_request.proof_review_status == "selected" and .website_request.direct_checkout_available == true'
 business_checkout="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"website_request\":\"$business_request_id\",\"skus\":[\"FAM-BUSINESS-499\"],\"domain_choice\":\"existing_domain\",\"recurring_authorized\":true,\"accept_terms\":true,\"terms_version\":\"customer_terms_v4_approved\"}" "$BASE/api/customer/checkout")"
 assert_json "$business_checkout" '.ok == true and .order_id > 0'
 business_order_id="$(jq -r '.order_id' <<<"$business_checkout")"
 "$DRUSH" eval "\$order = \Drupal::entityTypeManager()->getStorage('commerce_order')->load($business_order_id); assert((float) \$order->getTotalPrice()->getNumber() === 199.0); \$context = \$order->getData('famtastic_checkout'); assert(\$context['private_offer']['list_amount_minor'] === 49900); assert(\$context['private_offer']['offered_amount_minor'] === 19900);"
+grant_request="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"project_name\":\"Sponsored site $run_id\",\"business_name\":\"Synthetic Grant Customer\",\"project_type\":\"landing_page\",\"primary_goal\":\"Generate calls\",\"products_services\":\"Local services\",\"domain_choice\":\"existing_domain\",\"action\":\"submit\"}" "$BASE/api/customer/website-requests")"
+grant_request_id="$(jq -r '.website_request.public_id' <<<"$grant_request")"
+grant_code="$("$DRUSH" eval "
+  \$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$grant_request_id')->execute()->fetchAssoc();
+  \Drupal::service('famtastic_pipeline.automation_worker')->run(10, 'proof.generate', [(int) \$request['prospect_id']]);
+  \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('id', \$request['id'])->execute()->fetchAssoc();
+  \Drupal::service('famtastic_pipeline.customer_portal')->approveWebsiteRequestProof((int) \$request['id'], 1);
+  \$grant = \Drupal::service('famtastic_pipeline.grant_codes')->create(['grant_class' => 'CUSTOMER_GRANT', 'label' => 'Synthetic exact-request grant', 'customer_id' => (int) \$request['customer_id'], 'organization_id' => (int) \$request['organization_id'], 'website_request_id' => (int) \$request['id'], 'sku' => 'FAM-FOOT-199', 'discount_type' => 'free', 'max_redemptions' => 1, 'expires_at' => \Drupal::time()->getRequestTime() + 3600], 1);
+  print \$grant['code'];
+" | tr -d '\r\n')"
+test -n "$grant_code"
+assert_json "$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"c"}' "$BASE/api/customer/website-requests/$grant_request_id/proof-decision")" '.website_request.proof_review_status == "selected"'
+grant_checkout="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"website_request\":\"$grant_request_id\",\"skus\":[\"FAM-FOOT-199\"],\"domain_choice\":\"existing_domain\",\"recurring_authorized\":true,\"accept_terms\":true,\"terms_version\":\"customer_terms_v4_approved\",\"grant_code\":\"$grant_code\"}" "$BASE/api/customer/checkout")"
+assert_json "$grant_checkout" '.ok == true and .completed == true and .order_id > 0 and (.checkout_url | contains("grant=applied"))'
+grant_order_id="$(jq -r '.order_id' <<<"$grant_checkout")"
+"$DRUSH" eval "
+  \$order = \Drupal::entityTypeManager()->getStorage('commerce_order')->load($grant_order_id); assert(\$order->getState()->value === 'completed' && \$order->getTotalPrice()->isZero());
+  \$redemption = \Drupal::database()->select('famtastic_grant_redemption', 'r')->condition('commerce_order_id', $grant_order_id)->countQuery()->execute()->fetchField(); assert((int) \$redemption === 1);
+  \$fulfillment = \Drupal::database()->select('famtastic_commerce_fulfillment', 'f')->fields('f')->condition('commerce_order_id', $grant_order_id)->execute()->fetchAssoc(); assert(\$fulfillment['status'] === 'fulfilled' && (int) \$fulfillment['amount_minor'] === 0);
+"
 other_email="other-$email"
 other_password="Other-$customer_password"
 other_cookie_jar="$sandbox/other-customer.cookies"
@@ -324,6 +360,7 @@ assert_json "$(curl -s -X POST "${JH[@]}" -d "{\"token\":\"$other_verification_t
 assert_json "$(curl -s -c "$other_cookie_jar" -X POST "${JH[@]}" -d "{\"email\":\"$other_email\",\"password\":\"$other_password\"}" "$BASE/api/customer/login")" '.customer.verified == true'
 other_csrf="$(curl -s -b "$other_cookie_jar" "$BASE/session/token")"
 test "$(http_code -b "$other_cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Token: $other_csrf" -d '{"project_name":"Stolen request","action":"save"}' "$BASE/api/customer/website-requests/$website_request_id")" = "404"
+test "$(http_code -b "$other_cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "404"
 commerce_checkout="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
   \"organization\":\"$organization_id\",
   \"website_request\":\"$website_request_id\",
@@ -454,7 +491,7 @@ jq -n \
     package:$package,
     synthetic_customer_email_sha256:$email_hash,
     records:{prospect_id:$prospect_id,project_id:$project_id,deployment_id:$deployment_id,organization_public_id:$organization},
-    checks:{proofs:3,payment_verified:true,intake:true,revision_add_on:true,approval:true,deployment:true,domain:true,hosting_renewal:true,account_verified:true,portal_ownership:true,website_request_draft:true,repeat_website_requests:true,review_required_for_complex_scope:true,website_request_commerce_binding:true,cross_customer_request_isolation:true,preferences:true,support_notifications:true},
+    checks:{proofs:3,payment_verified:true,intake:true,revision_add_on:true,approval:true,deployment:true,domain:true,hosting_renewal:true,account_verified:true,portal_ownership:true,website_request_draft:true,repeat_website_requests:true,review_required_for_complex_scope:true,owner_proof_gate:true,account_proof_selection:true,cross_account_proof_isolation:true,website_request_commerce_binding:true,scoped_zero_dollar_grant:true,cross_customer_request_isolation:true,preferences:true,support_notifications:true},
     captured_transactional_messages:$captured_messages,
     generated_at:$generated_at
   }' > "$evidence_dir/evidence.json"

@@ -141,6 +141,42 @@ famtastic_pipeline.customer_website_request:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.customer_website_request_proof_decision:
+  path: '/api/customer/website-requests/{website_request}/proof-decision'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::websiteProofDecision'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    website_request: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_website_request_asset:
+  path: '/api/customer/website-requests/{website_request}/assets'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\WebsiteRequestProofController::uploadAsset'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    website_request: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_website_request_proof_preview:
+  path: '/api/customer/website-requests/{website_request}/proofs/{direction}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\WebsiteRequestProofController::customerPreview'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    website_request: '[0-9a-f-]{36}'
+    direction: 'a|b|c'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_profile:
   path: '/api/customer/profile'
   defaults:
@@ -438,7 +474,7 @@ famtastic_pipeline.operations_metric:
     _title: 'Operations Records'
   requirements:
     _permission: 'administer famtastic pipeline'
-    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers'
+    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes'
 
 famtastic_pipeline.launch_approval:
   path: '/admin/famtastic/launch-approval'
@@ -456,6 +492,35 @@ famtastic_pipeline.website_request_offer:
   requirements:
     _permission: 'administer famtastic pipeline'
     website_request: '\d+'
+
+famtastic_pipeline.website_request_proof_review:
+  path: '/admin/famtastic/website-request/{website_request}/proof-review'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\WebsiteRequestProofReviewForm'
+    _title: 'Review website proofs'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    website_request: '\d+'
+
+famtastic_pipeline.website_request_proof_admin_preview:
+  path: '/admin/famtastic/website-request/{website_request}/proof/{direction}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\WebsiteRequestProofController::adminPreview'
+  methods: [GET]
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    website_request: '\d+'
+    direction: 'a|b|c'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.grant_code_create:
+  path: '/admin/famtastic/grant-code/add'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\GrantCodeForm'
+    _title: 'Create private grant code'
+  requirements:
+    _permission: 'administer famtastic pipeline'
 
 famtastic_pipeline.operations_campaign:
   path: '/admin/famtastic/campaign/{campaign_key}'

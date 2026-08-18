@@ -19,20 +19,34 @@ new purchases. Stripe holds payment credentials; Drupal must not store cards.
 ## Intake to purchase decision
 
 1. A customer owns reusable website requests inside their workspace.
-2. `website_discovery_v2` captures goals, audience, pages, content, brand,
+2. `website_discovery_v3` captures goals, audience, pages, content, brand,
    integrations, SEO, accessibility/legal context, ecommerce, booking, AI,
-   operations, timing, and decision context.
+   operations, timing, decision context, structured colors and references,
+   optional private assets, AI-enrichment consent, and the 0-10 FAMtastic
+   creative-intensity preference.
 3. The deterministic recommendation is explainable:
    - focused one-page need: `FAM-FOOT-199`;
    - defined business site up to five pages: `FAM-BUSINESS-499`;
    - ecommerce, membership, custom integrations, regulated work, or more than
      five pages: staff scope review.
-4. Staff may override the package and create a one-account, one-request private
-   offer. Never implement a private price as a public/shareable coupon.
-5. Checkout must validate ownership, recommendation/private offer, terms,
-   domain branch, and renewal authorization server-side.
-6. Paid Commerce orders create SKU-driven intake, project, entitlements,
+4. `website_proof.generate.v1` produces exactly three working directions named
+   Safe, Wild, and OMG. Customer requests stop at an owner review gate before
+   any proof-ready email or account disclosure.
+5. The customer selects an owner-approved direction before checkout. Staff may
+   override the package and create a one-account, one-request private offer.
+   Never implement a private price as a public/shareable coupon.
+6. Private service grants use explicit classes, hashed raw codes, exact account
+   and request scope where required, atomic redemption, and Commerce orders.
+   A fully sponsored order completes as a real zero-dollar Commerce order; it
+   never bypasses fulfillment through a fake paid flag.
+7. Checkout must validate ownership, proof selection, recommendation/private
+   offer, grant scope, terms, domain branch, and renewal authorization
+   server-side.
+8. Completed Commerce orders create SKU-driven intake, project, entitlements,
    communications, renewal records, and portal history idempotently.
+
+The complete proof and intake contract is versioned in
+`docs/WEBSITE_PROOF_PRODUCTION_STANDARD_V1.md`.
 
 ## Product creation
 

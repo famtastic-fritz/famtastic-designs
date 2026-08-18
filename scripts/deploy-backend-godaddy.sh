@@ -89,7 +89,7 @@ source_package_normalizer="$backend_dir/scripts/normalize-package-ladder.php"
 production_config_dir="$production_dir/config"
 drush="$production_dir/vendor/bin/drush"
 
-for command_name in git php composer tar rsync; do
+for command_name in git php composer tar rsync crontab; do
   command -v "$command_name" >/dev/null || {
     echo "Remote prerequisite missing: $command_name" >&2
     exit 1
@@ -308,6 +308,22 @@ echo "Sitemap generation verified."
   print "Drupal AI foundation verified.\n";
 '
 
+# Install an independent lifecycle runner. Mailbox ingestion may fail without
+# suppressing notification dispatch, proof jobs, protection, or heartbeats.
+cron_marker='# FAMTASTIC_LIFECYCLE_CRON_V1'
+cron_stage="$deploy_dir/tmp/famtastic-crontab-$timestamp"
+crontab -l > "$cron_stage" 2>/dev/null || true
+if ! grep -Fq "$cron_marker" "$cron_stage"; then
+  {
+    printf '\n%s\n' "$cron_marker"
+    printf '*/5 * * * * cd %q && %q famtastic:lifecycle-run --limit=50 >/dev/null 2>&1\n' "$production_dir" "$drush"
+  } >> "$cron_stage"
+  crontab "$cron_stage"
+fi
+rm -f "$cron_stage"
+crontab -l | grep -F "$cron_marker" >/dev/null
+echo "Independent lifecycle scheduler verified."
+
 {
   printf 'commit=%s\n' "$commit_sha"
   printf 'deployed_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -319,6 +335,7 @@ echo "Sitemap generation verified."
   printf 'dependency_backup=%s\n' "$dependency_backup"
   printf 'commercial_config_backup=%s\n' "$commercial_config_backup"
   printf 'demand_manifest_version=2\n'
+  printf 'lifecycle_cron=FAMTASTIC_LIFECYCLE_CRON_V1\n'
 } > "$production_dir/.backend-release"
 
 rm -rf "$previous_module"

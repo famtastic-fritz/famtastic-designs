@@ -18,6 +18,15 @@ famtastic_pipeline.settings:
   parent: famtastic_pipeline.admin
   weight: -17
 
+famtastic_pipeline.grant_codes:
+  title: 'Grant Codes'
+  description: 'Create and audit private customer grants, owner comps, and service credits.'
+  route_name: famtastic_pipeline.operations_metric
+  route_parameters:
+    metric: grant-codes
+  parent: famtastic_pipeline.admin
+  weight: -16
+
 famtastic_pipeline.campaign_operations:
   title: 'Campaign Operations'
   route_name: famtastic_pipeline.campaign_operations

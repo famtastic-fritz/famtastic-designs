@@ -1,5 +1,22 @@
 # Product changelog
 
+## 2026-08-17 — Owner-gated website proofs, reliable alerts, and private grants
+
+- Versioned the complete `website_proof.generate.v1` standard and upgraded the
+  account intake to `website_discovery_v3` with a 0-10 FAMtastic scale,
+  structured color/emotion inputs, private visual references, and recorded AI
+  enrichment choice.
+- Connected submitted website requests to an exactly-three Safe/Wild/OMG proof
+  job, a visible staff review surface, authenticated customer previews,
+  selection/revision decisions, and an explicit owner-controlled email gate.
+- Decoupled lifecycle automation and notification dispatch from mailbox ingest,
+  added worker/queue-age visibility, corrected the operational alert inbox, and
+  made customer registration generate a staff alert.
+- Added hashed grant-code classes, account/request/SKU scope, atomic redemption,
+  a staff administration surface, and real zero-dollar Commerce fulfillment.
+- Added private PNG/JPEG/WebP/PDF request assets with ownership, AI-use consent,
+  MIME, size, checksum, and account ownership controls.
+
 ## 2026-08-12 — 17-day campaign and independent QA-agent contracts
 
 - Added a 17-day, four-content-moment campaign plan covering 68 core pieces,
