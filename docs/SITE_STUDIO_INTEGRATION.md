@@ -120,9 +120,11 @@ X-FAMtastic-Signature: sha256=<HMAC-SHA256(raw body)>
 ```
 
 The secret is `SITE_STUDIO_CALLBACK_SECRET`. The body contains `event_id`,
-`campaign_id`, `job_id`, and exactly three variants. Each variant has one unique
-`direction_id` (`a`, `b`, or `c`), HTML limited to 500 KB, and optional
-`design_dna`.
+`campaign_id`, `job_id`, and exactly three variants. A core job contains one
+unique `direction_id` for each of `a/b/c`. An explicitly prepared
+`local-showcase-*` job contains one unique direction for each of `d/e/f` and
+appends them to the account-owned core set. HTML is limited to 500 KB and may
+include optional `design_dna`.
 
 The callback:
 
@@ -135,7 +137,9 @@ The callback:
   served as `/proofs/<campaign>/<direction>/`;
 - validates and stores each screenshot as
   `/proofs/<campaign>/<direction>/thumbnail.<jpg|png>`;
-- creates all three proof records before marking the campaign ready;
+- creates all three callback proof records before marking the campaign ready;
+- accepts a showcase only when the matching account-owned campaign already has
+  exactly `a/b/c`, preserves those artifacts, and returns all six to owner review;
 - records callback event IDs so replay is harmless;
 - appends a `proof.ready` event and queues outreach preparation.
 

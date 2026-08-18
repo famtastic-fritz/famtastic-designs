@@ -219,7 +219,9 @@ final class CommerceLifecycleService {
           $variantIds = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
             ->condition('campaign_id', (int) $row['proof_campaign_id'])->sort('direction_id')->execute();
           $variants = array_values($this->entities->getStorage('proof_variant')->loadMultiple($variantIds));
-          if (!$campaign || count($variants) !== 3) {
+          $directions = array_map(static fn(object $variant): string => (string) $variant->get('direction_id')->value, $variants);
+          $validSet = $directions === ['a', 'b', 'c'] || $directions === ['a', 'b', 'c', 'd', 'e', 'f'];
+          if (!$campaign || !$validSet) {
             throw new \RuntimeException('commerce_selected_proof_set_missing');
           }
           $this->portal->markProjectProofReady((int) $operations['project_id'], $campaign, $variants);

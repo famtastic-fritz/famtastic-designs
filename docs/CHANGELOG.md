@@ -9,6 +9,8 @@
 - Connected submitted website requests to an exactly-three Safe/Wild/OMG proof
   job, a visible staff review surface, authenticated customer previews,
   selection/revision decisions, and an explicit owner-controlled email gate.
+- Added an explicit owner-gated FAMtastic showcase pack that appends three
+  original high-intensity working sites for a six-concept customer review.
 - Decoupled lifecycle automation and notification dispatch from mailbox ingest,
   added worker/queue-age visibility, corrected the operational alert inbox, and
   made customer registration generate a staff alert.

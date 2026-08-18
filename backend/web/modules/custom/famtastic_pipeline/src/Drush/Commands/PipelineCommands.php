@@ -209,6 +209,56 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Exports an optional three-direction FAMtastic showcase expansion.
+   */
+  #[CLI\Command(name: 'famtastic:website-request-proof-showcase-export', aliases: ['fwrpse'])]
+  #[CLI\Argument(name: 'requestReference', description: 'Website request numeric id or public UUID.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the request public UUID.')]
+  public function websiteRequestProofShowcaseExport(string $requestReference, array $options = ['confirm' => '']): int {
+    $database = \Drupal::database();
+    $query = $database->select('famtastic_project_request', 'r')->fields('r');
+    ctype_digit($requestReference) ? $query->condition('id', (int) $requestReference) : $query->condition('public_id', $requestReference);
+    $request = $query->execute()->fetchAssoc();
+    $confirmation = trim((string) $options['confirm']);
+    if (!$request || !hash_equals((string) $request['public_id'], $confirmation)) {
+      $this->logger()->error('Showcase export requires --confirm=<exact-request-public-uuid>.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
+      $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+      $campaign = $proofs->prepareWebsiteRequestShowcase((int) $request['id'], $confirmation);
+      /** @var \Drupal\famtastic_pipeline\Service\CustomerPortalService $portal */
+      $portal = \Drupal::service('famtastic_pipeline.customer_portal');
+      $context = $portal->websiteRequestProofContext((int) $request['id']);
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode([
+      'schema_version' => 1,
+      'routine' => 'website_proof.showcase.v1',
+      'transport' => 'offline_ssh_bundle_showcase',
+      'website_request_id' => (int) $request['id'],
+      'website_request_public_id' => (string) $request['public_id'],
+      'prospect_id' => (int) $request['prospect_id'],
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'job_id' => (string) $campaign->get('studio_job_id')->value,
+      'website_discovery_v3' => $context['website_discovery_v3'],
+      'required_directions' => [
+        'd' => ['name' => 'Royal Current'],
+        'e' => ['name' => 'Crownverse'],
+        'f' => ['name' => 'Shay Live'],
+      ],
+      'resulting_direction_count' => 6,
+      'customer_delivery_authorized' => FALSE,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success('FAMtastic showcase handoff exported; customer delivery remains locked.');
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Exports a local refresh while an image-free pilot remains publicly usable.
    */
   #[CLI\Command(name: 'famtastic:proof-local-refresh-export', aliases: ['fplre'])]

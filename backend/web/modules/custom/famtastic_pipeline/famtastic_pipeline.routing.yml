@@ -173,7 +173,7 @@ famtastic_pipeline.customer_website_request_proof_preview:
   requirements:
     _access: 'TRUE'
     website_request: '[0-9a-f-]{36}'
-    direction: 'a|b|c'
+    direction: 'a|b|c|d|e|f'
   options:
     no_cache: 'TRUE'
 
@@ -510,7 +510,7 @@ famtastic_pipeline.website_request_proof_admin_preview:
   requirements:
     _permission: 'review famtastic website proofs'
     website_request: '\d+'
-    direction: 'a|b|c'
+    direction: 'a|b|c|d|e|f'
   options:
     no_cache: 'TRUE'
 

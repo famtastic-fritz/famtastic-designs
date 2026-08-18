@@ -32,6 +32,9 @@ new purchases. Stripe holds payment credentials; Drupal must not store cards.
 4. `website_proof.generate.v1` produces exactly three working directions named
    Safe, Wild, and OMG. Customer requests stop at an owner review gate before
    any proof-ready email or account disclosure.
+   An explicit showcase request may append exactly three maximum-FAMtastic
+   directions (`d/e/f`) to that complete core set. The six-direction result
+   returns to owner review and must not trigger customer delivery by itself.
 5. The customer selects an owner-approved direction before checkout. Staff may
    override the package and create a one-account, one-request private offer.
    Never implement a private price as a public/shareable coupon.

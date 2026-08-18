@@ -128,7 +128,7 @@ final class PipelineAnalyticsService {
     }
 
     $proofPerformance = [];
-    foreach (['a', 'b', 'c'] as $direction) {
+    foreach (['a', 'b', 'c', 'd', 'e', 'f'] as $direction) {
       $selectedProspects = $this->database->select('proof_campaign', 'p')
         ->fields('p', ['prospect_id'])
         ->condition('selected_variant', $direction)

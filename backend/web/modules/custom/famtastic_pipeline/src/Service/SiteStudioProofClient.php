@@ -49,7 +49,7 @@ final class SiteStudioProofClient {
         'address' => $prospect->get('address')->value,
         'hours' => $prospect->get('hours')->value,
       ],
-      'directions' => ProofCampaignService::DIRECTIONS,
+      'directions' => ProofCampaignService::CORE_DIRECTIONS,
       'required_variant_count' => 3,
       'direction_contract' => [
         'a' => ['name' => 'Safe', 'intent' => 'polished, familiar, credible, low-risk'],

@@ -6,16 +6,21 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 SSH_TARGET="${FAMTASTIC_SSH_TARGET:-xrdj7j99xhzt@p3plzcpnl497512.prod.phx3.secureserver.net}"
 REMOTE_ROOT="${FAMTASTIC_REMOTE_ROOT:-public_html}"
 APPLY=false
+SHOWCASE=false
+LOCAL_IMPORT=false
 BUNDLE_DIR=""
 
 usage() {
   cat <<'USAGE'
-Usage: ./scripts/promote-local-proof-godaddy.sh BUNDLE_DIR [--apply]
+Usage: ./scripts/promote-local-proof-godaddy.sh BUNDLE_DIR [--showcase] [--local|--apply]
 
-BUNDLE_DIR must contain manifest.json plus a/, b/, and c/ directories. Each
-direction requires index.html and thumbnail.png or thumbnail.jpg. Dry-run is
-the default. --apply uploads only the validated callback payload to a private
-server inbox and imports it through Drupal's exact-three callback validator.
+BUNDLE_DIR must contain manifest.json plus a/b/c directories for a core set, or
+d/e/f directories when --showcase is supplied. Each direction requires
+index.html and thumbnail.png or thumbnail.jpg. Dry-run is the default. --apply
+uploads only the validated callback payload to a private server inbox and
+imports it through Drupal's three-direction callback validator.
+--local imports into the repository's local Drupal database for acceptance
+testing and cannot be combined with --apply.
 
 manifest.json requires campaign_id, job_id, and event_id. Optional telemetry:
 provider, agent_name, flow_key, task_key, prompt_snapshot, input_snapshot,
@@ -26,6 +31,8 @@ USAGE
 for argument in "$@"; do
   case "$argument" in
     --apply) APPLY=true ;;
+    --showcase) SHOWCASE=true ;;
+    --local) LOCAL_IMPORT=true ;;
     -h|--help) usage; exit 0 ;;
     *)
       if [[ -n "$BUNDLE_DIR" ]]; then
@@ -36,6 +43,11 @@ for argument in "$@"; do
       ;;
   esac
 done
+
+if [[ "$APPLY" == true && "$LOCAL_IMPORT" == true ]]; then
+  echo "--local and --apply are mutually exclusive." >&2
+  exit 2
+fi
 
 [[ -n "$BUNDLE_DIR" ]] || { usage >&2; exit 2; }
 BUNDLE_DIR="$(cd "$BUNDLE_DIR" && pwd)"
@@ -61,7 +73,15 @@ campaign_id="$(jq -r '.campaign_id' "$manifest")"
 job_id="$(jq -r '.job_id' "$manifest")"
 event_id="$(jq -r '.event_id' "$manifest")"
 [[ "$campaign_id" =~ ^pc-[a-z0-9-]+$ ]] || { echo "Invalid campaign_id." >&2; exit 1; }
-[[ "$job_id" =~ ^local-(refresh-)?[a-f0-9]{32}$ ]] || { echo "Invalid local job_id." >&2; exit 1; }
+if [[ "$SHOWCASE" == true ]]; then
+  [[ "$job_id" =~ ^local-showcase-[a-f0-9]{32}$ ]] || { echo "Showcase promotion requires a local-showcase job_id." >&2; exit 1; }
+  directions=(d e f)
+  proof_set="FAMtastic showcase"
+else
+  [[ "$job_id" =~ ^local-(refresh-)?[a-f0-9]{32}$ ]] || { echo "Invalid local job_id." >&2; exit 1; }
+  directions=(a b c)
+  proof_set="core"
+fi
 [[ "$event_id" =~ ^[a-zA-Z0-9._:-]+$ ]] || { echo "Invalid event_id." >&2; exit 1; }
 
 temporary_dir="$(mktemp -d /tmp/famtastic-proof-promotion.XXXXXX)"
@@ -71,7 +91,7 @@ trap cleanup EXIT
 
 variants_file="$temporary_dir/variants.json"
 printf '[]\n' > "$variants_file"
-for direction in a b c; do
+for direction in "${directions[@]}"; do
   html_path="$BUNDLE_DIR/$direction/index.html"
   [[ -s "$html_path" ]] || { echo "Missing $direction/index.html" >&2; exit 1; }
   html_bytes="$(wc -c < "$html_path" | tr -d ' ')"
@@ -111,12 +131,18 @@ payload_bytes="$(wc -c < "$payload" | tr -d ' ')"
 [[ "$payload_bytes" -le 8388608 ]] || { echo "Combined callback payload exceeds 8 MB." >&2; exit 1; }
 
 echo "Local proof promotion candidate"
+echo "  proof set: $proof_set"
 echo "  campaign: $campaign_id"
 echo "  job:      $job_id"
 echo "  event:    $event_id"
 echo "  variants: 3"
 echo "  bytes:    $payload_bytes"
 echo "  sha256:   $checksum"
+
+if [[ "$LOCAL_IMPORT" == true ]]; then
+  "$REPO_ROOT/backend/vendor/bin/drush" famtastic:proof-local-import "$payload" --confirm="$campaign_id" --checksum="$checksum"
+  exit 0
+fi
 
 if [[ "$APPLY" != true ]]; then
   echo "Dry-run passed. No production files or data changed."

@@ -101,7 +101,7 @@ final class WebsiteRequestProofController extends ControllerBase {
 
   private function artifactResponse(array $row, string $direction): Response {
     $direction = strtolower($direction);
-    if (!in_array($direction, ['a', 'b', 'c'], TRUE) || empty($row['proof_campaign_id'])) return new Response('Proof not found.', 404);
+    if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE) || empty($row['proof_campaign_id'])) return new Response('Proof not found.', 404);
     $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
       ->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $direction)->range(0, 1)->execute();
     $variant = $ids ? $this->entities->getStorage('proof_variant')->load(reset($ids)) : NULL;

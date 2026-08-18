@@ -8,7 +8,8 @@ Routine: `website_proof.generate.v1(source_id)`
 ## Outcome
 
 Every qualified website request must become an auditable, customer-owned path
-from intake to three genuinely different working concepts. The system prepares
+from intake to three genuinely different working concepts, with an optional
+three-concept FAMtastic showcase expansion. The system prepares
 the work automatically, stops at explicit human approval gates, keeps prices
 deterministic, and preserves enough evidence to reproduce what happened.
 
@@ -17,6 +18,8 @@ The customer promise is simple:
 1. Register or use the public request path.
 2. Complete the website brief.
 3. Review three working concepts: Safe, Wild, and OMG.
+   When explicitly commissioned, compare three additional maximum-FAMtastic
+   concepts in the same private review, for six total.
 4. Select a direction and request refinements.
 5. Confirm scope and payment.
 6. FAMtastic deploys the approved release.
@@ -159,6 +162,16 @@ The deterministic no-image renderer is not a customer-deliverable proof engine.
 When a qualified creative provider is unavailable, the run must wait in a
 visible exception state rather than generate low-quality substitutes.
 
+### Optional FAMtastic showcase pack
+
+An explicit owner or customer request may add exactly three further directions
+to an already complete Safe/Wild/OMG set. The result is six—not a replacement
+for the core three—and uses stable identifiers `d`, `e`, and `f`. These
+directions must be original working sites at the requested high creative
+intensity, satisfy the same responsive and evidence contract, and remain behind
+the same owner approval gate. One showcase callback may add only `d/e/f`; it
+may not overwrite `a/b/c` or expose anything to the customer automatically.
+
 ## Engine and agent boundaries
 
 The deterministic workflow owns facts and safety:
@@ -287,8 +300,9 @@ The sanitized Shay locs request is the first golden benchmark fixture. A clean
 run must repeatedly produce:
 
 - one request and one deterministic package recommendation;
-- exactly three distinct working demos;
-- six screenshots: desktop and mobile for Safe, Wild, and OMG;
+- exactly three distinct core working demos, plus three showcase demos when the
+  showcase profile is explicitly exercised;
+- desktop and mobile screenshots for every generated direction;
 - no broken links or horizontal mobile overflow;
 - required calls to action and research citations;
 - request, account, project, proof, and order continuity;
@@ -357,7 +371,9 @@ The production journey is releasable only when all of the following are true:
 4. Stale worker state and notification backlog are visible to administrators.
 5. The intake persists creative intensity, colors, avoidance, references,
    uploads, and AI consent with the declared schema version.
-6. Exactly three Safe/Wild/OMG proofs enter owner review and remain customer-hidden.
+6. Exactly three Safe/Wild/OMG proofs enter owner review and remain
+   customer-hidden; an explicitly requested showcase adds exactly d/e/f and
+   keeps all six customer-hidden until a new owner approval.
 7. Owner approval reveals proofs and queues one account notification.
 8. Cross-account reads, proof views, selections, uploads, and grant redemption fail.
 9. A scoped free grant completes one $0 Commerce order without Stripe and

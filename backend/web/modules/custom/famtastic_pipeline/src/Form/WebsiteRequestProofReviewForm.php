@@ -55,11 +55,14 @@ final class WebsiteRequestProofReviewForm extends FormBase {
       $name = (string) $variant->get('direction_name')->value;
       $items[] = Link::fromTextAndUrl($name . ' — open owner preview', Url::fromRoute('famtastic_pipeline.website_request_proof_admin_preview', ['website_request' => $website_request, 'direction' => $direction], ['attributes' => ['target' => '_blank', 'rel' => 'noopener']]))->toRenderable();
     }
-    $form['proofs'] = ['#theme' => 'item_list', '#title' => $this->t('Safe, Wild, and OMG'), '#items' => $items, '#empty' => $this->t('No complete proof set is attached yet.')];
-    $notification = $campaignId ? $this->database->select('famtastic_notification_outbox', 'n')->fields('n')->condition('notification_key', 'website-request:' . $website_request . ':proofs:' . $campaignId)->execute()->fetchAssoc() : NULL;
+    $proofCount = count($items);
+    $complete = in_array($proofCount, [3, 6], TRUE);
+    $proofTitle = $proofCount === 6 ? $this->t('Six working website concepts') : $this->t('Safe, Wild, and OMG');
+    $form['proofs'] = ['#theme' => 'item_list', '#title' => $proofTitle, '#items' => $items, '#empty' => $this->t('No complete proof set is attached yet.')];
+    $notification = $campaignId && $complete ? $this->database->select('famtastic_notification_outbox', 'n')->fields('n')->condition('notification_key', 'website-request:' . $website_request . ':proofs:' . $campaignId . ':' . $proofCount)->execute()->fetchAssoc() : NULL;
     $form['delivery'] = ['#type' => 'item', '#title' => $this->t('Customer delivery'), '#markup' => '<p>' . ($notification ? 'Notification status: <strong>' . htmlspecialchars((string) $notification['status']) . '</strong>' : '<strong>Not queued.</strong> The customer has not been sent these proofs.') . '</p>'];
-    if (count($items) === 3 && $this->requestRow['proof_review_status'] === 'owner_review') {
-      $form['confirm'] = ['#type' => 'checkbox', '#title' => $this->t('I reviewed all three working previews and approve showing them in this customer account.'), '#required' => TRUE];
+    if ($complete && $this->requestRow['proof_review_status'] === 'owner_review') {
+      $form['confirm'] = ['#type' => 'checkbox', '#title' => $this->t('I reviewed all @count working previews and approve showing them in this customer account.', ['@count' => $proofCount]), '#required' => TRUE];
       $form['actions']['#type'] = 'actions';
       $form['actions']['submit'] = ['#type' => 'submit', '#value' => $this->t('Approve and queue customer email'), '#button_type' => 'primary'];
     }
