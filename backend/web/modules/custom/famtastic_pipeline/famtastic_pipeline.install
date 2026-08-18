@@ -593,6 +593,41 @@ function famtastic_pipeline_update_8029(&$sandbox) {
   return t('Added owner-gated request proofs, private reference assets, scoped grant codes, and corrected the operational alert inbox.');
 }
 
+/** Blocks direct web access to account-owned proof artifacts. */
+function famtastic_pipeline_update_8030(&$sandbox) {
+  $database = \Drupal::database();
+  $rows = $database->select('famtastic_project_request', 'r')
+    ->fields('r', ['id', 'proof_campaign_id'])
+    ->isNotNull('proof_campaign_id')
+    ->execute()
+    ->fetchAllAssoc('proof_campaign_id', \PDO::FETCH_ASSOC);
+  if (!$rows) {
+    return t('No account-owned proof artifacts required protection.');
+  }
+  $campaigns = \Drupal::entityTypeManager()->getStorage('proof_campaign')->loadMultiple(array_keys($rows));
+  $variantStorage = \Drupal::entityTypeManager()->getStorage('proof_variant');
+  $rules = "<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n  Order allow,deny\n  Deny from all\n</IfModule>\n";
+  $secured = 0;
+  foreach ($campaigns as $campaignEntityId => $campaign) {
+    $requestId = (int) $rows[$campaignEntityId]['id'];
+    $campaignId = preg_replace('/[^a-z0-9-]/', '', strtolower((string) $campaign->get('campaign_id')->value));
+    if ($campaignId === '') {
+      continue;
+    }
+    $directory = \Drupal::root() . '/proofs/' . $campaignId;
+    if (!is_dir($directory) || file_put_contents($directory . '/.htaccess', $rules, LOCK_EX) === FALSE) {
+      throw new \RuntimeException('Unable to secure account proof campaign ' . $campaignId . '.');
+    }
+    $ids = $variantStorage->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $campaignEntityId)->execute();
+    foreach ($variantStorage->loadMultiple($ids) as $variant) {
+      $direction = (string) $variant->get('direction_id')->value;
+      $variant->set('preview_url', '/web/admin/famtastic/website-request/' . $requestId . '/proof/' . $direction)->save();
+    }
+    $secured++;
+  }
+  return t('Protected @count account-owned proof campaign(s) from direct web access.', ['@count' => $secured]);
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();

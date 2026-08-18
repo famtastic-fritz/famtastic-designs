@@ -246,6 +246,9 @@ class ProofCampaignService {
     if (!$campaign || !hash_equals((string) $campaign->get('studio_job_id')->value, $studioJobId)) {
       throw new \InvalidArgumentException('Unknown campaign or Site Studio job.');
     }
+    $prospectId = (int) $campaign->get('prospect_id')->target_id;
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('prospect_id', $prospectId)->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $processed = json_decode((string) $campaign->get('callback_event_ids')->value ?: '[]', TRUE);
     if (in_array($eventId, (array) $processed, TRUE)) {
       return ['newly_processed' => FALSE, 'campaign' => $campaign, 'variants' => $this->loadVariants($campaign)];
@@ -337,9 +340,14 @@ class ProofCampaignService {
         ->set('artifact_path', $path)
         ->set('thumbnail_path', $thumbnailPath)
         ->set('design_dna', json_encode($variant['design_dna'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))
-        ->set('preview_url', $this->previewUrl($campaignId, $direction));
+        ->set('preview_url', $request
+          ? '/web/admin/famtastic/website-request/' . (int) $request['id'] . '/proof/' . $direction
+          : $this->previewUrl($campaignId, $direction));
       $entity->save();
       $created[] = $entity;
+    }
+    if ($request) {
+      $this->protectAccountProofArtifacts($campaignId);
     }
     $processed[] = $eventId;
     $campaign
@@ -347,15 +355,12 @@ class ProofCampaignService {
       ->set('generation_status', 'ready')
       ->set('ready_at', $this->time->getRequestTime())
       ->save();
-    $prospectId = (int) $campaign->get('prospect_id')->target_id;
     $this->ledger->recordEvent(
       'proof.callback:' . $eventId,
       'proof.ready',
       ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => 3, 'refresh' => $isRefresh],
       $prospectId,
     );
-    $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
-      ->condition('prospect_id', $prospectId)->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     if ($request) {
       $this->portal->attachWebsiteRequestProof((int) $request['id'], $campaign, $created);
     }
@@ -655,6 +660,18 @@ class ProofCampaignService {
     $this->fileSystem->prepareDirectory($absolute, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     $this->fileSystem->saveData($binary, $absolute . '/' . $filename, FileSystemInterface::EXISTS_REPLACE);
     return '/proofs/' . $campaignId . '/' . $direction . '/' . $filename;
+  }
+
+  /** Prevents direct web access to request-owned proof artifacts. */
+  protected function protectAccountProofArtifacts(string $campaignId): void {
+    $directory = \Drupal::root() . '/proofs/' . $campaignId;
+    if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
+      throw new \RuntimeException('Unable to secure account-owned proof artifacts.');
+    }
+    $rules = "<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n  Order allow,deny\n  Deny from all\n</IfModule>\n";
+    if ($this->fileSystem->saveData($rules, $directory . '/.htaccess', FileSystemInterface::EXISTS_REPLACE) === FALSE) {
+      throw new \RuntimeException('Unable to secure account-owned proof artifacts.');
+    }
   }
 
   /**
