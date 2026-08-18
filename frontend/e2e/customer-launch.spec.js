@@ -26,6 +26,7 @@ async function signIn(page, redirect = '/portal') {
 
 async function mockNewCustomerPortal(page) {
   await page.route('**/api/customer/session', (route) => route.fulfill({ json: { customer: { display_name: 'Fritz', email: 'fitzgerald.medine@gmail.com' } } }));
+  await page.route('**/api/customer/catalog', (route) => route.fulfill({ json: { products: [] } }));
   await page.route('**/api/customer/workspace*', (route) => route.fulfill({ json: {
     organization: { public_id: 'org-proof', name: 'Fritzoo', role: 'owner' },
     projects: [], orders: [], entitlements: [], website_requests: [], threads: [], activity: [], members: [], referrals: [], articles: [], faqs: [], offers: [],
@@ -33,22 +34,77 @@ async function mockNewCustomerPortal(page) {
   } }));
 }
 
+async function mockProofReviewPortal(page) {
+  let websiteRequest = {
+    public_id: 'request-proof-review', project_name: 'Tighten Up Your Locs website', status: 'submitted', proof_review_status: 'notified', changed: 1787020000,
+    intake: { recommendation: { label: 'Web Basics Bundle', reasons: ['A focused website is the smallest useful path.'] } }, direct_checkout_available: false,
+    proofs: { campaign_id: 'campaign-proof-review', generation_status: 'ready', selected_variant: '', variants: [
+      { direction_id: 'a', direction_name: 'Safe', preview_url: 'https://example.test/proofs/a' },
+      { direction_id: 'b', direction_name: 'Wild', preview_url: 'https://example.test/proofs/b' },
+      { direction_id: 'c', direction_name: 'OMG', preview_url: 'https://example.test/proofs/c' },
+    ] },
+  };
+  const workspace = () => ({
+    organization: { public_id: 'org-proof', name: 'Tighten Up Your Locs', role: 'owner' },
+    projects: [], orders: [], entitlements: [], website_requests: [websiteRequest], threads: [], activity: [], members: [], referrals: [], articles: [], faqs: [], offers: [],
+    analytics: { entitled: false }, preferences: { project_email: true, support_email: true, billing_email: true, product_education: true, deals_promotions: true, analytics_digest: 'monthly', topics: [] }, topics: {},
+  });
+  await page.route('**/api/customer/session', (route) => route.fulfill({ json: { customer: { display_name: 'Shay', email: 'shay@example.test' } } }));
+  await page.route('**/api/customer/catalog', (route) => route.fulfill({ json: { products: [] } }));
+  await page.route('**/api/customer/workspace*', (route) => route.fulfill({ json: workspace() }));
+  await page.route('**/session/token', (route) => route.fulfill({ body: 'mock-csrf-token' }));
+  await page.route('**/api/customer/website-requests/*/proof-decision', async (route) => {
+    const payload = route.request().postDataJSON();
+    if (payload.action === 'select') {
+      websiteRequest = { ...websiteRequest, proof_review_status: 'selected', selected_proof_direction: payload.direction, direct_checkout_available: true, proofs: { ...websiteRequest.proofs, selected_variant: payload.direction } };
+    } else {
+      websiteRequest = { ...websiteRequest, proof_review_status: 'revision_requested', intake: { ...websiteRequest.intake, proof_revision_request: { notes: payload.notes, requested_at: '2026-08-18T04:00:00Z' } } };
+    }
+    await route.fulfill({ json: { ok: true, website_request: websiteRequest } });
+  });
+}
+
 test('portal home makes the website-and-proofs revenue journey unmistakable', async ({ page }, testInfo) => {
   await mockNewCustomerPortal(page);
   await page.goto('/portal');
-  await expect(page.getByRole('heading', { name: 'Turn an idea into something customers can use.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Your business systems, all in one place.' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Start my website & proofs', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'See how easy it is', exact: true }).click();
+  await page.getByRole('button', { name: 'Play tutorial', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Register' })).toBeVisible();
   await expect(page.getByText('Website launch in seven easy steps')).toBeVisible();
   await page.getByRole('button', { name: 'Close website walkthrough' }).click();
   await expect(page.getByRole('heading', { name: 'From brief to business system' })).toBeVisible();
-  await expect(page.getByText('Shay Shay', { exact: true })).toBeVisible();
+  await expect(page.getByText('FAMtastic AI solutions studio', { exact: true })).toBeVisible();
   await assertNoHorizontalOverflow(page);
   await page.screenshot({ path: testInfo.outputPath('portal-ai-studio-home.png'), fullPage: true });
   await page.getByRole('button', { name: 'Start my website & proofs', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Websites & proofs', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Projects', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: '+ Start a new website', exact: true })).toBeVisible();
+});
+
+test('proof selection is unmistakable and Make changes opens a working revision flow', async ({ page }, testInfo) => {
+  await mockProofReviewPortal(page);
+  await page.goto('/portal');
+  await page.getByRole('button', { name: 'Continue my website', exact: true }).click();
+  await page.getByRole('button', { name: 'Choose Wild', exact: true }).click();
+
+  const selected = page.locator('[data-proof-direction="b"]');
+  await expect(selected).toHaveClass(/selected/);
+  await expect(selected.getByText('✓ Selected', { exact: true })).toBeVisible();
+  await expect(page.locator('[data-proof-direction="a"]')).toHaveClass(/dimmed/);
+  await expect(page.getByRole('heading', { name: 'Wild is your selected direction' })).toBeVisible();
+  await expect(page.locator('.portal-proof-next')).toBeFocused();
+
+  await page.getByRole('button', { name: 'Make changes', exact: true }).click();
+  const notes = page.getByLabel('Your change notes');
+  await expect(notes).toBeVisible();
+  await expect(notes).toBeFocused();
+  await notes.fill('Keep the layout, but use royal blue and warmer photography.');
+  await page.getByRole('button', { name: 'Send changes to Fritz', exact: true }).click();
+  await expect(page.getByText('Changes requested. Fritz has your notes.')).toBeVisible();
+  await expect(page.getByText('Changes requested ✓', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'We received your changes for Wild' })).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('proof-selection-and-revision.png'), fullPage: true });
 });
 
 test('customer account, portal, support, settings, and purchase UI are mobile-safe', async ({ page }, testInfo) => {
