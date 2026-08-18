@@ -116,7 +116,7 @@ final class LifecycleOperationsService {
         ->condition('thread_id', $thread['id'])->execute();
     }
     else {
-      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
       $this->queue('inbound:' . $hash . ':unmatched', $admin, 'Unmatched customer email requires review', "Subject: {$subject}\nReason: {$reason}\nMessage-ID hash: {$hash}");
     }
     return ['accepted' => $status === 'matched', 'duplicate' => FALSE, 'status' => $status, 'reason' => $reason];
@@ -143,7 +143,7 @@ final class LifecycleOperationsService {
 
   public function runProtection(): array {
     $now = $this->time->getRequestTime();
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $overdue = $this->database->select('famtastic_support_case', 's')->fields('s')
       ->condition('status', ['new', 'assigned', 'waiting_on_famtastic'], 'IN')->condition('response_due', $now, '<=')->execute()->fetchAll(\PDO::FETCH_ASSOC);
     foreach ($overdue as $case) {

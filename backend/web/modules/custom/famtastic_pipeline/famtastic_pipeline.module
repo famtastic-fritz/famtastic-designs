@@ -111,7 +111,7 @@ function famtastic_pipeline_cron(): void {
   if (!$config->get('sla_alerts_enabled')) {
     return;
   }
-  $recipient = (string) ($config->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+  $recipient = (string) ($config->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
   $now = \Drupal::time()->getRequestTime();
   $storage = \Drupal::entityTypeManager()->getStorage('famtastic_prospect');
   $ids = $storage->getQuery()->accessCheck(FALSE)

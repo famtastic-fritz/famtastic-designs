@@ -265,13 +265,13 @@ final class CommerceLifecycleService {
         ->condition('organization_id', $row['organization_id'])->condition('order_id', (int) $order->id())->execute();
     }
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $row['customer_id'])->execute()->fetchAssoc();
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $this->queue("commerce:{$order->id()}:payment:{$state}", 'transactional', $customer['email'], 'Payment update for your FAMtastic order', "Order {$order->getOrderNumber()} payment status: {$state}. Sign in to review next steps.");
     $this->queue("commerce:{$order->id()}:staff-payment:{$state}", 'operational', $admin, "Commerce payment requires review — {$state}", "Order: {$order->getOrderNumber()}\nCustomer: {$customer['email']}\nState: {$state}");
   }
 
   private function queueNotifications(OrderInterface $order, array $customer, array $skus, array $intakeSchemas): void {
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $number = $order->getOrderNumber() ?: (string) $order->id();
     $summary = implode(', ', $skus);
     $this->queue('commerce:' . $order->id() . ':customer-receipt', 'transactional', (string) $customer['email'],

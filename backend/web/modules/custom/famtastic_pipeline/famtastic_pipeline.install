@@ -628,6 +628,31 @@ function famtastic_pipeline_update_8030(&$sandbox) {
   return t('Protected @count account-owned proof campaign(s) from direct web access.', ['@count' => $secured]);
 }
 
+/** Gives the configured owner inbox a narrowly scoped proof-review role. */
+function famtastic_pipeline_update_8031(&$sandbox) {
+  $roleStorage = \Drupal::entityTypeManager()->getStorage('user_role');
+  $role = $roleStorage->load('famtastic_proof_reviewer');
+  if (!$role) {
+    $role = $roleStorage->create([
+      'id' => 'famtastic_proof_reviewer',
+      'label' => 'FAMtastic proof reviewer',
+    ]);
+  }
+  $role->grantPermission('review famtastic website proofs')->save();
+  $ownerEmail = mb_strtolower(trim((string) \Drupal::config('famtastic_pipeline.settings')->get('notification_to_email')));
+  if ($ownerEmail === '') {
+    return t('Created the proof-review role; no operational owner email is configured for assignment.');
+  }
+  $userStorage = \Drupal::entityTypeManager()->getStorage('user');
+  $ids = $userStorage->getQuery()->accessCheck(FALSE)->condition('mail', $ownerEmail)->condition('status', 1)->execute();
+  if (count($ids) !== 1) {
+    return t('Created the proof-review role; no unique active account matched the configured owner email.');
+  }
+  $owner = $userStorage->load(reset($ids));
+  $owner->addRole('famtastic_proof_reviewer')->save();
+  return t('Assigned narrowly scoped website proof-review access to the configured operational owner.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();

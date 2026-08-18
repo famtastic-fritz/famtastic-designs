@@ -499,7 +499,7 @@ famtastic_pipeline.website_request_proof_review:
     _form: 'Drupal\famtastic_pipeline\Form\WebsiteRequestProofReviewForm'
     _title: 'Review website proofs'
   requirements:
-    _permission: 'administer famtastic pipeline'
+    _permission: 'review famtastic website proofs'
     website_request: '\d+'
 
 famtastic_pipeline.website_request_proof_admin_preview:
@@ -508,7 +508,7 @@ famtastic_pipeline.website_request_proof_admin_preview:
     _controller: 'Drupal\famtastic_pipeline\Controller\WebsiteRequestProofController::adminPreview'
   methods: [GET]
   requirements:
-    _permission: 'administer famtastic pipeline'
+    _permission: 'review famtastic website proofs'
     website_request: '\d+'
     direction: 'a|b|c'
   options:

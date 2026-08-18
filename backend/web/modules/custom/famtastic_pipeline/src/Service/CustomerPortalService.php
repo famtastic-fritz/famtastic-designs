@@ -426,7 +426,7 @@ final class CustomerPortalService {
   }
 
   private function queueWebsiteRequestNotifications(int $id, array $customer, array $request): void {
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $subject = 'Website request received — ' . $request['project_name'];
     $this->queueNotification("website-request:{$id}:customer", 'transactional', (string) $customer['email'], $subject,
       "We received your website request for {$request['project_name']}. Fritz will review it within 3 business days. You can continue or review it from your customer portal.");
@@ -436,7 +436,7 @@ final class CustomerPortalService {
 
   /** Queues one owner alert for a newly created customer account. */
   public function queueRegistrationNotification(array $customer): void {
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $this->queueNotification('customer:' . (int) $customer['id'] . ':staff-registration', 'operational', $admin,
       'New FAMtastic customer registration — ' . (string) $customer['display_name'],
       "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nVerification is pending.\nOpen customers: https://famtasticdesigns.com/web/admin/famtastic/metric/customers");
@@ -522,7 +522,7 @@ final class CustomerPortalService {
       'proof_review_status' => 'owner_review',
       'changed' => $now,
     ])->condition('id', $requestId)->execute();
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $this->queueNotification('website-request:' . $requestId . ':owner-proof-review:' . $campaignEntityId, 'operational', $admin,
       'Three website proofs need your approval — ' . (string) $row['project_name'],
       "Safe, Wild, and OMG are ready for owner review. Nothing has been sent to the customer.\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$requestId}/proof-review");
@@ -544,7 +544,7 @@ final class CustomerPortalService {
       $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
       $intake['proof_revision_request'] = ['notes' => $notes, 'requested_at' => gmdate(DATE_ATOM, $now)];
       $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'revision_requested', 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'changed' => $now])->condition('id', $row['id'])->execute();
-      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
       $this->queueNotification('website-request:' . $row['id'] . ':proof-revision:' . hash('sha256', $notes), 'operational', $admin, 'Website proof revision requested — ' . $row['project_name'], "Customer request:\n{$notes}\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
     }
     else {
@@ -702,7 +702,7 @@ final class CustomerPortalService {
       'response_due' => $now + ($responseHours * 3600), 'created' => $now, 'changed' => $now,
     ])->execute();
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $replyAddress = 'support+' . $publicId . '@famtasticdesigns.com';
     $this->queueNotification('support:' . $threadId . ':customer-created', 'transactional', (string) $customer['email'],
       "Support request {$caseNumber} received", "We received your request: {$subject}\nCase: {$caseNumber}\nReply address: {$replyAddress}");
