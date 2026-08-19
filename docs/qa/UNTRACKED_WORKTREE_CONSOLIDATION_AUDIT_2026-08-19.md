@@ -1,8 +1,8 @@
 # Untracked worktree consolidation audit
 
-**Date:** August 19, 2026  
-**Repository:** `famtastic-fritz/famtastic-designs`  
-**Branch:** `codex/shay-website-delivery-swarm`  
+**Date:** August 19, 2026
+**Repository:** `famtastic-fritz/famtastic-designs`
+**Branch:** `codex/shay-website-delivery-swarm`
 **Purpose:** Understand, preserve, and classify the shared worktree before any bulk commit, archive, or deletion.
 
 ## Executive finding
