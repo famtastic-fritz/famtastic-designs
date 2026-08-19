@@ -23,6 +23,14 @@ directus/uploads/
 .eslintcache
 .netlify
 .artifacts/
+# Local proof runs, screenshots, signed packets, and browser evidence are
+# retained outside Git. Curated manifests may be copied into docs/qa when a
+# release needs durable repository evidence.
+artifacts/
+
+# Python runtime caches are reproducible and never source artifacts.
+__pycache__/
+*.py[cod]
 marketing/video/node_modules/
 marketing/video/out/
 marketing/runtime/
