@@ -21,6 +21,7 @@ export default function PurchasePage() {
       .then(([session, catalog, workspace]) => {
         const request = workspace?.website_requests?.find((item) => item.public_id === websiteRequest);
         setBaseSku(request?.recommended_sku || '');
+        setSelected(request?.intake?.recommendation?.suggested_addon_skus || []);
         setState({ loading: false, session, workspace, products: catalog.products || [], terms: catalog.terms, error: '' });
       })
       .catch((error) => setState({ loading: false, session: null, products: [], terms: null, error: error.message }));
@@ -48,7 +49,7 @@ export default function PurchasePage() {
     {state.error && <div className="alert alert--error" role="alert">{state.error}</div>}
     {!websiteRequest && <fieldset><legend>Choose the package that fits</legend>{websiteBundles.map((item) => <label key={item.sku}><input type="radio" name="bundle" value={item.sku} checked={baseSku === item.sku} onChange={(event) => setBaseSku(event.target.value)} required /> <b>{item.title}</b> — {money(item.price)}<small>{item.summary}</small></label>)}</fieldset>}
     <fieldset><legend>Domain setup</legend><label><input type="radio" name="domain" value="new_domain" checked={domainChoice === 'new_domain'} onChange={(e) => setDomainChoice(e.target.value)} required /> Register a new customer-owned domain for the included first year</label><label><input type="radio" name="domain" value="existing_domain" checked={domainChoice === 'existing_domain'} onChange={(e) => setDomainChoice(e.target.value)} /> Connect a domain I already own</label></fieldset>
-    <fieldset><legend>Useful add-ons</legend>{addons.map((item) => <label key={item.sku}><input type="checkbox" checked={selected.includes(item.sku)} onChange={(e) => setSelected((current) => e.target.checked ? [...current, item.sku] : current.filter((sku) => sku !== item.sku))} /> <b>{item.title}</b> — {money(item.price)}<small>{item.summary}</small></label>)}</fieldset>
+    <fieldset><legend>Useful add-ons</legend>{requestRecord?.intake?.recommendation?.suggested_addon_skus?.length > 0 && <p className="purchase-context">Suggested from your answers and preselected for review. Every add-on is optional: uncheck anything you do not want.</p>}{addons.map((item) => <label key={item.sku}><input type="checkbox" checked={selected.includes(item.sku)} onChange={(e) => setSelected((current) => e.target.checked ? [...current, item.sku] : current.filter((sku) => sku !== item.sku))} /> <b>{item.title}</b> — {money(item.price)}<small>{item.summary}</small></label>)}</fieldset>
     <label className="purchase-consent"><input type="checkbox" checked={renewal} onChange={(e) => setRenewal(e.target.checked)} required /> I authorize the hosting included with this package to renew at {renewalPrice}/month after the included first year. I can cancel before renewal from my account.</label>
     <label className="purchase-consent"><input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} required /> I accept the recorded product scope, payment, cancellation, renewal, and domain terms.</label>
     <label className="purchase-consent"><input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} /> Send me useful articles and relevant offers. I can unsubscribe without affecting service messages.</label>

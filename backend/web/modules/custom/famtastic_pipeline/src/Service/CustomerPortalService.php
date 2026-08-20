@@ -312,6 +312,9 @@ final class CustomerPortalService {
       'contact_details', 'social_profiles', 'accessibility_needs', 'privacy_legal_needs',
       'ecommerce_details', 'product_count', 'shipping_pickup', 'booking_details', 'ai_agent_goals',
       'maintenance_needs', 'launch_timing', 'budget_context', 'decision_makers', 'notes',
+      'business_model', 'industry', 'research_context', 'reference_site_reasons',
+      'existing_technology', 'desired_domains', 'domain_fallback', 'business_email_needs',
+      'custom_needs',
     ] as $key) $intake[$key] = $text($key);
     $intake['page_count'] = max(1, min(100, (int) ($input['page_count'] ?? 1)));
     $intake['recommendation'] = $this->recommendWebsitePackage($type, $intake);
@@ -328,6 +331,7 @@ final class CustomerPortalService {
     $features = mb_strtolower(implode(' ', [
       $intake['required_features'], $intake['integrations'], $intake['ecommerce_details'],
       $intake['booking_details'], $intake['ai_agent_goals'],
+      $intake['custom_needs'],
     ]));
     $complexTerms = ['shop', 'cart', 'checkout', 'ecommerce', 'membership', 'portal', 'custom api', 'hipaa', 'inventory', 'subscription'];
     $complex = $type === 'online_store';
@@ -344,7 +348,13 @@ final class CustomerPortalService {
     foreach (['lead', 'quote', 'form', 'gallery', 'analytics', 'seo'] as $term) if (str_contains($features, $term)) $score += 8;
     if ($intake['content_status'] === 'help_needed' || $intake['copywriting_needs'] !== '') $addons[] = 'FAM-COPY';
     if ($intake['brand_status'] === 'help_needed') $addons[] = 'FAM-BRAND';
+    if ($intake['business_email_needs'] !== '') $addons[] = 'FAM-BUSINESS-EMAIL';
     if ($intake['ai_agent_goals'] !== '') $addons[] = 'FAM-AI-AGENT';
+    if ($intake['booking_details'] !== '') $addons[] = 'FAM-SCHEDULING';
+    if ($intake['custom_needs'] !== '') {
+      $reasons[] = 'An unlisted product, service, or workflow request needs human scope review.';
+      return ['recommended_sku' => '', 'label' => 'Custom scope review', 'complexity_score' => 100, 'review_required' => TRUE, 'reasons' => $reasons, 'suggested_addon_skus' => array_values(array_unique($addons))];
+    }
     if ($pages > 1 || $score >= 30) {
       $reasons[] = 'A multi-page business presence benefits from structured navigation, lead capture, SEO, and analytics.';
       return ['recommended_sku' => 'FAM-BUSINESS-499', 'label' => 'Business Website Bundle', 'complexity_score' => min(99, $score), 'review_required' => FALSE, 'reasons' => $reasons, 'suggested_addon_skus' => array_values(array_unique($addons))];

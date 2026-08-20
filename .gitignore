@@ -26,3 +26,9 @@ directus/uploads/
 marketing/video/node_modules/
 marketing/video/out/
 marketing/runtime/
+
+# Locally symlinked shared skills (absolute paths — machine-specific)
+.claude/skills/
+
+# Packaged asset bundle — repackages content already tracked in this repo
+marketing/*.zip

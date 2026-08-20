@@ -168,7 +168,9 @@ class PublicRequestController extends ControllerBase {
       'services' => $this->sanitize((string) ($data['branch'] ?? ''), TRUE),
       'about' => $this->sanitize($this->requestSummary($data, $type), TRUE),
       'brand_colors' => '',
-      'style_preferences' => '',
+      'style_preferences' => $this->sanitize((string) ($answers['referenceSites'] ?? ''), TRUE),
+      'reference_sites' => $this->sanitize((string) ($answers['referenceSites'] ?? ''), TRUE),
+      'existing_domain' => $this->sanitize((string) ($answers['domainDetails'] ?? '')),
       'submitted_at' => $this->time->getRequestTime(),
     ]);
     if (!empty($answers['businessDescription'])) {
