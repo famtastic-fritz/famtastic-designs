@@ -17,6 +17,11 @@ capability is not “proven” merely because code exists.
 | SEO and dynamic sitemap delivery | Production smoke-tested | Drupal content discovery, route-specific shells, sitemap, robots, and canonical metadata |
 | Synthetic customer journey proof | Locally proven | Repeatable lifecycle QA with explicit provider and production boundaries |
 | Isolated customer site deployment | Locally proven | Build, proof, approval, deployment, rollback, domain, and hosting lifecycle patterns |
+| Campaign strategy and content systems | Production smoke-tested | Offer-led campaign architecture, landing pages, articles, FAQs, email, social adaptations, CTAs, UTMs, and measurement |
+| Branded social creative production | Locally proven | Reusable image, motion-graphics, short-form video, caption, safe-area, and channel-variant production |
+| Social publishing orchestration | Provider-proven on Facebook | Approval, account-specific copy, media publishing, delivery verification, retry evidence, and campaign attribution |
+| AI-presenter video production | Provider generation in progress | Presenter-led explainers and advertisements governed by the same offer truth, QA, and publishing ledger |
+| Marketing operations command center | Locally proven | Mobile campaign review, approvals, schedules, channel status, exceptions, attributed visits, leads, and sales |
 
 Update this table only when evidence changes. Link durable proof in the release
 or acceptance report; do not upgrade a classification from confidence alone.

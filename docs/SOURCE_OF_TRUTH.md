@@ -12,6 +12,13 @@ FAMtastic Designs has one supported application stack:
 | Deployment and acceptance | `scripts/` | commands run against an exact Git SHA |
 | Operational guidance | `docs/` | repository documentation |
 
+The target Shay specialist-agent architecture for website intake, research,
+commercial analysis, proofs, contracts, implementation, QA, provider failover,
+monitoring, and governed learning is
+`docs/architecture/SHAY_WEBSITE_DELIVERY_SWARM.md`. Drupal remains the customer,
+product, Commerce, approval, and evidence source of truth; agent outputs become
+authoritative only through the documented validation and approval boundaries.
+
 The former root Nuxt/AgencyOS application and local Directus prototype are
 historical only. They were removed after the React/Vite plus Drupal stack was
 accepted as the production baseline. Git history remains the archive.

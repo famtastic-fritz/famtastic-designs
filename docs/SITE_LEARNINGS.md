@@ -1,6 +1,53 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-17 — Website discovery must preserve decisions, not just collect contact details
+
+- Anonymous and account-owned website discovery need the same decision vocabulary
+  for brand status, business model, industry context, domains, hosting, email,
+  inspiration, existing technology, and unlisted needs, even when the public
+  version uses fewer questions.
+- “No logo” is not one state. A customer who declines logo work must not receive
+  a brand add-on; a customer who wants help should receive the configured option.
+- Example-site URLs are weak evidence without the reasons behind them. Capture
+  what the customer wants to borrow or avoid and preserve that context for design.
+- Domain names typed into intake are preferences, not availability proof. Record
+  acceptable alternatives and the back-and-forth decision before purchase.
+- An unlisted product, service, industry, or workflow must remain representable.
+  Unknown industry text is preserved; an unlisted deliverable routes to human
+  scope review rather than being discarded or forced into a packaged website.
+- A public form that records “mockup requested” is not a proven anonymous mockup
+  pipeline until it triggers the proof job, delivers a secure review link, and
+  can hand the same request into an account without duplication.
+
 ## 2026-08-12 — Marketing production and local AI
+
+- A successful provider test is not a successful campaign post. The first
+  Facebook proof used text-only test content and an invalid route; acceptance
+  required the approved branded asset, account-specific copy, a canonical
+  landing page, UTMs, provider delivery evidence, and a visual check.
+- HTTP 200 does not prove a React campaign destination exists. A fallback shell
+  can return success for an unknown route, so campaign preflight must verify a
+  route-specific title, canonical, heading, or content marker.
+- One master creative should produce channel-native variants, but publishing
+  must retain separate evidence for the business identity and founder identity.
+  Cross-posting convenience never replaces verification of the actual account,
+  media, caption, destination, and audience.
+- Evaluate paid AI video with a controlled A/B test against the programmable
+  baseline. Subscribe only when presenter quality, trust, production speed, or
+  revision savings materially exceed the Remotion workflow.
+- Adobe Firefly is a useful comparison, not a perfect HeyGen substitute. Its
+  Text to Avatar feature can create stock-presenter videos, while Generate
+  Video produces short cinematic scenes that still need Express or Premiere
+  assembly, captions, real brand assets, and offer QA. Existing Creative Cloud
+  access may make that extra work economically sensible.
+- Consumer Creative Cloud access and server automation are separate rights and
+  credentials. Adobe's Audio/Video and Firefly APIs require an Adobe Developer
+  Console project, server-to-server credentials, and applicable service access;
+  never assume a desktop subscription automatically authorizes API automation.
+- Every internal implementation lesson should enter a reuse loop: record the
+  capability, classify its proof, teach the customer problem, package the
+  deliverable, define billing, publish useful education, and capture a future
+  case study without inventing outcomes.
 
 - Open weights do not imply local fit. Kimi K2 activates 32 billion of one
   trillion total parameters and is not a practical 16 GB laptop model; select

@@ -1,5 +1,17 @@
 # Site Studio Proof Integration
 
+## Orchestration direction
+
+The current proof dispatch/callback contract remains the proven integration
+boundary. The planned provider-neutral specialist-agent system that prepares
+research, recommendations, add-ons, contracts, prototypes, QA, and evidence is
+defined in `docs/architecture/SHAY_WEBSITE_DELIVERY_SWARM.md`.
+
+Shay will orchestrate versioned routines and bounded specialist agents rather
+than acting as one all-purpose model. The future `website_build_brief.v2`
+extends the present prospect-safe proof payload; it does not retroactively
+upgrade historical image-free pilots or unproven provider routes.
+
 ## Modes
 
 - Offline local mode: production Drupal creates a private request and a

@@ -36,6 +36,13 @@
   `marketing/brands/famtastic`, and campaign/customer/Drupal truth outside the
   portable boundary. Run `python3 scripts/campaign-readiness.py` before saying
   campaign production is ready.
+- Before choosing a paid creative, document, video, model, storage, publishing,
+  or analytics provider, read `marketing/providers.json` and
+  `docs/marketing/ADOBE_SUITE_CONNECTION_MAP_2026-08-13.md`. This provider
+  registry applies equally to Codex, Claude, Shay, local agents, and scripts.
+  Reuse an available subscription before proposing a new paid service. Never
+  infer API entitlement from a consumer subscription, never commit credentials,
+  and record provider-produced artifacts in the canonical campaign evidence.
 
 ## Package Managers
 

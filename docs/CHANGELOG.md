@@ -1,5 +1,23 @@
 # Product changelog
 
+## 2026-08-12 — Campaign publishing proof and video evaluation
+
+- Proved branded Facebook Page photo publishing and founder-profile sharing
+  with account-specific copy and provider evidence.
+- Corrected campaign destinations from a React fallback route to the canonical
+  `/55-cents-a-day-website` experience with stable campaign UTMs.
+- Added route-specific campaign-link validation so HTTP success alone cannot
+  pass marketing preflight.
+- Confirmed two 15-second vertical campaign videos, including an audio-enabled
+  Remotion master, and initiated one controlled HeyGen presenter-video
+  comparison on the connected free plan.
+- Expanded the capability registry and capability-to-revenue strategy for
+  campaign strategy, branded creative, short-form video, social publishing,
+  marketing command centers, tutorials, and future service packaging.
+- Added a controlled Adobe Firefly avatar-and-B-roll production brief with an
+  offer-safe script, assembly instructions, and a common HeyGen/Firefly/Remotion
+  evaluation scorecard.
+
 ## 2026-08-12 — Hybrid marketing production foundation
 
 - Documented the lowest-cost credible production flow for the 17-day Web
