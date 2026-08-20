@@ -15,6 +15,7 @@ export default function PurchasePage() {
   const [renewal, setRenewal] = useState(false);
   const [terms, setTerms] = useState(false);
   const [marketing, setMarketing] = useState(false);
+  const [grantCode, setGrantCode] = useState('');
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     Promise.all([customerSession().catch(() => null), getCustomerCatalog(), getCustomerWorkspace().catch(() => null)])
@@ -35,7 +36,7 @@ export default function PurchasePage() {
   async function checkout(event) {
     event.preventDefault(); setBusy(true); setState((current) => ({ ...current, error: '' }));
     try {
-      const result = await createCommerceCheckout({ organization: organization.public_id, website_request: websiteRequest, skus: [baseSku, ...selected], domain_choice: domainChoice, recurring_authorized: renewal, accept_terms: terms, terms_version: state.terms.version, marketing_opt_in: marketing });
+      const result = await createCommerceCheckout({ organization: organization.public_id, website_request: websiteRequest, skus: [baseSku, ...selected], domain_choice: domainChoice, recurring_authorized: renewal, accept_terms: terms, terms_version: state.terms.version, marketing_opt_in: marketing, grant_code: grantCode.trim() });
       window.location.assign(result.checkout_url);
     } catch (error) { setState((current) => ({ ...current, error: error.message })); setBusy(false); }
   }
@@ -49,9 +50,10 @@ export default function PurchasePage() {
     {!websiteRequest && <fieldset><legend>Choose the package that fits</legend>{websiteBundles.map((item) => <label key={item.sku}><input type="radio" name="bundle" value={item.sku} checked={baseSku === item.sku} onChange={(event) => setBaseSku(event.target.value)} required /> <b>{item.title}</b> — {money(item.price)}<small>{item.summary}</small></label>)}</fieldset>}
     <fieldset><legend>Domain setup</legend><label><input type="radio" name="domain" value="new_domain" checked={domainChoice === 'new_domain'} onChange={(e) => setDomainChoice(e.target.value)} required /> Register a new customer-owned domain for the included first year</label><label><input type="radio" name="domain" value="existing_domain" checked={domainChoice === 'existing_domain'} onChange={(e) => setDomainChoice(e.target.value)} /> Connect a domain I already own</label></fieldset>
     <fieldset><legend>Useful add-ons</legend>{addons.map((item) => <label key={item.sku}><input type="checkbox" checked={selected.includes(item.sku)} onChange={(e) => setSelected((current) => e.target.checked ? [...current, item.sku] : current.filter((sku) => sku !== item.sku))} /> <b>{item.title}</b> — {money(item.price)}<small>{item.summary}</small></label>)}</fieldset>
+    <fieldset><legend>Private grant or credit</legend><label>Grant code<input value={grantCode} onChange={(event) => setGrantCode(event.target.value.toUpperCase())} autoComplete="off" placeholder="FAM-GRANT-…" /><small>Codes are checked against this account, website request, and package. A fully sponsored order completes here without opening Stripe.</small></label></fieldset>
     <label className="purchase-consent"><input type="checkbox" checked={renewal} onChange={(e) => setRenewal(e.target.checked)} required /> I authorize the hosting included with this package to renew at {renewalPrice}/month after the included first year. I can cancel before renewal from my account.</label>
     <label className="purchase-consent"><input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} required /> I accept the recorded product scope, payment, cancellation, renewal, and domain terms.</label>
     <label className="purchase-consent"><input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} /> Send me useful articles and relevant offers. I can unsubscribe without affecting service messages.</label>
-    <div className="purchase-total"><span>Due today</span><strong>{money(total)}</strong></div><button className="btn btn--lime" disabled={busy || !base}>{busy ? 'Opening secure payment…' : 'Continue to secure payment'}</button>
+    <div className="purchase-total"><span>{grantCode ? 'Before verified grant' : 'Due today'}</span><strong>{money(total)}</strong></div><button className="btn btn--lime" disabled={busy || !base}>{busy ? 'Finalizing…' : grantCode ? 'Apply grant and continue' : 'Continue to secure payment'}</button>
   </form>;
 }

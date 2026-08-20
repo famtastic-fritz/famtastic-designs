@@ -33,6 +33,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PurchasePage from './pages/PurchasePage.jsx';
 import FiftyFiveCentWebsitePage from './pages/FiftyFiveCentWebsitePage.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
+import ProofSharePage from './pages/ProofSharePage.jsx';
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="/p/:token/status" element={<ProofStatusPage />} />
         <Route path="/portal/:token" element={<ClientPortalPage />} />
         <Route path="/portal" element={<CustomerPortalDashboard />} />
+        <Route path="/proofs/share/:requestId/:signature" element={<ProofSharePage />} />
 
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />

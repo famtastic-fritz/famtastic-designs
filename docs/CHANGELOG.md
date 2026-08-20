@@ -85,6 +85,23 @@
 - Added the callable `run-website-delivery-swarm` repository skill and scale-out implementation record.
 - Added a reusable `human-experience-tester` specialist and callable skill with neutral control mode, opt-in Life Path lenses for 1–9/11/22/33, master-number calculation, protected-decision guardrails, and unit coverage for Life Paths 3 and 33.
 - Added the first customer-specific artifact pilot with Safe/Wild/OMG barbershop proofs, generated hero media, desktop/mobile screenshots, explicit approval/build automation, payment-boundary stop, Gmail self-delivery, and local-versus-premium model benchmarking.
+## 2026-08-12 — Campaign publishing proof and video evaluation
+
+- Proved branded Facebook Page photo publishing and founder-profile sharing
+  with account-specific copy and provider evidence.
+- Corrected campaign destinations from a React fallback route to the canonical
+  `/55-cents-a-day-website` experience with stable campaign UTMs.
+- Added route-specific campaign-link validation so HTTP success alone cannot
+  pass marketing preflight.
+- Confirmed two 15-second vertical campaign videos, including an audio-enabled
+  Remotion master, and initiated one controlled HeyGen presenter-video
+  comparison on the connected free plan.
+- Expanded the capability registry and capability-to-revenue strategy for
+  campaign strategy, branded creative, short-form video, social publishing,
+  marketing command centers, tutorials, and future service packaging.
+- Added a controlled Adobe Firefly avatar-and-B-roll production brief with an
+  offer-safe script, assembly instructions, and a common HeyGen/Firefly/Remotion
+  evaluation scorecard.
 
 ## 2026-08-12 — Hybrid marketing production foundation
 
@@ -105,6 +122,50 @@
   schema boundary and replaceable FAMtastic brand configuration, and created a
   fail-closed campaign readiness audit covering 68 records, UTMs, approvals,
   local tools, local models, and shared agent contracts.
+## 2026-08-18 — Revocable unlisted proof rooms
+
+- Added private-by-default, owner-controlled share links for approved three- or
+  six-concept website proof sets.
+- Added a branded anonymous proof room that exposes working previews only;
+  selection, revisions, purchase, and all account or intake data remain behind
+  the authenticated portal.
+- Made links server-signed, non-indexable, non-cacheable, and immediately
+  revocable, with separate controls to turn sharing off or replace an existing
+  link.
+- Suppressed analytics on unlisted review routes and added defensive path
+  redaction so request UUIDs and share signatures never enter page-view data.
+- Added customer-portal and staff-review controls plus acceptance coverage for
+  ownership, anonymous privacy, rotation, revocation, and mobile rendering.
+
+## 2026-08-18 — Account-safe proof email deep links
+
+- Changed proof-ready notifications from a generic portal link to an exact
+  request-scoped Projects link and told customers to use the same email address
+  that received the notification.
+- Made an unselected ready proof set the portal's immediate next action, so the
+  older generic portal link still opens the concepts for the correct account.
+- Added an explicit signed-in-account mismatch warning, visible account email,
+  exact request highlighting, and desktop/mobile acceptance coverage instead
+  of allowing a valid proof link to appear empty in the wrong workspace.
+
+## 2026-08-17 — Owner-gated website proofs, reliable alerts, and private grants
+
+- Versioned the complete `website_proof.generate.v1` standard and upgraded the
+  account intake to `website_discovery_v3` with a 0-10 FAMtastic scale,
+  structured color/emotion inputs, private visual references, and recorded AI
+  enrichment choice.
+- Connected submitted website requests to an exactly-three Safe/Wild/OMG proof
+  job, a visible staff review surface, authenticated customer previews,
+  selection/revision decisions, and an explicit owner-controlled email gate.
+- Added an explicit owner-gated FAMtastic showcase pack that appends three
+  original high-intensity working sites for a six-concept customer review.
+- Decoupled lifecycle automation and notification dispatch from mailbox ingest,
+  added worker/queue-age visibility, corrected the operational alert inbox, and
+  made customer registration generate a staff alert.
+- Added hashed grant-code classes, account/request/SKU scope, atomic redemption,
+  a staff administration surface, and real zero-dollar Commerce fulfillment.
+- Added private PNG/JPEG/WebP/PDF request assets with ownership, AI-use consent,
+  MIME, size, checksum, and account ownership controls.
 
 ## 2026-08-12 — 17-day campaign and independent QA-agent contracts
 

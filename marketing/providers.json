@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "providers": [
+    {"id":"openai_image","purpose":["campaign images","article graphics","creative variations"],"status":"available_in_codex","automation":"native_tool","secret_env":[]},
+    {"id":"adobe_firefly_web","purpose":["premium image ingredients","premium video b-roll"],"status":"manual_assisted","automation":"browser_handoff","secret_env":[]},
+    {"id":"adobe_firefly_services","purpose":["server-side image generation"],"status":"license_pending","automation":"api","secret_env":["ADOBE_FIREFLY_CLIENT_ID","ADOBE_FIREFLY_CLIENT_SECRET"]},
+    {"id":"adobe_express_embed","purpose":["template editing","resize","crop","trim","export to command center"],"status":"business_approval_pending","automation":"embedded_sdk","secret_env":["ADOBE_EXPRESS_CLIENT_ID"]},
+    {"id":"adobe_cc_libraries","purpose":["shared logos","colors","fonts","approved brand assets"],"status":"credential_setup_pending","automation":"oauth_api","secret_env":["ADOBE_CC_LIBRARIES_CLIENT_ID","ADOBE_CC_LIBRARIES_CLIENT_SECRET"]},
+    {"id":"adobe_photoshop_api","purpose":["PSD templates","renditions","background removal","image finishing"],"status":"entitlement_check_pending","automation":"api","secret_env":["ADOBE_PHOTOSHOP_CLIENT_ID","ADOBE_PHOTOSHOP_CLIENT_SECRET"]},
+    {"id":"adobe_pdf_services","purpose":["proposals","growth reports","lead magnets","customer PDFs"],"status":"credential_setup_pending","automation":"server_api","secret_env":["PDF_SERVICES_CLIENT_ID","PDF_SERVICES_CLIENT_SECRET"]},
+    {"id":"adobe_frameio","purpose":["video review","versioning","time-coded comments","approval webhooks"],"status":"account_entitlement_check_pending","automation":"oauth_api","secret_env":["FRAMEIO_CLIENT_ID","FRAMEIO_CLIENT_SECRET"]},
+    {"id":"remotion","purpose":["deterministic branded video assembly","platform variants"],"status":"installed_local","automation":"local_runner","secret_env":[]},
+    {"id":"heygen","purpose":["avatar presenter videos"],"status":"connected_when_key_present","automation":"api","secret_env":["HEYGEN_API_KEY"]},
+    {"id":"poe","purpose":["optional model routing and drafting"],"status":"connected_when_key_present","automation":"api","secret_env":["POE_API_KEY"]},
+    {"id":"postiz","purpose":["approval queue","scheduling","social publishing"],"status":"local_foundation","automation":"api","secret_env":["POSTIZ_API_KEY","POSTIZ_URL"]},
+    {"id":"google_drive","purpose":["decision logs","campaign packages","review artifacts"],"status":"connected_in_supported_agents","automation":"connector","secret_env":[]},
+    {"id":"gmail","purpose":["campaign review","notifications","mailbox testing"],"status":"connected_in_supported_agents","automation":"connector","secret_env":[]},
+    {"id":"stripe","purpose":["Commerce payment lifecycle"],"status":"configured_separately","automation":"api","secret_env":[]},
+    {"id":"ga4","purpose":["campaign traffic and conversion measurement"],"status":"site_tracking_configured","automation":"analytics","secret_env":[]}
+  ]
+}

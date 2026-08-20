@@ -11,7 +11,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 /**
  * Defines the Proof Variant entity.
  *
- * One of three design directions (a, b, c) generated for a proof campaign.
+ * One core or optional showcase direction generated for a proof campaign.
  * Each variant points at a static HTML proof artifact on disk
  * (backend/web/proofs/<campaign_id>/<direction>/index.html) and carries the
  * design DNA (JSON) that produced it.
@@ -56,7 +56,7 @@ class ProofVariant extends ContentEntityBase {
   /**
    * Allowed direction ids.
    */
-  public const DIRECTIONS = ['a', 'b', 'c'];
+  public const DIRECTIONS = ['a', 'b', 'c', 'd', 'e', 'f'];
 
   /**
    * {@inheritdoc}
@@ -77,6 +77,9 @@ class ProofVariant extends ContentEntityBase {
         'a' => 'A',
         'b' => 'B',
         'c' => 'C',
+        'd' => 'D',
+        'e' => 'E',
+        'f' => 'F',
       ])
       ->setRequired(TRUE)
       ->setDisplayConfigurable('form', TRUE)

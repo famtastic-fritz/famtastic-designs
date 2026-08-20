@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "pipeline": "famtastic_adobe_creative_production",
+  "principle": "Adobe supplies premium creative ingredients and human finishing; FAMtastic owns briefs, approvals, assembly, distribution, tracking, and evidence.",
+  "use_cases": [
+    {
+      "id": "offer-launch-55-cents",
+      "scenario": "Launch a conversion campaign for the $199 Web Basics offer.",
+      "audience": "Small-business owners delaying a first website because of cost or complexity.",
+      "source_offer": "Web Basics Bundle",
+      "adobe_jobs": ["Firefly photoreal campaign scenes", "Express brand-template finishing", "Premiere/Express social crops"],
+      "required_outputs": ["1200x628 image", "1080x1350 image", "1080x1920 story/reel", "15-second MP4", "thumbnail"],
+      "channels": ["facebook", "instagram", "tiktok", "youtube_shorts"],
+      "cta_path": "/web/packages/web-basics",
+      "proof_inputs": [
+        "marketing/55-cent-campaign/assets/facebook-feed-1200x628.jpg",
+        "marketing/55-cent-campaign/assets/instagram-feed-1080x1350.jpg",
+        "marketing/55-cent-campaign/assets/stories-reels-1080x1920.jpg",
+        "marketing/55-cent-campaign/video/famtastic-55-cent-campaign-15s.mp4"
+      ]
+    },
+    {
+      "id": "service-education-ai-agent",
+      "scenario": "Teach an existing website owner what an AI site agent does and create demand for the service.",
+      "audience": "Businesses losing leads because questions go unanswered after hours.",
+      "source_offer": "AI Site Agent",
+      "adobe_jobs": ["Firefly hero and interface-context imagery", "Express explainer carousel", "Premiere/Express captioned demo cut"],
+      "required_outputs": ["article hero", "five-slide carousel", "vertical explainer video", "FAQ graphic", "CTA card"],
+      "channels": ["blog", "linkedin", "facebook", "instagram", "youtube_shorts"],
+      "cta_path": "/web/contact",
+      "proof_inputs": []
+    },
+    {
+      "id": "customer-retention-growth-review",
+      "scenario": "Turn a delivered website's results into a branded customer review and relevant upsell conversation.",
+      "audience": "Existing customers with a launched website and available performance data.",
+      "source_offer": "Growth Review",
+      "adobe_jobs": ["Express branded report pages", "Photoshop chart and screenshot cleanup", "Acrobat customer PDF", "Premiere testimonial/case-study cut"],
+      "required_outputs": ["customer PDF", "portal summary graphic", "case-study social image", "30-second recap video", "next-step recommendation card"],
+      "channels": ["client_portal", "email", "blog", "linkedin"],
+      "cta_path": "/web/portal",
+      "proof_inputs": []
+    }
+  ]
+}

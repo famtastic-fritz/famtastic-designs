@@ -14,6 +14,8 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
+use Drupal\famtastic_pipeline\Service\CommerceLifecycleService;
+use Drupal\famtastic_pipeline\Service\GrantCodeService;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
@@ -36,6 +38,8 @@ final class CustomerPortalController extends ControllerBase {
     private readonly ConfigFactoryInterface $portalConfigFactory,
     private readonly LoggerInterface $logger,
     private readonly Connection $database,
+    private readonly GrantCodeService $grantCodes,
+    private readonly CommerceLifecycleService $commerceLifecycle,
   ) {}
 
   public static function create(ContainerInterface $container): self {
@@ -48,6 +52,8 @@ final class CustomerPortalController extends ControllerBase {
       $container->get('config.factory'),
       $container->get('logger.channel.famtastic_pipeline'),
       $container->get('database'),
+      $container->get('famtastic_pipeline.grant_codes'),
+      $container->get('famtastic_pipeline.commerce_lifecycle'),
     );
   }
 
@@ -80,6 +86,7 @@ final class CustomerPortalController extends ControllerBase {
     ]);
     $user->save();
     $customer = $this->portal->createCustomer($user, $data);
+    $this->portal->queueRegistrationNotification($customer);
     $this->sendVerification($request, $customer);
     return new JsonResponse(['ok' => TRUE, 'verification_required' => TRUE], 201);
   }
@@ -174,7 +181,8 @@ final class CustomerPortalController extends ControllerBase {
       if (empty($definition['published'])) continue;
       $items[] = array_intersect_key($definition, array_flip([
         'sku', 'type', 'title', 'summary', 'price', 'currency', 'billing',
-        'included', 'exclusions', 'intake_schema',
+        'included', 'exclusions', 'entitlements', 'intake_schema', 'fulfillment',
+        'portal', 'upsells',
       ]));
     }
     return $this->noStore(new JsonResponse(['products' => $items, 'terms' => [
@@ -220,6 +228,9 @@ final class CustomerPortalController extends ControllerBase {
       if (!empty($websiteRequest['commerce_order_id'])) {
         return $this->error('website_request_already_ordered', 409, 'This website request already has a purchase in progress.');
       }
+      if (($websiteRequest['proof_review_status'] ?? '') !== 'selected') {
+        return $this->error('website_proof_selection_required', 422, 'Choose one of your approved website concepts before purchasing.');
+      }
     }
 
     $skus = array_values(array_unique(array_filter(array_map('strval', (array) ($data['skus'] ?? [])))));
@@ -248,19 +259,50 @@ final class CustomerPortalController extends ControllerBase {
 
     $storeIds = $this->entityTypeManager()->getStorage('commerce_store')->getQuery()->accessCheck(FALSE)->condition('status', 1)->range(0, 1)->execute();
     if (!$storeIds) return $this->error('store_unavailable', 503, 'Checkout is temporarily unavailable.');
-    $items = [];
+    $variations = [];
+    $skuAmounts = [];
     foreach ($skus as $sku) {
       $variationIds = $this->entityTypeManager()->getStorage('commerce_product_variation')->getQuery()->accessCheck(FALSE)
         ->condition('sku', $sku)->condition('status', 1)->range(0, 1)->execute();
       /** @var \Drupal\commerce_product\Entity\ProductVariationInterface|null $variation */
       $variation = $variationIds ? ProductVariation::load(reset($variationIds)) : NULL;
       if (!$variation) return $this->error('product_unavailable', 422, 'One selected service is unavailable.');
+      $variations[$sku] = $variation;
+      $amount = (int) round((float) $variation->getPrice()->getNumber() * 100);
+      if ($privateOffer && $sku === $privateOffer['sku']) {
+        $amount = (int) $privateOffer['offered_amount_minor'];
+      }
+      $skuAmounts[$sku] = $amount;
+    }
+    $grantQuote = NULL;
+    if (trim((string) ($data['grant_code'] ?? '')) !== '') {
+      try {
+        $grantQuote = $this->grantCodes->quote(
+          (string) $data['grant_code'],
+          (int) $customer['id'],
+          (int) $organization['id'],
+          $websiteRequest ? (int) $websiteRequest['id'] : NULL,
+          $skuAmounts,
+        );
+      }
+      catch (\InvalidArgumentException $error) {
+        return $this->error('grant_code_invalid', 422, $error->getMessage());
+      }
+    }
+
+    $transaction = $this->database->startTransaction();
+    $items = [];
+    foreach ($variations as $sku => $variation) {
       $item = OrderItem::create([
         'type' => $variation->getOrderItemTypeId(), 'purchased_entity' => $variation, 'quantity' => 1,
         'unit_price' => $variation->getPrice(), 'title' => $variation->getTitle(),
       ]);
       if ($privateOffer && $sku === $privateOffer['sku']) {
         $item->setUnitPrice(new Price(number_format(((int) $privateOffer['offered_amount_minor']) / 100, 2, '.', ''), strtoupper((string) $privateOffer['currency'])), TRUE);
+      }
+      if ($grantQuote && $sku === $grantQuote['sku']) {
+        $newAmount = max(0, (int) $skuAmounts[$sku] - (int) $grantQuote['discount_minor']);
+        $item->setUnitPrice(new Price(number_format($newAmount / 100, 2, '.', ''), 'USD'), TRUE);
       }
       $item->save();
       $items[] = $item;
@@ -278,6 +320,7 @@ final class CustomerPortalController extends ControllerBase {
       'selected_skus' => $skus,
       'website_request_public_id' => $websiteRequest['public_id'] ?? '',
       'private_offer' => $privateOffer ? ['public_id' => $privateOffer['public_id'], 'sku' => $privateOffer['sku'], 'list_amount_minor' => (int) $privateOffer['list_amount_minor'], 'offered_amount_minor' => (int) $privateOffer['offered_amount_minor'], 'reason' => $privateOffer['reason']] : NULL,
+      'grant' => $grantQuote ? array_diff_key($grantQuote, ['id' => TRUE]) : NULL,
       'captured_at' => gmdate(DATE_ATOM),
     ]);
     $order->save();
@@ -285,6 +328,29 @@ final class CustomerPortalController extends ControllerBase {
       $this->portal->bindWebsiteRequestToOrder((int) $customer['id'], (string) $websiteRequest['public_id'], (int) $order->id());
     }
     if ($privateOffer) $this->database->update('famtastic_private_offer')->fields(['status' => 'accepted', 'commerce_order_id' => (int) $order->id(), 'accepted_at' => time(), 'changed' => time()])->condition('id', $privateOffer['id'])->condition('status', 'active')->execute();
+    if ($grantQuote) {
+      try {
+        $this->grantCodes->redeem($grantQuote, (int) $order->id(), (int) $customer['id'], (int) $organization['id'], $websiteRequest ? (int) $websiteRequest['id'] : NULL);
+      }
+      catch (\RuntimeException $error) {
+        $transaction->rollBack();
+        return $this->error('grant_code_reservation_failed', 409, $error->getMessage());
+      }
+    }
+    $order->recalculateTotalPrice();
+    if ($order->getTotalPrice() && $order->getTotalPrice()->isZero()) {
+      $order->set('state', 'completed');
+      $order->setPlacedTime(time());
+      $order->save();
+      $fulfillment = $this->commerceLifecycle->fulfill($order);
+      if (empty($fulfillment['fulfilled'])) {
+        throw new \RuntimeException('The sponsored order completed, but service activation requires staff review.');
+      }
+      return $this->noStore(new JsonResponse([
+        'ok' => TRUE, 'order_id' => (int) $order->id(), 'completed' => TRUE,
+        'checkout_url' => $request->getSchemeAndHttpHost() . '/portal/?order=' . $order->id() . '&grant=applied',
+      ], 201));
+    }
     return $this->noStore(new JsonResponse([
       'ok' => TRUE, 'order_id' => (int) $order->id(),
       'checkout_url' => $request->getSchemeAndHttpHost() . '/web/checkout/' . $order->id(),
@@ -310,6 +376,32 @@ final class CustomerPortalController extends ControllerBase {
     }
     catch (\InvalidArgumentException $e) { return $this->error('invalid_website_request', 422, $e->getMessage()); }
     catch (\RuntimeException) { return $this->error('website_request_not_found', 404, 'Website request not found.'); }
+  }
+
+  public function websiteProofDecision(Request $request, string $website_request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    try {
+      return new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->decideWebsiteRequestProof((int) $customer['id'], $website_request, $this->body($request))]);
+    }
+    catch (\InvalidArgumentException $error) { return $this->error('invalid_proof_decision', 422, $error->getMessage()); }
+    catch (\RuntimeException) { return $this->error('website_proofs_not_found', 404, 'Website proofs are not available.'); }
+  }
+
+  public function websiteProofShare(Request $request, string $website_request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    try {
+      $data = $this->body($request);
+      return $this->noStore(new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->updateWebsiteProofShare(
+        (int) $customer['id'],
+        $website_request,
+        (string) ($data['action'] ?? ''),
+        (int) $this->account->id(),
+      )]));
+    }
+    catch (\InvalidArgumentException $error) { return $this->error('invalid_proof_share_action', 422, $error->getMessage()); }
+    catch (\RuntimeException) { return $this->error('website_proofs_not_found', 404, 'Website proofs are not available.'); }
   }
 
   public function profile(Request $request): JsonResponse {

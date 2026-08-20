@@ -47,3 +47,8 @@ website-delivery-swarm/pilots/**/safe-site/
 website-delivery-swarm/pilots/**/wild-site/
 website-delivery-swarm/pilots/**/proof/
 website-delivery-swarm/pilots/**/proof-hub/
+# Locally symlinked shared skills (absolute paths — machine-specific)
+.claude/skills/
+
+# Packaged asset bundle — repackages content already tracked in this repo
+marketing/*.zip

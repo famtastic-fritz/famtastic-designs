@@ -23,6 +23,7 @@ final class CommerceLifecycleService {
     private readonly UuidInterface $uuid,
     private readonly CustomerPortalService $portal,
     private readonly ConfigFactoryInterface $configFactory,
+    private readonly OperationalLedger $ledger,
   ) {}
 
   /**
@@ -55,6 +56,7 @@ final class CommerceLifecycleService {
     $organizationId = (int) $organization['id'];
     if ($existing && $existing['status'] === 'fulfilled') {
       $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing);
+      $this->enqueueProjectProofs($order, $operations, (array) ($order->getData('famtastic_checkout') ?? []));
       return ['fulfilled' => TRUE, 'existing' => TRUE, 'record' => $existing, 'operations' => $operations];
     }
     $profile = $order->getBillingProfile();
@@ -114,6 +116,7 @@ final class CommerceLifecycleService {
     }
 
     $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing ?: []);
+    $this->enqueueProjectProofs($order, $operations, $checkout);
 
     $this->portal->activity($organizationId, 'commerce.fulfilled', 'Your purchase is confirmed and your services are ready for intake.');
     $this->queueNotifications($order, $customer, $skus, array_values(array_unique($intakeSchemas)));
@@ -156,14 +159,23 @@ final class CommerceLifecycleService {
     $intake = !empty($fulfillment['intake_id']) ? $intakeStorage->load((int) $fulfillment['intake_id']) : NULL;
     if (!$intake) {
       $requestIntake = $request ? (json_decode((string) $request['intake_data'], TRUE) ?: []) : [];
+      $assetIds = $request ? $this->database->select('famtastic_request_asset', 'a')->fields('a', ['file_id'])
+        ->condition('website_request_id', (int) $request['id'])->condition('status', 'active')->execute()->fetchCol() : [];
       $intake = $intakeStorage->create([
         'prospect_ref' => $prospect->id(),
         'primary_goal' => $requestIntake['primary_goal'] ?? 'Complete purchased-service onboarding',
         'ideal_customer' => $requestIntake['ideal_customer'] ?? '',
+        'customer_problem' => $requestIntake['customer_pain_points'] ?? '',
+        'desired_outcome' => $requestIntake['success_metrics'] ?? '',
+        'primary_cta' => mb_substr((string) ($requestIntake['desired_actions'] ?? ''), 0, 255),
         'services' => ($requestIntake['products_services'] ?? '') . "\n\nPurchased configuration: " . json_encode(['skus' => array_values((array) ($checkout['selected_skus'] ?? [])), 'domain_choice' => $checkout['domain_choice'] ?? ''], JSON_THROW_ON_ERROR),
-        'required_sections' => $requestIntake['required_features'] ?? '',
-        'style_preferences' => $requestIntake['style_preferences'] ?? '',
+        'required_sections' => trim((string) ($requestIntake['page_list'] ?? '') . "\n" . (string) ($requestIntake['required_features'] ?? '')),
+        'info_to_avoid' => trim((string) ($requestIntake['colors_to_avoid'] ?? '') . "\n" . (string) ($requestIntake['styles_to_avoid'] ?? '')),
+        'brand_colors' => mb_substr((string) ($requestIntake['preferred_colors'] ?? ''), 0, 255),
+        'style_preferences' => trim((string) ($requestIntake['style_preferences'] ?? '') . "\nDesired feeling: " . (string) ($requestIntake['desired_feeling'] ?? '') . "\nFAMtastic level: " . (string) ($requestIntake['famtastic_level'] ?? 5) . '/10'),
         'reference_sites' => $requestIntake['reference_sites'] ?? '',
+        'asset_refs' => $assetIds,
+        'asset_ownership_confirmed' => $assetIds !== [],
         'existing_domain' => $request['existing_domain'] ?? '',
       ]);
       $intake->save();
@@ -194,6 +206,47 @@ final class CommerceLifecycleService {
     return ['prospect_id' => (int) $prospect->id(), 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id()];
   }
 
+  /** Carries the selected pre-purchase proof set into the paid project. */
+  private function enqueueProjectProofs(OrderInterface $order, array $operations, array $checkout): void {
+    $request = [];
+    if (!empty($checkout['website_request_public_id'])) {
+      $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+        ->condition('public_id', (string) $checkout['website_request_public_id'])->execute()->fetchAssoc();
+      if ($row) {
+        $request = json_decode((string) $row['intake_data'], TRUE) ?: [];
+        if ($row['proof_review_status'] === 'selected' && !empty($row['proof_campaign_id'])) {
+          $campaign = $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']);
+          $variantIds = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
+            ->condition('campaign_id', (int) $row['proof_campaign_id'])->sort('direction_id')->execute();
+          $variants = array_values($this->entities->getStorage('proof_variant')->loadMultiple($variantIds));
+          $directions = array_map(static fn(object $variant): string => (string) $variant->get('direction_id')->value, $variants);
+          $validSet = $directions === ['a', 'b', 'c'] || $directions === ['a', 'b', 'c', 'd', 'e', 'f'];
+          if (!$campaign || !$validSet) {
+            throw new \RuntimeException('commerce_selected_proof_set_missing');
+          }
+          $this->portal->markProjectProofReady((int) $operations['project_id'], $campaign, $variants);
+          return;
+        }
+        throw new \RuntimeException('commerce_website_request_proof_not_selected');
+      }
+    }
+    $projectId = (int) $operations['project_id'];
+    $prospectId = (int) $operations['prospect_id'];
+    $this->ledger->enqueue(
+      'proof.generate:paid-project:' . $projectId,
+      'proof.generate',
+      [
+        'prospect_id' => $prospectId,
+        'project_id' => $projectId,
+        'commerce_order_id' => (int) $order->id(),
+        'website_request_public_id' => (string) ($checkout['website_request_public_id'] ?? ''),
+        'website_discovery_v3' => $request,
+        'website_discovery_v2' => $request,
+      ],
+      $prospectId,
+    );
+  }
+
   /** Reconciles refund, void, and failed-payment states into service access. */
   public function reconcilePayment(object $payment): void {
     if (!method_exists($payment, 'getOrder') || !$payment->getOrder()) return;
@@ -214,13 +267,13 @@ final class CommerceLifecycleService {
         ->condition('organization_id', $row['organization_id'])->condition('order_id', (int) $order->id())->execute();
     }
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $row['customer_id'])->execute()->fetchAssoc();
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $this->queue("commerce:{$order->id()}:payment:{$state}", 'transactional', $customer['email'], 'Payment update for your FAMtastic order', "Order {$order->getOrderNumber()} payment status: {$state}. Sign in to review next steps.");
     $this->queue("commerce:{$order->id()}:staff-payment:{$state}", 'operational', $admin, "Commerce payment requires review — {$state}", "Order: {$order->getOrderNumber()}\nCustomer: {$customer['email']}\nState: {$state}");
   }
 
   private function queueNotifications(OrderInterface $order, array $customer, array $skus, array $intakeSchemas): void {
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $number = $order->getOrderNumber() ?: (string) $order->id();
     $summary = implode(', ', $skus);
     $this->queue('commerce:' . $order->id() . ':customer-receipt', 'transactional', (string) $customer['email'],

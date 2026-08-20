@@ -136,6 +136,129 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Exports the current account-owned request brief without requiring payment.
+   */
+  #[CLI\Command(name: 'famtastic:website-request-proof-export', aliases: ['fwrpe'])]
+  #[CLI\Argument(name: 'requestReference', description: 'Website request numeric id or public UUID.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the request public UUID.')]
+  public function websiteRequestProofExport(string $requestReference, array $options = ['confirm' => '']): int {
+    $database = \Drupal::database();
+    $query = $database->select('famtastic_project_request', 'r')->fields('r');
+    ctype_digit($requestReference) ? $query->condition('id', (int) $requestReference) : $query->condition('public_id', $requestReference);
+    $request = $query->execute()->fetchAssoc();
+    if (!$request || !hash_equals((string) $request['public_id'], trim((string) $options['confirm']))) {
+      $this->logger()->error('Export requires --confirm=<exact-request-public-uuid>.');
+      return self::EXIT_FAILURE;
+    }
+    if ($request['status'] === 'draft' || !empty($request['proof_campaign_id'])) {
+      $this->logger()->error('Request must be submitted and must not already have an attached proof set.');
+      return self::EXIT_FAILURE;
+    }
+    $prospect = \Drupal::entityTypeManager()->getStorage('famtastic_prospect')->load((int) $request['prospect_id']);
+    if (!$prospect) {
+      $this->logger()->error('Request prospect does not exist.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
+      $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+      $campaign = $proofs->createLocalHandoff($prospect);
+      /** @var \Drupal\famtastic_pipeline\Service\CustomerPortalService $portal */
+      $portal = \Drupal::service('famtastic_pipeline.customer_portal');
+      $context = $portal->websiteRequestProofContext((int) $request['id']);
+      $assets = $database->select('famtastic_request_asset', 'a')->fields('a')
+        ->condition('website_request_id', (int) $request['id'])->condition('status', 'active')->execute()->fetchAll(\PDO::FETCH_ASSOC);
+      $fileStorage = \Drupal::entityTypeManager()->getStorage('file');
+      $assetManifest = [];
+      foreach ($assets as $asset) {
+        $file = $fileStorage->load((int) $asset['file_id']);
+        $assetManifest[] = [
+          'name' => (string) $asset['original_name'],
+          'mime_type' => (string) $asset['mime_type'],
+          'size_bytes' => (int) $asset['size_bytes'],
+          'sha256' => (string) $asset['sha256'],
+          'ai_use_consent' => (bool) $asset['ai_use_consent'],
+          'private_uri' => $file ? (string) $file->getFileUri() : '',
+        ];
+      }
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode([
+      'schema_version' => 2,
+      'routine' => 'website_proof.generate.v1',
+      'transport' => 'offline_ssh_bundle',
+      'website_request_id' => (int) $request['id'],
+      'website_request_public_id' => (string) $request['public_id'],
+      'prospect_id' => (int) $request['prospect_id'],
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'job_id' => (string) $campaign->get('studio_job_id')->value,
+      'website_discovery_v3' => $context['website_discovery_v3'],
+      'reference_assets' => $assetManifest,
+      'required_directions' => [
+        'a' => ['name' => 'Safe'],
+        'b' => ['name' => 'Wild'],
+        'c' => ['name' => 'OMG'],
+      ],
+      'customer_delivery_authorized' => FALSE,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success('Account-owned website proof handoff exported; customer delivery remains locked.');
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Exports an optional three-direction FAMtastic showcase expansion.
+   */
+  #[CLI\Command(name: 'famtastic:website-request-proof-showcase-export', aliases: ['fwrpse'])]
+  #[CLI\Argument(name: 'requestReference', description: 'Website request numeric id or public UUID.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the request public UUID.')]
+  public function websiteRequestProofShowcaseExport(string $requestReference, array $options = ['confirm' => '']): int {
+    $database = \Drupal::database();
+    $query = $database->select('famtastic_project_request', 'r')->fields('r');
+    ctype_digit($requestReference) ? $query->condition('id', (int) $requestReference) : $query->condition('public_id', $requestReference);
+    $request = $query->execute()->fetchAssoc();
+    $confirmation = trim((string) $options['confirm']);
+    if (!$request || !hash_equals((string) $request['public_id'], $confirmation)) {
+      $this->logger()->error('Showcase export requires --confirm=<exact-request-public-uuid>.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
+      $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+      $campaign = $proofs->prepareWebsiteRequestShowcase((int) $request['id'], $confirmation);
+      /** @var \Drupal\famtastic_pipeline\Service\CustomerPortalService $portal */
+      $portal = \Drupal::service('famtastic_pipeline.customer_portal');
+      $context = $portal->websiteRequestProofContext((int) $request['id']);
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode([
+      'schema_version' => 1,
+      'routine' => 'website_proof.showcase.v1',
+      'transport' => 'offline_ssh_bundle_showcase',
+      'website_request_id' => (int) $request['id'],
+      'website_request_public_id' => (string) $request['public_id'],
+      'prospect_id' => (int) $request['prospect_id'],
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'job_id' => (string) $campaign->get('studio_job_id')->value,
+      'website_discovery_v3' => $context['website_discovery_v3'],
+      'required_directions' => [
+        'd' => ['name' => 'Royal Current'],
+        'e' => ['name' => 'Crownverse'],
+        'f' => ['name' => 'Shay Live'],
+      ],
+      'resulting_direction_count' => 6,
+      'customer_delivery_authorized' => FALSE,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success('FAMtastic showcase handoff exported; customer delivery remains locked.');
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Exports a local refresh while an image-free pilot remains publicly usable.
    */
   #[CLI\Command(name: 'famtastic:proof-local-refresh-export', aliases: ['fplre'])]
@@ -226,6 +349,31 @@ class PipelineCommands extends DrushCommands {
       'payload_checksum' => $actualChecksum,
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     $this->logger()->success('Local Site Studio proof bundle imported.');
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
+   * Runs protection, automation, and notification dispatch as one observable cycle.
+   */
+  #[CLI\Command(name: 'famtastic:lifecycle-run', aliases: ['flr'])]
+  #[CLI\Option(name: 'limit', description: 'Maximum automation jobs and notifications to process (1-100).')]
+  public function lifecycleRun(array $options = ['limit' => 25]): int {
+    $limit = max(1, min(100, (int) $options['limit']));
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\LifecycleOperationsService $operations */
+      $operations = \Drupal::service('famtastic_pipeline.lifecycle_operations');
+      $result = [
+        'protection' => $operations->runProtection(),
+        'automation' => $operations->runAutomation(min(50, $limit)),
+        'notifications' => $operations->dispatchNotifications($limit),
+      ];
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success('FAMtastic lifecycle cycle completed.');
     return self::EXIT_SUCCESS;
   }
 

@@ -12,6 +12,10 @@ capability is not “proven” merely because code exists.
 | Website-delivery specialist swarm | Locally proven | Versioned brief, package/add-on reasoning, three-direction proof, agent trace, independent QA, and Playwright evidence across guest and member lanes |
 | Synthetic human-experience testing | Locally proven | Reusable control persona plus disclosed, opt-in creative lenses that cannot affect commercial, legal, safety, accessibility, or approval decisions |
 | Account-scoped private pricing | Locally proven | Auditable relationship, partner, and promotional pricing without public coupons |
+| Owner-gated three-direction website proofs | Locally proven | Safe/Wild/OMG generation, private staff review, authenticated selection, and revision workflow |
+| Optional six-direction FAMtastic showcase | Locally proven | Three additional original high-intensity sites appended without bypassing private review or customer-send gates |
+| Scoped service grants and owner comps | Locally proven | Hashed account/request codes with audited zero-dollar Commerce fulfillment |
+| Private customer visual references | Locally proven | Consent-tracked, checksummed image and PDF inputs attached to one request |
 | Lead response and notifications | Test-provider proven | Acknowledgment, owner alerts, deadlines, escalation, and worker protection |
 | Portal support cases | Test-provider proven | Customer timelines, priority targets, replies, and staff alerts |
 | Mail reply ingestion | Locally proven | Thread-address matching, validation, attachment policy, and unmatched-reply handling |
@@ -47,6 +51,11 @@ The canonical reusable recipe is
 `docs/architecture/LEAN_SOCIAL_PRESENCE_PRODUCTION_PROCESS_V1.md`. The Rattler
 Lifers campaign remains its first golden example and does not become a general
 template until a second unrelated brand reproduces the quality and timing.
+| Campaign strategy and content systems | Production smoke-tested | Offer-led campaign architecture, landing pages, articles, FAQs, email, social adaptations, CTAs, UTMs, and measurement |
+| Branded social creative production | Locally proven | Reusable image, motion-graphics, short-form video, caption, safe-area, and channel-variant production |
+| Social publishing orchestration | Provider-proven on Facebook | Approval, account-specific copy, media publishing, delivery verification, retry evidence, and campaign attribution |
+| AI-presenter video production | Provider generation in progress | Presenter-led explainers and advertisements governed by the same offer truth, QA, and publishing ledger |
+| Marketing operations command center | Locally proven | Mobile campaign review, approvals, schedules, channel status, exceptions, attributed visits, leads, and sales |
 
 Update this table only when evidence changes. Link durable proof in the release
 or acceptance report; do not upgrade a classification from confidence alone.

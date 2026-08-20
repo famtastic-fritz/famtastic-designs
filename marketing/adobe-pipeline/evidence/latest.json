@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-08-13T19:18:19.417544+00:00",
+  "pipeline": "famtastic_adobe_creative_production",
+  "safe_mode": true,
+  "external_calls": 0,
+  "credits_consumed": 0,
+  "publishing_performed": false,
+  "passed": true,
+  "assertions": [
+    {
+      "use_case": "offer-launch-55-cents",
+      "status": "locally_proven",
+      "checks": {
+        "unique_id": true,
+        "scenario_defined": true,
+        "audience_defined": true,
+        "offer_defined": true,
+        "adobe_job_defined": true,
+        "deliverables_defined": true,
+        "distribution_defined": true,
+        "cta_defined": true,
+        "local_proof_inputs_exist": true
+      }
+    },
+    {
+      "use_case": "service-education-ai-agent",
+      "status": "contract_proven_assets_pending",
+      "checks": {
+        "unique_id": true,
+        "scenario_defined": true,
+        "audience_defined": true,
+        "offer_defined": true,
+        "adobe_job_defined": true,
+        "deliverables_defined": true,
+        "distribution_defined": true,
+        "cta_defined": true,
+        "local_proof_inputs_exist": true
+      }
+    },
+    {
+      "use_case": "customer-retention-growth-review",
+      "status": "contract_proven_assets_pending",
+      "checks": {
+        "unique_id": true,
+        "scenario_defined": true,
+        "audience_defined": true,
+        "offer_defined": true,
+        "adobe_job_defined": true,
+        "deliverables_defined": true,
+        "distribution_defined": true,
+        "cta_defined": true,
+        "local_proof_inputs_exist": true
+      }
+    }
+  ],
+  "classification_note": "Contract proof validates repeatability. Local proof additionally requires checked-in deliverable evidence; Adobe API proof requires approved credentials and a separate authorized run."
+}

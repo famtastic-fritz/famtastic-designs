@@ -1,0 +1,8 @@
+{
+  "campaign_events": [
+    {"campaign":"web_basics_55_cents_17d","content":"proof_offer_launch","events":["impression","video_progress","cta_click","intake_started","checkout_started","purchase"]},
+    {"campaign":"ai_site_agent_education","content":"proof_after_hours","events":["impression","video_progress","article_view","cta_click","quote_requested"]},
+    {"campaign":"customer_growth_review","content":"proof_post_launch","events":["portal_impression","report_opened","review_booked","recommendation_viewed","add_on_purchased"]}
+  ],
+  "note":"This is the event contract. Counts remain empty until an authorized live or controlled test run produces evidence."
+}

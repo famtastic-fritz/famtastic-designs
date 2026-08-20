@@ -90,8 +90,10 @@ final class BuildTelemetryService {
       'preview_url' => (string) $variant->get('preview_url')->value,
       'design_dna' => json_decode((string) $variant->get('design_dna')->value, TRUE),
     ], $variants);
+    $suffix = preg_replace('/[^a-z0-9_-]+/', '-', strtolower((string) ($source['build_key_suffix'] ?? 'site-studio')));
+    $suffix = trim((string) $suffix, '-') ?: 'site-studio';
     return $this->record([
-      'build_key' => 'proof:' . $campaign->get('campaign_id')->value . ':site-studio',
+      'build_key' => 'proof:' . $campaign->get('campaign_id')->value . ':' . $suffix,
       'campaign_key' => (string) $prospect->get('campaign')->value,
       'prospect_id' => (int) $prospect->id(),
       'proof_campaign_id' => (int) $campaign->id(),

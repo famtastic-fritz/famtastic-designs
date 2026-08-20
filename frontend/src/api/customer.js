@@ -33,6 +33,17 @@ export const getCustomerCatalog = () => request('/catalog');
 export const createCommerceCheckout = (payload) => request('/checkout', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const createWebsiteRequest = (payload) => request('/website-requests', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const updateWebsiteRequest = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}`, { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
+export const decideWebsiteRequestProof = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}/proof-decision`, { method: 'POST', csrf: true, body: JSON.stringify(payload) });
+export const updateWebsiteRequestProofShare = (id, action) => request(`/website-requests/${encodeURIComponent(id)}/proof-share`, { method: 'POST', csrf: true, body: JSON.stringify({ action }) });
+export async function uploadWebsiteRequestAsset(id, formData) {
+  const token = await fetch(`${WEB_PREFIX}/session/token`, { credentials: 'same-origin' }).then((response) => response.text());
+  const response = await fetch(`${API}/website-requests/${encodeURIComponent(id)}/assets`, {
+    method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json', 'X-CSRF-Token': token }, body: formData,
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new CustomerApiError(payload.message || 'Please try again.', response.status, payload.error);
+  return payload;
+}
 export const updateCustomerProfile = (payload) => request('/profile', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const updateCustomerPreferences = (payload) => request('/preferences', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const createCustomerReferral = (payload) => request('/referrals', { method: 'POST', csrf: true, body: JSON.stringify(payload) });

@@ -59,6 +59,7 @@ const BRANCHES = {
           { name: 'businessName', label: 'Business name', type: 'text', required: true, autoComplete: 'organization' },
           { name: 'industry', label: 'Industry', type: 'text', required: true, placeholder: 'e.g. restaurant, landscaping, dental' },
           { name: 'location', label: 'Location', type: 'text', required: true, placeholder: 'City, State' },
+          { name: 'businessModel', label: 'How does the business make money today?', type: 'textarea', required: true, placeholder: 'What you sell, how customers find you, and how they buy or book.' },
         ],
       },
       {
@@ -81,6 +82,31 @@ const BRANCHES = {
               { value: '10+', label: '10+ pages' },
             ],
           },
+          {
+            name: 'brandStatus', label: 'Logo and brand status', type: 'select', required: true,
+            options: [
+              { value: 'ready', label: 'I have a logo / brand assets' },
+              { value: 'no_logo_no_help', label: 'No logo, and I do not want one' },
+              { value: 'help_needed', label: 'No logo, and I want help creating one' },
+              { value: 'partial', label: 'I have some brand pieces' },
+            ],
+          },
+        ],
+      },
+      {
+        title: 'Domain, email & inspiration',
+        fields: [
+          {
+            name: 'domainChoice', label: 'Domain situation', type: 'select', required: true,
+            options: [
+              { value: 'new_domain', label: 'I need a new domain' },
+              { value: 'existing_domain', label: 'I already own a domain' },
+              { value: 'undecided', label: 'I am not sure' },
+            ],
+          },
+          { name: 'domainDetails', label: 'Domain, hosting, email, or repository details', type: 'textarea', required: false, placeholder: 'Desired domains or an existing domain, registrar, host, email provider, website login, Git repository, or anything you know.' },
+          { name: 'businessEmailNeeds', label: 'Custom business email needs', type: 'textarea', required: false, placeholder: 'Examples: info@, sales@, two mailboxes, forwarding only, or help choosing.' },
+          { name: 'referenceSites', label: 'Sites you like or dislike—and why', type: 'textarea', required: false, placeholder: 'URLs plus what to borrow or avoid. We use the reasons, not just the links.' },
         ],
       },
       {
@@ -110,6 +136,15 @@ const BRANCHES = {
               { value: '1-week', label: 'Within 1 week' },
               { value: '1-month', label: 'Within 1 month' },
               { value: 'flexible', label: 'Flexible' },
+            ],
+          },
+          { name: 'customNeeds', label: 'Anything else you need—even if we do not list it?', type: 'textarea', required: false, placeholder: 'Products, services, integrations, accessibility, legal, or unusual workflow needs.' },
+          {
+            name: 'mockupInterest', label: 'What would help you decide?', type: 'select', required: true,
+            options: [
+              { value: 'mockup', label: 'A no-account mockup / visual direction' },
+              { value: 'quote', label: 'A quote and recommendation' },
+              { value: 'both', label: 'Both a mockup and quote' },
             ],
           },
         ],
@@ -380,6 +415,14 @@ function estimateWebsite(v) {
   if (v.aiFeatures?.includes('automation')) {
     low += 499; high += 1000;
     includes.push('Workflow automation (leads, follow-ups, notifications)');
+  }
+  if (v.brandStatus === 'help_needed') {
+    low += 249; high += 249;
+    includes.push('Logo and Brand Starter add-on');
+  }
+  if (String(v.businessEmailNeeds || '').trim()) {
+    low += 99; high += 99;
+    includes.push('Business Email Setup add-on');
   }
   return { low, high, includes };
 }

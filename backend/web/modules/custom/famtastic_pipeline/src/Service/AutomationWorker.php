@@ -19,6 +19,7 @@ final class AutomationWorker {
     private readonly CustomerDeploymentService $deployments,
     private readonly DomainLifecycleService $domains,
     private readonly HostingLifecycleService $hosting,
+    private readonly CustomerPortalService $portal,
   ) {}
 
   /**
@@ -65,13 +66,18 @@ final class AutomationWorker {
    * Produces exactly three isolated proof variants or throws for retry.
    */
   private function generateProofs(array $job): array {
+    $context = (array) ($job['payload'] ?? []);
+    $requestId = (int) ($context['website_request_id'] ?? 0);
+    if ($requestId) {
+      $context = array_replace($context, $this->portal->websiteRequestProofContext($requestId));
+    }
     $prospectId = (int) ($job['payload']['prospect_id'] ?? $job['prospect_id'] ?? 0);
     $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
     if (!$prospect) {
       throw new \RuntimeException('Prospect no longer exists.');
     }
     $existing = $this->proofCampaigns->getForProspect($prospect);
-    $created = $existing ?: $this->proofCampaigns->createForProspect($prospect);
+    $created = $existing ?: $this->proofCampaigns->createForProspect($prospect, $context);
     $variants = $created['variants'];
     if (
       count($variants) === 0
@@ -124,12 +130,21 @@ final class AutomationWorker {
       ],
       $prospectId,
     );
-    $this->ledger->enqueue(
-      'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
-      'outreach.prepare',
-      ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
-      $prospectId,
-    );
+    $projectId = (int) ($job['payload']['project_id'] ?? 0);
+    if ($requestId) {
+      $this->portal->attachWebsiteRequestProof($requestId, $campaign, $variants);
+    }
+    elseif ($projectId) {
+      $this->portal->markProjectProofReady($projectId, $campaign, $variants);
+    }
+    else {
+      $this->ledger->enqueue(
+        'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
+        'outreach.prepare',
+        ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
+        $prospectId,
+      );
+    }
     return [
       'campaign_id' => $campaign->get('campaign_id')->value,
       'variant_count' => 3,

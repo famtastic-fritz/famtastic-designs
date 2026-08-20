@@ -9,10 +9,11 @@ export default function GoogleAnalytics() {
   const path = `${location.pathname}${location.search}`;
 
   useEffect(() => {
+    if (location.pathname.startsWith('/proofs/share/')) return;
     if (path === lastTrackedPath) return;
     lastTrackedPath = path;
     trackPageView(path);
-  }, [path]);
+  }, [location.pathname, path]);
 
   return null;
 }

@@ -23,7 +23,7 @@ final class PipelineSettingsForm extends ConfigFormBase {
       '#type' => 'email',
       '#title' => $this->t('Fritz notification email'),
       '#required' => TRUE,
-      '#default_value' => $config->get('notification_to_email') ?: 'fritz.medine@gmail.com',
+      '#default_value' => $config->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com',
       '#description' => $this->t('New leads, customer portal messages, and SLA alerts are sent here.'),
     ];
     $form['lead_response_sla_days'] = [

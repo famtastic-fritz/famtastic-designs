@@ -89,7 +89,7 @@ source_package_normalizer="$backend_dir/scripts/normalize-package-ladder.php"
 production_config_dir="$production_dir/config"
 drush="$production_dir/vendor/bin/drush"
 
-for command_name in git php composer tar rsync; do
+for command_name in git php composer tar rsync crontab; do
   command -v "$command_name" >/dev/null || {
     echo "Remote prerequisite missing: $command_name" >&2
     exit 1
@@ -259,23 +259,70 @@ install -m 0644 "$backend_dir/composer.json" "$production_dir/composer.json"
 install -m 0644 "$backend_dir/composer.lock" "$production_dir/composer.lock"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$production_dir" install \
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
-"$drush" updatedb -y
-"$drush" pm:enable commerce_stripe metatag redirect simple_sitemap -y
+echo "Backend dependencies promoted."
+# Drush exits 255 on this cPanel host even when the update run succeeds. Disable
+# the rollback trap only while capturing that unreliable status, then restore it
+# before the authoritative pending-update check and every remaining apply step.
+trap - ERR
+set +e
+"$drush" updatedb -y --strict=0
+updatedb_exit=$?
+set -e
+trap rollback_code ERR
+if [[ "$updatedb_exit" -ne 0 ]]; then
+  echo "Database update command returned $updatedb_exit after dependency cold start; verifying authoritative pending-update status."
+fi
+pending_updates="$($drush updatedb:status --format=json)"
+if [[ -n "$pending_updates" && "$pending_updates" != "[]" && "$pending_updates" != "{}" ]]; then
+  echo "Database updates remain pending after apply: $pending_updates" >&2
+  exit 1
+fi
+echo "Database updates verified."
+"$drush" pm:enable commerce_stripe metatag redirect simple_sitemap key ai ai_dashboard ai_api_explorer ai_agents ai_automators ai_logging ai_provider_openai -y
+echo "Required Drupal modules enabled."
 "$drush" php:script "$source_demand_fields"
+echo "Demand fields verified."
 "$drush" php:script "$source_demand_seed"
+echo "Demand content verified."
 "$drush" php:script "$source_package_normalizer"
+echo "Package ladder verified."
 "$drush" cr
 # A second process-level rebuild is required on this host after first-time
 # module discovery; otherwise the sitemap writer can see stale router state.
 "$drush" cr
 "$drush" eval '\Drupal::service("router.route_provider")->getRouteByName("simple_sitemap.sitemap_xsl"); print "Sitemap route verified.\n";'
 "$drush" simple-sitemap:generate
+echo "Sitemap generation verified."
 "$drush" eval '
   foreach (["famtastic_prospect", "famtastic_order", "famtastic_intake", "famtastic_project", "proof_campaign", "proof_variant"] as $entity_type_id) {
     \Drupal::entityTypeManager()->getDefinition($entity_type_id);
   }
   print "Pipeline entity definitions verified.\n";
 '
+"$drush" eval '
+  foreach (["key", "ai", "ai_dashboard", "ai_api_explorer", "ai_agents", "ai_automators", "ai_logging", "ai_provider_openai"] as $module) {
+    if (!\Drupal::moduleHandler()->moduleExists($module)) {
+      throw new \RuntimeException("Required AI foundation module is not enabled: " . $module);
+    }
+  }
+  print "Drupal AI foundation verified.\n";
+'
+
+# Install an independent lifecycle runner. Mailbox ingestion may fail without
+# suppressing notification dispatch, proof jobs, protection, or heartbeats.
+cron_marker='# FAMTASTIC_LIFECYCLE_CRON_V1'
+cron_stage="$deploy_dir/tmp/famtastic-crontab-$timestamp"
+crontab -l > "$cron_stage" 2>/dev/null || true
+if ! grep -Fq "$cron_marker" "$cron_stage"; then
+  {
+    printf '\n%s\n' "$cron_marker"
+    printf '*/5 * * * * cd %q && %q famtastic:lifecycle-run --limit=50 >/dev/null 2>&1\n' "$production_dir" "$drush"
+  } >> "$cron_stage"
+  crontab "$cron_stage"
+fi
+rm -f "$cron_stage"
+crontab -l | grep -F "$cron_marker" >/dev/null
+echo "Independent lifecycle scheduler verified."
 
 {
   printf 'commit=%s\n' "$commit_sha"
@@ -288,6 +335,7 @@ TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-
   printf 'dependency_backup=%s\n' "$dependency_backup"
   printf 'commercial_config_backup=%s\n' "$commercial_config_backup"
   printf 'demand_manifest_version=2\n'
+  printf 'lifecycle_cron=FAMTASTIC_LIFECYCLE_CRON_V1\n'
 } > "$production_dir/.backend-release"
 
 rm -rf "$previous_module"

@@ -57,6 +57,7 @@ final class OperationsController extends ControllerBase {
       ['Support', $openSupport . ' open conversations', 'Customer requests, project questions, replies, and service issues.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support']), 'support'],
       ['Notifications', $this->countIn('famtastic_notification_outbox', 'status', ['queued', 'retry', 'dead_letter']) . ' need attention', 'Receipts, acknowledgments, reminders, delivery attempts, and failures.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'notifications']), 'emails-sent'],
       ['Automation', $this->count('famtastic_worker_heartbeat') . ' monitored workers', 'Scheduled protection, last runs, retries, and worker health.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'workers']), 'open-jobs'],
+      ['Grant Codes', $this->count('famtastic_grant_code', ['status' => 'active']) . ' active private grants', 'Owner comps, named customer grants, credits, partner benefits, redemption scope, and audit.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'grant-codes']), 'commerce'],
       ['Launch Approval', 'Owner decision record', 'Review exact product promises, provisional terms, Stripe evidence, and activation gates.', Url::fromRoute('famtastic_pipeline.launch_approval'), 'commerce'],
       ['Content', $published . ' published items', 'Website pages, articles, FAQs, services, and packages.', Url::fromUserInput('/admin/content'), 'content'],
       ['Services', $this->count('famtastic_entitlement', ['status' => 'active']) . ' active entitlements', 'Hosting, domains, analytics, websites, and customer capabilities.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'services']), 'services'],
@@ -357,6 +358,7 @@ final class OperationsController extends ControllerBase {
       'services' => $this->serviceMetric(),
       'notifications' => $this->notificationMetric(),
       'workers' => $this->workerMetric(),
+      'grant-codes' => $this->grantCodeMetric(),
       default => throw new NotFoundHttpException('Operations metric not found.'),
     };
   }
@@ -365,7 +367,7 @@ final class OperationsController extends ControllerBase {
     $query = $this->database->select('famtastic_project_request', 'r')->extend(PagerSelectExtender::class);
     $query->leftJoin('famtastic_customer', 'c', 'c.id = r.customer_id');
     $query->leftJoin('famtastic_organization', 'o', 'o.id = r.organization_id');
-    $query->fields('r', ['id', 'project_name', 'business_name', 'project_type', 'domain_choice', 'existing_domain', 'recommendation_requested', 'status', 'prospect_id', 'commerce_order_id', 'intake_data', 'submitted_at', 'changed']);
+    $query->fields('r', ['id', 'project_name', 'business_name', 'project_type', 'domain_choice', 'existing_domain', 'recommendation_requested', 'status', 'proof_review_status', 'proof_campaign_id', 'prospect_id', 'commerce_order_id', 'intake_data', 'submitted_at', 'changed']);
     $query->addField('c', 'display_name', 'customer_name');
     $query->addField('c', 'email', 'customer_email');
     $query->addField('o', 'name', 'organization_name');
@@ -383,12 +385,15 @@ final class OperationsController extends ControllerBase {
       $rows[] = [
         $record['project_name'], $record['organization_name'] ?: $record['business_name'],
         $record['customer_name'] . ' · ' . $record['customer_email'], ucwords(str_replace('_', ' ', $record['project_type'])),
-        ['data' => ['#markup' => $this->badge($record['status'])]],
-        ['data' => Link::fromTextAndUrl('Package / special price', Url::fromRoute('famtastic_pipeline.website_request_offer', ['website_request' => $record['id']]))->toRenderable()],
+        ['data' => ['#markup' => $this->badge($record['status']) . ' ' . $this->badge($record['proof_review_status'])]],
+        ['data' => ['#theme' => 'item_list', '#items' => [
+          Link::fromTextAndUrl('Proof review', Url::fromRoute('famtastic_pipeline.website_request_proof_review', ['website_request' => $record['id']]))->toRenderable(),
+          Link::fromTextAndUrl('Package / special price', Url::fromRoute('famtastic_pipeline.website_request_offer', ['website_request' => $record['id']]))->toRenderable(),
+        ]]],
         ['data' => $prospect], implode("\n", $summary) ?: 'Draft details not added yet', $this->date((int) $record['changed']),
       ];
     }
-    return $this->recordsPage('Website Requests', 'Customer-owned, resumable website interviews. Online stores, redesigns, and recommendation requests require review before a package or private offer is presented.', ['Request', 'Business', 'Customer', 'Type', 'Status', 'Path', 'Lead', 'Brief', 'Updated'], $rows, 'No website requests have been recorded.');
+    return $this->recordsPage('Website Requests', 'Customer-owned, resumable website interviews. Proofs remain owner-only until the explicit customer-send gate is approved.', ['Request', 'Business', 'Customer', 'Type', 'Status', 'Actions', 'Lead', 'Brief', 'Updated'], $rows, 'No website requests have been recorded.');
   }
 
   private function supportMetric(): array {
@@ -407,18 +412,39 @@ final class OperationsController extends ControllerBase {
     $rows = [];
     $query = $this->database->select('famtastic_notification_outbox', 'n')->extend(PagerSelectExtender::class);
     foreach ($query->fields('n', ['category', 'recipient', 'subject', 'status', 'attempts', 'last_error', 'changed'])->orderBy('changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
-      $rows[] = [$record['category'], $record['recipient'], $record['subject'], ['data' => ['#markup' => $this->badge($record['status'])]], $record['attempts'], $record['last_error'] ?: '—', $this->date((int) $record['changed'])];
+      $age = max(0, \Drupal::time()->getRequestTime() - (int) $record['changed']);
+      $rows[] = [$record['category'], $record['recipient'], $record['subject'], ['data' => ['#markup' => $this->badge($record['status'])]], $record['attempts'], $record['last_error'] ?: '—', $age > 300 && in_array($record['status'], ['queued', 'retry'], TRUE) ? round($age / 60) . ' minutes' : 'Current', $this->date((int) $record['changed'])];
     }
-    return $this->recordsPage('Notifications', 'Transactional and operational delivery state, retries, and dead letters.', ['Category', 'Recipient', 'Subject', 'Status', 'Attempts', 'Last error', 'Updated'], $rows, 'No notifications have been queued.');
+    return $this->recordsPage('Notifications', 'Transactional and operational delivery state, retries, queue age, and dead letters.', ['Category', 'Recipient', 'Subject', 'Status', 'Attempts', 'Last error', 'Queue age', 'Updated'], $rows, 'No notifications have been queued.');
   }
 
   private function workerMetric(): array {
     $rows = [];
     $query = $this->database->select('famtastic_worker_heartbeat', 'w')->extend(PagerSelectExtender::class);
     foreach ($query->fields('w')->orderBy('worker_key')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
-      $rows[] = [$record['worker_key'], ['data' => ['#markup' => $this->badge($record['status'])]], $this->date((int) $record['last_started']), $this->date((int) $record['last_finished']), $this->date((int) $record['next_due']), $record['processed'], $record['failed'], $record['last_error'] ?: '—'];
+      $late = (int) $record['next_due'] > 0 && (int) $record['next_due'] < \Drupal::time()->getRequestTime();
+      $status = $late ? 'stale' : $record['status'];
+      $rows[] = [$record['worker_key'], ['data' => ['#markup' => $this->badge($status)]], $this->date((int) $record['last_started']), $this->date((int) $record['last_finished']), $this->date((int) $record['next_due']), $record['processed'], $record['failed'], $record['last_error'] ?: ($late ? 'Worker missed its expected interval.' : '—')];
     }
     return $this->recordsPage('Automation Workers', 'Worker heartbeat, schedules, processing totals, and failures.', ['Worker', 'Status', 'Started', 'Finished', 'Next due', 'Processed', 'Failed', 'Last error'], $rows, 'No worker heartbeat has been recorded.');
+  }
+
+  private function grantCodeMetric(): array {
+    $rows = [];
+    $query = $this->database->select('famtastic_grant_code', 'g')->extend(PagerSelectExtender::class);
+    $query->leftJoin('famtastic_customer', 'c', 'c.id = g.customer_id');
+    $query->leftJoin('famtastic_project_request', 'r', 'r.id = g.website_request_id');
+    $query->fields('g', ['code_prefix', 'label', 'grant_class', 'sku', 'discount_type', 'discount_value', 'redemptions', 'max_redemptions', 'expires_at', 'covers_renewal', 'status', 'created']);
+    $query->addField('c', 'email', 'customer_email');
+    $query->addField('r', 'project_name', 'request_name');
+    foreach ($query->orderBy('g.created', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $discount = $record['discount_type'] === 'free' ? 'Free initial SKU' : ($record['discount_type'] === 'percent' ? (((int) $record['discount_value']) / 100) . '%' : $this->formatCurrency((int) $record['discount_value'], 'usd'));
+      $rows[] = [$record['code_prefix'] . '-••••••', $record['label'], $record['grant_class'], $record['customer_email'] ?: 'Unscoped', $record['request_name'] ?: 'Any allowed request', $record['sku'], $discount, $record['redemptions'] . ' / ' . $record['max_redemptions'], $record['covers_renewal'] ? 'Yes' : 'Initial term only', ['data' => ['#markup' => $this->badge($record['status'])]], $this->date((int) $record['expires_at'])];
+    }
+    $page = $this->recordsPage('Private Grant Codes', 'Raw codes are never stored or shown again. Every redemption is account, request, SKU, limit, and expiry checked.', ['Code', 'Label', 'Class', 'Customer', 'Request', 'SKU', 'Benefit', 'Uses', 'Renewal', 'Status', 'Expires'], $rows, 'No grant codes exist.');
+    $page['create'] = ['#type' => 'link', '#title' => $this->t('Create private grant code'), '#url' => Url::fromRoute('famtastic_pipeline.grant_code_create'), '#attributes' => ['class' => ['button', 'button--primary']]];
+    $page['create']['#weight'] = -20;
+    return $page;
   }
 
   private function referralMetric(): array {

@@ -274,6 +274,56 @@ Use the matrix to prioritize blog publication, product pages, site CTAs, assessm
 
 Sell the outcome, teach the system, show the proof, and bill according to the work performed and the continuing value delivered.
 
+## Marketing-production revenue path
+
+Today's campaign system creates a new capability family, but it should not be
+sold as a vague promise to “post on social media.” The customer buys a governed
+demand and distribution system.
+
+### Potential offers
+
+| Offer concept | Customer outcome | Core deliverables | Billing hypothesis |
+|---|---|---|---|
+| Campaign Foundation | One offer becomes a coherent, measurable campaign | Positioning, audience, objections, landing page, CTA map, UTMs, 17-day calendar, approval workflow | Defined strategy/setup fee |
+| Branded Content Sprint | A reusable library replaces improvised posts | Article series, FAQs, email copy, social copy, branded images, short-form motion templates | Fixed sprint fee based on approved asset count |
+| Short-Form Video Pack | Channel-ready videos that preserve offer truth | Scripts, 9:16 masters, captions, safe-area QA, thumbnails, platform variants, revision allowance | Fixed pack; presenter-provider usage passed through when selected |
+| Social Publishing Operations | Approved content is scheduled, delivered, and verified | Account connections, scheduling, publishing ledger, retries, proof links, exception handling | Setup fee plus monthly management |
+| Marketing Command Center | One operational view replaces scattered tools | Campaign calendar, approvals, channel state, exceptions, attribution, lead and sales views | Implementation fee plus optional support/maintenance |
+| Campaign Automation System | A repeatable process connects creation through measurement | Content contracts, QA agents, provider adapters, posting workflow, analytics, documentation, training | Paid discovery followed by custom implementation |
+
+These are pricing hypotheses, not approved public prices. Final pricing should
+account for asset volume, number of channels and identities, revision limits,
+provider fees, moderation effort, reporting depth, and whether FAMtastic only
+builds the system or also operates it every month.
+
+### Education and tutorial cluster
+
+Create a pillar series titled **From One Offer to a Measurable Campaign** with
+supporting articles and tutorials:
+
+1. Why a social-media post is not a campaign system.
+2. How to turn one offer into 17 days of useful content without repetition.
+3. Motion graphics versus AI presenters: when each earns attention.
+4. How safe-area design prevents cropped Reels, Shorts, and TikToks.
+5. Why a working link needs more than an HTTP 200 response.
+6. Personal profile versus business Page: using both without confusing the brand.
+7. What an approval queue prevents before automated publishing.
+8. How UTMs connect a social post to traffic, leads, purchases, and revenue.
+9. What a small business should see in a marketing command center.
+10. How to compare HeyGen with a programmable video workflow before subscribing.
+11. What must be documented before marketing automation becomes a repeatable service.
+12. How campaign lessons become reusable capabilities, products, and customer education.
+
+The first provider-comparison tutorial now has a repeatable production brief at
+`marketing/55-cent-campaign/FIREFLY_VIDEO_TEST.md`. It compares one Adobe
+avatar/B-roll workflow against HeyGen and Remotion using the same offer truth
+and scoring criteria rather than comparing unrelated demos.
+
+Each tutorial should lead to the smallest relevant action: campaign assessment,
+content-system review, video pilot, social-automation setup, or command-center
+demonstration. Drafts remain governed by the demand-engine content contract and
+must not be broadly published without approval.
+
 ## Sources
 
 - [Google Search Central: Creating Helpful, Reliable, People-First Content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)
