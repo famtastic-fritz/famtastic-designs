@@ -10,6 +10,10 @@ capability is not “proven” merely because code exists.
 | Product onboarding contracts | Locally proven | Repeatable product, terms, intake, fulfillment, communication, reporting, and acceptance setup |
 | Website discovery and package recommendation | Locally proven | Needs-led intake that distinguishes packaged and custom work |
 | Account-scoped private pricing | Locally proven | Auditable relationship, partner, and promotional pricing without public coupons |
+| Owner-gated three-direction website proofs | Locally proven | Safe/Wild/OMG generation, private staff review, authenticated selection, and revision workflow |
+| Optional six-direction FAMtastic showcase | Locally proven | Three additional original high-intensity sites appended without bypassing private review or customer-send gates |
+| Scoped service grants and owner comps | Locally proven | Hashed account/request codes with audited zero-dollar Commerce fulfillment |
+| Private customer visual references | Locally proven | Consent-tracked, checksummed image and PDF inputs attached to one request |
 | Lead response and notifications | Test-provider proven | Acknowledgment, owner alerts, deadlines, escalation, and worker protection |
 | Portal support cases | Test-provider proven | Customer timelines, priority targets, replies, and staff alerts |
 | Mail reply ingestion | Locally proven | Thread-address matching, validation, attachment policy, and unmatched-reply handling |

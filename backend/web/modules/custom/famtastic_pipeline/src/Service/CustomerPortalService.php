@@ -9,6 +9,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\user\UserInterface;
 use Drupal\famtastic_pipeline\Entity\Order;
 
@@ -23,6 +24,7 @@ final class CustomerPortalService {
     private readonly TimeInterface $time,
     private readonly UuidInterface $uuid,
     private readonly ConfigFactoryInterface $configFactory,
+    private readonly OperationalLedger $ledger,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -173,6 +175,12 @@ final class CustomerPortalService {
     $projects = $this->serializeEntities('famtastic_project', $resourceIds('project'), [
       'uuid', 'label', 'proof_url', 'live_url', 'delivery_status', 'approval_status', 'revision_count', 'revision_limit', 'created', 'changed',
     ]);
+    $projectEntities = array_values($this->entities->getStorage('famtastic_project')->loadMultiple($resourceIds('project')));
+    foreach ($projects as $index => &$projectRow) {
+      $project = $projectEntities[$index] ?? NULL;
+      $projectRow['proofs'] = $project ? $this->projectProofs($project) : NULL;
+    }
+    unset($projectRow);
     $entitlements = $this->database->select('famtastic_entitlement', 'e')->fields('e')
       ->condition('organization_id', $organizationId)->execute()->fetchAll(\PDO::FETCH_ASSOC);
     $threadQuery = $this->database->select('famtastic_portal_thread', 't');
@@ -242,7 +250,10 @@ final class CustomerPortalService {
     ])->execute();
     $this->claimResource((int) $organization['id'], 'prospect', (int) $prospect->id());
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
-    if ($clean['status'] === 'submitted') $this->queueWebsiteRequestNotifications($id, $customer, $clean);
+    if ($clean['status'] === 'submitted') {
+      $this->queueWebsiteRequestNotifications($id, $customer, $clean);
+      $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
+    }
     return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
   }
 
@@ -272,6 +283,7 @@ final class CustomerPortalService {
       }
       $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
       $this->queueWebsiteRequestNotifications((int) $row['id'], $customer, $clean);
+      $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $clean['intake']);
       $this->activity((int) $row['organization_id'], 'website_request.submitted', 'A website request was submitted for review.');
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
@@ -303,7 +315,7 @@ final class CustomerPortalService {
     $type = in_array($input['project_type'] ?? '', ['new_website', 'landing_page', 'redesign', 'online_store'], TRUE) ? $input['project_type'] : 'new_website';
     $domain = in_array($input['domain_choice'] ?? '', ['undecided', 'new_domain', 'existing_domain'], TRUE) ? $input['domain_choice'] : 'undecided';
     $text = fn(string $key, int $max = 5000): string => mb_substr(trim(strip_tags((string) ($input[$key] ?? ''))), 0, $max);
-    $intake = ['schema_version' => 'website_discovery_v2'];
+    $intake = ['schema_version' => 'website_discovery_v3'];
     foreach ([
       'primary_goal', 'secondary_goals', 'success_metrics', 'ideal_customer', 'customer_pain_points',
       'products_services', 'desired_actions', 'required_features', 'integrations', 'page_list',
@@ -315,8 +327,15 @@ final class CustomerPortalService {
       'business_model', 'industry', 'research_context', 'reference_site_reasons',
       'existing_technology', 'desired_domains', 'domain_fallback', 'business_email_needs',
       'custom_needs',
+      'preferred_colors', 'colors_to_avoid', 'desired_feeling', 'styles_to_avoid',
+      'visual_reference_notes', 'ai_context_notes',
     ] as $key) $intake[$key] = $text($key);
     $intake['page_count'] = max(1, min(100, (int) ($input['page_count'] ?? 1)));
+    $intake['famtastic_level'] = max(0, min(10, (int) ($input['famtastic_level'] ?? 5)));
+    $intake['allow_bolder_direction'] = !empty($input['allow_bolder_direction']);
+    $intake['life_path_opt_in'] = !empty($input['life_path_opt_in']);
+    $intake['ai_enrichment_mode'] = in_array($input['ai_enrichment_mode'] ?? '', ['none', 'famtastic_managed', 'customer_managed'], TRUE)
+      ? (string) $input['ai_enrichment_mode'] : 'none';
     $intake['recommendation'] = $this->recommendWebsitePackage($type, $intake);
     if ($status === 'submitted' && ($intake['primary_goal'] === '' || $intake['products_services'] === '')) throw new \InvalidArgumentException('Add the primary goal and what the business sells before submitting.');
     return [
@@ -370,22 +389,305 @@ final class CustomerPortalService {
       ->condition('website_request_id', (int) $row['id'])->condition('status', 'active')
       ->condition('expires_at', $this->time->getRequestTime(), '>')->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $row['private_offer'] = $offer ?: NULL;
+    $row['proofs'] = $this->serializeRequestProof($row);
+    $row['proof_share'] = $this->proofSharePayload($row);
+    $row['assets'] = $this->requestAssets((int) $row['id']);
     $row['recommended_sku'] = (string) ($recommendation['recommended_sku'] ?? '');
     if ($offer) $row['recommended_sku'] = (string) $offer['sku'];
     $row['direct_checkout_available'] = $row['status'] === 'submitted'
+      && $row['proof_review_status'] === 'selected'
       && empty($recommendation['review_required'])
       && in_array($row['recommended_sku'], ['FAM-FOOT-199', 'FAM-BUSINESS-499'], TRUE);
-    foreach (['id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id', 'intake_data'] as $key) unset($row[$key]);
+    foreach (['id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id', 'intake_data', 'proof_campaign_id', 'proof_approved_by_uid', 'proof_share_enabled', 'proof_share_version', 'proof_share_changed_at', 'proof_share_changed_by_uid'] as $key) unset($row[$key]);
     return $row;
   }
 
+  /** Changes the unlisted proof link for one account-owned request. */
+  public function updateWebsiteProofShare(int $customerId, string $publicId, string $action, int $uid): array {
+    $row = $this->ownedWebsiteRequest($customerId, $publicId);
+    if (!$row) throw new \RuntimeException('Website proofs are not available.');
+    $this->changeWebsiteProofShare($row, $action, $uid);
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
+    return $this->serializeWebsiteRequest($updated ?: $row);
+  }
+
+  /** Changes an unlisted proof link from the staff proof-review screen. */
+  public function manageWebsiteProofShare(int $requestId, string $action, int $uid): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    if (!$row) throw new \RuntimeException('Website proofs are not available.');
+    $this->changeWebsiteProofShare($row, $action, $uid);
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    return $this->proofSharePayload($updated ?: $row);
+  }
+
+  /** Returns staff-safe share status for one request. */
+  public function websiteProofShareStatus(int $requestId): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    return $row ? $this->proofSharePayload($row) : ['enabled' => FALSE, 'url' => ''];
+  }
+
+  /** Resolves a valid, enabled share token to its request row. */
+  public function sharedWebsiteRequest(string $publicId, string $signature): ?array {
+    if (!preg_match('/^[0-9a-f]{64}$/', $signature)) return NULL;
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
+    if (!$row || empty($row['proof_share_enabled']) || !$this->requestProofsAreCustomerVisible($row)) return NULL;
+    return hash_equals($this->proofShareSignature($row), $signature) ? $row : NULL;
+  }
+
+  /** Returns the deliberately minimal, anonymous proof-share payload. */
+  public function publicWebsiteProofShare(string $publicId, string $signature): ?array {
+    $row = $this->sharedWebsiteRequest($publicId, $signature);
+    if (!$row) return NULL;
+    $proofs = $this->serializeRequestProof($row);
+    if (!$proofs) return NULL;
+    $base = '/web/api/proof-shares/' . rawurlencode($publicId) . '/' . rawurlencode($signature) . '/proofs/';
+    $variants = array_map(static fn(array $variant): array => [
+      'direction_id' => (string) $variant['direction_id'],
+      'direction_name' => (string) $variant['direction_name'],
+      'preview_url' => $base . rawurlencode((string) $variant['direction_id']),
+    ], $proofs['variants']);
+    return [
+      'project_name' => (string) $row['project_name'],
+      'business_name' => (string) ($row['business_name'] ?: $row['project_name']),
+      'proof_count' => count($variants),
+      'variants' => $variants,
+    ];
+  }
+
+  private function changeWebsiteProofShare(array $row, string $action, int $uid): void {
+    if (!$this->requestProofsAreCustomerVisible($row) || !$this->serializeRequestProof($row)) {
+      throw new \RuntimeException('Only a complete owner-approved proof set can be shared.');
+    }
+    if (!in_array($action, ['enable', 'disable', 'rotate'], TRUE)) {
+      throw new \InvalidArgumentException('Choose a valid proof-sharing action.');
+    }
+    $enabled = !empty($row['proof_share_enabled']);
+    if ($action === 'rotate' && !$enabled) throw new \InvalidArgumentException('Enable sharing before creating a new link.');
+    $version = max(1, (int) ($row['proof_share_version'] ?? 1));
+    if (($action === 'disable' && $enabled) || $action === 'rotate') $version++;
+    $newEnabled = $action !== 'disable';
+    $now = $this->time->getRequestTime();
+    $this->database->update('famtastic_project_request')->fields([
+      'proof_share_enabled' => $newEnabled ? 1 : 0,
+      'proof_share_version' => $version,
+      'proof_share_changed_at' => $now,
+      'proof_share_changed_by_uid' => $uid,
+      'changed' => $now,
+    ])->condition('id', $row['id'])->execute();
+    $event = $action === 'rotate' ? 'website_request.proof_share_rotated' : 'website_request.proof_share_' . ($newEnabled ? 'enabled' : 'disabled');
+    $summary = $action === 'rotate' ? 'A new unlisted website-proof link was created.' : 'Unlisted website-proof sharing was turned ' . ($newEnabled ? 'on.' : 'off.');
+    $this->activity((int) $row['organization_id'], $event, $summary);
+  }
+
+  private function requestProofsAreCustomerVisible(array $row): bool {
+    return in_array((string) ($row['proof_review_status'] ?? ''), ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE);
+  }
+
+  private function proofSharePayload(array $row): array {
+    $enabled = !empty($row['proof_share_enabled']) && $this->requestProofsAreCustomerVisible($row) && (bool) $this->serializeRequestProof($row);
+    $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+    return [
+      'enabled' => $enabled,
+      'url' => $enabled ? $base . '/proofs/share/' . rawurlencode((string) $row['public_id']) . '/' . $this->proofShareSignature($row) : '',
+      'changed_at' => !empty($row['proof_share_changed_at']) ? (int) $row['proof_share_changed_at'] : NULL,
+    ];
+  }
+
+  private function proofShareSignature(array $row): string {
+    $version = max(1, (int) ($row['proof_share_version'] ?? 1));
+    return hash_hmac('sha256', 'website-proof-share-v1|' . (string) $row['public_id'] . '|' . $version, Settings::getHashSalt());
+  }
+
+  /** Returns customer-safe proof metadata only after explicit owner approval. */
+  private function serializeRequestProof(array $row): ?array {
+    if (!in_array((string) ($row['proof_review_status'] ?? ''), ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) return NULL;
+    $campaignId = (int) ($row['proof_campaign_id'] ?? 0);
+    if (!$campaignId) return NULL;
+    $campaign = $this->entities->getStorage('proof_campaign')->load($campaignId);
+    if (!$campaign || $campaign->get('generation_status')->value !== 'ready') return NULL;
+    $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
+      ->condition('campaign_id', $campaignId)->sort('direction_id')->execute();
+    $variants = [];
+    foreach ($this->entities->getStorage('proof_variant')->loadMultiple($ids) as $variant) {
+      $direction = (string) $variant->get('direction_id')->value;
+      $variants[] = [
+        'direction_id' => $direction,
+        'direction_name' => (string) $variant->get('direction_name')->value,
+        'preview_url' => '/web/api/customer/website-requests/' . rawurlencode((string) $row['public_id']) . '/proofs/' . rawurlencode($direction),
+      ];
+    }
+    $directions = array_column($variants, 'direction_id');
+    $validSet = $directions === ['a', 'b', 'c'] || $directions === ['a', 'b', 'c', 'd', 'e', 'f'];
+    return $validSet ? [
+      'status' => (string) $row['proof_review_status'],
+      'selected_variant' => (string) ($row['selected_proof_direction'] ?? ''),
+      'variants' => $variants,
+    ] : NULL;
+  }
+
+  /** Returns integrity metadata for request-owned private reference files. */
+  private function requestAssets(int $requestId): array {
+    return array_map(static fn(array $row): array => [
+      'public_id' => $row['public_id'], 'kind' => $row['kind'], 'name' => $row['original_name'],
+      'mime_type' => $row['mime_type'], 'size_bytes' => (int) $row['size_bytes'],
+      'ownership_confirmed' => (bool) $row['ownership_confirmed'], 'ai_use_consent' => (bool) $row['ai_use_consent'],
+    ], $this->database->select('famtastic_request_asset', 'a')->fields('a')
+      ->condition('website_request_id', $requestId)->condition('status', 'active')->orderBy('created')->execute()->fetchAll(\PDO::FETCH_ASSOC));
+  }
+
   private function queueWebsiteRequestNotifications(int $id, array $customer, array $request): void {
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $subject = 'Website request received — ' . $request['project_name'];
     $this->queueNotification("website-request:{$id}:customer", 'transactional', (string) $customer['email'], $subject,
       "We received your website request for {$request['project_name']}. Fritz will review it within 3 business days. You can continue or review it from your customer portal.");
     $this->queueNotification("website-request:{$id}:staff", 'operational', $admin, 'New portal website request — ' . $request['project_name'],
-      "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nType: {$request['project_type']}\nReview in Drupal: /web/admin/famtastic/metric/website-requests");
+      "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nType: {$request['project_type']}\nProof generation has been queued.\nReview in Drupal: https://famtasticdesigns.com/web/admin/famtastic/metric/website-requests");
+  }
+
+  /** Queues one owner alert for a newly created customer account. */
+  public function queueRegistrationNotification(array $customer): void {
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
+    $this->queueNotification('customer:' . (int) $customer['id'] . ':staff-registration', 'operational', $admin,
+      'New FAMtastic customer registration — ' . (string) $customer['display_name'],
+      "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nVerification is pending.\nOpen customers: https://famtasticdesigns.com/web/admin/famtastic/metric/customers");
+  }
+
+  /** Enqueues the canonical pre-purchase proof routine exactly once. */
+  private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake): void {
+    $this->ledger->enqueue(
+      'website_proof.generate.v1:request:' . $requestId,
+      'proof.generate',
+      [
+        'routine' => 'website_proof.generate.v1',
+        'prospect_id' => $prospectId,
+        'website_request_id' => $requestId,
+        'website_request_public_id' => $publicId,
+        'website_discovery_v3' => $intake,
+        'website_discovery_v2' => $intake,
+      ],
+      $prospectId,
+    );
+  }
+
+  /** Returns the current normalized brief for a request-bound proof worker. */
+  public function websiteRequestProofContext(int $requestId): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    if (!$row || $row['status'] === 'draft') {
+      throw new \RuntimeException('Submitted website request not found.');
+    }
+    $intake = json_decode((string) $row['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR);
+    return [
+      'routine' => 'website_proof.generate.v1',
+      'website_request_id' => (int) $row['id'],
+      'website_request_public_id' => (string) $row['public_id'],
+      'website_discovery_v3' => $intake,
+      'website_discovery_v2' => $intake,
+    ];
+  }
+
+  /** Owner approval reveals proofs and queues one transactional customer email. */
+  public function approveWebsiteRequestProof(int $requestId, int $uid): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    if (!$row || !$row['proof_campaign_id'] || $row['proof_review_status'] !== 'owner_review') throw new \RuntimeException('Website proofs are not awaiting owner review.');
+    $campaign = $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']);
+    $variantCount = (int) $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
+      ->condition('campaign_id', (int) $row['proof_campaign_id'])->count()->execute();
+    $directions = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
+      ->condition('campaign_id', (int) $row['proof_campaign_id'])->sort('direction_id')->execute();
+    $directionValues = array_map(static fn(object $variant): string => (string) $variant->get('direction_id')->value,
+      array_values($this->entities->getStorage('proof_variant')->loadMultiple($directions)));
+    $validSet = $directionValues === ['a', 'b', 'c'] || $directionValues === ['a', 'b', 'c', 'd', 'e', 'f'];
+    if (!$campaign || $campaign->get('generation_status')->value !== 'ready' || !in_array($variantCount, [3, 6], TRUE) || !$validSet) throw new \RuntimeException('A complete three- or six-direction proof set is required.');
+    $now = $this->time->getRequestTime();
+    $this->database->update('famtastic_project_request')->fields([
+      'proof_review_status' => 'customer_ready', 'proof_approved_by_uid' => $uid, 'proof_approved_at' => $now, 'changed' => $now,
+    ])->condition('id', $requestId)->condition('proof_review_status', 'owner_review')->execute();
+    $this->database->update('famtastic_notification_outbox')->fields(['status' => 'superseded', 'changed' => $now])
+      ->condition('notification_key', 'website-request:' . $requestId . ':owner-proof-review:%', 'LIKE')
+      ->condition('status', ['queued', 'retry'], 'IN')->execute();
+    $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', (int) $row['customer_id'])->execute()->fetchAssoc();
+    $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+    $count = count($directionValues);
+    $setLabel = $count === 6 ? 'six website concepts—including three fully FAMtastic directions—' : 'Safe, Wild, and OMG concepts';
+    $reviewUrl = $base . '/portal/?section=projects&request=' . rawurlencode((string) $row['public_id']);
+    $this->queueNotification('website-request:' . $requestId . ':proofs:' . (int) $row['proof_campaign_id'] . ':' . $count, 'transactional', (string) $customer['email'],
+      'Your FAMtastic website concepts are ready', "Your {$setLabel} are ready. Sign in to compare them and choose your direction:\n{$reviewUrl}\n\nUse the same email address that received this message.");
+    $this->activity((int) $row['organization_id'], 'website_request.proofs_approved', ucfirst($setLabel) . ' were approved for customer review.');
+    return $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc() ?: [];
+  }
+
+  /**
+   * Attaches a complete core or core-plus-showcase set for owner review.
+   *
+   * This is the shared terminal step for remote callbacks, local imports, and
+   * an idempotent worker that discovers an already-ready campaign. It never
+   * exposes the proofs to the customer and never queues a customer email.
+   */
+  public function attachWebsiteRequestProof(int $requestId, object $campaign, array $variants): void {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    if (!$row || (int) $row['prospect_id'] !== (int) $campaign->get('prospect_id')->target_id) {
+      throw new \RuntimeException('Proof campaign does not belong to this website request.');
+    }
+    $directions = [];
+    foreach ($variants as $variant) {
+      $directions[] = (string) $variant->get('direction_id')->value;
+    }
+    sort($directions);
+    $validSet = $directions === ['a', 'b', 'c'] || $directions === ['a', 'b', 'c', 'd', 'e', 'f'];
+    if (!$validSet || $campaign->get('generation_status')->value !== 'ready') {
+      throw new \RuntimeException('A complete Safe/Wild/OMG set or six-direction showcase set is required.');
+    }
+    $campaignEntityId = (int) $campaign->id();
+    $now = $this->time->getRequestTime();
+    $this->database->update('famtastic_project_request')->fields([
+      'proof_campaign_id' => $campaignEntityId,
+      'proof_review_status' => 'owner_review',
+      'changed' => $now,
+    ])->condition('id', $requestId)->execute();
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
+    $count = count($directions);
+    if ($count === 6) {
+      $this->database->update('famtastic_notification_outbox')->fields(['status' => 'superseded', 'changed' => $now])
+        ->condition('notification_key', 'website-request:' . $requestId . ':owner-proof-review:%', 'LIKE')
+        ->condition('status', ['queued', 'retry'], 'IN')->execute();
+    }
+    $description = $count === 6 ? 'Safe, Wild, OMG, Royal Current, Crownverse, and Shay Live' : 'Safe, Wild, and OMG';
+    $this->queueNotification('website-request:' . $requestId . ':owner-proof-review:' . $campaignEntityId . ':' . $count, 'operational', $admin,
+      $count . ' website proofs need your approval — ' . (string) $row['project_name'],
+      "{$description} are ready for owner review. Nothing has been sent to the customer.\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$requestId}/proof-review");
+    $this->activity((int) $row['organization_id'], 'website_request.proofs_owner_review', $count . ' website concepts are awaiting FAMtastic owner review.');
+    if (!empty($row['project_id'])) {
+      $this->markProjectProofReady((int) $row['project_id'], $campaign, $variants);
+    }
+  }
+
+  /** Records one account-owned selection or revision request. */
+  public function decideWebsiteRequestProof(int $customerId, string $publicId, array $input): array {
+    $row = $this->ownedWebsiteRequest($customerId, $publicId);
+    if (!$row || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) throw new \RuntimeException('Website proofs are not available.');
+    $action = (string) ($input['action'] ?? 'select');
+    $now = $this->time->getRequestTime();
+    if ($action === 'revision') {
+      $notes = mb_substr(trim(strip_tags((string) ($input['notes'] ?? ''))), 0, 5000);
+      if ($notes === '') throw new \InvalidArgumentException('Tell us what you want adjusted.');
+      $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
+      $intake['proof_revision_request'] = ['notes' => $notes, 'requested_at' => gmdate(DATE_ATOM, $now)];
+      $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'revision_requested', 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'changed' => $now])->condition('id', $row['id'])->execute();
+      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
+      $this->queueNotification('website-request:' . $row['id'] . ':proof-revision:' . hash('sha256', $notes), 'operational', $admin, 'Website proof revision requested — ' . $row['project_name'], "Customer request:\n{$notes}\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
+    }
+    else {
+      $direction = strtolower((string) ($input['direction'] ?? ''));
+      if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE)) throw new \InvalidArgumentException('Choose one available website direction.');
+      $exists = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $direction)->count()->execute();
+      if ((int) $exists !== 1) throw new \InvalidArgumentException('That proof direction is unavailable.');
+      $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'selected', 'selected_proof_direction' => $direction, 'selected_proof_at' => $now, 'changed' => $now])->condition('id', $row['id'])->execute();
+      $campaign = $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']);
+      if ($campaign) $campaign->set('selected_variant', $direction)->set('selected_at', $now)->save();
+      $this->activity((int) $row['organization_id'], 'website_request.proof_selected', 'A website concept was selected and is ready for purchase.');
+    }
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
+    return $this->serializeWebsiteRequest($updated);
   }
 
   public function updateCustomer(int $customerId, array $input): void {
@@ -529,7 +831,7 @@ final class CustomerPortalService {
       'response_due' => $now + ($responseHours * 3600), 'created' => $now, 'changed' => $now,
     ])->execute();
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $replyAddress = 'support+' . $publicId . '@famtasticdesigns.com';
     $this->queueNotification('support:' . $threadId . ':customer-created', 'transactional', (string) $customer['email'],
       "Support request {$caseNumber} received", "We received your request: {$subject}\nCase: {$caseNumber}\nReply address: {$replyAddress}");
@@ -622,11 +924,82 @@ final class CustomerPortalService {
     return $out;
   }
 
+  /** Serializes the latest complete proof campaign attached to a project. */
+  private function projectProofs(object $project): ?array {
+    $prospectId = (int) $project->get('prospect_ref')->target_id;
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r', ['public_id', 'proof_campaign_id', 'proof_review_status'])
+      ->condition('project_id', (int) $project->id())->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    if ($request && !in_array($request['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) {
+      return NULL;
+    }
+    $campaignQuery = $this->entities->getStorage('proof_campaign')->getQuery()->accessCheck(FALSE)
+      ->condition('prospect_id', $prospectId)->sort('id', 'DESC')->range(0, 1);
+    if ($request && !empty($request['proof_campaign_id'])) {
+      $campaignQuery->condition('id', (int) $request['proof_campaign_id']);
+    }
+    $campaignIds = $campaignQuery->execute();
+    if (!$campaignIds) return NULL;
+    $campaign = $this->entities->getStorage('proof_campaign')->load(reset($campaignIds));
+    $variantIds = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
+      ->condition('campaign_id', (int) $campaign->id())->sort('direction_id')->execute();
+    $variants = [];
+    foreach ($this->entities->getStorage('proof_variant')->loadMultiple($variantIds) as $variant) {
+      $variants[] = [
+        'direction_id' => (string) $variant->get('direction_id')->value,
+        'direction_name' => (string) $variant->get('direction_name')->value,
+        'preview_url' => $request
+          ? '/web/api/customer/website-requests/' . rawurlencode((string) $request['public_id']) . '/proofs/' . rawurlencode((string) $variant->get('direction_id')->value)
+          : (string) $variant->get('preview_url')->value,
+        'thumbnail_path' => (string) $variant->get('thumbnail_path')->value,
+      ];
+    }
+    $directions = array_column($variants, 'direction_id');
+    if ($directions !== ['a', 'b', 'c'] && $directions !== ['a', 'b', 'c', 'd', 'e', 'f']) return NULL;
+    return [
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'generation_status' => (string) $campaign->get('generation_status')->value,
+      'selected_variant' => (string) $campaign->get('selected_variant')->value,
+      'variants' => $variants,
+    ];
+  }
+
   public function activity(int $organizationId, string $type, string $summary): void {
     $this->database->insert('famtastic_portal_activity')->fields(['organization_id' => $organizationId, 'event_type' => $type, 'summary' => $summary, 'created' => $this->time->getRequestTime()])->execute();
   }
 
-  private function queueNotification(string $key, string $category, string $recipient, string $subject, string $body): void {
+  /** Publishes an account-owned proof set without entering marketing outreach. */
+  public function markProjectProofReady(int $projectId, object $campaign, array $variants): void {
+    if (!in_array(count($variants), [3, 6], TRUE)) throw new \RuntimeException('A complete three- or six-direction proof set is required.');
+    $project = $this->entities->getStorage('famtastic_project')->load($projectId);
+    if (!$project) throw new \RuntimeException('Project no longer exists.');
+    $preview = (string) $variants[0]->get('preview_url')->value;
+    $project->set('proof_url', $preview)->set('delivery_status', 'proof_ready')->set('approval_status', 'pending')->save();
+    $resource = $this->database->select('famtastic_customer_resource', 'r')->fields('r')
+      ->condition('resource_type', 'project')->condition('resource_id', $projectId)->execute()->fetchAssoc();
+    if (!$resource) throw new \RuntimeException('Project is not attached to a customer workspace.');
+    $organizationId = (int) $resource['organization_id'];
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('project_id', $projectId)->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    $count = count($variants);
+    if ($request) {
+      $this->activity($organizationId, 'project.proofs_owner_review', $count . ' website concepts are awaiting FAMtastic owner review.');
+      return;
+    }
+    $query = $this->database->select('famtastic_membership', 'm');
+    $query->join('famtastic_customer', 'c', 'c.id = m.customer_id');
+    $query->addField('c', 'email');
+    $email = (string) $query->condition('m.organization_id', $organizationId)->condition('m.status', 'active')
+      ->orderBy('m.id', 'ASC')->range(0, 1)->execute()->fetchField();
+    $campaignId = (string) $campaign->get('campaign_id')->value;
+    $this->activity($organizationId, 'project.proofs_ready', $count . ' website concepts are ready for your review.');
+    if ($email !== '') {
+      $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+      $this->queueNotification('project:' . $projectId . ':proofs:' . $campaignId . ':' . $count, 'transactional', $email,
+        'Your FAMtastic website concepts are ready', "Review, compare, and select your {$count} concepts securely in your account:\n{$base}/portal/?section=projects\n\nUse the same email address that received this message.");
+    }
+  }
+
+  public function queueNotification(string $key, string $category, string $recipient, string $subject, string $body): void {
     $now = $this->time->getRequestTime();
     $this->database->merge('famtastic_notification_outbox')->key('notification_key', $key)->insertFields([
       'notification_key' => $key, 'category' => $category, 'recipient' => mb_strtolower($recipient), 'subject' => $subject, 'body' => $body,

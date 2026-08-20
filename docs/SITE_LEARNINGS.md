@@ -74,6 +74,54 @@
   separated structurally from brand, customer, Commerce, Drupal, and credential
   data. Extract only after a second brand and real delivery evidence prove the
   abstraction; early repository duplication creates competing truths.
+## 2026-08-18 — Public proof access should be unlisted, revocable, and read-only
+
+- Requiring registration before every proof view creates friction for a lead
+  campaign and prevents a customer from asking another decision-maker for
+  feedback. A signed unlisted link is the appropriate middle state between a
+  private account and an indexable public portfolio page.
+- Possession of a view link must not grant the customer action surface. Proof
+  viewing can be anonymous while selection, revisions, pricing, checkout, and
+  account data remain authenticated and ownership-checked.
+- Store link state and a version, not a reusable raw secret. Disabling or
+  replacing a link must invalidate the previous signature immediately, and the
+  anonymous failure response must not confirm which customer or project existed.
+- `noindex` alone is not a privacy boundary. Unlisted proof responses also need
+  no-store caching, no-referrer handling, minimal payloads, and a default-off
+  publication control after the human quality gate.
+
+## 2026-08-18 — Transactional links must preserve customer intent and identity
+
+- A successfully delivered email and a valid authenticated portal can still
+  create a broken journey when the browser is signed into a different customer
+  account. The portal must show the active account email and explain an
+  ownership mismatch rather than displaying an apparently empty workspace.
+- Proof-ready messages must carry the account-owned request UUID and open the
+  Projects surface directly. A generic `/portal/` link discards the customer's
+  reason for arriving and forces them to rediscover the action promised in the
+  email.
+- Backward compatibility matters for messages already in an inbox. When the
+  correct account has one unselected approved proof set, a plain portal visit
+  should surface that set automatically without weakening organization-scoped
+  authorization.
+
+## 2026-08-17 — A queued alert is not a delivered alert
+
+- Portal submission, outbox persistence, SMTP delivery, and owner receipt are
+  separate states. Monitor queue age and worker heartbeat, then record the SMTP
+  message id before claiming an alert was delivered.
+- Never couple the core lifecycle runner to an unrelated mailbox command with
+  `&&`; a mail-ingest failure can otherwise suppress receipts, staff alerts,
+  proof jobs, and escalation for every customer.
+- Proof generation and proof delivery need separate gates. Exactly three
+  artifacts may be ready while remaining invisible to the customer until the
+  owner reviews all three and explicitly authorizes account disclosure.
+- A free customer purchase is still a Commerce order. Use a hashed, scoped,
+  auditable grant redemption and zero-dollar fulfillment rather than marking an
+  unpaid order as paid or bypassing entitlement creation.
+- A creative intake is incomplete when it only asks for generic style notes.
+  Structured intensity, preferred/avoided colors, desired feeling, references,
+  asset consent, and model-enrichment boundaries belong in the canonical brief.
 
 ## 2026-08-11 — Headless navigation must have one ordering authority
 

@@ -4,7 +4,7 @@
 token_ttl_days: 14
 frontend_base_url: 'http://localhost:5173'
 support_from_email: 'hello@famtasticdesigns.com'
-notification_to_email: 'fritz.medine@gmail.com'
+notification_to_email: 'fitzgerald.medine@gmail.com'
 lead_response_sla_days: 3
 sla_alerts_enabled: true
 legacy_checkout_enabled: false

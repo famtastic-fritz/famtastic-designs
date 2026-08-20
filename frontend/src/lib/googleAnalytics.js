@@ -5,6 +5,7 @@ let initialized = false;
 function safeLocation(path) {
   const url = new URL(window.location.href);
   const cleanPath = String(path || url.pathname)
+    .replace(/^\/proofs\/share\/[^/]+\/[^/]+/, '/proofs/share/unlisted')
     .replace(/^\/portal\/[^/]+/, '/portal/personalized')
     .replace(/^\/p\/[^/]+/, '/p/personalized');
   url.pathname = cleanPath;

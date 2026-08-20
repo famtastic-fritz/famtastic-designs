@@ -20,6 +20,7 @@ final class LifecycleOperationsService {
     private readonly OutreachMailer $mailer,
     private readonly ConfigFactoryInterface $configFactory,
     private readonly FileSystemInterface $fileSystem,
+    private readonly AutomationWorker $automationWorker,
   ) {}
 
   public function dispatchNotifications(int $limit = 25): array {
@@ -36,6 +37,13 @@ final class LifecycleOperationsService {
           'status' => 'sent', 'attempts' => (int) $row['attempts'] + 1, 'sent_at' => $now,
           'provider_message_id' => $messageId, 'last_error' => NULL, 'changed' => $now,
         ])->condition('id', $row['id'])->execute();
+        if (preg_match('/^website-request:(\d+):proofs:\d+(?::(?:3|6))?$/', (string) $row['notification_key'], $matches)) {
+          $this->database->update('famtastic_project_request')->fields([
+            'proof_review_status' => 'notified',
+            'proof_notified_at' => $now,
+            'changed' => $now,
+          ])->condition('id', (int) $matches[1])->condition('proof_review_status', 'customer_ready')->execute();
+        }
         $result['sent']++;
       }
       catch (\Throwable $error) {
@@ -51,6 +59,18 @@ final class LifecycleOperationsService {
     }
     $this->heartbeat('notification_dispatch', $result, $now + 300);
     return $result;
+  }
+
+  /** Runs bounded durable proof and delivery jobs and records worker health. */
+  public function runAutomation(int $limit = 10): array {
+    $results = $this->automationWorker->run(max(1, min(50, $limit)));
+    $result = [
+      'processed' => count($results),
+      'failed' => count(array_filter($results, static fn(array $row): bool => $row['status'] === 'failed')),
+      'retried' => count(array_filter($results, static fn(array $row): bool => $row['status'] === 'retry')),
+    ];
+    $this->heartbeat('automation_jobs', $result, $this->time->getRequestTime() + 300);
+    return ['summary' => $result, 'jobs' => $results];
   }
 
   /**
@@ -96,7 +116,7 @@ final class LifecycleOperationsService {
         ->condition('thread_id', $thread['id'])->execute();
     }
     else {
-      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
       $this->queue('inbound:' . $hash . ':unmatched', $admin, 'Unmatched customer email requires review', "Subject: {$subject}\nReason: {$reason}\nMessage-ID hash: {$hash}");
     }
     return ['accepted' => $status === 'matched', 'duplicate' => FALSE, 'status' => $status, 'reason' => $reason];
@@ -123,7 +143,7 @@ final class LifecycleOperationsService {
 
   public function runProtection(): array {
     $now = $this->time->getRequestTime();
-    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fritz.medine@gmail.com');
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $overdue = $this->database->select('famtastic_support_case', 's')->fields('s')
       ->condition('status', ['new', 'assigned', 'waiting_on_famtastic'], 'IN')->condition('response_due', $now, '<=')->execute()->fetchAll(\PDO::FETCH_ASSOC);
     foreach ($overdue as $case) {

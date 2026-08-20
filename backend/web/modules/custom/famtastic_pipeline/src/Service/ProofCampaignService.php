@@ -6,6 +6,7 @@ namespace Drupal\famtastic_pipeline\Service;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\famtastic_pipeline\Entity\ProofCampaign;
@@ -14,7 +15,7 @@ use Drupal\famtastic_pipeline\Entity\Prospect;
 use Psr\Log\LoggerInterface;
 
 /**
- * Creates and manages proof campaigns (3 design directions per prospect).
+ * Creates core three-direction proofs and optional owner-gated showcase packs.
  *
  * On first creation the service generates three proof variants. When a Site
  * Studio URL is configured the generation request is handed off through the
@@ -28,9 +29,24 @@ class ProofCampaignService {
    * Direction id => human-facing direction name.
    */
   public const DIRECTIONS = [
-    'a' => 'Bold and Modern',
-    'b' => 'Trusted and Professional',
-    'c' => 'Local and Approachable',
+    'a' => 'Safe',
+    'b' => 'Wild',
+    'c' => 'OMG',
+    'd' => 'Royal Current',
+    'e' => 'Crownverse',
+    'f' => 'Shay Live',
+  ];
+
+  public const CORE_DIRECTIONS = [
+    'a' => 'Safe',
+    'b' => 'Wild',
+    'c' => 'OMG',
+  ];
+
+  public const SHOWCASE_DIRECTIONS = [
+    'd' => 'Royal Current',
+    'e' => 'Crownverse',
+    'f' => 'Shay Live',
   ];
 
   /**
@@ -54,6 +70,8 @@ class ProofCampaignService {
     protected SiteStudioProofClient $studioClient,
     protected OperationalLedger $ledger,
     protected BuildTelemetryService $buildTelemetry,
+    protected Connection $database,
+    protected CustomerPortalService $portal,
   ) {}
 
   /**
@@ -64,11 +82,15 @@ class ProofCampaignService {
    *
    * @return array{campaign:\Drupal\famtastic_pipeline\Entity\ProofCampaign,variants:\Drupal\famtastic_pipeline\Entity\ProofVariant[]}
    */
-  public function createForProspect(Prospect $prospect): array {
+  public function createForProspect(Prospect $prospect, array $context = []): array {
     $businessName = (string) ($prospect->get('business_name')->value ?: 'Your Business');
     $campaignId = $this->buildCampaignId($businessName);
     $now = $this->time->getRequestTime();
 
+    $allowPilot = getenv('FAMTASTIC_ALLOW_NO_IMAGE_PILOT_PROOFS') === '1'
+      || getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') === '1';
+    $remote = $this->studioClient->isRemote();
+    $localJobId = !$remote && !$allowPilot ? 'local-' . bin2hex(random_bytes(16)) : '';
     $storage = $this->entityTypeManager->getStorage('proof_campaign');
     /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign $campaign */
     $campaign = $storage->create([
@@ -76,13 +98,14 @@ class ProofCampaignService {
       'prospect_id' => $prospect->id(),
       'business_name' => $businessName,
       'status' => 'active',
-      'generation_status' => $this->studioClient->isRemote() ? 'dispatching' : 'ready',
+      'generation_status' => $remote ? 'dispatching' : ($allowPilot ? 'ready' : 'waiting_callback'),
+      'studio_job_id' => $localJobId,
       'expires_at' => $now + self::TTL,
     ]);
     $campaign->save();
 
-    if ($this->studioClient->isRemote()) {
-      $jobId = $this->studioClient->dispatch($prospect, $campaign);
+    if ($remote) {
+      $jobId = $this->studioClient->dispatch($prospect, $campaign, $context);
       $campaign
         ->set('generation_status', 'waiting_callback')
         ->set('studio_job_id', $jobId)
@@ -97,11 +120,21 @@ class ProofCampaignService {
       return ['campaign' => $campaign, 'variants' => []];
     }
 
+    if (!$allowPilot) {
+      $this->ledger->recordEvent(
+        'proof.local_waiting:' . $campaignId,
+        'proof.waiting_for_creative_provider',
+        ['campaign_id' => $campaignId, 'studio_job_id' => $localJobId, 'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1')],
+        (int) $prospect->id(),
+      );
+      return ['campaign' => $campaign, 'variants' => []];
+    }
+
     $source = 'no_image_pilot_v1';
 
     $variants = [];
     $variantStorage = $this->entityTypeManager->getStorage('proof_variant');
-    foreach (self::DIRECTIONS as $direction => $directionName) {
+    foreach (self::CORE_DIRECTIONS as $direction => $directionName) {
       $artifact = $this->writeStubArtifact($campaignId, $direction, $directionName, $businessName, $prospect, $source);
       $thumbnail = $this->writePilotThumbnail($campaignId, $direction, $directionName, $businessName);
       $dna = [
@@ -217,8 +250,46 @@ class ProofCampaignService {
     return $campaign;
   }
 
+  /** Prepares an owner-gated three-direction FAMtastic showcase expansion. */
+  public function prepareWebsiteRequestShowcase(int $requestId, string $publicId): ProofCampaign {
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->execute()->fetchAssoc();
+    if (!$request || !hash_equals((string) $request['public_id'], $publicId)) {
+      throw new \RuntimeException('Showcase export requires the exact website request confirmation.');
+    }
+    if (!in_array($request['proof_review_status'], ['owner_review', 'showcase_building'], TRUE) || empty($request['proof_campaign_id'])) {
+      throw new \RuntimeException('Only an owner-review proof set can receive a FAMtastic showcase expansion.');
+    }
+    $campaign = $this->entityTypeManager->getStorage('proof_campaign')->load((int) $request['proof_campaign_id']);
+    if (!$campaign || $campaign->get('generation_status')->value !== 'ready') {
+      throw new \RuntimeException('The attached proof campaign is not ready.');
+    }
+    $variants = $this->loadVariants($campaign);
+    $directions = array_map(static fn(ProofVariant $variant): string => (string) $variant->get('direction_id')->value, $variants);
+    sort($directions);
+    if ($directions !== array_keys(self::CORE_DIRECTIONS)) {
+      throw new \RuntimeException('The showcase expansion requires exactly the original Safe, Wild, and OMG set.');
+    }
+    $jobId = (string) $campaign->get('studio_job_id')->value;
+    if (!str_starts_with($jobId, 'local-showcase-')) {
+      $jobId = 'local-showcase-' . bin2hex(random_bytes(16));
+      $campaign->set('studio_job_id', $jobId)->set('dispatched_at', $this->time->getRequestTime())->save();
+      $this->ledger->recordEvent(
+        'proof.showcase_exported:' . $campaign->get('campaign_id')->value,
+        'proof.showcase_dispatched',
+        ['campaign_id' => $campaign->get('campaign_id')->value, 'studio_job_id' => $jobId, 'website_request_id' => $requestId],
+        (int) $campaign->get('prospect_id')->target_id,
+      );
+    }
+    $this->database->update('famtastic_project_request')->fields([
+      'proof_review_status' => 'showcase_building',
+      'changed' => $this->time->getRequestTime(),
+    ])->condition('id', $requestId)->condition('proof_review_status', ['owner_review', 'showcase_building'], 'IN')->execute();
+    return $campaign;
+  }
+
   /**
-   * Accepts one idempotent exactly-three Site Studio callback.
+   * Accepts one idempotent core or showcase three-direction callback.
    */
   public function acceptCallback(string $eventId, string $campaignId, string $studioJobId, array $variants): array {
     if ($eventId === '' || strlen($eventId) > 255) {
@@ -228,12 +299,21 @@ class ProofCampaignService {
     if (!$campaign || !hash_equals((string) $campaign->get('studio_job_id')->value, $studioJobId)) {
       throw new \InvalidArgumentException('Unknown campaign or Site Studio job.');
     }
+    $prospectId = (int) $campaign->get('prospect_id')->target_id;
+    $isShowcase = str_starts_with($studioJobId, 'local-showcase-');
+    $requestQuery = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('prospect_id', $prospectId);
+    if ($isShowcase) {
+      $requestQuery->condition('proof_campaign_id', (int) $campaign->id());
+    }
+    $request = $requestQuery->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $processed = json_decode((string) $campaign->get('callback_event_ids')->value ?: '[]', TRUE);
     if (in_array($eventId, (array) $processed, TRUE)) {
       return ['newly_processed' => FALSE, 'campaign' => $campaign, 'variants' => $this->loadVariants($campaign)];
     }
-    if (count($variants) !== 3) {
-      throw new \InvalidArgumentException('Exactly three variants are required.');
+    $requiredDirections = $isShowcase ? self::SHOWCASE_DIRECTIONS : self::CORE_DIRECTIONS;
+    if (count($variants) !== count($requiredDirections)) {
+      throw new \InvalidArgumentException('Exactly three variants are required for this proof set.');
     }
     $validated = [];
     foreach ($variants as $variant) {
@@ -242,8 +322,8 @@ class ProofCampaignService {
       }
       $direction = strtolower((string) ($variant['direction_id'] ?? ''));
       $html = (string) ($variant['html'] ?? '');
-      if (!array_key_exists($direction, self::DIRECTIONS) || isset($validated[$direction])) {
-        throw new \InvalidArgumentException('Variants must contain unique directions a, b, and c.');
+      if (!array_key_exists($direction, $requiredDirections) || isset($validated[$direction])) {
+        throw new \InvalidArgumentException('Variants must contain the three unique directions required by this proof set.');
       }
       if ($html === '' || strlen($html) > 500000) {
         throw new \InvalidArgumentException('Each proof HTML artifact is required and limited to 500 KB.');
@@ -276,16 +356,23 @@ class ProofCampaignService {
         'design_dna' => is_array($variant['design_dna'] ?? NULL) ? $variant['design_dna'] : [],
       ];
     }
-    if (array_keys($validated) !== ['a', 'b', 'c']) {
+    if (array_keys($validated) !== array_keys($requiredDirections)) {
       ksort($validated);
     }
-    if (array_keys($validated) !== ['a', 'b', 'c']) {
-      throw new \InvalidArgumentException('Variants must contain directions a, b, and c.');
+    if (array_keys($validated) !== array_keys($requiredDirections)) {
+      throw new \InvalidArgumentException('Proof directions do not match the requested proof set.');
     }
     $currentVariants = $this->loadVariants($campaign);
     $isRefresh = str_starts_with($studioJobId, 'local-refresh-');
-    if ($currentVariants && !$isRefresh) {
+    if ($currentVariants && !$isRefresh && !$isShowcase) {
       throw new \InvalidArgumentException('Campaign already has proof artifacts.');
+    }
+    if ($isShowcase) {
+      $currentDirections = array_map(static fn(ProofVariant $variant): string => (string) $variant->get('direction_id')->value, $currentVariants);
+      sort($currentDirections);
+      if (!$request || $request['proof_review_status'] !== 'showcase_building' || (int) $request['proof_campaign_id'] !== (int) $campaign->id() || $currentDirections !== array_keys(self::CORE_DIRECTIONS)) {
+        throw new \InvalidArgumentException('A showcase expansion requires one matching account-owned Safe, Wild, and OMG set.');
+      }
     }
     if ($isRefresh) {
       if (count($currentVariants) !== 3) {
@@ -313,14 +400,20 @@ class ProofCampaignService {
         'campaign_id' => $campaign->id(),
         'direction_id' => $direction,
       ]);
+      $directionName = mb_substr(trim(strip_tags((string) ($variant['design_dna']['direction_name'] ?? self::DIRECTIONS[$direction]))), 0, 255);
       $entity
-        ->set('direction_name', self::DIRECTIONS[$direction])
+        ->set('direction_name', $directionName ?: self::DIRECTIONS[$direction])
         ->set('artifact_path', $path)
         ->set('thumbnail_path', $thumbnailPath)
         ->set('design_dna', json_encode($variant['design_dna'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))
-        ->set('preview_url', $this->previewUrl($campaignId, $direction));
+        ->set('preview_url', $request
+          ? '/web/admin/famtastic/website-request/' . (int) $request['id'] . '/proof/' . $direction
+          : $this->previewUrl($campaignId, $direction));
       $entity->save();
       $created[] = $entity;
+    }
+    if ($request) {
+      $this->protectAccountProofArtifacts($campaignId);
     }
     $processed[] = $eventId;
     $campaign
@@ -328,24 +421,31 @@ class ProofCampaignService {
       ->set('generation_status', 'ready')
       ->set('ready_at', $this->time->getRequestTime())
       ->save();
-    $prospectId = (int) $campaign->get('prospect_id')->target_id;
     $this->ledger->recordEvent(
       'proof.callback:' . $eventId,
       'proof.ready',
-      ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => 3, 'refresh' => $isRefresh],
+      ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => $isShowcase ? 6 : 3, 'refresh' => $isRefresh, 'showcase' => $isShowcase],
       $prospectId,
     );
-    $this->ledger->enqueue(
-      'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
-      'outreach.prepare',
-      ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
-      $prospectId,
-    );
+    $completeVariants = $isShowcase ? $this->loadVariants($campaign) : $created;
+    if ($request) {
+      $this->portal->attachWebsiteRequestProof((int) $request['id'], $campaign, $completeVariants);
+    }
+    else {
+      $this->ledger->enqueue(
+        'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
+        'outreach.prepare',
+        ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
+        $prospectId,
+      );
+    }
     $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
     if ($prospect) {
-      $dna = $validated['a']['design_dna'] ?? [];
+      $firstDirection = array_key_first($validated);
+      $dna = $firstDirection === NULL ? [] : ($validated[$firstDirection]['design_dna'] ?? []);
       $telemetry = is_array($dna['telemetry'] ?? NULL) ? $dna['telemetry'] : [];
       $this->buildTelemetry->recordStudioProof($prospect, $campaign, $created, [
+        'build_key_suffix' => $isShowcase ? 'site-studio-showcase' : 'site-studio',
         'flow_key' => $telemetry['flow_key'] ?? 'site-studio-local-promotion',
         'task_key' => $telemetry['task_key'] ?? 'proof.generate',
         'provider' => $telemetry['provider'] ?? ($dna['provider'] ?? 'site_studio_local'),
@@ -355,7 +455,7 @@ class ProofCampaignService {
         'source_sha' => $telemetry['source_sha'] ?? '',
       ]);
     }
-    return ['newly_processed' => TRUE, 'campaign' => $campaign, 'variants' => $created];
+    return ['newly_processed' => TRUE, 'campaign' => $campaign, 'variants' => $completeVariants];
   }
 
   /**
@@ -388,7 +488,7 @@ class ProofCampaignService {
   public function select(ProofCampaign $campaign, string $variantId, string $package): ProofCampaign {
     $variantId = strtolower(trim($variantId));
     if (!array_key_exists($variantId, self::DIRECTIONS)) {
-      throw new \InvalidArgumentException('variant_id must be one of: a, b, c.');
+      throw new \InvalidArgumentException('variant_id must be one of: a, b, c, d, e, f.');
     }
     $package = trim($package);
     if (!in_array($package, self::PACKAGES, TRUE)) {
@@ -506,7 +606,7 @@ class ProofCampaignService {
   }
 
   /**
-   * Loads all variants for a campaign, ordered a, b, c.
+   * Loads all variants for a campaign, ordered by direction id.
    *
    * @return \Drupal\famtastic_pipeline\Entity\ProofVariant[]
    */
@@ -629,6 +729,18 @@ class ProofCampaignService {
     $this->fileSystem->prepareDirectory($absolute, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     $this->fileSystem->saveData($binary, $absolute . '/' . $filename, FileSystemInterface::EXISTS_REPLACE);
     return '/proofs/' . $campaignId . '/' . $direction . '/' . $filename;
+  }
+
+  /** Prevents direct web access to request-owned proof artifacts. */
+  protected function protectAccountProofArtifacts(string $campaignId): void {
+    $directory = \Drupal::root() . '/proofs/' . $campaignId;
+    if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
+      throw new \RuntimeException('Unable to secure account-owned proof artifacts.');
+    }
+    $rules = "<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n  Order allow,deny\n  Deny from all\n</IfModule>\n";
+    if ($this->fileSystem->saveData($rules, $directory . '/.htaccess', FileSystemInterface::EXISTS_REPLACE) === FALSE) {
+      throw new \RuntimeException('Unable to secure account-owned proof artifacts.');
+    }
   }
 
   /**

@@ -259,6 +259,16 @@ async function dynamicRoutes() {
 // and structured-data path as every other public shell.
 await writeFile(templatePath, renderShell('/'));
 
+// `/portal` also contains public media. Without a physical entry document,
+// Apache treats that directory as a forbidden listing instead of handing the
+// authenticated SPA route to React.
+const portalShellPath = join(distDir, 'portal', 'index.html');
+await mkdir(dirname(portalShellPath), { recursive: true });
+await writeFile(
+  portalShellPath,
+  template.replace('</head>', '    <meta name="robots" content="noindex,nofollow" />\n  </head>'),
+);
+
 for (const path of Object.keys(SEO_PAGES)) {
   if (path === '/') continue;
   const target = join(distDir, path.replace(/^\//, ''), 'index.html');

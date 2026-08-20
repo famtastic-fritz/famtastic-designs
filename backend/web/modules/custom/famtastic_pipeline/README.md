@@ -1,6 +1,6 @@
 # FAMtastic Pipeline
 
-Attributed lead → three proofs → gated outreach → proof/package selection →
+Attributed lead → three core proofs (plus an optional three-proof showcase) → gated outreach → proof/package selection →
 versioned terms → payment → intake → Site Studio fulfillment → revisions →
 approval → deployment/domain/hosting/renewal pipeline for FAMtastic Designs.
 
