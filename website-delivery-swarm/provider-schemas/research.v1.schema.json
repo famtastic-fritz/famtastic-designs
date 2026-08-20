@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "request_id", "business_context", "findings", "creative_opportunities", "unknowns_requiring_client_confirmation", "sources"],
+  "properties": {
+    "schema": {"type": "string", "const": "famtastic.live-research.v1"},
+    "request_id": {"type": "string", "minLength": 1},
+    "business_context": {"type": "string", "minLength": 80},
+    "findings": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["topic", "finding", "source_url", "source_title", "source_type", "design_use", "mutable"],
+        "properties": {
+          "topic": {"type": "string"},
+          "finding": {"type": "string", "minLength": 20},
+          "source_url": {"type": "string", "pattern": "^https://"},
+          "source_title": {"type": "string"},
+          "source_type": {"type": "string"},
+          "design_use": {"type": "string"},
+          "mutable": {"type": "boolean"}
+        }
+      }
+    },
+    "creative_opportunities": {"type": "array", "minItems": 4, "items": {"type": "string"}},
+    "unknowns_requiring_client_confirmation": {"type": "array", "minItems": 4, "items": {"type": "string"}},
+    "sources": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url", "title", "publisher", "accessed_at"],
+        "properties": {
+          "url": {"type": "string", "pattern": "^https://"},
+          "title": {"type": "string"},
+          "publisher": {"type": "string"},
+          "accessed_at": {"type": "string"}
+        }
+      }
+    }
+  }
+}

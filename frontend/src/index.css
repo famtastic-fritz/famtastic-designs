@@ -2889,6 +2889,37 @@ a:hover {
   font-size: 0.95rem;
 }
 
+.sf__upgrade {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: clamp(1.15rem, 4vw, 1.75rem);
+  border: 1px solid rgba(124, 252, 0, 0.42);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(124, 252, 0, 0.09), rgba(124, 252, 0, 0.02));
+}
+
+.sf__upgrade h4,
+.sf__upgrade p,
+.sf__upgrade small {
+  margin: 0;
+}
+
+.sf__upgrade h4 {
+  font-family: 'Space Grotesk', var(--fam-font);
+  font-size: clamp(1.2rem, 3vw, 1.55rem);
+}
+
+.sf__upgrade p,
+.sf__upgrade small {
+  color: var(--fam-text-muted);
+  line-height: 1.6;
+}
+
+.sf__upgrade .v1-btn {
+  width: fit-content;
+}
+
 .sf__result-actions {
   display: flex;
   gap: 0.75rem;

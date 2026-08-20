@@ -1,0 +1,136 @@
+{
+  "schema": "famtastic.browser-proof.v1",
+  "campaign": "and_if_it_is_rattler_lifers",
+  "tested_at": "2026-08-19T21:37:11.172Z",
+  "browser": "playwright-chromium",
+  "routes": [
+    {
+      "route": "/index.html",
+      "profile": "desktop",
+      "status": 200,
+      "generatedRollCall": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "storedRollCall": true,
+      "restoredRollCall": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "title": "AND IF IT IS? — The Unofficial Rattler Lifers Project",
+      "h1Count": 1,
+      "imageCount": 3,
+      "missingAltCount": 0,
+      "horizontalOverflow": false,
+      "disclosure": true,
+      "campaignHook": true,
+      "privacyBoundary": true,
+      "canonical": "https://famtasticdesigns.com/and-if-it-is/",
+      "socialMetadata": true,
+      "jsonLdValid": true,
+      "shareControls": 2,
+      "localCardLinks": [
+        "cards/01-question.html",
+        "cards/02-lifer.html",
+        "cards/03-proof.html"
+      ],
+      "blankExternalLinks": 0
+    },
+    {
+      "route": "/index.html",
+      "profile": "mobile",
+      "status": 200,
+      "generatedRollCall": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "storedRollCall": true,
+      "restoredRollCall": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "title": "AND IF IT IS? — The Unofficial Rattler Lifers Project",
+      "h1Count": 1,
+      "imageCount": 3,
+      "missingAltCount": 0,
+      "horizontalOverflow": false,
+      "disclosure": true,
+      "campaignHook": true,
+      "privacyBoundary": true,
+      "canonical": "https://famtasticdesigns.com/and-if-it-is/",
+      "socialMetadata": true,
+      "jsonLdValid": true,
+      "shareControls": 2,
+      "localCardLinks": [
+        "cards/01-question.html",
+        "cards/02-lifer.html",
+        "cards/03-proof.html"
+      ],
+      "blankExternalLinks": 0
+    },
+    {
+      "route": "/cards/01-question.html",
+      "profile": "social-1080x1350",
+      "status": 200,
+      "horizontalOverflow": false,
+      "cardWidth": 1080,
+      "cardHeight": 1350
+    },
+    {
+      "route": "/cards/02-lifer.html",
+      "profile": "social-1080x1350",
+      "status": 200,
+      "horizontalOverflow": false,
+      "cardWidth": 1080,
+      "cardHeight": 1350
+    },
+    {
+      "route": "/cards/03-proof.html",
+      "profile": "social-1080x1350",
+      "status": 200,
+      "horizontalOverflow": false,
+      "cardWidth": 1080,
+      "cardHeight": 1350
+    }
+  ],
+  "assertions": {
+    "every_route_200": true,
+    "one_h1_on_hub": true,
+    "all_hub_images_have_alt_attributes": true,
+    "no_horizontal_overflow": true,
+    "disclosure_visible": true,
+    "campaign_hook_preserved": true,
+    "public_launch_metadata_complete": true,
+    "roll_call_generates_persists_and_restores": true,
+    "local_card_links_work": true,
+    "exact_three_social_cards": true,
+    "exact_two_generated_assets": true,
+    "no_console_errors": true,
+    "no_page_errors": true,
+    "no_failed_requests": true
+  },
+  "console_errors": [],
+  "page_errors": [],
+  "failed_requests": [],
+  "screenshots": [
+    "evidence/screenshots/social-hub-desktop.png",
+    "evidence/screenshots/social-hub-mobile.png",
+    "evidence/screenshots/01-question.png",
+    "evidence/screenshots/02-lifer.png",
+    "evidence/screenshots/03-proof.png"
+  ],
+  "hashes": {
+    "site/index.html": "d7932c3e2894d8c5a43fa9e15912668d78dd1e0561542987c8b1ddb226cf1433",
+    "site/cards/01-question.html": "d1c469a4506ed86887c684eebb001fe3886a8c8f4cf13d31c72c14bab5926f08",
+    "site/cards/02-lifer.html": "3078638b2dccac187748f8ea390feaa673f8eb4842ffff4d0941e0d856bfee92",
+    "site/cards/03-proof.html": "a883e16f154ee99c38b1c42197e2aa5961ea3669ae0b5aefd351fbb1223c4150",
+    "site/assets/rattler-lifers-hero.png": "ab8097c6c0ce4429b3878acfecc8f39f74c08469d52ca651ece68a68c0413be5",
+    "site/assets/the-lifer-character.png": "0c28405809c80fe36ece19f676a7438dd8422aae188fe0d6f1c1ef29791c6007"
+  },
+  "pass": true,
+  "link_statuses": [
+    {
+      "href": "cards/01-question.html",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "href": "cards/02-lifer.html",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "href": "cards/03-proof.html",
+      "status": 200,
+      "ok": true
+    }
+  ]
+}

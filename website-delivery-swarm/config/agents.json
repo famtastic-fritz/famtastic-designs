@@ -1,0 +1,14 @@
+{
+  "schema_version":1,
+  "agents":[
+    {"id":"intake-auditor","capabilities":["extract","classify"],"primary":"rules","advisory":"qwen3:8b","gate":"brief_valid"},
+    {"id":"industry-research","capabilities":["research"],"primary":"codex","fallback":"qwen3:8b","gate":"sources_labeled"},
+    {"id":"solution-architect","capabilities":["synthesis"],"primary":"codex","fallback":"qwen3:8b","gate":"scope_complete"},
+    {"id":"package-recommender","capabilities":["classify"],"primary":"rules","advisory":"qwen3:8b","gate":"canonical_sku_only"},
+    {"id":"addon-analyst","capabilities":["classify"],"primary":"rules","challenger":"glm4:9b","gate":"evidence_per_addon"},
+    {"id":"creative-director","capabilities":["draft"],"primary":"qwen3:8b","fallback":"codex","gate":"three_distinct_directions"},
+    {"id":"human-experience-tester","capabilities":["persona_simulation","journey_review","optional_numerology_lens"],"primary":"rules","advisory":"qwen3:8b","gate":"control_and_commerce_boundaries"},
+    {"id":"prototype-builder","capabilities":["code"],"primary":"codex","fallback":"claude","gate":"portable_artifact"},
+    {"id":"independent-qa","capabilities":["challenge","accessibility_review"],"primary":"rules","advisory":"gemma3:4b","gate":"all_assertions_true"}
+  ]
+}

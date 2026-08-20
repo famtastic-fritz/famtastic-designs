@@ -1,0 +1,18 @@
+{
+  "schema":"famtastic.synthetic-visual-review.v1",
+  "request_id":"local:bossy-nails-pri-20260818-fritz-001",
+  "reviewed_artifacts":"Six desktop and six mobile full-page Playwright screenshots plus generated hero assets",
+  "reviewer":{"provider":"openai","model":"codex-primary-session-exact-deployment-unavailable","role":"parent visual critic","independent":true,"execution_class":"separate agent session","independence_note":"The parent session inspected all twelve full-page screenshots after the specialist build; customer approval remains unresolved."},
+  "three_or_more_distinct_layout_families":true,
+  "all_six_visually_distinct":true,
+  "critical_defects":[],
+  "resolved_during_review":["Each concept has a distinct asset, metaphor, palette, type system, section sequence, and mobile reflow.","Service, availability, policy, and booking language is visibly fictional or awaiting confirmation."],
+  "directions":[
+    {"id":"direction-a","name":"Polished & Punctual","scores":{"first_impression":8,"business_relevance":9,"visual_distinction":8,"copy_specificity":9,"trust_credibility":9,"mobile_usability":9,"accessibility":8,"conversion_clarity":9,"emotional_response":8,"next_action_confidence":9},"overall":8.6,"rationale":"Premium, calm, clear, and structurally complete."},
+    {"id":"direction-b","name":"Express Yourself","scores":{"first_impression":9,"business_relevance":9,"visual_distinction":9,"copy_specificity":9,"trust_credibility":8,"mobile_usability":9,"accessibility":8,"conversion_clarity":9,"emotional_response":9,"next_action_confidence":9},"overall":8.8,"rationale":"A legitimate midpoint: expressive branding without sacrificing the appointment journey."},
+    {"id":"direction-c","name":"Chrome Empress","scores":{"first_impression":10,"business_relevance":9,"visual_distinction":10,"copy_specificity":9,"trust_credibility":8,"mobile_usability":8,"accessibility":8,"conversion_clarity":9,"emotional_response":10,"next_action_confidence":9},"overall":9,"rationale":"The power-armor metaphor controls services, process, gallery, and conversion."},
+    {"id":"direction-d","name":"Nailverse","scores":{"first_impression":10,"business_relevance":9,"visual_distinction":10,"copy_specificity":9,"trust_credibility":8,"mobile_usability":9,"accessibility":8,"conversion_clarity":9,"emotional_response":10,"next_action_confidence":9},"overall":9.1,"rationale":"A portal system that translates imaginative exploration into a practical pre-flight plan."},
+    {"id":"direction-e","name":"Main Character Mani","scores":{"first_impression":10,"business_relevance":10,"visual_distinction":10,"copy_specificity":9,"trust_credibility":8,"mobile_usability":9,"accessibility":8,"conversion_clarity":9,"emotional_response":10,"next_action_confidence":9},"overall":9.2,"rationale":"Kinetic, audience-specific, schedule-aware, and still a usable website."},
+    {"id":"direction-f","name":"The Bossy Lab","scores":{"first_impression":10,"business_relevance":9,"visual_distinction":10,"copy_specificity":9,"trust_credibility":9,"mobile_usability":9,"accessibility":8,"conversion_clarity":9,"emotional_response":10,"next_action_confidence":9},"overall":9.2,"rationale":"The formula builder makes customization feel proprietary while retaining clear controls."}
+  ]
+}

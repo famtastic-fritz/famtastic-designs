@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "request_id", "reviewer", "directions", "all_six_visually_distinct", "three_or_more_distinct_layout_families", "critical_defects", "repair_required", "release_decision"],
+  "properties": {
+    "schema": {"type": "string", "const": "famtastic.visual-review.v1"},
+    "request_id": {"type": "string"},
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model", "independent", "execution_class"],
+      "properties": {
+        "provider": {"type": "string", "const": "anthropic"},
+        "model": {"type": "string"},
+        "independent": {"type": "boolean", "const": true},
+        "execution_class": {"type": "string", "const": "cloud_provider_executed"}
+      }
+    },
+    "directions": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "scores", "overall", "strengths", "defects", "repair_instructions"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^direction-[a-f]$"},
+          "scores": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["impact", "business_relevance", "visual_distinction", "copy_specificity", "trust", "mobile_usability", "accessibility", "conversion_clarity", "emotional_response"],
+            "properties": {
+              "impact": {"type": "number", "minimum": 0, "maximum": 10},
+              "business_relevance": {"type": "number", "minimum": 0, "maximum": 10},
+              "visual_distinction": {"type": "number", "minimum": 0, "maximum": 10},
+              "copy_specificity": {"type": "number", "minimum": 0, "maximum": 10},
+              "trust": {"type": "number", "minimum": 0, "maximum": 10},
+              "mobile_usability": {"type": "number", "minimum": 0, "maximum": 10},
+              "accessibility": {"type": "number", "minimum": 0, "maximum": 10},
+              "conversion_clarity": {"type": "number", "minimum": 0, "maximum": 10},
+              "emotional_response": {"type": "number", "minimum": 0, "maximum": 10}
+            }
+          },
+          "overall": {"type": "number", "minimum": 0, "maximum": 10},
+          "strengths": {"type": "array", "items": {"type": "string"}},
+          "defects": {"type": "array", "items": {"type": "string"}},
+          "repair_instructions": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "all_six_visually_distinct": {"type": "boolean"},
+    "three_or_more_distinct_layout_families": {"type": "boolean"},
+    "critical_defects": {"type": "array", "items": {"type": "string"}},
+    "repair_required": {"type": "boolean"},
+    "release_decision": {"enum": ["pass", "repair"]}
+  }
+}

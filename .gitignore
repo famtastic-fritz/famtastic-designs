@@ -34,3 +34,16 @@ __pycache__/
 marketing/video/node_modules/
 marketing/video/out/
 marketing/runtime/
+
+# Pilot proofs are reproducible/generated evidence, not application source.
+# Keep their normalized intakes, prompts, direction contracts, builders, and
+# verifiers under version control; retain rendered sites, images, screenshots,
+# nested app checkouts, and dependency output in the artifact/Drive evidence
+# lanes described by the Build DNA record.
+website-delivery-swarm/pilots/**/assets/
+website-delivery-swarm/pilots/**/visual-directions/
+website-delivery-swarm/pilots/**/site/
+website-delivery-swarm/pilots/**/safe-site/
+website-delivery-swarm/pilots/**/wild-site/
+website-delivery-swarm/pilots/**/proof/
+website-delivery-swarm/pilots/**/proof-hub/

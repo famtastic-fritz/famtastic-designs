@@ -1,0 +1,47 @@
+{
+  "id": "member-bossy-nails-by-pri-benchmark",
+  "request_id": "local:bossy-nails-pri-20260818-fritz-001",
+  "lane": "customer_portal",
+  "account": true,
+  "customer": {
+    "name": "Fritz Medine",
+    "email": "fritz.medine@gmail.com"
+  },
+  "privacy_class": "local_proof_with_user_supplied_contact",
+  "mode": "preview",
+  "fictional_business": true,
+  "business": {
+    "name": "Bossy Nails by Pri",
+    "industry": "Independent nail technology and beauty services",
+    "location": "St. Lucie County, Florida",
+    "model": "Fictional appointment-led studio for busy, style-forward clients",
+    "goal": "Turn bold nail artistry into fast, confident booking journeys without losing service clarity or trust"
+  },
+  "brand": {
+    "status": "fictional_benchmark",
+    "audience_language": "Flashy, new-age Black women on the go",
+    "creative_contract": "Exactly one restrained direction, one medium-FAMtastic direction, and four ultra-FAMtastic directions"
+  },
+  "scope": {
+    "pages": 5,
+    "features": [
+      "Services and starting-point descriptions",
+      "Availability and booking handoff",
+      "Nail-art gallery",
+      "Appointment preparation guidance",
+      "Policies and accessibility contact",
+      "Mobile-first calls to action"
+    ]
+  },
+  "research": {
+    "external_facts_required": false,
+    "note": "The benchmark uses only user-supplied locale and creative invention; all service names, availability, policies, testimonials, prices, and claims remain placeholders pending client validation."
+  },
+  "constraints": [
+    "Fictional reusable market proof; not a real client or operating salon",
+    "Do not invent prices, address, phone, booking availability, credentials, sanitation claims, testimonials, or domain availability",
+    "All people and imagery are AI-generated and fictional",
+    "No external email, publication, deployment, payment, booking, or customer-system mutation",
+    "Every direction must work as a responsive website, not a campaign poster"
+  ]
+}

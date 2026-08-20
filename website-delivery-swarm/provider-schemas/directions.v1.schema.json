@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "request_id", "directions", "image_prompts"],
+  "properties": {
+    "schema": {"type": "string", "const": "famtastic.creative-directions.v1"},
+    "request_id": {"type": "string"},
+    "directions": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "slug", "name", "mode", "famtastic_level", "strategy", "information_architecture", "visual_system", "conversion_path", "sections", "copy_seed"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^direction-[a-f]$"},
+          "slug": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "name": {"type": "string"},
+          "mode": {"enum": ["restrained", "medium_famtastic", "ultra_famtastic"]},
+          "famtastic_level": {"type": "integer", "minimum": 0, "maximum": 10},
+          "strategy": {"type": "string", "minLength": 60},
+          "information_architecture": {"type": "string", "minLength": 30},
+          "visual_system": {"type": "string", "minLength": 30},
+          "conversion_path": {"type": "string", "minLength": 30},
+          "sections": {"type": "array", "minItems": 5, "items": {"type": "string"}},
+          "copy_seed": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["eyebrow", "headline", "subhead", "primary_cta", "secondary_cta"],
+            "properties": {
+              "eyebrow": {"type": "string"},
+              "headline": {"type": "string"},
+              "subhead": {"type": "string"},
+              "primary_cta": {"type": "string"},
+              "secondary_cta": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "image_prompts": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["direction_id", "filename", "prompt", "alt_text"],
+        "properties": {
+          "direction_id": {"type": "string", "pattern": "^direction-[a-f]$"},
+          "filename": {"type": "string", "pattern": "^direction-[a-f]\\.png$"},
+          "prompt": {"type": "string", "minLength": 120},
+          "alt_text": {"type": "string", "minLength": 20}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "famtastic.build-classes.v1",
+  "classes": {
+    "free": {
+      "description": "Deterministic rules and locally available no-cost workers.",
+      "brain_policy": "local_or_replay",
+      "worker_policy": "local_or_replay",
+      "premium_escalation_allowed": false
+    },
+    "low": {
+      "description": "Economical brain with local workers and bounded escalation.",
+      "brain_policy": "economical",
+      "worker_policy": "local_first",
+      "premium_escalation_allowed": false
+    },
+    "medium": {
+      "description": "Stronger strategy brain with economical workers and independent review.",
+      "brain_policy": "balanced",
+      "worker_policy": "economical_or_local",
+      "premium_escalation_allowed": true
+    },
+    "premium": {
+      "description": "Premium strategy, creative direction, construction, and independent review.",
+      "brain_policy": "premium",
+      "worker_policy": "best_available",
+      "premium_escalation_allowed": true
+    },
+    "premium_brain_free_workers": {
+      "description": "Premium strategy brain with free or local specialist workers.",
+      "brain_policy": "premium",
+      "worker_policy": "local_only",
+      "premium_escalation_allowed": true
+    },
+    "custom": {
+      "description": "Explicit per-stage policy supplied in the request and validated before execution.",
+      "brain_policy": "request_defined",
+      "worker_policy": "request_defined",
+      "premium_escalation_allowed": "request_defined"
+    }
+  }
+}

@@ -31,6 +31,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\SiteStudioProofClient
     arguments: ['@http_client', '@config.factory']
 
+  famtastic_pipeline.site_studio_build_packets:
+    class: Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService
+    arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@datetime.time', '@config.factory']
+
   famtastic_pipeline.customer_deployment:
     class: Drupal\famtastic_pipeline\Service\CustomerDeploymentService
     arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@datetime.time']

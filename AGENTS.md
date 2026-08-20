@@ -7,6 +7,21 @@
   Shay, and every other CLI agent.
 - Use `docs/CAPABILITY_REGISTRY.md` to distinguish implemented, provider-proven,
   and production-proven capabilities.
+- For every creative proof, selected-direction refinement, campaign experience,
+  or Site Studio-bound build, follow `docs/architecture/BUILD_DNA_STANDARD_V1.md`.
+  Create and validate one `famtastic.build-dna.v1` record at run creation;
+  journal the real provider/model status, prompts or prompt artifacts, inputs,
+  outputs, hashes, timing, costs, fallback, reviewer decision, and retrieval
+  locations as each stage happens. Register the Drupal projection before an
+  eligible handoff and copy the same record into the Site Studio packet. Never
+  guess missing model identity, duration, cost, prompt, or session information.
+- Route designed motion, proof walkthroughs, and reusable social cutdowns through
+  HyperFrames; route fast, draft-only narrated social/video assemblies through
+  MoneyPrinterTurbo. Neither tool is a publishing authority or a substitute for
+  a creative-proof reviewer. Record the provider/model, source assets, render
+  command, duration, cost status, hashes, QA, and approval state in the same
+  Build DNA record before handing a media artifact to a customer, campaign, or
+  Site Studio.
 - For marketing strategy, demand generation, blog series, SEO content, FAQs,
   CTAs, product explanations, or pricing recommendations, read
   `docs/DEMAND_ENGINE_DOCTRINE.md` and use

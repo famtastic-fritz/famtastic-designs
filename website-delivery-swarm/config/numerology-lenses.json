@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "disclosure": "Optional creative-personalization lens based on numerology tradition; not a scientific personality assessment.",
+  "lenses": {
+    "1":{"theme":"independence and initiative","voice":["direct","confident","possibility-focused"],"promote":["ownership","fast starts","leadership choices"],"test_for":["clear autonomy","decisive CTA","visible progress"]},
+    "2":{"theme":"cooperation and harmony","voice":["warm","reassuring","collaborative"],"promote":["partnership","support","shared decisions"],"test_for":["trust cues","gentle comparisons","human assistance"]},
+    "3":{"theme":"creativity and expression","voice":["playful","imaginative","encouraging"],"promote":["visual directions","storytelling","content and brand ideas"],"test_for":["room to explore","inspiring examples","easy idea capture"]},
+    "4":{"theme":"structure and dependability","voice":["practical","organized","specific"],"promote":["roadmaps","checklists","maintenance plans"],"test_for":["clear steps","scope certainty","operational proof"]},
+    "5":{"theme":"freedom and variety","voice":["energetic","flexible","exploratory"],"promote":["options","experiments","modular growth"],"test_for":["choice without overload","reversible actions","novelty"]},
+    "6":{"theme":"care and responsibility","voice":["supportive","grounded","community-minded"],"promote":["accessibility","customer care","reputation"],"test_for":["safety","service outcomes","inclusive language"]},
+    "7":{"theme":"analysis and depth","voice":["thoughtful","evidence-aware","unhurried"],"promote":["research","comparisons","technical detail"],"test_for":["sources","privacy clarity","time to evaluate"]},
+    "8":{"theme":"achievement and stewardship","voice":["strategic","outcome-focused","concise"],"promote":["ROI","automation","scalable operations"],"test_for":["business case","measurement","authority boundaries"]},
+    "9":{"theme":"purpose and broad impact","voice":["compassionate","vision-oriented","inclusive"],"promote":["mission","community reach","lasting value"],"test_for":["impact story","inclusive access","values alignment"]},
+    "11":{"theme":"intuition and inspiration","voice":["visionary","sensitive","uplifting"],"promote":["distinctive concepts","meaningful storytelling","future vision"],"test_for":["emotional resonance","inspiration plus grounding","overwhelm control"]},
+    "22":{"theme":"vision made practical","voice":["ambitious","structured","capable"],"promote":["systems","phased scale","durable infrastructure"],"test_for":["big-picture roadmap","feasible milestones","operational leverage"]},
+    "33":{"theme":"creative service and compassionate leadership","voice":["warm","inspiring","service-centered"],"promote":["community storytelling","accessible education","mission-led creative systems"],"test_for":["care without pressure","service impact","creative expression with responsibility"]}
+  },
+  "guardrails": {
+    "opt_in_required": true,
+    "control_mode_required": true,
+    "persist_birth_date": false,
+    "never_affect": ["price","eligibility","risk","legal terms","accessibility requirements","approval","priority"],
+    "never_claim": ["scientific validity","diagnosis","certainty about a person","guaranteed conversion"]
+  }
+}

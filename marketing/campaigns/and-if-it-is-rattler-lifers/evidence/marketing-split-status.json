@@ -1,0 +1,44 @@
+{
+  "schema": "famtastic.marketing-split-status.v1",
+  "updated_at": "2026-08-19",
+  "status": "incubating_in_site_famtastic_designs",
+  "future_repository": "famtastic-marketing-engine",
+  "current_artifact_classification": "public_marketing_case_study",
+  "allowed_flow": {
+    "from_core_to_marketing": [
+      "sanitized capability records",
+      "rights-reviewed public proof",
+      "approved portfolio assets"
+    ],
+    "from_marketing_to_core": [
+      "consent-aware lead or intake packet",
+      "source and campaign attribution",
+      "research boundaries",
+      "deduplication identity"
+    ]
+  },
+  "forbidden_marketing_ownership": [
+    "customer projects",
+    "prices",
+    "payments",
+    "approvals",
+    "transactional notifications",
+    "Site Studio build state"
+  ],
+  "completed": [
+    "one-way versioned boundary documented",
+    "public Lab artifact routes to core intake rather than writing customer state",
+    "campaign and content attribution are PII-free"
+  ],
+  "queued": [
+    "complete the 17-day campaign evidence",
+    "prove two social channels through draft, approval, delivery, and rollback",
+    "join email, UTM, GA4, and Drupal lead attribution on one stable content ID",
+    "prove approval, idempotency, bounded retries, alerts, and duplicate protection",
+    "prove Shay, Claude, and Codex can execute the same documented workflow",
+    "pass a second mock brand without reusable engine edits",
+    "complete the extraction manifest",
+    "prove the portable set contains no secrets, customer records, OAuth tokens, or private records"
+  ],
+  "decision": "Keep the marketing engine in the current repository until evidence gates pass; do not split by calendar date."
+}

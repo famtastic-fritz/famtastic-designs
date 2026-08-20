@@ -1,0 +1,23 @@
+{
+  "schema": "famtastic.lab-publication.v1",
+  "published_at": "2026-08-19T17:20:10Z",
+  "url": "https://famtasticdesigns.com/lab/and-if-it-is/",
+  "route_class": "public_indexable_case_study",
+  "deployment_lane": "isolated_atomic_static_godaddy",
+  "archive_sha256": "0debde1778b9bf10b8399ec19d54b62f6128af114a33b7c9d92b29f508d511b4",
+  "revision": "Separated the immersive public experience from the Lab DNA page and pointed every live-experience CTA to https://famtasticdesigns.com/and-if-it-is/.",
+  "source_hashes": {
+    "lab-site/index.html": "f82c3415b16926f356b90241316ea9dcfd13ade7f256fe4ad9841cbc859a7bcd",
+    "lab-site/styles.css": "c88c4e5bcbffa16ff50adc286ea962e127f40e69f0b7f1d0f7282c47fee5a5c3",
+    "lab-site/app.js": "fcf03f5d156c0c0929a3b11b964ff0279e6613993a9cee5ca9042b5803238350"
+  },
+  "production_smoke": {
+    "evidence": "lab-live-results.json",
+    "anonymous_desktop_1440": "pass",
+    "anonymous_phone_390": "pass",
+    "live_experience_destination": "pass",
+    "attributed_intake_destination": "pass"
+  },
+  "main_frontend_deployed": false,
+  "reason_main_frontend_unchanged": "The shared worktree contains unrelated changes; the exact Lab directory was published through its isolated allowlisted lane only."
+}

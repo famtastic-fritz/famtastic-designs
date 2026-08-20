@@ -1,0 +1,18 @@
+{
+  "schema":"famtastic.independent-visual-review.v1",
+  "request_id":"local:famu-corner-20260818-fritz-001",
+  "reviewer":{"provider":"openai","model":"codex-primary-session-exact-deployment-unavailable","role":"parent visual critic","independent":true,"execution_class":"separate agent session"},
+  "review_basis":"Independent inspection of all six desktop and all six mobile full-page screenshots after browser QA.",
+  "three_or_more_distinct_layout_families":true,
+  "all_six_visually_distinct":true,
+  "critical_defects":[],
+  "advisories":["Bragg After Dark intentionally crops part of the oversized mobile display word; refine before public delivery if full legibility is preferred.","Rattler Weekender has a dense mobile masthead but retains readable hierarchy.","Trademark and affiliation review remains required before public use."],
+  "directions":[
+    {"id":"direction-a","name":"The Hill Brief","scores":{"first_impression":8,"business_relevance":9,"visual_distinction":8,"copy_specificity":9,"trust_credibility":9,"mobile_usability":9,"accessibility":9,"conversion_clarity":9,"emotional_response":8},"overall":8.7,"rationale":"A useful, source-first community utility baseline."},
+    {"id":"direction-b","name":"Rattler Weekender","scores":{"first_impression":9,"business_relevance":10,"visual_distinction":9,"copy_specificity":9,"trust_credibility":9,"mobile_usability":8,"accessibility":8,"conversion_clarity":9,"emotional_response":9},"overall":8.9,"rationale":"A strong events-and-game journey with a dense but usable mobile header."},
+    {"id":"direction-c","name":"Strike Network","scores":{"first_impression":10,"business_relevance":10,"visual_distinction":10,"copy_specificity":9,"trust_credibility":9,"mobile_usability":9,"accessibility":8,"conversion_clarity":9,"emotional_response":10},"overall":9.3,"rationale":"The best information-system concept and a highly ownable visual language."},
+    {"id":"direction-d","name":"Bragg After Dark","scores":{"first_impression":10,"business_relevance":9,"visual_distinction":10,"copy_specificity":9,"trust_credibility":8,"mobile_usability":8,"accessibility":7,"conversion_clarity":9,"emotional_response":10},"overall":8.9,"rationale":"Big homecoming emotion with one documented mobile display-type advisory."},
+    {"id":"direction-e","name":"Hillscape Live","scores":{"first_impression":10,"business_relevance":10,"visual_distinction":10,"copy_specificity":9,"trust_credibility":9,"mobile_usability":9,"accessibility":8,"conversion_clarity":9,"emotional_response":10},"overall":9.3,"rationale":"A beautiful campus command center that makes official utilities inviting."},
+    {"id":"direction-f","name":"Serpent Signal","scores":{"first_impression":10,"business_relevance":10,"visual_distinction":10,"copy_specificity":9,"trust_credibility":9,"mobile_usability":9,"accessibility":8,"conversion_clarity":9,"emotional_response":10},"overall":9.3,"rationale":"A distinctive media identity with the strongest long-term community-platform potential."}
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-08-19",
+  "campaign": "and_if_it_is_rattler_lifers",
+  "public_publish_enabled": false,
+  "record_count": 6,
+  "records": [
+    {
+      "content_id": "aiii-launch-question",
+      "campaign": "and_if_it_is_rattler_lifers",
+      "state": "media_ready",
+      "channels": ["instagram", "facebook", "x"],
+      "asset_variants": ["16x9", "4x5"],
+      "theme": "question_and_response",
+      "moment": "challenge",
+      "copy_source": "CAMPAIGN_PLAYBOOK.md#hero-post",
+      "utm": {"source": "pending_channel", "medium": "organic_social", "campaign": "and_if_it_is", "content": "aiii-launch-question"},
+      "approval": {"content": false, "media": false, "publish": false},
+      "provider_ids": {},
+      "evidence": ["research.json", "formula.json"]
+    },
+    {
+      "content_id": "aiii-roll-call",
+      "campaign": "and_if_it_is_rattler_lifers",
+      "state": "drafted",
+      "channels": ["instagram", "facebook", "threads"],
+      "asset_variants": ["4x5"],
+      "theme": "class_year_roll_call",
+      "moment": "invite",
+      "copy_source": "CAMPAIGN_PLAYBOOK.md#roll-call-prompt",
+      "utm": {"source": "pending_channel", "medium": "organic_social", "campaign": "and_if_it_is", "content": "aiii-roll-call"},
+      "approval": {"content": false, "media": false, "publish": false},
+      "provider_ids": {},
+      "evidence": ["research.json"]
+    },
+    {
+      "content_id": "aiii-lifer-character",
+      "campaign": "and_if_it_is_rattler_lifers",
+      "state": "media_ready",
+      "channels": ["instagram", "tiktok", "youtube_shorts"],
+      "asset_variants": ["4x5", "9x16"],
+      "theme": "meet_the_lifer",
+      "moment": "teach",
+      "copy_source": "CAMPAIGN_PLAYBOOK.md#character-branding",
+      "utm": {"source": "pending_channel", "medium": "organic_social", "campaign": "and_if_it_is", "content": "aiii-lifer-character"},
+      "approval": {"content": false, "media": false, "publish": false},
+      "provider_ids": {},
+      "evidence": ["formula.json"]
+    },
+    {
+      "content_id": "aiii-why-return",
+      "campaign": "and_if_it_is_rattler_lifers",
+      "state": "drafted",
+      "channels": ["instagram", "facebook"],
+      "asset_variants": ["4x5"],
+      "theme": "why_we_come_back",
+      "moment": "prove",
+      "copy_source": "CAMPAIGN_PLAYBOOK.md#the-idea",
+      "utm": {"source": "pending_channel", "medium": "organic_social", "campaign": "and_if_it_is", "content": "aiii-why-return"},
+      "approval": {"content": false, "media": false, "publish": false},
+      "provider_ids": {},
+      "evidence": ["research.json"]
+    },
+    {
+      "content_id": "aiii-we-bragg-different",
+      "campaign": "and_if_it_is_rattler_lifers",
+      "state": "drafted",
+      "channels": ["instagram", "facebook", "x"],
+      "asset_variants": ["4x5", "1x1"],
+      "theme": "sourced_excellence",
+      "moment": "prove",
+      "copy_source": "research.json",
+      "utm": {"source": "pending_channel", "medium": "organic_social", "campaign": "and_if_it_is", "content": "aiii-we-bragg-different"},
+      "approval": {"content": false, "media": false, "publish": false},
+      "provider_ids": {},
+      "evidence": ["research.json"]
+    },
+    {
+      "content_id": "aiii-pride-with-purpose",
+      "campaign": "and_if_it_is_rattler_lifers",
+      "state": "drafted",
+      "channels": ["instagram", "facebook", "x"],
+      "asset_variants": ["4x5"],
+      "theme": "official_next_actions",
+      "moment": "invite",
+      "copy_source": "CAMPAIGN_PLAYBOOK.md#five-content-pillars",
+      "utm": {"source": "pending_channel", "medium": "organic_social", "campaign": "and_if_it_is", "content": "aiii-pride-with-purpose"},
+      "approval": {"content": false, "media": false, "publish": false},
+      "provider_ids": {},
+      "evidence": ["research.json"]
+    }
+  ]
+}

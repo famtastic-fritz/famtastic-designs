@@ -1,0 +1,38 @@
+[
+  {
+    "direction_id": "direction-a",
+    "mode": "built-in-imagegen",
+    "use_case": "photorealistic-natural",
+    "prompt": "Responsive church website hero: a welcoming Sunday morning at a fictional Black church in Fort Pierce, Florida; modest contemporary sanctuary entrance with palms and Treasure Coast morning light; a fictional multigenerational Black congregation with a friendly usher greeting a family; premium natural editorial photography; 16:9 with people on the right and negative space on the left; cream, navy, muted gold, and natural greens; culturally respectful; no celebrity likenesses, text, logos, watermark, distorted hands, or megachurch spectacle."
+  },
+  {
+    "direction_id": "direction-b",
+    "mode": "built-in-imagegen",
+    "use_case": "stylized-concept",
+    "prompt": "Sunrise Revival: an outrageously energetic responsive website hero for a fictional Black church in Fort Pierce; contemporary sanctuary transformed by sweeping sunrise light and coastal atmosphere; fictional Black gospel choir and congregation in a joyful, reverent worship crescendo; cinematic photorealism with high-fashion campaign art direction; 16:9 dynamic diagonal movement and headline room; coral, cyan, deep plum, and gold; no text, logos, watermark, caricature, or celebrity likenesses."
+  },
+  {
+    "direction_id": "direction-c",
+    "mode": "built-in-imagegen",
+    "use_case": "stylized-concept",
+    "prompt": "Gospel Frequency: a future-facing responsive website hero for a fictional Black church; a dark immersive sanctuary with a fictional contemporary Black gospel ensemble surrounded by monumental luminous sound waves; premium cinematic 3D concept art fused with authentic editorial portraiture; 16:9 panoramic with dark headline space; ultraviolet, electric lime, hot magenta, black, and chrome; no text, logos, watermark, nightclub branding, or celebrity likenesses."
+  },
+  {
+    "direction_id": "direction-d",
+    "mode": "built-in-imagegen",
+    "use_case": "stylized-concept",
+    "prompt": "Stained Glass Future: an outrageously FAMtastic Afrofuturist website hero for a fictional Black church; visionary sanctuary formed from contemporary stained-glass geometry and digital light; fictional Black family and young adults with quiet awe; luxury cinematic 3D editorial art; 16:9 architectural panorama with center-left copy space; midnight blue, cobalt, ultraviolet, amber, and turquoise; no text, logos, watermark, deity depiction, superhero costumes, or celebrity likenesses."
+  },
+  {
+    "direction_id": "direction-e",
+    "mode": "built-in-imagegen",
+    "use_case": "stylized-concept",
+    "prompt": "Legacy in Motion: an expressive editorial collage celebrating a fictional multigenerational Black church in coastal Florida; layered paper and paint suggesting church, neighborhood service, palms, waterfront light, and community memory; fictional elders in Sunday hats, families, worship, pulpit, and volunteers; premium mixed-media magazine collage with documentary realism; 16:9 with calm headline space; coral, indigo, sunflower, sea green, and warm black; no copied art, text, logos, watermark, caricature, or celebrity likenesses."
+  },
+  {
+    "direction_id": "direction-f",
+    "mode": "built-in-imagegen",
+    "use_case": "stylized-concept",
+    "prompt": "Heaven on the Harbor: a spectacular cinematic website hero for a fictional Black church in Fort Pierce; a luminous coastal causeway and waterfront chapel inspired by Florida's Indian River Lagoon at sunrise; a fictional multigenerational Black congregation walking together toward the light; epic cinematic realism with surreal campaign-art scale; 16:9 with spacious navy copy area; molten gold, coral, and turquoise mist; no text, logos, watermark, literal gates of heaven, deity depiction, funeral imagery, apocalypse, or celebrity likenesses."
+  }
+]

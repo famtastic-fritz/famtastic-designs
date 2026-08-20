@@ -1,0 +1,48 @@
+{
+  "schema": "famtastic.website-intake.v2",
+  "request_id": "heldout:palm-pepper-20260818-fritz-001",
+  "customer": {
+    "name": "Fritz Medine",
+    "email": "fritz.medine@gmail.com",
+    "account_state": "member"
+  },
+  "mode": "fresh_provider_preview",
+  "fictional_business": true,
+  "business": {
+    "name": "Palm & Pepper Supper Club",
+    "industry": "Caribbean-inspired private dining, chef pop-ups, and curated meal experiences",
+    "location": "Port St. Lucie and the Treasure Coast, Florida",
+    "ownership_context": "Fictional Black-owned hospitality concept created solely as a held-out autonomy benchmark",
+    "goal": "Turn visual appetite into qualified private-dining and pop-up inquiries while making the experience, fit, and next step easy to understand"
+  },
+  "audience": [
+    "Adults planning milestone dinners and intimate celebrations",
+    "Local professionals seeking distinctive hosted experiences",
+    "Community partners considering curated pop-ups"
+  ],
+  "brand": {
+    "status": "no existing identity; create concept directions only",
+    "famtastic_scale": 10,
+    "creative_contract": "Exactly one restrained direction, one medium-FAMtastic direction, and four ultra-FAMtastic directions; every direction must be a usable website rather than a campaign poster",
+    "desired_feeling": ["warm", "transportive", "confident", "culturally alive", "premium without feeling exclusionary"],
+    "avoid": ["generic restaurant template", "fake luxury", "tourist caricature", "invented heritage claims", "visual sameness between directions"]
+  },
+  "scope": {
+    "preview_pages": 1,
+    "future_pages": ["Experience", "Menus", "Private Dining", "Pop-ups", "Story", "Inquiry"],
+    "features": ["experience-led inquiry path", "sample menu storytelling without invented prices", "dietary and accessibility question capture", "event-fit guidance", "mobile-first conversion"]
+  },
+  "references": [],
+  "known_facts": [
+    "The business is fictional and has no operating address, menu, prices, testimonials, credentials, permits, booking availability, or domain",
+    "All imagery must be newly generated for this run and must not depict a real client or real venue"
+  ],
+  "constraints": [
+    "Use live research only for public market, locality, accessibility, and hospitality context; do not present mutable research as a business fact",
+    "Do not invent prices, address, phone, availability, reviews, credentials, awards, food-safety claims, permits, menu guarantees, or domain availability",
+    "No email, Drupal import, payment, booking, deployment, publication, or Site Studio mutation",
+    "Every page must disclose fictional concept status and that details require owner confirmation",
+    "No external JavaScript, tracking, remote fonts, or hotlinked imagery"
+  ],
+  "selected_direction_ids": ["direction-e", "direction-f"]
+}

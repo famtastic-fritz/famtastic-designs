@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://famtasticdesigns.com/schemas/build-dna.v1.schema.json",
+  "title": "FAMtastic Build DNA",
+  "description": "An immutable, retrieval-ready record of what produced one preview, build, campaign experience, or selected-direction refinement.",
+  "type": "object",
+  "required": ["schema", "build_id", "classification", "created_at", "repository", "recipe", "stages", "artifacts", "retrieval", "integrity"],
+  "properties": {
+    "schema": {"const": "famtastic.build-dna.v1"},
+    "build_id": {"type": "string", "minLength": 8},
+    "classification": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "repository": {
+      "type": "object",
+      "required": ["name", "revision"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "revision": {"type": "string", "minLength": 7},
+        "worktree_state": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "recipe": {
+      "type": "object",
+      "required": ["routine", "version", "build_class"],
+      "properties": {
+        "routine": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "build_class": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["stage_id", "attempt", "capability", "execution", "result"],
+        "properties": {
+          "stage_id": {"type": "string", "minLength": 1},
+          "attempt": {"type": "integer", "minimum": 1},
+          "capability": {"type": "string", "minLength": 1},
+          "execution": {
+            "type": "object",
+            "required": ["provider", "model", "timing", "cost"],
+            "properties": {
+              "provider": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string", "minLength": 1}}, "additionalProperties": true},
+              "model": {"type": "object", "required": ["status"], "properties": {"id": {"type": ["string", "null"]}, "status": {"type": "string", "minLength": 1}}, "additionalProperties": true},
+              "timing": {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "minLength": 1}}, "additionalProperties": true},
+              "cost": {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "minLength": 1}}, "additionalProperties": true},
+              "prompt": {"type": "object"},
+              "input": {"type": "object"},
+              "output": {"type": "object"}
+            },
+            "additionalProperties": true
+          },
+          "result": {"type": "object", "required": ["status"], "properties": {"status": {"type": "string", "minLength": 1}}, "additionalProperties": true}
+        },
+        "additionalProperties": true
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["role", "path", "sha256"],
+        "properties": {
+          "role": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "retrieval": {
+      "type": "object",
+      "required": ["filesystem", "database", "site_studio"],
+      "properties": {
+        "filesystem": {"type": "object"},
+        "database": {"type": "object"},
+        "site_studio": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["artifact_hash_algorithm"],
+      "properties": {"artifact_hash_algorithm": {"const": "sha256"}},
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

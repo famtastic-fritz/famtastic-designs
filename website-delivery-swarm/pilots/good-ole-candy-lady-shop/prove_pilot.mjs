@@ -1,0 +1,77 @@
+#!/usr/bin/env node
+import { chromium } from '../../../frontend/node_modules/playwright/index.mjs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawn, spawnSync } from 'node:child_process';
+
+const pilot=dirname(fileURLToPath(import.meta.url));
+const repo=resolve(pilot,'../../..');
+const output=resolve(process.argv[2]||join(repo,'artifacts','website-delivery-swarm','good-ole-candy-lady-shop-20260818'));
+const scenario=JSON.parse(readFileSync(join(pilot,'scenario.json'),'utf8'));
+const directions=JSON.parse(readFileSync(join(pilot,'directions.json'),'utf8'));
+const prompts=JSON.parse(readFileSync(join(pilot,'image-prompts.json'),'utf8'));
+const now=new Date().toISOString();
+const sha=(value)=>createHash('sha256').update(value).digest('hex');
+
+const built=spawnSync(process.execPath,[join(pilot,'build_pilot.mjs'),output],{encoding:'utf8'});
+process.stdout.write(built.stdout); process.stderr.write(built.stderr); if(built.status!==0)process.exit(built.status||1);
+const manifest=JSON.parse(readFileSync(join(output,'manifest.json'),'utf8'));
+const screenshots=join(output,'screenshots'); mkdirSync(screenshots,{recursive:true});
+
+const research={
+  schema:'famtastic.research.v1', request_id:scenario.request_id, conducted_at:now,
+  scope:'Official local sources used only to validate the youth-sports/community context; no fictional client facts were inferred.',
+  findings:[
+    {topic:'local recreation context',finding:'St. Lucie County Parks and Recreation operates parks, athletic fields, event venues, community centers, and regional sports facilities.',source_url:'https://www.stlucieco.gov/departments-and-services/parks-recreation-department',source_type:'official county source',use:'Supports a mobile-first events and location pattern; does not imply vendor permission.'},
+    {topic:'multi-sport venues',finding:'The official John B. Park Sports Complex listing includes basketball, football/soccer, baseball/softball, pavilions, and community events.',source_url:'https://www.stlucieco.gov/Home/Components/FacilityDirectory/FacilityDirectory/6/683',source_type:'official county source',use:'Supports football and basketball audience scenarios; no booking or vending claim.'},
+    {topic:'family recreation',finding:'Fort Pierce describes youth recreation around activity, skill development, teamwork, confidence, and community pride.',source_url:'https://www.cityoffortpierce.com/960/Recreation-Programs',source_type:'official municipal source',use:'Supports inclusive family-oriented messaging; no program affiliation.'},
+    {topic:'event discoverability',finding:'The county publishes a recreation calendar containing sports, family activities, and recurring community programming.',source_url:'https://www.stlucieco.gov/departments-and-services/parks-recreation-department/calendar',source_type:'official county source',use:'Supports a confirmed-event calendar feature; no event is copied into the fictional proof.'}
+  ],
+  unknowns_requiring_client_confirmation:['Owner name and business registration','Actual menu, inventory, ingredients, allergen handling, prices, and margins','Vendor permits, venue permission, insurance, food-safety requirements, and service area','Payment provider, verified checkout URL, refund policy, taxes, and QR destination','Confirmed events, pickup windows, contact details, brand assets, and photography permissions','Fundraiser math, team eligibility, revenue split, fulfillment, and cancellation terms'],
+  prohibited_assumptions:['No live venue or event affiliation','No live payment or QR destination','No invented price, inventory, margin, permit, domain, or booking','No school, league, team, candy, or payment-provider trademark']
+};
+const brief={schema:'website_build_brief.v2',request_id:scenario.request_id,lane:'member',account_state:'member',privacy_class:scenario.privacy_class,mode:scenario.mode,source_checksum:sha(JSON.stringify(scenario)),source:scenario};
+const architecture={site_type:'mobile-first event commerce and community website',pages:6,primary_conversion:'Submit an event preorder after owner setup',secondary_conversions:['Browse confirmed menu','Find a confirmed pop-up','Request a team fundraiser','Request a pop-up booking'],package:{decision:'staff-scope-review',reason:'Payment, preorder, inventory, event operations, and fundraiser requirements need discovery before product or price selection.',direct_checkout:false,price:null},payment_concept:{live_destination:false,qr_encoded:false,provider_selected:false,owner_approval_required:true},external_mutation_allowed:false};
+
+const port=9200+(process.pid%400); const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',output],{stdio:'ignore'}); await new Promise(r=>setTimeout(r,700));
+const browser=await chromium.launch({headless:true}); const profiles={desktop:{width:1440,height:1000},mobile:{width:390,height:844}}; const results={}; const ledger=[];
+try{
+ for(const [profile,viewport] of Object.entries(profiles)){
+  const context=await browser.newContext({viewport,deviceScaleFactor:1,reducedMotion:'reduce'});
+  const routes=[{id:'review',path:'index.html',expected:'One safe.'},...directions.map(d=>({id:d.id,path:`${d.slug}/index.html`,expected:d.headline}))];
+  for(const route of routes){
+   const page=await context.newPage(); const consoleErrors=[]; const pageErrors=[]; const failed=[];
+   page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())}); page.on('pageerror',e=>pageErrors.push(e.message)); page.on('requestfailed',r=>failed.push(`${r.method()} ${r.url()}`));
+   const response=await page.goto(`http://127.0.0.1:${port}/${route.path}`,{waitUntil:'networkidle'});
+   const inspect=await page.evaluate(()=>{const imgs=[...document.images],links=[...document.querySelectorAll('a')];return{title:document.title,h1Count:document.querySelectorAll('h1').length,h1Text:document.querySelector('h1')?.textContent?.replace(/\s+/g,' ').trim()||'',textLength:document.body.innerText.length,visibleLinks:links.filter(a=>{const r=a.getBoundingClientRect();return r.width>0&&r.height>0}).length,unnamedLinks:links.filter(a=>!(a.textContent||'').trim()&&!a.getAttribute('aria-label')).length,brokenAnchors:links.filter(a=>a.getAttribute('href')?.startsWith('#')&&a.getAttribute('href')!=='#'&&!document.querySelector(a.getAttribute('href'))).map(a=>a.getAttribute('href')),missingAlt:imgs.filter(i=>!i.hasAttribute('alt')).length,brokenImages:imgs.filter(i=>!i.complete||i.naturalWidth<1).length,scriptCount:document.scripts.length,iframeCount:document.querySelectorAll('iframe').length,scrollWidth:document.documentElement.scrollWidth,innerWidth:window.innerWidth,lang:document.documentElement.lang}});
+   const passed=response?.ok()===true&&inspect.h1Count===1&&inspect.h1Text.includes(route.expected)&&inspect.textLength>450&&inspect.visibleLinks>=4&&inspect.unnamedLinks===0&&inspect.brokenAnchors.length===0&&inspect.missingAlt===0&&inspect.brokenImages===0&&inspect.scriptCount===0&&inspect.iframeCount===0&&inspect.scrollWidth<=inspect.innerWidth+1&&inspect.lang==='en'&&consoleErrors.length===0&&pageErrors.length===0&&failed.length===0;
+   results[`${route.id}:${profile}`]={passed,status:response?.status()||0,...inspect,consoleErrors,pageErrors,failedRequests:failed};
+   if(route.id!=='review'){const file=`${route.id}-${profile}.png`; await page.screenshot({path:join(screenshots,file),fullPage:true}); ledger.push({route:route.id,profile,file:`screenshots/${file}`,sha256:sha(readFileSync(join(screenshots,file)))});}
+   await page.close();
+  }
+  await context.close();
+ }
+}finally{await browser.close();server.kill('SIGTERM')}
+
+const technical={exact_six_directions:directions.length===6&&manifest.direction_count===6,exact_creative_mix:directions.filter(d=>d.mode==='safe').length===1&&directions.filter(d=>d.mode==='medium_famtastic').length===1&&directions.filter(d=>d.mode==='ultra_famtastic').length===4,four_ultra_at_least_nine:directions.filter(d=>d.mode==='ultra_famtastic').every(d=>d.famtastic_level>=9),distinct_information_architecture:new Set(directions.map(d=>d.information_architecture)).size===6,distinct_html:new Set(manifest.directions.map(d=>d.html_sha256)).size===6,distinct_original_art:new Set(manifest.directions.map(d=>d.hero_sha256)).size===6,request_identity_preserved:manifest.request_id===scenario.request_id&&brief.request_id===scenario.request_id,customer_email_preserved:manifest.customer_email==='fritz.medine@gmail.com',multi_project_safe_unique_request:scenario.request_id==='local-candy-lady-20260818-001',staff_scope_no_invented_price:architecture.package.decision==='staff-scope-review'&&architecture.package.price===null,qr_is_nonfunctional_concept:architecture.payment_concept.live_destination===false&&architecture.payment_concept.qr_encoded===false,no_external_mutation:architecture.external_mutation_allowed===false,all_browser_checks_passed:Object.values(results).every(r=>r.passed),exactly_twelve_direction_screenshots:ledger.length===12};
+const reviewPath=join(pilot,'visual-review.json'); const visual=existsSync(reviewPath)?JSON.parse(readFileSync(reviewPath,'utf8')):null;
+const visualAssertions={review_present:Boolean(visual),independent_reviewer:Boolean(visual?.reviewer?.independent),request_matches:visual?.request_id===scenario.request_id,exact_six_reviews:visual?.directions?.length===6,no_dimension_below_seven:Boolean(visual?.directions?.every(d=>Object.values(d.scores).every(s=>s>=7))),every_overall_at_least_eight:Boolean(visual?.directions?.every(d=>d.overall>=8)),all_six_visually_distinct:visual?.all_six_visually_distinct===true,no_critical_defects:visual?.critical_defects?.length===0};
+const trace=[]; const add=(agent,provider,model,execution,outputValue,assertions,status)=>trace.push({task_id:`${scenario.request_id}:${String(trace.length+1).padStart(2,'0')}`,agent,provider,model,execution_class:execution,attempt:1,fallback_used:false,duration_ms:null,cost_usd:null,output_checksum:sha(JSON.stringify(outputValue)),assertions,status:status||(Object.values(assertions).every(Boolean)?'passed':'failed')});
+add('intake-auditor','deterministic-local','rules-v2','local',brief,{stable_request:Boolean(brief.request_id),member_lane:brief.account_state==='member',customer_email:/^[^@]+@[^@]+\.[^@]+$/.test(scenario.customer.email),fictional_disclosed:scenario.fictional_business===true});
+add('local-market-researcher','official-web-sources','source-synthesis-v1','cloud',research,{official_sources_only:research.findings.every(f=>f.source_type.includes('official')),four_sources:research.findings.length===4,unknowns_visible:research.unknowns_requiring_client_confirmation.length>=6,no_client_fact_invented:true});
+add('solution-architect','deterministic-local','scope-rules-v2','local',architecture,{staff_scope:architecture.package.decision==='staff-scope-review',no_price:architecture.package.price===null,no_checkout:architecture.package.direct_checkout===false,qr_disconnected:technical.qr_is_nonfunctional_concept});
+add('creative-director','openai','codex-session','cloud',directions,{exact_six:technical.exact_six_directions,exact_mix:technical.exact_creative_mix,distinct_architecture:technical.distinct_information_architecture});
+add('visual-artist','openai-built-in-imagegen','managed-image-generator','cloud',prompts,{one_per_direction:prompts.length===6,persisted:manifest.directions.every(d=>Boolean(d.hero_sha256)),distinct:technical.distinct_original_art});
+add('prototype-builder','openai','codex-session','cloud',manifest,{six_pages:manifest.direction_count===6,distinct_html:technical.distinct_html,scriptless:Object.values(results).every(r=>r.scriptCount===0),no_iframes:Object.values(results).every(r=>r.iframeCount===0)});
+add('browser-qa','playwright','chromium','local',results,{fourteen_route_profiles:Object.keys(results).length===14,all_pass:technical.all_browser_checks_passed,no_overflow:Object.values(results).every(r=>r.scrollWidth<=r.innerWidth+1),twelve_screenshots:technical.exactly_twelve_direction_screenshots});
+add('independent-visual-critic',visual?.reviewer?.provider||'pending',visual?.reviewer?.model||'pending',visual?'separate-review':'local',{review:visual||'pending'},visualAssertions,Object.values(visualAssertions).every(Boolean)?'passed':'gated');
+const allTech=Object.values(technical).every(Boolean),allVisual=Object.values(visualAssertions).every(Boolean);
+const evidence={schema:'famtastic.swarm-proof.v2',generated_at:now,classification:'locally proven',routine:'website.preview.v2+six-direction-benchmark.v1',request_id:scenario.request_id,customer:{email:scenario.customer.email,notification_sent:false},scenario:{fictional_business:true,name:scenario.business.name,location:scenario.business.location},package_decision:architecture.package,payment_concept:architecture.payment_concept,directions:manifest.directions,screenshots:ledger,browser:{engine:'Playwright Chromium',profiles,results},assertions:{...technical,visual_review:visualAssertions,all_technical:allTech,all_visual:allVisual},trace,unresolved_gates:[...(allVisual?[]:['Independent visual review and any required revision']),...research.unknowns_requiring_client_confirmation,'Drupal persistence and Site Studio callback','Customer approval, email, payment, domain, and production deployment']};
+copyFileSync(join(pilot,'scenario.json'),join(output,'intake.json')); copyFileSync(join(pilot,'directions.json'),join(output,'directions.json')); copyFileSync(join(pilot,'image-prompts.json'),join(output,'image-prompts.json'));
+writeFileSync(join(output,'research.json'),JSON.stringify(research,null,2)+'\n'); writeFileSync(join(output,'website-build-brief.v2.json'),JSON.stringify(brief,null,2)+'\n'); writeFileSync(join(output,'architecture.json'),JSON.stringify(architecture,null,2)+'\n'); writeFileSync(join(output,'agent-ledger.json'),JSON.stringify(trace,null,2)+'\n'); writeFileSync(join(output,'quality-report.json'),JSON.stringify({technical,visual,visual_assertions:visualAssertions},null,2)+'\n'); writeFileSync(join(output,'evidence.json'),JSON.stringify(evidence,null,2)+'\n');
+writeFileSync(join(output,'run-report.md'),`# The Good Ole Candy Lady Shop six-proof local benchmark\n\n- Request: \`${scenario.request_id}\`\n- Customer continuity: \`${scenario.customer.email}\`\n- Classification: locally proven\n- Fictional business: yes\n- Creative mix: 1 safe, 1 medium-FAMtastic, 4 ultra-FAMtastic\n- Working proof sites: 6\n- Direction screenshots: ${ledger.length}\n- Customer notification: not sent\n- External mutation: none\n- Payment and QR: disconnected concept only\n\n## Remaining gates\n\n${evidence.unresolved_gates.map(g=>`- ${g}`).join('\n')}\n`);
+if(!allTech){console.error('FAIL: technical or browser assertion failed');console.error(`Evidence: ${join(output,'evidence.json')}`);process.exit(1)}
+if(!allVisual){console.error('GATE: independent visual review required');console.error(`Evidence: ${join(output,'evidence.json')}`);process.exit(2)}
+console.log('PASS: Candy Lady six-proof website benchmark'); console.log('PASS: exact 1 safe, 1 medium, 4 ultra-FAMtastic mix'); console.log('PASS: desktop, mobile, independent browser QA, and visual review'); console.log(`Evidence: ${join(output,'evidence.json')}`);

@@ -1,0 +1,45 @@
+{
+  "schema": "famtastic.unlisted-static-publication.v1",
+  "campaign": "and_if_it_is_rattler_lifers",
+  "published_at": "2026-08-19T14:06:24Z",
+  "verified_at": "2026-08-19T14:10:12Z",
+  "url": "https://famtasticdesigns.com/proofs/unlisted/0d87038b679e52c104ba126eceb02f1b/",
+  "access": "public_unlisted_anyone_with_link",
+  "archive_sha256": "fe2413dae15dd0f851e8023f764edefdecfb6f1ef81ec97ec17239dcfee7c3ee",
+  "files": 15,
+  "source_bytes": 9854383,
+  "served_image_derivatives": {
+    "rattler-lifers-hero.jpg": {
+      "width": 2304,
+      "height": 1296,
+      "bytes_approx": 900000
+    },
+    "the-lifer-character.jpg": {
+      "width": 1344,
+      "height": 1680,
+      "bytes_approx": 728000
+    }
+  },
+  "anonymous_verification": [
+    {
+      "viewport": "1440x900",
+      "status": 200,
+      "images_loaded": 3,
+      "horizontal_overflow": false,
+      "console_errors": 0
+    },
+    {
+      "viewport": "390x900",
+      "status": 200,
+      "images_loaded": 3,
+      "horizontal_overflow": false,
+      "console_errors": 0
+    }
+  ],
+  "boundaries": {
+    "social_account_created": false,
+    "social_post_published": false,
+    "form_data_transmitted": false,
+    "official_famu_affiliation_claimed": false
+  }
+}

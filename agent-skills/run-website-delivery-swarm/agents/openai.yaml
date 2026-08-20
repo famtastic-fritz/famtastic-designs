@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run Website Delivery Swarm"
+  short_description: "Run and prove the FAMtastic website-delivery agent swarm."
+  default_prompt: "Run the FAMtastic website delivery swarm for the supplied request, preserve evidence, and report its proof classification."

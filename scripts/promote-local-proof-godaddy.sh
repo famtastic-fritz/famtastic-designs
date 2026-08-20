@@ -7,12 +7,14 @@ SSH_TARGET="${FAMTASTIC_SSH_TARGET:-xrdj7j99xhzt@p3plzcpnl497512.prod.phx3.secur
 REMOTE_ROOT="${FAMTASTIC_REMOTE_ROOT:-public_html}"
 APPLY=false
 BUNDLE_DIR=""
+DIRECTIONS="a,b,c"
 
 usage() {
   cat <<'USAGE'
-Usage: ./scripts/promote-local-proof-godaddy.sh BUNDLE_DIR [--apply]
+Usage: ./scripts/promote-local-proof-godaddy.sh BUNDLE_DIR [--directions=a,b,c|d,e,f] [--apply]
 
-BUNDLE_DIR must contain manifest.json plus a/, b/, and c/ directories. Each
+BUNDLE_DIR must contain manifest.json plus the selected three direction
+directories. Each
 direction requires index.html and thumbnail.png or thumbnail.jpg. Dry-run is
 the default. --apply uploads only the validated callback payload to a private
 server inbox and imports it through Drupal's exact-three callback validator.
@@ -26,6 +28,7 @@ USAGE
 for argument in "$@"; do
   case "$argument" in
     --apply) APPLY=true ;;
+    --directions=*) DIRECTIONS="${argument#*=}" ;;
     -h|--help) usage; exit 0 ;;
     *)
       if [[ -n "$BUNDLE_DIR" ]]; then
@@ -38,6 +41,7 @@ for argument in "$@"; do
 done
 
 [[ -n "$BUNDLE_DIR" ]] || { usage >&2; exit 2; }
+[[ "$DIRECTIONS" == "a,b,c" || "$DIRECTIONS" == "d,e,f" ]] || { echo "Directions must be a,b,c or d,e,f." >&2; exit 2; }
 BUNDLE_DIR="$(cd "$BUNDLE_DIR" && pwd)"
 manifest="$BUNDLE_DIR/manifest.json"
 
@@ -61,7 +65,7 @@ campaign_id="$(jq -r '.campaign_id' "$manifest")"
 job_id="$(jq -r '.job_id' "$manifest")"
 event_id="$(jq -r '.event_id' "$manifest")"
 [[ "$campaign_id" =~ ^pc-[a-z0-9-]+$ ]] || { echo "Invalid campaign_id." >&2; exit 1; }
-[[ "$job_id" =~ ^local-(refresh-)?[a-f0-9]{32}$ ]] || { echo "Invalid local job_id." >&2; exit 1; }
+[[ "$job_id" =~ ^local-(refresh-|showcase-)?[a-f0-9]{32}$ ]] || { echo "Invalid local job_id." >&2; exit 1; }
 [[ "$event_id" =~ ^[a-zA-Z0-9._:-]+$ ]] || { echo "Invalid event_id." >&2; exit 1; }
 
 temporary_dir="$(mktemp -d /tmp/famtastic-proof-promotion.XXXXXX)"
@@ -71,7 +75,8 @@ trap cleanup EXIT
 
 variants_file="$temporary_dir/variants.json"
 printf '[]\n' > "$variants_file"
-for direction in a b c; do
+IFS=',' read -r -a selected_directions <<< "$DIRECTIONS"
+for direction in "${selected_directions[@]}"; do
   html_path="$BUNDLE_DIR/$direction/index.html"
   [[ -s "$html_path" ]] || { echo "Missing $direction/index.html" >&2; exit 1; }
   html_bytes="$(wc -c < "$html_path" | tr -d ' ')"

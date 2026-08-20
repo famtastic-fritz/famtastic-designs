@@ -1,0 +1,78 @@
+{
+  "schema": "famtastic.lean-social-presence-formula.v1",
+  "formula_version": "1.0.0",
+  "campaign": "and_if_it_is_rattler_lifers",
+  "principle": "One researched cultural truth, one memorable question-and-response, two original images, one social hub, three deterministic social cards, one technical QA pass, and one human approval gate.",
+  "time_budget_minutes": 18,
+  "stages": [
+    {
+      "order": 1,
+      "stage": "source-research",
+      "capability": "web_research",
+      "provider": "OpenAI web search",
+      "model": "provider_not_disclosed",
+      "budget_minutes": 3,
+      "output": "research.json"
+    },
+    {
+      "order": 2,
+      "stage": "campaign-direction",
+      "capability": "creative_strategy_and_copy",
+      "provider": "OpenAI",
+      "model": "gpt-5.6-sol",
+      "budget_minutes": 2,
+      "output": "CAMPAIGN_PLAYBOOK.md"
+    },
+    {
+      "order": 3,
+      "stage": "original-imagery",
+      "capability": "ultra_realistic_image_generation",
+      "provider": "OpenArt",
+      "model": "gpt-image-2",
+      "execution": "parallel_two_asset_plan",
+      "configurations": [
+        {"asset": "hero", "resolution": "2k", "aspect_ratio": "16:9", "quality": "high", "credits": 170},
+        {"asset": "character", "resolution": "2k", "aspect_ratio": "4:5", "quality": "high", "credits": 145}
+      ],
+      "budget_minutes": 6,
+      "output": "site/assets/"
+    },
+    {
+      "order": 4,
+      "stage": "hub-and-social-layouts",
+      "capability": "static_site_and_social_composition",
+      "provider": "OpenAI",
+      "model": "gpt-5.6-sol",
+      "execution": "deterministic_html_css",
+      "budget_minutes": 4,
+      "output": "site/"
+    },
+    {
+      "order": 5,
+      "stage": "technical-qa",
+      "capability": "browser_acceptance",
+      "provider": "Playwright",
+      "model": "chromium",
+      "budget_minutes": 2,
+      "output": "evidence/browser-results.json"
+    },
+    {
+      "order": 6,
+      "stage": "approval-gate",
+      "capability": "human_brand_and_publish_decision",
+      "provider": "human",
+      "model": null,
+      "budget_minutes": 1,
+      "output": "approval required before any social publishing"
+    }
+  ],
+  "retry_policy": {
+    "image": "one targeted retry only if unusable",
+    "site": "repair only a blocking build, overflow, missing asset, broken-link, or disclosure defect",
+    "creative_polish": "defer noncritical refinement until a direction is selected"
+  },
+  "agent_policy": {
+    "new_agent_created": false,
+    "reason": "The existing demand-engine, image-generation, site-building, and deterministic browser tools cover this bounded proof. A new agent would duplicate orchestration rather than add a missing capability."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "famtastic.lab-production-smoke.v1",
+  "tested_at": "2026-08-19T17:25:52.914Z",
+  "url": "https://famtasticdesigns.com/lab/and-if-it-is/",
+  "session": "anonymous_fresh_browser_context",
+  "profiles": [
+    {
+      "profile": "desktop-1440",
+      "status": 200,
+      "finalUrl": "https://famtasticdesigns.com/lab/and-if-it-is/",
+      "screenshot": "evidence/lab-screenshots/famtastic-lab-live-desktop-1440.png",
+      "screenshot_sha256": "08aaae787853eb0308428f7297c63daa83df7394f65a5bfbb0105cb3c943a4c1",
+      "title": "AND IF IT IS? — A FAMtastic Lab Case Study",
+      "canonical": "https://famtasticdesigns.com/lab/and-if-it-is/",
+      "h1Count": 1,
+      "imageCount": 4,
+      "allImagesLoaded": true,
+      "horizontalOverflow": false,
+      "disclosureVisible": true,
+      "campaignHookVisible": true,
+      "experienceExact": true,
+      "intakeAttributed": true,
+      "canonicalExact": true
+    },
+    {
+      "profile": "phone-390",
+      "status": 200,
+      "finalUrl": "https://famtasticdesigns.com/lab/and-if-it-is/",
+      "screenshot": "evidence/lab-screenshots/famtastic-lab-live-phone-390.png",
+      "screenshot_sha256": "bfd32bdb213a31bcf2a4b8933de0bc0b14225a918574f9687358c1469dddc18d",
+      "title": "AND IF IT IS? — A FAMtastic Lab Case Study",
+      "canonical": "https://famtasticdesigns.com/lab/and-if-it-is/",
+      "h1Count": 1,
+      "imageCount": 4,
+      "allImagesLoaded": true,
+      "horizontalOverflow": false,
+      "disclosureVisible": true,
+      "campaignHookVisible": true,
+      "experienceExact": true,
+      "intakeAttributed": true,
+      "canonicalExact": true
+    }
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "failed_requests": [],
+  "assertions": {
+    "anonymous_profiles_return_200": true,
+    "canonical_and_url_exact": true,
+    "one_h1_and_all_images_loaded": true,
+    "no_horizontal_overflow": true,
+    "disclosure_visible": true,
+    "campaign_hook_preserved_in_first_viewport": true,
+    "experience_and_intake_links_exact": true,
+    "destinations_reachable": true,
+    "production_screenshots_recorded": true,
+    "no_console_errors": true,
+    "no_page_errors": true,
+    "no_failed_requests": true
+  },
+  "pass": true,
+  "destinations": {
+    "live_experience": {
+      "status": 200,
+      "final_url": "https://famtasticdesigns.com/and-if-it-is/"
+    },
+    "intake": {
+      "status": 200,
+      "final_url": "https://famtasticdesigns.com/start/?source=famtastic-lab&campaign=and-if-it-is"
+    }
+  }
+}

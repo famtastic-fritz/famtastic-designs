@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { createCustomerReferral, createCustomerThread, createWebsiteRequest, customerLogout, customerSession, getCustomerThread, getCustomerWorkspace, replyCustomerThread, updateCustomerPreferences, updateCustomerProfile, updateWebsiteRequest } from '../api/customer.js';
 import '../portal.css';
 
@@ -81,7 +81,9 @@ function PortalHome({ workspace, org, order, project, nextAction, go }) {
 
 export default function CustomerPortalDashboard() {
   const navigate = useNavigate();
-  const [section, setSection] = useState('home');
+  const [searchParams] = useSearchParams();
+  const continuingWebsiteLead = searchParams.get('start') === 'website';
+  const [section, setSection] = useState(continuingWebsiteLead ? 'projects' : 'home');
   const [session, setSession] = useState(null);
   const [workspace, setWorkspace] = useState(null);
   const [state, setState] = useState('loading');
@@ -91,7 +93,7 @@ export default function CustomerPortalDashboard() {
   const [activeThread, setActiveThread] = useState(null);
   const [faqSearch, setFaqSearch] = useState('');
   const [busy, setBusy] = useState(false);
-  const [editingRequest, setEditingRequest] = useState(null);
+  const [editingRequest, setEditingRequest] = useState(continuingWebsiteLead ? {} : null);
   useEffect(() => { Promise.all([customerSession(), getCustomerWorkspace()]).then(([s, w]) => { setSession(s); setWorkspace(w); setState('ready'); }).catch(() => navigate('/login', { replace: true })); }, [navigate]);
   const org = workspace?.organization;
   const project = workspace?.projects?.[0];
@@ -140,6 +142,8 @@ export default function CustomerPortalDashboard() {
           <label>What should this website accomplish?<textarea name="primary_goal" defaultValue={editingRequest.intake?.primary_goal || ''} placeholder="Example: take cake orders and explain pickup options" /></label>
           <label>Other goals and how you will measure success<textarea name="secondary_goals" defaultValue={editingRequest.intake?.secondary_goals || ''} /><textarea name="success_metrics" defaultValue={editingRequest.intake?.success_metrics || ''} placeholder="Calls, quote requests, bookings, sales…" /></label>
           <label>What does the business sell or provide?<textarea name="products_services" defaultValue={editingRequest.intake?.products_services || ''} /></label>
+          <div className="portal-form-grid"><label>How does the business make money or serve customers?<textarea name="business_model" defaultValue={editingRequest.intake?.business_model || ''} placeholder="Services, appointments, products, memberships, referrals…" /></label><label>Industry or specialty<input name="industry" defaultValue={editingRequest.intake?.industry || ''} placeholder="Use your own words if it is not listed elsewhere" /></label></div>
+          <label>What should we research before designing?<textarea name="research_context" defaultValue={editingRequest.intake?.research_context || ''} placeholder="Industry, audience, local market, competitors, regulations, terminology…" /></label>
           <label>Who should the website reach, and what problem are they trying to solve?<textarea name="ideal_customer" defaultValue={editingRequest.intake?.ideal_customer || ''} /><textarea name="customer_pain_points" defaultValue={editingRequest.intake?.customer_pain_points || ''} /></label>
           <label>What should visitors do next?<textarea name="desired_actions" defaultValue={editingRequest.intake?.desired_actions || ''} placeholder="Call, submit a quote, book, visit, buy…" /></label>
           <label>Pages or sections you expect<textarea name="page_list" defaultValue={editingRequest.intake?.page_list || ''} placeholder="Home, About, Services, Gallery, Contact…" /></label>
@@ -148,7 +152,10 @@ export default function CustomerPortalDashboard() {
           <div className="portal-form-grid"><label>Content readiness<select name="content_status" defaultValue={editingRequest.intake?.content_status || ''}><option value="">Choose one</option><option value="ready">Copy and photos are ready</option><option value="partial">Some content is ready</option><option value="help_needed">I need help creating content</option></select></label><label>Desired timing<input name="launch_timing" defaultValue={editingRequest.intake?.launch_timing || ''} placeholder="A date or flexible" /></label></div>
           <div className="portal-form-grid"><label>Copywriting help<textarea name="copywriting_needs" defaultValue={editingRequest.intake?.copywriting_needs || ''} /></label><label>Photos and assets<textarea name="photo_asset_status" defaultValue={editingRequest.intake?.photo_asset_status || ''} /></label></div>
           <label>Brand/logo status<select name="brand_status" defaultValue={editingRequest.intake?.brand_status || ''}><option value="">Choose one</option><option value="ready">Brand and logo ready</option><option value="partial">Some brand pieces exist</option><option value="help_needed">I need brand help</option></select></label>
-          <label>Style, colors, or feeling<textarea name="style_preferences" defaultValue={editingRequest.intake?.style_preferences || ''} /></label><label>Websites you like and competitors<textarea name="reference_sites" defaultValue={editingRequest.intake?.reference_sites || ''} /><textarea name="competitors" defaultValue={editingRequest.intake?.competitors || ''} /></label>
+          <label>Style, colors, or feeling<textarea name="style_preferences" defaultValue={editingRequest.intake?.style_preferences || ''} /></label><label>Websites you like or dislike<textarea name="reference_sites" defaultValue={editingRequest.intake?.reference_sites || ''} placeholder="Paste links and label each one like or dislike" /><textarea name="reference_site_reasons" defaultValue={editingRequest.intake?.reference_site_reasons || ''} placeholder="What specifically works or does not work for you?" /></label><label>Competitors or alternatives customers compare<textarea name="competitors" defaultValue={editingRequest.intake?.competitors || ''} /></label>
+          <label>Existing website technology, hosting, repositories, or accounts<textarea name="existing_technology" defaultValue={editingRequest.intake?.existing_technology || ''} placeholder="WordPress, Wix, hosting company, GitHub repository, business tools—do not enter passwords" /></label>
+          <div className="portal-form-grid"><label>Desired domain names<textarea name="desired_domains" defaultValue={editingRequest.intake?.desired_domains || ''} placeholder="List preferred options in order" /></label><label>If the first domain is unavailable<textarea name="domain_fallback" defaultValue={editingRequest.intake?.domain_fallback || ''} placeholder="Try alternatives, ask me first, use my existing domain…" /></label></div>
+          <label>Business email needs<textarea name="business_email_needs" defaultValue={editingRequest.intake?.business_email_needs || ''} placeholder="New inboxes such as info@, forwarding, or connection to an existing provider" /></label>
           <div className="portal-form-grid"><label>Search phrases customers use<textarea name="seo_keywords" defaultValue={editingRequest.intake?.seo_keywords || ''} /></label><label>Locations you serve<textarea name="service_locations" defaultValue={editingRequest.intake?.service_locations || ''} /></label></div>
           <div className="portal-form-grid"><label>Business hours<textarea name="business_hours" defaultValue={editingRequest.intake?.business_hours || ''} /></label><label>Public contact details<textarea name="contact_details" defaultValue={editingRequest.intake?.contact_details || ''} /></label></div>
           <label>Social profiles<textarea name="social_profiles" defaultValue={editingRequest.intake?.social_profiles || ''} /></label>
@@ -156,6 +163,7 @@ export default function CustomerPortalDashboard() {
           <label>Online store details<textarea name="ecommerce_details" defaultValue={editingRequest.intake?.ecommerce_details || ''} placeholder="Products, variants, taxes, inventory, payments…" /></label>
           <div className="portal-form-grid"><label>Approximate product count<input name="product_count" defaultValue={editingRequest.intake?.product_count || ''} /></label><label>Shipping, delivery, or pickup<textarea name="shipping_pickup" defaultValue={editingRequest.intake?.shipping_pickup || ''} /></label></div>
           <label>Booking or appointment details<textarea name="booking_details" defaultValue={editingRequest.intake?.booking_details || ''} /></label><label>AI agent goals<textarea name="ai_agent_goals" defaultValue={editingRequest.intake?.ai_agent_goals || ''} /></label><label>Ongoing maintenance needs<textarea name="maintenance_needs" defaultValue={editingRequest.intake?.maintenance_needs || ''} /></label>
+          <label>Something not listed, or a custom product, service, or workflow<textarea name="custom_needs" defaultValue={editingRequest.intake?.custom_needs || ''} placeholder="Describe it here. Custom requests are routed for human scope review instead of forced into a package." /></label>
           <label>Budget context (optional)<textarea name="budget_context" defaultValue={editingRequest.intake?.budget_context || ''} placeholder="This does not lock you into a package; it helps us recommend the smallest useful solution." /></label><label>Anything else Fritz should know<textarea name="notes" defaultValue={editingRequest.intake?.notes || ''} /></label>
           <label className="portal-check"><input name="recommendation_requested" type="checkbox" defaultChecked={editingRequest.recommendation_requested !== 0} />Recommend the smallest useful package and add-ons for me.</label>
           <div className="portal-form-actions"><button name="action" value="save" disabled={busy}>{busy ? 'Saving…' : 'Save draft'}</button><button className="secondary" name="action" value="submit" disabled={busy}>Submit for review</button><button className="quiet" type="button" onClick={() => setEditingRequest(null)}>Close</button></div>

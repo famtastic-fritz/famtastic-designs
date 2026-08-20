@@ -1,5 +1,116 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-20 — A proof link needs a review task, not six unexplained demos
+
+- “Six directions” is internal shorthand. A recipient needs to hear that they
+  have six complete alternative homepages, that each link opens one whole
+  concept, and that the immediate task is to compare then shortlist one or two
+  favorites. The review hub now owns that explanation deterministically;
+  creative workers cannot omit it.
+- Email evidence and email presentation are different concerns. Preserve the
+  readable plain-text body in the outbox and test transport, but render a
+  safely escaped, mobile-readable HTML wrapper for inbox use. Never send a raw
+  form JSON dump to the owner when a triage summary is what enables action.
+- A responsive custom Operations surface can support mobile triage, but it
+  cannot make every dense Drupal entity editor good on a phone. Tell the owner
+  which actions are safe there, retain touch-safe review controls, and send
+  detailed editing to desktop until a dedicated mobile editor is designed and
+  tested.
+- Motion and high-volume video need different tools. Use HyperFrames when
+  layout, type, and controlled motion are part of the design; use
+  MoneyPrinterTurbo for reviewed narrative assemblies. Record both in Build DNA
+  and keep publishing separate. A subscription advertisement, including a
+  reported ACI AI image plan, is a candidate—not a capability claim—until it
+  passes a real benchmark with receipts and rights review.
+
+## 2026-08-20 — Build DNA makes quality repeatable instead of memorable
+
+- A beautiful output is not a reproducible system until the build records the
+  actual routine, provider/model status, rendered prompts, normalized inputs,
+  outputs, asset hashes, timing, cost status, fallback, review decision, and
+  retrieval path while the work happens. Missing data must remain explicitly
+  missing; backfilling a polished story later creates false telemetry.
+- One Build DNA JSON should point to the complete filesystem evidence, be
+  projected into the searchable Drupal build ledger, and travel into the Site
+  Studio packet. Those are retrieval surfaces for one record, not three
+  competing sources of truth.
+- The first Gemini Flash Lite story test preserved a premium art-direction
+  reference's emotional grammar without copying pixels by describing the
+  camera, group layout, architecture, light, palette, material, negative space,
+  uniqueness requirements, and prohibited output in concrete terms. “Premium”
+  alone was not the quality instruction.
+- The five new 1K Lite images have an expected USD 0.168 image-output cost;
+  the provider did not return an invoice, so the ledger labels it an estimate.
+  The inherited OpenArt `gpt-image-2` source image was not charged to the new
+  Lite story build.
+- The actual image results, prompts, per-image generation durations, source
+  hashes, page source, browser evidence, and same-operator review are saved in
+  `marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/build-dna.json`.
+  The browser technical gate passed at 1440px and 390px; independent visual
+  approval remains an open gate for any customer or public release.
+
+## 2026-08-19 — A lean social baseline can preserve the design magic
+
+- A public Lab and a public audience experience are different products. The
+  experience must protect immersion, story, emotion, and working interactions;
+  the Lab owns recipe, telemetry, QA, evidence, and conversion. Combining them
+  weakens both even when the visual design is strong.
+- “Live” means more than a public 200 response. The Rattler Roll Call is now
+  tested in production for generation, device-local persistence, reload,
+  clipboard copy, and share fallback, with desktop and phone screenshots.
+- The public Lab should sell the method without disguising the evidence
+  boundary. Showing the 13:03 observed window, excluded research time,
+  self-review status, and marketing/core split made the case study more
+  credible than a vague “AI made this fast” claim.
+- The recent six-direction Rattler run exposed orchestration churn: eight
+  visual-review calls consumed about 29.5 aggregate minutes. Resume logic must
+  reuse a passing verdict, default to one consolidated repair, and stop after
+  two total visual-review calls unless a human explicitly opens a new change
+  lane.
+- Quality and speed are compatible when preview scope is bounded. Keep
+  research, thesis, expressive typography, subject-native texture/depth, and
+  browser/visual gates; move noncritical polish into the selected-direction
+  refinement phase.
+- One researched cultural truth, two deliberate images, one deep brand system, three editable social cards, and one browser gate produced a stronger and faster social-presence proof than multiplying weak directions.
+- The measured production window was 13 minutes 03 seconds from first paid image request to passing QA. Research time was not instrumented and must not be hidden inside that number.
+- Graphic quality came from constraints, not volume: the prompts named story, composition, material, light, negative space, prohibited official marks, and common visual failures. Both images passed on their first generation.
+- Typography and surface construction must be explicit acceptance dimensions. Outline type, italic serif contrast, rotation, scale patterns, grain, concrete, wool, leather, and atmospheric depth prevented the familiar flat bold/color-only result.
+- OpenArt was the transport and `gpt-image-2` was the model. Direct OpenAI Image API access can preserve the same model without OpenArt; Responses API or a different provider/model is a separate route that needs its own cost, authentication, and golden-prompt benchmark.
+- This is one coherent social proof, not the six-direction website contract. The distinction must remain visible in the manifest, evidence, and customer language.
+- An unlisted public URL proves anonymous static delivery, not social account creation or posting. Content, media, and publication approvals remain closed.
+- A new skill or agent was intentionally not created. Promote the formula only after a second unrelated brand reproduces the quality floor; add orchestration only for a measured missing capability.
+
+## 2026-08-17 — Public intake should earn the detailed brief
+
+- The anonymous Solution Finder is strongest as a short lead-capture experience: collect enough information for a starter recommendation, save the Drupal Prospect and Intake, and explain the next useful action.
+- A public planning range is not a finished design proof. Working customer-specific demos require the richer authenticated brief and should be described that way.
+- Registration must continue the journey instead of restarting it. Matching the verified account by email lets Drupal claim the existing prospect resources into the customer organization.
+- The conversion invitation should promise a free workspace and detailed brief, not free finished production work. Payment remains a later, separately authorized boundary.
+- Unknown industries and unlisted requirements need open text and human scope review rather than forced catalog classification.
+
+## 2026-08-17 — A model is not the website-delivery engine
+
+- Deterministic schemas, package/add-on rules, independent assertions, and browser evidence own acceptance; models remain replaceable workers.
+- The first `website.preview.v2` fixture proof passed three scenarios across anonymous Solution Finder and member portal lanes with six traced specialist stages and three creative directions each.
+- Installed subscriptions are not callable automation by default. Ollama is locally available; unattended Codex, Claude, Gemini/Antigravity, and Kimi routes still need auth/cost/privacy proof, while Poe and Z.ai are not currently callable locally.
+- The signed Site Studio callback is the scale-out seam. The enriched brief and per-agent trace still need a Drupal persistence adapter before integration is proven.
+- Browser screenshots must be content-bearing and hashed. A 1×1 transport fixture proves callback mechanics, not visual quality.
+
+## 2026-08-17 — Personality lenses need a control and protected decisions
+
+- A reusable human tester is more useful when its personality is stable: curious, warm, observant, and constructively skeptical.
+- Numerology can be offered as an opt-in creative framing device, but it must be disclosed as non-scientific and cannot infer facts about a person.
+- Life Path 3 may receive more visual, storytelling, and idea-generation prompts; Life Path 33 may receive more service, community, education, and responsible-creative prompts.
+- Every material finding needs a neutral control comparison. The lens cannot affect price, eligibility, priority, risk, legal terms, accessibility requirements, or approval.
+- Prefer receiving the derived Life Path number. Do not persist a birth date merely to personalize a mockup or test.
+
+## 2026-08-17 — First customer-specific swarm artifact pilot
+
+- Three direction contracts are insufficient proof; screenshots must show actual customer-specific rendered websites and loaded media.
+- The first screenshot pass caught a broken generated-image path that DOM-only assertions missed. Asset load dimensions are now an explicit assertion.
+- Local Qwen and GLM reviews completed much faster than the premium repository-aware review, but disagreed on OMG versus Safe. Provider voting must not replace explicit customer choice or deterministic gates.
+- The preview simulator can prove selection, approval, build, and payment stop, but it cannot be represented as the current Drupal purchase lifecycle until an adapter and the production ordering decision are implemented.
+
 ## 2026-08-12 — Marketing production and local AI
 
 - Open weights do not imply local fit. Kimi K2 activates 32 billion of one
@@ -310,3 +421,49 @@ architecture decisions; this file captures what future work must remember.
   customer, organization, selected SKUs, domain branch, approved terms,
   recurring authorization, and marketing choice are captured before handing
   the same order to Drupal Commerce checkout.
+
+## Six-direction proof production
+
+- A creative benchmark needs an explicit mix, not only a count: one restrained,
+  one medium, and four ultra-FAMtastic directions prevents six high-energy
+  palette swaps and preserves a usable comparison baseline.
+- Multi-project continuity should be proved with one customer identity and
+  unique request IDs. Three simultaneous local fixtures produced 18 unique
+  HTML/artifact hashes without collapsing into one project.
+- Full-page desktop/mobile screenshots plus deterministic browser checks are
+  necessary but not sufficient. A separate reviewer must inspect the actual
+  renders, record dimension scores, identify advisories, and leave customer
+  approval unresolved.
+- Unselected proofs are valuable inventory, but retention is not publication.
+  Archive and hash every package; de-identify the candidate catalog; block
+  customer copy/assets; and require owner/rights review before portfolio use.
+- Model ledgers must state the real boundary. Separate specialist sessions,
+  managed image generation, and Playwright are repeatable roles, but they do
+  not equal six independent model providers or unattended production proof.
+# Autonomous preview-to-Site-Studio bridge learning — 2026-08-18
+
+The reusable seam is an immutable packet boundary, not another build engine.
+FAMtastic can own research-first previews, selection, commercial truth, evidence,
+and customer operations while Site Studio keeps its existing recipe engine. The
+four correlation fields (`packet_id`, `idempotency_key`, `request_id`, and
+`project_id`) plus the selected direction set are the minimum safe continuation
+contract.
+
+The historical six-direction runs preserved excellent HTML, art, screenshots,
+structured outputs, and review decisions, but not complete conversational
+prompts, real costs, or real durations. New runs must journal the rendered prompt,
+normalized input, raw and parsed output, route, fallback, cost status, and review
+decision at creation time. Retrofitting those facts later creates fake telemetry.
+
+Installed CLIs are not authenticated providers. Capability routing must mark
+command presence, authentication, runtime capability, and fixture adapters as
+different states. Golden replay is valuable for deterministic regression but
+cannot certify fresh creative autonomy. Likewise, a locally generated Site
+Studio success fixture proves validation and portal continuation, not Site
+Studio execution.
+
+Supporting one or two chosen directions belongs in the packet contract; it does
+not require duplicating projects. Multiple concurrent customer projects remain
+safe when every packet is registered on one owned project and every result is
+validated against that project's exact packet before any activity or mail is
+queued.

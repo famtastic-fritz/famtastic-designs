@@ -10,6 +10,10 @@ FAMtastic Designs has one supported application stack:
 | Static frontend assets | `frontend/public/` | copied into `frontend/dist/` by Vite |
 | API, CMS, and customer pipeline | `backend/` | Drupal runtime on GoDaddy |
 | Deployment and acceptance | `scripts/` | commands run against an exact Git SHA |
+| Website-delivery swarm contracts | `website-delivery-swarm/` | Shay-callable runner and evidence artifacts |
+| Governed marketing campaigns and social-presence baselines | `marketing/campaigns/` | Draft manifests, creative source, evidence packages, explicitly unlisted proofs, and approved public Lab case studies |
+| Portable marketing engine seed | `marketing/engine/` | Provider-neutral contracts only; no brand, customer, Drupal, credential, or campaign truth |
+| Repository agent skills | `agent-skills/` | versioned callable procedures |
 | Operational guidance | `docs/` | repository documentation |
 
 The former root Nuxt/AgencyOS application and local Directus prototype are
@@ -56,5 +60,14 @@ are documented in `docs/FRONTEND_DEPLOYMENT.md` and
 - Never use `rsync --delete` against `public_html` because Drupal shares it.
 - Never commit secrets, local databases, uploaded files, generated proofs, or
   dependency directories.
+- Campaign evidence committed under `marketing/campaigns/` must be an explicitly
+  selected golden baseline with rights and disclosure review; ordinary generated
+  customer proofs continue to live under ignored artifact storage.
+- A public Lab case study may use the isolated allowlisted static publisher only
+  for its exact reviewed campaign source. It does not authorize a dirty-worktree
+  React deployment, broad content publication, or direct customer-state writes.
+- The reusable lean social-presence recipe is
+  `docs/architecture/LEAN_SOCIAL_PRESENCE_PRODUCTION_PROCESS_V1.md`; an individual
+  campaign directory is evidence and an exemplar, not the canonical process.
 - If documentation or automation contradicts this file, stop and reconcile it
   before deployment.

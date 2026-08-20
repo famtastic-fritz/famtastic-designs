@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rattler Lifers — Creative Finish Lab</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #07100b; color: #f8f2df; }
+      body { margin: 0; background: radial-gradient(circle at 10% 0%, #26351c, #07100b 55%); }
+      main { max-width: 1220px; margin: auto; padding: 42px 24px 80px; }
+      h1 { margin: 0 0 8px; font-size: clamp(2rem, 5vw, 4.5rem); letter-spacing: -.06em; }
+      p { color: #c7c7b9; line-height: 1.6; }
+      .status { display: inline-block; padding: 6px 10px; border: 1px solid #6d8a4d; border-radius: 999px; color: #d7e8b3; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(275px, 1fr)); gap: 18px; margin-top: 28px; }
+      article { overflow: hidden; border: 1px solid rgba(237,207,125,.22); background: rgba(7,13,9,.67); border-radius: 18px; }
+      article img, article video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #020503; }
+      .copy { padding: 17px; }
+      h2 { margin: 0 0 6px; font-size: 1.1rem; }
+      code { color: #e7c468; font-size: .82rem; }
+      .pending { opacity: .72; border-style: dashed; }
+      .comparison { width: 100%; margin: 30px 0 0; border-radius: 16px; border: 1px solid rgba(237,207,125,.22); }
+      a { color: #f3ca66; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <span class="status">Source preserved · 2 actual render outputs</span>
+      <h1>Creative finish lab</h1>
+      <p>One Flash Lite recreation, kept intact. Every treatment is a sibling file—not a replacement. The current comparison is source → Photoshop finish → Remotion midpoint.</p>
+      <img class="comparison" src="00-live-comparison.jpg" alt="Source, Photoshop finish, and Remotion preview side by side" />
+      <section class="grid">
+        <article>
+          <img src="01-flash-lite-reference-source.jpg" alt="Untouched Flash Lite reference recreation" />
+          <div class="copy"><h2>01 — Flash Lite source</h2><code>Preserved untouched</code></div>
+        </article>
+        <article>
+          <img src="02-photoshop-finish.jpg" alt="Photoshop finished still" />
+          <div class="copy"><h2>02 — Photoshop finish</h2><code>Curves · tone · grain · detail</code></div>
+        </article>
+        <article>
+          <video controls poster="05-remotion-rattler-ambient-preview.jpg"><source src="05-remotion-rattler-ambient.mp4" type="video/mp4" /></video>
+          <div class="copy"><h2>05 — Remotion ambient</h2><code>Actual 4.05s H.264 render</code></div>
+        </article>
+        <article class="pending">
+          <img src="03-premiere-source-copy.jpg" alt="Premiere source copy" />
+          <div class="copy"><h2>03 — Premiere treatment</h2><code>Awaiting local bridge; spec included</code></div>
+        </article>
+        <article class="pending">
+          <img src="04-after-effects-source-copy.jpg" alt="After Effects source copy" />
+          <div class="copy"><h2>04 — After Effects treatment</h2><code>Build script included; no render claimed</code></div>
+        </article>
+      </section>
+      <p>Read the full evidence and settings in <a href="README.md">README.md</a> and <a href="manifest.json">manifest.json</a>.</p>
+    </main>
+  </body>
+</html>

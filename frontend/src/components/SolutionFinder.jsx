@@ -499,6 +499,7 @@ export default function SolutionFinder({ initialBranch = null }) {
   const [submitError, setSubmitError] = useState(null);
   const [serverMessage, setServerMessage] = useState(null);
   const [requestId, setRequestId] = useState(null);
+  const [registrationUrl, setRegistrationUrl] = useState(null);
   const [offlineEstimate, setOfflineEstimate] = useState(false);
   const searchRef = useRef(null);
 
@@ -523,6 +524,7 @@ export default function SolutionFinder({ initialBranch = null }) {
     setSubmitError(null);
     setServerMessage(null);
     setRequestId(null);
+    setRegistrationUrl(null);
     setOfflineEstimate(false);
     setStage('branch');
   }
@@ -607,6 +609,7 @@ export default function SolutionFinder({ initialBranch = null }) {
     try {
       const res = await postIntake(payload);
       setRequestId(res?.request_id || null);
+      setRegistrationUrl(res?.registration_url || null);
       setServerMessage(res?.message || 'We received your request. Your estimate is being prepared, and our team has been notified.');
       setStatus('success');
       setStage('result');
@@ -671,12 +674,11 @@ export default function SolutionFinder({ initialBranch = null }) {
               </button>
             </div>
 
-            <div className="sf__chips" role="list">
+            <div className="sf__chips" role="group" aria-label="Solution types">
               {CHIPS.map((chip) => (
                 <button
                   key={chip.id}
                   type="button"
-                  role="listitem"
                   className={`sf__chip${matched === chip.id ? ' is-match' : ''}`}
                   onClick={() => startBranch(chip.id)}
                 >
@@ -684,7 +686,7 @@ export default function SolutionFinder({ initialBranch = null }) {
                 </button>
               ))}
             </div>
-            <p className="sf__hint">Type what you need or pick an option — 60 seconds, instant estimate.</p>
+            <p className="sf__hint">Share the basics in about 60 seconds. We’ll save your request and show a starter recommendation.</p>
           </motion.div>
         )}
 
@@ -848,7 +850,7 @@ export default function SolutionFinder({ initialBranch = null }) {
             ) : (
               <p className="v1-eyebrow">Thank you!</p>
             )}
-            <h3 className="sf__step-title">Your custom estimate</h3>
+            <h3 className="sf__step-title">Your starter recommendation</h3>
             <p className="sf__price">{range(result.estimate.low, result.estimate.high)}</p>
             {!offlineEstimate && serverMessage && (
               <p className="sf__note">{serverMessage}</p>
@@ -871,16 +873,26 @@ export default function SolutionFinder({ initialBranch = null }) {
 
             {!offlineEstimate && (
               <p className="sf__note">
-                We'll send a detailed quote to <strong>{values.email}</strong> within 24 hours. No phone call required.
+                This planning range is based on the basic information you shared—not a final quote or a finished design proof. We saved the lead and sent the next step to <strong>{values.email}</strong>.
               </p>
             )}
 
+            {!offlineEstimate && registrationUrl && (
+              <div className="sf__upgrade">
+                <p className="v1-eyebrow">Want the full experience?</p>
+                <h4>Get working website demos—not just a basic mockup.</h4>
+                <p>Create a free account with the same email. Your saved request follows you into the client portal, where the detailed brief covers your brand, business model, domain, email, content, features, reference sites, and custom needs.</p>
+                <a className="v1-btn v1-btn--primary" href={registrationUrl}>Create my free account →</a>
+                <small>No payment is required to register or complete the detailed brief.</small>
+              </div>
+            )}
+
             <div className="sf__result-actions">
-              <Link to="/contact#contact-form" className="v1-btn v1-btn--primary">Email Your Questions</Link>
+              {!registrationUrl && <Link to="/contact#contact-form" className="v1-btn v1-btn--primary">Email Your Questions</Link>}
               <button
                 type="button"
                 className="v1-btn v1-btn--ghost"
-                onClick={() => { setStage('entry'); setValues({}); setBranch(null); setStepIndex(0); setStatus('idle'); setSubmitError(null); setServerMessage(null); setRequestId(null); setOfflineEstimate(false); setQuery(''); }}
+                onClick={() => { setStage('entry'); setValues({}); setBranch(null); setStepIndex(0); setStatus('idle'); setSubmitError(null); setServerMessage(null); setRequestId(null); setRegistrationUrl(null); setOfflineEstimate(false); setQuery(''); }}
               >
                 Start over
               </button>

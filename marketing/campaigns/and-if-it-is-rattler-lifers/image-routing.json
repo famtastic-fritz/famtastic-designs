@@ -1,0 +1,73 @@
+{
+  "schema": "famtastic.image-capability-routing.v1",
+  "campaign": "and_if_it_is_rattler_lifers",
+  "capability": "image.generate.ultra_real.campaign",
+  "goal": "Preserve the prompt, quality target, output contract, cost receipt, and visual gate while allowing the transport or model provider to change.",
+  "proven_route": {
+    "route_id": "openart-gpt-image-2",
+    "transport": "OpenArt MCP",
+    "model": "gpt-image-2",
+    "status": "proven_for_this_run",
+    "evidence": [
+      "prompts.json",
+      "evidence/run-ledger.json",
+      "evidence/visual-review.json",
+      "evidence/browser-results.json"
+    ]
+  },
+  "same_model_alternatives": [
+    {
+      "route_id": "openai-image-api-gpt-image-2",
+      "transport": "OpenAI Image API",
+      "model": "gpt-image-2",
+      "best_for": "One-shot generation or editing with direct model selection.",
+      "status": "officially_documented_not_authenticated_or_benchmarked_in_this_repository",
+      "requirements": [
+        "OpenAI API project and server-side API key",
+        "API organization verification when required",
+        "per-request usage and cost capture",
+        "the same prompt and visual acceptance gates"
+      ],
+      "source": "https://developers.openai.com/api/docs/guides/image-generation"
+    },
+    {
+      "route_id": "openai-responses-image-tool",
+      "transport": "OpenAI Responses API image-generation tool",
+      "model": "tool_selected_gpt_image_model",
+      "best_for": "Conversational or multi-turn image generation and editing.",
+      "status": "officially_documented_not_authenticated_or_benchmarked_in_this_repository",
+      "note": "The mainline Responses model calls the image tool; GPT Image selection is handled by the tool and mainline token usage is additional.",
+      "source": "https://developers.openai.com/api/docs/guides/image-generation"
+    }
+  ],
+  "different_model_fallbacks": [
+    {
+      "route_id": "codex-managed-imagegen",
+      "transport": "Codex built-in image generation",
+      "model": "managed_not_guaranteed_to_be_gpt-image-2",
+      "status": "tool_available_but_not_equivalent_model_receipt",
+      "use_when": "A managed generation tool is preferred and exact underlying model identity is not required."
+    },
+    {
+      "route_id": "gemini-image-capability",
+      "transport": "Authenticated Gemini capability",
+      "model": "resolved_at_runtime",
+      "status": "candidate_requires_cost_quality_and_auth_benchmark",
+      "use_when": "A different image model is acceptable after running the same baseline prompt and visual rubric."
+    },
+    {
+      "route_id": "third-party-or-local-image-capability",
+      "transport": "MuAPI, another declared provider, or an installed local image runtime",
+      "model": "resolved_at_runtime",
+      "status": "candidate_requires_availability_license_cost_and_quality_preflight",
+      "use_when": "A lower-cost or specialized model clears the same prompt, rights, and visual acceptance contract."
+    }
+  ],
+  "failover_rules": [
+    "A transport failure may fail over to the same model through another proven transport without changing the creative brief.",
+    "A model change is never silent; record the resolved model, provider, prompt hash, cost, duration, and fallback reason.",
+    "Do not publish a fallback image unless it independently clears the visual rubric and trademark boundary.",
+    "Do not claim two routes are equivalent until the same golden prompt is benchmarked through both.",
+    "Do not retry broadly: one targeted retry is allowed only for an unusable or contract-breaking result."
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "famtastic.public-experience-publication.v1",
+  "published_at": "2026-08-19T17:18:42Z",
+  "url": "https://famtasticdesigns.com/and-if-it-is/",
+  "route_class": "public_indexable_interactive_campaign_experience",
+  "deployment_lane": "isolated_atomic_static_godaddy",
+  "archive_sha256": "cd9b14f840a47e659c71174b154f3fee2fcdd26ded4af6b2e855e6da6ee6b16a",
+  "source_hashes": {
+    "site/index.html": "d7932c3e2894d8c5a43fa9e15912668d78dd1e0561542987c8b1ddb226cf1433",
+    "site/styles.css": "0f86eeaa6486aa284d0d6d485ab065097f88f09ae079e5c3131b63e9261aae79",
+    "site/app.js": "f11e91c76e0d903423f36de9f69c6eebdb78903b06a895a771f244a24320b883"
+  },
+  "experience_contract": {
+    "campaign_thesis_first": true,
+    "lab_process_content_present": false,
+    "roll_call_generates": true,
+    "roll_call_persists_on_device": true,
+    "roll_call_copies": true,
+    "roll_call_native_share_or_copy_fallback": true,
+    "visitor_entry_transmitted": false,
+    "three_social_cards_reachable": true,
+    "official_source_links_reachable_from_page": true,
+    "lab_dna_companion_link": "https://famtasticdesigns.com/lab/and-if-it-is/"
+  },
+  "production_proof": {
+    "evidence": "experience-live-results.json",
+    "anonymous_desktop_1440": "pass",
+    "anonymous_phone_390": "pass",
+    "roll_call_generate_persist_copy_restore": "pass",
+    "metadata_and_disclosure": "pass",
+    "console_page_and_request_errors": 0
+  },
+  "recovery": "The exact prior route is preserved as a timestamped server-side backup by the atomic publisher when revisions replace an existing release."
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "famtastic.capability-routes.v1",
+  "capabilities": {
+    "intake_validation": ["deterministic_rules"],
+    "live_research": ["web_research", "cli_research", "local_research"],
+    "research_synthesis": ["premium_reasoning", "balanced_reasoning", "local_text"],
+    "creative_direction": ["premium_reasoning", "balanced_reasoning", "local_text"],
+    "image_generation": ["openai_image_api", "managed_image_generation", "local_image_generation"],
+    "prototype_construction": ["premium_code", "balanced_code", "local_code"],
+    "browser_qa": ["playwright_chromium"],
+    "visual_review": ["independent_vision", "local_vision"],
+    "artifact_hashing": ["deterministic_rules"]
+  },
+  "providers": {
+    "deterministic_rules": {"execution": "local", "availability": "always", "classes": ["free", "low", "medium", "premium", "premium_brain_free_workers", "custom"]},
+    "golden_replay": {"execution": "local", "availability": "fixture_only", "classes": ["free", "low", "medium", "premium", "premium_brain_free_workers", "custom"]},
+    "playwright_chromium": {"execution": "local", "availability": "command", "command": "node", "classes": ["free", "low", "medium", "premium", "premium_brain_free_workers", "custom"]},
+    "local_text": {"execution": "local", "availability": "command", "command": "ollama", "classes": ["free", "low", "medium", "premium_brain_free_workers", "custom"]},
+    "local_vision": {"execution": "local", "availability": "command", "command": "ollama", "classes": ["free", "low", "medium", "premium_brain_free_workers", "custom"]},
+    "local_code": {"execution": "local", "availability": "command", "command": "ollama", "classes": ["free", "low", "medium", "premium_brain_free_workers", "custom"]},
+    "web_research": {"execution": "cloud", "availability": "runtime_capability", "classes": ["medium", "premium", "custom"]},
+    "cli_research": {"execution": "cloud", "availability": "command_and_auth", "command": "gemini", "classes": ["low", "medium", "premium", "custom"]},
+    "local_research": {"execution": "local", "availability": "command", "command": "ollama", "classes": ["free", "low", "medium", "premium_brain_free_workers", "custom"]},
+    "balanced_reasoning": {"execution": "cloud", "availability": "command_and_auth", "command": "codex", "classes": ["medium", "premium", "custom"]},
+    "premium_reasoning": {"execution": "cloud", "availability": "command_and_auth", "command": "claude", "classes": ["premium", "premium_brain_free_workers", "custom"]},
+    "balanced_code": {"execution": "cloud", "availability": "command_and_auth", "command": "codex", "classes": ["medium", "premium", "custom"]},
+    "premium_code": {"execution": "cloud", "availability": "command_and_auth", "command": "claude", "classes": ["premium", "custom"]},
+    "openai_image_api": {"execution": "cloud", "availability": "keychain_preflight", "command": "python3", "service": "FAMtastic.OpenAI.Image", "account": "famtastic-image-worker", "model_allowlist": ["gpt-image-2"], "endpoint_allowlist": ["POST /v1/images/generations"], "denied_capabilities": ["text_generation", "research", "code_generation", "embeddings", "audio", "video"], "classes": ["medium", "premium", "custom"]},
+    "managed_image_generation": {"execution": "cloud", "availability": "runtime_capability", "classes": ["medium", "premium", "custom"]},
+    "local_image_generation": {"execution": "local", "availability": "configured_service", "classes": ["free", "low", "medium", "premium_brain_free_workers", "custom"]},
+    "independent_vision": {"execution": "cloud", "availability": "runtime_capability", "classes": ["medium", "premium", "custom"]}
+  },
+  "rules": {
+    "stages_request_capabilities_not_models": true,
+    "provider_must_pass_preflight": true,
+    "missing_provider_uses_declared_fallback_only": true,
+    "no_silent_simulation": true,
+    "generator_cannot_be_final_reviewer": true,
+    "subscription_does_not_prove_api_authority": true
+  }
+}

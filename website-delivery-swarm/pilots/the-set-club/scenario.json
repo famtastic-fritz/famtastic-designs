@@ -1,0 +1,108 @@
+{
+  "schema": "famtastic.website-intake.v2",
+  "request_id": "famtastic:the-set-club-20260819-fritz-001",
+  "customer": {
+    "name": "Fritz Medine",
+    "email": "fritz.medine@gmail.com",
+    "account_state": "member"
+  },
+  "mode": "fresh_provider_preview",
+  "fictional_business": true,
+  "business": {
+    "name": "The Set Club",
+    "industry": "Intergenerational FAMU student and alumni social club concept",
+    "location": "The Set near the Frederick S. Humphries, Sr. statue on Florida A&M University's Tallahassee campus",
+    "ownership_context": "User-directed unofficial concept for current and former FAMU students; no university affiliation, operating authority, or physical venue is claimed",
+    "goal": "Make current students and alumni immediately feel that they have a shared home on the Hill, understand what the club could offer, discover gatherings and traditions, and request founding information without implying that unverified operations already exist"
+  },
+  "audience": [
+    "Current Florida A&M University students across schools, classes, and organizations",
+    "FAMU alumni from every era who want a meaningful reason to return to the Hill",
+    "Graduating students seeking continuity between campus life and alumni life",
+    "Rattlers visiting Tallahassee for Homecoming, games, reunions, professional events, and family milestones"
+  ],
+  "brand": {
+    "status": "No verified club identity exists; create an original unofficial concept system without copying FAMU marks",
+    "famtastic_scale": 10,
+    "creative_contract": "Exactly one normal restrained direction, one medium-FAMtastic direction, and four ultra-FAMtastic directions that become progressively more impressive from C through F; each must be a complete usable responsive website, not a campaign poster",
+    "desired_feeling": [
+      "unmistakably Rattler in spirit without pretending to be an official university property",
+      "intergenerational",
+      "magnetic",
+      "culturally grounded",
+      "premium but welcoming",
+      "alive with music, movement, memory, achievement, and possibility"
+    ],
+    "avoid": [
+      "generic college club template",
+      "six color swaps of one layout",
+      "unauthorized FAMU logos or copied athletics marks",
+      "invented membership dues, alcohol service, hours, events, officers, endorsements, testimonials, or university approval",
+      "nostalgia that excludes current students",
+      "poster-like hero art without useful member journeys",
+      "weak mobile layouts"
+    ]
+  },
+  "scope": {
+    "preview_pages": 1,
+    "future_pages": [
+      "The Club",
+      "Membership",
+      "Gatherings",
+      "Rattler Network",
+      "Traditions",
+      "On the Set",
+      "Visit",
+      "Founding Updates"
+    ],
+    "features": [
+      "current-student and alumni pathways",
+      "interest and founding-update form",
+      "conceptual event discovery without fake dates",
+      "member-era storytelling",
+      "career and mentorship connection concepts",
+      "campus-location context with accessibility confirmation prompts",
+      "mobile-first Homecoming and event-day usefulness",
+      "clear unofficial-concept disclosure"
+    ]
+  },
+  "references": [
+    {
+      "url": "https://news.famu.edu/2026/famu-introduces-commemorative-bronze-humphries-tribute-for-day-of-giving.php",
+      "use": "Official source confirming the full-scale Frederick S. Humphries, Sr. monument was dedicated in October 2025"
+    },
+    {
+      "url": "https://www.famu.edu/students/student-activities/clubs-and-organizations/index.php",
+      "use": "Official context for FAMU clubs, organizations, student engagement, registration, and iStrike"
+    },
+    {
+      "url": "https://www.famu.edu/about-famu/alumni-affairs/index.php",
+      "use": "Official context for continuous alumni engagement and the university's existing alumni pathways"
+    },
+    {
+      "url": "https://www.famu.edu/students/student-activities/campus-activity-board.php",
+      "use": "Official context for campus activities and SET Friday programming"
+    }
+  ],
+  "known_facts": [
+    "The user specified a new club concept on The Set near the Frederick S. Humphries, Sr. statue and said it should be available to current and former students",
+    "FAMU's official club page says the university has more than 300 registered student organizations and routes official participation through Student Activities and iStrike",
+    "FAMU's official alumni page describes continuous alumni involvement as an institutional goal",
+    "FAMU's official 2026 statue campaign says the full-scale Humphries monument was dedicated in October 2025",
+    "No public source located during discovery verified an operating organization called The Set Club; the name and all operating details are concept material",
+    "All imagery must be newly generated for this run and may not depict a real member, officer, event, or venue as fact"
+  ],
+  "constraints": [
+    "Research may establish public FAMU history and participation context but may not convert mutable university information into a club promise",
+    "Do not claim official FAMU affiliation, approval, registered-organization status, physical occupancy, hours, dues, alcohol service, membership eligibility policy, leadership, events, accessibility conditions, or operating authority",
+    "Do not use or imitate protected FAMU logos, athletics marks, the Rattler head, the university seal, or photographs of real people without permission",
+    "Every page must visibly identify The Set Club as an unofficial concept requiring university, owner, legal, accessibility, and operational confirmation",
+    "Forms are non-submitting prototype interactions and must say so",
+    "During generation do not send email, charge, buy a domain, publish, mutate Drupal, or invoke Site Studio; authorized proof publication and FAMtastic import occur only after the evidence gate passes",
+    "Use no external JavaScript, trackers, remote fonts, iframes, or hotlinked images"
+  ],
+  "selected_direction_ids": [
+    "direction-e",
+    "direction-f"
+  ]
+}
