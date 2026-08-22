@@ -64,6 +64,32 @@ def require(condition: bool, message: str):
         raise ContractError(message)
 
 
+def resolve_keychain_worker(spec: dict) -> pathlib.Path:
+    """Resolve the declared image-only worker without crossing its boundary.
+
+    Capability routes name a repository-relative worker so the same contract
+    can be carried into Site Studio packets.  The orchestration script itself
+    lives inside ``website-delivery-swarm/``, so accepting that string as a
+    path relative to this file would duplicate the directory and silently make
+    an authenticated provider look unavailable.  Resolve both supported forms
+    deliberately, and reject a path outside the checked-out repository.
+    """
+    raw = str(spec.get("worker") or "openai_image_worker.py").strip()
+    require(raw != "", "Keychain provider has no worker declaration")
+    requested = pathlib.Path(raw)
+    repo_root = ROOT.parent.resolve()
+    candidates = [ROOT / requested, repo_root / requested]
+    for candidate in candidates:
+        resolved = candidate.resolve()
+        try:
+            resolved.relative_to(repo_root)
+        except ValueError:
+            continue
+        if resolved.is_file():
+            return resolved
+    raise ContractError(f"Declared image-only worker is unavailable: {raw}")
+
+
 def png_width(path: pathlib.Path) -> int:
     with path.open("rb") as stream:
         header = stream.read(24)
@@ -110,11 +136,9 @@ def preflight(build_class: str, golden_replay: bool) -> dict:
         elif kind == "keychain_preflight":
             command = spec.get("command", "python3")
             found = shutil.which(command)
-            worker = ROOT / "openai_image_worker.py"
+            worker = resolve_keychain_worker(spec)
             if not found:
                 state, reason = "unavailable", f"command missing: {command}"
-            elif not worker.is_file():
-                state, reason = "unavailable", "image-only worker missing"
             else:
                 probe = subprocess.run(
                     [found, str(worker), "--preflight"],
@@ -123,8 +147,10 @@ def preflight(build_class: str, golden_replay: bool) -> dict:
                     capture_output=True,
                     timeout=30,
                 )
+                models = [str(model) for model in spec.get("model_allowlist", []) if str(model)]
+                route_label = ", ".join(models) if models else "the declared image-only route"
                 state, reason = (
-                    ("available", "local Keychain credential authenticated to gpt-image-2")
+                    ("available", f"local Keychain credential authenticated to {route_label}")
                     if probe.returncode == 0
                     else ("unavailable", "image-only Keychain/API preflight failed")
                 )
