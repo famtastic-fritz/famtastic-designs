@@ -5,7 +5,9 @@
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "render:proof": "remotion render src/index.ts Famtastic55CentsPortrait out/famtastic-55-cents-remotion.mp4",
-    "still": "remotion still src/index.ts Famtastic55CentsPortrait out/famtastic-55-cents-cover.png --frame=30"
+    "still": "remotion still src/index.ts Famtastic55CentsPortrait out/famtastic-55-cents-cover.png --frame=30",
+    "render:proof-flow": "remotion render src/index.ts FamtasticProofFlowPortrait out/famtastic-proof-flow.mp4",
+    "still:proof-flow": "remotion still src/index.ts FamtasticProofFlowPortrait out/famtastic-proof-flow-cover.png --frame=580"
   },
   "dependencies": {
     "@remotion/cli": "4.0.509",
