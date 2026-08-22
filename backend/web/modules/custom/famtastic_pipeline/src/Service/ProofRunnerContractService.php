@@ -85,6 +85,16 @@ final class ProofRunnerContractService {
   ];
 
   /**
+   * One immutable selected-direction revision. The direction id itself is
+   * resolved from the persisted revision record, never from a global label.
+   */
+  private const PORTAL_SELECTED_DIRECTION_REVISION = [
+    'id' => 'portal_selected_direction_revision.v1',
+    'proof_count' => 1,
+    'customer_visibility' => 'owner_review_only',
+  ];
+
+  /**
    * Input keys allowed to leave the authenticated portal as build context.
    *
    * Deliberately excludes contact details, passwords, tokens, and free-form
@@ -335,6 +345,93 @@ final class ProofRunnerContractService {
   }
 
   /**
+   * Rehydrates an already linked preflight without minting a second build id.
+   *
+   * This is used by source-bound retry lanes which may receive an ambiguous
+   * transport failure after the remote provider accepted a signed request but
+   * before FAMtastic persisted its provider job id. The original contract's
+   * idempotency key and build id are retained, so a retry cannot create a
+   * competing revision candidate or later accept the wrong callback.
+   *
+   * @return array{build_id:string,profile:array,handoff:array}|null
+   */
+  public function resumeLinkedHandoffForSource(Prospect $prospect, array $context, ProofCampaign $campaign): ?array {
+    $routine = $this->routineFor($context);
+    $profile = $this->profileFor($context);
+    $source = $this->normalizeSource($prospect, $context, $profile);
+    $registered = $this->telemetry->loadBuildDnaForSource($source, $routine);
+    if (!$registered || ($registered['record']['status'] ?? '') !== 'preflight') {
+      return NULL;
+    }
+    $dna = (array) $registered['manifest'];
+    $run = (array) ($dna['run'] ?? []);
+    if (($dna['recipe']['routine'] ?? '') !== $routine
+      || ($dna['recipe']['profile_id'] ?? '') !== $profile['id']
+      || (int) ($run['proof_campaign_id'] ?? 0) !== (int) $campaign->id()
+      || (string) ($run['campaign_id'] ?? '') !== (string) $campaign->get('campaign_id')->value
+      || (int) ($run['prospect_id'] ?? 0) !== (int) $prospect->id()) {
+      return NULL;
+    }
+    $expected = (array) ($run['source_correlation'] ?? []);
+    foreach ($this->sourceCorrelationKeys() as $key) {
+      if (array_key_exists($key, $source) && (string) ($expected[$key] ?? '') !== (string) $source[$key]) {
+        return NULL;
+      }
+    }
+    if ((array) ($dna['lineage'] ?? []) !== (array) ($source['lineage'] ?? [])) {
+      return NULL;
+    }
+    $contractUri = (string) ($dna['artifacts'][0]['path'] ?? '');
+    $contractHash = strtolower((string) ($dna['artifacts'][0]['sha256'] ?? ''));
+    if ($contractUri === '' || !preg_match('/^[a-f0-9]{64}$/', $contractHash)) {
+      return NULL;
+    }
+    try {
+      $contractJson = $this->readContractForHash($contractUri, $contractHash);
+      $contract = json_decode($contractJson, TRUE, 512, JSON_THROW_ON_ERROR);
+    }
+    catch (\Throwable) {
+      return NULL;
+    }
+    if (!is_array($contract)
+      || ($contract['schema'] ?? '') !== self::CONTRACT_SCHEMA
+      || ($contract['routine'] ?? '') !== $routine
+      || ($contract['profile']['id'] ?? '') !== $profile['id']
+      || ($contract['build_id'] ?? '') !== ($dna['build_id'] ?? '')
+      || !hash_equals($contractHash, hash('sha256', $contractJson))) {
+      return NULL;
+    }
+    return [
+      'build_id' => (string) $dna['build_id'],
+      'profile' => $profile,
+      'handoff' => [
+        'build_id' => (string) $dna['build_id'],
+        'contract_sha256' => $contractHash,
+        'contract' => $contract,
+        'preflight_build_dna_sha256' => hash('sha256', $this->json($dna)),
+        'campaign_id' => (string) $campaign->get('campaign_id')->value,
+        'proof_campaign_id' => (int) $campaign->id(),
+        'source_type' => (string) ($source['type'] ?? ''),
+        'profile_id' => $profile['id'],
+        'idempotency_key' => (string) ($contract['idempotency_key'] ?? ''),
+      ],
+    ];
+  }
+
+  /** Central list used by runner resumption and callback source checks. */
+  private function sourceCorrelationKeys(): array {
+    return [
+      'prospect_id', 'type', 'proof_phase', 'lineage_hash',
+      'source_preview_delivery_id', 'public_preview_delivery_id',
+      'parent_public_proof_campaign_id', 'parent_public_campaign_key',
+      'parent_public_build_dna_id', 'parent_public_build_dna_hash',
+      'intake_id', 'website_request_id', 'website_request_public_id',
+      'proof_campaign_id', 'revision_id', 'revision_public_id',
+      'revision_number', 'selected_direction', 'direction_id',
+    ];
+  }
+
+  /**
    * Binds the preflight to the newly created campaign before remote dispatch.
    *
    * The preflight record is mutable only until the provider returns its final
@@ -421,6 +518,9 @@ final class ProofRunnerContractService {
   private function profileFor(array $context): array {
     $this->routineFor($context);
     $phase = $this->phaseForContext($context);
+    if ($phase === 'revision') {
+      return $this->revisionProfile($context);
+    }
     if ($phase === 'refined_six') {
       if (empty($context['website_request_id'])) {
         throw new \InvalidArgumentException('Refined six-proof runner requires an authenticated website request source.');
@@ -454,10 +554,36 @@ final class ProofRunnerContractService {
     if ($requestedProfile === self::PORTAL_REFINED_SIX['id'] || $deliveryClass === 'authenticated_refined') {
       $phase = 'refined_six';
     }
-    if (!in_array($phase, ['initial', 'showcase', 'refined_six'], TRUE)) {
+    if ($requestedProfile === self::PORTAL_SELECTED_DIRECTION_REVISION['id'] || $deliveryClass === 'authenticated_revision') {
+      $phase = 'revision';
+    }
+    if (!in_array($phase, ['initial', 'showcase', 'refined_six', 'revision'], TRUE)) {
       throw new \InvalidArgumentException('Unsupported proof runner phase.');
     }
     return $phase;
+  }
+
+  /**
+   * Builds the single-direction revision profile from the exact selected id.
+   *
+   * The normalizer below proves the queue's id against the persisted revision
+   * row before the profile can be dispatched. This early shape check prevents
+   * a revision callback from quietly becoming a generic a/b/c proof set.
+   */
+  private function revisionProfile(array $context): array {
+    $selected = strtolower(trim((string) ($context['selected_direction'] ?? '')));
+    $direction = strtolower(trim((string) ($context['direction_id'] ?? $selected)));
+    if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE) || ($selected !== '' && $selected !== $direction)) {
+      throw new \InvalidArgumentException('Selected-direction revision requires one matching a-f direction id.');
+    }
+    return self::PORTAL_SELECTED_DIRECTION_REVISION + [
+      'directions' => [
+        $direction => [
+          'name' => 'Selected direction revision',
+          'intent' => 'Refine only the selected direction using the stored customer notes. Do not alter, regenerate, or replace any other direction.',
+        ],
+      ],
+    ];
   }
 
   /**
@@ -470,13 +596,13 @@ final class ProofRunnerContractService {
     $contact = (string) $prospect->get('public_email')->value;
     $common = [
       'prospect_id' => (int) $prospect->id(),
-      'business_name' => (string) $prospect->label(),
-      'business_category' => (string) $prospect->get('business_category')->value,
-      'business_description' => (string) $prospect->get('business_description')->value,
-      'service_area' => (string) $prospect->get('service_area')->value,
+      'business_name' => $this->redactContactValues((string) $prospect->label()),
+      'business_category' => $this->redactContactValues((string) $prospect->get('business_category')->value),
+      'business_description' => $this->redactContactValues((string) $prospect->get('business_description')->value),
+      'service_area' => $this->redactContactValues((string) $prospect->get('service_area')->value),
       'contact_hash' => $this->ledger->contactHash($contact),
-      'campaign_key' => (string) $prospect->get('campaign')->value,
-      'source_key' => (string) $prospect->get('source')->value,
+      'campaign_key' => $this->redactContactValues((string) $prospect->get('campaign')->value),
+      'source_key' => $this->redactContactValues((string) $prospect->get('source')->value),
     ];
 
     if ($profile['id'] === self::PUBLIC_INITIAL['id']) {
@@ -497,7 +623,7 @@ final class ProofRunnerContractService {
         'proof_phase' => 'initial',
         'public_preview_delivery_id' => $deliveryId,
         'intake_id' => $intakeId,
-        'facts' => array_filter([
+        'facts' => $this->sanitizeOutboundValue(array_filter([
           'primary_goal' => $fact($intake, 'primary_goal'),
           'primary_cta' => $fact($intake, 'primary_cta'),
           'services' => $fact($intake, 'services'),
@@ -508,7 +634,7 @@ final class ProofRunnerContractService {
           'style_preferences' => $fact($intake, 'style_preferences'),
           'reference_sites' => $fact($intake, 'reference_sites'),
           'existing_domain' => $fact($intake, 'existing_domain'),
-        ], static fn(string $value): bool => $value !== ''),
+        ], static fn(string $value): bool => $value !== '')),
       ];
     }
 
@@ -519,6 +645,7 @@ final class ProofRunnerContractService {
     }
     $request = $this->database->select('famtastic_project_request', 'r')->fields('r', [
       'id', 'prospect_id', 'public_id', 'status', 'intake_data',
+      'proof_campaign_id', 'selected_proof_direction', 'proof_review_status',
       'source_preview_delivery_id',
       'parent_public_proof_campaign_id', 'parent_public_campaign_key',
       'parent_public_build_dna_id', 'parent_public_build_dna_hash',
@@ -531,6 +658,9 @@ final class ProofRunnerContractService {
       throw new \RuntimeException('Portal website request does not belong to the proof prospect.');
     }
     $phase = $this->phaseForContext($context);
+    if ($phase === 'revision') {
+      return $this->revisionSource($prospect, $context, $request, $common);
+    }
     $sourceContext = $context;
     $lineageKeys = [
       'source_preview_delivery_id',
@@ -588,7 +718,7 @@ final class ProofRunnerContractService {
     $facts = [];
     foreach (self::PORTAL_INTAKE_KEYS as $key) {
       if (array_key_exists($key, $intake) && (is_scalar($intake[$key]) || is_array($intake[$key]))) {
-        $facts[$key] = $intake[$key];
+        $facts[$key] = $this->sanitizeOutboundValue($intake[$key]);
       }
     }
     $lineage = $phase === 'refined_six' ? $this->refinedSixLineage($prospect, $sourceContext, $facts) : [];
@@ -613,6 +743,259 @@ final class ProofRunnerContractService {
       $source['parent_public_build_dna_hash'] = (string) $lineage['parent_public_build_dna_hash'];
     }
     return $source;
+  }
+
+  /**
+   * Resolves one selected-direction revision from its durable row and baseline.
+   *
+   * The queued payload is useful transport evidence, but its request, selected
+   * direction, customer notes, baseline hashes, and revision version cannot
+   * override the persisted revision record. The rendered baseline is included
+   * only after its stored bytes and SHA-256 are rechecked, so an external
+   * provider has an actual visual/source reference instead of a meaningless
+   * Drupal filesystem path.
+   */
+  private function revisionSource(Prospect $prospect, array $context, array $request, array $common): array {
+    $revisionId = (int) ($context['revision_id'] ?? 0);
+    $revisionPublicId = strtolower(trim((string) ($context['revision_public_id'] ?? '')));
+    $direction = strtolower(trim((string) ($context['direction_id'] ?? '')));
+    $selected = strtolower(trim((string) ($context['selected_direction'] ?? '')));
+    if ($revisionId < 1 || !preg_match('/^[0-9a-f-]{36}$/', $revisionPublicId) || !in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE) || $selected !== $direction) {
+      throw new \InvalidArgumentException('Selected-direction revision requires its exact revision identity and matching a-f direction.');
+    }
+    if ((int) ($context['proof_count'] ?? 0) !== 1) {
+      throw new \InvalidArgumentException('Selected-direction revision must dispatch exactly one proof artifact.');
+    }
+    $directionContract = (array) ($context['direction_contract'] ?? []);
+    if (array_keys($directionContract) !== [$direction]) {
+      throw new \InvalidArgumentException('Selected-direction revision must carry exactly one matching direction contract.');
+    }
+    $revision = $this->database->select('famtastic_proof_revision', 'v')->fields('v', [
+      'id', 'public_id', 'website_request_id', 'prospect_id', 'proof_campaign_id',
+      'direction_id', 'revision_number', 'status', 'notes', 'notes_sha256',
+      'baseline_artifact_id', 'baseline_variant_id', 'baseline_artifact_sha256',
+      'baseline_design_dna_sha256', 'baseline_build_dna_id', 'baseline_build_dna_hash',
+    ])->condition('id', $revisionId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$revision
+      || !hash_equals(strtolower((string) $revision['public_id']), $revisionPublicId)
+      || (int) ($revision['website_request_id'] ?? 0) !== (int) $request['id']
+      || (int) ($revision['prospect_id'] ?? 0) !== (int) $prospect->id()
+      || (int) ($revision['proof_campaign_id'] ?? 0) !== (int) ($request['proof_campaign_id'] ?? 0)
+      || (string) ($revision['direction_id'] ?? '') !== $direction
+      || !in_array((string) ($revision['status'] ?? ''), ['queued', 'waiting_callback'], TRUE)) {
+      throw new \RuntimeException('Selected-direction revision does not match its durable request, campaign, or runnable state.');
+    }
+    if ((string) ($request['selected_proof_direction'] ?? '') !== $direction) {
+      throw new \RuntimeException('Selected-direction revision no longer matches the request selection.');
+    }
+
+    $revisionNumber = (int) ($revision['revision_number'] ?? 0);
+    $canonicalSource = [
+      'website_request_id' => (int) $request['id'],
+      'website_request_public_id' => (string) $request['public_id'],
+      'proof_campaign_id' => (int) $revision['proof_campaign_id'],
+      'revision_public_id' => (string) $revision['public_id'],
+      'revision_number' => $revisionNumber,
+      'selected_direction' => $direction,
+      'direction_id' => $direction,
+    ];
+    $queuedSource = (array) ($context['source_correlation'] ?? []);
+    foreach ($canonicalSource as $key => $value) {
+      if (!array_key_exists($key, $queuedSource) || (string) $queuedSource[$key] !== (string) $value) {
+        throw new \RuntimeException('Selected-direction revision queue payload differs from persisted source correlation at ' . $key . '.');
+      }
+    }
+    if ((int) ($context['proof_campaign_id'] ?? 0) !== $canonicalSource['proof_campaign_id']
+      || (int) ($context['revision_number'] ?? 0) !== $revisionNumber
+      || !hash_equals((string) ($context['website_request_public_id'] ?? ''), (string) $request['public_id'])) {
+      throw new \RuntimeException('Selected-direction revision queue payload does not match the persisted request lineage.');
+    }
+    $notes = (string) $revision['notes'];
+    $notesHash = strtolower((string) $revision['notes_sha256']);
+    if (!preg_match('/^[a-f0-9]{64}$/', $notesHash)
+      || !hash_equals($notesHash, hash('sha256', $notes))
+      || !hash_equals((string) ($context['revision_notes'] ?? ''), $notes)
+      || !hash_equals((string) ($context['revision_notes_sha256'] ?? ''), $notesHash)) {
+      throw new \RuntimeException('Selected-direction revision notes are not the immutable queued notes.');
+    }
+
+    $baselineFields = [
+      'artifact_id' => (int) ($revision['baseline_artifact_id'] ?? 0),
+      'artifact_sha256' => strtolower((string) ($revision['baseline_artifact_sha256'] ?? '')),
+      'design_dna_sha256' => strtolower((string) ($revision['baseline_design_dna_sha256'] ?? '')),
+      'build_dna_id' => (string) ($revision['baseline_build_dna_id'] ?? ''),
+      'build_dna_hash' => strtolower((string) ($revision['baseline_build_dna_hash'] ?? '')),
+    ];
+    $queuedBaseline = (array) ($context['baseline'] ?? []);
+    if ($baselineFields['artifact_id'] < 1 || $baselineFields['build_dna_id'] === '') {
+      throw new \RuntimeException('Selected-direction revision is missing its immutable baseline references.');
+    }
+    foreach (['artifact_sha256', 'design_dna_sha256', 'build_dna_hash'] as $key) {
+      if (!preg_match('/^[a-f0-9]{64}$/', $baselineFields[$key])) {
+        throw new \RuntimeException('Selected-direction revision has an invalid baseline ' . $key . '.');
+      }
+    }
+    foreach ($baselineFields as $key => $value) {
+      if (!array_key_exists($key, $queuedBaseline) || (string) $queuedBaseline[$key] !== (string) $value) {
+        throw new \RuntimeException('Selected-direction revision queue payload differs from its persisted baseline at ' . $key . '.');
+      }
+    }
+    $baselineArtifact = $this->database->select('famtastic_proof_revision_artifact', 'a')->fields('a', [
+      'id', 'revision_id', 'artifact_role', 'direction_id', 'artifact_path',
+      'artifact_sha256', 'design_dna_sha256', 'build_dna_id', 'build_dna_hash', 'visibility',
+    ])->condition('id', $baselineFields['artifact_id'])->range(0, 1)->execute()->fetchAssoc();
+    if (!$baselineArtifact
+      || (int) ($baselineArtifact['revision_id'] ?? 0) !== $revisionId
+      || (string) ($baselineArtifact['artifact_role'] ?? '') !== 'baseline'
+      || (string) ($baselineArtifact['direction_id'] ?? '') !== $direction
+      || !hash_equals((string) ($baselineArtifact['artifact_sha256'] ?? ''), $baselineFields['artifact_sha256'])
+      || !hash_equals((string) ($baselineArtifact['design_dna_sha256'] ?? ''), $baselineFields['design_dna_sha256'])
+      || !hash_equals((string) ($baselineArtifact['build_dna_id'] ?? ''), $baselineFields['build_dna_id'])
+      || !hash_equals((string) ($baselineArtifact['build_dna_hash'] ?? ''), $baselineFields['build_dna_hash'])) {
+      throw new \RuntimeException('Selected-direction revision baseline artifact does not match its immutable revision record.');
+    }
+    $baselineBuild = $this->telemetry->loadBuildDna($baselineFields['build_dna_id']);
+    $baselineManifest = (array) ($baselineBuild['manifest'] ?? []);
+    $baselineRun = (array) ($baselineManifest['run'] ?? []);
+    if (!$baselineBuild
+      || ($baselineBuild['record']['status'] ?? '') !== 'completed'
+      || !hash_equals($baselineFields['build_dna_hash'], (string) ($baselineBuild['record']['artifact_checksum'] ?? ''))
+      || ($baselineManifest['classification'] ?? '') !== 'production_proof_completion'
+      || ($baselineRun['completion_state'] ?? '') !== 'provider_completed'
+      || ($baselineManifest['recipe']['routine'] ?? '') !== self::ROUTINE
+      || (int) ($baselineRun['proof_campaign_id'] ?? 0) !== $canonicalSource['proof_campaign_id']) {
+      throw new \RuntimeException('Selected-direction revision requires a completed immutable baseline Build DNA record.');
+    }
+
+    try {
+      $intake = json_decode((string) $request['intake_data'], TRUE, 512, JSON_THROW_ON_ERROR);
+    }
+    catch (\Throwable) {
+      throw new \RuntimeException('Selected-direction revision has no readable normalized website request.');
+    }
+    if (!is_array($intake) || ($intake['schema_version'] ?? '') !== 'website_discovery_v3') {
+      throw new \RuntimeException('Selected-direction revision requires a normalized website_discovery_v3 request.');
+    }
+    $facts = [];
+    foreach (self::PORTAL_INTAKE_KEYS as $key) {
+      if (array_key_exists($key, $intake) && (is_scalar($intake[$key]) || is_array($intake[$key]))) {
+        $facts[$key] = $this->sanitizeOutboundValue($intake[$key]);
+      }
+    }
+    $baselineReference = $this->revisionBaselineReference((string) $baselineArtifact['artifact_path'], $baselineFields['artifact_sha256']);
+    $sanitizedNotes = $this->redactContactValues($notes);
+    $facts['revision_notes'] = $sanitizedNotes;
+    // `revision_notes_sha256` remains the source-value hash in lineage. The
+    // remote worker gets only the redacted text plus its own reproducible hash.
+    $facts['revision_notes_sha256'] = $notesHash;
+    $facts['revision_notes_sanitized_sha256'] = hash('sha256', $sanitizedNotes);
+    $facts['revision_baseline'] = [
+      'direction_id' => $direction,
+      'artifact_sha256' => $baselineFields['artifact_sha256'],
+      'design_dna_sha256' => $baselineFields['design_dna_sha256'],
+      'build_dna_id' => $baselineFields['build_dna_id'],
+      'build_dna_hash' => $baselineFields['build_dna_hash'],
+      // The original artifact hash remains the immutable source evidence.
+      // Only this deterministic, inactive render reference crosses the
+      // signed provider boundary; a working proof may legitimately include
+      // scripts that must never execute in a remote worker preview context.
+      'sanitized_reference_sha256' => $baselineReference['sha256'],
+      'html' => $baselineReference['html'],
+    ];
+    $lineage = [
+      'revision_id' => $revisionId,
+      'revision_public_id' => (string) $revision['public_id'],
+      'revision_number' => $revisionNumber,
+      'selected_direction' => $direction,
+      'baseline_artifact_id' => $baselineFields['artifact_id'],
+      'baseline_variant_id' => (int) ($revision['baseline_variant_id'] ?? 0),
+      'baseline_artifact_sha256' => $baselineFields['artifact_sha256'],
+      'baseline_design_dna_sha256' => $baselineFields['design_dna_sha256'],
+      'baseline_build_dna_id' => $baselineFields['build_dna_id'],
+      'baseline_build_dna_hash' => $baselineFields['build_dna_hash'],
+      'revision_notes_sha256' => $notesHash,
+      'revision_notes_sanitized_sha256' => hash('sha256', $sanitizedNotes),
+      'baseline_sanitized_reference_sha256' => $baselineReference['sha256'],
+    ];
+    return $common + [
+      'type' => 'authenticated_website_request',
+      'proof_phase' => 'revision',
+      'website_request_id' => $canonicalSource['website_request_id'],
+      'website_request_public_id' => $canonicalSource['website_request_public_id'],
+      'proof_campaign_id' => $canonicalSource['proof_campaign_id'],
+      'revision_id' => $revisionId,
+      'revision_public_id' => $canonicalSource['revision_public_id'],
+      'revision_number' => $revisionNumber,
+      'selected_direction' => $direction,
+      'direction_id' => $direction,
+      'lineage' => $lineage,
+      'lineage_hash' => hash('sha256', $this->json($lineage)),
+      'facts' => $facts,
+    ];
+  }
+
+  /**
+   * Returns a deterministic inactive render reference for a baseline artifact.
+   *
+   * The stored source bytes remain cryptographically bound by artifact_sha256.
+   * A revision can therefore use a real working proof as its baseline without
+   * asking a remote provider to execute scripts, embeds, event handlers, or
+   * javascript: URLs found in that proof. The sanitized-reference SHA-256 is
+   * included in lineage so the exact visible reference is reproducible.
+   *
+   * @return array{html:string,sha256:string}
+   */
+  private function revisionBaselineReference(string $storedPath, string $expectedHash): array {
+    $workspaceRoot = rtrim((string) realpath(dirname(\Drupal::root())), DIRECTORY_SEPARATOR);
+    $proofRoot = rtrim((string) realpath(\Drupal::root() . '/proofs'), DIRECTORY_SEPARATOR);
+    $candidate = str_starts_with($storedPath, DIRECTORY_SEPARATOR)
+      ? $storedPath
+      : $workspaceRoot . DIRECTORY_SEPARATOR . ltrim($storedPath, DIRECTORY_SEPARATOR);
+    $resolved = realpath($candidate);
+    if ($workspaceRoot === '' || $proofRoot === '' || $resolved === FALSE || !str_starts_with($resolved, $proofRoot . DIRECTORY_SEPARATOR) || !is_file($resolved)) {
+      throw new \RuntimeException('Selected-direction revision baseline artifact is unavailable for dispatch.');
+    }
+    $html = file_get_contents($resolved);
+    if ($html === FALSE || $html === '' || strlen($html) > 500000 || !hash_equals($expectedHash, hash('sha256', $html))) {
+      throw new \RuntimeException('Selected-direction revision baseline artifact does not match its immutable hash.');
+    }
+    $sanitized = preg_replace('#<(script|iframe|object|embed)\b[^>]*>.*?</\1\s*>#is', '', $html);
+    $sanitized = is_string($sanitized) ? preg_replace('#<base\b[^>]*>#is', '', $sanitized) : NULL;
+    $sanitized = is_string($sanitized) ? preg_replace('/\s+on[a-z]+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $sanitized) : NULL;
+    $sanitized = is_string($sanitized) ? preg_replace('/\s+(?:href|src|action|formaction)\s*=\s*(?:"\s*javascript:[^"]*"|\'\s*javascript:[^\']*\'|javascript:[^\s>]+)/i', '', $sanitized) : NULL;
+    // The source contract allows only a contact hash. A real proof can carry
+    // its public business phone/email in visible markup, so redact those from
+    // the remote render reference while retaining its own deterministic hash.
+    $sanitized = is_string($sanitized) ? $this->redactContactValues($sanitized) : NULL;
+    if (!is_string($sanitized) || trim($sanitized) === '') {
+      throw new \RuntimeException('Selected-direction revision baseline cannot be sanitized into a usable render reference.');
+    }
+    return ['html' => $sanitized, 'sha256' => hash('sha256', $sanitized)];
+  }
+
+  /** Removes plain email/phone values before source facts cross a provider boundary. */
+  private function redactContactValues(string $value): string {
+    $redacted = preg_replace('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i', '[redacted-email]', $value);
+    $redacted = is_string($redacted) ? preg_replace('/(?<![\w+])(?:\+?1[.\s-]?)?(?:\(?\d{3}\)?[.\s-]?)\d{3}[.\s-]?\d{4}(?!\w)/', '[redacted-phone]', $redacted) : NULL;
+    if (!is_string($redacted)) {
+      throw new \RuntimeException('Revision source contact redaction failed.');
+    }
+    return $redacted;
+  }
+
+  /** Recursively redacts values while preserving the submitted fact shape. */
+  private function sanitizeOutboundValue(mixed $value): mixed {
+    if (is_string($value)) {
+      return $this->redactContactValues($value);
+    }
+    if (is_array($value)) {
+      $sanitized = [];
+      foreach ($value as $key => $child) {
+        $sanitized[$key] = $this->sanitizeOutboundValue($child);
+      }
+      return $sanitized;
+    }
+    return $value;
   }
 
   /** Returns only the immutable detailed snapshot supplied by lineage. */
@@ -913,6 +1296,9 @@ final class ProofRunnerContractService {
     $walk = function (mixed $value, string $key = '') use (&$walk, $forbidden): void {
       if (in_array(mb_strtolower($key), $forbidden, TRUE)) {
         throw new \InvalidArgumentException('Proof runner contracts may not contain raw contact or credential fields.');
+      }
+      if (is_string($value) && (preg_match('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i', $value) || preg_match('/(?<![\w+])(?:\+?1[.\s-]?)?(?:\(?\d{3}\)?[.\s-]?)\d{3}[.\s-]?\d{4}(?!\w)/', $value))) {
+        throw new \InvalidArgumentException('Proof runner contracts may not contain raw contact values.');
       }
       if (is_array($value)) {
         foreach ($value as $childKey => $childValue) {

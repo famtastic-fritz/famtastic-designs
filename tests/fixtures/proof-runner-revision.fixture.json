@@ -1,0 +1,92 @@
+{
+  "schema": "famtastic.proof-runner-request.v1",
+  "contract_version": "1.0.0",
+  "build_id": "proof-runner-revision-fixture-20260822-001",
+  "idempotency_key": "proof-runner:fixture:revision:20260822-001",
+  "routine": "website_proof.generate.v1",
+  "created_at": "2026-08-22T12:00:00Z",
+  "classification": "local_contract_fixture",
+  "source": {
+    "type": "authenticated_website_request",
+    "prospect_id": 4242,
+    "contact_hash": "1c070f15c60bc13dd470f3648c4e55a0adca9f0a30f0ae0b21e2456134872814",
+    "proof_phase": "revision",
+    "website_request_id": 177,
+    "website_request_public_id": "request-fixture-opaque-177",
+    "proof_campaign_id": 199,
+    "revision_id": 21,
+    "revision_public_id": "c7d97a6d-8417-4fe3-b459-08aebb00ef42",
+    "revision_number": 1,
+    "selected_direction": "f",
+    "direction_id": "f",
+    "lineage_hash": "3ed2dbed390e1360f4aa4d6bf7a98e8fd19e5f549a2ec703eb3f09f2ca8c5f66",
+    "lineage": {
+      "revision_id": 21,
+      "revision_public_id": "c7d97a6d-8417-4fe3-b459-08aebb00ef42",
+      "revision_number": 1,
+      "selected_direction": "f",
+      "baseline_artifact_id": 77,
+      "baseline_artifact_sha256": "61866fb249f2392fda4bdb61b511483dc2fe15532327731106f1673451033a60",
+      "baseline_design_dna_sha256": "cff9e376841fdd8e1f02ee4f03da5107a24799b45c07a5316de423c963a21bc7",
+      "baseline_build_dna_id": "proof-runner-refined-fixture-20260822-001",
+      "baseline_build_dna_hash": "4a6a75bdce19cf7f8f4104063c4f2c44c1ec00b69899d0f7e0b3d4531b8e0084",
+      "revision_notes_sha256": "9560efb7f3d98aaf9ed999c8e1cd8d47260c4a41a6d3a96c65af35c96a67e0bb",
+      "revision_notes_sanitized_sha256": "d81a440644641b3eb4a70c213f0668f1d45bda58ff0ba56286ad2e176980803f",
+      "baseline_sanitized_reference_sha256": "0fbb90a23d7978372723cce80a0ae00ff8e69d2eff8e178f238ce8f5145b8e91"
+    },
+    "facts": {
+      "primary_goal": "Refine the selected campaign direction without changing the original six proof artifacts.",
+      "revision_notes": "Strengthen the contrast and preserve the existing conversion path.",
+      "revision_baseline": {
+        "direction_id": "f",
+        "artifact_sha256": "61866fb249f2392fda4bdb61b511483dc2fe15532327731106f1673451033a60",
+        "sanitized_reference_sha256": "0fbb90a23d7978372723cce80a0ae00ff8e69d2eff8e178f238ce8f5145b8e91",
+        "html": "<main><h1>Immutable baseline render reference</h1></main>"
+      }
+    }
+  },
+  "profile": {
+    "id": "portal_selected_direction_revision.v1",
+    "proof_count": 1,
+    "directions": {
+      "f": {
+        "name": "Selected direction revision",
+        "intent": "Refine only the selected direction using the stored customer notes. Do not alter, regenerate, or replace any other direction."
+      }
+    },
+    "customer_visibility": "owner_review_only"
+  },
+  "build_class": "low",
+  "provider_preflight": {
+    "status": "local_contract_fixture_validated",
+    "ready": true,
+    "transport": "local_contract_fixture",
+    "classification": "local_contract_fixture",
+    "reason": "Fixture only; no revision candidate may be generated.",
+    "provider": { "id": "deterministic_contract_fixture", "model_status": "not_applicable" }
+  },
+  "mutation_policy": {
+    "customer_email": "forbidden",
+    "outbox_enqueue": "forbidden",
+    "checkout": "forbidden",
+    "payment": "forbidden",
+    "domain_purchase": "forbidden",
+    "production_publish": "forbidden"
+  },
+  "return_contract": {
+    "callback_required": true,
+    "callback_must_correlate_build_id": "proof-runner-revision-fixture-20260822-001",
+    "callback_must_include_complete_build_dna": true,
+    "callback_must_include_provider_preflight_receipts": true,
+    "callback_must_include_browser_qa": true,
+    "callback_must_include_independent_visual_review": true,
+    "callback_variants_must_include_sha256": true,
+    "callback_build_dna_must_include_per_direction_html_hashes": true,
+    "final_completion_contract": {
+      "classification": "production_proof_completion",
+      "run_completion_state": "provider_completed",
+      "local_fixture_forbidden": true
+    },
+    "owner_review_required_before_customer_visibility": true
+  }
+}

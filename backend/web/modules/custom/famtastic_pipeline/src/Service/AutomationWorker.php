@@ -22,6 +22,8 @@ final class AutomationWorker {
     private readonly HostingLifecycleService $hosting,
     private readonly CustomerPortalService $portal,
     private readonly PublicPreviewDeliveryService $previews,
+    private readonly ProofRevisionService $revisions,
+    private readonly SiteStudioProofClient $studioClient,
   ) {}
 
   /**
@@ -56,6 +58,7 @@ final class AutomationWorker {
       'proof.generate' => $this->generateProofs($job),
       'proof.showcase.generate' => $this->generateShowcaseProofs($job),
       'proof.refined.generate' => $this->generateRefinedSixJob($job),
+      'proof.revision.generate' => $this->generateRevisionProof($job),
       'proof.revision.requested' => $this->recordRevisionRequest($job),
       'outreach.prepare' => $this->prepareOutreach($job),
       'outreach.send' => $this->sendOutreach($job),
@@ -355,6 +358,91 @@ final class AutomationWorker {
       'proof_phase' => 'refined_six',
       'profile_id' => 'portal_refined_six.v1',
       'proof_runner_build_id' => $runner['build_id'] ?? NULL,
+    ];
+  }
+
+  /**
+   * Dispatches exactly one selected-direction revision through the canonical
+   * proof runner. The original campaign stays intact: its a-f artifacts are
+   * the immutable baseline, while the revision service owns the isolated
+   * candidate and its owner/customer notification gates.
+   */
+  private function generateRevisionProof(array $job): array {
+    $context = (array) ($job['payload'] ?? []);
+    if ((string) ($context['routine'] ?? '') !== ProofRunnerContractService::ROUTINE
+      || (string) ($context['proof_phase'] ?? '') !== 'revision'
+      || (string) ($context['requested_profile_id'] ?? '') !== 'portal_selected_direction_revision.v1'
+      || (string) ($context['delivery_class'] ?? '') !== 'authenticated_revision') {
+      throw new \RuntimeException('Revision proof jobs must use the canonical selected-direction runner contract.');
+    }
+    $requestId = (int) ($context['website_request_id'] ?? 0);
+    $campaignId = (int) ($context['proof_campaign_id'] ?? 0);
+    $revisionPublicId = trim((string) ($context['revision_public_id'] ?? ''));
+    $prospectId = (int) ($job['prospect_id'] ?? $context['prospect_id'] ?? 0);
+    if ($requestId < 1 || $campaignId < 1 || $revisionPublicId === '' || $prospectId < 1) {
+      throw new \RuntimeException('Revision proof generation requires exact request, campaign, revision, and prospect identities.');
+    }
+    /** @var \Drupal\famtastic_pipeline\Entity\Prospect|null $prospect */
+    $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
+    /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign|null $campaign */
+    $campaign = $this->entityTypeManager->getStorage('proof_campaign')->load($campaignId);
+    if (!$prospect || !$campaign || (int) $campaign->get('prospect_id')->target_id !== (int) $prospect->id()) {
+      throw new \RuntimeException('Revision proof source does not resolve to its exact prospect and proof campaign.');
+    }
+
+    // Normalize against the durable revision, request, baseline bytes, and
+    // baseline Build DNA before any provider call. A retry may only resume a
+    // preflight already linked to this exact revision—not a latest campaign.
+    $existing = $this->proofRunner->existingCampaignForSource($prospect, $context);
+    if ($existing) {
+      if ((int) $existing['campaign']->id() !== $campaignId) {
+        throw new \RuntimeException('Revision runner source is linked to a different proof campaign.');
+      }
+      $runner = $this->proofRunner->resumeLinkedHandoffForSource($prospect, $context, $campaign);
+      if (!$runner) {
+        throw new \RuntimeException('Revision runner has an existing campaign but no resumable immutable preflight handoff.');
+      }
+    }
+    else {
+      $runner = $this->proofRunner->prepare($prospect, $context, $job);
+      if ($this->proofRunner->isLocalContractFixture($runner)) {
+        return [
+          'status' => 'local_contract_fixture',
+          'build_id' => $runner['build_id'],
+          'contract_uri' => $runner['contract_uri'],
+          'build_dna_uri' => $runner['build_dna_uri'],
+          'revision_public_id' => $revisionPublicId,
+          'message' => 'Fixture validated only; no revision candidate, email, payment, or publication was created.',
+        ];
+      }
+    }
+    if (!$this->studioClient->isRemote()) {
+      throw new \RuntimeException('Selected-direction revision is preflight-ready but no signed remote proof provider is configured.');
+    }
+
+    $context = $this->proofRunner->applyProfileToContext($context, $runner);
+    // Link before the first HTTP request, closing the fast-callback race while
+    // keeping the original campaign proof-ready for its baseline artifacts.
+    // A resumed run already has this immutable linkage and reuses its original
+    // provider idempotency key rather than minting a competing build.
+    $context['proof_runner'] = $existing
+      ? (array) $runner['handoff']
+      : $this->proofRunner->linkCampaignHandoff((array) $runner['handoff'], $campaign);
+    $providerJobId = $this->studioClient->dispatch($prospect, $campaign, $context);
+    $this->revisions->markRunnerDispatched(
+      $revisionPublicId,
+      $providerJobId,
+      (string) $runner['build_id'],
+      (string) $context['proof_runner']['contract_sha256'],
+    );
+    return [
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'status' => 'waiting_callback',
+      'studio_job_id' => $providerJobId,
+      'proof_phase' => 'revision',
+      'profile_id' => 'portal_selected_direction_revision.v1',
+      'revision_public_id' => $revisionPublicId,
+      'proof_runner_build_id' => (string) $runner['build_id'],
     ];
   }
 

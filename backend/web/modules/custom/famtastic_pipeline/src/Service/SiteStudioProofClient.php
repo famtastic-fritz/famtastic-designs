@@ -44,6 +44,7 @@ final class SiteStudioProofClient {
     $runnerBound = $proofRunner !== [];
     $runnerProfile = (string) ($runnerContract['profile']['id'] ?? '');
     $refinedSix = $runnerBound && $runnerProfile === 'portal_refined_six.v1';
+    $selectedDirectionRevision = $runnerBound && $runnerProfile === 'portal_selected_direction_revision.v1';
     $directions = (array) ($context['directions'] ?? ProofCampaignService::CORE_DIRECTIONS);
     $directionContract = (array) ($context['direction_contract'] ?? ProofCampaignService::CORE_DIRECTION_CONTRACT);
     $directionIds = array_keys($directions);
@@ -57,8 +58,11 @@ final class SiteStudioProofClient {
     $refinedIds = ['a', 'b', 'c', 'd', 'e', 'f'];
     $validThreePack = count($directions) === 3 && in_array($directionIds, $allowedDirectionSets, TRUE);
     $validRefinedSix = $refinedSix && count($directions) === 6 && $directionIds === $refinedIds;
-    if ($directionIds !== $contractIds || (!$validThreePack && !$validRefinedSix)) {
-      throw new \InvalidArgumentException('A Site Studio proof dispatch requires the exact runner-bound a/b/c, d/e/f, or refined a-f direction contract.');
+    $validRevision = $selectedDirectionRevision && count($directions) === 1
+      && count($directionIds) === 1
+      && in_array($directionIds[0], $refinedIds, TRUE);
+    if ($directionIds !== $contractIds || (!$validThreePack && !$validRefinedSix && !$validRevision)) {
+      throw new \InvalidArgumentException('A Site Studio proof dispatch requires the exact runner-bound a/b/c, d/e/f, refined a-f, or one selected-direction revision contract.');
     }
     $resolvedDirections = [];
     foreach ($directionContract as $directionId => $contract) {

@@ -7,6 +7,7 @@ namespace Drupal\famtastic_pipeline\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
+use Drupal\famtastic_pipeline\Service\ProofRevisionService;
 use Drupal\famtastic_pipeline\Service\ProofRunnerCallbackVerifier;
 use Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,6 +26,7 @@ final class SiteStudioCallbackController extends ControllerBase {
     private readonly ProofCampaignService $proofCampaigns,
     private readonly SiteStudioBuildPacketService $buildPackets,
     private readonly ProofRunnerCallbackVerifier $proofRunnerCallbacks,
+    private readonly ProofRevisionService $proofRevisions,
   ) {}
 
   /**
@@ -35,6 +37,7 @@ final class SiteStudioCallbackController extends ControllerBase {
       $container->get('famtastic_pipeline.proof_campaign_service'),
       $container->get('famtastic_pipeline.site_studio_build_packets'),
       $container->get('famtastic_pipeline.proof_runner_callback_verifier'),
+      $container->get('famtastic_pipeline.proof_revisions'),
     );
   }
 
@@ -72,13 +75,38 @@ final class SiteStudioCallbackController extends ControllerBase {
       // preflight record. It cannot advance without a complete, source-bound
       // Build DNA manifest and the required QA/review evidence.
       $runnerVerification = $this->proofRunnerCallbacks->verify($data);
-      $result = $this->proofCampaigns->acceptCallback(
-        (string) ($data['event_id'] ?? ''),
-        (string) ($data['campaign_id'] ?? ''),
-        (string) ($data['job_id'] ?? ''),
-        is_array($data['variants'] ?? NULL) ? $data['variants'] : [],
-        $runnerVerification,
-      );
+      if (($runnerVerification['profile_id'] ?? '') === 'portal_selected_direction_revision.v1') {
+        $source = (array) ($runnerVerification['source_correlation'] ?? []);
+        $variants = is_array($data['variants'] ?? NULL) ? $data['variants'] : [];
+        if (count($variants) !== 1 || empty($source['revision_public_id'])) {
+          throw new \InvalidArgumentException('Selected-direction revision callback requires exactly one variant and its immutable revision source.');
+        }
+        // Do not call ProofCampaignService here: the original a-f campaign is
+        // immutable revision baseline. The revision service writes only a
+        // separate owner-review candidate and its durable outbox records.
+        $revision = $this->proofRevisions->acceptVerifiedCandidate(
+          (string) $source['revision_public_id'],
+          (string) ($data['event_id'] ?? ''),
+          (string) ($data['job_id'] ?? ''),
+          $variants[0],
+          $runnerVerification,
+        );
+        $result = [
+          'newly_processed' => TRUE,
+          'variants' => $variants,
+          'revision_public_id' => (string) ($revision['public_id'] ?? $source['revision_public_id']),
+          'revision_status' => (string) ($revision['status'] ?? 'owner_review'),
+        ];
+      }
+      else {
+        $result = $this->proofCampaigns->acceptCallback(
+          (string) ($data['event_id'] ?? ''),
+          (string) ($data['campaign_id'] ?? ''),
+          (string) ($data['job_id'] ?? ''),
+          is_array($data['variants'] ?? NULL) ? $data['variants'] : [],
+          $runnerVerification,
+        );
+      }
     }
     catch (\InvalidArgumentException $e) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_callback', 'message' => $e->getMessage()], 422);
@@ -87,6 +115,8 @@ final class SiteStudioCallbackController extends ControllerBase {
       'ok' => TRUE,
       'newly_processed' => $result['newly_processed'],
       'variant_count' => count($result['variants']),
+      'revision_public_id' => $result['revision_public_id'] ?? NULL,
+      'revision_status' => $result['revision_status'] ?? NULL,
       'proof_runner' => $runnerVerification,
     ]);
   }

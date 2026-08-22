@@ -278,6 +278,12 @@ final class BuildTelemetryService {
       'intake_id',
       'website_request_id',
       'website_request_public_id',
+      'proof_campaign_id',
+      'revision_id',
+      'revision_public_id',
+      'revision_number',
+      'selected_direction',
+      'direction_id',
     ];
     foreach ($rows as $row) {
       try {

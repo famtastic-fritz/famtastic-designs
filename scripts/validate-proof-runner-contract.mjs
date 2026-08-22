@@ -44,10 +44,11 @@ const validate = (contract) => {
   if (!contract.source || !["public_solution_finder_intake", "authenticated_website_request"].includes(contract.source.type)) fail("Source type is not supported");
   if (!Number.isInteger(contract.source.prospect_id) || contract.source.prospect_id < 1) fail("Source prospect_id is required");
   if (!/^[a-f0-9]{64}$/.test(contract.source.contact_hash || "")) fail("Source contact hash is required");
-  if (!contract.profile || !["public_initial.v1", "portal_initial.v1", "portal_showcase.v1", "portal_refined_six.v1"].includes(contract.profile.id)) fail("Known proof profile is required");
+  if (!contract.profile || !["public_initial.v1", "portal_initial.v1", "portal_showcase.v1", "portal_refined_six.v1", "portal_selected_direction_revision.v1"].includes(contract.profile.id)) fail("Known proof profile is required");
   const refinedSix = contract.profile.id === "portal_refined_six.v1";
-  if (contract.profile.proof_count !== (refinedSix ? 6 : 3) || contract.profile.customer_visibility !== "owner_review_only") fail("Fixture proof count or owner-review gate is wrong");
-  const expectedDirections = refinedSix ? ["a", "b", "c", "d", "e", "f"] : (contract.profile.id === "portal_showcase.v1" ? ["d", "e", "f"] : ["a", "b", "c"]);
+  const revision = contract.profile.id === "portal_selected_direction_revision.v1";
+  if (contract.profile.proof_count !== (refinedSix ? 6 : (revision ? 1 : 3)) || contract.profile.customer_visibility !== "owner_review_only") fail("Fixture proof count or owner-review gate is wrong");
+  const expectedDirections = refinedSix ? ["a", "b", "c", "d", "e", "f"] : (revision ? [contract.source.direction_id] : (contract.profile.id === "portal_showcase.v1" ? ["d", "e", "f"] : ["a", "b", "c"]));
   const directions = Object.keys(contract.profile.directions || {}).sort();
   if (directions.join(",") !== expectedDirections.join(",")) fail("Proof profile must retain the exact routine direction set");
   expectedDirections.forEach((id) => {
@@ -71,6 +72,24 @@ const validate = (contract) => {
     ["detailed_intake_snapshot_sha256", "consented_asset_manifest_sha256", "parent_public_build_dna_id", "parent_public_build_dna_hash"].forEach((field) => {
       if (!/^[a-f0-9]{64}$/.test(lineage[field] || "") && field !== "parent_public_build_dna_id") fail(`Refined six lineage requires SHA-256 ${field}`);
       if (field === "parent_public_build_dna_id") requireString(lineage[field], `source.lineage.${field}`);
+    });
+  }
+  if (revision) {
+    if (contract.source.proof_phase !== "revision") fail("Revision fixture requires proof_phase=revision");
+    ["website_request_id", "proof_campaign_id", "revision_id", "revision_number"].forEach((field) => {
+      if (!Number.isInteger(contract.source[field]) || contract.source[field] < 1) fail(`Revision source requires ${field}`);
+    });
+    ["website_request_public_id", "revision_public_id"].forEach((field) => requireString(contract.source[field], `source.${field}`));
+    if (!/^[a-f]$/.test(contract.source.direction_id || "") || contract.source.selected_direction !== contract.source.direction_id) fail("Revision source requires one matching selected direction a-f");
+    if (!/^[a-f0-9]{64}$/.test(contract.source.lineage_hash || "")) fail("Revision source requires lineage_hash");
+    const lineage = contract.source.lineage;
+    if (!lineage || typeof lineage !== "object") fail("Revision source requires immutable baseline lineage");
+    ["revision_id", "revision_number", "baseline_artifact_id"].forEach((field) => {
+      if (!Number.isInteger(lineage[field]) || lineage[field] < 1) fail(`Revision lineage requires ${field}`);
+    });
+    ["revision_public_id", "baseline_build_dna_id"].forEach((field) => requireString(lineage[field], `source.lineage.${field}`));
+    ["baseline_artifact_sha256", "baseline_design_dna_sha256", "baseline_build_dna_hash", "revision_notes_sha256", "revision_notes_sanitized_sha256", "baseline_sanitized_reference_sha256"].forEach((field) => {
+      if (!/^[a-f0-9]{64}$/.test(lineage[field] || "")) fail(`Revision lineage requires SHA-256 ${field}`);
     });
   }
   if (!contract.provider_preflight || typeof contract.provider_preflight.ready !== "boolean") fail("Provider preflight result is required");

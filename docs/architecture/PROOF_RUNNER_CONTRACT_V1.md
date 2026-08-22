@@ -14,7 +14,7 @@ payment, domain work, or publication.
 
 ## Profiles and proof phases
 
-One routine has four immutable profiles:
+One routine has five immutable profiles:
 
 | Proof phase | Profile | Direction IDs | Customer visibility |
 |---|---|---|---|
@@ -22,6 +22,7 @@ One routine has four immutable profiles:
 | Initial portal request | `portal_initial.v1` | `a`, `b`, `c` | Owner review only |
 | Legacy append-only showcase | `portal_showcase.v1` | `d`, `e`, `f` | Owner review only |
 | Detailed portal refinement | `portal_refined_six.v1` | `a`, `b`, `c`, `d`, `e`, `f` | Owner review only |
+| Selected-direction revision | `portal_selected_direction_revision.v1` | exactly one selected `a`–`f` | Owner review only |
 
 `portal_showcase.v1` is readable for historical records but is not used for a
 new detailed-intake delivery. The new detailed run is still
@@ -29,6 +30,15 @@ new detailed-intake delivery. The new detailed run is still
 creates a **brand-new proof campaign** and requires exactly one fresh `a-f`
 callback. It cannot reuse public `a/b/c` artifacts or append `d/e/f` to a
 public campaign.
+
+A revision is also `website_proof.generate.v1`, with
+`source.proof_phase=revision`. It is not a replacement proof campaign. Its
+source contract binds the exact account request, existing refined campaign,
+revision ID/version, selected direction, customer-note hash, original baseline
+artifact/design/Build DNA hashes, and a deterministic inactive baseline render
+reference hash. The existing `a-f` artifacts are never overwritten. A verified
+callback writes a separate candidate only; owner approval remains the gate for
+customer visibility and durable outbox notifications.
 
 ## Source binding and dispatch
 
@@ -46,6 +56,13 @@ public campaign.
   top-level Build DNA `lineage`. Those refined values are read from the
   persisted request; a queue payload may corroborate them but cannot replace
   them with alternative snapshot bytes or hashes.
+- Revision lane: an exact durable revision row and its selected direction must
+  agree with the authenticated request. The runner rechecks the original
+  artifact bytes against its SHA-256 and produces an inactive render reference
+  (active tags, handlers, `javascript:` URLs, and visible phone/email values
+  removed) for the remote worker. Both original and sanitized-reference hashes
+  are recorded in Build DNA lineage. A retry resumes the same bound build ID and provider
+  idempotency key rather than minting a competing revision run.
 - A contact hash may correlate delivery; raw email, phone, credentials, and
   Drupal `private://` references may not leave the canonical envelope.
 
@@ -126,6 +143,6 @@ node tests/proof-runner-contract.test.mjs
 ```
 
 This proves contract shape and the fixture's declared non-mutation policy. It
-checks both the public three-pack and detailed refined six-pack contract
-shapes. It does not claim a live provider run, customer email, payment, or
-production proof delivery.
+checks the public three-pack, detailed refined six-pack, and one-direction
+revision contract shapes. It does not claim a live provider run, customer
+email, payment, or production proof delivery.

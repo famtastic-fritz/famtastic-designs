@@ -124,7 +124,7 @@ final class ProofRunnerCallbackVerifier {
     if (($run['source_type'] ?? '') !== ($pendingRun['source_type'] ?? '')) {
       throw new \InvalidArgumentException('Proof callback Build DNA source type does not match the prepared contract.');
     }
-    foreach (['prospect_id', 'type', 'proof_phase', 'lineage_hash', 'source_preview_delivery_id', 'public_preview_delivery_id', 'parent_public_proof_campaign_id', 'parent_public_campaign_key', 'parent_public_build_dna_id', 'parent_public_build_dna_hash', 'intake_id', 'website_request_id', 'website_request_public_id'] as $key) {
+    foreach (['prospect_id', 'type', 'proof_phase', 'lineage_hash', 'source_preview_delivery_id', 'public_preview_delivery_id', 'parent_public_proof_campaign_id', 'parent_public_campaign_key', 'parent_public_build_dna_id', 'parent_public_build_dna_hash', 'intake_id', 'website_request_id', 'website_request_public_id', 'proof_campaign_id', 'revision_id', 'revision_public_id', 'revision_number', 'selected_direction', 'direction_id'] as $key) {
       if (array_key_exists($key, $expectedSource) && (string) ($actualSource[$key] ?? '') !== (string) $expectedSource[$key]) {
         throw new \InvalidArgumentException('Proof callback Build DNA source correlation differs at ' . $key . '.');
       }

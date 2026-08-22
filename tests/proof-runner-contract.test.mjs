@@ -11,6 +11,7 @@ try {
   const fixtures = [
     ["public-three", join(root, "tests/fixtures/proof-runner-contract.fixture.json"), 3],
     ["detailed-refined-six", join(root, "tests/fixtures/proof-runner-refined-six.fixture.json"), 6],
+    ["selected-direction-revision", join(root, "tests/fixtures/proof-runner-revision.fixture.json"), 1],
   ];
   for (const [name, fixture, expectedCount] of fixtures) {
     const output = join(temporary, `${name}-receipt.json`);
@@ -19,11 +20,14 @@ try {
     const receipt = JSON.parse(readFileSync(output, "utf8"));
     if (receipt.classification !== "local_contract_fixture" || receipt.status !== "local_contract_fixture_validated") throw new Error(`${name}: fixture receipt classification is wrong`);
     if (expectedCount === 6 && receipt.profile_id !== "portal_refined_six.v1") throw new Error("refined fixture did not preserve its profile");
+    if (expectedCount === 1 && receipt.profile_id !== "portal_selected_direction_revision.v1") throw new Error("revision fixture did not preserve its profile");
     for (const [action, occurred] of Object.entries(receipt.mutations)) if (occurred) throw new Error(`${name}: fixture mutated ${action}`);
   }
   const callbackEvidence = spawnSync("php", [join(root, "tests/proof-runner-callback-evidence.test.php")], { encoding: "utf8" });
   if (callbackEvidence.status !== 0) throw new Error(callbackEvidence.stderr || callbackEvidence.stdout);
-  process.stdout.write("PASS: public-three and detailed-refined-six local fixtures are no-send and no-proof\n");
+  const revisionReference = spawnSync("php", [join(root, "tests/proof-runner-revision-reference.test.php")], { encoding: "utf8" });
+  if (revisionReference.status !== 0) throw new Error(revisionReference.stderr || revisionReference.stdout);
+  process.stdout.write("PASS: public-three, detailed-refined-six, and selected-direction-revision fixtures are no-send and no-proof\n");
 }
 finally {
   rmSync(temporary, { recursive: true, force: true });
