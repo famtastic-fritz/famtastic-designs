@@ -25,6 +25,7 @@ final class CustomerPortalService {
     private readonly UuidInterface $uuid,
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
+    private readonly PublicPreviewDeliveryService $previews,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -45,6 +46,7 @@ final class CustomerPortalService {
     }
     $now = $this->time->getRequestTime();
     $email = mb_strtolower(trim($user->getEmail()));
+    $this->previews->markSignupStarted((string) ($input['preview_continuation'] ?? ''), $email);
     $prospectId = $this->findProspect($email);
     $customerId = (int) $this->database->insert('famtastic_customer')->fields([
       'public_id' => $this->uuid->generate(), 'uid' => (int) $user->id(),
@@ -83,6 +85,11 @@ final class CustomerPortalService {
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_customer')->fields(['verified_at' => $now, 'changed' => $now])
       ->condition('id', $customerId)->execute();
+    $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['email'])
+      ->condition('id', $customerId)->execute()->fetchAssoc();
+    if ($customer) {
+      $this->previews->claimVerifiedCustomer($customerId, (string) $customer['email']);
+    }
   }
 
   /**
@@ -230,18 +237,25 @@ final class CustomerPortalService {
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
     $clean = $this->validateWebsiteRequest($input);
     $now = $this->time->getRequestTime();
-    $prospect = $this->entities->getStorage('famtastic_prospect')->create([
-      'business_name' => $clean['business_name'] ?: $clean['project_name'],
-      'public_email' => (string) $customer['email'], 'contact_name' => (string) $customer['display_name'],
-      'contact_method' => 'email', 'contact_value' => (string) $customer['email'],
-      'campaign' => 'customer_portal', 'source' => 'customer_portal', 'authorized' => TRUE,
-      'confirmed_at' => $now, 'status' => $clean['status'] === 'submitted' ? 'lead' : 'new', 'owner_uid' => 1,
-    ]);
-    $prospect->save();
+    $claimedPreview = $this->previews->claimedPreviewForCustomer($customerId);
+    $claimedProspectId = $claimedPreview ? (int) $claimedPreview['prospect_id'] : $this->previews->claimedProspectId($customerId);
+    $prospect = $claimedProspectId ? $this->entities->getStorage('famtastic_prospect')->load($claimedProspectId) : NULL;
+    if (!$prospect) {
+      $prospect = $this->entities->getStorage('famtastic_prospect')->create([
+        'business_name' => $clean['business_name'] ?: $clean['project_name'],
+        'public_email' => (string) $customer['email'], 'contact_name' => (string) $customer['display_name'],
+        'contact_method' => 'email', 'contact_value' => (string) $customer['email'],
+        'campaign' => 'customer_portal', 'source' => 'customer_portal', 'authorized' => TRUE,
+        'confirmed_at' => $now, 'status' => $clean['status'] === 'submitted' ? 'lead' : 'new', 'owner_uid' => 1,
+      ]);
+      $prospect->save();
+    }
     $publicId = $this->uuid->generate();
     $id = (int) $this->database->insert('famtastic_project_request')->fields([
       'public_id' => $publicId, 'organization_id' => (int) $organization['id'], 'customer_id' => $customerId,
       'prospect_id' => (int) $prospect->id(), 'status' => $clean['status'],
+      'proof_campaign_id' => $claimedPreview ? (int) $claimedPreview['proof_campaign_id'] : NULL,
+      'proof_review_status' => $claimedPreview && $clean['status'] === 'submitted' ? 'refinement_queued' : 'not_started',
       'project_name' => $clean['project_name'], 'business_name' => $clean['business_name'],
       'project_type' => $clean['project_type'], 'domain_choice' => $clean['domain_choice'],
       'existing_domain' => $clean['existing_domain'], 'recommendation_requested' => $clean['recommendation_requested'],
@@ -249,10 +263,16 @@ final class CustomerPortalService {
       'submitted_at' => $clean['status'] === 'submitted' ? $now : NULL, 'created' => $now, 'changed' => $now,
     ])->execute();
     $this->claimResource((int) $organization['id'], 'prospect', (int) $prospect->id());
+    $this->previews->attachClaimedRequest($customerId, $id, $clean['status']);
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
     if ($clean['status'] === 'submitted') {
       $this->queueWebsiteRequestNotifications($id, $customer, $clean);
-      $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
+      if ($claimedPreview) {
+        $this->queueWebsiteRequestRefinementJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
+      }
+      else {
+        $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
+      }
     }
     return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
   }
@@ -569,6 +589,25 @@ final class CustomerPortalService {
     );
   }
 
+  /** Enqueues the six-direction refinement after a verified public-preview claim. */
+  private function queueWebsiteRequestRefinementJob(int $requestId, int $prospectId, string $publicId, array $intake): void {
+    $this->ledger->enqueue(
+      'website_proof.showcase.v1:request:' . $requestId,
+      'proof.showcase.generate',
+      [
+        'routine' => 'website_proof.showcase.v1',
+        'prospect_id' => $prospectId,
+        'website_request_id' => $requestId,
+        'website_request_public_id' => $publicId,
+        'proof_count' => 6,
+        'proof_mix' => ['safe', 'medium_famtastic', 'ultra_famtastic_1', 'ultra_famtastic_2', 'ultra_famtastic_3', 'ultra_famtastic_4'],
+        'website_discovery_v3' => $intake,
+        'website_discovery_v2' => $intake,
+      ],
+      $prospectId,
+    );
+  }
+
   /** Returns the current normalized brief for a request-bound proof worker. */
   public function websiteRequestProofContext(int $requestId): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
@@ -608,7 +647,7 @@ final class CustomerPortalService {
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', (int) $row['customer_id'])->execute()->fetchAssoc();
     $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
     $count = count($directionValues);
-    $setLabel = $count === 6 ? 'six website concepts—including three fully FAMtastic directions—' : 'Safe, Wild, and OMG concepts';
+    $setLabel = $count === 6 ? 'six refined website concepts—one Normal, one Medium FAMtastic, and four Ultra FAMtastic directions—' : 'three website concepts: Safe, Medium FAMtastic, and Ultra FAMtastic';
     $reviewUrl = $base . '/portal/?section=projects&request=' . rawurlencode((string) $row['public_id']);
     $this->queueNotification('website-request:' . $requestId . ':proofs:' . (int) $row['proof_campaign_id'] . ':' . $count, 'transactional', (string) $customer['email'],
       'Your FAMtastic website concepts are ready', "Your {$setLabel} are ready. Sign in to compare them and choose your direction:\n{$reviewUrl}\n\nUse the same email address that received this message.");
@@ -651,7 +690,7 @@ final class CustomerPortalService {
         ->condition('notification_key', 'website-request:' . $requestId . ':owner-proof-review:%', 'LIKE')
         ->condition('status', ['queued', 'retry'], 'IN')->execute();
     }
-    $description = $count === 6 ? 'Safe, Wild, OMG, Royal Current, Crownverse, and Shay Live' : 'Safe, Wild, and OMG';
+    $description = $count === 6 ? 'one Normal, one Medium FAMtastic, and four Ultra FAMtastic directions' : 'Safe, Medium FAMtastic, and Ultra FAMtastic';
     $this->queueNotification('website-request:' . $requestId . ':owner-proof-review:' . $campaignEntityId . ':' . $count, 'operational', $admin,
       $count . ' website proofs need your approval — ' . (string) $row['project_name'],
       "{$description} are ready for owner review. Nothing has been sent to the customer.\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$requestId}/proof-review");
@@ -671,10 +710,41 @@ final class CustomerPortalService {
       $notes = mb_substr(trim(strip_tags((string) ($input['notes'] ?? ''))), 0, 5000);
       if ($notes === '') throw new \InvalidArgumentException('Tell us what you want adjusted.');
       $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
-      $intake['proof_revision_request'] = ['notes' => $notes, 'requested_at' => gmdate(DATE_ATOM, $now)];
+      $previousRevision = (array) ($intake['proof_revision_request'] ?? []);
+      $revisionVersion = max(1, (int) ($previousRevision['version'] ?? 0) + 1);
+      $intake['proof_revision_request'] = [
+        'notes' => $notes,
+        'requested_at' => gmdate(DATE_ATOM, $now),
+        'version' => $revisionVersion,
+        'selected_direction' => (string) ($row['selected_proof_direction'] ?? ''),
+      ];
       $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'revision_requested', 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'changed' => $now])->condition('id', $row['id'])->execute();
       $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
-      $this->queueNotification('website-request:' . $row['id'] . ':proof-revision:' . hash('sha256', $notes), 'operational', $admin, 'Website proof revision requested — ' . $row['project_name'], "Customer request:\n{$notes}\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
+      $revisionKey = hash('sha256', $revisionVersion . ':' . $notes);
+      $this->queueNotification('website-request:' . $row['id'] . ':proof-revision-owner:' . $revisionKey, 'operational', $admin,
+        'Website proof revision requested — ' . $row['project_name'],
+        "Client request:\n{$notes}\n\nSelected direction: " . ((string) ($row['selected_proof_direction'] ?: 'not yet selected')) . "\nRevision version: {$revisionVersion}\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
+      $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['email'])->condition('id', (int) $row['customer_id'])->execute()->fetchAssoc();
+      $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+      if (!empty($customer['email'])) {
+        $this->queueNotification('website-request:' . $row['id'] . ':proof-revision-customer:' . $revisionKey, 'transactional', (string) $customer['email'],
+          'We received your website proof changes',
+          "Your requested changes were saved as revision {$revisionVersion}. FAMtastic will review the new proof version before anything changes or is sent.\n\nTrack your project: {$base}/portal/?section=projects&request=" . rawurlencode((string) $row['public_id']));
+      }
+      $this->ledger->enqueue(
+        'website_proof.revision.v1:request:' . $row['id'] . ':' . $revisionVersion,
+        'proof.revision.requested',
+        [
+          'routine' => 'website_proof.revision.v1',
+          'website_request_id' => (int) $row['id'],
+          'website_request_public_id' => (string) $row['public_id'],
+          'selected_direction' => (string) ($row['selected_proof_direction'] ?? ''),
+          'revision_version' => $revisionVersion,
+          'notes' => $notes,
+        ],
+        (int) $row['prospect_id'],
+      );
+      $this->activity((int) $row['organization_id'], 'website_request.proof_revision_requested', 'Your requested proof changes were saved and sent to FAMtastic for review.');
     }
     else {
       $direction = strtolower((string) ($input['direction'] ?? ''));

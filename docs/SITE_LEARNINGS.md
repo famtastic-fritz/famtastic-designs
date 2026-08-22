@@ -1,5 +1,23 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-22 — A public lead needs a delivery record, not an SMTP side effect
+
+- A mail send attempt cannot be the lead state machine. The public lead must
+  first create a durable delivery record, an outbox entry, a proof job, and a
+  visible owner action. Only after a complete, Build-DNA-backed proof set is
+  reviewed may an owner approve the exact frozen customer invitation.
+- Keep public and portal proof surfaces intentionally different: the signed
+  public room is a private, view-only decision aid with a same-email workspace
+  invitation; the authenticated portal is the only place for detailed intake,
+  six refinements, selection, revision, scope, terms, and checkout.
+- Same-email claim is an idempotency boundary. Reusing the public Prospect and
+  proof campaign avoids duplicate leads and preserves the early creative
+  history while the detailed request adds the new v3 brief facts.
+- “Make changes” must create durable evidence beyond a frontend toggle: store
+  the notes/version, queue an owner work item, queue customer acknowledgement,
+  and retain the prior selected proof until an owner-approved replacement is
+  available.
+
 ## 2026-08-20 — A proof link needs a review task, not six unexplained demos
 
 - “Six directions” is internal shorthand. A recipient needs to hear that they

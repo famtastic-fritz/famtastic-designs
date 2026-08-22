@@ -26,6 +26,11 @@ final class SiteStudioProofClient {
 
   /**
    * Dispatches an exactly-three proof request and returns the remote job id.
+   *
+   * The runner owns provider selection. This boundary carries the requested
+   * direction contract verbatim so Site Studio can build a public three-pack,
+   * a portal refinement pack, or a later revision without inferring intent
+   * from the campaign's previous job.
    */
   public function dispatch(Prospect $prospect, ProofCampaign $campaign, array $context = []): string {
     $endpoint = $this->endpoint();
@@ -34,10 +39,23 @@ final class SiteStudioProofClient {
       throw new \RuntimeException('Remote Site Studio requires an endpoint and dispatch secret.');
     }
     $callbackBase = rtrim((string) (getenv('FAMTASTIC_PUBLIC_BASE_URL') ?: $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')), '/');
+    $directions = (array) ($context['directions'] ?? ProofCampaignService::CORE_DIRECTIONS);
+    $directionContract = (array) ($context['direction_contract'] ?? [
+      'a' => ['name' => 'Safe', 'intent' => 'polished, familiar, credible, low-risk'],
+      'b' => ['name' => 'Wild', 'intent' => 'expressive, energetic, clearly differentiated'],
+      'c' => ['name' => 'OMG', 'intent' => 'campaign-level concept with the strongest visual idea'],
+    ]);
+    $directionIds = array_keys($directions);
+    sort($directionIds);
+    $contractIds = array_keys($directionContract);
+    sort($contractIds);
+    if (count($directions) !== 3 || $directionIds !== $contractIds) {
+      throw new \InvalidArgumentException('A Site Studio proof dispatch requires exactly three contracted directions.');
+    }
     $payload = [
       'schema_version' => 2,
       'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1'),
-      'idempotency_key' => 'proof:' . $campaign->get('campaign_id')->value,
+      'idempotency_key' => (string) ($context['idempotency_key'] ?? ('proof:' . $campaign->get('campaign_id')->value)),
       'campaign_id' => $campaign->get('campaign_id')->value,
       'prospect' => [
         'business_name' => $prospect->get('business_name')->value,
@@ -49,13 +67,9 @@ final class SiteStudioProofClient {
         'address' => $prospect->get('address')->value,
         'hours' => $prospect->get('hours')->value,
       ],
-      'directions' => ProofCampaignService::CORE_DIRECTIONS,
+      'directions' => $directions,
       'required_variant_count' => 3,
-      'direction_contract' => [
-        'a' => ['name' => 'Safe', 'intent' => 'polished, familiar, credible, low-risk'],
-        'b' => ['name' => 'Wild', 'intent' => 'expressive, energetic, clearly differentiated'],
-        'c' => ['name' => 'OMG', 'intent' => 'campaign-level concept with the strongest visual idea'],
-      ],
+      'direction_contract' => $directionContract,
       'callback_url' => $callbackBase . '/api/pipeline/site-studio/callback',
       'project' => [
         'project_id' => (int) ($context['project_id'] ?? 0),

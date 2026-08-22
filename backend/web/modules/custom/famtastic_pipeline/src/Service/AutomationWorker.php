@@ -20,6 +20,7 @@ final class AutomationWorker {
     private readonly DomainLifecycleService $domains,
     private readonly HostingLifecycleService $hosting,
     private readonly CustomerPortalService $portal,
+    private readonly PublicPreviewDeliveryService $previews,
   ) {}
 
   /**
@@ -52,6 +53,8 @@ final class AutomationWorker {
   private function execute(array $job): array {
     return match ($job['job_type']) {
       'proof.generate' => $this->generateProofs($job),
+      'proof.showcase.generate' => $this->generateShowcaseProofs($job),
+      'proof.revision.requested' => $this->recordRevisionRequest($job),
       'outreach.prepare' => $this->prepareOutreach($job),
       'outreach.send' => $this->sendOutreach($job),
       'deployment.prepare' => $this->prepareDeployment($job),
@@ -137,7 +140,7 @@ final class AutomationWorker {
     elseif ($projectId) {
       $this->portal->markProjectProofReady($projectId, $campaign, $variants);
     }
-    else {
+    elseif (!$this->previews->markCampaignReady($prospectId, (int) $campaign->id())) {
       $this->ledger->enqueue(
         'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
         'outreach.prepare',
@@ -149,6 +152,45 @@ final class AutomationWorker {
       'campaign_id' => $campaign->get('campaign_id')->value,
       'variant_count' => 3,
       'directions' => $directions,
+    ];
+  }
+
+  /** Starts the detailed three-direction expansion of a claimed public proof set. */
+  private function generateShowcaseProofs(array $job): array {
+    $context = (array) ($job['payload'] ?? []);
+    $requestId = (int) ($context['website_request_id'] ?? 0);
+    $publicId = (string) ($context['website_request_public_id'] ?? '');
+    if (!$requestId || $publicId === '') {
+      throw new \RuntimeException('Refined proof generation requires the exact website request.');
+    }
+    $campaign = $this->proofCampaigns->prepareWebsiteRequestShowcase($requestId, $publicId);
+    return [
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'status' => 'waiting_callback',
+      'studio_job_id' => (string) $campaign->get('studio_job_id')->value,
+      'proof_count' => 6,
+    ];
+  }
+
+  /**
+   * Closes the transactional handoff for a customer revision request.
+   *
+   * A revision cannot silently rewrite a selected proof: it remains a durable
+   * owner-reviewed work item until a versioned Site Studio revision callback
+   * is available. The job is still material operational evidence, rather than
+   * a UI-only state change.
+   */
+  private function recordRevisionRequest(array $job): array {
+    $context = (array) ($job['payload'] ?? []);
+    $requestId = (int) ($context['website_request_id'] ?? 0);
+    if (!$requestId) {
+      throw new \RuntimeException('Revision work item requires a website request.');
+    }
+    return [
+      'website_request_id' => $requestId,
+      'selected_direction' => (string) ($context['selected_direction'] ?? ''),
+      'status' => 'owner_review_required',
+      'revision_version' => (int) ($context['revision_version'] ?? 1),
     ];
   }
 

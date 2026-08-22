@@ -14,6 +14,66 @@ use Drush\Commands\DrushCommands;
 class PipelineCommands extends DrushCommands {
 
   /**
+   * Recovers one existing public lead into the owner-gated preview lifecycle.
+   *
+   * This deliberately creates no customer email, price, checkout, or public
+   * link. It creates the durable delivery, queues proof work, and records one
+   * owner alert that still travels through the transactional outbox.
+   */
+  #[CLI\Command(name: 'famtastic:public-preview-prepare', aliases: ['fppp'])]
+  #[CLI\Argument(name: 'prospectId', description: 'Exact existing public prospect entity id.')]
+  #[CLI\Option(name: 'intake-id', description: 'Exact public intake entity id; newest intake for this prospect when omitted.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the prospect id to create the recovery delivery.')]
+  public function publicPreviewPrepare(int $prospectId, array $options = [
+    'intake-id' => 0,
+    'confirm' => '',
+  ]): int {
+    if (!hash_equals((string) $prospectId, trim((string) $options['confirm']))) {
+      $this->logger()->error('Recovery preparation requires --confirm=<exact-prospect-id>.');
+      return self::EXIT_FAILURE;
+    }
+    /** @var \Drupal\famtastic_pipeline\Entity\Prospect|null $prospect */
+    $prospect = \Drupal::entityTypeManager()->getStorage('famtastic_prospect')->load($prospectId);
+    if (!$prospect) {
+      $this->logger()->error('Prospect does not exist.');
+      return self::EXIT_FAILURE;
+    }
+    $intakeId = max(0, (int) ($options['intake-id'] ?? 0));
+    $intakeStorage = \Drupal::entityTypeManager()->getStorage('famtastic_intake');
+    if (!$intakeId) {
+      $ids = $intakeStorage->getQuery()->accessCheck(FALSE)->condition('prospect_ref', $prospectId)->sort('submitted_at', 'DESC')->range(0, 1)->execute();
+      $intakeId = $ids ? (int) reset($ids) : 0;
+    }
+    $intake = $intakeId ? $intakeStorage->load($intakeId) : NULL;
+    if (!$intake || (int) $intake->get('prospect_ref')->target_id !== $prospectId) {
+      $this->logger()->error('A matching public intake is required.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService $previews */
+      $previews = \Drupal::service('famtastic_pipeline.public_preview_deliveries');
+      $delivery = $previews->createForPublicLead($prospectId, $intakeId);
+      $previews->queueLeadCapturedAlert((int) $delivery['id'], 'Public proof recovery — ' . $prospect->label(),
+        "Prospect #{$prospectId} was recovered into the owner-gated public preview lifecycle.\nIntake #{$intakeId}\nNo customer email, proof link, price, checkout, or payment has been approved.");
+      $previews->queueInitialProofJob((int) $delivery['id']);
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode([
+      'delivery_id' => (int) $delivery['id'],
+      'delivery_public_id' => (string) $delivery['public_id'],
+      'prospect_id' => $prospectId,
+      'intake_id' => $intakeId,
+      'customer_email_queued' => FALSE,
+      'next_owner_action' => 'Run the proof job, register Build DNA, stage the exact frozen email, then approve that send.',
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success('Public proof recovery prepared; no customer email has been queued.');
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Prints campaign, source, funnel, revenue, launch, and renewal metrics.
    */
   #[CLI\Command(name: 'famtastic:analytics-report', aliases: ['far'])]

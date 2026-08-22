@@ -57,7 +57,8 @@ Public lead
   -> registration
   -> account-to-lead association
   -> detailed portal intake
-  -> selection and refinement
+  -> six owner-approved refined proofs (1 Normal / 1 Medium / 4 Ultra)
+  -> selection and versioned revision request
   -> payment
   -> isolated deployment
 ```

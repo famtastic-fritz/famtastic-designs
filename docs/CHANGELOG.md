@@ -1,5 +1,26 @@
 # Product changelog
 
+## 2026-08-22 — Public proof-to-payment recovery
+
+- Replaced Solution Finder's direct SMTP acknowledgement with a durable public
+  preview-delivery record, owner alert outbox entry, and idempotent
+  `website_proof.generate.v1` job. A captured lead is no longer marked handled
+  merely because SMTP accepted a request.
+- Added owner-gated, signed three-concept decision rooms with frozen
+  transactional-email snapshots, delivery acceptance tracking, revocation,
+  same-email verified account claim, and an explicit P.I.T. recovery command.
+- Connected a claimed public preview to the next submitted portal request so it
+  queues the six-direction refinement contract (one Normal, one Medium, four
+  Ultra) rather than creating a duplicate lead or losing proof continuity.
+- Added lead-delivery Operations records, durable customer and owner revision
+  notifications, and a revision work-item ledger. The external proof send,
+  pricing, checkout, payment, and deployment gates remain explicit owner
+  actions.
+- Verified the frontend production build and desktop browser flows for selection
+  focus/animation, revision entry, unlisted sharing, and the public concept
+  room. Backend PHPUnit remains blocked locally by the missing Drupal test
+  bootstrap and is not represented as passing.
+
 ## 2026-08-21 — Preview-provider doctrine and Antigravity boundary
 
 - Declared the role-specific preview route: Gemini 3.7 Flash through an

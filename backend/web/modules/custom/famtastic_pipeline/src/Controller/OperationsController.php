@@ -53,6 +53,7 @@ final class OperationsController extends ControllerBase {
       ['Website Analytics', !empty($analytics['available']) ? 'Connected · 30-day reporting ready' : 'Connection needs attention', 'Traffic, engagement, top pages, and acquisition channels.', Url::fromRoute('famtastic_pipeline.analytics'), 'analytics'],
       ['Customers', $this->count('famtastic_customer') . ' customer accounts', 'Customer identity, contact details, consent, and business workspaces.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'customers']), 'customers'],
       ['Website Requests', $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started']) . ' active requests', 'Pre-purchase interviews, recommendations, private-offer candidates, and Commerce conversion.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), 'prospects'],
+      ['Lead Delivery', $this->countIn('famtastic_preview_delivery', 'state', ['lead_captured', 'preview_requested', 'proof_ready_owner_review', 'email_staged', 'email_queued']) . ' lead proof actions', 'Public lead intake, three-concept proof state, owner send gate, claim status, and delivery evidence.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'lead-delivery']), 'campaigns'],
       ['Commerce', $this->count('famtastic_order', ['payment_status' => 'paid']) . ' paid orders', 'Products, orders, payment status, subscriptions, and fulfillment.', Url::fromUserInput('/admin/commerce'), 'commerce'],
       ['Support', $openSupport . ' open conversations', 'Customer requests, project questions, replies, and service issues.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support']), 'support'],
       ['Notifications', $this->countIn('famtastic_notification_outbox', 'status', ['queued', 'retry', 'dead_letter']) . ' need attention', 'Receipts, acknowledgments, reminders, delivery attempts, and failures.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'notifications']), 'emails-sent'],
@@ -347,6 +348,7 @@ final class OperationsController extends ControllerBase {
       'prospects' => $this->prospectMetric(),
       'customers' => $this->customerMetric(),
       'website-requests' => $this->websiteRequestMetric(),
+      'lead-delivery' => $this->leadDeliveryMetric(),
       'proofs-ready' => $this->proofMetric(),
       'emails-sent' => $this->eventMetric('email.sent', 'Emails Sent', 'Every recorded campaign send event.'),
       'clicks' => $this->eventMetric('email.clicked', 'Proof-Link Clicks', 'Every recorded proof-link click event.'),
@@ -394,6 +396,32 @@ final class OperationsController extends ControllerBase {
       ];
     }
     return $this->recordsPage('Website Requests', 'Customer-owned, resumable website interviews. Proofs remain owner-only until the explicit customer-send gate is approved.', ['Request', 'Business', 'Customer', 'Type', 'Status', 'Actions', 'Lead', 'Brief', 'Updated'], $rows, 'No website requests have been recorded.');
+  }
+
+  /** Keeps the public-lead lane visible without mixing it into campaign outreach. */
+  private function leadDeliveryMetric(): array {
+    $query = $this->database->select('famtastic_preview_delivery', 'd')->extend(PagerSelectExtender::class);
+    $query->leftJoin('famtastic_prospect', 'p', 'p.id = d.prospect_id');
+    $query->leftJoin('famtastic_project_request', 'r', 'r.id = d.website_request_id');
+    $query->fields('d', ['id', 'state', 'proof_campaign_id', 'build_dna_id', 'email_outbox_id', 'provider_message_id', 'customer_id', 'website_request_id', 'requested_at', 'proof_ready_at', 'accepted_at', 'last_event_at'])
+      ->fields('p', ['business_name', 'public_email', 'source'])
+      ->addField('r', 'proof_review_status', 'refinement_state');
+    $rows = [];
+    foreach ($query->orderBy('d.changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $kind = str_starts_with((string) $record['source'], 'fixture') || str_contains((string) $record['source'], 'demo') || str_contains((string) $record['public_email'], '+famtastic-') ? 'Fixture / demo' : 'Prospect';
+      $review = Link::fromTextAndUrl('Open owner review', Url::fromRoute('famtastic_pipeline.public_preview_delivery_review', ['preview_delivery' => $record['id']]))->toRenderable();
+      $rows[] = [
+        '#' . $record['id'], $kind, $record['business_name'], $record['public_email'],
+        ['data' => ['#markup' => $this->badge((string) $record['state'])]],
+        $record['proof_campaign_id'] ? 'Campaign #' . $record['proof_campaign_id'] : 'Queued / awaiting proof',
+        $record['build_dna_id'] ?: 'Not registered',
+        $record['customer_id'] ? 'Claimed' : 'Not claimed',
+        $record['website_request_id'] ? ($record['refinement_state'] ?: 'Request created') : 'No portal request',
+        $record['email_outbox_id'] ? ('Outbox #' . $record['email_outbox_id'] . ($record['provider_message_id'] ? ' accepted' : ' queued')) : 'Not queued',
+        ['data' => $review], $this->date((int) $record['last_event_at']),
+      ];
+    }
+    return $this->recordsPage('Lead Delivery', 'Public prospects only. A proof email cannot be sent until a complete three-concept package has Build DNA and an owner approval.', ['ID', 'Class', 'Business', 'Contact', 'Lead stage', 'Proofs', 'Build DNA', 'Account', 'Refinement', 'Email', 'Action', 'Updated'], $rows, 'No public lead deliveries have been created.');
   }
 
   private function supportMetric(): array {

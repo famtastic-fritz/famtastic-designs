@@ -72,6 +72,7 @@ class ProofCampaignService {
     protected BuildTelemetryService $buildTelemetry,
     protected Connection $database,
     protected CustomerPortalService $portal,
+    protected PublicPreviewDeliveryService $previews,
   ) {}
 
   /**
@@ -250,15 +251,15 @@ class ProofCampaignService {
     return $campaign;
   }
 
-  /** Prepares an owner-gated three-direction FAMtastic showcase expansion. */
+  /** Prepares the three remaining directions in a six-concept refinement. */
   public function prepareWebsiteRequestShowcase(int $requestId, string $publicId): ProofCampaign {
     $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
       ->condition('id', $requestId)->execute()->fetchAssoc();
     if (!$request || !hash_equals((string) $request['public_id'], $publicId)) {
       throw new \RuntimeException('Showcase export requires the exact website request confirmation.');
     }
-    if (!in_array($request['proof_review_status'], ['owner_review', 'showcase_building'], TRUE) || empty($request['proof_campaign_id'])) {
-      throw new \RuntimeException('Only an owner-review proof set can receive a FAMtastic showcase expansion.');
+    if (!in_array($request['proof_review_status'], ['owner_review', 'refinement_queued', 'showcase_building'], TRUE) || empty($request['proof_campaign_id'])) {
+      throw new \RuntimeException('Only a claimed public proof set can receive a FAMtastic showcase expansion.');
     }
     $campaign = $this->entityTypeManager->getStorage('proof_campaign')->load((int) $request['proof_campaign_id']);
     if (!$campaign || $campaign->get('generation_status')->value !== 'ready') {
@@ -271,7 +272,8 @@ class ProofCampaignService {
       throw new \RuntimeException('The showcase expansion requires exactly the original Safe, Wild, and OMG set.');
     }
     $jobId = (string) $campaign->get('studio_job_id')->value;
-    if (!str_starts_with($jobId, 'local-showcase-')) {
+    $alreadyDispatched = $request['proof_review_status'] === 'showcase_building';
+    if (!$this->studioClient->isRemote() && !$alreadyDispatched && !str_starts_with($jobId, 'local-showcase-')) {
       $jobId = 'local-showcase-' . bin2hex(random_bytes(16));
       $campaign->set('studio_job_id', $jobId)->set('dispatched_at', $this->time->getRequestTime())->save();
       $this->ledger->recordEvent(
@@ -281,10 +283,38 @@ class ProofCampaignService {
         (int) $campaign->get('prospect_id')->target_id,
       );
     }
+    elseif ($this->studioClient->isRemote() && !$alreadyDispatched) {
+      /** @var \Drupal\famtastic_pipeline\Entity\Prospect|null $prospect */
+      $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load((int) $campaign->get('prospect_id')->target_id);
+      if (!$prospect) {
+        throw new \RuntimeException('The refinement prospect could not be loaded.');
+      }
+      $intake = json_decode((string) ($request['intake_data'] ?? '[]'), TRUE);
+      $jobId = $this->studioClient->dispatch($prospect, $campaign, [
+        'routine' => 'website_proof.showcase.v1',
+        'idempotency_key' => 'proof-showcase:' . $campaign->get('campaign_id')->value . ':' . $requestId,
+        'directions' => self::SHOWCASE_DIRECTIONS,
+        'direction_contract' => [
+          'd' => ['name' => 'Ultra FAMtastic — Signature', 'intent' => 'a bold, client-specific flagship expression'],
+          'e' => ['name' => 'Ultra FAMtastic — Storyworld', 'intent' => 'an immersive visual world with a distinct narrative system'],
+          'f' => ['name' => 'Ultra FAMtastic — Future', 'intent' => 'the most expressive, motion-ready campaign-level direction'],
+        ],
+        'website_request_public_id' => (string) $request['public_id'],
+        'website_discovery_v2' => is_array($intake) ? $intake : [],
+        'website_discovery_v3' => is_array($intake) ? $intake : [],
+      ]);
+      $campaign->set('studio_job_id', $jobId)->set('dispatched_at', $this->time->getRequestTime())->save();
+      $this->ledger->recordEvent(
+        'proof.showcase_dispatched:' . $campaign->get('campaign_id')->value . ':' . $requestId,
+        'proof.showcase_dispatched',
+        ['campaign_id' => $campaign->get('campaign_id')->value, 'studio_job_id' => $jobId, 'website_request_id' => $requestId, 'transport' => 'site_studio'],
+        (int) $campaign->get('prospect_id')->target_id,
+      );
+    }
     $this->database->update('famtastic_project_request')->fields([
       'proof_review_status' => 'showcase_building',
       'changed' => $this->time->getRequestTime(),
-    ])->condition('id', $requestId)->condition('proof_review_status', ['owner_review', 'showcase_building'], 'IN')->execute();
+    ])->condition('id', $requestId)->condition('proof_review_status', ['owner_review', 'refinement_queued', 'showcase_building'], 'IN')->execute();
     return $campaign;
   }
 
@@ -300,13 +330,12 @@ class ProofCampaignService {
       throw new \InvalidArgumentException('Unknown campaign or Site Studio job.');
     }
     $prospectId = (int) $campaign->get('prospect_id')->target_id;
-    $isShowcase = str_starts_with($studioJobId, 'local-showcase-');
-    $requestQuery = $this->database->select('famtastic_project_request', 'r')->fields('r')
-      ->condition('prospect_id', $prospectId);
-    if ($isShowcase) {
-      $requestQuery->condition('proof_campaign_id', (int) $campaign->id());
-    }
-    $request = $requestQuery->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    $campaignRequest = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('proof_campaign_id', (int) $campaign->id())
+      ->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    $isShowcase = str_starts_with($studioJobId, 'local-showcase-') || (($campaignRequest['proof_review_status'] ?? '') === 'showcase_building');
+    $request = $campaignRequest ?: $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('prospect_id', $prospectId)->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $processed = json_decode((string) $campaign->get('callback_event_ids')->value ?: '[]', TRUE);
     if (in_array($eventId, (array) $processed, TRUE)) {
       return ['newly_processed' => FALSE, 'campaign' => $campaign, 'variants' => $this->loadVariants($campaign)];
@@ -431,7 +460,7 @@ class ProofCampaignService {
     if ($request) {
       $this->portal->attachWebsiteRequestProof((int) $request['id'], $campaign, $completeVariants);
     }
-    else {
+    elseif (!$this->previews->markCampaignReady($prospectId, (int) $campaign->id())) {
       $this->ledger->enqueue(
         'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
         'outreach.prepare',

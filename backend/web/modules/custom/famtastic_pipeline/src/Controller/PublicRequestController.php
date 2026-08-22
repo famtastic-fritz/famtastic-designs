@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\ConciergeWebhookService;
-use Drupal\famtastic_pipeline\Service\OutreachMailer;
+use Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService;
 use Drupal\famtastic_pipeline\Service\TokenManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -26,8 +26,8 @@ class PublicRequestController extends ControllerBase {
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManagerService,
     protected TokenManager $tokenManager,
-    protected OutreachMailer $mailer,
     protected ConciergeWebhookService $concierge,
+    protected PublicPreviewDeliveryService $previews,
     protected ConfigFactoryInterface $pipelineConfigFactory,
     protected TimeInterface $time,
     protected LoggerInterface $logger,
@@ -41,8 +41,8 @@ class PublicRequestController extends ControllerBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('famtastic_pipeline.token_manager'),
-      $container->get('famtastic_pipeline.mailer'),
       $container->get('famtastic_pipeline.concierge_webhooks'),
+      $container->get('famtastic_pipeline.public_preview_deliveries'),
       $container->get('config.factory'),
       $container->get('datetime.time'),
       $container->get('logger.channel.famtastic_pipeline'),
@@ -125,7 +125,8 @@ class PublicRequestController extends ControllerBase {
     }
 
     $intake = $this->saveRequest($prospect, $data, $answers, $type);
-    $registrationUrl = $this->registrationUrl($email, $businessName, (int) $intake->id(), $type);
+    $previewDelivery = $this->previews->createForPublicLead((int) $prospect->id(), (int) $intake->id());
+    $registrationUrl = $this->registrationUrl((string) $previewDelivery['public_id']);
     try {
       $this->concierge->recordPublicLead((int) $prospect->id(), (int) $intake->id(), 'public_' . $type);
     }
@@ -136,26 +137,41 @@ class PublicRequestController extends ControllerBase {
         '@message' => $error->getMessage(),
       ]);
     }
-    $notification = $this->notify($prospect, $intake, $data, $type, $duplicate, $registrationUrl);
+    try {
+      $notification = $this->previews->queueLeadCapturedAlert(
+        (int) $previewDelivery['id'],
+        sprintf('New public %s request — %s', $type, $prospect->label()),
+        $this->ownerNotificationBody($prospect, $intake, $data, $type, $duplicate),
+      );
+      $this->previews->queueInitialProofJob((int) $previewDelivery['id']);
+    }
+    catch (\Throwable $error) {
+      $this->logger->error('Public request operator alert failed for request @id: @message', [
+        '@id' => $intake->id(),
+        '@message' => $error->getMessage(),
+      ]);
+      return $this->error('lead_delivery_unavailable', 503, 'Your request could not be safely queued. Please try again shortly.');
+    }
 
     $payload = [
       'ok' => TRUE,
-      'status' => $notification['ok'] ? 'received' : 'partial_success',
+      'status' => 'received',
       'request_id' => (int) $intake->id(),
       'prospect_id' => (int) $prospect->id(),
       'duplicate' => $duplicate,
-      'notification_sent' => $notification['ok'],
+      'notification_sent' => FALSE,
+      'notification_queued' => TRUE,
       'preview_level' => $type === 'quote' ? 'basic' : NULL,
       'next_step' => $type === 'quote' ? 'register_for_detailed_demo' : 'staff_follow_up',
       'registration_url' => $type === 'quote' ? $registrationUrl : NULL,
-      'message' => $notification['ok']
-        ? ($type === 'quote'
-          ? 'Your starter recommendation is ready and your request is saved. Create a free account for a more detailed brief and working design demos.'
-          : 'We received your request and our team has been notified.')
-        : 'We received your request, but our notification system encountered an issue. Our team will still follow up.',
+      'message' => $type === 'quote'
+        ? 'Your request is saved. FAMtastic is preparing a private three-concept review; it will be sent only after quality and owner approval.'
+        : 'We received your request and queued it for FAMtastic review.',
     ];
 
-    return new JsonResponse($payload, $notification['ok'] ? 200 : 202);
+    // The capture is durable and proof work is asynchronous; do not confuse a
+    // queued outbox record with an accepted or delivered email.
+    return new JsonResponse($payload, 202);
   }
 
   /**
@@ -203,54 +219,14 @@ class PublicRequestController extends ControllerBase {
   }
 
   /**
-   * Attempts the notification boundary and reports partial success on failure.
-   */
-  protected function notify(Prospect $prospect, $intake, array $data, string $type, bool $duplicate, string $registrationUrl): array {
-    $settings = $this->pipelineConfigFactory->get('famtastic_pipeline.settings');
-    $to = (string) ($settings->get('notification_to_email') ?: 'hello@famtasticdesigns.com');
-    $subject = sprintf('FAMtastic Designs %s request #%d%s', $type, (int) $intake->id(), $duplicate ? ' (duplicate)' : '');
-    $body = $this->ownerNotificationBody($prospect, $intake, $data, $type, $duplicate);
-
-    try {
-      $this->mailer->send($to, $subject, $body);
-      $customerEmail = (string) $prospect->get('public_email')->value;
-      $customerSubject = $type === 'quote'
-        ? 'We received your FAMtastic Designs quote request'
-        : 'We received your message — FAMtastic Designs';
-      $slaDays = max(1, (int) ($settings->get('lead_response_sla_days') ?: 3));
-      $customerBody = "Thanks for reaching out to FAMtastic Designs.\n\n"
-        . "Your request #" . $intake->id() . " is safely recorded.\n\n"
-        . ($type === 'quote'
-          ? "The public Solution Finder gives you a useful starter recommendation from the basic information you shared. For a more detailed experience—and working website demos instead of a basic mockup—create your free customer account with this same email address:\n{$registrationUrl}\n\nYour saved lead and intake will follow you into the portal, where you can add brand, domain, content, feature, reference-site, and business details without starting over.\n\n"
-          : '')
-        . "We will review your request and reply within {$slaDays} business days. You can reply directly to this email if you need to add context.\n\nFAMtastic Designs";
-      $this->mailer->send($customerEmail, $customerSubject, $customerBody);
-      $prospect->set('status', 'acknowledged')->save();
-      return ['ok' => TRUE];
-    }
-    catch (\Throwable $e) {
-      $this->logger->error('Public request notification failed for request @id: @m', [
-        '@id' => $intake->id(),
-        '@m' => $e->getMessage(),
-      ]);
-      return ['ok' => FALSE, 'error' => $e->getMessage()];
-    }
-  }
-
-  /**
    * Builds the public-to-member continuation link without exposing a secret.
    */
-  protected function registrationUrl(string $email, string $businessName, int $requestId, string $type): string {
+  protected function registrationUrl(string $previewPublicId): string {
     $base = rtrim((string) (getenv('FRONTEND_BASE_URL') ?: $this->pipelineConfigFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')), '/');
-    $query = http_build_query([
-      'mode' => 'register',
-      'email' => $email,
-      'business' => $businessName,
-      'source' => 'public_' . $type,
-      'request' => $requestId,
-      'redirect' => '/portal?start=website',
-    ]);
-    return $base . '/login?' . $query;
+    // No email, business name, intake id, or public-lead identifier is exposed
+    // in a browser URL. The opaque continuation is verified again server-side.
+    $signature = hash_hmac('sha256', 'public-preview-continuation-v1|' . $previewPublicId, \Drupal\Core\Site\Settings::getHashSalt());
+    return $base . '/login?mode=register&continuation=' . rawurlencode($previewPublicId . '.' . $signature) . '&redirect=%2Fportal%3Fstart%3Dwebsite';
   }
 
   protected function primaryGoal(array $data, string $type): string {

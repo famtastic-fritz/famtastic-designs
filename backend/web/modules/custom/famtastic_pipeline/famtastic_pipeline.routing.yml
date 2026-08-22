@@ -15,6 +15,41 @@ famtastic_pipeline.public_contact:
   requirements:
     _access: 'TRUE'
 
+# --- Public, signed, read-only concept rooms for owner-approved leads. ---
+famtastic_pipeline.public_preview_share:
+  path: '/api/public-preview/{preview_delivery}/{signature}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PublicPreviewController::share'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    preview_delivery: '[0-9a-f-]{36}'
+    signature: '[0-9a-f]{64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.public_preview_proof:
+  path: '/api/public-preview/{preview_delivery}/{signature}/proofs/{direction}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PublicPreviewController::proof'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    preview_delivery: '[0-9a-f-]{36}'
+    signature: '[0-9a-f]{64}'
+    direction: 'a|b|c'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.public_preview_delivery_review:
+  path: '/admin/famtastic/preview-delivery/{preview_delivery}/review'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\PublicPreviewDeliveryReviewForm'
+    _title: 'Public preview delivery review'
+  requirements:
+    _permission: 'review famtastic website proofs'
+    preview_delivery: '\d+'
+
 # --- Branded customer account API (Drupal session cookie; never exposes CMS UI) ---
 famtastic_pipeline.customer_register:
   path: '/api/customer/register'

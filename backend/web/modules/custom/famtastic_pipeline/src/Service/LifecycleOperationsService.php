@@ -21,6 +21,7 @@ final class LifecycleOperationsService {
     private readonly ConfigFactoryInterface $configFactory,
     private readonly FileSystemInterface $fileSystem,
     private readonly AutomationWorker $automationWorker,
+    private readonly PublicPreviewDeliveryService $previews,
   ) {}
 
   public function dispatchNotifications(int $limit = 25): array {
@@ -37,6 +38,9 @@ final class LifecycleOperationsService {
           'status' => 'sent', 'attempts' => (int) $row['attempts'] + 1, 'sent_at' => $now,
           'provider_message_id' => $messageId, 'last_error' => NULL, 'changed' => $now,
         ])->condition('id', $row['id'])->execute();
+        if (str_starts_with((string) $row['notification_key'], 'preview-delivery:')) {
+          $this->previews->markAcceptedByOutbox((int) $row['id'], $messageId);
+        }
         if (preg_match('/^website-request:(\d+):proofs:\d+(?::(?:3|6))?$/', (string) $row['notification_key'], $matches)) {
           $this->database->update('famtastic_project_request')->fields([
             'proof_review_status' => 'notified',

@@ -665,6 +665,16 @@ function famtastic_pipeline_update_8032(&$sandbox) {
   return t('Added revocable, non-indexable sharing controls for approved website proofs.');
 }
 
+/** Adds owner-gated, public-lead preview deliveries and account continuity. */
+function famtastic_pipeline_update_8033(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_preview_delivery_schema();
+  if (!$schema->tableExists('famtastic_preview_delivery')) {
+    $schema->createTable('famtastic_preview_delivery', $definition);
+  }
+  return t('Added public preview delivery, concept-room, and verified-account claim records.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
@@ -1148,6 +1158,69 @@ function _famtastic_pipeline_automation_schema(): array {
   return $tables;
 }
 
+/** Schema for an owner-gated public concept-room delivery. */
+function _famtastic_pipeline_preview_delivery_schema(): array {
+  $id = ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE];
+  $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
+  $nullableTime = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  $entity = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  return [
+    'famtastic_preview_delivery' => [
+      'description' => 'Owner-gated public lead preview delivery, revocable concept room, and verified account claim.',
+      'fields' => [
+        'id' => $id,
+        'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+        'delivery_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+        'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'intake_id' => $entity,
+        'proof_campaign_id' => $entity,
+        'build_dna_id' => ['type' => 'varchar', 'length' => 170, 'not null' => TRUE, 'default' => ''],
+        'build_dna_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'state' => ['type' => 'varchar', 'length' => 48, 'not null' => TRUE, 'default' => 'lead_captured'],
+        'recipient_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'recipient_address_snapshot' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE, 'default' => ''],
+        'template_key' => ['type' => 'varchar', 'length' => 96, 'not null' => TRUE, 'default' => 'lead_preview_ready'],
+        'template_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 1],
+        'subject_snapshot' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE, 'default' => ''],
+        'text_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'share_token_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'share_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 1],
+        'share_expires_at' => $nullableTime,
+        'share_revoked_at' => $nullableTime,
+        'share_revoked_by_uid' => $entity,
+        'owner_approved_at' => $nullableTime,
+        'owner_approved_by_uid' => $entity,
+        'email_outbox_id' => $entity,
+        'provider_message_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'signup_started_at' => $nullableTime,
+        'customer_id' => $entity,
+        'claimed_at' => $nullableTime,
+        'website_request_id' => $entity,
+        'requested_at' => $time,
+        'proof_ready_at' => $nullableTime,
+        'queued_at' => $nullableTime,
+        'accepted_at' => $nullableTime,
+        'last_event_at' => $time,
+        'expires_at' => $nullableTime,
+        'created' => $time,
+        'changed' => $time,
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [
+        'public_id' => ['public_id'],
+        'delivery_key' => ['delivery_key'],
+      ],
+      'indexes' => [
+        'prospect_state' => ['prospect_id', 'state'],
+        'customer_state' => ['customer_id', 'state'],
+        'proof_campaign' => ['proof_campaign_id'],
+        'outbox' => ['email_outbox_id'],
+        'share_expiry' => ['state', 'share_expires_at'],
+      ],
+    ],
+  ];
+}
+
 /**
  * Defines records shared by Commerce fulfillment and customer operations.
  */
@@ -1186,6 +1259,7 @@ function _famtastic_pipeline_lifecycle_schema(): array {
     'primary key' => ['id'], 'unique keys' => ['notification_key' => ['notification_key']],
     'indexes' => ['queue' => ['status', 'available_at'], 'recipient' => ['recipient', 'created']],
   ];
+  $tables += _famtastic_pipeline_preview_delivery_schema();
   $tables['famtastic_support_case'] = [
     'description' => 'Operational support case workflow linked to a portal thread.',
     'fields' => [

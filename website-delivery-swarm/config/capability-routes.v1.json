@@ -5,7 +5,7 @@
     "live_research": ["web_research", "cli_research", "local_research"],
     "research_synthesis": ["premium_reasoning", "balanced_reasoning", "local_text"],
     "creative_direction": ["premium_reasoning", "balanced_reasoning", "local_text"],
-    "image_generation": ["openai_image_api", "managed_image_generation", "local_image_generation"],
+    "image_generation": ["gemini_flash_lite_image", "openai_image_api", "managed_image_generation", "local_image_generation"],
     "prototype_construction": ["premium_code", "balanced_code", "local_code"],
     "browser_qa": ["playwright_chromium"],
     "visual_review": ["independent_vision", "local_vision"],
@@ -26,6 +26,7 @@
     "balanced_code": {"execution": "cloud", "availability": "command_and_auth", "command": "codex", "classes": ["medium", "premium", "custom"]},
     "premium_code": {"execution": "cloud", "availability": "command_and_auth", "command": "claude", "classes": ["premium", "custom"]},
     "openai_image_api": {"execution": "cloud", "availability": "keychain_preflight", "command": "python3", "service": "FAMtastic.OpenAI.Image", "account": "famtastic-image-worker", "model_allowlist": ["gpt-image-2"], "endpoint_allowlist": ["POST /v1/images/generations"], "denied_capabilities": ["text_generation", "research", "code_generation", "embeddings", "audio", "video"], "classes": ["medium", "premium", "custom"]},
+    "gemini_flash_lite_image": {"execution": "cloud", "availability": "keychain_preflight", "command": "node", "worker": "website-delivery-swarm/gemini_flash_lite_image_worker.mjs", "service": "FAMtastic.Gemini.Image", "account": "famtastic-gemini-image-worker", "model_allowlist": ["gemini-3.1-flash-lite-image"], "endpoint_allowlist": ["GET /v1/models/gemini-3.1-flash-lite-image", "POST /v1/models/gemini-3.1-flash-lite-image:generateContent"], "preview_only": true, "max_image_size": "1K", "denied_capabilities": ["text_generation", "research", "code_generation", "embeddings", "audio", "video"], "classes": ["low", "medium", "premium", "custom"]},
     "managed_image_generation": {"execution": "cloud", "availability": "runtime_capability", "classes": ["medium", "premium", "custom"]},
     "local_image_generation": {"execution": "local", "availability": "configured_service", "classes": ["free", "low", "medium", "premium_brain_free_workers", "custom"]},
     "independent_vision": {"execution": "cloud", "availability": "runtime_capability", "classes": ["medium", "premium", "custom"]}
