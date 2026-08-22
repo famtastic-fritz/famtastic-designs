@@ -348,9 +348,23 @@ class ProofCampaignService {
     }
     $jobId = (string) $campaign->get('studio_job_id')->value;
     $alreadyDispatched = $request['proof_review_status'] === 'showcase_building';
+    // The existing a/b/c campaign must not remain customer- or owner-ready
+    // while its d/e/f phase is in flight. Persist this state before an
+    // outbound provider call so retries and Operations see the callback gate,
+    // not stale ready evidence from the previous phase.
+    if ($campaign->get('generation_status')->value !== 'waiting_callback') {
+      $campaign
+        ->set('generation_status', 'waiting_callback')
+        ->set('dispatched_at', $this->time->getRequestTime())
+        ->save();
+    }
     if (!$this->studioClient->isRemote() && !$alreadyDispatched && !str_starts_with($jobId, 'local-showcase-')) {
       $jobId = 'local-showcase-' . bin2hex(random_bytes(16));
-      $campaign->set('studio_job_id', $jobId)->set('dispatched_at', $this->time->getRequestTime())->save();
+      $campaign
+        ->set('studio_job_id', $jobId)
+        ->set('generation_status', 'waiting_callback')
+        ->set('dispatched_at', $this->time->getRequestTime())
+        ->save();
       $this->ledger->recordEvent(
         'proof.showcase_exported:' . $campaign->get('campaign_id')->value,
         'proof.showcase_dispatched',
@@ -377,7 +391,11 @@ class ProofCampaignService {
         'website_discovery_v2' => is_array($intake) ? $intake : [],
         'website_discovery_v3' => is_array($intake) ? $intake : [],
       ]));
-      $campaign->set('studio_job_id', $jobId)->set('dispatched_at', $this->time->getRequestTime())->save();
+      $campaign
+        ->set('studio_job_id', $jobId)
+        ->set('generation_status', 'waiting_callback')
+        ->set('dispatched_at', $this->time->getRequestTime())
+        ->save();
       $this->ledger->recordEvent(
         'proof.showcase_dispatched:' . $campaign->get('campaign_id')->value . ':' . $requestId,
         'proof.showcase_dispatched',
