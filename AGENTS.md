@@ -7,6 +7,12 @@
   Shay, and every other CLI agent.
 - Use `docs/CAPABILITY_REGISTRY.md` to distinguish implemented, provider-proven,
   and production-proven capabilities.
+- FAMtastic Concierge is the customer-facing communications identity; FAMtastic
+  Connections is the durable lead/status projection. Read
+  `docs/architecture/FAMTASTIC_CONNECTIONS_CONCIERGE_CONTRACT_V1.md` before
+  changing Concierge, Inkbox, Solution Finder follow-up, or Site Studio work
+  intake. Never put credentials in a CLI configuration, commit them, or let an
+  agent autonomously send, quote, grant, charge, purchase a domain, or deploy.
 - For marketing strategy, demand generation, blog series, SEO content, FAQs,
   CTAs, product explanations, or pricing recommendations, read
   `docs/DEMAND_ENGINE_DOCTRINE.md` and use

@@ -80,3 +80,19 @@ Shay is an orchestrator, not an alternate source of truth. Shay must use these
 same definitions, proof gates, deployment primitives, and evidence labels. If
 Shay encounters a contradiction, stop and reconcile the canonical product or
 operating contract instead of silently creating a parallel workflow.
+
+## FAMtastic Concierge and Connections
+
+FAMtastic Concierge is the named customer-facing communications identity.
+FAMtastic Connections is the canonical projection of lead, registration,
+communication, proof, offer, and delivery status. Drupal remains the customer,
+Commerce, project, and operational source of truth; Site Studio remains the
+internal build/proof/QA surface. No CLI, including Shay, Codex, or Claude, may
+create a competing CRM or deployment authority.
+
+The Concierge webhook boundary accepts only verified Inkbox events and records
+metadata/status facts. It must not copy customer message bodies into a new
+shadow store, send a response, or turn a delivery event into commercial or
+deployment approval. Human approval remains required before any outbound
+message, price/offer/grant, payment, domain action, or release. The exact
+handoff contract is `docs/architecture/FAMTASTIC_CONNECTIONS_CONCIERGE_CONTRACT_V1.md`.

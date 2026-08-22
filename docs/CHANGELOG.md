@@ -299,3 +299,14 @@
   browser QA found no document-level horizontal overflow.
 - Began the official Meta developer connection and paused at Facebook login for
   Fritz's password/2FA rather than handling or storing Facebook credentials.
+## 2026-08-21 — FAMtastic Concierge event bridge
+
+- Added a signature-verified, idempotent Inkbox lifecycle receiver for the
+  FAMtastic Concierge identity and recorded public Solution Finder submissions
+  in the shared Concierge timeline.
+- The bridge stores only lifecycle metadata and lead matching facts; it does
+  not send customer messages or alter pricing, grant, payment, domain, or
+  deployment authority.
+- Added the cross-CLI and Site Studio handoff contract. Production deployment,
+  webhook subscription, signing-key configuration, and live certification are
+  deliberately deferred.

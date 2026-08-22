@@ -15,6 +15,7 @@ capability is not “proven” merely because code exists.
 | Scoped service grants and owner comps | Locally proven | Hashed account/request codes with audited zero-dollar Commerce fulfillment |
 | Private customer visual references | Locally proven | Consent-tracked, checksummed image and PDF inputs attached to one request |
 | Lead response and notifications | Test-provider proven | Acknowledgment, owner alerts, deadlines, escalation, and worker protection |
+| FAMtastic Concierge to Connections event bridge | Locally proven | Signed, idempotent email/iMessage lifecycle metadata projected onto the Drupal lead timeline without autonomous replies or commercial authority |
 | Portal support cases | Test-provider proven | Customer timelines, priority targets, replies, and staff alerts |
 | Mail reply ingestion | Locally proven | Thread-address matching, validation, attachment policy, and unmatched-reply handling |
 | Google Analytics operations reporting | Production smoke-tested | Separate traffic/campaign reporting and customer analytics entitlement |
