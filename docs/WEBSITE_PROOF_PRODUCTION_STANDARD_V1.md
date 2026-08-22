@@ -8,18 +8,21 @@ Routine: `website_proof.generate.v1(source_id)`
 ## Outcome
 
 Every qualified website request must become an auditable, customer-owned path
-from intake to three genuinely different working concepts, with an optional
-three-concept FAMtastic showcase expansion. The system prepares
-the work automatically, stops at explicit human approval gates, keeps prices
-deterministic, and preserves enough evidence to reproduce what happened.
+from intake to genuinely different working concepts. A direct registered
+request receives three directions. A public lead's detailed continuation
+receives a fresh six-direction package, never an append-only expansion of its
+public teaser. The system prepares the work automatically, stops at explicit
+human approval gates, keeps prices deterministic, and preserves enough evidence
+to reproduce what happened.
 
 The customer promise is simple:
 
 1. Register or use the public request path.
 2. Complete the website brief.
 3. Review three working concepts: Safe, Medium FAMtastic, and Ultra FAMtastic.
-   When explicitly commissioned, compare three additional maximum-FAMtastic
-   concepts in the same private review, for six total.
+   A public lead who creates a verified same-email workspace and completes its
+   detailed intake receives a new six-direction comparison: one Normal, one
+   Medium FAMtastic, and four Ultra FAMtastic directions.
 4. Select a direction and request refinements.
 5. Confirm scope and payment.
 6. FAMtastic deploys the approved release.
@@ -64,8 +67,12 @@ Public lead
 ```
 
 The public-lead adapter may begin from a lead id, but every continued run must
-resolve to a canonical website request. Remaining idempotency is keyed by the
-website request id and brief version.
+resolve to a canonical website request and its exact immutable preview-delivery
+source. The original public `a/b/c` campaign remains historical evidence on
+that delivery. The detailed request starts with no active campaign and creates
+a new `portal_refined_six.v1` `a`–`f` campaign from its frozen detailed intake
+and consent-filtered asset manifest. Remaining idempotency is keyed by the
+website request id and frozen brief version.
 
 ## Callable routine
 
@@ -168,18 +175,21 @@ above are generic. A creative title can appear only in that run's researched,
 recorded direction contract and Build DNA. A title from Shay, a prior client,
 or another proof run must never become a global default for a new client.
 
-### Optional FAMtastic showcase pack
+### Legacy append-only showcase profile
 
-An explicit owner or customer request may add exactly three further directions
-to an already complete Safe/Medium FAMtastic/Ultra FAMtastic set. The result is
-six—not a replacement for the core three—and uses stable identifiers `d`, `e`,
-and `f`. These
-directions must be original working sites at the requested high creative
-intensity, satisfy the same responsive and evidence contract, and remain behind
-the same owner approval gate. One showcase callback may add only `d/e/f`; it
-may not overwrite `a/b/c` or expose anything to the customer automatically.
-Until a run's research and creative-direction stage records a more specific
-title, `d/e/f` use generic Ultra FAMtastic Direction 2/3/4 labels.
+`portal_showcase.v1` may remain readable and support historical proof records
+that appended `d/e/f` to an already complete `a/b/c` campaign. It is not the
+current detailed-intake standard and must not be selected for any new public
+lead continuation or new detailed portal request.
+
+The current six-direction detailed package is `portal_refined_six.v1`. It
+creates a separate campaign with stable identifiers `a` through `f`: one
+Normal, one Medium FAMtastic, and four Ultra FAMtastic directions. It carries
+the exact public delivery ID, parent public campaign/Build DNA identifiers,
+frozen `website_discovery_v3` bytes and hash, and consent-filtered asset
+manifest bytes and hash. No worker may reinterpret a mutable request field,
+reuse the public campaign as the active request campaign, or change this
+lineage by selecting a newer delivery for the same email or Prospect.
 
 ## Engine and agent boundaries
 
@@ -346,8 +356,9 @@ The sanitized Shay locs request is the first golden benchmark fixture. A clean
 run must repeatedly produce:
 
 - one request and one deterministic package recommendation;
-- exactly three distinct core working demos, plus three showcase demos when the
-  showcase profile is explicitly exercised;
+- exactly three distinct direct-request demos, or—when exercising the public
+  continuation—the immutable public three plus a new, separate six-direction
+  `portal_refined_six.v1` campaign;
 - desktop and mobile screenshots for every generated direction;
 - no broken links or horizontal mobile overflow;
 - required calls to action and research citations;
@@ -417,9 +428,12 @@ The production journey is releasable only when all of the following are true:
 4. Stale worker state and notification backlog are visible to administrators.
 5. The intake persists creative intensity, colors, avoidance, references,
    uploads, and AI consent with the declared schema version.
-6. Exactly three Safe/Medium FAMtastic/Ultra FAMtastic proofs enter owner review and remain
-   customer-hidden; an explicitly requested showcase adds exactly d/e/f and
-   keeps all six customer-hidden until a new owner approval.
+6. Exactly three Safe/Medium FAMtastic/Ultra FAMtastic direct-request proofs
+   enter owner review and remain customer-hidden. A public continuation creates
+   a fresh six-direction `portal_refined_six.v1` campaign from immutable
+   lineage, keeps its parent public `a/b/c` campaign historical, and keeps all
+   six new directions customer-hidden until a new owner approval. The legacy
+   append-only showcase profile is historical/readable only.
 7. Owner approval reveals proofs and queues one account notification.
 8. Cross-account reads, proof views, selections, uploads, and grant redemption fail.
 9. Unlisted sharing is off by default; enable, rotate, and disable are

@@ -18,6 +18,24 @@ use Drupal\famtastic_pipeline\Entity\Order;
  */
 final class CustomerPortalService {
 
+  /** The only detailed continuation profile for a claimed public preview. */
+  private const REFINED_PROOF_PHASE = 'refined_six';
+  private const REFINED_PROOF_PROFILE = 'portal_refined_six.v1';
+
+  /** A normal authenticated request remains a separate three-direction run. */
+  private const INITIAL_PROOF_PHASE = 'initial';
+  private const INITIAL_PROOF_PROFILE = 'portal_initial.v1';
+
+  /** Stable, generic contract for the new detailed six-direction campaign. */
+  private const REFINED_DIRECTION_CONTRACT = [
+    'a' => ['name' => 'Normal', 'intent' => 'polished, familiar, credible, and grounded in the detailed customer intake'],
+    'b' => ['name' => 'Medium FAMtastic', 'intent' => 'expressive and differentiated while preserving practical clarity'],
+    'c' => ['name' => 'Ultra FAMtastic · Direction 1', 'intent' => 'the first campaign-level visual idea derived from the detailed intake'],
+    'd' => ['name' => 'Ultra FAMtastic · Direction 2', 'intent' => 'a distinct maximum-FAMtastic visual system and conversion path'],
+    'e' => ['name' => 'Ultra FAMtastic · Direction 3', 'intent' => 'a third maximum-FAMtastic visual system and conversion path'],
+    'f' => ['name' => 'Ultra FAMtastic · Direction 4', 'intent' => 'a fourth maximum-FAMtastic visual system and conversion path'],
+  ];
+
   public function __construct(
     private readonly Connection $database,
     private readonly EntityTypeManagerInterface $entities,
@@ -42,13 +60,22 @@ final class CustomerPortalService {
   }
 
   public function createCustomer(UserInterface $user, array $input = []): array {
+    $email = mb_strtolower(trim($user->getEmail()));
+    $signupPreview = $this->previews->markSignupStarted((string) ($input['preview_continuation'] ?? ''), $email);
     if ($existing = $this->customerForUid((int) $user->id())) {
+      if ($signupPreview) {
+        $this->previews->bindSignupCustomer((int) $signupPreview['id'], (int) $existing['id'], $email);
+        if (!empty($existing['verified_at'])) {
+          $this->previews->claimVerifiedCustomer((int) $existing['id'], $email);
+        }
+      }
       return $existing;
     }
     $now = $this->time->getRequestTime();
-    $email = mb_strtolower(trim($user->getEmail()));
-    $this->previews->markSignupStarted((string) ($input['preview_continuation'] ?? ''), $email);
-    $prospectId = $this->findProspect($email);
+    // A signed continuation is the authority for its own public lead. Do not
+    // let a later same-email prospect replace that relationship merely because
+    // it has a larger numeric ID.
+    $prospectId = $signupPreview ? (int) $signupPreview['prospect_id'] : $this->findProspect($email);
     $customerId = (int) $this->database->insert('famtastic_customer')->fields([
       'public_id' => $this->uuid->generate(), 'uid' => (int) $user->id(),
       'prospect_id' => $prospectId,
@@ -68,6 +95,9 @@ final class CustomerPortalService {
       'organization_id' => $organizationId, 'customer_id' => $customerId,
       'role' => 'owner', 'status' => 'active', 'created' => $now, 'changed' => $now,
     ])->execute();
+    if ($signupPreview) {
+      $this->previews->bindSignupCustomer((int) $signupPreview['id'], $customerId, $email);
+    }
     if ($prospectId) {
       $this->claimResource($organizationId, 'prospect', $prospectId);
       $this->claimProspectResources($organizationId, $prospectId);
@@ -238,8 +268,12 @@ final class CustomerPortalService {
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
     $clean = $this->validateWebsiteRequest($input);
     $now = $this->time->getRequestTime();
-    $claimedPreview = $this->previews->claimedPreviewForCustomer($customerId);
-    $claimedProspectId = $claimedPreview ? (int) $claimedPreview['prospect_id'] : $this->previews->claimedProspectId($customerId);
+    $requestedDelivery = trim((string) ($input['source_preview_delivery'] ?? ''));
+    $claimedPreview = $this->previews->claimedPreviewForCustomer($customerId, $requestedDelivery ?: NULL);
+    if ($requestedDelivery !== '' && !$claimedPreview) {
+      throw new \InvalidArgumentException('That public preview is not available for this customer workspace.');
+    }
+    $claimedProspectId = $claimedPreview ? (int) $claimedPreview['prospect_id'] : NULL;
     $prospect = $claimedProspectId ? $this->entities->getStorage('famtastic_prospect')->load($claimedProspectId) : NULL;
     if (!$prospect) {
       $prospect = $this->entities->getStorage('famtastic_prospect')->create([
@@ -252,11 +286,18 @@ final class CustomerPortalService {
       $prospect->save();
     }
     $publicId = $this->uuid->generate();
+    $sourceDeliveryId = $claimedPreview ? (int) $claimedPreview['id'] : NULL;
+    $refined = $sourceDeliveryId !== NULL;
     $id = (int) $this->database->insert('famtastic_project_request')->fields([
       'public_id' => $publicId, 'organization_id' => (int) $organization['id'], 'customer_id' => $customerId,
       'prospect_id' => (int) $prospect->id(), 'status' => $clean['status'],
-      'proof_campaign_id' => $claimedPreview ? (int) $claimedPreview['proof_campaign_id'] : NULL,
-      'proof_review_status' => $claimedPreview && $clean['status'] === 'submitted' ? 'refinement_queued' : 'not_started',
+      // The public a/b/c campaign remains immutable on its delivery record.
+      // A detailed account-owned request begins with no active proof campaign.
+      'source_preview_delivery_id' => $sourceDeliveryId,
+      'proof_campaign_id' => NULL,
+      'proof_review_status' => $refined && $clean['status'] === 'submitted' ? 'refinement_queued' : 'not_started',
+      'proof_phase' => $refined ? self::REFINED_PROOF_PHASE : self::INITIAL_PROOF_PHASE,
+      'proof_profile_id' => $refined ? self::REFINED_PROOF_PROFILE : self::INITIAL_PROOF_PROFILE,
       'project_name' => $clean['project_name'], 'business_name' => $clean['business_name'],
       'project_type' => $clean['project_type'], 'domain_choice' => $clean['domain_choice'],
       'existing_domain' => $clean['existing_domain'], 'recommendation_requested' => $clean['recommendation_requested'],
@@ -264,12 +305,24 @@ final class CustomerPortalService {
       'submitted_at' => $clean['status'] === 'submitted' ? $now : NULL, 'created' => $now, 'changed' => $now,
     ])->execute();
     $this->claimResource((int) $organization['id'], 'prospect', (int) $prospect->id());
-    $this->previews->attachClaimedRequest($customerId, $id, $clean['status']);
+    // Freeze and validate the parent proof evidence before changing the public
+    // delivery state. If that evidence is unavailable, the new request remains
+    // recoverable but no public proof is accidentally consumed or notified.
+    $lineage = NULL;
+    if ($sourceDeliveryId !== NULL && $clean['status'] === 'submitted') {
+      $lineage = $this->freezeDetailedRequestLineage($id, $publicId, $clean['intake'], $now);
+    }
+    if ($sourceDeliveryId !== NULL) {
+      $this->previews->attachClaimedRequest($customerId, $sourceDeliveryId, $id, $clean['status']);
+    }
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
     if ($clean['status'] === 'submitted') {
       $this->queueWebsiteRequestNotifications($id, $customer, $clean);
-      if ($claimedPreview) {
-        $this->queueWebsiteRequestRefinementJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
+      if ($sourceDeliveryId !== NULL) {
+        if ($lineage === NULL) {
+          throw new \LogicException('The detailed request did not preserve its required public-preview lineage.');
+        }
+        $this->queueWebsiteRequestRefinementJob($id, (int) $prospect->id(), $publicId, $lineage);
       }
       else {
         $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
@@ -302,9 +355,17 @@ final class CustomerPortalService {
         $prospect->set('status', 'lead');
         $prospect->save();
       }
+      $sourceDeliveryId = (int) ($row['source_preview_delivery_id'] ?? 0);
+      if ($sourceDeliveryId > 0) {
+        $lineage = $this->freezeDetailedRequestLineage((int) $row['id'], (string) $row['public_id'], $clean['intake'], $now);
+        $this->previews->attachClaimedRequest($customerId, $sourceDeliveryId, (int) $row['id'], 'submitted');
+        $this->queueWebsiteRequestRefinementJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $lineage);
+      }
+      else {
+        $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $clean['intake']);
+      }
       $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
       $this->queueWebsiteRequestNotifications((int) $row['id'], $customer, $clean);
-      $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $clean['intake']);
       $this->activity((int) $row['organization_id'], 'website_request.submitted', 'A website request was submitted for review.');
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
@@ -419,7 +480,14 @@ final class CustomerPortalService {
       && $row['proof_review_status'] === 'selected'
       && empty($recommendation['review_required'])
       && in_array($row['recommended_sku'], ['FAM-FOOT-199', 'FAM-BUSINESS-499'], TRUE);
-    foreach (['id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id', 'intake_data', 'proof_campaign_id', 'proof_approved_by_uid', 'proof_share_enabled', 'proof_share_version', 'proof_share_changed_at', 'proof_share_changed_by_uid'] as $key) unset($row[$key]);
+    foreach ([
+      'id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id',
+      'intake_data', 'proof_campaign_id', 'proof_approved_by_uid', 'proof_share_enabled', 'proof_share_version',
+      'proof_share_changed_at', 'proof_share_changed_by_uid', 'source_preview_delivery_id',
+      'parent_public_proof_campaign_id', 'parent_public_campaign_key', 'parent_public_build_dna_id',
+      'parent_public_build_dna_hash', 'detailed_intake_snapshot', 'detailed_intake_snapshot_sha256',
+      'consented_asset_manifest', 'consented_asset_manifest_sha256', 'proof_phase', 'proof_profile_id',
+    ] as $key) unset($row[$key]);
     return $row;
   }
 
@@ -556,6 +624,188 @@ final class CustomerPortalService {
       ->condition('website_request_id', $requestId)->condition('status', 'active')->orderBy('created')->execute()->fetchAll(\PDO::FETCH_ASSOC));
   }
 
+  /**
+   * Freezes the exact detailed brief and usable reference assets for one
+   * claimed public delivery. These bytes are the only portal facts passed to
+   * the refined proof runner; later edits to intake_data cannot silently alter
+   * an already-queued six-direction build.
+   */
+  private function freezeDetailedRequestLineage(int $requestId, string $requestPublicId, array $intake, int $now): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$row || !hash_equals((string) $row['public_id'], $requestPublicId) || (int) ($row['source_preview_delivery_id'] ?? 0) < 1) {
+      throw new \RuntimeException('The detailed request is missing its exact public preview source.');
+    }
+    if ((string) ($row['detailed_intake_snapshot'] ?? '') !== ''
+      || (string) ($row['detailed_intake_snapshot_sha256'] ?? '') !== '') {
+      return $this->validatedDetailedRequestLineage($row);
+    }
+    if (($intake['schema_version'] ?? '') !== 'website_discovery_v3') {
+      throw new \InvalidArgumentException('Detailed refinement requires a normalized website_discovery_v3 intake.');
+    }
+
+    $parent = $this->parentPublicLineage($row);
+    // The snapshot stays a direct v3 object so every worker can validate it
+    // without reconstructing a wrapper or reading mutable request fields.
+    $snapshot = $this->canonicalJson($intake);
+    $manifest = $this->canonicalJson([
+      'schema' => 'famtastic.consented-asset-manifest.v1',
+      'assets' => $this->consentedAssetManifest($requestId),
+    ]);
+    $lineage = $parent + [
+      'source_preview_delivery_id' => (int) $row['source_preview_delivery_id'],
+      'detailed_intake_snapshot' => $snapshot,
+      'detailed_intake_snapshot_sha256' => hash('sha256', $snapshot),
+      'consented_asset_manifest' => $manifest,
+      'consented_asset_manifest_sha256' => hash('sha256', $manifest),
+    ];
+    $this->database->update('famtastic_project_request')->fields($lineage + [
+      'proof_review_status' => 'refinement_queued',
+      'proof_phase' => self::REFINED_PROOF_PHASE,
+      'proof_profile_id' => self::REFINED_PROOF_PROFILE,
+      'changed' => $now,
+    ])->condition('id', $requestId)->execute();
+    return $lineage;
+  }
+
+  /** Validates persisted refined lineage before it can leave Drupal again. */
+  private function validatedDetailedRequestLineage(array $row): array {
+    if ((int) ($row['source_preview_delivery_id'] ?? 0) < 1
+      || (string) ($row['proof_phase'] ?? '') !== self::REFINED_PROOF_PHASE
+      || (string) ($row['proof_profile_id'] ?? '') !== self::REFINED_PROOF_PROFILE) {
+      throw new \RuntimeException('The detailed request is not bound to the required refined proof profile.');
+    }
+    $lineage = [];
+    foreach ([
+      'parent_public_proof_campaign_id', 'parent_public_campaign_key',
+      'parent_public_build_dna_id', 'parent_public_build_dna_hash',
+      'detailed_intake_snapshot', 'detailed_intake_snapshot_sha256',
+      'consented_asset_manifest', 'consented_asset_manifest_sha256',
+    ] as $key) {
+      $lineage[$key] = $row[$key] ?? '';
+    }
+    $lineage['source_preview_delivery_id'] = (int) $row['source_preview_delivery_id'];
+    if ((int) $lineage['parent_public_proof_campaign_id'] < 1
+      || trim((string) $lineage['parent_public_campaign_key']) === ''
+      || trim((string) $lineage['parent_public_build_dna_id']) === ''
+      || !preg_match('/^[a-f0-9]{64}$/', (string) $lineage['parent_public_build_dna_hash'])
+      || !preg_match('/^[a-f0-9]{64}$/', (string) $lineage['detailed_intake_snapshot_sha256'])
+      || !preg_match('/^[a-f0-9]{64}$/', (string) $lineage['consented_asset_manifest_sha256'])) {
+      throw new \RuntimeException('The refined proof lineage is incomplete.');
+    }
+    foreach (['detailed_intake_snapshot', 'consented_asset_manifest'] as $field) {
+      $hashField = $field . '_sha256';
+      $raw = (string) $lineage[$field];
+      if ($raw === '' || !hash_equals((string) $lineage[$hashField], hash('sha256', $raw))) {
+        throw new \RuntimeException('The refined proof lineage hash does not match its immutable source snapshot.');
+      }
+      try {
+        $decoded = json_decode($raw, TRUE, 512, JSON_THROW_ON_ERROR);
+      }
+      catch (\Throwable) {
+        throw new \RuntimeException('The refined proof lineage contains unreadable JSON.');
+      }
+      if (!is_array($decoded)) {
+        throw new \RuntimeException('The refined proof lineage contains an invalid JSON object.');
+      }
+      if ($field === 'detailed_intake_snapshot' && ($decoded['schema_version'] ?? '') !== 'website_discovery_v3') {
+        throw new \RuntimeException('The refined proof lineage does not contain a website_discovery_v3 intake snapshot.');
+      }
+      if ($field === 'consented_asset_manifest' && ($decoded['schema'] ?? '') !== 'famtastic.consented-asset-manifest.v1') {
+        throw new \RuntimeException('The refined proof lineage does not contain the expected consented asset manifest.');
+      }
+    }
+    return $lineage;
+  }
+
+  /** Resolves the public delivery's immutable completed campaign and Build DNA. */
+  private function parentPublicLineage(array $request): array {
+    $deliveryId = (int) ($request['source_preview_delivery_id'] ?? 0);
+    $delivery = $this->database->select('famtastic_preview_delivery', 'd')->fields('d')
+      ->condition('id', $deliveryId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$delivery
+      || (int) $delivery['prospect_id'] !== (int) $request['prospect_id']
+      || (!empty($delivery['website_request_id']) && (int) $delivery['website_request_id'] !== (int) $request['id'])
+      || (int) ($delivery['proof_campaign_id'] ?? 0) < 1
+      || trim((string) ($delivery['build_dna_id'] ?? '')) === ''
+      || !preg_match('/^[a-f0-9]{64}$/', (string) ($delivery['build_dna_hash'] ?? ''))) {
+      throw new \RuntimeException('The claimed public preview does not have immutable proof and Build DNA evidence.');
+    }
+    $campaign = $this->entities->getStorage('proof_campaign')->load((int) $delivery['proof_campaign_id']);
+    if (!$campaign || (int) $campaign->get('prospect_id')->target_id !== (int) $request['prospect_id']) {
+      throw new \RuntimeException('The claimed public preview campaign does not belong to this detailed request.');
+    }
+    $dna = $this->buildTelemetry->loadBuildDna((string) $delivery['build_dna_id']);
+    if (!$dna) {
+      throw new \RuntimeException('The claimed public preview Build DNA projection is incomplete or belongs to another campaign.');
+    }
+    $manifest = (array) ($dna['manifest'] ?? []);
+    $run = (array) ($manifest['run'] ?? []);
+    if ((string) ($dna['record']['status'] ?? '') !== 'completed'
+      || !hash_equals((string) $delivery['build_dna_hash'], (string) ($dna['record']['artifact_checksum'] ?? ''))
+      || (int) ($dna['record']['proof_campaign_id'] ?? 0) !== (int) $campaign->id()
+      || (string) ($manifest['classification'] ?? '') !== 'production_proof_completion'
+      || (string) ($run['completion_state'] ?? '') !== 'provider_completed'
+      || (string) ($manifest['recipe']['routine'] ?? '') !== ProofRunnerContractService::ROUTINE
+      || (string) ($manifest['recipe']['profile_id'] ?? '') !== 'public_initial.v1'
+      || (int) ($run['prospect_id'] ?? 0) !== (int) $request['prospect_id']
+      || (int) ($run['proof_campaign_id'] ?? 0) !== (int) $campaign->id()) {
+      throw new \RuntimeException('The claimed public preview Build DNA projection is incomplete or belongs to another campaign.');
+    }
+    $source = (array) ($run['source_correlation'] ?? []);
+    if ((string) ($source['type'] ?? '') !== 'public_solution_finder_intake'
+      || (string) ($source['proof_phase'] ?? '') !== 'initial'
+      || (int) ($source['public_preview_delivery_id'] ?? 0) !== $deliveryId) {
+      throw new \RuntimeException('The claimed public preview Build DNA does not name this exact delivery.');
+    }
+    return [
+      'parent_public_proof_campaign_id' => (int) $campaign->id(),
+      'parent_public_campaign_key' => (string) $campaign->get('campaign_id')->value,
+      'parent_public_build_dna_id' => (string) $delivery['build_dna_id'],
+      'parent_public_build_dna_hash' => (string) $delivery['build_dna_hash'],
+    ];
+  }
+
+  /** Returns only active, owned assets explicitly consented for AI reference. */
+  private function consentedAssetManifest(int $requestId): array {
+    $rows = $this->database->select('famtastic_request_asset', 'a')
+      ->fields('a', ['public_id', 'file_id', 'kind', 'mime_type', 'size_bytes', 'sha256'])
+      ->condition('website_request_id', $requestId)
+      ->condition('status', 'active')
+      ->condition('ownership_confirmed', 1)
+      ->condition('ai_use_consent', 1)
+      ->orderBy('public_id')
+      ->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    return array_map(static fn(array $asset): array => [
+      'asset_public_id' => (string) $asset['public_id'],
+      'file_id' => (int) $asset['file_id'],
+      'kind' => (string) $asset['kind'],
+      'mime_type' => (string) $asset['mime_type'],
+      'size_bytes' => (int) $asset['size_bytes'],
+      'sha256' => (string) $asset['sha256'],
+      'ai_reference_permitted' => TRUE,
+    ], $rows);
+  }
+
+  /** Produces stable bytes for snapshots and their recorded SHA-256 hashes. */
+  private function canonicalJson(array $value): string {
+    return json_encode($this->canonicalize($value), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+  }
+
+  private function canonicalize(mixed $value): mixed {
+    if (!is_array($value)) {
+      return $value;
+    }
+    if (array_is_list($value)) {
+      return array_map(fn(mixed $item): mixed => $this->canonicalize($item), $value);
+    }
+    ksort($value, SORT_STRING);
+    foreach ($value as $key => $item) {
+      $value[$key] = $this->canonicalize($item);
+    }
+    return $value;
+  }
+
   private function queueWebsiteRequestNotifications(int $id, array $customer, array $request): void {
     $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $subject = 'Website request received — ' . $request['project_name'];
@@ -583,6 +833,8 @@ final class CustomerPortalService {
         'prospect_id' => $prospectId,
         'website_request_id' => $requestId,
         'website_request_public_id' => $publicId,
+        'proof_phase' => self::INITIAL_PROOF_PHASE,
+        'requested_profile_id' => self::INITIAL_PROOF_PROFILE,
         'website_discovery_v3' => $intake,
         'website_discovery_v2' => $intake,
         'directions' => ProofCampaignService::CORE_DIRECTIONS,
@@ -592,21 +844,35 @@ final class CustomerPortalService {
     );
   }
 
-  /** Enqueues the six-direction refinement after a verified public-preview claim. */
-  private function queueWebsiteRequestRefinementJob(int $requestId, int $prospectId, string $publicId, array $intake): void {
+  /** Enqueues one new six-direction campaign from an immutable detailed brief. */
+  private function queueWebsiteRequestRefinementJob(int $requestId, int $prospectId, string $publicId, array $lineage): void {
+    $sourceDeliveryId = (int) ($lineage['source_preview_delivery_id'] ?? 0);
+    if ($sourceDeliveryId < 1) {
+      throw new \RuntimeException('A detailed six-direction proof requires its exact claimed public preview source.');
+    }
     $this->ledger->enqueue(
-      'website_proof.generate.v1:showcase:request:' . $requestId,
-      'proof.showcase.generate',
+      'website_proof.refined.generate.v1:request:' . $requestId . ':' . (string) $lineage['detailed_intake_snapshot_sha256'],
+      'proof.refined.generate',
       [
         'routine' => ProofRunnerContractService::ROUTINE,
-        'proof_phase' => 'showcase',
+        'delivery_class' => 'authenticated_refined',
+        'proof_phase' => self::REFINED_PROOF_PHASE,
+        'requested_profile_id' => self::REFINED_PROOF_PROFILE,
         'prospect_id' => $prospectId,
         'website_request_id' => $requestId,
         'website_request_public_id' => $publicId,
+        'source_preview_delivery_id' => $sourceDeliveryId,
+        // The public delivery's campaign is historical proof only. This job
+        // starts a fresh account-owned a-f campaign from the detailed brief.
+        'public_preview_delivery_id' => $sourceDeliveryId,
         'proof_count' => 6,
-        'proof_mix' => ['safe', 'medium_famtastic', 'ultra_famtastic_1', 'ultra_famtastic_2', 'ultra_famtastic_3', 'ultra_famtastic_4'],
-        'website_discovery_v3' => $intake,
-        'website_discovery_v2' => $intake,
+        'proof_mix' => ['normal', 'medium_famtastic', 'ultra_famtastic_1', 'ultra_famtastic_2', 'ultra_famtastic_3', 'ultra_famtastic_4'],
+        'directions' => array_map(static fn(array $direction): string => $direction['name'], self::REFINED_DIRECTION_CONTRACT),
+        'direction_contract' => self::REFINED_DIRECTION_CONTRACT,
+        'detailed_intake_snapshot' => (string) $lineage['detailed_intake_snapshot'],
+        'detailed_intake_snapshot_sha256' => (string) $lineage['detailed_intake_snapshot_sha256'],
+        'consented_asset_manifest' => (string) $lineage['consented_asset_manifest'],
+        'consented_asset_manifest_sha256' => (string) $lineage['consented_asset_manifest_sha256'],
       ],
       $prospectId,
     );
@@ -619,8 +885,35 @@ final class CustomerPortalService {
       throw new \RuntimeException('Submitted website request not found.');
     }
     $intake = json_decode((string) $row['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR);
+    $sourceDeliveryId = (int) ($row['source_preview_delivery_id'] ?? 0);
+    if ($sourceDeliveryId > 0) {
+      $lineage = $this->validatedDetailedRequestLineage($row);
+      $snapshot = json_decode((string) $lineage['detailed_intake_snapshot'], TRUE, flags: JSON_THROW_ON_ERROR);
+      return [
+        'routine' => ProofRunnerContractService::ROUTINE,
+        'delivery_class' => 'authenticated_refined',
+        'proof_phase' => self::REFINED_PROOF_PHASE,
+        'requested_profile_id' => self::REFINED_PROOF_PROFILE,
+        'website_request_id' => (int) $row['id'],
+        'website_request_public_id' => (string) $row['public_id'],
+        'source_preview_delivery_id' => $sourceDeliveryId,
+        'public_preview_delivery_id' => $sourceDeliveryId,
+        'parent_public_proof_campaign_id' => (int) $lineage['parent_public_proof_campaign_id'],
+        'parent_public_campaign_key' => (string) $lineage['parent_public_campaign_key'],
+        'parent_public_build_dna_id' => (string) $lineage['parent_public_build_dna_id'],
+        'parent_public_build_dna_hash' => (string) $lineage['parent_public_build_dna_hash'],
+        'proof_count' => 6,
+        'proof_mix' => ['normal', 'medium_famtastic', 'ultra_famtastic_1', 'ultra_famtastic_2', 'ultra_famtastic_3', 'ultra_famtastic_4'],
+        'directions' => array_map(static fn(array $direction): string => $direction['name'], self::REFINED_DIRECTION_CONTRACT),
+        'direction_contract' => self::REFINED_DIRECTION_CONTRACT,
+        'website_discovery_v3' => $snapshot,
+        'website_discovery_v2' => $snapshot,
+      ] + $lineage;
+    }
     return [
       'routine' => 'website_proof.generate.v1',
+      'proof_phase' => (string) ($row['proof_phase'] ?: self::INITIAL_PROOF_PHASE),
+      'requested_profile_id' => (string) ($row['proof_profile_id'] ?: self::INITIAL_PROOF_PROFILE),
       'website_request_id' => (int) $row['id'],
       'website_request_public_id' => (string) $row['public_id'],
       'website_discovery_v3' => $intake,
@@ -641,18 +934,48 @@ final class CustomerPortalService {
       ->condition('campaign_id', (int) $row['proof_campaign_id'])->sort('direction_id')->execute();
     $directionValues = array_map(static fn(object $variant): string => (string) $variant->get('direction_id')->value,
       array_values($this->entities->getStorage('proof_variant')->loadMultiple($directions)));
-    $validSet = $directionValues === ['a', 'b', 'c'] || $directionValues === ['a', 'b', 'c', 'd', 'e', 'f'];
+    $refined = (int) ($row['source_preview_delivery_id'] ?? 0) > 0;
+    $validSet = $refined
+      ? $directionValues === ['a', 'b', 'c', 'd', 'e', 'f']
+      : ($directionValues === ['a', 'b', 'c'] || $directionValues === ['a', 'b', 'c', 'd', 'e', 'f']);
     if (!$campaign || $campaign->get('generation_status')->value !== 'ready' || !in_array($variantCount, [3, 6], TRUE) || !$validSet) throw new \RuntimeException('A complete three- or six-direction proof set is required.');
-    $proofPhase = $variantCount === 6 ? 'showcase' : 'initial';
+    $proofPhase = $refined ? self::REFINED_PROOF_PHASE : ((string) ($row['proof_phase'] ?: ($variantCount === 6 ? 'showcase' : self::INITIAL_PROOF_PHASE)));
+    $proofProfile = $refined ? self::REFINED_PROOF_PROFILE : ((string) ($row['proof_profile_id'] ?: ($variantCount === 6 ? 'portal_showcase.v1' : self::INITIAL_PROOF_PROFILE)));
+    if ($refined && ((string) $row['proof_phase'] !== self::REFINED_PROOF_PHASE || (string) $row['proof_profile_id'] !== self::REFINED_PROOF_PROFILE)) {
+      throw new \RuntimeException('The detailed public-preview continuation does not have the required refined proof profile.');
+    }
     $proofRoutine = ProofRunnerContractService::ROUTINE;
-    if (!$this->buildTelemetry->hasCompletedBuildDnaForCampaign((int) $campaign->id(), [
+    $requiredSource = [
       'prospect_id' => (int) $row['prospect_id'],
       'type' => 'authenticated_website_request',
       'proof_phase' => $proofPhase,
       'website_request_id' => $requestId,
       'website_request_public_id' => (string) $row['public_id'],
-    ], $proofRoutine)) {
+    ];
+    if ($refined) {
+      $requiredSource['public_preview_delivery_id'] = (int) $row['source_preview_delivery_id'];
+    }
+    if (!$this->buildTelemetry->hasCompletedBuildDnaForCampaign((int) $campaign->id(), $requiredSource, $proofRoutine)) {
       throw new \RuntimeException('A complete source-bound Build DNA callback is required before customer proof delivery can be approved.');
+    }
+    $build = $this->buildTelemetry->loadBuildDnaForCampaign((int) $campaign->id());
+    $manifest = (array) ($build['manifest'] ?? []);
+    $run = (array) ($manifest['run'] ?? []);
+    if ((string) ($manifest['classification'] ?? '') !== 'production_proof_completion'
+      || (string) ($run['completion_state'] ?? '') !== 'provider_completed'
+      || (string) ($manifest['recipe']['profile_id'] ?? '') !== $proofProfile) {
+      throw new \RuntimeException('The completed Build DNA profile does not match this exact proof phase.');
+    }
+    if ($refined) {
+      $lineage = (array) ($manifest['lineage'] ?? []);
+      foreach ([
+        'parent_public_proof_campaign_id', 'parent_public_campaign_key',
+        'parent_public_build_dna_id', 'parent_public_build_dna_hash',
+      ] as $field) {
+        if ((string) ($lineage[$field] ?? '') !== (string) ($row[$field] ?? '')) {
+          throw new \RuntimeException('The completed Build DNA does not preserve the exact public-preview parent lineage.');
+        }
+      }
     }
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_project_request')->fields([
@@ -689,7 +1012,10 @@ final class CustomerPortalService {
       $directions[] = (string) $variant->get('direction_id')->value;
     }
     sort($directions);
-    $validSet = $directions === ['a', 'b', 'c'] || $directions === ['a', 'b', 'c', 'd', 'e', 'f'];
+    $refined = (int) ($row['source_preview_delivery_id'] ?? 0) > 0;
+    $validSet = $refined
+      ? $directions === ['a', 'b', 'c', 'd', 'e', 'f']
+      : ($directions === ['a', 'b', 'c'] || $directions === ['a', 'b', 'c', 'd', 'e', 'f']);
     if (!$validSet || $campaign->get('generation_status')->value !== 'ready') {
       throw new \RuntimeException('A complete Safe, Medium FAMtastic, and Ultra FAMtastic set or six-direction refinement set is required.');
     }

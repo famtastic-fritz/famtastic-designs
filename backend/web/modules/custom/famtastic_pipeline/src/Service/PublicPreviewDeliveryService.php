@@ -23,7 +23,7 @@ final class PublicPreviewDeliveryService {
 
   private const STATES_VISIBLE_TO_HOLDER = [
     'share_enabled', 'email_queued', 'email_accepted', 'concept_room_viewed',
-    'signup_started', 'account_verified_and_claimed', 'request_submitted',
+    'signup_started', 'account_verified_and_claimed', 'request_attached', 'request_submitted',
   ];
 
   public function __construct(
@@ -148,6 +148,15 @@ final class PublicPreviewDeliveryService {
     if ($buildDnaId === '' || !preg_match('/^[a-f0-9]{64}$/', $buildDnaHash)) {
       throw new \InvalidArgumentException('A Build DNA identifier and SHA-256 hash are required before staging.');
     }
+    // A public delivery is the immutable historical record for its original
+    // three-direction campaign. Refinement belongs to a later, account-owned
+    // request and must never replace this campaign or its invitation evidence.
+    if (!empty($row['proof_campaign_id']) && (int) $row['proof_campaign_id'] !== $proofCampaignId) {
+      throw new \RuntimeException('This public preview delivery is already bound to a different immutable proof campaign.');
+    }
+    if ((string) ($row['build_dna_id'] ?? '') !== '' && !hash_equals((string) $row['build_dna_id'], $buildDnaId)) {
+      throw new \RuntimeException('This public preview delivery is already bound to a different immutable Build DNA record.');
+    }
     $this->assertRegisteredBuildDna($buildDnaId, $buildDnaHash, $proofCampaignId, (int) $row['prospect_id'], $deliveryId);
     $now = $this->time->getRequestTime();
     $expires = $now + (14 * 86400);
@@ -178,13 +187,23 @@ final class PublicPreviewDeliveryService {
     return $row;
   }
 
-  /** Holds a complete public-lead proof set for Build DNA registration and owner review. */
-  public function markCampaignReady(int $prospectId, int $proofCampaignId): bool {
-    $row = $this->database->select('famtastic_preview_delivery', 'p')->fields('p')
-      ->condition('prospect_id', $prospectId)
-      ->condition('state', ['lead_captured', 'preview_requested', 'research_ready'], 'IN')
-      ->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
-    if (!$row) return FALSE;
+  /**
+   * Holds one exact public-lead campaign for Build DNA registration/review.
+   *
+   * A prospect can submit more than one lead or project. Selecting the latest
+   * delivery by prospect would allow one proof job to mutate another lead's
+   * concept room, so callers must pass the immutable delivery correlation
+   * returned by the runner contract.
+   */
+  public function markCampaignReady(int $deliveryId, int $prospectId, int $proofCampaignId): bool {
+    $row = $this->load($deliveryId);
+    if (!$row || (int) $row['prospect_id'] !== $prospectId) return FALSE;
+    if (!in_array((string) $row['state'], ['lead_captured', 'preview_requested', 'research_ready', 'proof_ready_owner_review'], TRUE)) {
+      return FALSE;
+    }
+    if (!empty($row['proof_campaign_id']) && (int) $row['proof_campaign_id'] !== $proofCampaignId) {
+      throw new \RuntimeException('A different proof campaign is already immutable on this public preview delivery.');
+    }
     $this->assertCompleteCoreCampaign($proofCampaignId, $prospectId);
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_preview_delivery')->fields([
@@ -193,7 +212,7 @@ final class PublicPreviewDeliveryService {
       'proof_ready_at' => $now,
       'last_event_at' => $now,
       'changed' => $now,
-    ])->condition('id', $row['id'])->execute();
+    ])->condition('id', $deliveryId)->execute();
     $this->event($this->require((int) $row['id']), 'preview.proof_ready_owner_review', ['proof_campaign_id' => $proofCampaignId]);
     return TRUE;
   }
@@ -322,33 +341,75 @@ final class PublicPreviewDeliveryService {
     return $ids ? $this->entities->getStorage('proof_variant')->load(reset($ids)) : NULL;
   }
 
-  /** Records a non-sensitive signup start from the signed continuation URL. */
-  public function markSignupStarted(string $continuation, string $email): void {
+  /**
+   * Resolves one signed continuation to one unbound preview delivery.
+   *
+   * This intentionally does not claim by email. The returned record must be
+   * bound to the newly created customer before verification can claim it.
+   */
+  public function markSignupStarted(string $continuation, string $email): ?array {
     [$publicId, $signature] = array_pad(explode('.', trim($continuation), 2), 2, '');
     $row = $this->loadBy('public_id', strtolower($publicId));
     if (!$row || !hash_equals($this->continuationSignature((string) $row['public_id']), $signature)) {
-      return;
+      return NULL;
     }
     if (!hash_equals((string) $row['recipient_hash'], $this->ledger->contactHash($email))) {
-      return;
+      return NULL;
     }
-    if (in_array($row['state'], ['share_revoked', 'expired'], TRUE)) {
-      return;
+    if (!empty($row['customer_id'])
+      || !in_array((string) $row['state'], ['email_staged', 'email_queued', 'email_accepted', 'concept_room_viewed', 'signup_started'], TRUE)) {
+      return NULL;
     }
     $now = $this->time->getRequestTime();
-    $this->database->update('famtastic_preview_delivery')->fields([
+    $updated = $this->database->update('famtastic_preview_delivery')->fields([
       'state' => 'signup_started', 'signup_started_at' => $now, 'last_event_at' => $now, 'changed' => $now,
-    ])->condition('id', $row['id'])->execute();
-    $this->event($this->require((int) $row['id']), 'preview.signup_started');
+    ])->condition('id', $row['id'])->isNull('customer_id')->execute();
+    if ($updated !== 1) {
+      return NULL;
+    }
+    $started = $this->require((int) $row['id']);
+    $this->event($started, 'preview.signup_started');
+    return $started;
   }
 
-  /** Claims eligible previews only after the account email has been verified. */
+  /**
+   * Binds one validated signup continuation to one newly created customer.
+   *
+   * Customer verification is deliberately a second step. Binding before it
+   * prevents a same-email signup from claiming unrelated deliveries.
+   */
+  public function bindSignupCustomer(int $deliveryId, int $customerId, string $email): array {
+    $row = $this->require($deliveryId);
+    if (!hash_equals((string) $row['recipient_hash'], $this->ledger->contactHash($email))
+      || (string) $row['state'] !== 'signup_started'
+      || !empty($row['website_request_id'])) {
+      throw new \RuntimeException('The signed public preview continuation is no longer eligible for this account.');
+    }
+    if (!empty($row['customer_id']) && (int) $row['customer_id'] !== $customerId) {
+      throw new \RuntimeException('The signed public preview continuation is already bound to another account.');
+    }
+    if (empty($row['customer_id'])) {
+      $updated = $this->database->update('famtastic_preview_delivery')->fields([
+        'customer_id' => $customerId,
+        'changed' => $this->time->getRequestTime(),
+      ])->condition('id', $deliveryId)->isNull('customer_id')->execute();
+      if ($updated !== 1) {
+        throw new \RuntimeException('The signed public preview continuation could not be bound safely.');
+      }
+      $row = $this->require($deliveryId);
+      $this->event($row, 'preview.signup_bound', ['customer_id' => $customerId]);
+    }
+    return $row;
+  }
+
+  /** Claims only the continuation delivery already bound to a verified account. */
   public function claimVerifiedCustomer(int $customerId, string $email): void {
     $hash = $this->ledger->contactHash($email);
     $rows = $this->database->select('famtastic_preview_delivery', 'p')->fields('p')
       ->condition('recipient_hash', $hash)
-      ->condition('customer_id', NULL, 'IS NULL')
-      ->condition('state', ['lead_captured', 'email_staged', 'email_queued', 'email_accepted', 'concept_room_viewed', 'signup_started'], 'IN')
+      ->condition('customer_id', $customerId)
+      ->isNull('website_request_id')
+      ->condition('state', 'signup_started')
       ->execute()->fetchAll(\PDO::FETCH_ASSOC);
     $now = $this->time->getRequestTime();
     foreach ($rows as $row) {
@@ -365,44 +426,74 @@ final class PublicPreviewDeliveryService {
 
   /** Supplies the one unclaimed public prospect that should back the next request. */
   public function claimedProspectId(int $customerId): ?int {
-    $value = $this->database->select('famtastic_preview_delivery', 'p')->fields('p', ['prospect_id'])
-      ->condition('customer_id', $customerId)
-      ->isNull('website_request_id')
-      ->condition('state', 'account_verified_and_claimed')
-      ->orderBy('claimed_at', 'DESC')->range(0, 1)->execute()->fetchField();
-    return $value ? (int) $value : NULL;
+    $preview = $this->claimedPreviewForCustomer($customerId);
+    return $preview ? (int) $preview['prospect_id'] : NULL;
   }
 
-  /** Returns the one verified public preview eligible for detailed refinement. */
-  public function claimedPreviewForCustomer(int $customerId): ?array {
-    $row = $this->database->select('famtastic_preview_delivery', 'p')->fields('p')
+  /**
+   * Returns one exact verified public preview eligible for detailed refinement.
+   *
+   * A missing target is allowed only when exactly one claimed-but-unattached
+   * delivery exists for the account. Multiple active deliveries require the
+   * caller to name the opaque public delivery ID; they are never resolved by
+   * "latest by email" or "latest by prospect".
+   */
+  public function claimedPreviewForCustomer(int $customerId, ?string $deliveryPublicId = NULL): ?array {
+    $query = $this->database->select('famtastic_preview_delivery', 'p')->fields('p')
       ->condition('customer_id', $customerId)
       ->isNull('website_request_id')
       ->condition('state', 'account_verified_and_claimed')
-      ->isNotNull('proof_campaign_id')
-      ->orderBy('claimed_at', 'DESC')->range(0, 1)->execute()->fetchAssoc();
-    return $row ?: NULL;
+      ->isNotNull('proof_campaign_id');
+    $deliveryPublicId = strtolower(trim((string) $deliveryPublicId));
+    if ($deliveryPublicId !== '') {
+      if (!preg_match('/^[0-9a-f-]{36}$/', $deliveryPublicId)) {
+        throw new \InvalidArgumentException('The public preview source is invalid.');
+      }
+      $row = $query->condition('public_id', $deliveryPublicId)->range(0, 1)->execute()->fetchAssoc();
+      return $row ?: NULL;
+    }
+    $rows = $query->orderBy('claimed_at', 'DESC')->range(0, 2)->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    if (count($rows) > 1) {
+      throw new \InvalidArgumentException('Choose which public preview should become this detailed website request.');
+    }
+    return $rows[0] ?? NULL;
   }
 
-  /** Binds a customer's new canonical request to their claimed preview. */
-  public function attachClaimedRequest(int $customerId, int $requestId, string $state): void {
-    $row = $this->database->select('famtastic_preview_delivery', 'p')->fields('p')
-      ->condition('customer_id', $customerId)
-      ->isNull('website_request_id')
-      ->condition('state', 'account_verified_and_claimed')
-      ->orderBy('claimed_at', 'DESC')->range(0, 1)->execute()->fetchAssoc();
-    if (!$row) {
-      return;
+  /** Binds one customer-owned detailed request to its exact claimed preview. */
+  public function attachClaimedRequest(int $customerId, int $deliveryId, int $requestId, string $state): void {
+    $row = $this->require($deliveryId);
+    if ((int) $row['customer_id'] !== $customerId
+      || !in_array((string) $row['state'], ['account_verified_and_claimed', 'request_attached', 'request_submitted'], TRUE)
+      || empty($row['proof_campaign_id'])) {
+      throw new \RuntimeException('The selected public preview is not eligible for this detailed website request.');
+    }
+    if (!empty($row['website_request_id']) && (int) $row['website_request_id'] !== $requestId) {
+      throw new \RuntimeException('The selected public preview is already bound to another website request.');
     }
     $now = $this->time->getRequestTime();
-    $next = $state === 'submitted' ? 'request_submitted' : 'account_verified_and_claimed';
-    $this->database->update('famtastic_preview_delivery')->fields([
+    $next = $state === 'submitted' ? 'request_submitted' : 'request_attached';
+    $update = $this->database->update('famtastic_preview_delivery')->fields([
       'website_request_id' => $requestId,
       'state' => $next,
       'last_event_at' => $now,
       'changed' => $now,
-    ])->condition('id', $row['id'])->execute();
-    $this->event($this->require((int) $row['id']), $state === 'submitted' ? 'preview.request_submitted' : 'preview.request_attached', ['website_request_id' => $requestId]);
+    ])->condition('id', $deliveryId);
+    // Do not let two browser submissions race into the same public delivery.
+    // An existing attachment is only idempotent for the same request ID.
+    if (empty($row['website_request_id'])) {
+      $update->isNull('website_request_id');
+    }
+    else {
+      $update->condition('website_request_id', $requestId);
+    }
+    if ($update->execute() !== 1) {
+      $latest = $this->require($deliveryId);
+      if ((int) ($latest['website_request_id'] ?? 0) !== $requestId) {
+        throw new \RuntimeException('The selected public preview was claimed by another website request.');
+      }
+    }
+    $updated = $this->require($deliveryId);
+    $this->event($updated, $state === 'submitted' ? 'preview.request_submitted' : 'preview.request_attached', ['website_request_id' => $requestId]);
   }
 
   private function assertCompleteCoreCampaign(int $campaignId, int $prospectId): void {
@@ -431,7 +522,8 @@ final class PublicPreviewDeliveryService {
       throw new \RuntimeException('The registered Build DNA projection is unreadable.');
     }
     if (($dna['schema'] ?? '') !== 'famtastic.build-dna.v1'
-      || in_array((string) ($dna['classification'] ?? ''), ['local_contract_fixture', 'proof_runner_preflight'], TRUE)
+      || ($dna['classification'] ?? '') !== 'production_proof_completion'
+      || ($dna['run']['completion_state'] ?? '') !== 'provider_completed'
       || !in_array(mb_strtolower((string) ($dna['run']['status'] ?? '')), ['passed', 'complete', 'completed'], TRUE)) {
       throw new \RuntimeException('A preflight, fixture, or incomplete Build DNA record cannot stage a public preview.');
     }

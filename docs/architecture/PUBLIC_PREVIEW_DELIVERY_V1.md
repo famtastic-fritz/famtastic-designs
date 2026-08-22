@@ -23,6 +23,15 @@ Public lead + intake
 - Staging freezes the subject and text snapshot. Only the proof-review role can approve and queue one transactional invitation. SMTP acceptance is recorded separately from delivery; no nurture or commercial follow-up is automatic.
 - The share signature is server-derived and versioned. Revoke rotates the version immediately; public responses are private, no-store, no-referrer, and no-index.
 
+## Exact continuation and detailed proof lineage
+
+- The continuation token resolves one immutable `famtastic_preview_delivery`, not an email-wide or "latest prospect" lookup. It is bound to the customer before verification; a customer with more than one eligible delivery must name the opaque delivery ID for the new project.
+- `famtastic_project_request.source_preview_delivery_id` is the immutable historical link. It is indexed and nullable because a customer can start an unrelated project without a public preview.
+- A claimed public campaign is never copied into `famtastic_project_request.proof_campaign_id`. The field stays empty until a new account-owned refined campaign has completed its verified callback and entered owner review.
+- Detailed intake freezes as direct canonical `website_discovery_v3` JSON and a separate consent-filtered asset manifest. Each raw string is SHA-256 recorded, then passed as the exact bytes to `proof.refined.generate`; later portal edits cannot change a queued run.
+- The refined job carries `delivery_class=authenticated_refined`, `proof_phase=refined_six`, `requested_profile_id=portal_refined_six.v1`, the exact source delivery, and the original public campaign/Build DNA identifiers and checksum. It must create six new directions (`a`–`f`: one Normal, one Medium FAMtastic, four Ultra FAMtastic), never append to the public three.
+- Parent and refined Build DNA evidence must be `classification=production_proof_completion` with `run.completion_state=provider_completed`. Preflight, fixture, local-only, or merely registered records cannot unlock an owner send gate.
+
 ## Operator sequence
 
 1. Confirm the research ledger, consent boundaries, three real proofs, desktop/mobile Browser QA, independent visual review, and Build DNA record.

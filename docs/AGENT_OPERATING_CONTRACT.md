@@ -29,12 +29,19 @@ new purchases. Stripe holds payment credentials; Drupal must not store cards.
    - defined business site up to five pages: `FAM-BUSINESS-499`;
    - ecommerce, membership, custom integrations, regulated work, or more than
      five pages: staff scope review.
-4. `website_proof.generate.v1` produces exactly three working directions named
-   Safe, Medium FAMtastic, and Ultra FAMtastic. Customer requests stop at an
-   owner review gate before any proof-ready email or account disclosure.
-   An explicit showcase request may append exactly three maximum-FAMtastic
-   directions (`d/e/f`) to that complete core set. The six-direction result
-   returns to owner review and must not trigger customer delivery by itself.
+4. A direct registered request uses `website_proof.generate.v1` to produce
+   exactly three working directions named Safe, Medium FAMtastic, and Ultra
+   FAMtastic. Customer requests stop at an owner review gate before any
+   proof-ready email or account disclosure. A public lead first receives its
+   own immutable public `a/b/c` history. After a verified same-email claim and
+   detailed portal intake, the only new detailed-proof path is
+   `proof.refined.generate` with `portal_refined_six.v1`: a fresh, separate
+   `a`–`f` campaign (one Normal, one Medium FAMtastic, four Ultra FAMtastic)
+   bound to the exact public delivery, its completed Build DNA, frozen detailed
+   intake, and consent-filtered asset manifest. It returns to owner review and
+   must not trigger customer delivery by itself. The older append-only
+   `portal_showcase.v1` `d/e/f` flow remains readable for historical runs only;
+   no new public-lead continuation or detailed request may use it.
 5. The customer selects an owner-approved direction before checkout. Staff may
    override the package and create a one-account, one-request private offer.
    Never implement a private price as a public/shareable coupon.

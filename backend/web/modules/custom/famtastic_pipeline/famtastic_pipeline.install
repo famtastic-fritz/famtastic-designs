@@ -675,6 +675,46 @@ function famtastic_pipeline_update_8033(&$sandbox) {
   return t('Added public preview delivery, concept-room, and verified-account claim records.');
 }
 
+/**
+ * Separates an immutable public teaser from its later detailed six-proof run.
+ *
+ * Existing request rows are intentionally not backfilled or detached: older
+ * rows may have one campaign that was legitimately shown to a customer, and
+ * guessing at lineage would hide proof history. New claimed requests carry an
+ * exact delivery link plus frozen input/asset evidence before any refined job
+ * can run.
+ */
+function famtastic_pipeline_update_8034(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_customer_portal_schema()['famtastic_project_request'];
+  if (!$schema->tableExists('famtastic_project_request')) {
+    $schema->createTable('famtastic_project_request', $definition);
+    return t('Created customer website requests with detailed public-preview lineage fields.');
+  }
+  $fields = [
+    'source_preview_delivery_id',
+    'parent_public_proof_campaign_id',
+    'parent_public_campaign_key',
+    'parent_public_build_dna_id',
+    'parent_public_build_dna_hash',
+    'detailed_intake_snapshot',
+    'detailed_intake_snapshot_sha256',
+    'consented_asset_manifest',
+    'consented_asset_manifest_sha256',
+    'proof_phase',
+    'proof_profile_id',
+  ];
+  foreach ($fields as $field) {
+    if (!$schema->fieldExists('famtastic_project_request', $field)) {
+      $schema->addField('famtastic_project_request', $field, $definition['fields'][$field]);
+    }
+  }
+  if (!$schema->indexExists('famtastic_project_request', 'source_preview_delivery')) {
+    $schema->addIndex('famtastic_project_request', 'source_preview_delivery', $definition['indexes']['source_preview_delivery']);
+  }
+  return t('Added immutable public-preview source, parent Build DNA, detailed intake snapshot, and consented asset lineage fields.');
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
@@ -1449,6 +1489,20 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'prospect_id' => $entity, 'commerce_order_id' => $entity, 'intake_id' => $entity, 'project_id' => $entity,
+      // Public lead a/b/c concepts remain on famtastic_preview_delivery. A
+      // request only receives proof_campaign_id after its own account-owned
+      // run has passed callback and owner review.
+      'source_preview_delivery_id' => $entity,
+      'parent_public_proof_campaign_id' => $entity,
+      'parent_public_campaign_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'parent_public_build_dna_id' => ['type' => 'varchar', 'length' => 170, 'not null' => TRUE, 'default' => ''],
+      'parent_public_build_dna_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'detailed_intake_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'detailed_intake_snapshot_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'consented_asset_manifest' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'consented_asset_manifest_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'proof_phase' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''],
+      'proof_profile_id' => ['type' => 'varchar', 'length' => 96, 'not null' => TRUE, 'default' => ''],
       'proof_campaign_id' => $entity,
       'proof_review_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_started'],
       'proof_approved_by_uid' => $entity,
@@ -1477,6 +1531,7 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'organization_status' => ['organization_id', 'status'],
       'customer' => ['customer_id', 'changed'],
       'prospect' => ['prospect_id'], 'project' => ['project_id'],
+      'source_preview_delivery' => ['source_preview_delivery_id'],
       'proof_review' => ['proof_review_status', 'changed'],
     ],
   ];
