@@ -471,6 +471,16 @@ famtastic_pipeline.inbound_mail:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.inkbox_concierge_webhook:
+  path: '/api/pipeline/concierge/inkbox/webhook'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\InkboxWebhookController::receive'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
 # --- Admin: generate & export the Site Studio request ---
 famtastic_pipeline.operations:
   path: '/admin/famtastic'

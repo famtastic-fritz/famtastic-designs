@@ -10,6 +10,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\famtastic_pipeline\Entity\Prospect;
+use Drupal\famtastic_pipeline\Service\ConciergeWebhookService;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
 use Drupal\famtastic_pipeline\Service\TokenManager;
 use Psr\Log\LoggerInterface;
@@ -26,6 +27,7 @@ class PublicRequestController extends ControllerBase {
     protected EntityTypeManagerInterface $entityTypeManagerService,
     protected TokenManager $tokenManager,
     protected OutreachMailer $mailer,
+    protected ConciergeWebhookService $concierge,
     protected ConfigFactoryInterface $pipelineConfigFactory,
     protected TimeInterface $time,
     protected LoggerInterface $logger,
@@ -40,6 +42,7 @@ class PublicRequestController extends ControllerBase {
       $container->get('entity_type.manager'),
       $container->get('famtastic_pipeline.token_manager'),
       $container->get('famtastic_pipeline.mailer'),
+      $container->get('famtastic_pipeline.concierge_webhooks'),
       $container->get('config.factory'),
       $container->get('datetime.time'),
       $container->get('logger.channel.famtastic_pipeline'),
@@ -123,6 +126,16 @@ class PublicRequestController extends ControllerBase {
 
     $intake = $this->saveRequest($prospect, $data, $answers, $type);
     $registrationUrl = $this->registrationUrl($email, $businessName, (int) $intake->id(), $type);
+    try {
+      $this->concierge->recordPublicLead((int) $prospect->id(), (int) $intake->id(), 'public_' . $type);
+    }
+    catch (\Throwable $error) {
+      // The customer lead must remain durable even if the operator timeline is unavailable.
+      $this->logger->error('Concierge lead timeline failed for request @id: @message', [
+        '@id' => $intake->id(),
+        '@message' => $error->getMessage(),
+      ]);
+    }
     $notification = $this->notify($prospect, $intake, $data, $type, $duplicate, $registrationUrl);
 
     $payload = [

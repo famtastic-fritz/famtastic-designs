@@ -561,3 +561,23 @@ not require duplicating projects. Multiple concurrent customer projects remain
 safe when every packet is registered on one owned project and every result is
 validated against that project's exact packet before any activity or mail is
 queued.
+
+## 2026-08-21 — FAMtastic Concierge is a channel identity, not a new source of truth
+
+- FAMtastic Concierge is the customer-facing communication identity. FAMtastic
+  Connections is the shared operational view of the lead and status timeline;
+  Drupal remains the customer, Commerce, project, and delivery source of truth.
+- Public Solution Finder capture records `concierge.lead_received` after the
+  Prospect and Intake persist. A timeline failure is logged but must not reject
+  or discard the customer submission.
+- Inkbox callback handling is metadata-only: the receiver verifies
+  `X-Inkbox-Request-ID`, `X-Inkbox-Timestamp`, and `X-Inkbox-Signature`, rejects
+  replay-window failures, uses the provider event ID as the idempotency key, and
+  writes the channel, direction, delivery state, provider IDs, hashed contact,
+  and matched Prospect. Customer message bodies stay in the channel inbox.
+- Concierge has no authority to auto-send, set a price, issue a grant, charge,
+  buy a domain, or publish/deploy. Those remain human approval gates with the
+  existing deterministic lifecycle services.
+- Current evidence is locally proven for the signature verifier and code path.
+  Live deployment, Inkbox webhook subscriptions, real signing-key storage, and
+  a clean canonical customer proof remain separate launch gates.

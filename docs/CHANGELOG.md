@@ -404,3 +404,15 @@
 - Added Drupal packet registration and signed success ingestion on the existing Site Studio callback boundary. Results are idempotent, project-scoped, ownership-aware, notification-backed, and forbidden from changing price, charging, purchasing domains, or publishing.
 - Added three-run clean certification, tamper rejection, template retention, capability drift enforcement, a dated nine-part master plan, and Gandalf cross-repository notes.
 - Site Studio's repository and build engine were not changed. Golden replay and a local Site Studio contract fixture remain explicitly distinct from real provider generation and real Site Studio execution.
+
+## 2026-08-21 — FAMtastic Concierge event bridge
+
+- Added a signature-verified, idempotent Inkbox lifecycle receiver for the
+  FAMtastic Concierge identity and recorded public Solution Finder submissions
+  in the shared Concierge timeline.
+- The bridge stores only lifecycle metadata and lead matching facts; it does
+  not send customer messages or alter pricing, grant, payment, domain, or
+  deployment authority.
+- Added the cross-CLI and Site Studio handoff contract. Production deployment,
+  webhook subscription, signing-key configuration, and live certification are
+  deliberately deferred.

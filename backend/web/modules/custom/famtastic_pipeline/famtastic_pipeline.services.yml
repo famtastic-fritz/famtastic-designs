@@ -73,6 +73,13 @@ services:
   famtastic_pipeline.webhook_verifier:
     class: Drupal\famtastic_pipeline\Service\WebhookVerifier
 
+  famtastic_pipeline.inkbox_webhook_verifier:
+    class: Drupal\famtastic_pipeline\Service\InkboxWebhookVerifier
+
+  famtastic_pipeline.concierge_webhooks:
+    class: Drupal\famtastic_pipeline\Service\ConciergeWebhookService
+    arguments: ['@entity_type.manager', '@famtastic_pipeline.operational_ledger']
+
   famtastic_pipeline.fulfillment:
     class: Drupal\famtastic_pipeline\Service\FulfillmentService
     arguments: ['@entity_type.manager', '@datetime.time', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.proof_campaign_service', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.customer_portal']
