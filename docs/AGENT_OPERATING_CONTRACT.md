@@ -51,6 +51,38 @@ new purchases. Stripe holds payment credentials; Drupal must not store cards.
 The complete proof and intake contract is versioned in
 `docs/WEBSITE_PROOF_PRODUCTION_STANDARD_V1.md`.
 
+## Preview-provider doctrine
+
+`website_proof.generate.v1` is the only supported creative-preview routine.
+It must read the declared capability route, run provider preflight, and create
+the Build DNA record before it starts research, art, construction, or review.
+An agent may not substitute a chat-only mockup, a fixture renderer, or an
+unrecorded model session for that routine.
+
+- Gemini 3.7 Flash through the Antigravity desktop bridge is the preferred
+  **reasoning, research, direction, copy, and prototype-construction** lane
+  when its local authenticated bridge passes a structured provider call. A
+  desktop sign-in or command discovery alone is not execution proof; without
+  the bridge address and a recorded success, the run must use its declared
+  fallback or stop visibly.
+- Gemini 3.1 Flash Lite Image is the preferred economical **preview-art** lane
+  for original 1K proof artwork. Its prompt must carry the complete
+  art-direction contract: composition, material, lighting, cast/action,
+  negative space, aspect ratio, and exclusions. Its 1K limit is intentional
+  for preview use, not an unstated final-production guarantee.
+- Gemini Flash Image, Gemini Pro Image, and the image-only `gpt-image-2`
+  route are explicit quality/resolution escalation lanes. They require the
+  selected route, preflight, actual receipt, and Build DNA cost record; a
+  failure in Lite must never silently spend on a premium model.
+- The generator may not perform final visual approval. Browser QA and an
+  independent review route remain required, even when Gemini creates both the
+  art and prototype.
+
+The provider registry distinguishes desktop-attended execution, authenticated
+API execution, and unattended service execution. Do not call a local desktop
+bridge production-autonomous until it survives a clean-session and unavailable-
+provider failure test with the real declared fallback.
+
 ## Product creation
 
 `backend/config/famtastic-products.json` and

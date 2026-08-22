@@ -46,6 +46,7 @@ final class ConciergeWebhookService {
         'source' => mb_substr($source, 0, 128),
         'intake_id' => $intakeId,
         'account_continuation_available' => TRUE,
+        'account_continuation_invited' => FALSE,
         'communication_mode' => 'human_review_required',
       ],
       $prospectId,

@@ -22,7 +22,8 @@ customer conversation.
 Solution Finder or portal request
 → Drupal Prospect/Intake or Website Request
 → FAMtastic Connections timeline event
-→ existing transactional acknowledgment and account continuation
+→ existing transactional acknowledgment; an explicit account-continuation
+  invitation when that public flow is enabled
 → human-reviewed Concierge draft/reply when appropriate
 → authenticated portal work and owner review
 → approved Site Studio packet/proof/delivery work

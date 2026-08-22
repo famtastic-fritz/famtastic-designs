@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-08-21 — Preview-provider doctrine and Antigravity boundary
+
+- Declared the role-specific preview route: Gemini 3.7 Flash through an
+  authenticated Antigravity bridge for reasoning/build work, Gemini Flash Lite
+  Image for economical 1K proof art, explicit premium image escalation, and an
+  independent final reviewer.
+- Recorded the Antigravity desktop bridge as a discovered, local-attended
+  candidate rather than an autonomous provider. It cannot become selectable
+  until it produces a structured execution receipt, survives a clean-session
+  retry, and demonstrates its declared fallback.
+- Required all agents to use `website_proof.generate.v1`, provider preflight,
+  and Build DNA rather than chat-only mockups or unrecorded model sessions.
+
 ## 2026-08-20 — Clearer proof review, readable notifications, and media routing
 
 - Replaced raw-JSON owner email presentation with a compact decision-ready

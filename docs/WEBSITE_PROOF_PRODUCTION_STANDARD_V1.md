@@ -227,6 +227,20 @@ models may handle benchmark or escalation work. Dedicated visual providers
 create artwork. Browser automation proves functional behavior. Humans approve
 customer delivery, prices, contracts, and publication.
 
+The current desired preview route is role-specific:
+
+| Capability | Preferred route | Boundary |
+| --- | --- | --- |
+| Research, direction, copy, and prototype construction | Gemini 3.7 Flash through Antigravity | Selectable only after a structured bridge call succeeds and records a receipt; desktop sign-in is not enough. |
+| Economical original preview art | Gemini 3.1 Flash Lite Image | 1K proof artwork only; detailed art-direction contract required. |
+| Selected-direction image refinement or high-resolution art | Explicit Gemini Flash/Pro Image or image-only `gpt-image-2` escalation | Owner-selected route, preflight, receipt, and cost record required. |
+| Functional QA | Playwright Chromium | Deterministic, required for every direction. |
+| Visual release | Independent model or approved human | The generator is disqualified from final approval. |
+
+When a preferred route is unavailable, the declared fallback or visible
+exception applies. No provider may silently change the build class, quality
+lane, or spend profile.
+
 Every run records:
 
 - agent, capability, provider, and model;
