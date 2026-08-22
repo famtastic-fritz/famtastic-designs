@@ -37,6 +37,36 @@ case. Use `drush famtastic:public-preview-prepare 30 --intake-id=13
 That command creates no customer email; it only queues owner-visible proof
 work. The customer invitation is separately staged and approved in Operations.
 
+### Priority 0 implementation checklist — August 22, 2026
+
+- [x] Replace public direct-SMTP lead acknowledgement with a durable preview
+  delivery, owner-alert outbox record, and canonical proof job.
+- [x] Bind every public, refined, and revision proof request to the sole
+  `website_proof.generate.v1` routine, an immutable source correlation, a
+  Build DNA preflight, and a declared direction/profile contract.
+- [x] Keep the public `a`–`c` history immutable; create a distinct detailed
+  `portal_refined_six.v1` campaign with fresh `a`–`f` proofs rather than
+  appending directions to the public campaign.
+- [x] Make proof selection and "Make changes" durable: a revision snapshots
+  the selected baseline, queues one source-bound direction, and keeps the
+  candidate owner-only until explicit approval.
+- [x] Add fresh-sandbox acceptance coverage for public intake, owner gates,
+  same-email exact claim, refined-six lineage, stale-callback rejection,
+  selection, revision idempotency, checkout gates, and unavailable-provider
+  failure. The fixture proves safety plumbing only, not a creative provider.
+- [x] Verify a clean Drupal installation and migrations from the current
+  source branch.
+- [ ] Configure and prove the real Site Studio provider return, including
+  actual provider/model receipts, complete Build DNA, browser QA, and an
+  independent visual reviewer decision.
+- [ ] Deploy the reviewed backend migration and source SHA through the
+  production runbook, then browser-verify the live public and portal lanes.
+- [ ] Run the controlled P.I.T. recovery job, review its real three-proof
+  package, and explicitly approve its frozen customer invitation.
+- [ ] Verify a real test inbox delivery, a Stripe test checkout/fulfillment
+  handoff, a revision candidate owner approval, and the negative production
+  authorization cases before calling the lifecycle production-proven.
+
 ## Objective
 
 Raise FAMtastic Designs from a manually operated proof to a production-safe,

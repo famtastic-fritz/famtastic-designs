@@ -1,5 +1,28 @@
 # Product changelog
 
+## 2026-08-22 — Canonical public-to-refined proof lifecycle safety contract
+
+- Added one source-bound `website_proof.generate.v1` contract for public
+  initial three-proof work, fresh detailed `portal_refined_six.v1` work, and
+  `portal_selected_direction_revision.v1` work. Each phase has immutable
+  request/campaign/build/revision correlation and an exact direction count.
+- Replaced the detailed-intake append behavior with a fresh six-direction
+  campaign. The original public `a`–`c` package is preserved as immutable
+  history; stale `d`–`f` callbacks are rejected.
+- Added a fail-closed selected-direction revision transport and callback path.
+  The original campaign remains intact; a verified result becomes a separate
+  owner-review candidate with outbox-only notices and explicit visibility
+  approval.
+- Added `scripts/e2e-public-preview-lifecycle.sh`, which installs a fresh
+  SQLite Drupal sandbox and exercises the public-to-payment safety contract.
+  It requires fixture provenance to be rejected before staging, and explicitly
+  labels downstream state setup as local-only. It makes no real provider, SMTP,
+  payment, deployment, or customer-delivery claim.
+- Fixed capability preflight to execute the image worker declared by each
+  provider route. Gemini Lite now invokes its own image-only worker and
+  records `gemini-3.1-flash-lite-image` rather than a misleading OpenAI label.
+  This is credential-route evidence only.
+
 ## 2026-08-22 — Immutable selected-direction proof revisions
 
 - Added additive `famtastic_proof_revision` and

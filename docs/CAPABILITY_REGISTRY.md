@@ -12,8 +12,9 @@ capability is not “proven” merely because code exists.
 | Website-delivery specialist swarm | Locally proven | Versioned brief, package/add-on reasoning, three-direction proof, agent trace, independent QA, and Playwright evidence across guest and member lanes |
 | Synthetic human-experience testing | Locally proven | Reusable control persona plus disclosed, opt-in creative lenses that cannot affect commercial, legal, safety, accessibility, or approval decisions |
 | Account-scoped private pricing | Locally proven | Auditable relationship, partner, and promotional pricing without public coupons |
-| Owner-gated three-direction website proofs | Locally proven | Safe/Medium FAMtastic/Ultra FAMtastic generation, private staff review, authenticated selection, and revision workflow |
-| Optional six-direction FAMtastic showcase | Locally proven | Three additional original high-intensity sites appended without bypassing private review or customer-send gates |
+| Owner-gated public three-direction proof lifecycle | Locally proven safety contract | Durable public intake, immutable Safe/Medium FAMtastic/Ultra FAMtastic proof history, owner gate, signed same-email continuation, and no direct customer send |
+| Detailed six-direction portal refinement | Locally proven safety contract | Fresh Normal/Medium/Four-Ultra `a`–`f` campaign from frozen detailed intake; it never appends to or rewrites the public three-proof campaign |
+| Selected-direction proof revision | Locally proven safety contract | Immutable baseline/candidate artifact lineage, one-direction canonical runner contract, owner-only candidate review, and outbox-only customer visibility notification |
 | Scoped service grants and owner comps | Locally proven | Hashed account/request codes with audited zero-dollar Commerce fulfillment |
 | Private customer visual references | Locally proven | Consent-tracked, checksummed image and PDF inputs attached to one request |
 | Lead response and notifications | Test-provider proven | Acknowledgment, owner alerts, deadlines, escalation, and worker protection |

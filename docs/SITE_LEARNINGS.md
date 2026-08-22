@@ -1,5 +1,37 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-22 — One pipeline needs three immutable proof histories
+
+- A public teaser, a detailed portal refinement, and a selected-direction
+  revision are not variants of one mutable campaign. Keep public `a`–`c`
+  immutable, create a fresh detailed `a`–`f` campaign from frozen portal
+  intake, and store a revision candidate beside—not inside—the selected
+  artifact.
+- The public/refined/revision stages can all use one creative routine
+  (`website_proof.generate.v1`) when phase, profile, source correlation,
+  direction count, Build DNA, and delivery authority are declared separately.
+  A second routine would make replay, ownership, and Site Studio handoff less
+  inspectable.
+- A fixture callback must be a positive failure test: it can prove signature,
+  correlation, duplicate, and outbox boundaries only by being rejected before
+  it stages a proof or queues a customer delivery. Later local state setup must
+  be labeled as a state precondition, never promoted as provider completion.
+- Retry safety has a different key at each boundary: public delivery, account
+  claim, detailed request, proof contract, revision request, provider callback,
+  and owner approval. Looking up the latest prospect or campaign is unsafe
+  because one person can have multiple concurrent projects.
+
+## 2026-08-22 — Provider preflight must execute the declared worker
+
+- Provider-neutral routing is only honest if its preflight calls the provider
+  worker named in the route. The orchestration preflight formerly defaulted to
+  the OpenAI worker even for Gemini Lite; it now resolves the declared worker
+  inside the repository and reports the actual allow-listed model.
+- The no-image Gemini preflight currently authenticates the image-only
+  `gemini-3.1-flash-lite-image` route. That is evidence for credential routing,
+  not a creative run, price receipt, independent review, Site Studio callback,
+  or production availability.
+
 ## 2026-08-22 — Revision lineage is a separate artifact chain, not an edit
 
 - A client change request must never be represented by overwriting
