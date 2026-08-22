@@ -155,6 +155,7 @@ final class ProofRunnerCallbackVerifier {
         throw new \InvalidArgumentException('Proof callback Build DNA is missing required ' . $required . ' evidence.');
       }
     }
+    $this->assertNoFixtureOrMockEvidence($final);
     $this->assertIndependentQualityDecision($final);
     $this->assertVariantArtifactLineage($callback, $final, $pending);
     if (!is_array($final['retrieval'] ?? NULL) || !is_array($final['integrity'] ?? NULL) || ($final['integrity']['artifact_hash_algorithm'] ?? '') !== 'sha256') {
@@ -226,6 +227,74 @@ final class ProofRunnerCallbackVerifier {
       || trim((string) ($visual['reviewer'] ?? '')) === '') {
       throw new \InvalidArgumentException('Proof callback Build DNA requires an explicit passing independent visual review decision and reviewer.');
     }
+  }
+
+  /**
+   * A callback cannot turn a labelled fixture into a production completion by
+   * changing only its top-level classification. The final evidence record is
+   * deliberately inspected at its formal provenance fields rather than
+   * searching free-form customer copy or research notes.
+   */
+  private function assertNoFixtureOrMockEvidence(array $final): void {
+    $run = (array) ($final['run'] ?? []);
+    $quality = (array) ($final['quality'] ?? []);
+    $visual = (array) ($quality['visual'] ?? []);
+    $evidence = [
+      'run.execution_class' => $run['execution_class'] ?? '',
+      'run.environment' => $run['environment'] ?? '',
+      'run.provider_mode' => $run['provider_mode'] ?? '',
+      'run.evidence_level' => $run['evidence_level'] ?? '',
+      'quality.visual.reviewer' => $visual['reviewer'] ?? '',
+      'quality.visual.review_type' => $visual['review_type'] ?? '',
+    ];
+    foreach ((array) ($final['stages'] ?? []) as $index => $stage) {
+      $execution = is_array($stage['execution'] ?? NULL) ? $stage['execution'] : [];
+      $provider = is_array($execution['provider'] ?? NULL) ? $execution['provider'] : [];
+      $model = is_array($execution['model'] ?? NULL) ? $execution['model'] : [];
+      $timing = is_array($execution['timing'] ?? NULL) ? $execution['timing'] : [];
+      $cost = is_array($execution['cost'] ?? NULL) ? $execution['cost'] : [];
+      $result = is_array($stage['result'] ?? NULL) ? $stage['result'] : [];
+      $prefix = 'stages.' . $index;
+      $evidence += [
+        $prefix . '.stage_id' => $stage['stage_id'] ?? '',
+        $prefix . '.execution.kind' => $execution['kind'] ?? '',
+        $prefix . '.execution.provider.id' => $provider['id'] ?? '',
+        $prefix . '.execution.provider.mode' => $provider['mode'] ?? '',
+        $prefix . '.execution.provider.environment' => $provider['environment'] ?? '',
+        $prefix . '.execution.model.id' => $model['id'] ?? '',
+        $prefix . '.execution.model.status' => $model['status'] ?? '',
+        $prefix . '.execution.timing.status' => $timing['status'] ?? '',
+        $prefix . '.execution.cost.status' => $cost['status'] ?? '',
+        $prefix . '.result.status' => $result['status'] ?? '',
+        $prefix . '.result.evidence_class' => $result['evidence_class'] ?? '',
+      ];
+    }
+    foreach ((array) ($final['artifacts'] ?? []) as $index => $artifact) {
+      if (!is_array($artifact)) {
+        continue;
+      }
+      $evidence['artifacts.' . $index . '.role'] = $artifact['role'] ?? '';
+      $evidence['artifacts.' . $index . '.path'] = $artifact['path'] ?? '';
+      $evidence['artifacts.' . $index . '.rights_status'] = $artifact['rights_status'] ?? '';
+      $evidence['artifacts.' . $index . '.provenance'] = $artifact['provenance'] ?? '';
+    }
+    foreach ((array) ($final['retrieval'] ?? []) as $surface => $details) {
+      if (!is_array($details)) {
+        continue;
+      }
+      $evidence['retrieval.' . $surface . '.status'] = $details['status'] ?? '';
+      $evidence['retrieval.' . $surface . '.mode'] = $details['mode'] ?? '';
+    }
+    foreach ($evidence as $field => $value) {
+      if (is_string($value) && $this->hasNonProductionMarker($value)) {
+        throw new \InvalidArgumentException('Proof callback Build DNA carries non-production fixture/mock/test evidence at ' . $field . '.');
+      }
+    }
+  }
+
+  /** Identifies explicit test doubles without treating ordinary copy as evidence. */
+  private function hasNonProductionMarker(string $value): bool {
+    return preg_match('/(?:^|[^a-z0-9])(fixture|mock|stub|fake|simulat(?:e|ed|ion)|test(?:ing|[_ -]?mode)?|loopback|not[_ -]?a[_ -]?real)(?:$|[^a-z0-9])/i', $value) === 1;
   }
 
   private function isPassed(string $status): bool {

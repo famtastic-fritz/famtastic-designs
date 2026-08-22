@@ -21,6 +21,8 @@ try {
     if (expectedCount === 6 && receipt.profile_id !== "portal_refined_six.v1") throw new Error("refined fixture did not preserve its profile");
     for (const [action, occurred] of Object.entries(receipt.mutations)) if (occurred) throw new Error(`${name}: fixture mutated ${action}`);
   }
+  const callbackEvidence = spawnSync("php", [join(root, "tests/proof-runner-callback-evidence.test.php")], { encoding: "utf8" });
+  if (callbackEvidence.status !== 0) throw new Error(callbackEvidence.stderr || callbackEvidence.stdout);
   process.stdout.write("PASS: public-three and detailed-refined-six local fixtures are no-send and no-proof\n");
 }
 finally {

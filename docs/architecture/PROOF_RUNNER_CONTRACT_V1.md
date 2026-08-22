@@ -85,6 +85,11 @@ For runner-bound work, the final DNA must declare
 `classification=production_proof_completion` and
 `run.completion_state=provider_completed`. A local fixture, preflight, or
 generic "complete" record cannot stage public or customer proof delivery.
+The verifier also rejects explicit fixture, mock, test, stub, simulation,
+fake, loopback, or "not a real provider" markers in the formal provider,
+model, stage, artifact, retrieval, and reviewer provenance fields. A local
+test cannot relabel itself as production merely by changing the top-level
+classification.
 
 Legacy callbacks remain visibly legacy. Once a campaign has a canonical runner
 record, a later callback cannot bypass it by omitting Build DNA or creating a
