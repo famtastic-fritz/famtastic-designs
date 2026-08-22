@@ -207,25 +207,25 @@ def auth_probe(output: pathlib.Path, ledger: Ledger):
     command_exists("claude")
     command_exists("node")
     command_exists("python3")
-    image_worker = ROOT / "openai_image_worker.py"
+    image_worker = ROOT / "gemini_flash_lite_image_worker.mjs"
     require(image_worker.is_file(), "FAMtastic image-only worker is missing")
-    image_preflight_command = [sys.executable, str(image_worker), "--preflight"]
+    image_preflight_command = ["node", str(image_worker), "--preflight"]
     image_preflight, started = run_process(
         image_preflight_command, REPO, ledger.logs / "openai-image-auth.log", timeout=60
     )
     require(
-        "OPENAI_IMAGE_PREFLIGHT_AUTHENTICATED" in image_preflight.stdout,
-        "OpenAI image-only preflight failed",
+        "GEMINI_FLASH_LITE_IMAGE_PREFLIGHT_AUTHENTICATED" in image_preflight.stdout,
+        "Gemini Flash Lite Image preflight failed",
     )
     ledger.record(
-        "provider-preflight-openai-image", "openai", "gpt-image-2",
-        "Authenticate the local image-only Keychain credential to GPT Image 2 without generating an image.",
-        {"keychain_service": "FAMtastic.OpenAI.Image", "keychain_account": "famtastic-image-worker"},
-        {"authenticated": True, "image_generated": False, "model_allowlist": ["gpt-image-2"]},
+        "provider-preflight-gemini-flash-lite-image", "google-gemini-api", "gemini-3.1-flash-lite-image",
+        "Authenticate the local Gemini Flash Lite Image Keychain credential without generating an image.",
+        {"keychain_service": "FAMtastic.Gemini.Image", "keychain_account": "famtastic-gemini-image-worker"},
+        {"authenticated": True, "image_generated": False, "model_allowlist": ["gemini-3.1-flash-lite-image"]},
         started, image_preflight_command,
         usage={"image_requests": 0},
         cost={"currency": "USD", "amount": 0, "status": "no_image_generated"},
-        assertions={"image_only_keychain_present": True, "gpt_image_2_authenticated": True, "no_image_generated": True},
+        assertions={"image_only_keychain_present": True, "gemini_flash_lite_authenticated": True, "no_image_generated": True},
     )
     prompt = "Return exactly AUTH_OK"
     codex_command = ["codex", "exec", "--ephemeral", "--ignore-rules", "--sandbox", "read-only", "-m", CODEX_MODEL, prompt]
@@ -512,7 +512,7 @@ def main():
     parser.add_argument("--select", default="direction-e,direction-f")
     parser.add_argument("--max-repairs", type=int, default=1)
     parser.add_argument("--image-max-cost-usd", type=float, required=True,
-                        help="Declared ceiling for the six direct GPT Image 2 calls; the worker fails before a charge if it is too small.")
+                        help="Declared ceiling for the Gemini Flash Lite 1K preview-art calls; the worker fails before generation if it is too small.")
     args = parser.parse_args()
     require(0 <= args.max_repairs <= 1,
             "Preview release permits zero or one consolidated repair cycle")
@@ -566,9 +566,9 @@ RESEARCH VERBATIM:
     stage_design_fonts(output)
 
     artwork_dir = output / "generated-artwork"
-    image_worker = ROOT / "openai_image_worker.py"
+    image_worker = ROOT / "gemini_flash_lite_image_worker.mjs"
     image_command = [
-        sys.executable, str(image_worker),
+        "node", str(image_worker),
         "--prompts", str(output / "image-prompts.json"),
         "--output", str(artwork_dir),
         "--request-id", request_id,
@@ -579,21 +579,21 @@ RESEARCH VERBATIM:
         image_command, output, ledger.logs / "visual-art-attempt-1.log", timeout=1200
     )
     image_receipt = load(artwork_dir / "generation-receipt.json")
-    require(image_receipt.get("status") == "complete", "OpenAI image worker did not complete")
+    require(image_receipt.get("status") == "complete", "Gemini image worker did not complete")
     require(image_receipt.get("request_id") == request_id, "Image worker changed request identity")
-    require(image_receipt.get("model") == "gpt-image-2", "Image worker resolved an unapproved model")
+    require(image_receipt.get("model") == "gemini-3.1-flash-lite-image", "Image worker resolved an unapproved model")
     require(image_receipt.get("estimated_cost_usd", 0) <= args.image_max_cost_usd,
             "Image worker exceeded the declared cost ceiling")
     ledger.record(
-        "visual-art", "openai", "gpt-image-2",
-        "Generate exactly one original wide PNG hero per direction through the image-only OpenAI worker. Use only gpt-image-2, preserve the supplied prompt text, enforce no-text/no-logo/no-watermark constraints, and record a receipt.",
+        "visual-art", "google-gemini-api", "gemini-3.1-flash-lite-image",
+        "Generate exactly one original 1K hero per direction through the Gemini Flash Lite Image worker. Preserve the supplied prompt text, enforce no-text/no-logo/no-watermark constraints, and record a receipt.",
         {"image_prompts": prompts, "max_cost_usd": args.image_max_cost_usd},
         image_receipt, started, image_command,
         usage={"image_requests": len(prompts), "provider_usage": image_receipt.get("artifacts", [])},
         cost={"currency": "USD", "amount": image_receipt.get("estimated_cost_usd"), "status": "estimated_pending_provider_reconciliation"},
         assertions={
-            "image_only_endpoint": image_receipt.get("endpoint_allowlist") == ["POST /v1/images/generations"],
-            "gpt_image_2_only": image_receipt.get("model") == "gpt-image-2",
+            "gemini_image_endpoint": image_receipt.get("api") == "generateContent",
+            "gemini_flash_lite_only": image_receipt.get("model") == "gemini-3.1-flash-lite-image",
             "within_declared_ceiling": image_receipt.get("estimated_cost_usd", 0) <= args.image_max_cost_usd,
             "all_requested_artifacts_returned": len(image_receipt.get("artifacts", [])) == len(prompts),
         },
