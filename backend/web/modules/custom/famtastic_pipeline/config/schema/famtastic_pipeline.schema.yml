@@ -23,6 +23,15 @@ famtastic_pipeline.settings:
     legacy_checkout_enabled:
       type: boolean
       label: 'Allow the legacy prospect-token checkout'
+    proof_runner_transport:
+      type: string
+      label: 'Proof runner transport'
+    proof_runner_external_url:
+      type: string
+      label: 'External proof runner URL'
+    proof_runner_default_build_class:
+      type: string
+      label: 'Default proof runner build class'
     package:
       type: mapping
       label: 'Offer package'

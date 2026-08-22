@@ -148,7 +148,7 @@ final class PublicPreviewDeliveryService {
     if ($buildDnaId === '' || !preg_match('/^[a-f0-9]{64}$/', $buildDnaHash)) {
       throw new \InvalidArgumentException('A Build DNA identifier and SHA-256 hash are required before staging.');
     }
-    $this->assertRegisteredBuildDna($buildDnaId, $buildDnaHash);
+    $this->assertRegisteredBuildDna($buildDnaId, $buildDnaHash, $proofCampaignId, (int) $row['prospect_id'], $deliveryId);
     $now = $this->time->getRequestTime();
     $expires = $now + (14 * 86400);
     $version = max(1, (int) $row['share_version']);
@@ -418,11 +418,33 @@ final class PublicPreviewDeliveryService {
   }
 
   /** Requires the immutable Drupal projection before a public handoff. */
-  private function assertRegisteredBuildDna(string $buildDnaId, string $buildDnaHash): void {
-    $row = $this->database->select('famtastic_build_run', 'b')->fields('b', ['artifact_checksum'])
+  private function assertRegisteredBuildDna(string $buildDnaId, string $buildDnaHash, int $proofCampaignId, int $prospectId, int $deliveryId): void {
+    $row = $this->database->select('famtastic_build_run', 'b')->fields('b', ['artifact_checksum', 'status', 'output_manifest'])
       ->condition('build_key', 'build-dna:' . $buildDnaId)->range(0, 1)->execute()->fetchAssoc();
-    if (!$row || !hash_equals((string) $row['artifact_checksum'], $buildDnaHash)) {
+    if (!$row || !hash_equals((string) $row['artifact_checksum'], $buildDnaHash) || (string) $row['status'] !== 'completed') {
       throw new \RuntimeException('The matching immutable Build DNA projection must be registered before public preview staging.');
+    }
+    try {
+      $dna = json_decode((string) $row['output_manifest'], TRUE, 512, JSON_THROW_ON_ERROR);
+    }
+    catch (\Throwable) {
+      throw new \RuntimeException('The registered Build DNA projection is unreadable.');
+    }
+    if (($dna['schema'] ?? '') !== 'famtastic.build-dna.v1'
+      || in_array((string) ($dna['classification'] ?? ''), ['local_contract_fixture', 'proof_runner_preflight'], TRUE)
+      || !in_array(mb_strtolower((string) ($dna['run']['status'] ?? '')), ['passed', 'complete', 'completed'], TRUE)) {
+      throw new \RuntimeException('A preflight, fixture, or incomplete Build DNA record cannot stage a public preview.');
+    }
+    $run = (array) ($dna['run'] ?? []);
+    $source = (array) ($run['source_correlation'] ?? []);
+    if (($dna['recipe']['routine'] ?? '') !== ProofRunnerContractService::ROUTINE
+      || ($dna['recipe']['profile_id'] ?? '') !== 'public_initial.v1'
+      || (int) ($run['prospect_id'] ?? 0) !== $prospectId
+      || (int) ($run['proof_campaign_id'] ?? 0) !== $proofCampaignId
+      || ($source['type'] ?? '') !== 'public_solution_finder_intake'
+      || ($source['proof_phase'] ?? '') !== 'initial'
+      || (int) ($source['public_preview_delivery_id'] ?? 0) !== $deliveryId) {
+      throw new \RuntimeException('Build DNA does not belong to this exact public preview delivery and proof campaign.');
     }
   }
 

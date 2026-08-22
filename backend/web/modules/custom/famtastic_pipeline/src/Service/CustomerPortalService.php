@@ -26,6 +26,7 @@ final class CustomerPortalService {
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
     private readonly PublicPreviewDeliveryService $previews,
+    private readonly BuildTelemetryService $buildTelemetry,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -594,10 +595,11 @@ final class CustomerPortalService {
   /** Enqueues the six-direction refinement after a verified public-preview claim. */
   private function queueWebsiteRequestRefinementJob(int $requestId, int $prospectId, string $publicId, array $intake): void {
     $this->ledger->enqueue(
-      'website_proof.showcase.v1:request:' . $requestId,
+      'website_proof.generate.v1:showcase:request:' . $requestId,
       'proof.showcase.generate',
       [
-        'routine' => 'website_proof.showcase.v1',
+        'routine' => ProofRunnerContractService::ROUTINE,
+        'proof_phase' => 'showcase',
         'prospect_id' => $prospectId,
         'website_request_id' => $requestId,
         'website_request_public_id' => $publicId,
@@ -641,6 +643,17 @@ final class CustomerPortalService {
       array_values($this->entities->getStorage('proof_variant')->loadMultiple($directions)));
     $validSet = $directionValues === ['a', 'b', 'c'] || $directionValues === ['a', 'b', 'c', 'd', 'e', 'f'];
     if (!$campaign || $campaign->get('generation_status')->value !== 'ready' || !in_array($variantCount, [3, 6], TRUE) || !$validSet) throw new \RuntimeException('A complete three- or six-direction proof set is required.');
+    $proofPhase = $variantCount === 6 ? 'showcase' : 'initial';
+    $proofRoutine = ProofRunnerContractService::ROUTINE;
+    if (!$this->buildTelemetry->hasCompletedBuildDnaForCampaign((int) $campaign->id(), [
+      'prospect_id' => (int) $row['prospect_id'],
+      'type' => 'authenticated_website_request',
+      'proof_phase' => $proofPhase,
+      'website_request_id' => $requestId,
+      'website_request_public_id' => (string) $row['public_id'],
+    ], $proofRoutine)) {
+      throw new \RuntimeException('A complete source-bound Build DNA callback is required before customer proof delivery can be approved.');
+    }
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_project_request')->fields([
       'proof_review_status' => 'customer_ready', 'proof_approved_by_uid' => $uid, 'proof_approved_at' => $now, 'changed' => $now,

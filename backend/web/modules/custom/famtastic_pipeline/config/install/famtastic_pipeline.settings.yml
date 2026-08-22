@@ -10,6 +10,16 @@ sla_alerts_enabled: true
 legacy_checkout_enabled: false
 # Site Studio proof generation endpoint. Empty = built-in stub generator.
 studio_url: ''
+# The website proof runner is an explicit dispatch boundary. It remains
+# fail-closed until one of these routes is deliberately configured:
+# - site_studio_dispatch: uses the signed Site Studio dispatch boundary;
+# - external_runner: uses proof_runner_external_url plus an environment secret;
+# - local_contract_fixture: test plumbing only and additionally requires
+#   FAMTASTIC_ALLOW_LOCAL_CONTRACT_FIXTURE=1.
+# It never sends email, stages a public room, charges, or publishes.
+proof_runner_transport: disabled
+proof_runner_external_url: ''
+proof_runner_default_build_class: low
 # Public base URL for proof previews (scheme+host+path prefix, no trailing
 # slash). Empty = {request scheme+host}/web/proofs.
 proofs_base_url: ''

@@ -114,6 +114,7 @@ class ProofCampaignService {
     protected SiteStudioProofClient $studioClient,
     protected OperationalLedger $ledger,
     protected BuildTelemetryService $buildTelemetry,
+    protected ProofRunnerContractService $proofRunner,
     protected Connection $database,
     protected CustomerPortalService $portal,
     protected PublicPreviewDeliveryService $previews,
@@ -155,6 +156,17 @@ class ProofCampaignService {
       'expires_at' => $now + self::TTL,
     ]);
     $campaign->save();
+
+    // Bind the preflight record before the outbound dispatch. The handoff
+    // returned from this call deliberately strips Drupal's private:// evidence
+    // URI while retaining the inline, sanitized contract that the remote
+    // runner must echo in its final callback lineage.
+    if (!empty($context['proof_runner']['build_id'])) {
+      $context['proof_runner'] = $this->proofRunner->linkCampaignHandoff(
+        (array) $context['proof_runner'],
+        $campaign,
+      );
+    }
 
     if ($remote) {
       $jobId = $this->studioClient->dispatch($prospect, $campaign, $context);
@@ -303,7 +315,7 @@ class ProofCampaignService {
   }
 
   /** Prepares the three remaining directions in a six-concept refinement. */
-  public function prepareWebsiteRequestShowcase(int $requestId, string $publicId): ProofCampaign {
+  public function prepareWebsiteRequestShowcase(int $requestId, string $publicId, array $runnerContext = []): ProofCampaign {
     $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
       ->condition('id', $requestId)->execute()->fetchAssoc();
     if (!$request || !hash_equals((string) $request['public_id'], $publicId)) {
@@ -321,6 +333,18 @@ class ProofCampaignService {
     sort($directions);
     if ($directions !== array_keys(self::CORE_DIRECTIONS)) {
       throw new \RuntimeException('The showcase expansion requires exactly the original Safe, Medium FAMtastic, and Ultra FAMtastic set.');
+    }
+    // The showcase is a new proof version on the same campaign. Bind its own
+    // Build DNA record before any dispatch; the initial a/b/c DNA remains a
+    // separate immutable row keyed by its original build_id.
+    if (!empty($runnerContext['proof_runner']['build_id'])) {
+      $runnerContext['proof_runner'] = $this->proofRunner->linkCampaignHandoff(
+        (array) $runnerContext['proof_runner'],
+        $campaign,
+      );
+    }
+    elseif ($this->studioClient->isRemote()) {
+      throw new \RuntimeException('A remote showcase dispatch requires its own source-bound proof runner Build DNA record.');
     }
     $jobId = (string) $campaign->get('studio_job_id')->value;
     $alreadyDispatched = $request['proof_review_status'] === 'showcase_building';
@@ -341,15 +365,18 @@ class ProofCampaignService {
         throw new \RuntimeException('The refinement prospect could not be loaded.');
       }
       $intake = json_decode((string) ($request['intake_data'] ?? '[]'), TRUE);
-      $jobId = $this->studioClient->dispatch($prospect, $campaign, [
-        'routine' => 'website_proof.showcase.v1',
+      $jobId = $this->studioClient->dispatch($prospect, $campaign, array_replace($runnerContext, [
+        // The engine has one canonical creative routine. This is a separate
+        // immutable proof phase/profile, not a second renderer routine.
+        'routine' => ProofRunnerContractService::ROUTINE,
+        'proof_phase' => 'showcase',
         'idempotency_key' => 'proof-showcase:' . $campaign->get('campaign_id')->value . ':' . $requestId,
         'directions' => self::SHOWCASE_DIRECTIONS,
         'direction_contract' => self::SHOWCASE_DIRECTION_CONTRACT,
         'website_request_public_id' => (string) $request['public_id'],
         'website_discovery_v2' => is_array($intake) ? $intake : [],
         'website_discovery_v3' => is_array($intake) ? $intake : [],
-      ]);
+      ]));
       $campaign->set('studio_job_id', $jobId)->set('dispatched_at', $this->time->getRequestTime())->save();
       $this->ledger->recordEvent(
         'proof.showcase_dispatched:' . $campaign->get('campaign_id')->value . ':' . $requestId,

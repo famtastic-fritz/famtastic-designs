@@ -145,6 +145,8 @@ final class BuildTelemetryService {
     $started = $this->timestamp($run['started_at'] ?? $dna['created_at'] ?? NULL) ?? $this->time->getRequestTime();
     $completed = $this->timestamp($run['completed_at'] ?? NULL);
     $projectId = $this->numericId($run['project_id'] ?? NULL);
+    $prospectId = $this->numericId($run['prospect_id'] ?? NULL);
+    $proofCampaignId = $this->numericId($run['proof_campaign_id'] ?? NULL);
     $promptArtifacts = [];
     foreach ($stages as $stage) {
       $prompt = is_array($stage['execution']['prompt'] ?? NULL) ? $stage['execution']['prompt'] : [];
@@ -161,12 +163,17 @@ final class BuildTelemetryService {
     return $this->record([
       'build_key' => 'build-dna:' . $buildId,
       'campaign_key' => substr((string) ($run['campaign_id'] ?? ''), 0, 128),
+      'prospect_id' => $prospectId,
+      'proof_campaign_id' => $proofCampaignId,
       'project_id' => $projectId,
       'flow_key' => 'build-dna',
       'task_key' => substr((string) ($dna['recipe']['routine'] ?? 'build.record'), 0, 128),
       'provider' => substr((string) ($provider['id'] ?? 'unresolved'), 0, 128),
       'agent_name' => substr((string) ($model['id'] ?? $model['status'] ?? 'unresolved'), 0, 128),
-      'status' => 'completed',
+      // A source-bound preflight is intentionally not a completed creative
+      // build. The ledger must preserve that distinction so an owner cannot
+      // mistake a runner-contract receipt for final proof evidence.
+      'status' => $this->buildDnaStatus($run),
       'prompt_snapshot' => $this->json(['prompt_artifacts' => $promptArtifacts]),
       'input_snapshot' => $this->json([
         'run' => $run,
@@ -179,6 +186,142 @@ final class BuildTelemetryService {
       'started_at' => $started,
       'completed_at' => $completed,
     ]);
+  }
+
+  /** Returns the registered projection used to correlate a provider callback. */
+  public function loadBuildDna(string $buildId): ?array {
+    $buildId = trim($buildId);
+    if ($buildId === '') {
+      return NULL;
+    }
+    $row = $this->database->select('famtastic_build_run', 'b')
+      ->fields('b', ['id', 'build_key', 'status', 'artifact_checksum', 'output_manifest', 'prospect_id', 'proof_campaign_id', 'project_id'])
+      ->condition('build_key', 'build-dna:' . $buildId)
+      ->range(0, 1)
+      ->execute()
+      ->fetchAssoc();
+    if (!$row) {
+      return NULL;
+    }
+    try {
+      $manifest = json_decode((string) $row['output_manifest'], TRUE, 512, JSON_THROW_ON_ERROR);
+    }
+    catch (\Throwable) {
+      return NULL;
+    }
+    return [
+      'record' => [
+        'id' => (int) $row['id'],
+        'build_key' => (string) $row['build_key'],
+        'status' => (string) $row['status'],
+        'artifact_checksum' => (string) $row['artifact_checksum'],
+        'prospect_id' => $row['prospect_id'] === NULL ? NULL : (int) $row['prospect_id'],
+        'proof_campaign_id' => $row['proof_campaign_id'] === NULL ? NULL : (int) $row['proof_campaign_id'],
+        'project_id' => $row['project_id'] === NULL ? NULL : (int) $row['project_id'],
+      ],
+      'manifest' => $manifest,
+    ];
+  }
+
+  /** Returns the current runner-bound Build DNA record for one proof campaign. */
+  public function loadBuildDnaForCampaign(int $proofCampaignId): ?array {
+    if ($proofCampaignId < 1) {
+      return NULL;
+    }
+    $row = $this->database->select('famtastic_build_run', 'b')
+      ->fields('b', ['id', 'build_key', 'status', 'artifact_checksum', 'output_manifest', 'prospect_id', 'proof_campaign_id', 'project_id'])
+      ->condition('proof_campaign_id', $proofCampaignId)
+      ->condition('build_key', 'build-dna:%', 'LIKE')
+      ->orderBy('id', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchAssoc();
+    if (!$row) {
+      return NULL;
+    }
+    $buildId = preg_replace('/^build-dna:/', '', (string) $row['build_key']);
+    return $this->loadBuildDna((string) $buildId);
+  }
+
+  /**
+   * Finds the current Build DNA record for an immutable intake correlation.
+   *
+   * The source fields live in the canonical manifest rather than in a second
+   * database column so changing a schema is not required to add a new
+   * correlation key. This is intentionally used only to resume a canonical
+   * proof job; it never performs a broad "latest prospect campaign" lookup.
+   */
+  public function loadBuildDnaForSource(array $source, string $routine = 'website_proof.generate.v1'): ?array {
+    $prospectId = $this->numericId($source['prospect_id'] ?? NULL);
+    $sourceType = trim((string) ($source['type'] ?? ''));
+    if (!$prospectId || $sourceType === '') {
+      return NULL;
+    }
+    $rows = $this->database->select('famtastic_build_run', 'b')
+      ->fields('b', ['build_key', 'output_manifest'])
+      ->condition('prospect_id', $prospectId)
+      ->condition('build_key', 'build-dna:%', 'LIKE')
+      ->orderBy('id', 'DESC')
+      ->execute()
+      ->fetchAllAssoc('build_key');
+    $keys = [
+      'prospect_id',
+      'type',
+      'proof_phase',
+      'public_preview_delivery_id',
+      'intake_id',
+      'website_request_id',
+      'website_request_public_id',
+    ];
+    foreach ($rows as $row) {
+      try {
+        $manifest = json_decode((string) $row->output_manifest, TRUE, 512, JSON_THROW_ON_ERROR);
+      }
+      catch (\Throwable) {
+        continue;
+      }
+      $candidate = (array) ($manifest['run']['source_correlation'] ?? []);
+      if (($manifest['recipe']['routine'] ?? '') !== $routine) {
+        continue;
+      }
+      $matches = TRUE;
+      foreach ($keys as $key) {
+        if (array_key_exists($key, $source) && (string) ($candidate[$key] ?? '') !== (string) $source[$key]) {
+          $matches = FALSE;
+          break;
+        }
+      }
+      if (!$matches) {
+        continue;
+      }
+      $buildId = preg_replace('/^build-dna:/', '', (string) $row->build_key);
+      return $this->loadBuildDna((string) $buildId);
+    }
+    return NULL;
+  }
+
+  /** TRUE only when the campaign has a final, not-preflight Build DNA record. */
+  public function hasCompletedBuildDnaForCampaign(int $proofCampaignId, array $requiredSource = [], ?string $routine = NULL): bool {
+    $record = $this->loadBuildDnaForCampaign($proofCampaignId);
+    if (!$record || ($record['record']['status'] ?? '') !== 'completed') {
+      return FALSE;
+    }
+    $manifest = (array) $record['manifest'];
+    if (($manifest['schema'] ?? '') !== 'famtastic.build-dna.v1'
+      || in_array((string) ($manifest['classification'] ?? ''), ['local_contract_fixture', 'proof_runner_preflight'], TRUE)
+      || !in_array(mb_strtolower((string) ($manifest['run']['status'] ?? '')), ['passed', 'complete', 'completed'], TRUE)) {
+      return FALSE;
+    }
+    if ($routine !== NULL && ($manifest['recipe']['routine'] ?? '') !== $routine) {
+      return FALSE;
+    }
+    $actualSource = (array) ($manifest['run']['source_correlation'] ?? []);
+    foreach ($requiredSource as $key => $expected) {
+      if ((string) ($actualSource[$key] ?? '') !== (string) $expected) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 
   /**
@@ -249,6 +392,20 @@ final class BuildTelemetryService {
       return (int) $value;
     }
     return NULL;
+  }
+
+  /** Maps honest Build DNA lifecycle facts to the searchable projection. */
+  private function buildDnaStatus(array $run): string {
+    $status = mb_strtolower(trim((string) ($run['status'] ?? 'completed')));
+    return match ($status) {
+      'passed', 'complete', 'completed' => 'completed',
+      'preflight_ready', 'dispatched_waiting_callback', 'waiting_for_runner', 'queued' => 'preflight',
+      'gated' => 'gated',
+      'failed' => 'failed',
+      'partial' => 'partial',
+      'local_contract_fixture_validated' => 'fixture',
+      default => 'unknown',
+    };
   }
 
   private function releaseSha(): string {

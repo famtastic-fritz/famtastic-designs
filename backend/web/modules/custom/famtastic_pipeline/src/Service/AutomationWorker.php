@@ -14,6 +14,7 @@ final class AutomationWorker {
   public function __construct(
     private readonly OperationalLedger $ledger,
     private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly ProofRunnerContractService $proofRunner,
     private readonly ProofCampaignService $proofCampaigns,
     private readonly CampaignMessageService $campaignMessages,
     private readonly CustomerDeploymentService $deployments,
@@ -79,8 +80,52 @@ final class AutomationWorker {
     if (!$prospect) {
       throw new \RuntimeException('Prospect no longer exists.');
     }
-    $existing = $this->proofCampaigns->getForProspect($prospect);
-    $created = $existing ?: $this->proofCampaigns->createForProspect($prospect, $context);
+    $runner = NULL;
+    // Canonical runner jobs are explicitly opted in and must carry one of the
+    // two source correlations. Preserve older imports/synthetic proof jobs
+    // until they are intentionally migrated instead of making them fail on a
+    // missing public-delivery or website-request record.
+    $canonicalRunnerJob = (string) ($context['routine'] ?? '') === ProofRunnerContractService::ROUTINE
+      && (!empty($context['public_preview_delivery_id']) || !empty($context['website_request_id']));
+    if ($canonicalRunnerJob) {
+      // A prospect may own several projects. Resume only a campaign already
+      // source-bound to this exact intake, never the latest campaign across
+      // all of the prospect's work.
+      $existing = $this->proofRunner->existingCampaignForSource($prospect, $context);
+    }
+    else {
+      $existing = $this->proofCampaigns->getForProspect($prospect);
+    }
+    if (!$existing) {
+      if (!$canonicalRunnerJob) {
+        $created = $this->proofCampaigns->createForProspect($prospect, $context);
+      }
+      else {
+        // No proof builder, pilot renderer, email, or customer-facing artifact
+        // may start until the source-bound runner contract has passed its
+        // declared preflight and registered its preflight Build DNA projection.
+        $runner = $this->proofRunner->prepare($prospect, $context, $job);
+        if ($this->proofRunner->isLocalContractFixture($runner)) {
+          return [
+            'status' => 'local_contract_fixture',
+            'build_id' => $runner['build_id'],
+            'contract_uri' => $runner['contract_uri'],
+            'build_dna_uri' => $runner['build_dna_uri'],
+            'message' => 'Fixture validated only; no proof, email, payment, or publication was created.',
+          ];
+        }
+        // ProofCampaignService consumes the private evidence URI and binds
+        // it to the just-created campaign before it dispatches any remote
+        // request. It removes that URI before Site Studio receives the signed
+        // envelope, so there is neither a private:// leak nor a fast-callback
+        // linkage race.
+        $context['proof_runner'] = $runner['handoff'];
+        $created = $this->proofCampaigns->createForProspect($prospect, $context);
+      }
+    }
+    else {
+      $created = $existing;
+    }
     $variants = $created['variants'];
     if (
       count($variants) === 0
@@ -90,6 +135,7 @@ final class AutomationWorker {
         'campaign_id' => $created['campaign']->get('campaign_id')->value,
         'status' => 'waiting_callback',
         'studio_job_id' => $created['campaign']->get('studio_job_id')->value,
+        'proof_runner_build_id' => $runner['build_id'] ?? NULL,
       ];
     }
     if (count($variants) !== 3) {
@@ -152,6 +198,7 @@ final class AutomationWorker {
       'campaign_id' => $campaign->get('campaign_id')->value,
       'variant_count' => 3,
       'directions' => $directions,
+      'proof_runner_build_id' => $runner['build_id'] ?? NULL,
     ];
   }
 
@@ -163,12 +210,45 @@ final class AutomationWorker {
     if (!$requestId || $publicId === '') {
       throw new \RuntimeException('Refined proof generation requires the exact website request.');
     }
-    $campaign = $this->proofCampaigns->prepareWebsiteRequestShowcase($requestId, $publicId);
+    // Rehydrate the submitted request from the durable portal record rather
+    // than trusting an old queue payload, then keep the distinct showcase
+    // phase. This creates a new immutable Build DNA record for d/e/f and does
+    // not overwrite the completed a/b/c run on the same campaign.
+    $context = array_replace($context, $this->portal->websiteRequestProofContext($requestId));
+    $context['routine'] = ProofRunnerContractService::ROUTINE;
+    $context['proof_phase'] = 'showcase';
+    $context['website_request_id'] = $requestId;
+    $context['website_request_public_id'] = $publicId;
+    $prospectId = (int) ($context['prospect_id'] ?? $job['prospect_id'] ?? 0);
+    $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
+    if (!$prospect) {
+      throw new \RuntimeException('Showcase proof prospect no longer exists.');
+    }
+    $existing = $this->proofRunner->existingCampaignForSource($prospect, $context);
+    $runner = NULL;
+    if (!$existing) {
+      $runner = $this->proofRunner->prepare($prospect, $context, $job);
+      if ($this->proofRunner->isLocalContractFixture($runner)) {
+        return [
+          'status' => 'local_contract_fixture',
+          'build_id' => $runner['build_id'],
+          'contract_uri' => $runner['contract_uri'],
+          'build_dna_uri' => $runner['build_dna_uri'],
+          'message' => 'Fixture validated only; no refinement, email, payment, or publication was created.',
+        ];
+      }
+      $context['proof_runner'] = $runner['handoff'];
+      $campaign = $this->proofCampaigns->prepareWebsiteRequestShowcase($requestId, $publicId, $context);
+    }
+    else {
+      $campaign = $existing['campaign'];
+    }
     return [
       'campaign_id' => (string) $campaign->get('campaign_id')->value,
-      'status' => 'waiting_callback',
+      'status' => (string) $campaign->get('generation_status')->value,
       'studio_job_id' => (string) $campaign->get('studio_job_id')->value,
       'proof_count' => 6,
+      'proof_runner_build_id' => $runner['build_id'] ?? NULL,
     ];
   }
 

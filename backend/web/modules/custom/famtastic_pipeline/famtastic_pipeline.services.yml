@@ -21,7 +21,15 @@ services:
 
   famtastic_pipeline.automation_worker:
     class: Drupal\famtastic_pipeline\Service\AutomationWorker
-    arguments: ['@famtastic_pipeline.operational_ledger', '@entity_type.manager', '@famtastic_pipeline.proof_campaign_service', '@famtastic_pipeline.campaign_messages', '@famtastic_pipeline.customer_deployment', '@famtastic_pipeline.domain_lifecycle', '@famtastic_pipeline.hosting_lifecycle', '@famtastic_pipeline.customer_portal', '@famtastic_pipeline.public_preview_deliveries']
+    arguments: ['@famtastic_pipeline.operational_ledger', '@entity_type.manager', '@famtastic_pipeline.proof_runner_contract', '@famtastic_pipeline.proof_campaign_service', '@famtastic_pipeline.campaign_messages', '@famtastic_pipeline.customer_deployment', '@famtastic_pipeline.domain_lifecycle', '@famtastic_pipeline.hosting_lifecycle', '@famtastic_pipeline.customer_portal', '@famtastic_pipeline.public_preview_deliveries']
+
+  famtastic_pipeline.proof_runner_contract:
+    class: Drupal\famtastic_pipeline\Service\ProofRunnerContractService
+    arguments: ['@config.factory', '@database', '@entity_type.manager', '@file_system', '@datetime.time', '@uuid', '@http_client', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.build_telemetry']
+
+  famtastic_pipeline.proof_runner_callback_verifier:
+    class: Drupal\famtastic_pipeline\Service\ProofRunnerCallbackVerifier
+    arguments: ['@entity_type.manager', '@famtastic_pipeline.build_telemetry', '@famtastic_pipeline.operational_ledger']
 
   famtastic_pipeline.campaign_messages:
     class: Drupal\famtastic_pipeline\Service\CampaignMessageService
@@ -98,7 +106,7 @@ services:
 
   famtastic_pipeline.proof_campaign_service:
     class: Drupal\famtastic_pipeline\Service\ProofCampaignService
-    arguments: ['@entity_type.manager', '@config.factory', '@datetime.time', '@file_system', '@famtastic_pipeline.studio_adapter', '@famtastic_pipeline.repository', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.site_studio_proof_client', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.build_telemetry', '@database', '@famtastic_pipeline.customer_portal', '@famtastic_pipeline.public_preview_deliveries']
+    arguments: ['@entity_type.manager', '@config.factory', '@datetime.time', '@file_system', '@famtastic_pipeline.studio_adapter', '@famtastic_pipeline.repository', '@logger.channel.famtastic_pipeline', '@famtastic_pipeline.site_studio_proof_client', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.build_telemetry', '@famtastic_pipeline.proof_runner_contract', '@database', '@famtastic_pipeline.customer_portal', '@famtastic_pipeline.public_preview_deliveries']
 
   famtastic_pipeline.mailer:
     class: Drupal\famtastic_pipeline\Service\OutreachMailer
@@ -106,7 +114,7 @@ services:
 
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.public_preview_deliveries']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.public_preview_deliveries', '@famtastic_pipeline.build_telemetry']
 
   famtastic_pipeline.public_preview_deliveries:
     class: Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService

@@ -6,6 +6,7 @@ namespace Drupal\famtastic_pipeline\Drush\Commands;
 
 use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
+use Drupal\famtastic_pipeline\Service\ProofRunnerContractService;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
 
@@ -295,7 +296,8 @@ class PipelineCommands extends DrushCommands {
     }
     $this->io()->writeln(json_encode([
       'schema_version' => 1,
-      'routine' => 'website_proof.showcase.v1',
+      'routine' => ProofRunnerContractService::ROUTINE,
+      'proof_phase' => 'showcase',
       'transport' => 'offline_ssh_bundle_showcase',
       'website_request_id' => (int) $request['id'],
       'website_request_public_id' => (string) $request['public_id'],

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://famtasticdesigns.com/schemas/proof-runner-request.v1.schema.json",
+  "title": "FAMtastic source-bound proof runner request",
+  "type": "object",
+  "required": ["schema", "contract_version", "build_id", "idempotency_key", "routine", "created_at", "source", "profile", "build_class", "provider_preflight", "mutation_policy", "return_contract"],
+  "properties": {
+    "schema": {"const": "famtastic.proof-runner-request.v1"},
+    "contract_version": {"type": "string", "minLength": 1},
+    "build_id": {"type": "string", "minLength": 8},
+    "idempotency_key": {"type": "string", "minLength": 8},
+    "routine": {"const": "website_proof.generate.v1"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "source": {
+      "type": "object",
+      "required": ["type", "prospect_id", "contact_hash"],
+      "properties": {
+        "type": {"enum": ["public_solution_finder_intake", "authenticated_website_request"]},
+        "prospect_id": {"type": "integer", "minimum": 1},
+        "contact_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      },
+      "additionalProperties": true
+    },
+    "profile": {
+      "type": "object",
+      "required": ["id", "proof_count", "directions", "customer_visibility"],
+      "properties": {
+        "id": {"enum": ["public_initial.v1", "portal_initial.v1", "portal_showcase.v1"]},
+        "proof_count": {"const": 3},
+        "directions": {"type": "object"},
+        "customer_visibility": {"const": "owner_review_only"}
+      },
+      "additionalProperties": true
+    },
+    "build_class": {"enum": ["free", "low", "medium", "premium", "premium_brain_free_workers", "custom"]},
+    "provider_preflight": {"type": "object", "required": ["status", "ready", "transport", "classification", "reason", "provider"]},
+    "mutation_policy": {"type": "object"},
+    "return_contract": {"type": "object"}
+  },
+  "additionalProperties": true
+}

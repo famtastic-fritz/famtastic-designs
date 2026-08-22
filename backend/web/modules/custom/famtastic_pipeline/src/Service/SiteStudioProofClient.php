@@ -71,12 +71,25 @@ final class SiteStudioProofClient {
     ksort($directionContract);
     ksort($resolvedDirections);
     $directions = $resolvedDirections;
-    $payload = [
-      'schema_version' => 2,
-      'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1'),
-      'idempotency_key' => (string) ($context['idempotency_key'] ?? ('proof:' . $campaign->get('campaign_id')->value)),
-      'campaign_id' => $campaign->get('campaign_id')->value,
-      'prospect' => [
+    $proofRunner = (array) ($context['proof_runner'] ?? []);
+    $runnerContract = (array) ($proofRunner['contract'] ?? []);
+    $runnerBound = $proofRunner !== [];
+    if ($runnerBound) {
+      $this->assertRemoteSafeRunnerEnvelope($proofRunner, $runnerContract);
+      $source = (array) ($runnerContract['source'] ?? []);
+      // The full normalized source contract is sent inline and signed with
+      // this request. Do not also leak the Drupal prospect's contact fields or
+      // the original unfiltered portal payload to a remote proof worker.
+      $prospectPayload = [
+        'business_name' => (string) ($source['business_name'] ?? ''),
+        'category' => (string) ($source['business_category'] ?? ''),
+        'description' => (string) ($source['business_description'] ?? ''),
+        'service_area' => (string) ($source['service_area'] ?? ''),
+      ];
+      $websiteDiscovery = (array) ($source['facts'] ?? []);
+    }
+    else {
+      $prospectPayload = [
         'business_name' => $prospect->get('business_name')->value,
         'category' => $prospect->get('business_category')->value,
         'description' => $prospect->get('business_description')->value,
@@ -85,7 +98,15 @@ final class SiteStudioProofClient {
         'email' => $prospect->get('public_email')->value,
         'address' => $prospect->get('address')->value,
         'hours' => $prospect->get('hours')->value,
-      ],
+      ];
+      $websiteDiscovery = (array) ($context['website_discovery_v3'] ?? $context['website_discovery_v2'] ?? []);
+    }
+    $payload = [
+      'schema_version' => 2,
+      'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1'),
+      'idempotency_key' => (string) ($context['idempotency_key'] ?? ('proof:' . $campaign->get('campaign_id')->value)),
+      'campaign_id' => $campaign->get('campaign_id')->value,
+      'prospect' => $prospectPayload,
       'directions' => $directions,
       'required_variant_count' => 3,
       'direction_contract' => $directionContract,
@@ -95,8 +116,11 @@ final class SiteStudioProofClient {
         'commerce_order_id' => (int) ($context['commerce_order_id'] ?? 0),
         'website_request_public_id' => (string) ($context['website_request_public_id'] ?? ''),
       ],
-      'website_discovery_v2' => (array) ($context['website_discovery_v2'] ?? []),
-      'website_discovery_v3' => (array) ($context['website_discovery_v3'] ?? $context['website_discovery_v2'] ?? []),
+      'website_discovery_v2' => $websiteDiscovery,
+      'website_discovery_v3' => $websiteDiscovery,
+      // Additive FAMtastic-side correlation only. Site Studio need not change
+      // its recipe engine to preserve and return this opaque build lineage.
+      'proof_runner' => $proofRunner,
     ];
     $body = json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     $signature = 'sha256=' . hash_hmac('sha256', $body, (string) $secret);
@@ -119,6 +143,38 @@ final class SiteStudioProofClient {
 
   private function endpoint(): string {
     return rtrim((string) (getenv('SITE_STUDIO_URL') ?: $this->configFactory->get('famtastic_pipeline.settings')->get('studio_url')), '/');
+  }
+
+  /**
+   * Rejects a malformed canonical envelope before the signed remote dispatch.
+   *
+   * This boundary intentionally accepts the inline contract, not a Drupal
+   * private:// pointer. A remote provider must never receive personal contact
+   * fields merely because legacy dispatches included them.
+   */
+  private function assertRemoteSafeRunnerEnvelope(array $envelope, array $contract): void {
+    if (trim((string) ($envelope['build_id'] ?? '')) === '' || trim((string) ($envelope['contract_sha256'] ?? '')) === '') {
+      throw new \InvalidArgumentException('Runner-bound Site Studio dispatch requires build_id and contract checksum.');
+    }
+    if (($contract['schema'] ?? '') !== ProofRunnerContractService::CONTRACT_SCHEMA || !ProofRunnerContractService::isSupportedRoutine((string) ($contract['routine'] ?? ''))) {
+      throw new \InvalidArgumentException('Runner-bound Site Studio dispatch requires the inline canonical proof contract.');
+    }
+    $serialized = json_encode($envelope, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+    if (str_contains($serialized, 'private://')) {
+      throw new \InvalidArgumentException('Runner-bound Site Studio dispatch may not contain a Drupal private:// URI.');
+    }
+    $forbidden = ['email', 'public_email', 'phone', 'public_phone', 'password', 'token', 'access_token', 'refresh_token', 'api_key', 'secret'];
+    $walk = function (mixed $value, string $key = '') use (&$walk, $forbidden): void {
+      if (in_array(mb_strtolower($key), $forbidden, TRUE)) {
+        throw new \InvalidArgumentException('Runner-bound Site Studio dispatch may not contain raw contact or credential fields.');
+      }
+      if (is_array($value)) {
+        foreach ($value as $childKey => $childValue) {
+          $walk($childValue, (string) $childKey);
+        }
+      }
+    };
+    $walk($contract);
   }
 
 }

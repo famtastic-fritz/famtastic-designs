@@ -1,0 +1,59 @@
+{
+  "schema": "famtastic.proof-runner-request.v1",
+  "contract_version": "1.0.0",
+  "build_id": "proof-runner-fixture-20260822-001",
+  "idempotency_key": "proof-runner:fixture:20260822-001",
+  "routine": "website_proof.generate.v1",
+  "created_at": "2026-08-22T12:00:00Z",
+  "classification": "local_contract_fixture",
+  "source": {
+    "type": "public_solution_finder_intake",
+    "prospect_id": 4242,
+    "contact_hash": "1c070f15c60bc13dd470f3648c4e55a0adca9f0a30f0ae0b21e2456134872814",
+    "public_preview_delivery_id": 88,
+    "intake_id": 99,
+    "facts": {
+      "primary_goal": "Explain a workforce readiness program.",
+      "services": "Career coaching and employer connections.",
+      "reference_sites": "Use only provided reference URLs in a real provider run."
+    }
+  },
+  "profile": {
+    "id": "public_initial.v1",
+    "proof_count": 3,
+    "directions": {
+      "a": { "name": "Safe", "intent": "polished, familiar, credible, and low-risk" },
+      "b": { "name": "Medium FAMtastic", "intent": "expressive, energetic, and clearly differentiated" },
+      "c": { "name": "Ultra FAMtastic", "intent": "the strongest campaign-level visual idea" }
+    },
+    "customer_visibility": "owner_review_only"
+  },
+  "build_class": "low",
+  "provider_preflight": {
+    "status": "local_contract_fixture_validated",
+    "ready": true,
+    "transport": "local_contract_fixture",
+    "classification": "local_contract_fixture",
+    "reason": "Fixture only; no proof may be generated.",
+    "provider": { "id": "deterministic_contract_fixture", "model_status": "not_applicable" }
+  },
+  "mutation_policy": {
+    "customer_email": "forbidden",
+    "outbox_enqueue": "forbidden",
+    "checkout": "forbidden",
+    "payment": "forbidden",
+    "domain_purchase": "forbidden",
+    "production_publish": "forbidden"
+  },
+  "return_contract": {
+    "callback_required": true,
+    "callback_must_correlate_build_id": "proof-runner-fixture-20260822-001",
+    "callback_must_include_complete_build_dna": true,
+    "callback_must_include_provider_preflight_receipts": true,
+    "callback_must_include_browser_qa": true,
+    "callback_must_include_independent_visual_review": true,
+    "callback_variants_must_include_sha256": true,
+    "callback_build_dna_must_include_per_direction_html_hashes": true,
+    "owner_review_required_before_customer_visibility": true
+  }
+}

@@ -7,6 +7,7 @@ namespace Drupal\famtastic_pipeline\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
+use Drupal\famtastic_pipeline\Service\ProofRunnerCallbackVerifier;
 use Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,6 +24,7 @@ final class SiteStudioCallbackController extends ControllerBase {
   public function __construct(
     private readonly ProofCampaignService $proofCampaigns,
     private readonly SiteStudioBuildPacketService $buildPackets,
+    private readonly ProofRunnerCallbackVerifier $proofRunnerCallbacks,
   ) {}
 
   /**
@@ -32,6 +34,7 @@ final class SiteStudioCallbackController extends ControllerBase {
     return new static(
       $container->get('famtastic_pipeline.proof_campaign_service'),
       $container->get('famtastic_pipeline.site_studio_build_packets'),
+      $container->get('famtastic_pipeline.proof_runner_callback_verifier'),
     );
   }
 
@@ -65,6 +68,10 @@ final class SiteStudioCallbackController extends ControllerBase {
           'status' => 'site_studio_build_succeeded',
         ]);
       }
+      // A campaign created by the canonical proof runner carries a linked
+      // preflight record. It cannot advance without a complete, source-bound
+      // Build DNA manifest and the required QA/review evidence.
+      $runnerVerification = $this->proofRunnerCallbacks->verify($data);
       $result = $this->proofCampaigns->acceptCallback(
         (string) ($data['event_id'] ?? ''),
         (string) ($data['campaign_id'] ?? ''),
@@ -79,6 +86,7 @@ final class SiteStudioCallbackController extends ControllerBase {
       'ok' => TRUE,
       'newly_processed' => $result['newly_processed'],
       'variant_count' => count($result['variants']),
+      'proof_runner' => $runnerVerification,
     ]);
   }
 
