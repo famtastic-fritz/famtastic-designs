@@ -67,6 +67,24 @@ final class ProofRunnerContractService {
   ];
 
   /**
+   * The new detailed-intake proof package. It is always a new campaign: a
+   * fresh a-f six-pack, not a public teaser plus an append-only expansion.
+   */
+  private const PORTAL_REFINED_SIX = [
+    'id' => 'portal_refined_six.v1',
+    'proof_count' => 6,
+    'directions' => [
+      'a' => ['name' => 'Normal', 'intent' => 'polished, familiar, credible, and grounded in the detailed customer intake'],
+      'b' => ['name' => 'Medium FAMtastic', 'intent' => 'expressive and differentiated while preserving practical clarity'],
+      'c' => ['name' => 'Ultra FAMtastic · Direction 1', 'intent' => 'the first campaign-level visual idea derived from the detailed intake'],
+      'd' => ['name' => 'Ultra FAMtastic · Direction 2', 'intent' => 'a distinct maximum-FAMtastic visual system and conversion path'],
+      'e' => ['name' => 'Ultra FAMtastic · Direction 3', 'intent' => 'a third maximum-FAMtastic visual system and conversion path'],
+      'f' => ['name' => 'Ultra FAMtastic · Direction 4', 'intent' => 'a fourth maximum-FAMtastic visual system and conversion path'],
+    ],
+    'customer_visibility' => 'owner_review_only',
+  ];
+
+  /**
    * Input keys allowed to leave the authenticated portal as build context.
    *
    * Deliberately excludes contact details, passwords, tokens, and free-form
@@ -164,6 +182,11 @@ final class ProofRunnerContractService {
           'technical_status' => 'passed',
           'visual' => ['independent' => TRUE, 'status' => 'passed', 'decision' => 'required', 'reviewer' => 'required'],
         ],
+        'final_completion_contract' => [
+          'classification' => 'production_proof_completion',
+          'run_completion_state' => 'provider_completed',
+          'local_fixture_forbidden' => TRUE,
+        ],
         'owner_review_required_before_customer_visibility' => TRUE,
       ],
     ];
@@ -228,6 +251,43 @@ final class ProofRunnerContractService {
   /** Returns TRUE only for a deliberately non-creative plumbing fixture. */
   public function isLocalContractFixture(array $run): bool {
     return ($run['classification'] ?? '') === 'local_contract_fixture';
+  }
+
+  /**
+   * Copies the immutable direction contract into the internal dispatch context.
+   *
+   * The callback verifies these same directions from Build DNA, not from the
+   * mutable campaign/request state that happens to exist when it returns.
+   */
+  public function applyProfileToContext(array $context, array $run): array {
+    $profile = (array) ($run['profile'] ?? []);
+    $directions = (array) ($profile['directions'] ?? []);
+    if ($directions === []) {
+      throw new \InvalidArgumentException('Proof runner profile does not contain a direction contract.');
+    }
+    $names = [];
+    foreach ($directions as $id => $contract) {
+      if (!is_array($contract) || trim((string) ($contract['name'] ?? '')) === '') {
+        throw new \InvalidArgumentException('Proof runner profile direction contract is invalid.');
+      }
+      $names[(string) $id] = (string) $contract['name'];
+    }
+    $context['directions'] = $names;
+    $context['direction_contract'] = $directions;
+    $context['proof_phase'] = (string) (($run['handoff']['contract']['source']['proof_phase'] ?? $context['proof_phase'] ?? 'initial'));
+    $context['requested_profile_id'] = (string) ($profile['id'] ?? '');
+    // Kept as a non-authoritative convenience for internal dispatch code. The
+    // pending Build DNA remains the only source of truth at callback time.
+    $context['proof_profile_id'] = (string) ($profile['id'] ?? '');
+    return $context;
+  }
+
+  /** Returns the immutable IDs expected for the declared canonical phase. */
+  public function expectedDirectionIds(array $context): array {
+    $profile = $this->profileFor($context);
+    $ids = array_keys((array) $profile['directions']);
+    sort($ids);
+    return $ids;
   }
 
   /**
@@ -359,10 +419,13 @@ final class ProofRunnerContractService {
 
   /** Chooses an explicit phase profile; no prior proof leaks into another run. */
   private function profileFor(array $context): array {
-    $routine = $this->routineFor($context);
-    $phase = trim((string) ($context['proof_phase'] ?? 'initial'));
-    if (!in_array($phase, ['initial', 'showcase'], TRUE)) {
-      throw new \InvalidArgumentException('Unsupported proof runner phase.');
+    $this->routineFor($context);
+    $phase = $this->phaseForContext($context);
+    if ($phase === 'refined_six') {
+      if (empty($context['website_request_id'])) {
+        throw new \InvalidArgumentException('Refined six-proof runner requires an authenticated website request source.');
+      }
+      return self::PORTAL_REFINED_SIX;
     }
     if ($phase === 'showcase') {
       if (empty($context['website_request_id'])) {
@@ -378,6 +441,23 @@ final class ProofRunnerContractService {
       return self::PORTAL_INITIAL;
     }
     throw new \InvalidArgumentException('Proof runner requires a public preview delivery or an authenticated website request source.');
+  }
+
+  /** Normalizes new detailed-proof jobs away from the legacy showcase label. */
+  private function phaseForContext(array $context): string {
+    $phase = trim((string) ($context['proof_phase'] ?? 'initial'));
+    $requestedProfile = trim((string) ($context['requested_profile_id'] ?? ''));
+    $deliveryClass = trim((string) ($context['delivery_class'] ?? ''));
+    // The lifecycle layer may still carry `showcase` as its queue label while
+    // it migrates off the legacy append-only path. The explicit refined class
+    // or profile is authoritative and normalizes to the new phase below.
+    if ($requestedProfile === self::PORTAL_REFINED_SIX['id'] || $deliveryClass === 'authenticated_refined') {
+      $phase = 'refined_six';
+    }
+    if (!in_array($phase, ['initial', 'showcase', 'refined_six'], TRUE)) {
+      throw new \InvalidArgumentException('Unsupported proof runner phase.');
+    }
+    return $phase;
   }
 
   /**
@@ -437,16 +517,70 @@ final class ProofRunnerContractService {
     if (!$requestId || $publicId === '') {
       throw new \InvalidArgumentException('Portal proof runner requires a submitted v3 request and opaque public ID.');
     }
-    $request = $this->database->select('famtastic_project_request', 'r')->fields('r', ['id', 'prospect_id', 'public_id', 'status', 'intake_data'])
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r', [
+      'id', 'prospect_id', 'public_id', 'status', 'intake_data',
+      'source_preview_delivery_id',
+      'parent_public_proof_campaign_id', 'parent_public_campaign_key',
+      'parent_public_build_dna_id', 'parent_public_build_dna_hash',
+      'detailed_intake_snapshot', 'detailed_intake_snapshot_sha256',
+      'consented_asset_manifest', 'consented_asset_manifest_sha256',
+      'proof_phase', 'proof_profile_id',
+    ])
       ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
     if (!$request || (int) $request['prospect_id'] !== (int) $prospect->id() || !hash_equals((string) $request['public_id'], $publicId) || (string) $request['status'] === 'draft') {
       throw new \RuntimeException('Portal website request does not belong to the proof prospect.');
     }
+    $phase = $this->phaseForContext($context);
+    $sourceContext = $context;
+    $lineageKeys = [
+      'source_preview_delivery_id',
+      'detailed_intake_snapshot',
+      'detailed_intake_snapshot_sha256',
+      'consented_asset_manifest',
+      'consented_asset_manifest_sha256',
+      'parent_public_proof_campaign_id',
+      'parent_public_campaign_key',
+      'parent_public_build_dna_id',
+      'parent_public_build_dna_hash',
+    ];
+    // Detailed input and parent lineage are database-authoritative. A queue
+    // payload may carry duplicate bytes for transport, but it cannot replace
+    // the persisted source with a self-consistent alternate snapshot/hash.
+    if ($phase === 'refined_six') {
+      if (($request['proof_phase'] ?? '') !== 'refined_six' || ($request['proof_profile_id'] ?? '') !== self::PORTAL_REFINED_SIX['id']) {
+        throw new \RuntimeException('Refined six-proof request is not persisted with the required immutable proof profile.');
+      }
+      foreach ($lineageKeys as $key) {
+        if (!array_key_exists($key, $request) || $request[$key] === NULL || $request[$key] === '') {
+          throw new \RuntimeException('Refined six-proof request is missing persisted lineage field ' . $key . '.');
+        }
+        if (array_key_exists($key, $context) && (string) $context[$key] !== (string) $request[$key]) {
+          throw new \RuntimeException('Refined six-proof queue payload differs from persisted lineage at ' . $key . '.');
+        }
+        $sourceContext[$key] = $request[$key];
+      }
+      $persistedDeliveryId = (int) $request['source_preview_delivery_id'];
+      if (array_key_exists('public_preview_delivery_id', $context) && (int) $context['public_preview_delivery_id'] !== $persistedDeliveryId) {
+        throw new \RuntimeException('Refined six-proof queue payload differs from the persisted public preview delivery lineage.');
+      }
+      $sourceContext['public_preview_delivery_id'] = $persistedDeliveryId;
+    }
+    else {
+      foreach (array_merge(['public_preview_delivery_id'], $lineageKeys) as $key) {
+        if (!array_key_exists($key, $sourceContext) && array_key_exists($key, $request) && $request[$key] !== NULL && $request[$key] !== '') {
+          $sourceContext[$key] = $request[$key];
+        }
+      }
+    }
     try {
-      $intake = json_decode((string) $request['intake_data'], TRUE, 512, JSON_THROW_ON_ERROR);
+      $intake = $phase === 'refined_six'
+        ? $this->detailedSnapshotIntake($sourceContext)
+        : json_decode((string) $request['intake_data'], TRUE, 512, JSON_THROW_ON_ERROR);
     }
     catch (\Throwable) {
-      throw new \RuntimeException('Portal website request has no valid normalized intake.');
+      throw new \RuntimeException($phase === 'refined_six'
+        ? 'Refined six-proof runner has no valid immutable detailed intake snapshot.'
+        : 'Portal website request has no valid normalized intake.');
     }
     if (!is_array($intake) || ($intake['schema_version'] ?? '') !== 'website_discovery_v3') {
       throw new \InvalidArgumentException('Portal proof runner requires a submitted v3 request and opaque public ID.');
@@ -457,13 +591,130 @@ final class ProofRunnerContractService {
         $facts[$key] = $intake[$key];
       }
     }
-    return $common + [
+    $lineage = $phase === 'refined_six' ? $this->refinedSixLineage($prospect, $sourceContext, $facts) : [];
+    $source = $common + [
       'type' => 'authenticated_website_request',
-      'proof_phase' => (string) ($context['proof_phase'] ?? 'initial'),
+      'proof_phase' => $phase,
       'website_request_id' => $requestId,
       'website_request_public_id' => $publicId,
+      'lineage' => $lineage,
+      'lineage_hash' => $lineage === [] ? '' : hash('sha256', $this->json($lineage)),
       'facts' => $facts,
     ];
+    if ($phase === 'refined_six') {
+      // Both names are retained: the first expresses historical lineage and
+      // the second is the immutable public-delivery correlation used by
+      // FAMtastic's exact-ID owner-promotion gate.
+      $source['source_preview_delivery_id'] = (int) $lineage['source_preview_delivery_id'];
+      $source['public_preview_delivery_id'] = (int) $lineage['source_preview_delivery_id'];
+      $source['parent_public_proof_campaign_id'] = (int) $lineage['parent_public_proof_campaign_id'];
+      $source['parent_public_campaign_key'] = (string) $lineage['parent_public_campaign_key'];
+      $source['parent_public_build_dna_id'] = (string) $lineage['parent_public_build_dna_id'];
+      $source['parent_public_build_dna_hash'] = (string) $lineage['parent_public_build_dna_hash'];
+    }
+    return $source;
+  }
+
+  /** Returns only the immutable detailed snapshot supplied by lineage. */
+  private function detailedSnapshotIntake(array $context): array {
+    $snapshot = $context['detailed_intake_snapshot'] ?? NULL;
+    if (is_string($snapshot)) {
+      $snapshot = json_decode($snapshot, TRUE, 512, JSON_THROW_ON_ERROR);
+    }
+    if (!is_array($snapshot) || ($snapshot['schema_version'] ?? '') !== 'website_discovery_v3') {
+      throw new \InvalidArgumentException('Detailed intake snapshot must be a canonical website_discovery_v3 object.');
+    }
+    return $snapshot;
+  }
+
+  /**
+   * Requires the lineage layer's immutable detailed-intake and asset hashes.
+   *
+   * The complete inputs remain in their owned request/asset stores. The runner
+   * receives only the normalised facts plus hashes required to prove that a
+   * refined package did not silently reuse a public teaser's source material.
+   */
+  private function refinedSixLineage(Prospect $prospect, array $context, array $facts): array {
+    $detailHash = strtolower(trim((string) ($context['detailed_intake_snapshot_sha256'] ?? '')));
+    $assetHash = strtolower(trim((string) ($context['consented_asset_manifest_sha256'] ?? '')));
+    $sourcePreviewId = (int) ($context['source_preview_delivery_id'] ?? 0);
+    $publicPreviewId = (int) ($context['public_preview_delivery_id'] ?? 0);
+    $parentCampaignId = (int) ($context['parent_public_proof_campaign_id'] ?? 0);
+    $parentCampaignKey = trim((string) ($context['parent_public_campaign_key'] ?? ''));
+    $parentBuildId = trim((string) ($context['parent_public_build_dna_id'] ?? ''));
+    $parentBuildHash = strtolower(trim((string) ($context['parent_public_build_dna_hash'] ?? '')));
+    if (!preg_match('/^[a-f0-9]{64}$/', $detailHash) || !preg_match('/^[a-f0-9]{64}$/', $assetHash) || !preg_match('/^[a-f0-9]{64}$/', $parentBuildHash) || $sourcePreviewId < 1 || $parentCampaignId < 1 || $parentCampaignKey === '' || $parentBuildId === '') {
+      throw new \InvalidArgumentException('Refined six-proof runner requires source_preview_delivery_id, detailed/asset snapshot hashes, parent public campaign/Build DNA IDs, and parent_public_build_dna_hash from the lineage layer.');
+    }
+    if ($publicPreviewId > 0 && $publicPreviewId !== $sourcePreviewId) {
+      throw new \InvalidArgumentException('Refined six-proof runner public preview delivery aliases do not match.');
+    }
+    $snapshot = $context['detailed_intake_snapshot'] ?? NULL;
+    if ($snapshot !== NULL && !$this->hashMatches($detailHash, $snapshot)) {
+      throw new \InvalidArgumentException('Detailed intake snapshot does not match detailed_intake_snapshot_sha256.');
+    }
+    $assets = $context['consented_asset_manifest'] ?? NULL;
+    if ($assets !== NULL && !$this->hashMatches($assetHash, $assets)) {
+      throw new \InvalidArgumentException('Consented asset manifest does not match consented_asset_manifest_sha256.');
+    }
+    $parent = $this->database->select('famtastic_preview_delivery', 'd')->fields('d', [
+      'id', 'prospect_id', 'proof_campaign_id', 'build_dna_id', 'build_dna_hash', 'state',
+    ])->condition('id', $sourcePreviewId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$parent
+      || (int) $parent['prospect_id'] !== (int) $prospect->id()
+      || (int) ($parent['proof_campaign_id'] ?? 0) !== $parentCampaignId
+      || !hash_equals((string) ($parent['build_dna_id'] ?? ''), $parentBuildId)) {
+      throw new \RuntimeException('Refined six-proof runner parent public delivery does not match its immutable campaign and Build DNA lineage.');
+    }
+    /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign|null $parentCampaign */
+    $parentCampaign = $this->entities->getStorage('proof_campaign')->load($parentCampaignId);
+    if (!$parentCampaign
+      || (int) $parentCampaign->get('prospect_id')->target_id !== (int) $prospect->id()
+      || ($parentCampaignKey !== '' && !hash_equals((string) $parentCampaign->get('campaign_id')->value, $parentCampaignKey))) {
+      throw new \RuntimeException('Refined six-proof runner parent public campaign key does not match the immutable delivery lineage.');
+    }
+    if (!hash_equals((string) ($parent['build_dna_hash'] ?? ''), $parentBuildHash)) {
+      throw new \RuntimeException('Refined six-proof runner parent public Build DNA hash does not match the delivery record.');
+    }
+    $parentDna = $this->telemetry->loadBuildDna($parentBuildId);
+    $parentManifest = (array) ($parentDna['manifest'] ?? []);
+    $parentRun = (array) ($parentManifest['run'] ?? []);
+    $parentSource = (array) ($parentRun['source_correlation'] ?? []);
+    if (!$parentDna
+      || ($parentDna['record']['status'] ?? '') !== 'completed'
+      || !hash_equals($parentBuildHash, (string) ($parentDna['record']['artifact_checksum'] ?? ''))
+      || ($parentManifest['classification'] ?? '') !== 'production_proof_completion'
+      || ($parentRun['completion_state'] ?? '') !== 'provider_completed'
+      || (int) ($parentRun['proof_campaign_id'] ?? 0) !== $parentCampaignId
+      || (int) ($parentRun['prospect_id'] ?? 0) !== (int) $prospect->id()
+      || ($parentManifest['recipe']['routine'] ?? '') !== self::ROUTINE
+      || ($parentManifest['recipe']['profile_id'] ?? '') !== self::PUBLIC_INITIAL['id']
+      || ($parentSource['type'] ?? '') !== 'public_solution_finder_intake'
+      || (int) ($parentSource['public_preview_delivery_id'] ?? 0) !== $sourcePreviewId) {
+      throw new \RuntimeException('Refined six-proof runner requires a completed source-bound public parent Build DNA record.');
+    }
+    return [
+      'source_preview_delivery_id' => $sourcePreviewId,
+      'parent_public_proof_campaign_id' => $parentCampaignId,
+      'parent_public_campaign_key' => (string) $parentCampaign->get('campaign_id')->value,
+      'parent_public_build_dna_id' => $parentBuildId,
+      'parent_public_build_dna_hash' => (string) ($parent['build_dna_hash'] ?? ''),
+      'detailed_intake_snapshot_sha256' => $detailHash,
+      'consented_asset_manifest_sha256' => $assetHash,
+      // This independent hash binds the specific normalised facts that left
+      // Drupal without assuming the lineage service's storage serialization.
+      'normalized_detailed_facts_sha256' => hash('sha256', $this->json($facts)),
+    ];
+  }
+
+  private function hashMatches(string $expected, mixed $snapshot): bool {
+    if (is_string($snapshot)) {
+      return hash_equals($expected, hash('sha256', $snapshot));
+    }
+    if (is_array($snapshot)) {
+      return hash_equals($expected, hash('sha256', $this->json($snapshot)));
+    }
+    return FALSE;
   }
 
   private function buildClass(array $context): string {
@@ -600,6 +851,7 @@ final class ProofRunnerContractService {
         'revision' => $this->repositoryRevision(),
         'worktree_state' => 'runtime_not_disclosed',
       ],
+      'lineage' => (array) ($source['lineage'] ?? []),
       'recipe' => [
         'routine' => $routine,
         'version' => '1.0.0',
@@ -713,10 +965,14 @@ final class ProofRunnerContractService {
   private function idempotencyKey(array $source, array $job): string {
     $key = trim((string) ($job['job_key'] ?? ''));
     if ($key !== '') {
-      return 'proof-runner:' . $key;
+      // A new immutable detailed snapshot is a new proof version even when a
+      // queue implementation reuses its human-readable request job key.
+      $lineage = (string) ($source['lineage_hash'] ?? '');
+      return 'proof-runner:' . $key . ($lineage === '' ? '' : ':' . $lineage);
     }
     $correlation = (string) ($source['public_preview_delivery_id'] ?? $source['website_request_id'] ?? $source['prospect_id']);
-    return 'proof-runner:' . $source['type'] . ':' . $correlation . ':' . (string) ($source['proof_phase'] ?? 'initial');
+    $lineage = (string) ($source['lineage_hash'] ?? '');
+    return 'proof-runner:' . $source['type'] . ':' . $correlation . ':' . (string) ($source['proof_phase'] ?? 'initial') . ($lineage === '' ? '' : ':' . $lineage);
   }
 
   private function repositoryRevision(): string {

@@ -44,21 +44,42 @@ const validate = (contract) => {
   if (!contract.source || !["public_solution_finder_intake", "authenticated_website_request"].includes(contract.source.type)) fail("Source type is not supported");
   if (!Number.isInteger(contract.source.prospect_id) || contract.source.prospect_id < 1) fail("Source prospect_id is required");
   if (!/^[a-f0-9]{64}$/.test(contract.source.contact_hash || "")) fail("Source contact hash is required");
-  if (!contract.profile || !["public_initial.v1", "portal_initial.v1", "portal_showcase.v1"].includes(contract.profile.id)) fail("Known proof profile is required");
-  if (contract.profile.proof_count !== 3 || contract.profile.customer_visibility !== "owner_review_only") fail("Fixture only accepts owner-gated three-direction profiles");
-  const expectedDirections = contract.profile.id === "portal_showcase.v1" ? ["d", "e", "f"] : ["a", "b", "c"];
+  if (!contract.profile || !["public_initial.v1", "portal_initial.v1", "portal_showcase.v1", "portal_refined_six.v1"].includes(contract.profile.id)) fail("Known proof profile is required");
+  const refinedSix = contract.profile.id === "portal_refined_six.v1";
+  if (contract.profile.proof_count !== (refinedSix ? 6 : 3) || contract.profile.customer_visibility !== "owner_review_only") fail("Fixture proof count or owner-review gate is wrong");
+  const expectedDirections = refinedSix ? ["a", "b", "c", "d", "e", "f"] : (contract.profile.id === "portal_showcase.v1" ? ["d", "e", "f"] : ["a", "b", "c"]);
   const directions = Object.keys(contract.profile.directions || {}).sort();
   if (directions.join(",") !== expectedDirections.join(",")) fail("Proof profile must retain the exact routine direction set");
   expectedDirections.forEach((id) => {
     requireString(contract.profile.directions[id]?.name, `profile.directions.${id}.name`);
     requireString(contract.profile.directions[id]?.intent, `profile.directions.${id}.intent`);
   });
+  if (refinedSix) {
+    if (contract.source.proof_phase !== "refined_six") fail("Refined six fixture requires proof_phase=refined_six");
+    ["source_preview_delivery_id", "public_preview_delivery_id", "website_request_id", "parent_public_proof_campaign_id"].forEach((field) => {
+      if (!Number.isInteger(contract.source[field]) || contract.source[field] < 1) fail(`Refined six source requires ${field}`);
+    });
+    if (contract.source.source_preview_delivery_id !== contract.source.public_preview_delivery_id) fail("Refined six source delivery aliases must match");
+    ["website_request_public_id", "parent_public_campaign_key", "parent_public_build_dna_id", "lineage_hash"].forEach((field) => requireString(contract.source[field], `source.${field}`));
+    if (!/^[a-f0-9]{64}$/.test(contract.source.lineage_hash)) fail("Refined six source requires lineage_hash");
+    if (!/^[a-f0-9]{64}$/.test(contract.source.parent_public_build_dna_hash || "")) fail("Refined six source requires parent_public_build_dna_hash");
+    const lineage = contract.source.lineage;
+    if (!lineage || typeof lineage !== "object") fail("Refined six source requires immutable lineage");
+    ["source_preview_delivery_id", "parent_public_proof_campaign_id"].forEach((field) => {
+      if (!Number.isInteger(lineage[field]) || lineage[field] < 1) fail(`Refined six lineage requires ${field}`);
+    });
+    ["detailed_intake_snapshot_sha256", "consented_asset_manifest_sha256", "parent_public_build_dna_id", "parent_public_build_dna_hash"].forEach((field) => {
+      if (!/^[a-f0-9]{64}$/.test(lineage[field] || "") && field !== "parent_public_build_dna_id") fail(`Refined six lineage requires SHA-256 ${field}`);
+      if (field === "parent_public_build_dna_id") requireString(lineage[field], `source.lineage.${field}`);
+    });
+  }
   if (!contract.provider_preflight || typeof contract.provider_preflight.ready !== "boolean") fail("Provider preflight result is required");
   ["customer_email", "outbox_enqueue", "checkout", "payment", "domain_purchase", "production_publish"].forEach((key) => {
     if (contract.mutation_policy?.[key] !== "forbidden") fail(`Mutation policy must forbid ${key}`);
   });
   if (contract.return_contract?.callback_must_include_complete_build_dna !== true || contract.return_contract?.owner_review_required_before_customer_visibility !== true) fail("Final Build DNA and owner review gates are required");
   if (contract.return_contract?.callback_variants_must_include_sha256 !== true || contract.return_contract?.callback_build_dna_must_include_per_direction_html_hashes !== true) fail("Callback artifact lineage gates are required");
+  if (contract.return_contract?.final_completion_contract?.classification !== "production_proof_completion" || contract.return_contract?.final_completion_contract?.run_completion_state !== "provider_completed" || contract.return_contract?.final_completion_contract?.local_fixture_forbidden !== true) fail("Final production completion contract is required");
   assertNoRawContact(contract);
 };
 

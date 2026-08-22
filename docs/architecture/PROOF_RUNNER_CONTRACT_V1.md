@@ -14,18 +14,21 @@ payment, domain work, or publication.
 
 ## Profiles and proof phases
 
-One routine has three immutable profiles:
+One routine has four immutable profiles:
 
 | Proof phase | Profile | Direction IDs | Customer visibility |
 |---|---|---|---|
 | Initial public lead | `public_initial.v1` | `a`, `b`, `c` | Owner review only |
 | Initial portal request | `portal_initial.v1` | `a`, `b`, `c` | Owner review only |
-| Portal refinement | `portal_showcase.v1` | `d`, `e`, `f` | Owner review only |
+| Legacy append-only showcase | `portal_showcase.v1` | `d`, `e`, `f` | Owner review only |
+| Detailed portal refinement | `portal_refined_six.v1` | `a`, `b`, `c`, `d`, `e`, `f` | Owner review only |
 
-The portal refinement is still `website_proof.generate.v1`, with
-`source.proof_phase=showcase`. It creates a **new Build DNA `build_id`** tied
-to the same campaign. It never overwrites the completed initial `a/b/c` record.
-Together the two records explain the six-direction set.
+`portal_showcase.v1` is readable for historical records but is not used for a
+new detailed-intake delivery. The new detailed run is still
+`website_proof.generate.v1`, with `source.proof_phase=refined_six`, but it
+creates a **brand-new proof campaign** and requires exactly one fresh `a-f`
+callback. It cannot reuse public `a/b/c` artifacts or append `d/e/f` to a
+public campaign.
 
 ## Source binding and dispatch
 
@@ -35,6 +38,14 @@ Together the two records explain the six-direction set.
   `public_preview_delivery_id`.
 - Portal lane: exact submitted `famtastic_project_request`, opaque public ID,
   and stored `website_discovery_v3` intake.
+- Refined-six lane: exact immutable `detailed_intake_snapshot` and consented
+  asset-manifest SHA-256 values, the exact public-preview delivery ID, and a
+  verified parent public proof campaign + completed public Build DNA ID/hash.
+  The parent must itself be source-bound to that exact public delivery. The
+  runner records this continuation in both `run.source_correlation` and
+  top-level Build DNA `lineage`. Those refined values are read from the
+  persisted request; a queue payload may corroborate them but cannot replace
+  them with alternative snapshot bytes or hashes.
 - A contact hash may correlate delivery; raw email, phone, credentials, and
   Drupal `private://` references may not leave the canonical envelope.
 
@@ -70,16 +81,24 @@ The final DNA must also include passing browser QA, a passing technical quality
 state, and a non-empty independent visual-review decision and reviewer. A
 stage merely named `visual_review` is not enough.
 
+For runner-bound work, the final DNA must declare
+`classification=production_proof_completion` and
+`run.completion_state=provider_completed`. A local fixture, preflight, or
+generic "complete" record cannot stage public or customer proof delivery.
+
 Legacy callbacks remain visibly legacy. Once a campaign has a canonical runner
 record, a later callback cannot bypass it by omitting Build DNA or creating a
 different proof phase without a new bound record.
 
 ## Delivery gates
 
-- Public proof staging checks final DNA against the exact prospect, campaign,
-  public-preview delivery, initial phase, and `public_initial.v1` profile.
+- Public proof staging receives the exact `public_preview_delivery_id` from
+  verified final DNA—not a prospect lookup—and checks prospect, campaign,
+  delivery, initial phase, and `public_initial.v1` profile. The verified
+  callback freezes that owner-only stage with its own Build DNA ID/hash; it
+  does **not** queue or send customer email.
 - Portal owner approval checks final DNA against the exact request public ID,
-  phase, profile/routine, and campaign.
+  phase, profile/routine, campaign, and (for six proofs) detailed lineage.
 - No method in this contract calls direct SMTP. The existing outbox remains the
   only email boundary and still needs owner approval.
 
@@ -102,5 +121,6 @@ node tests/proof-runner-contract.test.mjs
 ```
 
 This proves contract shape and the fixture's declared non-mutation policy. It
-does not claim a live provider run, customer email, payment, or production
-proof delivery.
+checks both the public three-pack and detailed refined six-pack contract
+shapes. It does not claim a live provider run, customer email, payment, or
+production proof delivery.

@@ -25,7 +25,7 @@ final class SiteStudioProofClient {
   }
 
   /**
-   * Dispatches an exactly-three proof request and returns the remote job id.
+   * Dispatches a source-bound proof request and returns the remote job id.
    *
    * The runner owns provider selection. This boundary carries the requested
    * direction contract verbatim so Site Studio can build a public three-pack,
@@ -39,6 +39,11 @@ final class SiteStudioProofClient {
       throw new \RuntimeException('Remote Site Studio requires an endpoint and dispatch secret.');
     }
     $callbackBase = rtrim((string) (getenv('FAMTASTIC_PUBLIC_BASE_URL') ?: $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')), '/');
+    $proofRunner = (array) ($context['proof_runner'] ?? []);
+    $runnerContract = (array) ($proofRunner['contract'] ?? []);
+    $runnerBound = $proofRunner !== [];
+    $runnerProfile = (string) ($runnerContract['profile']['id'] ?? '');
+    $refinedSix = $runnerBound && $runnerProfile === 'portal_refined_six.v1';
     $directions = (array) ($context['directions'] ?? ProofCampaignService::CORE_DIRECTIONS);
     $directionContract = (array) ($context['direction_contract'] ?? ProofCampaignService::CORE_DIRECTION_CONTRACT);
     $directionIds = array_keys($directions);
@@ -49,8 +54,11 @@ final class SiteStudioProofClient {
       array_keys(ProofCampaignService::CORE_DIRECTIONS),
       array_keys(ProofCampaignService::SHOWCASE_DIRECTIONS),
     ];
-    if (count($directions) !== 3 || $directionIds !== $contractIds || !in_array($directionIds, $allowedDirectionSets, TRUE)) {
-      throw new \InvalidArgumentException('A Site Studio proof dispatch requires exactly the contracted a/b/c or d/e/f direction set.');
+    $refinedIds = ['a', 'b', 'c', 'd', 'e', 'f'];
+    $validThreePack = count($directions) === 3 && in_array($directionIds, $allowedDirectionSets, TRUE);
+    $validRefinedSix = $refinedSix && count($directions) === 6 && $directionIds === $refinedIds;
+    if ($directionIds !== $contractIds || (!$validThreePack && !$validRefinedSix)) {
+      throw new \InvalidArgumentException('A Site Studio proof dispatch requires the exact runner-bound a/b/c, d/e/f, or refined a-f direction contract.');
     }
     $resolvedDirections = [];
     foreach ($directionContract as $directionId => $contract) {
@@ -71,9 +79,6 @@ final class SiteStudioProofClient {
     ksort($directionContract);
     ksort($resolvedDirections);
     $directions = $resolvedDirections;
-    $proofRunner = (array) ($context['proof_runner'] ?? []);
-    $runnerContract = (array) ($proofRunner['contract'] ?? []);
-    $runnerBound = $proofRunner !== [];
     if ($runnerBound) {
       $this->assertRemoteSafeRunnerEnvelope($proofRunner, $runnerContract);
       $source = (array) ($runnerContract['source'] ?? []);
@@ -108,7 +113,7 @@ final class SiteStudioProofClient {
       'campaign_id' => $campaign->get('campaign_id')->value,
       'prospect' => $prospectPayload,
       'directions' => $directions,
-      'required_variant_count' => 3,
+      'required_variant_count' => count($directions),
       'direction_contract' => $directionContract,
       'callback_url' => $callbackBase . '/api/pipeline/site-studio/callback',
       'project' => [

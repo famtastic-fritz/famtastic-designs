@@ -143,7 +143,10 @@ class ProofCampaignService {
     $allowPilot = getenv('FAMTASTIC_ALLOW_NO_IMAGE_PILOT_PROOFS') === '1'
       || getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') === '1';
     $remote = $this->studioClient->isRemote();
-    $localJobId = !$remote && !$allowPilot ? 'local-' . bin2hex(random_bytes(16)) : '';
+    $runnerBound = !empty($context['proof_runner']['build_id']);
+    // A canonical runner record is evidence of a real provider-bound run.
+    // It may wait safely, but it may never degrade into image-free pilot HTML.
+    $localJobId = !$remote && (!$allowPilot || $runnerBound) ? 'local-' . bin2hex(random_bytes(16)) : '';
     $storage = $this->entityTypeManager->getStorage('proof_campaign');
     /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign $campaign */
     $campaign = $storage->create([
@@ -151,7 +154,7 @@ class ProofCampaignService {
       'prospect_id' => $prospect->id(),
       'business_name' => $businessName,
       'status' => 'active',
-      'generation_status' => $remote ? 'dispatching' : ($allowPilot ? 'ready' : 'waiting_callback'),
+      'generation_status' => $remote ? 'dispatching' : ($runnerBound || !$allowPilot ? 'waiting_callback' : 'ready'),
       'studio_job_id' => $localJobId,
       'expires_at' => $now + self::TTL,
     ]);
@@ -184,11 +187,16 @@ class ProofCampaignService {
       return ['campaign' => $campaign, 'variants' => []];
     }
 
-    if (!$allowPilot) {
+    if (!$allowPilot || $runnerBound) {
       $this->ledger->recordEvent(
         'proof.local_waiting:' . $campaignId,
         'proof.waiting_for_creative_provider',
-        ['campaign_id' => $campaignId, 'studio_job_id' => $localJobId, 'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1')],
+        [
+          'campaign_id' => $campaignId,
+          'studio_job_id' => $localJobId,
+          'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1'),
+          'runner_bound' => $runnerBound,
+        ],
         (int) $prospect->id(),
       );
       return ['campaign' => $campaign, 'variants' => []];
@@ -411,9 +419,9 @@ class ProofCampaignService {
   }
 
   /**
-   * Accepts one idempotent core or showcase three-direction callback.
+   * Accepts a legacy callback or a verifier-approved immutable proof package.
    */
-  public function acceptCallback(string $eventId, string $campaignId, string $studioJobId, array $variants): array {
+  public function acceptCallback(string $eventId, string $campaignId, string $studioJobId, array $variants, array $runnerVerification = []): array {
     if ($eventId === '' || strlen($eventId) > 255) {
       throw new \InvalidArgumentException('callback event_id is required.');
     }
@@ -425,16 +433,33 @@ class ProofCampaignService {
     $campaignRequest = $this->database->select('famtastic_project_request', 'r')->fields('r')
       ->condition('proof_campaign_id', (int) $campaign->id())
       ->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
-    $isShowcase = str_starts_with($studioJobId, 'local-showcase-') || (($campaignRequest['proof_review_status'] ?? '') === 'showcase_building');
-    $request = $campaignRequest ?: $this->database->select('famtastic_project_request', 'r')->fields('r')
-      ->condition('prospect_id', $prospectId)->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    $runnerBound = ($runnerVerification['status'] ?? '') === 'verified';
+    $runnerProfile = (string) ($runnerVerification['profile_id'] ?? '');
+    $runnerSource = (array) ($runnerVerification['source_correlation'] ?? []);
+    $runnerContract = (array) ($runnerVerification['direction_contract'] ?? []);
+    $isRefinedSix = $runnerBound && $runnerProfile === 'portal_refined_six.v1';
+    $isShowcase = ($runnerBound && $runnerProfile === 'portal_showcase.v1')
+      || (!$runnerBound && (str_starts_with($studioJobId, 'local-showcase-') || (($campaignRequest['proof_review_status'] ?? '') === 'showcase_building')));
+    if ($runnerBound) {
+      $request = ($runnerSource['type'] ?? '') === 'authenticated_website_request'
+        ? $this->requestForRunnerSource($runnerSource, $prospectId)
+        : NULL;
+      if (($runnerSource['type'] ?? '') === 'authenticated_website_request' && !$request) {
+        throw new \InvalidArgumentException('Runner-bound portal callback does not resolve to its exact website request source.');
+      }
+      $requiredDirections = $this->runnerDirectionNames($runnerContract, $runnerProfile);
+    }
+    else {
+      $request = $campaignRequest ?: $this->database->select('famtastic_project_request', 'r')->fields('r')
+        ->condition('prospect_id', $prospectId)->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+      $requiredDirections = $isShowcase ? self::SHOWCASE_DIRECTIONS : self::CORE_DIRECTIONS;
+    }
     $processed = json_decode((string) $campaign->get('callback_event_ids')->value ?: '[]', TRUE);
     if (in_array($eventId, (array) $processed, TRUE)) {
       return ['newly_processed' => FALSE, 'campaign' => $campaign, 'variants' => $this->loadVariants($campaign)];
     }
-    $requiredDirections = $isShowcase ? self::SHOWCASE_DIRECTIONS : self::CORE_DIRECTIONS;
     if (count($variants) !== count($requiredDirections)) {
-      throw new \InvalidArgumentException('Exactly three variants are required for this proof set.');
+      throw new \InvalidArgumentException(sprintf('Exactly %d variants are required for this proof set.', count($requiredDirections)));
     }
     $validated = [];
     foreach ($variants as $variant) {
@@ -444,7 +469,7 @@ class ProofCampaignService {
       $direction = strtolower((string) ($variant['direction_id'] ?? ''));
       $html = (string) ($variant['html'] ?? '');
       if (!array_key_exists($direction, $requiredDirections) || isset($validated[$direction])) {
-        throw new \InvalidArgumentException('Variants must contain the three unique directions required by this proof set.');
+        throw new \InvalidArgumentException('Variants must contain each unique direction required by this proof set.');
       }
       if ($html === '' || strlen($html) > 500000) {
         throw new \InvalidArgumentException('Each proof HTML artifact is required and limited to 500 KB.');
@@ -521,9 +546,10 @@ class ProofCampaignService {
         'campaign_id' => $campaign->id(),
         'direction_id' => $direction,
       ]);
-      $directionName = mb_substr(trim(strip_tags((string) ($variant['design_dna']['direction_name'] ?? self::DIRECTIONS[$direction]))), 0, 255);
+      $fallbackDirectionName = (string) ($requiredDirections[$direction] ?? self::DIRECTIONS[$direction] ?? strtoupper($direction));
+      $directionName = mb_substr(trim(strip_tags((string) ($variant['design_dna']['direction_name'] ?? $fallbackDirectionName))), 0, 255);
       $entity
-        ->set('direction_name', $directionName ?: self::DIRECTIONS[$direction])
+        ->set('direction_name', $directionName ?: $fallbackDirectionName)
         ->set('artifact_path', $path)
         ->set('thumbnail_path', $thumbnailPath)
         ->set('design_dna', json_encode($variant['design_dna'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))
@@ -545,14 +571,41 @@ class ProofCampaignService {
     $this->ledger->recordEvent(
       'proof.callback:' . $eventId,
       'proof.ready',
-      ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => $isShowcase ? 6 : 3, 'refresh' => $isRefresh, 'showcase' => $isShowcase],
+      [
+        'campaign_id' => $campaignId,
+        'studio_job_id' => $studioJobId,
+        'variant_count' => count($created),
+        'refresh' => $isRefresh,
+        'showcase' => $isShowcase,
+        'refined_six' => $isRefinedSix,
+        'runner_profile_id' => $runnerBound ? $runnerProfile : '',
+      ],
       $prospectId,
     );
     $completeVariants = $isShowcase ? $this->loadVariants($campaign) : $created;
     if ($request) {
       $this->portal->attachWebsiteRequestProof((int) $request['id'], $campaign, $completeVariants);
     }
-    elseif (!$this->previews->markCampaignReady($prospectId, (int) $campaign->id())) {
+    elseif ($runnerBound && ($runnerSource['type'] ?? '') === 'public_solution_finder_intake') {
+      $deliveryId = (int) ($runnerSource['public_preview_delivery_id'] ?? 0);
+      if ($deliveryId < 1 || !$this->previews->markCampaignReady($deliveryId, $prospectId, (int) $campaign->id())) {
+        throw new \InvalidArgumentException('Runner-bound public callback could not advance its exact public preview delivery.');
+      }
+      $buildId = trim((string) ($runnerVerification['build_id'] ?? ''));
+      $buildHash = strtolower(trim((string) ($runnerVerification['build_dna_hash'] ?? '')));
+      if ($buildId === '' || !preg_match('/^[a-f0-9]{64}$/', $buildHash)) {
+        throw new \InvalidArgumentException('Runner-bound public callback is missing its verified final Build DNA receipt.');
+      }
+      // This is owner-only staging, not delivery: it freezes the exact proof
+      // package and Build DNA after verifier success so an owner never has to
+      // type arbitrary IDs or hashes. approveAndQueue() remains the only
+      // customer-email boundary.
+      $this->previews->stage($deliveryId, (int) $campaign->id(), $buildId, $buildHash);
+    }
+    elseif (!$runnerBound) {
+      // Legacy callbacks have no immutable public-delivery correlation. Keep
+      // them visible for manual Operations recovery, but never select a
+      // "latest" public lead to stage automatically.
       $this->ledger->enqueue(
         'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
         'outreach.prepare',
@@ -566,7 +619,7 @@ class ProofCampaignService {
       $dna = $firstDirection === NULL ? [] : ($validated[$firstDirection]['design_dna'] ?? []);
       $telemetry = is_array($dna['telemetry'] ?? NULL) ? $dna['telemetry'] : [];
       $this->buildTelemetry->recordStudioProof($prospect, $campaign, $created, [
-        'build_key_suffix' => $isShowcase ? 'site-studio-showcase' : 'site-studio',
+        'build_key_suffix' => $isRefinedSix ? 'site-studio-refined-six' : ($isShowcase ? 'site-studio-showcase' : 'site-studio'),
         'flow_key' => $telemetry['flow_key'] ?? 'site-studio-local-promotion',
         'task_key' => $telemetry['task_key'] ?? 'proof.generate',
         'provider' => $telemetry['provider'] ?? ($dna['provider'] ?? 'site_studio_local'),
@@ -577,6 +630,52 @@ class ProofCampaignService {
       ]);
     }
     return ['newly_processed' => TRUE, 'campaign' => $campaign, 'variants' => $completeVariants];
+  }
+
+  /** Returns the exact, verified request addressed by a runner source. */
+  private function requestForRunnerSource(array $source, int $prospectId): ?array {
+    $requestId = (int) ($source['website_request_id'] ?? 0);
+    $publicId = trim((string) ($source['website_request_public_id'] ?? ''));
+    if ($requestId < 1 || $publicId === '') {
+      return NULL;
+    }
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)
+      ->condition('prospect_id', $prospectId)
+      ->range(0, 1)->execute()->fetchAssoc();
+    if (!$request || !hash_equals((string) $request['public_id'], $publicId)) {
+      return NULL;
+    }
+    return $request;
+  }
+
+  /**
+   * Resolves callback direction names from immutable verified Build DNA only.
+   *
+   * The explicit profile check prevents a mutable campaign status from turning
+   * a public three-pack into an apparent refined six-pack or vice versa.
+   */
+  private function runnerDirectionNames(array $contract, string $profileId): array {
+    $expected = match ($profileId) {
+      'public_initial.v1', 'portal_initial.v1' => ['a', 'b', 'c'],
+      'portal_showcase.v1' => ['d', 'e', 'f'],
+      'portal_refined_six.v1' => ['a', 'b', 'c', 'd', 'e', 'f'],
+      default => throw new \InvalidArgumentException('Runner-bound callback has an unsupported proof profile.'),
+    };
+    $resolved = [];
+    foreach ($contract as $direction => $value) {
+      $id = strtolower(trim((string) $direction));
+      $name = is_array($value) ? trim(strip_tags((string) ($value['name'] ?? ''))) : '';
+      if ($id === '' || $name === '' || isset($resolved[$id])) {
+        throw new \InvalidArgumentException('Runner-bound callback has an invalid immutable direction contract.');
+      }
+      $resolved[$id] = mb_substr($name, 0, 255);
+    }
+    ksort($resolved);
+    if (array_keys($resolved) !== $expected) {
+      throw new \InvalidArgumentException('Runner-bound callback directions differ from its immutable proof profile.');
+    }
+    return $resolved;
   }
 
   /**

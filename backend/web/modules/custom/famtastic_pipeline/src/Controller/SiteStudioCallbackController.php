@@ -77,6 +77,7 @@ final class SiteStudioCallbackController extends ControllerBase {
         (string) ($data['campaign_id'] ?? ''),
         (string) ($data['job_id'] ?? ''),
         is_array($data['variants'] ?? NULL) ? $data['variants'] : [],
+        $runnerVerification,
       );
     }
     catch (\InvalidArgumentException $e) {

@@ -55,6 +55,7 @@ final class AutomationWorker {
     return match ($job['job_type']) {
       'proof.generate' => $this->generateProofs($job),
       'proof.showcase.generate' => $this->generateShowcaseProofs($job),
+      'proof.refined.generate' => $this->generateRefinedSixJob($job),
       'proof.revision.requested' => $this->recordRevisionRequest($job),
       'outreach.prepare' => $this->prepareOutreach($job),
       'outreach.send' => $this->sendOutreach($job),
@@ -119,6 +120,7 @@ final class AutomationWorker {
         // request. It removes that URI before Site Studio receives the signed
         // envelope, so there is neither a private:// leak nor a fast-callback
         // linkage race.
+        $context = $this->proofRunner->applyProfileToContext($context, $runner);
         $context['proof_runner'] = $runner['handoff'];
         $created = $this->proofCampaigns->createForProspect($prospect, $context);
       }
@@ -138,8 +140,12 @@ final class AutomationWorker {
         'proof_runner_build_id' => $runner['build_id'] ?? NULL,
       ];
     }
-    if (count($variants) !== 3) {
-      throw new \RuntimeException(sprintf('Site Studio returned %d proof variants; exactly 3 are required.', count($variants)));
+    $expectedDirections = $canonicalRunnerJob
+      ? $this->proofRunner->expectedDirectionIds($context)
+      : ['a', 'b', 'c'];
+    $expectedCount = count($expectedDirections);
+    if (count($variants) !== $expectedCount) {
+      throw new \RuntimeException(sprintf('Site Studio returned %d proof variants; exactly %d are required.', count($variants), $expectedCount));
     }
     $directions = [];
     $paths = [];
@@ -150,13 +156,13 @@ final class AutomationWorker {
       if ($path !== '' && !str_starts_with($path, '/') && !is_file($path)) {
         $absolutePath = dirname(\Drupal::root()) . '/' . ltrim($path, '/');
       }
-      if (!in_array($direction, ['a', 'b', 'c'], TRUE) || $path === '' || !is_file($absolutePath)) {
+      if (!in_array($direction, $expectedDirections, TRUE) || $path === '' || !is_file($absolutePath)) {
         throw new \RuntimeException('A proof variant is invalid or its isolated artifact is missing.');
       }
       $directions[] = $direction;
       $paths[] = realpath($absolutePath) ?: $absolutePath;
     }
-    if (count(array_unique($directions)) !== 3 || count(array_unique($paths)) !== 3) {
+    if (count(array_unique($directions)) !== $expectedCount || count(array_unique($paths)) !== $expectedCount) {
       throw new \RuntimeException('Proof variants are not distinct and isolated.');
     }
     $pilotSources = array_filter($variants, static function ($variant): bool {
@@ -174,7 +180,7 @@ final class AutomationWorker {
       'proof.ready',
       [
         'campaign_id' => $campaign->get('campaign_id')->value,
-        'variant_count' => 3,
+        'variant_count' => $expectedCount,
         'directions' => $directions,
       ],
       $prospectId,
@@ -186,7 +192,11 @@ final class AutomationWorker {
     elseif ($projectId) {
       $this->portal->markProjectProofReady($projectId, $campaign, $variants);
     }
-    elseif (!$this->previews->markCampaignReady($prospectId, (int) $campaign->id())) {
+    elseif (!$canonicalRunnerJob) {
+      // Runner-bound public proofs are promoted only inside the signed
+      // callback after final Build DNA verification, using its exact immutable
+      // public_preview_delivery_id. A worker retry must not infer a delivery
+      // from the prospect or stage a lead from mutable queue context.
       $this->ledger->enqueue(
         'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
         'outreach.prepare',
@@ -196,13 +206,13 @@ final class AutomationWorker {
     }
     return [
       'campaign_id' => $campaign->get('campaign_id')->value,
-      'variant_count' => 3,
+      'variant_count' => $expectedCount,
       'directions' => $directions,
       'proof_runner_build_id' => $runner['build_id'] ?? NULL,
     ];
   }
 
-  /** Starts the detailed three-direction expansion of a claimed public proof set. */
+  /** Starts a legacy showcase append or a new detailed six-proof package. */
   private function generateShowcaseProofs(array $job): array {
     $context = (array) ($job['payload'] ?? []);
     $requestId = (int) ($context['website_request_id'] ?? 0);
@@ -210,15 +220,21 @@ final class AutomationWorker {
     if (!$requestId || $publicId === '') {
       throw new \RuntimeException('Refined proof generation requires the exact website request.');
     }
-    // Rehydrate the submitted request from the durable portal record rather
-    // than trusting an old queue payload, then keep the distinct showcase
-    // phase. This creates a new immutable Build DNA record for d/e/f and does
-    // not overwrite the completed a/b/c run on the same campaign.
-    $context = array_replace($context, $this->portal->websiteRequestProofContext($requestId));
+    // Rehydrate the operational request while retaining the queue's immutable
+    // detailed snapshot and asset manifest bytes.
+    $context = array_replace($this->portal->websiteRequestProofContext($requestId), $context);
     $context['routine'] = ProofRunnerContractService::ROUTINE;
-    $context['proof_phase'] = 'showcase';
     $context['website_request_id'] = $requestId;
     $context['website_request_public_id'] = $publicId;
+    $isRefinedSix = (string) ($context['requested_profile_id'] ?? $context['proof_profile_id'] ?? '') === 'portal_refined_six.v1'
+      || (string) ($context['delivery_class'] ?? '') === 'authenticated_refined'
+      || (string) ($context['proof_phase'] ?? '') === 'refined_six';
+    if ($isRefinedSix) {
+      return $this->generateRefinedSixProofs($job, $context);
+    }
+    // Retained for historical records only. New detailed intake proof sets
+    // use portal_refined_six.v1 below and never append to public a/b/c.
+    $context['proof_phase'] = 'showcase';
     $prospectId = (int) ($context['prospect_id'] ?? $job['prospect_id'] ?? 0);
     $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
     if (!$prospect) {
@@ -237,6 +253,7 @@ final class AutomationWorker {
           'message' => 'Fixture validated only; no refinement, email, payment, or publication was created.',
         ];
       }
+      $context = $this->proofRunner->applyProfileToContext($context, $runner);
       $context['proof_runner'] = $runner['handoff'];
       $campaign = $this->proofCampaigns->prepareWebsiteRequestShowcase($requestId, $publicId, $context);
     }
@@ -248,6 +265,95 @@ final class AutomationWorker {
       'status' => (string) $campaign->get('generation_status')->value,
       'studio_job_id' => (string) $campaign->get('studio_job_id')->value,
       'proof_count' => 6,
+      'proof_runner_build_id' => $runner['build_id'] ?? NULL,
+    ];
+  }
+
+  /** Normalizes the dedicated detailed-intake queue before proof execution. */
+  private function generateRefinedSixJob(array $job): array {
+    $context = (array) ($job['payload'] ?? []);
+    $requestId = (int) ($context['website_request_id'] ?? 0);
+    $publicId = (string) ($context['website_request_public_id'] ?? '');
+    if (!$requestId || $publicId === '') {
+      throw new \RuntimeException('Refined six-proof generation requires the exact website request.');
+    }
+    $context = array_replace($this->portal->websiteRequestProofContext($requestId), $context);
+    $context['routine'] = ProofRunnerContractService::ROUTINE;
+    $context['proof_phase'] = 'refined_six';
+    $context['requested_profile_id'] = 'portal_refined_six.v1';
+    $context['delivery_class'] = 'authenticated_refined';
+    $context['website_request_id'] = $requestId;
+    $context['website_request_public_id'] = $publicId;
+    return $this->generateRefinedSixProofs($job, $context);
+  }
+
+  /**
+   * Creates a distinct campaign with six fresh detailed-intake directions.
+   *
+   * This intentionally bypasses prepareWebsiteRequestShowcase(): that method
+   * is an append-only legacy d/e/f path, while this profile requires one
+   * newly-bound Build DNA record and a single a-f callback for the detailed
+   * request source.
+   */
+  private function generateRefinedSixProofs(array $job, array $context): array {
+    $requestId = (int) ($context['website_request_id'] ?? 0);
+    $publicId = (string) ($context['website_request_public_id'] ?? '');
+    $prospectId = (int) ($context['prospect_id'] ?? $job['prospect_id'] ?? 0);
+    if (!$requestId || $publicId === '' || !$prospectId) {
+      throw new \RuntimeException('Refined six-proof generation requires an exact request, opaque ID, and prospect.');
+    }
+    $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
+    if (!$prospect) {
+      throw new \RuntimeException('Refined proof prospect no longer exists.');
+    }
+    $context['proof_phase'] = 'refined_six';
+    $context['requested_profile_id'] = 'portal_refined_six.v1';
+    $context['delivery_class'] = 'authenticated_refined';
+    $existing = $this->proofRunner->existingCampaignForSource($prospect, $context);
+    $runner = NULL;
+    if (!$existing) {
+      $runner = $this->proofRunner->prepare($prospect, $context, $job);
+      if ($this->proofRunner->isLocalContractFixture($runner)) {
+        return [
+          'status' => 'local_contract_fixture',
+          'build_id' => $runner['build_id'],
+          'contract_uri' => $runner['contract_uri'],
+          'build_dna_uri' => $runner['build_dna_uri'],
+          'message' => 'Fixture validated only; no refined proof, email, payment, or publication was created.',
+        ];
+      }
+      $context = $this->proofRunner->applyProfileToContext($context, $runner);
+      $context['proof_runner'] = $runner['handoff'];
+      $created = $this->proofCampaigns->createForProspect($prospect, $context);
+    }
+    else {
+      $created = $existing;
+    }
+    $campaign = $created['campaign'];
+    $variants = $created['variants'];
+    $expected = ['a', 'b', 'c', 'd', 'e', 'f'];
+    if ($variants === [] && $campaign->get('generation_status')->value === 'waiting_callback') {
+      return [
+        'campaign_id' => (string) $campaign->get('campaign_id')->value,
+        'status' => 'waiting_callback',
+        'studio_job_id' => (string) $campaign->get('studio_job_id')->value,
+        'proof_count' => 6,
+        'proof_phase' => 'refined_six',
+        'profile_id' => 'portal_refined_six.v1',
+        'proof_runner_build_id' => $runner['build_id'] ?? NULL,
+      ];
+    }
+    $directions = array_map(static fn($variant): string => (string) $variant->get('direction_id')->value, $variants);
+    sort($directions);
+    if ($campaign->get('generation_status')->value !== 'ready' || $directions !== $expected) {
+      throw new \RuntimeException('The refined six-proof campaign is not complete and source-verified.');
+    }
+    return [
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'status' => 'ready',
+      'proof_count' => 6,
+      'proof_phase' => 'refined_six',
+      'profile_id' => 'portal_refined_six.v1',
       'proof_runner_build_id' => $runner['build_id'] ?? NULL,
     ];
   }

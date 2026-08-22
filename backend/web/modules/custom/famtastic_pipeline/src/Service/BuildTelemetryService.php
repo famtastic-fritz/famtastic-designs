@@ -268,7 +268,13 @@ final class BuildTelemetryService {
       'prospect_id',
       'type',
       'proof_phase',
+      'lineage_hash',
+      'source_preview_delivery_id',
       'public_preview_delivery_id',
+      'parent_public_proof_campaign_id',
+      'parent_public_campaign_key',
+      'parent_public_build_dna_id',
+      'parent_public_build_dna_hash',
       'intake_id',
       'website_request_id',
       'website_request_public_id',
@@ -313,6 +319,11 @@ final class BuildTelemetryService {
       return FALSE;
     }
     if ($routine !== NULL && ($manifest['recipe']['routine'] ?? '') !== $routine) {
+      return FALSE;
+    }
+    if (($manifest['recipe']['routine'] ?? '') === ProofRunnerContractService::ROUTINE
+      && (($manifest['classification'] ?? '') !== 'production_proof_completion'
+        || (($manifest['run']['completion_state'] ?? '') !== 'provider_completed'))) {
       return FALSE;
     }
     $actualSource = (array) ($manifest['run']['source_correlation'] ?? []);

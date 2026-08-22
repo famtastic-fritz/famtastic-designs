@@ -25,8 +25,8 @@
       "type": "object",
       "required": ["id", "proof_count", "directions", "customer_visibility"],
       "properties": {
-        "id": {"enum": ["public_initial.v1", "portal_initial.v1", "portal_showcase.v1"]},
-        "proof_count": {"const": 3},
+        "id": {"enum": ["public_initial.v1", "portal_initial.v1", "portal_showcase.v1", "portal_refined_six.v1"]},
+        "proof_count": {"enum": [3, 6]},
         "directions": {"type": "object"},
         "customer_visibility": {"const": "owner_review_only"}
       },
@@ -37,5 +37,41 @@
     "mutation_policy": {"type": "object"},
     "return_contract": {"type": "object"}
   },
+  "allOf": [
+    {
+      "if": {"properties": {"profile": {"properties": {"id": {"const": "portal_refined_six.v1"}}}}},
+      "then": {
+        "properties": {
+          "source": {
+            "required": [
+              "proof_phase",
+              "source_preview_delivery_id",
+              "public_preview_delivery_id",
+              "website_request_id",
+              "website_request_public_id",
+              "parent_public_proof_campaign_id",
+              "parent_public_campaign_key",
+              "parent_public_build_dna_id",
+              "parent_public_build_dna_hash",
+              "lineage",
+              "lineage_hash"
+            ],
+            "properties": {
+              "proof_phase": {"const": "refined_six"},
+              "source_preview_delivery_id": {"type": "integer", "minimum": 1},
+              "public_preview_delivery_id": {"type": "integer", "minimum": 1},
+              "website_request_id": {"type": "integer", "minimum": 1},
+              "website_request_public_id": {"type": "string", "minLength": 1},
+              "parent_public_proof_campaign_id": {"type": "integer", "minimum": 1},
+              "parent_public_campaign_key": {"type": "string", "minLength": 1},
+              "parent_public_build_dna_id": {"type": "string", "minLength": 1},
+              "parent_public_build_dna_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+              "lineage_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+            }
+          }
+        }
+      }
+    }
+  ],
   "additionalProperties": true
 }

@@ -54,6 +54,11 @@
     "callback_must_include_independent_visual_review": true,
     "callback_variants_must_include_sha256": true,
     "callback_build_dna_must_include_per_direction_html_hashes": true,
+    "final_completion_contract": {
+      "classification": "production_proof_completion",
+      "run_completion_state": "provider_completed",
+      "local_fixture_forbidden": true
+    },
     "owner_review_required_before_customer_visibility": true
   }
 }

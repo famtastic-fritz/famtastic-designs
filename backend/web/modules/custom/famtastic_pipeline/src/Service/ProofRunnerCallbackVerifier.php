@@ -79,6 +79,13 @@ final class ProofRunnerCallbackVerifier {
       'build_id' => $expectedBuildId,
       'build_dna_hash' => $finalHash,
       'profile_id' => (string) ($pending['recipe']['profile_id'] ?? ''),
+      // These values are copied only after the final DNA has been checked
+      // against the pending immutable contract. Downstream delivery code must
+      // use them instead of inferring a request/delivery from the prospect.
+      'proof_phase' => (string) ($pending['run']['source_correlation']['proof_phase'] ?? ''),
+      'source_correlation' => (array) ($pending['run']['source_correlation'] ?? []),
+      'lineage' => (array) ($pending['lineage'] ?? []),
+      'direction_contract' => (array) ($pending['recipe']['direction_contract'] ?? []),
     ];
   }
 
@@ -86,10 +93,13 @@ final class ProofRunnerCallbackVerifier {
     if (($final['schema'] ?? '') !== 'famtastic.build-dna.v1' || (string) ($final['build_id'] ?? '') !== (string) ($pending['build_id'] ?? '')) {
       throw new \InvalidArgumentException('Proof callback must return the complete Build DNA record for the prepared build_id.');
     }
-    if (in_array((string) ($final['classification'] ?? ''), ['local_contract_fixture', 'proof_runner_preflight'], TRUE)) {
-      throw new \InvalidArgumentException('A preflight or fixture Build DNA record cannot be used as a completed proof result.');
+    if (($final['classification'] ?? '') !== 'production_proof_completion') {
+      throw new \InvalidArgumentException('Runner-bound proof completion must declare classification=production_proof_completion.');
     }
     $run = (array) ($final['run'] ?? []);
+    if (($run['completion_state'] ?? '') !== 'provider_completed') {
+      throw new \InvalidArgumentException('Runner-bound proof completion must declare run.completion_state=provider_completed.');
+    }
     $allowedFinalStates = ['passed', 'complete', 'completed'];
     if (!in_array(mb_strtolower((string) ($run['status'] ?? '')), $allowedFinalStates, TRUE)) {
       throw new \InvalidArgumentException('Proof callback Build DNA must report a completed run.');
@@ -114,10 +124,13 @@ final class ProofRunnerCallbackVerifier {
     if (($run['source_type'] ?? '') !== ($pendingRun['source_type'] ?? '')) {
       throw new \InvalidArgumentException('Proof callback Build DNA source type does not match the prepared contract.');
     }
-    foreach (['prospect_id', 'type', 'proof_phase', 'public_preview_delivery_id', 'intake_id', 'website_request_id', 'website_request_public_id'] as $key) {
+    foreach (['prospect_id', 'type', 'proof_phase', 'lineage_hash', 'source_preview_delivery_id', 'public_preview_delivery_id', 'parent_public_proof_campaign_id', 'parent_public_campaign_key', 'parent_public_build_dna_id', 'parent_public_build_dna_hash', 'intake_id', 'website_request_id', 'website_request_public_id'] as $key) {
       if (array_key_exists($key, $expectedSource) && (string) ($actualSource[$key] ?? '') !== (string) $expectedSource[$key]) {
         throw new \InvalidArgumentException('Proof callback Build DNA source correlation differs at ' . $key . '.');
       }
+    }
+    if ((array) ($final['lineage'] ?? []) !== (array) ($pending['lineage'] ?? [])) {
+      throw new \InvalidArgumentException('Proof callback Build DNA lineage does not match the prepared detailed source snapshot.');
     }
     if (!is_array($final['artifacts'] ?? NULL) || count($final['artifacts']) < 1 || !is_array($final['stages'] ?? NULL) || count($final['stages']) < 1) {
       throw new \InvalidArgumentException('Proof callback Build DNA must include artifacts and stage evidence.');
