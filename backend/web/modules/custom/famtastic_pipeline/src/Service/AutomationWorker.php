@@ -20,6 +20,7 @@ final class AutomationWorker {
     private readonly DomainLifecycleService $domains,
     private readonly HostingLifecycleService $hosting,
     private readonly CustomerPortalService $portal,
+    private readonly PublicPreviewDeliveryService $previews,
   ) {}
 
   /**
@@ -137,7 +138,7 @@ final class AutomationWorker {
     elseif ($projectId) {
       $this->portal->markProjectProofReady($projectId, $campaign, $variants);
     }
-    else {
+    elseif (!$this->previews->markCampaignReady($prospectId, (int) $campaign->id())) {
       $this->ledger->enqueue(
         'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
         'outreach.prepare',

@@ -65,7 +65,7 @@ export function normalizePath(pathname = '/') {
 }
 
 export function seoForPath(pathname = '/') {
-  if (pathname.startsWith('/proofs/share/')) {
+  if (pathname.startsWith('/proofs/share/') || pathname.startsWith('/proofs/preview/')) {
     const description = 'An unlisted website concept review shared through FAMtastic Designs.';
     return {
       siteName: SITE_NAME,

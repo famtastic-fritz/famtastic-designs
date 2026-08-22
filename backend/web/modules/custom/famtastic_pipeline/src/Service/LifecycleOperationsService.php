@@ -37,6 +37,16 @@ final class LifecycleOperationsService {
           'status' => 'sent', 'attempts' => (int) $row['attempts'] + 1, 'sent_at' => $now,
           'provider_message_id' => $messageId, 'last_error' => NULL, 'changed' => $now,
         ])->condition('id', $row['id'])->execute();
+        if (str_starts_with((string) $row['notification_key'], 'preview-delivery:')) {
+          $this->database->update('famtastic_preview_delivery')->fields([
+            'state' => 'email_accepted',
+            'provider_message_id' => $messageId,
+            'accepted_at' => $now,
+            'last_event_at' => $now,
+            'changed' => $now,
+          ])->condition('email_outbox_id', (int) $row['id'])
+            ->condition('state', 'email_queued')->execute();
+        }
         if (preg_match('/^website-request:(\d+):proofs:\d+(?::(?:3|6))?$/', (string) $row['notification_key'], $matches)) {
           $this->database->update('famtastic_project_request')->fields([
             'proof_review_status' => 'notified',

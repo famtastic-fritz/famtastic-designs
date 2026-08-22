@@ -165,6 +165,26 @@ test('unlisted proof room works without an account and exposes view links only',
   await page.screenshot({ path: testInfo.outputPath('unlisted-proof-room.png'), fullPage: true });
 });
 
+test('public preview room is a private decision aid with one workspace handoff', async ({ page }) => {
+  await page.route('**/api/public-preview/preview-pit/public-signature', (route) => route.fulfill({ json: { ok: true, preview_delivery: {
+    business_name: 'Pros In Training', proof_count: 3, private_label: 'Private review concept · Not yet published.',
+    registration_url: '/login?mode=register&continuation=preview-pit.public-continuation',
+    variants: [
+      { direction_id: 'a', direction_name: 'The Launchpad', preview_url: '/web/api/public-preview/preview-pit/public-signature/proofs/a' },
+      { direction_id: 'b', direction_name: 'The Field Guide', preview_url: '/web/api/public-preview/preview-pit/public-signature/proofs/b' },
+      { direction_id: 'c', direction_name: 'Future Pros Studio', preview_url: '/web/api/public-preview/preview-pit/public-signature/proofs/c' },
+    ],
+  } } }));
+  await page.goto('/proofs/preview/preview-pit/public-signature');
+  await expect(page.getByRole('heading', { name: 'Three exploratory directions for Pros In Training' })).toBeVisible();
+  await expect(page.getByText('Private review concept · Not yet published.')).toBeVisible();
+  await expect(page.getByRole('link', { name: /Open working concept/ })).toHaveCount(3);
+  await expect(page.getByText('No selection, price, checkout, or publishing happens here')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Create your free workspace' })).toHaveAttribute('href', /continuation=preview-pit\.public-continuation/);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow, noarchive');
+  await assertNoHorizontalOverflow(page);
+});
+
 test('revoked or unknown proof link reveals no project data', async ({ page }) => {
   await page.route('**/api/proof-shares/request-proof-review/revoked-signature', (route) => route.fulfill({ status: 404, json: { ok: false, error: 'proof_share_not_found' } }));
   await page.goto('/proofs/share/request-proof-review/revoked-signature');

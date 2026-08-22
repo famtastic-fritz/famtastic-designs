@@ -12,6 +12,7 @@ use Drupal\Core\Flood\FloodInterface;
 use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\ConciergeWebhookService;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
+use Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService;
 use Drupal\famtastic_pipeline\Service\TokenManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,6 +29,7 @@ class PublicRequestController extends ControllerBase {
     protected TokenManager $tokenManager,
     protected OutreachMailer $mailer,
     protected ConciergeWebhookService $concierge,
+    protected PublicPreviewDeliveryService $previews,
     protected ConfigFactoryInterface $pipelineConfigFactory,
     protected TimeInterface $time,
     protected LoggerInterface $logger,
@@ -43,6 +45,7 @@ class PublicRequestController extends ControllerBase {
       $container->get('famtastic_pipeline.token_manager'),
       $container->get('famtastic_pipeline.mailer'),
       $container->get('famtastic_pipeline.concierge_webhooks'),
+      $container->get('famtastic_pipeline.public_preview_deliveries'),
       $container->get('config.factory'),
       $container->get('datetime.time'),
       $container->get('logger.channel.famtastic_pipeline'),
@@ -125,7 +128,8 @@ class PublicRequestController extends ControllerBase {
     }
 
     $intake = $this->saveRequest($prospect, $data, $answers, $type);
-    $registrationUrl = $this->registrationUrl($email, $businessName, (int) $intake->id(), $type);
+    $previewDelivery = $this->previews->createForPublicLead((int) $prospect->id(), (int) $intake->id());
+    $registrationUrl = $this->registrationUrl((string) $previewDelivery['public_id']);
     try {
       $this->concierge->recordPublicLead((int) $prospect->id(), (int) $intake->id(), 'public_' . $type);
     }
@@ -240,17 +244,12 @@ class PublicRequestController extends ControllerBase {
   /**
    * Builds the public-to-member continuation link without exposing a secret.
    */
-  protected function registrationUrl(string $email, string $businessName, int $requestId, string $type): string {
+  protected function registrationUrl(string $previewPublicId): string {
     $base = rtrim((string) (getenv('FRONTEND_BASE_URL') ?: $this->pipelineConfigFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')), '/');
-    $query = http_build_query([
-      'mode' => 'register',
-      'email' => $email,
-      'business' => $businessName,
-      'source' => 'public_' . $type,
-      'request' => $requestId,
-      'redirect' => '/portal?start=website',
-    ]);
-    return $base . '/login?' . $query;
+    // No email, business name, intake id, or public-lead identifier is exposed
+    // in a browser URL. The opaque continuation is verified again server-side.
+    $signature = hash_hmac('sha256', 'public-preview-continuation-v1|' . $previewPublicId, \Drupal\Core\Site\Settings::getHashSalt());
+    return $base . '/login?mode=register&continuation=' . rawurlencode($previewPublicId . '.' . $signature) . '&redirect=%2Fportal%3Fstart%3Dwebsite';
   }
 
   protected function primaryGoal(array $data, string $type): string {

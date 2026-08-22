@@ -128,3 +128,9 @@ shadow store, send a response, or turn a delivery event into commercial or
 deployment approval. Human approval remains required before any outbound
 message, price/offer/grant, payment, domain action, or release. The exact
 handoff contract is `docs/architecture/FAMTASTIC_CONNECTIONS_CONCIERGE_CONTRACT_V1.md`.
+
+For a public lead who receives pre-registration working concepts, use only
+`docs/architecture/PUBLIC_PREVIEW_DELIVERY_V1.md`. A campaign email, a legacy
+prospect token page, an account-owned proof share, or a manually copied URL is
+not a substitute for the owner-gated public-preview delivery and verified
+same-email claim.

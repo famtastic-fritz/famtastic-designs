@@ -25,6 +25,7 @@ final class CustomerPortalService {
     private readonly UuidInterface $uuid,
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
+    private readonly PublicPreviewDeliveryService $previews,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -45,6 +46,7 @@ final class CustomerPortalService {
     }
     $now = $this->time->getRequestTime();
     $email = mb_strtolower(trim($user->getEmail()));
+    $this->previews->markSignupStarted((string) ($input['preview_continuation'] ?? ''), $email);
     $prospectId = $this->findProspect($email);
     $customerId = (int) $this->database->insert('famtastic_customer')->fields([
       'public_id' => $this->uuid->generate(), 'uid' => (int) $user->id(),
@@ -83,6 +85,11 @@ final class CustomerPortalService {
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_customer')->fields(['verified_at' => $now, 'changed' => $now])
       ->condition('id', $customerId)->execute();
+    $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['email'])
+      ->condition('id', $customerId)->execute()->fetchAssoc();
+    if ($customer) {
+      $this->previews->claimVerifiedCustomer($customerId, (string) $customer['email']);
+    }
   }
 
   /**
@@ -230,14 +237,18 @@ final class CustomerPortalService {
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
     $clean = $this->validateWebsiteRequest($input);
     $now = $this->time->getRequestTime();
-    $prospect = $this->entities->getStorage('famtastic_prospect')->create([
-      'business_name' => $clean['business_name'] ?: $clean['project_name'],
-      'public_email' => (string) $customer['email'], 'contact_name' => (string) $customer['display_name'],
-      'contact_method' => 'email', 'contact_value' => (string) $customer['email'],
-      'campaign' => 'customer_portal', 'source' => 'customer_portal', 'authorized' => TRUE,
-      'confirmed_at' => $now, 'status' => $clean['status'] === 'submitted' ? 'lead' : 'new', 'owner_uid' => 1,
-    ]);
-    $prospect->save();
+    $claimedProspectId = $this->previews->claimedProspectId($customerId);
+    $prospect = $claimedProspectId ? $this->entities->getStorage('famtastic_prospect')->load($claimedProspectId) : NULL;
+    if (!$prospect) {
+      $prospect = $this->entities->getStorage('famtastic_prospect')->create([
+        'business_name' => $clean['business_name'] ?: $clean['project_name'],
+        'public_email' => (string) $customer['email'], 'contact_name' => (string) $customer['display_name'],
+        'contact_method' => 'email', 'contact_value' => (string) $customer['email'],
+        'campaign' => 'customer_portal', 'source' => 'customer_portal', 'authorized' => TRUE,
+        'confirmed_at' => $now, 'status' => $clean['status'] === 'submitted' ? 'lead' : 'new', 'owner_uid' => 1,
+      ]);
+      $prospect->save();
+    }
     $publicId = $this->uuid->generate();
     $id = (int) $this->database->insert('famtastic_project_request')->fields([
       'public_id' => $publicId, 'organization_id' => (int) $organization['id'], 'customer_id' => $customerId,
@@ -249,6 +260,7 @@ final class CustomerPortalService {
       'submitted_at' => $clean['status'] === 'submitted' ? $now : NULL, 'created' => $now, 'changed' => $now,
     ])->execute();
     $this->claimResource((int) $organization['id'], 'prospect', (int) $prospect->id());
+    $this->previews->attachClaimedRequest($customerId, $id, $clean['status']);
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
     if ($clean['status'] === 'submitted') {
       $this->queueWebsiteRequestNotifications($id, $customer, $clean);
