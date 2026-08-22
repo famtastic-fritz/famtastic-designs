@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
+use Drupal\famtastic_pipeline\Service\ProofRevisionService;
 use Drupal\file\FileRepositoryInterface;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,6 +26,7 @@ final class WebsiteRequestProofController extends ControllerBase {
     private readonly Connection $database,
     private readonly EntityTypeManagerInterface $entities,
     private readonly CustomerPortalService $portal,
+    private readonly ProofRevisionService $proofRevisions,
     private readonly AccountProxyInterface $account,
     private readonly FileSystemInterface $fileSystem,
     private readonly FileRepositoryInterface $fileRepository,
@@ -37,6 +39,7 @@ final class WebsiteRequestProofController extends ControllerBase {
       $container->get('database'),
       $container->get('entity_type.manager'),
       $container->get('famtastic_pipeline.customer_portal'),
+      $container->get('famtastic_pipeline.proof_revisions'),
       $container->get('current_user'),
       $container->get('file_system'),
       $container->get('file.repository'),
@@ -56,7 +59,7 @@ final class WebsiteRequestProofController extends ControllerBase {
 
   public function adminPreview(Request $request, int $website_request, string $direction): Response {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $website_request)->execute()->fetchAssoc();
-    return $row ? $this->artifactResponse($row, $direction) : new Response('Proof not found.', 404);
+    return $row ? $this->artifactResponse($row, $direction, TRUE) : new Response('Proof not found.', 404);
   }
 
   public function publicShare(Request $request, string $website_request, string $signature): JsonResponse {
@@ -110,14 +113,20 @@ final class WebsiteRequestProofController extends ControllerBase {
     return new JsonResponse(['ok' => TRUE, 'duplicate' => FALSE, 'asset' => $this->assetPayload($asset)], 201);
   }
 
-  private function artifactResponse(array $row, string $direction): Response {
+  private function artifactResponse(array $row, string $direction, bool $ownerPreview = FALSE): Response {
     $direction = strtolower($direction);
     if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE) || empty($row['proof_campaign_id'])) return new Response('Proof not found.', 404);
-    $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
-      ->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $direction)->range(0, 1)->execute();
-    $variant = $ids ? $this->entities->getStorage('proof_variant')->load(reset($ids)) : NULL;
-    if (!$variant) return new Response('Proof not found.', 404);
-    $stored = (string) $variant->get('artifact_path')->value;
+    $revisionArtifact = $this->proofRevisions->activeArtifactForRequest((int) $row['id'], $direction, $ownerPreview);
+    if ($revisionArtifact) {
+      $stored = (string) $revisionArtifact['artifact_path'];
+    }
+    else {
+      $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
+        ->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $direction)->range(0, 1)->execute();
+      $variant = $ids ? $this->entities->getStorage('proof_variant')->load(reset($ids)) : NULL;
+      if (!$variant) return new Response('Proof not found.', 404);
+      $stored = (string) $variant->get('artifact_path')->value;
+    }
     $path = str_starts_with($stored, '/') ? $stored : dirname(\Drupal::root()) . '/' . ltrim($stored, '/');
     $real = realpath($path);
     $root = realpath(\Drupal::root() . '/proofs');

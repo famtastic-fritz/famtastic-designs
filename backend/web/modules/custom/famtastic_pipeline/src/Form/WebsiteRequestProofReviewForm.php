@@ -12,6 +12,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
+use Drupal\famtastic_pipeline\Service\ProofRevisionService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /** Owner-only approval gate for one account-owned website proof set. */
@@ -23,6 +24,7 @@ final class WebsiteRequestProofReviewForm extends FormBase {
     private readonly Connection $database,
     private readonly EntityTypeManagerInterface $entities,
     private readonly CustomerPortalService $portal,
+    private readonly ProofRevisionService $proofRevisions,
     private readonly AccountProxyInterface $account,
   ) {}
 
@@ -31,6 +33,7 @@ final class WebsiteRequestProofReviewForm extends FormBase {
       $container->get('database'),
       $container->get('entity_type.manager'),
       $container->get('famtastic_pipeline.customer_portal'),
+      $container->get('famtastic_pipeline.proof_revisions'),
       $container->get('current_user'),
     );
   }
@@ -61,7 +64,30 @@ final class WebsiteRequestProofReviewForm extends FormBase {
     $form['proofs'] = ['#theme' => 'item_list', '#title' => $proofTitle, '#items' => $items, '#empty' => $this->t('No complete proof set is attached yet.')];
     $notification = $campaignId && $complete ? $this->database->select('famtastic_notification_outbox', 'n')->fields('n')->condition('notification_key', 'website-request:' . $website_request . ':proofs:' . $campaignId . ':' . $proofCount)->execute()->fetchAssoc() : NULL;
     $form['delivery'] = ['#type' => 'item', '#title' => $this->t('Customer delivery'), '#markup' => '<p>' . ($notification ? 'Notification status: <strong>' . htmlspecialchars((string) $notification['status']) . '</strong>' : '<strong>Not queued.</strong> The customer has not been sent these proofs.') . '</p>'];
-    if ($complete && $this->requestRow['proof_review_status'] === 'owner_review') {
+    $pendingRevision = $this->proofRevisions->ownerPendingForRequest((int) $website_request);
+    if ($pendingRevision) {
+      $direction = (string) $pendingRevision['direction_id'];
+      $version = (int) $pendingRevision['revision_number'];
+      $candidate = Link::fromTextAndUrl($this->t('Open revised direction @direction for owner review', ['@direction' => strtoupper($direction)]), Url::fromRoute('famtastic_pipeline.website_request_proof_admin_preview', ['website_request' => $website_request, 'direction' => $direction], ['attributes' => ['target' => '_blank', 'rel' => 'noopener']]))->toString();
+      $form['revision'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Revision @version awaiting owner approval', ['@version' => $version]),
+        '#open' => TRUE,
+      ];
+      $form['revision']['notes'] = [
+        '#markup' => '<p><strong>Selected direction:</strong> ' . htmlspecialchars(strtoupper($direction)) . '</p><p><strong>Client notes:</strong><br>' . nl2br(htmlspecialchars((string) $pendingRevision['notes'])) . '</p><p>' . $candidate . '</p><p>Approving this makes only this new artifact visible to the customer. It does not send mail directly, alter a price, or start checkout.</p>',
+      ];
+      $form['confirm_revision'] = ['#type' => 'checkbox', '#title' => $this->t('I reviewed this exact revised direction and approve showing it to the customer.'), '#required' => TRUE];
+      $form['actions']['#type'] = 'actions';
+      $form['actions']['submit'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Approve revised direction and queue customer notification'),
+        '#button_type' => 'primary',
+        '#proof_action' => 'approve_revision',
+        '#revision_id' => (int) $pendingRevision['id'],
+      ];
+    }
+    elseif ($complete && $this->requestRow['proof_review_status'] === 'owner_review') {
       $form['confirm'] = ['#type' => 'checkbox', '#title' => $this->t('I reviewed all @count working previews and approve showing them in this customer account.', ['@count' => $proofCount]), '#required' => TRUE];
       $form['actions']['#type'] = 'actions';
       $form['actions']['submit'] = ['#type' => 'submit', '#value' => $this->t('Approve and queue customer email'), '#button_type' => 'primary', '#proof_action' => 'approve'];
@@ -93,7 +119,11 @@ final class WebsiteRequestProofReviewForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $trigger = $form_state->getTriggeringElement();
     $action = (string) ($trigger['#proof_action'] ?? 'approve');
-    if ($action === 'approve') {
+    if ($action === 'approve_revision') {
+      $this->proofRevisions->approveRevision((int) ($trigger['#revision_id'] ?? 0), (int) $this->account->id());
+      $this->messenger()->addStatus($this->t('Revised direction approved. One customer notification was queued; no message was sent directly.'));
+    }
+    elseif ($action === 'approve') {
       $this->portal->approveWebsiteRequestProof((int) $this->requestRow['id'], (int) $this->account->id());
       $this->messenger()->addStatus($this->t('Proofs approved and one customer notification queued.'));
     }

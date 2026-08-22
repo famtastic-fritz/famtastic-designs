@@ -45,6 +45,7 @@ final class CustomerPortalService {
     private readonly OperationalLedger $ledger,
     private readonly PublicPreviewDeliveryService $previews,
     private readonly BuildTelemetryService $buildTelemetry,
+    private readonly ProofRevisionService $proofRevisions,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -466,6 +467,7 @@ final class CustomerPortalService {
 
   private function serializeWebsiteRequest(array $row): array {
     $row['intake'] = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    $row['proof_revision'] = $this->proofRevisions->customerSummary((int) $row['id']);
     $recommendation = (array) ($row['intake']['recommendation'] ?? []);
     $offer = $this->database->select('famtastic_private_offer', 'o')->fields('o', ['public_id', 'sku', 'list_amount_minor', 'offered_amount_minor', 'currency', 'reason', 'expires_at'])
       ->condition('website_request_id', (int) $row['id'])->condition('status', 'active')
@@ -1043,51 +1045,25 @@ final class CustomerPortalService {
     }
   }
 
-  /** Records one account-owned selection or revision request. */
+  /** Records one account-owned selection or immutable revision request. */
   public function decideWebsiteRequestProof(int $customerId, string $publicId, array $input): array {
     $row = $this->ownedWebsiteRequest($customerId, $publicId);
-    if (!$row || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) throw new \RuntimeException('Website proofs are not available.');
     $action = (string) ($input['action'] ?? 'select');
+    if (!$row) throw new \RuntimeException('Website proofs are not available.');
+    // A same-note retry is intentionally routed back to the revision service
+    // after the first submission changes state to revision_requested. Selecting
+    // another direction remains blocked until that revision has been reviewed.
+    $allowed = $action === 'revision'
+      ? ['selected', 'revision_requested']
+      : ['customer_ready', 'notified', 'selected'];
+    if (!in_array((string) $row['proof_review_status'], $allowed, TRUE)) throw new \RuntimeException('Website proofs are not available.');
     $now = $this->time->getRequestTime();
     if ($action === 'revision') {
       $notes = mb_substr(trim(strip_tags((string) ($input['notes'] ?? ''))), 0, 5000);
       if ($notes === '') throw new \InvalidArgumentException('Tell us what you want adjusted.');
-      $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
-      $previousRevision = (array) ($intake['proof_revision_request'] ?? []);
-      $revisionVersion = max(1, (int) ($previousRevision['version'] ?? 0) + 1);
-      $intake['proof_revision_request'] = [
-        'notes' => $notes,
-        'requested_at' => gmdate(DATE_ATOM, $now),
-        'version' => $revisionVersion,
-        'selected_direction' => (string) ($row['selected_proof_direction'] ?? ''),
-      ];
-      $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'revision_requested', 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'changed' => $now])->condition('id', $row['id'])->execute();
-      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
-      $revisionKey = hash('sha256', $revisionVersion . ':' . $notes);
-      $this->queueNotification('website-request:' . $row['id'] . ':proof-revision-owner:' . $revisionKey, 'operational', $admin,
-        'Website proof revision requested — ' . $row['project_name'],
-        "Client request:\n{$notes}\n\nSelected direction: " . ((string) ($row['selected_proof_direction'] ?: 'not yet selected')) . "\nRevision version: {$revisionVersion}\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
-      $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['email'])->condition('id', (int) $row['customer_id'])->execute()->fetchAssoc();
-      $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
-      if (!empty($customer['email'])) {
-        $this->queueNotification('website-request:' . $row['id'] . ':proof-revision-customer:' . $revisionKey, 'transactional', (string) $customer['email'],
-          'We received your website proof changes',
-          "Your requested changes were saved as revision {$revisionVersion}. FAMtastic will review the new proof version before anything changes or is sent.\n\nTrack your project: {$base}/portal/?section=projects&request=" . rawurlencode((string) $row['public_id']));
-      }
-      $this->ledger->enqueue(
-        'website_proof.revision.v1:request:' . $row['id'] . ':' . $revisionVersion,
-        'proof.revision.requested',
-        [
-          'routine' => 'website_proof.revision.v1',
-          'website_request_id' => (int) $row['id'],
-          'website_request_public_id' => (string) $row['public_id'],
-          'selected_direction' => (string) ($row['selected_proof_direction'] ?? ''),
-          'revision_version' => $revisionVersion,
-          'notes' => $notes,
-        ],
-        (int) $row['prospect_id'],
-      );
-      $this->activity((int) $row['organization_id'], 'website_request.proof_revision_requested', 'Your requested proof changes were saved and sent to FAMtastic for review.');
+      // Notes and baseline evidence are immutable revision records. Do not
+      // mutate the reusable intake snapshot or overwrite a proof_variant.
+      $this->proofRevisions->request($row, $notes);
     }
     else {
       $direction = strtolower((string) ($input['direction'] ?? ''));

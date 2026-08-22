@@ -1,5 +1,27 @@
 # Product changelog
 
+## 2026-08-22 — Immutable selected-direction proof revisions
+
+- Added additive `famtastic_proof_revision` and
+  `famtastic_proof_revision_artifact` records for account-owned, direction-local
+  revisions. Original proof variants remain immutable; each revision preserves
+  a baseline hash, candidate hash, Build DNA lineage, notes hash, and review
+  decision.
+- Replaced the old intake-JSON/UI-only revision state with one source-bound
+  `proof.revision.generate` queue item. It keeps the sole creative routine
+  `website_proof.generate.v1`, uses `proof_phase=revision`, and constrains the
+  runner to one selected direction under
+  `portal_selected_direction_revision.v1`.
+- Added callback/owner gates: only a completed, correlated Build DNA receipt
+  may store a candidate; the candidate stays owner-only until an explicit
+  approval queues a customer notice. No revision path sends mail directly,
+  changes pricing/terms, creates an order, or starts checkout.
+- Added `scripts/e2e-proof-revision-versioning.sh`, a fresh SQLite fixture that
+  proves idempotent customer submission, immutable source retention,
+  selected-direction-only callback handling, owner approval, customer
+  visibility, and no-send/no-checkout behavior. This is local contract evidence
+  only; the runner transport and real provider delivery remain separate gates.
+
 ## 2026-08-22 — Public proof-to-payment recovery
 
 - Replaced Solution Finder's direct SMTP acknowledgement with a durable public

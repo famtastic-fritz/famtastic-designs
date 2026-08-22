@@ -715,6 +715,49 @@ function famtastic_pipeline_update_8034(&$sandbox) {
   return t('Added immutable public-preview source, parent Build DNA, detailed intake snapshot, and consented asset lineage fields.');
 }
 
+/**
+ * Adds immutable selected-direction proof revision records and artifacts.
+ *
+ * Existing proof variants deliberately remain untouched. A revision starts by
+ * snapshotting its selected source artifact into a new additive record, then
+ * carries a separate candidate artifact through owner review.
+ */
+function famtastic_pipeline_update_8035(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $created = [];
+  $repaired = [];
+  foreach (_famtastic_pipeline_proof_revision_schema() as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+      $created[] = $table;
+      continue;
+    }
+    // Defensive for an interrupted development migration. The tables are
+    // additive and have no predecessor schema, but an existing partial table
+    // must not leave production without the lineage or owner-gate columns.
+    foreach ($definition['fields'] as $field => $fieldDefinition) {
+      if (!$schema->fieldExists($table, $field)) {
+        $schema->addField($table, $field, $fieldDefinition);
+        $repaired[] = $table . '.' . $field;
+      }
+    }
+    foreach ($definition['unique keys'] as $name => $fields) {
+      if (!$schema->indexExists($table, $name)) {
+        $schema->addUniqueKey($table, $name, $fields);
+      }
+    }
+    foreach ($definition['indexes'] as $name => $fields) {
+      if (!$schema->indexExists($table, $name)) {
+        $schema->addIndex($table, $name, $fields);
+      }
+    }
+  }
+  return t('Added immutable proof revision work items and artifact lineage: @tables. @repairs', [
+    '@tables' => $created ? implode(', ', $created) : 'already present',
+    '@repairs' => $repaired ? 'Repaired: ' . implode(', ', $repaired) : '',
+  ]);
+}
+
 /** Preserves v3 and creates the approved v4 terms snapshot. */
 function _famtastic_pipeline_seed_customer_terms_v4(): void {
   _famtastic_pipeline_seed_customer_terms_v3();
@@ -1188,6 +1231,9 @@ function _famtastic_pipeline_automation_schema(): array {
   foreach (_famtastic_pipeline_customer_portal_schema() as $table => $definition) {
     $tables[$table] = $definition;
   }
+  foreach (_famtastic_pipeline_proof_revision_schema() as $table => $definition) {
+    $tables[$table] = $definition;
+  }
   foreach (_famtastic_pipeline_portal_engagement_schema() as $table => $definition) {
     $tables[$table] = $definition;
   }
@@ -1196,6 +1242,111 @@ function _famtastic_pipeline_automation_schema(): array {
   }
 
   return $tables;
+}
+
+/**
+ * Defines immutable, request-owned revision work items and artifact lineage.
+ *
+ * The original proof_variant remains the current campaign artifact. This table
+ * records the baseline and replacement separately so a callback cannot replace
+ * historical proof bytes in place.
+ */
+function _famtastic_pipeline_proof_revision_schema(): array {
+  $id = ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE];
+  $entity = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
+  $nullableTime = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  return [
+    'famtastic_proof_revision' => [
+      'description' => 'Source-bound selected-direction proof refinements with owner approval and immutable version lineage.',
+      'fields' => [
+        'id' => $id,
+        'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+        'revision_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+        'website_request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'prospect_id' => $entity,
+        'proof_campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'direction_id' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE],
+        'revision_number' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'parent_revision_id' => $entity,
+        'status' => ['type' => 'varchar', 'length' => 48, 'not null' => TRUE, 'default' => 'requested'],
+        'notes' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'notes_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'baseline_artifact_id' => $entity,
+        'baseline_variant_id' => $entity,
+        'baseline_artifact_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'baseline_design_dna_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'baseline_build_dna_id' => ['type' => 'varchar', 'length' => 170, 'not null' => TRUE, 'default' => ''],
+        'baseline_build_dna_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'runner_job_id' => $entity,
+        'runner_job_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE, 'default' => ''],
+        'provider_job_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'runner_build_id' => ['type' => 'varchar', 'length' => 170, 'not null' => TRUE, 'default' => ''],
+        'runner_contract_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'callback_event_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'candidate_artifact_id' => $entity,
+        'candidate_build_dna_id' => ['type' => 'varchar', 'length' => 170, 'not null' => TRUE, 'default' => ''],
+        'candidate_build_dna_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'owner_approved_by_uid' => $entity,
+        'owner_approved_at' => $nullableTime,
+        'customer_visible_at' => $nullableTime,
+        'requested_at' => $time,
+        'dispatched_at' => $nullableTime,
+        'completed_at' => $nullableTime,
+        'created' => $time,
+        'changed' => $time,
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [
+        'public_id' => ['public_id'],
+        'revision_key' => ['revision_key'],
+      ],
+      'indexes' => [
+        'request_direction_version' => ['website_request_id', 'direction_id', 'revision_number'],
+        'review_queue' => ['status', 'requested_at'],
+        'campaign_direction' => ['proof_campaign_id', 'direction_id'],
+        'provider_job' => ['provider_job_id'],
+        'callback_event' => ['callback_event_id'],
+      ],
+    ],
+    'famtastic_proof_revision_artifact' => [
+      'description' => 'Append-only baseline and candidate artifact evidence for a proof revision.',
+      'fields' => [
+        'id' => $id,
+        'artifact_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+        'revision_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'artifact_role' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+        'source_type' => ['type' => 'varchar', 'length' => 48, 'not null' => TRUE, 'default' => ''],
+        'source_record_id' => $entity,
+        'parent_artifact_id' => $entity,
+        'direction_id' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE],
+        'version_number' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'artifact_path' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
+        'preview_url' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE, 'default' => ''],
+        'thumbnail_path' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE, 'default' => ''],
+        'artifact_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'thumbnail_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'design_dna' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+        'design_dna_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'build_dna_id' => ['type' => 'varchar', 'length' => 170, 'not null' => TRUE, 'default' => ''],
+        'build_dna_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'visibility' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'owner_only'],
+        'created' => $time,
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [
+        'artifact_key' => ['artifact_key'],
+        'revision_role' => ['revision_id', 'artifact_role'],
+      ],
+      'indexes' => [
+        'revision_visibility' => ['revision_id', 'visibility'],
+        'source_artifact' => ['source_type', 'source_record_id'],
+        'direction_version' => ['direction_id', 'version_number'],
+      ],
+    ],
+  ];
 }
 
 /** Schema for an owner-gated public concept-room delivery. */

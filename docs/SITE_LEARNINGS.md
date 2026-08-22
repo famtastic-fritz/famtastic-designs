@@ -1,5 +1,25 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-22 — Revision lineage is a separate artifact chain, not an edit
+
+- A client change request must never be represented by overwriting
+  `intake_data`, mutating a reusable `proof_variant`, or pretending an SMTP
+  acceptance completed the work. The safe unit is an append-only revision
+  record with a snapshot of the selected baseline, notes hash, source-bound
+  runner payload, one candidate artifact, and an explicit owner decision.
+- Idempotency needs to be checked before the request lifecycle state: the first
+  submission changes a selected proof to `revision_requested`, while a browser
+  retry with the same notes must return the same revision rather than fail or
+  create a second version.
+- The revision job has a new operational type but no new creative routine:
+  `proof.revision.generate` runs `website_proof.generate.v1` with the declared
+  `revision` phase/profile. This keeps Build DNA, provider routing, and Site
+  Studio handoff on one canonical proof vocabulary.
+- A local fixture can simulate the signed callback boundary and prove records,
+  access state, and no-commercial-mutation rules. It is not evidence that a
+  provider, mailbox, payment processor, or production server performed those
+  actions.
+
 ## 2026-08-22 — A public lead needs a delivery record, not an SMTP side effect
 
 - A mail send attempt cannot be the lead state machine. The public lead must

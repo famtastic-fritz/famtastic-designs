@@ -114,7 +114,11 @@ services:
 
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.public_preview_deliveries', '@famtastic_pipeline.build_telemetry']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.public_preview_deliveries', '@famtastic_pipeline.build_telemetry', '@famtastic_pipeline.proof_revisions']
+
+  famtastic_pipeline.proof_revisions:
+    class: Drupal\famtastic_pipeline\Service\ProofRevisionService
+    arguments: ['@database', '@entity_type.manager', '@file_system', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.build_telemetry']
 
   famtastic_pipeline.public_preview_deliveries:
     class: Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService
