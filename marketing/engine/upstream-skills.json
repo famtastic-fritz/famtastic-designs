@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-08-22",
+  "source": {
+    "repository": "https://github.com/coreyhaines31/marketingskills",
+    "commit": "3df87f97621e18fbed7f6aa684edba54f49779a7",
+    "license": "MIT",
+    "adoption_mode": "project_shared_supporting_references"
+  },
+  "governance": {
+    "canonical_context": ".agents/product-marketing.md",
+    "famtastic_doctrine": "docs/DEMAND_ENGINE_DOCTRINE.md",
+    "capability_truth": "docs/CAPABILITY_REGISTRY.md",
+    "external_effects": "approval_gated",
+    "source_of_truth": "FAMtastic repository contracts override upstream skill guidance"
+  },
+  "skills": {
+    "product-marketing": "6dfd6bd485f62448385844cb9eceefcee0977c843d7a1c9e6077590d4e19d1ec",
+    "cro": "199016bec3b44bc6a7507b111b6028f6550cc852cd54c7d0df789f15d6f814c4",
+    "signup": "9395aabae64891ebdac5f31d17c83b9d47546dc0c9b22654c7b89e9b04da7cf6",
+    "onboarding": "15a802ffb73828730aba90b740426fbb8d2070721ee92d6f8737de4704e8ff0f",
+    "popups": "6c66e7f923c1eebc7eb7b94971af2e8016d3b5316e14bb1ad4b15ed3522084ce",
+    "revops": "bb27b16ad41c5c2d4fea14c12359c6a01fc755f2bb91140f0c2c43b05b3adb10",
+    "ad-creative": "e874d7bde2f55a5f0687c938ea9d3c1f210a73ff948d58ba3ee0e08631587702",
+    "marketing-ideas": "7fe1f79d008129c359f28ec733837693567a11f54bd578e1fd0d178ac69bbb8d",
+    "marketing-loops": "db4ba419ee74c7ef4c6dacffdf92fa4038e720640a4b4b95e8766ad9ff269898",
+    "sales-enablement": "d83c3244dd8e2e64d585f1ff0d760eff181587f06b90ceaf8127a4ce618265dd",
+    "ai-seo": "b4394dde31fba2aceebb6626d545a0e38d008f2c69c52c25a513f2a602aee1e0",
+    "analytics": "3eda97d96b2329daa933b6fdb94bf81aaa1196e3e344e56a8805f972a7438404",
+    "ab-testing": "1fd229160f6014f3f2d7c92cc7d2f991fbf8dc9ed68aac9793c71b408a6d1144",
+    "social": "8cc93d9b361622cdb640e87969747b85603bed2d268e923179f8dfb4799ec8c7",
+    "site-architecture": "a47f693c6a4f45db89276d8c341b3aa3054090cc8002dd4a2635448d7d152492",
+    "schema": "d8b7aa7bcd9727a87fb5470a6c9ee252b99a7ccb84f637d7c67c5d155b507e0b",
+    "offers": "cdc291bdf93b9ce135c39f034283acaee136b453239b7fe712823fae4f2d5a12"
+  }
+}

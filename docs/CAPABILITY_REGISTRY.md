@@ -59,6 +59,7 @@ template until a second unrelated brand reproduces the quality and timing.
 | Social publishing orchestration | Provider-proven on Facebook | Approval, account-specific copy, media publishing, delivery verification, retry evidence, and campaign attribution |
 | AI-presenter video production | Provider generation in progress | Presenter-led explainers and advertisements governed by the same offer truth, QA, and publishing ledger |
 | Marketing operations command center | Locally proven | Mobile campaign review, approvals, schedules, channel status, exceptions, attributed visits, leads, and sales |
+| Project-shared marketing specialist core | Locally verified documentation and provenance | Pinned conversion, lifecycle, RevOps, campaign, discovery, and measurement methods shared by Codex, Claude, Shay, and future project agents; supporting methods only, not an autonomous or newly sellable capability |
 
 Update this table only when evidence changes. Link durable proof in the release
 or acceptance report; do not upgrade a classification from confidence alone.

@@ -34,6 +34,16 @@
   `agent-skills/famtastic-demand-engine/SKILL.md`.
 - Installed `blog-*`, `seo-*`, and marketing skills are supporting references.
   FAMtastic's repository contracts override generic skill guidance.
+- The project-shared marketing core lives in `.agents/skills/` and begins with
+  `.agents/product-marketing.md`. For marketing, conversion, intake, campaign,
+  measurement, or sales-handoff work, read that context and then load only the
+  narrowest relevant specialist (`cro`, `signup`, `onboarding`, `popups`,
+  `revops`, `ad-creative`, `marketing-ideas`, `marketing-loops`,
+  `sales-enablement`, `ai-seo`, `analytics`, `ab-testing`, `social`,
+  `site-architecture`, `schema`, or `offers`). These are version-pinned
+  upstream references, not independent sources of FAMtastic product truth;
+  `docs/DEMAND_ENGINE_DOCTRINE.md`, the capability registry, products, terms,
+  and approval gates take precedence.
 - New generated marketing content is draft-first. Live prices, recurring
   charges, legal promises, real promotional sends, advertising spend, and
   broad publication remain explicit approval gates.

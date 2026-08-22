@@ -581,3 +581,18 @@ queued.
 - Current evidence is locally proven for the signature verifier and code path.
   Live deployment, Inkbox webhook subscriptions, real signing-key storage, and
   a clean canonical customer proof remain separate launch gates.
+
+## 2026-08-22 — Shared marketing skills must be pinned supporting methods
+
+- A global agent-skill installation does not preserve FAMtastic behavior for
+  Shay, Claude, or the next Codex session. Project-shared copies, a source
+  commit, individual content hashes, and a compact product-marketing context
+  make the method retrievable and auditable across agents.
+- Upstream marketing skills improve task routing, but they do not create a
+  second product catalog, customer database, pricing authority, or publishing
+  lane. FAMtastic's evidence registry, product/terms records, Build DNA, and
+  approval rules always override generic advice.
+- Keep the installed core narrow. Conversion, intake, RevOps, campaign,
+  discovery, and measurement skills cover the current gaps; outreach, email,
+  spend, and customer-data execution skills remain explicit on-demand choices
+  until their authority and lifecycle proof are reviewed.

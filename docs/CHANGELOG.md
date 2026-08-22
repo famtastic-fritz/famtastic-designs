@@ -15,6 +15,12 @@
 
 ## 2026-08-22 — Stateful Gemini Image interaction benchmark
 
+- Added a project-shared, pinned marketing specialist core from
+  `coreyhaines31/marketingskills`: product context, CRO, signup/onboarding,
+  popups, RevOps, ad creative, marketing ideas/loops, sales enablement, AI SEO,
+  analytics/experimentation, social, site architecture, schema, and offer
+  design. The adoption manifest records source commit and per-skill hashes;
+  FAMtastic doctrine, capability truth, and approval gates remain authoritative.
 - Installed Google's `gemini-interactions-api` reference skill in the shared
   project-agent location and recorded its GEAP credential boundary separately
   from the existing Gemini Developer API image worker.
