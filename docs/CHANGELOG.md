@@ -13,6 +13,19 @@
 - Required all agents to use `website_proof.generate.v1`, provider preflight,
   and Build DNA rather than chat-only mockups or unrecorded model sessions.
 
+## 2026-08-22 — Stateful Gemini Image interaction benchmark
+
+- Installed Google's `gemini-interactions-api` reference skill in the shared
+  project-agent location and recorded its GEAP credential boundary separately
+  from the existing Gemini Developer API image worker.
+- Proved a two-step Gemini 3.1 Flash Lite Image Developer API interaction from
+  the FAMU-adjacent visual canon: one new 16:9 reference-led scene in 6.096
+  seconds and one 9:16 stateful companion revision in 5.028 seconds.
+- Persisted interaction IDs, verbatim prompts, usage metadata, response and
+  image hashes, receipt, and valid Build DNA under local artifact storage. The
+  benchmark made no customer, Drupal, Site Studio, notification, or production
+  mutation and did not run an independent creative-release review.
+
 ## 2026-08-20 — Clearer proof review, readable notifications, and media routing
 
 - Replaced raw-JSON owner email presentation with a compact decision-ready

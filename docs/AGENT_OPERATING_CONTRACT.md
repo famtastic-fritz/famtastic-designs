@@ -77,6 +77,11 @@ unrecorded model session for that routine.
 - The generator may not perform final visual approval. Browser QA and an
   independent review route remain required, even when Gemini creates both the
   art and prototype.
+- The installed `.agents/skills/gemini-interactions-api` reference applies to
+  Gemini Enterprise Agent Platform (GEAP): it needs a provisioned agent and
+  Application Default Credentials. FAMtastic's existing image worker uses the
+  separate Gemini Developer API image-only Keychain route. Do not mix their
+  credential models or claim one proves the other.
 
 The provider registry distinguishes desktop-attended execution, authenticated
 API execution, and unattended service execution. Do not call a local desktop
