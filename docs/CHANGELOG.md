@@ -1,5 +1,19 @@
 # Product changelog
 
+## 2026-08-22 — Production provider compatibility audit
+
+- Performed a read-only production and Site Studio audit before release. The
+  reviewed source-bound public/refined/revision implementation remains pushed
+  but is **not deployed** and no P.I.T. customer email was sent.
+- Recorded the release blocker: production has no preview/revision schema or
+  configured proof-runner endpoint, while the inspected legacy Studio endpoint
+  supports only fixed three-direction jobs and lacks the signed runner
+  envelope, artifact SHA-256 values, final Build DNA, browser QA, and
+  independent-review callback evidence required by the new verifier.
+- Kept the release fail-closed. No production migration, provider call,
+  customer proof room, or outbound customer invitation was created from this
+  audit.
+
 ## 2026-08-22 — Canonical public-to-refined proof lifecycle safety contract
 
 - Added one source-bound `website_proof.generate.v1` contract for public

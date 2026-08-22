@@ -1,5 +1,22 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-22 — A legacy proof endpoint is not a canonical runner adapter
+
+- A provider must satisfy both sides of the contract. A Studio endpoint that
+  accepts only three fixed directions and returns HTML links is not compatible
+  with a source-bound runner that needs declared 3/6/1 profiles, the original
+  build ID and contract hash, per-artifact SHA-256 values, final Build DNA,
+  browser QA, and an independent visual-review decision.
+- The active Studio process is loopback-only and no production Studio URL or
+  HMAC pair is configured. Exposing a workstation or weakening the Drupal
+  verifier would create a false production claim. The correct next change is a
+  secure adapter (or explicitly approved alternate runner) that preserves the
+  canonical envelope and callback evidence end to end.
+- A backend-only deployment would fail closed, not finish delivery: it can
+  create the durable public record and owner alert, but cannot produce an
+  eligible P.I.T. proof room or customer invitation until that provider return
+  is real and verified.
+
 ## 2026-08-22 — One pipeline needs three immutable proof histories
 
 - A public teaser, a detailed portal refinement, and a selected-direction

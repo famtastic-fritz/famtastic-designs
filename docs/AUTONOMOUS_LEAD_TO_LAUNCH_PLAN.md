@@ -56,9 +56,17 @@ work. The customer invitation is separately staged and approved in Operations.
   failure. The fixture proves safety plumbing only, not a creative provider.
 - [x] Verify a clean Drupal installation and migrations from the current
   source branch.
-- [ ] Configure and prove the real Site Studio provider return, including
-  actual provider/model receipts, complete Build DNA, browser QA, and an
-  independent visual reviewer decision.
+- [ ] Replace or upgrade the legacy Site Studio proof boundary before using
+  it as this routine's provider. The currently inspected Studio endpoint is
+  local-only, fixes every job at three directions, and returns a legacy
+  callback without the runner envelope, artifact hashes, final Build DNA,
+  browser QA, or independent-review evidence. It cannot receive the refined
+  six-proof or selected-direction revision profiles, and its current
+  three-proof callback would be rejected by the canonical verifier.
+- [ ] Configure and prove a compatible real provider return, including actual
+  provider/model receipts, complete Build DNA, browser QA, and an independent
+  visual reviewer decision. Pair the approved HTTPS endpoint and HMAC secrets
+  only after the adapter passes one production callback acceptance test.
 - [ ] Deploy the reviewed backend migration and source SHA through the
   production runbook, then browser-verify the live public and portal lanes.
 - [ ] Run the controlled P.I.T. recovery job, review its real three-proof

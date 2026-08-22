@@ -1,11 +1,27 @@
 # Site Studio Proof Integration
 
-## Orchestration direction
+## Compatibility notice — canonical runner is not yet installed in Site Studio
 
-The current proof dispatch/callback contract remains the proven integration
-boundary. The planned provider-neutral specialist-agent system that prepares
-research, recommendations, add-ons, contracts, prototypes, QA, and evidence is
-defined in `docs/architecture/SHAY_WEBSITE_DELIVERY_SWARM.md`.
+The historic three-direction Studio endpoint described below is a **legacy
+integration**, not a compatible implementation of the current
+`website_proof.generate.v1` runner contract. As inspected on 2026-08-22, it
+accepts only three fixed directions and emits a legacy callback that lacks the
+preflight `build_id`/contract hash, per-variant artifact SHA-256 values, final
+Build DNA, browser-QA evidence, and independent visual-review decision.
+
+Do not route a new public, detailed six-proof, or selected-direction revision
+job through that endpoint. The canonical Drupal verifier will correctly reject
+it. A future Studio adapter must preserve the signed source-bound envelope,
+support declared 3/6/1 profiles, and return the complete callback contract in
+`docs/architecture/PROOF_RUNNER_CONTRACT_V1.md` before a provider URL and HMAC
+secrets are configured in production.
+
+## Legacy orchestration direction
+
+The historic proof dispatch/callback contract remains available only for legacy
+three-direction records. The provider-neutral specialist-agent system that
+prepares research, recommendations, add-ons, contracts, prototypes, QA, and
+evidence is defined in `docs/architecture/SHAY_WEBSITE_DELIVERY_SWARM.md`.
 
 Shay will orchestrate versioned routines and bounded specialist agents rather
 than acting as one all-purpose model. The future `website_build_brief.v2`
