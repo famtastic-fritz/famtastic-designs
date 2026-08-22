@@ -584,6 +584,8 @@ final class CustomerPortalService {
         'website_request_public_id' => $publicId,
         'website_discovery_v3' => $intake,
         'website_discovery_v2' => $intake,
+        'directions' => ProofCampaignService::CORE_DIRECTIONS,
+        'direction_contract' => ProofCampaignService::CORE_DIRECTION_CONTRACT,
       ],
       $prospectId,
     );
@@ -621,6 +623,8 @@ final class CustomerPortalService {
       'website_request_public_id' => (string) $row['public_id'],
       'website_discovery_v3' => $intake,
       'website_discovery_v2' => $intake,
+      'directions' => ProofCampaignService::CORE_DIRECTIONS,
+      'direction_contract' => ProofCampaignService::CORE_DIRECTION_CONTRACT,
     ];
   }
 
@@ -674,7 +678,7 @@ final class CustomerPortalService {
     sort($directions);
     $validSet = $directions === ['a', 'b', 'c'] || $directions === ['a', 'b', 'c', 'd', 'e', 'f'];
     if (!$validSet || $campaign->get('generation_status')->value !== 'ready') {
-      throw new \RuntimeException('A complete Safe/Wild/OMG set or six-direction showcase set is required.');
+      throw new \RuntimeException('A complete Safe, Medium FAMtastic, and Ultra FAMtastic set or six-direction refinement set is required.');
     }
     $campaignEntityId = (int) $campaign->id();
     $now = $this->time->getRequestTime();

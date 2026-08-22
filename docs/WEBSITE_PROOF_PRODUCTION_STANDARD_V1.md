@@ -17,7 +17,7 @@ The customer promise is simple:
 
 1. Register or use the public request path.
 2. Complete the website brief.
-3. Review three working concepts: Safe, Wild, and OMG.
+3. Review three working concepts: Safe, Medium FAMtastic, and Ultra FAMtastic.
    When explicitly commissioned, compare three additional maximum-FAMtastic
    concepts in the same private review, for six total.
 4. Select a direction and request refinements.
@@ -144,8 +144,8 @@ contracts, accessibility, risk, or approval.
 Every proof run returns exactly three genuinely different directions:
 
 - **Safe:** polished, familiar, credible, and low-risk;
-- **Wild:** expressive, energetic, and clearly differentiated;
-- **OMG:** the strongest campaign-level visual idea.
+- **Medium FAMtastic:** expressive, energetic, and clearly differentiated;
+- **Ultra FAMtastic:** the strongest campaign-level visual idea.
 
 Each direction includes:
 
@@ -163,15 +163,23 @@ The deterministic no-image renderer is not a customer-deliverable proof engine.
 When a qualified creative provider is unavailable, the run must wait in a
 visible exception state rather than generate low-quality substitutes.
 
+The stable integration identifiers are `a`, `b`, and `c`; the default labels
+above are generic. A creative title can appear only in that run's researched,
+recorded direction contract and Build DNA. A title from Shay, a prior client,
+or another proof run must never become a global default for a new client.
+
 ### Optional FAMtastic showcase pack
 
 An explicit owner or customer request may add exactly three further directions
-to an already complete Safe/Wild/OMG set. The result is six—not a replacement
-for the core three—and uses stable identifiers `d`, `e`, and `f`. These
+to an already complete Safe/Medium FAMtastic/Ultra FAMtastic set. The result is
+six—not a replacement for the core three—and uses stable identifiers `d`, `e`,
+and `f`. These
 directions must be original working sites at the requested high creative
 intensity, satisfy the same responsive and evidence contract, and remain behind
 the same owner approval gate. One showcase callback may add only `d/e/f`; it
 may not overwrite `a/b/c` or expose anything to the customer automatically.
+Until a run's research and creative-direction stage records a more specific
+title, `d/e/f` use generic Ultra FAMtastic Direction 2/3/4 labels.
 
 ## Engine and agent boundaries
 
@@ -207,8 +215,9 @@ creative-director result is:
   "agent": "creative_director",
   "routine_version": "1.0.0",
   "website_request_id": "request-uuid",
-  "direction": "omg",
-  "concept_name": "Crown in Motion",
+  "direction_id": "c",
+  "direction_label": "Ultra FAMtastic",
+  "concept_name": "Per-run recorded concept name",
   "visual_strategy": "customer-specific strategy",
   "image_prompts": [],
   "required_sections": [],
@@ -372,9 +381,9 @@ proof-runs/{website-request-id}/{run-id}/
 ├── research.json
 ├── approved-brief.json
 ├── agent-ledger.json
-├── direction-safe/
-├── direction-wild/
-├── direction-omg/
+├── direction-a-safe/
+├── direction-b-medium-famtastic/
+├── direction-c-ultra-famtastic/
 ├── screenshots/
 ├── quality-report.json
 ├── approval-record.json
@@ -408,7 +417,7 @@ The production journey is releasable only when all of the following are true:
 4. Stale worker state and notification backlog are visible to administrators.
 5. The intake persists creative intensity, colors, avoidance, references,
    uploads, and AI consent with the declared schema version.
-6. Exactly three Safe/Wild/OMG proofs enter owner review and remain
+6. Exactly three Safe/Medium FAMtastic/Ultra FAMtastic proofs enter owner review and remain
    customer-hidden; an explicitly requested showcase adds exactly d/e/f and
    keeps all six customer-hidden until a new owner approval.
 7. Owner approval reveals proofs and queues one account notification.

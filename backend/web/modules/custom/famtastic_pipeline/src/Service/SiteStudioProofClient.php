@@ -40,18 +40,37 @@ final class SiteStudioProofClient {
     }
     $callbackBase = rtrim((string) (getenv('FAMTASTIC_PUBLIC_BASE_URL') ?: $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')), '/');
     $directions = (array) ($context['directions'] ?? ProofCampaignService::CORE_DIRECTIONS);
-    $directionContract = (array) ($context['direction_contract'] ?? [
-      'a' => ['name' => 'Safe', 'intent' => 'polished, familiar, credible, low-risk'],
-      'b' => ['name' => 'Wild', 'intent' => 'expressive, energetic, clearly differentiated'],
-      'c' => ['name' => 'OMG', 'intent' => 'campaign-level concept with the strongest visual idea'],
-    ]);
+    $directionContract = (array) ($context['direction_contract'] ?? ProofCampaignService::CORE_DIRECTION_CONTRACT);
     $directionIds = array_keys($directions);
     sort($directionIds);
     $contractIds = array_keys($directionContract);
     sort($contractIds);
-    if (count($directions) !== 3 || $directionIds !== $contractIds) {
-      throw new \InvalidArgumentException('A Site Studio proof dispatch requires exactly three contracted directions.');
+    $allowedDirectionSets = [
+      array_keys(ProofCampaignService::CORE_DIRECTIONS),
+      array_keys(ProofCampaignService::SHOWCASE_DIRECTIONS),
+    ];
+    if (count($directions) !== 3 || $directionIds !== $contractIds || !in_array($directionIds, $allowedDirectionSets, TRUE)) {
+      throw new \InvalidArgumentException('A Site Studio proof dispatch requires exactly the contracted a/b/c or d/e/f direction set.');
     }
+    $resolvedDirections = [];
+    foreach ($directionContract as $directionId => $contract) {
+      if (!is_array($contract)) {
+        throw new \InvalidArgumentException('Each Site Studio direction contract must be an object.');
+      }
+      $name = mb_substr(trim(strip_tags((string) ($contract['name'] ?? ''))), 0, 255);
+      $intent = mb_substr(trim(strip_tags((string) ($contract['intent'] ?? ''))), 0, 1000);
+      if ($name === '' || $intent === '') {
+        throw new \InvalidArgumentException('Each Site Studio direction contract requires a name and intent.');
+      }
+      // The contract, rather than an unrelated global fallback label, is the
+      // only source for the direction names that leave this dispatch boundary.
+      $directionContract[$directionId]['name'] = $name;
+      $directionContract[$directionId]['intent'] = $intent;
+      $resolvedDirections[$directionId] = $name;
+    }
+    ksort($directionContract);
+    ksort($resolvedDirections);
+    $directions = $resolvedDirections;
     $payload = [
       'schema_version' => 2,
       'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1'),

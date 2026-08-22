@@ -30,8 +30,8 @@ new purchases. Stripe holds payment credentials; Drupal must not store cards.
    - ecommerce, membership, custom integrations, regulated work, or more than
      five pages: staff scope review.
 4. `website_proof.generate.v1` produces exactly three working directions named
-   Safe, Wild, and OMG. Customer requests stop at an owner review gate before
-   any proof-ready email or account disclosure.
+   Safe, Medium FAMtastic, and Ultra FAMtastic. Customer requests stop at an
+   owner review gate before any proof-ready email or account disclosure.
    An explicit showcase request may append exactly three maximum-FAMtastic
    directions (`d/e/f`) to that complete core set. The six-direction result
    returns to owner review and must not trigger customer delivery by itself.

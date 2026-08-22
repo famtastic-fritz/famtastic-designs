@@ -16,15 +16,10 @@ use Drupal\famtastic_pipeline\Entity\Prospect;
  * Owns public-lead concept-room delivery without becoming a second CRM.
  *
  * A delivery is deliberately inert until an owner stages a complete, audited
- * Safe/Wild/OMG campaign and explicitly approves its one transactional email.
+ * Safe/Medium FAMtastic/Ultra FAMtastic campaign and explicitly approves its
+ * one transactional email.
  */
 final class PublicPreviewDeliveryService {
-
-  private const PUBLIC_DIRECTION_NAMES = [
-    'a' => 'Safe',
-    'b' => 'Medium FAMtastic',
-    'c' => 'Ultra FAMtastic',
-  ];
 
   private const STATES_VISIBLE_TO_HOLDER = [
     'share_enabled', 'email_queued', 'email_accepted', 'concept_room_viewed',
@@ -124,13 +119,18 @@ final class PublicPreviewDeliveryService {
         'delivery_class' => 'public_initial',
         'proof_count' => 3,
         'proof_mix' => ['safe', 'medium_famtastic', 'ultra_famtastic'],
+        'directions' => ProofCampaignService::CORE_DIRECTIONS,
+        'direction_contract' => ProofCampaignService::CORE_DIRECTION_CONTRACT,
         'public_preview_delivery_id' => $deliveryId,
         'prospect_id' => (int) $row['prospect_id'],
         'intake_id' => (int) ($row['intake_id'] ?? 0),
       ],
       (int) $row['prospect_id'],
     );
-    $this->event($row, 'preview.proof_generation_queued', ['proof_count' => 3]);
+    $this->event($row, 'preview.proof_generation_queued', [
+      'proof_count' => 3,
+      'direction_ids' => array_keys(ProofCampaignService::CORE_DIRECTION_CONTRACT),
+    ]);
   }
 
   /**
@@ -301,7 +301,7 @@ final class PublicPreviewDeliveryService {
       'registration_url' => $this->registrationUrl((string) $row['public_id']),
       'variants' => array_map(fn ($variant): array => [
         'direction_id' => (string) $variant->get('direction_id')->value,
-        'direction_name' => self::PUBLIC_DIRECTION_NAMES[(string) $variant->get('direction_id')->value] ?? (string) $variant->get('direction_name')->value,
+        'direction_name' => ProofCampaignService::CORE_DIRECTIONS[(string) $variant->get('direction_id')->value] ?? (string) $variant->get('direction_name')->value,
         'preview_url' => $this->publicPreviewUrl((string) $row['public_id'], $signature, (string) $variant->get('direction_id')->value),
       ], $variants),
     ];
@@ -413,7 +413,7 @@ final class PublicPreviewDeliveryService {
     $directions = array_map(static fn ($variant): string => (string) $variant->get('direction_id')->value, $this->variants($campaignId));
     sort($directions);
     if ($directions !== ['a', 'b', 'c']) {
-      throw new \RuntimeException('Public concept rooms require exactly the Safe, Wild, and OMG proof set.');
+      throw new \RuntimeException('Public concept rooms require exactly the Safe, Medium FAMtastic, and Ultra FAMtastic proof set.');
     }
   }
 

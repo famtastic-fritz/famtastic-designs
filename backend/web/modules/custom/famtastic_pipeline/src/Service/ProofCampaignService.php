@@ -26,27 +26,71 @@ use Psr\Log\LoggerInterface;
 class ProofCampaignService {
 
   /**
-   * Direction id => human-facing direction name.
+   * Stable direction ids => generic fallback labels.
+   *
+   * These labels deliberately contain no client, staff, or Shay-specific
+   * branding. A provider may return a researched, per-run direction name in
+   * the run's Build DNA, but no such name is a global pipeline default.
    */
   public const DIRECTIONS = [
     'a' => 'Safe',
-    'b' => 'Wild',
-    'c' => 'OMG',
-    'd' => 'Royal Current',
-    'e' => 'Crownverse',
-    'f' => 'Shay Live',
+    'b' => 'Medium FAMtastic',
+    'c' => 'Ultra FAMtastic',
+    'd' => 'Ultra FAMtastic · Direction 2',
+    'e' => 'Ultra FAMtastic · Direction 3',
+    'f' => 'Ultra FAMtastic · Direction 4',
   ];
 
   public const CORE_DIRECTIONS = [
     'a' => 'Safe',
-    'b' => 'Wild',
-    'c' => 'OMG',
+    'b' => 'Medium FAMtastic',
+    'c' => 'Ultra FAMtastic',
   ];
 
   public const SHOWCASE_DIRECTIONS = [
-    'd' => 'Royal Current',
-    'e' => 'Crownverse',
-    'f' => 'Shay Live',
+    'd' => 'Ultra FAMtastic · Direction 2',
+    'e' => 'Ultra FAMtastic · Direction 3',
+    'f' => 'Ultra FAMtastic · Direction 4',
+  ];
+
+  /**
+   * Generic initial-proof contract sent on every three-direction dispatch.
+   *
+   * Stable ids are the integration contract. The name and intent may be
+   * replaced only by a researched, recorded per-run contract—not by a global
+   * creative label from an unrelated client proof.
+   */
+  public const CORE_DIRECTION_CONTRACT = [
+    'a' => [
+      'name' => 'Safe',
+      'intent' => 'polished, familiar, credible, and low-risk',
+    ],
+    'b' => [
+      'name' => 'Medium FAMtastic',
+      'intent' => 'expressive, energetic, and clearly differentiated',
+    ],
+    'c' => [
+      'name' => 'Ultra FAMtastic',
+      'intent' => 'the strongest campaign-level visual idea',
+    ],
+  ];
+
+  /**
+   * Generic remaining directions for the six-direction refinement.
+   */
+  public const SHOWCASE_DIRECTION_CONTRACT = [
+    'd' => [
+      'name' => 'Ultra FAMtastic · Direction 2',
+      'intent' => 'a second maximum-FAMtastic direction with a distinct visual system and conversion path',
+    ],
+    'e' => [
+      'name' => 'Ultra FAMtastic · Direction 3',
+      'intent' => 'a third maximum-FAMtastic direction with a distinct visual system and conversion path',
+    ],
+    'f' => [
+      'name' => 'Ultra FAMtastic · Direction 4',
+      'intent' => 'a fourth maximum-FAMtastic direction with a distinct visual system and conversion path',
+    ],
   ];
 
   /**
@@ -84,6 +128,13 @@ class ProofCampaignService {
    * @return array{campaign:\Drupal\famtastic_pipeline\Entity\ProofCampaign,variants:\Drupal\famtastic_pipeline\Entity\ProofVariant[]}
    */
   public function createForProspect(Prospect $prospect, array $context = []): array {
+    // A direction contract is data for this run. These generic defaults keep
+    // public initial dispatches aligned with the customer-facing promise while
+    // allowing a later research stage to provide a recorded per-run contract.
+    $context += [
+      'directions' => self::CORE_DIRECTIONS,
+      'direction_contract' => self::CORE_DIRECTION_CONTRACT,
+    ];
     $businessName = (string) ($prospect->get('business_name')->value ?: 'Your Business');
     $campaignId = $this->buildCampaignId($businessName);
     $now = $this->time->getRequestTime();
@@ -269,7 +320,7 @@ class ProofCampaignService {
     $directions = array_map(static fn(ProofVariant $variant): string => (string) $variant->get('direction_id')->value, $variants);
     sort($directions);
     if ($directions !== array_keys(self::CORE_DIRECTIONS)) {
-      throw new \RuntimeException('The showcase expansion requires exactly the original Safe, Wild, and OMG set.');
+      throw new \RuntimeException('The showcase expansion requires exactly the original Safe, Medium FAMtastic, and Ultra FAMtastic set.');
     }
     $jobId = (string) $campaign->get('studio_job_id')->value;
     $alreadyDispatched = $request['proof_review_status'] === 'showcase_building';
@@ -294,11 +345,7 @@ class ProofCampaignService {
         'routine' => 'website_proof.showcase.v1',
         'idempotency_key' => 'proof-showcase:' . $campaign->get('campaign_id')->value . ':' . $requestId,
         'directions' => self::SHOWCASE_DIRECTIONS,
-        'direction_contract' => [
-          'd' => ['name' => 'Ultra FAMtastic — Signature', 'intent' => 'a bold, client-specific flagship expression'],
-          'e' => ['name' => 'Ultra FAMtastic — Storyworld', 'intent' => 'an immersive visual world with a distinct narrative system'],
-          'f' => ['name' => 'Ultra FAMtastic — Future', 'intent' => 'the most expressive, motion-ready campaign-level direction'],
-        ],
+        'direction_contract' => self::SHOWCASE_DIRECTION_CONTRACT,
         'website_request_public_id' => (string) $request['public_id'],
         'website_discovery_v2' => is_array($intake) ? $intake : [],
         'website_discovery_v3' => is_array($intake) ? $intake : [],
@@ -400,7 +447,7 @@ class ProofCampaignService {
       $currentDirections = array_map(static fn(ProofVariant $variant): string => (string) $variant->get('direction_id')->value, $currentVariants);
       sort($currentDirections);
       if (!$request || $request['proof_review_status'] !== 'showcase_building' || (int) $request['proof_campaign_id'] !== (int) $campaign->id() || $currentDirections !== array_keys(self::CORE_DIRECTIONS)) {
-        throw new \InvalidArgumentException('A showcase expansion requires one matching account-owned Safe, Wild, and OMG set.');
+        throw new \InvalidArgumentException('A showcase expansion requires one matching account-owned Safe, Medium FAMtastic, and Ultra FAMtastic set.');
       }
     }
     if ($isRefresh) {
@@ -679,7 +726,8 @@ class ProofCampaignService {
       'type' => 'proof_campaign',
       'campaign_id' => $campaign->get('campaign_id')->value,
       'studio_url' => $studioUrl,
-      'directions' => self::DIRECTIONS,
+      'directions' => self::CORE_DIRECTIONS,
+      'direction_contract' => self::CORE_DIRECTION_CONTRACT,
       'output_dir' => 'web/proofs/' . $campaign->get('campaign_id')->value . '/',
     ];
     $brief = sprintf(

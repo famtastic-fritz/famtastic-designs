@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\famtastic_pipeline\Drush\Commands;
 
 use Drupal\famtastic_pipeline\Entity\Prospect;
+use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drush\Attributes as CLI;
 use Drush\Commands\DrushCommands;
 
@@ -189,7 +190,7 @@ class PipelineCommands extends DrushCommands {
       'campaign_id' => (string) $campaign->get('campaign_id')->value,
       'job_id' => (string) $campaign->get('studio_job_id')->value,
       'request_location' => (string) ($request['handoff']['location'] ?? ''),
-      'required_directions' => ['a', 'b', 'c'],
+      'required_directions' => ProofCampaignService::CORE_DIRECTION_CONTRACT,
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     $this->logger()->success('Local Site Studio handoff exported.');
     return self::EXIT_SUCCESS;
@@ -257,11 +258,7 @@ class PipelineCommands extends DrushCommands {
       'job_id' => (string) $campaign->get('studio_job_id')->value,
       'website_discovery_v3' => $context['website_discovery_v3'],
       'reference_assets' => $assetManifest,
-      'required_directions' => [
-        'a' => ['name' => 'Safe'],
-        'b' => ['name' => 'Wild'],
-        'c' => ['name' => 'OMG'],
-      ],
+      'required_directions' => ProofCampaignService::CORE_DIRECTION_CONTRACT,
       'customer_delivery_authorized' => FALSE,
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     $this->logger()->success('Account-owned website proof handoff exported; customer delivery remains locked.');
@@ -306,11 +303,7 @@ class PipelineCommands extends DrushCommands {
       'campaign_id' => (string) $campaign->get('campaign_id')->value,
       'job_id' => (string) $campaign->get('studio_job_id')->value,
       'website_discovery_v3' => $context['website_discovery_v3'],
-      'required_directions' => [
-        'd' => ['name' => 'Royal Current'],
-        'e' => ['name' => 'Crownverse'],
-        'f' => ['name' => 'Shay Live'],
-      ],
+      'required_directions' => ProofCampaignService::SHOWCASE_DIRECTION_CONTRACT,
       'resulting_direction_count' => 6,
       'customer_delivery_authorized' => FALSE,
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));

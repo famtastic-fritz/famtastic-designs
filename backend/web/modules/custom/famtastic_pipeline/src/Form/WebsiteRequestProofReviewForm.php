@@ -57,7 +57,7 @@ final class WebsiteRequestProofReviewForm extends FormBase {
     }
     $proofCount = count($items);
     $complete = in_array($proofCount, [3, 6], TRUE);
-    $proofTitle = $proofCount === 6 ? $this->t('Six working website concepts') : $this->t('Safe, Wild, and OMG');
+    $proofTitle = $proofCount === 6 ? $this->t('Six working website concepts') : $this->t('Safe, Medium FAMtastic, and Ultra FAMtastic');
     $form['proofs'] = ['#theme' => 'item_list', '#title' => $proofTitle, '#items' => $items, '#empty' => $this->t('No complete proof set is attached yet.')];
     $notification = $campaignId && $complete ? $this->database->select('famtastic_notification_outbox', 'n')->fields('n')->condition('notification_key', 'website-request:' . $website_request . ':proofs:' . $campaignId . ':' . $proofCount)->execute()->fetchAssoc() : NULL;
     $form['delivery'] = ['#type' => 'item', '#title' => $this->t('Customer delivery'), '#markup' => '<p>' . ($notification ? 'Notification status: <strong>' . htmlspecialchars((string) $notification['status']) . '</strong>' : '<strong>Not queued.</strong> The customer has not been sent these proofs.') . '</p>'];
