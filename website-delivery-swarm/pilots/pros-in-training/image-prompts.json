@@ -1,0 +1,19 @@
+{
+  "image_prompts": [
+    {
+      "direction_id": "a",
+      "filename": "direction-a-safe.png",
+      "prompt": "Original 16:9 editorial documentary photograph for a fictional Atlanta workforce-development organization called P.I.T. / Pros In Training. A confident Black woman facilitator in her late thirties stands beside a small mixed-gender group of ambitious Black and Latino young professionals in a bright modern training room. They are gathered around a large blank whiteboard and a laptop, visibly collaborating on career plans; authentic attentive expressions, premium natural window light, rich navy, warm terracotta and cream accents in clothing and room materials, refined public-service annual-report visual language, 35mm photography, lifelike skin, fabric and wood texture. Compose people on the right two-thirds and preserve clean softly lit negative space on the left for website typography. No text, letters, logos, signage, watermarks, badges, uniforms, celebrity, distorted hands, or stock-photo posing."
+    },
+    {
+      "direction_id": "b",
+      "filename": "direction-b-medium.png",
+      "prompt": "Original 16:9 cinematic editorial photograph for a fictional Atlanta workforce-development collective called P.I.T. / Pros In Training. Three stylish Black and Latino emerging professionals, early twenties, step out of a downtown Atlanta transit station at blue hour with purposeful movement, one carries a plain notebook, one gestures toward the skyline, one looks at a phone map; rain-dark sidewalk reflecting cobalt blue, neon coral, warm gold and city glass. The mood is forward motion, mentorship, career confidence, and a new generation building opportunity—not corporate stock photography. Wide lens, dramatic perspective, richly detailed street textures, believable anatomy and faces. Leave deep shadowed negative space on the left for large typography. No readable text, logos, transit brands, university marks, watermarks, celebrities, political imagery, or distorted hands."
+    },
+    {
+      "direction_id": "c",
+      "filename": "direction-c-ultra.png",
+      "prompt": "Original 16:9 campaign-level cinematic photograph for a fictional Atlanta workforce-development experience called P.I.T. / Pros In Training. At night on an elevated rooftop above a generic Atlanta skyline, a diverse group of seven Black and Latino young adults and one mentor form an energetic circle around a glowing abstract blue-and-amber light table displaying no words or numbers. Their outfits are contemporary, tailored, expressive and individually styled in electric cobalt, saffron, cream and charcoal; wind catches fabric and the skyline becomes a field of soft bokeh. The feeling is a launch night for future leaders: bold, joyful, aspirational, grounded and real. Low camera angle, high contrast, cinematic haze, highly realistic faces, hands, clothing, metal and wet rooftop textures. Reserve a dark clean area in upper-left for oversized website lettering. No text, letters, logos, branded buildings, official marks, watermark, celebrity, sci-fi costume, distorted hands, or propaganda."
+    }
+  ]
+}
