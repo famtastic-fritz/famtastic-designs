@@ -29,19 +29,26 @@ new purchases. Stripe holds payment credentials; Drupal must not store cards.
    - defined business site up to five pages: `FAM-BUSINESS-499`;
    - ecommerce, membership, custom integrations, regulated work, or more than
      five pages: staff scope review.
-4. A direct registered request uses `website_proof.generate.v1` to produce
-   exactly three working directions named Safe, Medium FAMtastic, and Ultra
-   FAMtastic. Customer requests stop at an owner review gate before any
-   proof-ready email or account disclosure. A public lead first receives its
-   own immutable public `a/b/c` history. After a verified same-email claim and
-   detailed portal intake, the only new detailed-proof path is
-   `proof.refined.generate` with `portal_refined_six.v1`: a fresh, separate
-   `a`–`f` campaign (one Normal, one Medium FAMtastic, four Ultra FAMtastic)
-   bound to the exact public delivery, its completed Build DNA, frozen detailed
-   intake, and consent-filtered asset manifest. It returns to owner review and
-   must not trigger customer delivery by itself. The older append-only
-   `portal_showcase.v1` `d/e/f` flow remains readable for historical runs only;
-   no new public-lead continuation or detailed request may use it.
+4. Before any proof job is created, FAMtastic selects a named, versioned
+   proof-package profile. Its exact direction contract, mix, labels, access,
+   owner-review behavior, and email behavior are frozen in Build DNA for that
+   run; they are never inferred from login state or hard-coded in a UI/email
+   fallback. The default unregistered public package is exactly three working
+   directions: Safe, Medium FAMtastic, and Ultra FAMtastic. The default
+   verified, detailed portal package is up to six directions (one Normal, one
+   Medium FAMtastic, four Ultra FAMtastic). A selected-direction revision is
+   exactly one durable replacement candidate. If the selected package is not
+   supported by the installed runner/verifier, fail visibly rather than pad,
+   truncate, append, or silently substitute a proof set. Customer requests stop
+   at an owner review gate before any proof-ready email or account disclosure.
+   A public lead first receives its own immutable public history. After a
+   verified same-email claim and detailed portal intake, the new detailed-proof
+   path is `proof.refined.generate`, a fresh campaign bound to the exact public
+   delivery, completed Build DNA, frozen detailed intake, and consent-filtered
+   asset manifest. It returns to owner review and must not trigger customer
+   delivery by itself. The older append-only `portal_showcase.v1` `d/e/f` flow
+   remains readable for historical runs only; no new public-lead continuation
+   or detailed request may use it.
 5. The customer selects an owner-approved direction before checkout. Staff may
    override the package and create a one-account, one-request private offer.
    Never implement a private price as a public/shareable coupon.
@@ -75,6 +82,12 @@ that packet and later returns `site-studio.build-success.v1`; it never
 generates/stores/shares a preview, sends preview email, or owns a customer
 request or project. The full boundary and no-Studio-exposure release checklist
 are in `docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
+
+For startup orientation, proof-package defaults, and the existing
+FAMtastic-owned compatibility promotion route, use
+`docs/architecture/FAMTASTIC_PREVIEW_DELIVERY_OPERATING_ROUTINE_V1.md`. The
+compatibility route's historical "Site Studio" wording does not grant Site
+Studio preview, artifact, share, email, or customer-state authority.
 
 - Gemini 3.7 Flash through the Antigravity desktop bridge is the preferred
   **reasoning, research, direction, copy, and prototype-construction** lane

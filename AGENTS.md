@@ -5,6 +5,10 @@
 - Read `docs/AGENT_OPERATING_CONTRACT.md` before product, customer, Commerce,
   intake, mail, proof, or deployment work. It applies equally to Codex, Claude,
   Shay, and every other CLI agent.
+- At the start of a new session that might touch a customer journey, run
+  `bash scripts/agent-startup-context.sh`. It is read-only and points to the
+  authoritative preview-delivery, package-profile, and evidence contracts; it
+  does not replace reading the relevant contract.
 - Use `docs/CAPABILITY_REGISTRY.md` to distinguish implemented, provider-proven,
   and production-proven capabilities.
 - FAMtastic Concierge is the customer-facing communications identity; FAMtastic
@@ -15,12 +19,17 @@
   them, or let an
   agent autonomously send, quote, grant, charge, purchase a domain, or deploy.
 - For every public or portal preview, read
-  `docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`. FAMtastic
-  owns preview generation, FAMtastic-controlled artifact slots, share links,
-  owner review, outbox/email, and request/project truth. Site Studio receives
-  only a selected immutable build packet and later returns a build-success
-  packet; it is never a preview runner, preview host, or customer-delivery
-  surface.
+  `docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md` and
+  `docs/architecture/FAMTASTIC_PREVIEW_DELIVERY_OPERATING_ROUTINE_V1.md`.
+  FAMtastic owns preview generation, FAMtastic-controlled artifact slots,
+  share links, owner review, outbox/email, and request/project truth. Site
+  Studio receives only a selected immutable build packet and later returns a
+  build-success packet; it is never a preview runner, preview host, or
+  customer-delivery surface. The default public package is three directions;
+  the default verified, detailed package is up to six; and every count, mix,
+  label, visibility rule, and send behavior must come from the selected
+  versioned proof-package profile before dispatch. Never hard-code a package
+  count in a UI, email, or worker fallback.
 - For every creative proof, selected-direction refinement, campaign experience,
   or Site Studio-bound build, follow `docs/architecture/BUILD_DNA_STANDARD_V1.md`.
   Create and validate one `famtastic.build-dna.v1` record at run creation;

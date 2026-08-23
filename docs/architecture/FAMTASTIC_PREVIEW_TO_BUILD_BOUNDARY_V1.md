@@ -20,7 +20,7 @@ project source of truth.
 | Capability | FAMtastic Designs owns | Site Studio owns |
 | --- | --- | --- |
 | Intake and research | Normalized lead/portal intake, consent, source facts, research, direction contract | Nothing before a selected packet arrives |
-| Preview generation | `website_proof.generate.v1`, its provider routing, Build DNA, QA/review gates, and 3/6/1 direction contracts | Never generates a customer preview |
+| Preview generation | `website_proof.generate.v1`, its provider routing, Build DNA, QA/review gates, and the selected versioned direction contract (current defaults: public 3, detailed up to 6, revision 1) | Never generates a customer preview |
 | Preview artifacts and slots | `proof_campaign`, `proof_variant`, revision-artifact lineage, controlled filesystem/object storage, screenshots, hashes, and retention | May read the selected packet copies; it cannot become the authoritative preview store |
 | Preview access and delivery | Signed/unlisted concept rooms, authenticated portal previews, owner approval, transactional outbox/email, revocation, and same-email claim | Never hosts a proof room, sends proof mail, or advances a delivery state |
 | Customer and commercial truth | Prospect, intake, customer, request, project, selection, revision, package, terms, payment, and Operations records | Never sets commercial or customer state |
@@ -42,17 +42,20 @@ public or portal intake
   → FAMtastic project update and approved notification
 ```
 
-The public three-proof package, portal six-proof package, and selected-direction
-revision remain FAMtastic proof histories. They are not intermediate Site Studio
-jobs, and a Site Studio success result cannot rewrite them.
+The default public three-proof package, default detailed portal package of up to
+six proofs, and selected-direction revision remain FAMtastic proof histories.
+The exact count, mix, labels, access, and send behavior are selected from a
+versioned proof-package profile before dispatch and then frozen for that run.
+They are not intermediate Site Studio jobs, and a Site Studio success result
+cannot rewrite them.
 
 ## Provider routing rule
 
 The preview runner may use an internal FAMtastic worker or a declared
 FAMtastic-controlled provider adapter. It must meet
 `docs/architecture/PROOF_RUNNER_CONTRACT_V1.md`: actual provider preflight,
-source-bound Build DNA, exact 3/6/1 artifacts, browser QA, independent visual
-review, artifact hashes, and a verified completion receipt.
+source-bound Build DNA, the exact selected direction contract, browser QA,
+independent visual review, artifact hashes, and a verified completion receipt.
 
 `site_studio_dispatch`, `SITE_STUDIO_URL`, and the old
 `/api/pipeline/site-studio/callback` proof callback are **legacy preview
@@ -127,4 +130,6 @@ passes the checklist above.
 
 For the selected-build handoff contract, use
 `docs/architecture/GANDALF_FAMTASTIC_SITE_STUDIO_BRIDGE.md`. For public proof
-delivery, use `docs/architecture/PUBLIC_PREVIEW_DELIVERY_V1.md`.
+delivery, use `docs/architecture/PUBLIC_PREVIEW_DELIVERY_V1.md`. For
+cross-session startup and the production-compatible promotion distinction, use
+`docs/architecture/FAMTASTIC_PREVIEW_DELIVERY_OPERATING_ROUTINE_V1.md`.
