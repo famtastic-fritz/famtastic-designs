@@ -1,0 +1,11 @@
+#!/bin/sh
+# FAMtastic Designs commit-msg guardrails.
+# Soft check: AI attribution trailer reminder (does not block humans).
+set -u
+
+MSG_FILE="$1"
+if [ -f "$MSG_FILE" ] && ! grep -qi 'Co-Authored-By' "$MSG_FILE"; then
+  echo "NOTE: no Co-Authored-By trailer. AI-authored commits MUST include it." >&2
+fi
+
+exit 0

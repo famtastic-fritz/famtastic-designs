@@ -1,0 +1,12 @@
+#!/bin/sh
+# FAMtastic Designs pre-commit guardrails.
+# Hard block: generated output (frontend/dist) must never be committed.
+set -u
+
+if git diff --cached --name-only | grep -q '^frontend/dist/'; then
+  echo "COMMIT BLOCKED: frontend/dist is generated output." >&2
+  echo "Change frontend/src/, rebuild, and commit the SOURCE change only." >&2
+  exit 1
+fi
+
+exit 0

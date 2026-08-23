@@ -60,7 +60,7 @@ export default function ContactPage() {
               <ul className="v1-dot-list">
                 <li>You send the form, and your request is saved securely.</li>
                 <li>We reply within one business day with a scoped, fixed-price plan.</li>
-                <li>Every engagement starts with a $199 verified discovery build.</li>
+                <li>Focused one-page sites start at a $199 verified discovery build; defined business sites up to five pages at $499.</li>
               </ul>
             </div>
           </div>
