@@ -1,5 +1,22 @@
 # Product changelog
 
+## 2026-08-23 — Controlled P.I.T. three-proof delivery evidence
+
+- Completed one controlled legacy-compatible production delivery for P.I.T.:
+  FAMtastic stored exactly three static, view-only proof pages under campaign
+  `pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44` and recorded one
+  transactional outbox send (`public-proof:30:22:initial-v1`, outbox `#202`,
+  one attempt, SMTP provider message ID present). SMTP acceptance is not
+  represented as an inbox open, click, bounce, or customer decision.
+- The local bundle preserved Build DNA, prompt/model receipts, artifact hashes,
+  desktop/mobile QA, and a Gemini Flash Lite image cost estimate of `$0.1344`.
+  The generated pre-promotion Build DNA correctly remains labeled local; the
+  production import/outbox record is the separate post-promotion evidence.
+- This is a manual FAMtastic compatibility route, not certification of the new
+  signed public-preview, same-email claim, refined-six, revision, checkout, or
+  autonomous-runner lifecycle. Site Studio did not host the proofs or send the
+  email. The durable human/LLM record is the linked Drive delivery record.
+
 ## 2026-08-23 — Preview ownership boundary correction
 
 - Corrected the active architecture language: FAMtastic Designs owns preview

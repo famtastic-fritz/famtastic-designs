@@ -1,5 +1,25 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-23 — A real manual delivery is useful evidence, not a shortcut
+
+- P.I.T. proved a narrow production slice: a reviewed FAMtastic `a/b/c` static
+  bundle can be promoted to FAMtastic proof slots and emailed once through the
+  transactional outbox. Record the artifact hashes, QA, outbox key, attempts,
+  provider message ID, and duplicate-suppression action together; none of
+  these facts should be reconstructed from a chat.
+- The pre-promotion Build DNA must retain its local/gated classification even
+  after a later manual promotion. Pair it with the production import/outbox
+  receipt instead of rewriting it to claim production provider completion.
+- The deployed compatibility route is FAMtastic-owned despite old script
+  wording. It is `FAMtastic campaign → controlled local bundle → FAMtastic
+  proof-slot import → FAMtastic outbox`; Site Studio is neither the proof host
+  nor the sender.
+- Treat proof-package count and intensity mix as a named profile, frozen per
+  run: public/unregistered defaults to three, verified detailed intake defaults
+  to up to six, and a selected-direction revision is one. Never silently pad,
+  truncate, append, or recycle a package merely because an old adapter supports
+  a different count.
+
 ## 2026-08-23 — Preview ownership resides in FAMtastic, not Site Studio
 
 - FAMtastic owns preview generation, preview slots/artifacts, Build DNA, owner

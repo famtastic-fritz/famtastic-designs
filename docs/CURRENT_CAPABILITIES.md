@@ -109,7 +109,11 @@ FAMtastic Designs designs and engineers connected digital business systems that 
 
 - Create secure, expiring, revocable proof links and tailored demonstrations that help prospects see the proposed outcome before buying.
 - Track proof delivery, viewing, responses, revisions, approvals, conversion, and safe transition into permanent customer records.
-- **Maturity:** Demonstrated and operational.
+- **Maturity:** A controlled legacy three-proof FAMtastic delivery and
+  transactional outbox send are production-evidenced. The signed/revocable
+  room, same-email continuity, detailed six-proof refinement, revision,
+  checkout, and end-to-end autonomous lifecycle remain separate production
+  gates.
 
 ### 18. Hosting and domain lifecycle management
 

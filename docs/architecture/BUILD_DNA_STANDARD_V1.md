@@ -43,6 +43,21 @@ or rights-safe run records. It is never the source of truth for customer state,
 payment, credentials, private prompts containing customer secrets, or deployed
 artifact integrity.
 
+## Compatibility delivery evidence
+
+When a reviewed local bundle is deliberately imported through an older
+FAMtastic compatibility adapter, its Build DNA must keep its original execution
+classification. Do not revise a `locally_proven` pre-promotion manifest into a
+fictional provider-completed record just because a later owner manually
+promotes proof slots or sends an email. Instead, retain the original manifest
+and add a separate production delivery receipt containing the exact campaign,
+import result, artifact hashes, owner decision, outbox key/status/attempts, and
+provider message ID. The P.I.T. August 23 record is the first example.
+
+This evidence is sufficient to explain a controlled compatibility delivery. It
+does not satisfy the canonical signed preview-room, same-email claim,
+refined-six, independent provider callback, or checkout proof gates.
+
 ## Required fields
 
 ### Build level

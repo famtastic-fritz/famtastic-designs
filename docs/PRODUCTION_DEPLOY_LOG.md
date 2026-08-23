@@ -6,6 +6,38 @@
 > delivery; Site Studio receives selected build packets only. See
 > `architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
 
+## 2026-08-23 — P.I.T. controlled three-proof compatibility delivery
+
+- **Classification:** production evidence for one controlled legacy-compatible
+  `a/b/c` proof-slot import and transactional send; not a code deployment and
+  not an autonomous lifecycle certification.
+- **Campaign:** `pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44`
+- **Bundle/Build:** local bundle Build ID `pit-public-initial-three-20260823`;
+  manifest SHA-256
+  `7fbabde127e991f7a43060133e8ca1006dfe9714c3d77110057c1460fa65213e`.
+- **Proofs:** exactly Safe / Medium FAMtastic / Ultra FAMtastic; the three
+  imported proof URLs were verified HTTP 200 after promotion. Their source
+  HTML checksums are retained in the Build DNA record.
+- **Quality:** local pre-promotion QA recorded desktop `1440px` and mobile
+  `390px` captures, exact direction set, static active-content scan, portable
+  assets, and owner-review visual inspection. This does not turn local QA into
+  a production independent-review claim.
+- **Email:** FAMtastic transactional outbox `#202`, key
+  `public-proof:30:22:initial-v1`, recorded `sent` with `attempts=1` and a
+  nonempty SMTP provider message ID. The legacy outreach job was explicitly
+  marked superseded to prevent a duplicate. SMTP acceptance is not inbox/open/
+  click/bounce proof.
+- **Boundary:** FAMtastic stored/served the proofs and owned the outbox. Site
+  Studio was not exposed, used as a proof host, or granted email authority.
+- **Durable record:** [P.I.T. Proof Delivery Record & Lessons — 2026-08-23](https://docs.google.com/document/d/1FaD6KXj4LtN0Ma5BkFQ1nTXsPFyXgb-QlHcD6-XY8xA/edit)
+
+### Remaining gates
+
+The deployed legacy route does not prove the new signed/revocable public room,
+same-email claim, account-owned refined-six campaign, versioned revision
+delivery, payment/fulfillment, or a fully autonomous preview runner. Do not
+reuse this record as evidence for any of those gates.
+
 ## 2026-08-07 — Customer lifecycle portal and Commerce catalog
 
 - Repository/branch: `famtastic-fritz/famtastic-designs` / `main`

@@ -2,6 +2,14 @@
 
 This is the only supported pre-registration proof path for a FAMtastic Designs public lead. It is intentionally separate from marketing campaigns and from the account-owned proof-share feature.
 
+> **Compatibility evidence notice — 2026-08-23:** P.I.T. received a real,
+> controlled FAMtastic legacy `a/b/c` static-package promotion and one
+> transactional outbox send. That package was delivered by direct view-only
+> proof URLs, not by this signed/revocable public-preview delivery record. It
+> is useful production evidence for artifact import and email tracking, but it
+> does not certify this v1 contract's durable delivery, claim, refined-six, or
+> checkout behavior.
+
 ```text
 Public lead + intake
 → preview delivery (inert)

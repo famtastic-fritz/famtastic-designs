@@ -4,6 +4,20 @@
 
 Status: **active implementation plan** (August 22, 2026).
 
+### Controlled P.I.T. evidence update — August 23, 2026
+
+P.I.T. received one **manual compatibility** public package: exactly three
+direct, view-only static proofs and one recorded FAMtastic transactional-outbox
+send. The evidence is campaign
+`pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44`, local Build ID
+`pit-public-initial-three-20260823`, outbox key
+`public-proof:30:22:initial-v1`, and the Drive delivery record. It proves that
+FAMtastic can promote a reviewed `a/b/c` bundle into its artifact slots and
+send it once through the outbox. It does **not** complete any unchecked
+canonical-lifecycle gate below: it was not a signed/revocable preview delivery,
+did not prove same-email claim/history, detailed refined-six generation,
+revision candidate delivery, Stripe, or the autonomous runner.
+
 The old Solution Finder path called SMTP directly, then marked a lead
 `acknowledged`. That was not a delivery workflow: no durable message receipt,
 claimable request, proof job, owner proof-send gate, or account continuation
@@ -32,10 +46,12 @@ files. Customer emails, proof publication, offers, payment, and deployment
 each remain a human approval at the action boundary.
 
 P.I.T. recovery control: Prospect #30 / Intake #13 is the controlled first
-case. Use `drush famtastic:public-preview-prepare 30 --intake-id=13
---confirm=30` only after the deployed migration and source SHA are verified.
-That command creates no customer email; it only queues owner-visible proof
-work. The customer invitation is separately staged and approved in Operations.
+canonical case. A manual legacy-compatible `a/b/c` delivery occurred on August
+23 and must not be replayed or used as proof of the new path. Use
+`drush famtastic:public-preview-prepare 30 --intake-id=13 --confirm=30` only
+after the deployed migration and source SHA are verified. That command creates
+no customer email; it only queues owner-visible proof work. The customer
+invitation is separately staged and approved in Operations.
 
 ### Priority 0 implementation checklist — August 22, 2026
 
