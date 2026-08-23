@@ -15,6 +15,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\GoogleAnalyticsReportingService;
+use Drupal\famtastic_pipeline\Service\PostizChannelsService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -31,6 +32,7 @@ final class OperationsController extends ControllerBase {
     private readonly EntityTypeManagerInterface $pipelineEntityTypeManager,
     private readonly DateFormatterInterface $dateFormatter,
     private readonly GoogleAnalyticsReportingService $googleAnalytics,
+    private readonly PostizChannelsService $postizChannels,
   ) {}
 
   /**
@@ -42,6 +44,7 @@ final class OperationsController extends ControllerBase {
       $container->get('entity_type.manager'),
       $container->get('date.formatter'),
       $container->get('famtastic_pipeline.google_analytics_reporting'),
+      $container->get('famtastic_pipeline.postiz_channels'),
     );
   }
 
@@ -142,6 +145,7 @@ final class OperationsController extends ControllerBase {
     $socialSales = $socialEvents['sales'];
     $conversionRate = $socialVisits > 0 ? round(($socialLeads / $socialVisits) * 100, 1) . '%' : '—';
     $campaignDays = $this->fiftyFiveCentCampaignDays();
+    $channelCards = $this->channelHealthCards();
 
     $todayCards = [
       ['Planned moments', (string) $planned, '17 days × four distinct content moments', 'neutral'],
@@ -160,7 +164,7 @@ final class OperationsController extends ControllerBase {
       $attentionItems[] = ['Approve the first batch', 'Days 1–3 need content, media, and publish approval before scheduling.', 'Review calendar'];
     }
     if ($scheduled === 0) {
-      $attentionItems[] = ['Connect publishing channels', 'Facebook and Instagram OAuth are not yet represented by a verified provider event.', 'Connect Meta'];
+      $attentionItems[] = ['Queue and verify a provider event', 'Facebook is connected in Postiz; days 1–3 sit as drafts awaiting your queued-week review before any scheduling.', 'Review drafts'];
     }
     if ($failedSocial > 0) {
       $attentionItems[] = ['Resolve delivery failures', $failedSocial . ' social item(s) failed or remain unverified.', 'Open failures'];
@@ -198,6 +202,8 @@ final class OperationsController extends ControllerBase {
       ],
       'today_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Owner view</span><h2>Campaign pulse</h2></div><p>Provider and business outcomes update as verified events arrive.</p></div>'],
       'today' => $this->commandCards($todayCards),
+      'channels_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Publishing</span><h2>Channel health</h2></div><p>Live connection state per platform, read from the Postiz API.</p></div>'],
+      'channels' => $this->commandCards($channelCards),
       'attention_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Next actions</span><h2>Needs your attention</h2></div></div>'],
       'attention' => $this->attentionList($attentionItems),
       'calendar_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>17-day launch</span><h2>Content calendar</h2></div><p>Teach · Challenge · Prove · Invite every day, adapted per channel.</p></div>'],
@@ -245,6 +251,37 @@ final class OperationsController extends ControllerBase {
       $build['item_' . $index] = ['#markup' => '<article class="famtastic-command__pulse-card famtastic-command__pulse-card--' . Html::getClass($tone) . '"><span>' . Html::escape($label) . '</span><strong>' . Html::escape($value) . '</strong><p>' . Html::escape($detail) . '</p></article>'];
     }
     return $build;
+  }
+
+  /**
+   * Builds per-platform publishing channel cards from the Postiz API.
+   */
+  private function channelHealthCards(): array {
+    $snapshot = $this->postizChannels->channels();
+    if (!$snapshot['configured']) {
+      return [
+        ['Channel health', 'Not configured', 'Set FAMTASTIC_POSTIZ_API_KEY (settings or env) to show live channel state.', 'neutral'],
+      ];
+    }
+    if (!$snapshot['reachable']) {
+      return [
+        ['Channel health', 'Unreachable', $snapshot['error'] ?: 'Postiz API did not respond.', 'danger'],
+      ];
+    }
+    $toneByState = ['connected' => 'good', 'expiring' => 'attention', 'disabled' => 'attention', 'error' => 'danger'];
+    $cards = [];
+    foreach ($snapshot['platforms'] as $platform) {
+      $cards[] = [
+        ucfirst($platform['identifier']) . ' · ' . $platform['name'],
+        ucfirst($platform['state']),
+        $platform['detail'],
+        $toneByState[$platform['state']] ?? 'neutral',
+      ];
+    }
+    if ($cards === []) {
+      $cards[] = ['Channel health', 'No channels connected', 'Postiz is reachable but no platform OAuth has completed.', 'neutral'];
+    }
+    return $cards;
   }
 
   /** Builds the prioritized owner action queue. */

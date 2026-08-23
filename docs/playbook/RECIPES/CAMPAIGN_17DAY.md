@@ -171,3 +171,14 @@ Per SOCIAL_POSTING rules: every calendar day is currently **BLOCKED** (no asset)
 - 2026-08-23 — Step 1 audit created by Social Ops dispatch.
 - 2026-08-23 — Step 2 partial: days 1–3 re-cuts landed (24 variants); days 4–17 still MISSING.
 - 2026-08-23 — Postiz queue check (unattended run): days 1–3 assets verified on disk (24 variants, matches asset-map.days-1-3.json). Queuing in Postiz is BLOCKED on two Fritz-gated prerequisites, recorded honestly: (1) G2 — days 1–3 content/media approvals all false; (2) Meta OAuth never completed (provider app IDs empty in `~/.config/famtastic-marketing/postiz.env`; zero connected channels — Postiz cannot hold posts without an integration). Sequence when unblocked: Fritz approves days 1–3 → completes Meta OAuth per SOCIAL_AUTOMATION_HANDOFF steps 1–5 → Social Ops queues drafts with `FAMTASTIC_MARKETING_PUBLISH=false` (drafts only; publish remains a separate gate). No speculative tooling written for the unrunnable path.
+- 2026-08-23 (later, correction) — Fritz CORRECTED the earlier entry below: "zero connected channels / Meta OAuth never completed" was FALSE. Postiz `Integration` table (queried directly) shows one enabled channel: **FAMTastic Designs (facebook)**, token valid through 2026-10-10. Root cause of the bad claim: I read the stale repo env template (`~/.config/famtastic-marketing/postiz.env`) instead of the live container env/DB. G3's "no connected providers" is likewise stale as of today; its UTM `pending_channel` observation remains true for unqueued records only. CONSEQUENT STATE: days 1–3 are Tier-1 approved for DRAFT QUEUEING (Fritz); all 12 records now hold Postiz drafts (state=DRAFT, creationMethod=API), provider_ids + evidence recorded in manifest.json, channels=facebook, utm.source=facebook. Publish gate CLOSED until Fritz reviews a queued week (`FAMTASTIC_MARKETING_PUBLISH=false` unchanged). Receipts: `.artifacts/postiz-queue/1787523990/evidence.json` (+ posts-verify.json). providers.json postiz status updated to `connected_local_facebook`.
+
+## Postiz draft queue (days 1–3, Tier-1 approved 2026-08-23)
+
+| Day | content_ids | Postiz state | Draft IDs (manifest `provider_ids.postiz_draft_id`) |
+|---|---|---|---|
+| 1 (Aug 24) | teach/challenge/prove/invite | DRAFT ×4 | see manifest.json |
+| 2 (Aug 25) | teach/challenge/prove/invite | DRAFT ×4 | see manifest.json |
+| 3 (Aug 26) | teach/challenge/prove/invite | DRAFT ×4 | see manifest.json |
+
+Queue tool: `scripts/queue-55-cent-days-1-3-drafts.sh` (idempotent; reconciles prior partial runs by utm_content). Publish gate: **CLOSED** — Fritz reviews the queued week before any scheduling; `FAMTASTIC_MARKETING_PUBLISH=false` unchanged.

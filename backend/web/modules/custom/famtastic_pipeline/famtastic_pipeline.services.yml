@@ -122,3 +122,7 @@ services:
 
   famtastic_pipeline.support_intent_classifier:
     class: Drupal\famtastic_pipeline\Service\SupportIntentClassifier
+
+  famtastic_pipeline.postiz_channels:
+    class: Drupal\famtastic_pipeline\Service\PostizChannelsService
+    arguments: ['@http_client', '@datetime.time']
