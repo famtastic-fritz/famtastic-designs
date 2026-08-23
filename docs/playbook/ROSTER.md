@@ -11,12 +11,13 @@ Maintained by the CEO (`fam-ceo`). Every hire = an agent file in `.opencode/agen
 | Unification Engineer | `fam-unifier.md` | Drift audit + approved consolidation moves, verified by validators | Awaits auditor findings; then portal↔admin vocabulary parity | 2026-08-22 |
 | Social Ops agent | `fam-social-ops.md` | Owns SOCIAL_POSTING.md + CAMPAIGN_17DAY.md: manifest audit, gap fill, Postiz scheduling (gated), publish verification, attribution | SOCIAL_POSTING step 1 — day-by-day 17-day manifest audit → commit table to RECIPES/CAMPAIGN_17DAY.md | 2026-08-23 |
 | Dev (mail/notifications) | `fam-dev-mail.md` | Builds T1 Phase A visibility layer (A4–A6) + LEAD_TO_LAUNCH mail fixes; local-only, evidence-first | AUTONOMOUS_CUSTOMER_SERVICE A4–A6: replies list view, selection notifications, attention banner | 2026-08-23 |
+| Support Triage agent | `fam-support-triage.md` | Owns AUTONOMOUS_CUSTOMER_SERVICE Phase B: intent classification (B1), draft-only L0 queue (B2), SLAs (B4); never auto-sends — B3 is a Fritz gate | B1: documented classifier rules + labeled test-set evidence on ≥20 historical messages | 2026-08-23 |
 
 ## Vacancies (hire against real blocked steps)
 
 | Role to hire | Needed for | Hire when |
 |---|---|---|
-| Support Triage agent | Owns AUTONOMOUS_CUSTOMER_SERVICE Phase B; intent classification + draft queue + SLAs | Immediately after Phase A (A1–A3) passes |
+| ~~Support Triage agent~~ | — | HIRED 2026-08-23 → Active |
 | ~~Social Ops agent~~ | — | HIRED 2026-08-23 → Active |
 | Content Engine / CMO | Owns BLOG_FACTORY + campaign asset production (with HeyGen/Adobe pipelines) | Within week 1 |
 | Portfolio Manager | Owns PRODUCT_PIPELINE: catalog register, scoring, wave selection prep | Before first product wave |

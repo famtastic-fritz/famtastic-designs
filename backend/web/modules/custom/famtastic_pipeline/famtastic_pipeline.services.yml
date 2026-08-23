@@ -119,3 +119,6 @@ services:
   famtastic_pipeline.lifecycle_operations:
     class: Drupal\famtastic_pipeline\Service\LifecycleOperationsService
     arguments: ['@database', '@datetime.time', '@famtastic_pipeline.mailer', '@config.factory', '@file_system', '@famtastic_pipeline.automation_worker']
+
+  famtastic_pipeline.support_intent_classifier:
+    class: Drupal\famtastic_pipeline\Service\SupportIntentClassifier

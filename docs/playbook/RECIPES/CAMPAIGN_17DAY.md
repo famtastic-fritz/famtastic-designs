@@ -170,3 +170,4 @@ Per SOCIAL_POSTING rules: every calendar day is currently **BLOCKED** (no asset)
 
 - 2026-08-23 — Step 1 audit created by Social Ops dispatch.
 - 2026-08-23 — Step 2 partial: days 1–3 re-cuts landed (24 variants); days 4–17 still MISSING.
+- 2026-08-23 — Postiz queue check (unattended run): days 1–3 assets verified on disk (24 variants, matches asset-map.days-1-3.json). Queuing in Postiz is BLOCKED on two Fritz-gated prerequisites, recorded honestly: (1) G2 — days 1–3 content/media approvals all false; (2) Meta OAuth never completed (provider app IDs empty in `~/.config/famtastic-marketing/postiz.env`; zero connected channels — Postiz cannot hold posts without an integration). Sequence when unblocked: Fritz approves days 1–3 → completes Meta OAuth per SOCIAL_AUTOMATION_HANDOFF steps 1–5 → Social Ops queues drafts with `FAMTASTIC_MARKETING_PUBLISH=false` (drafts only; publish remains a separate gate). No speculative tooling written for the unrunnable path.
