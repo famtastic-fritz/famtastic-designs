@@ -39,23 +39,27 @@ Reference contracts applied: `docs/marketing/FAMTASTIC_MARKETING_FLOW_2026-08-12
 ## Day-by-day table
 
 Legend: Approvals c/m/p = content/media/publish (`✗`=false). Channels `—` = empty list.
-Provider IDs `—` = empty object. Every asset cell below is MISSING because no file anywhere
-in the repo carries the record's content_id (see search log above).
+Provider IDs `—` = empty object. Asset paths are relative to `marketing/campaigns/55-cents-17-day/`
+and map to both channel ratios via `asset-map.days-1-3.json`. Days 1–3 rows were filled by the
+Step 2 partial (2026-08-23): deterministic local re-cuts of approved seed creative
+(`scripts/build-55-cent-day-assets.py`, copy reused verbatim from
+`build-55-cent-social-assets.py`; no new claims/prices). Every remaining asset cell below is
+MISSING because no file anywhere in the repo carries that record's content_id.
 
 | Day | Moment | content_id | State | Channels | Asset (path or MISSING) | Approvals (c/m/p) | Provider IDs |
 |-----|--------|------------|-------|----------|-------------------------|-------------------|--------------|
-| 1 | teach (declaration) | 55c-d01-teach | idea | — | MISSING | ✗/✗/✗ | — |
-| 1 | challenge (declaration) | 55c-d01-challenge | idea | — | MISSING | ✗/✗/✗ | — |
-| 1 | prove (declaration) | 55c-d01-prove | idea | — | MISSING | ✗/✗/✗ | — |
-| 1 | invite (declaration) | 55c-d01-invite | idea | — | MISSING | ✗/✗/✗ | — |
-| 2 | teach (excuses) | 55c-d02-teach | idea | — | MISSING | ✗/✗/✗ | — |
-| 2 | challenge (excuses) | 55c-d02-challenge | idea | — | MISSING | ✗/✗/✗ | — |
-| 2 | prove (excuses) | 55c-d02-prove | idea | — | MISSING | ✗/✗/✗ | — |
-| 2 | invite (excuses) | 55c-d02-invite | idea | — | MISSING | ✗/✗/✗ | — |
-| 3 | teach (domain_basics) | 55c-d03-teach | idea | — | MISSING | ✗/✗/✗ | — |
-| 3 | challenge (domain_basics) | 55c-d03-challenge | idea | — | MISSING | ✗/✗/✗ | — |
-| 3 | prove (domain_basics) | 55c-d03-prove | idea | — | MISSING | ✗/✗/✗ | — |
-| 3 | invite (domain_basics) | 55c-d03-invite | idea | — | MISSING | ✗/✗/✗ | — |
+| 1 | teach (declaration) | 55c-d01-teach | media_ready | — | assets/55c-d01-teach.9x16.png · assets/55c-d01-teach.4x5.png | ✗/✗/✗ | — |
+| 1 | challenge (declaration) | 55c-d01-challenge | media_ready | — | assets/55c-d01-challenge.9x16.png · assets/55c-d01-challenge.4x5.png | ✗/✗/✗ | — |
+| 1 | prove (declaration) | 55c-d01-prove | media_ready | — | assets/55c-d01-prove.9x16.png · assets/55c-d01-prove.4x5.png | ✗/✗/✗ | — |
+| 1 | invite (declaration) | 55c-d01-invite | media_ready | — | assets/55c-d01-invite.9x16.png · assets/55c-d01-invite.4x5.png | ✗/✗/✗ | — |
+| 2 | teach (excuses) | 55c-d02-teach | media_ready | — | assets/55c-d02-teach.9x16.png · assets/55c-d02-teach.4x5.png | ✗/✗/✗ | — |
+| 2 | challenge (excuses) | 55c-d02-challenge | media_ready | — | assets/55c-d02-challenge.9x16.png · assets/55c-d02-challenge.4x5.png | ✗/✗/✗ | — |
+| 2 | prove (excuses) | 55c-d02-prove | media_ready | — | assets/55c-d02-prove.9x16.png · assets/55c-d02-prove.4x5.png | ✗/✗/✗ | — |
+| 2 | invite (excuses) | 55c-d02-invite | media_ready | — | assets/55c-d02-invite.9x16.png · assets/55c-d02-invite.4x5.png | ✗/✗/✗ | — |
+| 3 | teach (domain_basics) | 55c-d03-teach | media_ready | — | assets/55c-d03-teach.9x16.png · assets/55c-d03-teach.4x5.png | ✗/✗/✗ | — |
+| 3 | challenge (domain_basics) | 55c-d03-challenge | media_ready | — | assets/55c-d03-challenge.9x16.png · assets/55c-d03-challenge.4x5.png | ✗/✗/✗ | — |
+| 3 | prove (domain_basics) | 55c-d03-prove | media_ready | — | assets/55c-d03-prove.9x16.png · assets/55c-d03-prove.4x5.png | ✗/✗/✗ | — |
+| 3 | invite (domain_basics) | 55c-d03-invite | media_ready | — | assets/55c-d03-invite.9x16.png · assets/55c-d03-invite.4x5.png | ✗/✗/✗ | — |
 | 4 | teach (hosting_basics) | 55c-d04-teach | idea | — | MISSING | ✗/✗/✗ | — |
 | 4 | challenge (hosting_basics) | 55c-d04-challenge | idea | — | MISSING | ✗/✗/✗ | — |
 | 4 | prove (hosting_basics) | 55c-d04-prove | idea | — | MISSING | ✗/✗/✗ | — |
@@ -165,3 +169,4 @@ Per SOCIAL_POSTING rules: every calendar day is currently **BLOCKED** (no asset)
 ## Change log
 
 - 2026-08-23 — Step 1 audit created by Social Ops dispatch.
+- 2026-08-23 — Step 2 partial: days 1–3 re-cuts landed (24 variants); days 4–17 still MISSING.

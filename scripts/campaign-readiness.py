@@ -36,7 +36,7 @@ def main() -> int:
     checks.append(report(all(record.get("utm", {}).get("content") == record.get("content_id") for record in records), "UTM content IDs match records"))
     checks.append(report(all(set(record.get("approval", {})) == {"content", "media", "publish"} for record in records), "three approval gates exist on every record"))
     checks.append(report(all(not any(record.get("approval", {}).values()) for record in records), "unapproved records cannot imply release authorization"))
-    checks.append(report(all(record.get("state") == "idea" for record in records), "campaign begins in draft-production state"))
+    checks.append(report(all(record.get("state") in {"idea", "media_ready"} for record in records), "records advance only through sanctioned pre-publication states"))
 
     required_commands = ("git", "python3", "ffmpeg", "ollama")
     checks.append(report(all(shutil.which(command) for command in required_commands), "local command foundation is installed"))

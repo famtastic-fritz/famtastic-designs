@@ -15,7 +15,7 @@
       "intent": "education",
       "promise": "What 55 cents a day means",
       "suggested_time_et": "08:00",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -44,7 +44,7 @@
       "intent": "objection",
       "promise": "What 55 cents a day means",
       "suggested_time_et": "12:30",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -73,7 +73,7 @@
       "intent": "evidence",
       "promise": "What 55 cents a day means",
       "suggested_time_et": "17:30",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -102,7 +102,7 @@
       "intent": "cta",
       "promise": "What 55 cents a day means",
       "suggested_time_et": "20:30",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -131,7 +131,7 @@
       "intent": "education",
       "promise": "Why owners delay getting a website",
       "suggested_time_et": "08:00",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -160,7 +160,7 @@
       "intent": "objection",
       "promise": "Why owners delay getting a website",
       "suggested_time_et": "12:30",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -189,7 +189,7 @@
       "intent": "evidence",
       "promise": "Why owners delay getting a website",
       "suggested_time_et": "17:30",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -218,7 +218,7 @@
       "intent": "cta",
       "promise": "Why owners delay getting a website",
       "suggested_time_et": "20:30",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -247,7 +247,7 @@
       "intent": "education",
       "promise": "The difference between a domain, website, and hosting",
       "suggested_time_et": "08:00",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -276,7 +276,7 @@
       "intent": "objection",
       "promise": "The difference between a domain, website, and hosting",
       "suggested_time_et": "12:30",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -305,7 +305,7 @@
       "intent": "evidence",
       "promise": "The difference between a domain, website, and hosting",
       "suggested_time_et": "17:30",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
@@ -334,7 +334,7 @@
       "intent": "cta",
       "promise": "The difference between a domain, website, and hosting",
       "suggested_time_et": "20:30",
-      "state": "idea",
+      "state": "media_ready",
       "channels": [],
       "asset_variants": [
         "9x16",
