@@ -2,8 +2,9 @@
 
 ## Purpose
 
-Every creative proof, selected-direction refinement, and Site Studio-bound build
-gets one immutable **Build DNA** record. It answers, without guesswork:
+Every FAMtastic creative proof, selected-direction refinement, and Site
+Studio-bound selected build gets one immutable **Build DNA** record. It answers,
+without guesswork:
 
 - What request, recipe, build class, and design constraints produced this?
 - Which agent/task/tool did each stage, with which resolved provider and model?
@@ -11,8 +12,8 @@ gets one immutable **Build DNA** record. It answers, without guesswork:
   files prove it?
 - How long did each recorded stage take, what did it cost, which fallback or
   repair occurred, and who made the review decision?
-- What did FAMtastic pass to Site Studio, and what should Site Studio preserve
-  and return?
+- What did FAMtastic pass to Site Studio after selection, and what should Site
+  Studio preserve and return about its later build?
 
 It is observability and continuity—not a new creative engine and not permission
 to publish, charge, email, or replace Drupal/Site Studio truth.
@@ -35,7 +36,7 @@ The same immutable record has three retrieval surfaces:
 |---|---|---|
 | Filesystem / artifact package | Exact prompts, input/output evidence, media, screenshots, and hashes | `build-dna.json` next to the run evidence |
 | Drupal | Searchable project/request/build projection | `famtastic_build_run` row keyed as `build-dna:<build_id>` |
-| Site Studio handoff | Consistent proof-to-build context | `packet-files/build-dna.json` plus top-level `build_dna` pointer in the immutable build packet |
+| Site Studio handoff | Later selected-build context only | `packet-files/build-dna.json` plus top-level `build_dna` pointer in the immutable build packet |
 
 Google Drive is a human/LLM-readable mirror of selected standards and approved
 or rights-safe run records. It is never the source of truth for customer state,
@@ -83,13 +84,18 @@ capabilities.
 
 ## Site Studio boundary
 
-FAMtastic owns the Build DNA up to the immutable packet boundary. When a preview
-is handed over, copy `build-dna.json` into `packet-files/`, include the artifact
-hash and Build DNA ID in the packet's `build_dna` pointer, and retain the full
-FAMtastic stage ledger. Site Studio does not need a new engine: it receives the
-record as context, journals its own real stages, and returns its build ID,
-artifact hashes, timing, provider/model facts when exposed, warnings, and a
-Build DNA continuation reference in the signed success packet.
+FAMtastic owns the complete preview Build DNA, including the research,
+generation, artifact slots, screenshots, review, owner gate, share link, and
+outbox evidence. Only after a customer selects a direction does FAMtastic copy
+`build-dna.json` into `packet-files/`, include the artifact hash and Build DNA
+ID in the packet's `build_dna` pointer, and retain the full FAMtastic stage
+ledger. Site Studio does not need a new engine: it receives that selected-build
+context as read-only input, journals its own real build stages, and returns its
+build ID, artifact hashes, timing, provider/model facts when exposed, warnings,
+and a Build DNA continuation reference in the signed success packet.
+
+Site Studio must not create, host, mutate, or deliver FAMtastic preview Build
+DNA. See `docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
 
 The existing v1 packet is intentionally additive-compatible. New FAMtastic
 packets must include the pointer; legacy packets can be read but are visibly

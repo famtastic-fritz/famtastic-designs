@@ -4,6 +4,11 @@
 **Owner:** FAMtastic Designs
 **Goal:** One autonomous FAMtastic-side routine researches, creates, proves, and journals website previews; produces a portable build packet for Site Studio; validates Site Studio's signed success packet; then advances the owned project and queues the customer notification. Site Studio's build engine remains unchanged.
 
+**Boundary clarification:** FAMtastic owns preview generation, artifact slots,
+proof access, owner approval, email, and request/project truth. Site Studio
+only consumes a selected immutable build packet and later returns a build-success
+packet. See `FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
+
 ## Non-negotiable boundary
 
 FAMtastic owns intake, research, preview generation, commercial truth, selection, evidence, packet creation, customer/project ownership, notifications, approvals, and payment boundaries. Site Studio receives an immutable build packet and returns an immutable success packet. Neither repository silently reaches into the other's database or rewrites the other's engine.
@@ -60,7 +65,8 @@ FAMtastic owns intake, research, preview generation, commercial truth, selection
 
 - [x] Correlate packet, request, project, selection, and returned build IDs.
 - [x] Add Drupal registration for the exact outbound packet.
-- [x] Add signed success-packet ingestion to the existing Site Studio callback boundary.
+- [x] Add signed success-packet ingestion to the FAMtastic selected-build
+  callback boundary.
 - [x] Enforce project ownership through the existing customer-resource map.
 - [x] Update only the matching project, append portal activity, and queue one transactional notification idempotently.
 - [x] Preserve multiple projects per customer because every result is project-scoped.
@@ -96,7 +102,9 @@ The preview/build system is the production factory; the marketing system is a de
 - [x] Provide one command that runs the FAMtastic packet bridge three times from clean output directories.
 - [x] Verify signed success ingestion, tamper rejection, two-direction selection, journals, archives, and portal-event emission.
 - [x] Keep the Site Studio repository untouched.
-- [ ] Obtain a real Site Studio success packet for this schema.
+- [ ] Obtain a real Site Studio success packet for a selected immutable build
+  packet. This is separate from and must not block the FAMtastic preview-room
+  release.
 - [ ] Run the Drupal kernel/browser path with a real owned project and notification worker.
 - [ ] Run one fresh live-research, live-art, independently reviewed order without golden replay.
 - [ ] Deploy only from a clean, pushed SHA after production approval.

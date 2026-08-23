@@ -46,15 +46,18 @@ Keep all live-action gates disabled until their specific approval is granted.
 | Setting | Purpose | Safe pre-activation value |
 |---|---|---|
 | `FRONTEND_BASE_URL` | Customer return and portal links | `https://famtasticdesigns.com` |
-| `FAMTASTIC_PUBLIC_BASE_URL` | Public tracking and Site Studio callback base | `https://famtasticdesigns.com` |
+| `FAMTASTIC_PUBLIC_BASE_URL` | Public FAMtastic links, including signed concept rooms | `https://famtasticdesigns.com` |
 | `STRIPE_SECRET_KEY` | Stripe API; use test mode during verification | unset until approved |
 | `STRIPE_WEBHOOK_SECRET` | Stripe signature verification | required before Stripe activation |
 | `STRIPE_PRICE_ID_ESSENTIAL_199` | Authoritative $199 Checkout price | approved test/live Price ID |
 | `STRIPE_PRICE_ID_BUSINESS_499` | Authoritative $499 Checkout price | approved test/live Price ID |
 | `STRIPE_PRICE_ID_REVISION_ADDON_75` | Authoritative $75 revision price | approved test/live Price ID |
-| `SITE_STUDIO_URL` | Remote proof-job endpoint | approved HTTPS endpoint |
-| `SITE_STUDIO_DISPATCH_SECRET` | HMAC for outbound proof jobs | required for remote mode |
-| `SITE_STUDIO_CALLBACK_SECRET` | HMAC for proof callbacks | required for remote mode |
+| `proof_runner_transport` | FAMtastic preview-runner route | `disabled` until a compatible FAMtastic-controlled runner is approved |
+| `proof_runner_external_url` | FAMtastic-controlled preview-runner endpoint | unset until its real preflight is proven |
+| `FAMTASTIC_PROOF_RUNNER_SECRET` | HMAC for FAMtastic preview-runner dispatch | unset until the approved runner is configured |
+| `SITE_STUDIO_URL` | Retired preview-dispatch setting | **must remain unset** for preview delivery |
+| `SITE_STUDIO_DISPATCH_SECRET` | Retired preview-dispatch HMAC | **must remain unset** for preview delivery |
+| `SITE_STUDIO_CALLBACK_SECRET` | HMAC for a later selected-build success packet only | unset until the private build-packet return is approved |
 | `FAMTASTIC_EMAIL_TRANSPORT` | Outreach adapter | `disabled` |
 | `FAMTASTIC_EMAIL_WEBHOOK_SECRET` | Provider event HMAC | required before provider events |
 | `FAMTASTIC_ALLOW_REAL_OUTREACH` | Separate bulk-send gate | `false` |
@@ -75,6 +78,38 @@ Live recurring hosting remains intentionally unavailable until a separately
 reviewed provider adapter is implemented. The current code proves consent,
 scheduling, retry, cancellation, and suspension with the time-compressed
 `memory` adapter; it cannot charge a real renewal.
+
+## FAMtastic preview-path release — Site Studio remains private
+
+This is an additional release gate for public/portal previews. It must pass
+before an owner stages or approves a customer proof invitation.
+
+1. Confirm the deployment includes the preview-delivery, proof-variant, Build
+   DNA, and revision migrations, then verify them with Drupal after deploy.
+2. Configure a FAMtastic-controlled proof runner only. Leave
+   `site_studio_dispatch`, `SITE_STUDIO_URL`, and
+   `SITE_STUDIO_DISPATCH_SECRET` disabled/unset.
+3. Execute the runner's declared preflight and retain the real provider/model
+   receipt, fallback result, and Build DNA preflight. A desktop login or old
+   Studio fixture is not enough.
+4. Complete one controlled preview run and verify that FAMtastic—not Site
+   Studio—stores the HTML, screenshots, hashes, final Build DNA, browser QA,
+   and independent visual-review decision in its proof slots.
+5. Browser-test the FAMtastic owner review, signed concept room, unlisted
+   revocation, same-email claim, authenticated portal, selection, and revision
+   paths. Confirm no preview link points to Studio, localhost, or a workstation.
+6. Stage the FAMtastic transactional invitation and verify its frozen proof set
+   and outbox record. The named owner approval remains required before send.
+7. Confirm Site Studio has no public listener, no preview provider credential,
+   and no preview/campaign email authority. A selected-build packet handoff is
+   a later, separate private/offline gate.
+8. Record the exact `main` SHA, migration results, runner receipt, Build DNA,
+   browser evidence, owner approval, and delivery evidence in
+   `docs/PRODUCTION_DEPLOY_LOG.md`.
+
+Do not deploy a preview release that depends on Site Studio returning preview
+artifacts. The governing boundary is
+`docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
 
 ## Production-safe verification
 

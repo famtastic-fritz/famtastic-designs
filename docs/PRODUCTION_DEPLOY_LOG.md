@@ -1,5 +1,11 @@
 # Production Deploy Log
 
+> **Historical terminology notice:** Older entries may describe a Site Studio
+> proof bridge. They preserve the facts of those releases but are not the
+> current preview-release architecture. FAMtastic owns previews and their
+> delivery; Site Studio receives selected build packets only. See
+> `architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
+
 ## 2026-08-07 — Customer lifecycle portal and Commerce catalog
 
 - Repository/branch: `famtastic-fritz/famtastic-designs` / `main`

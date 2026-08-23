@@ -1,5 +1,11 @@
 # Chandler Lead Outreach Pilot — 2026-08-01
 
+> **Archived pilot boundary:** This record documents the retired Site Studio
+> preview bridge exactly as it was observed. It is not a current runbook or a
+> valid provider path for new previews. FAMtastic now owns preview generation,
+> slots, rooms, approval, and delivery; Site Studio receives selected build
+> packets only. See `../architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
+
 Status: **first production batch sent on 2026-08-02**
 
 Campaign key: `chandler-landing-pilot-2026-08-01-b1`

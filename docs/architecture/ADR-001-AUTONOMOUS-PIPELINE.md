@@ -26,9 +26,11 @@ Build the first complete system as a modular monolith:
 - React/Vite is the public proof, checkout, intake, approval, and portal
   experience.
 - Long-running or external work crosses explicit adapter and queue boundaries:
-  Site Studio generation, email delivery, Stripe, deployment, DNS/domain, and
-  analytics. Each adapter has an idempotency key, durable status, retry policy,
-  and operator-visible failure state.
+  FAMtastic-controlled preview generation, email delivery, selected-packet Site
+  Studio build execution, Stripe, deployment, DNS/domain, and analytics. Each
+  adapter has an idempotency key, durable status, retry policy, and
+  operator-visible failure state. Site Studio is not a preview generator or
+  delivery authority.
 - Git is the only source for deployable code. All agents call the same checked-in
   scripts. Agent identity never changes the release procedure.
 - Production releases use an exact committed SHA, build outside the document

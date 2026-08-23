@@ -18,9 +18,10 @@ records are preserved for now; strict run-ID cleanup remains a launch gate.
 
 - lawful-source CSV lead ingestion, provenance, normalization, scoring,
   suppression, and deduplication;
-- exactly three isolated Site Studio proofs through deterministic, signed async,
-  and offline local-to-production adapters, including checksum/replay gates and
-  persisted provider/agent/prompt/build telemetry;
+- FAMtastic-owned preview-runner fixture coverage for exactly three isolated
+  artifacts through deterministic, signed async, and offline adapters,
+  including checksum/replay gates and persisted provider/agent/prompt/build
+  telemetry. This is not the current FAMtastic-owned preview-release path;
 - campaign-specific approval, staged email, tracking, unsubscribe,
   bounce/complaint handling, and default-deny real transport;
 - versioned $199 and $499 offers, versioned terms acceptance, exact amount
@@ -51,9 +52,10 @@ The suite runs:
 ```bash
 scripts/e2e-lead-import.sh
 scripts/e2e-fresh-backend-install.sh
-scripts/e2e-site-studio-callback.sh
+scripts/e2e-preview-runner-callback.sh
 scripts/e2e-local-proof-promotion.sh
 MODE=refresh scripts/e2e-local-proof-promotion.sh
+scripts/e2e-public-preview-lifecycle.sh
 scripts/e2e-email-campaign.sh
 PORT=8920 PACKAGE=essential_199 EXPECTED_AMOUNT=19900 EXPECTED_REVISIONS=1 scripts/e2e-autonomous-journey.sh
 PORT=8921 PACKAGE=business_499 EXPECTED_AMOUNT=49900 EXPECTED_REVISIONS=2 scripts/e2e-autonomous-journey.sh

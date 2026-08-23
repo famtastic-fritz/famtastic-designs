@@ -60,11 +60,21 @@ The complete proof and intake contract is versioned in
 
 ## Preview-provider doctrine
 
-`website_proof.generate.v1` is the only supported creative-preview routine.
-It must read the declared capability route, run provider preflight, and create
-the Build DNA record before it starts research, art, construction, or review.
-An agent may not substitute a chat-only mockup, a fixture renderer, or an
-unrecorded model session for that routine.
+`website_proof.generate.v1` is the only supported FAMtastic creative-preview
+routine. FAMtastic owns its provider routing, generated preview artifacts and
+slots, Build DNA, review/approval, concept-room links, transactional outbox,
+and request/project truth. It must read the declared capability route, run
+provider preflight, and create the Build DNA record before it starts research,
+art, construction, or review. An agent may not substitute a chat-only mockup,
+a fixture renderer, an unrecorded model session, or Site Studio for that
+routine.
+
+Site Studio begins only after a customer has selected a direction and FAMtastic
+has frozen an immutable `famtastic.site-studio.build-packet.v1`. It consumes
+that packet and later returns `site-studio.build-success.v1`; it never
+generates/stores/shares a preview, sends preview email, or owns a customer
+request or project. The full boundary and no-Studio-exposure release checklist
+are in `docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
 
 - Gemini 3.7 Flash through the Antigravity desktop bridge is the preferred
   **reasoning, research, direction, copy, and prototype-construction** lane
@@ -130,9 +140,10 @@ operating contract instead of silently creating a parallel workflow.
 FAMtastic Concierge is the named customer-facing communications identity.
 FAMtastic Connections is the canonical projection of lead, registration,
 communication, proof, offer, and delivery status. Drupal remains the customer,
-Commerce, project, and operational source of truth; Site Studio remains the
-internal build/proof/QA surface. No CLI, including Shay, Codex, or Claude, may
-create a competing CRM or deployment authority.
+Commerce, project, preview, and operational source of truth; Site Studio remains
+the internal selected-build execution and final-build QA surface. No CLI,
+including Shay, Codex, or Claude, may create a competing CRM,
+preview-delivery system, or deployment authority.
 
 The Concierge webhook boundary accepts only verified Inkbox events and records
 metadata/status facts. It must not copy customer message bodies into a new

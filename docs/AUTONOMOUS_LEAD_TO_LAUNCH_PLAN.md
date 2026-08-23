@@ -56,17 +56,21 @@ work. The customer invitation is separately staged and approved in Operations.
   failure. The fixture proves safety plumbing only, not a creative provider.
 - [x] Verify a clean Drupal installation and migrations from the current
   source branch.
-- [ ] Replace or upgrade the legacy Site Studio proof boundary before using
-  it as this routine's provider. The currently inspected Studio endpoint is
-  local-only, fixes every job at three directions, and returns a legacy
-  callback without the runner envelope, artifact hashes, final Build DNA,
-  browser QA, or independent-review evidence. It cannot receive the refined
-  six-proof or selected-direction revision profiles, and its current
-  three-proof callback would be rejected by the canonical verifier.
-- [ ] Configure and prove a compatible real provider return, including actual
-  provider/model receipts, complete Build DNA, browser QA, and an independent
-  visual reviewer decision. Pair the approved HTTPS endpoint and HMAC secrets
-  only after the adapter passes one production callback acceptance test.
+- [ ] Remove the retired Site Studio dispatch/callback path from the preview
+  release lane. Site Studio is not this routine's provider: FAMtastic owns
+  preview generation, artifact slots, proof rooms, owner review, email, and
+  request/project truth. The inspected local-only Studio endpoint remains
+  historical evidence only and cannot satisfy the public/refined/revision
+  preview contract.
+- [ ] Configure and prove a compatible FAMtastic-controlled preview runner,
+  including actual provider/model receipts, complete Build DNA, browser QA,
+  an independent visual-review decision, and FAMtastic-owned artifact storage.
+  It must pass one production callback acceptance test without exposing or
+  configuring Site Studio as a preview endpoint.
+- [ ] Keep Site Studio private until a customer selects a direction. Its only
+  later role is to consume the immutable selected-build packet and return a
+  signed build-success packet; that handoff is not a prerequisite for a
+  FAMtastic proof-room or proof-email release.
 - [ ] Deploy the reviewed backend migration and source SHA through the
   production runbook, then browser-verify the live public and portal lanes.
 - [ ] Run the controlled P.I.T. recovery job, review its real three-proof

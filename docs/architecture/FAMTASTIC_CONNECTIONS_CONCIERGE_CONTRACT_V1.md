@@ -12,8 +12,8 @@ customer conversation.
 | --- | --- | --- |
 | FAMtastic Connections | Lead/status projection, communication event timeline, owner next action | Customer identity, price, payment, deployment |
 | FAMtastic Concierge | Branded communication identity and channel inbox | Autonomous outreach, commercial decisions, customer/project truth |
-| Drupal FAMtastic Pipeline | Prospect, Intake, customer/organization, Commerce, project, entitlement, operational ledger | Site Studio editing/runtime |
-| Site Studio | Internal build, proof, QA, and delivery artifacts | Lead capture, customer communications, payment, domain purchase |
+| Drupal FAMtastic Pipeline | Prospect, intake, preview generation, preview slots/artifacts, share links, customer/organization, Commerce, request/project, entitlement, operational ledger, and customer delivery | Site Studio editing/runtime |
+| Site Studio | Selected-packet build execution, its private stage ledger, and signed build-success facts | Preview generation/storage/share/delivery, lead capture, customer communications, request/project truth, payment, domain purchase |
 | Shay and other CLIs | Research, draft, coordination, implementation, and evidence | A parallel database, approval bypass, background authority |
 
 ## Required lifecycle
@@ -22,11 +22,12 @@ customer conversation.
 Solution Finder or portal request
 → Drupal Prospect/Intake or Website Request
 → FAMtastic Connections timeline event
-→ existing transactional acknowledgment; an explicit account-continuation
-  invitation when that public flow is enabled
-→ human-reviewed Concierge draft/reply when appropriate
-→ authenticated portal work and owner review
-→ approved Site Studio packet/proof/delivery work
+→ FAMtastic preview generation, slots, Build DNA, and owner review
+→ FAMtastic signed concept room or authenticated portal preview
+→ owner-approved FAMtastic transactional invitation when appropriate
+→ selection/revision in the FAMtastic portal
+→ approved immutable Site Studio build packet
+→ signed Site Studio build-success packet returned to FAMtastic
 ```
 
 An Inkbox email or iMessage event may enrich the Connections timeline. It does
@@ -72,6 +73,8 @@ communication as production-proven.
 ## Site Studio handoff
 
 Site Studio should consume only an approved Drupal build packet and report
-build/proof/QA facts back on its existing packet boundary. It may display the
+its later build/QA facts back on the packet boundary. It may display the
 Connections correlation IDs and current human-approved next action, but it
-must not send messages or infer approval from a Concierge event.
+must not generate/host/deliver a preview, send messages, or infer approval from
+a Concierge event. The canonical boundary is
+`docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.

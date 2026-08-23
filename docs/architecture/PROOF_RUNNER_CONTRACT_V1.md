@@ -3,10 +3,17 @@
 ## Purpose
 
 `website_proof.generate.v1` is the only FAMtastic creative-preview routine.
-It is a source-bound dispatch and evidence contract, not a renderer and not a
-customer-delivery action. It exists to make a real public or portal intake
-repeatable across a local/external provider while preserving the facts, Build
+It is a FAMtastic-owned source-bound generation, artifact-slot, and evidence
+contract—not a Site Studio renderer and not a customer-delivery action. It
+exists to make a real public or portal intake repeatable across a
+FAMtastic-controlled local/external provider while preserving the facts, Build
 DNA, review gates, and exact source correlation needed by Operations.
+
+FAMtastic stores every returned preview artifact in its own proof slots,
+creates the share/portal access surface, and controls owner review and the
+transactional outbox. Site Studio is not an eligible implementation of this
+routine. It receives a later selected immutable build packet only; see
+`docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
 
 The contract is intentionally fail-closed. A missing provider route never
 falls back to a manual pilot, a deterministic mockup, direct SMTP, checkout,
@@ -128,9 +135,19 @@ different proof phase without a new bound record.
 
 `famtastic_pipeline.settings.proof_runner_transport` is disabled by default.
 
-- `site_studio_dispatch`: requires both Site Studio URL and dispatch secret.
-- `external_runner`: requires an explicit URL/secret and an explicit signed
-  provider preflight response.
+- `famtastic_preview_runner_dispatch`: requires
+  `FAMTASTIC_PREVIEW_RUNNER_URL` and
+  `FAMTASTIC_PREVIEW_RUNNER_DISPATCH_SECRET`. The worker returns only signed
+  callback bytes/evidence to `/api/pipeline/preview-runner/callback`; FAMtastic
+  writes the canonical artifacts and controls proof slots, rooms, and email.
+- `external_runner`: requires an explicit FAMtastic-controlled URL/secret and
+  an explicit signed provider preflight response. Its output is returned to
+  FAMtastic, which validates and stores the proof slots before any room/email
+  action.
+- `site_studio_dispatch`: a **retired legacy transport** retained only so old
+  records and fixtures can be read. It is not a supported route for any new
+  preview profile and must remain disabled in a preview release. A Site Studio
+  URL or secret never proves preview-provider readiness.
 - `local_contract_fixture`: only works with
   `FAMTASTIC_ALLOW_LOCAL_CONTRACT_FIXTURE=1`. It validates the contract and
   writes a receipt; it cannot generate proofs, call a provider, send mail,

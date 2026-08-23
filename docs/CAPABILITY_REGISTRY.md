@@ -25,7 +25,7 @@ capability is not “proven” merely because code exists.
 | SEO and dynamic sitemap delivery | Production smoke-tested | Drupal content discovery, route-specific shells, sitemap, robots, and canonical metadata |
 | Synthetic customer journey proof | Locally proven | Repeatable lifecycle QA with explicit provider and production boundaries |
 | Isolated customer site deployment | Locally proven | Build, proof, approval, deployment, rollback, domain, and hosting lifecycle patterns |
-| Preview-to-Site-Studio build packet bridge | Locally proven | Provider-neutral one/two-direction build packet, exact stage journal, signed success validation, project-scoped portal continuation, and transactional notification handoff |
+| FAMtastic preview-to-Site-Studio selected-build packet bridge | Locally proven | FAMtastic-owned preview evidence/slots followed by a provider-neutral one/two-direction build packet, exact stage journal, signed success validation, project-scoped portal continuation, and transactional notification handoff |
 | Six-direction proof retention library | Locally proven | Deduplicated design/structure candidates retained without reusing customer copy or media |
 | Provider availability and build-class routing | Locally proven | Free, low, medium, premium, premium-brain/free-worker, and custom policies with fail-closed preflight and declared fallbacks |
 | Lean research-first social-presence proof | Unlisted-hosting production smoke-tested | One coherent campaign identity, two purpose-built graphics, original character branding, editable social cards, responsive hub, exact model/cost ledger, and closed social-publication gates |
@@ -40,9 +40,10 @@ capability is not “proven” merely because code exists.
 | MoneyPrinterTurbo narrative-video lane | Evaluated integration candidate; no FAMtastic run yet | Draft-only short-form explainers and campaign assemblies with script, footage, captions, music, and a separate approval/publishing boundary |
 | ACI AI image plan | Candidate only; price, API, rights, and quota unverified | Possible lower-cost image-volume route after an exact provider benchmark and Build DNA receipt |
 
-The packet bridge's current evidence is contract-autonomous golden replay. A real
-Site Studio success return, fresh provider-generated creative run, production
-Drupal persistence, and live notification remain separate evidence upgrades.
+The packet bridge's current evidence is contract-autonomous golden replay. A
+real Site Studio selected-build success return, a fresh FAMtastic-controlled
+provider-generated preview run, production Drupal persistence, and live
+notification remain separate evidence upgrades.
 
 The social-presence evidence covers an anonymously reachable unlisted static
 experience plus a public FAMtastic-owned Lab case study. It does not prove

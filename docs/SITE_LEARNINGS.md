@@ -1,21 +1,25 @@
 # FAMtastic Designs site learnings
 
-## 2026-08-22 — A legacy proof endpoint is not a canonical runner adapter
+## 2026-08-23 — Preview ownership resides in FAMtastic, not Site Studio
 
-- A provider must satisfy both sides of the contract. A Studio endpoint that
-  accepts only three fixed directions and returns HTML links is not compatible
-  with a source-bound runner that needs declared 3/6/1 profiles, the original
-  build ID and contract hash, per-artifact SHA-256 values, final Build DNA,
-  browser QA, and an independent visual-review decision.
-- The active Studio process is loopback-only and no production Studio URL or
-  HMAC pair is configured. Exposing a workstation or weakening the Drupal
-  verifier would create a false production claim. The correct next change is a
-  secure adapter (or explicitly approved alternate runner) that preserves the
-  canonical envelope and callback evidence end to end.
-- A backend-only deployment would fail closed, not finish delivery: it can
-  create the durable public record and owner alert, but cannot produce an
-  eligible P.I.T. proof room or customer invitation until that provider return
-  is real and verified.
+- FAMtastic owns preview generation, preview slots/artifacts, Build DNA, owner
+  review, signed proof links, email/outbox, and request/project truth. Site
+  Studio begins only after a selected immutable build packet exists and returns
+  a later build-success packet. This boundary must be stated in every agent
+  contract and release checklist so a future session does not invert it.
+- A legacy Studio endpoint that accepts only three fixed directions and returns
+  HTML links is historical fixture evidence, not a preview provider. It is
+  neither required nor permitted for a new public/refined/revision preview run.
+  FAMtastic must use a compatible FAMtastic-controlled runner that returns the
+  3/6/1 artifacts, original build ID/contract hash, SHA-256 values, final Build
+  DNA, browser QA, and independent visual-review evidence.
+- The active Studio process may remain loopback-only. Exposing a workstation or
+  weakening the Drupal verifier would create a false production claim. A
+  FAMtastic preview release can and should deploy without exposing Studio.
+- A backend-only deployment is incomplete only if the FAMtastic preview runner
+  has not been configured/proven; it is not blocked by Site Studio. Once the
+  runner is real and verified, FAMtastic can create the durable public record,
+  own its artifact slots, stage the proof room, and await owner-approved email.
 
 ## 2026-08-22 — One pipeline needs three immutable proof histories
 
@@ -27,7 +31,7 @@
 - The public/refined/revision stages can all use one creative routine
   (`website_proof.generate.v1`) when phase, profile, source correlation,
   direction count, Build DNA, and delivery authority are declared separately.
-  A second routine would make replay, ownership, and Site Studio handoff less
+  A second routine would make replay, ownership, and selected-build handoff less
   inspectable.
 - A fixture callback must be a positive failure test: it can prove signature,
   correlation, duplicate, and outbox boundaries only by being rejected before
@@ -46,8 +50,8 @@
   inside the repository and reports the actual allow-listed model.
 - The no-image Gemini preflight currently authenticates the image-only
   `gemini-3.1-flash-lite-image` route. That is evidence for credential routing,
-  not a creative run, price receipt, independent review, Site Studio callback,
-  or production availability.
+  not a creative run, price receipt, independent review, a FAMtastic proof
+  completion receipt, or production availability.
 
 ## 2026-08-22 — Revision lineage is a separate artifact chain, not an edit
 
@@ -62,8 +66,8 @@
   create a second version.
 - The revision job has a new operational type but no new creative routine:
   `proof.revision.generate` runs `website_proof.generate.v1` with the declared
-  `revision` phase/profile. This keeps Build DNA, provider routing, and Site
-  Studio handoff on one canonical proof vocabulary.
+  `revision` phase/profile. This keeps Build DNA, provider routing, and
+  selected-build handoff on one canonical proof vocabulary.
 - A local fixture can simulate the signed callback boundary and prove records,
   access state, and no-commercial-mutation rules. It is not evidence that a
   provider, mailbox, payment processor, or production server performed those
@@ -180,7 +184,9 @@
 - Deterministic schemas, package/add-on rules, independent assertions, and browser evidence own acceptance; models remain replaceable workers.
 - The first `website.preview.v2` fixture proof passed three scenarios across anonymous Solution Finder and member portal lanes with six traced specialist stages and three creative directions each.
 - Installed subscriptions are not callable automation by default. Ollama is locally available; unattended Codex, Claude, Gemini/Antigravity, and Kimi routes still need auth/cost/privacy proof, while Poe and Z.ai are not currently callable locally.
-- The signed Site Studio callback is the scale-out seam. The enriched brief and per-agent trace still need a Drupal persistence adapter before integration is proven.
+- The FAMtastic proof-runner callback and artifact-slot persistence are the
+  scale-out seam. Site Studio is a later selected-build packet consumer, not a
+  preview callback or preview-storage authority.
 - Browser screenshots must be content-bearing and hashed. A 1×1 transport fixture proves callback mechanics, not visual quality.
 
 ## 2026-08-17 — Personality lenses need a control and protected decisions

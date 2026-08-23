@@ -10,9 +10,17 @@
 - FAMtastic Concierge is the customer-facing communications identity; FAMtastic
   Connections is the durable lead/status projection. Read
   `docs/architecture/FAMTASTIC_CONNECTIONS_CONCIERGE_CONTRACT_V1.md` before
-  changing Concierge, Inkbox, Solution Finder follow-up, or Site Studio work
-  intake. Never put credentials in a CLI configuration, commit them, or let an
+  changing Concierge, Inkbox, Solution Finder follow-up, or a selected Site
+  Studio build handoff. Never put credentials in a CLI configuration, commit
+  them, or let an
   agent autonomously send, quote, grant, charge, purchase a domain, or deploy.
+- For every public or portal preview, read
+  `docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`. FAMtastic
+  owns preview generation, FAMtastic-controlled artifact slots, share links,
+  owner review, outbox/email, and request/project truth. Site Studio receives
+  only a selected immutable build packet and later returns a build-success
+  packet; it is never a preview runner, preview host, or customer-delivery
+  surface.
 - For every creative proof, selected-direction refinement, campaign experience,
   or Site Studio-bound build, follow `docs/architecture/BUILD_DNA_STANDARD_V1.md`.
   Create and validate one `famtastic.build-dna.v1` record at run creation;

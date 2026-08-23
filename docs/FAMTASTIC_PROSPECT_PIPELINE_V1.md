@@ -1,5 +1,12 @@
 # FAMtastic Designs — Prospect → Paid → Site Studio Pipeline (V1)
 
+> **Historical V1 plan:** This describes the original local implementation
+> slice. Its Site Studio/proof references do not define current preview
+> ownership. FAMtastic owns preview generation, artifact slots, share links,
+> approval, email, and request/project truth; Site Studio receives selected
+> immutable build packets only. See
+> `architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
+
 **Status:** ✅ **Implemented and proven** as a bounded local proof. All 20 deliverables (§12) are built
 and verified: the executed E2E is **26/26 passing** (`scripts/e2e-proof.sh`, recorded in
 `docs/E2E_PROOF_RUN.md`), unit tests **11/11**, `vite build` clean, and the React flow + Drupal admin were

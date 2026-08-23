@@ -1,5 +1,11 @@
 # FAMtastic Designs — Prospect Pipeline V1: Executed Local E2E Proof
 
+> **Historical V1 record:** References to a generated Site Studio prompt or a
+> recorded proof URL describe the original local slice, not current preview
+> ownership. FAMtastic owns preview creation/storage/delivery; Site Studio is a
+> selected-build packet consumer. See
+> `architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
+
 This is the executed record for **deliverable 20**. The script
 `scripts/e2e-proof.sh` drives the entire customer transaction against a real,
 locally-served Drupal 11 and asserts every step. It exits `0` only when all

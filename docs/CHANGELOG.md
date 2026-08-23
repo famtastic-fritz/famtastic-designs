@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-08-23 — Preview ownership boundary correction
+
+- Corrected the active architecture language: FAMtastic Designs owns preview
+  generation, controlled proof/artifact slots, Build DNA, proof rooms, owner
+  approval, transactional email, and request/project truth. Site Studio only
+  receives an immutable selected-build packet and later returns a signed
+  build-success packet.
+- Added `docs/architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`, including
+  a release checklist that deploys the FAMtastic preview path without exposing
+  Site Studio, configuring it as a preview provider, or granting it customer
+  delivery authority.
+- Reclassified the old `site_studio_dispatch` proof callback and its fixtures
+  as historical compatibility evidence. They cannot certify a new public,
+  refined, or revision preview run. No Site Studio code, production setting,
+  deployment, or email was changed by this documentation correction.
+
 ## 2026-08-22 — Production provider compatibility audit
 
 - Performed a read-only production and Site Studio audit before release. The

@@ -1,5 +1,11 @@
 # FAMtastic Designs — Real Stripe Test-Mode Activation Report
 
+> **Historical checkout record:** Any Site Studio proof references below are
+> evidence from the prior V1 slice, not the current preview architecture.
+> FAMtastic owns preview generation/storage/delivery; Site Studio later consumes
+> selected immutable build packets only. See
+> `architecture/FAMTASTIC_PREVIEW_TO_BUILD_BOUNDARY_V1.md`.
+
 ## Drupal Commerce sandbox path (2026-08-10)
 
 The canonical Commerce sandbox is configured without checking credentials into

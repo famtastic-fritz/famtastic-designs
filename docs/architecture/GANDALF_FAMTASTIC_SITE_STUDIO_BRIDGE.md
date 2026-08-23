@@ -4,13 +4,17 @@ These notes are the resumable boundary map for any agent working in either repos
 
 ## The bridge in one line
 
-`FAMtastic owned project → signed build packet → Site Studio existing engine → signed success packet → FAMtastic owned project + activity + notification`
+`FAMtastic-owned preview and selected project → signed build packet → Site Studio existing engine → signed success packet → FAMtastic project + activity + notification`
+
+FAMtastic, not Site Studio, creates/stores/shares/delivers the preview. This
+bridge begins after selection only; it does not turn Site Studio into a preview
+provider or customer-delivery surface.
 
 ## FAMtastic repository responsibilities
 
 1. Load the customer-owned request and project.
-2. Run or retrieve the validated research-first preview package.
-3. Preserve all six directions and the quality/evidence package.
+2. Run or retrieve the validated FAMtastic-owned research-first preview package.
+3. Preserve all directions, artifact slots, and the quality/evidence package.
 4. Accept one or two customer-selected direction IDs.
 5. Resolve provider capabilities and fail closed when unavailable.
 6. Produce `famtastic.site-studio.build-packet.v1` and its archive, with the
@@ -42,9 +46,13 @@ Site Studio does not need a new engine. Its boundary adapter should:
    actual stages separately and return its build ID, output checksums, timing,
    exposed provider/model facts, warnings, and a Build DNA continuation
    reference in the signed success packet. Do not invent missing runtime facts.
-6. Preserve its own real per-stage journal and reversible checkpoints.
-7. Return `site-studio.build-success.v1` with artifact URIs, SHA-256 values, real stage ledger, warnings, timestamps, and the original correlation IDs.
-8. Sign the exact raw success body with the shared callback secret.
+7. Preserve its own real per-stage journal and reversible checkpoints.
+8. Return `site-studio.build-success.v1` with artifact URIs, SHA-256 values, real stage ledger, warnings, timestamps, and the original correlation IDs.
+9. Sign the exact raw success body with the shared callback secret.
+
+It must not generate, host, or email previews, nor write customer/request/project
+truth. The packet handoff may remain offline/private; Site Studio does not need
+a public endpoint for FAMtastic preview delivery.
 
 No Site Studio build-process modification was made by this work. The adapter is a boundary responsibility for the Site Studio lane.
 

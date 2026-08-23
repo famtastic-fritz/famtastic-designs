@@ -12,9 +12,9 @@ entities rather than introducing a disconnected campaign module.
 - the exact rendered email body, envelope From, provider, provider Message-ID,
   and attributed lifecycle events;
 - every proof campaign and its three published directions;
-- deterministic or Site Studio build provider, agent, flow, task, prompt,
-  machine input, output manifest, checksum, release/source SHA, status, and
-  error.
+- FAMtastic preview runner or later Site Studio selected-build provider, agent,
+  flow, task, prompt, machine input, output manifest, checksum, release/source
+  SHA, status, and error.
 
 Access requires `administer famtastic pipeline`. Message bodies and build inputs
 can contain contact or customer intake data and must remain admin-only.
