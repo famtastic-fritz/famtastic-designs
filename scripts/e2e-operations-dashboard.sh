@@ -32,6 +32,23 @@ DRUSH="$REPO_ROOT/backend/vendor/bin/drush"
       }
     }
 
+    $prospect = \Drupal::entityTypeManager()->getStorage("famtastic_prospect")->create([
+      "business_name" => "Workspace route test",
+      "campaign" => "public_quote",
+      "status" => "acknowledged",
+      "public_email" => "workspace-test@example.invalid",
+    ]);
+    $prospect->save();
+    $workspacePath = "/admin/famtastic/prospect/" . $prospect->id() . "/workspace";
+    $prospects = (string) $renderer->renderRoot($controller->metric("prospects"));
+    if (!str_contains($prospects, $workspacePath) || !str_contains($prospects, "Review today")) {
+      throw new \RuntimeException("Prospect list does not expose its actionable lead workspace.");
+    }
+    $workspace = (string) $renderer->renderRoot($controller->prospectWorkspace($prospect));
+    if (!str_contains($workspace, "Lead workspace") || !str_contains($workspace, "Automation boundary")) {
+      throw new \RuntimeException("Lead workspace did not render its decision and safety context.");
+    }
+
     $paidCount = (int) \Drupal::database()->select("famtastic_order", "o")
       ->condition("payment_status", "paid")
       ->countQuery()
@@ -47,6 +64,18 @@ DRUSH="$REPO_ROOT/backend/vendor/bin/drush"
     print "PASS: operations tiles and all eight exact-record drill-downs render; paid orders: " . $paidCount . ".\n";
   }
   finally {
+    // Remove every synthetic workspace-test prospect (including ones left by
+    // earlier runs) so repeat runs stay idempotent and the needs-response
+    // queue count is not inflated by test data.
+    $storage = \Drupal::entityTypeManager()->getStorage("famtastic_prospect");
+    $staleIds = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition("public_email", "workspace-test@example.invalid")
+      ->execute();
+    if (!empty($staleIds)) {
+      $storage->delete($storage->loadMultiple($staleIds));
+      print "CLEANUP: removed " . count($staleIds) . " synthetic workspace-test prospect(s).\n";
+    }
     $switcher->switchBack();
   }
 '

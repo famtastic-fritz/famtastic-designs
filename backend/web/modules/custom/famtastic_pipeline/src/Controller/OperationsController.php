@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
+use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\GoogleAnalyticsReportingService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -724,22 +725,141 @@ final class OperationsController extends ControllerBase {
       ->execute();
     $rows = [];
     foreach ($storage->loadMultiple($ids) as $prospect) {
+      $workspace = Url::fromRoute('famtastic_pipeline.prospect_workspace', ['famtastic_prospect' => $prospect->id()]);
+      $needsReply = $this->prospectNeedsHumanReply($prospect);
       $rows[] = [
-        'business' => $this->linkCell($prospect->toLink($prospect->label() ?: '(no name)')),
+        'business' => $this->linkCell(Link::fromTextAndUrl($prospect->label() ?: '(no name)', $workspace)),
         'status' => ['data' => ['#markup' => $this->badge((string) $prospect->get('status')->value)]],
         'campaign' => $this->campaignLinkCell((string) $prospect->get('campaign')->value),
         'category' => (string) ($prospect->get('business_category')->value ?: '—'),
         'email' => (string) ($prospect->get('public_email')->value ?: '—'),
+        'next_action' => $needsReply
+          ? ['data' => ['#markup' => '<strong>Review today</strong><br><small>Prepare a specific next step</small>']]
+          : ['data' => ['#markup' => '<strong>Open workspace</strong><br><small>Review the lead record</small>']],
+        'actions' => ['data' => Link::fromTextAndUrl('Open lead workspace', $workspace)->toRenderable()],
         'created' => $this->date((int) $prospect->get('created')->value),
       ];
     }
-    return $this->recordsPage(
-      'Prospects',
-      'Every discovered business in the pipeline, including its source campaign and current lifecycle state.',
-      ['Business', 'Status', 'Campaign', 'Category', 'Public Email', 'Created'],
-      $rows,
-      'No prospects have been recorded.',
-    );
+    $replyCount = $this->countProspectsNeedingHumanReply();
+    return $this->page([
+      'back' => Link::fromTextAndUrl('← Operations Dashboard', Url::fromRoute('famtastic_pipeline.operations'))->toRenderable(),
+      'intro' => ['#markup' => '<p class="famtastic-ops__lede">Open a lead workspace to see the request, facts, history, related customer work, and the next owner-approved move. Acknowledgment is not a sales reply; no message, price, proof, domain, or deployment is sent automatically.</p>'],
+      'priority' => ['#markup' => '<section class="famtastic-leads__priority"><div><span>Needs a human response</span><strong>' . $replyCount . '</strong><p>Public quote requests with no recorded first response.</p></div><div><span>How this queue works</span><p>AI may organize facts and prepare a draft. A person approves the message, scope, price, proof, and launch.</p></div></section>'],
+      'records' => [
+        '#type' => 'table',
+        '#header' => ['Business', 'Status', 'Campaign', 'Category', 'Public Email', 'Next action', 'Open', 'Created'],
+        '#rows' => $rows,
+        '#empty' => $this->t('No prospects have been recorded.'),
+        '#attributes' => ['class' => ['famtastic-ops__table', 'famtastic-leads__table']],
+      ],
+      'pager' => ['#type' => 'pager'],
+    ], 'Prospects');
+  }
+
+  /**
+   * Renders the operator workspace for one lead instead of a generic entity page.
+   */
+  public function prospectWorkspace(Prospect $famtastic_prospect): array {
+    $prospect = $famtastic_prospect;
+    $prospectId = (int) $prospect->id();
+    $requestFields = ['id', 'public_id', 'project_name', 'status', 'changed'];
+    // Keep the workspace usable while a pre-existing site is waiting for its
+    // module update. New installations and current production include it.
+    if ($this->database->schema()->fieldExists('famtastic_project_request', 'proof_review_status')) {
+      $requestFields[] = 'proof_review_status';
+    }
+    $relatedRequest = $this->database->select('famtastic_project_request', 'r')
+      ->fields('r', $requestFields)
+      ->condition('prospect_id', $prospectId)
+      ->orderBy('changed', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchAssoc() ?: NULL;
+    $events = $this->database->select('famtastic_event', 'e')
+      ->fields('e', ['event_type', 'provider', 'occurred_at', 'recorded_at'])
+      ->condition('prospect_id', $prospectId)
+      ->orderBy('occurred_at', 'DESC')
+      ->orderBy('id', 'DESC')
+      ->range(0, 12)
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+
+    $business = $prospect->label() ?: '(no name)';
+    $status = (string) $prospect->get('status')->value;
+    $firstResponse = (int) $prospect->get('first_responded_at')->value;
+    $nextAction = $this->prospectNeedsHumanReply($prospect)
+      ? ['Review the lead and prepare a tailored first reply.', 'The automated acknowledgment is not the sales conversation. Confirm the request, then approve a helpful next step.']
+      : ['Review the lead record and keep the next action current.', 'Use this workspace to confirm what happened before advancing the relationship.'];
+    $facts = array_filter([
+      'Business category' => (string) $prospect->get('business_category')->value,
+      'Contact name' => (string) $prospect->get('contact_name')->value,
+      'Email' => (string) $prospect->get('public_email')->value,
+      'Phone' => (string) $prospect->get('public_phone')->value,
+      'Existing website' => (string) $prospect->get('website_url')->value,
+      'Service area' => (string) $prospect->get('service_area')->value,
+      'Description' => (string) $prospect->get('business_description')->value,
+    ], static fn(string $value): bool => trim($value) !== '');
+    $factRows = [];
+    foreach ($facts as $label => $value) {
+      $factRows[] = [$label, $value];
+    }
+    $eventRows = array_map(fn(array $event): array => [
+      ucwords(str_replace(['.', '_'], ' ', (string) $event['event_type'])),
+      (string) ($event['provider'] ?: 'FAMtastic pipeline'),
+      $this->date((int) ($event['occurred_at'] ?: $event['recorded_at'])),
+    ], $events);
+    $requestPanel = ['#markup' => '<p class="famtastic-ops__empty">No account-based website request is connected yet. A concise, owner-approved reply should invite the customer to register and complete the guided website intake before a proof or price is proposed.</p>'];
+    if ($relatedRequest) {
+      $requestPanel = [
+        '#type' => 'table',
+        '#header' => ['Request', 'Status', 'Proof review', 'Updated'],
+        '#rows' => [[
+          Link::fromTextAndUrl((string) ($relatedRequest['project_name'] ?: $relatedRequest['public_id']), Url::fromRoute('famtastic_pipeline.website_request_proof_review', ['website_request' => $relatedRequest['id']]))->toRenderable(),
+          ['data' => ['#markup' => $this->badge((string) $relatedRequest['status'])]],
+          ['data' => ['#markup' => $this->badge((string) ($relatedRequest['proof_review_status'] ?? 'not started'))]],
+          $this->date((int) $relatedRequest['changed']),
+        ]],
+        '#attributes' => ['class' => ['famtastic-ops__table']],
+      ];
+    }
+
+    return $this->page([
+      'back' => Link::fromTextAndUrl('← Back to prospects', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'prospects']))->toRenderable(),
+      'hero' => ['#markup' => '<section class="famtastic-lead__hero"><div><span>Lead workspace</span><h2>' . Html::escape($business) . '</h2><p>Source: ' . Html::escape((string) ($prospect->get('campaign')->value ?: 'direct')) . ' · Created ' . Html::escape($this->date((int) $prospect->get('created')->value)) . '</p></div><div><span>Current state</span>' . $this->badge($status) . '</div></section>'],
+      'next' => ['#markup' => '<section class="famtastic-lead__next"><span>Next owner action</span><h3>' . Html::escape($nextAction[0]) . '</h3><p>' . Html::escape($nextAction[1]) . '</p><small>' . ($firstResponse ? 'First response recorded ' . Html::escape($this->date($firstResponse)) . '.' : 'No first response has been recorded.') . '</small></section>'],
+      'actions' => [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['famtastic-ops__actions']],
+        'edit' => ['#type' => 'link', '#title' => $this->t('Edit lead facts'), '#url' => $prospect->toUrl('edit-form'), '#attributes' => ['class' => ['button', 'button--primary']]],
+        'request' => ['#type' => 'link', '#title' => $this->t('View website requests'), '#url' => Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), '#attributes' => ['class' => ['button']]],
+      ],
+      'facts_heading' => ['#markup' => '<h3>What we know</h3>'],
+      'facts' => ['#type' => 'table', '#header' => ['Field', 'Value'], '#rows' => $factRows, '#empty' => $this->t('No usable lead details have been recorded yet.'), '#attributes' => ['class' => ['famtastic-ops__table']]],
+      'request_heading' => ['#markup' => '<h3>Customer continuation</h3>'],
+      'request' => $requestPanel,
+      'history_heading' => ['#markup' => '<h3>Recorded activity</h3>'],
+      'history' => ['#type' => 'table', '#header' => ['Event', 'Source', 'When'], '#rows' => $eventRows, '#empty' => $this->t('No timeline events have been recorded yet.'), '#attributes' => ['class' => ['famtastic-ops__table']]],
+      'boundary' => ['#markup' => '<aside class="famtastic-lead__boundary"><strong>Automation boundary</strong><p>Research, qualification notes, follow-up reminders, and a tailored draft can be prepared here. A person still approves every outgoing message, quote, proof, domain, payment, and deployment.</p></aside>'],
+    ], $business . ' lead workspace');
+  }
+
+  /** Determines whether a prospect needs a human first response. */
+  private function prospectNeedsHumanReply(Prospect $prospect): bool {
+    $campaign = (string) $prospect->get('campaign')->value;
+    $status = (string) $prospect->get('status')->value;
+    return $campaign === 'public_quote'
+      && (int) $prospect->get('first_responded_at')->value === 0
+      && !in_array($status, ['lost', 'paid', 'launched'], TRUE);
+  }
+
+  /** Counts the public quote leads that still need a human first response. */
+  private function countProspectsNeedingHumanReply(): int {
+    $ids = $this->pipelineEntityTypeManager->getStorage('famtastic_prospect')->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('campaign', 'public_quote')
+      ->notExists('first_responded_at')
+      ->execute();
+    return count($ids);
   }
 
   /**

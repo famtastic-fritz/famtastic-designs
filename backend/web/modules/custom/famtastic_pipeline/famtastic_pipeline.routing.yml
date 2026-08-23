@@ -523,6 +523,15 @@ famtastic_pipeline.operations_metric:
     _permission: 'administer famtastic pipeline'
     metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes'
 
+famtastic_pipeline.prospect_workspace:
+  path: '/admin/famtastic/prospect/{famtastic_prospect}/workspace'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::prospectWorkspace'
+    _title: 'Lead workspace'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    famtastic_prospect: '\d+'
+
 famtastic_pipeline.launch_approval:
   path: '/admin/famtastic/launch-approval'
   defaults:
