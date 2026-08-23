@@ -1,0 +1,68 @@
+[
+  {
+    "id": "direction-a",
+    "slug": "hill-brief",
+    "name": "The Hill Brief",
+    "mode": "restrained",
+    "famtastic_level": 2,
+    "strategy": "A credible editorial utility that helps alumni, families, and visitors find official information quickly.",
+    "palette": "forest / parchment / burnt orange / charcoal",
+    "information_architecture": "editorial hero -> official quick links -> upcoming verified game -> campus essentials -> community notes",
+    "hero_asset": "direction-a-hill-brief.png"
+  },
+  {
+    "id": "direction-b",
+    "slug": "rattler-weekender",
+    "name": "Rattler Weekender",
+    "mode": "medium_famtastic",
+    "famtastic_level": 6,
+    "strategy": "A polished culture-and-game-day magazine built around what is happening, where to go, and who is gathering.",
+    "palette": "emerald / citrus / cream / ink",
+    "information_architecture": "fashion hero -> weekend planner -> official scoreboard links -> city chapters -> campus utility rail",
+    "hero_asset": "direction-b-rattler-weekender.png"
+  },
+  {
+    "id": "direction-c",
+    "slug": "strike-network",
+    "name": "Strike Network",
+    "mode": "ultra_famtastic",
+    "famtastic_level": 9,
+    "strategy": "An Afrofuturist live broadcast command center for schedules, scores, fan reactions, and verified feeds.",
+    "palette": "signal green / laser orange / black / electric mint",
+    "information_architecture": "broadcast hero -> live source rail -> team channels -> stats lab -> fan transmission",
+    "hero_asset": "direction-c-strike-network.png"
+  },
+  {
+    "id": "direction-d",
+    "slug": "bragg-after-dark",
+    "name": "Bragg After Dark",
+    "mode": "ultra_famtastic",
+    "famtastic_level": 10,
+    "strategy": "A cinematic homecoming journey that turns the event calendar into a living parade of culture, sound, and alumni connection.",
+    "palette": "molten orange / emerald / midnight / champagne gold",
+    "information_architecture": "parade hero -> homecoming runway -> event stages -> alumni roll call -> plan-the-trip utility",
+    "hero_asset": "direction-d-bragg-after-dark.png"
+  },
+  {
+    "id": "direction-e",
+    "slug": "hillscape-live",
+    "name": "Hillscape Live",
+    "mode": "ultra_famtastic",
+    "famtastic_level": 10,
+    "strategy": "A playful interactive campus command map that unifies destinations, shuttle handoffs, sports, events, and meetups.",
+    "palette": "deep navy / luminous mint / orange / warm gold",
+    "information_architecture": "map hero -> choose-your-path controls -> shuttle status concept -> campus destinations -> official map handoff",
+    "hero_asset": "direction-e-hillscape-live.png"
+  },
+  {
+    "id": "direction-f",
+    "slug": "serpent-signal",
+    "name": "Serpent Signal",
+    "mode": "ultra_famtastic",
+    "famtastic_level": 10,
+    "strategy": "A high-fashion digital arena where legacy, competition, sound, and the next generation meet in one iconic signal.",
+    "palette": "obsidian / chrome orange / emerald laser / smoke",
+    "information_architecture": "arena hero -> strike manifesto -> season portal -> FAMU-ly voices -> official source vault",
+    "hero_asset": "direction-f-serpent-signal.png"
+  }
+]

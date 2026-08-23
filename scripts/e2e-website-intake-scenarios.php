@@ -107,4 +107,3 @@ print json_encode([
   'scenario_count' => count($results),
   'results' => $results,
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
-

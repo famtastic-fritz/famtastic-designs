@@ -1,0 +1,102 @@
+[
+  {
+    "profile": {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000
+    },
+    "status": 200,
+    "failures": [],
+    "errors": [],
+    "metrics": {
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "images": [
+        {
+          "src": "assets/00-lite-image-canon.jpg",
+          "complete": true,
+          "width": 1376,
+          "height": 768
+        },
+        {
+          "src": "assets/01-the-pull.jpg",
+          "complete": true,
+          "width": 1376,
+          "height": 768
+        },
+        {
+          "src": "assets/02-everywhere.jpg",
+          "complete": true,
+          "width": 1264,
+          "height": 848
+        },
+        {
+          "src": "assets/03-the-return.jpg",
+          "complete": true,
+          "width": 1376,
+          "height": 768
+        },
+        {
+          "src": "assets/04-the-hand-off.jpg",
+          "complete": true,
+          "width": 928,
+          "height": 1152
+        }
+      ],
+      "sections": 6,
+      "revealed": 8,
+      "fontCheck": true
+    },
+    "pass": true
+  },
+  {
+    "profile": {
+      "name": "phone",
+      "width": 390,
+      "height": 844
+    },
+    "status": 200,
+    "failures": [],
+    "errors": [],
+    "metrics": {
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "images": [
+        {
+          "src": "assets/00-lite-image-canon.jpg",
+          "complete": true,
+          "width": 1376,
+          "height": 768
+        },
+        {
+          "src": "assets/01-the-pull.jpg",
+          "complete": true,
+          "width": 1376,
+          "height": 768
+        },
+        {
+          "src": "assets/02-everywhere.jpg",
+          "complete": true,
+          "width": 1264,
+          "height": 848
+        },
+        {
+          "src": "assets/03-the-return.jpg",
+          "complete": true,
+          "width": 1376,
+          "height": 768
+        },
+        {
+          "src": "assets/04-the-hand-off.jpg",
+          "complete": true,
+          "width": 928,
+          "height": 1152
+        }
+      ],
+      "sections": 6,
+      "revealed": 8,
+      "fontCheck": true
+    },
+    "pass": true
+  }
+]

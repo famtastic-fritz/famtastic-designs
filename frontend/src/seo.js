@@ -33,9 +33,9 @@ export const SEO_PAGES = {
       'Review FAMtastic Designs packages for custom websites, business applications, AI-powered systems, and digital solution builds.',
   },
   '/work': {
-    title: 'Work | FAMtastic Designs Case Studies',
+    title: 'Our Work | FAMtastic Designs Creative Worlds',
     description:
-      'See FAMtastic Designs project examples, case studies, and custom AI business solutions engineered for real outcomes.',
+      'Enter live launches, campaign worlds, and clearly labeled concept labs by FAMtastic Designs—digital experiences built with story, motion, systems, and purpose.',
   },
   '/blog': {
     title: 'Blogs | Agentic AI, Web Engineering & Digital Solutions',

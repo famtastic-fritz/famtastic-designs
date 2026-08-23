@@ -1,0 +1,132 @@
+{
+  "schema": "famtastic.lab-browser-proof.v1",
+  "content_id": "famtastic-lab-and-if-it-is-v1",
+  "tested_at": "2026-08-19T17:25:43.685Z",
+  "browser": "playwright-chromium",
+  "profiles": [
+    {
+      "profile": "desktop-1440",
+      "status": 200,
+      "title": "AND IF IT IS? — A FAMtastic Lab Case Study",
+      "h1Count": 1,
+      "landmarkMainCount": 1,
+      "imageCount": 4,
+      "missingAltCount": 0,
+      "horizontalOverflow": false,
+      "canonical": "https://famtasticdesigns.com/lab/and-if-it-is/",
+      "ogTitle": "AND IF IT IS? — Built in the FAMtastic Lab",
+      "ogDescription": "Is FAMU a cult? And if it is? One unapologetic cultural truth became an original campaign world for Rattler lifers.",
+      "ogImage": "https://famtasticdesigns.com/lab/and-if-it-is/assets/rattler-lifers-hero.jpg",
+      "twitterCard": "summary_large_image",
+      "jsonLdValid": true,
+      "disclosure": true,
+      "timingBoundary": true,
+      "campaignHookVisible": true,
+      "marketingBoundary": true,
+      "liveExperienceLinks": 3,
+      "liveExperienceExact": true,
+      "intakeLinks": 2,
+      "intakeQueryFacts": [
+        {
+          "path": "/start",
+          "source": "famtastic-lab",
+          "campaign": "and-if-it-is",
+          "utmSource": "famtastic_lab",
+          "hasPii": false
+        },
+        {
+          "path": "/start",
+          "source": "famtastic-lab",
+          "campaign": "and-if-it-is",
+          "utmSource": "famtastic_lab",
+          "hasPii": false
+        }
+      ],
+      "pageViewEvent": true,
+      "ctaEvent": true,
+      "canonicalExact": true,
+      "externalBlankRelDefects": 0,
+      "activeHeaderHeight": 74
+    },
+    {
+      "profile": "phone-390",
+      "status": 200,
+      "title": "AND IF IT IS? — A FAMtastic Lab Case Study",
+      "h1Count": 1,
+      "landmarkMainCount": 1,
+      "imageCount": 4,
+      "missingAltCount": 0,
+      "horizontalOverflow": false,
+      "canonical": "https://famtasticdesigns.com/lab/and-if-it-is/",
+      "ogTitle": "AND IF IT IS? — Built in the FAMtastic Lab",
+      "ogDescription": "Is FAMU a cult? And if it is? One unapologetic cultural truth became an original campaign world for Rattler lifers.",
+      "ogImage": "https://famtasticdesigns.com/lab/and-if-it-is/assets/rattler-lifers-hero.jpg",
+      "twitterCard": "summary_large_image",
+      "jsonLdValid": true,
+      "disclosure": true,
+      "timingBoundary": true,
+      "campaignHookVisible": true,
+      "marketingBoundary": true,
+      "liveExperienceLinks": 3,
+      "liveExperienceExact": true,
+      "intakeLinks": 2,
+      "intakeQueryFacts": [
+        {
+          "path": "/start",
+          "source": "famtastic-lab",
+          "campaign": "and-if-it-is",
+          "utmSource": "famtastic_lab",
+          "hasPii": false
+        },
+        {
+          "path": "/start",
+          "source": "famtastic-lab",
+          "campaign": "and-if-it-is",
+          "utmSource": "famtastic_lab",
+          "hasPii": false
+        }
+      ],
+      "pageViewEvent": true,
+      "ctaEvent": true,
+      "canonicalExact": true,
+      "externalBlankRelDefects": 0,
+      "activeHeaderHeight": 66
+    }
+  ],
+  "assertions": {
+    "every_profile_200": true,
+    "exactly_one_h1_and_main": true,
+    "all_images_have_alt_attributes": true,
+    "no_horizontal_overflow": true,
+    "canonical_metadata_complete": true,
+    "structured_data_valid": true,
+    "legal_and_timing_boundaries_visible": true,
+    "campaign_hook_preserved_in_first_viewport": true,
+    "marketing_split_visible": true,
+    "live_experience_ctas_exact": true,
+    "attributed_intake_ctas_without_pii": true,
+    "analytics_page_and_cta_events_wired": true,
+    "no_external_rel_defects": true,
+    "screenshots_exactly_desktop_and_phone": true,
+    "source_and_asset_hashes_recorded": true,
+    "no_console_errors": true,
+    "no_page_errors": true,
+    "no_failed_requests": true
+  },
+  "console_errors": [],
+  "page_errors": [],
+  "failed_requests": [],
+  "screenshots": [
+    "evidence/lab-screenshots/famtastic-lab-desktop-1440.png",
+    "evidence/lab-screenshots/famtastic-lab-phone-390.png"
+  ],
+  "hashes": {
+    "lab-site/index.html": "f82c3415b16926f356b90241316ea9dcfd13ade7f256fe4ad9841cbc859a7bcd",
+    "lab-site/styles.css": "c88c4e5bcbffa16ff50adc286ea962e127f40e69f0b7f1d0f7282c47fee5a5c3",
+    "lab-site/app.js": "fcf03f5d156c0c0929a3b11b964ff0279e6613993a9cee5ca9042b5803238350",
+    "lab-site/assets/rattler-lifers-hero.jpg": "a98eb894e03bb7d7e8819d4b7b4d9d193f97633c28bfa3c737d096572cc79384",
+    "lab-site/assets/the-lifer-character.jpg": "2b363e1830554521cd4e8b431754eaff9fb30804ca0d194baa00348e593af589",
+    "lab-site/assets/famtastic-mark.svg": "a394195419bc347e26da6ac1f5db60f9fa740f34aca4bf3d082e915fc4728730"
+  },
+  "pass": true
+}

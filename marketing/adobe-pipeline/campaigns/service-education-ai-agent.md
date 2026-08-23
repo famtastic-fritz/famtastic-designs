@@ -24,4 +24,3 @@ CTA: Meet your AI Site Agent.
 ## Tracking
 
 `utm_campaign=ai_site_agent_education&utm_content=proof_after_hours`
-

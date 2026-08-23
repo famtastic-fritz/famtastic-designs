@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://famtasticdesigns.com/schemas/site-studio-build-packet.v1.schema.json",
+  "title": "FAMtastic Site Studio build packet",
+  "type": "object",
+  "required": ["schema", "packet_id", "idempotency_key", "request_id", "project_id", "build_class", "selected_direction_ids", "brief", "artifacts", "stage_ledger", "return_contract"],
+  "properties": {
+    "schema": {"const": "famtastic.site-studio.build-packet.v1"},
+    "packet_id": {"type": "string", "minLength": 8},
+    "idempotency_key": {"type": "string", "minLength": 8},
+    "request_id": {"type": "string", "minLength": 1},
+    "project_id": {"type": "string", "minLength": 1},
+    "build_class": {"enum": ["free", "low", "medium", "premium", "premium_brain_free_workers", "custom"]},
+    "selected_direction_ids": {"type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": true, "items": {"pattern": "^direction-[a-f]$"}},
+    "brief": {"type": "object"},
+    "artifacts": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["role", "path", "sha256", "bytes"]}},
+    "stage_ledger": {"type": "array", "minItems": 1},
+    "build_dna": {
+      "type": "object",
+      "description": "Additive pointer to the immutable FAMtastic Build DNA record copied into packet-files/build-dna.json for all new packets.",
+      "required": ["schema", "build_id", "path", "sha256", "status"],
+      "properties": {
+        "schema": {"const": "famtastic.build-dna.v1"},
+        "build_id": {"type": "string", "minLength": 8},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "status": {"enum": ["complete", "legacy_missing", "gated"]}
+      },
+      "additionalProperties": true
+    },
+    "return_contract": {"type": "object", "required": ["schema", "signature_algorithm"]}
+  },
+  "additionalProperties": true
+}

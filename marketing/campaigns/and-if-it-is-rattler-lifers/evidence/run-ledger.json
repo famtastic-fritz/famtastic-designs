@@ -1,0 +1,153 @@
+{
+  "schema": "famtastic.lean-campaign-run-ledger.v1",
+  "run_id": "and-if-it-is-20260819-001",
+  "campaign": "and_if_it_is_rattler_lifers",
+  "proof_level": "locally_proven_draft_with_production_unlisted_hosting",
+  "measured_window": {
+    "definition": "first paid image job accepted through final passing browser QA",
+    "started_at": "2026-08-19T13:20:58.935Z",
+    "completed_at": "2026-08-19T13:34:02.000Z",
+    "elapsed_seconds": 783.065,
+    "elapsed_human": "13m 03s"
+  },
+  "stages": [
+    {
+      "order": 1,
+      "name": "source-research",
+      "capability": "web_research",
+      "provider": "OpenAI web search",
+      "model": "provider_not_disclosed",
+      "tool_purpose": "Find official evidence, current rank language, alumni continuity, and trademark boundaries.",
+      "input": "brief.json",
+      "output": "research.json",
+      "status": "pass"
+    },
+    {
+      "order": 2,
+      "name": "campaign-direction-and-copy",
+      "capability": "creative_strategy_and_copy",
+      "provider": "OpenAI",
+      "model": "gpt-5.6-sol",
+      "tool_purpose": "Convert research and user language into one campaign identity, content pillars, copy, and evidence narrative.",
+      "input": ["brief.json", "research.json"],
+      "output": ["CAMPAIGN_PLAYBOOK.md", "manifest.json"],
+      "status": "pass"
+    },
+    {
+      "order": 3,
+      "name": "original-graphics",
+      "capability": "ultra_realistic_image_generation",
+      "provider": "OpenArt",
+      "model": "gpt-image-2",
+      "mode": "text2image",
+      "execution": "two jobs submitted in parallel; one output each; no retry",
+      "prompt_source": "prompts.json",
+      "credits": 315,
+      "account_plan": "Starter",
+      "account_credits_after_run": 3010,
+      "jobs": [
+        {
+          "prompt_id": "hero-v1",
+          "history_id": "0Dpm7sjX4vK5TzgvHPTn",
+          "resource_id": "7Lglh53N46WgxELo9UJi",
+          "created_at": "2026-08-19T13:21:03.364Z",
+          "completed_at_inferred_from_resource_timestamp": "2026-08-19T13:22:51.715Z",
+          "observed_generation_seconds": 108.351,
+          "credits": 170,
+          "dimensions": "2304x1296",
+          "format": "png",
+          "output": "site/assets/rattler-lifers-hero.png",
+          "sha256": "ab8097c6c0ce4429b3878acfecc8f39f74c08469d52ca651ece68a68c0413be5"
+        },
+        {
+          "prompt_id": "the-lifer-v1",
+          "history_id": "xMCCKgeAYRiVGrzoWIjU",
+          "resource_id": "BpRLdpZKfYX0NmKAb990",
+          "created_at": "2026-08-19T13:20:58.935Z",
+          "completed_at_inferred_from_resource_timestamp": "2026-08-19T13:23:31.282Z",
+          "observed_generation_seconds": 152.347,
+          "credits": 145,
+          "dimensions": "1344x1680",
+          "format": "png",
+          "output": "site/assets/the-lifer-character.png",
+          "sha256": "0c28405809c80fe36ece19f676a7438dd8422aae188fe0d6f1c1ef29791c6007"
+        }
+      ],
+      "delivery_derivatives": [
+        {
+          "source": "site/assets/rattler-lifers-hero.png",
+          "served_as": "site/assets/rattler-lifers-hero.jpg",
+          "quality": 86,
+          "purpose": "Reduce live transfer size while preserving the original PNG as evidence."
+        },
+        {
+          "source": "site/assets/the-lifer-character.png",
+          "served_as": "site/assets/the-lifer-character.jpg",
+          "quality": 88,
+          "purpose": "Reduce live transfer size while preserving the original PNG as evidence."
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "order": 4,
+      "name": "social-hub-and-card-build",
+      "capability": "responsive_static_site_and_social_composition",
+      "provider": "OpenAI",
+      "model": "gpt-5.6-sol",
+      "tool_purpose": "Build editable HTML and CSS around the approved formula and two generated assets.",
+      "output": ["site/index.html", "site/styles.css", "site/app.js", "site/cards/"],
+      "status": "pass"
+    },
+    {
+      "order": 5,
+      "name": "technical-browser-qa",
+      "capability": "browser_acceptance",
+      "provider": "Playwright",
+      "model": "chromium",
+      "tool_purpose": "Verify five routes, desktop and mobile rendering, image loading, local links, disclosure, overflow, and runtime errors.",
+      "output": "evidence/browser-results.json",
+      "attempts": 2,
+      "first_attempt_issue": "Decorative rotated ticker widened the document by 8px on desktop and 2px on mobile.",
+      "repair": "Removed the section transform and retained the angled energy on an internal clipped rule.",
+      "final_status": "pass"
+    },
+    {
+      "order": 6,
+      "name": "visual-review",
+      "capability": "visual_criticism",
+      "provider": "OpenAI",
+      "model": "gpt-5.6-sol",
+      "independent": false,
+      "output": "evidence/visual-review.json",
+      "status": "self_review_pass_human_approval_pending"
+    },
+    {
+      "order": 7,
+      "name": "unlisted-static-publication",
+      "capability": "anonymous_static_proof_hosting",
+      "provider": "FAMtastic Designs GoDaddy production",
+      "model": null,
+      "tool_purpose": "Publish the exact validated static campaign as an anyone-with-link proof without creating or posting to a social account.",
+      "output": "evidence/live-publication.json",
+      "url": "https://famtasticdesigns.com/proofs/unlisted/0d87038b679e52c104ba126eceb02f1b/",
+      "archive_sha256": "fe2413dae15dd0f851e8023f764edefdecfb6f1ef81ec97ec17239dcfee7c3ee",
+      "status": "production_smoke_test_pass"
+    }
+  ],
+  "agent_and_skill_decision": {
+    "new_agent_created": false,
+    "new_skill_created": false,
+    "reason": "Existing demand-engine, image-generation, site-building, and browser capabilities covered the bounded proof. The durable addition is the versioned formula and one-command verifier, not another orchestration layer."
+  },
+  "external_side_effects": {
+    "openart_generation": true,
+    "credits_spent": 315,
+    "social_account_created": false,
+    "social_post_published": false,
+    "customer_email_sent": false,
+    "production_site_mutated": true,
+    "unlisted_static_proof_published": true,
+    "unlisted_static_proof_url": "https://famtasticdesigns.com/proofs/unlisted/0d87038b679e52c104ba126eceb02f1b/"
+  }
+}

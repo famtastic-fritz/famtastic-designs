@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { createCustomerReferral, createCustomerThread, createWebsiteRequest, customerLogout, customerSession, decideWebsiteRequestProof, getCustomerCatalog, getCustomerThread, getCustomerWorkspace, replyCustomerThread, updateCustomerPreferences, updateCustomerProfile, updateWebsiteRequest, updateWebsiteRequestProofShare, uploadWebsiteRequestAsset } from '../api/customer.js';
 import '../portal.css';
 
@@ -179,7 +179,9 @@ function PortalHome({ workspace, org, order, project, nextAction, go, catalog })
 
 export default function CustomerPortalDashboard() {
   const navigate = useNavigate();
-  const [section, setSection] = useState('home');
+  const [searchParams] = useSearchParams();
+  const continuingWebsiteLead = searchParams.get('start') === 'website';
+  const [section, setSection] = useState(continuingWebsiteLead ? 'projects' : 'home');
   const [session, setSession] = useState(null);
   const [workspace, setWorkspace] = useState(null);
   const [catalog, setCatalog] = useState(null);
@@ -190,7 +192,7 @@ export default function CustomerPortalDashboard() {
   const [activeThread, setActiveThread] = useState(null);
   const [faqSearch, setFaqSearch] = useState('');
   const [busy, setBusy] = useState(false);
-  const [editingRequest, setEditingRequest] = useState(null);
+  const [editingRequest, setEditingRequest] = useState(continuingWebsiteLead ? {} : null);
   const [targetRequest, setTargetRequest] = useState('');
   const proofIntentHandled = useRef(false);
   useEffect(() => { Promise.all([customerSession(), getCustomerWorkspace(), getCustomerCatalog()]).then(([s, w, c]) => { setSession(s); setWorkspace(w); setCatalog(c); setState('ready'); }).catch(() => navigate('/login', { replace: true })); }, [navigate]);
@@ -200,10 +202,15 @@ export default function CustomerPortalDashboard() {
     const params = new URLSearchParams(window.location.search);
     const requestedSection = params.get('section');
     const requestId = params.get('request') || '';
+    const startWebsite = params.get('start') === 'website';
     const requestedProof = requestId ? workspace.website_requests?.find((request) => request.public_id === requestId) : null;
     const requestedProofReady = requestedProof && [3, 6].includes(requestedProof.proofs?.variants?.length);
     const readyProof = workspace.website_requests?.find((request) => ['customer_ready', 'notified'].includes(request.proof_review_status) && [3, 6].includes(request.proofs?.variants?.length));
     if (requestedSection && Object.hasOwn(LABELS, requestedSection)) setSection(requestedSection);
+    if (startWebsite) {
+      setSection('projects');
+      setEditingRequest((current) => current || {});
+    }
     if (requestId || readyProof) setSection('projects');
     if (requestId) {
       setTargetRequest(requestId);
@@ -298,7 +305,7 @@ export default function CustomerPortalDashboard() {
           <label>Overall style notes<textarea name="style_preferences" defaultValue={editingRequest.intake?.style_preferences || ''} /></label>
           <div className="portal-form-grid"><label>Preferred colors<textarea name="preferred_colors" defaultValue={editingRequest.intake?.preferred_colors || ''} placeholder="Names, hex codes, or describe a palette" /></label><label>Colors or styles to avoid<textarea name="colors_to_avoid" defaultValue={editingRequest.intake?.colors_to_avoid || ''} /><textarea name="styles_to_avoid" defaultValue={editingRequest.intake?.styles_to_avoid || ''} /></label></div>
           <label>How should visitors feel?<textarea name="desired_feeling" defaultValue={editingRequest.intake?.desired_feeling || ''} placeholder="Safe, energized, luxurious, playful, confident…" /></label>
-          <label>Websites you like and competitors<textarea name="reference_sites" defaultValue={editingRequest.intake?.reference_sites || ''} placeholder="One URL per line, plus what you like" /><textarea name="competitors" defaultValue={editingRequest.intake?.competitors || ''} /></label><label>Notes about flyers, images, or other visual references<textarea name="visual_reference_notes" defaultValue={editingRequest.intake?.visual_reference_notes || ''} /></label>
+          <label>Websites you like and competitors<textarea name="reference_sites" defaultValue={editingRequest.intake?.reference_sites || ''} placeholder="One URL per line, plus what you like" /><textarea name="reference_site_reasons" defaultValue={editingRequest.intake?.reference_site_reasons || ''} placeholder="What specifically works or does not work for you?" /><textarea name="competitors" defaultValue={editingRequest.intake?.competitors || ''} /></label><label>Notes about flyers, images, or other visual references<textarea name="visual_reference_notes" defaultValue={editingRequest.intake?.visual_reference_notes || ''} /></label>
           <div className="portal-form-grid"><label>Search phrases customers use<textarea name="seo_keywords" defaultValue={editingRequest.intake?.seo_keywords || ''} /></label><label>Locations you serve<textarea name="service_locations" defaultValue={editingRequest.intake?.service_locations || ''} /></label></div>
           <div className="portal-form-grid"><label>Business hours<textarea name="business_hours" defaultValue={editingRequest.intake?.business_hours || ''} /></label><label>Public contact details<textarea name="contact_details" defaultValue={editingRequest.intake?.contact_details || ''} /></label></div>
           <label>Social profiles<textarea name="social_profiles" defaultValue={editingRequest.intake?.social_profiles || ''} /></label>

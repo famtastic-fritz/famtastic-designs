@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run Human Experience Tester"
+  short_description: "Test customer journeys with an opt-in personality lens."
+  default_prompt: "Test this customer journey as a realistic human persona, optionally apply a disclosed numerology lens, and return evidence-based findings."

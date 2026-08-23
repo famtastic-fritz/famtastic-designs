@@ -1,0 +1,68 @@
+[
+  {
+    "id": "direction-a",
+    "slug": "polished-and-punctual",
+    "name": "Polished & Punctual",
+    "mode": "restrained",
+    "famtastic_level": 2,
+    "strategy": "A refined, conversion-first studio site that reassures busy clients and puts services, preparation, and booking in the shortest path.",
+    "palette": "ivory / cocoa / blush / rose gold",
+    "information_architecture": "calm hero -> service categories -> three-step booking -> work gallery -> preparation -> policy handoff",
+    "hero_asset": "direction-a-polished-and-punctual.png"
+  },
+  {
+    "id": "direction-b",
+    "slug": "express-yourself",
+    "name": "Express Yourself",
+    "mode": "medium",
+    "famtastic_level": 6,
+    "strategy": "A fast, energetic appointment experience with an express-lane rhythm and enough spectacle to feel unmistakably Bossy.",
+    "palette": "black cherry / hot coral / chrome / lilac",
+    "information_architecture": "split hero -> appointment runway -> service menu -> availability explainer -> gallery -> book",
+    "hero_asset": "direction-b-express-yourself.png"
+  },
+  {
+    "id": "direction-c",
+    "slug": "chrome-empress",
+    "name": "Chrome Empress",
+    "mode": "ultra",
+    "famtastic_level": 10,
+    "strategy": "Turn nail artistry into futuristic power armor with a commanding chrome world that still delivers an intelligible booking path.",
+    "palette": "mirror chrome / ultraviolet / black / white",
+    "information_architecture": "immersive throne hero -> choose your armor -> process timeline -> detail gallery -> care protocol -> appointment gate",
+    "hero_asset": "direction-c-chrome-empress.png"
+  },
+  {
+    "id": "direction-d",
+    "slug": "nailverse",
+    "name": "Nailverse",
+    "mode": "ultra",
+    "famtastic_level": 10,
+    "strategy": "Make every service a portal into a different nail-art universe, balancing imaginative discovery with clear scope and preparation details.",
+    "palette": "midnight / holographic pink / aqua / violet / star gold",
+    "information_architecture": "cosmic portal hero -> universe selector -> service orbit -> gallery constellations -> prep mission -> reserve",
+    "hero_asset": "direction-d-nailverse.png"
+  },
+  {
+    "id": "direction-e",
+    "slug": "main-character-mani",
+    "name": "Main Character Mani",
+    "mode": "ultra",
+    "famtastic_level": 10,
+    "strategy": "Frame the appointment as a kinetic chapter in a client’s day, pairing music-video energy with a schedule-first conversion structure.",
+    "palette": "magenta / acid orange / electric blue / black",
+    "information_architecture": "runway hero -> day-in-motion timeline -> look selector -> speed and prep -> social-proof placeholders -> book the scene",
+    "hero_asset": "direction-e-main-character-mani.png"
+  },
+  {
+    "id": "direction-f",
+    "slug": "bossy-lab",
+    "name": "The Bossy Lab",
+    "mode": "ultra",
+    "famtastic_level": 10,
+    "strategy": "Present bespoke nail sets as collectible formulas inside a playful luxury laboratory with precision, customization, and care at its core.",
+    "palette": "obsidian / neon lime / violet / glass / silver",
+    "information_architecture": "laboratory hero -> formula builder -> specimen vault -> process controls -> care data -> request experiment",
+    "hero_asset": "direction-f-bossy-lab.png"
+  }
+]

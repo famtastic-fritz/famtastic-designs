@@ -89,8 +89,13 @@ class OutreachMailer {
       }
       $mailer->addAddress($to);
       $mailer->Subject = $subject;
-      $mailer->Body = $body;
-      $mailer->isHTML(FALSE);
+      // Keep the operational record and the plain-text alternative readable,
+      // while giving every customer and owner notification a consistent,
+      // mobile-safe presentation.  Callers deliberately provide plain text so
+      // request data can never become executable markup in an email.
+      $mailer->isHTML(TRUE);
+      $mailer->Body = $this->renderHtmlMessage($subject, $body);
+      $mailer->AltBody = $body;
       $mailer->send();
       $providerMessageId = trim($mailer->getLastMessageID());
       if ($providerMessageId === '') {
@@ -113,6 +118,45 @@ class OutreachMailer {
       '@message_id' => $providerMessageId,
     ]);
     return $providerMessageId;
+  }
+
+  /**
+   * Turns a trusted plain-text notification into a small transactional email.
+   *
+   * This is intentionally a presentation boundary rather than a new template
+   * system: the outbox and memory transport retain the exact readable text,
+   * and only http(s) links become anchors after escaping.
+   */
+  private function renderHtmlMessage(string $subject, string $body): string {
+    $paragraphs = preg_split('/\R{2,}/', trim($body)) ?: [];
+    $content = '';
+    foreach ($paragraphs as $paragraph) {
+      $escaped = htmlspecialchars(trim($paragraph), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      $escaped = preg_replace_callback(
+        '#(https?://[^\s&lt;]+)#i',
+        static function (array $match): string {
+          $url = $match[1];
+          return '<a href="' . $url . '" style="color:#0f6b47;font-weight:700;word-break:break-word">' . $url . '</a>';
+        },
+        $escaped,
+      ) ?? $escaped;
+      $content .= '<p style="margin:0 0 16px;color:#243126;font:16px/1.55 Arial,Helvetica,sans-serif">'
+        . nl2br($escaped, FALSE)
+        . '</p>';
+    }
+    if ($content === '') {
+      $content = '<p style="margin:0;color:#243126;font:16px/1.55 Arial,Helvetica,sans-serif">A FAMtastic Designs notification is ready for review.</p>';
+    }
+
+    $safeSubject = htmlspecialchars($subject, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    return '<!doctype html><html lang="en"><body style="margin:0;padding:0;background:#edf1eb">'
+      . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#edf1eb"><tr><td style="padding:28px 14px">'
+      . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #d8e0d8;border-radius:14px;overflow:hidden">'
+      . '<tr><td style="padding:22px 28px;background:#102a1c;color:#ffffff;font:800 15px/1 Arial,Helvetica,sans-serif;letter-spacing:.08em;text-transform:uppercase">FAMtastic Designs</td></tr>'
+      . '<tr><td style="padding:28px"><h1 style="margin:0 0 20px;color:#102a1c;font:800 27px/1.15 Arial,Helvetica,sans-serif">' . $safeSubject . '</h1>'
+      . $content
+      . '<p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #d8e0d8;color:#66736a;font:13px/1.45 Arial,Helvetica,sans-serif">This is an operational message from FAMtastic Designs. You can reply to this email if you need to add context.</p>'
+      . '</td></tr></table></td></tr></table></body></html>';
   }
 
   /**

@@ -23,7 +23,16 @@ Read `references/content-contract.md` before authoring or changing a series. Rea
 
 ## Supporting skills
 
-Use installed `blog-*`, `seo-*`, `content-strategy`, `copywriting`, `pricing-strategy`, `product-marketing-context`, `free-tool-strategy`, `email-sequence`, `analytics-tracking`, and `launch-strategy` skills as specialist references. This skill and the repository doctrine override generic advice.
+Read `.agents/product-marketing.md` before starting a marketing task. Use the
+project-shared `blog-*`, `seo-*`, `content-strategy`, `copywriting`,
+`pricing-strategy`, `product-marketing-context`, `free-tool-strategy`,
+`email-sequence`, `analytics-tracking`, and `launch-strategy` skills as
+specialist references. The current shared marketing core additionally provides
+`product-marketing`, `cro`, `signup`, `onboarding`, `popups`, `revops`,
+`ad-creative`, `marketing-ideas`, `marketing-loops`, `sales-enablement`,
+`ai-seo`, `analytics`, `ab-testing`, `social`, `site-architecture`, `schema`,
+and `offers`. Load the narrowest applicable specialist; this skill and the
+repository doctrine override generic advice.
 
 ## Workflow
 

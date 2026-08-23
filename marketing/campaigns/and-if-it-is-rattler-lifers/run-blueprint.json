@@ -1,0 +1,192 @@
+{
+  "schema": "famtastic.adjustable-creative-run-blueprint.v1",
+  "version": "1.0.0",
+  "status": "golden_baseline_pending_second_unrelated_certification",
+  "callable_routines": [
+    "social_presence.generate.v1(brief_id)",
+    "website.preview.v2(request_id)"
+  ],
+  "principle": "Protect the research-led creative thesis and quality gates; control cost and latency through bounded candidates, parallel work, deterministic assembly, and selected-direction refinement.",
+  "run_profiles": {
+    "lean_social_presence": {
+      "directions": 1,
+      "original_image_jobs": 2,
+      "social_cards": 3,
+      "target_minutes_after_research": 20,
+      "certification": "one observed run passed in 13m03s; target is not yet a service guarantee"
+    },
+    "six_direction_preview": {
+      "directions": 6,
+      "mix": {
+        "restrained": 1,
+        "medium_famtastic": 1,
+        "ultra_famtastic": 4
+      },
+      "target_minutes_after_research": 30,
+      "certification": "quality contract proven locally; timing target not yet certified"
+    },
+    "selected_direction_refinement": {
+      "directions": 1,
+      "purpose": "Spend deeper copy, image, interaction, accessibility, and customer-review effort only after selection.",
+      "target_minutes_after_research": null,
+      "certification": "separate build phase; never hidden inside preview timing"
+    }
+  },
+  "adjustable_parameters": {
+    "famtastic_intensity": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 8
+    },
+    "research_depth": {
+      "type": "enum",
+      "values": ["local_context", "market_and_competitor", "deep_cultural"],
+      "default": "market_and_competitor"
+    },
+    "direction_mix": {
+      "type": "object",
+      "default": {"restrained": 1, "medium_famtastic": 1, "ultra_famtastic": 4}
+    },
+    "image_job_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 12,
+      "default": 2
+    },
+    "character_strategy": {
+      "type": "enum",
+      "values": ["none", "original_character", "original_motif", "client_supplied_subject"],
+      "default": "original_motif"
+    },
+    "typography_experimentation": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 8
+    },
+    "texture_density": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 7
+    },
+    "motion_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 4
+    },
+    "routing_class": {
+      "type": "object",
+      "default": {
+        "orchestrator": "premium",
+        "research": "premium",
+        "creative_direction": "premium",
+        "construction_workers": "standard",
+        "image_generation": "high_fidelity",
+        "independent_critic": "premium"
+      },
+      "note": "Classes resolve to available providers and exact models at runtime. The blueprint never hardcodes a provider."
+    },
+    "max_consolidated_repair_cycles": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2,
+      "default": 1
+    }
+  },
+  "locked_boundaries": [
+    "facts and claims remain sourced or explicitly unknown",
+    "pricing and package rules remain deterministic",
+    "customer identity and ownership remain in core systems",
+    "rights, consent, affiliation, accessibility, and disclosure checks cannot be disabled",
+    "publishing, email, payment, and approval require the declared authority gate",
+    "a provider fallback may not silently reduce the visual or review contract"
+  ],
+  "stage_families": [
+    {
+      "order": 1,
+      "stage": "normalize_and_preflight",
+      "capabilities": ["brief_validation", "provider_availability", "rights_boundary"],
+      "parallelizable": true
+    },
+    {
+      "order": 2,
+      "stage": "research",
+      "capabilities": ["live_web_research", "source_validation", "cultural_synthesis"],
+      "parallelizable": true
+    },
+    {
+      "order": 3,
+      "stage": "creative_thesis_and_directions",
+      "capabilities": ["positioning", "art_direction", "copy_concept"],
+      "parallelizable": false
+    },
+    {
+      "order": 4,
+      "stage": "original_assets",
+      "capabilities": ["image_generation", "asset_validation"],
+      "parallelizable": true
+    },
+    {
+      "order": 5,
+      "stage": "deterministic_assembly",
+      "capabilities": ["responsive_web_composition", "social_composition", "metadata"],
+      "parallelizable": true
+    },
+    {
+      "order": 6,
+      "stage": "technical_browser_gate",
+      "capabilities": ["playwright", "accessibility_basics", "link_and_asset_validation"],
+      "parallelizable": true
+    },
+    {
+      "order": 7,
+      "stage": "independent_visual_gate",
+      "capabilities": ["visual_criticism", "business_relevance_review"],
+      "parallelizable": false,
+      "call_budget": "one initial review plus one post-repair review only when the rendered artifact hash changed"
+    },
+    {
+      "order": 8,
+      "stage": "bounded_repair",
+      "capabilities": ["consolidated_technical_and_visual_repair"],
+      "parallelizable": false,
+      "call_budget": "one consolidated repair by default"
+    },
+    {
+      "order": 9,
+      "stage": "package_and_handoff",
+      "capabilities": ["evidence_package", "site_studio_build_packet", "approval_gate"],
+      "parallelizable": true
+    }
+  ],
+  "telemetry_contract": {
+    "required_per_stage": [
+      "stage_id",
+      "attempt",
+      "capability",
+      "resolved_provider",
+      "resolved_model",
+      "prompt_or_input_hash",
+      "output_hash",
+      "started_at",
+      "completed_at",
+      "duration_ms",
+      "cost_when_available",
+      "retry_or_fallback_reason",
+      "reviewer_decision"
+    ],
+    "run_level": [
+      "wall_clock_ms",
+      "stage_duration_totals",
+      "provider_preflight_result",
+      "repair_count",
+      "visual_review_count",
+      "browser_attempt_count",
+      "quality_scores",
+      "final_classification"
+    ]
+  }
+}

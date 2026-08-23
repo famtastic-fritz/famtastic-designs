@@ -1,0 +1,42 @@
+{
+  "schema": "famtastic.preview-timing-analysis.v1",
+  "analyzed_at": "2026-08-19T16:18:00Z",
+  "source": "artifacts/website-delivery-swarm/rattler-football-fan-portal-fresh-20260819-001/agent-ledger.json",
+  "run": "rattler-football-fan-portal-fresh-20260819-001",
+  "ledger_span": {
+    "started_at": "2026-08-19T10:49:56.446860+00:00",
+    "completed_at": "2026-08-19T12:43:42.136486+00:00",
+    "wall_clock_ms": 6825689,
+    "wall_clock_human": "1h 53m 46s"
+  },
+  "active_stage_time": {
+    "aggregate_ms": 4309342,
+    "aggregate_minutes": 71.82
+  },
+  "resumption_and_idle_gap": {
+    "inferred_ms": 2516347,
+    "inferred_human": "41m 56s",
+    "method": "ledger span minus aggregate recorded stage duration"
+  },
+  "stage_summary": [
+    {"stage": "visual-review", "calls": 8, "duration_ms": 1770329, "minutes": 29.51},
+    {"stage": "prototype-construction", "calls": 1, "duration_ms": 603209, "minutes": 10.05},
+    {"stage": "prototype-repair", "calls": 1, "duration_ms": 524713, "minutes": 8.75},
+    {"stage": "visual-art", "calls": 1, "duration_ms": 421628, "minutes": 7.03},
+    {"stage": "live-research", "calls": 1, "duration_ms": 354993, "minutes": 5.92},
+    {"stage": "technical-repair", "calls": 1, "duration_ms": 308835, "minutes": 5.15},
+    {"stage": "browser-qa", "calls": 11, "duration_ms": 201892, "minutes": 3.36},
+    {"stage": "creative-direction", "calls": 1, "duration_ms": 100173, "minutes": 1.67},
+    {"stage": "provider-preflight-claude", "calls": 1, "duration_ms": 8247, "minutes": 0.14},
+    {"stage": "live-source-fetch", "calls": 1, "duration_ms": 6654, "minutes": 0.11},
+    {"stage": "provider-preflight-codex", "calls": 1, "duration_ms": 5712, "minutes": 0.1},
+    {"stage": "site-studio-packet", "calls": 2, "duration_ms": 2859, "minutes": 0.05},
+    {"stage": "bounded-technical-finalization", "calls": 8, "duration_ms": 98, "minutes": 0.0}
+  ],
+  "primary_findings": [
+    "Eight independent visual-review calls consumed the largest active-time share.",
+    "Repeated resume invocations added material wall time even when active provider work was not running.",
+    "The fresh and primary resume lanes now cap the release at one initial review plus one changed-artifact re-review.",
+    "Noncritical refinement should occur after selection instead of multiplying across all six previews."
+  ]
+}

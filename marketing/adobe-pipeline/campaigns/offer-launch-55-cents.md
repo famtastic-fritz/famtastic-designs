@@ -25,4 +25,3 @@ CTA: Start for $199.
 ## Tracking
 
 `utm_campaign=web_basics_55_cents_17d&utm_content=proof_offer_launch`
-

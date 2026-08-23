@@ -327,8 +327,8 @@ final class CustomerPortalService {
       'business_model', 'industry', 'research_context', 'reference_site_reasons',
       'existing_technology', 'desired_domains', 'domain_fallback', 'business_email_needs',
       'custom_needs',
-      'preferred_colors', 'colors_to_avoid', 'desired_feeling', 'styles_to_avoid',
-      'visual_reference_notes', 'ai_context_notes',
+       'preferred_colors', 'colors_to_avoid', 'desired_feeling', 'styles_to_avoid',
+       'visual_reference_notes', 'ai_context_notes',
     ] as $key) $intake[$key] = $text($key);
     $intake['page_count'] = max(1, min(100, (int) ($input['page_count'] ?? 1)));
     $intake['famtastic_level'] = max(0, min(10, (int) ($input['famtastic_level'] ?? 5)));

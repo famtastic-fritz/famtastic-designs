@@ -1,0 +1,74 @@
+{
+  "id": "member-fort-pierce-black-church-showcase",
+  "request_id": "local:church-fp-20260818-fritz-001",
+  "lane": "customer_portal",
+  "account": true,
+  "customer": {
+    "name": "Fritz Medine",
+    "email": "fritz.medine@gmail.com"
+  },
+  "privacy_class": "local_proof_with_user_supplied_contact",
+  "mode": "preview",
+  "fictional_business": true,
+  "business": {
+    "name": "Crown & Coast Fellowship",
+    "industry": "Black church and community ministry",
+    "location": "Fort Pierce, Florida",
+    "model": "Fictional multigenerational church serving worshippers, families, youth, elders, and neighbors",
+    "goal": "Help newcomers plan a visit while making livestreams, ministries, events, giving, prayer, and community service easy to find"
+  },
+  "brand": {
+    "status": "help_needed",
+    "famtastic_level": 10,
+    "creative_contract": "One polished traditional direction and five progressively outrageous FAMtastic directions"
+  },
+  "technology": {
+    "website": null,
+    "domain_owned": false,
+    "desired_domains": [],
+    "email_need": "Use the supplied customer email only for local evidence; do not send"
+  },
+  "scope": {
+    "pages": 5,
+    "booking": false,
+    "ecommerce": false,
+    "custom": null,
+    "features": [
+      "Plan a visit",
+      "Service times and directions",
+      "Livestream and sermon archive",
+      "Ministries and events",
+      "Giving handoff",
+      "Prayer request",
+      "Community outreach"
+    ]
+  },
+  "references": [
+    {
+      "url": "https://www.cityoffortpierce.com/224/About-Fort-Pierce",
+      "role": "Local setting and Sunrise City identity"
+    },
+    {
+      "url": "https://jointheriver.org/",
+      "role": "Local church journey and multigenerational ministry patterns"
+    },
+    {
+      "url": "https://www.reslifefl.com/watch-online",
+      "role": "Local livestream and service-time pattern"
+    },
+    {
+      "url": "https://southsideonline.com/",
+      "role": "Local plan-a-visit, events, ministries, and calendar pattern"
+    },
+    {
+      "url": "https://waytolight.org/",
+      "role": "Local mission, livestream, and connection pattern"
+    }
+  ],
+  "constraints": [
+    "This is a fictional reusable market proof, not a representation of a real church",
+    "Do not invent a real pastor, address, phone number, donation provider, price, or domain availability",
+    "No external email, publication, deployment, payment, or domain mutation",
+    "All generated people are fictional"
+  ]
+}

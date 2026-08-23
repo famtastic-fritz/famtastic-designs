@@ -2,6 +2,11 @@ operations:
   css:
     theme:
       css/operations.css: {}
+  js:
+    js/operations-mobile.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 
 commerce_checkout:
   css:

@@ -67,4 +67,3 @@ minimum necessary context enforced before dispatch.
 
 AI Search/RAG is deferred until a supported vector-store design, source access
 policy, deletion policy, and cross-organization isolation tests are approved.
-

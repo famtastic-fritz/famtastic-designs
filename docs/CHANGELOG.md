@@ -1,5 +1,122 @@
 # Product changelog
 
+## 2026-08-21 — Preview-provider doctrine and Antigravity boundary
+
+- Declared the role-specific preview route: Gemini 3.7 Flash through an
+  authenticated Antigravity bridge for reasoning/build work, Gemini Flash Lite
+  Image for economical 1K proof art, explicit premium image escalation, and an
+  independent final reviewer.
+- Recorded the Antigravity desktop bridge as a discovered, local-attended
+  candidate rather than an autonomous provider. It cannot become selectable
+  until it produces a structured execution receipt, survives a clean-session
+  retry, and demonstrates its declared fallback.
+- Required all agents to use `website_proof.generate.v1`, provider preflight,
+  and Build DNA rather than chat-only mockups or unrecorded model sessions.
+
+## 2026-08-22 — Stateful Gemini Image interaction benchmark
+
+- Added a project-shared, pinned marketing specialist core from
+  `coreyhaines31/marketingskills`: product context, CRO, signup/onboarding,
+  popups, RevOps, ad creative, marketing ideas/loops, sales enablement, AI SEO,
+  analytics/experimentation, social, site architecture, schema, and offer
+  design. The adoption manifest records source commit and per-skill hashes;
+  FAMtastic doctrine, capability truth, and approval gates remain authoritative.
+- Installed Google's `gemini-interactions-api` reference skill in the shared
+  project-agent location and recorded its GEAP credential boundary separately
+  from the existing Gemini Developer API image worker.
+- Proved a two-step Gemini 3.1 Flash Lite Image Developer API interaction from
+  the FAMU-adjacent visual canon: one new 16:9 reference-led scene in 6.096
+  seconds and one 9:16 stateful companion revision in 5.028 seconds.
+- Persisted interaction IDs, verbatim prompts, usage metadata, response and
+  image hashes, receipt, and valid Build DNA under local artifact storage. The
+  benchmark made no customer, Drupal, Site Studio, notification, or production
+  mutation and did not run an independent creative-release review.
+
+## 2026-08-20 — Clearer proof review, readable notifications, and media routing
+
+- Replaced raw-JSON owner email presentation with a compact decision-ready
+  intake summary and a safe responsive transactional email wrapper. The exact
+  plain-text body remains in the outbox/test record; HTML is presentation only.
+- Added a deterministic six-concept review hub to the preview runner: every
+  proof now explains that it is six separate homepage concepts, gives a
+  three-step compare/shortlist flow, exposes visual thumbnails, and asks for
+  one or two favorites. Browser QA now rejects a hub that lacks the guide or
+  does not link exactly to all six directions.
+- Added a mobile Operations-mode notice for the custom Drupal staff surfaces.
+  It keeps phone use focused on triage and record review while honestly warning
+  that dense editors and wide record tables remain desktop-safe work.
+- Added the media routing policy and updated the capability map: HyperFrames
+  is the installed designed-motion lane, MoneyPrinterTurbo is a draft-only
+  narrative-video candidate, and ACI AI remains an unverified image-volume
+  candidate pending terms/API/rights/quota/quality evidence.
+- Recorded the marketing split decision: only `marketing/engine/` is portable
+  today; campaigns, FAMtastic brand data, Drupal/customer truth, evidence, and
+  publishing adapters remain in this repository until explicit extraction gates
+  pass.
+
+## 2026-08-20 — Build DNA and low-cost Gemini Flash Lite image proof
+
+- Added the versioned `famtastic.build-dna.v1` contract, checksum validator,
+  searchable Drupal ledger projection commands, and common agent operating
+  rule. Build DNA captures real stage/model/provider status, prompt/input/output
+  lineage, cost/timing status, reviewers, artifacts, and Site Studio continuity
+  without creating a second workflow engine.
+- Recorded the complete Build DNA for the reference-led Gemini Flash Lite story:
+  an inherited premium visual canon, five new 1K outputs, four distinct support
+  scenes, prompts/usage receipts, expected USD 0.168 new-image cost, static
+  source, responsive browser evidence, and open independent-review boundary.
+- Added the provider-proven Gemini Flash Lite reference-led image sequence to
+  the capability map. It establishes a low-cost route to benchmark further; it
+  does not yet certify an invoice, customer release, Site Studio execution, or
+  unattended independent visual quality.
+
+## 2026-08-19 — Lean social-presence quality baseline
+
+- Separated the `AND IF IT IS?` audience experience from its Lab DNA case
+  study. The public interactive microsite now lives at
+  `https://famtasticdesigns.com/and-if-it-is/`; the Lab remains the process,
+  evidence, timing, QA, and conversion companion at `/lab/and-if-it-is/`.
+- Upgraded Rattler Roll Call from a prototype preview to a working device-local
+  generate, persist, reload, copy, and native-share/copy-fallback interaction.
+  Production Playwright proof covers desktop, phone, all three social cards,
+  metadata, disclosures, the Lab return link, and zero browser errors.
+- Published the public FAMtastic Lab case study at
+  `https://famtasticdesigns.com/lab/and-if-it-is/` through an isolated,
+  allowlisted, atomic static lane, then anonymously verified desktop and phone
+  rendering, assets, disclosures, live-experience links, and attributed intake.
+- Added promotion metadata, structured data, GA4 `page_view` and `cta_clicked`
+  events, PII-free campaign attribution, and a visible boundary between the
+  marketing demand engine and core customer/Site Studio state.
+- Added a machine-readable adjustable run blueprint, quality-and-speed
+  contract, post-run latency review, live publication evidence, and a guarded
+  two-review release budget. Provider resume now skips repair/re-review when
+  the existing independent verdict already passes.
+- Separated the provider-neutral `social_presence.generate.v1` production
+  process from the `AND IF IT IS?` golden example, including its input/output
+  contracts, nine-stage flow, capability routing, evidence package, time and
+  cost discipline, retention rules, and FAMtastic Lab productization path.
+- Added the `AND IF IT IS?` unofficial Rattler Lifers campaign as a one-direction social-presence baseline with one responsive hub, two original 2K graphics, The Lifer character system, three editable HTML social cards, and six governed draft content records.
+- Preserved the verbatim brief, sourced research, exact prompts, provider/model/cost ledger, image-routing alternatives, desktop/mobile/social screenshots, self-review boundary, hashes, and one-command verifier.
+- Recorded the 13-minute-03-second paid-generation-to-QA window, 315-credit OpenArt `gpt-image-2` cost, two first-pass image results, and one targeted overflow repair.
+- Added a provider-neutral image-routing contract distinguishing OpenArt transport from the GPT Image 2 model and documenting direct OpenAI Image API, Responses API, managed, and alternate-model routes without claiming untested equivalence.
+- Added a guarded atomic publisher for campaign-owned static proofs and verified the live unlisted URL anonymously at desktop and phone widths with loaded images, zero overflow, and no browser errors.
+- Kept all social account, OAuth, scheduling, posting, and engagement behavior disabled behind explicit content, media, and publish approvals.
+
+## 2026-08-17 — Public lead-to-member website proof funnel
+
+- Repositioned Solution Finder as the short public lead-capture and starter-recommendation experience rather than the full design-proof intake.
+- Added a Drupal-generated continuation URL and transactional acknowledgement explaining that a free account unlocks the detailed brief and working website demos.
+- Prefilled the registration email and business name, preserved same-email Prospect and Intake claiming, and opened the detailed portal website request immediately after sign-in.
+- Extended the authenticated Drupal website-request model and portal form for business model, research context, likes/dislikes, existing technology, domain fallback, business email, and unlisted custom needs.
+- Added desktop and mobile browser proof for the anonymous lead → registration hook → detailed portal intake journey.
+
+## 2026-08-17 — Website delivery swarm proof engine
+
+- Added a provider-neutral `website.preview.v2` deterministic reference runner.
+- Added specialist/provider registries, versioned brief and trace schemas, three intake fixtures, package/add-on reasoning, independent QA, and Playwright screenshot evidence.
+- Added the callable `run-website-delivery-swarm` repository skill and scale-out implementation record.
+- Added a reusable `human-experience-tester` specialist and callable skill with neutral control mode, opt-in Life Path lenses for 1–9/11/22/33, master-number calculation, protected-decision guardrails, and unit coverage for Life Paths 3 and 33.
+- Added the first customer-specific artifact pilot with Safe/Wild/OMG barbershop proofs, generated hero media, desktop/mobile screenshots, explicit approval/build automation, payment-boundary stop, Gmail self-delivery, and local-versus-premium model benchmarking.
 ## 2026-08-12 — Campaign publishing proof and video evaluation
 
 - Proved branded Facebook Page photo publishing and founder-profile sharing
@@ -299,6 +416,27 @@
   browser QA found no document-level horizontal overflow.
 - Began the official Meta developer connection and paused at Facebook login for
   Fritz's password/2FA rather than handling or storing Facebook credentials.
+
+## 2026-08-18 — Three-project six-direction swarm benchmark
+
+- Added exact one-restrained, one-medium, four-ultra benchmark acceptance.
+- Built 18 responsive websites for Bossy Nails by Pri, The Good Ole Candy Lady
+  Shop, and The FAMU Corner under one customer identity and three request IDs.
+- Added 36 direction screenshots, project review rooms, independent visual
+  scoring, model/prompt ledgers, official-source research where required, and
+  SHA-256 integrity evidence.
+- Added a one-command clean rerun and combined multi-project evidence gate.
+- Added a de-identified private template library that retains proof packages
+  while blocking automatic reuse of customer copy/assets and public portfolio
+  publication.
+# 2026-08-18 — Autonomous preview-to-Site-Studio packet bridge
+
+- Added versioned FAMtastic build-packet and Site Studio success-packet schemas.
+- Added a provider-neutral autonomous pipeline with exact per-stage asked/given/returned journals, availability preflight, build classes, declared fallbacks, one-or-two-direction selection, portable assets, signatures, and portal-result emission.
+- Added Drupal packet registration and signed success ingestion on the existing Site Studio callback boundary. Results are idempotent, project-scoped, ownership-aware, notification-backed, and forbidden from changing price, charging, purchasing domains, or publishing.
+- Added three-run clean certification, tamper rejection, template retention, capability drift enforcement, a dated nine-part master plan, and Gandalf cross-repository notes.
+- Site Studio's repository and build engine were not changed. Golden replay and a local Site Studio contract fixture remain explicitly distinct from real provider generation and real Site Studio execution.
+
 ## 2026-08-21 — FAMtastic Concierge event bridge
 
 - Added a signature-verified, idempotent Inkbox lifecycle receiver for the

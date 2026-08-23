@@ -1,0 +1,50 @@
+{
+  "schema": "famtastic.website-pilot.v1",
+  "request_id": "local:famu-corner-20260818-fritz-001",
+  "customer": {
+    "email": "fritz.medine@gmail.com",
+    "account_state": "member"
+  },
+  "business": {
+    "name": "The FAMU Corner",
+    "location": "Tallahassee, Florida with city and national Rattler reach",
+    "ownership": "personal unofficial community concept",
+    "fictional_business": true
+  },
+  "goal": "A useful unofficial Rattler community hub for verified games, locations, teams, stats, fan stories, alumni and club events, campus navigation, and shuttle information.",
+  "audience": [
+    "FAMU alumni",
+    "current students",
+    "families and prospective visitors",
+    "Rattler fans in Florida and beyond"
+  ],
+  "required_capabilities": [
+    "official athletics schedule and stats links",
+    "verified university events feed concept",
+    "fan and alumni corner",
+    "official campus map handoff",
+    "official Venom Express schedule and tracker handoff",
+    "mobile-first game-day utility"
+  ],
+  "creative_mix": {
+    "restrained": 1,
+    "medium_famtastic": 1,
+    "ultra_famtastic": 4
+  },
+  "required_phrases": [
+    "We Bragg Different",
+    "FAM-Got-Dam-U",
+    "FAMU-ly",
+    "Rattlers",
+    "Strike, Strike and Strike Again"
+  ],
+  "safety": {
+    "unofficial_no_affiliation_disclaimer_required": true,
+    "official_logos_and_copied_graphics_forbidden": true,
+    "invented_schedules_stats_and_transit_times_forbidden": true,
+    "dynamic_information_must_link_to_official_source": true,
+    "external_mutation_allowed": false,
+    "email_allowed": false,
+    "production_import_allowed": false
+  }
+}

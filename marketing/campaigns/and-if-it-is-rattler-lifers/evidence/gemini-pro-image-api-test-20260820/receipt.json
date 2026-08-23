@@ -1,0 +1,49 @@
+{
+  "schema": "famtastic.image-generation-receipt.v1",
+  "generated_at": "2026-08-20T04:25:48.909Z",
+  "provider": "google-gemini-api",
+  "model": "gemini-3-pro-image",
+  "endpoint": "https://generativelanguage.googleapis.com/v1beta/interactions",
+  "source_prompt_file": "/Users/famtastic-fritz/Development/FAMtastic/worktrees/shay-website-delivery-swarm/marketing/campaigns/and-if-it-is-rattler-lifers/prompts.json",
+  "source_prompt_id": "hero-v1",
+  "prompt_verbatim": "Use case: ads-marketing\nAsset type: 16:9 campaign hero for an unofficial lifelong HBCU fan-community social presence\nPrimary request: an ultra-realistic, cinematic editorial photograph about generations of Black college pride that lasts for life\nScene/backdrop: outside a grand but unbranded Southern college football stadium at golden hour, stadium lights glowing through light atmospheric haze, subtle crowd energy in the distance\nSubject: an intergenerational group of seven Black adults spanning current-student age through elders in their late sixties, walking together toward the stadium with confident joy; one older alumnus carries a worn ticket scrapbook, a current student carries a plain megaphone, a parent and adult child walk shoulder to shoulder; natural individuality and authentic age detail\nStyle/medium: premium ultra-realistic campaign photography, 35mm editorial lens, lifelike skin texture, natural hair detail, realistic fabric, cinematic but believable\nComposition/framing: wide horizontal composition, group weighted toward the right two-thirds, generous darker negative space on the left for website typography, full and three-quarter figures, low heroic camera angle\nLighting/mood: warm sunset rim light, deep emerald shadows, copper-orange practical light, proud, affectionate, defiant, generational\nMaterials/textures: worn leather scrapbook, brushed metal railings, concrete stadium grain, subtle abstract iridescent scale reflections in the light—not a literal logo\nConstraints: no text; no letters; no school name; no official university logo, seal, mascot, uniform, licensed mark, celebrity, real identifiable person, watermark, hazing, worship ritual, religious imagery, coercion, menace, or propaganda; portray healthy community, alumni continuity, mentorship, culture, game-day joy, and belonging\nAvoid: generic stock-photo smiles, matching outfits, plastic skin, cloned faces, extra fingers, aggressive snake imagery",
+  "prompt_sha256": "3a6887b55b711e63c47ef0d76ae36ec1ccf699e61186aaf816f98f6dd7b200fd",
+  "requested_output": {
+    "type": "image",
+    "mime_type": "image/jpeg",
+    "aspect_ratio": "16:9",
+    "image_size": "2K"
+  },
+  "http_status": 200,
+  "provider_interaction_id": "v1_Chc0NEdHYXRIOE1ybTlxdHNQOGNQSndRbxIXNDRHR2F0SDhNcm05cXRzUDhjUEp3UW8",
+  "interaction_status": "completed",
+  "duration_ms": 26683,
+  "usage": {
+    "total_tokens": 1961,
+    "total_input_tokens": 374,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 374
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1340,
+    "output_tokens_by_modality": [
+      {
+        "modality": "image",
+        "tokens": 1120
+      }
+    ],
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 247,
+    "raw_prompt_token": 820
+  },
+  "cost_usd_expected_image_output": 0.134,
+  "cost_note": "Published standard pricing for one Gemini 3 Pro Image 1K/2K output as of 2026-08-20; provider response does not include an invoice.",
+  "error": null,
+  "output_file": "/Users/famtastic-fritz/Development/FAMtastic/worktrees/shay-website-delivery-swarm/marketing/campaigns/and-if-it-is-rattler-lifers/evidence/gemini-pro-image-api-test-20260820/hero-gemini-3-pro-image-2k.jpg",
+  "output_mime_type": "image/jpeg",
+  "output_bytes": 3081604,
+  "output_sha256": "a9a36bc87d2bd4ab5b198a47136d645fd3a9e0c929362924bcbcd85eb1e9c544"
+}

@@ -579,4 +579,62 @@ class PipelineCommands extends DrushCommands {
     return self::EXIT_SUCCESS;
   }
 
+  /**
+   * Registers an exact FAMtastic preview-to-Site-Studio build packet.
+   */
+  #[CLI\Command(name: 'famtastic:site-studio-packet-register', aliases: ['fsspr'])]
+  #[CLI\Argument(name: 'path', description: 'Absolute path to site-studio-build-packet.json.')]
+  public function siteStudioPacketRegister(string $path): int {
+    if (!is_file($path)) {
+      $this->logger()->error('Build packet file does not exist.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      $packet = json_decode((string) file_get_contents($path), TRUE, 512, JSON_THROW_ON_ERROR);
+      /** @var \Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService $service */
+      $service = \Drupal::service('famtastic_pipeline.site_studio_build_packets');
+      $result = $service->registerPacket($packet);
+      $this->io()->writeln(json_encode([
+        'ok' => TRUE,
+        'newly_registered' => $result['newly_registered'],
+        'project_id' => (int) $result['project']->id(),
+        'packet_id' => $packet['packet_id'],
+      ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $e) {
+      $this->logger()->error($e->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
+  /**
+   * Imports a private Site Studio success packet through the same service.
+   */
+  #[CLI\Command(name: 'famtastic:site-studio-success-import', aliases: ['fsssi'])]
+  #[CLI\Argument(name: 'path', description: 'Absolute private path to a Site Studio success packet.')]
+  public function siteStudioSuccessImport(string $path): int {
+    if (!is_file($path)) {
+      $this->logger()->error('Success packet file does not exist.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      $success = json_decode((string) file_get_contents($path), TRUE, 512, JSON_THROW_ON_ERROR);
+      /** @var \Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService $service */
+      $service = \Drupal::service('famtastic_pipeline.site_studio_build_packets');
+      $result = $service->acceptSuccess($success);
+      $this->io()->writeln(json_encode([
+        'ok' => TRUE,
+        'newly_processed' => $result['newly_processed'],
+        'project_id' => (int) $result['project']->id(),
+        'status' => 'site_studio_build_succeeded',
+      ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $e) {
+      $this->logger()->error($e->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
 }

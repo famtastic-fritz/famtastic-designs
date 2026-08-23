@@ -341,4 +341,3 @@ provider and the production callback/delivery path have their own evidence.
 - `marketing/local-models.json`
 - `marketing/providers.json`
 - `docs/SOURCE_OF_TRUTH.md`
-

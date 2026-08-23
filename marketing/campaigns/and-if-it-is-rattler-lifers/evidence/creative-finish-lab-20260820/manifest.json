@@ -1,0 +1,47 @@
+{
+  "lab": "creative-finish-lab-20260820",
+  "purpose": "Compare one untouched Gemini Flash Lite reference recreation with non-destructive finishing and four motion-tool treatments.",
+  "source": {
+    "file": "01-flash-lite-reference-source.jpg",
+    "sha256": "55a4cbd0099bb17c21179cdbb2d28b405c300eccf5f7205ea46ab31e2f39e34f",
+    "dimensions": "1376x768",
+    "preservation": "Untouched copy of the Flash Lite reference recreation; never overwritten."
+  },
+  "treatments": [
+    {
+      "tool": "Adobe Photoshop 2026",
+      "source": "01-flash-lite-reference-source.jpg",
+      "outputs": ["02-photoshop-finish.psd", "02-photoshop-finish.jpg"],
+      "recipe": {
+        "curves": [[0, 0], [48, 39], [128, 137], [208, 222], [255, 255]],
+        "brightness": -2,
+        "contrast": 7,
+        "grain": "0.6% Gaussian monochromatic",
+        "unsharp_mask": "55%, 1.0px, threshold 4"
+      },
+      "intent": "A restrained still-image polish, preserving composition and subjects."
+    },
+    {
+      "tool": "Adobe Premiere Pro 2026",
+      "status": "blocked_pending_local_bridge",
+      "source": "02-photoshop-finish.jpg",
+      "planned_output": "03-premiere-cinematic-push.mp4",
+      "intent": "Four-second cinematic push-in and drift from the finished still."
+    },
+    {
+      "tool": "Adobe After Effects 2026",
+      "status": "build_script_ready_not_rendered",
+      "source": "02-photoshop-finish.jpg",
+      "planned_output": "04-after-effects-depth-and-light.mp4",
+      "intent": "Four-second layered parallax, controlled light sweep, and surface texture treatment."
+    },
+    {
+      "tool": "Remotion",
+      "status": "rendered_and_verified",
+      "source": "02-photoshop-finish.jpg",
+      "planned_output": "05-remotion-rattler-ambient.mp4",
+      "intent": "Four-second browser-rendered push-in with a restrained amber sweep and animated patterned overlay."
+    }
+  ],
+  "rule": "Every render is a sibling output. Source files and prior outputs remain intact."
+}

@@ -1,0 +1,144 @@
+{
+  "schema": "famtastic.website-intake.v2",
+  "request_id": "famtastic:rattler-football-fan-portal-20260819-fritz-001",
+  "customer": {
+    "name": "Fritz Medine",
+    "email": "fritz.medine@gmail.com",
+    "account_state": "member"
+  },
+  "mode": "fresh_provider_preview",
+  "fictional_business": true,
+  "business": {
+    "name": "Rattler Football Fan Portal",
+    "industry": "Unofficial FAMU football fan, family, history, and support portal concept",
+    "location": "Tallahassee, Florida with a national Rattler alumni and fan audience",
+    "ownership_context": "User-directed independent fan concept informed by the user's experience as the parent of a current scholarship FAMU football player; no university, athletics-department, team, collective, or player endorsement is claimed",
+    "goal": "Give current fans, alumni, families, and future Rattlers one magnetic mobile-first home for official schedules and statistics, player and history discovery, fan messages, and safe handoffs to authorized support channels"
+  },
+  "audience": [
+    "FAMU football fans who want schedule, result, roster, and statistical handoffs in one place",
+    "Current-player families who want a dignified community experience around the team",
+    "Former players and alumni reconnecting with Rattler football history",
+    "Prospective students and younger fans learning how Rattlers shaped college and professional football",
+    "Supporters looking for official giving, ticket, NIL, and athletics-support pathways"
+  ],
+  "brand": {
+    "status": "Create an original unofficial fan-editorial identity; use original rattler and serpent artwork, scale textures, turf, jersey mesh, stadium concrete, light, and motion without copying the official FAMU mascot drawing, logos, uniforms, or athletics wordmarks",
+    "famtastic_scale": 10,
+    "creative_contract": "Exactly one normal restrained direction, one medium-FAMtastic direction, and four ultra-FAMtastic directions that escalate unmistakably from C through F; all six must be complete responsive fan portals, not posters",
+    "typography_contract": "Typography must be composed as artwork. Every direction needs a named display-font pairing using bundled local WOFF2 fonts plus at least one technique beyond weight/color/italic: outlined or inline type, layered dimensional type, interlocking words, vertical scoring type, editorial drop caps, variable-width contrast, masked imagery, or stadium-signage construction.",
+    "surface_contract": "Every direction needs a named, subject-native surface system visibly applied to backgrounds and containers: original snakeskin scales, jersey mesh, turf grids, painted yard lines, pebbled football leather, stadium concrete, ticket perforations, playbook marks, halftone photography, metallic scoreboard edges, or layered translucent broadcast glass. Flat color-only cards fail.",
+    "reuse_policy": "Reuse and adaptation of proven FAMU Corner, Black Churches, and other FAMtastic components is allowed and encouraged when it improves quality or speed. A complete prior-site copy, identical information architecture, or simple recolor fails.",
+    "desired_feeling": [
+      "unmistakably Rattler football in spirit",
+      "historic and current at the same time",
+      "player-family proud",
+      "electric on game day",
+      "deeply researched",
+      "textured, dimensional, and collectible",
+      "useful enough to revisit every week"
+    ],
+    "required_symbols": [
+      "an original rattler or serpent visual language in every medium or ultra direction",
+      "snakeskin scale geometry used as a pattern or structural grid",
+      "football material cues such as leather grain, laces, turf, yard lines, jersey mesh, play diagrams, scoreboards, tickets, or stadium concrete",
+      "two-g Bragg storytelling that makes the family surname memorable rather than treating it as a typo"
+    ],
+    "avoid": [
+      "generic sports-news template",
+      "plain Arial-only typography",
+      "flat color-only cards and containers",
+      "six recolors of one grid",
+      "official-looking FAMU mascot or logo copies",
+      "fabricated live scores, player statistics, donation destinations, messages, endorsements, or team access",
+      "poster-like hero art without fan utility",
+      "unlabeled stale statistics",
+      "horizontal mobile overflow or inaccessible content rails"
+    ]
+  },
+  "scope": {
+    "preview_pages": 1,
+    "future_pages": [
+      "Game Center",
+      "Schedule and Results",
+      "Roster",
+      "Stats Lab",
+      "Fan Wall",
+      "Rattler Football History",
+      "Rattlers to the Pros",
+      "Bragg Stadium",
+      "Support the Program",
+      "Player Family Spotlight"
+    ],
+    "features": [
+      "official 2026 schedule handoffs and clearly dated 2025 completed-season statistics",
+      "official roster and player-bio handoffs",
+      "non-submitting fan-message prototype with moderation and consent requirements",
+      "official giving, tickets, NIL, and athletics-support handoffs without processing money",
+      "searchable historical-event and legendary-player concepts",
+      "Rattlers-to-the-NFL and Hall of Fame discovery",
+      "Bragg Memorial Stadium naming story and facility facts",
+      "reserved player-family spotlight module that requires the son's name, approval, biography, imagery, and consent before publication",
+      "mobile game-day quick actions",
+      "persistent unofficial-fan-concept and mutable-data disclosures"
+    ]
+  },
+  "references": [
+    {
+      "url": "https://famuathletics.com/sports/football/schedule/2026",
+      "use": "Official current 2026 football schedule and live-stat handoffs"
+    },
+    {
+      "url": "https://famuathletics.com/sports/football/roster/2026",
+      "use": "Official current roster and player biography handoffs"
+    },
+    {
+      "url": "https://famuathletics.com/sports/football/stats/2025",
+      "use": "Official completed 2025 team and player statistics, always labeled by season"
+    },
+    {
+      "url": "https://famuathletics.com/facilities/bragg-memorial-stadium/8",
+      "use": "Official Bragg Memorial Stadium naming, capacity, renovation, Ken Riley Field, Galimore, and Powell facts"
+    },
+    {
+      "url": "https://famuathletics.com/honors/hall-of-fame?type=alpha",
+      "use": "Official FAMU Sports Hall of Fame discovery"
+    },
+    {
+      "url": "https://famuathletics.com/news/2023/2/9/ken-riley-selected-for-the-pro-football-hall-of-fame-joining-bob-hayes-as-the-only-rattlers.aspx",
+      "use": "Official Ken Riley and Bob Hayes Pro Football Hall of Fame context"
+    },
+    {
+      "url": "https://famuathletics.com/news/2016/2/1/210677992.aspx",
+      "use": "Official article documenting Rattler Super Bowl alumni history"
+    },
+    {
+      "url": "https://famuathletics.com/story.aspx?file_date=4%2F12%2F2019&filename=211799523",
+      "use": "Official Athletics FAQ describing authorized support pathways"
+    }
+  ],
+  "known_facts": [
+    "The user is the parent of a current scholarship FAMU football player, but the player's identity, biography, imagery, and consent were not supplied and must not be invented",
+    "FAMU Athletics identifies the venue as Ken Riley Field at Bragg Memorial Stadium",
+    "The stadium name is not a misspelling: Bragg is the surname of father-and-son football figures J.B. 'Jubie' Bragg and Eugene Bragg",
+    "The official facility page says the current stadium was originally built in 1957 and lists a current capacity of 19,633",
+    "Official 2026 schedule, roster, official 2025 statistics, Hall of Fame, ticket, and support pages are available and mutable",
+    "Ken Riley and Bob Hayes are documented by FAMU Athletics as Pro Football Hall of Fame Rattlers",
+    "An official 2016 FAMU Athletics article reported 27 all-time Rattler Super Bowl player appearances through Super Bowl 49; this is historical and must be labeled with the article date rather than presented as current",
+    "All hero artwork and serpent imagery must be original for this run"
+  ],
+  "constraints": [
+    "This is an unofficial fan-portal concept and must not imply FAMU, Athletics, team, coach, player, collective, or sponsor endorsement",
+    "Use the words FAMU, Rattlers, Rattler football, Bragg Memorial Stadium, and player names only for factual editorial reference with citations; do not copy the official mascot drawing, logos, uniforms, or proprietary wordmarks",
+    "The original serpent artwork must not be presented as the official mascot",
+    "Do not accept donations, tickets, NIL payments, fan messages, or personal data; only link to verified official destinations and label all local controls as non-submitting prototypes",
+    "Current schedules, rosters, scores, and statistics are mutable and must link to official sources with season or retrieval context",
+    "Do not feature the user's son until his name, preferred biography, imagery rights, and publication consent are supplied",
+    "During generation do not send email, charge, buy a domain, publish, mutate Drupal, or invoke Site Studio; production proof promotion may happen only after all evidence gates pass",
+    "Use no external JavaScript, trackers, remote fonts, iframes, or hotlinked images"
+  ],
+  "selected_direction_ids": [
+    "direction-e",
+    "direction-f"
+  ]
+}

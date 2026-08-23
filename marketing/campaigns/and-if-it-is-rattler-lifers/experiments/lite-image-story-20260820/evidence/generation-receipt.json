@@ -1,0 +1,168 @@
+{
+  "schema": "famtastic.reference-led-story-image-receipt.v1",
+  "run_id": "lite-image-story-20260820-001",
+  "provider": "google-gemini-api",
+  "api": "generateContent",
+  "model": "gemini-3.1-flash-lite-image",
+  "started_at": "2026-08-20T05:53:05.071Z",
+  "completed_at": "2026-08-20T05:53:23.203Z",
+  "reference_asset": "assets/00-lite-image-canon.jpg",
+  "reference_sha256": "55a4cbd0099bb17c21179cdbb2d28b405c300eccf5f7205ea46ab31e2f39e34f",
+  "reference_role": "Visual canon only: preserve its cinematic editorial grammar, warm wet-concrete stadium atmosphere, candid intergenerational Black community, forest/amber/denim palette, and unbranded setting. Do not copy its pixels or reproduce exact faces.",
+  "requested_output": {
+    "aspect_ratio": "16:9",
+    "image_size": "1K"
+  },
+  "cost_usd_expected_per_image_output": 0.0336,
+  "cost_usd_expected_total_output": 0.1344,
+  "results": [
+    {
+      "id": "01-the-pull",
+      "role": "The pull — the annual ritual before the road starts",
+      "prompt": "Use case: photorealistic-natural\nAsset type: supporting editorial image for an unofficial lifelong college-fan community story page\nInput image: Image 1 is an owned visual canon only. Match its warm amber/olive/charcoal cinematic editorial grammar, tactile wet concrete, weathered leather, denim, brushed stadium metal, subtle 35mm grain, lifelike Black skin/hair/fabric detail, and believable candid emotion. Create a wholly new photograph; do not reuse the hero’s people, exact pose, composition, or stadium view.\n\nPrimary request: show a spontaneous yearly ritual before a road trip.\nScene/backdrop: early golden hour at a modest, completely unbranded neighborhood driveway.\nSubjects: a stylish Black woman in her early fifties pauses at the open trunk of an older dark car, laying a worn leather scrapbook, a folded blank forest-and-copper scarf, and a plain reusable water bottle beside each other. Her adult son, late twenties, leans against the car smiling while checking an unbranded paper map; both are dressed individually, not matching. Background only hints of distant trees and a quiet street; no stadium.\nStyle/medium: ultra-realistic 35mm editorial campaign photography, tactile and intimate.\nComposition/framing: 16:9 horizontal, waist-height perspective, foreground objects tactile and crisp, generous darker negative space in the upper-left for page type.\nLighting/mood: low warm sun, proud and quietly anticipatory.\nMaterials/textures: weathered leather, cotton scarf, paper map, car paint, driveway texture.\nConstraints: no text, letters, numbers, school name, official university logo, seal, mascot, uniform mark, readable map details, fake signage, celebrity, real identifiable person, watermark, worship/cult ritual, hazing, coercion, menace, propaganda, generic stock smiles, cloned faces, malformed hands, or aggressive snake imagery.",
+      "prompt_sha256": "4a0ab122ed87cdf0e6a35b93b45cbd1122ab3e96ead15211b73127edd9aeae5e",
+      "output": "assets/01-the-pull.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 736242,
+      "sha256": "31893dec0236ac198dcdb14600ae375aaa3fd02dfe93c97794f8db89a455f166",
+      "duration_ms": 4333,
+      "requested_output": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      },
+      "usage_metadata": {
+        "promptTokenCount": 1513,
+        "candidatesTokenCount": 1514,
+        "totalTokenCount": 3027,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 393
+          },
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    {
+      "id": "02-everywhere",
+      "role": "Everywhere — the recognition travels beyond the campus",
+      "prompt": "Use case: photorealistic-natural\nAsset type: supporting editorial image for an unofficial lifelong college-fan community story page\nInput image: Image 1 is an owned visual canon only. Match its warm amber/olive/charcoal cinematic editorial grammar, tactile wet surfaces, subtle 35mm grain, lifelike Black skin/hair/fabric detail, and believable candid emotion. Create a wholly new photograph; do not reuse the hero’s people, exact pose, composition, or stadium view.\n\nPrimary request: show how three people who have never met recognize one another in a new city.\nScene/backdrop: blue-hour outside a generic city corner diner with all signage unreadable and no logos. Wet sidewalk reflects amber window light; worn brick, transit mist, soft background bokeh, street scene with no readable signage.\nSubjects: three Black adults of different generations recognize each other in the doorway: an older woman in a deep green wool coat, a thirty-something man in a copper knit cap, and a young woman with natural curls in a dark denim jacket. The recognition is subtle—shared grin, raised eyebrows, shoulders turning toward one another—not theatrical.\nStyle/medium: eye-level 50mm ultra-realistic editorial photograph, close enough for honest faces and material texture.\nComposition/framing: 3:2 horizontal, leave soft shadowed space on the right for copy.\nLighting/mood: city blue hour mixed with amber glass reflections, intimate and unexpectedly joyful.\nMaterials/textures: damp sidewalk, worn brick, wool, denim, mist, window reflections.\nConstraints: no text, letters, numbers, school name, official university logo, seal, mascot, uniform mark, readable signage, celebrity, real identifiable person, watermark, worship/cult ritual, hazing, coercion, menace, propaganda, generic stock smiles, cloned faces, malformed hands, or aggressive snake imagery.",
+      "prompt_sha256": "3400d0f3c5d27b90a9d23ce077584c139c5c4ee78f7a780d12556fd1693425b7",
+      "output": "assets/02-everywhere.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 700319,
+      "sha256": "53247088f835cc4fb8e253873039487419783d5f2ed5d3afba6aedb754e3fdcf",
+      "duration_ms": 3653,
+      "requested_output": {
+        "aspect_ratio": "3:2",
+        "image_size": "1K"
+      },
+      "usage_metadata": {
+        "promptTokenCount": 1511,
+        "candidatesTokenCount": 1524,
+        "totalTokenCount": 3035,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 391
+          },
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    {
+      "id": "03-the-return",
+      "role": "The return — a multigenerational walk toward the lights",
+      "prompt": "Use case: photorealistic-natural\nAsset type: supporting editorial image for an unofficial lifelong college-fan community story page\nInput image: Image 1 is an owned visual canon only. Match its warm amber/olive/charcoal cinematic editorial grammar, tactile wet concrete, brushed stadium metal, subtle 35mm grain, lifelike Black skin/hair/fabric detail, and believable candid emotion. Create a wholly new photograph; do not reuse the hero’s people, exact pose, composition, or stadium view.\n\nPrimary request: show an intergenerational return to a game.\nScene/backdrop: twilight at the exterior entry of a grand but completely unbranded Southern college stadium.\nSubjects: five Black adults, spanning twenties through seventies, move up broad concrete steps toward warm floodlights. A silver-haired aunt reaches back for her granddaughter, an older man carries a folded blanket, and a young couple laugh mid-step. Their clothing uses subtle forest green, copper, mustard, dark denim, and charcoal but has no logos, letters, uniform design, or school colors arranged as a mark.\nStyle/medium: premium ultra-realistic campaign photography, camera behind and slightly below, looking up with real anatomy and motion.\nComposition/framing: 16:9 horizontal, largest light and sky field on the upper-left for page typography.\nLighting/mood: navy evening and pools of amber light; celebratory, cinematic, never a literal cult gathering.\nMaterials/textures: metal railings, worn steps, damp concrete, wool, denim, soft haze.\nConstraints: no text, letters, numbers, school name, official university logo, seal, mascot, uniform mark, readable signage, celebrity, real identifiable person, watermark, worship/cult ritual, hazing, coercion, menace, propaganda, generic stock smiles, cloned faces, malformed hands, or aggressive snake imagery.",
+      "prompt_sha256": "e554cde52451c16be75261d1dc1e141dcccc5dea5d955beb6599baf40a7660d5",
+      "output": "assets/03-the-return.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 706584,
+      "sha256": "3fca7e512b44dd6d7cd2e8ab822f2872c8dd017318ab1faf0fce3569d946451d",
+      "duration_ms": 5180,
+      "requested_output": {
+        "aspect_ratio": "16:9",
+        "image_size": "1K"
+      },
+      "usage_metadata": {
+        "promptTokenCount": 1505,
+        "candidatesTokenCount": 1582,
+        "totalTokenCount": 3087,
+        "promptTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          },
+          {
+            "modality": "TEXT",
+            "tokenCount": 385
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    {
+      "id": "04-the-hand-off",
+      "role": "The hand-off — a story shared forward",
+      "prompt": "Use case: photorealistic-natural\nAsset type: supporting portrait editorial image for an unofficial lifelong college-fan community story page\nInput image: Image 1 is an owned visual canon only. Match its warm amber/olive/charcoal cinematic editorial grammar, tactile materials, subtle 35mm grain, lifelike Black skin/hair/fabric detail, and believable candid emotion. Create a wholly new photograph; do not reuse the hero’s people, exact pose, composition, or stadium view.\n\nPrimary request: show history being shared, never imposed.\nScene/backdrop: an intimate cinematic porch at late afternoon, with deep green house plants, a copper woven blanket, soft rain sheen, weathered wood, and warm sidelight.\nSubjects: a Black grandmother with silver curls and a teenage granddaughter sit close together on weathered wooden steps, smiling as the grandmother opens a blank, worn leather photo album and the granddaughter holds a plain vintage ticket stub with no readable words. In the near background, a Black father with a gentle smile repairs the strap of a plain old megaphone; it remains secondary and physically believable.\nStyle/medium: ultra-realistic editorial portrait, knee-height camera with natural hands in focus and rich material depth.\nComposition/framing: 4:5 vertical; use balanced close framing and leave gentle darker space near the lower-left for a small caption.\nLighting/mood: soft amber late-afternoon warmth, domestic, tactile, generous.\nMaterials/textures: denim, corduroy, aged paper, leather, wood grain, woven blanket, subtle rain sheen.\nConstraints: no text, letters, numbers, school name, official university logo, seal, mascot, uniform mark, readable ticket text, celebrity, real identifiable person, watermark, worship/cult ritual, hazing, coercion, menace, propaganda, generic stock smiles, cloned faces, malformed hands, or aggressive snake imagery.",
+      "prompt_sha256": "cb62677a882aa901817b96d53be9a78311778a28210c0475f4991fac9203dafb",
+      "output": "assets/04-the-hand-off.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 837031,
+      "sha256": "61fc06445ab0310721fd9f70c5db6ab78303ec2605285ef6d6d39de32bbd524f",
+      "duration_ms": 4928,
+      "requested_output": {
+        "aspect_ratio": "4:5",
+        "image_size": "1K"
+      },
+      "usage_metadata": {
+        "promptTokenCount": 1510,
+        "candidatesTokenCount": 1478,
+        "totalTokenCount": 2988,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 390
+          },
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    }
+  ]
+}

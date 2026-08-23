@@ -1,0 +1,65 @@
+{
+  "schema": "famtastic.gpt-image-2-transport-comparison.v1",
+  "campaign": "and_if_it_is_rattler_lifers",
+  "comparison_date": "2026-08-19",
+  "comparison_boundary": {
+    "same_model": "gpt-image-2",
+    "same_prompts_source": "../../prompts.json",
+    "same_prompt_ids": ["hero-v1", "the-lifer-v1"],
+    "same_dimensions": true,
+    "same_quality": "high",
+    "same_auto_enhance_policy": false,
+    "outputs_are_new_nondeterministic_samples": true
+  },
+  "openart_original": {
+    "transport": "OpenArt",
+    "account_plan": "Starter",
+    "credits_spent": 315,
+    "currency_cost": null,
+    "currency_cost_status": "OpenArt credits do not provide a direct USD receipt in the saved run ledger",
+    "parallel_submission": true,
+    "jobs": [
+      {"prompt_id": "hero-v1", "dimensions": "2304x1296", "credits": 170, "duration_ms": 108351, "sha256": "ab8097c6c0ce4429b3878acfecc8f39f74c08469d52ca651ece68a68c0413be5"},
+      {"prompt_id": "the-lifer-v1", "dimensions": "1344x1680", "credits": 145, "duration_ms": 152347, "sha256": "0c28405809c80fe36ece19f676a7438dd8422aae188fe0d6f1c1ef29791c6007"}
+    ],
+    "wall_time_ms": 152347
+  },
+  "openai_direct_api": {
+    "transport": "OpenAI Image API",
+    "endpoint": "POST /v1/images/generations",
+    "model": "gpt-image-2",
+    "sequential_submission": true,
+    "receipt": "generation-receipt.json",
+    "standard_pricing_usd_per_million_tokens": {"text_input": 5, "image_output": 30},
+    "jobs": [
+      {
+        "prompt_id": "hero-v1",
+        "dimensions": "2304x1296",
+        "input_text_tokens": 382,
+        "image_output_tokens": 6462,
+        "calculated_cost_usd": 0.19577,
+        "duration_ms": 84392,
+        "sha256": "df75a5e86e9f2c80fa915f5d256756401a3febb58a6f3e3f627be4141be90b68"
+      },
+      {
+        "prompt_id": "the-lifer-v1",
+        "dimensions": "1344x1680",
+        "input_text_tokens": 401,
+        "image_output_tokens": 7869,
+        "calculated_cost_usd": 0.238075,
+        "duration_ms": 126457,
+        "sha256": "3a72872038302160967df1ab76738e2b636395346583913140f8ebfcc812e790"
+      }
+    ],
+    "calculated_total_usd": 0.433845,
+    "generation_duration_ms": 210850,
+    "calculation": "(input_text_tokens × 5/1,000,000) + (image_output_tokens × 30/1,000,000)",
+    "invoice_status": "calculated from the API response token usage at the current published Standard rates; reconcile with the OpenAI project invoice for the final billing record"
+  },
+  "interpretation": {
+    "cost": "The successful direct API run has a calculated Standard cost of $0.433845. It cannot be converted honestly into an OpenArt per-credit USD amount from the saved data alone.",
+    "latency": "The two OpenArt jobs were submitted in parallel, while this direct API worker submitted the two jobs serially. Do not compare 152.347 seconds to 210.850 seconds as provider speed; the direct worker needs bounded concurrency before a timing comparison is valid.",
+    "quality": "New samples from the same model and prompt are nondeterministic. Human or independent visual review is required before declaring one transport better."
+  },
+  "excluded_attempt": "An earlier direct request hit the local 60-second client timeout and produced no file or receipt. It is excluded from this controlled comparison; reconcile the OpenAI project usage page before treating this as a final invoice total."
+}

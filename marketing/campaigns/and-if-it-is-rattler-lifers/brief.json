@@ -1,0 +1,47 @@
+{
+  "schema": "famtastic.social-presence-brief.v1",
+  "campaign_id": "and_if_it_is_rattler_lifers",
+  "source_request_verbatim": "Hmmm. Im starting to worry about over engineering.  And too much logic.  So keep track of models . Formula used etc\n. So we can adjust an evaluate.  Ok so lets prove your concept. And make sure we dic and have a repeatable process and skills and agents created where nessisary. But lets stay with the famu them while although im still not seeing graphics created. We have mascots, images we can remake to add graphics and character branding to the sites. And we have gpt-img2 ultra realistic recipe.  And you have access to codex play book online.  So heres the concept. People who went to famu and still goes there supports the school and functions their entire life.  I graduated almost 30 years ago and still go to every game. So other schools especially other hbcu's say famu is a cult. Ut jokingly.  There's a whole social media push that rattlers are loud of, basically. We ask. Is famu a cult. And the response is \"and if it is?\" Badically saying so what if it is. I dint cate. Is still all about FAM-GOT-DAM-U!  The best hbcu ever. So take thos info and build ne a social presence that up holds this belief and prove why we are so great",
+  "assembled_brief": {
+    "public_name": "AND IF IT IS?",
+    "descriptor": "The Unofficial Rattler Lifers Project",
+    "audience": [
+      "current FAMU students",
+      "FAMU alumni across graduation decades",
+      "parents and future Rattlers",
+      "HBCU culture audiences"
+    ],
+    "single_minded_idea": "Rattler identity is a healthy, joyful, lifelong bond that does not end at graduation.",
+    "question": "Is FAMU a cult?",
+    "response": "And if it is?",
+    "supporting_line": "We do not graduate from the feeling.",
+    "voice": ["affectionate", "knowing", "defiant", "intergenerational", "funny", "informed"],
+    "required_outputs": [
+      "one responsive social hub",
+      "one ultra-real intergenerational hero image",
+      "one original ultra-real character image",
+      "three editable HTML social cards",
+      "campaign playbook",
+      "source research",
+      "model and cost ledger",
+      "desktop and mobile browser evidence"
+    ],
+    "must_include": [
+      "expressive typography",
+      "scale pattern or surface texture",
+      "real visual depth",
+      "sourced evidence of lifelong alumni culture and institutional excellence",
+      "useful links to official FAMU destinations",
+      "clear unofficial-fan disclosure"
+    ],
+    "must_not_include": [
+      "official FAMU logos, seals, wordmarks, or mascot art",
+      "an account handle that appears official",
+      "literal cult behavior, coercion, worship, hazing, menace, or exclusion",
+      "unsourced ranking claims",
+      "publication to a social account without human approval"
+    ],
+    "proof_level": "locally_proven_draft",
+    "publish_authority": false
+  }
+}

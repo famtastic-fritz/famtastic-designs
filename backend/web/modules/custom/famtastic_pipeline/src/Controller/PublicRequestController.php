@@ -125,6 +125,7 @@ class PublicRequestController extends ControllerBase {
     }
 
     $intake = $this->saveRequest($prospect, $data, $answers, $type);
+    $registrationUrl = $this->registrationUrl($email, $businessName, (int) $intake->id(), $type);
     try {
       $this->concierge->recordPublicLead((int) $prospect->id(), (int) $intake->id(), 'public_' . $type);
     }
@@ -135,7 +136,7 @@ class PublicRequestController extends ControllerBase {
         '@message' => $error->getMessage(),
       ]);
     }
-    $notification = $this->notify($prospect, $intake, $data, $type, $duplicate);
+    $notification = $this->notify($prospect, $intake, $data, $type, $duplicate, $registrationUrl);
 
     $payload = [
       'ok' => TRUE,
@@ -144,8 +145,13 @@ class PublicRequestController extends ControllerBase {
       'prospect_id' => (int) $prospect->id(),
       'duplicate' => $duplicate,
       'notification_sent' => $notification['ok'],
+      'preview_level' => $type === 'quote' ? 'basic' : NULL,
+      'next_step' => $type === 'quote' ? 'register_for_detailed_demo' : 'staff_follow_up',
+      'registration_url' => $type === 'quote' ? $registrationUrl : NULL,
       'message' => $notification['ok']
-        ? 'We received your request. Your estimate is being prepared, and our team has been notified.'
+        ? ($type === 'quote'
+          ? 'Your starter recommendation is ready and your request is saved. Create a free account for a more detailed brief and working design demos.'
+          : 'We received your request and our team has been notified.')
         : 'We received your request, but our notification system encountered an issue. Our team will still follow up.',
     ];
 
@@ -199,11 +205,11 @@ class PublicRequestController extends ControllerBase {
   /**
    * Attempts the notification boundary and reports partial success on failure.
    */
-  protected function notify(Prospect $prospect, $intake, array $data, string $type, bool $duplicate): array {
+  protected function notify(Prospect $prospect, $intake, array $data, string $type, bool $duplicate, string $registrationUrl): array {
     $settings = $this->pipelineConfigFactory->get('famtastic_pipeline.settings');
     $to = (string) ($settings->get('notification_to_email') ?: 'hello@famtasticdesigns.com');
     $subject = sprintf('FAMtastic Designs %s request #%d%s', $type, (int) $intake->id(), $duplicate ? ' (duplicate)' : '');
-    $body = $this->requestSummary($data, $type) . "\n\nProspect ID: " . $prospect->id() . "\nRequest ID: " . $intake->id();
+    $body = $this->ownerNotificationBody($prospect, $intake, $data, $type, $duplicate);
 
     try {
       $this->mailer->send($to, $subject, $body);
@@ -213,11 +219,11 @@ class PublicRequestController extends ControllerBase {
         : 'We received your message — FAMtastic Designs';
       $slaDays = max(1, (int) ($settings->get('lead_response_sla_days') ?: 3));
       $customerBody = "Thanks for reaching out to FAMtastic Designs.\n\n"
-        . "Your request #" . $intake->id() . " is safely recorded. We will review it and reply within {$slaDays} business days with the next useful step.\n\n"
-        . "The best next step is to create your free FAMtastic account and start your guided website request:\n"
-        . "https://famtasticdesigns.com/portal\n\n"
-        . "You can save your answers as you go. Tell us what your website needs to do, who it needs to serve, the pages or features you are considering, and any reference material. That lets us refine the recommendation, the real scope, and any eligible private offer before you are asked to purchase anything.\n\n"
-        . "You can also reply directly to this email if you need to add context.\n\n"
+        . "Your request #" . $intake->id() . " is safely recorded.\n\n"
+        . ($type === 'quote'
+          ? "The public Solution Finder gives you a useful starter recommendation from the basic information you shared. For a more detailed experience—and working website demos instead of a basic mockup—create your free customer account with this same email address:\n{$registrationUrl}\n\nYour saved lead and intake will follow you into the portal, where you can add brand, domain, content, feature, reference-site, and business details without starting over.\n\n"
+          : '')
+        . "We will review your request and reply within {$slaDays} business days. You can reply directly to this email if you need to add context.\n\n"
         . "Shay Shay\nFAMtastic Concierge\nFAMtastic Designs · https://famtasticdesigns.com";
       $this->mailer->send($customerEmail, $customerSubject, $customerBody);
       $prospect->set('status', 'acknowledged')->save();
@@ -230,6 +236,22 @@ class PublicRequestController extends ControllerBase {
       ]);
       return ['ok' => FALSE, 'error' => $e->getMessage()];
     }
+  }
+
+  /**
+   * Builds the public-to-member continuation link without exposing a secret.
+   */
+  protected function registrationUrl(string $email, string $businessName, int $requestId, string $type): string {
+    $base = rtrim((string) (getenv('FRONTEND_BASE_URL') ?: $this->pipelineConfigFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')), '/');
+    $query = http_build_query([
+      'mode' => 'register',
+      'email' => $email,
+      'business' => $businessName,
+      'source' => 'public_' . $type,
+      'request' => $requestId,
+      'redirect' => '/portal?start=website',
+    ]);
+    return $base . '/login?' . $query;
   }
 
   protected function primaryGoal(array $data, string $type): string {
@@ -247,6 +269,53 @@ class PublicRequestController extends ControllerBase {
     $safe = $data;
     unset($safe['token'], $safe['access_token'], $safe['refresh_token']);
     return strtoupper($type) . " request\n" . json_encode($safe, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+  }
+
+  /**
+   * Gives the owner the decision-ready request facts without emailing raw JSON.
+   *
+   * The complete, sanitized intake remains on the Prospect and Intake records.
+   * This notification intentionally contains a compact triage view only.
+   */
+  protected function ownerNotificationBody(Prospect $prospect, $intake, array $data, string $type, bool $duplicate): string {
+    $answers = is_array($data['answers'] ?? NULL) ? $data['answers'] : [];
+    $value = static function (mixed $candidate): string {
+      if (is_array($candidate)) {
+        $candidate = implode(', ', array_filter(array_map(static fn ($item): string => is_scalar($item) ? trim((string) $item) : '', $candidate)));
+      }
+      return trim((string) $candidate);
+    };
+    $facts = [
+      'Business' => $prospect->label(),
+      'Contact email' => (string) $prospect->get('public_email')->value,
+      'Phone' => (string) $prospect->get('public_phone')->value,
+      'Industry' => (string) $prospect->get('business_category')->value,
+      'Location' => $value($answers['location'] ?? ''),
+      'What they need' => $value($answers['businessDescription'] ?? $answers['description'] ?? $data['branch'] ?? ''),
+      'Services' => $value($answers['services'] ?? $data['services'] ?? ''),
+      'Timeline' => $value($answers['timeline'] ?? ''),
+      'Budget / recommendation' => $value($answers['budget'] ?? $data['estimate'] ?? ''),
+      'Reference sites' => $value($answers['referenceSites'] ?? ''),
+    ];
+    $lines = [
+      sprintf('A new public %s request is ready for review%s.', $type, $duplicate ? ' (duplicate submission)' : ''),
+      '',
+      'Quick intake',
+    ];
+    foreach ($facts as $label => $fact) {
+      if ($fact !== '') {
+        $lines[] = $label . ': ' . $fact;
+      }
+    }
+    $base = rtrim((string) (getenv('FRONTEND_BASE_URL') ?: $this->pipelineConfigFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')), '/');
+    $operationsUrl = $base !== '' ? $base . '/web/admin/famtastic/metric/website-requests' : '';
+    $lines[] = '';
+    $lines[] = 'Request ID: ' . $intake->id() . ' · Prospect ID: ' . $prospect->id();
+    if ($operationsUrl !== '') {
+      $lines[] = 'Open Website Requests: ' . $operationsUrl;
+    }
+    $lines[] = 'The complete submitted intake is saved in Drupal; raw JSON is intentionally omitted from email.';
+    return implode("\n", $lines);
   }
 
   protected function jsonBody(Request $request): array {

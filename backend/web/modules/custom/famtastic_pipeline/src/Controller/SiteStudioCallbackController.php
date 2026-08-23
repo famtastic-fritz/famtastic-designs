@@ -7,6 +7,7 @@ namespace Drupal\famtastic_pipeline\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
+use Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,14 +17,27 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class SiteStudioCallbackController extends ControllerBase {
 
+  /**
+   * Constructs the callback controller.
+   */
   public function __construct(
     private readonly ProofCampaignService $proofCampaigns,
+    private readonly SiteStudioBuildPacketService $buildPackets,
   ) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container): static {
-    return new static($container->get('famtastic_pipeline.proof_campaign_service'));
+    return new static(
+      $container->get('famtastic_pipeline.proof_campaign_service'),
+      $container->get('famtastic_pipeline.site_studio_build_packets'),
+    );
   }
 
+  /**
+   * Accepts a signed proof callback or build-success packet.
+   */
   public function handle(Request $request): JsonResponse {
     if (strlen($request->getContent()) > 2 * 1024 * 1024) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'request_too_large'], 413);
@@ -42,6 +56,15 @@ final class SiteStudioCallbackController extends ControllerBase {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_json'], 400);
     }
     try {
+      if (($data['schema'] ?? '') === 'site-studio.build-success.v1') {
+        $result = $this->buildPackets->acceptSuccess($data);
+        return new JsonResponse([
+          'ok' => TRUE,
+          'newly_processed' => $result['newly_processed'],
+          'project_id' => (int) $result['project']->id(),
+          'status' => 'site_studio_build_succeeded',
+        ]);
+      }
       $result = $this->proofCampaigns->acceptCallback(
         (string) ($data['event_id'] ?? ''),
         (string) ($data['campaign_id'] ?? ''),

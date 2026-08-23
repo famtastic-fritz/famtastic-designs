@@ -172,12 +172,12 @@ test('revoked or unknown proof link reveals no project data', async ({ page }) =
   await expect(page.getByText('Crown & Coast Church')).toHaveCount(0);
 });
 
-test('customer account, portal, support, settings, and purchase UI are mobile-safe', async ({ page }, testInfo) => {
+test('customer account, portal, project, and purchase UI are mobile-safe', async ({ page }, testInfo) => {
   await signIn(page);
   await expect(page.getByRole('button', { name: 'Start my website & proofs', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Start my website & proofs', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Websites & proofs', exact: true })).toBeVisible();
-  for (const section of ['Support', 'Settings', 'Websites & proofs']) {
+  await expect(page.getByRole('heading', { name: 'Projects', exact: true })).toBeVisible();
+  for (const section of ['Services', 'Messages', 'Projects']) {
     const menu = page.getByRole('button', { name: 'Menu', exact: true });
     if (await menu.isVisible()) await menu.click();
     await page.getByRole('button', { name: section, exact: true }).click();
@@ -200,9 +200,9 @@ test('customer account, portal, support, settings, and purchase UI are mobile-sa
   await expect(page.getByText(/\$9\.99\/month/i)).toBeVisible();
 });
 
-test('authenticated portal sections remain mobile-safe', async ({ page }, testInfo) => {
+test('authenticated customer command-center sections remain mobile-safe', async ({ page }, testInfo) => {
   await signIn(page);
-  for (const section of ['Home', 'Activity', 'My services', 'Performance', 'Websites & proofs', 'Messages', 'Support', 'For you & latest', 'FAQs', 'Recommended next steps', 'Refer a friend', 'Purchases & billing', 'Profile & team', 'Settings']) {
+  for (const section of ['Home', 'Services', 'Projects', 'Messages', 'Billing', 'Account']) {
     const menu = page.getByRole('button', { name: 'Menu', exact: true });
     if (await menu.isVisible()) await menu.click();
     await page.getByRole('button', { name: section, exact: true }).click();

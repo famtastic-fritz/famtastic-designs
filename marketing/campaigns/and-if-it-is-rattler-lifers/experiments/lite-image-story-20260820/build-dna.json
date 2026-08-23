@@ -1,0 +1,229 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "build-and-if-it-is-lite-story-20260820-001",
+  "classification": "locally_proven_reference_led_creative_build",
+  "created_at": "2026-08-20T05:59:59Z",
+  "run": {
+    "run_id": "lite-image-story-20260820-001",
+    "subject_type": "unofficial_fan_culture_story_experiment",
+    "title": "And If It Is? — Lite Image Story",
+    "campaign_id": "and-if-it-is-rattler-lifers",
+    "request_id": null,
+    "project_id": null,
+    "started_at": "2026-08-20T05:53:05.071Z",
+    "completed_at": "2026-08-20T05:59:59Z",
+    "timing_status": "partial_stage_timing_captured; uninterrupted wall-clock timing for ideation and static assembly was not instrumented",
+    "operator_intent": "Test whether Gemini Flash Lite can use an owned premium art-direction reference to produce a coherent multi-image story page at low expected image cost.",
+    "session_context": {
+      "orchestrator": "OpenAI Codex interactive session",
+      "orchestrator_model_status": "not_disclosed_by_runtime",
+      "specialist_roles": ["story_content_direction", "font_texture_direction"],
+      "session_transcript_retained": false,
+      "credential_retention": "none; Gemini key was read from the local Keychain only"
+    }
+  },
+  "repository": {
+    "name": "famtastic-designs",
+    "remote": "origin",
+    "revision": "05e3dc4763873f2df959a2a9f6616da00c9ce151",
+    "worktree_state": "dirty at capture; this run is isolated under marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820 and unrelated changes were excluded"
+  },
+  "recipe": {
+    "routine": "reference_led_story_page.generate.v1",
+    "version": "1.0.0",
+    "build_class": "low",
+    "routing_profile": "low-cost Gemini Flash Lite image generation plus operator-directed static composition",
+    "creative_controls": {
+      "famtastic_intensity": 8,
+      "research_depth": "visual_reference_transcription",
+      "image_job_count": 5,
+      "typography_experimentation": 9,
+      "texture_depth": 8,
+      "motion_level": 2,
+      "repair_budget": 1,
+      "reference_policy": "owned art-direction reference only; new scenes, poses, people, and compositions required"
+    },
+    "quality_contract": [
+      "Each image must be a unique moment, setting, cast, and camera angle in one coherent visual grammar.",
+      "Typography, material, texture, depth, and image-safe negative space are composition requirements, not decorative afterthoughts.",
+      "No official marks, logos, mascot art, copied people, affiliated-documentary claim, visible text, or harmful cult/hazing imagery.",
+      "Responsive page must load every image and local font without errors or horizontal overflow at 1440px and 390px."
+    ]
+  },
+  "lineage": {
+    "inherited_visual_reference": {
+      "role": "premium art-direction source only",
+      "provider": "OpenArt",
+      "model": "gpt-image-2",
+      "source_build": "and-if-it-is-rattler-lifers campaign baseline",
+      "source_path": "marketing/campaigns/and-if-it-is-rattler-lifers/site/assets/rattler-lifers-hero.png",
+      "source_sha256": "ab8097c6c0ce4429b3878acfecc8f39f74c08469d52ca651ece68a68c0413be5",
+      "cost_treatment": "Inherited source: the baseline's 315 OpenArt credits are excluded from this new Lite-build cost."
+    }
+  },
+  "stages": [
+    {
+      "stage_id": "visual-reference-transcription",
+      "sequence": 1,
+      "attempt": 1,
+      "capability": "art_direction_analysis",
+      "execution": {
+        "kind": "model_assisted_human_directed",
+        "provider": {"id": "openai_codex", "product": "interactive coding session"},
+        "model": {"id": null, "status": "not_disclosed_by_runtime"},
+        "tool": "image inspection and structured visual transcription",
+        "timing": {"status": "not_instrumented"},
+        "cost": {"status": "not_available_from_runtime"},
+        "input": {"reference_path": "marketing/campaigns/and-if-it-is-rattler-lifers/site/assets/rattler-lifers-hero.png", "sha256": "ab8097c6c0ce4429b3878acfecc8f39f74c08469d52ca651ece68a68c0413be5"},
+        "output": {"artifact": "marketing/campaigns/and-if-it-is-rattler-lifers/evidence/gemini-flash-lite-reference-recreation-20260820/receipt.json", "sha256": "dc95205b0b3e1c3bb0f835b8fe68ea55232cf3027a62afe76d66c705ee6078d8"}
+      },
+      "result": {"status": "passed", "decision": "Literal camera, people, composition, light, palette, and material contract captured before the Lite prompt was written."}
+    },
+    {
+      "stage_id": "gemini-flash-lite-hero-recreation",
+      "sequence": 2,
+      "attempt": 1,
+      "capability": "reference_assisted_original_image_generation",
+      "execution": {
+        "kind": "provider_image_generation",
+        "provider": {"id": "google-gemini-api", "api": "generateContent", "service_tier": "standard"},
+        "model": {"id": "gemini-3.1-flash-lite-image", "status": "provider_reported"},
+        "tool": "Gemini Image API",
+        "timing": {"status": "provider_response_measured", "started_at": "2026-08-20T04:44:48.958Z", "completed_at": "2026-08-20T04:44:56.503Z", "duration_ms": 7545},
+        "cost": {"status": "expected_price_not_invoice", "currency": "USD", "amount": 0.0336, "unit": "one 1K image output", "source": "receipt cost note"},
+        "prompt": {"artifact": "marketing/campaigns/and-if-it-is-rattler-lifers/evidence/gemini-flash-lite-reference-recreation-20260820/receipt.json", "sha256": "dc95205b0b3e1c3bb0f835b8fe68ea55232cf3027a62afe76d66c705ee6078d8", "field": "source_prompt_verbatim", "prompt_sha256": "a1d16ca80974213b6a7a45a9879ed44bbbf5d7a52a1c5607c55a8c5a4c27b66a"},
+        "input": {"reference_asset_sha256": "ab8097c6c0ce4429b3878acfecc8f39f74c08469d52ca651ece68a68c0413be5", "aspect_ratio": "16:9", "image_size": "1K"},
+        "output": {"artifact": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/assets/00-lite-image-canon.jpg", "sha256": "55a4cbd0099bb17c21179cdbb2d28b405c300eccf5f7205ea46ab31e2f39e34f", "dimensions": "1376x768"}
+      },
+      "result": {"status": "passed", "decision": "The new original hero retained the premium reference's editorial grammar while using a new scene and people."}
+    },
+    {
+      "stage_id": "gemini-flash-lite-supporting-series",
+      "sequence": 3,
+      "attempt": 1,
+      "capability": "coherent_editorial_image_series_generation",
+      "execution": {
+        "kind": "provider_image_generation",
+        "provider": {"id": "google-gemini-api", "api": "generateContent", "service_tier": "standard"},
+        "model": {"id": "gemini-3.1-flash-lite-image", "status": "provider_reported"},
+        "tool": "generate-supporting-images.mjs; Gemini Image API",
+        "timing": {"status": "provider_response_measured", "started_at": "2026-08-20T05:53:05.071Z", "completed_at": "2026-08-20T05:53:23.203Z", "duration_ms": 18132, "job_durations_ms": {"01-the-pull": 4333, "02-everywhere": 3653, "03-the-return": 5180, "04-the-hand-off": 4928}},
+        "cost": {"status": "expected_price_not_invoice", "currency": "USD", "amount": 0.1344, "unit": "four 1K image outputs", "source": "generation receipt"},
+        "prompt": {"artifact": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/evidence/generation-receipt.json", "sha256": "a7b4396e6ef13fb380f1eb6f54c628adbea01bc1b1ee9e72910588e1d37aa134", "field": "results[].prompt", "companion_prompt_artifact": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/prompts.json", "companion_prompt_sha256": "1b963285375e5afcb21a98784cb8f506e1464c8bb6cf52a907982ac81057e360"},
+        "input": {"reference_asset_sha256": "55a4cbd0099bb17c21179cdbb2d28b405c300eccf5f7205ea46ab31e2f39e34f", "series_contract": "four distinct story beats with shared warm amber/olive/charcoal editorial grammar"},
+        "output": {"receipt": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/evidence/generation-receipt.json", "outputs": ["01-the-pull.jpg", "02-everywhere.jpg", "03-the-return.jpg", "04-the-hand-off.jpg"]}
+      },
+      "result": {"status": "passed", "decision": "Four distinct scenes passed first generation; no retry, fallback, or asset repair was required."}
+    },
+    {
+      "stage_id": "story-content-and-design-system",
+      "sequence": 4,
+      "attempt": 1,
+      "capability": "narrative_copy_typography_texture_direction",
+      "execution": {
+        "kind": "specialist_agent_direction",
+        "provider": {"id": "openai_codex", "roles": ["story_content_direction", "font_texture_direction"]},
+        "model": {"id": null, "status": "not_disclosed_by_runtime"},
+        "tool": "specialist-agent review",
+        "timing": {"status": "not_instrumented"},
+        "cost": {"status": "not_available_from_runtime"},
+        "input": {"reference_asset_sha256": "55a4cbd0099bb17c21179cdbb2d28b405c300eccf5f7205ea46ab31e2f39e34f"},
+        "output": {"content_contract": "question -> pull -> recognition -> return -> inheritance -> answer", "type_contract": "Metropolis display + Lora editorial italic + monospace evidence", "surface_contract": "stadium-rhythm lattice, ticket paper, grain, wet concrete, brushed metal, porch wood"}
+      },
+      "result": {"status": "passed", "decision": "Each story beat received a distinct camera, material surface, typography rhythm, and image-safe copy composition."}
+    },
+    {
+      "stage_id": "static-editorial-assembly",
+      "sequence": 5,
+      "attempt": 1,
+      "capability": "responsive_web_composition",
+      "execution": {
+        "kind": "operator_directed_deterministic_assembly",
+        "provider": {"id": "local_repository"},
+        "model": {"id": null, "status": "not_disclosed_by_runtime"},
+        "tool": "HTML, CSS, and browser-native JavaScript",
+        "timing": {"status": "not_instrumented"},
+        "cost": {"status": "not_available_from_runtime"},
+        "input": {"assets": "five generated images plus existing local fonts", "direction": "static editorial story, no external JavaScript or third-party font fetch"},
+        "output": {"page": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/index.html", "styles": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/styles.css", "behavior": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/app.js"}
+      },
+      "result": {"status": "passed", "decision": "One isolated static page assembled with the original source image untouched."}
+    },
+    {
+      "stage_id": "browser-technical-qa",
+      "sequence": 6,
+      "attempt": 1,
+      "capability": "browser_qa",
+      "execution": {
+        "kind": "deterministic_tool_verification",
+        "provider": {"id": "playwright"},
+        "model": {"id": "chromium", "status": "tool_reported"},
+        "tool": "Playwright headless Chromium",
+        "timing": {"status": "command_measured", "duration_ms": 5600, "profiles": ["1440x1000", "390x844"]},
+        "cost": {"status": "not_metered_local_tool"},
+        "input": {"route": "experiments/lite-image-story-20260820/index.html", "assertions": ["HTTP 200", "five images complete", "local fonts loaded", "zero request failures", "zero page errors", "zero horizontal overflow"]},
+        "output": {"artifact": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/evidence/browser/browser-results.json", "sha256": "3b449232fe44d724ef3a230244199fdb7643bf3ce9e056e451587db39d48e774"}
+      },
+      "result": {"status": "passed", "decision": "Desktop and phone profiles passed all declared technical assertions."}
+    },
+    {
+      "stage_id": "visual-review",
+      "sequence": 7,
+      "attempt": 1,
+      "capability": "visual_criticism",
+      "execution": {
+        "kind": "same_operator_visual_review",
+        "provider": {"id": "openai_codex"},
+        "model": {"id": null, "status": "not_disclosed_by_runtime"},
+        "tool": "rendered desktop and mobile screenshot inspection",
+        "timing": {"status": "not_instrumented"},
+        "cost": {"status": "not_available_from_runtime"},
+        "input": {"screenshots": ["desktop.png", "phone.png"]},
+        "output": {"decision": "cohesive editorial story, with original images and distinct material/type systems across sections"}
+      },
+      "result": {"status": "passed_with_independent_review_open", "reviewer_decision": "same-operator visual pass; independent visual approval remains open if this becomes a customer or public release"}
+    }
+  ],
+  "artifacts": [
+    {"role": "build_dna_contract", "path": "website-delivery-swarm/schemas/build-dna.v1.schema.json", "sha256": "00a57f568312c442dc670e987b98f00ff216856b02ab924c4daff3fc167da261"},
+    {"role": "source_reference", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/site/assets/rattler-lifers-hero.png", "sha256": "ab8097c6c0ce4429b3878acfecc8f39f74c08469d52ca651ece68a68c0413be5"},
+    {"role": "reference_recreation_receipt", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/evidence/gemini-flash-lite-reference-recreation-20260820/receipt.json", "sha256": "dc95205b0b3e1c3bb0f835b8fe68ea55232cf3027a62afe76d66c705ee6078d8"},
+    {"role": "canonical_hero", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/assets/00-lite-image-canon.jpg", "sha256": "55a4cbd0099bb17c21179cdbb2d28b405c300eccf5f7205ea46ab31e2f39e34f"},
+    {"role": "supporting_image", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/assets/01-the-pull.jpg", "sha256": "31893dec0236ac198dcdb14600ae375aaa3fd02dfe93c97794f8db89a455f166"},
+    {"role": "supporting_image", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/assets/02-everywhere.jpg", "sha256": "53247088f835cc4fb8e253873039487419783d5f2ed5d3afba6aedb754e3fdcf"},
+    {"role": "supporting_image", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/assets/03-the-return.jpg", "sha256": "3fca7e512b44dd6d7cd2e8ab822f2872c8dd017318ab1faf0fce3569d946451d"},
+    {"role": "supporting_image", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/assets/04-the-hand-off.jpg", "sha256": "61fc06445ab0310721fd9f70c5db6ab78303ec2605285ef6d6d39de32bbd524f"},
+    {"role": "exact_prompts", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/prompts.json", "sha256": "1b963285375e5afcb21a98784cb8f506e1464c8bb6cf52a907982ac81057e360"},
+    {"role": "generation_receipt", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/evidence/generation-receipt.json", "sha256": "a7b4396e6ef13fb380f1eb6f54c628adbea01bc1b1ee9e72910588e1d37aa134"},
+    {"role": "generator", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/generate-supporting-images.mjs", "sha256": "90bfc22204818b5e4c0de477e4d223afb064909f919bc62a9f1721d0ec2309ed"},
+    {"role": "page_source", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/index.html", "sha256": "64e2d92c1463e1c4359a4f6559ead6bfb5e93c06236510a7a1789a21f83579a6"},
+    {"role": "page_style", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/styles.css", "sha256": "6c98884aa385e3d7b32f082909e1caff340def628edc0a2a881d2fcd9df36a47"},
+    {"role": "page_behavior", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/app.js", "sha256": "22b391e21053ea3a0c7dad0b7b4ef9e9878d58123abaac443df04360144e15f1"},
+    {"role": "browser_qa", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/evidence/browser/browser-results.json", "sha256": "3b449232fe44d724ef3a230244199fdb7643bf3ce9e056e451587db39d48e774"},
+    {"role": "desktop_screenshot", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/evidence/browser/desktop.png", "sha256": "dfe444bbfc97e6be2b255d828c9cc9e6ec9b6d9a415b89752b4a0250a3bed7b1"},
+    {"role": "phone_screenshot", "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/evidence/browser/phone.png", "sha256": "15802b25fe7f02fc3482d1d930fdecd97b9b9b9ee79ab1d6615c75af75cdf0d8"}
+  ],
+  "cost_summary": {
+    "status": "expected_price_not_invoice",
+    "currency": "USD",
+    "new_build_image_cost": 0.168,
+    "calculation": "five 1K Gemini Flash Lite Image outputs at USD 0.0336 each",
+    "excluded": "the inherited OpenArt GPT Image 2 reference's earlier 315-credit campaign cost"
+  },
+  "quality": {
+    "technical": {"status": "passed", "profiles": ["1440x1000", "390x844"], "assertions": ["all 5 images loaded", "fonts loaded", "zero request failures", "zero page errors", "zero horizontal overflow"]},
+    "visual": {"status": "same_operator_pass_independent_review_open", "strengths": ["coherent color/light/material grammar", "genuinely distinct story moments", "type and surfaces work as composition"], "open_gate": "independent reviewer required before customer/public release"},
+    "rights": {"status": "passed_for_concept", "boundary": "original illustrative scenes; no official logo, mascot art, wordmark, or affiliation claim"}
+  },
+  "retrieval": {
+    "filesystem": {"canonical_manifest": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/build-dna.json", "validator": "website-delivery-swarm/scripts/validate-build-dna.mjs"},
+    "database": {"status": "implementation_ready_not_registered", "reason": "The available local Drupal SQLite fixture was unbootstrapped at capture time (missing key_value); no direct database write was attempted.", "table": "famtastic_build_run", "build_key": "build-dna:build-and-if-it-is-lite-story-20260820-001", "register_command": "drush famtastic:build-dna-register <absolute-path-to-build-dna.json>", "show_command": "drush famtastic:build-dna-show build-and-if-it-is-lite-story-20260820-001"},
+    "site_studio": {"status": "not_applicable_to_this_marketing_story", "future_packet_rule": "copy this file to packet-files/build-dna.json and include its build_id/path/SHA-256 in the additive build_dna pointer"},
+    "google_drive": {"status": "exported", "folder_url": "https://drive.google.com/drive/folders/1w4YoyqT91VzywoNEJFqoKvLR_uUXgOOO", "run_record_url": "https://docs.google.com/document/d/1KgWClqeQOKgznYLqGbATBoO16ICYKGpixp1fRNWZRv8/edit?usp=drivesdk", "scope": "rights-safe standard and run record; no credentials or session transcript"}
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256",
+    "validation_command": "node website-delivery-swarm/scripts/validate-build-dna.mjs marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/build-dna.json .",
+    "self_hash_policy": "The manifest does not hash itself; the containing package/Drive export records its immutable external checksum."
+  }
+}

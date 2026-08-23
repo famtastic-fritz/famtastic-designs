@@ -1,0 +1,69 @@
+{
+  "schema": "famtastic.image-generation-receipt.v1",
+  "generated_at": "2026-08-20T04:44:56.503Z",
+  "provider": "google-gemini-api",
+  "api": "generateContent",
+  "model": "gemini-3.1-flash-lite-image",
+  "endpoint": "https://generativelanguage.googleapis.com/v1/models/gemini-3.1-flash-lite-image:generateContent",
+  "mode": "reference-assisted-original-generation",
+  "reference_asset": "/Users/famtastic-fritz/Development/FAMtastic/worktrees/shay-website-delivery-swarm/marketing/campaigns/and-if-it-is-rattler-lifers/site/assets/rattler-lifers-hero.png",
+  "reference_asset_sha256": "ab8097c6c0ce4429b3878acfecc8f39f74c08469d52ca651ece68a68c0413be5",
+  "visual_transcription": {
+    "reference_asset": "/Users/famtastic-fritz/Development/FAMtastic/worktrees/shay-website-delivery-swarm/marketing/campaigns/and-if-it-is-rattler-lifers/site/assets/rattler-lifers-hero.png",
+    "reference_asset_sha256": "ab8097c6c0ce4429b3878acfecc8f39f74c08469d52ca651ece68a68c0413be5",
+    "source_route": "OpenArt MCP / gpt-image-2",
+    "actual_composition": {
+      "aspect_ratio": "16:9",
+      "camera": "wide low-angle 35mm-style editorial campaign photograph; group fills the lower frame edge-to-edge, viewed at chest-to-waist height",
+      "subject_count": 8,
+      "subject_layout": "Eight Black adults, three generations, walking shoulder-to-shoulder across the lower 85% of the frame; several faces turn toward each other in candid conversation.",
+      "architecture": "Large unbranded football-stadium grandstand occupies the upper-right third with a strong diagonal concourse/bleacher line rising to the right; three lit floodlight towers puncture the sunset sky.",
+      "light": "Low golden-hour sun near the lower-left edge; warm rim light, mild lens flare, long reflections on damp concrete.",
+      "props": "Older alumnus holds a worn brown ticket scrapbook; a young adult holds a plain dark green/black megaphone pointed downward.",
+      "palette": "weathered concrete and charcoal, warm amber sunset, forest green, mustard, denim blue, leather brown, muted burgundy.",
+      "materials": "wet concrete reflections, weathered leather, denim, brushed stadium metal, natural skin and hair texture."
+    },
+    "quality_constraints": [
+      "No text, letters, school name, logo, seal, mascot, uniform mark, signage, watermark, celebrity, or real identifiable person.",
+      "No cloned faces, extra limbs or fingers, plastic skin, aggression, hazing, coercion, propaganda, or religious/cult imagery.",
+      "Use the supplied image solely as an art-direction and composition reference. Generate a new original photograph; do not copy pixels or imply documentary affiliation."
+    ]
+  },
+  "source_prompt_verbatim": "Use case: ads-marketing\nAsset type: 16:9 hero image for an unofficial lifelong HBCU fan-community social presence\nInput image: Image 1 is an owned art-direction and composition reference only. Create a new original photograph with the same visual grammar, not a pixel copy.\n\nPrimary request: recreate the reference image’s emotional composition as an ultra-realistic, cinematic editorial campaign photograph about generations of Black college pride that lasts for life.\n\nScene/backdrop: outside a grand, completely unbranded Southern college football stadium at golden hour. The grandstand/concourse occupies the upper-right third of frame and rises diagonally toward the right. Three bright stadium-light towers glow above the group. The low sun is near the lower-left edge, with soft atmospheric haze and subtle crowd energy far in the background. Wet concrete catches long amber reflections.\n\nSubjects: exactly eight Black adults, visibly spanning young alumni/current-student age through elders in their late sixties. They walk shoulder-to-shoulder across the lower frame with candid joy and genuine individuality: a young woman in a caramel textured jacket; a young man in a forest-green bomber; an older man with a gray beard, glasses and flat cap carrying a worn brown ticket scrapbook; a young woman in denim and mustard; an older woman with short silver hair and a mustard scarf; a tall young man in blue denim over a neutral hoodie holding one plain, blank dark megaphone pointed naturally downward; a middle-aged woman in a camel coat with gold hoop earrings; and an older man with a salt-and-pepper beard and flat cap in a leather jacket. They should feel connected, proud, affectionate, and unposed—not synchronized or cloned.\n\nStyle/medium: premium ultra-realistic campaign photography, 35mm editorial lens, low eye-level perspective, cinematic but believable. Natural skin texture, real hair detail, realistic fabric, correct hands and anatomy.\n\nComposition/framing: wide horizontal 16:9, close full and three-quarter figures filling the lower 80% of the image from left edge to right edge, dramatic sky above, architecture creating a strong upper-right diagonal, natural cropping at the extreme edges.\n\nLighting/mood: warm sunset rim light, deep olive/charcoal shadows, copper and amber practical light, proud, affectionate, stylish, timeless.\n\nMaterials/textures: wet stadium concrete, weathered leather scrapbook, brushed metal railings, denim, knitwear, softly textured atmospheric haze.\n\nConstraints: no text, no letters, no school name, no official university logo, seal, mascot, uniform, licensed mark, celebrity, real identifiable person, watermark, fake storefront signage, religious imagery, cult ritual, hazing, coercion, menace, or propaganda. No generic stock-photo smiles, matching outfits, plastic skin, cloned faces, extra fingers, malformed hands, aggressive snake imagery, or oversized/floating megaphone. Keep the megaphone physically believable and secondary.",
+  "prompt_sha256": "a1d16ca80974213b6a7a45a9879ed44bbbf5d7a52a1c5607c55a8c5a4c27b66a",
+  "requested_output": {
+    "aspect_ratio": "16:9",
+    "image_size": "1K"
+  },
+  "duration_ms": 7545,
+  "http_status": 200,
+  "cost_usd_expected_image_output": 0.0336,
+  "cost_note": "Published standard price for one Gemini 3.1 Flash Lite Image 1K output as of 2026-08-20; provider response does not include an invoice.",
+  "error": null,
+  "output_file": "/Users/famtastic-fritz/Development/FAMtastic/worktrees/shay-website-delivery-swarm/marketing/campaigns/and-if-it-is-rattler-lifers/evidence/gemini-flash-lite-reference-recreation-20260820/hero-gemini-3.1-flash-lite-reference-recreation-1k.jpg",
+  "output_mime_type": "image/jpeg",
+  "output_bytes": 784602,
+  "output_sha256": "55a4cbd0099bb17c21179cdbb2d28b405c300eccf5f7205ea46ab31e2f39e34f",
+  "usage_metadata": {
+    "promptTokenCount": 1729,
+    "candidatesTokenCount": 1619,
+    "totalTokenCount": 3348,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 609
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1120
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1120
+      }
+    ],
+    "serviceTier": "standard"
+  }
+}

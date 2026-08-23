@@ -1,0 +1,127 @@
+{
+  "schema": "famtastic.synthetic-visual-review.v1",
+  "request_id": "local:church-fp-20260818-fritz-001",
+  "reviewed_artifacts": "Six desktop and six mobile full-page Playwright screenshots",
+  "reviewer": {
+    "provider": "openai",
+    "model": "codex-image-capable-review",
+    "role": "synthetic visual critic",
+    "independence_note": "Visual critique was performed after generation. Independent deterministic acceptance is separately owned by the Playwright browser-qa trace. Human customer approval remains an unresolved external gate."
+  },
+  "three_or_more_distinct_layout_families": true,
+  "all_six_visually_distinct": true,
+  "critical_defects": [],
+  "resolved_during_review": [
+    "Direction F's desktop ministry filmstrip was replaced with a stacked mobile layout so cards are not visually clipped on phones."
+  ],
+  "directions": [
+    {
+      "id": "direction-a",
+      "name": "Sunday Welcome",
+      "scores": {
+        "first_impression": 8,
+        "business_relevance": 9,
+        "visual_distinction": 8,
+        "copy_specificity": 9,
+        "trust_credibility": 9,
+        "mobile_usability": 9,
+        "accessibility": 8,
+        "conversion_clarity": 9,
+        "emotional_response": 8,
+        "next_action_confidence": 9
+      },
+      "overall": 8.6,
+      "rationale": "The intentional safe direction is polished, reassuring, and extremely clear without pretending to be the FAMtastic extreme."
+    },
+    {
+      "id": "direction-b",
+      "name": "Sunrise Revival",
+      "scores": {
+        "first_impression": 10,
+        "business_relevance": 9,
+        "visual_distinction": 10,
+        "copy_specificity": 8,
+        "trust_credibility": 8,
+        "mobile_usability": 9,
+        "accessibility": 8,
+        "conversion_clarity": 9,
+        "emotional_response": 10,
+        "next_action_confidence": 9
+      },
+      "overall": 9.0,
+      "rationale": "A campaign-scale sunrise and worship concept with a dramatic but usable mobile hierarchy."
+    },
+    {
+      "id": "direction-c",
+      "name": "Gospel Frequency",
+      "scores": {
+        "first_impression": 10,
+        "business_relevance": 9,
+        "visual_distinction": 10,
+        "copy_specificity": 9,
+        "trust_credibility": 8,
+        "mobile_usability": 9,
+        "accessibility": 8,
+        "conversion_clarity": 9,
+        "emotional_response": 10,
+        "next_action_confidence": 9
+      },
+      "overall": 9.1,
+      "rationale": "The broadcast metaphor controls navigation, content grouping, typography, and art rather than acting as surface decoration."
+    },
+    {
+      "id": "direction-d",
+      "name": "Stained Glass Future",
+      "scores": {
+        "first_impression": 10,
+        "business_relevance": 9,
+        "visual_distinction": 10,
+        "copy_specificity": 9,
+        "trust_credibility": 9,
+        "mobile_usability": 9,
+        "accessibility": 8,
+        "conversion_clarity": 9,
+        "emotional_response": 10,
+        "next_action_confidence": 9
+      },
+      "overall": 9.2,
+      "rationale": "A coherent future-facing stained-glass system with unusually strong desktop and mobile continuity."
+    },
+    {
+      "id": "direction-e",
+      "name": "Legacy in Motion",
+      "scores": {
+        "first_impression": 10,
+        "business_relevance": 10,
+        "visual_distinction": 10,
+        "copy_specificity": 9,
+        "trust_credibility": 9,
+        "mobile_usability": 9,
+        "accessibility": 8,
+        "conversion_clarity": 9,
+        "emotional_response": 10,
+        "next_action_confidence": 9
+      },
+      "overall": 9.3,
+      "rationale": "The strongest culturally grounded editorial system; its information architecture feels like a living community publication."
+    },
+    {
+      "id": "direction-f",
+      "name": "Heaven on the Harbor",
+      "scores": {
+        "first_impression": 10,
+        "business_relevance": 9,
+        "visual_distinction": 10,
+        "copy_specificity": 9,
+        "trust_credibility": 9,
+        "mobile_usability": 9,
+        "accessibility": 8,
+        "conversion_clarity": 9,
+        "emotional_response": 10,
+        "next_action_confidence": 9
+      },
+      "overall": 9.2,
+      "rationale": "The visit path becomes the visual idea, and the corrected mobile ministry stack preserves the full narrative without clipping."
+    }
+  ]
+}

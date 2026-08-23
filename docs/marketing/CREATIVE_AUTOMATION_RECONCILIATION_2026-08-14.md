@@ -62,4 +62,3 @@ This record reconciles the Adobe bridge work with the existing FAMtastic marketi
 ## Product meaning
 
 The recent bridge work closes the gap between "Adobe-ready handoff" and direct local creative control for Photoshop and Premiere. That makes the creative pipeline more than a mockup: FAMtastic can generate, refine, animate, review, and preserve evidence from one governed workflow. It does not yet make every Adobe application or every social network automatic. Those capabilities become marketable only as each provider crosses the same evidence boundary.
-

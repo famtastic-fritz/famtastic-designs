@@ -112,6 +112,76 @@ final class BuildTelemetryService {
   }
 
   /**
+   * Projects one immutable Build DNA manifest into the searchable run ledger.
+   *
+   * The complete manifest stays in output_manifest. This table is deliberately
+   * a retrieval projection, not a competing customer, project, or artifact
+   * source of truth.
+   */
+  public function recordBuildDna(array $dna): int {
+    if (($dna['schema'] ?? '') !== 'famtastic.build-dna.v1') {
+      throw new \InvalidArgumentException('Unsupported Build DNA schema.');
+    }
+    $buildId = trim((string) ($dna['build_id'] ?? ''));
+    if ($buildId === '' || strlen($buildId) > 170) {
+      throw new \InvalidArgumentException('Build DNA build_id is required and must be at most 170 characters.');
+    }
+    $run = is_array($dna['run'] ?? NULL) ? $dna['run'] : [];
+    $repository = is_array($dna['repository'] ?? NULL) ? $dna['repository'] : [];
+    $stages = is_array($dna['stages'] ?? NULL) ? $dna['stages'] : [];
+    if (!$stages) {
+      throw new \InvalidArgumentException('Build DNA requires at least one stage.');
+    }
+
+    $firstExecution = [];
+    foreach ($stages as $stage) {
+      if (is_array($stage['execution'] ?? NULL)) {
+        $firstExecution = $stage['execution'];
+        break;
+      }
+    }
+    $provider = is_array($firstExecution['provider'] ?? NULL) ? $firstExecution['provider'] : [];
+    $model = is_array($firstExecution['model'] ?? NULL) ? $firstExecution['model'] : [];
+    $started = $this->timestamp($run['started_at'] ?? $dna['created_at'] ?? NULL) ?? $this->time->getRequestTime();
+    $completed = $this->timestamp($run['completed_at'] ?? NULL);
+    $projectId = $this->numericId($run['project_id'] ?? NULL);
+    $promptArtifacts = [];
+    foreach ($stages as $stage) {
+      $prompt = is_array($stage['execution']['prompt'] ?? NULL) ? $stage['execution']['prompt'] : [];
+      if ($prompt) {
+        $promptArtifacts[] = [
+          'stage_id' => (string) ($stage['stage_id'] ?? ''),
+          'artifact' => (string) ($prompt['artifact'] ?? ''),
+          'sha256' => (string) ($prompt['sha256'] ?? ''),
+          'field' => (string) ($prompt['field'] ?? ''),
+        ];
+      }
+    }
+
+    return $this->record([
+      'build_key' => 'build-dna:' . $buildId,
+      'campaign_key' => substr((string) ($run['campaign_id'] ?? ''), 0, 128),
+      'project_id' => $projectId,
+      'flow_key' => 'build-dna',
+      'task_key' => substr((string) ($dna['recipe']['routine'] ?? 'build.record'), 0, 128),
+      'provider' => substr((string) ($provider['id'] ?? 'unresolved'), 0, 128),
+      'agent_name' => substr((string) ($model['id'] ?? $model['status'] ?? 'unresolved'), 0, 128),
+      'status' => 'completed',
+      'prompt_snapshot' => $this->json(['prompt_artifacts' => $promptArtifacts]),
+      'input_snapshot' => $this->json([
+        'run' => $run,
+        'recipe' => $dna['recipe'] ?? [],
+        'lineage' => $dna['lineage'] ?? [],
+      ]),
+      'output_manifest' => $this->json($dna),
+      'source_sha' => substr((string) ($repository['revision'] ?? ''), 0, 64),
+      'artifact_checksum' => hash('sha256', $this->json($dna)),
+      'started_at' => $started,
+      'completed_at' => $completed,
+    ]);
+  }
+
+  /**
    * Idempotently stores a build-run snapshot.
    */
   public function record(array $values): int {
@@ -164,6 +234,21 @@ final class BuildTelemetryService {
 
   private function json(mixed $value): string {
     return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+  }
+
+  private function timestamp(mixed $value): ?int {
+    if (!is_string($value) || trim($value) === '') {
+      return NULL;
+    }
+    $timestamp = strtotime($value);
+    return $timestamp === FALSE ? NULL : $timestamp;
+  }
+
+  private function numericId(mixed $value): ?int {
+    if (is_int($value) || (is_string($value) && ctype_digit($value))) {
+      return (int) $value;
+    }
+    return NULL;
   }
 
   private function releaseSha(): string {

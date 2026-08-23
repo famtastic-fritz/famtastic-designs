@@ -24,4 +24,3 @@ CTA: Book a Growth Review.
 ## Tracking
 
 `utm_campaign=customer_growth_review&utm_content=proof_post_launch`
-

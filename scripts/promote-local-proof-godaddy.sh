@@ -9,16 +9,17 @@ APPLY=false
 SHOWCASE=false
 LOCAL_IMPORT=false
 BUNDLE_DIR=""
+DIRECTIONS="a,b,c"
 
 usage() {
   cat <<'USAGE'
-Usage: ./scripts/promote-local-proof-godaddy.sh BUNDLE_DIR [--showcase] [--local|--apply]
+Usage: ./scripts/promote-local-proof-godaddy.sh BUNDLE_DIR [--directions=a,b,c|d,e,f] [--showcase] [--local|--apply]
 
-BUNDLE_DIR must contain manifest.json plus a/b/c directories for a core set, or
-d/e/f directories when --showcase is supplied. Each direction requires
-index.html and thumbnail.png or thumbnail.jpg. Dry-run is the default. --apply
-uploads only the validated callback payload to a private server inbox and
-imports it through Drupal's three-direction callback validator.
+BUNDLE_DIR must contain manifest.json plus the selected three direction
+directories. `--showcase` is shorthand for `--directions=d,e,f`. Each direction
+requires index.html and thumbnail.png or thumbnail.jpg. Dry-run is the default.
+--apply uploads only the validated callback payload to a private server inbox
+and imports it through Drupal's exact-three callback validator.
 --local imports into the repository's local Drupal database for acceptance
 testing and cannot be combined with --apply.
 
@@ -31,7 +32,8 @@ USAGE
 for argument in "$@"; do
   case "$argument" in
     --apply) APPLY=true ;;
-    --showcase) SHOWCASE=true ;;
+    --directions=*) DIRECTIONS="${argument#*=}" ;;
+    --showcase) SHOWCASE=true; DIRECTIONS="d,e,f" ;;
     --local) LOCAL_IMPORT=true ;;
     -h|--help) usage; exit 0 ;;
     *)
@@ -50,6 +52,7 @@ if [[ "$APPLY" == true && "$LOCAL_IMPORT" == true ]]; then
 fi
 
 [[ -n "$BUNDLE_DIR" ]] || { usage >&2; exit 2; }
+[[ "$DIRECTIONS" == "a,b,c" || "$DIRECTIONS" == "d,e,f" ]] || { echo "Directions must be a,b,c or d,e,f." >&2; exit 2; }
 BUNDLE_DIR="$(cd "$BUNDLE_DIR" && pwd)"
 manifest="$BUNDLE_DIR/manifest.json"
 
@@ -73,7 +76,7 @@ campaign_id="$(jq -r '.campaign_id' "$manifest")"
 job_id="$(jq -r '.job_id' "$manifest")"
 event_id="$(jq -r '.event_id' "$manifest")"
 [[ "$campaign_id" =~ ^pc-[a-z0-9-]+$ ]] || { echo "Invalid campaign_id." >&2; exit 1; }
-if [[ "$SHOWCASE" == true ]]; then
+if [[ "$DIRECTIONS" == "d,e,f" ]]; then
   [[ "$job_id" =~ ^local-showcase-[a-f0-9]{32}$ ]] || { echo "Showcase promotion requires a local-showcase job_id." >&2; exit 1; }
   directions=(d e f)
   proof_set="FAMtastic showcase"
@@ -91,6 +94,7 @@ trap cleanup EXIT
 
 variants_file="$temporary_dir/variants.json"
 printf '[]\n' > "$variants_file"
+IFS=',' read -r -a selected_directions <<< "$DIRECTIONS"
 for direction in "${directions[@]}"; do
   html_path="$BUNDLE_DIR/$direction/index.html"
   [[ -s "$html_path" ]] || { echo "Missing $direction/index.html" >&2; exit 1; }

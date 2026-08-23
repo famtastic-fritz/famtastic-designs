@@ -1,0 +1,87 @@
+{
+  "schema": "famtastic.preview-quality-and-speed-contract.v1",
+  "version": "1.1.1",
+  "status": "active_baseline",
+  "technical_gate": {
+    "required": [
+      "all declared routes return 200",
+      "one H1 and one main landmark per page",
+      "all meaningful images have accurate alt text and decorative images use empty alt text",
+      "no horizontal overflow at 1440 and 390 pixels",
+      "no broken local links or assets",
+      "no console errors, page errors, or failed requests",
+      "visible focus states and reduced-motion behavior",
+      "functional calls to action with a clear next step",
+      "visible concept, rights, affiliation, and unknown-fact disclosures",
+      "desktop and phone screenshots plus content hashes"
+    ]
+  },
+  "visual_gate": {
+    "dimensions": [
+      "first_impression_impact",
+      "business_relevance",
+      "visual_distinction",
+      "copy_specificity",
+      "trust_and_credibility",
+      "mobile_usability",
+      "accessibility",
+      "conversion_clarity",
+      "emotional_response"
+    ],
+    "minimum_each": 7,
+    "minimum_overall": 8,
+    "critical_defects_allowed": 0,
+    "independent_reviewer_required_for_release": true
+  },
+  "campaign_identity_gate": {
+    "placement": "first_viewport_desktop_and_phone",
+    "required_language": [
+      "Is FAMU a cult?",
+      "And if it is?",
+      "FAM-GOT-DAM-U."
+    ],
+    "rule": "The public Lab may explain process, evidence, and capability, but it may not soften or replace the campaign thesis that made the concept distinctive."
+  },
+  "creative_reject_conditions": [
+    "The concept could fit an unrelated business after swapping the name.",
+    "Directions differ only by color, image, or minor component arrangement.",
+    "Display typography is only generic bold, color, or italic styling rather than a composed visual layer.",
+    "Backgrounds and containers lack subject-native pattern, texture, material, or depth.",
+    "A direction reads as a campaign poster rather than a complete usable website.",
+    "An official mark, mascot, person, affiliation, or endorsement is copied or implied without authority.",
+    "The call to action, information architecture, or mobile reading order is unclear.",
+    "A pristine form shows an error state, a rail hides content without controls, or text overlaps or breaks inside words."
+  ],
+  "speed_policy": {
+    "separate_clocks": [
+      "research_and_strategy",
+      "first_paid_generation_through_passing_preview_QA",
+      "selected_direction_refinement"
+    ],
+    "observed_golden_window_seconds": 783.065,
+    "observed_golden_window_scope": "first paid image job accepted through final passing browser QA for the one-direction AND IF IT IS social-presence baseline",
+    "target_social_preview_minutes_after_research": 20,
+    "target_six_direction_preview_minutes_after_research": 30,
+    "six_direction_target_certified": false,
+    "initial_visual_review_calls": 1,
+    "maximum_visual_review_calls_after_changed_repair": 1,
+    "default_consolidated_repair_cycles": 1,
+    "rule": "Missing the time target creates a latency finding; it does not authorize shipping work below the quality floor. Noncritical polish moves to selected-direction refinement."
+  },
+  "reuse_policy": {
+    "allowed": [
+      "adapted grids",
+      "accessible interaction patterns",
+      "tested responsive components",
+      "de-identified design rationale"
+    ],
+    "required_on_reuse": [
+      "new business-specific research",
+      "new thesis and copy",
+      "new or rights-approved imagery",
+      "subject-native typography, pattern, texture, and symbolism",
+      "new screenshots and QA"
+    ],
+    "forbidden": "Wholesale cloning of a prior customer or proof site."
+  }
+}

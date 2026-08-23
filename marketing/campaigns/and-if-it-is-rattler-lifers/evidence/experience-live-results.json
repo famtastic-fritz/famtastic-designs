@@ -1,0 +1,86 @@
+{
+  "schema": "famtastic.public-experience-production-proof.v1",
+  "tested_at": "2026-08-19T17:25:46.422Z",
+  "url": "https://famtasticdesigns.com/and-if-it-is/",
+  "profiles": [
+    {
+      "profile": "desktop-1440",
+      "status": 200,
+      "screenshot": "evidence/screenshots/and-if-it-is-live-desktop-1440.png",
+      "screenshot_sha256": "4736a66dad358850fbeb0adad6a152f036058c4100aa34863614a6e969aae097",
+      "roll_call_generated": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "roll_call_stored": true,
+      "roll_call_copied": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "roll_call_restored": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "final_url": "https://famtasticdesigns.com/and-if-it-is/",
+      "canonical": "https://famtasticdesigns.com/and-if-it-is/",
+      "h1_count": 1,
+      "main_count": 1,
+      "image_count": 3,
+      "all_images_loaded": true,
+      "horizontal_overflow": false,
+      "campaign_hook_visible": true,
+      "disclosure_visible": true,
+      "privacy_boundary_visible": true,
+      "metadata_complete": true,
+      "json_ld_valid": true,
+      "lab_link_exact": true
+    },
+    {
+      "profile": "phone-390",
+      "status": 200,
+      "screenshot": "evidence/screenshots/and-if-it-is-live-phone-390.png",
+      "screenshot_sha256": "e14279c7da84fb44975b831289c54252894d55c614e6231fb7ad5b13acf38c4a",
+      "roll_call_generated": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "roll_call_stored": true,
+      "roll_call_copied": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "roll_call_restored": "CLASS OF 1996 · The games, the band, and coming home to the Hill. — Once a Rattler. Always a Rattler. #AndIfItIs",
+      "final_url": "https://famtasticdesigns.com/and-if-it-is/",
+      "canonical": "https://famtasticdesigns.com/and-if-it-is/",
+      "h1_count": 1,
+      "main_count": 1,
+      "image_count": 3,
+      "all_images_loaded": true,
+      "horizontal_overflow": false,
+      "campaign_hook_visible": true,
+      "disclosure_visible": true,
+      "privacy_boundary_visible": true,
+      "metadata_complete": true,
+      "json_ld_valid": true,
+      "lab_link_exact": true
+    }
+  ],
+  "card_routes": [
+    {
+      "route": "cards/01-question.html",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "route": "cards/02-lifer.html",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "route": "cards/03-proof.html",
+      "status": 200,
+      "ok": true
+    }
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "failed_requests": [],
+  "assertions": {
+    "anonymous_desktop_and_phone_return_200": true,
+    "semantic_and_visual_basics_pass": true,
+    "campaign_experience_preserved": true,
+    "launch_metadata_and_lab_dna_link_pass": true,
+    "roll_call_generates_persists_copies_and_restores": true,
+    "all_three_social_cards_reachable": true,
+    "production_screenshots_recorded": true,
+    "no_console_errors": true,
+    "no_page_errors": true,
+    "no_failed_requests": true
+  },
+  "pass": true
+}

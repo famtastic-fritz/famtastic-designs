@@ -1,0 +1,18 @@
+{
+  "tool": "Adobe Premiere Pro 2026",
+  "status": "not_rendered",
+  "blocking_evidence": "2026-08-20: verify_premiere_connection timed out. The installed CEP bridge must be opened and started before an actual Premiere project or export may be claimed.",
+  "source": "03-premiere-source-copy.jpg",
+  "planned_sequence": {
+    "name": "Rattler Lifers — Premiere cinematic push",
+    "format": "1920x1080, 30fps, 4 seconds, silent",
+    "motion": {
+      "scale": "100% to 109.5%",
+      "position": "subtle 1.5% left/up drift",
+      "transition": "none; this is one continuous hero shot"
+    },
+    "grade": "Use finished Photoshop still as source; do not re-grade beyond a restrained amber highlight lift."
+  },
+  "output_when_bridge_is_ready": "03-premiere-cinematic-push.mp4",
+  "integrity_rule": "Do not substitute an ffmpeg or Remotion render and call it Premiere."
+}

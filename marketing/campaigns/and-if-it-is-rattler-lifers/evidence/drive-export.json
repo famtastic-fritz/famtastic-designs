@@ -1,0 +1,245 @@
+{
+  "schema": "famtastic.drive_export_receipt.v1",
+  "recorded_at": "2026-08-19T17:23:38Z",
+  "campaign": "AND IF IT IS — Rattler Lifers",
+  "status": "complete",
+  "drive_folder": {
+    "id": "1tk9mT2oYYQOml6WUyZXr6pveRBYj9nkv",
+    "title": "AND IF IT IS — Social Presence Baseline — 2026-08-19",
+    "url": "https://drive.google.com/drive/folders/1tk9mT2oYYQOml6WUyZXr6pveRBYj9nkv"
+  },
+  "source_archive": {
+    "id": "1le1v43Efca6-RTUAGn1v1sjcWpxun6CU",
+    "name": "AND_IF_IT_IS_Social_Presence_Baseline_2026-08-19.zip",
+    "sha256": "b04bcc3b16bd5fe08a99458d87c5ad0294a12141698491de3705fbb092af02c2",
+    "url": "https://drive.google.com/file/d/1le1v43Efca6-RTUAGn1v1sjcWpxun6CU/view?usp=drivesdk",
+    "note": "Verified Drive revision containing the public Lab source, production smoke evidence, post-run review, quality contract, blueprint, and marketing-split status. The later timing correction is stored in the verified telemetry supplement because three attempts to replace this 35.7 MB archive failed at the connector blob-upload layer. This receipt records only bytes confirmed in Drive."
+  },
+  "telemetry_supplement": {
+    "id": "1Cx2PGm6Zsv1P0StsX4Hf8UrDePrRgNPd",
+    "name": "AND_IF_IT_IS_Lab_Telemetry_Supplement_2026-08-19.zip",
+    "sha256": "2c531a07c2dceaf7ee493cf0185f17b5dd893e02e0db4e29886c6892a8d94b93",
+    "url": "https://drive.google.com/file/d/1Cx2PGm6Zsv1P0StsX4Hf8UrDePrRgNPd/view?usp=drivesdk",
+    "contents": [
+      "post-run-review.md",
+      "six-direction-timing-analysis.json",
+      "DRIVE_INDEX.md",
+      "run-blueprint.json",
+      "quality-contract.json"
+    ],
+    "note": "Small, verified supplement carrying the final corrected six-direction timing analysis and its current quality/telemetry controls."
+  },
+  "indexed_files": [
+    {
+      "role": "drive_index",
+      "id": "1Y_yg6RaqdXbcH1FsQCB-Rh5fS5NOYY8s",
+      "url": "https://drive.google.com/file/d/1Y_yg6RaqdXbcH1FsQCB-Rh5fS5NOYY8s/view?usp=drivesdk"
+    },
+    {
+      "role": "campaign_playbook",
+      "id": "1mkMmrFfi7dSG7CuQDrzWwtCQEUyxRXCo",
+      "url": "https://drive.google.com/file/d/1mkMmrFfi7dSG7CuQDrzWwtCQEUyxRXCo/view?usp=drivesdk"
+    },
+    {
+      "role": "run_report",
+      "id": "1TUw4ELjVO4arxd_IBXKR5s9lpU7wDovk",
+      "url": "https://drive.google.com/file/d/1TUw4ELjVO4arxd_IBXKR5s9lpU7wDovk/view?usp=drivesdk"
+    },
+    {
+      "role": "image_routing",
+      "id": "14KOE8pc-RBIG7X_2uN2NkohxJyxqIcod",
+      "url": "https://drive.google.com/file/d/14KOE8pc-RBIG7X_2uN2NkohxJyxqIcod/view?usp=drivesdk"
+    },
+    {
+      "role": "prompts",
+      "id": "1zKMZL3Ttx_BaytcXGSm72UhhAaooUGNG",
+      "url": "https://drive.google.com/file/d/1zKMZL3Ttx_BaytcXGSm72UhhAaooUGNG/view?usp=drivesdk"
+    },
+    {
+      "role": "run_ledger",
+      "id": "1tBt62SVLRvIaj8jR3SipHQrUYNoOj1h1",
+      "url": "https://drive.google.com/file/d/1tBt62SVLRvIaj8jR3SipHQrUYNoOj1h1/view?usp=drivesdk"
+    },
+    {
+      "role": "visual_review",
+      "id": "1tmeBP18u1i-BEFrasQVUrwiDQmK2rnWL",
+      "url": "https://drive.google.com/file/d/1tmeBP18u1i-BEFrasQVUrwiDQmK2rnWL/view?usp=drivesdk"
+    },
+    {
+      "role": "live_publication",
+      "id": "1OABy7bWARFcmzrrnUsek0MqRTBN68G16",
+      "url": "https://drive.google.com/file/d/1OABy7bWARFcmzrrnUsek0MqRTBN68G16/view?usp=drivesdk"
+    },
+    {
+      "role": "hero_original_2k",
+      "id": "1586EJ_wc08kpGCpezBHAqeELOpmY0me8",
+      "url": "https://drive.google.com/file/d/1586EJ_wc08kpGCpezBHAqeELOpmY0me8/view?usp=drivesdk"
+    },
+    {
+      "role": "lifer_original_2k",
+      "id": "1z2TiMG-Q23-xft4Of4NCucfUIdq0Ou6Q",
+      "url": "https://drive.google.com/file/d/1z2TiMG-Q23-xft4Of4NCucfUIdq0Ou6Q/view?usp=drivesdk"
+    },
+    {
+      "role": "lab_post_run_review",
+      "id": "1A_QHb8qiAw_LdkYHgzvJBgZ2hrS43fcx",
+      "url": "https://drive.google.com/file/d/1A_QHb8qiAw_LdkYHgzvJBgZ2hrS43fcx/view?usp=drivesdk"
+    },
+    {
+      "role": "preview_quality_and_speed_contract",
+      "id": "1D1aNoN-eNb7OOf_05dwdHxfqGTH3AGpB",
+      "url": "https://drive.google.com/file/d/1D1aNoN-eNb7OOf_05dwdHxfqGTH3AGpB/view?usp=drivesdk"
+    },
+    {
+      "role": "adjustable_run_blueprint",
+      "id": "1Oz5w876hH-V5H-3fV4ACTNVSl_Uvur0f",
+      "url": "https://drive.google.com/file/d/1Oz5w876hH-V5H-3fV4ACTNVSl_Uvur0f/view?usp=drivesdk"
+    },
+    {
+      "role": "lab_publication",
+      "id": "1bImyMLGGu4zemDlhgvIKxqUZiKkG5IZZ",
+      "url": "https://drive.google.com/file/d/1bImyMLGGu4zemDlhgvIKxqUZiKkG5IZZ/view?usp=drivesdk"
+    },
+    {
+      "role": "lab_production_smoke",
+      "id": "109sA94vIYPzJOvEyeQCN1J1ejJ08YdH0",
+      "url": "https://drive.google.com/file/d/109sA94vIYPzJOvEyeQCN1J1ejJ08YdH0/view?usp=drivesdk"
+    },
+    {
+      "role": "marketing_split_status",
+      "id": "11X5t9vUmBTrhF4kvocmvpdusjZ3njzsl",
+      "url": "https://drive.google.com/file/d/11X5t9vUmBTrhF4kvocmvpdusjZ3njzsl/view?usp=drivesdk"
+    },
+    {
+      "role": "lab_tracking_plan",
+      "id": "130RMABk7o9-5ZyQeD9IkRU5MJ83AbCtM",
+      "url": "https://drive.google.com/file/d/130RMABk7o9-5ZyQeD9IkRU5MJ83AbCtM/view?usp=drivesdk"
+    },
+    {
+      "role": "lab_live_desktop_screenshot",
+      "id": "16F-1iXfZjAZpi23KHQglx4sMQBGvjHk9",
+      "url": "https://drive.google.com/file/d/16F-1iXfZjAZpi23KHQglx4sMQBGvjHk9/view?usp=drivesdk"
+    },
+    {
+      "role": "lab_live_phone_screenshot",
+      "id": "1ZtSgrmK2gqd_YDPXpX3Yo2eTdlXtpS1s",
+      "url": "https://drive.google.com/file/d/1ZtSgrmK2gqd_YDPXpX3Yo2eTdlXtpS1s/view?usp=drivesdk"
+    },
+    {
+      "role": "lab_source_index",
+      "id": "1O32Iej-mKtg_OQYvH1qXokKPkeKh5A6P",
+      "url": "https://drive.google.com/file/d/1O32Iej-mKtg_OQYvH1qXokKPkeKh5A6P/view?usp=drivesdk"
+    },
+    {
+      "role": "six_direction_timing_analysis",
+      "id": "1jVSOexXrHaYwTew6hUHJEzQxJFvvc-Pm",
+      "url": "https://drive.google.com/file/d/1jVSOexXrHaYwTew6hUHJEzQxJFvvc-Pm/view?usp=drivesdk"
+    },
+    {
+      "role": "public_experience_publication",
+      "id": "19o7CcXlMcICf-33Zon3Q85IWH162QU7V",
+      "url": "https://drive.google.com/file/d/19o7CcXlMcICf-33Zon3Q85IWH162QU7V/view?usp=drivesdk"
+    },
+    {
+      "role": "public_experience_production_proof",
+      "id": "10kVRL80Mz1aCY2TJ6na0MFc39zrWfuDI",
+      "url": "https://drive.google.com/file/d/10kVRL80Mz1aCY2TJ6na0MFc39zrWfuDI/view?usp=drivesdk"
+    },
+    {
+      "role": "public_experience_source_index",
+      "id": "1OfRMYCw-Ht0lJGm6Qt9jZ1DFZFADfwqm",
+      "url": "https://drive.google.com/file/d/1OfRMYCw-Ht0lJGm6Qt9jZ1DFZFADfwqm/view?usp=drivesdk"
+    },
+    {
+      "role": "public_experience_source_styles",
+      "id": "1SgpSUUlE8wvyxu3WNl5EsyBHlXWEo4Br",
+      "url": "https://drive.google.com/file/d/1SgpSUUlE8wvyxu3WNl5EsyBHlXWEo4Br/view?usp=drivesdk"
+    },
+    {
+      "role": "public_experience_source_app",
+      "id": "1FfhWRAhOq8nQspoY6BdqF2fP6fBVm8CY",
+      "url": "https://drive.google.com/file/d/1FfhWRAhOq8nQspoY6BdqF2fP6fBVm8CY/view?usp=drivesdk"
+    },
+    {
+      "role": "public_experience_live_desktop_screenshot",
+      "id": "1lUPzqE7xzsPP7qAeMzvBs2zpiFJ_Nc3F",
+      "url": "https://drive.google.com/file/d/1lUPzqE7xzsPP7qAeMzvBs2zpiFJ_Nc3F/view?usp=drivesdk"
+    },
+    {
+      "role": "public_experience_live_phone_screenshot",
+      "id": "1gb2ar1qp5wvEHzQEnkjWIihvw4yrcXyT",
+      "url": "https://drive.google.com/file/d/1gb2ar1qp5wvEHzQEnkjWIihvw4yrcXyT/view?usp=drivesdk"
+    },
+    {
+      "role": "public_experience_local_browser_proof",
+      "id": "1AV9heg9GF9G0YHMCHJVtSTM-EnCpZlCa",
+      "url": "https://drive.google.com/file/d/1AV9heg9GF9G0YHMCHJVtSTM-EnCpZlCa/view?usp=drivesdk"
+    }
+  ],
+  "related_drive_records": [
+    {
+      "role": "proof_links_google_doc",
+      "id": "1oZdKGx1RU0fe3SGwZXLQbwYPXdCq41WpflnWP05c5MY",
+      "url": "https://docs.google.com/document/d/1oZdKGx1RU0fe3SGwZXLQbwYPXdCq41WpflnWP05c5MY/edit",
+      "update": "Added separate links for the public interactive experience and the FAMtastic Lab DNA case study."
+    },
+    {
+      "role": "current_capabilities_google_doc",
+      "id": "1HctX5S2e9Or7wFdpqARaZadZz0Dm3L4nlHzzBxQn85Q",
+      "url": "https://docs.google.com/document/d/1HctX5S2e9Or7wFdpqARaZadZz0Dm3L4nlHzzBxQn85Q/edit",
+      "update": "Appended the two-surface public experience plus Lab DNA architecture, links, production proof, and maturity boundary."
+    },
+    {
+      "role": "architecture_snapshot",
+      "id": "1YcXR27Z_Blb2eUwG2B_3XQAs_QERQvbN",
+      "url": "https://drive.google.com/file/d/1YcXR27Z_Blb2eUwG2B_3XQAs_QERQvbN/view?usp=drivesdk"
+    },
+    {
+      "role": "lessons_snapshot",
+      "id": "1vBR4g3ZwCFiOPxmZCAb6mSRpde1a2hUw",
+      "url": "https://drive.google.com/file/d/1vBR4g3ZwCFiOPxmZCAb6mSRpde1a2hUw/view?usp=drivesdk"
+    },
+    {
+      "role": "capability_registry_snapshot",
+      "id": "1TS_aSACYZVxBSJwT9QTQ9x6BDLgVKUmh",
+      "url": "https://drive.google.com/file/d/1TS_aSACYZVxBSJwT9QTQ9x6BDLgVKUmh/view?usp=drivesdk"
+    }
+  ],
+  "public_proof": {
+    "visibility": "public_unlisted",
+    "url": "https://famtasticdesigns.com/proofs/unlisted/0d87038b679e52c104ba126eceb02f1b/",
+    "anonymous_browser_verification": "pass"
+  },
+  "public_lab": {
+    "visibility": "public_indexable",
+    "url": "https://famtasticdesigns.com/lab/and-if-it-is/",
+    "anonymous_browser_verification": "pass",
+    "profiles": [1440, 390],
+    "attributed_intake": "pass"
+  },
+  "public_experience": {
+    "visibility": "public_indexable",
+    "url": "https://famtasticdesigns.com/and-if-it-is/",
+    "anonymous_browser_verification": "pass",
+    "profiles": [1440, 390],
+    "roll_call_generate_persist_copy_restore": "pass",
+    "social_cards_reachable": 3,
+    "visitor_entry_transmitted": false,
+    "lab_dna_companion": "https://famtasticdesigns.com/lab/and-if-it-is/"
+  },
+  "latest_lab_revision": {
+    "published_at": "2026-08-19T17:20:10Z",
+    "archive_sha256": "0debde1778b9bf10b8399ec19d54b62f6128af114a33b7c9d92b29f508d511b4",
+    "revision": "Separated the immersive public experience from the Lab DNA page and pointed every live-experience CTA to the public microsite.",
+    "source_index_drive_id": "1O32Iej-mKtg_OQYvH1qXokKPkeKh5A6P",
+    "publication_drive_id": "1bImyMLGGu4zemDlhgvIKxqUZiKkG5IZZ",
+    "production_smoke_drive_id": "109sA94vIYPzJOvEyeQCN1J1ejJ08YdH0",
+    "anonymous_browser_verification": "pass",
+    "note": "These individually revisioned Drive files supersede the Lab source and smoke evidence inside the earlier full campaign archive."
+  },
+  "external_actions": {
+    "social_account_created": false,
+    "social_post_published": false,
+    "customer_email_sent": false
+  }
+}

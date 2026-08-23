@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://famtasticdesigns.com/schemas/marketing/campaign-manifest-v1.json",
+  "$id": "https://famtastic-marketing-engine.local/schemas/campaign-manifest-v1.json",
   "title": "Marketing campaign manifest",
   "type": "object",
   "required": [

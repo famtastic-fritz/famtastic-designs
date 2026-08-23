@@ -13,12 +13,37 @@
   changing Concierge, Inkbox, Solution Finder follow-up, or Site Studio work
   intake. Never put credentials in a CLI configuration, commit them, or let an
   agent autonomously send, quote, grant, charge, purchase a domain, or deploy.
+- For every creative proof, selected-direction refinement, campaign experience,
+  or Site Studio-bound build, follow `docs/architecture/BUILD_DNA_STANDARD_V1.md`.
+  Create and validate one `famtastic.build-dna.v1` record at run creation;
+  journal the real provider/model status, prompts or prompt artifacts, inputs,
+  outputs, hashes, timing, costs, fallback, reviewer decision, and retrieval
+  locations as each stage happens. Register the Drupal projection before an
+  eligible handoff and copy the same record into the Site Studio packet. Never
+  guess missing model identity, duration, cost, prompt, or session information.
+- Route designed motion, proof walkthroughs, and reusable social cutdowns through
+  HyperFrames; route fast, draft-only narrated social/video assemblies through
+  MoneyPrinterTurbo. Neither tool is a publishing authority or a substitute for
+  a creative-proof reviewer. Record the provider/model, source assets, render
+  command, duration, cost status, hashes, QA, and approval state in the same
+  Build DNA record before handing a media artifact to a customer, campaign, or
+  Site Studio.
 - For marketing strategy, demand generation, blog series, SEO content, FAQs,
   CTAs, product explanations, or pricing recommendations, read
   `docs/DEMAND_ENGINE_DOCTRINE.md` and use
   `agent-skills/famtastic-demand-engine/SKILL.md`.
 - Installed `blog-*`, `seo-*`, and marketing skills are supporting references.
   FAMtastic's repository contracts override generic skill guidance.
+- The project-shared marketing core lives in `.agents/skills/` and begins with
+  `.agents/product-marketing.md`. For marketing, conversion, intake, campaign,
+  measurement, or sales-handoff work, read that context and then load only the
+  narrowest relevant specialist (`cro`, `signup`, `onboarding`, `popups`,
+  `revops`, `ad-creative`, `marketing-ideas`, `marketing-loops`,
+  `sales-enablement`, `ai-seo`, `analytics`, `ab-testing`, `social`,
+  `site-architecture`, `schema`, or `offers`). These are version-pinned
+  upstream references, not independent sources of FAMtastic product truth;
+  `docs/DEMAND_ENGINE_DOCTRINE.md`, the capability registry, products, terms,
+  and approval gates take precedence.
 - New generated marketing content is draft-first. Live prices, recurring
   charges, legal promises, real promotional sends, advertising spend, and
   broad publication remain explicit approval gates.

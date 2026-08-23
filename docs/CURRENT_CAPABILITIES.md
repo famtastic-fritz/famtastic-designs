@@ -1,6 +1,6 @@
 # FAMtasticDesigns.com Current Capabilities
 
-**Capability baseline:** August 11, 2026  
+**Capability baseline:** August 19, 2026
 **Purpose:** Define what FAMtastic Designs can credibly design, build, integrate, operate, or productize today. This is a capability map—not a product catalog and not a claim that every capability is fully automated in production.
 
 ## Core capability
@@ -135,25 +135,63 @@ FAMtastic Designs designs and engineers connected digital business systems that 
 - Capture product-specific promises, inclusions, exclusions, intake requirements, entitlements, support expectations, renewal behavior, legal language, QA requirements, and proof standards.
 - **Maturity:** Actively demonstrated through FAMtastic Designs itself and ready for continued formalization.
 
-### 22. Campaign strategy and demand creation
+### 22. Research-first AI creative previews and campaign worlds
+
+- Turn a normalized brief and sourced market/cultural research into one deep
+  social-presence direction or a six-direction website comparison with
+  deliberate typography, pattern, texture, material depth, original imagery,
+  responsive prototypes, screenshots, prompt/model/cost ledgers, browser QA,
+  and visual review.
+- Publish a two-surface campaign system: an immersive, functional public
+  audience experience plus a separate Lab DNA case study for process,
+  telemetry, QA, evidence, and attributed intake. Keep both separate from
+  customer projects, prices, approvals, payments, and Site Studio state.
+- Tune research depth, direction mix, image count, model/worker class,
+  FAMtastic intensity, typography experimentation, texture density, motion,
+  and repair budget while preserving truth, rights, accessibility, ownership,
+  approval, and publishing guardrails.
+- Preserve one Build DNA record for each qualifying run: the actual
+  provider/model status, prompts, normalized inputs, outputs, hashes, timing,
+  cost status, fallback, reviewer decision, filesystem evidence, Drupal
+  retrieval projection, and Site Studio handoff lineage. Missing telemetry is
+  explicitly labeled rather than backfilled from memory.
+- **Maturity:** Creative and technical contracts are locally proven; one public
+  interactive experience and its separate Lab DNA companion are production
+  proven on desktop and phone. The Gemini Flash Lite reference-led route is
+  provider-proven for one low-cost story sequence; consistent timing and
+  unattended independent quality remain pending a second unrelated
+  certification run.
+
+### 23. Governed media-routing lanes
+
+- Use HyperFrames for deliberate motion compositions built from approved proof
+  or campaign assets; use MoneyPrinterTurbo only for draft-first narrated
+  social/video assemblies. Neither tool may publish, send, price, or alter a
+  customer project on its own.
+- Keep image-volume providers interchangeable. ACI AI is a candidate reported
+  by the owner, not a verified cost or rights claim, until its API, terms,
+  quota, output quality, and receipt are benchmarked against the same brief.
+- **Maturity:** HyperFrames is installed and MoneyPrinterTurbo is evaluated;
+  neither has yet completed a FAMtastic production media run.
+### 24. Campaign strategy and demand creation
 
 - Translate an approved offer into a campaign thesis, audience, objections, hooks, learning journey, landing page, blog series, FAQs, email sequence, social moments, CTAs, and attribution plan.
 - Maintain one offer truth across every channel so generated content does not invent scope, pricing, proof, or promises.
 - **Maturity:** Demonstrated through the 17-day, 68-moment Web Basics campaign and its supporting content system.
 
-### 23. Branded creative and short-form video production
+### 25. Branded creative and short-form video production
 
 - Produce campaign-specific graphics, photoreal scenarios, motion graphics, vertical videos, captions, platform-safe crops, thumbnails, scripts, and channel-native variants.
 - Use provider-neutral Remotion templates as the repeatable baseline and selectively test presenter-led AI video when a human face improves trust.
 - **Maturity:** Local branded image and Remotion production are proven; the first controlled HeyGen presenter comparison is in provider generation.
 
-### 24. Social publishing and campaign operations
+### 26. Social publishing and campaign operations
 
 - Prepare, approve, schedule, publish, and verify media-rich posts while preserving account-specific copy, working destinations, UTMs, delivery evidence, and failure states.
 - Operate a mobile-first Drupal campaign command center for content readiness, channel status, publishing exceptions, traffic, leads, and sales.
 - **Maturity:** Facebook Page and founder-profile photo publishing are provider-proven. Instagram, TikTok, YouTube Shorts, and X remain channel-specific connection and delivery gates.
 
-### 25. AI-assisted marketing production
+### 27. AI-assisted marketing production
 
 - Route research, drafting, QA, image creation, video production, repurposing, and classification across cloud and appropriately sized local models without allowing models to approve claims or publish autonomously.
 - Compare paid presenter tools against open and programmable formats using quality, revision effort, speed, brand control, and cost per approved asset.

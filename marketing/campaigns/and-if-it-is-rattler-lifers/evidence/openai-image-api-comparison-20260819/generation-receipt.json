@@ -1,0 +1,97 @@
+{
+  "actual_cost_status" : "provider_did_not_return_invoice_cost; retain estimate and reconcile with OpenAI usage",
+  "actual_cost_usd" : null,
+  "artifacts" : [
+    {
+      "api_usage" : {
+        "input_tokens" : 382,
+        "input_tokens_details" : {
+          "image_tokens" : 0,
+          "text_tokens" : 382
+        },
+        "output_tokens" : 6462,
+        "output_tokens_details" : {
+          "image_tokens" : 6462,
+          "text_tokens" : 0
+        },
+        "total_tokens" : 6844
+      },
+      "bytes" : 4412820,
+      "direction_id" : "hero-v1",
+      "duration_ms" : 84392,
+      "path" : "hero-v1.png",
+      "sha256" : "df75a5e86e9f2c80fa915f5d256756401a3febb58a6f3e3f627be4141be90b68",
+      "size" : "2304x1296"
+    },
+    {
+      "api_usage" : {
+        "input_tokens" : 401,
+        "input_tokens_details" : {
+          "image_tokens" : 0,
+          "text_tokens" : 401
+        },
+        "output_tokens" : 7869,
+        "output_tokens_details" : {
+          "image_tokens" : 7869,
+          "text_tokens" : 0
+        },
+        "total_tokens" : 8270
+      },
+      "bytes" : 3586036,
+      "direction_id" : "the-lifer-v1",
+      "duration_ms" : 126457,
+      "path" : "the-lifer-v1.png",
+      "sha256" : "3a72872038302160967df1ab76738e2b636395346583913140f8ebfcc812e790",
+      "size" : "1344x1680"
+    }
+  ],
+  "charge_authorized" : true,
+  "denied_capabilities" : [
+    "text_generation",
+    "research",
+    "code_generation",
+    "embeddings",
+    "audio",
+    "video"
+  ],
+  "duration_ms" : 210850,
+  "endpoint_allowlist" : [
+    "POST \/v1\/images\/generations"
+  ],
+  "estimate_components_usd" : {
+    "default_image_output_each" : 0.16500000000000001,
+    "default_prompt_input_reserve_each" : 0.014999999999999999
+  },
+  "estimated_cost_usd" : 1,
+  "generated_at" : "2026-08-19T23:31:23Z",
+  "image_count" : 2,
+  "max_cost_usd" : 1.2,
+  "model" : "gpt-image-2",
+  "model_allowlist" : [
+    "gpt-image-2"
+  ],
+  "prompts" : [
+    {
+      "direction_id" : "hero-v1",
+      "estimated_cost_usd" : 0.5,
+      "filename" : "hero-v1.png",
+      "prompt" : "Use case: ads-marketing\nAsset type: 16:9 campaign hero for an unofficial lifelong HBCU fan-community social presence\nPrimary request: an ultra-realistic, cinematic editorial photograph about generations of Black college pride that lasts for life\nScene\/backdrop: outside a grand but unbranded Southern college football stadium at golden hour, stadium lights glowing through light atmospheric haze, subtle crowd energy in the distance\nSubject: an intergenerational group of seven Black adults spanning current-student age through elders in their late sixties, walking together toward the stadium with confident joy; one older alumnus carries a worn ticket scrapbook, a current student carries a plain megaphone, a parent and adult child walk shoulder to shoulder; natural individuality and authentic age detail\nStyle\/medium: premium ultra-realistic campaign photography, 35mm editorial lens, lifelike skin texture, natural hair detail, realistic fabric, cinematic but believable\nComposition\/framing: wide horizontal composition, group weighted toward the right two-thirds, generous darker negative space on the left for website typography, full and three-quarter figures, low heroic camera angle\nLighting\/mood: warm sunset rim light, deep emerald shadows, copper-orange practical light, proud, affectionate, defiant, generational\nMaterials\/textures: worn leather scrapbook, brushed metal railings, concrete stadium grain, subtle abstract iridescent scale reflections in the light—not a literal logo\nConstraints: no text; no letters; no school name; no official university logo, seal, mascot, uniform, licensed mark, celebrity, real identifiable person, watermark, hazing, worship ritual, religious imagery, coercion, menace, or propaganda; portray healthy community, alumni continuity, mentorship, culture, game-day joy, and belonging\nAvoid: generic stock-photo smiles, matching outfits, plastic skin, cloned faces, extra fingers, aggressive snake imagery",
+      "prompt_sha256" : "3a6887b55b711e63c47ef0d76ae36ec1ccf699e61186aaf816f98f6dd7b200fd",
+      "size" : "2304x1296"
+    },
+    {
+      "direction_id" : "the-lifer-v1",
+      "estimated_cost_usd" : 0.5,
+      "filename" : "the-lifer-v1.png",
+      "prompt" : "Use case: ads-marketing\nAsset type: 4:5 original character-brand portrait for an unofficial lifelong college fan project\nPrimary request: create \"THE LIFER,\" an entirely original ultra-realistic fantasy-realism serpent-spirit character symbolizing alumni pride that never fades\nScene\/backdrop: an unbranded stadium tunnel opening toward warm game-day light, layered concrete, brass rails, atmospheric particles, faint abstract coil shadows\nSubject: a dignified humanoid rattlesnake spirit with biologically convincing emerald, charcoal, and copper scale detail, expressive intelligent eyes, relaxed confident posture, warm knowing half-smile rather than aggression; wearing a high-fashion vintage varsity-inspired jacket made of deep forest wool, copper leather sleeves, cream piping, completely blank with no letters, numbers, logo, seal, or patches; tail naturally coiled beside one well-worn stadium seat and a blank vintage ticket\nStyle\/medium: ultra-realistic cinematic creature portrait, luxury editorial character photography, convincing anatomy and materials, sophisticated Black cultural fashion influence without impersonating any person or copying an existing mascot\nComposition\/framing: vertical 4:5, full three-quarter character, strong silhouette, room above and beside the head for separate HTML typography, readable on a phone\nLighting\/mood: dramatic tunnel rim light, emerald shadow, copper highlights, proud, witty, welcoming, timeless\nMaterials\/textures: detailed natural scales, wool varsity texture, aged leather, stadium concrete, metallic ticket edge\nConstraints: no text; no letters; no school name; no official mascot likeness, university logo, seal, wordmark, uniform, copyrighted character, celebrity, real person, watermark, forked tongue display, fangs, threat, violence, cult ritual, religious iconography, hazing, or coercion; this must read as an original unofficial fan character\nAvoid: cartoon mascot, sports-team logo design, costume head, horror monster, generic dragon, official orange-and-green uniform",
+      "prompt_sha256" : "33430ccc8bb6aaca66b991d32d5bdea02efad4304a3d989aafd360a9ca4bcb6a",
+      "size" : "1344x1680"
+    }
+  ],
+  "provider" : "openai_image_api",
+  "quality" : "high",
+  "request_id" : "marketing:and-if-it-is-20260819-api-comparison",
+  "schema" : "famtastic.openai-image-generation-receipt.v1",
+  "status" : "complete",
+  "transport" : "https:\/\/api.openai.com\/v1\/images\/generations"
+}

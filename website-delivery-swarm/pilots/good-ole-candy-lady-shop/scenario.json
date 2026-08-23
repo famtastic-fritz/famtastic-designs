@@ -1,0 +1,31 @@
+{
+  "schema": "famtastic.fictional-pilot.v1",
+  "request_id": "local-candy-lady-20260818-001",
+  "lane": "member",
+  "privacy_class": "fictional-local-proof",
+  "mode": "six-direction-benchmark",
+  "fictional_business": true,
+  "customer": { "email": "fritz.medine@gmail.com" },
+  "business": {
+    "name": "The Good Ole Candy Lady Shop",
+    "location": "St. Lucie County, Florida",
+    "ownership_positioning": "fictional Black-owned community business",
+    "story": "A modern mobile version of the neighborhood candy-lady house, bringing affordable treats and familiar warmth to youth football, basketball, and community events."
+  },
+  "audiences": ["Youth-sports families", "Coaches and team organizers", "Community-event hosts"],
+  "required_capabilities": [
+    "Mobile-first menu and inventory concepts",
+    "Event preorder and pickup workflow",
+    "Team fundraising inquiry",
+    "Bundle merchandising",
+    "Contactless payment and QR concept with no fabricated live destination",
+    "Event calendar and booking inquiry"
+  ],
+  "creative_mix": { "safe": 1, "medium_famtastic": 1, "ultra_famtastic": 4 },
+  "constraints": [
+    "No live price, payment destination, domain, event, inventory, or availability claim",
+    "No school, league, team, candy, or payment-provider trademark",
+    "All content and people are fictional concept material",
+    "No email, production import, deployment, or external mutation"
+  ]
+}

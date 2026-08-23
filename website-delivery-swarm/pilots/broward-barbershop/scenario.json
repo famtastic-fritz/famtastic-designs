@@ -1,0 +1,12 @@
+{
+  "schema":"website_build_brief.v2",
+  "request_id":"fixture:broward-barbershop-lp3",
+  "synthetic":true,
+  "business":{"name":"Third Chair Studio","industry":"Neighborhood barbershop","location":"Broward County, Florida","ownership_context":"African American-owned","owner_age":41,"business_model":"Draft assumption: appointment and walk-in grooming services"},
+  "goal":"Turn mobile visitors into appointment requests while showing craft, trust, and community character.",
+  "audience":"Adults and families seeking modern and classic barbering in Broward County.",
+  "creative":{"requested_directions":["safe","wild","omg"],"life_path":3,"numerology_opt_in":true,"disclosure":"Optional creative lens; not a scientific personality assessment."},
+  "draft_services":["Signature cut","Fade or taper","Cut and beard detail","Kids cut","Beard shaping"],
+  "unknowns":["Exact city and address","Confirmed services and prices","Hours","Booking provider","Walk-in and deposit policies","License details","Logo/domain/email","Real photography and reviews"],
+  "protected_decisions":["price","eligibility","risk","legal terms","accessibility","approval","priority"]
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "famtastic.campaign-research.v1",
+  "campaign": "and_if_it_is_rattler_lifers",
+  "researched_on": "2026-08-19",
+  "thesis": "The playful cult comparison works only as affectionate shorthand for an unusually durable, intergenerational Rattler identity. The evidence story is lifelong involvement, tradition, excellence, mentorship, attendance, giving, and return—not coercion or literal cult behavior.",
+  "findings": [
+    {
+      "fact": "FAMU describes its traditions as connecting past, present, and future and says the Rattler embodies resilience and the willingness to strike again.",
+      "source": "https://www.famu.edu/students/campus-traditions/",
+      "use": "Ground the campaign in continuity and resilience."
+    },
+    {
+      "fact": "FAMU's National Alumni Association uses the language 'Once a Rattler, always a Rattler' and describes continuing ties through giving, recruiting, advocacy, and service.",
+      "source": "https://www.famu.edu/about-famu/alumni-affairs/famunaa.php",
+      "use": "Support the lifelong-Rattler premise with official language."
+    },
+    {
+      "fact": "FAMU Alumni Affairs exists to promote continuous involvement of every alumnus and invites alumni to connect, engage, and give back.",
+      "source": "https://www.famu.edu/about-famu/alumni-affairs/index.php",
+      "use": "Turn pride into useful official next actions."
+    },
+    {
+      "fact": "FAMU's current public homepage identifies the university as the number-one public HBCU and says students and alumni are its proof.",
+      "source": "https://www.famu.edu/",
+      "mutable": true,
+      "use": "Use only with a source and retrieval date; never convert it into an unsupported universal superiority claim."
+    },
+    {
+      "fact": "A 2025 profile of alumnus Jason Carter records the familiar joke that people call FAMU a cult and connects it to lifelong pride, community, confidence, and cultural belonging.",
+      "source": "https://offtheyard.net/news/from-the-hill-to-atls-piedmont-park-how-famu-alum-jason-j-carter-built-one-musicfest-into-a-cultural-institution/",
+      "use": "Confirm the joke exists in contemporary Rattler culture; do not present one interview as universal sentiment."
+    },
+    {
+      "fact": "FAMU's social-media guidance restricts unofficial use of the FAMU name in account handles and prohibits unapproved use of official logos, seals, and social graphics.",
+      "source": "https://www.famu.edu/administration/communications/pdf/2018-StyleGuide.pdf",
+      "use": "Use an original handle, original character, no official logo or mascot likeness, and a prominent unofficial-fan disclosure."
+    },
+    {
+      "fact": "OpenAI recommends well-scoped tasks, persistent AGENTS.md context, issue-like prompts, and Best-of-N only when it materially improves a complicated result.",
+      "source": "https://openai.com/business/guides-and-resources/how-openai-uses-codex/",
+      "use": "Keep this proof bounded and store the repeatable formula without manufacturing a large new agent hierarchy."
+    }
+  ],
+  "claim_boundaries": [
+    "The campaign is an unofficial fan commentary concept and is not affiliated with or endorsed by Florida A&M University.",
+    "The word cult is a joke about healthy lifelong belonging; never depict coercion, hazing, worship, secrecy, threats, or exclusion.",
+    "Do not use official logos, seals, wordmarks, mascot art, uniforms, or an official-looking social handle.",
+    "Treat rankings and schedules as mutable and link to current official sources.",
+    "Use official destinations for giving, alumni membership, events, and university information."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema":"famtastic.independent-visual-review.v1",
+  "request_id":"local-candy-lady-20260818-001",
+  "reviewer":{"provider":"openai","model":"codex-primary-session-exact-deployment-unavailable","role":"parent visual critic","independent":true,"execution_class":"separate agent session"},
+  "review_basis":"Independent inspection of all six desktop and all six mobile full-page screenshots after browser QA.",
+  "three_or_more_distinct_layout_families":true,
+  "all_six_visually_distinct":true,
+  "critical_defects":[],
+  "advisories":["Generated people are fictional concept imagery.","QR, payment, inventory, venue, pickup, and event functions remain visibly disconnected placeholders."],
+  "directions":[
+    {"id":"direction-a","name":"Porch Table","scores":{"first_impression":8,"business_relevance":9,"visual_distinction":8,"copy_specificity":8,"trust_credibility":9,"mobile_usability":9,"accessibility":8,"conversion_clarity":8,"emotional_response":8},"overall":8.3,"rationale":"A warm, trustworthy baseline with an easy menu path."},
+    {"id":"direction-b","name":"Game Day Pop","scores":{"first_impression":9,"business_relevance":9,"visual_distinction":9,"copy_specificity":9,"trust_credibility":8,"mobile_usability":9,"accessibility":8,"conversion_clarity":9,"emotional_response":9},"overall":8.8,"rationale":"Fast game-day merchandising energy with practical bundles."},
+    {"id":"direction-c","name":"Candy Cosmos","scores":{"first_impression":10,"business_relevance":9,"visual_distinction":10,"copy_specificity":8,"trust_credibility":8,"mobile_usability":8,"accessibility":7,"conversion_clarity":8,"emotional_response":10},"overall":8.7,"rationale":"A delightful world-builder whose category system remains navigable."},
+    {"id":"direction-d","name":"Halftime Rush","scores":{"first_impression":10,"business_relevance":9,"visual_distinction":10,"copy_specificity":9,"trust_credibility":8,"mobile_usability":8,"accessibility":7,"conversion_clarity":9,"emotional_response":9},"overall":8.8,"rationale":"Sports urgency becomes a clear three-lane ordering model."},
+    {"id":"direction-e","name":"Porch to Playoffs","scores":{"first_impression":9,"business_relevance":10,"visual_distinction":10,"copy_specificity":9,"trust_credibility":9,"mobile_usability":9,"accessibility":8,"conversion_clarity":8,"emotional_response":10},"overall":9.0,"rationale":"The strongest story concept, connecting neighborhood memory to modern operations."},
+    {"id":"direction-f","name":"The Candy Stadium","scores":{"first_impression":10,"business_relevance":8,"visual_distinction":10,"copy_specificity":8,"trust_credibility":8,"mobile_usability":8,"accessibility":7,"conversion_clarity":9,"emotional_response":9},"overall":8.6,"rationale":"A premium pop-up vision with a clear mobile conversion path."}
+  ]
+}

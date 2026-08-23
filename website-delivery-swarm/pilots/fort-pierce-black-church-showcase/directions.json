@@ -1,0 +1,68 @@
+[
+  {
+    "id": "direction-a",
+    "slug": "sunday-welcome",
+    "name": "Sunday Welcome",
+    "mode": "normal",
+    "famtastic_level": 2,
+    "strategy": "A warm, familiar church homepage that removes first-visit anxiety and keeps service information obvious.",
+    "palette": "cream / navy / muted gold",
+    "information_architecture": "welcome hero -> service times -> visit steps -> ministries -> message -> contact",
+    "hero_asset": "direction-a-sunday-welcome.png"
+  },
+  {
+    "id": "direction-b",
+    "slug": "sunrise-revival",
+    "name": "Sunrise Revival",
+    "mode": "famtastic",
+    "famtastic_level": 8,
+    "strategy": "Turn Fort Pierce sunrise energy into a cinematic invitation built around worship, momentum, and one bold next step.",
+    "palette": "coral / cyan / plum / liquid gold",
+    "information_architecture": "cinematic hero -> live countdown -> experience pillars -> next gathering -> community invitation",
+    "hero_asset": "direction-b-sunrise-revival.png"
+  },
+  {
+    "id": "direction-c",
+    "slug": "gospel-frequency",
+    "name": "Gospel Frequency",
+    "mode": "famtastic",
+    "famtastic_level": 9,
+    "strategy": "Make the church feel like a living broadcast where worship, sermons, youth, and stories travel through one shared frequency.",
+    "palette": "ultraviolet / electric lime / hot magenta / black",
+    "information_architecture": "broadcast hero -> now playing -> channel grid -> weekly signal -> prayer call-in",
+    "hero_asset": "direction-c-gospel-frequency.png"
+  },
+  {
+    "id": "direction-d",
+    "slug": "stained-glass-future",
+    "name": "Stained Glass Future",
+    "mode": "famtastic",
+    "famtastic_level": 10,
+    "strategy": "Reimagine stained glass as an immersive future-facing portal connecting legacy, youth, worship, and service.",
+    "palette": "cobalt / ultraviolet / amber / turquoise",
+    "information_architecture": "portal hero -> four pathways -> future calendar -> legacy statement -> enter the house",
+    "hero_asset": "direction-d-stained-glass-future.png"
+  },
+  {
+    "id": "direction-e",
+    "slug": "legacy-in-motion",
+    "name": "Legacy in Motion",
+    "mode": "famtastic",
+    "famtastic_level": 10,
+    "strategy": "Build the homepage like a living cultural magazine where testimony, service, memory, and the next generation share the frame.",
+    "palette": "Florida coral / indigo / sunflower / sea green",
+    "information_architecture": "editorial cover -> legacy ticker -> story features -> community board -> oral-history invitation",
+    "hero_asset": "direction-e-legacy-in-motion.png"
+  },
+  {
+    "id": "direction-f",
+    "slug": "heaven-on-harbor",
+    "name": "Heaven on the Harbor",
+    "mode": "famtastic",
+    "famtastic_level": 10,
+    "strategy": "Create a breathtaking pilgrimage through Fort Pierce light and water, turning the visit journey into the central visual idea.",
+    "palette": "Atlantic navy / molten gold / coral / turquoise mist",
+    "information_architecture": "immersive journey hero -> three-step path -> waterfront ministries -> invitation filmstrip -> arrival card",
+    "hero_asset": "direction-f-heaven-on-harbor.png"
+  }
+]
