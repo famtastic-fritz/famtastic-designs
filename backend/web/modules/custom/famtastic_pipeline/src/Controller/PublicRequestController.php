@@ -214,7 +214,11 @@ class PublicRequestController extends ControllerBase {
       $slaDays = max(1, (int) ($settings->get('lead_response_sla_days') ?: 3));
       $customerBody = "Thanks for reaching out to FAMtastic Designs.\n\n"
         . "Your request #" . $intake->id() . " is safely recorded. We will review it and reply within {$slaDays} business days with the next useful step.\n\n"
-        . "You can reply directly to this email if you need to add context.\n\nFAMtastic Designs";
+        . "The best next step is to create your free FAMtastic account and start your guided website request:\n"
+        . "https://famtasticdesigns.com/portal\n\n"
+        . "You can save your answers as you go. Tell us what your website needs to do, who it needs to serve, the pages or features you are considering, and any reference material. That lets us refine the recommendation, the real scope, and any eligible private offer before you are asked to purchase anything.\n\n"
+        . "You can also reply directly to this email if you need to add context.\n\n"
+        . "Shay Shay\nFAMtastic Concierge\nFAMtastic Designs · https://famtasticdesigns.com";
       $this->mailer->send($customerEmail, $customerSubject, $customerBody);
       $prospect->set('status', 'acknowledged')->save();
       return ['ok' => TRUE];
