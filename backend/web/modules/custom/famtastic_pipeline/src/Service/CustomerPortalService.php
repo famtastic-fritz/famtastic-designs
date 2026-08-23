@@ -674,7 +674,14 @@ final class CustomerPortalService {
       $intake['proof_revision_request'] = ['notes' => $notes, 'requested_at' => gmdate(DATE_ATOM, $now)];
       $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'revision_requested', 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'changed' => $now])->condition('id', $row['id'])->execute();
       $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
-      $this->queueNotification('website-request:' . $row['id'] . ':proof-revision:' . hash('sha256', $notes), 'operational', $admin, 'Website proof revision requested — ' . $row['project_name'], "Customer request:\n{$notes}\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
+      $notesHash = hash('sha256', $notes);
+      $this->queueNotification('website-request:' . $row['id'] . ':proof-revision:' . $notesHash, 'operational', $admin, 'Website proof revision requested — ' . $row['project_name'], "Customer request:\n{$notes}\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
+      $customer = $this->customerContact((int) $row['customer_id']);
+      if ($customer['email'] !== '') {
+        $this->queueNotification('website-request:' . $row['id'] . ':customer-revision-ack:' . $notesHash, 'transactional', $customer['email'],
+          'We received your website revision request',
+          "Hi {$customer['display_name']},\n\nFAMtastic Concierge has your revision notes for {$row['project_name']}. Fritz will review them and follow up with the next step.\n" . $this->portalLink((string) $row['public_id']) . "\n\n— FAMtastic Concierge");
+      }
     }
     else {
       $direction = strtolower((string) ($input['direction'] ?? ''));
@@ -685,9 +692,40 @@ final class CustomerPortalService {
       $campaign = $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']);
       if ($campaign) $campaign->set('selected_variant', $direction)->set('selected_at', $now)->save();
       $this->activity((int) $row['organization_id'], 'website_request.proof_selected', 'A website concept was selected and is ready for purchase.');
+      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
+      $customer = $this->customerContact((int) $row['customer_id']);
+      foreach (['owner-proof-selected', 'customer-proof-selected'] as $supersedeKey) {
+        $this->database->update('famtastic_notification_outbox')->fields(['status' => 'superseded', 'changed' => $now])
+          ->condition('notification_key', 'website-request:' . $row['id'] . ':' . $supersedeKey . ':%', 'LIKE')
+          ->condition('status', ['queued', 'retry'], 'IN')->execute();
+      }
+      $this->queueNotification('website-request:' . $row['id'] . ':owner-proof-selected:' . $direction, 'operational', $admin,
+        'Customer selected proof ' . strtoupper($direction) . ' — ' . $row['project_name'],
+        "Customer: {$customer['display_name']} ({$customer['email']})\nSelected direction: " . strtoupper($direction) . "\nNext step: confirm the selection, then prepare the private offer or checkout.\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
+      if ($customer['email'] !== '') {
+        $this->queueNotification('website-request:' . $row['id'] . ':customer-proof-selected:' . $direction, 'transactional', $customer['email'],
+          'We received your website direction choice',
+          "Hi {$customer['display_name']},\n\nThanks for choosing direction " . strtoupper($direction) . " for {$row['project_name']}. FAMtastic Concierge recorded your choice and Fritz will follow up with the next step.\n" . $this->portalLink((string) $row['public_id']) . "\n\n— FAMtastic Concierge");
+      }
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
     return $this->serializeWebsiteRequest($updated);
+  }
+
+  /** Returns one customer's acknowledgment contact details. */
+  private function customerContact(int $customerId): array {
+    $row = $this->database->select('famtastic_customer', 'c')
+      ->fields('c', ['display_name', 'email'])
+      ->condition('id', $customerId)
+      ->execute()
+      ->fetchAssoc();
+    return $row ? ['display_name' => (string) $row['display_name'], 'email' => mb_strtolower((string) $row['email'])] : ['display_name' => 'there', 'email' => ''];
+  }
+
+  /** Builds the portal deep link used by customer acknowledgments. */
+  private function portalLink(string $publicId): string {
+    $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+    return $base . '/portal/?section=projects&request=' . rawurlencode($publicId);
   }
 
   public function updateCustomer(int $customerId, array $input): void {

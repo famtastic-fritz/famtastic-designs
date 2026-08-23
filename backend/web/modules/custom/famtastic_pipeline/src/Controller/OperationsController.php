@@ -23,6 +23,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 final class OperationsController extends ControllerBase {
 
+  /** Queue age in seconds after which the notification banner demands attention. */
+  private const NOTIFICATION_QUEUE_ATTENTION_SECONDS = 1800;
+
   public function __construct(
     private readonly Connection $database,
     private readonly EntityTypeManagerInterface $pipelineEntityTypeManager,
@@ -358,6 +361,7 @@ final class OperationsController extends ControllerBase {
       'referrals' => $this->referralMetric(),
       'services' => $this->serviceMetric(),
       'notifications' => $this->notificationMetric(),
+      'replies' => $this->replyMetric(),
       'workers' => $this->workerMetric(),
       'grant-codes' => $this->grantCodeMetric(),
       default => throw new NotFoundHttpException('Operations metric not found.'),
@@ -417,6 +421,45 @@ final class OperationsController extends ControllerBase {
       $rows[] = [$record['category'], $record['recipient'], $record['subject'], ['data' => ['#markup' => $this->badge($record['status'])]], $record['attempts'], $record['last_error'] ?: '—', $age > 300 && in_array($record['status'], ['queued', 'retry'], TRUE) ? round($age / 60) . ' minutes' : 'Current', $this->date((int) $record['changed'])];
     }
     return $this->recordsPage('Notifications', 'Transactional and operational delivery state, retries, queue age, and dead letters.', ['Category', 'Recipient', 'Subject', 'Status', 'Attempts', 'Last error', 'Queue age', 'Updated'], $rows, 'No notifications have been queued.');
+  }
+
+  /**
+   * Renders validated inbound mailbox messages behind the replies metric.
+   */
+  private function replyMetric(): array {
+    $messages = $this->database->select('famtastic_inbound_message', 'i')
+      ->extend(PagerSelectExtender::class)
+      ->fields('i', ['thread_public_id', 'sender_hash', 'subject', 'status', 'rejection_reason', 'received_at'])
+      ->orderBy('i.received_at', 'DESC')
+      ->orderBy('i.id', 'DESC')
+      ->limit(50)
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+    // Inbound senders are stored as hashes; resolve them against the durable
+    // customer directory so operators see who replied without new PII storage.
+    $senders = [];
+    foreach ($this->database->select('famtastic_customer', 'c')->fields('c', ['email', 'display_name'])->execute()->fetchAll(\PDO::FETCH_ASSOC) as $customer) {
+      $senders[hash('sha256', mb_strtolower((string) $customer['email']))] = trim((string) $customer['display_name']) . ' · ' . $customer['email'];
+    }
+    $rows = [];
+    foreach ($messages as $message) {
+      $reason = (string) $message['rejection_reason'];
+      $matchCell = $this->badge((string) $message['status']) . ($reason !== '' ? '<br><small>' . Html::escape(str_replace('_', ' ', $reason)) . '</small>' : '');
+      $rows[] = [
+        'sender' => $senders[(string) $message['sender_hash']] ?? ('Unknown sender (' . substr((string) $message['sender_hash'], 0, 12) . '…)'),
+        'subject' => (string) $message['subject'],
+        'match' => ['data' => ['#markup' => $matchCell]],
+        'thread' => (string) ($message['thread_public_id'] ?: '—'),
+        'received' => $this->date((int) $message['received_at']),
+      ];
+    }
+    return $this->recordsPage(
+      'Customer Replies',
+      'Every validated inbound customer email with its thread match result, so no reply can be silently lost.',
+      ['Sender', 'Subject', 'Match status', 'Thread', 'Received'],
+      $rows,
+      'No inbound messages have been received.',
+    );
   }
 
   private function workerMetric(): array {
@@ -1099,14 +1142,47 @@ final class OperationsController extends ControllerBase {
    * Wraps operator content in the shared page presentation.
    */
   private function page(array $content, string $title): array {
+    $banner = $this->notificationAttentionBanner();
     return [
       '#title' => $title,
       '#attached' => ['library' => ['famtastic_pipeline/operations']],
       'content' => [
         '#type' => 'container',
         '#attributes' => ['class' => ['famtastic-ops']],
-      ] + $content,
+      ] + ($banner === [] ? [] : ['attention_banner' => $banner]) + $content,
     ];
+  }
+
+  /**
+   * Builds the notification queue banner, empty while delivery stays healthy.
+   */
+  private function notificationAttentionBanner(): array {
+    $now = (int) \Drupal::time()->getRequestTime();
+    $retrying = $this->countIn('famtastic_notification_outbox', 'status', ['retry']);
+    $deadLetters = $this->countIn('famtastic_notification_outbox', 'status', ['dead_letter']);
+    $oldestQueued = (int) ($this->database->select('famtastic_notification_outbox', 'n')
+      ->fields('n', ['created'])
+      ->condition('status', 'queued')
+      ->orderBy('n.created', 'ASC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField() ?: 0);
+    $waitingMinutes = $oldestQueued > 0 ? (int) round(max(0, $now - $oldestQueued) / 60) : 0;
+    if ($retrying === 0 && $deadLetters === 0 && $waitingMinutes * 60 < self::NOTIFICATION_QUEUE_ATTENTION_SECONDS) {
+      return [];
+    }
+    $reasons = [];
+    if ($deadLetters > 0) {
+      $reasons[] = '<b class="famtastic-ops__attention-banner-danger">' . $deadLetters . ' dead-lettered</b>';
+    }
+    if ($retrying > 0) {
+      $reasons[] = '<b>' . $retrying . ' retrying</b>';
+    }
+    if ($waitingMinutes * 60 >= self::NOTIFICATION_QUEUE_ATTENTION_SECONDS) {
+      $reasons[] = '<b>oldest queued item waiting ' . $waitingMinutes . ' minutes</b>';
+    }
+    $link = Link::fromTextAndUrl('Open notifications →', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'notifications']))->toString();
+    return ['#markup' => '<section class="famtastic-ops__attention-banner" role="status"><strong>Needs attention</strong><span>Notification delivery: ' . implode(' · ', $reasons) . '</span>' . $link . '</section>'];
   }
 
   /**

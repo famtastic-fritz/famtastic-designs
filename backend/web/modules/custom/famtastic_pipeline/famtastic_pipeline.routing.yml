@@ -521,7 +521,7 @@ famtastic_pipeline.operations_metric:
     _title: 'Operations Records'
   requirements:
     _permission: 'administer famtastic pipeline'
-    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes'
+    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes|replies'
 
 famtastic_pipeline.prospect_workspace:
   path: '/admin/famtastic/prospect/{famtastic_prospect}/workspace'
