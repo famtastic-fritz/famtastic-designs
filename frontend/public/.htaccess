@@ -3,8 +3,12 @@
 #    assets and render as unstyled soup.
 # 2) Missing hashed assets must 404 loudly instead of falling back to HTML.
 
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "now"
+</IfModule>
 <IfModule mod_headers.c>
-  <FilesMatch "^(index\.html|\.frontend-release)$">
+  <FilesMatch "index\.html$|\.frontend-release$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
