@@ -35,6 +35,16 @@
 ## Approval gates
 Steps 2, 10 (+ any real billing/DNS/production action). CEO prepares change + rollback; Fritz approves.
 
+## Remediation: Brutal Review 2026-08-24 (`docs/audits/BRUTAL-REVIEW-2026-08-24.md`)
+| # | Finding (severity) | Fix step | Owner | Status |
+|---|---|---|---|---|
+| R1 | Prod Commerce missing 2 of 16 advertised SKUs — $499 tier unsellable after intake+proofs (CRITICAL) | Seed variations via `backend/scripts/setup-commerce.php` on prod + permanent catalog-drift guard in deploy script | fam-ceo → backend deploy is a GATE | Guard code fixed + locally verified 2026-08-24 (quote bug found in first draft, repaired, stub-run receipts clean; see heartbeat 2026-08-24T15:20Z). ⚠️ **Prod seeding BLOCKED on next approved backend deploy.** |
+| R2 | No stranger has ever paid; e2e asserts checkout URL then calls fulfill() directly (CRITICAL) | Gateway-mode test charge through real `/web/checkout/{id}` in Stripe TEST mode | fam-ceo, needs Fritz billing-gate ruling | ⚠️ awaiting Fritz: confirm TEST-mode charge counts as "billing" under hard limits |
+| R3 | Publish approvals have no executor; Postiz bound to laptop (HIGH) | Bounded batch publisher consuming approval records | unassigned (dispatch hold) | ⚠️ not started |
+| R4 | UTMs never persisted at prospect capture; no post→lead→order join (HIGH) | Persist UTM snapshot on prospect create + attribution join table | unassigned (dispatch hold) | ⚠️ not started |
+| R5–R9 | Renewals email-only; split-brain payments; per-request JSON reads + hardcoded personal URLs; double fulfillment; lead-count myth (MED/LOW) | Backlog — schedule after R1–R4 | unassigned | ⚠️ backlog |
+
 ## Change log
 - 2026-08-22 — Seeded from AUTONOMOUS_LEAD_TO_LAUNCH_PLAN slices; marked known holes (proof email disconnect, missing selection notifications) discovered in production use.
 - 2026-08-23 — Step 1 partially advanced: per-lead owner workspace + needs-first-response queue shipped (`efbef789`, e2e PASS ×2 idempotent). Ack email now points customers at guided intake (`db13b6e8`). Step remains 🔄: dedup/suppression validator still outstanding.
+- 2026-08-24 — Added Brutal Review remediation table (R1–R9). R1 drift-guard code fixed locally same day; prod seeding gated on backend deploy approval. R2 needs Fritz ruling on TEST-mode charges vs billing hard limit.
