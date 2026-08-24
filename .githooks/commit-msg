@@ -4,8 +4,10 @@
 set -u
 
 MSG_FILE="$1"
-if [ -f "$MSG_FILE" ] && ! grep -qi 'Co-Authored-By' "$MSG_FILE"; then
-  echo "NOTE: no Co-Authored-By trailer. AI-authored commits MUST include it." >&2
+# Owner directive 2026-08-24: NO Co-Authored-By trailers, ever.
+if grep -qi 'Co-Authored-By' "$MSG_FILE"; then
+  echo "BLOCKED: Co-Authored-By trailers are forbidden in this repository." >&2
+  exit 1
 fi
 
 exit 0
