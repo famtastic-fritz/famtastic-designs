@@ -141,3 +141,12 @@ AI commits MUST include:
 ```text
 Co-Authored-By: (the agent model's name and attribution byline)
 ```
+
+## Standing Rule — Lessons Learned Are Mandatory Records (2026-08-24)
+
+Every incident, correction, or non-obvious fix MUST be captured the same day:
+1. `docs/SITE_LEARNINGS.md` — dated entry: what happened, root cause, the rule that prevents recurrence.
+2. The relevant recipe/change log (`docs/playbook/RECIPES/*.md`, `docs/CHANGELOG.md`).
+3. The FAMtastic Drive decision log when a business decision (not just code) drove it.
+Historical records of WHY and HOW we got here are part of the deliverable. An agent
+that fixes without recording has not finished the task.

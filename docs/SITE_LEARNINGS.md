@@ -596,3 +596,33 @@ queued.
   discovery, and measurement skills cover the current gaps; outreach, email,
   spend, and customer-data execution skills remain explicit on-demand choices
   until their authority and lifecycle proof are reviewed.
+## 2026-08-24 — Catalog truth must live in exactly one place (and reconcile at deploy)
+
+- Prod Commerce held 14 variations while `famtastic-products.json` advertised 16; the $499 tier was unsellable and checkout died with `product_unavailable` AFTER intake+proofs. Rule: backend deploys run setup-commerce.php + fail on advertised≠sellable SKU drift. Never add a SKU to config without seeding, or vice versa.
+
+## 2026-08-24 — Validators must exercise the money step, not simulate it
+
+- e2e-autonomous-journey asserted checkout URL + totals then force-transitioned state and called fulfill() directly. Zero strangers had ever paid. Rule: payment coverage = real gateway interaction (test mode or owner-executed $1 live purchase); label claims "fulfillment-proven" vs "checkout-proven" distinctly.
+
+## 2026-08-24 — Admin presentation must be generated from system state
+
+- Calendar hardcoded "0/4 approved" + static times; attention items were bold text styled as buttons; badges shipped without CSS rules. Rule: every number shown in /admin/famtastic comes from a query; every action-styled element is a real link/form; new CSS classes ship WITH their rules (deep audit script enforces).
+
+## 2026-08-24 — Check claims against artifacts before writing them down
+
+- Two false-blocked/false-absent claims in one day ("Meta OAuth never completed" — Integration table had facebook live; "Stripe step blocked" — price IDs existed in .artifacts/stripe). Rule: grep artifacts + DB before declaring anything blocked/missing.
+
+## 2026-08-24 — Deploy lanes are separate; say which one you mean
+
+- "Fully approved" executed frontend-only because backend deploys through a different primitive (backups+updatedb). Rule: launch approvals enumerate lanes explicitly; agents confirm lane coverage before reporting DONE.
+
+## 2026-08-24 — Drupal table cells need 'data' wrapping for renderables
+
+- Bare Link::toRenderable() as a table row cell explodes Attribute rendering (500 blank pages). House pattern: $this->linkCell(Link::...) everywhere.
+
+## 2026-08-24 — Drush/php quirks that cost time today
+
+- drush php:script treats explicit exit() as abnormal termination (use return).
+- drush sqlq appends trailing blank line (tail -1 grabs emptiness — use grep -m1 .).
+- uli URLs use host 'default' (strip scheme+host, not 127.0.0.1).
+- php:script extra args arrive as $extra[], not $args[].
