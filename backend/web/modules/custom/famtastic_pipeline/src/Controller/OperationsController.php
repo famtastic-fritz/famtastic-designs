@@ -340,7 +340,7 @@ final class OperationsController extends ControllerBase {
     }
     $page = $this->recordsPage(
       'Campaign Record Gates',
-      'Per-record approval state for the 17-day campaign, stored in Drupal. Approving content/media here is the owner decision the pipeline reads; publishing remains a separate bounded-batch decision.',
+      'Per-record approval state for the 17-day campaign, stored in your operations database. Approving content/media here is the owner decision the pipeline reads; publishing remains a separate bounded-batch decision.',
       ['Day', 'Moment', 'Promise', 'ET', 'State', 'Content', 'Media', 'Publish', 'Postiz'],
       $rows,
       'No campaign records are imported yet. Run backend/scripts/import-social-records.php against the campaign manifest.',
