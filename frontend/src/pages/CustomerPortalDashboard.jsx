@@ -75,6 +75,9 @@ function WebsiteProofReview({ request, busy, onDecision, onShare }) {
         const selected = selectedDirection === proof.direction_id;
         return <article key={proof.direction_id} data-proof-direction={proof.direction_id} className={selected ? 'selected' : selectedDirection ? 'dimmed' : ''}>
           <span className="portal-proof-badge" aria-hidden={!selected}>{selected ? '✓ Selected' : 'Available'}</span>
+          <a href={proof.preview_url} target="_blank" rel="noreferrer" className="portal-proof-preview" aria-label={`Live preview of ${proof.direction_name}`}>
+            <iframe src={proof.preview_url} title={`${proof.direction_name} live preview`} loading="lazy" tabIndex={-1} sandbox="allow-scripts allow-same-origin" scrolling="no" />
+          </a>
           <a href={proof.preview_url} target="_blank" rel="noreferrer"><b>{proof.direction_name}</b><span>Open working concept ↗</span></a>
           <button type="button" aria-pressed={selected} disabled={busy || selected} onClick={() => choose(proof.direction_id)}>{savingDirection === proof.direction_id ? 'Saving selection…' : selected ? `${proof.direction_name} selected ✓` : selectedDirection ? `Switch to ${proof.direction_name}` : `Choose ${proof.direction_name}`}</button>
         </article>;

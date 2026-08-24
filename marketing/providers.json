@@ -195,6 +195,20 @@
       "status": "site_tracking_configured",
       "automation": "analytics",
       "secret_env": []
+    },
+    {
+      "id": "muapi",
+      "purpose": [
+        "ui/ux mockups",
+        "design-direction generation",
+        "creative variations"
+      ],
+      "status": "key_pending_owner",
+      "automation": "api",
+      "secret_env": [
+        "MUAPI_API_KEY"
+      ],
+      "notes": "Skills installed (~/.agents/skills/muapi-*); key NOT found on this machine as of 2026-08-24 - owner says added, location unknown. Store via: echo export MUAPI_API_KEY=... >> ~/.zshenv (never commit)."
     }
   ]
 }
