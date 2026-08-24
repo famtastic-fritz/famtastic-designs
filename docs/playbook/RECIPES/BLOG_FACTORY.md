@@ -28,6 +28,21 @@
 | Fact-check fails | Claim unverifiable | Cut the claim; never "close enough" |
 | Week slot missed | Pipeline stalled | Report BLOCKED with reason in standup; never silently skip |
 
+## Post inventory (board-vs-disk reconciliation, 2026-08-24 CEO heartbeat)
+
+| Slug | Steps 1–5 state | Evidence check |
+|---|---|---|
+| `what-does-199-website-include` | ✅ steps 1–5 DONE | 374-word draft; brief + seo-check.json verified 2026-08-23 |
+| `proof-first-website-see-before-you-pay` | ✅ steps 1–5 DONE | 311-word draft; brief + seo-check.json verified 2026-08-23 |
+| `business-email-on-your-own-domain` | ◐ steps 1–2 SKELETON only | 90-word template stub; brief is boilerplate ("defined work with a plain boundary"); **steps 3–5 NOT done** |
+| `how-local-customers-find-your-business-online` | ◐ steps 1–2 SKELETON only | 99-word template stub; same defect |
+| `what-website-maintenance-actually-covers` | ◐ steps 1–2 SKELETON only | 105-word template stub; same defect |
+| `do-you-guarantee-google-rankings` | ☐ topic staged | empty dir only (untracked), created 2026-08-24 01:02 |
+| `what-happens-when-first-year-hosting-ends` | ☐ topic staged | empty dir only (untracked), created 2026-08-24 01:02 |
+
+The three wave-1-supporting stubs came from the 2026-08-23 launch session (commit `5cb1759e`) and were over-counted as "blog drafts ×5" in the 05:03Z heartbeat verification. They pass seo-check.json schema shape but fail step 3's definition of done (substantive draft). Content Engine must rebuild them through steps 3–5 before any publish staging.
+
 ## Change log
 - 2026-08-22 — Created; converts one-time library build into an ongoing factory.
 - 2026-08-23 — Content Engine hired; steps 1–5 complete for first two posts (`marketing/blog/drafts/what-does-199-website-include/`, `proof-first-website-see-before-you-pay/`). Step 6 publish remains GATE→☐ per recipe (first 3 factory posts need Fritz); step 7 measurement pending publish.
+- 2026-08-24 (heartbeat) — Board-vs-disk audit: added Post Inventory table. Found 3 additional draft kits from launch session `5cb1759e` that fail step 3 DoD (90–105-word boilerplate stubs) and 2 empty topic dirs; recorded as ◐/☐, never counted toward "2 posts/week". Dispatch hold still honored — rebuild queued for @fam-content-engine when spawns resume.
