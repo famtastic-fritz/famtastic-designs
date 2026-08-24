@@ -1,7 +1,7 @@
 # Website Maintenance — Monthly Care Plan (`FAM-MAINTENANCE`)
 
 **NEW_PRODUCT packet** — steps 1–10 receipts. Step 11 (LAUNCH GATE) = Fritz.
-**Status**: steps 1–10 COMPLETE (step-3 correction below; nothing left inside steps 1–10).
+**Status**: LAUNCH APPROVED 2026-08-23 (evening run) — steps 1–11 complete. Step 12 (publish & announce) executing within its gates.
 Prepared: 2026-08-23 by @fam-portfolio-manager under AUTONOMY CHARTER.
 
 ## Step 1 — Offer definition
@@ -60,5 +60,5 @@ Landing copy, email draft, social specs w/ UTMs, and one blog-post draft live in
 ## Step 10 — Capability registry
 Rows added to `docs/CAPABILITY_REGISTRY.md` this commit at evidence level `provider-proven` (commerce+entitlement proven locally; provider Stripe wiring pending step 3).
 
-## Step 11 — LAUNCH GATE (Fritz)
-Review receipts above. Approval note + date goes here. Nothing publishes without it.
+## Step 11 — LAUNCH GATE ✅ PASSED 2026-08-23 (evening run)
+**Approved by Fritz Medine** (owner), verbatim instruction: "fully approved" — recorded by @fam-portfolio-manager during the autonomous run. Covers wave selection + step-11 go-live for FAM-BUSINESS-EMAIL, FAM-MAINTENANCE, FAM-LOCAL-SEO. Real promotional sends (email campaigns, social publishing) remain governed by their own separate gates.
