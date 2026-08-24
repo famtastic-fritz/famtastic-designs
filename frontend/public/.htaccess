@@ -18,6 +18,7 @@
   RewriteCond %{REQUEST_URI} ^/assets/ [NC]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ - [R=404,L]
-  # Platform domain-verification files: tolerate trailing slash (TikTok fetches /file.txt/)
-  RewriteRule ^(tiktok[A-Za-z0-9]+\.txt)/?$ /$1 [L]
+  # Platform domain-verification files: tolerate trailing slash (TikTok fetches /file.txt/).
+  # Match requires the slash so the rewritten slashless URL exits the loop.
+  RewriteRule ^(tiktok[A-Za-z0-9]+\.txt)/$ /$1 [L]
 </IfModule>
