@@ -203,12 +203,12 @@
         "design-direction generation",
         "creative variations"
       ],
-      "status": "key_pending_owner",
+      "status": "connected_local_keychain",
       "automation": "api",
       "secret_env": [
         "MUAPI_API_KEY"
       ],
-      "notes": "Skills installed (~/.agents/skills/muapi-*); key NOT found on this machine as of 2026-08-24 - owner says added, location unknown. Store via: echo export MUAPI_API_KEY=... >> ~/.zshenv (never commit)."
+      "notes": "Key in OS keychain (service: muapi-cli, account: api-key) - never committed. CLI binary absent; call REST directly: POST https://api.muapi.ai/api/v1/flux-schnell-image (x-api-key header), poll /predictions/{id}/result. Image dims must be multiples of 64 (128-2048). Generator: scripts/muapi-generate-mockups.sh. AI text renders as gibberish - use outputs as layout comps only."
     }
   ]
 }

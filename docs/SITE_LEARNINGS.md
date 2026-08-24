@@ -660,3 +660,8 @@ queued.
 ## 2026-08-24 — Structure crawls pass while geometry fails: card grids need overlap assertions
 
 - Portal Projects rendered five proof-review panels in auto-fit columns, each crushing a fixed 3-column concept grid into ~90px cells — titles overflowed, badges scattered, cards overlapped. The text/structure crawler passed every check. Rule: any card-grid surface gets geometric assertions (sibling bounding-box intersections > 4px² fail; scrollWidth ≤ viewport+2) in e2e-portal-links.sh, and new grids default to fluid `repeat(auto-fit,minmax(min-card,1fr))` instead of fixed column counts.
+## 2026-08-24 — muapi.ai integration facts
+
+- Key lives in macOS keychain (service `muapi-cli`, account `api-key`) — retrieve with `security find-generic-password -s muapi-cli -w`; never print or commit. The `muapi` CLI binary is NOT installed despite setup output suggesting it; call the REST API directly.
+- flux image endpoints require width/height as multiples of 64 (128–2048); 1000-height fails with invalidHeight.
+- Generated UI mockups carry AI-gibberish text — use them as layout/hierarchy comps, never as copy specs.
