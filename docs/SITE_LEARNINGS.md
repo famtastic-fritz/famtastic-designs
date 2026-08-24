@@ -632,3 +632,7 @@ queued.
 - Per-customer usage limits make promotions unavailable to orders WITHOUT an email — headless probes must set mail.
 - Coupon entities default their own start_date; timezone skew can leave them future-dated and inert for hours. Always pin start_date explicitly.
 - Headless total verification: set coupons field -> commerce_order.order_refresh -> save -> loadUnchanged -> getTotalPrice().
+
+## 2026-08-24 — The tree can be dirty again one run after "clean"
+
+- 17:33Z heartbeat recorded a clean tree; at 19:35Z `restart-postiz-tunnel.sh` carried an uncommitted +18 env-merge block whose mtime (~17:55Z local) postdates that claim — someone/something (Fritz or another agent session sharing the repo) edited files outside any tracked dispatch. Rule: every heartbeat re-runs `git status` itself; never inherit "clean" from the previous run's claim. Unknown-provenance diffs get syntax-checked + safety-reviewed, then flagged for Fritz — never committed by the CEO.
