@@ -288,7 +288,7 @@ echo "Demand content verified."
 echo "Package ladder verified."
 # Catalog drift guard: Commerce variations must always match the advertised
 # catalog (BRUTAL-REVIEW-2026-08-24 critical #1 - $499 tier was unsellable).
-"$drush" php:script "$release_source/backend/scripts/setup-commerce.php" >/dev/null
+"$drush" php:script "$backend_dir/scripts/setup-commerce.php" >/dev/null
 "$drush" eval '
   $advertised = array_keys(json_decode(file_get_contents(dirname(\Drupal::root()) . "/config/famtastic-products.json"), TRUE)["products"] ?? []);
   sort($advertised);
