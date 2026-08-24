@@ -1,5 +1,27 @@
 # Product changelog
 
+## 2026-08-24 — Social publishing channels live; Postiz estate hardened
+
+- Connected Instagram `@famtasticdesigns` via the `instagram-standalone`
+  provider (Meta "API with Instagram Login" product). Token live and
+  refresh-capable through 2026-10-21; BUSINESS account confirmed via
+  `graph.instagram.com/me`. Facebook Page connection untouched.
+- Replaced the ephemeral trycloudflare tunnel with a permanent ngrok static
+  domain (`designate-vacation-shadiness.ngrok-free.dev`) after diagnosing the
+  recurring Postiz login spinner: auth cookie is hostname-bound and OAuth
+  callbacks require stable HTTPS.
+- Added `scripts/restart-postiz-tunnel.sh`: one-command recovery that rotates
+  nothing (static domain), rebuilds the env file with secret preservation,
+  recreates only the postiz container, rewrites absolute Media paths to the
+  current public URL (fixed all 56 broken-image rows), and verifies health.
+- Added `docs/SYSTEMS.md` (systems inventory with health checks and known
+  quirks) and
+  `docs/playbook/RUNBOOKS/instagram-standalone-onboarding.md` (7-gate client
+  onboarding procedure proven end-to-end).
+- Playbook expanded earlier this window: MASTER-PLAN (five tracks), recipes
+  for autonomous customer service / social posting / blog factory / product
+  pipeline / pricing strategy, fam-ceo + workforce agents, campaign receipts.
+
 ## 2026-08-21 — Preview-provider doctrine and Antigravity boundary
 
 - Declared the role-specific preview route: Gemini 3.7 Flash through an

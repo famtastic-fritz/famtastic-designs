@@ -314,7 +314,7 @@ class PublicRequestController extends ControllerBase {
     if ($operationsUrl !== '') {
       $lines[] = 'Open Website Requests: ' . $operationsUrl;
     }
-    $lines[] = 'The complete submitted intake is saved in Drupal; raw JSON is intentionally omitted from email.';
+    $lines[] = 'Your complete submitted intake is saved to your secure request record; raw data dumps are never emailed.';
     return implode("\n", $lines);
   }
 

@@ -541,7 +541,7 @@ final class CustomerPortalService {
     $this->queueNotification("website-request:{$id}:customer", 'transactional', (string) $customer['email'], $subject,
       "We received your website request for {$request['project_name']}. Fritz will review it within 3 business days. You can continue or review it from your customer portal.");
     $this->queueNotification("website-request:{$id}:staff", 'operational', $admin, 'New portal website request — ' . $request['project_name'],
-      "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nType: {$request['project_type']}\nProof generation has been queued.\nReview in Drupal: https://famtasticdesigns.com/web/admin/famtastic/metric/website-requests");
+      "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nType: {$request['project_type']}\nProof generation has been queued.\nOwner review queue: https://famtasticdesigns.com/web/admin/famtastic/metric/website-requests");
   }
 
   /** Queues one owner alert for a newly created customer account. */
