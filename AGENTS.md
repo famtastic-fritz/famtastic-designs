@@ -152,11 +152,9 @@ updated, say so explicitly in the session report rather than skipping silently.
 
 ## Commit Attribution
 
-AI commits MUST include:
-
-```text
-Co-Authored-By: (the agent model's name and attribution byline)
-```
+NEVER add `Co-Authored-By` trailers (or any AI attribution lines) to commits
+in this repository. Owner directive 2026-08-24: commits carry no agent
+bylines, period. Commit messages describe the change, nothing else.
 
 ## Standing Rule — Lessons Learned Are Mandatory Records (2026-08-24)
 
