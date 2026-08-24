@@ -31,6 +31,44 @@ docker exec postiz-postgres psql -U postiz-user -d postiz-db-local -c \
 curl -s "https://graph.instagram.com/v21.0/me?fields=username,account_type&access_token=<token>"   # HTTP 200 + correct username/account_type
 ```
 
+## App icon recipe (TikTok/X/YouTube portals — 1024×1024 PNG)
+
+Source of truth: `~/Downloads/FAMtastic-Vector-Working.ai` (master vector).
+Generated icon (git-tracked): `marketing/brands/famtastic-social-app-icon-1024.png`.
+
+Regenerate after logo changes:
+```
+qlmanage -t -s 2048 -o /tmp <master.ai>          # QuickLook renders AI → PNG
+sips --resampleWidth 1024 /tmp/<name>.ai.png --out /tmp/icon-1024w.png
+sips --padToHeightWidth 1024 1024 --padColor FFFFFF /tmp/icon-1024w.png \
+  --out marketing/brands/famtastic-social-app-icon-1024.png
+```
+(No ImageMagick/Inkscape on this machine; QuickLook+sips is the proven path.)
+
+## Portal field cheat-sheet (TikTok example, reuse pattern per platform)
+
+| Field | Value |
+|---|---|
+| App name | `FAMtastic Social Publishing-<TT/X/YT>` |
+| Category | Business |
+| Description | `FAMtastic Designs publishes and manages its own business content on TikTok from one dashboard.` |
+| ToS / Privacy URLs | `https://famtasticdesigns.com/terms` · `/privacy` (⚠️ pages still to be built — business todo) |
+| Platforms | Web only |
+| Redirect URI | `<public-url>/integrations/social/<provider>` |
+| Submit for review | **NO** for own-account use — sandbox/development mode covers it; production review only when onboarding paying clients |
+
+## Domain verification (TikTok URL-prefix property — repeat per client/platform)
+
+TikTok requires proving ownership of the site domain before accepting ToS/Privacy/Website URLs.
+
+1. Developer portal → URL properties → verify → choose **URL prefix** → `https://<client-domain>`
+2. Download the provided `tiktok<token>.txt` file
+3. Place it in `frontend/public/` (Vite copies public/* to deploy root verbatim)
+4. Commit + deploy frontend (owner gate) — file must then resolve at `https://<client-domain>/<filename>.txt`
+5. Click verify in portal → property becomes verified → ToS/Privacy/Website URL errors clear
+
+For other platforms expecting meta-tag verification instead: add the tag to `frontend/index.html` <head>, same deploy path.
+
 ## Never
 - Touch an existing Facebook integration while adding Instagram standalone.
 - Proceed past gate 5 without acceptance — error will be "Insufficient Developer Role".
