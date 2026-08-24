@@ -132,11 +132,21 @@ class OutreachMailer {
     $content = '';
     foreach ($paragraphs as $paragraph) {
       $escaped = htmlspecialchars(trim($paragraph), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      // Escape first, then autolink. The character class must only exclude
+      // whitespace: the previous pattern excluded the literal entity string
+      // "&lt;" - i.e. the letters s,l,t,g,;,& - so every URL truncated at the
+      // first "s" and no customer link ever opened (SITE_LEARNINGS 2026-08-24).
       $escaped = preg_replace_callback(
-        '#(https?://[^\s&lt;]+)#i',
+        '#(https?://[^\s]+)#i',
         static function (array $match): string {
           $url = $match[1];
-          return '<a href="' . $url . '" style="color:#0f6b47;font-weight:700;word-break:break-word">' . $url . '</a>';
+          // Leave trailing sentence punctuation out of the href.
+          $trailing = '';
+          if (preg_match('#[),.;:!?"\']+$#', $url, $m)) {
+            $trailing = $m[0];
+            $url = substr($url, 0, strlen($url) - strlen($trailing));
+          }
+          return '<a href="' . $url . '" style="color:#0f6b47;font-weight:700;word-break:break-word">' . $url . '</a>' . $trailing;
         },
         $escaped,
       ) ?? $escaped;

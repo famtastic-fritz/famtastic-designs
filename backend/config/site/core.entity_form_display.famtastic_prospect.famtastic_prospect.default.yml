@@ -1,0 +1,140 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - famtastic_pipeline
+id: famtastic_prospect.famtastic_prospect.default
+targetEntityType: famtastic_prospect
+bundle: famtastic_prospect
+mode: default
+content:
+  business_name:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: { }
+  business_category:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: { }
+  status:
+    type: options_select
+    weight: 3
+    region: content
+    third_party_settings: { }
+  contact_name:
+    type: string_textfield
+    weight: 5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: { }
+  contact_method:
+    type: string_textfield
+    weight: 6
+    region: content
+    settings:
+      size: 20
+      placeholder: 'email, phone, or text'
+    third_party_settings: { }
+  contact_value:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: { }
+  public_email:
+    type: email_default
+    weight: 8
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: { }
+  public_phone:
+    type: string_textfield
+    weight: 9
+    region: content
+    settings:
+      size: 30
+      placeholder: ''
+    third_party_settings: { }
+  website_url:
+    type: string_textfield
+    weight: 10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: { }
+  service_area:
+    type: string_textfield
+    weight: 11
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: { }
+  authorized:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: { }
+  campaign:
+    type: string_textfield
+    weight: 13
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: { }
+  source:
+    type: string_textfield
+    weight: 14
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: { }
+  business_description:
+    type: string_textarea
+    weight: 15
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: { }
+  discovery_notes:
+    type: string_textarea
+    weight: 16
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: { }
+hidden:
+  token_hash: true
+  token_expires: true
+  token_revoked: true
+  confirmed_fields: true
+  first_response_due: true
+  first_responded_at: true
+  sla_alerted_at: true
+  owner_uid: true
+  next_followup_due: true
+  lost_reason: true
+  nurture_eligible: true
+  discovered_at: true
+  created: true
+  changed: true
