@@ -288,19 +288,7 @@ echo "Demand content verified."
 echo "Package ladder verified."
 # Catalog drift guard: Commerce variations must always match the advertised
 # catalog (BRUTAL-REVIEW-2026-08-24 critical #1 - $499 tier was unsellable).
-"$drush" php:script "$backend_dir/scripts/setup-commerce.php" >/dev/null
-"$drush" eval '
-  $advertised = array_keys(json_decode(file_get_contents(dirname(\Drupal::root()) . "/config/famtastic-products.json"), TRUE)["products"] ?? []);
-  sort($advertised);
-  $storage = \Drupal::entityTypeManager()->getStorage("commerce_product_variation");
-  $sellable = [];
-  foreach ($storage->loadMultiple() as $variation) { $sellable[] = $variation->get("sku")->value; }
-  sort($sellable);
-  if ($advertised !== $sellable) {
-    throw new \RuntimeException("CATALOG DRIFT: advertised=" . implode(",", $advertised) . " sellable=" . implode(",", $sellable));
-  }
-  print "Catalog drift guard verified: " . count($sellable) . " SKUs advertised == sellable.\n";
-'
+"$drush" php:script "$backend_dir/scripts/assert-catalog-parity.php" "$backend_dir/config/famtastic-products.json"
 "$drush" cr
 # A second process-level rebuild is required on this host after first-time
 # module discovery; otherwise the sitemap writer can see stale router state.
