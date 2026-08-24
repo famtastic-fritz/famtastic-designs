@@ -45,6 +45,7 @@ echo "      Tunnel live: $NEW_URL"
 
 echo "[3/5] Writing env file ($ENV_FILE)..."
 OLD_URL=""
+[ -f "$ENV_FILE" ] && cp "$ENV_FILE" "$ENV_FILE.bak"
 [ -f "$ENV_FILE" ] && OLD_URL=$(grep -E '^POSTIZ_PUBLIC_URL=' "$ENV_FILE" | cut -d= -f2- || true)
 {
   echo "POSTIZ_PUBLIC_URL=$NEW_URL"
@@ -54,6 +55,23 @@ OLD_URL=""
   docker inspect postiz --format '{{range .Config.Env}}{{println .}}{{end}}' \
     | grep -E '^(FACEBOOK_APP_ID|FACEBOOK_APP_SECRET|INSTAGRAM_APP_ID|INSTAGRAM_APP_SECRET|THREADS_APP_ID|THREADS_APP_SECRET|TIKTOK_CLIENT_ID|TIKTOK_CLIENT_SECRET|YOUTUBE_CLIENT_ID|YOUTUBE_CLIENT_SECRET|LINKEDIN_CLIENT_ID|LINKEDIN_CLIENT_SECRET|PINTEREST_CLIENT_ID|PINTEREST_CLIENT_SECRET|X_API_KEY|X_API_SECRET)=' || true
 } > "$ENV_FILE"
+# Merge custom variables (e.g., INSTAGRAM_*, future providers) from the
+# previous env file. Custom values WIN over empty placeholders captured from
+# the old container; the five core POSTIZ_* + FACEBOOK_* stay container-sourced.
+if [ -f "$ENV_FILE.bak" ]; then
+  awk -v ovf="$ENV_FILE.bak" '
+    BEGIN {
+      while ((getline l < ovf) > 0)
+        if (l !~ /^(POSTIZ_PUBLIC_URL|POSTIZ_DISABLE_REGISTRATION|POSTIZ_JWT_SECRET|POSTIZ_DB_PASSWORD|FACEBOOK_APP_ID|FACEBOOK_APP_SECRET)=/)
+          { k = substr(l, 1, index(l, "=") - 1); if (k != "") o[k] = l }
+    }
+    {
+      k = substr($0, 1, index($0, "=") - 1)
+      if (k in o) { print o[k]; delete o[k] } else print
+    }
+    END { for (k in o) print o[k] }
+  ' "$ENV_FILE" > "$ENV_FILE.tmp" && mv "$ENV_FILE.tmp" "$ENV_FILE"
+fi
 chmod 600 "$ENV_FILE"
 
 echo "[4/5] Recreating postiz container with new URLs..."

@@ -5,6 +5,33 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-24 — Postiz public URL is now permanent; five failure modes documented
+
+Observation:
+
+- The self-hosted Postiz scheduler previously ran behind an ephemeral
+  trycloudflare tunnel. Every tunnel rotation broke (a) the login session,
+  (b) OAuth callback whitelists in four developer portals, and (c) every media
+  row, because `Media.path` stores absolute URLs. The recurring "infinite
+  spinner" was the auth cookie being hostname-bound while config pointed at a
+  dead host.
+- Resolution: permanent ngrok static domain + `scripts/restart-postiz-tunnel.sh`
+  which rebuilds env with secret preservation and rewrites Media paths on every
+  run. Full detail lives in `docs/SYSTEMS.md` (systems inventory — agents must
+  probe systems rather than trust stale docs; this incident started from a
+  handoff doc claiming OAuth "never completed" when Facebook had been connected
+  for two weeks).
+
+Operator guidance:
+
+- If Postiz spins or images break: run the restart script, then hard-refresh on
+  the ngrok hostname exactly.
+- Instagram connections use the standalone provider only; dev-mode Meta apps
+  require the account to hold an ACCEPTED tester invite (Instagram → Settings →
+  Website permissions → Apps and websites → Tester Invites).
+- Never assert channel/connection state without querying the Integration table;
+  docs lag reality.
+
 ## 2026-08-02 — Operator totals require exact-record drill-downs
 
 Observation:

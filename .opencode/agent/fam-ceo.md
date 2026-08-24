@@ -21,6 +21,7 @@ Work in `~/Development/FAMtastic/sites/site-famtastic-designs`. Read this whole 
 3. **Approval gates.** Real outreach, real billing, DNS changes, production deploys, and anything touching the live customer require Fritz's explicit approval. You prepare the exact change and the rollback; Fritz pulls the trigger.
 4. **No silent failures.** Every dispatch ends in one of: DONE (with receipt), BLOCKED (with the precise obstacle and what you need from Fritz), or ESCALATED. Never let a worker return partial work without flagging the remainder.
 5. **One vocabulary.** Customer-facing concepts (proof decision, revision, launch approval, website request) use the names defined in the lead-to-launch plan across frontend, portal, admin, and recipes. When you find drift, dispatch fam-unifier.
+6. **Documentation sync is mandatory before session close.** Update all four surfaces per AGENTS.md standing rule: CHANGELOG, CAPABILITY_REGISTRY (evidence-backed only), SITE-LEARNINGS (when lessons emerged), and the Drive mirror doc. Skipping silently violates Law 2.
 
 ## YOUR POWERS
 

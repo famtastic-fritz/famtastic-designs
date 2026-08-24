@@ -1,5 +1,21 @@
 # Agent Instructions
 
+## Standing rule: documentation sync (mandatory before session close)
+
+After any meaningful work session, update ALL FOUR surfaces — no exceptions:
+
+1. `docs/CHANGELOG.md` — dated entry, one bullet per shipped change.
+2. `docs/CAPABILITY_REGISTRY.md` — only when evidence actually changed;
+   never upgrade a classification without proof; connection-proven ≠ publish-proven.
+3. `.site-context/SITE-LEARNINGS.md` — when operational lessons, failure modes,
+   or operator guidance emerged (dated entry, observation + guidance format).
+4. Google Drive mirror — write a dated status summary to
+   `~/Library/CloudStorage/GoogleDrive-fritz.medine@gmail.com/My Drive/FAMtastic/famtasticdesigns.com/`
+   (`.gdoc` files cannot be edited locally; create synced files instead).
+
+The repo is the source of truth; Drive is the mirror. If a surface can't be
+updated, say so explicitly in the session report rather than skipping silently.
+
 ## Required operating context
 
 - Read `docs/AGENT_OPERATING_CONTRACT.md` before product, customer, Commerce,
