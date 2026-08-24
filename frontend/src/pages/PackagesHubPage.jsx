@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { getNodesRaw } from '../api/drupal.js';
 import { transformPackageNode } from '../lib/drupalAdapter.js';
 import { Hero, Section, PricingCard, CTABanner, Stagger, Item } from '../components/v1/index.js';
+import { trackEvent } from '../lib/googleAnalytics.js';
 
 /**
  * /packages — pricing hub listing every package_page as a v1 PricingCard,
@@ -55,7 +56,19 @@ export default function PackagesHubPage() {
           <Stagger className="v1-grid v1-grid--3">
             {packages.map((plan) => (
               <Item key={plan.id}>
-                <PricingCard plan={plan} />
+                <div
+                  role="presentation"
+                  onClick={() =>
+                    trackEvent('select_item', {
+                      item_id: plan.slug || plan.id,
+                      item_name: plan.title,
+                      item_category: 'package',
+                      value: Number(String(plan.price).replace(/[^0-9.]/g, '')) || undefined,
+                    })
+                  }
+                >
+                  <PricingCard plan={plan} />
+                </div>
               </Item>
             ))}
           </Stagger>

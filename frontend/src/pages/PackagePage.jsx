@@ -4,6 +4,7 @@ import { getNodesRaw } from '../api/drupal.js';
 import { matchBySlug } from '../utils/content.js';
 import { transformPackageNode } from '../lib/drupalAdapter.js';
 import { applySeo } from '../components/SEO.jsx';
+import { trackEvent } from '../lib/googleAnalytics.js';
 import { packageSeo } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp, Stagger, Item } from '../components/v1/index.js';
 import RelatedEducation from '../components/RelatedEducation.jsx';
@@ -34,6 +35,16 @@ export default function PackagePage() {
   const plan = state.plan;
   useEffect(() => {
     if (plan) applySeo(packageSeo(plan, slug));
+  }, [plan, slug]);
+
+  useEffect(() => {
+    if (!plan) return;
+    trackEvent('view_item', {
+      item_id: plan.slug || slug,
+      item_name: plan.title,
+      item_category: 'package',
+      value: Number(String(plan.price).replace(/[^0-9.]/g, '')) || undefined,
+    });
   }, [plan, slug]);
 
   if (state.loading) {

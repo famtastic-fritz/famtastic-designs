@@ -1,0 +1,25 @@
+{
+ "slug": "how-local-customers-find-your-business-online",
+ "schema": "famtastic.blog-seo-check.v1",
+ "title": "How Local Customers Find Your Business Online",
+ "title_length": 45,
+ "meta_description": "Local search runs on three layers: structured data that tells search engines exactly what you are and where you serve, profiles that carry your hours an...",
+ "h1_count": 1,
+ "internal_links": [
+  "https://famtasticdesigns.com/web/packages",
+  "https://famtasticdesigns.com/web/packages/web-basics",
+  "https://famtasticdesigns.com/contact"
+ ],
+ "internal_link_count": 3,
+ "claims_verified_against_live_sources": true,
+ "statistics_used": false,
+ "checks": {
+  "title_under_60": true,
+  "single_h1": true,
+  "internal_links_gte_3": true,
+  "no_unsourced_claims": true,
+  "answers_intent_first_screen": true
+ },
+ "pass": true,
+ "generated_at": "2026-08-23T19:50:00Z"
+}

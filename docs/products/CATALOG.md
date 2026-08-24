@@ -81,5 +81,6 @@ These enter NEW_PRODUCT.md only after Fritz signs the wave (GATE).
 - KILL tier: 50/50 rows - confirms the backlog's dominant families do not fit this business; they will be bulk-killed at batch dedupe.
 - No row from the first 50 reaches a wave table. Wave-1 comes from owned capabilities instead (above).
 - Next batch: rows 51-150 after wave-1 sign-off.
+- **CEO review 2026-08-23**: tiers CONCURRED — bulk-KILL stands for all first-50 rows; PRODUCT_PIPELINE step 3 closed. Step 4 (wave selection) remains a Fritz gate.
 
 *Generated: 2026-08-23 by @fam-portfolio-manager under AUTONOMY CHARTER.*

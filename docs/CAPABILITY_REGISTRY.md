@@ -61,5 +61,9 @@ template until a second unrelated brand reproduces the quality and timing.
 | Marketing operations command center | Locally proven | Mobile campaign review, approvals, schedules, channel status, exceptions, attributed visits, leads, and sales |
 | Project-shared marketing specialist core | Locally verified documentation and provenance | Pinned conversion, lifecycle, RevOps, campaign, discovery, and measurement methods shared by Codex, Claude, Shay, and future project agents; supporting methods only, not an autonomous or newly sellable capability |
 
+| Business Email Setup (FAM-BUSINESS-EMAIL) | Provider-proven (commerce+entitlement locally; Stripe test wiring pending owner action) | Branded domain-email configuration, testing, and recorded handoff as a sellable $99 add-on |
+| Website Maintenance Care Plan (FAM-MAINTENANCE) | Locally proven (recurring entitlement machinery; Stripe test wiring pending owner action) | Monthly care: update checks, backup verification, small content touches at $49.99/mo |
+| Local SEO Setup (FAM-LOCAL-SEO) | Locally proven (catalog+entitlements; delivery semi-autonomous via SEO/GA4 tooling) | Structured local data, profile setup, and analytics verification at $299 one-time |
+
 Update this table only when evidence changes. Link durable proof in the release
 or acceptance report; do not upgrade a classification from confidence alone.

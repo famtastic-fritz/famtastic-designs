@@ -15,9 +15,9 @@ Reference contracts applied: `docs/marketing/FAMTASTIC_MARKETING_FLOW_2026-08-12
 | Metric | Count |
 |---|---|
 | Records total (manifest) | 68 |
-| Channel-ready asset found on disk (by content_id) | 0 |
-| Records with asset MISSING | 68 (100%) |
-| State breakdown | idea: 68 · briefed/drafted/content_qa/seo_qa/media_ready/approved/scheduled/published/verified/measured/learned: 0 each |
+| Channel-ready asset found on disk (by content_id) | 68 (as of 2026-08-23 correction below; was 0 at audit time) |
+| Records with asset MISSING | 0 — **superseded**: days 4–17 built in commit `932eff3b` (112 re-cut variants) |
+| State breakdown | media_ready: 68 · all other states: 0 |
 | Content approvals true | 0 / 68 |
 | Media approvals true | 0 / 68 |
 | Publish approvals true | 0 / 68 |
@@ -48,6 +48,11 @@ MISSING because no file anywhere in the repo carries that record's content_id.
 
 | Day | Moment | content_id | State | Channels | Asset (path or MISSING) | Approvals (c/m/p) | Provider IDs |
 |-----|--------|------------|-------|----------|-------------------------|-------------------|--------------|
+> **SUPERSEDED 2026-08-23 (CEO drift correction):** the rows below still show the audit-time
+> snapshot. Days 4–17 are no longer `idea`/MISSING — commit `932eff3b` built all 56 remaining
+> records via `scripts/build-55-cent-days-4-17-assets.py` (112 assets, verified on disk, zero
+> undersized files). Manifest.json is authoritative: all 68 records now `media_ready`.
+> Approval gates remain ✗ everywhere; publish gate CLOSED.
 | 1 | teach (declaration) | 55c-d01-teach | media_ready | — | assets/55c-d01-teach.9x16.png · assets/55c-d01-teach.4x5.png | ✗/✗/✗ | — |
 | 1 | challenge (declaration) | 55c-d01-challenge | media_ready | — | assets/55c-d01-challenge.9x16.png · assets/55c-d01-challenge.4x5.png | ✗/✗/✗ | — |
 | 1 | prove (declaration) | 55c-d01-prove | media_ready | — | assets/55c-d01-prove.9x16.png · assets/55c-d01-prove.4x5.png | ✗/✗/✗ | — |
@@ -171,6 +176,7 @@ Per SOCIAL_POSTING rules: every calendar day is currently **BLOCKED** (no asset)
 - 2026-08-23 — Step 1 audit created by Social Ops dispatch.
 - 2026-08-23 — Step 2 partial: days 1–3 re-cuts landed (24 variants); days 4–17 still MISSING.
 - 2026-08-23 — Postiz queue check (unattended run): days 1–3 assets verified on disk (24 variants, matches asset-map.days-1-3.json). Queuing in Postiz is BLOCKED on two Fritz-gated prerequisites, recorded honestly: (1) G2 — days 1–3 content/media approvals all false; (2) Meta OAuth never completed (provider app IDs empty in `~/.config/famtastic-marketing/postiz.env`; zero connected channels — Postiz cannot hold posts without an integration). Sequence when unblocked: Fritz approves days 1–3 → completes Meta OAuth per SOCIAL_AUTOMATION_HANDOFF steps 1–5 → Social Ops queues drafts with `FAMTASTIC_MARKETING_PUBLISH=false` (drafts only; publish remains a separate gate). No speculative tooling written for the unrunnable path.
+- 2026-08-23 (drift correction, CEO heartbeat) — Day-by-day table + Summary above were stale: commit `932eff3b` had already built days 4–17 (all 68 records `media_ready`, 136 assets on disk) but this file still said MISSING. Corrected Summary; per-row table marked SUPERSEDED with manifest.json named authoritative. SOCIAL_POSTING step 2 → ✅ DONE. No gates crossed.
 - 2026-08-23 (later, correction) — Fritz CORRECTED the earlier entry below: "zero connected channels / Meta OAuth never completed" was FALSE. Postiz `Integration` table (queried directly) shows one enabled channel: **FAMTastic Designs (facebook)**, token valid through 2026-10-10. Root cause of the bad claim: I read the stale repo env template (`~/.config/famtastic-marketing/postiz.env`) instead of the live container env/DB. G3's "no connected providers" is likewise stale as of today; its UTM `pending_channel` observation remains true for unqueued records only. CONSEQUENT STATE: days 1–3 are Tier-1 approved for DRAFT QUEUEING (Fritz); all 12 records now hold Postiz drafts (state=DRAFT, creationMethod=API), provider_ids + evidence recorded in manifest.json, channels=facebook, utm.source=facebook. Publish gate CLOSED until Fritz reviews a queued week (`FAMTASTIC_MARKETING_PUBLISH=false` unchanged). Receipts: `.artifacts/postiz-queue/1787523990/evidence.json` (+ posts-verify.json). providers.json postiz status updated to `connected_local_facebook`.
 
 ## Postiz draft queue (days 1–3, Tier-1 approved 2026-08-23)

@@ -44,3 +44,16 @@ export function trackPageView(path) {
     page_title: document.title,
   });
 }
+
+/**
+ * Custom commerce/lifecycle event (view_item, select_item, purchase...).
+ * Safe no-op when GA is unavailable; never throws into render paths.
+ */
+export function trackEvent(name, params = {}) {
+  try {
+    if (!initializeGoogleAnalytics() && !initialized) return;
+    window.gtag('event', name, params);
+  } catch {
+    /* analytics must never break the page */
+  }
+}

@@ -1,0 +1,25 @@
+{
+ "slug": "business-email-on-your-own-domain",
+ "schema": "famtastic.blog-seo-check.v1",
+ "title": "Business Email on Your Own Domain: What It Takes",
+ "title_length": 48,
+ "meta_description": "When your invoice says acmehvac.com but your email says acme.hvac@gmail.com, customers hesitate. Branded email is a trust fix, and most of it is plumbin...",
+ "h1_count": 1,
+ "internal_links": [
+  "https://famtasticdesigns.com/web/packages",
+  "https://famtasticdesigns.com/web/packages/web-basics",
+  "https://famtasticdesigns.com/contact"
+ ],
+ "internal_link_count": 3,
+ "claims_verified_against_live_sources": true,
+ "statistics_used": false,
+ "checks": {
+  "title_under_60": true,
+  "single_h1": true,
+  "internal_links_gte_3": true,
+  "no_unsourced_claims": true,
+  "answers_intent_first_screen": true
+ },
+ "pass": true,
+ "generated_at": "2026-08-23T19:50:00Z"
+}

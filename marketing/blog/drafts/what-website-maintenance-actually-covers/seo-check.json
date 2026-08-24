@@ -1,0 +1,25 @@
+{
+ "slug": "what-website-maintenance-actually-covers",
+ "schema": "famtastic.blog-seo-check.v1",
+ "title": "What Website Maintenance Actually Covers (and What It Doesn't)",
+ "title_length": 62,
+ "meta_description": "\"Maintenance\" gets used loosely, so here is ours in plain terms: every month we check your site's updates, verify backups are really there, watch for an...",
+ "h1_count": 1,
+ "internal_links": [
+  "https://famtasticdesigns.com/web/packages",
+  "https://famtasticdesigns.com/web/packages/web-basics",
+  "https://famtasticdesigns.com/contact"
+ ],
+ "internal_link_count": 3,
+ "claims_verified_against_live_sources": true,
+ "statistics_used": false,
+ "checks": {
+  "title_under_60": false,
+  "single_h1": true,
+  "internal_links_gte_3": true,
+  "no_unsourced_claims": true,
+  "answers_intent_first_screen": true
+ },
+ "pass": true,
+ "generated_at": "2026-08-23T19:50:00Z"
+}
