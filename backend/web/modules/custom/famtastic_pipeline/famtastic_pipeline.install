@@ -1212,6 +1212,28 @@ function _famtastic_pipeline_lifecycle_schema(): array {
     'primary key' => ['id'], 'unique keys' => ['message_id' => ['message_id_hash']],
     'indexes' => ['thread' => ['thread_public_id', 'received_at'], 'status' => ['status', 'received_at']],
   ];
+  $tables['famtastic_social_record'] = [
+    'description' => 'Per-record state for the 17-day social campaign: gates, assets, provider ids.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'content_id' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'day' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'moment' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''],
+      'theme' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'promise' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'scheduled_time_et' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE, 'default' => ''],
+      'state' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'idea'],
+      'approval_content' => ['type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'approval_media' => ['type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'approval_publish' => ['type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'postiz_draft_id' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'asset_variants' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['content_id' => ['content_id']],
+    'indexes' => ['day' => ['day'], 'gates' => ['approval_content', 'approval_media', 'approval_publish']],
+  ];
   $tables['famtastic_support_draft'] = [
     'description' => 'L0 draft replies generated per inbound message; nothing sends without owner approval.',
     'fields' => [
@@ -1677,4 +1699,14 @@ function famtastic_pipeline_update_8033(&$sandbox) {
   }
   $schema->createTable('famtastic_support_draft', _famtastic_pipeline_lifecycle_schema()['famtastic_support_draft']);
   return t('Created the support draft queue table.');
+}
+
+/** Creates the social campaign record state table (command-center source of truth). */
+function famtastic_pipeline_update_8034(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('famtastic_social_record')) {
+    return t('Social record table already present.');
+  }
+  $schema->createTable('famtastic_social_record', _famtastic_pipeline_lifecycle_schema()['famtastic_social_record']);
+  return t('Created the social campaign record table.');
 }

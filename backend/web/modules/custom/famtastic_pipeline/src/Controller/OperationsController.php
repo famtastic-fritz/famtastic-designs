@@ -161,16 +161,16 @@ final class OperationsController extends ControllerBase {
 
     $attentionItems = [];
     if ($approved === 0) {
-      $attentionItems[] = ['Approve the first batch', 'Days 1–3 need content, media, and publish approval before scheduling.', 'Review calendar'];
+      $attentionItems[] = ['Approve the first batch', 'Days 1–3 sit as queued Postiz drafts. Review content/media/publish gates per record.', 'Open approval queue', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'social-records'])];
     }
     if ($scheduled === 0) {
-      $attentionItems[] = ['Queue and verify a provider event', 'Facebook is connected in Postiz; days 1–3 sit as drafts awaiting your queued-week review before any scheduling.', 'Review drafts'];
+      $attentionItems[] = ['Queue and verify a provider event', 'Facebook is connected in Postiz; days 1–3 sit as drafts awaiting your queued-week review before any scheduling.', 'Open Postiz scheduler', Url::fromUri('http://127.0.0.1:4007')];
     }
     if ($failedSocial > 0) {
-      $attentionItems[] = ['Resolve delivery failures', $failedSocial . ' social item(s) failed or remain unverified.', 'Open failures'];
+      $attentionItems[] = ['Resolve delivery failures', $failedSocial . ' social item(s) failed or remain unverified.', 'Open failures', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'open-exceptions'])];
     }
     if ($socialVisits === 0) {
-      $attentionItems[] = ['Prove attribution', 'Publish one private or controlled post and verify its UTM content ID reaches GA4 and Drupal.', 'Run proof'];
+      $attentionItems[] = ['Prove attribution', 'Publish one private or controlled post and verify its UTM content ID reaches GA4 and Drupal.', 'Open analytics', Url::fromRoute('famtastic_pipeline.analytics')];
     }
 
     $rows = [];
@@ -291,17 +291,106 @@ final class OperationsController extends ControllerBase {
       return ['#markup' => '<div class="famtastic-command__all-clear"><strong>All clear.</strong><span>No campaign exception currently needs owner action.</span></div>'];
     }
     $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-command__attention-list']]];
-    foreach ($items as $index => [$title, $detail, $action]) {
-      $build['item_' . $index] = ['#markup' => '<article><span aria-hidden="true">!</span><div><strong>' . Html::escape($title) . '</strong><p>' . Html::escape($detail) . '</p></div><b>' . Html::escape($action) . ' →</b></article>'];
+    foreach ($items as $index => $item) {
+      [$title, $detail, $action] = $item;
+      $url = $item[3] ?? NULL;
+      $actionMarkup = $url instanceof Url
+        ? Link::fromTextAndUrl($action . ' →', $url->setOption('attributes', ['class' => ['famtastic-command__attention-action']]))->toRenderable()
+        : ['#markup' => '<b>' . Html::escape($action) . ' →</b>'];
+      $build['item_' . $index] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['famtastic-command__attention-item']],
+        '#children' => [],
+        'lead' => ['#markup' => '<span aria-hidden="true">!</span><div><strong>' . Html::escape($title) . '</strong><p>' . Html::escape($detail) . '</p></div>'],
+        'action' => $actionMarkup,
+      ];
     }
     return $build;
+  }
+
+  /**
+   * Live per-record command surface for the 17-day campaign: every record,
+   * its gates, and one-click approve/revoke per gate.
+   */
+  private function socialRecordsMetric(): array {
+    $rows = [];
+    foreach ($this->database->select('famtastic_social_record', 'r')->fields('r')
+      ->orderBy('r.day')->orderBy('r.id')->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $cells = [];
+      foreach (['content' => 'approval_content', 'media' => 'approval_media', 'publish' => 'approval_publish'] as $gate => $col) {
+        $on = (int) $record[$col] === 1;
+        $cells[] = ['data' => [
+          '#markup' => '<span class="famtastic-ops__badge famtastic-ops__badge--' . ($on ? 'good' : 'off') . '">' . ($on ? '✓' : '—') . '</span> ',
+          'link' => ['data' => $this->linkCell(Link::fromTextAndUrl($on ? 'revoke' : 'approve', Url::fromRoute('famtastic_pipeline.social_record_gate',
+            ['content_id' => $record['content_id'], 'gate' => $gate, 'direction' => $on ? 'revoke' : 'approve'])))],
+        ]];
+      }
+      $draft = $record['postiz_draft_id'] !== ''
+        ? $this->linkCell(Link::fromTextAndUrl('draft ↗', Url::fromUri('http://127.0.0.1:4007', ['attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']])))
+        : ['#markup' => '—'];
+      $rows[] = [
+        (int) $record['day'],
+        (string) $record['moment'],
+        (string) $record['promise'],
+        (string) $record['scheduled_time_et'],
+        ['data' => ['#markup' => $this->badge((string) $record['state'])]],
+        $cells[0], $cells[1], $cells[2],
+        ['data' => $draft],
+      ];
+    }
+    $page = $this->recordsPage(
+      'Campaign Record Gates',
+      'Per-record approval state for the 17-day campaign, stored in Drupal. Approving content/media here is the owner decision the pipeline reads; publishing remains a separate bounded-batch decision.',
+      ['Day', 'Moment', 'Promise', 'ET', 'State', 'Content', 'Media', 'Publish', 'Postiz'],
+      $rows,
+      'No campaign records are imported yet. Run backend/scripts/import-social-records.php against the campaign manifest.',
+    );
+    $page['import'] = ['#markup' => '<p class="famtastic-ops__lede"><code>drush php:script backend/scripts/import-social-records.php</code> syncs manifest state; approvals stored here always win.</p>'];
+    return $page;
   }
 
   /** Renders the canonical 17-day campaign spine. */
   private function campaignCalendar(array $days): array {
     $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-command__calendar']]];
+    // Live per-record state; days with no imported records show an honest
+    // unknown instead of invented numbers. Missing table = not yet updatedb'd.
+    if (!$this->database->schema()->tableExists('famtastic_social_record')) {
+      $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-command__calendar']]];
+      foreach ($days as $day => [$theme, $promise]) {
+        $build['day_' . $day] = ['#markup' => '<article class="famtastic-command__calendar-day is-unknown"><div class="famtastic-command__day"><span>Day</span><strong>' . $day . '</strong></div><div><span>' . Html::escape((string) $theme) . '</span><h3>' . Html::escape((string) $promise) . '</h3><p>Record table pending module update.</p></div></article>'];
+      }
+      return $build;
+    }
+    $records = $this->database->select('famtastic_social_record', 'r')
+      ->fields('r', ['content_id', 'day', 'moment', 'scheduled_time_et', 'state',
+                     'approval_content', 'approval_media', 'approval_publish'])
+      ->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $byDay = [];
+    foreach ($records as $record) {
+      $byDay[(int) $record['day']][] = $record;
+    }
+    $queueUrl = Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'social-records']);
     foreach ($days as $day => [$theme, $promise]) {
-      $build['day_' . $day] = ['#markup' => '<article><div class="famtastic-command__day"><span>Day</span><strong>' . $day . '</strong></div><div><span>' . Html::escape($theme) . '</span><h3>' . Html::escape($promise) . '</h3><p>08:00 Teach · 12:30 Challenge · 17:30 Prove · 20:30 Invite</p></div><b>0/4 approved</b></article>'];
+      if (!isset($byDay[$day])) {
+        $build['day_' . $day] = ['#markup' => '<article class="famtastic-command__calendar-day is-unknown"><div class="famtastic-command__day"><span>Day</span><strong>' . $day . '</strong></div><div><span>' . Html::escape((string) $theme) . '</span><h3>' . Html::escape((string) $promise) . '</h3><p>Record state not imported yet — no invented numbers.</p></div><em>' . Link::fromTextAndUrl('Import records', $queueUrl)->toString() . '</em></article>'];
+        continue;
+      }
+      $lines = [];
+      $gatesOn = 0;
+      $gatesTotal = 0;
+      foreach ($byDay[$day] as $record) {
+        $on = ((int) $record['approval_content']) + ((int) $record['approval_media']) + ((int) $record['approval_publish']);
+        $gatesOn += $on;
+        $gatesTotal += 3;
+        $lines[] = sprintf('%s %s · %s', $record['scheduled_time_et'] ?: '—', ucfirst((string) $record['moment']),
+          '<span class="famtastic-ops__badge famtastic-ops__badge--' . ($on === 3 ? 'good' : ($on ? 'partial' : 'off')) . '">' . $on . '/3</span>');
+      }
+      $build['day_' . $day] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['famtastic-command__calendar-day']],
+        '#children' => [],
+        'body' => ['#markup' => '<article><div class="famtastic-command__day"><span>Day</span><strong>' . $day . '</strong></div><div><span>' . Html::escape((string) $theme) . '</span><h3>' . Html::escape((string) $promise) . '</h3><p>' . implode('<br>', $lines) . '</p></div><em>' . \Drupal::service('renderer')->renderRoot($this->linkCell(Link::fromTextAndUrl('Review gates →', $queueUrl))) . '</em></article>'],
+      ];
     }
     return $build;
   }
@@ -401,6 +490,7 @@ final class OperationsController extends ControllerBase {
       'notifications' => $this->notificationMetric(),
       'replies' => $this->replyMetric(),
       'support-drafts' => $this->supportDraftMetric(),
+      'social-records' => $this->socialRecordsMetric(),
       'workers' => $this->workerMetric(),
       'grant-codes' => $this->grantCodeMetric(),
       default => throw new NotFoundHttpException('Operations metric not found.'),
@@ -425,6 +515,10 @@ final class OperationsController extends ControllerBase {
         'Timing: ' . ($intake['launch_timing'] ?? ''),
         'Notes: ' . ($intake['notes'] ?? ''),
       ], static fn(string $line): bool => !str_ends_with($line, ': '));
+      $briefText = Html::escape(implode(' · ', $summary));
+      if (mb_strlen($briefText) > 180) {
+        $briefText = mb_substr($briefText, 0, 177) . '…';
+      }
       $prospect = $record['prospect_id'] ? $this->linkCell(Link::fromTextAndUrl('#' . $record['prospect_id'], Url::fromUserInput('/admin/famtastic/prospect/' . $record['prospect_id'] . '/edit'))) : ['#markup' => '—'];
       $rows[] = [
         $record['project_name'], $record['organization_name'] ?: $record['business_name'],
@@ -434,7 +528,7 @@ final class OperationsController extends ControllerBase {
           $this->linkCell(Link::fromTextAndUrl('Proof review', Url::fromRoute('famtastic_pipeline.website_request_proof_review', ['website_request' => $record['id']]))),
           $this->linkCell(Link::fromTextAndUrl('Package / special price', Url::fromRoute('famtastic_pipeline.website_request_offer', ['website_request' => $record['id']]))),
         ]]],
-        ['data' => $prospect], implode("\n", $summary) ?: 'Draft details not added yet', $this->date((int) $record['changed']),
+        ['data' => $prospect], ['data' => ['#markup' => $briefText ?: 'Draft details not added yet']], $this->date((int) $record['changed']),
       ];
     }
     return $this->recordsPage('Website Requests', 'Customer-owned, resumable website interviews. Proofs remain owner-only until the explicit customer-send gate is approved.', ['Request', 'Business', 'Customer', 'Type', 'Status', 'Actions', 'Lead', 'Brief', 'Updated'], $rows, 'No website requests have been recorded.');
@@ -1207,11 +1301,15 @@ final class OperationsController extends ControllerBase {
       'back' => Link::fromTextAndUrl('← Operations Dashboard', Url::fromRoute('famtastic_pipeline.operations'))->toRenderable(),
       'intro' => ['#markup' => '<p class="famtastic-ops__lede">' . Html::escape($description) . '</p>'],
       'records' => [
-        '#type' => 'table',
-        '#header' => $header,
-        '#rows' => $rows,
-        '#empty' => $empty,
-        '#attributes' => ['class' => ['famtastic-ops__table']],
+        '#type' => 'container',
+        '#attributes' => ['class' => ['famtastic-ops__table-scroll', 'famtastic-ops__table-scroll--wide']],
+        'table' => [
+          '#type' => 'table',
+          '#header' => $header,
+          '#rows' => $rows,
+          '#empty' => $empty,
+          '#attributes' => ['class' => ['famtastic-ops__table', 'famtastic-ops__table--readable']],
+        ],
       ],
       'pager' => ['#type' => 'pager'],
     ], $title);

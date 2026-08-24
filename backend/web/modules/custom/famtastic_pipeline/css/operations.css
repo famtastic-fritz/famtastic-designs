@@ -277,3 +277,98 @@
 }
 
 @media (max-width: 430px){.famtastic-command__pulse{grid-template-columns:1fr}.famtastic-command__hero{padding:1.15rem}.famtastic-command__hero h2{font-size:2.2rem}.famtastic-command__calendar article{align-items:start}}
+
+/* --- Deep-audit additions: badge variants that previously had no rules --- */
+.famtastic-ops__badge--draft,
+.famtastic-ops__badge--lead,
+.famtastic-ops__badge--new,
+.famtastic-ops__badge--paid,
+.famtastic-ops__badge--superseded,
+.famtastic-ops__badge--stale,
+.famtastic-ops__badge--pending,
+.famtastic-ops__badge--other,
+.famtastic-ops__badge--off {
+  background: #3a3f45;
+  color: #d5d9dd;
+}
+.famtastic-ops__badge--within-sla {
+  background: #12331c;
+  color: #7ee2a8;
+}
+.famtastic-command__pulse-card--neutral {
+  border-color: #4a5058;
+}
+
+/* Attention items: real actions are real links; never fake buttons. */
+.famtastic-command__attention-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.famtastic-command__attention-action {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* Calendar day states. */
+.famtastic-command__calendar-day.is-unknown article {
+  opacity: 0.55;
+}
+.famtastic-ops__badge--partial {
+  background: #3a3320;
+  color: #e8c96a;
+}
+
+/* Icon fallbacks so unstyled icon slots still occupy layout cleanly. */
+[class*="famtastic-hub__icon--"] {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #2f353b center / 16px no-repeat;
+}
+
+/* --- Readability: wide operational tables on real desktops --- */
+.famtastic-ops__table-scroll--wide {
+  overflow-x: auto;
+  border: 1px solid #3a3f45;
+  border-radius: 8px;
+  background: #23272b;
+}
+.famtastic-ops__table--readable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.famtastic-ops__table--readable th {
+  position: sticky;
+  top: 0;
+  background: #2f353b;
+  color: #e8eaec;
+  text-align: left;
+  white-space: nowrap;
+  padding: 10px 12px;
+  border-bottom: 2px solid #4a5058;
+  z-index: 2;
+}
+.famtastic-ops__table--readable td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #33383d;
+  vertical-align: top;
+  max-width: 340px;
+  overflow-wrap: anywhere;
+}
+.famtastic-ops__table--readable tbody tr:nth-child(even) {
+  background: #262a2e;
+}
+.famtastic-ops__table--readable tbody tr:hover {
+  background: #2c3136;
+}
+.famtastic-ops__table--readable td:first-child {
+  font-weight: 600;
+  white-space: nowrap;
+}

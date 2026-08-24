@@ -521,7 +521,7 @@ famtastic_pipeline.operations_metric:
     _title: 'Operations Records'
   requirements:
     _permission: 'administer famtastic pipeline'
-    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes|replies|support-drafts'
+    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes|replies|support-drafts|social-records'
 
 famtastic_pipeline.support_draft_decision:
   path: '/admin/famtastic/support-draft/{id}/decide'
@@ -603,6 +603,17 @@ famtastic_pipeline.campaign_add:
     _title: 'New campaign'
   requirements:
     _permission: 'administer famtastic pipeline'
+
+famtastic_pipeline.social_record_gate:
+  path: '/admin/famtastic/social-record/{content_id}/{{gate}}/{{direction}}'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\SocialRecordGateForm'
+    _title: 'Campaign record gate'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    content_id: '[a-z0-9-]+'
+    gate: 'content|media|publish'
+    direction: 'approve|revoke'
 
 famtastic_pipeline.operations_message:
   path: '/admin/famtastic/message/{message}'
