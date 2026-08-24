@@ -150,3 +150,12 @@
 .portal-conversation ol { overflow-wrap: anywhere; }
 .portal-conversation ol li p { overflow-wrap: anywhere; white-space: pre-wrap; }
 .portal-thread-list button strong { overflow-wrap: anywhere; }
+
+/* Projects flow: progressive disclosure keeps first-save friction low (ADMIN-CX 2026-08-24). */
+.portal-form-stepnote{margin:0;padding:.75rem .9rem;border:1px solid rgba(124,252,0,.35);border-radius:12px;background:rgba(124,252,0,.07);color:#dfe6df;line-height:1.5}
+.portal-form-stepnote strong{color:var(--p-lime)}
+.portal-form-group{min-width:0;margin:0;padding:1rem;border:1px solid var(--p-line);border-radius:14px;background:#0c0f0c;display:grid;gap:1rem;max-width:100%}
+.portal-form-group legend{padding:0 .5rem;color:var(--p-lime);font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.13em}
+.portal-form-group>*,.portal-form-group label{min-width:0}
+.portal-sticky-actions{position:sticky;bottom:0;z-index:6;margin-top:1.25rem;padding:.8rem;border:1px solid var(--p-line);border-radius:14px;background:rgba(9,12,9,.97);box-shadow:0 -14px 40px rgba(0,0,0,.4);backdrop-filter:blur(10px)}
+@media(max-width:560px){.portal-sticky-actions{display:grid}.portal-sticky-actions button{width:100%;text-align:center}}
