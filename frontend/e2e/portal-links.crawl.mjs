@@ -69,6 +69,46 @@ async function scanPage(page, name, { expectedHeading } = {}) {
     entry.failures.push(`horizontal overflow: content ${sizes.content}px > viewport ${sizes.viewport}px`);
   }
 
+  // Geometric overlap: sibling cards must never intersect (owner screenshot
+  // 2026-08-24 - structural/text checks passed while cards physically overlapped).
+  const overlaps = await page.evaluate(() => {
+    const TOLERANCE = 4; // px^2 of intersection tolerated (rounding, borders)
+    const groups = [
+      '.portal-request-list > *',
+      '.portal-proof-grid > article',
+      '.portal-proof-grid > a',
+      '.portal-grid > *',
+    ];
+    const seen = new Set();
+    const violations = [];
+    for (const sel of groups) {
+      document.querySelectorAll(sel).forEach((el) => {
+        const parent = el.parentElement;
+        const key = parent ? (parent.className || parent.tagName) + '::' + sel : sel;
+        if (seen.has(key)) return;
+        seen.add(key);
+        const kids = [...parent.children].filter((c) => {
+          const r = c.getBoundingClientRect();
+          return r.width > 2 && r.height > 2;
+        });
+        for (let i = 0; i < kids.length; i++) {
+          for (let j = i + 1; j < kids.length; j++) {
+            const a = kids[i].getBoundingClientRect();
+            const b = kids[j].getBoundingClientRect();
+            const ix = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+            const iy = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+            if (ix * iy > TOLERANCE) {
+              violations.push(`${sel} child[${i}]×child[${j}] overlap ${Math.round(ix * iy)}px²`);
+              if (violations.length >= 6) return violations;
+            }
+          }
+        }
+      });
+    }
+    return violations;
+  });
+  if (overlaps.length) entry.failures.push(`geometric overlap: ${overlaps.join('; ')}`);
+
   // Stale notices: a notice surviving navigation is not context-scoped.
   const notices = await page.locator('.portal-notice').allTextContents();
   if (notices.length) entry.warnings.push(`notice visible: "${notices[0].trim().slice(0, 60)}"`);

@@ -657,3 +657,6 @@ queued.
   reaches them: GROUPS nav exposes only six sections and `?section=` accepts
   only those. Dead surfaces are a fake-affordance class defect; nav change is
   an owner decision, flagged not fixed unilaterally.
+## 2026-08-24 — Structure crawls pass while geometry fails: card grids need overlap assertions
+
+- Portal Projects rendered five proof-review panels in auto-fit columns, each crushing a fixed 3-column concept grid into ~90px cells — titles overflowed, badges scattered, cards overlapped. The text/structure crawler passed every check. Rule: any card-grid surface gets geometric assertions (sibling bounding-box intersections > 4px² fail; scrollWidth ≤ viewport+2) in e2e-portal-links.sh, and new grids default to fluid `repeat(auto-fit,minmax(min-card,1fr))` instead of fixed column counts.
