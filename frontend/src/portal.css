@@ -181,3 +181,34 @@
   padding-right: 3.2rem; /* keep clear of the absolutely-positioned badge */
 }
 .portal-proof-grid a span { overflow-wrap: anywhere; }
+
+/* Request switcher: one expanded review at a time (conversion focus). */
+.portal-request-list {
+  /* Own the layout: 'portal-grid two' specificity must not fight this. */
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 1.25rem;
+}
+.portal-request-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
+.portal-request-chips button {
+  display: grid;
+  gap: .15rem;
+  padding: .6rem .9rem;
+  border: 1px solid var(--p-line);
+  border-radius: 12px;
+  background: #0d100d;
+  color: #cdd4cd;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.portal-request-chips button small { color: #8e998e; font-size: .72rem; }
+.portal-request-chips button.active {
+  border-color: var(--p-lime);
+  background: rgba(124, 252, 0, .1);
+  color: #fff;
+}

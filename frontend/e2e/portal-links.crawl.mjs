@@ -158,8 +158,43 @@ async function main() {
     await page.getByLabel('Request name').fill('Portal Crawl Studio website');
     await page.getByLabel('What are we building?').selectOption('landing_page');
     await page.getByLabel('What should this website accomplish?').fill('Capture quote requests from local homeowners.');
+    const saveResponses = [];
+    const pageErrors = [];
+    page.on('pageerror', (error) => pageErrors.push(String(error).slice(0, 200)));
+    page.on('response', async (response) => {
+      if (response.url().includes('/website-requests') && response.request().method() !== 'GET') {
+        let bodyKeys = [];
+        try { bodyKeys = Object.keys(await response.json()); } catch {}
+        saveResponses.push({ status: response.status(), bodyKeys });
+      }
+    });
     await page.getByRole('button', { name: /Save draft/i }).click();
-    await page.waitForSelector('.portal-form-group', { timeout: 15000 });
+    await page.waitForTimeout(2500);
+    if (saveResponses.length) {
+      entryStart.artifacts.saveResponses = saveResponses;
+      if (pageErrors.length) entryStart.failures.push(`page errors: ${pageErrors.join(' | ')}`);
+      const domState = await page.evaluate(() => ({
+        editor: !!document.getElementById('website-request-editor'),
+        fieldsets: document.querySelectorAll('.portal-form-group').length,
+        stepnote: !!document.querySelector('.portal-form-stepnote'),
+      }));
+      entryStart.artifacts.domState = domState;
+      if (!domState.editor) entryStart.failures.push('editor panel unmounted after save');
+      if (domState.stepnote) entryStart.failures.push('step-1 note still showing after save (public_id gate failed)');
+      const bad = saveResponses.find((r) => r.status >= 400);
+      if (bad) entryStart.failures.push(`save HTTP ${bad.status}`);
+    } else {
+      entryStart.failures.push('save click produced no website-requests POST (submit did not fire)');
+    }
+    try {
+      await page.waitForSelector('.portal-form-group', { timeout: 15000 });
+    } catch {
+      const errText = await page.locator('.portal-notice--error').first().textContent().catch(() => '(no error notice rendered)');
+      entryStart.failures.push(`draft save did not reveal the interview; error notice: ${errText?.trim() || 'none'}`);
+    }
+    if (entryStart.failures.length === 0) {
+      await page.waitForSelector('.portal-form-group', { timeout: 5000 }).catch(() => {});
+    }
     const groups = await page.locator('.portal-form-group').count();
     if (groups < 5) entryStart.failures.push(`expected >=5 grouped fieldsets after draft save, saw ${groups}`);
     else entryStart.artifacts.groupsAfterDraft = groups;
