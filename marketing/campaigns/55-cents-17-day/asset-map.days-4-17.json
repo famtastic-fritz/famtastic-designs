@@ -1,0 +1,234 @@
+{
+ "schema": "famtastic.asset-map.v1",
+ "generated_on": "2026-08-23",
+ "campaign": "web_basics_55_cents_17d",
+ "scope": "days 4-17",
+ "built_by": "scripts/build-55-cent-days-4-17-assets.py",
+ "note": "Deterministic local re-cut of approved seed creative under each content_id (same doctrine as days 1-3). No generative provider, no publishing. Copy reused verbatim; sources cycle the three approved photoreal originals.",
+ "assets": {
+  "55c-d04-teach": {
+   "9x16": "assets/55c-d04-teach.9x16.png",
+   "4x5": "assets/55c-d04-teach.4x5.png"
+  },
+  "55c-d04-challenge": {
+   "9x16": "assets/55c-d04-challenge.9x16.png",
+   "4x5": "assets/55c-d04-challenge.4x5.png"
+  },
+  "55c-d04-prove": {
+   "9x16": "assets/55c-d04-prove.9x16.png",
+   "4x5": "assets/55c-d04-prove.4x5.png"
+  },
+  "55c-d04-invite": {
+   "9x16": "assets/55c-d04-invite.9x16.png",
+   "4x5": "assets/55c-d04-invite.4x5.png"
+  },
+  "55c-d05-teach": {
+   "9x16": "assets/55c-d05-teach.9x16.png",
+   "4x5": "assets/55c-d05-teach.4x5.png"
+  },
+  "55c-d05-challenge": {
+   "9x16": "assets/55c-d05-challenge.9x16.png",
+   "4x5": "assets/55c-d05-challenge.4x5.png"
+  },
+  "55c-d05-prove": {
+   "9x16": "assets/55c-d05-prove.9x16.png",
+   "4x5": "assets/55c-d05-prove.4x5.png"
+  },
+  "55c-d05-invite": {
+   "9x16": "assets/55c-d05-invite.9x16.png",
+   "4x5": "assets/55c-d05-invite.4x5.png"
+  },
+  "55c-d06-teach": {
+   "9x16": "assets/55c-d06-teach.9x16.png",
+   "4x5": "assets/55c-d06-teach.4x5.png"
+  },
+  "55c-d06-challenge": {
+   "9x16": "assets/55c-d06-challenge.9x16.png",
+   "4x5": "assets/55c-d06-challenge.4x5.png"
+  },
+  "55c-d06-prove": {
+   "9x16": "assets/55c-d06-prove.9x16.png",
+   "4x5": "assets/55c-d06-prove.4x5.png"
+  },
+  "55c-d06-invite": {
+   "9x16": "assets/55c-d06-invite.9x16.png",
+   "4x5": "assets/55c-d06-invite.4x5.png"
+  },
+  "55c-d07-teach": {
+   "9x16": "assets/55c-d07-teach.9x16.png",
+   "4x5": "assets/55c-d07-teach.4x5.png"
+  },
+  "55c-d07-challenge": {
+   "9x16": "assets/55c-d07-challenge.9x16.png",
+   "4x5": "assets/55c-d07-challenge.4x5.png"
+  },
+  "55c-d07-prove": {
+   "9x16": "assets/55c-d07-prove.9x16.png",
+   "4x5": "assets/55c-d07-prove.4x5.png"
+  },
+  "55c-d07-invite": {
+   "9x16": "assets/55c-d07-invite.9x16.png",
+   "4x5": "assets/55c-d07-invite.4x5.png"
+  },
+  "55c-d08-teach": {
+   "9x16": "assets/55c-d08-teach.9x16.png",
+   "4x5": "assets/55c-d08-teach.4x5.png"
+  },
+  "55c-d08-challenge": {
+   "9x16": "assets/55c-d08-challenge.9x16.png",
+   "4x5": "assets/55c-d08-challenge.4x5.png"
+  },
+  "55c-d08-prove": {
+   "9x16": "assets/55c-d08-prove.9x16.png",
+   "4x5": "assets/55c-d08-prove.4x5.png"
+  },
+  "55c-d08-invite": {
+   "9x16": "assets/55c-d08-invite.9x16.png",
+   "4x5": "assets/55c-d08-invite.4x5.png"
+  },
+  "55c-d09-teach": {
+   "9x16": "assets/55c-d09-teach.9x16.png",
+   "4x5": "assets/55c-d09-teach.4x5.png"
+  },
+  "55c-d09-challenge": {
+   "9x16": "assets/55c-d09-challenge.9x16.png",
+   "4x5": "assets/55c-d09-challenge.4x5.png"
+  },
+  "55c-d09-prove": {
+   "9x16": "assets/55c-d09-prove.9x16.png",
+   "4x5": "assets/55c-d09-prove.4x5.png"
+  },
+  "55c-d09-invite": {
+   "9x16": "assets/55c-d09-invite.9x16.png",
+   "4x5": "assets/55c-d09-invite.4x5.png"
+  },
+  "55c-d10-teach": {
+   "9x16": "assets/55c-d10-teach.9x16.png",
+   "4x5": "assets/55c-d10-teach.4x5.png"
+  },
+  "55c-d10-challenge": {
+   "9x16": "assets/55c-d10-challenge.9x16.png",
+   "4x5": "assets/55c-d10-challenge.4x5.png"
+  },
+  "55c-d10-prove": {
+   "9x16": "assets/55c-d10-prove.9x16.png",
+   "4x5": "assets/55c-d10-prove.4x5.png"
+  },
+  "55c-d10-invite": {
+   "9x16": "assets/55c-d10-invite.9x16.png",
+   "4x5": "assets/55c-d10-invite.4x5.png"
+  },
+  "55c-d11-teach": {
+   "9x16": "assets/55c-d11-teach.9x16.png",
+   "4x5": "assets/55c-d11-teach.4x5.png"
+  },
+  "55c-d11-challenge": {
+   "9x16": "assets/55c-d11-challenge.9x16.png",
+   "4x5": "assets/55c-d11-challenge.4x5.png"
+  },
+  "55c-d11-prove": {
+   "9x16": "assets/55c-d11-prove.9x16.png",
+   "4x5": "assets/55c-d11-prove.4x5.png"
+  },
+  "55c-d11-invite": {
+   "9x16": "assets/55c-d11-invite.9x16.png",
+   "4x5": "assets/55c-d11-invite.4x5.png"
+  },
+  "55c-d12-teach": {
+   "9x16": "assets/55c-d12-teach.9x16.png",
+   "4x5": "assets/55c-d12-teach.4x5.png"
+  },
+  "55c-d12-challenge": {
+   "9x16": "assets/55c-d12-challenge.9x16.png",
+   "4x5": "assets/55c-d12-challenge.4x5.png"
+  },
+  "55c-d12-prove": {
+   "9x16": "assets/55c-d12-prove.9x16.png",
+   "4x5": "assets/55c-d12-prove.4x5.png"
+  },
+  "55c-d12-invite": {
+   "9x16": "assets/55c-d12-invite.9x16.png",
+   "4x5": "assets/55c-d12-invite.4x5.png"
+  },
+  "55c-d13-teach": {
+   "9x16": "assets/55c-d13-teach.9x16.png",
+   "4x5": "assets/55c-d13-teach.4x5.png"
+  },
+  "55c-d13-challenge": {
+   "9x16": "assets/55c-d13-challenge.9x16.png",
+   "4x5": "assets/55c-d13-challenge.4x5.png"
+  },
+  "55c-d13-prove": {
+   "9x16": "assets/55c-d13-prove.9x16.png",
+   "4x5": "assets/55c-d13-prove.4x5.png"
+  },
+  "55c-d13-invite": {
+   "9x16": "assets/55c-d13-invite.9x16.png",
+   "4x5": "assets/55c-d13-invite.4x5.png"
+  },
+  "55c-d14-teach": {
+   "9x16": "assets/55c-d14-teach.9x16.png",
+   "4x5": "assets/55c-d14-teach.4x5.png"
+  },
+  "55c-d14-challenge": {
+   "9x16": "assets/55c-d14-challenge.9x16.png",
+   "4x5": "assets/55c-d14-challenge.4x5.png"
+  },
+  "55c-d14-prove": {
+   "9x16": "assets/55c-d14-prove.9x16.png",
+   "4x5": "assets/55c-d14-prove.4x5.png"
+  },
+  "55c-d14-invite": {
+   "9x16": "assets/55c-d14-invite.9x16.png",
+   "4x5": "assets/55c-d14-invite.4x5.png"
+  },
+  "55c-d15-teach": {
+   "9x16": "assets/55c-d15-teach.9x16.png",
+   "4x5": "assets/55c-d15-teach.4x5.png"
+  },
+  "55c-d15-challenge": {
+   "9x16": "assets/55c-d15-challenge.9x16.png",
+   "4x5": "assets/55c-d15-challenge.4x5.png"
+  },
+  "55c-d15-prove": {
+   "9x16": "assets/55c-d15-prove.9x16.png",
+   "4x5": "assets/55c-d15-prove.4x5.png"
+  },
+  "55c-d15-invite": {
+   "9x16": "assets/55c-d15-invite.9x16.png",
+   "4x5": "assets/55c-d15-invite.4x5.png"
+  },
+  "55c-d16-teach": {
+   "9x16": "assets/55c-d16-teach.9x16.png",
+   "4x5": "assets/55c-d16-teach.4x5.png"
+  },
+  "55c-d16-challenge": {
+   "9x16": "assets/55c-d16-challenge.9x16.png",
+   "4x5": "assets/55c-d16-challenge.4x5.png"
+  },
+  "55c-d16-prove": {
+   "9x16": "assets/55c-d16-prove.9x16.png",
+   "4x5": "assets/55c-d16-prove.4x5.png"
+  },
+  "55c-d16-invite": {
+   "9x16": "assets/55c-d16-invite.9x16.png",
+   "4x5": "assets/55c-d16-invite.4x5.png"
+  },
+  "55c-d17-teach": {
+   "9x16": "assets/55c-d17-teach.9x16.png",
+   "4x5": "assets/55c-d17-teach.4x5.png"
+  },
+  "55c-d17-challenge": {
+   "9x16": "assets/55c-d17-challenge.9x16.png",
+   "4x5": "assets/55c-d17-challenge.4x5.png"
+  },
+  "55c-d17-prove": {
+   "9x16": "assets/55c-d17-prove.9x16.png",
+   "4x5": "assets/55c-d17-prove.4x5.png"
+  },
+  "55c-d17-invite": {
+   "9x16": "assets/55c-d17-invite.9x16.png",
+   "4x5": "assets/55c-d17-invite.4x5.png"
+  }
+ }
+}

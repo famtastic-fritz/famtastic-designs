@@ -521,7 +521,16 @@ famtastic_pipeline.operations_metric:
     _title: 'Operations Records'
   requirements:
     _permission: 'administer famtastic pipeline'
-    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes|replies'
+    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes|replies|support-drafts'
+
+famtastic_pipeline.support_draft_decision:
+  path: '/admin/famtastic/support-draft/{id}/decide'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\SupportDraftDecisionForm'
+    _title: 'Review support draft'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    id: \d+
 
 famtastic_pipeline.prospect_workspace:
   path: '/admin/famtastic/prospect/{famtastic_prospect}/workspace'

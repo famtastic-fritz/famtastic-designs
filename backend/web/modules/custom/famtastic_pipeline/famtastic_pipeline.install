@@ -1212,6 +1212,21 @@ function _famtastic_pipeline_lifecycle_schema(): array {
     'primary key' => ['id'], 'unique keys' => ['message_id' => ['message_id_hash']],
     'indexes' => ['thread' => ['thread_public_id', 'received_at'], 'status' => ['status', 'received_at']],
   ];
+  $tables['famtastic_support_draft'] = [
+    'description' => 'L0 draft replies generated per inbound message; nothing sends without owner approval.',
+    'fields' => [
+      'id' => $id, 'message_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'thread_public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE, 'default' => ''],
+      'intent' => $short, 'confidence' => ['type' => 'float', 'size' => 'normal', 'not null' => TRUE, 'default' => 0],
+      'escalate' => ['type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'template_id' => $short, 'body' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'status' => $short, 'reviewer_uid' => $entity, 'decided_at' => $time,
+      'sla_target_seconds' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'created' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['message' => ['message_id']],
+    'indexes' => ['queue' => ['status', 'created'], 'thread' => ['thread_public_id']],
+  ];
   $tables['famtastic_worker_heartbeat'] = [
     'description' => 'Worker health, throughput, retry, and failure telemetry.',
     'fields' => [
@@ -1652,4 +1667,14 @@ function _famtastic_pipeline_lead_import_schema(): array {
       'prospect' => ['prospect_id'],
     ],
   ];
+}
+
+/** Creates the L0 support draft queue table (AUTONOMOUS_CUSTOMER_SERVICE B2/B4). */
+function famtastic_pipeline_update_8033(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('famtastic_support_draft')) {
+    return t('Support draft table already present.');
+  }
+  $schema->createTable('famtastic_support_draft', _famtastic_pipeline_lifecycle_schema()['famtastic_support_draft']);
+  return t('Created the support draft queue table.');
 }

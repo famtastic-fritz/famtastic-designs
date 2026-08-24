@@ -21,6 +21,7 @@ final class LifecycleOperationsService {
     private readonly ConfigFactoryInterface $configFactory,
     private readonly FileSystemInterface $fileSystem,
     private readonly AutomationWorker $automationWorker,
+    private readonly SupportDraftService $supportDrafts,
   ) {}
 
   public function dispatchNotifications(int $limit = 25): array {
@@ -118,6 +119,18 @@ final class LifecycleOperationsService {
     else {
       $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
       $this->queue('inbound:' . $hash . ':unmatched', $admin, 'Unmatched customer email requires review', "Subject: {$subject}\nReason: {$reason}\nMessage-ID hash: {$hash}");
+    }
+    // L0 triage (B2): every accepted inbound gets exactly one draft reply.
+    // Best-effort — a drafting failure must never break mail ingestion.
+    try {
+      $draftedId = (int) $this->database->select('famtastic_inbound_message', 'i')
+        ->fields('i', ['id'])->condition('message_id_hash', $hash)->execute()->fetchField();
+      if ($draftedId > 0) {
+        $this->supportDrafts->createForMessage($draftedId);
+      }
+    }
+    catch (\Throwable) {
+      // Drafting is additive; ingestion evidence already recorded above.
     }
     return ['accepted' => $status === 'matched', 'duplicate' => FALSE, 'status' => $status, 'reason' => $reason];
   }

@@ -399,6 +399,7 @@ final class OperationsController extends ControllerBase {
       'services' => $this->serviceMetric(),
       'notifications' => $this->notificationMetric(),
       'replies' => $this->replyMetric(),
+      'support-drafts' => $this->supportDraftMetric(),
       'workers' => $this->workerMetric(),
       'grant-codes' => $this->grantCodeMetric(),
       default => throw new NotFoundHttpException('Operations metric not found.'),
@@ -499,8 +500,48 @@ final class OperationsController extends ControllerBase {
     );
   }
 
-  private function workerMetric(): array {
+  /**
+   * L0 support draft queue: every inbound reply, its classification, and the
+   * owner decision state. Nothing sends without a decision here (step B2).
+   */
+  private function supportDraftMetric(): array {
+    $now = \Drupal::time()->getRequestTime();
+    $query = $this->database->select('famtastic_support_draft', 'd')->extend(PagerSelectExtender::class);
+    $query->join('famtastic_inbound_message', 'm', 'm.id = d.message_id');
+    $query->fields('d', ['id', 'intent', 'confidence', 'escalate', 'status', 'body', 'created', 'decided_at', 'sla_target_seconds'])
+      ->fields('m', ['subject', 'received_at', 'thread_public_id']);
     $rows = [];
+    foreach ($query->orderBy('d.created', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $age = $now - (int) $record['created'];
+      $target = (int) $record['sla_target_seconds'] ?: 86400;
+      $slaState = $record['status'] === 'pending' && $age > $target
+        ? $this->badge('breached') . ' +' . round(($age - $target) / 60) . 'min'
+        : $this->badge('within_sla');
+      $decision = $record['status'] === 'pending'
+        ? Link::fromTextAndUrl('Review', Url::fromRoute('famtastic_pipeline.support_draft_decision', ['id' => $record['id']]))->toRenderable()
+        : $this->date((int) $record['decided_at']);
+      $rows[] = [
+        $this->date((int) $record['received_at']),
+        (string) $record['subject'],
+        ['data' => ['#markup' => $this->badge((string) $record['intent'])]],
+        ((int) round(((float) $record['confidence']) * 100)) . '%',
+        (int) $record['escalate'] ? $this->badge('escalate') : $this->badge('normal'),
+        ['data' => ['#markup' => $slaState]],
+        ['data' => ['#markup' => $this->badge((string) $record['status'])]],
+        mb_strimwidth(strip_tags((string) $record['body']), 0, 90, '…'),
+        ['data' => $decision],
+      ];
+    }
+    return $this->recordsPage(
+      'Support Drafts (L0)',
+      'Every inbound message gets one deterministic draft. Nothing sends without an owner decision — approving queues the reply through the reviewed outbox path.',
+      ['Received', 'Subject', 'Intent', 'Confidence', 'Triage', 'SLA', 'Status', 'Draft preview', 'Decision'],
+      $rows,
+      'No support drafts have been generated yet. They appear automatically as inbound messages arrive.',
+    );
+  }
+
+  private function workerMetric(): array {    $rows = [];
     $query = $this->database->select('famtastic_worker_heartbeat', 'w')->extend(PagerSelectExtender::class);
     foreach ($query->fields('w')->orderBy('worker_key')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
       $late = (int) $record['next_due'] > 0 && (int) $record['next_due'] < \Drupal::time()->getRequestTime();

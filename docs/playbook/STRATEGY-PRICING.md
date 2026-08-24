@@ -38,3 +38,4 @@ Weekly CEO report must include: orders by source/campaign, add-on attach rate, w
 
 ## Change log
 - 2026-08-22 — Created as T4 home; wave plan encoded.
+- 2026-08-23 — Wave 0 PASSED (runner `scripts/wave0-synthetic-run.sh`; receipts in .artifacts/wave0/*). Wave-1 REHEARSAL complete: 20 synthetic leads, memory transport only, zero dead letters (`.artifacts/wave1-rehearsal/*/evidence.json`). Real Wave 1 (20 highest-fit leads) remains GATED on Fritz: send approval + acceptance criteria (≥40% open, ≥10% click, ≥1 paid order, SLA met) measured post-send.

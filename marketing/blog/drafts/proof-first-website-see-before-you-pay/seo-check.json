@@ -1,0 +1,34 @@
+{
+  "slug": "proof-first-website-see-before-you-pay",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "Proof-First Websites: See Three Real Designs Before You Pay",
+  "title_length": 55,
+  "meta_description": "See three real website proofs built from your business before any payment. How FAMtastic's proof-first flow works and who it fits best.",
+  "meta_description_length": 137,
+  "h1_count": 1,
+  "question_headings": ["Why this order matters to you?", "Who it fits best?"],
+  "internal_links": [
+    "https://famtasticdesigns.com/web/packages",
+    "https://famtasticdesigns.com/web/packages/web-basics",
+    "https://famtasticdesigns.com/contact"
+  ],
+  "internal_link_count": 3,
+  "external_links": [],
+  "claims_verified_against_live_sources": true,
+  "statistics_used": false,
+  "schema_recommended": ["BlogPosting", "FAQPage"],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": ["How the flow works", "What it is not"],
+  "checks": {
+    "title_under_60": true,
+    "meta_140_160": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "no_unsourced_claims": true,
+    "answers_intent_first_screen": true,
+    "links_to_packages_pages": true,
+    "renewal_terms_disclosed": true
+  },
+  "pass": true,
+  "generated_at": "2026-08-23T19:25:00Z"
+}

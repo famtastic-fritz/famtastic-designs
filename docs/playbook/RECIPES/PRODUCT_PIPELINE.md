@@ -9,9 +9,9 @@
 
 | # | Step | Owner | Definition of done | Evidence | Status |
 |---|------|-------|--------------------|----------|--------|
-| 1 | Import & dedupe backlog into catalog register | Portfolio Mgr | `docs/products/CATALOG.md` created: every idea = row w/ source, one-line outcome, suggested price | Register committed | ☐ |
-| 2 | Score each candidate | Portfolio Mgr | Scored 1–5 on four axes (below); scores in register | Score column populated for first 50 | ☐ |
-| 3 | Tier assignment | CEO reviews | Each scored item → STARTER / ADD-ON / GROWTH / RECURRING / KILL | Tier column; kill list with reasons | ☐ |
+| 1 | Import & dedupe backlog into catalog register | Portfolio Mgr | `docs/products/CATALOG.md` created: every idea = row w/ source, one-line outcome, suggested price | Register committed | ◐ PARTIAL 2026-08-23 — CATALOG.md created; first 50 backlog rows imported+scored with dedupe rules stated. Remaining ~1,250 rows queued for batch import (explicitly recorded, not silently skipped). |
+| 2 | Score each candidate | Portfolio Mgr | Scored 1–5 on four axes (below); scores in register | Score column populated for first 50 | ✅ DONE 2026-08-23 — first 50 scored on all four axes with per-row justifications + precedence rules. Key finding: backlog rows 1–50 are dominated by off-brand families → bulk KILL; wave-1 candidates come from owned capabilities instead. |
+| 3 | Tier assignment | CEO reviews | Each scored item → STARTER / ADD-ON / GROWTH / RECURRING / KILL | Tier column; kill list with reasons | ◐ PROPOSED 2026-08-23 — tier column populated for first 50 w/ reasons (CEO review pending as designed). |
 | 4 | Select wave (3–5) | CEO + Fritz sign-off | Wave chosen by score × strategic fit (feeds the $199/55¢ ladder) | Wave table in MASTER-PLAN weekly report | GATE→☐ |
 | 5 | Run NEW_PRODUCT.md per product | Owners per that recipe | Steps 1–10 complete per product | Links to receipts | ☐ |
 | 6 | Launch gate (per product) | **Fritz** | Approved at NEW_PRODUCT step 11 | Approval notes | GATE |
@@ -31,4 +31,5 @@
 - Recurring revenue (managed hosting, care plans) outranks one-off price tags at equal scores.
 
 ## Change log
+- 2026-08-23 — Portfolio Manager hired; steps 1–3 advanced per DoD (register, scoring, tier proposals). Wave selection stays GATE.
 - 2026-08-22 — Created; converts 1000-IDEAS.md from a static list into a governed pipeline.

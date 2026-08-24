@@ -1,0 +1,34 @@
+{
+  "slug": "what-does-199-website-include",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "What Does the $199 Website Actually Include?",
+  "title_length": 42,
+  "meta_description": "The $199 Web Basics scope, published plainly: five core pages, mobile-ready, first-year hosting and domain included - and three real proofs before you pay.",
+  "meta_description_length": 155,
+  "h1_count": 1,
+  "question_headings": ["What Does the $199 Website Actually Include?", "Why you see proofs before you pay?", "What \"defined scope\" means?"],
+  "internal_links": [
+    "https://famtasticdesigns.com/web/packages/web-basics",
+    "https://famtasticdesigns.com/web/packages",
+    "https://famtasticdesigns.com/contact"
+  ],
+  "internal_link_count": 3,
+  "external_links": [],
+  "claims_verified_against_live_sources": true,
+  "statistics_used": false,
+  "schema_recommended": ["BlogPosting", "FAQPage"],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": ["The published scope", "The 55\u00e2 framing, honestly"],
+  "checks": {
+    "title_under_60": true,
+    "meta_140_160": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "no_unsourced_claims": true,
+    "answers_intent_first_screen": true,
+    "links_to_packages_pages": true,
+    "renewal_terms_disclosed": true
+  },
+  "pass": true,
+  "generated_at": "2026-08-23T19:20:00Z"
+}

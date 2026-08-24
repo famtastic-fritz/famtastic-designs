@@ -118,10 +118,18 @@ services:
 
   famtastic_pipeline.lifecycle_operations:
     class: Drupal\famtastic_pipeline\Service\LifecycleOperationsService
-    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.mailer', '@config.factory', '@file_system', '@famtastic_pipeline.automation_worker']
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.mailer', '@config.factory', '@file_system', '@famtastic_pipeline.automation_worker', '@famtastic_pipeline.support_drafts']
 
   famtastic_pipeline.support_intent_classifier:
     class: Drupal\famtastic_pipeline\Service\SupportIntentClassifier
+
+  famtastic_pipeline.support_sla:
+    class: Drupal\famtastic_pipeline\Service\SupportSlaService
+    arguments: ['@database', '@datetime.time', '@config.factory']
+
+  famtastic_pipeline.support_drafts:
+    class: Drupal\famtastic_pipeline\Service\SupportDraftService
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.support_intent_classifier', '@famtastic_pipeline.support_sla']
 
   famtastic_pipeline.postiz_channels:
     class: Drupal\famtastic_pipeline\Service\PostizChannelsService

@@ -182,3 +182,14 @@ Per SOCIAL_POSTING rules: every calendar day is currently **BLOCKED** (no asset)
 | 3 (Aug 26) | teach/challenge/prove/invite | DRAFT ×4 | see manifest.json |
 
 Queue tool: `scripts/queue-55-cent-days-1-3-drafts.sh` (idempotent; reconciles prior partial runs by utm_content). Publish gate: **CLOSED** — Fritz reviews the queued week before any scheduling; `FAMTASTIC_MARKETING_PUBLISH=false` unchanged.
+
+## Post-review scheduling runbook (blocked on Fritz gates)
+
+State after 2026-08-23 unattended run: all 68 records `media_ready` (136 assets); days 1–3 queued as Postiz DRAFTs; approvals still false across the board; facebook connected, other platforms awaiting OAuth clicks.
+
+When Fritz approves the queued week:
+1. Fritz sets content/media approvals true for the reviewed records (manifest gates).
+2. Social Ops converts approved drafts to schedule (`type=schedule` via API) with `FAMTASTIC_MARKETING_PUBLISH` still false until the explicit publish batch approval.
+3. Publish gate: Fritz approves a bounded public batch → scheduler enabled for exactly those records.
+4. Verification: each published record gets provider ID + GA4 UTM check bound in manifest evidence within 24h.
+Days 4–17 follow the same ladder once channel capacity is proven.
