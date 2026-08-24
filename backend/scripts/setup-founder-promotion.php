@@ -39,8 +39,8 @@ if (!$promotion) {
     'order_types' => [['target_id' => 'default']],
     'stores' => [['target_id' => 1]],
     'offer' => [
-      'plugin' => 'order_fixed_amount_off',
-      'configuration' => ['amount' => ['number' => '198.00', 'currency_code' => 'USD']],
+      'target_plugin_id' => 'order_fixed_amount_off',
+      'target_plugin_configuration' => ['amount' => ['number' => '198.00', 'currency_code' => 'USD']],
     ],
   ]);
   $promotion->save();
@@ -52,6 +52,10 @@ else {
       $promotion->set($key, $value);
     }
   }
+  $promotion->set('offer', [
+    'target_plugin_id' => 'order_fixed_amount_off',
+    'target_plugin_configuration' => ['amount' => ['number' => '198.00', 'currency_code' => 'USD']],
+  ]);
   $promotion->save();
   print "updated promotion FOUNDER-DOLLAR 2026Q3\n";
 }
@@ -65,6 +69,9 @@ if (!$coupon) {
   $coupon = $coupon_storage->create([
     'code' => 'FAMFOUNDER',
     'status' => TRUE,
+    // Pin explicitly: defaulted coupon start dates can store with a timezone
+    // skew that leaves the coupon inert for hours (SITE_LEARNINGS 2026-08-24).
+    'start_date' => '2026-08-01',
     'usage_limit' => 5,
     'usage_limit_customer' => 2,
   ]);

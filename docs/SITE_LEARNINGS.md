@@ -626,3 +626,9 @@ queued.
 - drush sqlq appends trailing blank line (tail -1 grabs emptiness — use grep -m1 .).
 - uli URLs use host 'default' (strip scheme+host, not 127.0.0.1).
 - php:script extra args arrive as $extra[], not $args[].
+## 2026-08-24 — Commerce promotion/coupon gotchas (headless)
+
+- commerce plugin-item fields need target_plugin_id/target_plugin_configuration keys; flat arrays silently drop the offer and promotions become inert.
+- Per-customer usage limits make promotions unavailable to orders WITHOUT an email — headless probes must set mail.
+- Coupon entities default their own start_date; timezone skew can leave them future-dated and inert for hours. Always pin start_date explicitly.
+- Headless total verification: set coupons field -> commerce_order.order_refresh -> save -> loadUnchanged -> getTotalPrice().
