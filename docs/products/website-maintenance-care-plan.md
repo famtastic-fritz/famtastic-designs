@@ -1,7 +1,7 @@
 # Website Maintenance — Monthly Care Plan (`FAM-MAINTENANCE`)
 
 **NEW_PRODUCT packet** — steps 1–10 receipts. Step 11 (LAUNCH GATE) = Fritz.
-**Status**: steps 1–10 complete except step 3 Stripe test price ID (BLOCKED: needs Stripe dashboard/API action with owner credentials — exact command below).
+**Status**: steps 1–10 COMPLETE (step-3 correction below; nothing left inside steps 1–10).
 Prepared: 2026-08-23 by @fam-portfolio-manager under AUTONOMY CHARTER.
 
 ## Step 1 — Offer definition
@@ -21,14 +21,12 @@ Prepared: 2026-08-23 by @fam-portfolio-manager under AUTONOMY CHARTER.
 - Refund/cancellation: Completed maintenance periods are not prorated. Cancel before the next monthly billing date to stop future charges.
 - Checkout terms link: inherited from standard commerce checkout flow (terms_version captured in order snapshot).
 
-## Step 3 — Stripe product + price (BLOCKED → prepared)
-Test-mode price ID must be created by Fritz (never autonomous):
-```bash
-# Requires STRIPE_SECRET_KEY_TEST in env (never committed):
-stripe products create --name "Website Maintenance — Monthly Care Plan" --description "Ongoing website care and managed updates."
-stripe prices create --product <prod_id> --unit-price 4999 --currency usd --recurring interval=month
-```
-Record returned `price_...` into `famtastic-products.json` → `products[].stripe_price_id` (field reserved by schema defaults) or gateway mapping config.
+## Step 3 — Stripe product + price ✅ DONE (correction 2026-08-23)
+Already provisioned test-mode on 2026-08-10 by `scripts/stripe-sandbox-catalog.sh` (livemode=false verified before writes; non-secret IDs recorded in `.artifacts/stripe/sandbox-catalog.json`):
+- **product_id**: `prod_V33k5IKfSnQQPD`
+- **price_id**: `price_1U2xd5RZzl2bMbMFoTRkbvzI` (4999 minor units, month)
+
+CORRECTION NOTE: an earlier revision of this packet wrongly claimed step 3 was blocked on owner action — the check missed `.artifacts/stripe/`. Production sandbox acceptance (Commerce order 1, $274, 2026-08-11 per `docs/COMMERCE_FOUNDATION.md`) already exercised the Stripe Payment Element gateway end to end.
 
 ## Step 4 — Drupal Commerce mapping ✅
 - Variation asserted by `scripts/e2e-commerce-catalog.sh`: SKU exists exactly once, price 49.99, published, entitlements ['maintenance'].

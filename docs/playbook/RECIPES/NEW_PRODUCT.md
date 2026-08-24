@@ -32,3 +32,4 @@
 
 ## Change log
 - 2026-08-22 — Created. Encodes the owner's rule: Stripe presence alone ≠ a product.
+- 2026-08-23 — Wave-1 trio (FAM-BUSINESS-EMAIL, FAM-MAINTENANCE, FAM-LOCAL-SEO): steps 1–10 COMPLETE. Step 3 correction: test price IDs already existed via stripe-sandbox-catalog.sh (.artifacts/stripe/sandbox-catalog.json); an earlier 'blocked' claim missed that artifact. Step 11 GATE pending Fritz per product.
