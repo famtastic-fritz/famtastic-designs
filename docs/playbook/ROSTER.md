@@ -16,6 +16,8 @@ Maintained by the CEO (`fam-ceo`). Every hire = an agent file in `.opencode/agen
 | Portfolio Manager | `fam-portfolio-manager.md` | Owns PRODUCT_PIPELINE: catalog register, 4-axis scoring, tier proposals, wave staging; waves + launches are Fritz gates | CATALOG.md register with first 50 scored + wave-1 candidates staged | 2026-08-23 |
 | Brutal Reviewer | `fam-brutal-reviewer.md` | Adversarial full-system audit: plan vs build gap analysis, vapor detection, Drupal-fit test | First assignment: end-to-end revenue-engine review (lead capture → conversion) | 2026-08-24 |
 
+| Admin CX specialist | `fam-admin-cx.md` | Conversion + customer-experience expert: admin command center, customer portal, funnel flows; test-data hygiene; post-deploy visual verification | First assignment: portal crawl validator + messages overflow + projects-section flow redesign (owner screenshot 2026-08-24) | 2026-08-24 |
+
 ## Vacancies (hire against real blocked steps)
 
 | Role to hire | Needed for | Hire when |

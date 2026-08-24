@@ -143,3 +143,10 @@
 .portal-tutorial__visual img,.portal-tutorial__visual video{object-fit:contain}
 @media(max-width:760px){.portal-tutorial__visual{min-height:0;aspect-ratio:1024/510}}
 @media(max-width:650px){.portal-inline-tutorial{height:auto;min-height:0;aspect-ratio:1024/510}.portal-inline-tutorial video{height:100%;min-height:0;object-fit:contain}}
+
+/* Messages: panels must never overflow the viewport (BRUTAL-REVIEW followup). */
+.portal-grid > * { min-width: 0; }
+.portal-conversation { overflow: hidden; }
+.portal-conversation ol { overflow-wrap: anywhere; }
+.portal-conversation ol li p { overflow-wrap: anywhere; white-space: pre-wrap; }
+.portal-thread-list button strong { overflow-wrap: anywhere; }

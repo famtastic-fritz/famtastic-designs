@@ -1,0 +1,17 @@
+# FAMtastic Designs SPA serving rules (shipped by deploy-frontend-godaddy.sh).
+# 1) The app shell must never be cached: stale shells reference dead hashed
+#    assets and render as unstyled soup.
+# 2) Missing hashed assets must 404 loudly instead of falling back to HTML.
+
+<IfModule mod_headers.c>
+  <FilesMatch "^(index\.html|\.frontend-release)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_URI} ^/assets/ [NC]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ - [R=404,L]
+</IfModule>
