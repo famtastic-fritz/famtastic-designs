@@ -16,7 +16,7 @@ if (!is_file($path)) {
   throw new RuntimeException("catalog file missing: $path");
 }
 $catalog = json_decode((string) file_get_contents($path), TRUE, 512, JSON_THROW_ON_ERROR);
-$advertised = array_keys($catalog['products'] ?? []);
+$advertised = array_map(static fn(array $p): string => (string) $p['sku'], $catalog['products'] ?? []);
 sort($advertised);
 
 $storage = \Drupal::entityTypeManager()->getStorage('commerce_product_variation');
