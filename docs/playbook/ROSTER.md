@@ -15,6 +15,8 @@ Maintained by the CEO (`fam-ceo`). Every hire = an agent file in `.opencode/agen
 | Content Engine / CMO | `fam-content-engine.md` | Owns BLOG_FACTORY: 2 SEO-checked, fact-grounded posts/week; draft-first — publishing is a Fritz gate | BLOG_FACTORY steps 1–5 for first two campaign-supporting posts | 2026-08-23 |
 | Portfolio Manager | `fam-portfolio-manager.md` | Owns PRODUCT_PIPELINE: catalog register, 4-axis scoring, tier proposals, wave staging; waves + launches are Fritz gates | CATALOG.md register with first 50 scored + wave-1 candidates staged | 2026-08-23 |
 
+| Brutal Reviewer | `fam-brutal-reviewer.md` | Adversarial full-system audit: plan vs build gap analysis, vapor detection, Drupal-fit test | First assignment: end-to-end revenue-engine review (lead capture → conversion) | 2026-08-24 |
+
 ## Vacancies (hire against real blocked steps)
 
 | Role to hire | Needed for | Hire when |
