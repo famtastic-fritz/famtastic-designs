@@ -21,6 +21,9 @@ export default defineConfig({
       '/jsonapi': proxyOpts,
       '/api': proxyOpts,
       '/oauth': proxyOpts,
+      // src/api/customer.js fetches its CSRF token from here in dev
+      // (production serves it same-origin under /web).
+      '/session': proxyOpts,
     },
   },
   preview: {

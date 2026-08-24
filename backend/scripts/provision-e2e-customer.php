@@ -26,11 +26,16 @@ $user = $matches ? reset($matches) : User::create([
 ]);
 $user->setPassword($password)->activate()->save();
 
+// Display fields are overridable so automated crawls never seed strings that
+// their own synthetic-content assertions would flag in customer-visible UI.
+$name = getenv('FAMTASTIC_E2E_CUSTOMER_NAME') ?: 'FAMtastic Mobile QA';
+$business = getenv('FAMTASTIC_E2E_CUSTOMER_BUSINESS') ?: 'FAMtastic Synthetic QA';
+
 /** @var \Drupal\famtastic_pipeline\Service\CustomerPortalService $portal */
 $portal = \Drupal::service('famtastic_pipeline.customer_portal');
 $customer = $portal->createCustomer($user, [
-  'name' => 'FAMtastic Mobile QA',
-  'business_name' => 'FAMtastic Synthetic QA',
+  'name' => $name,
+  'business_name' => $business,
   'source' => 'controlled_e2e',
   'marketing_opt_out' => TRUE,
 ]);
