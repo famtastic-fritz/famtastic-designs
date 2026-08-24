@@ -57,17 +57,15 @@ sips --padToHeightWidth 1024 1024 --padColor FFFFFF /tmp/icon-1024w.png \
 | Redirect URI | `<public-url>/integrations/social/<provider>` |
 | Submit for review | **NO** for own-account use — sandbox/development mode covers it; production review only when onboarding paying clients |
 
-## Domain verification (TikTok URL-prefix property — repeat per client/platform)
+## Domain verification (proven methods, best first)
 
-TikTok requires proving ownership of the site domain before accepting ToS/Privacy/Website URLs.
+TikTok (and similar portals) require proving ownership of the site domain before accepting ToS/Privacy/Website URLs.
 
-1. Developer portal → URL properties → verify → choose **URL prefix** → `https://<client-domain>`
-2. Download the provided `tiktok<token>.txt` file
-3. Place it in `frontend/public/` (Vite copies public/* to deploy root verbatim)
-4. Commit + deploy frontend (owner gate) — file must then resolve at `https://<client-domain>/<filename>.txt`
-5. Click verify in portal → property becomes verified → ToS/Privacy/Website URL errors clear
+**Method 1 — DNS TXT (PREFERRED, proven 2026-08-24).** Portal → URL properties → choose DNS/Domain method → it issues a TXT token → owner adds TXT record at registrar (GoDaddy UI, ~2 min, both apex and www if portal checks both). No deploy, no dirty-tree dependency, survives redesigns. Evidence: `dig TXT famtasticdesigns.com` shows `tiktok-developers-site-verification=<token>`.
 
-For other platforms expecting meta-tag verification instead: add the tag to `frontend/index.html` <head>, same deploy path.
+**Method 2 — verification FILE.** Download `tiktok<token>.txt` → place in `frontend/public/` (Vite copies to deploy root) → commit + deploy (owner gate; if tree is dirty, a surgical scp of the committed file to `~/public_html/` mirrors git without drift) → file must resolve at `https://<domain>/<filename>.txt`. ⚠️ TikTok's checker fetches WITH a trailing slash — the htaccess rule `RewriteRule ^(tiktok[A-Za-z0-9]+\.txt)/$ /$1 [L]` (in `frontend/public/.htaccess`) handles it; without it you get 404 → "signature not found". Tokens rotate on failed attempts — always re-download and redeploy the newest file.
+
+**Method 3 — meta tag.** Add portal-issued `<meta>` to `frontend/index.html` <head>, same deploy path as Method 2.
 
 ## Never
 - Touch an existing Facebook integration while adding Instagram standalone.

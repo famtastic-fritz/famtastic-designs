@@ -665,3 +665,19 @@ queued.
 - Key lives in macOS keychain (service `muapi-cli`, account `api-key`) — retrieve with `security find-generic-password -s muapi-cli -w`; never print or commit. The `muapi` CLI binary is NOT installed despite setup output suggesting it; call the REST API directly.
 - flux image endpoints require width/height as multiples of 64 (128–2048); 1000-height fails with invalidHeight.
 - Generated UI mockups carry AI-gibberish text — use them as layout/hierarchy comps, never as copy specs.
+
+## 2026-08-24 — Domain verification can leave TWO live artifacts; check before calling it drift
+
+- Rotating TikTok domain verification across methods left both live at once: the
+  deployed file (`tiktokjUD1….txt`, HTTP 200 on famtasticdesigns.com) from the
+  file method AND a different token in DNS TXT (`Yul3…`, apex + www) from the
+  newer preferred DNS method. Different prefixes across commit message, repo
+  file, and DNS is the intended end-state of "DNS preferred", not repo↔prod
+  drift. Guidance: identify which method each artifact belongs to before
+  rotating or deleting anything; only retire the deployed verification file via
+  a normal frontend deploy AFTER the portal confirms DNS-method verification.
+- Heartbeat practice that caught this: before adopting an uncommitted doc edit
+  into the ledger, verify every factual claim against live systems (here:
+  `dig TXT` both hostnames, `curl` of the deployed file, `grep` of the cited
+  htaccess rule). Provenance-by-context plus independently verified claims is
+  the standard for adopting handoff work; neither blind trust nor blind rejection.

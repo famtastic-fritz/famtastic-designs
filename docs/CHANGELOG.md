@@ -1,5 +1,17 @@
 # Product changelog
 
+## 2026-08-24 — Domain-verification runbook rewritten to proven methods (heartbeat)
+
+- `docs/playbook/RUNBOOKS/instagram-standalone-onboarding.md`: TikTok domain
+  verification now documents three methods ranked by what actually worked —
+  DNS TXT (preferred; proven live on apex + www), verification file (deployed;
+  requires the trailing-slash htaccess rule), meta tag. Every claim in the edit
+  was independently verified before adoption: DNS TXT answers on both
+  hostnames (`tiktok-developers-site-verification=Yul3…`), the htaccess rule
+  exists at `frontend/public/.htaccess:23`, and prod serves the `jUD1…` file
+  with HTTP 200. Two live artifacts is expected (see SITE_LEARNINGS same day);
+  no tokens or secrets introduced.
+
 ## 2026-08-24 — Portal projects-flow redesign + portal crawl validator (@fam-admin-cx)
 
 - Redesigned the customer portal projects intake for conversion (owner screenshot
