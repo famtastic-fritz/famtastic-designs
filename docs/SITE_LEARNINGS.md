@@ -636,3 +636,24 @@ queued.
 ## 2026-08-24 — The tree can be dirty again one run after "clean"
 
 - 17:33Z heartbeat recorded a clean tree; at 19:35Z `restart-postiz-tunnel.sh` carried an uncommitted +18 env-merge block whose mtime (~17:55Z local) postdates that claim — someone/something (Fritz or another agent session sharing the repo) edited files outside any tracked dispatch. Rule: every heartbeat re-runs `git status` itself; never inherit "clean" from the previous run's claim. Unknown-provenance diffs get syntax-checked + safety-reviewed, then flagged for Fritz — never committed by the CEO.
+
+## 2026-08-24 — Portal crawler lessons (admin-cx first assignment)
+
+- Vite dev proxy covered `/jsonapi`, `/api`, `/oauth` but NOT `/session` —
+  `src/api/customer.js` fetches its CSRF token from `/session/token`, so every
+  CSRF-protected portal action (draft save, thread create, profile save)
+  silently failed in local dev while working in prod (same-origin `/web`).
+  Rule: when adding a same-origin Drupal path to `api/*.{js,customer.js}`, add
+  its prefix to the vite proxy list the same commit.
+- The Messages nav button's accessible name includes the unread badge
+  ("Messages 2"), so Playwright locators must match by prefix, not
+  `exact: true`.
+- In bash validators under `set -e`: a `grep -m1 .` pipeline returns 1 on empty
+  input — every drush sqlq wrapper needs an explicit `|| true` or DELETE-style
+  calls kill the script mid-cleanup; and an EXIT trap that can fail flips a
+  scripted `exit 0` into rc=1. Guard trap bodies.
+- Eight CustomerPortalDashboard sections (activity, performance, support,
+  learn, faq, grow, referrals, settings) render code paths but no affordance
+  reaches them: GROUPS nav exposes only six sections and `?section=` accepts
+  only those. Dead surfaces are a fake-affordance class defect; nav change is
+  an owner decision, flagged not fixed unilaterally.

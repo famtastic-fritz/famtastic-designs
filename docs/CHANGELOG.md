@@ -1,5 +1,29 @@
 # Product changelog
 
+## 2026-08-24 — Portal projects-flow redesign + portal crawl validator (@fam-admin-cx)
+
+- Redesigned the customer portal projects intake for conversion (owner screenshot
+  complaint: hero button → ~60-field wall of textareas → jumbled request list).
+  Step 1 now asks only request name, build type, and goal; saving the draft
+  reveals the full interview grouped into six labeled fieldsets with a sticky
+  save bar. Every input name is unchanged — backend contract untouched. Build
+  green; not deployed (operator lane). Evidence:
+  `.artifacts/admin-cx/2026-08-24/` (before/after rendered captures, crawl JSON).
+- Added `scripts/e2e-portal-links.sh` (+ `frontend/e2e/portal-links.crawl.mjs`):
+  authenticated local crawler for the whole customer portal — seeds a controlled
+  test customer via `backend/scripts/provision-e2e-customer.php`, walks every
+  reachable section plus the `?start=website` flow and `/portal/:token`, and
+  asserts per surface: render OK, no fake-affordance bold/arrow labels outside
+  real anchors, no synthetic strings in customer-visible content, notices do not
+  survive navigation, no horizontal overflow past the viewport marker, and the
+  portal.css overflow guards exist. Idempotent and self-cleaning.
+- Prod hygiene sweep (read-only SSH SELECTs) across `famtastic_portal_thread`,
+  `famtastic_portal_message`, `famtastic_project_request`, and
+  `famtastic_prospect`: one synthetic-marked row found — prospect id 7
+  (`FAMtastic v3 Demo Proof`, `demo-proof-v3@example.test`, source
+  `owner-acceptance`). It is Fritz's own acceptance-demo record; deletion or
+  rename needs an owner-approved script. Threads, messages, and requests are clean.
+
 ## 2026-08-24 — Social publishing channels live; Postiz estate hardened
 
 - Connected Instagram `@famtasticdesigns` via the `instagram-standalone`

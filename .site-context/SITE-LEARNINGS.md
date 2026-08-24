@@ -213,3 +213,22 @@ Open follow-up:
 - The legacy Git checkout and stale root-level bundles in `public_html` are no
   longer part of the release lane. Remove them only through a separately
   backed-up ownership audit so Drupal and hosting files are not disturbed.
+
+## 2026-08-24 — admin-cx session: portal crawl + projects flow
+
+- Observation: owner screenshot showed messages panels overflowing and the
+  projects intake as a ~60-field wall. Overflow guards for messages already
+  landed (BRUTAL-REVIEW followup); the wall needed IA work, not CSS.
+- Guidance: progressive disclosure (3-field step 1 → draft save → six grouped
+  fieldsets + sticky bar) is now the pattern for any long customer-facing form;
+  keep backend field names byte-identical when re-flowing forms and verify with
+  a name-parity diff against HEAD (done: 64/64 preserved).
+- Guidance: `scripts/e2e-portal-links.sh` is the required green gate before any
+  portal CX change ships toward deploy; treat its UNREACHABLE warnings as
+  findings for Fritz, not noise.
+- Incident note: during this session a shell cwd drift caused a `git stash pop`
+  to run in the parent vault repo (`~/Development/FAMtastic`). Repaired by
+  surgically restoring exactly the seven stash-touched paths to HEAD (stash
+  entry left intact); unrelated live edits were untouched. Rule: always pin
+  repo-relative operations with `git -C <repo>` or the bash tool's workdir;
+  never bare `cd ..` chains before git writes.
