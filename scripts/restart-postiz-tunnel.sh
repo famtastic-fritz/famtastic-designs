@@ -44,6 +44,8 @@ if [ -z "$NEW_URL" ]; then echo "FAIL: tunnel did not come up; see $LOGFILE (is 
 echo "      Tunnel live: $NEW_URL"
 
 echo "[3/5] Writing env file ($ENV_FILE)..."
+OLD_URL=""
+[ -f "$ENV_FILE" ] && OLD_URL=$(grep -E '^POSTIZ_PUBLIC_URL=' "$ENV_FILE" | cut -d= -f2- || true)
 {
   echo "POSTIZ_PUBLIC_URL=$NEW_URL"
   echo "POSTIZ_DISABLE_REGISTRATION=true"
@@ -61,6 +63,11 @@ docker-compose -p "$PROJECT" --env-file "$ENV_FILE" \
 
 echo "[5/5] Verifying..."
 sleep 4
+if [ -n "$OLD_URL" ] && [ "$OLD_URL" != "$NEW_URL" ]; then
+  docker exec postiz-postgres psql -U postiz-user -d postiz-db-local \
+    -c "UPDATE \"Media\" SET path = REPLACE(path, '$OLD_URL', '$NEW_URL') WHERE path LIKE '%$OLD_URL%';" >/dev/null 2>&1 \
+    && echo "      Media paths rewritten: $OLD_URL -> $NEW_URL"
+fi
 LOCAL=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:4007 || true)
 TUNNEL=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$NEW_URL" || true)
 BACKEND=$(docker exec postiz printenv NEXT_PUBLIC_BACKEND_URL)

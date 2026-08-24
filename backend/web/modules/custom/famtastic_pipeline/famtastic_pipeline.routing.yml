@@ -596,6 +596,14 @@ famtastic_pipeline.operations_campaign:
     _permission: 'administer famtastic pipeline'
     campaign_key: '[a-zA-Z0-9._-]+'
 
+famtastic_pipeline.campaign_add:
+  path: '/admin/famtastic/campaign/add'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\CampaignAddForm'
+    _title: 'New campaign'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+
 famtastic_pipeline.operations_message:
   path: '/admin/famtastic/message/{message}'
   defaults:

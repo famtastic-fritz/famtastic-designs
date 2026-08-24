@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\famtastic_pipeline\Form;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Datetime\TimeInterface;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Uuid\UuidInterface;

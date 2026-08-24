@@ -196,6 +196,7 @@ final class OperationsController extends ControllerBase {
       'hero' => ['#markup' => '<section class="famtastic-command__hero"><div><span>FAMtastic Marketing Command Center</span><h2>Know what is ready, what needs you, and what makes money.</h2><p>Review the 17-day campaign, approve creative, monitor publishing, respond to engagement, and connect every post to visits, leads, and sales.</p></div><div class="famtastic-command__hero-status"><b>Draft-first safety</b><strong>PUBLIC PUBLISHING OFF</strong><small>Nothing goes live without explicit publish approval.</small></div></section>'],
       'actions' => [
         '#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions', 'famtastic-command__actions']],
+        'campaign-add' => ['#type' => 'link', '#title' => $this->t('＋ New campaign'), '#url' => Url::fromRoute('famtastic_pipeline.campaign_add'), '#attributes' => ['class' => ['button', 'button--primary']]],
         'scheduler' => ['#type' => 'link', '#title' => $this->t('Open Postiz Scheduler ↗'), '#url' => Url::fromUri('http://127.0.0.1:4007'), '#attributes' => ['class' => ['button', 'button--primary'], 'target' => '_blank', 'rel' => 'noopener noreferrer']],
         'analytics' => ['#type' => 'link', '#title' => $this->t('Website Analytics'), '#url' => Url::fromRoute('famtastic_pipeline.analytics'), '#attributes' => ['class' => ['button']]],
         'content' => ['#type' => 'link', '#title' => $this->t('Content Library'), '#url' => Url::fromUserInput('/admin/content'), '#attributes' => ['class' => ['button']]],
@@ -424,14 +425,14 @@ final class OperationsController extends ControllerBase {
         'Timing: ' . ($intake['launch_timing'] ?? ''),
         'Notes: ' . ($intake['notes'] ?? ''),
       ], static fn(string $line): bool => !str_ends_with($line, ': '));
-      $prospect = $record['prospect_id'] ? Link::fromTextAndUrl('#' . $record['prospect_id'], Url::fromUserInput('/admin/famtastic/prospect/' . $record['prospect_id'] . '/edit'))->toRenderable() : ['#markup' => '—'];
+      $prospect = $record['prospect_id'] ? $this->linkCell(Link::fromTextAndUrl('#' . $record['prospect_id'], Url::fromUserInput('/admin/famtastic/prospect/' . $record['prospect_id'] . '/edit'))) : ['#markup' => '—'];
       $rows[] = [
         $record['project_name'], $record['organization_name'] ?: $record['business_name'],
         $record['customer_name'] . ' · ' . $record['customer_email'], ucwords(str_replace('_', ' ', $record['project_type'])),
         ['data' => ['#markup' => $this->badge($record['status']) . ' ' . $this->badge($record['proof_review_status'])]],
         ['data' => ['#theme' => 'item_list', '#items' => [
-          Link::fromTextAndUrl('Proof review', Url::fromRoute('famtastic_pipeline.website_request_proof_review', ['website_request' => $record['id']]))->toRenderable(),
-          Link::fromTextAndUrl('Package / special price', Url::fromRoute('famtastic_pipeline.website_request_offer', ['website_request' => $record['id']]))->toRenderable(),
+          $this->linkCell(Link::fromTextAndUrl('Proof review', Url::fromRoute('famtastic_pipeline.website_request_proof_review', ['website_request' => $record['id']]))),
+          $this->linkCell(Link::fromTextAndUrl('Package / special price', Url::fromRoute('famtastic_pipeline.website_request_offer', ['website_request' => $record['id']]))),
         ]]],
         ['data' => $prospect], implode("\n", $summary) ?: 'Draft details not added yet', $this->date((int) $record['changed']),
       ];
@@ -518,7 +519,7 @@ final class OperationsController extends ControllerBase {
         ? $this->badge('breached') . ' +' . round(($age - $target) / 60) . 'min'
         : $this->badge('within_sla');
       $decision = $record['status'] === 'pending'
-        ? Link::fromTextAndUrl('Review', Url::fromRoute('famtastic_pipeline.support_draft_decision', ['id' => $record['id']]))->toRenderable()
+        ? $this->linkCell(Link::fromTextAndUrl('Review', Url::fromRoute('famtastic_pipeline.support_draft_decision', ['id' => $record['id']])))
         : $this->date((int) $record['decided_at']);
       $rows[] = [
         $this->date((int) $record['received_at']),
@@ -935,7 +936,7 @@ final class OperationsController extends ControllerBase {
         '#type' => 'table',
         '#header' => ['Request', 'Status', 'Proof review', 'Updated'],
         '#rows' => [[
-          Link::fromTextAndUrl((string) ($relatedRequest['project_name'] ?: $relatedRequest['public_id']), Url::fromRoute('famtastic_pipeline.website_request_proof_review', ['website_request' => $relatedRequest['id']]))->toRenderable(),
+          $this->linkCell(Link::fromTextAndUrl((string) ($relatedRequest['project_name'] ?: $relatedRequest['public_id']), Url::fromRoute('famtastic_pipeline.website_request_proof_review', ['website_request' => $relatedRequest['id']]))),
           ['data' => ['#markup' => $this->badge((string) $relatedRequest['status'])]],
           ['data' => ['#markup' => $this->badge((string) ($relatedRequest['proof_review_status'] ?? 'not started'))]],
           $this->date((int) $relatedRequest['changed']),
