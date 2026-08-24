@@ -159,3 +159,25 @@
 .portal-form-group>*,.portal-form-group label{min-width:0}
 .portal-sticky-actions{position:sticky;bottom:0;z-index:6;margin-top:1.25rem;padding:.8rem;border:1px solid var(--p-line);border-radius:14px;background:rgba(9,12,9,.97);box-shadow:0 -14px 40px rgba(0,0,0,.4);backdrop-filter:blur(10px)}
 @media(max-width:560px){.portal-sticky-actions{display:grid}.portal-sticky-actions button{width:100%;text-align:center}}
+
+/* Requests list: one request per full-width row. Proof review needs real
+   estate - five proof-ready projects in auto-fit columns crushed concept
+   cards into ~90px cells and scattered their badges (owner screenshot). */
+.portal-request-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+}
+.portal-request-list .portal-panel { min-height: 0; }
+
+/* Proof grids: fluid columns sized to real cards, never fixed counts. */
+.portal-request-list .portal-proof-grid,
+.portal-proof-grid {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+.portal-proof-grid a b {
+  font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+  overflow-wrap: anywhere;
+  padding-right: 3.2rem; /* keep clear of the absolutely-positioned badge */
+}
+.portal-proof-grid a span { overflow-wrap: anywhere; }
