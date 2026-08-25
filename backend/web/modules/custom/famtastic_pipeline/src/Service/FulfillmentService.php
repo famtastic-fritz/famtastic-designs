@@ -167,6 +167,31 @@ class FulfillmentService {
       orderId: (int) $order->id(),
       projectId: (int) $project->id(),
     );
+    $contact = (string) ($prospect->get('contact_value')->value ?: $prospect->get('public_email')->value);
+    if ($contact !== '') {
+      $this->customerPortal->queueNotification(
+        'revision_addon:' . $order->id() . ':customer-receipt',
+        'transactional',
+        $contact,
+        'Your additional revision round is confirmed',
+        sprintf(
+          "Payment received for one additional revision round on your website project.\nYour project now includes %d revision rounds. FAMtastic will deliver the updated proof for your review.\n",
+          $oldLimit + 1,
+        ),
+      );
+    }
+    $this->customerPortal->queueOwnerAlert(
+      'revision_addon:' . $order->id() . ':staff-sale',
+      'Additional revision purchased — project #' . $project->id(),
+      sprintf(
+        "A revision add-on was purchased and fulfilled.\nProject: #%d\nProspect: #%d\nOrder: #%d\nRevision allowance: %d → %d\nDeliver the updated proof for customer review.",
+        (int) $project->id(),
+        (int) $prospect->id(),
+        (int) $order->id(),
+        $oldLimit,
+        $oldLimit + 1,
+      ),
+    );
   }
 
 }

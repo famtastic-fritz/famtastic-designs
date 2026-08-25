@@ -1720,3 +1720,49 @@ function famtastic_pipeline_update_8035(&$sandbox) {
     ->save(TRUE);
   return t('Default theme set to Olivero for customer surfaces; admin keeps FAMtastic admin theme.');
 }
+
+/**
+ * Defines immutable proof version history for the revision loop.
+ */
+function _famtastic_pipeline_proof_version_schema(): array {
+  return [
+    'description' => 'Immutable proof version history: each delivered proof set lands as a new version and prior versions are preserved.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'version_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'project_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'source' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'initial'],
+      'revision_number' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'proof_campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'campaign_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'selected_direction' => ['type' => 'varchar', 'length' => 8, 'not null' => TRUE, 'default' => ''],
+      'variant_count' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'proof_url' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE, 'default' => ''],
+      'artifact_checksum' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'revision_notes' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'recorded_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['version_key' => ['version_key']],
+    'indexes' => [
+      'project_version' => ['project_id', 'version'],
+      'campaign' => ['proof_campaign_id'],
+      'prospect' => ['prospect_id'],
+    ],
+  ];
+}
+
+/**
+ * Adds the proof version history table (LEAD_TO_LAUNCH step 9).
+ */
+function famtastic_pipeline_update_8036(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('famtastic_proof_version')) {
+    return t('Proof version table already present.');
+  }
+  $schema->createTable('famtastic_proof_version', _famtastic_pipeline_proof_version_schema());
+  return t('Created the immutable proof version history table.');
+}
+

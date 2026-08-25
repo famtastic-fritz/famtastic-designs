@@ -1012,6 +1012,7 @@ final class CustomerPortalService {
     if (!$project) throw new \RuntimeException('Project no longer exists.');
     $preview = (string) $variants[0]->get('preview_url')->value;
     $project->set('proof_url', $preview)->set('delivery_status', 'proof_ready')->set('approval_status', 'pending')->save();
+    $this->recordProofVersion($projectId, $campaign, $variants);
     $resource = $this->database->select('famtastic_customer_resource', 'r')->fields('r')
       ->condition('resource_type', 'project')->condition('resource_id', $projectId)->execute()->fetchAssoc();
     if (!$resource) throw new \RuntimeException('Project is not attached to a customer workspace.');
@@ -1043,6 +1044,79 @@ final class CustomerPortalService {
       'notification_key' => $key, 'category' => $category, 'recipient' => mb_strtolower($recipient), 'subject' => $subject, 'body' => $body,
       'status' => 'queued', 'attempts' => 0, 'max_attempts' => 5, 'available_at' => $now, 'created' => $now, 'changed' => $now,
     ])->execute();
+  }
+
+  /** Queues an owner alert to the configured operations inbox. */
+  public function queueOwnerAlert(string $key, string $subject, string $body): void {
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
+    $this->queueNotification($key, 'operational', $admin, $subject, $body);
+  }
+
+  /**
+   * Records one immutable proof version whenever a complete proof set lands.
+   *
+   * The first delivered set is version 1 ('initial'); every set delivered after
+   * a revision request is a new version sourced from the revision loop. Prior
+   * rows are never mutated or deleted, which preserves version history in
+   * storage (LEAD_TO_LAUNCH step 9). Re-delivering the same campaign for the
+   * same project is idempotent and records nothing new.
+   */
+  public function recordProofVersion(int $projectId, object $campaign, array $variants): array {
+    if (!in_array(count($variants), [3, 6], TRUE)) throw new \RuntimeException('A complete three- or six-direction proof set is required.');
+    $project = $this->entities->getStorage('famtastic_project')->load($projectId);
+    if (!$project) throw new \RuntimeException('Project no longer exists.');
+    $campaignEntityId = (int) $campaign->id();
+    $existing = $this->database->select('famtastic_proof_version', 'v')->fields('v')
+      ->condition('project_id', $projectId)->condition('proof_campaign_id', $campaignEntityId)
+      ->orderBy('version', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    if ($existing) return $existing;
+    $revisionNumber = max(0, (int) $project->get('revision_count')->value);
+    $version = 1 + (int) $this->database->select('famtastic_proof_version', 'v')
+      ->condition('project_id', $projectId)->countQuery()->execute()->fetchField();
+    $request = $this->database->select('famtastic_project_request', 'r')
+      ->fields('r', ['selected_proof_direction'])
+      ->condition('project_id', $projectId)->orderBy('changed', 'DESC')->range(0, 1)
+      ->execute()->fetchAssoc();
+    $checksum = hash('sha256', implode('|', array_map(
+      static fn (object $variant): string => (string) $variant->get('preview_url')->value,
+      $variants,
+    )));
+    $now = $this->time->getRequestTime();
+    $row = [
+      'version_key' => 'proof_version:' . $projectId . ':' . $campaignEntityId,
+      'project_id' => $projectId,
+      'prospect_id' => (int) $project->get('prospect_ref')->target_id ?: NULL,
+      'version' => $version,
+      'source' => $revisionNumber > 0 ? 'revision' : 'initial',
+      'revision_number' => $revisionNumber,
+      'proof_campaign_id' => $campaignEntityId,
+      'campaign_key' => (string) $campaign->get('campaign_id')->value,
+      'selected_direction' => (string) ($campaign->get('selected_variant')->value ?: ($request['selected_proof_direction'] ?? '')),
+      'variant_count' => count($variants),
+      'proof_url' => (string) $variants[0]->get('preview_url')->value,
+      'artifact_checksum' => $checksum,
+      'revision_notes' => (string) $project->get('revision_notes')->value,
+      'recorded_at' => $now,
+    ];
+    try {
+      $this->database->insert('famtastic_proof_version')->fields($row)->execute();
+    }
+    catch (\Throwable $e) {
+      if (!$this->isDuplicateKey($e)) {
+        throw $e;
+      }
+      $row = $this->database->select('famtastic_proof_version', 'v')->fields('v')
+        ->condition('version_key', $row['version_key'])->execute()->fetchAssoc() ?: $row;
+    }
+    return $row;
+  }
+
+  /** Detects portable unique-key violations without hiding other failures. */
+  private function isDuplicateKey(\Throwable $exception): bool {
+    $message = $exception->getMessage();
+    return str_contains($message, 'UNIQUE constraint failed')
+      || str_contains($message, 'Duplicate entry')
+      || str_contains($message, 'SQLSTATE[23000]');
   }
 
   private function contextualOffers(array $entitlements, array $projects): array {
