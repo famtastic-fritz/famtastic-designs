@@ -506,3 +506,11 @@
 - Added the cross-CLI and Site Studio handoff contract. Production deployment,
   webhook subscription, signing-key configuration, and live certification are
   deliberately deferred.
+
+## 2026-08-24 — Command-center completion pass (audit gaps 1–8)
+
+- Hub: Proof QA, Campaign Gates, Support Drafts, Replies, Renewals-due-30d, Revenue-30d cards (live queries)
+- Campaigns: revenue column (paid commerce totals via prospects); Services: renewals-soonest sort + due-soon flags
+- Notifications: one-click Retry (requeue form); PurchasePage: server-driven renewal price, custom-scope honest notice; grant checkout completion notice; staff-login advert removed; checkout/user pages → Olivero customer theme; portal nav fully wired (Support/FAQs/Growth/Referrals/Settings), dead sections removed; portal crawler: geometric overlap detection + save-flow assertions
+- Fixes en route: portable SQL aggregates (SQLite), legacy support rows, case-number route pattern
+- Design brief for Codex: docs/design/UI-DESIGN-BRIEF.md (includes failed muapi prompt + rejection reasons)
