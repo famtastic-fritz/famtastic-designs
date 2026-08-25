@@ -1,5 +1,22 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-25 — Provenance audits must enumerate git stashes (C6 preview-runner stack)
+
+- Observation: the C6 escalation ("who owns the hidden preview-runner WIP?") sat
+  unanswered for a day because provenance hunting stopped at `git status`,
+  `.git/info/exclude`, and file mtimes. The answer was sitting in
+  `git stash list`: stash@{0} on branch `codex/shay-website-delivery-swarm`
+  (2026-08-23, "abandoned preview runner refactor before PIT delivery") holds the
+  near-complete stack wiring — service registration, callback route, client swap,
+  e2e rename — that the hidden on-disk files lack. Stashes carry author identity,
+  branch context, timestamps, and an owner-written message; they are the richest
+  provenance artifact in the repo and were checked last.
+- Rule: any provenance investigation into untracked/hidden/unknown-provenance
+  files MUST run `git stash list` + `git log -1 --format='%H|%an|%ad|%s'
+  stash@{N}` + branch-name inspection BEFORE escalating to Fritz for a ruling.
+  Also check `git log --all --oneline` for candidate branches by name. Escalating
+  without a stash sweep risks asking Fritz to rule on facts already in the repo.
+
 ## 2026-08-25 — Validator pitfalls: PDO typing + outbox dispatch starvation (fam-commerce, revision loop)
 
 - Observation: the revision-loop validator failed 2 of 15 checks with rows that

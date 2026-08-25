@@ -1,5 +1,42 @@
 # Product changelog
 
+## 2026-08-25 (late) — All five social channels connected
+
+- X connected via OAuth 1.0a consumer keys (Postiz's X provider is 1.0a, not
+  OAuth 2.0 — the 2.0 client creds are unused). Token has no expiry (2058
+  placeholder), refresh present.
+- YouTube connected via OAuth client on the `FAMtastic Site Studio` Google
+  project (YouTube Data API v3 enabled, testing mode, owner as test user).
+  Live `channels?mine=true` call returned HTTP 200. Access token auto-refreshes.
+- TikTok runs on SANDBOX credentials (Production keys cannot initiate Login
+  Kit pre-approval): tokens expire ~daily, re-auth required until app audit;
+  posts may be self-only in unaudited mode.
+- Diagnosed en route: Postiz OAuth handshake states expire after 60 minutes
+  (stale links cause "Invalid state"); Google token-exchange failures surface
+  as generic "Authentication failed" — validate credentials with a probe call
+  to oauth2.googleapis.com/token (invalid_client = bad secret).
+- Known issue opened: postiz orchestrator process OOM-killed (exit 137) inside
+  the 3GB colima VM — scheduled-publishing worker may be affected; colima
+  memory resize queued for next session (requires container restart, owner OK).
+
+## 2026-08-25 — Heartbeat 14:43Z: C6 provenance lead via git stash (CEO, read-only)
+
+- Found the provenance Fritz's C6 ruling was missing: `git stash@{0}` on branch
+  `codex/shay-website-delivery-swarm` (created 2026-08-23 05:37 −0400, message
+  "wip: abandoned preview runner refactor before PIT delivery") contains the
+  near-complete preview-runner refactor — `services.yml` registers
+  `preview_runner_client` → `FamtasticPreviewRunnerClient`, `routing.yml` adds
+  `/api/pipeline/preview-runner/callback` → `PreviewRunnerCallbackController::handle`,
+  `SiteStudioProofClient` deleted, e2e renamed to
+  `e2e-preview-runner-callback.sh` (17 files). Stash predates the hidden on-disk
+  copies (mtimes 08-24 17:35) and does not contain them. LEAD_TO_LAUNCH C6 row +
+  change log updated with the two ruling options (delete stash+files vs resume
+  stashed branch through normal review). Inspection strictly read-only; nothing
+  restored, deleted, or committed from the stash.
+- Verification sweep green this run: `campaign-readiness.py` READY/GATED PASS;
+  `bash -n` clean on both deploy scripts; catalog drift-guard eval blocks intact
+  (deploy-backend :334/:337/:343); tree clean before ledger edits.
+
 ## 2026-08-25 — Worker-late fix verified + publish executor built (fam-ops)
 
 - Assignment 1 verification: the worker-late grace-window fix
