@@ -143,3 +143,8 @@ services:
     class: Drupal\famtastic_pipeline\EventSubscriber\FrontPageRedirectSubscriber
     tags:
       - { name: event_subscriber }
+
+  famtastic_pipeline.checkout_complete_redirect:
+    class: Drupal\famtastic_pipeline\EventSubscriber\CheckoutCompleteRedirectSubscriber
+    tags:
+      - { name: event_subscriber }

@@ -211,6 +211,8 @@ export default function CustomerPortalDashboard() {
     const requestedSection = params.get('section');
     if (params.get('order') && params.get('grant') === 'applied') {
       setNotice('Your sponsored order is complete — everything is activated in your workspace. Welcome aboard!');
+    } else if (params.get('order') && params.get('completed') === '1') {
+      setNotice('Payment received — thank you! Your services are live in this workspace and your receipt is on its way.');
     } else if (params.get('order')) {
       setNotice('Purchase complete. Your services are active in this workspace.');
     }

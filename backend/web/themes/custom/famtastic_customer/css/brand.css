@@ -24,3 +24,39 @@ body {
 a { color: var(--fam-lime); }
 .layout-container { max-width: 1200px; }
 h1 { letter-spacing: -0.01em; }
+
+/* --- Checkout: breathing room and hierarchy (owner feedback: "so tight") --- */
+.layout-container {
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+  padding-block: 1.5rem 4rem;
+}
+h1 {
+  font-size: clamp(1.9rem, 3.5vw, 2.6rem) !important;
+  margin: 0 0 1.4rem !important;
+  overflow-wrap: anywhere;
+  line-height: 1.15;
+}
+.checkout-pane,
+.commerce-checkout-flow .checkout-pane {
+  padding: 1.4rem !important;
+  border-radius: 14px !important;
+  margin-bottom: 1.4rem !important;
+}
+.commerce-checkout-flow .form-submit,
+.checkout-pane .form-submit {
+  min-height: 48px;
+  padding-inline: 1.6rem;
+}
+fieldset { margin-bottom: 1.3rem; }
+legend { font-weight: 800; margin-bottom: .5rem; }
+.form-item { margin-block: .9rem; }
+input:not([type="checkbox"]):not([type="radio"]),
+select, textarea {
+  min-height: 44px;
+}
+/* Order summary sidebar breathing room */
+.commerce-order-summary, .checkout-order-summary {
+  padding: 1.4rem !important;
+}
+.commerce-order-summary .order-total-line-value,
+.view-commerce-order-total-summary td { padding-block: .5rem; }
