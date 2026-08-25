@@ -1,5 +1,61 @@
 # Product changelog
 
+## 2026-08-25 — Revision loop step 9 complete + R1 renewal-charging research (fam-commerce)
+
+- LEAD_TO_LAUNCH step 9 (revision requests & re-proof loop) completed locally:
+  new immutable `famtastic_proof_version` history table (update hook **8036**).
+  Every delivered proof set records a version row via
+  `CustomerPortalService::recordProofVersion` (v1 `initial`; re-proofs carry
+  `source=revision`, revision number, and notes snapshot); prior rows are never
+  mutated or deleted; re-delivering the same campaign is idempotent.
+- Revision add-on fulfillment (`FulfillmentService::fulfillRevisionAddOn`) now
+  queues an owner operational alert and a customer transactional receipt via
+  the existing outbox (`revision_addon:{order}:staff-sale|customer-receipt`);
+  both deliver through the memory transport.
+- New validator `scripts/e2e-revision-loop.sh`: proves request → allowance-gate
+  402 → stub-gateway checkout → webhook-path payment → revision_limit 1→2 →
+  owner notified → re-proof lands as v2 with v1 byte-identical. 15/15 checks,
+  two consecutive runs; evidence `.artifacts/revision-loop/`.
+- R1 research delivered: `docs/audits/R1-RENEWAL-CHARGING-RESEARCH.md` —
+  commerce_stripe **2.2.1** already supports off-session renewals (SetupIntent
+  `usage=off_session`, confirmed off-session PaymentIntents in `createPayment`,
+  SCA soft-decline taxonomy); recommendation: self-hosted cron + off-session
+  PaymentIntents over Stripe Billing; Fritz-gated rollout steps recorded.
+- Scaffold `backend/scripts/renewals-cron.php`: finds hosting entitlements due
+  in 7 days, dry-run by default, can materialize DRAFT `approval_required`
+  renewal orders under a double gate (`--create-drafts` +
+  `FAMTASTIC_RENEWALS_CRON_ACK=local_scaffold`). Contains no payment calls;
+  idempotent per entitlement+cycle via ledger event key; not scheduled.
+- Local only; no deploy; no live charges. Committed 30bbd17f + 24a54b9f.
+
+## 2026-08-25 — UTM attribution persisted end to end, locally (fam-growth)
+
+- Backend: new `AttributionService` snapshots `utm_source/medium/campaign/content/term`,
+  `gclid`, `fbclid` (+ capture route/time) into one JSON field
+  (`famtastic_prospect.utm_json`) at lead creation on both capture paths:
+  `PublicRequestController::capture` (query string + JSON body; body wins) and
+  portal `CustomerPortalService::createWebsiteRequest`. Update hook **8037**
+  adds the prospect field and `famtastic_social_record.leads_count` via the
+  standard schema API (MySQL-safe; 8036 was already taken by proof-version
+  history).
+- Social join: a lead whose `utm_content` matches a social record's
+  `content_id` increments that record's `leads_count` by exactly one.
+- Admin view: Marketing Command Center → Leads & attribution now renders a
+  content-grain table (Content ID | Day | Leads | Requests | Paid revenue)
+  joined live from `famtastic_social_record.content_id` ↔ prospect
+  attribution snapshots (match resolved in PHP for MySQL/SQLite portability);
+  the campaign/source-grain table is retained below it.
+- Frontend: shared `collectUtmParams()` in `frontend/src/api/pipeline.js`
+  forwards landing-page params on every capture call — Solution Finder quote,
+  v1 contact form, and portal website-request form.
+- Validator: `scripts/validate-utm-attribution.sh` proves query-carried and
+  body-carried persistence, exact +1 counter behavior, portal-path service
+  semantics, and cleans up all synthetic rows. PASS ×2;
+  evidence `.artifacts/utm-attribution/1787660247` and `.artifacts/utm-attribution/1787660595`.
+  All touched PHP `php -l` clean; frontend build green.
+- Local only — prod effect lands with the next approved backend deploy;
+  GA4 purchase event coverage remains open (LEAD_TO_LAUNCH C7).
+
 ## 2026-08-25 (heartbeat 08:17Z) — C6 escalation + ledger hygiene (no code changes)
 
 - C6 re-verified with ignore-bypassed census: the "dead" preview-runner stack

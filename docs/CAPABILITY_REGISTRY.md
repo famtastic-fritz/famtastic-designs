@@ -13,10 +13,13 @@ capability is not “proven” merely because code exists.
 | Synthetic human-experience testing | Locally proven | Reusable control persona plus disclosed, opt-in creative lenses that cannot affect commercial, legal, safety, accessibility, or approval decisions |
 | Account-scoped private pricing | Locally proven | Auditable relationship, partner, and promotional pricing without public coupons |
 | Owner-gated three-direction website proofs | Locally proven | Safe/Wild/OMG generation, private staff review, authenticated selection, and revision workflow |
+| Revision loop with proof-version receipts | Locally proven (not yet deployed) | Customer revision request → allowance-gated $75 add-on purchase (stub/test gateway) → limit increment → owner alert + customer receipt; immutable per-project proof version history with prior versions preserved (`scripts/e2e-revision-loop.sh`, 15/15) |
+| Off-session hosting renewal charging | Research complete; scaffold only; hard-disabled by code until Fritz gates open | R1 recommendation + never-charging renewals-cron scaffold in `docs/audits/R1-RENEWAL-CHARGING-RESEARCH.md`; no live charge capability claimed |
 | Optional six-direction FAMtastic showcase | Locally proven | Three additional original high-intensity sites appended without bypassing private review or customer-send gates |
 | Scoped service grants and owner comps | Locally proven | Hashed account/request codes with audited zero-dollar Commerce fulfillment |
 | Private customer visual references | Locally proven | Consent-tracked, checksummed image and PDF inputs attached to one request |
 | Lead response and notifications | Test-provider proven | Acknowledgment, owner alerts, deadlines, escalation, and worker protection |
+| Lead attribution capture (UTM + click IDs) | Locally proven (not yet deployed) | utm_source/medium/campaign/content/term + gclid/fbclid snapshotted as one JSON field on the prospect at public and portal lead creation, social-record lead counters, and a content-grain leads→requests→paid-revenue view in Marketing Command Center |
 | FAMtastic Concierge to Connections event bridge | Locally proven | Signed, idempotent email/iMessage lifecycle metadata projected onto the Drupal lead timeline without autonomous replies or commercial authority |
 | Portal support cases | Test-provider proven | Customer timelines, priority targets, replies, and staff alerts |
 | Mail reply ingestion | Locally proven | Thread-address matching, validation, attachment policy, and unmatched-reply handling |

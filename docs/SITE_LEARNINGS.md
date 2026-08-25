@@ -1,5 +1,45 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-25 — Validator pitfalls: PDO typing + outbox dispatch starvation (fam-commerce, revision loop)
+
+- Observation: the revision-loop validator failed 2 of 15 checks with rows that
+  were visibly unchanged. Root cause: Drush/PDO returns integer columns as
+  **strings**, so `$row['recorded_at']` (string) never strict-matched a stored
+  snapshot cast to `(int)`. Rule: in every e2e validator that snapshots DB
+  values and re-compares them, normalize BOTH sides at capture time
+  (`(int)` / `(string)`) — never rely on PHP's numeric-string equality.
+- Observation: `dispatchNotifications(25)` left freshly queued synthetic rows
+  unsent on the shared local dev database because unrelated queued rows
+  consumed the batch. The mail-visibility validator already parks pre-existing
+  outbox rows for this reason. Rule: either park foreign queued/retry rows
+  around the assertion window or dispatch in a bounded drain loop until the
+  synthetic rows leave the queue; assert per-row status after, not the batch count.
+- Guidance: when two agents share a working tree, whole-file `git add` on a
+  co-edited module file imports the other agent's hunks. Stage HEAD+your-hunks
+  via `git hash-object -w` + `update-index --cacheinfo`, then lint the staged
+  blob (`git cat-file -p … | php -l`) before committing.
+
+## 2026-08-25 — Update-hook numbering and raw key_value edits (fam-growth, UTM attribution)
+
+- This module's `.install` keeps update hooks in TWO places: the numbered run
+  near the top AND later hooks appended after the schema helper functions at
+  the bottom (`update_8033`–`8036` live there). Before adding a new hook,
+  `grep 'function famtastic_pipeline_update_'` the whole file — a duplicate
+  number fatals every PHP load of the module ("Cannot redeclare function"),
+  not just updatedb. New attribution hook therefore shipped as 8037.
+- Editing `key_value.system.schema` with raw SQL requires the exact
+  PhpSerialize format including the trailing semicolon (`i:8036;`, not
+  `i:8036`). A malformed value makes Drupal silently treat the module as
+  having no readable schema version — updates report "No pending updates"
+  while warnings (`unserialize(): Error at offset`) scroll past. If a raw
+  edit is ever needed, verify by re-running updatedb afterward.
+- Attribution join design note: matching social content IDs to prospect JSON
+  snapshots is resolved in PHP over the bounded snapshot set instead of SQL
+  `JSON_EXTRACT`/`CONCAT`-LIKE so the same Marketing Command Center query
+  works on MySQL production and SQLite local. The per-record `leads_count`
+  counter stays authoritative-fast for dashboards; the tab recomputes live
+  from snapshots so drift self-heals on render.
+
 ## 2026-08-20 — A proof link needs a review task, not six unexplained demos
 
 - “Six directions” is internal shorthand. A recipient needs to hear that they
