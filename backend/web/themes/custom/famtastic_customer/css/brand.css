@@ -1,0 +1,26 @@
+/* FAMtastic customer surfaces: brand the Olivero base. */
+:root {
+  --fam-black: #070907;
+  --fam-lime: #7cfc00;
+  --color-text-primary: #e8ecea;
+}
+body {
+  background: var(--fam-black);
+  color: #e8ecea;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+.site-branding__name, .header-nav a { color: #fff; }
+.site-branding a { text-decoration: none; }
+.site-branding__name::before { content: "FAM"; color: var(--fam-lime); font-weight: 900; }
+.site-branding__name { font-weight: 300; letter-spacing: .12em; text-transform: uppercase; }
+.button {
+  background: var(--fam-lime);
+  color: #071000;
+  border-radius: 9px;
+  font-weight: 800;
+  border: 0;
+}
+.button:hover { filter: brightness(1.08); }
+a { color: var(--fam-lime); }
+.layout-container { max-width: 1200px; }
+h1 { letter-spacing: -0.01em; }

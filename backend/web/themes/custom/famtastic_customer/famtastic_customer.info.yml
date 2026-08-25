@@ -1,0 +1,18 @@
+name: 'FAMtastic Customer'
+type: theme
+description: 'Customer-facing theme (checkout, user pages) — FAMtastic dark/lime brand on Olivero.'
+package: FAMtastic
+core_version_requirement: ^11
+base theme: olivero
+libraries:
+  - famtastic_customer/brand
+regions:
+  header: Header
+  primary_menu: 'Primary menu'
+  secondary_menu: 'Secondary menu'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  content: Content
+  sidebar_first: 'Sidebar first'
+  sidebar_second: 'Sidebar second'
+  footer: Footer

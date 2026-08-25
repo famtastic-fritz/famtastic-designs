@@ -71,6 +71,11 @@ MSG_ID=$("$DRUSH" -r "$REPO_ROOT/backend/web" sqlq "SELECT id FROM famtastic_ema
 [[ -n "$REQUEST_ID"  ]] && PATHS+=("/admin/famtastic/website-request/$REQUEST_ID/offer") \
                       && PATHS+=("/admin/famtastic/website-request/$REQUEST_ID/proof-review")
 [[ -n "$DRAFT_ID"    ]] && PATHS+=("/admin/famtastic/support-draft/$DRAFT_ID/decide")
+PATHS+=("/admin/famtastic/social-record/55c-d01-teach/content/approve")
+PATHS+=("/admin/famtastic/social-record/55c-d01-teach/media/revoke")
+PATHS+=("/admin/famtastic/marketing/email/1")
+PATHS+=("/admin/famtastic/marketing/build-dna/1")
+PATHS+=("/web/user/1")
 
 FAIL=0
 printf '%-62s %-6s %-8s %s\n' "PATH" "HTTP" "BYTES" "VERDICT"

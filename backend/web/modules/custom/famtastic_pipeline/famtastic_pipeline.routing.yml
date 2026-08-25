@@ -605,7 +605,7 @@ famtastic_pipeline.campaign_add:
     _permission: 'administer famtastic pipeline'
 
 famtastic_pipeline.social_record_gate:
-  path: '/admin/famtastic/social-record/{content_id}/{{gate}}/{{direction}}'
+  path: '/admin/famtastic/social-record/{content_id}/{gate}/{direction}'
   defaults:
     _form: 'Drupal\famtastic_pipeline\Form\SocialRecordGateForm'
     _title: 'Campaign record gate'

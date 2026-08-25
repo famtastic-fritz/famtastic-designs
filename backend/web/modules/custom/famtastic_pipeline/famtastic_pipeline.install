@@ -1803,3 +1803,13 @@ function famtastic_pipeline_update_8038(&$sandbox) {
   }
   return t('Added publish-executor state columns to the social record table.');
 }
+
+/** Customer surfaces use the branded FAMtastic Customer theme (audit gap). */
+function famtastic_pipeline_update_8039(&$sandbox) {
+  \Drupal::service('theme_installer')->install(['famtastic_customer']);
+  \Drupal::configFactory()->getEditable('system.theme')
+    ->set('default', 'famtastic_customer')
+    ->set('admin', 'famtastic_admin')
+    ->save(TRUE);
+  return t('Default theme set to FAMtastic Customer (branded); admin theme unchanged.');
+}
