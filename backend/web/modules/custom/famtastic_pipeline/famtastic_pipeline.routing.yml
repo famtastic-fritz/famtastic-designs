@@ -631,7 +631,7 @@ famtastic_pipeline.support_reply:
     _title: 'Reply to customer'
   requirements:
     _permission: 'administer famtastic pipeline'
-    case_number: 'FAM-[0-9]+'
+    case_number: 'FAM-[0-9]+-[0-9]+'
 
 famtastic_pipeline.operations_message:
   path: '/admin/famtastic/message/{message}'

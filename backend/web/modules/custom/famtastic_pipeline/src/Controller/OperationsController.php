@@ -238,10 +238,10 @@ final class OperationsController extends ControllerBase {
   private function campaignRevenue(string $campaignKey): string {
     $query = $this->database->select('famtastic_commerce_fulfillment', 'f');
     $query->join('famtastic_prospect', 'p', 'p.id = f.prospect_id');
-    $minor = (int) $query->condition('p.campaign', $campaignKey)
-      ->condition('f.status', 'fulfilled')
-      ->expression('SUM', ['amount_minor'])
-      ->execute()->fetchField();
+    $query->condition('p.campaign', $campaignKey)
+      ->condition('f.status', 'fulfilled');
+    $query->addExpression('SUM(f.amount_minor)', 'total');
+    $minor = (int) $query->execute()->fetchField();
     return $minor > 0 ? '$' . number_format($minor / 100, 2) : '—';
   }
 
@@ -274,11 +274,11 @@ final class OperationsController extends ControllerBase {
 
   /** Paid Commerce order totals (minor) fulfilled in the last 30 days. */
   private function revenueLast30Days(): int {
-    return (int) $this->database->select('famtastic_commerce_fulfillment', 'f')
+    $query = $this->database->select('famtastic_commerce_fulfillment', 'f')
       ->condition('f.fulfilled_at', \Drupal::time()->getRequestTime() - 2592000, '>=')
-      ->condition('f.status', 'fulfilled')
-      ->expression('SUM', ['amount_minor'])
-      ->execute()->fetchField();
+      ->condition('f.status', 'fulfilled');
+    $query->addExpression('SUM(f.amount_minor)', 'total');
+    return (int) $query->execute()->fetchField();
   }
 
   /** Builds compact, mobile-first owner KPI cards. */
@@ -580,7 +580,10 @@ final class OperationsController extends ControllerBase {
       $rows[] = [$record['case_number'] ?: 'Legacy', $record['organization'] ?: 'Individual', $record['subject'], ['data' => ['#markup' => $this->badge($record['priority'] ?: $record['kind'])]], ['data' => ['#markup' => $this->badge($record['status'] ?: 'open')]], $this->date((int) $record['response_due']), $this->date((int) $record['changed'])];
     }
     foreach ($rows as $i => $row) {
-      $rows[$i][] = ['data' => $this->linkCell(Link::fromTextAndUrl('Reply', Url::fromRoute('famtastic_pipeline.support_reply', ['case_number' => (string) $row[0]])))];
+      $caseNumber = (string) $row[0];
+      $rows[$i][] = $caseNumber !== '' && $caseNumber !== 'Legacy'
+        ? ['data' => $this->linkCell(Link::fromTextAndUrl('Reply', Url::fromRoute('famtastic_pipeline.support_reply', ['case_number' => $caseNumber])))]
+        : ['#markup' => '—'];
     }
     return $this->recordsPage('Customer Support', 'Customer-visible cases with ownership, priority, response targets, and conversation history.', ['Case', 'Customer', 'Subject', 'Priority', 'Status', 'Response due', 'Updated', 'Action'], $rows, 'No support conversations have been recorded.');
   }
