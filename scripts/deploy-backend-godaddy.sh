@@ -263,21 +263,26 @@ echo "Backend dependencies promoted."
 
 # Retention: releases and per-deploy backups accumulate (~230MB per release,
 # ~50MB+ per backup set). Keep the current release plus one rollback, and the
-# newest backup of each type (two newest database dumps).
-cd "$deploy_dir/releases"
-keep=( "$commit_sha" )
-previous=$(ls -td */ 2>/dev/null | grep -v "^$commit_sha/" | head -1 | tr -d '/')
-[ -n "$previous" ] && keep+=( "$previous" )
-for d in */; do
-  sha="${d%/}"
-  [[ " ${keep[*]} " == *" $sha "* ]] || rm -rf "$sha"
-done
-cd "$HOME/backups"
-ls -t famtastic-database-*.sql.gz 2>/dev/null | tail -n +3 | xargs -r rm -f
-for btype in dependencies module admin_theme services commercial_config; do
-  ls -t famtastic-${btype}-*.tgz 2>/dev/null | tail -n +2 | xargs -r rm -f
-done
-echo "Retention applied: releases kept=$(ls "$deploy_dir/releases" | wc -l)."
+# newest backup of each type (two newest database dumps). Failure-tolerant:
+# retention must never abort a deployment.
+(
+  trap - ERR
+  set +e
+  cd "$deploy_dir/releases" || exit 0
+  keep=( "$commit_sha" )
+  previous=$(ls -td */ 2>/dev/null | grep -v "^$commit_sha/" | head -1 | tr -d '/')
+  [ -n "$previous" ] && keep+=( "$previous" )
+  for d in */; do
+    sha="${d%/}"
+    [[ " ${keep[*]} " == *" $sha "* ]] || rm -rf "$sha"
+  done
+  cd "$HOME/backups"
+  ls -t famtastic-database-*.sql.gz 2>/dev/null | tail -n +3 | xargs -r rm -f 2>/dev/null
+  for btype in dependencies module admin_theme services commercial_config; do
+    ls -t famtastic-${btype}-*.tgz 2>/dev/null | tail -n +2 | xargs -r rm -f 2>/dev/null
+  done
+  echo "Retention applied: releases kept=$(ls "$deploy_dir/releases" | wc -l)."
+)
 # Drush exits 255 on this cPanel host even when the update run succeeds. Disable
 # the rollback trap only while capturing that unreliable status, then restore it
 # before the authoritative pending-update check and every remaining apply step.
