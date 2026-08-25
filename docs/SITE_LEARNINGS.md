@@ -681,3 +681,8 @@ queued.
   `dig TXT` both hostnames, `curl` of the deployed file, `grep` of the cited
   htaccess rule). Provenance-by-context plus independently verified claims is
   the standard for adopting handoff work; neither blind trust nor blind rejection.
+## 2026-08-24 — NotebookLM is wired for company research
+
+- notebooklm-py venv at `~/Development/FAMtastic/tools/nblm-venv`; auth = Chrome cookie extraction (`browser_cookie3.chrome(domain_name=".google.com")` wrapped in `httpx.Cookies`) → `_fetch_tokens_with_jar` → `save_cookies_to_storage(jar, original_snapshot=snapshot, path=~/.notebooklm/profiles/default/storage_state.json)`. Signed in as fritz.medine@gmail.com.
+- Runner: `scripts/notebooklm-deep-dive.py` — creates the growth notebook, uploads planning/audit docs, asks score-improvement questions, saves to `docs/research/`.
+- Gotchas: `research.start` web mode failed (likely premium-gated); `save_cookies_to_storage` is SYNC and needs original_snapshot; cookie refresh will be needed periodically (re-run login flow when 401s appear).
