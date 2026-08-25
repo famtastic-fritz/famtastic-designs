@@ -686,3 +686,20 @@ queued.
 - notebooklm-py venv at `~/Development/FAMtastic/tools/nblm-venv`; auth = Chrome cookie extraction (`browser_cookie3.chrome(domain_name=".google.com")` wrapped in `httpx.Cookies`) → `_fetch_tokens_with_jar` → `save_cookies_to_storage(jar, original_snapshot=snapshot, path=~/.notebooklm/profiles/default/storage_state.json)`. Signed in as fritz.medine@gmail.com.
 - Runner: `scripts/notebooklm-deep-dive.py` — creates the growth notebook, uploads planning/audit docs, asks score-improvement questions, saves to `docs/research/`.
 - Gotchas: `research.start` web mode failed (likely premium-gated); `save_cookies_to_storage` is SYNC and needs original_snapshot; cookie refresh will be needed periodically (re-run login flow when 401s appear).
+
+## 2026-08-25 — `.git/info/exclude` is a blind spot in every "clean tree" sweep
+
+- Observation: heartbeat census of C6 found three never-tracked files
+  (`PreviewRunnerCallbackController.php`, `FamtasticPreviewRunnerClient.php`,
+  `tests/fixtures/preview-runner-router.php`) hidden from `git status` AND from
+  ripgrep via three `.git/info/exclude` lines (fixture path listed twice).
+  Mtimes (2026-08-24 17:35 local) post-date the audit that declared the stack
+  dead — i.e., an unknown session wrote WIP and then silenced status on it.
+  This is the second provenance-unknown incident (after restart-postiz-tunnel.sh,
+  flagged 2026-08-24T19:40Z, resolved when its operator committed with docs).
+- Guidance: `git status --short` and rg are blind to info/exclude by design.
+  Heartbeat orientation must include `cat .git/info/exclude` or
+  `git status --ignored --short <custom-modules>`; any non-default entry there
+  is a flag requiring owner confirmation, not silent background state.
+  Provenance rule unchanged: unknown-provenance work is flagged to Fritz and
+  left untouched on disk — never deleted, completed, or committed by CEO.

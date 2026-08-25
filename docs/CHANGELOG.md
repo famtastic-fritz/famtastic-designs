@@ -1,5 +1,19 @@
 # Product changelog
 
+## 2026-08-25 (heartbeat 08:17Z) — C6 escalation + ledger hygiene (no code changes)
+
+- C6 re-verified with ignore-bypassed census: the "dead" preview-runner stack
+  (`PreviewRunnerCallbackController`, `FamtasticPreviewRunnerClient`, router
+  fixture) is present on disk but was never git-tracked and is hidden from
+  status via `.git/info/exclude`; mtimes post-date the audit; both imported
+  services still do not exist, zero routes/callers. Flagged for Fritz ruling
+  (delete vs complete); nothing touched per provenance rule.
+  `docs/playbook/RECIPES/LEAD_TO_LAUNCH.md` C6 row + change log updated.
+- New lesson in `docs/SITE_LEARNINGS.md`: `.git/info/exclude` blinds standard
+  clean-tree sweeps; orientation now checks it explicitly.
+- Fixed HEARTBEAT.md defect: the 06:13Z entry had been concatenated onto the
+  01:53Z line (missing newline), leaving one malformed mega-line.
+
 ## 2026-08-25 — Worker-late race fix + audit ledger corrections (heartbeat)
 
 - `LifecycleOperationsService::runProtection()` no longer flags a worker late
