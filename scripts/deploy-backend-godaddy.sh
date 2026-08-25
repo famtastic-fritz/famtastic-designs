@@ -260,6 +260,24 @@ install -m 0644 "$backend_dir/composer.lock" "$production_dir/composer.lock"
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$production_dir" install \
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
 echo "Backend dependencies promoted."
+
+# Retention: releases and per-deploy backups accumulate (~230MB per release,
+# ~50MB+ per backup set). Keep the current release plus one rollback, and the
+# newest backup of each type (two newest database dumps).
+cd "$releases_dir"
+keep=( "$commit_sha" )
+previous=$(ls -td */ 2>/dev/null | grep -v "^$commit_sha/" | head -1 | tr -d '/')
+[ -n "$previous" ] && keep+=( "$previous" )
+for d in */; do
+  sha="${d%/}"
+  [[ " ${keep[*]} " == *" $sha "* ]] || rm -rf "$sha"
+done
+cd "$HOME/backups"
+ls -t famtastic-database-*.sql.gz 2>/dev/null | tail -n +3 | xargs -r rm -f
+for btype in dependencies module admin_theme services commercial_config; do
+  ls -t famtastic-${btype}-*.tgz 2>/dev/null | tail -n +2 | xargs -r rm -f
+done
+echo "Retention applied: releases kept=$(ls "$releases_dir" | wc -l)."
 # Drush exits 255 on this cPanel host even when the update run succeeds. Disable
 # the rollback trap only while capturing that unreliable status, then restore it
 # before the authoritative pending-update check and every remaining apply step.
