@@ -22,7 +22,7 @@ const SYNTHETIC = /mailbox proof|controlled customer reply|synthetic|example\.te
 // are rendered code paths with no affordance pointing at them today; we still
 // probe them via ?section= and report UNREACHABLE instead of failing silently.
 const NAV_SECTIONS = ['home', 'services', 'projects', 'messages', 'billing', 'account'];
-const DEAD_SECTIONS = ['activity', 'performance', 'support', 'learn', 'faq', 'grow', 'referrals', 'settings'];
+const DEAD_SECTIONS = [];
 const LABELS = { home: 'Home', services: 'Services', projects: 'Projects', messages: 'Messages', billing: 'Billing', account: 'Account', activity: 'Activity', performance: 'Performance', support: 'Support', learn: 'Learn', faq: 'FAQ', grow: 'Grow', referrals: 'Referrals', settings: 'Settings' };
 
 const results = [];

@@ -70,6 +70,12 @@ final class OperationsController extends ControllerBase {
       ['Services', $this->count('famtastic_entitlement', ['status' => 'active']) . ' active entitlements', 'Hosting, domains, analytics, websites, and customer capabilities.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'services']), 'services'],
       ['Referrals', $this->count('famtastic_referral') . ' customer referrals', 'Introductions, privacy-safe status, and reward readiness.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'referrals']), 'referrals'],
       ['Campaign Operations', $this->count('famtastic_campaign') . ' campaigns', 'Prospects, proof builds, outreach, clicks, and campaign sales.', Url::fromRoute('famtastic_pipeline.campaign_operations'), 'campaigns'],
+      ['Proof QA Queue', $this->count('proof_campaign', ['generation_status' => 'ready']) . ' ready for review', 'Quality gate before a customer ever sees concepts.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'proofs-ready']), 'proofs'],
+      ['Campaign Gates', $this->count('famtastic_social_record') . ' records tracked', 'Content/media/publish approvals for the 17-day campaign.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'social-records']), 'campaigns'],
+      ['Support Drafts', $this->countIn('famtastic_support_draft', 'status', ['pending']) . ' awaiting decision', 'L0 drafted replies - approve or reject, nothing auto-sends.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support-drafts']), 'support'],
+      ['Customer Replies', $this->count('famtastic_inbound_message') . ' inbound messages', 'Every validated customer email with match status.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'replies']), 'emails-sent'],
+      ['Renewals Due 30d', $this->renewalsDueCount() . ' services renewing', 'Recurring revenue coming due - act before the date.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'services']), 'services'],
+      ['Revenue 30d', '$' . number_format($this->revenueLast30Days() / 100, 2), 'Paid Commerce order totals in the last 30 days.', Url::fromRoute('famtastic_pipeline.campaign_operations'), 'commerce'],
     ];
     $cardBuild = [];
     foreach ($cards as [$title, $status, $description, $url, $icon]) {
@@ -188,6 +194,7 @@ final class OperationsController extends ControllerBase {
         'sent' => $this->eventCount((int) $campaign['id'], 'email.sent'),
         'clicked' => $this->eventCount((int) $campaign['id'], 'email.clicked'),
         'sales' => $sales,
+      'revenue' => $this->campaignRevenue($key),
         'builds' => $this->count('famtastic_build_run', ['campaign_key' => $key]),
       ];
     }
@@ -217,7 +224,7 @@ final class OperationsController extends ControllerBase {
         '#attributes' => ['class' => ['famtastic-ops__table-scroll']],
         'table' => [
           '#type' => 'table',
-          '#header' => ['Campaign', 'Status', 'Source', 'Prospects', 'Proofs', 'Sent', 'Clicks', 'Sales', 'Builds'],
+          '#header' => ['Campaign', 'Status', 'Source', 'Prospects', 'Proofs', 'Sent', 'Clicks', 'Sales', 'Revenue', 'Builds'],
           '#rows' => $rows,
           '#empty' => $this->t('No campaigns have been recorded.'),
           '#attributes' => ['class' => ['famtastic-ops__table']],
@@ -225,6 +232,17 @@ final class OperationsController extends ControllerBase {
       ],
       'pager' => ['#type' => 'pager'],
     ], 'Campaign Operations');
+  }
+
+  /** Paid Commerce revenue attributed to a campaign via its prospects. */
+  private function campaignRevenue(string $campaignKey): string {
+    $query = $this->database->select('famtastic_commerce_fulfillment', 'f');
+    $query->join('famtastic_prospect', 'p', 'p.id = f.prospect_id');
+    $minor = (int) $query->condition('p.campaign', $campaignKey)
+      ->condition('f.status', 'fulfilled')
+      ->expression('SUM', ['amount_minor'])
+      ->execute()->fetchField();
+    return $minor > 0 ? '$' . number_format($minor / 100, 2) : '—';
   }
 
   /** Returns verified social/content events without treating attempts as proof. */
@@ -243,6 +261,24 @@ final class OperationsController extends ControllerBase {
       $counts[$key] = $this->countIn('famtastic_event', 'event_type', $eventTypes);
     }
     return $counts;
+  }
+
+  /** Active entitlements renewing within 30 days (recurring only). */
+  private function renewalsDueCount(): int {
+    return (int) $this->database->select('famtastic_entitlement', 'e')
+      ->condition('status', 'active')
+      ->condition('billing_interval', 'none', '!=')
+      ->condition('renews_at', [\Drupal::time()->getRequestTime(), \Drupal::time()->getRequestTime() + 2592000], 'BETWEEN')
+      ->countQuery()->execute()->fetchField();
+  }
+
+  /** Paid Commerce order totals (minor) fulfilled in the last 30 days. */
+  private function revenueLast30Days(): int {
+    return (int) $this->database->select('famtastic_commerce_fulfillment', 'f')
+      ->condition('f.fulfilled_at', \Drupal::time()->getRequestTime() - 2592000, '>=')
+      ->condition('f.status', 'fulfilled')
+      ->expression('SUM', ['amount_minor'])
+      ->execute()->fetchField();
   }
 
   /** Builds compact, mobile-first owner KPI cards. */
@@ -552,11 +588,12 @@ final class OperationsController extends ControllerBase {
   private function notificationMetric(): array {
     $rows = [];
     $query = $this->database->select('famtastic_notification_outbox', 'n')->extend(PagerSelectExtender::class);
-    foreach ($query->fields('n', ['category', 'recipient', 'subject', 'status', 'attempts', 'last_error', 'changed'])->orderBy('changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+    foreach ($query->fields('n', ['id', 'category', 'recipient', 'subject', 'status', 'attempts', 'last_error', 'changed'])->orderBy('changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
       $age = max(0, \Drupal::time()->getRequestTime() - (int) $record['changed']);
-      $rows[] = [$record['category'], $record['recipient'], $record['subject'], ['data' => ['#markup' => $this->badge($record['status'])]], $record['attempts'], $record['last_error'] ?: '—', $age > 300 && in_array($record['status'], ['queued', 'retry'], TRUE) ? round($age / 60) . ' minutes' : 'Current', $this->date((int) $record['changed'])];
+      $retryable = in_array($record['status'], ['dead_letter', 'retry', 'failed'], TRUE);
+      $rows[] = [(int) $record['id'], $record['category'], $record['recipient'], $record['subject'], ['data' => ['#markup' => $this->badge($record['status'])]], $record['attempts'], $record['last_error'] ?: '—', $age > 300 && in_array($record['status'], ['queued', 'retry'], TRUE) ? round($age / 60) . ' minutes' : 'Current', $this->date((int) $record['changed']), $retryable ? ['data' => $this->linkCell(Link::fromTextAndUrl('Retry', Url::fromRoute('famtastic_pipeline.notification_retry', ['id' => (int) $record['id']]))) ] : ['#markup' => '—']];
     }
-    return $this->recordsPage('Notifications', 'Transactional and operational delivery state, retries, queue age, and dead letters.', ['Category', 'Recipient', 'Subject', 'Status', 'Attempts', 'Last error', 'Queue age', 'Updated'], $rows, 'No notifications have been queued.');
+    return $this->recordsPage('Notifications', 'Transactional and operational delivery state, retries, queue age, and dead letters.', ['ID', 'Category', 'Recipient', 'Subject', 'Status', 'Attempts', 'Last error', 'Queue age', 'Updated', 'Action'], $rows, 'No notifications have been queued.');
   }
 
   /**
@@ -683,7 +720,7 @@ final class OperationsController extends ControllerBase {
     $query->leftJoin('famtastic_organization', 'o', 'o.id = e.organization_id');
     $query->fields('e', ['entitlement_type', 'status', 'included_until', 'renews_at', 'amount_minor', 'billing_interval'])->addField('o', 'name', 'organization');
     $rows = [];
-    foreach ($query->orderBy('e.changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+    foreach ($query->orderBy('e.renews_at', 'ASC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
       $rows[] = [$record['organization'] ?: 'Individual', ucwords(str_replace('_', ' ', $record['entitlement_type'])), ['data' => ['#markup' => $this->badge($record['status'])]], $this->date((int) $record['included_until']), $this->date((int) $record['renews_at']), $record['amount_minor'] ? $this->formatCurrency((int) $record['amount_minor'], 'usd') . ' / ' . $record['billing_interval'] : 'Included'];
     }
     return $this->recordsPage('Customer Services', 'Commerce-controlled capabilities, coverage, and renewal timing.', ['Customer', 'Service', 'Status', 'Included through', 'Renews', 'Renewal'], $rows, 'No customer services have been granted.');

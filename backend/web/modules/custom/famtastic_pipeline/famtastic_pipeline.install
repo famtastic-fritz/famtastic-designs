@@ -1710,3 +1710,13 @@ function famtastic_pipeline_update_8034(&$sandbox) {
   $schema->createTable('famtastic_social_record', _famtastic_pipeline_lifecycle_schema()['famtastic_social_record']);
   return t('Created the social campaign record table.');
 }
+
+/** Customer-facing default theme for checkout/user pages (audit gap #3). */
+function famtastic_pipeline_update_8035(&$sandbox) {
+  \Drupal::service('theme_installer')->install(['olivero']);
+  \Drupal::configFactory()->getEditable('system.theme')
+    ->set('default', 'olivero')
+    ->set('admin', 'famtastic_admin')
+    ->save(TRUE);
+  return t('Default theme set to Olivero for customer surfaces; admin keeps FAMtastic admin theme.');
+}

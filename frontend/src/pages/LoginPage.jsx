@@ -36,6 +36,5 @@ export default function LoginPage() {
       {mode === 'recover' && <button className="login-recover" type="button" onClick={() => setMode('login')}>Back to sign in</button>}
     </form>
     <div className="login-card__help"><div><strong>Need account help?</strong><span>We’ll verify your identity and get you back in.</span></div><a href="mailto:support@famtasticdesigns.com?subject=Customer%20account%20help">Contact support</a></div>
-    <p className="login-card__staff">Have a personalized pre-sale link? Open it directly from your email. FAMtastic staff can use the <a href="/web/user/login?destination=/admin/famtastic">operations login</a>.</p>
   </section>;
 }

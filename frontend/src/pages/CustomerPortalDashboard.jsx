@@ -208,6 +208,11 @@ export default function CustomerPortalDashboard() {
     proofIntentHandled.current = true;
     const params = new URLSearchParams(window.location.search);
     const requestedSection = params.get('section');
+    if (params.get('order') && params.get('grant') === 'applied') {
+      setNotice('Your sponsored order is complete — everything is activated in your workspace. Welcome aboard!');
+    } else if (params.get('order')) {
+      setNotice('Purchase complete. Your services are active in this workspace.');
+    }
     const requestId = params.get('request') || '';
     const startWebsite = params.get('start') === 'website';
     const requestedProof = requestId ? workspace.website_requests?.find((request) => request.public_id === requestId) : null;
