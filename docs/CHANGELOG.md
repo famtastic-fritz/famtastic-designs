@@ -639,3 +639,9 @@
 - /admin/famtastic/marketing: unified staff workspace over the canonical manifest — Command, Content queue, Calendar, Channel health, Leads & attribution, Email center (inspectable body/message-ID/retry), Creative & media, Build DNA (prompt/input/output/SHA inspection per build run)
 - Execution-truth banner on every tab (receipts required; Antigravity not headless; MuAPI needs approved direction; no state is publish/send/charge/launch approval)
 - Attribution honest at campaign grain; content-ID join lands with UTM persistence (queued)
+
+## 2026-08-25 — Gate links fixed; branded customer theme shipped
+
+- Social-record gate route had double-brace params ({{gate}}/{{direction}}) — every approval link 404'd. Fixed; gate form verified 200; audit extended to gate routes, email inspect, Build DNA detail.
+- famtastic_customer theme (Olivero subtheme, dark/lime brand) is now the default for customer surfaces (checkout, user pages); admin keeps famtastic_admin. Backend deploy promotes it with backup/rollback symmetry.
+- Ops: prod disk-quota squeeze had silently killed cron (workers stale Aug 24–25); 8.4G freed (32 stale releases + duplicate backups); deploy retention now automatic; cron verified running again.
