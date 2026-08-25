@@ -5,6 +5,30 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-25 — Alert floods train the operator to ignore alerts; "late" needs a grace window
+
+Observation:
+237 of the first 267 outbox sends were false-positive "Automation worker late"
+alerts. The monitor flagged any worker whose `next_due` had passed, but three
+workers share one every-5-minute crontab cadence, so a due-but-running worker
+was paged on nearly every cycle. The real automation queue processed zero jobs
+during the same window — the alerting loop was the only thing "working", and it
+was crying wolf.
+
+Guidance:
+- A health check that fires during normal operation is mis-specified, not
+  informative. "Late" must mean *no sign of life within a grace window*
+  (here: `last_finished` older than 1800s), never merely an expired schedule
+  time when siblings share the cron line.
+- When an alert channel's false-positive ratio exceeds ~50%, treat the channel
+  itself as incident #1: fix the detector before trusting anything it says.
+- PHP gotcha of the run: writing `*/5` inside a docblock terminates the comment
+  (`*/` closes it) and produces a confusing parse error; say "every-5-minute"
+  in comments. Caught by `php -l` before execution.
+- Fix landed locally with regression harness
+  `scripts/e2e-worker-late-guard.sh`; prod behavior changes only at the next
+  approved backend deploy (gate).
+
 ## 2026-08-24 — Postiz public URL is now permanent; five failure modes documented
 
 Observation:

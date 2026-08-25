@@ -1,5 +1,25 @@
 # Product changelog
 
+## 2026-08-25 — Worker-late race fix + audit ledger corrections (heartbeat)
+
+- `LifecycleOperationsService::runProtection()` no longer flags a worker late
+  merely because `next_due` passed: the monitor now also requires no completed
+  run within `WORKER_LATE_GRACE_SECONDS` (1800s). Root cause of 237 false
+  "Automation worker late" alerts (237 of first 267 outbox sends) was a race
+  between sibling every-5-minute crontab lines sharing one cadence — see
+  `docs/audits/CEO-FULL-REVIEW-2026-08-24.md` gap #4. New regression harness
+  `scripts/e2e-worker-late-guard.sh` proves stale-alerts/mid-run-silent/
+  idempotent semantics; unified lifecycle validator re-run green. Local only —
+  prod effect lands with the next approved backend deploy.
+- New permanent remediation section in `docs/playbook/RECIPES/LEAD_TO_LAUNCH.md`
+  for the CEO Full Review gaps (C4–C7), cross-referenced to R1–R4 where they
+  overlap; R1 row corrected to record that prod already contains all 16 SKUs
+  (verified in the audit) with an open receipt-trail question for Fritz.
+- `docs/playbook/MASTER-PLAN.md` current-state table refreshed against
+  verified reality (16 sellable SKUs, 80 live posts, 32 prod prospects, Phase
+  A/B support status, campaign media-ready-but-gated) replacing the stale
+  2026-08-22 snapshot.
+
 ## 2026-08-24 — Domain-verification runbook rewritten to proven methods (heartbeat)
 
 - `docs/playbook/RUNBOOKS/instagram-standalone-onboarding.md`: TikTok domain

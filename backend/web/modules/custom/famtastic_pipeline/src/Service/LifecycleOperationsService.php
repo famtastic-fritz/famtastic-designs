@@ -14,6 +14,11 @@ use Drupal\Core\File\FileSystemInterface;
  */
 final class LifecycleOperationsService {
 
+  /**
+   * Seconds without a completed run after next_due before a worker pages.
+   */
+  private const WORKER_LATE_GRACE_SECONDS = 1800;
+
   public function __construct(
     private readonly Connection $database,
     private readonly TimeInterface $time,
@@ -191,7 +196,19 @@ final class LifecycleOperationsService {
     }
     $processed += count($renewals);
 
-    $lateWorkers = $this->database->select('famtastic_worker_heartbeat', 'w')->fields('w')->condition('next_due', 0, '>')->condition('next_due', $now, '<')->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    // A worker counts as late only when it shows no sign of life within the
+    // grace window. Keying solely on next_due raced against the sibling */5
+    // crontab lines sharing this cadence: a due-but-running worker still had
+    // its pre-run next_due in the past, so nearly every cycle produced a false
+    // "late" alert (237 of the first 267 outbox sends). 1800s covers two full
+    // cycles of the slowest worker (lifecycle_protection, +900s) plus jitter.
+    // See docs/audits/CEO-FULL-REVIEW-2026-08-24.md gap #4.
+    $staleBefore = $now - self::WORKER_LATE_GRACE_SECONDS;
+    $lateWorkers = $this->database->select('famtastic_worker_heartbeat', 'w')->fields('w')
+      ->condition('next_due', 0, '>')
+      ->condition('next_due', $now, '<')
+      ->condition('last_finished', $staleBefore, '<')
+      ->execute()->fetchAll(\PDO::FETCH_ASSOC);
     foreach ($lateWorkers as $worker) {
       $this->queue("worker:{$worker['worker_key']}:late:" . gmdate('YmdH', $now), $admin, "Automation worker late — {$worker['worker_key']}", "Last finished: " . gmdate(DATE_ATOM, (int) $worker['last_finished']) . "\nExpected by: " . gmdate(DATE_ATOM, (int) $worker['next_due']));
     }

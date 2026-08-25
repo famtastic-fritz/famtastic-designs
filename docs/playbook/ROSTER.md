@@ -16,7 +16,6 @@ Maintained by the CEO (`fam-ceo`). Every hire = an agent file in `.opencode/agen
 | Portfolio Manager | `fam-portfolio-manager.md` | Owns PRODUCT_PIPELINE: catalog register, 4-axis scoring, tier proposals, wave staging; waves + launches are Fritz gates | CATALOG.md register with first 50 scored + wave-1 candidates staged | 2026-08-23 |
 | Brutal Reviewer | `fam-brutal-reviewer.md` | Adversarial full-system audit: plan vs build gap analysis, vapor detection, Drupal-fit test | First assignment: end-to-end revenue-engine review (lead capture → conversion) | 2026-08-24 |
 | Admin CX specialist | `fam-admin-cx.md` | Conversion + customer-experience expert: admin command center, customer portal, funnel flows; test-data hygiene; post-deploy visual verification | First assignment: portal crawl validator + messages overflow + projects-section flow redesign (owner screenshot 2026-08-24) | 2026-08-24 |
-
 | Automation & Reliability Engineer | `fam-ops.md` | Owns cron/queue/alert layer: heartbeat races, publish executor, renewals cron scaffold, alert hygiene | Fix worker-late race; zero false alerts/24h; first real queue job | 2026-08-24 |
 | Growth & Attribution Analyst | `fam-growth.md` | Owns measurement truth: UTM persistence, attribution joins, GA4 coverage, falsifiable wave criteria | UTM at capture + content→lead→order join; GA4 all routes | 2026-08-24 |
 | Commerce & Fulfillment Engineer | `fam-commerce.md` | Owns money path: revision loop, proof gen, retention, provider-aware renewals (gated) | Revision loop completion with receipts | 2026-08-24 |

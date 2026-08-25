@@ -5,14 +5,16 @@
 
 ## Current state (evidence-honest)
 
+*Refreshed 2026-08-25 from `docs/audits/CEO-FULL-REVIEW-2026-08-24.md` (prod queries + route census); prior table reflected 2026-08-22 state.*
+
 | Area | State |
 |---|---|
-| Products sellable | 2 ($199 site, 55¢-a-day). Business Email add-on exists. Everything else = vapor until it passes NEW_PRODUCT.md |
-| Catalog raw material | `../../1000-IDEAS.md` (1,000 ideas, unstructured) + monorepo agent-business-os |
-| Pipeline integrity | Works in pieces; P0 holes: outbound mail transport unverified, no sent/reply visibility, no selection notifications (see LEAD_TO_LAUNCH steps 7–8) |
-| Customer service | Support cases + reply ingestion exist; zero autonomy, zero visibility UI |
-| Marketing | Postiz publishing proven on Facebook only; 17-day campaign STALLED; 64-article blog library live; HeyGen + Adobe pipelines documented |
-| Leads | 300+ waiting. Campaign confidence low. Funnel not closed |
+| Products sellable | **16 SKUs live on prod Commerce** (verified 2026-08-24): $199 site, 55¢-a-day hosting, wave-1 trio (Business Email, Maintenance Care Plan, Local SEO Setup — NEW_PRODUCT step-11 approved by Fritz), repaired $499 tier. T5 backlog = KILL-dominated so far; waves drawn from owned capabilities only |
+| Catalog raw material | `../../1000-IDEAS.md` (≈1,300 backlog rows; rows 1–206 imported+scored in `docs/products/CATALOG.md`, bulk-KILL ruling pending Fritz) |
+| Pipeline integrity | Paved road proven end-to-end in code; prod mail transport verified healthy 2026-08-23 (sent=267/dead_letter=0), replies view + selection notifications + attention banner shipped. Remaining human-handoff gaps: proof generation for new customers (in-house path 🔄), revision loop (🔄), customer-site deploy (locally proven), retention step 13 (⚠️ not started) |
+| Customer service | Phase A COMPLETE (A1–A6 ✅): cron fixed, outbox clean, replies list, selection/revision notifications, attention banner. Phase B: deterministic classifier + draft-only L0 queue + SLA clocks shipped (B2/B4 ✅); B1 needs ≥20 real-history validation (Fritz prod export); B3 auto-send = Fritz policy gate |
+| Marketing | Postiz connected to Facebook (token to 2026-10-10) + Instagram (connection-proven, publish evidence pending); TikTok domain verification rotated 2026-08-25. 17-day campaign: all 68 records media-ready, ALL publish gates false pending Fritz week-review of days 1–3 drafts. **80-article blog library live** (newest post 2026-08-11 — cadence not yet running; 2 posts complete through BLOG_FACTORY step 5) |
+| Leads | **32 prospects on prod** (audit query 2026-08-24). The external "300+ leads" list was never imported — import-or-KILL decision queued. UTMs die at capture (R4 ⚠️); no post→lead→order join. Funnel accepts money autonomously (live Stripe armed, webhook HMAC) but has never charged a stranger — R2 founder-$1 proof staged, unexecuted |
 
 ## The five tracks (priority order)
 
