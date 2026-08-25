@@ -543,7 +543,10 @@ final class OperationsController extends ControllerBase {
     foreach ($query->orderBy('t.changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
       $rows[] = [$record['case_number'] ?: 'Legacy', $record['organization'] ?: 'Individual', $record['subject'], ['data' => ['#markup' => $this->badge($record['priority'] ?: $record['kind'])]], ['data' => ['#markup' => $this->badge($record['status'] ?: 'open')]], $this->date((int) $record['response_due']), $this->date((int) $record['changed'])];
     }
-    return $this->recordsPage('Customer Support', 'Customer-visible cases with ownership, priority, response targets, and conversation history.', ['Case', 'Customer', 'Subject', 'Priority', 'Status', 'Response due', 'Updated'], $rows, 'No support conversations have been recorded.');
+    foreach ($rows as $i => $row) {
+      $rows[$i][] = ['data' => $this->linkCell(Link::fromTextAndUrl('Reply', Url::fromRoute('famtastic_pipeline.support_reply', ['case_number' => (string) $row[0]])))];
+    }
+    return $this->recordsPage('Customer Support', 'Customer-visible cases with ownership, priority, response targets, and conversation history.', ['Case', 'Customer', 'Subject', 'Priority', 'Status', 'Response due', 'Updated', 'Action'], $rows, 'No support conversations have been recorded.');
   }
 
   private function notificationMetric(): array {

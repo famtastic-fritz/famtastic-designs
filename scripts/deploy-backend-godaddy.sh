@@ -289,6 +289,13 @@ echo "Package ladder verified."
 # Catalog drift guard: Commerce variations must always match the advertised
 # catalog (BRUTAL-REVIEW-2026-08-24 critical #1 - $499 tier was unsellable).
 "$drush" php:script "$backend_dir/scripts/assert-catalog-parity.php" "$backend_dir/config/famtastic-products.json"
+# Proof artifacts live under the web docroot but must never be directly
+# fetchable - the auth-gated API routes are the only reader
+# (BRUTAL-REVIEW-2026-08-24 critical #1).
+if [ -d "$production_dir/web/proofs" ]; then
+  install -m 0644 "$backend_dir/config/proofs-htaccess" "$production_dir/web/proofs/.htaccess"
+  echo "Proofs directory direct access denied."
+fi
 "$drush" cr
 # A second process-level rebuild is required on this host after first-time
 # module discovery; otherwise the sitemap writer can see stale router state.

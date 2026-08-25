@@ -615,6 +615,15 @@ famtastic_pipeline.social_record_gate:
     gate: 'content|media|publish'
     direction: 'approve|revoke'
 
+famtastic_pipeline.support_reply:
+  path: '/admin/famtastic/support-case/{case_number}/reply'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\SupportReplyForm'
+    _title: 'Reply to customer'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    case_number: 'FAM-[0-9]+'
+
 famtastic_pipeline.operations_message:
   path: '/admin/famtastic/message/{message}'
   defaults:
