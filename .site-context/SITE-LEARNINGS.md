@@ -5,6 +5,17 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-25 — Heartbeat runs must append + commit their own log line before exit
+
+Observation: two CEO heartbeat sessions stranded their HEARTBEAT.md append
+(08:17Z left work uncommitted; 14:43Z's edits were absorbed into operator
+commit 6a1a47b8, leaving a log gap found only by cross-referencing change-log
+citations against HEARTBEAT.md).
+
+Rule: every heartbeat run appends its dated line AND commits its ledger unit in
+the same session. Reconciliation sweeps grep recipe change-logs for "heartbeat
+HH:MMZ" citations missing from HEARTBEAT.md.
+
 ## 2026-08-25 — Local Postiz answers 502 while "healthy"; concurrent agents share one tree
 
 Observation:

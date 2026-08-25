@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-25 — Heartbeat runs must append + commit their own log line before exit
+
+- Observation: two CEO heartbeat sessions stranded their HEARTBEAT.md append.
+  The 08:17Z run left its work uncommitted (recovered by the 10:24Z run), and
+  the 14:43Z run's recipe/CHANGELOG edits were silently absorbed into operator
+  commit 6a1a47b8 — leaving a heartbeat-log gap that surfaced only because a
+  later sweep cross-referenced "(heartbeat 14:43Z)" change-log text against
+  HEARTBEAT.md and found no matching entry.
+- Rule: every heartbeat run appends its dated line AND commits its ledger unit
+  in the same session, before any other exit path. Reconciliation sweeps should
+  grep recipe change-logs for "heartbeat HH:MMZ" citations missing from
+  HEARTBEAT.md — a citation without a heartbeat line means an orphaned session.
+
 ## 2026-08-25 — Provenance audits must enumerate git stashes (C6 preview-runner stack)
 
 - Observation: the C6 escalation ("who owns the hidden preview-runner WIP?") sat
