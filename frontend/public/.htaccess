@@ -22,3 +22,6 @@
   # Match requires the slash so the rewritten slashless URL exits the loop.
   RewriteRule ^(tiktok[A-Za-z0-9]+\.txt)/$ /$1 [L]
 </IfModule>
+
+# The Drupal backend root (/web/) is not a landing surface - route it to the SPA.
+RewriteRule ^web/?$ https://famtasticdesigns.com/ [R=302,L]
