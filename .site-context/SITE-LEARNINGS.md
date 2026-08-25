@@ -5,6 +5,35 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-25 — Local Postiz answers 502 while "healthy"; concurrent agents share one tree
+
+Observation:
+During publish-executor validation the local Postiz container reported docker
+health=healthy while every API call returned nginx 502. Root cause chain: the
+v2.22.1 backend lazily creates `mastra_*` tables at boot, and under host CPU
+~100% the cold-start DDL raced/dropped its PG connection
+(`MASTRA_STORAGE_PG_CREATE_TABLE_FAILED`, then "Connection terminated
+unexpectedly"), killing pm2's `backend` process while `frontend` stayed up.
+A second flare hit mid-session as request-level hangs (curl timeouts) without
+container restart.
+
+Guidance:
+- Never trust the Postiz container health flag for API availability — probe
+  `/api/public/v1/is-connected`. The health check reflects the frontend, not
+  the pm2 backend on port 3000 inside the same container.
+- Fix for the mastra cold-start failure: `docker exec postiz pm2 restart backend`
+  once; tables persist afterwards. Symptom trail lives in
+  `/root/.pm2/logs/backend-error.log` (inside the container).
+- Any client of this stack must retry HTTP ≥500/timeouts with exponential
+  backoff and treat a persistent 502 as provider-DOWN → BLOCKED report, never
+  a silent skip. `publish-executor.php` encodes this policy.
+- Two agents edited one working tree simultaneously today (@fam-ops +
+  attribution work). Update-hook numbers collided invisibly until read-back
+  (8036/8037 taken → shifted to 8038); shared-file commits must be selective
+  (`git apply --cached` with only own hunks). Rule: before adding an update
+  hook or editing a dirty shared file in this repo, re-read it from disk and
+  check `git status` first.
+
 ## 2026-08-25 — Alert floods train the operator to ignore alerts; "late" needs a grace window
 
 Observation:

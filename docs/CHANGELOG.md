@@ -1,5 +1,34 @@
 # Product changelog
 
+## 2026-08-25 — Worker-late fix verified + publish executor built (fam-ops)
+
+- Assignment 1 verification: the worker-late grace-window fix
+  (`f623fdab`, contained in prod `aece5778+`) judges liveness off
+  `last_finished` + 1800s grace (`LifecycleOperationsService.php:199-214`),
+  not raw `next_due`. Guard `scripts/e2e-worker-late-guard.sh` PASS locally:
+  stale alerted once, mid-run clean, second sweep idempotent. Receipt:
+  `.artifacts/lifecycle-runs/1787659129-62485/evidence.json`.
+- Publish executor `backend/scripts/publish-executor.php`: converts
+  owner-approved Postiz drafts to schedule IN PLACE (`PUT /posts/{id}/status`,
+  keeps id/content/media/date), verifies QUEUE state by fresh read-back,
+  writes per-run evidence to `.artifacts/publish-executor/<run>/`. Hard double
+  gate in code (`FAMTASTIC_MARKETING_PUBLISH=true` AND
+  `--i-have-owner-publish-approval`) — all three refusal paths proven. Missing
+  drafts adopted by utm_content or marked BLOCKED; rerun-safe
+  (`already_scheduled` path). Schema: social-record columns
+  `postiz_scheduled_id`/`provider_state`/`published_at` + index via update
+  hook **8038**.
+- Local validation against local Postiz v2.22.1 with synthetic records dated
+  2099 (cannot fire on live integrations): 4 conversions verified, idempotency
+  case proven, teardown leaves zero residue in Postiz and DB; real days 1–3
+  drafts untouched (all 68 records still `approval_publish=0`). Evidence:
+  `.artifacts/publish-executor/20260825T124006Z-4950/evidence.json`.
+- New recipe `docs/playbook/RECIPES/AUTOMATION_RELIABILITY.md` (@fam-ops):
+  race-fix receipt, executor runbook + remaining prod-run gates (owner
+  bounded-batch approval + prod Postiz env keys), laptop-bound inventory,
+  local Postiz failure modes. SOCIAL_POSTING steps 4–5 marked mechanism-ready.
+- Not done by design: no deploy, no prod Postiz contact.
+
 ## 2026-08-25 — Revision loop step 9 complete + R1 renewal-charging research (fam-commerce)
 
 - LEAD_TO_LAUNCH step 9 (revision requests & re-proof loop) completed locally:
