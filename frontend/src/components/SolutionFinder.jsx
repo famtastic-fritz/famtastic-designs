@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { AnimatePresence, motion } from 'framer-motion';
-import { postIntake } from '../api/pipeline.js';
+import { collectUtmParams, postIntake } from '../api/pipeline.js';
 
 const CONTACT_EMAIL = 'hello@famtasticdesigns.com';
 
@@ -634,6 +634,7 @@ export default function SolutionFinder({ initialBranch = null }) {
       answers: values,
       estimate: { low: estimate.low, high: estimate.high },
       utm: {
+        ...collectUtmParams(),
         path: window.location.pathname,
         branch,
         timestamp: new Date().toISOString(),

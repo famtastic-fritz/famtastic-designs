@@ -25,6 +25,7 @@ final class CustomerPortalService {
     private readonly UuidInterface $uuid,
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
+    private readonly AttributionService $attribution,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -230,14 +231,19 @@ final class CustomerPortalService {
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
     $clean = $this->validateWebsiteRequest($input);
     $now = $this->time->getRequestTime();
+    $attribution = $this->attribution->snapshotFromArray($input, 'customer_portal');
     $prospect = $this->entities->getStorage('famtastic_prospect')->create([
       'business_name' => $clean['business_name'] ?: $clean['project_name'],
       'public_email' => (string) $customer['email'], 'contact_name' => (string) $customer['display_name'],
       'contact_method' => 'email', 'contact_value' => (string) $customer['email'],
       'campaign' => 'customer_portal', 'source' => 'customer_portal', 'authorized' => TRUE,
       'confirmed_at' => $now, 'status' => $clean['status'] === 'submitted' ? 'lead' : 'new', 'owner_uid' => 1,
+      'utm_json' => $this->attribution->toJson($attribution),
     ]);
     $prospect->save();
+    if (!empty($attribution['utm_content'])) {
+      $this->attribution->recordSocialLead((string) $attribution['utm_content']);
+    }
     $publicId = $this->uuid->generate();
     $id = (int) $this->database->insert('famtastic_project_request')->fields([
       'public_id' => $publicId, 'organization_id' => (int) $organization['id'], 'customer_id' => $customerId,

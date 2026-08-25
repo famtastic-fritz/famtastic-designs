@@ -286,8 +286,8 @@ final class MarketingCommandController extends ControllerBase {
   }
 
   /**
-   * Attribution v1 (honest): campaign-level join lead → request → paid order.
-   * Content-ID-level join lands when UTMs persist at capture (queued work).
+   * Attribution v2: content-grain join (social record ↔ prospect utm_json)
+   * above the original honest campaign-grain join.
    */
   private function tabAttribution(): array {
     $rows = [];
@@ -311,7 +311,75 @@ final class MarketingCommandController extends ControllerBase {
         $revenue > 0 ? '$' . number_format($revenue / 100, 2) : '—',
       ];
     }
-    return $this->table('Leads & attribution — campaign join', 'Campaign/source → leads → website requests → paid order totals. Content-ID-level attribution lands when UTMs persist at lead capture (queued backend work); until then this view is honest at campaign grain.', ['Campaign', 'Source', 'Leads', 'Requests', 'Paid revenue'], $rows, 'No attributed leads recorded yet.');
+    return [
+      'content_grain' => $this->table(
+        'Leads & attribution — content grain',
+        'Social content ID → leads whose captured utm_content matches it → website requests → paid revenue. Live join over prospect attribution snapshots (utm persisted at capture since update 8036); zero-lead rows show exactly which posts produced nothing.',
+        ['Content ID', 'Day', 'Leads', 'Requests', 'Paid revenue'],
+        $this->contentGrainRows(),
+        'No social records imported yet.',
+      ),
+      'campaign_grain' => $this->table(
+        'Leads & attribution — campaign/source grain',
+        'Campaign/source → leads → website requests → paid order totals.',
+        ['Campaign', 'Source', 'Leads', 'Requests', 'Paid revenue'],
+        $rows,
+        'No attributed leads recorded yet.',
+      ),
+    ];
+  }
+
+  /**
+   * Joins famtastic_social_record.content_id to prospect utm snapshots.
+   *
+   * The utm_content match is resolved in PHP over the bounded snapshot set so
+   * the query stays portable across MySQL production and SQLite local runs
+   * (no JSON_EXTRACT / CONCAT dependence).
+   */
+  private function contentGrainRows(): array {
+    $leadsByContent = [];
+    $snapshots = $this->database->select('famtastic_prospect', 'p')
+      ->fields('p', ['id', 'utm_json'])
+      ->isNotNull('p.utm_json')
+      ->execute();
+    foreach ($snapshots as $snapshot) {
+      $decoded = json_decode((string) $snapshot->utm_json, TRUE);
+      $contentId = is_array($decoded) ? mb_substr(trim((string) ($decoded['utm_content'] ?? '')), 0, 64) : '';
+      if ($contentId !== '') {
+        $leadsByContent[$contentId][] = (int) $snapshot->id;
+      }
+    }
+    if (!$leadsByContent && !$this->count('famtastic_social_record')) {
+      return [];
+    }
+    $rows = [];
+    foreach ($this->database->select('famtastic_social_record', 's')
+      ->fields('s', ['content_id', 'day'])
+      ->orderBy('s.day')->orderBy('s.id')
+      ->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
+      $leadIds = $leadsByContent[(string) $record['content_id']] ?? [];
+      $requests = 0;
+      $revenue = 0;
+      if ($leadIds) {
+        $requestQuery = $this->database->select('famtastic_project_request', 'r');
+        $requestQuery->addExpression('COUNT(DISTINCT r.id)', 'c');
+        $requests = (int) $requestQuery->condition('r.prospect_id', $leadIds, 'IN')->execute()->fetchField();
+        $revenueQuery = $this->database->select('famtastic_commerce_fulfillment', 'f');
+        $revenueQuery->addExpression('SUM(f.amount_minor)', 't');
+        $revenue = (int) $revenueQuery
+          ->condition('f.prospect_id', $leadIds, 'IN')
+          ->condition('f.status', 'fulfilled')
+          ->execute()->fetchField();
+      }
+      $rows[] = [
+        Html::escape((string) $record['content_id']),
+        (int) $record['day'],
+        count($leadIds),
+        $requests,
+        $revenue > 0 ? '$' . number_format($revenue / 100, 2) : '—',
+      ];
+    }
+    return $rows;
   }
 
   private function tabEmail(): array {

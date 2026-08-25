@@ -10,6 +10,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\famtastic_pipeline\Entity\Prospect;
+use Drupal\famtastic_pipeline\Service\AttributionService;
 use Drupal\famtastic_pipeline\Service\ConciergeWebhookService;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
 use Drupal\famtastic_pipeline\Service\TokenManager;
@@ -32,6 +33,7 @@ class PublicRequestController extends ControllerBase {
     protected TimeInterface $time,
     protected LoggerInterface $logger,
     protected FloodInterface $flood,
+    protected AttributionService $attribution,
   ) {}
 
   /**
@@ -47,6 +49,7 @@ class PublicRequestController extends ControllerBase {
       $container->get('datetime.time'),
       $container->get('logger.channel.famtastic_pipeline'),
       $container->get('flood'),
+      $container->get('famtastic_pipeline.attribution'),
     );
   }
 
@@ -101,6 +104,7 @@ class PublicRequestController extends ControllerBase {
     if (!$prospect) {
       $token = $this->tokenManager->generate();
       $slaDays = max(1, (int) ($this->pipelineConfigFactory->get('famtastic_pipeline.settings')->get('lead_response_sla_days') ?: 3));
+      $attribution = $this->attribution->snapshotFromRequest($request, 'public_' . $type);
       $prospect = Prospect::create([
         'business_name' => $businessName,
         'business_category' => $this->sanitize((string) ($answers['industry'] ?? $data['branch'] ?? '')),
@@ -111,6 +115,7 @@ class PublicRequestController extends ControllerBase {
         'campaign' => 'public_' . $type,
         'source' => $this->sanitize((string) ($data['source'] ?? 'public-form')),
         'discovery_notes' => $this->sanitize($this->requestSummary($data, $type), TRUE),
+        'utm_json' => $this->attribution->toJson($attribution),
         'token_hash' => $token['hash'],
         'token_expires' => $token['expires'],
         'token_revoked' => FALSE,
@@ -122,6 +127,10 @@ class PublicRequestController extends ControllerBase {
         'next_followup_due' => $this->time->getRequestTime() + ($slaDays * 86400),
       ]);
       $prospect->save();
+      // A new lead carrying utm_content counts once for that social record.
+      if (!empty($attribution['utm_content'])) {
+        $this->attribution->recordSocialLead((string) $attribution['utm_content']);
+      }
     }
 
     $intake = $this->saveRequest($prospect, $data, $answers, $type);

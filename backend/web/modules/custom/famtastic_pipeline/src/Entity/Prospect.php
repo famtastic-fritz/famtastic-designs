@@ -170,6 +170,12 @@ class Prospect extends ContentEntityBase {
       ->setLabel('Eligible for nurture')->setDefaultValue(FALSE)
       ->setDisplayConfigurable('form', TRUE)->setDisplayConfigurable('view', TRUE);
 
+    // Attribution snapshot persisted at lead creation (utm_* / click IDs).
+    $fields['utm_json'] = BaseFieldDefinition::create('string_long')
+      ->setLabel('Attribution snapshot (JSON)')
+      ->setDescription(t('UTM and click-ID parameters present when this lead was created.'))
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel('Created');
     $fields['changed'] = BaseFieldDefinition::create('changed')

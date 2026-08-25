@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { postContactRequest } from '../../api/pipeline.js';
+import { collectUtmParams, postContactRequest } from '../../api/pipeline.js';
 
 const CONTACT_EMAIL = 'hello@famtasticdesigns.com';
 
@@ -63,6 +63,7 @@ export default function ContactForm({ title = 'Tell us about your project', comp
         phone: values.phone.trim(),
         business_name: values.business.trim(),
         message: values.message.trim(),
+        utm: collectUtmParams(),
         path: window.location.pathname,
         referrer: document.referrer || null,
       });

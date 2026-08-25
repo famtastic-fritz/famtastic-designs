@@ -1227,12 +1227,16 @@ function _famtastic_pipeline_lifecycle_schema(): array {
       'approval_media' => ['type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
       'approval_publish' => ['type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
       'postiz_draft_id' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'leads_count' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'postiz_scheduled_id' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'provider_state' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''],
+      'published_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
       'asset_variants' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
       'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
     ],
     'primary key' => ['id'],
     'unique keys' => ['content_id' => ['content_id']],
-    'indexes' => ['day' => ['day'], 'gates' => ['approval_content', 'approval_media', 'approval_publish']],
+    'indexes' => ['day' => ['day'], 'gates' => ['approval_content', 'approval_media', 'approval_publish'], 'publish_state' => ['provider_state', 'approval_publish']],
   ];
   $tables['famtastic_support_draft'] = [
     'description' => 'L0 draft replies generated per inbound message; nothing sends without owner approval.',
@@ -1766,3 +1770,36 @@ function famtastic_pipeline_update_8036(&$sandbox) {
   return t('Created the immutable proof version history table.');
 }
 
+/** Persists UTM attribution snapshots at lead capture (R4 / Track fix). */
+function famtastic_pipeline_update_8037(&$sandbox) {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  if (!$manager->getFieldStorageDefinition('utm_json', 'famtastic_prospect')) {
+    $entityType = \Drupal::entityTypeManager()->getDefinition('famtastic_prospect');
+    $definitions = $entityType->getClass()::baseFieldDefinitions($entityType);
+    $manager->installFieldStorageDefinition('utm_json', 'famtastic_prospect', 'famtastic_pipeline', $definitions['utm_json']);
+  }
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('famtastic_social_record') && !$schema->fieldExists('famtastic_social_record', 'leads_count')) {
+    $schema->addField(
+      'famtastic_social_record',
+      'leads_count',
+      _famtastic_pipeline_lifecycle_schema()['famtastic_social_record']['fields']['leads_count'],
+    );
+  }
+  return t('Added prospect attribution snapshots and social record lead counters.');
+}
+
+/** Publish-executor state columns for social records (SOCIAL_POSTING steps 4-5). */
+function famtastic_pipeline_update_8038(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $fields = _famtastic_pipeline_lifecycle_schema()['famtastic_social_record']['fields'];
+  foreach (['postiz_scheduled_id', 'provider_state', 'published_at'] as $column) {
+    if ($schema->tableExists('famtastic_social_record') && !$schema->fieldExists('famtastic_social_record', $column)) {
+      $schema->addField('famtastic_social_record', $column, $fields[$column]);
+    }
+  }
+  if ($schema->tableExists('famtastic_social_record') && !$schema->indexExists('famtastic_social_record', 'publish_state')) {
+    $schema->addIndex('famtastic_social_record', 'publish_state', ['provider_state', 'approval_publish'], _famtastic_pipeline_lifecycle_schema()['famtastic_social_record']);
+  }
+  return t('Added publish-executor state columns to the social record table.');
+}

@@ -9,6 +9,22 @@ const BASE = (import.meta.env.VITE_DRUPAL_BASE_URL ?? '').replace(/\/+$/, '');
 const API = `${BASE}/api/pipeline`;
 const PUBLIC_API = `${BASE}/api/public`;
 
+// Attribution params forwarded on every lead-capture call so UTMs survive
+// past the landing page (backend persists them as the prospect utm_json
+// snapshot at lead creation).
+const ATTRIBUTION_PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'];
+
+export function collectUtmParams() {
+  if (typeof window === 'undefined') return {};
+  const search = new URLSearchParams(window.location.search);
+  const snapshot = {};
+  for (const key of ATTRIBUTION_PARAMS) {
+    const value = (search.get(key) || '').trim().slice(0, 255);
+    if (value) snapshot[key] = value;
+  }
+  return snapshot;
+}
+
 function tokenHeaders(token, extra = {}) {
   return { 'X-Prospect-Token': token, ...extra };
 }

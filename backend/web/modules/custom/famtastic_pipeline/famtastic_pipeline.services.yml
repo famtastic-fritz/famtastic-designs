@@ -104,9 +104,13 @@ services:
     class: Drupal\famtastic_pipeline\Service\OutreachMailer
     arguments: ['@config.factory', '@logger.channel.famtastic_pipeline']
 
+  famtastic_pipeline.attribution:
+    class: Drupal\famtastic_pipeline\Service\AttributionService
+    arguments: ['@database', '@datetime.time']
+
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.attribution']
 
   famtastic_pipeline.grant_codes:
     class: Drupal\famtastic_pipeline\Service\GrantCodeService
