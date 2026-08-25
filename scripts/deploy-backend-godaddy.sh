@@ -126,10 +126,11 @@ test "$remote_sha" = "$commit_sha" || {
 cd "$production_dir"
 "$drush" status --fields=bootstrap,db-status,drupal-version --format=list
 # A deployment must never land on (or silently leave) a maintenance-mode site.
-maint="$("$drush" config:get system.maintenance_mode.enabled --format=string 2>/dev/null || echo 0)"
+# Maintenance mode lives in STATE (not config) - Drupal core key.
+maint="$("$drush" sget system.maintenance_mode --format=string 2>/dev/null || echo 0)"
 if [ "$maint" = "1" ] || [ "$maint" = "true" ]; then
   if [ "$mode" = "apply" ]; then
-    "$drush" config:set -y system.maintenance_mode enabled 0 >/dev/null
+    "$drush" sset system.maintenance_mode 0 >/dev/null
     echo "Maintenance mode was ON - disabled before deployment."
   else
     echo "WARNING: site is in MAINTENANCE MODE (preflight only - not changed)."
