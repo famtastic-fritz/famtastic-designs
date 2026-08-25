@@ -615,6 +615,41 @@ famtastic_pipeline.social_record_gate:
     gate: 'content|media|publish'
     direction: 'approve|revoke'
 
+famtastic_pipeline.marketing:
+  path: '/admin/famtastic/marketing'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MarketingCommandController::command'
+    _title: 'Marketing Command Center'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+
+famtastic_pipeline.marketing.tab:
+  path: '/admin/famtastic/marketing/{tab}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MarketingCommandController::tab'
+    _title: 'Marketing Command Center'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    tab: 'command|queue|calendar|channels|attribution|email|creative|builddna'
+
+famtastic_pipeline.marketing.email_inspect:
+  path: '/admin/famtastic/marketing/email/{id}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MarketingCommandController::emailInspect'
+    _title: 'Email message'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    id: \d+
+
+famtastic_pipeline.marketing.build_dna:
+  path: '/admin/famtastic/marketing/build-dna/{id}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MarketingCommandController::buildDnaDetail'
+    _title: 'Build DNA'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    id: \d+
+
 famtastic_pipeline.notification_retry:
   path: '/admin/famtastic/notification/{id}/retry'
   defaults:
