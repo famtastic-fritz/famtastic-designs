@@ -28,6 +28,50 @@
       },
       "additionalProperties": true
     },
+    "research_enrichment": {
+      "type": "object",
+      "description": "Optional, provenance-only research context. It is absent unless explicitly requested with an upstream research execution receipt and never makes research a required Site Studio build stage.",
+      "required": ["requested", "actual", "receipt"],
+      "additionalProperties": false,
+      "properties": {
+        "requested": {
+          "type": "object",
+          "required": ["status", "adapter"],
+          "additionalProperties": false,
+          "properties": {
+            "status": {"const": "optional"},
+            "adapter": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"},
+            "model": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"},
+            "thinking": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"},
+            "permission_mode": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"}
+          }
+        },
+        "actual": {
+          "type": "object",
+          "required": ["status", "provider", "adapter"],
+          "additionalProperties": false,
+          "properties": {
+            "status": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"},
+            "provider": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"},
+            "adapter": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"},
+            "agent": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"},
+            "model": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"},
+            "execution_class": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"},
+            "research_status": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,160}$"}
+          }
+        },
+        "receipt": {
+          "type": "object",
+          "required": ["schema", "path", "sha256"],
+          "additionalProperties": false,
+          "properties": {
+            "schema": {"const": "famtastic.research-execution.v1"},
+            "path": {"type": "string", "pattern": "^packet-files/research-execution\\.json$"},
+            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+          }
+        }
+      }
+    },
     "return_contract": {"type": "object", "required": ["schema", "signature_algorithm"]}
   },
   "additionalProperties": true

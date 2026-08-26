@@ -28,7 +28,7 @@ capability is not “proven” merely because code exists.
 | SEO and dynamic sitemap delivery | Production smoke-tested | Drupal content discovery, route-specific shells, sitemap, robots, and canonical metadata |
 | Synthetic customer journey proof | Locally proven | Repeatable lifecycle QA with explicit provider and production boundaries |
 | Isolated customer site deployment | Locally proven | Build, proof, approval, deployment, rollback, domain, and hosting lifecycle patterns |
-| Preview-to-Site-Studio build packet bridge | Locally proven | Provider-neutral one/two-direction build packet, exact stage journal, signed success validation, project-scoped portal continuation, and transactional notification handoff |
+| Preview-to-Site-Studio build packet bridge | Locally proven | Provider-neutral one/two-direction build packet, exact stage journal, signed success validation, project-scoped portal continuation, transactional notification handoff, and an optional redacted research-execution provenance projection; it does not prove a live research provider or require one |
 | Six-direction proof retention library | Locally proven | Deduplicated design/structure candidates retained without reusing customer copy or media |
 | Provider availability and build-class routing | Locally proven | Free, low, medium, premium, premium-brain/free-worker, and custom policies with fail-closed preflight and declared fallbacks |
 | Lean research-first social-presence proof | Unlisted-hosting production smoke-tested | One coherent campaign identity, two purpose-built graphics, original character branding, editable social cards, responsive hub, exact model/cost ledger, and closed social-publication gates |

@@ -1,5 +1,22 @@
 # Product changelog
 
+## 2026-08-26 — Optional research-enrichment handoff added to the Site Studio packet contract
+
+- Added an additive `research_enrichment` field to the existing
+  `famtastic.site-studio.build-packet.v1` schema. The packet remains valid and
+  behaviorally unchanged when the field is absent.
+- `website-delivery-swarm/autonomous_pipeline.py prepare` now accepts the
+  explicit opt-in `--research-execution` argument. It records only a frozen
+  `requested.status: optional` plus actual status/provider/adapter and a
+  SHA-256-addressed receipt projection. A receipt sitting beside an artifact
+  does not silently enter the packet.
+- The new `research_enrichment.py` allowlists provenance data and strips raw
+  prompts/transcripts, customer contact/claims, credentials, OAuth/token data,
+  session IDs, and arbitrary provider metadata before the archive is signed.
+  Focused tests prove the supplied and omitted lanes, receipt checksum, archive
+  inclusion, and unsafe-provenance rejection. No provider call, Site Studio
+  invocation, customer action, or deployment occurred.
+
 ## 2026-08-26 — Unlisted proof-room route correction deployed
 
 - Corrected the frontend Apache routing contract for dynamic, signed

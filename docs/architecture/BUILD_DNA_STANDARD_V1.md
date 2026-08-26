@@ -91,6 +91,15 @@ record as context, journals its own real stages, and returns its build ID,
 artifact hashes, timing, provider/model facts when exposed, warnings, and a
 Build DNA continuation reference in the signed success packet.
 
+An optional `research_enrichment` packet field may point to a redacted,
+checksum-addressed `famtastic.research-execution.v1` provenance projection.
+It is not a second Build DNA record, a mandatory research stage, or permission
+for Site Studio to re-run the named provider. Preserve it as read-only inbound
+lineage only when present; validate the schema and SHA-256 first, then record
+only Site Studio's own actual subsequent stages in its continuation. The
+projection must never contain a raw provider transcript, customer contact data,
+credentials, OAuth material, or session identifiers.
+
 The existing v1 packet is intentionally additive-compatible. New FAMtastic
 packets must include the pointer; legacy packets can be read but are visibly
 marked `build_dna_status=legacy_missing` rather than silently upgraded.

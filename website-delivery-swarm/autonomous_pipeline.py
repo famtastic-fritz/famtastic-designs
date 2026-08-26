@@ -23,6 +23,11 @@ import time
 import uuid
 import zipfile
 
+from research_enrichment import (
+    prepare_research_enrichment,
+    validate_research_enrichment,
+)
+
 
 ROOT = pathlib.Path(__file__).resolve().parent
 SCHEMAS = ROOT / "schemas"
@@ -359,6 +364,16 @@ def prepare(args) -> pathlib.Path:
         shutil.copy2(artifact / name, packet_files / name)
     if (artifact / "stage-journal").is_dir():
         shutil.copytree(artifact / "stage-journal", packet_files / "stage-journal")
+    # Research enrichment is an optional provenance feature. It is present
+    # only when the caller explicitly supplies a safe execution receipt; it
+    # never turns research into a required Site Studio stage or imports a raw
+    # provider transcript/customer contact into the build packet.
+    research_enrichment = prepare_research_enrichment(
+        packet_files,
+        explicit_path=getattr(args, "research_execution", None),
+    )
+    if research_enrichment is not None:
+        validate_research_enrichment(research_enrichment, packet_files)
     # Preserve all six references so Site Studio can measure the creative spread;
     # selected_direction_ids controls which one or two become build targets.
     for direction_id in [f"direction-{letter}" for letter in "abcdef"]:
@@ -411,6 +426,8 @@ def prepare(args) -> pathlib.Path:
         "commercial_boundaries": {"price_authority": "Drupal Commerce", "charging_allowed": False, "domain_purchase_allowed": False, "publication_allowed": False},
         "return_contract": {"schema": "site-studio.build-success.v1", "signature_algorithm": "HMAC-SHA256", "idempotency_required": True, "success_only_updates_portal": True},
     }
+    if research_enrichment is not None:
+        packet["research_enrichment"] = research_enrichment
     dump(output / "site-studio-build-packet.json", packet)
     signature = None
     secret = os.getenv("FAMTASTIC_SITE_STUDIO_PACKET_SECRET")
@@ -520,6 +537,14 @@ def parser() -> argparse.ArgumentParser:
     prep.add_argument("--select", default="direction-e,direction-f")
     prep.add_argument("--build-class", default="medium")
     prep.add_argument("--golden-replay", action="store_true")
+    prep.add_argument(
+        "--research-execution",
+        help=(
+            "Explicit optional research execution receipt or Site Studio research "
+            "packet; a redacted provenance-only copy is included only when this "
+            "flag is supplied."
+        ),
+    )
     sim = sub.add_parser("simulate-success")
     sim.add_argument("--packet", required=True)
     sim.add_argument("--output", required=True)

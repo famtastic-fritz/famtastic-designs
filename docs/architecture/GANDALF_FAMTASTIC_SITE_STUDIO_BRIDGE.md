@@ -15,7 +15,10 @@ These notes are the resumable boundary map for any agent working in either repos
 5. Resolve provider capabilities and fail closed when unavailable.
 6. Produce `famtastic.site-studio.build-packet.v1` and its archive, with the
    same immutable `famtastic.build-dna.v1` record copied to
-   `packet-files/build-dna.json` and referenced by its checksum.
+   `packet-files/build-dna.json` and referenced by its checksum. An explicitly
+   requested research-execution receipt may be included as optional frozen
+   context; it never becomes a prerequisite for the packet or a request for
+   Site Studio to rerun a provider.
 7. Register the exact packet on the matching Drupal project before dispatch.
 8. Send or paste the immutable packet into Site Studio's approved intake surface.
 9. Validate the signed `site-studio.build-success.v1` return.
@@ -36,17 +39,63 @@ Site Studio does not need a new engine. Its boundary adapter should:
 1. Accept the packet as immutable input.
 2. Refuse an already-seen `idempotency_key` unless returning the prior result.
 3. Verify the packet signature when transport is networked.
-4. Place the supplied brief, research, selected direction contracts, preview HTML, art, and evidence into its existing recipe context.
+4. Place the supplied brief, research, selected direction contracts, preview
+   HTML, art, and evidence into its existing recipe context. When the optional
+   `research_enrichment` field exists, validate its checksum and use it only as
+   read-only provenance/context; it must not cause Site Studio to invoke,
+   retry, or substitute a research provider.
 5. Run its existing registered/YAML-sequenced stages.
 6. Preserve the inbound Build DNA as read-only lineage; journal Site Studio's
    actual stages separately and return its build ID, output checksums, timing,
    exposed provider/model facts, warnings, and a Build DNA continuation
    reference in the signed success packet. Do not invent missing runtime facts.
-6. Preserve its own real per-stage journal and reversible checkpoints.
-7. Return `site-studio.build-success.v1` with artifact URIs, SHA-256 values, real stage ledger, warnings, timestamps, and the original correlation IDs.
-8. Sign the exact raw success body with the shared callback secret.
+7. Preserve its own real per-stage journal and reversible checkpoints.
+8. Return `site-studio.build-success.v1` with artifact URIs, SHA-256 values, real stage ledger, warnings, timestamps, and the original correlation IDs.
+9. Sign the exact raw success body with the shared callback secret.
 
 No Site Studio build-process modification was made by this work. The adapter is a boundary responsibility for the Site Studio lane.
+
+## Optional research enrichment — frozen context, not a command
+
+`research_enrichment` is an additive field in the existing
+`famtastic.site-studio.build-packet.v1` schema. It supports a research-first
+build without forcing every FAMtastic request through the same provider,
+research depth, or stage count.
+
+- FAMtastic emits it only when `autonomous_pipeline.py prepare` is explicitly
+  given `--research-execution /absolute/path/to/receipt-or-research-packet`.
+  A receipt merely existing beside a preview artifact does **not** attach
+  itself. Omitting the flag produces the legacy-compatible packet with no
+  `research_enrichment` property.
+- The field records `requested.status: "optional"`, the declared/requested
+  adapter configuration, and the frozen actual `status`, `provider`, and
+  `adapter`. A declared fallback keeps its fallback state and actual provider
+  visible rather than being relabeled as a successful requested Kimi result.
+- Its `receipt` is a checksum pointer to
+  `packet-files/research-execution.json`. FAMtastic writes a narrowly
+  allowlisted provenance projection there: provider/model/adapter identity,
+  execution outcome, hashes, timing, aggregate tool/usage/cost state, and
+  redaction/fallback counts. It intentionally excludes raw prompt snapshots,
+  provider transcripts, customer claims/contact values, credentials, OAuth
+  data, tokens, session IDs, and arbitrary provider metadata.
+- FAMtastic accepts an input only when it declares
+  `famtastic.research-execution.v1`, validates the safe provenance subset used
+  by the projection, rejects unsafe required identifiers, writes the sanitized
+  projection, then records its SHA-256 in the signed packet. Site Studio must
+  validate the build-packet schema and recompute that file checksum before
+  reading it. A missing, invalid, or mismatched optional receipt is a
+  packet-integrity failure when the field is present; an absent field is normal
+  and must not block the build.
+- Site Studio may use the frozen result as context, preserve it in its Build
+  DNA continuation, or ignore it when the selected recipe does not need it.
+  It may not treat the field as permission or instruction to re-run Kimi,
+  prompt another model, modify the request, send mail, or advance a human
+  approval gate.
+
+Canonical FAMtastic implementation: `website-delivery-swarm/research_enrichment.py`,
+called only through the optional `--research-execution` argument in
+`website-delivery-swarm/autonomous_pipeline.py`. The focused contract coverage
+is `website-delivery-swarm/tests/test_research_enrichment.py`.
 
 ## Correlation invariants
 

@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-26 — A recorded research receipt is not permission to impose research on every build
+
+- Observation: a receipt can prove that a research route ran, but attaching it
+  automatically would make a provider choice rigid and could blur provenance
+  into an instruction for Site Studio to re-run a model. The bridge needs to
+  preserve quality context without changing the selected build recipe.
+- Guidance: `research_enrichment` is explicit opt-in only. Pass a receipt with
+  `autonomous_pipeline.py prepare --research-execution ...` when frozen
+  provenance is useful; otherwise omit the field. Copy only allowlisted,
+  checksum-addressed provenance into the packet, never raw prompts/transcripts,
+  customer contact/claims, credentials, OAuth/token data, or session IDs.
+  Site Studio validates the projection and may use it as read-only context, but
+  must never treat it as a command to invoke/retry Kimi or advance a customer
+  lifecycle gate.
+
 ## 2026-08-26 — A ledger claim can go stale mid-run when sessions run concurrently (heartbeat 03:16Z)
 
 - Observation: the 03:16Z heartbeat oriented at 03:13Z on two uncommitted

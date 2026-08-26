@@ -5,6 +5,22 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-26 — Research provenance is optional context, never a hidden build command
+
+Observation: a completed research receipt can improve continuity between
+FAMtastic and Site Studio, but automatically attaching it makes one provider or
+stage sequence look mandatory. A receipt also carries enough metadata that a
+generic copy risks bringing raw provider/customer data into a packet.
+
+Guidance: attach `research_enrichment` only through the explicit
+`autonomous_pipeline.py prepare --research-execution ...` opt-in. The packet
+must remain valid when the field is absent. When present, validate its schema
+and the copied receipt SHA-256, preserve it as read-only Build DNA context, and
+never interpret it as authorization to re-run Kimi, send mail, change a
+customer request, or advance an approval. Copy only the allowlisted provenance
+projection—not prompts/transcripts, contact/claim data, credentials, OAuth or
+token material, session IDs, or arbitrary provider metadata.
+
 ## 2026-08-26 — Dynamic proof links need an Apache shell fallback, not a static route directory
 
 Observation: an enabled signed proof share could be resolved anonymously by
