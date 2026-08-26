@@ -1,5 +1,33 @@
 # Production Deploy Log
 
+## 2026-08-26 — Signed anonymous proof-room routing
+
+- Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
+- Frontend release: `c119338b043a3ab907773344bccedcf3081387de`
+- Release record: 2026-08-26T18:32:22Z, Node v22.23.2
+- Frontend rollback archive:
+  `~/backups/famtastic-frontend-20260826T183200Z-c119338b043a3ab907773344bccedcf3081387de.tgz`
+- Scope: frontend `.htaccess` routing plus deploy backup/verification only; no
+  Drupal schema, proof record, share-token, customer email, payment, or other
+  production data mutation.
+- Result: successful.
+
+### Acceptance evidence
+
+- Before release, a valid anonymous signed proof API and its proof artifacts
+  returned 200, while its human-facing `/proofs/share/...` room returned
+  Apache's bare 404 on apex and `www`.
+- After release, the server release marker and deployed root `.htaccess` match
+  `c119338b`; valid shaped share URLs load the React proof-room route on both
+  hostnames.
+- The enabled signed proof payload exposes the expected six direction IDs;
+  first and last proof pages resolve anonymously, while an invalid signature
+  remains a 404 with no proof data.
+- Browser acceptance loaded the branded unavailable-proof state for a synthetic
+  invalid signature on both hostnames with `#root` populated and no console
+  errors, proving the dynamic route reaches the application rather than Apache
+  404ing before JavaScript starts.
+
 ## 2026-08-07 — Customer lifecycle portal and Commerce catalog
 
 - Repository/branch: `famtastic-fritz/famtastic-designs` / `main`

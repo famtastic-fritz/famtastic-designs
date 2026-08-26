@@ -1,6 +1,6 @@
 # Product changelog
 
-## 2026-08-26 — Unlisted proof-room route correction prepared (not deployed)
+## 2026-08-26 — Unlisted proof-room route correction deployed
 
 - Corrected the frontend Apache routing contract for dynamic, signed
   `/proofs/share/<request>/<signature>` rooms with a deliberately narrow React
@@ -15,8 +15,16 @@
   this route-level change is rollback-safe. Production inspection showed the
   signed API endpoint returned 200 anonymously while the frontend share route
   returned Apache's bare 404; this is a route-shell defect, not a revoked-link
-  or account-ownership defect. Local build and route-shell checks passed.
-  Deployment remains a separate approved step.
+  or account-ownership defect.
+- Frontend release `c119338b043a3ab907773344bccedcf3081387de` deployed at
+  2026-08-26T18:32:22Z with rollback archive
+  `~/backups/famtastic-frontend-20260826T183200Z-c119338b043a3ab907773344bccedcf3081387de.tgz`.
+  The server verified the deployed `.htaccess` exactly. On both apex and `www`,
+  a live signed room now returns 200, its anonymous API resolves six directions
+  (`a` through `f`), and first/last signed proof pages return 200. An invalid
+  signature remains a no-data 404. Browser checks verified the branded
+  unavailable-proof state instead of Apache's generic 404, with no console
+  errors.
 
 ## 2026-08-26 — Channel-health card live in production; four-day retrospective published
 

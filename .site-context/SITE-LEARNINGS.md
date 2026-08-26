@@ -25,6 +25,11 @@ Guidance:
   lacks permission. Verify both anonymous API resolution and the public browser
   route after each frontend deployment.
 
+Production outcome: frontend release `c119338b` deployed successfully at
+18:32:22Z. Both apex and `www` now hand valid shaped proof-share URLs to the
+branded React state rather than Apache's generic 404. A live enabled share
+resolved six anonymous directions; invalid signatures still return no data.
+
 ## 2026-08-25 — Heartbeat runs must append + commit their own log line before exit
 
 Observation: two CEO heartbeat sessions stranded their HEARTBEAT.md append

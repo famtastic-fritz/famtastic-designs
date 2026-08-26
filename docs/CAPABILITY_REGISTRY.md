@@ -13,6 +13,7 @@ capability is not “proven” merely because code exists.
 | Synthetic human-experience testing | Locally proven | Reusable control persona plus disclosed, opt-in creative lenses that cannot affect commercial, legal, safety, accessibility, or approval decisions |
 | Account-scoped private pricing | Locally proven | Auditable relationship, partner, and promotional pricing without public coupons |
 | Owner-gated three-direction website proofs | Locally proven | Safe/Wild/OMG generation, private staff review, authenticated selection, and revision workflow |
+| Anonymous view-only proof sharing | Production smoke-tested | Signed unlisted proof rooms load on apex and `www`; anonymous API access exposes only permitted directions while invalid signatures return no data |
 | Revision loop with proof-version receipts | Locally proven (not yet deployed) | Customer revision request → allowance-gated $75 add-on purchase (stub/test gateway) → limit increment → owner alert + customer receipt; immutable per-project proof version history with prior versions preserved (`scripts/e2e-revision-loop.sh`, 15/15) |
 | Off-session hosting renewal charging | Research complete; scaffold only; hard-disabled by code until Fritz gates open | R1 recommendation + never-charging renewals-cron scaffold in `docs/audits/R1-RENEWAL-CHARGING-RESEARCH.md`; no live charge capability claimed |
 | Optional six-direction FAMtastic showcase | Locally proven | Three additional original high-intensity sites appended without bypassing private review or customer-send gates |
