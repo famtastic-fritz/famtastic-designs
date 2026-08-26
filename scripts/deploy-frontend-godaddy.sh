@@ -195,6 +195,7 @@ done < "$asset_manifest"
 backup_items=()
 [[ -e "$production_dir/index.html" ]] && backup_items+=("index.html")
 [[ -e "$production_dir/assets" ]] && backup_items+=("assets")
+[[ -e "$production_dir/.htaccess" ]] && backup_items+=(".htaccess")
 [[ -e "$production_dir/.frontend-release" ]] && backup_items+=(".frontend-release")
 if [[ "${#backup_items[@]}" -gt 0 ]]; then
   tar -C "$production_dir" -czf "$backup_path" "${backup_items[@]}"
@@ -232,6 +233,12 @@ while IFS= read -r route_shell; do
   }
 done < "$route_shell_manifest"
 echo "Verified $(wc -l < "$route_shell_manifest" | tr -d ' ') route-specific SEO shell(s)."
+
+cmp -s "$dist_dir/.htaccess" "$production_dir/.htaccess" || {
+  echo "Verification failed: root .htaccess was not promoted exactly." >&2
+  exit 1
+}
+echo "Verified root .htaccess."
 
 while IFS= read -r asset_path; do
   live_url="https://famtasticdesigns.com/$asset_path"

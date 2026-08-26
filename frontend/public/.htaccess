@@ -21,6 +21,12 @@
   # Platform domain-verification files: tolerate trailing slash (TikTok fetches /file.txt/).
   # Match requires the slash so the rewritten slashless URL exits the loop.
   RewriteRule ^(tiktok[A-Za-z0-9]+\.txt)/$ /$1 [L]
+
+  # Signed proof rooms are dynamic React routes. Keep this deliberately narrow:
+  # the same document root also serves Drupal and static campaign experiences.
+  # React will validate the token; Apache must not 404 before it can load.
+  RewriteRule ^proofs/share/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]
+  RewriteRule ^proofs/preview/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]
 </IfModule>
 
 # The Drupal backend root (/web/) is not a landing surface - route it to the SPA.

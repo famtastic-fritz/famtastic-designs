@@ -5,6 +5,26 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-26 — Dynamic proof links need an Apache shell fallback, not a static route directory
+
+Observation: an enabled signed proof share could be resolved anonymously by
+Drupal's `/web/api/proof-shares/...` endpoint, while the customer-facing
+`/proofs/share/...` URL returned Apache's bare 404 before React loaded. The
+frontend had the `ProofSharePage` route, but no physical directory can exist
+for every signed request URL and the deployed root `.htaccess` had no fallback.
+
+Guidance:
+
+- Use a narrow `/proofs/share/<uuid>/<signature>` rewrite, not a generic SPA
+  fallback. This document root also hosts Drupal and static campaign experiences
+  that must retain their own routing behavior.
+- Include root `.htaccess` in every frontend-route deploy backup and verify its
+  exact promotion. A JavaScript-only rollback does not restore Apache behavior.
+- Treat a direct `GET /web/api/proof-shares/... = 200` plus a public-room 404
+  as routing-shell evidence, not as proof that a token was revoked or a client
+  lacks permission. Verify both anonymous API resolution and the public browser
+  route after each frontend deployment.
+
 ## 2026-08-25 — Heartbeat runs must append + commit their own log line before exit
 
 Observation: two CEO heartbeat sessions stranded their HEARTBEAT.md append

@@ -1,5 +1,23 @@
 # Product changelog
 
+## 2026-08-26 — Unlisted proof-room route correction prepared (not deployed)
+
+- Corrected the frontend Apache routing contract for dynamic, signed
+  `/proofs/share/<request>/<signature>` rooms with a deliberately narrow React
+  shell rewrite. Drupal, generated SEO shells, and static campaign experiences
+  retain their existing routes; React can now validate the unlisted token rather
+  than Apache returning a missing-path 404 first.
+- Added the parallel `/proofs/preview/...` rule for the future preview lane,
+  without treating that undeployed feature as live.
+- Extended `scripts/e2e-frontend-route-shells.sh` to fail if either protected
+  proof-room rule is removed or a broad SPA catch-all is introduced. The
+  frontend deploy primitive now backs up and byte-verifies root `.htaccess` so
+  this route-level change is rollback-safe. Production inspection showed the
+  signed API endpoint returned 200 anonymously while the frontend share route
+  returned Apache's bare 404; this is a route-shell defect, not a revoked-link
+  or account-ownership defect. Local build and route-shell checks passed.
+  Deployment remains a separate approved step.
+
 ## 2026-08-26 — Channel-health card live in production; four-day retrospective published
 
 - Postiz channel-health card wired into production: API key minted via

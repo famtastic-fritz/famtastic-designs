@@ -4,6 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DIST_DIR="$REPO_ROOT/frontend/dist"
 DEPLOY_SCRIPT="$REPO_ROOT/scripts/deploy-frontend-godaddy.sh"
+HTACCESS_FILE="$REPO_ROOT/frontend/public/.htaccess"
 SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/famtastic-route-shells.XXXXXX")"
 
 cleanup() {
@@ -18,6 +19,19 @@ trap cleanup EXIT
 
 test -f "$DIST_DIR/index.html"
 test -f "$DIST_DIR/contact/index.html"
+test -f "$HTACCESS_FILE"
+
+# Signed proof rooms use dynamic React routes. Apache must send only those
+# paths to the shell so token validation happens in the app without a broad
+# catch-all consuming Drupal or static campaign paths in the shared docroot.
+share_route_line="$(grep -nF 'RewriteRule ^proofs/share/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]' "$HTACCESS_FILE" | cut -d: -f1)"
+preview_route_line="$(grep -nF 'RewriteRule ^proofs/preview/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]' "$HTACCESS_FILE" | cut -d: -f1)"
+test -n "$share_route_line"
+test -n "$preview_route_line"
+if grep -Fq 'RewriteRule ^ index.html [L]' "$HTACCESS_FILE"; then
+  echo "Proof-room routing must not introduce a broad SPA catch-all." >&2
+  exit 1
+fi
 
 root_assets="$(grep -oE '(src|href)="/assets/[^"]+"' "$DIST_DIR/index.html" | sort -u)"
 test -n "$root_assets"
