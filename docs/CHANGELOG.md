@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-08-26 — Customer verification links work from a fresh browser
+
+Added a deliberately narrow Apache SPA rewrite for `/verify-email`, `/login`,
+and `/reset-password`. Account emails now reach the existing React verification
+screen on a fresh mobile browser instead of Apache returning 404 before the
+token handler can run. The rewrite does not create a broad SPA catch-all, so
+Drupal, static campaigns, and existing proof-room boundaries remain isolated.
+
 ## 2026-08-26 — Unlisted proof-room route correction deployed
 
 - Corrected the frontend Apache routing contract for dynamic, signed

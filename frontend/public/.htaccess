@@ -27,6 +27,11 @@
   # React will validate the token; Apache must not 404 before it can load.
   RewriteRule ^proofs/share/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]
   RewriteRule ^proofs/preview/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]
+
+  # Customer account links are sent by email and must work in a fresh mobile
+  # browser with no prior SPA navigation. Keep these account routes explicit
+  # rather than adding a broad fallback that could consume Drupal or microsites.
+  RewriteRule ^(?:login|verify-email|reset-password)/?$ /index.html [L]
 </IfModule>
 
 # The Drupal backend root (/web/) is not a landing surface - route it to the SPA.

@@ -26,8 +26,10 @@ test -f "$HTACCESS_FILE"
 # catch-all consuming Drupal or static campaign paths in the shared docroot.
 share_route_line="$(grep -nF 'RewriteRule ^proofs/share/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]' "$HTACCESS_FILE" | cut -d: -f1)"
 preview_route_line="$(grep -nF 'RewriteRule ^proofs/preview/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]' "$HTACCESS_FILE" | cut -d: -f1)"
+account_route_line="$(grep -nF 'RewriteRule ^(?:login|verify-email|reset-password)/?$ /index.html [L]' "$HTACCESS_FILE" | cut -d: -f1)"
 test -n "$share_route_line"
 test -n "$preview_route_line"
+test -n "$account_route_line"
 if grep -Fq 'RewriteRule ^ index.html [L]' "$HTACCESS_FILE"; then
   echo "Proof-room routing must not introduce a broad SPA catch-all." >&2
   exit 1
