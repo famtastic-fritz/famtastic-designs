@@ -12,3 +12,11 @@ commerce_checkout:
   css:
     theme:
       css/commerce-checkout.css: {}
+
+# Hides the React frontend header on user account pages where the admin
+# toolbar already provides navigation. Prevents the visual clash of both
+# headers stacking on top of each other.
+user_page_clean:
+  css:
+    theme:
+      css/user-page-clean.css: {}

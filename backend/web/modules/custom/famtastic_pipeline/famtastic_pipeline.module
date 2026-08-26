@@ -8,6 +8,7 @@
 declare(strict_types=1);
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_page_attachments().
@@ -19,6 +20,43 @@ function famtastic_pipeline_page_attachments(array &$attachments): void {
   $routeName = (string) \Drupal::routeMatch()->getRouteName();
   if (str_starts_with($routeName, 'commerce_checkout.')) {
     $attachments['#attached']['library'][] = 'famtastic_pipeline/commerce_checkout';
+  }
+  // Suppress the React frontend header on user account pages — the admin
+  // toolbar already provides navigation; mixing both creates visual chaos.
+  if (str_starts_with($routeName, 'user.') || str_starts_with($routeName, 'profile.')) {
+    $attachments['#attached']['library'][] = 'famtastic_pipeline/user_page_clean';
+  }
+}
+
+/**
+ * Implements hook_user_insert().
+ *
+ * Every registered user becomes a FAMtastic customer. If a prospect already
+ * exists with the same email, the customer is linked to it so proofs,
+ * projects, and intake data carry forward.
+ */
+function famtastic_pipeline_user_insert(UserInterface $account): void {
+  try {
+    $portal = \Drupal::service('famtastic_pipeline.customer_portal');
+    $customer = $portal->customerForUid((int) $account->id());
+    if (!$customer) {
+      $portal->createCustomer($account, [
+        'name' => $account->getDisplayName() ?: $account->getEmail(),
+        'source' => 'registration',
+      ]);
+    }
+    // Ensure a customer role exists and is assigned for portal access.
+    $roleStorage = \Drupal::entityTypeManager()->getStorage('user_role');
+    $customerRole = $roleStorage->load('famtastic_customer');
+    if ($customerRole && !$account->hasRole('famtastic_customer')) {
+      $account->addRole('famtastic_customer')->save();
+    }
+  }
+  catch (\Throwable $error) {
+    \Drupal::logger('famtastic_pipeline')->error(
+      'Customer auto-create failed for registered user @uid: @error',
+      ['@uid' => $account->id(), '@error' => $error->getMessage()]
+    );
   }
 }
 

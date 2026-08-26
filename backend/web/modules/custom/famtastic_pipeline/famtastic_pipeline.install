@@ -1813,3 +1813,18 @@ function famtastic_pipeline_update_8039(&$sandbox) {
     ->save(TRUE);
   return t('Default theme set to FAMtastic Customer (branded); admin theme unchanged.');
 }
+
+/** Creates the famtastic_customer role so registered users can be tagged. */
+function famtastic_pipeline_update_8040(&$sandbox) {
+  $roleStorage = \Drupal::entityTypeManager()->getStorage('user_role');
+  $role = $roleStorage->load('famtastic_customer');
+  if (!$role) {
+    $role = $roleStorage->create([
+      'id' => 'famtastic_customer',
+      'label' => 'FAMtastic customer',
+    ]);
+    $role->save();
+    return t('Created the famtastic_customer role.');
+  }
+  return t('The famtastic_customer role already exists.');
+}

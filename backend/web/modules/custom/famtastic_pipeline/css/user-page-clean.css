@@ -1,0 +1,29 @@
+/* user-page-clean.css — Suppress the React frontend header on Drupal user
+ * account pages (login, register, profile, reset-password). The admin toolbar
+ * already provides navigation; showing both creates the visual chaos seen in
+ * https://github.com/famtastic-designs/issues/THEME-LEAK-2026-08-26 */
+
+/* The React app mounts its header into a known container. Hide it on user
+ * routes so Drupal's admin toolbar is the only navigation chrome. */
+header[class*="site-header"],
+header[class*="app-header"],
+#app-header,
+#site-header,
+[data-region="header"],
+.fam-header,
+.famtastic-header {
+  display: none !important;
+}
+
+/* Also hide the frontend navigation if it uses a specific class pattern */
+nav[class*="main-nav"],
+nav[class*="primary-nav"],
+[class*="navbar"] {
+  display: none !important;
+}
+
+/* Ensure the page content starts at the top without the header gap */
+body.user-logged-in .layout-container,
+body.path-user .layout-container {
+  padding-top: 0 !important;
+}
