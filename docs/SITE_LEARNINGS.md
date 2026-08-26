@@ -1,5 +1,22 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-26 — A ledger claim can go stale mid-run when sessions run concurrently (heartbeat 03:16Z)
+
+- Observation: the 03:16Z heartbeat oriented at 03:13Z on two uncommitted
+  backend files (order-number hook + OperationsController render fixes),
+  verified them, wrote its line flagging both as unknown-provenance/uncommitted,
+  and committed — landing on top of `005d1b92`, which a concurrent operator
+  session had created at 03:15:30Z committing BOTH files. The worktree was
+  clean before the heartbeat's own commit finished; two ledger claims were
+  stale on arrival. This is pitfall #13 (two agents editing one tree,
+  RETROSPECTIVE-2026-08-22-25.md) manifesting live against the CEO process.
+- Guidance: immediately before appending a heartbeat/standup line, re-run
+  `git log --oneline -3 && git status --short` and write claims about
+  worktree/commit state as of THAT timestamp, not orientation time; if state
+  changed under you, append a same-run corrective line rather than amending —
+  amend is unsafe while another session may be committing on the same ref.
+  Uncommitted-code flags must always name their verification timestamp.
+
 ## 2026-08-25 — Heartbeat runs must append + commit their own log line before exit
 
 - Observation: two CEO heartbeat sessions stranded their HEARTBEAT.md append.
