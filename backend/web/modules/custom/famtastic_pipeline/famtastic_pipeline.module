@@ -144,3 +144,27 @@ function famtastic_pipeline_cron(): void {
     }
   }
 }
+
+/**
+ * Implements hook_commerce_order_insert().
+ *
+ * Branded order numbers: FAM-YYMM-NNNN. A bare "order number 2" reads as
+ * day-one startup; the padded date-prefixed number reads as an established
+ * operation. Applies to every new order at creation.
+ */
+function famtastic_pipeline_commerce_order_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'commerce_order') {
+    return;
+  }
+  if (!empty((string) $entity->get('order_number')->value) || (string) $entity->get('order_number')->value === '0') {
+    return;
+  }
+  static $composing = FALSE;
+  if ($composing) {
+    return;
+  }
+  $composing = TRUE;
+  $entity->set('order_number', sprintf('FAM-%s-%04d', date('ym'), (int) $entity->id()));
+  $entity->save();
+  $composing = FALSE;
+}

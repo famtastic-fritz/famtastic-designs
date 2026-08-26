@@ -337,10 +337,10 @@ final class OperationsController extends ControllerBase {
       $build['item_' . $index] = [
         '#type' => 'container',
         '#attributes' => ['class' => ['famtastic-command__attention-item']],
-        '#children' => [],
         'lead' => ['#markup' => '<span aria-hidden="true">!</span><div><strong>' . Html::escape($title) . '</strong><p>' . Html::escape($detail) . '</p></div>'],
         'action' => $actionMarkup,
       ];
+
     }
     return $build;
   }
@@ -425,7 +425,6 @@ final class OperationsController extends ControllerBase {
       $build['day_' . $day] = [
         '#type' => 'container',
         '#attributes' => ['class' => ['famtastic-command__calendar-day']],
-        '#children' => [],
         'body' => ['#markup' => '<article><div class="famtastic-command__day"><span>Day</span><strong>' . $day . '</strong></div><div><span>' . Html::escape((string) $theme) . '</span><h3>' . Html::escape((string) $promise) . '</h3><p>' . implode('<br>', $lines) . '</p></div><em>' . \Drupal::service('renderer')->renderRoot($this->linkCell(Link::fromTextAndUrl('Review gates →', $queueUrl))) . '</em></article>'],
       ];
     }
@@ -583,8 +582,8 @@ final class OperationsController extends ControllerBase {
     foreach ($rows as $i => $row) {
       $caseNumber = (string) $row[0];
       $rows[$i][] = $caseNumber !== '' && $caseNumber !== 'Legacy'
-        ? ['data' => $this->linkCell(Link::fromTextAndUrl('Reply', Url::fromRoute('famtastic_pipeline.support_reply', ['case_number' => $caseNumber])))]
-        : ['#markup' => '—'];
+        ? $this->linkCell(Link::fromTextAndUrl('Reply', Url::fromRoute('famtastic_pipeline.support_reply', ['case_number' => $caseNumber])))
+        : ['data' => ['#markup' => '—']];
     }
     return $this->recordsPage('Customer Support', 'Customer-visible cases with ownership, priority, response targets, and conversation history.', ['Case', 'Customer', 'Subject', 'Priority', 'Status', 'Response due', 'Updated', 'Action'], $rows, 'No support conversations have been recorded.');
   }
@@ -595,7 +594,7 @@ final class OperationsController extends ControllerBase {
     foreach ($query->fields('n', ['id', 'category', 'recipient', 'subject', 'status', 'attempts', 'last_error', 'changed'])->orderBy('changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
       $age = max(0, \Drupal::time()->getRequestTime() - (int) $record['changed']);
       $retryable = in_array($record['status'], ['dead_letter', 'retry', 'failed'], TRUE);
-      $rows[] = [(int) $record['id'], $record['category'], $record['recipient'], $record['subject'], ['data' => ['#markup' => $this->badge($record['status'])]], $record['attempts'], $record['last_error'] ?: '—', $age > 300 && in_array($record['status'], ['queued', 'retry'], TRUE) ? round($age / 60) . ' minutes' : 'Current', $this->date((int) $record['changed']), $retryable ? ['data' => $this->linkCell(Link::fromTextAndUrl('Retry', Url::fromRoute('famtastic_pipeline.notification_retry', ['id' => (int) $record['id']]))) ] : ['#markup' => '—']];
+      $rows[] = [(int) $record['id'], $record['category'], $record['recipient'], $record['subject'], ['data' => ['#markup' => $this->badge($record['status'])]], $record['attempts'], $record['last_error'] ?: '—', $age > 300 && in_array($record['status'], ['queued', 'retry'], TRUE) ? round($age / 60) . ' minutes' : 'Current', $this->date((int) $record['changed']), $retryable ? $this->linkCell(Link::fromTextAndUrl('Retry', Url::fromRoute('famtastic_pipeline.notification_retry', ['id' => (int) $record['id']]))) : ['data' => ['#markup' => '—']]];
     }
     return $this->recordsPage('Notifications', 'Transactional and operational delivery state, retries, queue age, and dead letters.', ['ID', 'Category', 'Recipient', 'Subject', 'Status', 'Attempts', 'Last error', 'Queue age', 'Updated', 'Action'], $rows, 'No notifications have been queued.');
   }
