@@ -1,5 +1,22 @@
 # Product changelog
 
+## 2026-08-26 — Channel-health card live in production; four-day retrospective published
+
+- Postiz channel-health card wired into production: API key minted via
+  `/api/user/api-key/rotate`, `famtastic_postiz_api_key` + base URL written to
+  prod `settings.local.php` (backup taken first); drush-verified — all five
+  channels report connected. Dependency recorded in SYSTEMS.md: prod reaches
+  Postiz through the Mac's ngrok tunnel, so the card errors when the Mac is
+  down. (c2473ee3)
+- `docs/RETROSPECTIVE-2026-08-22-25.md` published: day-by-day arc, CEO
+  performance review with four shortfall→fix pairs, 14-item pitfall catalog
+  each with a prevention, continuity model, and an ordered queue of next work
+  (content verdict, channel binding, colima resize, Wave 0→1, secret rotation,
+  /terms + /privacy, asset-factory plan). (693e3ae1)
+- CHANGELOG entries added retroactively for both commits by the CEO heartbeat
+  run per the doc-sync standing rule; no other surfaces moved (capability
+  evidence levels unchanged — connection-proven ≠ publish-proven still holds).
+
 ## 2026-08-25 (late) — All five social channels connected
 
 - X connected via OAuth 1.0a consumer keys (Postiz's X provider is 1.0a, not
