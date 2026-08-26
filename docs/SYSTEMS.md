@@ -37,6 +37,7 @@ If broken or spinner returns → run `scripts/restart-postiz-tunnel.sh` (heals t
 | Site | famtasticdesigns.com → cPanel box `132.148.233.159` (GoDaddy DNS by owner decision — do not migrate without Fritz) |
 | Backend | Drupal 11, custom module `famtastic_pipeline`, ~65 routes under `/api/*` + `/admin/famtastic/*` |
 | Mail | PHPMailer→SMTP via contrib smtp.settings (config lives ONLY in prod DB — verify before assuming); outbox list `/admin/famtastic/metric/notifications`, replies `/admin/famtastic/metric/replies` |
+| Postiz channel health | Prod `settings.local.php` holds `famtastic_postiz_api_key` + `famtastic_postiz_base_url` (ngrok URL) → Campaign Operations card shows live per-channel state. ⚠️ Prod reaches Postiz through the Mac's tunnel — card errors when the Mac is down |
 | Cron | cPanel `*/5 * * * * drush famtastic:lifecycle-run` — heartbeat visible at `/admin/famtastic/metric/workers`; NOTE: drush exits 255 on this host even when successful |
 | Deploys | Only from clean committed SHA via `scripts/deploy-{frontend,backend}-godaddy.sh` (`--apply` gated by Fritz) |
 | Repo | `~/Development/FAMtastic/sites/site-famtastic-designs` (origin: github famtastic-designs.git) |
