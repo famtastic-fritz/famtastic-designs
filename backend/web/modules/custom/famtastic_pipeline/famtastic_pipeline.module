@@ -40,7 +40,7 @@ function famtastic_pipeline_user_insert(UserInterface $account): void {
     $portal = \Drupal::service('famtastic_pipeline.customer_portal');
     $customer = $portal->customerForUid((int) $account->id());
     if (!$customer) {
-      $portal->createCustomer($account, [
+      $customer = $portal->createCustomer($account, [
         'name' => $account->getDisplayName() ?: $account->getEmail(),
         'source' => 'registration',
       ]);
@@ -50,6 +50,17 @@ function famtastic_pipeline_user_insert(UserInterface $account): void {
     $customerRole = $roleStorage->load('famtastic_customer');
     if ($customerRole && !$account->hasRole('famtastic_customer')) {
       $account->addRole('famtastic_customer')->save();
+    }
+    // Auto-create website request from prospect discovery data when available.
+    if (!empty($customer['prospect_id']) && !empty($customer['id'])) {
+      $organizations = $portal->organizations((int) $customer['id']);
+      if ($organizations) {
+        $portal->createWebsiteRequestFromProspectDiscovery(
+          (int) $customer['id'],
+          (int) $customer['prospect_id'],
+          (int) $organizations[0]['id']
+        );
+      }
     }
   }
   catch (\Throwable $error) {

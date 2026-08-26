@@ -296,6 +296,151 @@ final class CustomerPortalService {
     return $this->serializeWebsiteRequest($updated);
   }
 
+  /**
+   * Creates a submitted website request from a prospect's discovery notes.
+   *
+   * Used when a prospect with discovery data registers and becomes a customer.
+   * Links to the existing prospect rather than creating a new one.
+   */
+  public function createWebsiteRequestFromProspectDiscovery(int $customerId, int $prospectId, int $organizationId): ?array {
+    // Check if a request already exists for this prospect.
+    $existing = $this->database->select('famtastic_project_request', 'r')
+      ->fields('r', ['id'])
+      ->condition('prospect_id', $prospectId)
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    if ($existing) {
+      return NULL;
+    }
+
+    $prospect = $this->entities->getStorage('famtastic_prospect')->load($prospectId);
+    if (!$prospect) {
+      return NULL;
+    }
+
+    $discoveryNotes = (string) $prospect->get('discovery_notes')->value;
+    $discovery = $this->parseDiscoveryNotes($discoveryNotes);
+    $answers = is_array($discovery['answers'] ?? NULL) ? $discovery['answers'] : [];
+
+    // Only auto-create if there are actual discovery answers or discovery notes.
+    if (empty($answers) && $discoveryNotes === '') {
+      return NULL;
+    }
+
+    $businessName = trim((string) ($answers['businessName'] ?? $answers['business_name'] ?? $prospect->label()));
+    if ($businessName === '') {
+      $businessName = 'My Business Website';
+    }
+
+    $projectName = $businessName . ' Website';
+    $projectType = 'new_website';
+    $domainChoice = 'undecided';
+    $existingDomain = '';
+
+    $setup = (string) ($answers['setup'] ?? '');
+    if ($setup === 'none') {
+      $domainChoice = 'new_domain';
+    }
+    elseif ($setup === 'existing') {
+      $domainChoice = 'existing_domain';
+      $existingDomain = (string) ($answers['domainDetails'] ?? $answers['existing_domain'] ?? '');
+    }
+
+    $pageCount = max(1, min(100, (int) ($answers['pages'] ?? $answers['page_count'] ?? 1)));
+
+    $intake = [
+      'schema_version' => 'website_discovery_v3',
+      'primary_goal' => 'Build a professional website for ' . $businessName,
+      'products_services' => (string) ($answers['industry'] ?? $answers['business_category'] ?? ''),
+      'service_locations' => (string) ($answers['location'] ?? $answers['service_area'] ?? ''),
+      'budget_context' => (string) ($answers['budget'] ?? ''),
+      'page_count' => $pageCount,
+      'launch_timing' => (string) ($answers['timeline'] ?? ''),
+      'notes' => 'Auto-created from prospect discovery notes during registration. Source: ' . ($discovery['source'] ?? 'unknown'),
+      'business_model' => (string) ($answers['businessDescription'] ?? $answers['business_description'] ?? ''),
+      'industry' => (string) ($answers['industry'] ?? ''),
+      'reference_sites' => (string) ($answers['referenceSites'] ?? ''),
+    ];
+
+    // Map AI features from discovery answers.
+    $aiFeatures = $answers['aiFeatures'] ?? [];
+    if (is_array($aiFeatures)) {
+      $intake['required_features'] = implode(', ', $aiFeatures);
+      if (in_array('automation', $aiFeatures, TRUE)) {
+        $intake['ai_agent_goals'] = 'Automate business workflows and customer interactions';
+      }
+      if (in_array('chat', $aiFeatures, TRUE)) {
+        $intake['ai_agent_goals'] = ($intake['ai_agent_goals'] ?? '') . '; AI chatbot for customer support';
+      }
+    }
+
+    $intake['recommendation'] = $this->recommendWebsitePackage($projectType, $intake);
+
+    $now = $this->time->getRequestTime();
+    $publicId = $this->uuid->generate();
+
+    $id = (int) $this->database->insert('famtastic_project_request')->fields([
+      'public_id' => $publicId,
+      'organization_id' => $organizationId,
+      'customer_id' => $customerId,
+      'prospect_id' => $prospectId,
+      'status' => 'submitted',
+      'project_name' => $projectName,
+      'business_name' => $businessName,
+      'project_type' => $projectType,
+      'domain_choice' => $domainChoice,
+      'existing_domain' => $existingDomain,
+      'recommendation_requested' => 1,
+      'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+      'submitted_at' => $now,
+      'created' => $now,
+      'changed' => $now,
+    ])->execute();
+
+    $this->claimResource($organizationId, 'prospect', $prospectId);
+    $this->activity($organizationId, 'website_request.created', 'A new website request was submitted from discovery notes.');
+
+    $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
+    $clean = [
+      'status' => 'submitted',
+      'project_name' => $projectName,
+      'business_name' => $businessName,
+      'project_type' => $projectType,
+      'domain_choice' => $domainChoice,
+      'existing_domain' => $existingDomain,
+      'recommendation_requested' => TRUE,
+      'intake' => $intake,
+    ];
+    $this->queueWebsiteRequestNotifications($id, $customer, $clean);
+    $this->queueWebsiteRequestProofJob($id, $prospectId, $publicId, $intake);
+
+    return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
+  }
+
+  /**
+   * Parses discovery notes JSON from various storage formats.
+   */
+  private function parseDiscoveryNotes(string $notes): array {
+    $notes = trim($notes);
+    if ($notes === '') {
+      return [];
+    }
+    // Try direct JSON first.
+    $decoded = json_decode($notes, TRUE);
+    if (is_array($decoded)) {
+      return $decoded;
+    }
+    // Try extracting JSON from text (e.g. "QUOTE request\n{...}").
+    if (preg_match('/\{(?:[^{}]|(?R))*\}/s', $notes, $matches)) {
+      $decoded = json_decode($matches[0], TRUE);
+      if (is_array($decoded)) {
+        return $decoded;
+      }
+    }
+    return [];
+  }
+
   /** Loads one request only when it belongs to the signed-in customer workspace. */
   public function ownedWebsiteRequest(int $customerId, string $publicId): ?array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
@@ -352,7 +497,7 @@ final class CustomerPortalService {
   }
 
   /** Creates an explainable recommendation without turning every intake into $199. */
-  private function recommendWebsitePackage(string $type, array $intake): array {
+  public function recommendWebsitePackage(string $type, array $intake): array {
     $features = mb_strtolower(implode(' ', [
       $intake['required_features'], $intake['integrations'], $intake['ecommerce_details'],
       $intake['booking_details'], $intake['ai_agent_goals'],
