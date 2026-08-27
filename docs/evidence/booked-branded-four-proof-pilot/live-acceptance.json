@@ -1,0 +1,42 @@
+{
+  "schema": "famtastic.booked-branded-live-acceptance.v1",
+  "checked_at": "2026-08-27T18:57:00Z",
+  "deployment": {
+    "commit": "412a8f51451e684d987d2ba80971531acee4d067",
+    "rollback_archive": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T185348Z-412a8f51451e684d987d2ba80971531acee4d067.tgz"
+  },
+  "hosts": [
+    {
+      "origin": "https://famtasticdesigns.com",
+      "existing_react_homepage": "passed",
+      "showcase_routes": 21,
+      "viewport": "1440x1000",
+      "status": "passed"
+    },
+    {
+      "origin": "https://www.famtasticdesigns.com",
+      "existing_react_homepage": "passed",
+      "showcase_routes": 21,
+      "viewport": "390x844",
+      "status": "passed"
+    }
+  ],
+  "showcase_assertions": {
+    "http_200": true,
+    "h1_rendered": true,
+    "fictional_disclosure_present": true,
+    "noindex_present": true,
+    "horizontal_overflow": 0,
+    "console_or_page_errors": 0,
+    "broken_images": 0
+  },
+  "asset_assertions": {
+    "hosts_checked": 2,
+    "assets_per_host": 4,
+    "status": 200,
+    "content_type": "image/webp",
+    "exact_committed_byte_sizes": true
+  },
+  "observation": "The first www mobile overview snapshot checked a lazy image before staged scrolling completed. Direct HTTP asset verification and a repeated staged-scroll browser check loaded all four images at natural width 1672 with no errors; this was test timing, not a production defect.",
+  "passed": true
+}

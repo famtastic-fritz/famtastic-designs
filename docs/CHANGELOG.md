@@ -2,6 +2,12 @@
 
 ## 2026-08-27 — Booked & Branded four-business proof pilot
 
+- Published the unlisted showcase at
+  `https://famtasticdesigns.com/showcase/booked-and-branded-pilot/` in frontend
+  release `412a8f51451e684d987d2ba80971531acee4d067`. Real-browser acceptance
+  covered the React homepage plus all 21 showcase routes on both apex and
+  `www`; every route, image, no-index directive, disclosure, and responsive
+  width passed. The deploy retained a timestamped frontend rollback archive.
 - Built an unlisted, no-index product demonstration for four explicitly
   fictional Florida beauty operators: a Black barber in Port St. Lucie, a
   Black natural-hair stylist in Fort Pierce, a Latino barber in West Palm

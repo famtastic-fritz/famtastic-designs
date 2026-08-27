@@ -8,7 +8,7 @@ Date: 2026-08-27
 - One email preview and one three-direction concept room per business.
 - Twelve responsive proof sites: editorial, high-energy, and operator-first.
 - Four original generated hero images.
-- Public base reserved as
+- Public base live at
   `https://famtasticdesigns.com/showcase/booked-and-branded-pilot/`.
 
 ## Safety and truth boundary
@@ -60,5 +60,18 @@ isolated deployment. The two local evidence hashes were:
 Primary visual review passed across the overview, all four rooms, all four
 operator-first mobile pages, the representative email, and the complete
 three-direction desktop set. Independent review is deliberately reserved for
-the owner. Production publication and live-browser evidence are recorded only
-after the governed frontend deployment succeeds.
+the owner.
+
+## Production acceptance
+
+The governed frontend deployment published commit
+`412a8f51451e684d987d2ba80971531acee4d067` and retained rollback archive
+`/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T185348Z-412a8f51451e684d987d2ba80971531acee4d067.tgz`.
+
+Real-browser acceptance covered the existing React homepage and all 21
+showcase routes on both `https://famtasticdesigns.com` and
+`https://www.famtasticdesigns.com`. Apex desktop and `www` mobile checks found
+HTTP 200, a rendered H1, the fictional disclosure, `noindex`, no horizontal
+overflow, no console/page errors, and no broken images. All four hero assets
+also returned `200 image/webp` with their exact committed byte sizes on both
+hosts. See `live-acceptance.json`.
