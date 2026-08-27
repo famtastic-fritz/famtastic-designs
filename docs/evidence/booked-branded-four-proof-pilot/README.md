@@ -26,8 +26,8 @@ Date: 2026-08-27
 All names, people, services, prices, requests, reviews, appointments, and
 payment examples are fictional. No customer list, customer account, Drupal
 Prospect, campaign, email recipient, payment processor, or production booking
-record was used. No email was sent. The Booking Desk, deposit link, QR card,
-and review controls are non-submitting visual demonstrations.
+record was used. No email was sent. The Booking Desk, payment QR, and review
+controls are non-submitting visual demonstrations.
 
 This public static showcase proves the product story and responsive visual
 system. It does not replace the CRM-bound signed public-preview lane required
@@ -92,8 +92,8 @@ review is deliberately reserved for the owner.
 ## Production acceptance
 
 The governed frontend deployment published commit
-`a7123cf96c9b8ff00b2fc4bb4b07715fc151c284` and retained rollback archive
-`/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T202902Z-a7123cf96c9b8ff00b2fc4bb4b07715fc151c284.tgz`.
+`c7aef995404bc5c368ebc5fa05f4927d16ff8ab6` and retained rollback archive
+`/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T204623Z-c7aef995404bc5c368ebc5fa05f4927d16ff8ab6.tgz`.
 
 Real-browser acceptance covered the existing React homepage and all 22
 showcase routes on both `https://famtasticdesigns.com` and
@@ -105,4 +105,5 @@ SHA-256 on both hosts. This is 44 route checks, two existing-homepage checks,
 and 24 exact image checks. The former `$19.99` recommendation is absent; the
 live package instead shows the proposed `$199` launch, normal `$9.99` hosting
 from month 13, the optional `$149` scheduling setup, and later growth choices.
-See `live-acceptance.json`.
+The live run also confirms that no payment-processing offer is present and that
+the owner-QR/direct-provider-cost boundary appears. See `live-acceptance.json`.

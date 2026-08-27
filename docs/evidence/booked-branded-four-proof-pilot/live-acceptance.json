@@ -1,9 +1,9 @@
 {
   "schema": "famtastic.booked-branded-live-acceptance.v2",
-  "checked_at": "2026-08-27T20:33:26.878Z",
+  "checked_at": "2026-08-27T20:47:39.698Z",
   "deployment": {
-    "commit": "a7123cf96c9b8ff00b2fc4bb4b07715fc151c284",
-    "rollback_archive": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T202902Z-a7123cf96c9b8ff00b2fc4bb4b07715fc151c284.tgz"
+    "commit": "c7aef995404bc5c368ebc5fa05f4927d16ff8ab6",
+    "rollback_archive": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T204623Z-c7aef995404bc5c368ebc5fa05f4927d16ff8ab6.tgz"
   },
   "hosts": [
     {
@@ -425,7 +425,9 @@
     "route_checks": 44,
     "homepage_checks": 2,
     "old_renewal_copy_absent": true,
-    "starter_renewal_and_upgrade_ladder_present": true
+    "starter_renewal_and_upgrade_ladder_present": true,
+    "payment_processing_offer_absent": true,
+    "owner_qr_and_direct_provider_cost_boundary_present": true
   },
   "asset_assertions": {
     "hosts_checked": 2,
