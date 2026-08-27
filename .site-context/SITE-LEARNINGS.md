@@ -18,8 +18,9 @@ source of truth.
   delivery state unchanged, while non-cold local import remains compatible.
   Reject cold keys on the legacy GET unsubscribe route; only the one-click POST
   confirmation path may mutate consent. For update `8042`, validate nonempty
-  cold identity fields and duplicates before any DDL, then restore missing
-  declared unique keys using Drupal's Schema API and a disposable MariaDB run.
+  cold identity fields and duplicates before any DDL, then restore canonical
+  NOT NULL key fields and missing declared unique keys using Drupal's Schema
+  API and a disposable MariaDB run.
 ## 2026-08-27 — Pre-promotion safety is a separate boundary from the durable lock
 
 - Observation: an old live Drupal process can run before it has the newly

@@ -16,8 +16,8 @@
   consent mutation; only the confirmation POST may suppress cold mail.
 - Guidance: migration repair is a safety boundary too. Before `8042` changes
   a populated cold table, reject missing, NULL, blank, or duplicate immutable
-  cohort/ingress keys, then use Drupal's Schema API to restore a missing
-  declared unique key. Rehearse the actual update on disposable MariaDB rather
+  cohort/ingress keys, then use Drupal's Schema API to restore the canonical
+  NOT NULL field definition and a missing declared unique key. Rehearse the actual update on disposable MariaDB rather
   than infer behavior from source inspection.
 ## 2026-08-27 — A new durable lock cannot protect code that has not been promoted
 

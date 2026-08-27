@@ -20,8 +20,9 @@
   historical non-cold GET unsubscribe behavior remains compatible.
 - Update `8042` now preflights populated cold cohort/ingress tables for
   missing required identity fields and NULL, blank, or duplicate declared
-  `cohort_key`/`ingress_key` values before any DDL, then restores missing
-  declared unique keys through Drupal 11's Schema API. Disposable MariaDB
+  `cohort_key`/`ingress_key` values before any DDL, then restores their
+  canonical NOT NULL field definitions and missing declared unique keys through
+  Drupal 11's Schema API. Disposable MariaDB
   rehearsal passed clean partial-table repair, duplicate insert rejection,
   and no-cold-DDL failures for malformed historical identity data.
 ## 2026-08-27 — Pre-promotion pilot scheduler and legacy-mail guard (source-only; not deployed)

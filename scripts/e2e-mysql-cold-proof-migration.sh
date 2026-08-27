@@ -171,7 +171,7 @@ drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
       }
     }
   };
-  $insertCohort = static function (string $key) use ($db, $now): int {
+  $insertCohort = static function (mixed $key) use ($db, $now): int {
     return (int) $db->insert("famtastic_cold_proof_cohort")->fields([
       "cohort_key" => $key, "campaign_id" => 1, "campaign_key" => "migration-validation", "source_name" => "fixture",
       "package_profile" => "anonymous_safe_medium_ultra_v1", "direction_count" => 3, "direction_contract" => "{}", "profile_snapshot_hash" => str_repeat("e", 64),
@@ -198,6 +198,37 @@ drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
     }
     return FALSE;
   };
+
+  // A partial table may have valid historical values in nullable columns.
+  // A unique index alone still permits later NULLs on MySQL, so the migration
+  // must restore the canonical NOT NULL field definitions before it adds the
+  // declared unique keys.
+  $resetCold();
+  $nullableCohort = $definitions["famtastic_cold_proof_cohort"]["fields"]["cohort_key"];
+  $nullableCohort["not null"] = FALSE;
+  $schema->changeField("famtastic_cold_proof_cohort", "cohort_key", "cohort_key", $nullableCohort);
+  $nullableIngress = $definitions["famtastic_cold_proof_ingress"]["fields"]["ingress_key"];
+  $nullableIngress["not null"] = FALSE;
+  $schema->changeField("famtastic_cold_proof_ingress", "ingress_key", "ingress_key", $nullableIngress);
+  $hardenedCohort = $insertCohort("hardened-nullable-cohort");
+  $insertIngress($hardenedCohort, str_repeat("9", 64), "hardened-nullable-ingress");
+  $sandbox = [];
+  famtastic_pipeline_update_8042($sandbox);
+  $nullableCohortPostUpdateRejected = FALSE;
+  try {
+    $insertCohort(NULL);
+  }
+  catch (\Throwable) {
+    $nullableCohortPostUpdateRejected = TRUE;
+  }
+  $nullableIngressPostUpdateRejected = FALSE;
+  try {
+    $insertIngress($hardenedCohort, NULL, "hardened-nullable-ingress-null");
+  }
+  catch (\Throwable) {
+    $nullableIngressPostUpdateRejected = TRUE;
+  }
+  $nullableKeysHardened = $nullableCohortPostUpdateRejected && $nullableIngressPostUpdateRejected;
 
   $resetCold();
   $insertCohort("");
@@ -230,6 +261,7 @@ drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
     "idempotent_second_pass" => true,
     "duplicate_cohort_rejected" => $duplicateCohortRejected,
     "duplicate_ingress_rejected" => $duplicateIngressRejected,
+    "nullable_keys_hardened" => $nullableKeysHardened,
     "empty_cohort_rejected" => $emptyCohortRejected,
     "null_ingress_rejected" => $nullIngressRejected,
     "duplicate_cohort_preflight_rejected" => $duplicateCohortPreflightRejected,
@@ -237,5 +269,5 @@ drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
   ]);
 ' > "$sandbox/result.json"
 
-jq -e '.field == true and .index == true and .cohort_unique == true and .ingress_unique == true and .legacy_is_null == true and .idempotent_second_pass == true and .duplicate_cohort_rejected == true and .duplicate_ingress_rejected == true and .empty_cohort_rejected == true and .null_ingress_rejected == true and .duplicate_cohort_preflight_rejected == true and .duplicate_ingress_preflight_rejected == true' "$sandbox/result.json" >/dev/null
-echo "PASS: update 8042 restores the nullable proof link/index plus declared cohort/ingress uniques, rejects duplicate inserts, and fails before cold-table DDL for null, empty, or duplicate identity values on disposable MariaDB."
+jq -e '.field == true and .index == true and .cohort_unique == true and .ingress_unique == true and .legacy_is_null == true and .idempotent_second_pass == true and .duplicate_cohort_rejected == true and .duplicate_ingress_rejected == true and .nullable_keys_hardened == true and .empty_cohort_rejected == true and .null_ingress_rejected == true and .duplicate_cohort_preflight_rejected == true and .duplicate_ingress_preflight_rejected == true' "$sandbox/result.json" >/dev/null
+echo "PASS: update 8042 restores the nullable proof link/index plus canonical NOT NULL cohort/ingress identities, rejects duplicate inserts, and fails before cold-table DDL for null, empty, or duplicate identity values on disposable MariaDB."

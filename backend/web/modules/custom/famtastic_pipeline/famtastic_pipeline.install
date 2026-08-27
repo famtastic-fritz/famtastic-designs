@@ -2239,6 +2239,17 @@ function famtastic_pipeline_update_8042(&$sandbox) {
         $schema->addField($table, $name, $field);
       }
     }
+    // A MySQL unique index permits multiple NULL values. Once preflight has
+    // proven the historical values are present and unambiguous, restore the
+    // immutable unique-key columns to their canonical NOT NULL definitions so
+    // a partially upgraded table cannot accept new blank identities later.
+    foreach ((array) ($definition['unique keys'] ?? []) as $keyFields) {
+      foreach ((array) $keyFields as $field) {
+        if (isset($definition['fields'][$field]) && $schema->fieldExists($table, $field)) {
+          $schema->changeField($table, $field, $field, $definition['fields'][$field]);
+        }
+      }
+    }
     foreach ($definition['indexes'] as $name => $fields) {
       if (!$schema->indexExists($table, $name)) {
         $schema->addIndex($table, $name, $fields, $definition);
