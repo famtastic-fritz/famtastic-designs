@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Entity\ProofCampaign;
 use Drupal\famtastic_pipeline\Entity\ProofVariant;
 use Drupal\famtastic_pipeline\Entity\Prospect;
@@ -89,7 +90,8 @@ class ProofCampaignService {
     $now = $this->time->getRequestTime();
 
     $allowPilot = getenv('FAMTASTIC_ALLOW_NO_IMAGE_PILOT_PROOFS') === '1'
-      || getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') === '1';
+      || getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') === '1'
+      || Settings::get('famtastic_allow_no_image_pilot_proofs', FALSE);
     $remote = $this->studioClient->isRemote();
     $publicPreviewDeliveryId = (int) ($context['public_preview_delivery_id'] ?? 0);
     $websiteRequestId = (int) ($context['website_request_id'] ?? 0);
