@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-08-27 — Public-preview migration 8041 rehearsal hardening (not deployed)
+
+- Corrected the Drupal 11 `Schema::addIndex()` invocation in update `8041` and made its existing-table branch preflight all missing required fields and identity duplicates before any DDL. A recoverable partial table can receive a missing empty frozen-email snapshot; an unmappable Prospect/public ID/delivery key or duplicate identity now fails closed with an actionable update error.
+- Added `backend/scripts/rehearse-preview-delivery-8041.php`, a guarded disposable-MariaDB rehearsal that proves clean creation, safe nonempty partial-table completion, and no-mutation failure for missing ownership or duplicate IDs. The observed production table is absent, so production will take the separately proven clean-create path.
+- No migration was applied to production, no lead was imported, no proof was generated, and no email was sent. The normal backend release still requires current `main`, production preflight, `drush updb`, and schema inspection.
+
 ## 2026-08-26 — Owner-gated public preview delivery release candidate (not deployed)
 
 - Forward-ported the signed, read-only three-concept room and same-email verified-account claim onto current `main`, including an industry-neutral public room, immutable per-delivery context/research/artifact snapshots, customer-only research retrieval, and redacted/allowlisted anonymous build context.

@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — A Drupal schema upgrade must preflight nonempty partial tables
+
+- Observation: update `8041` originally created the absent-table path correctly, but its attempted partial-table repair passed too few arguments to Drupal 11's `Schema::addIndex()` and could let the Schema API restore `NOT NULL` on a missing field before legacy rows had a valid value. That turns an intended recovery branch into a late SQL failure.
+- Guidance: before any DDL on a nonempty partial table, identify missing required identity fields and duplicate future unique-key values. Populate only values that are semantically safe and explicit (the un-staged frozen-email snapshot may be empty); never manufacture ownership, public IDs, or delivery keys. Fail before mutation with an operator repair message when the legacy record cannot be mapped. Rehearse the actual update hook through Drupal's MySQL Schema API against the production-compatible major/minor database, not only with PHP lint or hand-written SQL.
+
 ## 2026-08-26 — Preview claims must not consume delivery state
 
 - Observation: the earlier preview branch represented signup and same-email claim by replacing the delivery state. A customer who registered before proof generation could therefore stop matching the preview-ready handoff and fall into generic outreach; a revoked delivery could also lose its reusable Prospect link.

@@ -1916,21 +1916,79 @@ function famtastic_pipeline_update_8040(&$sandbox) {
  * createTable(), which would not be a valid Drupal table definition.
  */
 function famtastic_pipeline_update_8041(&$sandbox) {
-  $schema = \Drupal::database()->schema();
+  $database = \Drupal::database();
+  $schema = $database->schema();
   $definitions = _famtastic_pipeline_preview_delivery_schema();
   $definition = $definitions['famtastic_preview_delivery'];
   if (!$schema->tableExists('famtastic_preview_delivery')) {
     $schema->createTable('famtastic_preview_delivery', $definition);
     return t('Added owner-gated public preview delivery, research snapshot, and account-claim records.');
   }
+
+  // A previous incomplete attempt may have left a table behind. Validate all
+  // non-reconstructable data before issuing any DDL: Drupal's MySQL Schema API
+  // temporarily permits NULL while adding a required field, then restores its
+  // NOT NULL constraint. That cannot safely work for an existing row without
+  // either a defined initial value or an explicit operator repair.
+  $row_count = (int) $database->select('famtastic_preview_delivery', 'delivery')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  $missing_fields = [];
   foreach ($definition['fields'] as $name => $field) {
     if (!$schema->fieldExists('famtastic_preview_delivery', $name)) {
+      $missing_fields[$name] = $field;
+    }
+  }
+  $safe_initial_values = [
+    // An un-staged legacy delivery has no frozen email body. An empty snapshot
+    // is an honest migration value; sending remains gated by a later stage.
+    'text_snapshot' => '',
+  ];
+  if ($row_count > 0) {
+    $unsafe_fields = [];
+    foreach ($missing_fields as $name => $field) {
+      if (!empty($field['not null']) && !array_key_exists('default', $field) && !array_key_exists($name, $safe_initial_values)) {
+        $unsafe_fields[] = $name;
+      }
+    }
+    if ($unsafe_fields) {
+      throw new \Drupal\Core\Utility\UpdateException(sprintf(
+        'famtastic_preview_delivery has %d existing row(s) but is missing required fields (%s). No schema changes were made. Repair or map those legacy records before rerunning update 8041.',
+        $row_count,
+        implode(', ', $unsafe_fields),
+      ));
+    }
+    foreach ($definition['unique keys'] as $name => $fields) {
+      if ($schema->indexExists('famtastic_preview_delivery', $name)) {
+        continue;
+      }
+      $duplicate_query = $database->select('famtastic_preview_delivery', 'delivery');
+      foreach ($fields as $field) {
+        $duplicate_query->addField('delivery', $field);
+        $duplicate_query->groupBy('delivery.' . $field);
+      }
+      $duplicate_query->having('COUNT(*) > 1');
+      $duplicate_query->range(0, 1);
+      if ($duplicate_query->execute()->fetchField() !== FALSE) {
+        throw new \Drupal\Core\Utility\UpdateException(sprintf(
+          'famtastic_preview_delivery contains duplicate values for the required %s key. No schema changes were made. Deduplicate the legacy records before rerunning update 8041.',
+          $name,
+        ));
+      }
+    }
+  }
+  foreach ($definition['fields'] as $name => $field) {
+    if (isset($missing_fields[$name])) {
+      if (array_key_exists($name, $safe_initial_values)) {
+        $field['initial'] = $safe_initial_values[$name];
+      }
       $schema->addField('famtastic_preview_delivery', $name, $field);
     }
   }
   foreach ($definition['indexes'] as $name => $fields) {
     if (!$schema->indexExists('famtastic_preview_delivery', $name)) {
-      $schema->addIndex('famtastic_preview_delivery', $name, $fields);
+      $schema->addIndex('famtastic_preview_delivery', $name, $fields, $definition);
     }
   }
   // A stale partial-table attempt may have created fields without the two

@@ -42,4 +42,17 @@ Public lead + intake
 
 ## Release verification boundary
 
-Migration `8041` creates or upgrades the isolated delivery table, including its unique public-ID and delivery-key constraints. This clean worktree has no Drupal vendor tree or production MySQL database, so release still requires a staging/production-like MySQL `drush updb` dry run and schema inspection before deployment. No deploy, import, proof generation, email, or customer-data mutation occurred while preparing this candidate.
+Migration `8041` creates or upgrades the isolated delivery table, including its unique public-ID and delivery-key constraints. Its existing-table path is fail-closed: it can complete a nonempty partial table only when stable ownership fields already exist and identities are unique. It may initialize a missing frozen email snapshot to an empty value, but it must never invent a Prospect, public ID, or delivery key. If an old table cannot be safely mapped, the update stops before DDL and names the operator repair required.
+
+Run the tracked rehearsal only against a disposable MariaDB database named `famtastic_preview_rehearsal`:
+
+```bash
+FAMTASTIC_MIGRATION_REHEARSAL_CONFIRM=DISPOSABLE_DB \
+FAMTASTIC_MIGRATION_REHEARSAL_DB_USER=root \
+FAMTASTIC_MIGRATION_REHEARSAL_DB_PASSWORD='<disposable-password>' \
+FAMTASTIC_MIGRATION_REHEARSAL_DB_HOST=127.0.0.1 \
+FAMTASTIC_MIGRATION_REHEARSAL_DB_PORT=3318 \
+php backend/scripts/rehearse-preview-delivery-8041.php
+```
+
+The script requires the repository's Drupal vendor tree (`composer install`) and creates/drops only its dedicated rehearsal table. It proves clean creation, recoverable nonempty partial-table migration, unsafe-mapping refusal before mutation, and duplicate-identity refusal before mutation. Production still requires the normal backend preflight, `drush updb`, and post-update schema inspection before deployment. No deploy, import, proof generation, email, or customer-data mutation occurred while preparing this candidate.

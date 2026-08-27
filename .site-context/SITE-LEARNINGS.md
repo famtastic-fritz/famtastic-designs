@@ -5,6 +5,25 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — Preview migration repair must validate legacy rows before DDL
+
+Observation: the owner-gated preview migration's clean create was valid, but
+the former existing-table fallback could fail late on a nonempty partial table:
+Drupal 11 requires a schema definition when adding indexes, and a missing
+`NOT NULL` column needs an explicit safe initial value before the Schema API
+restores its constraint.
+
+Guidance:
+
+- Preflight missing required identity fields and future unique-key duplicates
+  before changing a partial table. A migration may initialize an empty frozen
+  email snapshot, but it must never invent a Prospect, public ID, or delivery
+  key; stop before DDL and name the operator repair instead.
+- Rehearse update `8041` with
+  `backend/scripts/rehearse-preview-delivery-8041.php` against only the named
+  disposable MariaDB database. PHP lint and a hand-written SQL sketch are not
+  substitutes for Drupal's actual MySQL Schema API.
+
 ## 2026-08-26 — Dynamic proof links need an Apache shell fallback, not a static route directory
 
 Observation: an enabled signed proof share could be resolved anonymously by
