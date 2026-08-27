@@ -19,6 +19,30 @@
   cohort/ingress keys, then use Drupal's Schema API to restore a missing
   declared unique key. Rehearse the actual update on disposable MariaDB rather
   than infer behavior from source inspection.
+## 2026-08-27 — A new durable lock cannot protect code that has not been promoted
+
+- Observation: the prior pilot guard made the new Drupal durable lock
+  authoritative after promotion, but an old production `drush cron`, direct
+  jobs runner, or service-level evaluator can act before that code exists. The
+  historical cold-260 risk also spans more than queued proof jobs: a campaign
+  can hold proof preparation, send jobs, and generic message rows in different
+  claimable or active states.
+- Guidance: before an exact-ID pilot crosses the code boundary, enumerate every
+  broad scheduler and fail closed on unmarked, duplicate, altered, direct-eval,
+  active direct-worker, or already-running broad-process forms. Automatic
+  suspension may remove only one
+  marker immediately followed by its byte-exact named command and an explicit
+  repeated confirmation; retain a mode-0600 backup but never auto-restore a
+  stale full crontab. Keep the scheduler suspended until a separately authorized
+  end-pilot reconciliation verifies the durable lock, current crontab, and
+  queued/retry notification outbox inventory.
+- Guidance: exact-campaign quarantine must classify all attributable proof and
+  commercial-mail jobs plus campaign-owned generic messages by type/status;
+  active and unknown rows are manual reconciliation, not a reclassification
+  opportunity. Never cancel notification outbox rows heuristically when they
+  lack a campaign ownership key. Treat canonical frontend and `/web` API bases
+  as a deployment precondition rather than silently promoting localhost or a
+  staging route into customer email.
 
 ## 2026-08-27 — A held cold-proof email is not permission to use SMTP
 

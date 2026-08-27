@@ -89,44 +89,101 @@ general protection, automation, outbox, SLA, or mail work. The pilot invitation
 must instead be sent only by the exact-ID, owner-confirmed
 `famtastic:preview-delivery-dispatch` command.
 
-The deployer still refuses an active broad `famtastic:lifecycle-run` entry and
-does not install one. It also records any active `drush cron` entries, but it
-does not alter an unmarked Drupal cron line because that would be an unsafe
-crontab rewrite; the durable runtime lock makes the module's hook a no-op after
-promotion. A normal non-pilot apply explicitly clears and verifies the durable
-setting only after its code, update, and cache checks pass.
+Before a pilot is even eligible, its live Drupal configuration must resolve to
+the canonical customer-facing bases exactly:
 
-If the only active broad scheduler is exactly the checked-in
-`FAMTASTIC_LIFECYCLE_CRON_V1` marker followed immediately by its standard
-`famtastic:lifecycle-run --limit=50` command, an explicitly authorized apply
-can suspend it narrowly:
+```text
+frontend_base_url=https://famtasticdesigns.com
+public_api_base_url=https://famtasticdesigns.com/web
+```
+
+The deployer reads and asserts those values; it never guesses or rewrites a
+localhost, staging, empty, or other same-origin value. Correcting a noncanonical
+live value is a separately authorized configuration operation. A normal
+non-pilot apply explicitly clears and verifies the durable dispatch lock only
+after its code, update, and cache checks pass.
+
+#### Broad scheduler pre-promotion guard
+
+The old production module cannot read a lock introduced by the new release, so
+the pilot preflight refuses every active broad scheduler before old code is
+promoted. It discovers these active crontab forms and also fails if a matching
+process is already in flight (removing a line cannot stop a process that already
+started):
+
+- `famtastic:lifecycle-run`;
+- `drush cron` (including a path-qualified Drush command);
+- `famtastic:jobs-run` or `fjr`; and
+- direct `drush php:eval`, `php:script`, `ev`, or an
+  `automation[_:-]?worker` runner.
+
+An unmarked line is never guessed at or deleted. Direct evaluator/worker lines
+are never automatically suspended: the operator must manually make that class
+empty, then rerun preflight. A lifecycle, Drupal-cron, or jobs-run entry can be
+suspended only when it is the **one** documented marker immediately followed by
+the byte-exact checked-in command and the corresponding explicit confirmation is
+present. For example, a deliberately marker-owned Drupal cron line uses:
+
+```text
+# FAMTASTIC_DRUPAL_CRON_V1
+*/5 * * * * cd /home/ACCOUNT/public_html && /home/ACCOUNT/public_html/vendor/bin/drush cron >/dev/null 2>&1
+```
+
+Replace `/home/ACCOUNT` with the actual remote home path shown by the deployer;
+do not use `~`, a different interval, redirection, or wrapper. Its authorized
+pilot invocation is:
 
 ```bash
 FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 \
-FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON=1 \
+FAMTASTIC_PILOT_SUSPEND_MARKED_DRUPAL_CRON=1 \
+FAMTASTIC_PILOT_SUSPEND_MARKED_DRUPAL_CRON_CONFIRM=FAMTASTIC_DRUPAL_CRON_V1 \
 ./scripts/deploy-backend-godaddy.sh --apply
 ```
 
-Preflight with the same flags validates that exact pair without changing
-production. Apply saves the complete pre-change crontab below
-`~/deploy/famtastic-designs/cron-backups/`, removes only that pair, and refuses
-to proceed if any other active lifecycle runner is present. The recorded backup
-supports a separate, explicit scheduler restoration; a failed code deployment
-does not automatically re-enable broad dispatch.
+The lifecycle and jobs-run forms use the equivalent
+`FAMTASTIC_LIFECYCLE_CRON_V1` / `FAMTASTIC_JOBS_RUN_CRON_V1` marker, exact
+confirmation, and standard command. Preflight with the same declarations only
+validates; it changes nothing. Apply first writes a complete mode-0600 crontab
+backup under `~/deploy/famtastic-designs/cron-backups/`, atomically removes only
+the authorized marker/command pair(s), and proves all broad scheduler counts
+are zero before it sets the durable pilot lock. It repeats the process/cron
+assertion immediately before the old-code swap, after long validation and backup
+work but before any production module/theme file changes.
+
+The pilot deployer does **not** automatically restore the backup on either a
+successful or failed deployment. Leaving the pair suspended is intentional: a
+stale full-crontab restore could overwrite later operator work or reopen shared
+dispatch before reconciliation. The explicit end-pilot procedure is to inspect
+the recorded backup and current crontab, reconcile all failed/retry work,
+inventory queued/retry `famtastic_notification_outbox` rows, then separately
+reinsert only the reviewed marker and exact command. Do not apply the entire
+backup with `crontab <backup>`.
 
 ### Historical generic-proof queue gate
 
-The `cold-260-aug-2026` generic proof queue must be empty before an exact-ID
-pilot is recorded as safe. Pilot preflight counts only its exact historical
-queued `proof.generate:prospect:*` jobs and refuses a nonzero count by default.
-It never quarantines work implicitly.
+The `cold-260-aug-2026` legacy campaign must have no active or unrecognized
+claimable proof/mail work before an exact-ID pilot is recorded as safe. The
+preflight inspects only exact campaign-attributed rows:
+
+- `proof.generate:prospect:*` and `outreach.prepare:prospect:*` jobs for its
+  attributed Prospect IDs;
+- `outreach.send:message:<id>` jobs for its exact campaign message IDs; and
+- generic `famtastic_email_message` rows whose `campaign_id` is that exact
+  campaign.
+
+It treats queued/retry (and staged/held for messages) as claimable; running,
+claimed, processing, dispatching, or sending rows require manual
+reconciliation; unknown statuses also fail closed. It never touches
+`famtastic_notification_outbox` in this exact campaign quarantine because that
+table has no campaign/prospect ownership key. The pilot dispatch lock holds that
+global dispatcher; its queued/retry inventory is a mandatory manual end-pilot
+check before any future normal release clears the lock.
 
 If the owner explicitly authorizes that one narrow quarantine, repeat the exact
 campaign key in both variables on the apply command:
 
 ```bash
 FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 \
-FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON=1 \
 FAMTASTIC_PILOT_LEGACY_QUARANTINE_CAMPAIGN=cold-260-aug-2026 \
 FAMTASTIC_PILOT_LEGACY_QUARANTINE_CONFIRM=cold-260-aug-2026 \
 ./scripts/deploy-backend-godaddy.sh --apply
@@ -134,10 +191,11 @@ FAMTASTIC_PILOT_LEGACY_QUARANTINE_CONFIRM=cold-260-aug-2026 \
 
 The script only invokes the existing exact-campaign quarantine after the new
 module, dependencies, updates, cache rebuild, and durable runtime lock are
-active. It writes a private receipt, rechecks the exact queue is zero, and
-records the before/after count plus receipt location in `.backend-release`.
-If the running production release lacks that Drush command, the apply fails
-closed rather than guessing or modifying the queue directly.
+active. It writes a private receipt with job/message IDs and counts by type and
+status, rechecks that no exact claimable or active/unknown work remains, and
+records the before/after counts plus receipt location in `.backend-release`. If
+the running production release lacks that Drush command, the apply fails closed
+rather than guessing or modifying the queue directly.
 
 If code promotion or a Drupal command fails, the script restores the prior
 module plus both the admin and customer themes, then rebuilds cache. On a

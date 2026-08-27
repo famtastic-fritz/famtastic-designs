@@ -143,17 +143,17 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
-   * Quarantines only queued proof jobs for one exact historical campaign.
+   * Quarantines exact-campaign claimable proof and commercial-mail work.
    *
    * This is intentionally one-way: it records a reason and a ledger event,
-   * then removes only matching queued `proof.generate` jobs from claimability.
-   * It cannot send, rebuild, or alter an unrelated campaign.
+   * then removes only exact-campaign claimable proof and commercial-mail work
+   * from claimability. It cannot send, rebuild, or alter an unrelated campaign.
    */
   #[CLI\Command(name: 'famtastic:campaign-proof-quarantine', aliases: ['fcpq'])]
-  #[CLI\Option(name: 'campaign', description: 'Exact campaign attribution key whose queued proof jobs should be quarantined.')]
+  #[CLI\Option(name: 'campaign', description: 'Exact campaign attribution key whose claimable proof/mail work should be quarantined.')]
   #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the campaign key.')]
   #[CLI\Option(name: 'reason', description: 'Required concise operational reason to preserve with the quarantine event.')]
-  #[CLI\Usage(name: 'drush fcpq --campaign=cold-260-aug-2026 --confirm=cold-260-aug-2026 --reason="Superseded by owner-gated public preview flow"', description: 'Safely quarantine only the stale campaign proof jobs.')]
+  #[CLI\Usage(name: 'drush fcpq --campaign=cold-260-aug-2026 --confirm=cold-260-aug-2026 --reason="Superseded by owner-gated public preview flow"', description: 'Safely quarantine only exact-campaign claimable proof and commercial-mail work.')]
   public function campaignProofQuarantine(array $options = ['campaign' => '', 'confirm' => '', 'reason' => '']): int {
     $campaign = trim((string) $options['campaign']);
     $reason = trim((string) $options['reason']);
@@ -165,36 +165,40 @@ class PipelineCommands extends DrushCommands {
       $this->logger()->error('Quarantine requires a concise --reason (1-1000 characters).');
       return self::EXIT_FAILURE;
     }
-    $prospectIds = array_map('intval', \Drupal::entityQuery('famtastic_prospect')
-      ->accessCheck(FALSE)
-      ->condition('campaign', $campaign)
-      ->execute());
-    if ($prospectIds === []) {
-      $this->logger()->error('No prospects match the exact campaign key. Nothing changed.');
+    $database = \Drupal::database();
+    try {
+      $scope = $this->legacyCampaignWorkScope($campaign);
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
       return self::EXIT_FAILURE;
     }
-    $database = \Drupal::database();
-    $jobs = $database->select('famtastic_job', 'j')->fields('j')
-      ->condition('job_type', 'proof.generate')
-      ->condition('status', 'queued')
-      // The historical campaign importer uses this exact generic job-key
-      // family. Do not quarantine account-owned or paid-project proof jobs
-      // that merely share a prospect ID with the campaign.
-      ->condition('job_key', 'proof.generate:prospect:%', 'LIKE')
-      ->condition('prospect_id', $prospectIds, 'IN')
-      ->orderBy('id')
-      ->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $classification = $this->legacyCampaignWorkClassification($scope['jobs'], $scope['messages']);
+    if ($classification['active'] !== [] || $classification['unknown'] !== []) {
+      $this->io()->writeln(json_encode([
+        'campaign_key' => $campaign,
+        'status' => 'manual_reconciliation_required',
+        'status_counts' => $classification['status_counts'],
+        'active' => $classification['active'],
+        'unknown' => $classification['unknown'],
+      ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+      $this->logger()->error('Exact campaign quarantine refused because active or unrecognized work exists. No rows changed.');
+      return self::EXIT_FAILURE;
+    }
     $now = \Drupal::time()->getRequestTime();
     $reasonHash = hash('sha256', $reason);
     /** @var \Drupal\famtastic_pipeline\Service\OperationalLedger $ledger */
     $ledger = \Drupal::service('famtastic_pipeline.operational_ledger');
-    $quarantined = [];
+    $quarantinedJobs = [];
+    $quarantinedMessages = [];
     $transaction = $database->startTransaction();
     try {
-      foreach ($jobs as $job) {
+      foreach ($classification['claimable_jobs'] as $job) {
         $result = [
           'status' => 'quarantined',
           'campaign_key' => $campaign,
+          'job_type' => (string) $job['job_type'],
+          'previous_status' => (string) $job['status'],
           'reason' => $reason,
           'quarantined_at' => gmdate(DATE_ATOM, $now),
         ];
@@ -205,25 +209,52 @@ class PipelineCommands extends DrushCommands {
           'last_error' => 'quarantined: ' . $reason,
           'changed' => $now,
         ])->condition('id', (int) $job['id'])
-          ->condition('job_type', 'proof.generate')
-          ->condition('status', 'queued')
-          ->condition('job_key', 'proof.generate:prospect:%', 'LIKE')
+          ->condition('job_type', (string) $job['job_type'])
+          ->condition('status', (string) $job['status'])
           ->execute();
         if ($updated !== 1) {
-          throw new \RuntimeException('A queued proof job changed before it could be quarantined. No partial quarantine was retained.');
+          throw new \RuntimeException('An exact-campaign claimable job changed before it could be quarantined. No partial quarantine was retained.');
         }
         $ledger->recordEvent(
-          'proof.generate.quarantined:' . (int) $job['id'] . ':' . $reasonHash,
-          'proof.generate.quarantined',
-          ['job_id' => (int) $job['id'], 'campaign_key' => $campaign, 'reason_hash' => $reasonHash],
+          'campaign.work.quarantined:job:' . (int) $job['id'] . ':' . $reasonHash,
+          'campaign.work.quarantined',
+          ['job_id' => (int) $job['id'], 'job_type' => (string) $job['job_type'], 'campaign_key' => $campaign, 'reason_hash' => $reasonHash],
           (int) $job['prospect_id'],
+          (int) $scope['campaign_id'],
         );
-        $quarantined[] = (int) $job['id'];
+        $quarantinedJobs[] = (int) $job['id'];
+      }
+      foreach ($classification['claimable_messages'] as $message) {
+        $updated = $database->update('famtastic_email_message')->fields([
+          'status' => 'quarantined',
+          'changed' => $now,
+        ])->condition('id', (int) $message['id'])
+          ->condition('campaign_id', (int) $scope['campaign_id'])
+          ->condition('status', (string) $message['status'])
+          ->execute();
+        if ($updated !== 1) {
+          throw new \RuntimeException('An exact-campaign generic email record changed before it could be quarantined. No partial quarantine was retained.');
+        }
+        $ledger->recordEvent(
+          'campaign.work.quarantined:message:' . (int) $message['id'] . ':' . $reasonHash,
+          'campaign.work.quarantined',
+          ['message_id' => (int) $message['id'], 'template_key' => (string) $message['template_key'], 'campaign_key' => $campaign, 'reason_hash' => $reasonHash],
+          (int) $message['prospect_id'],
+          (int) $scope['campaign_id'],
+        );
+        $quarantinedMessages[] = (int) $message['id'];
       }
       $ledger->recordEvent(
-        'campaign.proof_jobs_quarantined:' . $campaign . ':' . $reasonHash,
-        'campaign.proof_jobs_quarantined',
-        ['campaign_key' => $campaign, 'job_count' => count($quarantined), 'reason_hash' => $reasonHash],
+        'campaign.work.quarantined:' . $campaign . ':' . $reasonHash,
+        'campaign.work.quarantined',
+        [
+          'campaign_key' => $campaign,
+          'job_count' => count($quarantinedJobs),
+          'message_count' => count($quarantinedMessages),
+          'status_counts' => $classification['status_counts'],
+          'reason_hash' => $reasonHash,
+        ],
+        campaignId: (int) $scope['campaign_id'],
       );
     }
     catch (\Throwable $error) {
@@ -234,12 +265,16 @@ class PipelineCommands extends DrushCommands {
     $this->io()->writeln(json_encode([
       'campaign_key' => $campaign,
       'status' => 'quarantined',
-      'job_ids' => $quarantined,
-      'count' => count($quarantined),
+      'job_ids' => $quarantinedJobs,
+      'message_ids' => $quarantinedMessages,
+      'job_count' => count($quarantinedJobs),
+      'message_count' => count($quarantinedMessages),
+      'status_counts' => $classification['status_counts'],
       'reason_hash' => $reasonHash,
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-    $this->logger()->success(dt('Quarantined @count queued proof job(s) for exactly @campaign. No emails or proof generation ran.', [
-      '@count' => count($quarantined),
+    $this->logger()->success(dt('Quarantined @jobs exact-campaign claimable job(s) and @messages generic email record(s) for @campaign. No email or proof generation ran.', [
+      '@jobs' => count($quarantinedJobs),
+      '@messages' => count($quarantinedMessages),
       '@campaign' => $campaign,
     ]));
     return self::EXIT_SUCCESS;
@@ -668,6 +703,12 @@ class PipelineCommands extends DrushCommands {
     'prospect' => 0,
     'campaign' => '',
   ]): int {
+    /** @var \Drupal\famtastic_pipeline\Service\PilotExactDispatchLock $pilotLock */
+    $pilotLock = \Drupal::service('famtastic_pipeline.pilot_exact_dispatch_lock');
+    if ($pilotLock->isActive()) {
+      $this->logger()->error('Pilot exact-dispatch lock is active; famtastic:jobs-run is disabled. It must not claim shared automation work during the exact-ID pilot.');
+      return self::EXIT_FAILURE;
+    }
     if ((int) $options['prospect'] > 0 && (string) $options['campaign'] !== '') {
       $this->logger()->error('--prospect and --campaign are mutually exclusive.');
       return self::EXIT_FAILURE;
@@ -1061,6 +1102,131 @@ class PipelineCommands extends DrushCommands {
       $this->logger()->error($error->getMessage());
       return self::EXIT_FAILURE;
     }
+  }
+
+  /**
+   * Returns only work that is structurally attributable to one exact campaign.
+   *
+   * Notification-outbox rows are intentionally absent: that table has neither
+   * campaign nor prospect ownership, so touching it here would not be exact.
+   *
+   * @return array{campaign_id:int,jobs:array<int,array<string,mixed>>,messages:array<int,array<string,mixed>>}
+   */
+  private function legacyCampaignWorkScope(string $campaign): array {
+    $database = \Drupal::database();
+    $campaignId = (int) $database->select('famtastic_campaign', 'c')
+      ->fields('c', ['id'])
+      ->condition('campaign_key', $campaign)
+      ->execute()
+      ->fetchField();
+    if ($campaignId < 1) {
+      throw new \RuntimeException('Exact campaign key does not resolve to a campaign record. Nothing changed.');
+    }
+    $prospectIds = array_values(array_unique(array_map('intval', \Drupal::entityQuery('famtastic_prospect')
+      ->accessCheck(FALSE)
+      ->condition('campaign', $campaign)
+      ->execute())));
+
+    $messages = $database->select('famtastic_email_message', 'm')
+      ->fields('m', ['id', 'prospect_id', 'campaign_id', 'template_key', 'status'])
+      ->condition('campaign_id', $campaignId)
+      ->orderBy('id')
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+    $messageIds = array_map(static fn (array $row): int => (int) $row['id'], $messages);
+    $jobs = [];
+    if ($prospectIds !== []) {
+      foreach ([
+        ['proof.generate', 'proof.generate:prospect:%'],
+        ['outreach.prepare', 'outreach.prepare:prospect:%'],
+      ] as [$jobType, $jobKeyPattern]) {
+        $rows = $database->select('famtastic_job', 'j')
+          ->fields('j', ['id', 'job_key', 'job_type', 'prospect_id', 'status'])
+          ->condition('job_type', $jobType)
+          ->condition('job_key', $jobKeyPattern, 'LIKE')
+          ->condition('prospect_id', $prospectIds, 'IN')
+          ->orderBy('id')
+          ->execute()
+          ->fetchAll(\PDO::FETCH_ASSOC);
+        foreach ($rows as $row) {
+          $jobs[(int) $row['id']] = $row;
+        }
+      }
+    }
+    if ($messageIds !== []) {
+      $sendKeys = array_map(static fn (int $messageId): string => 'outreach.send:message:' . $messageId, $messageIds);
+      $rows = $database->select('famtastic_job', 'j')
+        ->fields('j', ['id', 'job_key', 'job_type', 'prospect_id', 'status'])
+        ->condition('job_type', 'outreach.send')
+        ->condition('job_key', $sendKeys, 'IN')
+        ->orderBy('id')
+        ->execute()
+        ->fetchAll(\PDO::FETCH_ASSOC);
+      foreach ($rows as $row) {
+        $jobs[(int) $row['id']] = $row;
+      }
+    }
+    ksort($jobs, SORT_NUMERIC);
+    return [
+      'campaign_id' => $campaignId,
+      'jobs' => array_values($jobs),
+      'messages' => $messages,
+    ];
+  }
+
+  /**
+   * Separates claimable work from active/unknown work without changing rows.
+   *
+   * @return array{claimable_jobs:array<int,array<string,mixed>>,claimable_messages:array<int,array<string,mixed>>,active:array<int,array<string,mixed>>,unknown:array<int,array<string,mixed>>,status_counts:array<string,array<string,array<string,int>>>}
+   */
+  private function legacyCampaignWorkClassification(array $jobs, array $messages): array {
+    $claimableJobs = [];
+    $claimableMessages = [];
+    $active = [];
+    $unknown = [];
+    $statusCounts = ['jobs' => [], 'messages' => []];
+    $jobClaimable = ['queued', 'retry'];
+    $jobActive = ['running', 'claimed', 'processing', 'dispatching'];
+    $jobTerminal = ['completed', 'failed', 'quarantined'];
+    $messageClaimable = ['staged', 'queued', 'held', 'retry'];
+    $messageActive = ['running', 'claimed', 'processing', 'dispatching', 'sending'];
+    $messageTerminal = ['sent', 'delivered', 'opened', 'clicked', 'bounced', 'complained', 'unsubscribed', 'suppressed', 'failed', 'quarantined'];
+
+    foreach ($jobs as $job) {
+      $type = (string) $job['job_type'];
+      $status = strtolower(trim((string) $job['status']));
+      $statusCounts['jobs'][$type][$status] = ($statusCounts['jobs'][$type][$status] ?? 0) + 1;
+      if (in_array($status, $jobClaimable, TRUE)) {
+        $claimableJobs[] = $job;
+      }
+      elseif (in_array($status, $jobActive, TRUE)) {
+        $active[] = ['kind' => 'job', 'id' => (int) $job['id'], 'type' => $type, 'status' => $status];
+      }
+      elseif (!in_array($status, $jobTerminal, TRUE)) {
+        $unknown[] = ['kind' => 'job', 'id' => (int) $job['id'], 'type' => $type, 'status' => $status];
+      }
+    }
+    foreach ($messages as $message) {
+      $type = (string) $message['template_key'];
+      $status = strtolower(trim((string) $message['status']));
+      $statusCounts['messages'][$type][$status] = ($statusCounts['messages'][$type][$status] ?? 0) + 1;
+      if (in_array($status, $messageClaimable, TRUE)) {
+        $claimableMessages[] = $message;
+      }
+      elseif (in_array($status, $messageActive, TRUE)) {
+        $active[] = ['kind' => 'message', 'id' => (int) $message['id'], 'type' => $type, 'status' => $status];
+      }
+      elseif (!in_array($status, $messageTerminal, TRUE)) {
+        $unknown[] = ['kind' => 'message', 'id' => (int) $message['id'], 'type' => $type, 'status' => $status];
+      }
+    }
+    return [
+      'claimable_jobs' => $claimableJobs,
+      'claimable_messages' => $claimableMessages,
+      'active' => $active,
+      'unknown' => $unknown,
+      'status_counts' => $statusCounts,
+    ];
   }
 
   /** Resolves one non-symlink regular file below Drupal's private filesystem. */

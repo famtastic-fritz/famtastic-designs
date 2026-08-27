@@ -27,9 +27,17 @@ final class LifecycleOperationsService {
     private readonly FileSystemInterface $fileSystem,
     private readonly AutomationWorker $automationWorker,
     private readonly SupportDraftService $supportDrafts,
+    private readonly PilotExactDispatchLock $pilotExactDispatchLock,
   ) {}
 
   public function dispatchNotifications(int $limit = 25): array {
+    // This is the shared outbox boundary. Do not claim it during an exact-ID
+    // pilot; targeted preview delivery uses PublicPreviewDeliveryService and
+    // therefore remains separately owner-gated. Drupal account/auth mail and
+    // direct operational mail are not globally disabled by this narrow guard.
+    if ($this->pilotExactDispatchLock->isActive()) {
+      return ['processed' => 0, 'sent' => 0, 'failed' => 0, 'retried' => 0, 'skipped' => 'pilot_exact_dispatch_lock'];
+    }
     $now = $this->time->getRequestTime();
     $rows = $this->database->select('famtastic_notification_outbox', 'n')->fields('n')
       ->condition('status', ['queued', 'retry'], 'IN')->condition('available_at', $now, '<=')

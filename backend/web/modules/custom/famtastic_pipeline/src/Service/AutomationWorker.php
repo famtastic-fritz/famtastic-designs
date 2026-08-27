@@ -21,12 +21,21 @@ final class AutomationWorker {
     private readonly HostingLifecycleService $hosting,
     private readonly CustomerPortalService $portal,
     private readonly PublicPreviewDeliveryService $previews,
+    private readonly PilotExactDispatchLock $pilotExactDispatchLock,
   ) {}
 
   /**
    * Runs up to the requested number of available jobs.
    */
   public function run(int $limit = 25, ?string $jobType = NULL, ?array $prospectIds = NULL): array {
+    // Callers other than the lifecycle command (including a direct Drush
+    // jobs-run scheduler or service invocation) must not become a hidden path
+    // around the governed exact-ID pilot lock. Returning no claims preserves
+    // the shared queue untouched; the Drush boundary reports the explicit
+    // refusal to its operator.
+    if ($this->pilotExactDispatchLock->isActive()) {
+      return [];
+    }
     $limit = max(1, min(100, $limit));
     $results = [];
     for ($i = 0; $i < $limit; $i++) {

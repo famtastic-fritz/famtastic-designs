@@ -24,6 +24,38 @@
   declared unique keys through Drupal 11's Schema API. Disposable MariaDB
   rehearsal passed clean partial-table repair, duplicate insert rejection,
   and no-cold-DDL failures for malformed historical identity data.
+## 2026-08-27 — Pre-promotion pilot scheduler and legacy-mail guard (source-only; not deployed)
+
+- A governed exact-ID pilot now refuses active broad `drush cron`,
+  `famtastic:lifecycle-run`, `famtastic:jobs-run`/`fjr`, and direct
+  `php:eval`/`php:script`/`ev` or AutomationWorker scheduler entries before
+  old production code can be promoted; it also refuses a matching in-flight
+  owned process and repeats that assertion immediately before the code swap. An
+  unmarked scheduler is never removed.
+  Only one deliberately marker-owned, byte-exact lifecycle, Drupal-cron, or
+  jobs-run pair with its exact repeated confirmation may be suspended; a
+  mode-0600 backup is retained and there is no automatic restore on success or
+  failure.
+- Pilot preflight now requires Drupal's actual customer-facing configuration to
+  be exactly `https://famtasticdesigns.com` and
+  `https://famtasticdesigns.com/web`. It refuses localhost, staging, blank, or
+  alternative same-origin bases rather than changing live configuration during
+  deployment.
+- The durable pilot lock also closes direct `famtastic:jobs-run`, raw
+  `AutomationWorker::run()`, generic `CampaignMessageService::send()`, and
+  shared `LifecycleOperationsService::dispatchNotifications()` paths. The
+  owner-approved exact public-preview dispatcher remains separate; portal/auth
+  mail is not globally disabled.
+- The exact `cold-260-aug-2026` quarantine now inventories and fail-closes on
+  active/unknown `proof.generate`, `outreach.prepare`, `outreach.send`, and
+  campaign-owned generic email work. Its private receipt reports IDs and
+  type/status counts. It intentionally leaves unattributable notification
+  outbox rows untouched for a later manual inventory.
+- Local shell fixtures passed for mismatch refusal, unmarked scheduler and
+  in-flight-process refusal, noncanonical-base refusal, active generic-email
+  refusal, read-only preflight, suspension before code promotion, mode-0600
+  backup, and no automatic restore. No production scheduler, config, queue,
+  code, email, proof, or deployment state was changed.
 
 ## 2026-08-27 — Verified-cold commercial-send safety gates (local acceptance only; not deployed)
 

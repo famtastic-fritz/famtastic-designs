@@ -20,6 +20,23 @@ source of truth.
   confirmation path may mutate consent. For update `8042`, validate nonempty
   cold identity fields and duplicates before any DDL, then restore missing
   declared unique keys using Drupal's Schema API and a disposable MariaDB run.
+## 2026-08-27 — Pre-promotion safety is a separate boundary from the durable lock
+
+- Observation: an old live Drupal process can run before it has the newly
+  deployed durable lock, and direct jobs/outbox/mail services can bypass a
+  lifecycle-only guard. The cold-260 campaign may also have attributable
+  proof, preparation, send, and generic-email rows beyond its original proof
+  queue.
+- Guidance: pilot preflight must prove broad lifecycle, Drupal cron, jobs-run,
+  direct evaluator/worker schedulers, and already-running matching processes
+  are absent. Only one explicitly marked
+  byte-exact named line may be suspended with its matching confirmation; retain
+  a mode-0600 backup and require an explicit end-pilot restore/reconciliation.
+  Lock generic worker, campaign-mail, and shared-outbox boundaries while
+  preserving the exact public-preview dispatch path. Quarantine only exact
+  campaign-owned proof/mail rows, fail on active/unknown states, leave
+  unattributable notification outbox rows for manual inventory, and require
+  canonical public `/web` configuration before a customer-facing pilot.
 
 ## 2026-08-27 — A deploy-shell flag is not a cron safety boundary
 

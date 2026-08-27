@@ -26,6 +26,7 @@ class CampaignMessageService {
     private readonly OutreachMailer $mailer,
     private readonly TimeInterface $time,
     private readonly ConfigFactoryInterface $configFactory,
+    private readonly PilotExactDispatchLock $pilotExactDispatchLock,
   ) {}
 
   /**
@@ -117,12 +118,22 @@ class CampaignMessageService {
    * Sends through memory transport or the explicitly enabled real transport.
    */
   public function send(int $messageId): array {
+    // This is the generic campaign mail boundary. The owner-approved
+    // PublicPreviewDeliveryService exact-ID dispatcher intentionally uses its
+    // own narrow path, so the pilot lock cannot be bypassed through direct
+    // CampaignMessageService calls without disabling unrelated Drupal mail.
+    if ($this->pilotExactDispatchLock->isActive()) {
+      throw new \RuntimeException('Pilot exact-dispatch lock is active; generic campaign email send is disabled.');
+    }
     $message = $this->load($messageId);
     if (!$message) {
       throw new \RuntimeException('Email message does not exist.');
     }
     if ((string) ($message['template_key'] ?? '') === 'verified_cold_preview') {
       throw new \RuntimeException('Verified-cold commercial previews must use the exact-ID public preview dispatcher.');
+    }
+    if (in_array((string) $message['status'], ['quarantined', 'suppressed'], TRUE)) {
+      throw new \RuntimeException('This campaign message is quarantined or suppressed and cannot be sent.');
     }
     if (in_array($message['status'], ['sent', 'delivered', 'opened', 'clicked'], TRUE)) {
       return $message;
