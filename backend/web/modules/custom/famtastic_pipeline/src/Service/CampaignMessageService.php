@@ -618,7 +618,7 @@ class CampaignMessageService {
     $lines[] = '';
     $lines[] = '— FAMtastic Designs';
     $lines[] = '';
-    $lines[] = sprintf('FAMtastic Designs\n%s', $postalAddress);
+    $lines[] = $postalAddress;
     $lines[] = '';
     $lines[] = sprintf('Why you are receiving this: we found your business contact information in a public business listing while researching local %s businesses that may benefit from a stronger web presence.', $category);
     $lines[] = '';
