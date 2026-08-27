@@ -218,9 +218,9 @@ class ColdProofCommercialMessageService {
   }
 
   private function commercialBody(string $coreBody, string $shareUrl, string $tracking, string $unsubscribe, string $postal): string {
-    $base = $this->base();
-    $click = $base . '/api/pipeline/email/click/' . $tracking;
-    $unsub = $base . '/api/pipeline/email/unsubscribe/' . $unsubscribe;
+    $apiBase = $this->publicApiBase();
+    $click = $apiBase . '/api/pipeline/email/click/' . $tracking;
+    $unsub = $apiBase . '/api/pipeline/email/unsubscribe/' . $unsubscribe;
     // Keep the raw signed room URL only in the server-side proof_url column.
     // Every customer-facing CTA must cross the click ledger first.
     $body = str_replace($shareUrl, $click, trim($coreBody));
@@ -265,6 +265,67 @@ class ColdProofCommercialMessageService {
 
   private function base(): string {
     return rtrim((string) (getenv('FAMTASTIC_PUBLIC_BASE_URL') ?: $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url') ?: 'https://famtasticdesigns.com'), '/');
+  }
+
+  /**
+   * Resolves the public Drupal document root separately from the SPA origin.
+   *
+   * The public frontend lives at the origin while Drupal routes are mounted
+   * below `/web`. An optional explicit API base is accepted only on the same
+   * public origin and only at that document-root path, so an environment typo
+   * cannot silently turn a commercial click or unsubscribe into an arbitrary
+   * redirect endpoint.
+   */
+  private function publicApiBase(): string {
+    $publicBase = $this->validatedPublicBase($this->base(), 'public base URL');
+    $configured = trim((string) (
+      getenv('FAMTASTIC_PUBLIC_API_BASE_URL')
+      ?: $this->configFactory->get('famtastic_pipeline.settings')->get('public_api_base_url')
+      ?: ''
+    ));
+    if ($configured === '') {
+      $path = rtrim((string) (parse_url($publicBase, PHP_URL_PATH) ?: ''), '/');
+      if ($path === '') {
+        return $publicBase . '/web';
+      }
+      if ($path === '/web') {
+        return $publicBase;
+      }
+      throw new \RuntimeException('Verified-cold commercial email requires FAMTASTIC_PUBLIC_API_BASE_URL when the public base URL has a path other than /web.');
+    }
+
+    $apiBase = $this->validatedPublicBase($configured, 'public API base URL');
+    $public = parse_url($publicBase);
+    $api = parse_url($apiBase);
+    if (
+      strtolower((string) ($public['scheme'] ?? '')) !== strtolower((string) ($api['scheme'] ?? ''))
+      || strtolower((string) ($public['host'] ?? '')) !== strtolower((string) ($api['host'] ?? ''))
+      || (int) ($public['port'] ?? 0) !== (int) ($api['port'] ?? 0)
+      || rtrim((string) ($api['path'] ?? ''), '/') !== '/web'
+    ) {
+      throw new \RuntimeException('Verified-cold public API base must use the public site origin and end exactly at /web.');
+    }
+    return $apiBase;
+  }
+
+  private function validatedPublicBase(string $value, string $label): string {
+    $value = rtrim(trim($value), '/');
+    if (!filter_var($value, FILTER_VALIDATE_URL)) {
+      throw new \RuntimeException('Verified-cold ' . $label . ' must be an absolute http(s) URL.');
+    }
+    $parts = parse_url($value);
+    if (
+      !is_array($parts)
+      || !in_array(strtolower((string) ($parts['scheme'] ?? '')), ['http', 'https'], TRUE)
+      || trim((string) ($parts['host'] ?? '')) === ''
+      || isset($parts['user'])
+      || isset($parts['pass'])
+      || isset($parts['query'])
+      || isset($parts['fragment'])
+    ) {
+      throw new \RuntimeException('Verified-cold ' . $label . ' must contain only a scheme, host, optional port, and path.');
+    }
+    return $value;
   }
 
   private function messageForDelivery(int $deliveryId): ?array {

@@ -126,13 +126,22 @@ owner review, public room staging, and email still remain separate gates.
 ## Owner and commercial-send gates
 
 Proof generation does not send email. A ready set still needs Build DNA,
-owner staging, an exact email review, and `approveAndHold`.
+customer-safe research, owner staging, an exact email review, and
+`approveAndHold`. `verified_cold` staging specifically requires a non-empty
+research teaser, cited source summary, and an exact SHA-256 Build DNA artifact
+with a `research` role. Missing research is a staging error, not an empty
+teaser fallback.
 
 For `verified_cold`, staging creates a durable `famtastic_email_message` with
 campaign attribution, sender snapshot, physical postal footer, unsubscribe
 key, tracked click key, and the signed room URL stored server-side. The visible
 CTA is the tracked click endpoint; it records a click and redirects only to
 that message's validated signed room URL, never to a legacy prospect token.
+The public Drupal endpoint is canonicalized as
+`https://famtasticdesigns.com/web/api/pipeline/email/...`; an optional
+`FAMTASTIC_PUBLIC_API_BASE_URL` must be same-origin and end exactly at `/web`.
+A malformed stored cold destination returns a private 404 and never falls back
+to the legacy token lane.
 
 Campaign approval is required when the owner holds/dispatches the message, not
 when they stage it, so a full batch can be inspected before a campaign is
@@ -141,6 +150,19 @@ approved. The existing exact-ID dispatcher remains the only send boundary.
 `verified_cold_preview` template, and the generic campaign sender rejects it
 defensively. A verified-cold commercial message can only leave `held` through
 the reviewed public-preview delivery ID.
+
+The exact dispatcher preflights cold transport before it claims a held outbox.
+Default SMTP is denied. A local fixture/capture can dispatch only with
+`FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT=memory` and
+`FAMTASTIC_ALLOW_VERIFIED_COLD_MEMORY_DISPATCH=true`; real SMTP needs both
+`FAMTASTIC_ALLOW_REAL_OUTREACH=true` and
+`FAMTASTIC_ALLOW_VERIFIED_COLD_REAL_OUTREACH=true`. These flags do not replace
+owner review, campaign approval, suppression checks, or exact-ID confirmation.
+
+Cold source evidence and research text pass through the shared public-preview
+content guard before reaching a builder packet, room snapshot, or invitation.
+It redacts copied email, phone, and common credential-shaped text; raw source
+records remain restricted operational evidence.
 
 Scheduled releases are optional and bounded:
 

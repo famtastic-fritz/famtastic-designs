@@ -8,6 +8,9 @@ famtastic_pipeline.settings:
     frontend_base_url:
       type: string
       label: 'Frontend base URL'
+    public_api_base_url:
+      type: string
+      label: 'Public Drupal API base URL'
     support_from_email:
       type: string
       label: 'Support from email'

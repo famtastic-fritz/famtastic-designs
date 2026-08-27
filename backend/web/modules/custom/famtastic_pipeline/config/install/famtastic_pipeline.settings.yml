@@ -3,6 +3,9 @@
 # environment variables via settings, NEVER stored here.
 token_ttl_days: 14
 frontend_base_url: 'http://localhost:5173'
+# Public Drupal document root for click/unsubscribe API links. Empty derives
+# as {frontend_base_url}/web when the frontend lives at the origin.
+public_api_base_url: ''
 support_from_email: 'hello@famtasticdesigns.com'
 notification_to_email: 'fitzgerald.medine@gmail.com'
 lead_response_sla_days: 3

@@ -92,12 +92,16 @@ Read from `getenv()` or Drupal settings; secrets never live in config.
 | `FAMTASTIC_ALLOW_PAYMENT_SIMULATION` | Enables the local-only simulation endpoint when truthy. Never enable in production. | `false` |
 | `FRONTEND_BASE_URL` | Success/cancel + outreach links. | `frontend_base_url` config (`http://localhost:5173`) |
 | `FAMTASTIC_PUBLIC_BASE_URL` | Public tracking and Site Studio callback base. | configured frontend URL |
+| `FAMTASTIC_PUBLIC_API_BASE_URL` | Verified-cold public Drupal API base; must be same-origin and end `/web`. | derived as `{public base}/web` |
 | `SITE_STUDIO_URL` | Remote proof-job endpoint; unset uses the local deterministic adapter. | *(unset)* |
 | `SITE_STUDIO_DISPATCH_SECRET` | HMAC for remote proof dispatch. | *(unset)* |
 | `SITE_STUDIO_CALLBACK_SECRET` | HMAC for asynchronous proof callbacks. | *(unset)* |
 | `FAMTASTIC_EMAIL_TRANSPORT` | Campaign transport (`disabled`, `memory`, or configured real adapter). | `disabled` |
 | `FAMTASTIC_EMAIL_WEBHOOK_SECRET` | HMAC for provider delivery events. | *(unset)* |
 | `FAMTASTIC_ALLOW_REAL_OUTREACH` | Independent real-send approval gate. | `false` |
+| `FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT` | Transactional transport (`memory` only for local capture; `smtp` otherwise). | `smtp` |
+| `FAMTASTIC_ALLOW_VERIFIED_COLD_MEMORY_DISPATCH` | Test-only gate for a captured verified-cold memory dispatch. | `false` |
+| `FAMTASTIC_ALLOW_VERIFIED_COLD_REAL_OUTREACH` | Second owner gate for verified-cold real SMTP. | `false` |
 | `FAMTASTIC_CUSTOMER_RELEASE_ROOT` | Private immutable customer releases. | Drupal private path |
 | `FAMTASTIC_CUSTOMER_DEPLOY_ROOT` | Isolated customer deployment roots. | *(required for deployment)* |
 | `FAMTASTIC_CUSTOMER_PUBLIC_BASE` | Public customer-site URL base. | *(unset)* |

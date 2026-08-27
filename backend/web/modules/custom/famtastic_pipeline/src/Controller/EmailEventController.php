@@ -45,8 +45,14 @@ final class EmailEventController extends ControllerBase {
     if (!$prospect) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_tracking_link'], 404);
     }
-    if ($destination = $this->messages->verifiedColdClickDestination($tracking_key)) {
-      return new TrustedRedirectResponse($destination, 302, [
+    $cold = $this->messages->resolveVerifiedColdClick($tracking_key);
+    if ($cold['is_verified_cold']) {
+      if ($cold['destination'] === NULL) {
+        return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_cold_preview_destination'], 404, [
+          'Cache-Control' => 'no-store, private',
+        ]);
+      }
+      return new TrustedRedirectResponse($cold['destination'], 302, [
         'Cache-Control' => 'no-store, private',
       ]);
     }

@@ -1,5 +1,28 @@
 # Product changelog
 
+## 2026-08-27 — Verified-cold commercial-send safety gates (local acceptance only; not deployed)
+
+- Verified-cold tracked click and unsubscribe URLs now use the canonical public
+  Drupal document root (`https://famtasticdesigns.com/web/api/...`), with a
+  same-origin `/web` API-base validation rather than assuming the SPA root can
+  serve Drupal routes. A malformed or missing signed-room destination on a
+  verified-cold click now returns a private 404; it cannot fall through to the
+  legacy prospect-token flow.
+- Exact-ID public-preview dispatch preflights every verified-cold set before
+  changing a held outbox row. Default SMTP configuration denies the send;
+  local memory rehearsal needs its own explicit test-only gate, while real
+  SMTP needs both `FAMTASTIC_ALLOW_REAL_OUTREACH=true` and
+  `FAMTASTIC_ALLOW_VERIFIED_COLD_REAL_OUTREACH=true`. No production email was
+  sent by this change.
+- Verified-cold staging now requires a customer-safe research teaser, cited
+  source summary, and exact Build DNA research artifact. A shared public
+  preview content guard redacts copied email addresses, phone numbers, and
+  common credential-shaped values from cold source evidence and research
+  before any builder packet, room snapshot, or invitation body can use them.
+- Focused PHPUnit coverage (50 tests) and the fresh local verified-cold
+  handoff fixture passed. The fixture proves redacted public evidence and no
+  provider, SMTP, public-share, payment, deployment, or production action.
+
 ## 2026-08-27 — Exact-prompt Gemini Flash Lite cohort bridge (local acceptance only; not deployed)
 
 - Imported the previously proven Gemini Flash Lite image worker with its source

@@ -42,6 +42,8 @@ final class PublicPreviewDeliveryService {
     private readonly OutreachMailer $mailer,
     private readonly ProofCohortProfileResolverInterface $profiles,
     private readonly ColdProofCommercialMessageService $coldMessages,
+    private readonly VerifiedColdOutreachGate $coldOutreachGate,
+    private readonly PublicPreviewContentGuard $publicContentGuard,
   ) {}
 
   /** Creates (or returns) the durable, non-sendable delivery for a public lead. */
@@ -247,12 +249,7 @@ final class PublicPreviewDeliveryService {
       throw new \RuntimeException('The public preview intake is unavailable or does not belong to this prospect.');
     }
 
-    $safe = static function (string $value, int $maximum = 1200): string {
-      $value = preg_replace('/\s+/u', ' ', trim(strip_tags($value))) ?? '';
-      $value = preg_replace('/\b[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}\b/i', '[redacted email]', $value) ?? '';
-      $value = preg_replace('/(?<!\w)(?:\+?1[ .-]?)?(?:\(?\d{3}\)?[ .-]?)\d{3}[ .-]?\d{4}(?!\w)/', '[redacted phone]', $value) ?? '';
-      return mb_substr($value, 0, $maximum);
-    };
+    $safe = fn (mixed $value, int $maximum = 1200): string => $this->publicContentGuard->redact($value, $maximum);
     $field = static fn (Intake $entity, string $name, int $maximum = 1200): string => $safe((string) $entity->get($name)->value, $maximum);
     $brief = [
       'schema_version' => 'public_preview_intake_v1',
@@ -363,6 +360,7 @@ final class PublicPreviewDeliveryService {
       throw new \InvalidArgumentException('A Build DNA identifier and SHA-256 hash are required before staging.');
     }
     $research = $this->normalizeResearch($research);
+    $this->assertResearchForSourceLane((string) ($row['source_lane'] ?? 'anonymous_public'), $research);
     $this->assertRegisteredBuildDna($buildDnaId, $buildDnaHash, $campaignEvidence, $research['evidence_hash'], $research['evidence_role'], (string) ($row['source_lane'] ?? 'anonymous_public'));
     $now = $this->time->getRequestTime();
     $expires = $now + (14 * 86400);
@@ -619,6 +617,16 @@ final class PublicPreviewDeliveryService {
     sort($ids, SORT_NUMERIC);
     if ($ids === [] || count($ids) > 10) {
       throw new \InvalidArgumentException('Public preview dispatch requires between one and ten exact delivery IDs.');
+    }
+
+    // Reject a cold commercial send before claiming a single held outbox row.
+    // This preserves owner review state and makes a missing gate an operator
+    // correction, never an accidental SMTP attempt or partial dispatch.
+    foreach ($ids as $id) {
+      if ((string) ($this->require($id)['source_lane'] ?? 'anonymous_public') === 'verified_cold') {
+        $this->coldOutreachGate->assertDispatchAllowed();
+        break;
+      }
     }
 
     $now = $this->time->getRequestTime();
@@ -1277,10 +1285,7 @@ final class PublicPreviewDeliveryService {
     if (!$row) {
       return NULL;
     }
-    $safe = static function (mixed $value, int $maximum): string {
-      $value = preg_replace('/\s+/u', ' ', trim(strip_tags((string) $value))) ?? '';
-      return mb_substr($value, 0, $maximum);
-    };
+    $safe = fn (mixed $value, int $maximum): string => $this->publicContentGuard->redact($value, $maximum);
     $sourceUrl = trim((string) $row['source_url']);
     $parts = parse_url($sourceUrl);
     if (is_array($parts) && isset($parts['scheme'], $parts['host'])) {
@@ -1416,10 +1421,7 @@ final class PublicPreviewDeliveryService {
    * latter detects later changes to the frozen email/room snapshot.
    */
   private function normalizeResearch(array $research): array {
-    $clean = static function (mixed $value, int $maximum): string {
-      $value = preg_replace('/\s+/u', ' ', trim(strip_tags((string) $value))) ?? '';
-      return mb_substr($value, 0, $maximum);
-    };
+    $clean = fn (mixed $value, int $maximum): string => $this->publicContentGuard->redact($value, $maximum);
     $result = [
       'public_context' => $clean($research['public_context'] ?? '', 1200),
       'teaser' => $clean($research['teaser'] ?? '', 1600),
@@ -1445,6 +1447,22 @@ final class PublicPreviewDeliveryService {
       'report' => $result['report'],
     ], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
     return $result;
+  }
+
+  /** A researched cold campaign may not stage an unsubstantiated invitation. */
+  private function assertResearchForSourceLane(string $sourceLane, array $research): void {
+    if ($sourceLane !== 'verified_cold') {
+      return;
+    }
+    if (
+      trim((string) ($research['teaser'] ?? '')) === ''
+      || trim((string) ($research['sources'] ?? '')) === ''
+      || preg_match('/^[a-f0-9]{64}$/', (string) ($research['evidence_hash'] ?? '')) !== 1
+      || preg_match('/^[a-z0-9_.-]{3,128}$/', (string) ($research['evidence_role'] ?? '')) !== 1
+      || !str_contains((string) ($research['evidence_role'] ?? ''), 'research')
+    ) {
+      throw new \InvalidArgumentException('Verified-cold preview staging requires a customer-safe research teaser, cited source summary, and exact Build DNA research artifact before owner review.');
+    }
   }
 
   private function decodeBuildDnaManifest(string $manifest): array {

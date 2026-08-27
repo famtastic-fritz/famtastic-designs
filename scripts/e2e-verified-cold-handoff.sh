@@ -115,6 +115,8 @@ jq -e '
   (.lead.proof_job_id | type == "number") and
   .duplicate_reimport == "already_ingressed" and
   .draft_owner_gate == "rejected_without_partial_hold" and
+  .cold_dispatch_gate == "denied_before_claim" and
+  .public_brief_pii == "redacted" and
   .bundle.schema == "famtastic.verified-cold-proof-handoff.v1" and
   (.bundle.deliveries | length) == 1 and
   .bundle.deliveries[0].source_lane == "verified_cold" and
@@ -137,10 +139,11 @@ output="$private_root/famtastic/cold-handoff.json"
 test "$(stat -f '%Lp' "$output")" = "600"
 jq -e '.source_lane == "verified_cold" and (.deliveries | length == 1)' "$output" >/dev/null
 
-test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_notification_outbox" | tr -d '[:space:]')" = "0"
+test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_notification_outbox WHERE status = 'held' OR status = 'dispatching'" | tr -d '[:space:]')" = "0"
+test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_notification_outbox WHERE status = 'cancelled'" | tr -d '[:space:]')" = "1"
 test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_email_message WHERE status = 'held'" | tr -d '[:space:]')" = "0"
 test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_email_message WHERE status = 'staged'" | tr -d '[:space:]')" = "1"
 test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_job WHERE job_type = 'proof.generate'" | tr -d '[:space:]')" = "0"
 test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_job WHERE job_type = 'public_preview.generate'" | tr -d '[:space:]')" = "1"
 
-echo "PASS: verified-cold ingress creates exact prospect/delivery/campaign/job identities and a private runner handoff; a draft owner gate leaves no held outbox or commercial message. No provider, SMTP send, public share, payment, or production action occurred."
+echo "PASS: verified-cold ingress creates exact prospect/delivery/campaign/job identities and a private runner handoff; malformed cold clicks fail closed, default SMTP cannot claim a held cold delivery, and a draft owner gate leaves no active outbox or commercial message. No provider, SMTP send, public share, payment, or production action occurred."

@@ -1,5 +1,23 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — A held cold-proof email is not permission to use SMTP
+
+- Observation: the exact public-preview dispatcher called the transactional
+  mailer directly. A verified-cold delivery could therefore bypass the legacy
+  real-outreach gate, and its tracked URLs assumed `/api/...` even though
+  public Drupal routes are mounted beneath `/web`.
+- Guidance: preflight every verified-cold batch before claiming any held
+  outbox row. Default SMTP must deny; a local capture requires an explicit
+  memory gate, while real dispatch requires both the global and lane-specific
+  owner gates. Construct customer-facing click/unsubscribe links from the
+  canonical same-origin `/web` API base. A malformed cold destination is a
+  404, never a reason to mint a legacy prospect token.
+- Guidance: cold research and copied listing text are public-bound content,
+  not trusted internal notes. Require a research teaser, cited source summary,
+  and Build DNA research artifact before cold staging; pass source evidence and
+  research through the shared public-content guard so email, phone, and
+  credential-shaped text are redacted before a room, builder packet, or email.
+
 ## 2026-08-27 — A public-preview signup is an account claim, not a request submission
 
 - Observation: Drupal's user-insert hook sees the same-email Prospect during

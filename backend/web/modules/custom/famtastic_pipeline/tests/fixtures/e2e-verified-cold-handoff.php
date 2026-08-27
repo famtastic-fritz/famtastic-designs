@@ -7,6 +7,7 @@ use Drupal\famtastic_pipeline\Service\ColdProofCampaignSeedValidator;
 use Drupal\famtastic_pipeline\Service\ColdProofCommercialMessageService;
 use Drupal\famtastic_pipeline\Service\ColdProofIngressService;
 use Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService;
+use Drupal\famtastic_pipeline\Controller\EmailEventController;
 
 /**
  * Creates one local-only verified-cold ingress and exports its runner binding.
@@ -45,8 +46,11 @@ try {
         'provenance' => 'local public-directory fixture',
         'timeframe' => 'checked 2026-08-27',
       ],
-      'corroborated_fact' => 'The fixture directory identifies this business as a studio in Port Saint Lucie.',
-      'proof_teaser' => 'A review-only concept can use only the source-supported business facts.',
+      // Deliberately include contact/credential-shaped text. The public
+      // builder packet must retain the source-backed fact shape without
+      // exposing copied listing contacts or accidental secret material.
+      'corroborated_fact' => 'The fixture directory identifies this business as a studio in Port Saint Lucie. Contact copied-listing@example.test or 772-555-0199. token=fixture-secret-token-value.',
+      'proof_teaser' => 'A review-only concept can use only the source-supported business facts; email copied-teaser@example.test and api_key=fixture-secret-value-1234567890 are not public proof content.',
     ]],
   ];
   file_put_contents($seedPath, json_encode($seed, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
@@ -113,6 +117,115 @@ try {
   ) {
     throw new RuntimeException('Cold handoff bundle is missing its exact runner identity contract.');
   }
+  $publicBrief = (array) ($binding['public_brief'] ?? []);
+  $publicEvidence = (array) ($publicBrief['verified_source'] ?? []);
+  $publicText = json_encode($publicEvidence, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+  foreach (['copied-listing@example.test', 'copied-teaser@example.test', '772-555-0199', 'fixture-secret-token-value', 'fixture-secret-value-1234567890'] as $sensitive) {
+    if (str_contains($publicText, $sensitive)) {
+      throw new RuntimeException('Verified-cold public builder brief retained sensitive copied source content.');
+    }
+  }
+  if (!str_contains($publicText, '[redacted email]') || !str_contains($publicText, '[redacted phone]') || !str_contains($publicText, '[redacted secret]')) {
+    throw new RuntimeException('Verified-cold public builder brief did not retain the expected redaction markers.');
+  }
+  // A corrupt cold message must not escape into the legacy prospect-token
+  // click route. This uses a local synthetic row only and does not stage,
+  // approve, send, or expose a proof room.
+  $invalidTracking = str_repeat('d', 48);
+  $database = \Drupal::database();
+  $prospects = \Drupal::entityTypeManager()->getStorage('famtastic_prospect');
+  $sourceProspect = $prospects->load((int) $lead['prospect_id']);
+  if (!$sourceProspect) throw new RuntimeException('Fixture cold prospect is unavailable for click-route regression.');
+  $now = \Drupal::time()->getRequestTime();
+  $database->insert('famtastic_email_message')->fields([
+    'message_key' => 'fixture-invalid-cold-click:' . $run,
+    'prospect_id' => (int) $lead['prospect_id'],
+    'campaign_id' => (int) $database->select('famtastic_campaign', 'c')->fields('c', ['id'])
+      ->condition('campaign_key', (string) $sourceProspect->get('campaign')->value)->range(0, 1)->execute()->fetchField(),
+    'recipient_hash' => hash('sha256', 'fixture-invalid-cold-click:' . $run),
+    'recipient_address' => 'invalid-click-' . $run . '@example.test',
+    'from_address' => 'fixture@example.test',
+    'template_key' => 'verified_cold_preview',
+    'template_version' => 1,
+    'subject' => 'Fixture invalid cold click',
+    'body_snapshot' => 'No send fixture.',
+    'proof_url' => 'https://not-famtastic.example.test/not-a-signed-room',
+    'status' => 'staged',
+    'tracking_key' => $invalidTracking,
+    'unsubscribe_key' => str_repeat('e', 48),
+    'created' => $now,
+    'changed' => $now,
+  ])->execute();
+  $click = (new EmailEventController(
+    \Drupal::service('famtastic_pipeline.campaign_messages'),
+    \Drupal::service('famtastic_pipeline.token_manager'),
+  ))->click($invalidTracking);
+  if ($click->getStatusCode() !== 404 || !str_contains((string) $click->getContent(), 'invalid_cold_preview_destination')) {
+    throw new RuntimeException('Malformed verified-cold click destination fell through instead of failing closed.');
+  }
+  // A real-looking SMTP configuration is the production default, so prove it
+  // cannot claim an owner-held cold message without both explicit real-send
+  // gates. This synthetic fixture only creates and revokes local rows; the
+  // mailer must never be reached.
+  putenv('FAMTASTIC_OUTREACH_POSTAL_ADDRESS=1729 NW St. Lucie West Blvd #1181, Port Saint Lucie, FL 34986');
+  putenv('FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT=smtp');
+  putenv('FAMTASTIC_ALLOW_REAL_OUTREACH');
+  putenv('FAMTASTIC_ALLOW_VERIFIED_COLD_REAL_OUTREACH');
+  $dispatchCampaignKey = 'fixture-dispatch-' . $run;
+  $dispatchCampaignId = \Drupal::service('famtastic_pipeline.lead_ingestion')->ensureCampaignForChannel($dispatchCampaignKey, 'Local gate fixture', 'public_preview');
+  $database->update('famtastic_campaign')->fields(['status' => 'approved', 'changed' => $now])
+    ->condition('id', $dispatchCampaignId)->execute();
+  $dispatchProspect = $prospects->create([
+    'business_name' => 'Dispatch Gate Fixture ' . $run,
+    'business_category' => 'Fixture studio',
+    'public_email' => 'dispatch-gate-' . $run . '@example.test',
+    'campaign' => $dispatchCampaignKey,
+    'source' => 'local-fixture',
+  ]);
+  $dispatchProspect->save();
+  /** @var PublicPreviewDeliveryService $previews */
+  $previews = \Drupal::service('famtastic_pipeline.public_preview_deliveries');
+  $dispatchDelivery = $previews->createForPublicLead((int) $dispatchProspect->id(), 0, NULL, NULL, 'verified_cold');
+  $dispatchDeliveryId = (int) $dispatchDelivery['id'];
+  /** @var ColdProofCommercialMessageService $commercial */
+  $commercial = \Drupal::service('famtastic_pipeline.cold_proof_commercial_messages');
+  $dispatchMessage = $commercial->stage(
+    $dispatchDelivery,
+    $dispatchProspect,
+    'Fixture cold dispatch gate',
+    'View the fixture concept room: https://famtastic.local/proofs/fixture',
+    'https://famtastic.local/proofs/fixture',
+  );
+  $database->update('famtastic_preview_delivery')->fields([
+    'state' => 'email_staged',
+    'commercial_message_id' => (int) $dispatchMessage['id'],
+    'subject_snapshot' => (string) $dispatchMessage['subject'],
+    'text_snapshot' => (string) $dispatchMessage['body_snapshot'],
+    'changed' => $now,
+  ])->condition('id', $dispatchDeliveryId)->execute();
+  $previews->approveAndHold($dispatchDeliveryId, 1);
+  $dispatchDenied = FALSE;
+  try {
+    $previews->dispatchApproved([$dispatchDeliveryId]);
+  }
+  catch (RuntimeException $error) {
+    $dispatchDenied = str_contains($error->getMessage(), 'FAMTASTIC_ALLOW_REAL_OUTREACH=true');
+  }
+  $afterDeniedDelivery = $database->select('famtastic_preview_delivery', 'p')->fields('p', ['state', 'email_outbox_id'])
+    ->condition('id', $dispatchDeliveryId)->range(0, 1)->execute()->fetchAssoc();
+  $afterDeniedOutbox = $database->select('famtastic_notification_outbox', 'n')->fields('n', ['status'])
+    ->condition('id', (int) ($afterDeniedDelivery['email_outbox_id'] ?? 0))->range(0, 1)->execute()->fetchAssoc();
+  $afterDeniedMessage = $database->select('famtastic_email_message', 'm')->fields('m', ['status'])
+    ->condition('id', (int) $dispatchMessage['id'])->range(0, 1)->execute()->fetchAssoc();
+  if (
+    !$dispatchDenied
+    || !$afterDeniedDelivery || (string) $afterDeniedDelivery['state'] !== 'email_approved'
+    || !$afterDeniedOutbox || (string) $afterDeniedOutbox['status'] !== 'held'
+    || !$afterDeniedMessage || (string) $afterDeniedMessage['status'] !== 'held'
+  ) {
+    throw new RuntimeException('Verified-cold transport denial changed a held delivery or did not produce the clear owner gate error.');
+  }
+  $previews->revoke($dispatchDeliveryId, 1);
   // No builder may invent a new callback event or substitute a generic job
   // after the job payload was frozen. These fail before any artifact write.
   $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
@@ -134,11 +247,6 @@ try {
   // A campaign can be staged for inspection while draft, but its commercial
   // message cannot be held. This regression proves the failed owner approval
   // leaves no held outbox and no email_approved delivery state behind.
-  putenv('FAMTASTIC_OUTREACH_POSTAL_ADDRESS=1729 NW St. Lucie West Blvd #1181, Port Saint Lucie, FL 34986');
-  $database = \Drupal::database();
-  $prospects = \Drupal::entityTypeManager()->getStorage('famtastic_prospect');
-  $sourceProspect = $prospects->load((int) $lead['prospect_id']);
-  if (!$sourceProspect) throw new RuntimeException('Fixture cold prospect is unavailable for owner-gate regression.');
   $draftProspect = $prospects->create([
     'business_name' => 'Draft Gate Fixture ' . $run,
     'business_category' => 'Fixture studio',
@@ -150,12 +258,8 @@ try {
     'source' => 'local-fixture',
   ]);
   $draftProspect->save();
-  /** @var PublicPreviewDeliveryService $previews */
-  $previews = \Drupal::service('famtastic_pipeline.public_preview_deliveries');
   $draftDelivery = $previews->createForPublicLead((int) $draftProspect->id(), 0, NULL, NULL, 'verified_cold');
   $draftDeliveryId = (int) $draftDelivery['id'];
-  /** @var ColdProofCommercialMessageService $commercial */
-  $commercial = \Drupal::service('famtastic_pipeline.cold_proof_commercial_messages');
   $message = $commercial->stage(
     $draftDelivery,
     $draftProspect,
@@ -198,6 +302,8 @@ try {
     'lead' => $lead,
     'duplicate_reimport' => 'already_ingressed',
     'bundle' => $bundle,
+    'public_brief_pii' => 'redacted',
+    'cold_dispatch_gate' => 'denied_before_claim',
     'draft_owner_gate' => 'rejected_without_partial_hold',
   ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
 }

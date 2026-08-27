@@ -327,13 +327,16 @@ class CampaignMessageService {
   }
 
   /**
-   * Returns a stored signed-room destination only for the verified-cold
-   * commercial template. Legacy campaign clicks retain their token flow.
+   * Resolves the verified-cold click lane without conflating it with legacy
+   * campaign links. A malformed stored destination remains explicitly cold so
+   * the controller can fail closed instead of minting a legacy prospect token.
+   *
+   * @return array{is_verified_cold:bool,destination:?string}
    */
-  public function verifiedColdClickDestination(string $trackingKey): ?string {
+  public function resolveVerifiedColdClick(string $trackingKey): array {
     $message = $this->loadBy('tracking_key', $trackingKey);
     if (!$message || (string) $message['template_key'] !== 'verified_cold_preview') {
-      return NULL;
+      return ['is_verified_cold' => FALSE, 'destination' => NULL];
     }
     $url = trim((string) ($message['proof_url'] ?? ''));
     $base = rtrim((string) (
@@ -341,7 +344,19 @@ class CampaignMessageService {
       ?: $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')
       ?: 'https://famtasticdesigns.com'
     ), '/');
-    return $this->isVerifiedColdProofUrl($url, $base) ? $url : NULL;
+    return [
+      'is_verified_cold' => TRUE,
+      'destination' => $this->isVerifiedColdProofUrl($url, $base) ? $url : NULL,
+    ];
+  }
+
+  /**
+   * Compatibility helper for callers that need only a validated destination.
+   * New controllers must use resolveVerifiedColdClick() so invalid cold data
+   * cannot fall through to the legacy prospect-token flow.
+   */
+  public function verifiedColdClickDestination(string $trackingKey): ?string {
+    return $this->resolveVerifiedColdClick($trackingKey)['destination'];
   }
 
   /** Validates one stored, same-origin signed public-preview room URL. */
