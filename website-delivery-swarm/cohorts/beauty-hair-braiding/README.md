@@ -106,6 +106,48 @@ The binder remains local-only. It does not call Gemini, Drupal, Site Studio,
 the importer, production, or mail. The finalizer and callback-asset serializer
 both reject an unbound or internally mismatched bundle.
 
+## Offline Gemini Flash Lite worker handoff
+
+After canonical runtime binding, the cohort adapter can create one
+operator-only worker input per lead. It reads the a/b/c prompt files as bytes,
+requires exact UTF-8 round-tripping, and retains their SHA-256 values. It uses
+`trim()` only to reject an empty prompt: it does not trim, normalize, or
+rewrite the prompt before the worker hashes it or sends it to the provider.
+
+```bash
+node website-delivery-swarm/cohorts/beauty-hair-braiding/prepare-gemini-flash-lite-worker-input.mjs \
+  --cohort "$PWD/artifacts/beauty-proof-cohort/pc-example/cohort-manifest.json" \
+  --output /secure/operator/pc-example.gemini-flash-lite-input \
+  --dry-run
+```
+
+Remove `--dry-run` only to write the local JSON handoff. The output must be a
+new absolute directory outside the repository because it contains the exact
+prompt material. The handoff has one `<lead>.image-prompts.json` input with
+exactly these names: `a-hero.png`, `b-hero.png`, and `c-hero.png`.
+
+The imported worker is documented in
+`website-delivery-swarm/GEMINI_FLASH_LITE_WORKER_PROVENANCE.md`. Its offline
+validation modes are safe to run before any paid execution:
+
+```bash
+node website-delivery-swarm/gemini_flash_lite_image_worker.mjs \
+  --validate-input \
+  --prompts /secure/operator/pc-example.gemini-flash-lite-input/example-business.image-prompts.json
+
+node website-delivery-swarm/gemini_flash_lite_image_worker.mjs \
+  --validate-receipt \
+  --prompts /secure/operator/pc-example.gemini-flash-lite-input/example-business.image-prompts.json \
+  --receipt /secure/operator/pc-example.gemini-flash-lite-output/generation-receipt.json
+```
+
+Both commands are offline: they do not read Keychain or make provider, Drupal,
+Site Studio, import, production, mail, or scheduler calls. They reject empty
+or duplicate directions/filenames, a changed prompt hash, missing provider
+usage evidence, and incomplete receipt result sets. The worker's actual
+`--execute` mode remains a separate paid-provider and owner-approval gate; the
+adapter does not invoke it.
+
 ## Receipt-backed local finalization
 
 Once a separate approved worker has generated one original PNG or JPEG hero per

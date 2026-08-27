@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-08-27 — Exact-prompt Gemini Flash Lite cohort bridge (local acceptance only; not deployed)
+
+- Imported the previously proven Gemini Flash Lite image worker with its source
+  commit, Git blob, and SHA-256 provenance recorded beside the new worker.
+  The verified-cold cohort adapter now writes one operator-only a/b/c worker
+  input per canonically bound lead, preserving the exact prompt bytes and
+  matching prompt SHA-256 rather than normalizing trailing whitespace.
+- The worker has offline input and receipt validation modes that reject missing
+  or duplicate directions/filenames, a changed prompt hash, absent provider
+  usage evidence, and incomplete result sets. A fixture builds/binds one local
+  cohort, validates the adapter output, and proves that the existing finalizer
+  accepts the same prompt SHA only when it matches the source prompt file.
+- This was synthetic local validation only. No macOS Keychain read, Gemini
+  request, paid image generation, Drupal/Site Studio write, import, proof,
+  production deployment, scheduler, or email action occurred.
+
 ## 2026-08-27 — Exact-ID preview deployment scheduler gate (not deployed)
 
 - The backend deployer now supports `FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1`.

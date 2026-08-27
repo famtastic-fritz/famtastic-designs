@@ -5,6 +5,27 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — Proof-image prompts are byte-level evidence, not trim-safe copy
+
+Observation: the local cohort builder deliberately ends generated art prompts
+with a newline. A worker that uses `String(prompt).trim()` before its provider
+request or SHA-256 receipt changes the evidence even though the visible prompt
+looks the same, so the finalizer must correctly reject its receipt.
+
+Guidance:
+
+- Use `prompt.trim()` only to reject whitespace-only input. Preserve the
+  original exact UTF-8 text for provider request serialization and the prompt
+  hash. An adapter crossing JSON boundaries must prove the source prompt bytes
+  round-trip before it writes an operator-only worker input.
+- A public-preview image receipt is incomplete without one unique a/b/c
+  direction and filename per planned prompt plus non-empty provider usage
+  evidence. Validate that contract offline before any paid run, and retain the
+  source worker provenance separately from a later provider-execution receipt.
+- The local adapter/worker validation surface is not an image-generation,
+  Build DNA registration, proof-import, production, or email authorization.
+  Those gates remain separate even when the prompt and receipt hashes pass.
+
 ## 2026-08-27 — Public-preview continuation must isolate account signup from generic request automation
 
 Observation: a public-preview recipient can share an email with a Prospect
