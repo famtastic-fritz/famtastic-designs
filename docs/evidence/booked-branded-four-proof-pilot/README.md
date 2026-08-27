@@ -18,6 +18,18 @@ Date: 2026-08-27
 - Four reference-led material studies created with the built-in image
   generation tool. Provider model and cost were not reported; no paid Gemini,
   OpenArt, HeyGen, HyperFrames, or other provider job was called for this set.
+- One additive Velvet Coil Ultra quality study created after comparing the
+  baseline against the FAMU Hill Brief, Strike Network, and Serpent Signal
+  benchmark methods. “Every Coil Is Architecture” uses a new high-concept
+  hero and a different information architecture: philosophy, Texture Atlas,
+  Consultation Blueprint, Care Lab, Atelier Console, and Reserve the Ritual.
+  The original rooms and four Template Lab families remain intact as baseline
+  templates.
+- One new reference-led hero was created with the built-in image generation
+  tool from the owned fictional Velvet Coil source image. The provider did not
+  report model or cost; the original PNG, optimized WebP, exact prompt, source
+  hash, output hashes, and truth boundary are retained in
+  `frontend/public/showcase/booked-and-branded-pilot/wow-lab/`.
 - A complete proposed starter website foundation: domain, one branded
   forwarding address into the owner's existing inbox, protected contact form,
   call/text/social links, location/service area/hours/map when needed,
@@ -75,11 +87,12 @@ contract, and final artifact hashes are recorded under
 
 ## Local acceptance
 
-- Static routes tested: 23.
-- Viewport checks: 46 (1440px and 390px).
-- Copy-contract checks: 22, including the complete-site foundation,
+- Static routes tested: 24.
+- Viewport checks: 48 (1440px and 390px).
+- Copy-contract checks: 23, including the complete-site foundation,
   current-provider bridge, owner-QR/no-processing boundary, and Shay role.
-- Retained screenshots: 16, including full Template Lab desktop and mobile.
+- Retained screenshots: 20, including full Template Lab and Velvet Coil Ultra
+  desktop/mobile views plus dedicated Ultra hero viewport captures.
 - Broken images: 0.
 - Horizontal-overflow failures: 0.
 - Browser console/page errors: 0.
@@ -99,17 +112,19 @@ isolated deployment. The two local evidence hashes were:
 ## Review state
 
 Primary visual review passed across the overview, package page, Template Lab at
-desktop and mobile, all four rooms, all four operator-first mobile pages, the
-representative Shay email, the complete three-direction desktop set, all 12
-source images, and all four generated material fields. Independent review is
-deliberately reserved for the owner.
+desktop and mobile, the additive Velvet Coil Ultra study at desktop and mobile,
+all four rooms, all four operator-first mobile pages, the representative Shay
+email, the complete three-direction desktop set, all 12 source images, all four
+generated material fields, and the high-concept Ultra hero. Independent review
+is deliberately reserved for the owner.
 
-## Template Lab release state
+## Template Lab and Ultra study release state
 
-The Template Lab and four material systems are locally complete and tested but
-are not included in the production acceptance record below. They do not replace
-or invalidate the already-published proof rooms. Production deployment remains
-a separate explicit action.
+The Template Lab, four material systems, and Velvet Coil Ultra quality study
+are locally complete and tested but are not included in the production
+acceptance record below. They do not replace or invalidate the already-
+published proof rooms. Production deployment remains a separate explicit
+action.
 
 ## Production acceptance
 

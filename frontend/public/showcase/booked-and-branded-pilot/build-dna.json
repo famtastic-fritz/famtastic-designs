@@ -2,10 +2,10 @@
   "schema": "famtastic.build-dna.v1",
   "build_id": "booked-branded-v5-20260827",
   "classification": "fictional-product-demonstration",
-  "created_at": "2026-08-27T21:15:32.753Z",
+  "created_at": "2026-08-27T21:34:44.534Z",
   "repository": {
     "name": "FAMtastic",
-    "revision": "0b61e0b1ecdcb7aa1e078332750136a60ece496a",
+    "revision": "409f6a52b75547ae180911e8306f0db36d68ee93",
     "worktree": "booked-branded-four-proof-pilot",
     "revision_status": "source_revision_before_artifact_commit"
   },
@@ -74,7 +74,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T21:15:32.753Z"
+          "completed_at": "2026-08-27T21:34:44.534Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -207,6 +207,35 @@
       }
     },
     {
+      "stage_id": "ultra-benchmark-hero",
+      "capability": "high-concept-reference-led-hero-generation",
+      "attempt": 1,
+      "execution": {
+        "provider": {
+          "id": "openai-imagegen-builtin"
+        },
+        "model": {
+          "status": "provider_did_not_report"
+        },
+        "timing": {
+          "status": "reported",
+          "completed_at": "2026-08-27T21:29:34Z"
+        },
+        "cost": {
+          "status": "provider_did_not_report"
+        }
+      },
+      "result": {
+        "status": "completed",
+        "selected_image_count": 1,
+        "artifact_count": 2,
+        "outputs": [
+          "frontend/public/showcase/booked-and-branded-pilot/wow-lab/assets/velvet-coil-architecture-hero.png",
+          "frontend/public/showcase/booked-and-branded-pilot/wow-lab/assets/velvet-coil-architecture-hero.webp"
+        ]
+      }
+    },
+    {
       "stage_id": "gemini-reference-images",
       "capability": "reference-led-image-generation",
       "attempt": 1,
@@ -276,9 +305,10 @@
           "index.html",
           "package/index.html",
           "template-lab/index.html",
+          "wow-lab/velvet-coil-architecture/index.html",
           "4 emails",
           "4 rooms",
-          "12 proof pages"
+          "12 baseline proof pages"
         ]
       }
     },
@@ -295,7 +325,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T21:16:22.243Z"
+          "completed_at": "2026-08-27T21:35:42.067Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -304,10 +334,10 @@
       },
       "result": {
         "status": "completed",
-        "routes_tested": 23,
-        "viewport_checks": 46,
-        "screenshots": 16,
-        "copy_checks": 22,
+        "routes_tested": 24,
+        "viewport_checks": 48,
+        "screenshots": 20,
+        "copy_checks": 23,
         "evidence_ref": "docs/evidence/booked-branded-four-proof-pilot/qa-report.json"
       }
     },
@@ -324,7 +354,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T21:16:22.244Z"
+          "completed_at": "2026-08-27T21:35:42.068Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -333,7 +363,7 @@
       },
       "result": {
         "status": "completed",
-        "notes": "The overview, package, Template Lab at desktop and mobile, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. Direction A is editorial, B is a high-signal campaign, and C is operator-first; all twelve reference-led images and all four material systems are distinct and no text collision, broken image, or fictional-to-real ambiguity was observed.",
+        "notes": "The overview, package, Template Lab at desktop and mobile, the additive Velvet Coil Architecture quality study at desktop and mobile, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. The Ultra study uses a new information architecture and high-concept hero while retaining the baseline templates unchanged; no text collision, broken image, or fictional-to-real ambiguity was observed.",
         "independent_review": "reserved_for_owner"
       }
     }
@@ -623,8 +653,8 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/styles.css",
-      "bytes": 50104,
-      "sha256": "8ebb18a4c1b1ad0952d4cdfc888afcb58fd6c31cdda4a2b6e7bbc655cdc6eb35",
+      "bytes": 71143,
+      "sha256": "9e2195299ad3ceafdb78da3ceb6bce3c3524ae0c9a3b2e5b4c0385eddc3660e6",
       "role": "proof-support"
     },
     {
@@ -653,8 +683,8 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/index.html",
-      "bytes": 16827,
-      "sha256": "3fc1e3e4801c2a4d8cf2655e2476a91695c7d3af1fb49bd9a574989dc7a78749",
+      "bytes": 17023,
+      "sha256": "5c2c72597cc4f3aa471070b6ae70fdc6a8282435b50f1c8f8cda20d442c1b9f1",
       "role": "customer-facing-static-proof"
     },
     {
@@ -664,10 +694,34 @@
       "role": "proof-support"
     },
     {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/wow-lab/assets/velvet-coil-architecture-hero.png",
+      "bytes": 1996653,
+      "sha256": "b8fa3d1648f73f6c28391a859c2cf0256bf80e90b776b64b1aaca02b9a33025a",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/wow-lab/assets/velvet-coil-architecture-hero.webp",
+      "bytes": 254162,
+      "sha256": "3cadd16f7f498019c2b2d328d4fc2eab65ac9a34c689840a3b9bf7e4e7f0cb52",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/wow-lab/image-generation-receipt.json",
+      "bytes": 3347,
+      "sha256": "12b624a17d2fe99e53db128863b67399ca8e14c6fdb8a5da61a92a29b89b22bd",
+      "role": "proof-support"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/wow-lab/velvet-coil-architecture/index.html",
+      "bytes": 9491,
+      "sha256": "9c5f4220d0d66d8a988514ae7ebe784550059adf5a4ccc7d4f6ffa1d3f6b5ae6",
+      "role": "customer-facing-static-proof"
+    },
+    {
       "role": "browser-qa-report",
       "path": "docs/evidence/booked-branded-four-proof-pilot/qa-report.json",
-      "bytes": 25748,
-      "sha256": "916383cdbdb16dedf6151ed0fc626921d8ec82cf72db8553e321ef8982d93d25"
+      "bytes": 26922,
+      "sha256": "ca5c00575b40ae221ab7a529c46ec77af166313a4ff75fb8923c6ddd1d176c08"
     }
   ],
   "retrieval": {

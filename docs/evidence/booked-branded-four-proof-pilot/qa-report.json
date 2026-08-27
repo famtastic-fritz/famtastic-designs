@@ -1,11 +1,11 @@
 {
   "schema": "famtastic.booked-branded-qa.v1",
-  "generated_at": "2026-08-27T21:16:22.243Z",
+  "generated_at": "2026-08-27T21:35:42.067Z",
   "base_url": "http://127.0.0.1:4180/showcase/booked-and-branded-pilot",
-  "routes_tested": 23,
-  "viewport_checks": 46,
-  "screenshots": 16,
-  "copy_checks": 22,
+  "routes_tested": 24,
+  "viewport_checks": 48,
+  "screenshots": 20,
+  "copy_checks": 23,
   "errors": [],
   "passed": true,
   "copy_evidence": [
@@ -35,6 +35,25 @@
         "Booksy or another current provider",
         "FAMtastic does not process or receive the payment.",
         "Shay is FAMtastic Designs’ AI Business Concierge."
+      ],
+      "forbidden_phrases_absent": [
+        "$19.99",
+        "does not pretend",
+        "Not inside this pilot",
+        "No Booksy review scraping"
+      ]
+    },
+    {
+      "relative_path": "wow-lab/velvet-coil-architecture/index.html",
+      "required_phrases": [
+        "Every coil",
+        "is architecture.",
+        "THE TEXTURE ATLAS",
+        "THE CONSULTATION BLUEPRINT",
+        "Custom domain",
+        "Branded forwarding email",
+        "Owner’s payment QR",
+        "FAMtastic does not process"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -386,6 +405,28 @@
       "status": 200,
       "title": "Booked & Branded Template Lab — FAMtastic Designs",
       "h1": "A template should feel hand built.The system underneath should feel repeatable.",
+      "width": 390,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/wow-lab/velvet-coil-architecture/",
+      "viewport": 1440,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Every Coil Is Architecture",
+      "h1": "Every coilis architecture.",
+      "width": 1440,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/wow-lab/velvet-coil-architecture/",
+      "viewport": 390,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Every Coil Is Architecture",
+      "h1": "Every coilis architecture.",
       "width": 390,
       "brokenImages": [],
       "fictionalLabel": true,

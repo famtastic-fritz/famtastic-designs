@@ -19,6 +19,7 @@ const generatedImageRoot = join(publicRoot, 'assets/directions');
 const generationReceiptPath = join(generatedImageRoot, 'generation-receipt.json');
 const generatedPromptManifestPath = join(generatedImageRoot, 'prompt-manifest.json');
 const materialReceiptPath = join(publicRoot, 'template-lab/material-generation-receipt.json');
+const wowReceiptPath = join(publicRoot, 'wow-lab/image-generation-receipt.json');
 
 function esc(value) {
   return String(value)
@@ -289,7 +290,7 @@ function templateLabPage() {
           <div><small>Motif grammar</small><ul>${motifs}</ul></div>
           <div><small>Adaptation rule</small><p>${esc(family.adaptation_rule)}</p></div>
         </div>
-        <div class="lab-family-actions">${button(`${publicBase}/rooms/${business.slug}/`, 'Open the existing 3-proof room')}${button(`${publicBase}/proofs/${business.slug}/c/#owner-desk`, 'See the phone Booking Desk', true)}</div>
+              <div class="lab-family-actions">${business.slug === 'velvet-coil-atelier' ? button(`${publicBase}/wow-lab/velvet-coil-architecture/`, 'Open the Ultra quality study') : ''}${button(`${publicBase}/rooms/${business.slug}/`, 'Open the existing 3-proof room', business.slug === 'velvet-coil-atelier')}${button(`${publicBase}/proofs/${business.slug}/c/#owner-desk`, 'See the phone Booking Desk', true)}</div>
       </div>
     </article>`;
   }).join('');
@@ -330,6 +331,103 @@ function templateLabPage() {
         <section class="lab-shay"><div class="shell lab-shay-grid"><div><span class="shay-orb package-orb">S</span><p class="kicker">The FAMtastic business face</p><h2>Shay explains the value without overselling the machinery.</h2><p>Shay is FAMtastic Designs’ AI Business Concierge. She helps the owner compare proofs, understand what is included, collect setup choices, and see the next useful step. Fritz and the FAMtastic team retain authority for price, scope, approval, payment, and launch.</p></div><aside><small>Future motion layer</small><strong>HyperFrames can animate the approved motif—not invent the business.</strong><p>A short texture loop, reveal, or social explainer can become a later campaign asset. Reduced-motion-safe static design remains the default, and motion never changes pricing or publishes itself.</p></aside></div></section>
 
         <section class="lab-final"><div class="shell"><p class="kicker">No work thrown away</p><h2>The four current proofs become the first training examples for a reusable niche system.</h2><div>${button(`${publicBase}/`, 'Return to the four proof stories')}${button(`${publicBase}/package/`, 'Review the complete package', true)}</div></div></section>
+      </main>`
+  });
+}
+
+function wowLabPage() {
+  const business = data.businesses.find(item => item.slug === 'velvet-coil-atelier');
+  if (!business) throw new Error('Velvet Coil Atelier is missing from the pilot data.');
+  return template({
+    title: 'Velvet Coil Atelier — Every Coil Is Architecture',
+    description: 'An additive Ultra FAMtastic quality study for the fictional Velvet Coil Atelier.',
+    className: 'wow-page',
+    body: `${ribbon()}
+      <main>
+        <nav class="wow-nav" aria-label="Velvet Coil primary navigation">
+          <a class="wow-wordmark" href="#top"><span>VC</span><b>Velvet Coil<br>Atelier</b></a>
+          <div><a href="#atlas">Texture atlas</a><a href="#blueprint">Consultation</a><a href="#atelier-console">Atelier console</a><a class="wow-nav-cta" href="#reserve">Reserve the ritual</a></div>
+        </nav>
+
+        <section class="wow-hero" id="top">
+          <img src="${publicBase}/wow-lab/assets/velvet-coil-architecture-hero.webp" alt="Fictional editorial artwork of a natural-hair stylist and client surrounded by sculptural coil forms" width="1672" height="941">
+          <div class="wow-hero-noise" aria-hidden="true"></div>
+          <div class="wow-hero-copy">
+            <p>Fort Pierce · Texture-first hair care</p>
+            <h1><span>Every coil</span><em>is architecture.</em></h1>
+            <div class="wow-hero-foot"><p>Healthy shape is designed—not forced. A private atelier for curls, coils, silk presses, and care plans that respect the structure already there.</p><a href="#atlas">Enter the texture atlas <b>↘</b></a></div>
+          </div>
+          <aside class="wow-hero-index"><span>ATELIER / 01</span><span>COIL / CARE / FORM</span><span>27.45° N · FORT PIERCE</span></aside>
+        </section>
+
+        <section class="wow-thesis">
+          <div class="wow-orbit" aria-hidden="true"><i></i><i></i><i></i><b>VC</b></div>
+          <p class="wow-section-number">01 / PHILOSOPHY</p>
+          <h2>Hair is not a problem<br>to solve. <em>It is a form<br>to understand.</em></h2>
+          <p class="wow-thesis-copy">This concept turns the service list into a living material archive. Clients begin with their texture, goals, and maintenance rhythm—then choose the ritual that fits.</p>
+        </section>
+
+        <section class="wow-atlas" id="atlas">
+          <header><p class="wow-section-number">02 / THE TEXTURE ATLAS</p><h2>Choose your<br><em>structure.</em></h2><p>Three starting rituals. Each one can open into a consultation, preparation notes, duration, and an owner-controlled booking path.</p></header>
+          <div class="wow-atlas-grid">
+            <article class="wow-service wow-service-main"><span>01</span><div class="wow-contour" aria-hidden="true"></div><small>120 MIN · $120</small><h3>Signature<br>Curl Session</h3><p>Shape, hydration, definition, and a care map made for the week after the chair.</p><a href="#reserve">Request this ritual ↗</a></article>
+            <article class="wow-service wow-service-light"><span>02</span><small>105 MIN · $95</small><h3>Silk Press<br>Ritual</h3><p>Movement and polish with the texture conversation kept intact.</p><a href="#reserve">Request this ritual ↗</a></article>
+            <article class="wow-service wow-service-copper"><span>03</span><small>75 MIN · $75</small><h3>Coil Care<br>Reset</h3><p>A focused return to moisture, definition, and a simpler home rhythm.</p><a href="#reserve">Request this ritual ↗</a></article>
+            <aside><b>Not sure where to begin?</b><p>Start with the Blueprint. The right appointment should follow the texture—not a generic menu.</p><a href="#blueprint">Build your consultation blueprint →</a></aside>
+          </div>
+        </section>
+
+        <section class="wow-blueprint" id="blueprint">
+          <div class="wow-blueprint-head"><p class="wow-section-number">03 / THE CONSULTATION BLUEPRINT</p><h2>Before the chair,<br>we draw the <em>plan.</em></h2></div>
+          <div class="wow-blueprint-grid">
+            <ol>
+              <li><b>01</b><div><span>Texture now</span><p>Tell us what your hair is doing today—not what a category says it should do.</p></div></li>
+              <li><b>02</b><div><span>Shape next</span><p>Share the result, feeling, or reference you want to move toward.</p></div></li>
+              <li><b>03</b><div><span>Rhythm after</span><p>Choose the upkeep that fits your real time, budget, and routine.</p></div></li>
+            </ol>
+            <form class="wow-plan" aria-label="Fictional consultation blueprint">
+              <div class="wow-plan-top"><span>VELVET COIL / NEW GUEST</span><span>FORM 03—A</span></div>
+              <label>What is your texture asking for?<textarea readonly>More definition with a shape I can maintain between visits.</textarea></label>
+              <div><label>Last chemical service<input value="None in the last year" readonly></label><label>Ideal visit rhythm<input value="Every 8–10 weeks" readonly></label></div>
+              <label>Upload reference photos<span class="wow-upload">＋ Add up to 3 images</span></label>
+              <span class="wow-plan-submit" aria-disabled="true">Create my care blueprint <b>↗</b></span>
+              <small>Demonstration only · No details or files are submitted</small>
+            </form>
+          </div>
+        </section>
+
+        <section class="wow-care-lab">
+          <div class="wow-care-word" aria-hidden="true">CARE</div>
+          <div class="wow-care-copy"><p class="wow-section-number">04 / THE CARE LAB</p><h2>Luxury is knowing<br>what happens <em>next.</em></h2><p>Preparation, arrival notes, policies, and the care plan live beside the booking—not in scattered DMs.</p></div>
+          <div class="wow-care-notes">
+            <article><span>A / PREP</span><b>Arrive detangled unless your ritual says otherwise.</b><p>Owner-approved preparation notes appear with the chosen service.</p></article>
+            <article><span>B / ARRIVAL</span><b>Private studio. Confirmed requests receive exact arrival details.</b><p>Location, map, parking, and access instructions can be managed without exposing a private address too early.</p></article>
+            <article><span>C / CONTINUITY</span><b>Leave with a care map, not a product lecture.</b><p>The site can carry a simple owner-written routine and invite the next appointment.</p></article>
+          </div>
+        </section>
+
+        <section class="wow-console" id="atelier-console">
+          <div class="wow-console-copy"><p class="wow-section-number">05 / ATELIER CONSOLE</p><h2>The artistry is visible.<br><em>The system stays quiet.</em></h2><p>From her phone, the owner can review new requests, confirm consultations, update services and hours, approve contact or gallery changes, and share her own payment QR. FAMtastic does not process, receive, settle, or reconcile the payment.</p><div class="wow-foundation-list"><span>Custom domain</span><span>Branded forwarding email</span><span>Contact form</span><span>Service area or map</span><span>Current booking link</span><span>Owner’s payment QR</span></div></div>
+          <div class="wow-console-device" aria-label="Static fictional phone owner console">
+            <div class="wow-device-top"><span>9:41</span><b>VC / DESK</b><span>•••</span></div>
+            <p>THURSDAY / ATELIER 04</p><h3>The chair is<br>in rhythm.</h3>
+            <div class="wow-device-signal"><b>3</b><span>requests need your eye</span></div>
+            <div class="wow-device-row"><i>AR</i><span><b>A. Reed</b><small>Curl Session · 11:00</small></span><em>Review</em></div>
+            <div class="wow-device-row"><i>TN</i><span><b>T. Neal</b><small>Silk Press · 1:30</small></span><em>Ready</em></div>
+            <div class="wow-device-actions"><span>Update hours</span><span>Edit rituals</span><span>Share QR</span></div>
+            <small>Fictional console · No real account or activity</small>
+          </div>
+        </section>
+
+        <section class="wow-reserve" id="reserve">
+          <p class="wow-section-number">06 / RESERVE THE RITUAL</p>
+          <h2>Care is<br><em>the luxury.</em></h2>
+          <div class="wow-reserve-grid">
+            <div><p>First visit? Begin with a short texture consultation. Returning guest? Continue to the calendar the atelier already uses.</p><span class="wow-reserve-button" aria-disabled="true">Request a consultation <b>↗</b></span><span class="wow-reserve-link" aria-disabled="true">Continue to current calendar →</span></div>
+            <div class="wow-chair-card"><span class="wow-faux-qr" aria-hidden="true"></span><p><b>OWNER’S CHAIR CARD</b><br>Approved Cash App or existing payment QR can live here. Payment goes directly to the business.</p></div>
+          </div>
+          <footer><div><b>Velvet Coil Atelier</b><span>Fort Pierce, Florida · Wed–Sun · By confirmed request</span></div><div><span>velvetcoil.example</span><span>bookings@velvetcoil.example → owner’s existing inbox</span><span>Contact · Service area · Arrival notes</span></div><a href="${publicBase}/template-lab/">Return to the Template Lab ↗</a></footer>
+        </section>
       </main>`
   });
 }
@@ -488,6 +586,7 @@ for (const generated of ['emails', 'rooms', 'proofs', 'package']) {
 await write('index.html', pilotIndex());
 await write('package/index.html', packagePage());
 await write('template-lab/index.html', templateLabPage());
+await write('wow-lab/velvet-coil-architecture/index.html', wowLabPage());
 
 for (const business of data.businesses) {
   await write(`emails/${business.slug}/index.html`, emailPage(business));
@@ -537,6 +636,9 @@ const generatedReceipt = existsSync(generationReceiptPath)
   : null;
 const materialReceipt = existsSync(materialReceiptPath)
   ? JSON.parse(await readFile(materialReceiptPath, 'utf8'))
+  : null;
+const wowReceipt = existsSync(wowReceiptPath)
+  ? JSON.parse(await readFile(wowReceiptPath, 'utf8'))
   : null;
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' }).trim();
 const createdAt = new Date().toISOString();
@@ -604,6 +706,16 @@ const buildDna = {
       result: { status: materialReceipt ? 'completed' : 'planned', selected_image_count: materialReceipt?.artifacts?.length || 0, outputs: materialReceipt?.artifacts?.map(item => item.path) || [] }
     },
     {
+      stage_id: 'ultra-benchmark-hero', capability: 'high-concept-reference-led-hero-generation', attempt: 1,
+      execution: {
+        provider: { id: wowReceipt?.provider || 'openai-imagegen-builtin' },
+        model: { status: wowReceipt?.model_status || 'provider_did_not_report' },
+        timing: { status: wowReceipt ? 'reported' : 'not_started', completed_at: wowReceipt?.completed_at },
+        cost: { status: wowReceipt?.cost_status || 'provider_did_not_report' }
+      },
+      result: { status: wowReceipt ? 'completed' : 'planned', selected_image_count: wowReceipt?.selected_image_count || 0, artifact_count: wowReceipt?.artifacts?.length || 0, outputs: wowReceipt?.artifacts?.map(item => item.path) || [] }
+    },
+    {
       stage_id: 'gemini-reference-images',
       capability: 'reference-led-image-generation',
       attempt: 1,
@@ -615,7 +727,7 @@ const buildDna = {
       },
       result: { status: generatedReceipt ? 'completed' : 'planned', provider_generation_count: generatedReceipt?.provider_generation_count || 0, selected_image_count: generatedReceipt?.image_count || 0, outputs: generatedReceipt?.artifacts.map(item => item.filename) || [] }
     },
-    localStage('static-construction', 'static-proof-construction', ['index.html', 'package/index.html', 'template-lab/index.html', '4 emails', '4 rooms', '12 proof pages']),
+    localStage('static-construction', 'static-proof-construction', ['index.html', 'package/index.html', 'template-lab/index.html', 'wow-lab/velvet-coil-architecture/index.html', '4 emails', '4 rooms', '12 baseline proof pages']),
     {
       stage_id: 'browser-qa', capability: 'responsive-browser-qa', attempt: 1,
       execution: { provider: { id: 'playwright-local' }, model: { status: 'not_applicable' }, timing: { status: 'pending' }, cost: { status: 'not_applicable', amount_usd: 0 } },

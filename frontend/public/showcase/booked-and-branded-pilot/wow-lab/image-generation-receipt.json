@@ -1,0 +1,37 @@
+{
+  "schema": "famtastic.booked-branded-wow-image-receipt.v1",
+  "status": "completed",
+  "completed_at": "2026-08-27T21:29:34Z",
+  "provider": "openai-imagegen-builtin",
+  "model_status": "provider_did_not_report",
+  "cost_status": "provider_did_not_report",
+  "use_case": "stylized-concept",
+  "asset_type": "website-hero",
+  "concept": "Every coil is architecture",
+  "selected_image_count": 1,
+  "reference": {
+    "path": "frontend/public/showcase/booked-and-branded-pilot/assets/velvet-coil.webp",
+    "sha256": "326693b176ea8590940f89cd01a900750086fb86ca9ff2a57d7313ee231998c8",
+    "use": "Palette, human warmth, and natural-hair atelier context only; no copied face, pose, room, or composition."
+  },
+  "prompt": "Use the reference image only for its warm terracotta/cocoa palette, human warmth, and Black natural-hair salon context. Create a wholly new, high-concept cinematic website hero for a fictional luxury natural-hair atelier called Velvet Coil Atelier. ASSET TYPE: wide 16:9 website hero, stylized concept art, premium editorial campaign. CREATIVE CONCEPT: Every coil is architecture. A Black natural-hair stylist appears as an architect and artist beside a Black client with dramatic healthy natural coils. Monumental translucent coil ribbons, braided sculptural forms, and softly glowing topographic contour lines rise around them like a museum installation or design-biennale pavilion. The environment should feel like Afro-surreal high fashion, contemporary sculpture, and an intimate atelier fused into one distinctive world—not a normal salon photograph. COMPOSITION: stylist and client grouped at center-right/right third; preserve a large, clean, dark negative-space field across the left 40% for native HTML typography. Strong depth, deliberate silhouette, controlled cinematic spotlight, luxurious editorial framing. PALETTE/MATERIALS: dark cocoa satin, terracotta clay, warm cream, burnished copper, deep emerald shadows, translucent glass-like coil structures, subtle paper grain. Rich blacks and luminous skin tones. QUALITY: visually arresting, sophisticated, adult, believable anatomy, premium fashion-editorial finish, intricate hair texture, dramatic but warm. It must look like the visual world of a major cultural design exhibition, not stock photography. DO NOT include any readable words, typography, logos, watermarks, UI, QR codes, product labels, fake signage, or interface elements. No copied face, pose, room, or exact composition from the reference. Avoid stereotypes, malformed hands, extra fingers, duplicate people, plastic skin, generic beauty-ad styling, and clutter in the left negative space.",
+  "artifacts": [
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/wow-lab/assets/velvet-coil-architecture-hero.png",
+      "sha256": "b8fa3d1648f73f6c28391a859c2cf0256bf80e90b776b64b1aaca02b9a33025a",
+      "bytes_role": "provider-original",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/wow-lab/assets/velvet-coil-architecture-hero.webp",
+      "sha256": "3cadd16f7f498019c2b2d328d4fc2eab65ac9a34c689840a3b9bf7e4e7f0cb52",
+      "bytes_role": "web-optimized-q94",
+      "width": 1672,
+      "height": 941
+    }
+  ],
+  "customer_data_used": false,
+  "production_action": false,
+  "email_sent": false
+}

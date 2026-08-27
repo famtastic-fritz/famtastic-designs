@@ -1,5 +1,29 @@
 # Product changelog
 
+## 2026-08-27 — Velvet Coil Ultra quality study
+
+- Kept the existing Booked & Branded proof rooms and four Template Lab families
+  as reusable functional baselines, then added a separate quality study rather
+  than disguising another hero swap as a new direction.
+- Reapplied the benchmark method from the FAMU Hill Brief, Strike Network, and
+  Serpent Signal work: one dominant metaphor, compositional typography, a
+  bespoke art world, and a distinct information architecture. “Every Coil Is
+  Architecture” is organized as a Texture Atlas, Consultation Blueprint, Care
+  Lab, Atelier Console, and booking ritual instead of the baseline repeated
+  service/review/QR stack.
+- Generated one reference-led 16:9 hero with the built-in image generation
+  tool. The exact prompt, owned fictional reference hash, provider-original PNG,
+  optimized WebP, and output hashes are retained. Provider model and cost were
+  not reported; no customer data, paid external-provider call, email, booking,
+  payment, deployment, or production action occurred.
+- Preserved the complete starter foundation inside the concept: custom domain,
+  branded forwarding email, contact form, service area or map, current booking
+  bridge, services, consultation, and the owner's own payment QR. FAMtastic
+  does not process or receive the payment.
+- Local acceptance passed 24 routes at 1440px and 390px, 23 copy contracts, 48
+  viewport checks, and 20 retained screenshots. The Ultra study is local-only;
+  the already-published proof rooms remain unchanged.
+
 ## 2026-08-27 — Booked & Branded reusable Template Lab
 
 - Added four materially different, research-led template families around the
