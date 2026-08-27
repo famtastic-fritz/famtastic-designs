@@ -12,6 +12,10 @@ REPOSITORY_URL="${FAMTASTIC_REPOSITORY_URL:-https://github.com/famtastic-fritz/f
 # queues.  The normal deployment path retains its existing scheduler behavior;
 # an operator must explicitly opt into this narrower release mode.
 PILOT_EXACT_DISPATCH_ONLY="${FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY:-0}"
+# This is deliberately separate from the exact-dispatch declaration. It is an
+# explicit, reversible operations action for the one checked-in cron entry; it
+# must never become a broad crontab editor.
+PILOT_SUSPEND_MARKED_LIFECYCLE_CRON="${FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON:-0}"
 APPLY=false
 
 usage() {
@@ -29,6 +33,12 @@ Set FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 only for an owner-gated public-preview
 pilot. In that mode the deployment refuses to proceed while an active broad
 famtastic:lifecycle-run cron entry exists, and it never installs one. Exact
 owner-approved preview delivery must use famtastic:preview-delivery-dispatch.
+
+If that known scheduler is active, an authorized apply may suspend only the
+marked checked-in entry by also setting
+FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON=1. Preflight validates the exact
+marker/next-line pair first; apply backs up the crontab under the private deploy
+directory and refuses any other active lifecycle-run line.
 USAGE
 }
 
@@ -46,6 +56,19 @@ case "$PILOT_EXACT_DISPATCH_ONLY" in
     exit 2
     ;;
 esac
+
+case "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON" in
+  0|1) ;;
+  *)
+    echo "FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON must be 0 or 1." >&2
+    exit 2
+    ;;
+esac
+
+if [[ "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON" == "1" && "$PILOT_EXACT_DISPATCH_ONLY" != "1" ]]; then
+  echo "FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON=1 requires FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1." >&2
+  exit 2
+fi
 
 for required_command in git ssh; do
   command -v "$required_command" >/dev/null || {
@@ -75,13 +98,16 @@ echo "Private validation source:    ~/$REMOTE_DEPLOY_BASE/releases/$COMMIT_SHA/s
 echo "Drupal runtime:               ~/$REMOTE_ROOT"
 if [[ "$PILOT_EXACT_DISPATCH_ONLY" == "1" ]]; then
   echo "Dispatch mode:                exact owner-approved preview only (broad lifecycle cron forbidden)"
+  if [[ "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON" == "1" ]]; then
+    echo "Scheduler action:             suspend only the known marked lifecycle cron during apply"
+  fi
 fi
 
 remote_mode="preflight"
 [[ "$APPLY" == true ]] && remote_mode="apply"
 
 ssh -T "$SSH_TARGET" bash -s -- \
-  "$remote_mode" "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" "$PILOT_EXACT_DISPATCH_ONLY" <<'REMOTE'
+  "$remote_mode" "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" "$PILOT_EXACT_DISPATCH_ONLY" "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON" <<'REMOTE'
 set -euo pipefail
 
 mode="$1"
@@ -90,6 +116,7 @@ deploy_base="$3"
 repository_url="$4"
 commit_sha="$5"
 pilot_exact_dispatch_only="$6"
+pilot_suspend_marked_lifecycle_cron="$7"
 production_dir="$HOME/$remote_root"
 deploy_dir="$HOME/$deploy_base"
 mirror_dir="$deploy_dir/repository.git"
@@ -120,14 +147,29 @@ case "$pilot_exact_dispatch_only" in
     exit 2
     ;;
 esac
+case "$pilot_suspend_marked_lifecycle_cron" in
+  0|1) ;;
+  *)
+    echo "Remote pilot scheduler mode is invalid." >&2
+    exit 2
+    ;;
+esac
+if [[ "$pilot_suspend_marked_lifecycle_cron" == "1" && "$pilot_exact_dispatch_only" != "1" ]]; then
+  echo "Remote marked scheduler suspension requires exact-dispatch-only mode." >&2
+  exit 2
+fi
 
 # The general lifecycle runner claims all eligible jobs and notifications. It
 # is intentionally prohibited for a controlled exact-ID preview pilot, where
 # `famtastic:preview-delivery-dispatch` is the only allowed mail entry point.
-# Read the current crontab without changing it; an unreadable non-empty
-# scheduler is also unsafe because we cannot prove it is inactive.
-assert_no_active_global_lifecycle_cron() {
-  local current_crontab
+# Reading the scheduler is not optional: an unreadable non-empty crontab is
+# unsafe because the release cannot prove the broad worker is inactive.
+current_crontab=''
+lifecycle_cron_backup=''
+lifecycle_cron_record=''
+scheduler_timestamp=''
+
+load_current_crontab() {
   if ! current_crontab="$(crontab -l 2>&1)"; then
     if ! printf '%s\n' "$current_crontab" | grep -qi 'no crontab'; then
       echo "Pilot exact-dispatch-only deployment refused: unable to inspect the current crontab." >&2
@@ -135,6 +177,18 @@ assert_no_active_global_lifecycle_cron() {
     fi
     current_crontab=''
   fi
+}
+
+active_global_lifecycle_count() {
+  printf '%s\n' "$current_crontab" | awk '
+    /^[[:space:]]*#/ { next }
+    /famtastic:lifecycle-run/ { count++ }
+    END { print count + 0 }
+  '
+}
+
+assert_no_active_global_lifecycle_cron() {
+  load_current_crontab
   if printf '%s\n' "$current_crontab" | awk '
     /^[[:space:]]*#/ { next }
     /famtastic:lifecycle-run/ { found = 1 }
@@ -145,6 +199,106 @@ assert_no_active_global_lifecycle_cron() {
     return 1
   fi
   echo "Pilot exact-dispatch-only: no active broad lifecycle cron entry found."
+}
+
+# Validates the sole line that the optional pilot suspension is allowed to
+# remove. A marker is not enough: the immediately following line must match
+# exactly what the ordinary deployment path writes, and no other active broad
+# lifecycle entry may exist anywhere in the crontab.
+validate_marked_global_lifecycle_cron() {
+  local active_count marker_count marker_line active_entry active_line_number active_line expected_line
+  load_current_crontab
+  active_count="$(active_global_lifecycle_count)"
+  if [[ "$active_count" == "0" ]]; then
+    return 0
+  fi
+  if [[ "$active_count" != "1" ]]; then
+    echo "Pilot scheduler suspension refused: found $active_count active famtastic:lifecycle-run entries; only one exact marked entry may be suspended." >&2
+    return 1
+  fi
+  cron_marker='# FAMTASTIC_LIFECYCLE_CRON_V1'
+  marker_count="$(printf '%s\n' "$current_crontab" | awk -v marker="$cron_marker" '$0 == marker { count++ } END { print count + 0 }')"
+  if [[ "$marker_count" != "1" ]]; then
+    echo "Pilot scheduler suspension refused: the active lifecycle runner does not have exactly one FAMTASTIC_LIFECYCLE_CRON_V1 marker." >&2
+    return 1
+  fi
+  marker_line="$(printf '%s\n' "$current_crontab" | awk -v marker="$cron_marker" '$0 == marker { print NR; exit }')"
+  active_entry="$(printf '%s\n' "$current_crontab" | awk '
+    /^[[:space:]]*#/ { next }
+    /famtastic:lifecycle-run/ { print NR "\t" $0; exit }
+  ')"
+  active_line_number="${active_entry%%$'\t'*}"
+  active_line="${active_entry#*$'\t'}"
+  expected_line="$(printf '*/5 * * * * cd %q && %q famtastic:lifecycle-run --limit=50 >/dev/null 2>&1' "$production_dir" "$drush")"
+  if [[ "$active_line_number" != "$((marker_line + 1))" || "$active_line" != "$expected_line" ]]; then
+    echo "Pilot scheduler suspension refused: the marker is not followed immediately by the exact checked-in lifecycle command." >&2
+    return 1
+  fi
+}
+
+# This deliberately changes only the exact marker and its immediately following
+# exact command after validation. Its backup is retained for an explicitly
+# authorized later restore; a failed code deployment must not silently re-enable
+# broad dispatch on a shared queue.
+suspend_marked_global_lifecycle_cron() {
+  local cron_stage cron_backup_dir
+  validate_marked_global_lifecycle_cron
+  if [[ "$(active_global_lifecycle_count)" == "0" ]]; then
+    echo "Pilot exact-dispatch-only: no active broad lifecycle cron entry needed suspension."
+    return 0
+  fi
+  scheduler_timestamp="${scheduler_timestamp:-$(date -u +%Y%m%dT%H%M%SZ)}"
+  cron_backup_dir="$deploy_dir/cron-backups"
+  lifecycle_cron_backup="$cron_backup_dir/famtastic-crontab-before-pilot-suspension-$scheduler_timestamp-$commit_sha.txt"
+  mkdir -p "$cron_backup_dir" "$deploy_dir/tmp"
+  if [[ -e "$lifecycle_cron_backup" ]]; then
+    echo "Pilot scheduler suspension refused: crontab backup path already exists: $lifecycle_cron_backup" >&2
+    return 1
+  fi
+  (umask 077; printf '%s\n' "$current_crontab" > "$lifecycle_cron_backup")
+  test -s "$lifecycle_cron_backup" || {
+    echo "Pilot scheduler suspension refused: crontab backup was not written." >&2
+    return 1
+  }
+  cron_stage="$deploy_dir/tmp/famtastic-crontab-pilot-suspended-$scheduler_timestamp"
+  if ! printf '%s\n' "$current_crontab" | awk -v marker='# FAMTASTIC_LIFECYCLE_CRON_V1' -v expected="$(printf '*/5 * * * * cd %q && %q famtastic:lifecycle-run --limit=50 >/dev/null 2>&1' "$production_dir" "$drush")" '
+    $0 == marker {
+      if ((getline next_line) <= 0 || next_line != expected) {
+        exit 70
+      }
+      removed++
+      next
+    }
+    { print }
+    END { if (removed != 1) exit 71 }
+  ' > "$cron_stage"; then
+    rm -f "$cron_stage"
+    echo "Pilot scheduler suspension refused: exact marked cron entry changed before it could be removed." >&2
+    return 1
+  fi
+  if ! crontab "$cron_stage"; then
+    rm -f "$cron_stage"
+    echo "Pilot scheduler suspension failed before the new crontab could be installed; backup retained at $lifecycle_cron_backup." >&2
+    return 1
+  fi
+  rm -f "$cron_stage"
+  assert_no_active_global_lifecycle_cron
+  echo "Pilot exact-dispatch-only: suspended the marked lifecycle cron; backup: $lifecycle_cron_backup"
+}
+
+prepare_pilot_lifecycle_mode() {
+  if [[ "$pilot_suspend_marked_lifecycle_cron" == "1" ]]; then
+    validate_marked_global_lifecycle_cron
+    if [[ "$mode" == "apply" ]]; then
+      suspend_marked_global_lifecycle_cron
+    elif [[ "$(active_global_lifecycle_count)" == "1" ]]; then
+      echo "Pilot exact-dispatch-only preflight: the exact marked lifecycle cron is active and would be suspended during an authorized apply."
+    else
+      echo "Pilot exact-dispatch-only preflight: no active broad lifecycle cron entry needs suspension."
+    fi
+    return 0
+  fi
+  assert_no_active_global_lifecycle_cron
 }
 
 for command_name in git php composer tar rsync crontab; do
@@ -182,7 +336,7 @@ test "$remote_sha" = "$commit_sha" || {
 cd "$production_dir"
 "$drush" status --fields=bootstrap,db-status,drupal-version --format=list
 if [[ "$pilot_exact_dispatch_only" == "1" ]]; then
-  assert_no_active_global_lifecycle_cron
+  prepare_pilot_lifecycle_mode
 fi
 # A deployment must never land on (or silently leave) a maintenance-mode site.
 # Maintenance mode lives in STATE (not config) - Drupal core key.
@@ -476,6 +630,7 @@ fi
   printf 'commercial_config_backup=%s\n' "$commercial_config_backup"
   printf 'demand_manifest_version=2\n'
   printf 'lifecycle_cron=%s\n' "$lifecycle_cron_record"
+  printf 'lifecycle_cron_backup=%s\n' "${lifecycle_cron_backup:-none}"
 } > "$production_dir/.backend-release"
 
 rm -rf "$previous_module"

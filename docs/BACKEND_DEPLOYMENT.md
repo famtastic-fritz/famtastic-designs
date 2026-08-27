@@ -86,6 +86,24 @@ owner-confirmed `famtastic:preview-delivery-dispatch` command. Disabling an
 existing global scheduler is a separate, explicitly authorized operations
 change; do not silently remove it during the release.
 
+If the only active broad scheduler is exactly the checked-in
+`FAMTASTIC_LIFECYCLE_CRON_V1` marker followed immediately by its standard
+`famtastic:lifecycle-run --limit=50` command, an explicitly authorized apply
+can suspend it narrowly:
+
+```bash
+FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 \
+FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON=1 \
+./scripts/deploy-backend-godaddy.sh --apply
+```
+
+Preflight with the same flags validates that exact pair without changing
+production. Apply saves the complete pre-change crontab below
+`~/deploy/famtastic-designs/cron-backups/`, removes only that pair, and refuses
+to proceed if any other active lifecycle runner is present. The recorded backup
+supports a separate, explicit scheduler restoration; a failed code deployment
+does not automatically re-enable broad dispatch.
+
 If code promotion or a Drupal command fails, the script restores the prior
 module and rebuilds cache. Database updates cannot be assumed reversible, so
 the pre-update SQL dump is retained and its path is printed.

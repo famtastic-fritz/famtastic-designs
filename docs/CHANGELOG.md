@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-08-27 — Exact-ID preview deployment scheduler gate (not deployed)
+
+- The backend deployer now supports `FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1`.
+  In that narrow public-preview mode, both preflight and apply refuse an active
+  broad `famtastic:lifecycle-run` scheduler and never install one; exact
+  owner-confirmed preview mail remains the only permitted delivery lane.
+- When the known marked scheduler is already active, the separately explicit
+  `FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON=1` flag validates one exact
+  marker/command pair, saves the full crontab under the private deployment
+  directory, removes only that pair during apply, and refuses duplicate,
+  unmarked, or altered lifecycle commands. Normal non-pilot deployments retain
+  their existing scheduler behavior.
+- This was source-only validation: no scheduler, production code, database,
+  proof, lead, provider, or email state was changed.
+
 ## 2026-08-27 — Public-preview registration isolation (local acceptance only; not deployed)
 
 - A valid signed public-preview continuation is now validated before the Drupal
