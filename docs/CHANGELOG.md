@@ -15,6 +15,24 @@
 - The current XLSX/cold importer is deliberately **not** connected: it lacks verified source/recipient eligibility and the required personalized public-intake/research snapshot. A production-like MySQL migration validation is still required for the `8041` existing-table upgrade path.
 - No migration was applied, no lead was imported, no proof was generated, no email was sent, and no production deployment occurred in this release-candidate worktree. The existing direct public-request SMTP acknowledgment and cold-email campaign compliance integration remain separate follow-up work.
 
+## 2026-08-26 — Local Beauty / Hair / Braiding proof cohort preparation added
+
+- Added a local-only first-ten cohort builder under
+  website-delivery-swarm/cohorts/beauty-hair-braiding. It accepts an explicit
+  operator-mapped JSON or CSV input rather than reading a lead spreadsheet,
+  rejects records without source-backed research evidence, and produces
+  exactly three distinct Safe, Medium FAMtastic, and Ultra FAMtastic
+  self-contained proof directions per lead.
+- Every prepared bundle carries redacted intake, research evidence, three
+  Gemini Flash Lite Image prompt artifacts, static QA, promotion-readiness
+  gates, a promotion-contract-compatible manifest, and a Build DNA skeleton
+  with real local artifact hashes. The builder does not call a model, write
+  Drupal, publish, or send email; it records those steps as open gates instead
+  of manufacturing delivery evidence.
+- Added synthetic JSON and CSV fixtures plus an executable local contract test
+  that validates Build DNA, contact-data redaction, callback size/safety rules,
+  and the existing proof-promotion dry-run contract.
+
 ## 2026-08-26 — Customer verification links work from a fresh browser
 
 Added a deliberately narrow Apache SPA rewrite for `/verify-email`, `/login`,

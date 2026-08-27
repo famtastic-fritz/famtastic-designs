@@ -1,0 +1,93 @@
+{
+  "schema": "famtastic.beauty-proof-cohort-input.v1",
+  "campaign_id": "pc-beauty-proof-example-20260826",
+  "cohort_label": "Synthetic Beauty / Hair / Braiding example",
+  "source": {
+    "kind": "synthetic-fixture",
+    "mapping_version": "example-v1"
+  },
+  "leads": [
+    {
+      "lead_id": "fixture-001",
+      "business_name": "North Star Braids",
+      "contact_email": "north-star@example.invalid",
+      "category": "hair-braiding",
+      "location": {
+        "city": "Example City",
+        "region": "FL"
+      },
+      "public_profile_url": "https://example.invalid/north-star-braids",
+      "verified_facts": [
+        {
+          "fact": "The mapped public profile identifies North Star Braids as a braiding-focused beauty business.",
+          "source_url": "https://example.invalid/north-star-braids",
+          "source_type": "synthetic-public-profile"
+        }
+      ],
+      "research_teaser": {
+        "headline": "A source-backed starting signal, not an invented business story.",
+        "body": "The proof should make the discovered public signal clearer while holding unverified services, policies, availability, and pricing for owner confirmation.",
+        "source_urls": [
+          "https://example.invalid/north-star-braids"
+        ]
+      },
+      "design_clues": {
+        "palette_hints": [
+          "#14261f",
+          "#e8d9bd",
+          "#cb8a4a"
+        ],
+        "motif_hints": [
+          "interlaced fiber geometry"
+        ],
+        "audience_note": "Synthetic fixture only."
+      },
+      "observed_service_terms": [
+        "Braiding",
+        "Consultation",
+        "Style references"
+      ]
+    },
+    {
+      "lead_id": "fixture-002",
+      "business_name": "Velvet Mirror Studio",
+      "contact_email": "velvet-mirror@example.invalid",
+      "category": "beauty",
+      "location": {
+        "city": "Example City",
+        "region": "GA"
+      },
+      "public_profile_url": "https://example.invalid/velvet-mirror",
+      "verified_facts": [
+        {
+          "fact": "The mapped public profile presents Velvet Mirror Studio as a beauty business.",
+          "source_url": "https://example.invalid/velvet-mirror",
+          "source_type": "synthetic-public-profile"
+        }
+      ],
+      "research_teaser": {
+        "headline": "A visual system can carry personality without making promises.",
+        "body": "The output keeps the public signal intact and reserves all operational claims for client-provided confirmation.",
+        "source_urls": [
+          "https://example.invalid/velvet-mirror"
+        ]
+      },
+      "design_clues": {
+        "palette_hints": [
+          "#22121c",
+          "#f4e8db",
+          "#c64c89"
+        ],
+        "motif_hints": [
+          "soft mirror ripples"
+        ],
+        "audience_note": "Synthetic fixture only."
+      },
+      "observed_service_terms": [
+        "Beauty",
+        "References",
+        "Confirmation"
+      ]
+    }
+  ]
+}

@@ -24,6 +24,21 @@ Guidance:
   disposable MariaDB database. PHP lint and a hand-written SQL sketch are not
   substitutes for Drupal's actual MySQL Schema API.
 
+## 2026-08-26 — Personalization requires corroborated evidence, not a raw lead row
+
+Observation: a contact list alone cannot establish services, booking behavior,
+pricing, policies, or a right to use a logo or image. A proof builder therefore
+must not turn a row into a customer-facing claim by filling the gap with a
+vertical template.
+
+Guidance: the local Beauty / Hair / Braiding cohort preparation tool accepts
+only an explicit mapped input with a source-backed fact and research teaser per
+lead. It produces three distinct reusable directions, records unexecuted
+Gemini-art, browser, visual-review, Drupal, promotion, and email stages as
+gated in Build DNA, and redacts raw email from every artifact. A passing static
+bundle proves only structural readiness for the existing promotion importer,
+never customer delivery.
+
 ## 2026-08-26 — Dynamic proof links need an Apache shell fallback, not a static route directory
 
 Observation: an enabled signed proof share could be resolved anonymously by

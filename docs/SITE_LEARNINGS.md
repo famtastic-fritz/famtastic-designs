@@ -12,6 +12,21 @@
 - Guidance: a held targeted preview email must never become a broad lifecycle candidate. Do not permit revocation while it is in SMTP dispatch, and treat cold outreach as a separate compliant campaign-message lane until postal/unsubscribe/provider-event receipts exist.
 - Guidance: one Prospect can have public and registered proof work, so prospect lookup is not campaign ownership. Bind public and request proof campaigns before remote dispatch; retries must use that exact binding. A staged room must snapshot and rehash its served paths, not re-query mutable `proof_variant` rows.
 
+## 2026-08-26 — A lead list is not enough evidence for a personalized proof
+
+- Observation: a source list can contain business names and email addresses
+  without proving a service, policy, price, booking channel, audience, or
+  visual right. A generic template mailer can use that data to send outreach
+  but cannot honestly claim it has prepared a personalized website proof.
+- Guidance: the Beauty / Hair / Braiding cohort builder now takes a separate,
+  explicit mapped input. It fails closed until every selected lead has at least
+  one source-backed fact and a short source-backed research teaser. It keeps
+  raw contact email out of artifacts and emits three reusable vertical systems
+  that vary with real source evidence, palette, motif, and deterministic seed.
+  Gemini art, browser proof, independent visual approval, Drupal registration,
+  promotion, and email are individual named gates, never implied by static
+  HTML generation.
+
 ## 2026-08-26 — A ledger claim can go stale mid-run when sessions run concurrently (heartbeat 03:16Z)
 
 - Observation: the 03:16Z heartbeat oriented at 03:13Z on two uncommitted
