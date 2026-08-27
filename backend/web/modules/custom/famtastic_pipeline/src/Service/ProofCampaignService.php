@@ -72,6 +72,7 @@ class ProofCampaignService {
     protected BuildTelemetryService $buildTelemetry,
     protected Connection $database,
     protected CustomerPortalService $portal,
+    protected PublicPreviewDeliveryService $previews,
   ) {}
 
   /**
@@ -90,6 +91,14 @@ class ProofCampaignService {
     $allowPilot = getenv('FAMTASTIC_ALLOW_NO_IMAGE_PILOT_PROOFS') === '1'
       || getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') === '1';
     $remote = $this->studioClient->isRemote();
+    $publicPreviewDeliveryId = (int) ($context['public_preview_delivery_id'] ?? 0);
+    $websiteRequestId = (int) ($context['website_request_id'] ?? 0);
+    if ($publicPreviewDeliveryId && $websiteRequestId) {
+      throw new \RuntimeException('A proof campaign cannot be both a public delivery and an account-owned website request.');
+    }
+    if ($publicPreviewDeliveryId && !$remote && $allowPilot) {
+      throw new \RuntimeException('Public concept rooms require a real creative provider; image-free pilot generation is not permitted.');
+    }
     $localJobId = !$remote && !$allowPilot ? 'local-' . bin2hex(random_bytes(16)) : '';
     $storage = $this->entityTypeManager->getStorage('proof_campaign');
     /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign $campaign */
@@ -103,21 +112,17 @@ class ProofCampaignService {
       'expires_at' => $now + self::TTL,
     ]);
     $campaign->save();
+    if ($publicPreviewDeliveryId) {
+      // Bind before any remote dispatch so a callback cannot attach to a
+      // different request/campaign owned by this same prospect.
+      $this->previews->bindInitialProofCampaign($publicPreviewDeliveryId, (int) $campaign->id());
+    }
+    if ($websiteRequestId) {
+      $this->portal->bindWebsiteRequestProofCampaign($websiteRequestId, (int) $prospect->id(), (int) $campaign->id());
+    }
 
     if ($remote) {
-      $jobId = $this->studioClient->dispatch($prospect, $campaign, $context);
-      $campaign
-        ->set('generation_status', 'waiting_callback')
-        ->set('studio_job_id', $jobId)
-        ->set('dispatched_at', $now)
-        ->save();
-      $this->ledger->recordEvent(
-        'proof.dispatched:' . $campaignId,
-        'proof.dispatched',
-        ['campaign_id' => $campaignId, 'studio_job_id' => $jobId],
-        (int) $prospect->id(),
-      );
-      return ['campaign' => $campaign, 'variants' => []];
+      return $this->dispatchRemoteCampaign($prospect, $campaign, $context);
     }
 
     if (!$allowPilot) {
@@ -301,15 +306,34 @@ class ProofCampaignService {
     }
     $prospectId = (int) $campaign->get('prospect_id')->target_id;
     $isShowcase = str_starts_with($studioJobId, 'local-showcase-');
-    $requestQuery = $this->database->select('famtastic_project_request', 'r')->fields('r')
-      ->condition('prospect_id', $prospectId);
-    if ($isShowcase) {
-      $requestQuery->condition('proof_campaign_id', (int) $campaign->id());
+    $isPublicPreviewCampaign = !$isShowcase && $this->previews->isPublicDeliveryForCampaign($prospectId, (int) $campaign->id());
+    $request = NULL;
+    if (!$isPublicPreviewCampaign) {
+      // New request jobs bind their campaign before remote dispatch. Prefer
+      // that exact owner relation over the unsafe legacy "latest prospect"
+      // heuristic; retain the latter only for already-created legacy jobs.
+      $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
+        ->condition('prospect_id', $prospectId)
+        ->condition('proof_campaign_id', (int) $campaign->id())
+        ->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc() ?: NULL;
+      if (!$request) {
+        $legacyQuery = $this->database->select('famtastic_project_request', 'r')->fields('r')
+          ->condition('prospect_id', $prospectId);
+        if ($isShowcase) {
+          $legacyQuery->condition('proof_campaign_id', (int) $campaign->id());
+        }
+        $request = $legacyQuery->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc() ?: NULL;
+      }
     }
-    $request = $requestQuery->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $processed = json_decode((string) $campaign->get('callback_event_ids')->value ?: '[]', TRUE);
     if (in_array($eventId, (array) $processed, TRUE)) {
-      return ['newly_processed' => FALSE, 'campaign' => $campaign, 'variants' => $this->loadVariants($campaign)];
+      $existingVariants = $this->loadVariants($campaign);
+      // Callback event acceptance can precede filesystem protection. A retry
+      // must finish both its telemetry projection and bounded post-processing
+      // rather than becoming a no-op.
+      $this->recordCallbackTelemetry($campaign, $existingVariants, $isShowcase);
+      $this->finalizeCallbackDelivery($campaign, $request, $existingVariants);
+      return ['newly_processed' => FALSE, 'campaign' => $campaign, 'variants' => $existingVariants];
     }
     $requiredDirections = $isShowcase ? self::SHOWCASE_DIRECTIONS : self::CORE_DIRECTIONS;
     if (count($variants) !== count($requiredDirections)) {
@@ -412,9 +436,6 @@ class ProofCampaignService {
       $entity->save();
       $created[] = $entity;
     }
-    if ($request) {
-      $this->protectAccountProofArtifacts($campaignId);
-    }
     $processed[] = $eventId;
     $campaign
       ->set('callback_event_ids', json_encode(array_values($processed), JSON_THROW_ON_ERROR))
@@ -428,34 +449,56 @@ class ProofCampaignService {
       $prospectId,
     );
     $completeVariants = $isShowcase ? $this->loadVariants($campaign) : $created;
-    if ($request) {
-      $this->portal->attachWebsiteRequestProof((int) $request['id'], $campaign, $completeVariants);
-    }
-    else {
-      $this->ledger->enqueue(
-        'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
-        'outreach.prepare',
-        ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
-        $prospectId,
-      );
-    }
-    $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
-    if ($prospect) {
-      $firstDirection = array_key_first($validated);
-      $dna = $firstDirection === NULL ? [] : ($validated[$firstDirection]['design_dna'] ?? []);
-      $telemetry = is_array($dna['telemetry'] ?? NULL) ? $dna['telemetry'] : [];
-      $this->buildTelemetry->recordStudioProof($prospect, $campaign, $created, [
-        'build_key_suffix' => $isShowcase ? 'site-studio-showcase' : 'site-studio',
-        'flow_key' => $telemetry['flow_key'] ?? 'site-studio-local-promotion',
-        'task_key' => $telemetry['task_key'] ?? 'proof.generate',
-        'provider' => $telemetry['provider'] ?? ($dna['provider'] ?? 'site_studio_local'),
-        'agent_name' => $telemetry['agent_name'] ?? ($dna['agent'] ?? 'shay'),
-        'prompt_snapshot' => $telemetry['prompt_snapshot'] ?? '',
-        'input_snapshot' => $telemetry['input_snapshot'] ?? [],
-        'source_sha' => $telemetry['source_sha'] ?? '',
-      ]);
-    }
+    $this->finalizeCallbackDelivery($campaign, $request, $completeVariants);
+    $this->recordCallbackTelemetry($campaign, $completeVariants, $isShowcase);
     return ['newly_processed' => TRUE, 'campaign' => $campaign, 'variants' => $completeVariants];
+  }
+
+  /** Rebuilds the callback telemetry projection idempotently on a retry. */
+  private function recordCallbackTelemetry(ProofCampaign $campaign, array $variants, bool $isShowcase): void {
+    $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load((int) $campaign->get('prospect_id')->target_id);
+    if (!$prospect || $variants === []) {
+      return;
+    }
+    $first = reset($variants);
+    $dna = $first ? json_decode((string) $first->get('design_dna')->value, TRUE) : [];
+    $dna = is_array($dna) ? $dna : [];
+    $telemetry = is_array($dna['telemetry'] ?? NULL) ? $dna['telemetry'] : [];
+    $this->buildTelemetry->recordStudioProof($prospect, $campaign, $variants, [
+      'build_key_suffix' => $isShowcase ? 'site-studio-showcase' : 'site-studio',
+      'flow_key' => $telemetry['flow_key'] ?? 'site-studio-local-promotion',
+      'task_key' => $telemetry['task_key'] ?? 'proof.generate',
+      'provider' => $telemetry['provider'] ?? ($dna['provider'] ?? 'site_studio_local'),
+      'agent_name' => $telemetry['agent_name'] ?? ($dna['agent'] ?? 'shay'),
+      'prompt_snapshot' => $telemetry['prompt_snapshot'] ?? '',
+      'input_snapshot' => $telemetry['input_snapshot'] ?? [],
+      'source_sha' => $telemetry['source_sha'] ?? '',
+    ]);
+  }
+
+  /** Completes the route-specific handoff after callback artifacts exist. */
+  private function finalizeCallbackDelivery(ProofCampaign $campaign, ?array $request, array $variants): void {
+    $campaignId = (string) $campaign->get('campaign_id')->value;
+    $prospectId = (int) $campaign->get('prospect_id')->target_id;
+    if ($request) {
+      $this->protectProofArtifacts($campaignId);
+      $this->portal->attachWebsiteRequestProof((int) $request['id'], $campaign, $variants);
+      return;
+    }
+    if ($this->previews->isPublicDeliveryForCampaign($prospectId, (int) $campaign->id())) {
+      // Secure raw artifact paths before the delivery can become review-ready.
+      $this->protectPublicPreviewArtifacts($campaign);
+      if (!$this->previews->markCampaignReady($prospectId, (int) $campaign->id())) {
+        throw new \RuntimeException('The public preview delivery changed before it could be marked ready.');
+      }
+      return;
+    }
+    $this->ledger->enqueue(
+      'outreach.prepare:prospect:' . $prospectId . ':campaign:' . $campaign->id(),
+      'outreach.prepare',
+      ['prospect_id' => $prospectId, 'proof_campaign_id' => (int) $campaign->id()],
+      $prospectId,
+    );
   }
 
   /**
@@ -477,6 +520,41 @@ class ProofCampaignService {
     /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign $campaign */
     $campaign = $storage->load(reset($ids));
     return ['campaign' => $campaign, 'variants' => $this->loadVariants($campaign)];
+  }
+
+  /** Returns only the exact campaign owned by this prospect. */
+  public function getForId(Prospect $prospect, int $campaignId): ?array {
+    /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign|null $campaign */
+    $campaign = $this->entityTypeManager->getStorage('proof_campaign')->load($campaignId);
+    if (!$campaign instanceof ProofCampaign || (int) $campaign->get('prospect_id')->target_id !== (int) $prospect->id()) {
+      return NULL;
+    }
+    return ['campaign' => $campaign, 'variants' => $this->loadVariants($campaign)];
+  }
+
+  /** Reissues a failed-to-receipt remote dispatch with the same campaign key. */
+  public function resumeRemoteDispatch(Prospect $prospect, ProofCampaign $campaign, array $context): array {
+    if (!$this->studioClient->isRemote() || $campaign->get('generation_status')->value !== 'dispatching') {
+      return ['campaign' => $campaign, 'variants' => $this->loadVariants($campaign)];
+    }
+    return $this->dispatchRemoteCampaign($prospect, $campaign, $context);
+  }
+
+  /** Sends one idempotent Site Studio request and persists its returned job id. */
+  private function dispatchRemoteCampaign(Prospect $prospect, ProofCampaign $campaign, array $context): array {
+    $jobId = $this->studioClient->dispatch($prospect, $campaign, $context);
+    $campaign
+      ->set('generation_status', 'waiting_callback')
+      ->set('studio_job_id', $jobId)
+      ->set('dispatched_at', $this->time->getRequestTime())
+      ->save();
+    $this->ledger->recordEvent(
+      'proof.dispatched:' . $campaign->get('campaign_id')->value,
+      'proof.dispatched',
+      ['campaign_id' => $campaign->get('campaign_id')->value, 'studio_job_id' => $jobId],
+      (int) $prospect->id(),
+    );
+    return ['campaign' => $campaign, 'variants' => []];
   }
 
   /**
@@ -731,16 +809,21 @@ class ProofCampaignService {
     return '/proofs/' . $campaignId . '/' . $direction . '/' . $filename;
   }
 
-  /** Prevents direct web access to request-owned proof artifacts. */
-  protected function protectAccountProofArtifacts(string $campaignId): void {
+  /** Prevents direct web access to account-owned or signed-room proof artifacts. */
+  protected function protectProofArtifacts(string $campaignId): void {
     $directory = \Drupal::root() . '/proofs/' . $campaignId;
     if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-      throw new \RuntimeException('Unable to secure account-owned proof artifacts.');
+      throw new \RuntimeException('Unable to secure proof artifacts.');
     }
     $rules = "<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n  Order allow,deny\n  Deny from all\n</IfModule>\n";
     if ($this->fileSystem->saveData($rules, $directory . '/.htaccess', FileSystemInterface::EXISTS_REPLACE) === FALSE) {
-      throw new \RuntimeException('Unable to secure account-owned proof artifacts.');
+      throw new \RuntimeException('Unable to secure proof artifacts.');
     }
+  }
+
+  /** Protects a public-lead proof set before the signed concept-room handoff. */
+  public function protectPublicPreviewArtifacts(ProofCampaign $campaign): void {
+    $this->protectProofArtifacts((string) $campaign->get('campaign_id')->value);
   }
 
   /**

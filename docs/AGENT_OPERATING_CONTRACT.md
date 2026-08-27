@@ -29,9 +29,11 @@ new purchases. Stripe holds payment credentials; Drupal must not store cards.
    - defined business site up to five pages: `FAM-BUSINESS-499`;
    - ecommerce, membership, custom integrations, regulated work, or more than
      five pages: staff scope review.
-4. `website_proof.generate.v1` produces exactly three working directions named
-   Safe, Wild, and OMG. Customer requests stop at an owner review gate before
-   any proof-ready email or account disclosure.
+4. `website_proof.generate.v1` produces exactly three working core directions.
+   Their stored labels are configured per run (the legacy defaults are Safe,
+   Wild, and OMG); a public room must render those stored labels rather than
+   assume one industry-specific formula. Customer requests stop at an owner
+   review gate before any proof-ready email or account disclosure.
    An explicit showcase request may append exactly three maximum-FAMtastic
    directions (`d/e/f`) to that complete core set. The six-direction result
    returns to owner review and must not trigger customer delivery by itself.
@@ -133,3 +135,15 @@ shadow store, send a response, or turn a delivery event into commercial or
 deployment approval. Human approval remains required before any outbound
 message, price/offer/grant, payment, domain action, or release. The exact
 handoff contract is `docs/architecture/FAMTASTIC_CONNECTIONS_CONCIERGE_CONTRACT_V1.md`.
+
+For a public lead who receives pre-registration working concepts, use only
+`docs/architecture/PUBLIC_PREVIEW_DELIVERY_V1.md`. A campaign email, a legacy
+prospect token page, an account-owned proof share, or a manually copied URL is
+not a substitute for the owner-gated public-preview delivery and verified
+same-email claim.
+
+Public-preview ownership is exact, not merely Prospect-based: bind the public
+delivery to its new campaign before remote dispatch, and bind a later registered
+request to a different campaign. Never let a generic worker or callback reuse a
+public campaign for a commercial request, or use a generic/cold campaign for a
+public room.

@@ -99,6 +99,153 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Sends up to ten exact owner-approved public preview invitations.
+   *
+   * This is the only CLI entry point for a held public-preview invitation. It
+   * never invokes the broad lifecycle runner or scans the general outbox.
+   */
+  #[CLI\Command(name: 'famtastic:preview-delivery-dispatch', aliases: ['fpdd'])]
+  #[CLI\Option(name: 'ids', description: 'Comma-separated, exact preview-delivery numeric IDs (maximum 10).')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the normalized comma-separated IDs.')]
+  #[CLI\Usage(name: 'drush fpdd --ids=41,42 --confirm=41,42', description: 'Deliver two already-held preview invitations and no other mail.')]
+  public function previewDeliveryDispatch(array $options = ['ids' => '', 'confirm' => '']): int {
+    try {
+      $ids = $this->exactPositiveIds((string) $options['ids'], 10);
+    }
+    catch (\InvalidArgumentException $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $expected = implode(',', $ids);
+    if (!hash_equals($expected, trim((string) $options['confirm']))) {
+      $this->logger()->error('Targeted preview delivery requires --confirm=' . $expected . '.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService $previews */
+      $previews = \Drupal::service('famtastic_pipeline.public_preview_deliveries');
+      $result = $previews->dispatchApproved($ids);
+      $this->io()->writeln(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+      if ($result['failed'] > 0 || $result['receipt_unknown'] > 0) {
+        $this->logger()->error(dt('@failed targeted preview delivery attempt(s) failed and @unknown accepted-provider receipt(s) require reconciliation; no retry was automatically queued.', [
+          '@failed' => $result['failed'],
+          '@unknown' => $result['receipt_unknown'],
+        ]));
+        return self::EXIT_FAILURE;
+      }
+      $this->logger()->success(dt('Accepted @count exact public preview invitation(s). No general outbox messages were considered.', ['@count' => $result['sent']]));
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
+  /**
+   * Quarantines only queued proof jobs for one exact historical campaign.
+   *
+   * This is intentionally one-way: it records a reason and a ledger event,
+   * then removes only matching queued `proof.generate` jobs from claimability.
+   * It cannot send, rebuild, or alter an unrelated campaign.
+   */
+  #[CLI\Command(name: 'famtastic:campaign-proof-quarantine', aliases: ['fcpq'])]
+  #[CLI\Option(name: 'campaign', description: 'Exact campaign attribution key whose queued proof jobs should be quarantined.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the campaign key.')]
+  #[CLI\Option(name: 'reason', description: 'Required concise operational reason to preserve with the quarantine event.')]
+  #[CLI\Usage(name: 'drush fcpq --campaign=cold-260-aug-2026 --confirm=cold-260-aug-2026 --reason="Superseded by owner-gated public preview flow"', description: 'Safely quarantine only the stale campaign proof jobs.')]
+  public function campaignProofQuarantine(array $options = ['campaign' => '', 'confirm' => '', 'reason' => '']): int {
+    $campaign = trim((string) $options['campaign']);
+    $reason = trim((string) $options['reason']);
+    if ($campaign === '' || !hash_equals($campaign, trim((string) $options['confirm']))) {
+      $this->logger()->error('Quarantine requires --campaign and --confirm=<exact-campaign-key>.');
+      return self::EXIT_FAILURE;
+    }
+    if ($reason === '' || mb_strlen($reason) > 1000) {
+      $this->logger()->error('Quarantine requires a concise --reason (1-1000 characters).');
+      return self::EXIT_FAILURE;
+    }
+    $prospectIds = array_map('intval', \Drupal::entityQuery('famtastic_prospect')
+      ->accessCheck(FALSE)
+      ->condition('campaign', $campaign)
+      ->execute());
+    if ($prospectIds === []) {
+      $this->logger()->error('No prospects match the exact campaign key. Nothing changed.');
+      return self::EXIT_FAILURE;
+    }
+    $database = \Drupal::database();
+    $jobs = $database->select('famtastic_job', 'j')->fields('j')
+      ->condition('job_type', 'proof.generate')
+      ->condition('status', 'queued')
+      // The historical campaign importer uses this exact generic job-key
+      // family. Do not quarantine account-owned or paid-project proof jobs
+      // that merely share a prospect ID with the campaign.
+      ->condition('job_key', 'proof.generate:prospect:%', 'LIKE')
+      ->condition('prospect_id', $prospectIds, 'IN')
+      ->orderBy('id')
+      ->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $now = \Drupal::time()->getRequestTime();
+    $reasonHash = hash('sha256', $reason);
+    /** @var \Drupal\famtastic_pipeline\Service\OperationalLedger $ledger */
+    $ledger = \Drupal::service('famtastic_pipeline.operational_ledger');
+    $quarantined = [];
+    $transaction = $database->startTransaction();
+    try {
+      foreach ($jobs as $job) {
+        $result = [
+          'status' => 'quarantined',
+          'campaign_key' => $campaign,
+          'reason' => $reason,
+          'quarantined_at' => gmdate(DATE_ATOM, $now),
+        ];
+        $updated = $database->update('famtastic_job')->fields([
+          'status' => 'quarantined',
+          'locked_at' => NULL,
+          'result' => json_encode($result, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
+          'last_error' => 'quarantined: ' . $reason,
+          'changed' => $now,
+        ])->condition('id', (int) $job['id'])
+          ->condition('job_type', 'proof.generate')
+          ->condition('status', 'queued')
+          ->condition('job_key', 'proof.generate:prospect:%', 'LIKE')
+          ->execute();
+        if ($updated !== 1) {
+          throw new \RuntimeException('A queued proof job changed before it could be quarantined. No partial quarantine was retained.');
+        }
+        $ledger->recordEvent(
+          'proof.generate.quarantined:' . (int) $job['id'] . ':' . $reasonHash,
+          'proof.generate.quarantined',
+          ['job_id' => (int) $job['id'], 'campaign_key' => $campaign, 'reason_hash' => $reasonHash],
+          (int) $job['prospect_id'],
+        );
+        $quarantined[] = (int) $job['id'];
+      }
+      $ledger->recordEvent(
+        'campaign.proof_jobs_quarantined:' . $campaign . ':' . $reasonHash,
+        'campaign.proof_jobs_quarantined',
+        ['campaign_key' => $campaign, 'job_count' => count($quarantined), 'reason_hash' => $reasonHash],
+      );
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode([
+      'campaign_key' => $campaign,
+      'status' => 'quarantined',
+      'job_ids' => $quarantined,
+      'count' => count($quarantined),
+      'reason_hash' => $reasonHash,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success(dt('Quarantined @count queued proof job(s) for exactly @campaign. No emails or proof generation ran.', [
+      '@count' => count($quarantined),
+      '@campaign' => $campaign,
+    ]));
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Exports an offline Site Studio job for a prospect.
    */
   #[CLI\Command(name: 'famtastic:proof-local-export', aliases: ['fple'])]
@@ -635,6 +782,28 @@ class PipelineCommands extends DrushCommands {
       $this->logger()->error($e->getMessage());
       return self::EXIT_FAILURE;
     }
+  }
+
+  /** Parses exact, unique numeric IDs for an operator-confirmed bounded action. */
+  private function exactPositiveIds(string $raw, int $maximum): array {
+    $tokens = array_filter(array_map('trim', explode(',', $raw)), static fn (string $value): bool => $value !== '');
+    if ($tokens === [] || count($tokens) > $maximum) {
+      throw new \InvalidArgumentException('Provide between one and ' . $maximum . ' comma-separated delivery IDs.');
+    }
+    $ids = [];
+    foreach ($tokens as $token) {
+      if (!ctype_digit($token) || (int) $token < 1) {
+        throw new \InvalidArgumentException('Each preview-delivery ID must be a positive integer.');
+      }
+      $id = (int) $token;
+      if (isset($ids[$id])) {
+        throw new \InvalidArgumentException('Preview-delivery IDs must be unique.');
+      }
+      $ids[$id] = $id;
+    }
+    $ids = array_values($ids);
+    sort($ids, SORT_NUMERIC);
+    return $ids;
   }
 
 }

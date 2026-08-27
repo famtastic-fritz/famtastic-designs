@@ -1148,6 +1148,84 @@ function _famtastic_pipeline_automation_schema(): array {
   return $tables;
 }
 
+/** Schema for an owner-gated public concept-room delivery. */
+function _famtastic_pipeline_preview_delivery_schema(): array {
+  $id = ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE];
+  $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
+  $nullableTime = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  $entity = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  return [
+    'famtastic_preview_delivery' => [
+      'description' => 'Owner-gated public lead preview delivery, revocable concept room, and verified account claim.',
+      'fields' => [
+        'id' => $id,
+        'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+        'delivery_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+        'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'intake_id' => $entity,
+        'proof_campaign_id' => $entity,
+        // A staged room serves this exact direction/path/hash set, not whatever
+        // mutable proof_variant rows happen to contain later.
+        'proof_variant_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+        'build_dna_id' => ['type' => 'varchar', 'length' => 170, 'not null' => TRUE, 'default' => ''],
+        'build_dna_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'state' => ['type' => 'varchar', 'length' => 48, 'not null' => TRUE, 'default' => 'lead_captured'],
+        'recipient_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'recipient_address_snapshot' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE, 'default' => ''],
+        'template_key' => ['type' => 'varchar', 'length' => 96, 'not null' => TRUE, 'default' => 'lead_preview_ready'],
+        'template_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 1],
+        'subject_snapshot' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE, 'default' => ''],
+        'text_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'public_context_snapshot' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE],
+        'research_teaser_snapshot' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE],
+        'research_sources_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+        'research_report_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+        'research_snapshot_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'research_evidence_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'research_evidence_role' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+        'share_token_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'share_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 1],
+        'share_expires_at' => $nullableTime,
+        'share_revoked_at' => $nullableTime,
+        'share_revoked_by_uid' => $entity,
+        'owner_approved_at' => $nullableTime,
+        'owner_approved_by_uid' => $entity,
+        'email_outbox_id' => $entity,
+        'dispatch_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE, 'default' => ''],
+        'dispatch_claimed_at' => $nullableTime,
+        'dispatch_completed_at' => $nullableTime,
+        'dispatch_failed_at' => $nullableTime,
+        'provider_message_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'signup_started_at' => $nullableTime,
+        'customer_id' => $entity,
+        'claimed_at' => $nullableTime,
+        'website_request_id' => $entity,
+        'requested_at' => $time,
+        'proof_ready_at' => $nullableTime,
+        'queued_at' => $nullableTime,
+        'accepted_at' => $nullableTime,
+        'last_event_at' => $time,
+        'expires_at' => $nullableTime,
+        'created' => $time,
+        'changed' => $time,
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [
+        'public_id' => ['public_id'],
+        'delivery_key' => ['delivery_key'],
+      ],
+      'indexes' => [
+        'prospect_state' => ['prospect_id', 'state'],
+        'customer_state' => ['customer_id', 'state'],
+        'proof_campaign' => ['proof_campaign_id'],
+        'outbox' => ['email_outbox_id'],
+        'dispatch' => ['dispatch_key'],
+        'share_expiry' => ['state', 'share_expires_at'],
+      ],
+    ],
+  ];
+}
+
 /**
  * Defines records shared by Commerce fulfillment and customer operations.
  */
@@ -1186,6 +1264,7 @@ function _famtastic_pipeline_lifecycle_schema(): array {
     'primary key' => ['id'], 'unique keys' => ['notification_key' => ['notification_key']],
     'indexes' => ['queue' => ['status', 'available_at'], 'recipient' => ['recipient', 'created']],
   ];
+  $tables += _famtastic_pipeline_preview_delivery_schema();
   $tables['famtastic_support_case'] = [
     'description' => 'Operational support case workflow linked to a portal thread.',
     'fields' => [
@@ -1827,4 +1906,40 @@ function famtastic_pipeline_update_8040(&$sandbox) {
     return t('Created the famtastic_customer role.');
   }
   return t('The famtastic_customer role already exists.');
+}
+
+/**
+ * Adds owner-gated public proof deliveries without colliding with prior 8033.
+ *
+ * This update intentionally creates the preview table from its nested table
+ * definition. A prior feature branch passed the entire schema map to
+ * createTable(), which would not be a valid Drupal table definition.
+ */
+function famtastic_pipeline_update_8041(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definitions = _famtastic_pipeline_preview_delivery_schema();
+  $definition = $definitions['famtastic_preview_delivery'];
+  if (!$schema->tableExists('famtastic_preview_delivery')) {
+    $schema->createTable('famtastic_preview_delivery', $definition);
+    return t('Added owner-gated public preview delivery, research snapshot, and account-claim records.');
+  }
+  foreach ($definition['fields'] as $name => $field) {
+    if (!$schema->fieldExists('famtastic_preview_delivery', $name)) {
+      $schema->addField('famtastic_preview_delivery', $name, $field);
+    }
+  }
+  foreach ($definition['indexes'] as $name => $fields) {
+    if (!$schema->indexExists('famtastic_preview_delivery', $name)) {
+      $schema->addIndex('famtastic_preview_delivery', $name, $fields);
+    }
+  }
+  // A stale partial-table attempt may have created fields without the two
+  // idempotency keys. Upgrade it rather than silently accepting duplicate
+  // public IDs or delivery keys on production MySQL.
+  foreach ($definition['unique keys'] as $name => $fields) {
+    if (!$schema->indexExists('famtastic_preview_delivery', $name)) {
+      $schema->addUniqueKey('famtastic_preview_delivery', $name, $fields);
+    }
+  }
+  return t('Updated public preview delivery records with the current schema.');
 }

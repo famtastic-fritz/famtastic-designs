@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-26 — Preview claims must not consume delivery state
+
+- Observation: the earlier preview branch represented signup and same-email claim by replacing the delivery state. A customer who registered before proof generation could therefore stop matching the preview-ready handoff and fall into generic outreach; a revoked delivery could also lose its reusable Prospect link.
+- Guidance: delivery state describes the room/email lifecycle, while `signup_started_at`, `customer_id`, `claimed_at`, and `website_request_id` describe account continuation. Preserve those independently. Stage only from immutable, exact Build DNA evidence; include the exact prospect, proof campaign, public campaign ID, served-artifact hashes, and research artifact role where research copy is shown.
+- Guidance: a held targeted preview email must never become a broad lifecycle candidate. Do not permit revocation while it is in SMTP dispatch, and treat cold outreach as a separate compliant campaign-message lane until postal/unsubscribe/provider-event receipts exist.
+- Guidance: one Prospect can have public and registered proof work, so prospect lookup is not campaign ownership. Bind public and request proof campaigns before remote dispatch; retries must use that exact binding. A staged room must snapshot and rehash its served paths, not re-query mutable `proof_variant` rows.
+
 ## 2026-08-26 — A ledger claim can go stale mid-run when sessions run concurrently (heartbeat 03:16Z)
 
 - Observation: the 03:16Z heartbeat oriented at 03:13Z on two uncommitted

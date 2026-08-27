@@ -20,6 +20,7 @@ final class AutomationWorker {
     private readonly DomainLifecycleService $domains,
     private readonly HostingLifecycleService $hosting,
     private readonly CustomerPortalService $portal,
+    private readonly PublicPreviewDeliveryService $previews,
   ) {}
 
   /**
@@ -68,16 +69,43 @@ final class AutomationWorker {
   private function generateProofs(array $job): array {
     $context = (array) ($job['payload'] ?? []);
     $requestId = (int) ($context['website_request_id'] ?? 0);
+    $publicPreviewDeliveryId = (int) ($context['public_preview_delivery_id'] ?? 0);
     if ($requestId) {
       $context = array_replace($context, $this->portal->websiteRequestProofContext($requestId));
+    }
+    elseif ($publicPreviewDeliveryId) {
+      $context = array_replace($context, $this->previews->publicIntakeProofContext($publicPreviewDeliveryId));
     }
     $prospectId = (int) ($job['payload']['prospect_id'] ?? $job['prospect_id'] ?? 0);
     $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
     if (!$prospect) {
       throw new \RuntimeException('Prospect no longer exists.');
     }
-    $existing = $this->proofCampaigns->getForProspect($prospect);
-    $created = $existing ?: $this->proofCampaigns->createForProspect($prospect, $context);
+    if ($requestId) {
+      $boundCampaignId = $this->portal->websiteRequestProofCampaignId($requestId);
+      $created = $boundCampaignId
+        ? $this->proofCampaigns->getForId($prospect, $boundCampaignId)
+        : $this->proofCampaigns->createForProspect($prospect, $context);
+      if (!$created) {
+        throw new \RuntimeException('The website request references an unavailable proof campaign.');
+      }
+    }
+    elseif ($publicPreviewDeliveryId) {
+      $boundCampaignId = $this->previews->initialProofCampaignId($publicPreviewDeliveryId);
+      $created = $boundCampaignId
+        ? $this->proofCampaigns->getForId($prospect, $boundCampaignId)
+        : $this->proofCampaigns->createForProspect($prospect, $context);
+      if (!$created) {
+        throw new \RuntimeException('The public delivery references an unavailable proof campaign.');
+      }
+    }
+    else {
+      $existing = $this->proofCampaigns->getForProspect($prospect);
+      $created = $existing ?: $this->proofCampaigns->createForProspect($prospect, $context);
+    }
+    if (count($created['variants']) === 0 && $created['campaign']->get('generation_status')->value === 'dispatching') {
+      $created = $this->proofCampaigns->resumeRemoteDispatch($prospect, $created['campaign'], $context);
+    }
     $variants = $created['variants'];
     if (
       count($variants) === 0
@@ -116,6 +144,9 @@ final class AutomationWorker {
     });
     $pilotAllowed = getenv('FAMTASTIC_ALLOW_NO_IMAGE_PILOT_PROOFS') === '1'
       || getenv('FAMTASTIC_ALLOW_STUB_OUTREACH') === '1';
+    if ($pilotSources && $publicPreviewDeliveryId) {
+      throw new \RuntimeException('Public concept rooms cannot use image-free pilot proofs, even when another lane permits them.');
+    }
     if ($pilotSources && !$pilotAllowed) {
       throw new \RuntimeException('Image-free pilot proofs require explicit environment approval before outreach can be queued.');
     }
@@ -136,6 +167,20 @@ final class AutomationWorker {
     }
     elseif ($projectId) {
       $this->portal->markProjectProofReady($projectId, $campaign, $variants);
+    }
+    elseif ($publicPreviewDeliveryId) {
+      // An explicit public job is never eligible for generic outreach. This
+      // exact delivery remains retry-safe if artifact protection fails.
+      $this->proofCampaigns->protectPublicPreviewArtifacts($campaign);
+      if (!$this->previews->markCampaignReadyForDelivery($publicPreviewDeliveryId, (int) $campaign->id())) {
+        throw new \RuntimeException('The public preview delivery could not be marked ready after proof protection.');
+      }
+    }
+    elseif ($this->previews->isPublicDeliveryForCampaign($prospectId, (int) $campaign->id())) {
+      $this->proofCampaigns->protectPublicPreviewArtifacts($campaign);
+      if (!$this->previews->markCampaignReady($prospectId, (int) $campaign->id())) {
+        throw new \RuntimeException('The public preview delivery changed before it could be marked ready.');
+      }
     }
     else {
       $this->ledger->enqueue(

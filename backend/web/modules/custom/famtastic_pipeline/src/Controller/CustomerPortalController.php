@@ -77,6 +77,9 @@ final class CustomerPortalController extends ControllerBase {
       if ($existingCustomer && empty($existingCustomer['verified_at'])) {
         $this->sendVerification($request, $existingCustomer);
       }
+      elseif ($existingCustomer) {
+        $this->portal->claimPreviewsForVerifiedCustomer((int) $existingCustomer['id']);
+      }
       return new JsonResponse(['ok' => TRUE, 'verification_required' => TRUE], 202);
     }
     /** @var \Drupal\user\UserInterface $user */
@@ -117,6 +120,7 @@ final class CustomerPortalController extends ControllerBase {
     if (!$user || !$customer || empty($customer['verified_at'])) {
       return $this->error('verification_required', 403, 'Verify your email before opening the portal.');
     }
+    $this->portal->claimPreviewsForVerifiedCustomer((int) $customer['id']);
     user_login_finalize($user);
     $this->flood->clear('famtastic_portal_login', $identifier);
     return $this->sessionPayload($customer);
@@ -170,6 +174,16 @@ final class CustomerPortalController extends ControllerBase {
     catch (\RuntimeException) {
       return $this->error('workspace_not_found', 404, 'Customer workspace not found.');
     }
+  }
+
+  /** Returns a research snapshot only after the same-email customer claim. */
+  public function previewResearch(string $preview_delivery): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    if (empty($customer['verified_at'])) return $this->error('verification_required', 403, 'Verify your email before opening research.');
+    $research = $this->portal->previewResearchForCustomer((int) $customer['id'], $preview_delivery);
+    if (!$research) return $this->error('preview_research_not_found', 404, 'This research snapshot is unavailable.');
+    return $this->noStore(new JsonResponse(['ok' => TRUE, 'preview_research' => $research]));
   }
 
   /** Returns the administrator-controlled public Commerce catalog. */

@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-08-26 — Owner-gated public preview delivery release candidate (not deployed)
+
+- Forward-ported the signed, read-only three-concept room and same-email verified-account claim onto current `main`, including an industry-neutral public room, immutable per-delivery context/research/artifact snapshots, customer-only research retrieval, and redacted/allowlisted anonymous build context.
+- Added migration `8041` for preview delivery records without reusing the stale feature branch’s colliding migration number. Staging now fails closed unless the registered Build DNA record matches the exact Prospect, proof campaign, public campaign ID, served proof hashes, and (when used) research artifact hash/role.
+- Owner approval creates a **held** outbox record. The new `famtastic:preview-delivery-dispatch` command accepts only an exact confirmed list of one to ten held delivery IDs; it never runs the broad lifecycle dispatcher. A separate exact-campaign quarantine command can remove only the historical generic queued proof jobs for `cold-260-aug-2026`, with a reason hash and ledger events.
+- Public and registered-request jobs now bind distinct proof campaigns before remote dispatch, so neither path can borrow another campaign for the same Prospect. Remote-dispatch retries preserve that campaign's idempotency key; callback retries complete artifact protection/owner routing. This release does not claim the future automatic six-direction registered-refinement family.
+- The current XLSX/cold importer is deliberately **not** connected: it lacks verified source/recipient eligibility and the required personalized public-intake/research snapshot. A production-like MySQL migration validation is still required for the `8041` existing-table upgrade path.
+- No migration was applied, no lead was imported, no proof was generated, no email was sent, and no production deployment occurred in this release-candidate worktree. The existing direct public-request SMTP acknowledgment and cold-email campaign compliance integration remain separate follow-up work.
+
 ## 2026-08-26 — Customer verification links work from a fresh browser
 
 Added a deliberately narrow Apache SPA rewrite for `/verify-email`, `/login`,

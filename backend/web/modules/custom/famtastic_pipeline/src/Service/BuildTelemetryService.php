@@ -144,6 +144,8 @@ final class BuildTelemetryService {
     $model = is_array($firstExecution['model'] ?? NULL) ? $firstExecution['model'] : [];
     $started = $this->timestamp($run['started_at'] ?? $dna['created_at'] ?? NULL) ?? $this->time->getRequestTime();
     $completed = $this->timestamp($run['completed_at'] ?? NULL);
+    $prospectId = $this->numericId($run['prospect_id'] ?? NULL);
+    $proofCampaignId = $this->numericId($run['proof_campaign_id'] ?? NULL);
     $projectId = $this->numericId($run['project_id'] ?? NULL);
     $promptArtifacts = [];
     foreach ($stages as $stage) {
@@ -161,6 +163,8 @@ final class BuildTelemetryService {
     return $this->record([
       'build_key' => 'build-dna:' . $buildId,
       'campaign_key' => substr((string) ($run['campaign_id'] ?? ''), 0, 128),
+      'prospect_id' => $prospectId,
+      'proof_campaign_id' => $proofCampaignId,
       'project_id' => $projectId,
       'flow_key' => 'build-dna',
       'task_key' => substr((string) ($dna['recipe']['routine'] ?? 'build.record'), 0, 128),
@@ -178,6 +182,7 @@ final class BuildTelemetryService {
       'artifact_checksum' => hash('sha256', $this->json($dna)),
       'started_at' => $started,
       'completed_at' => $completed,
+      'immutable' => TRUE,
     ]);
   }
 
@@ -187,6 +192,7 @@ final class BuildTelemetryService {
   public function record(array $values): int {
     $now = $this->time->getRequestTime();
     $key = trim((string) ($values['build_key'] ?? ''));
+    $immutable = !empty($values['immutable']);
     if ($key === '') {
       throw new \InvalidArgumentException('Build telemetry requires a build key.');
     }
@@ -216,20 +222,43 @@ final class BuildTelemetryService {
       }
     }
     $existing = $this->database->select('famtastic_build_run', 'b')
-      ->fields('b', ['id'])
+      ->fields('b', ['id', 'artifact_checksum'])
       ->condition('build_key', $key)
       ->execute()
-      ->fetchField();
+      ->fetchAssoc();
     if ($existing) {
+      if ($immutable) {
+        if (!hash_equals((string) $existing['artifact_checksum'], (string) $fields['artifact_checksum'])) {
+          throw new \RuntimeException('An immutable Build DNA record already exists with a different checksum.');
+        }
+        return (int) $existing['id'];
+      }
       $this->database->update('famtastic_build_run')
         ->fields($fields)
-        ->condition('id', (int) $existing)
+        ->condition('id', (int) $existing['id'])
         ->execute();
-      return (int) $existing;
+      return (int) $existing['id'];
     }
     $fields['build_key'] = $key;
     $fields['created'] = $now;
-    return (int) $this->database->insert('famtastic_build_run')->fields($fields)->execute();
+    try {
+      return (int) $this->database->insert('famtastic_build_run')->fields($fields)->execute();
+    }
+    catch (\Throwable $error) {
+      if (!$immutable) {
+        throw $error;
+      }
+      $existing = $this->database->select('famtastic_build_run', 'b')
+        ->fields('b', ['id', 'artifact_checksum'])
+        ->condition('build_key', $key)
+        ->range(0, 1)
+        ->execute()
+        ->fetchAssoc();
+      if (!$existing || !hash_equals((string) $existing['artifact_checksum'], (string) $fields['artifact_checksum'])) {
+        throw $error;
+      }
+      return (int) $existing['id'];
+    }
   }
 
   private function json(mixed $value): string {

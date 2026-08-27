@@ -26,6 +26,7 @@ final class CustomerPortalService {
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
     private readonly AttributionService $attribution,
+    private readonly PublicPreviewDeliveryService $previews,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -40,12 +41,18 @@ final class CustomerPortalService {
     return $row ?: NULL;
   }
 
+  /** Returns a claimed preview's research snapshot to its verified owner only. */
+  public function previewResearchForCustomer(int $customerId, string $previewDelivery): ?array {
+    return $this->previews->researchForVerifiedCustomer($customerId, $previewDelivery);
+  }
+
   public function createCustomer(UserInterface $user, array $input = []): array {
     if ($existing = $this->customerForUid((int) $user->id())) {
       return $existing;
     }
     $now = $this->time->getRequestTime();
     $email = mb_strtolower(trim($user->getEmail()));
+    $this->previews->markSignupStarted((string) ($input['preview_continuation'] ?? ''), $email);
     $prospectId = $this->findProspect($email);
     $customerId = (int) $this->database->insert('famtastic_customer')->fields([
       'public_id' => $this->uuid->generate(), 'uid' => (int) $user->id(),
@@ -84,6 +91,21 @@ final class CustomerPortalService {
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_customer')->fields(['verified_at' => $now, 'changed' => $now])
       ->condition('id', $customerId)->execute();
+    $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['email'])
+      ->condition('id', $customerId)->execute()->fetchAssoc();
+    if ($customer) {
+      $this->previews->claimVerifiedCustomer($customerId, (string) $customer['email']);
+    }
+  }
+
+  /** Idempotently claims same-email previews for an already verified account. */
+  public function claimPreviewsForVerifiedCustomer(int $customerId): void {
+    $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['email', 'verified_at'])
+      ->condition('id', $customerId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$customer || empty($customer['verified_at'])) {
+      return;
+    }
+    $this->previews->claimVerifiedCustomer($customerId, (string) $customer['email']);
   }
 
   /**
@@ -232,15 +254,19 @@ final class CustomerPortalService {
     $clean = $this->validateWebsiteRequest($input);
     $now = $this->time->getRequestTime();
     $attribution = $this->attribution->snapshotFromArray($input, 'customer_portal');
-    $prospect = $this->entities->getStorage('famtastic_prospect')->create([
-      'business_name' => $clean['business_name'] ?: $clean['project_name'],
-      'public_email' => (string) $customer['email'], 'contact_name' => (string) $customer['display_name'],
-      'contact_method' => 'email', 'contact_value' => (string) $customer['email'],
-      'campaign' => 'customer_portal', 'source' => 'customer_portal', 'authorized' => TRUE,
-      'confirmed_at' => $now, 'status' => $clean['status'] === 'submitted' ? 'lead' : 'new', 'owner_uid' => 1,
-      'utm_json' => $this->attribution->toJson($attribution),
-    ]);
-    $prospect->save();
+    $claimedProspectId = $this->previews->claimedProspectId($customerId);
+    $prospect = $claimedProspectId ? $this->entities->getStorage('famtastic_prospect')->load($claimedProspectId) : NULL;
+    if (!$prospect) {
+      $prospect = $this->entities->getStorage('famtastic_prospect')->create([
+        'business_name' => $clean['business_name'] ?: $clean['project_name'],
+        'public_email' => (string) $customer['email'], 'contact_name' => (string) $customer['display_name'],
+        'contact_method' => 'email', 'contact_value' => (string) $customer['email'],
+        'campaign' => 'customer_portal', 'source' => 'customer_portal', 'authorized' => TRUE,
+        'confirmed_at' => $now, 'status' => $clean['status'] === 'submitted' ? 'lead' : 'new', 'owner_uid' => 1,
+        'utm_json' => $this->attribution->toJson($attribution),
+      ]);
+      $prospect->save();
+    }
     if (!empty($attribution['utm_content'])) {
       $this->attribution->recordSocialLead((string) $attribution['utm_content']);
     }
@@ -255,6 +281,7 @@ final class CustomerPortalService {
       'submitted_at' => $clean['status'] === 'submitted' ? $now : NULL, 'created' => $now, 'changed' => $now,
     ])->execute();
     $this->claimResource((int) $organization['id'], 'prospect', (int) $prospect->id());
+    $this->previews->attachClaimedRequest($customerId, $id, $clean['status']);
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
     if ($clean['status'] === 'submitted') {
       $this->queueWebsiteRequestNotifications($id, $customer, $clean);
@@ -736,6 +763,37 @@ final class CustomerPortalService {
     ];
   }
 
+  /** Returns the one proof campaign explicitly bound to a submitted request. */
+  public function websiteRequestProofCampaignId(int $requestId): ?int {
+    $value = $this->database->select('famtastic_project_request', 'r')->fields('r', ['proof_campaign_id'])
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchField();
+    return $value ? (int) $value : NULL;
+  }
+
+  /** Binds a fresh campaign before a request-specific remote callback can arrive. */
+  public function bindWebsiteRequestProofCampaign(int $requestId, int $prospectId, int $campaignId): void {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r', ['id', 'prospect_id', 'status', 'proof_campaign_id'])
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$row || (int) $row['prospect_id'] !== $prospectId || $row['status'] === 'draft') {
+      throw new \RuntimeException('A submitted website request is required before its proof campaign can be bound.');
+    }
+    $bound = (int) ($row['proof_campaign_id'] ?? 0);
+    if ($bound && $bound !== $campaignId) {
+      throw new \RuntimeException('This website request is already bound to a different proof campaign.');
+    }
+    if ($bound === $campaignId) {
+      return;
+    }
+    $this->database->update('famtastic_project_request')->fields([
+      'proof_campaign_id' => $campaignId,
+      'changed' => $this->time->getRequestTime(),
+    ])->condition('id', $requestId)->isNull('proof_campaign_id')->execute();
+    $actual = $this->websiteRequestProofCampaignId($requestId);
+    if ($actual !== $campaignId) {
+      throw new \RuntimeException('The website request changed before its proof campaign could be bound.');
+    }
+  }
+
   /** Owner approval reveals proofs and queues one transactional customer email. */
   public function approveWebsiteRequestProof(int $requestId, int $uid): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
@@ -778,6 +836,9 @@ final class CustomerPortalService {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
     if (!$row || (int) $row['prospect_id'] !== (int) $campaign->get('prospect_id')->target_id) {
       throw new \RuntimeException('Proof campaign does not belong to this website request.');
+    }
+    if (!empty($row['proof_campaign_id']) && (int) $row['proof_campaign_id'] !== (int) $campaign->id()) {
+      throw new \RuntimeException('Proof campaign does not match the campaign bound to this website request.');
     }
     $directions = [];
     foreach ($variants as $variant) {
