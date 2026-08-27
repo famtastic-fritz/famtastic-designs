@@ -106,6 +106,8 @@
 
 ## 2026-08-27 — Drupal AI-powered Solution Finder and Project Intake Advisor
 
+- Replaced the embedded chat panel with a clean **Hero Entry Point** (`See what your market is doing in 20 seconds`) and a **Full-Screen Mobile / Desktop Centered Sheet Overlay** to optimize mobile conversion and eliminate layout clutter.
+- Materialized the **Visible Artifact**: Instant Local Market Scan card followed by 3 guided scope questions, on-screen Scope Blueprint card with locked pricing ($199–$3,999) before asking for an email, and direct 1-click checkout.
 - Rebuilt the intake flow as **FAMtastic Scout**, implementing a "give-before-extracting" market scanner that delivers real local competitive insights within 20 seconds of receiving a business type and city.
 - Added a 4-step progressive roadmap (`Business & City` → `Market Scan` → `Custom Scope` → `Instant Blueprint`), on-screen payoff scope card rendered before asking for contact info, quick-tap chips on every step, and "Talk to a real human" hot-lead scoring.
 - Upgraded the Solution Finder into a full **Conversational AI Project Interviewer**, collecting business name, industry, logo status, domain/email situation, feature needs, and contact email with live package pricing and smart suggestion chips.

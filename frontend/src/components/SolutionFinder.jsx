@@ -1,25 +1,56 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { AnimatePresence, motion } from 'framer-motion';
 import { collectUtmParams, getAiSolutionAdvice, postIntake } from '../api/pipeline.js';
 
-const INITIAL_GREETING = "Tell me your business and your city — just that. I'll show you something in 20 seconds.";
+const NICHES = {
+  barber: {
+    label: 'Barbershop / Salon',
+    fact: "In your area, high-intent searches for grooming and styling happen overwhelmingly on mobile devices.",
+    win: 'The top shops winning online let clients book a chair or service right from the homepage—no DM, no phone tag.',
+    cost: "Every 'near me' search tonight lands on whoever made booking easiest. Without a mobile site, those clients go to a competitor.",
+  },
+  food: {
+    label: 'Restaurant / Food',
+    fact: 'Diners decide in under a minute—and over 80% check the menu and pricing online on mobile first.',
+    win: 'Winning spots put their menu, catering inquiries, and call/order buttons at the very top of the page.',
+    cost: "No website means local search shows a competitor's menu while yours stays invisible.",
+  },
+  church: {
+    label: 'Church / Non-Profit',
+    fact: 'New visitors almost always check service times, location, and beliefs online before ever visiting in person.',
+    win: 'Growing organizations lead with service times, a "Plan Your Visit" button, and online giving options.',
+    cost: "Without a dedicated site, first-time guests struggle to find times or directions—and most never ask.",
+  },
+  trades: {
+    label: 'Trades & Home Services',
+    fact: 'For plumbers, HVAC, electricians, and contractors, emergency local searches are the #1 source of high-ticket jobs.',
+    win: 'The pros getting the calls showcase 5-star reviews, verified service areas, and a tap-to-call quote button.',
+    cost: 'No website means the urgent repair call goes straight to the competitor who has one.',
+  },
+  health: {
+    label: 'Healthcare & Wellness',
+    fact: 'Patients and wellness clients prioritize provider credibility, credentials, and transparent consultation booking.',
+    win: 'Top practices highlight provider bios, care options, and a seamless new-patient inquiry form.',
+    cost: 'Without a trusted web presence, clients default to platform directories or competing clinics.',
+  },
+  default: {
+    label: 'Local Business',
+    fact: 'In almost every local market, customers check a business online before they ever call or visit.',
+    win: 'The businesses winning make it effortless to see what they offer and take action right from a phone.',
+    cost: 'Without a site, those ready-to-buy searches go straight to whoever shows up first.',
+  },
+};
 
-const INITIAL_CHIPS = [
-  'Barbershop / Salon',
-  'Restaurant / Food',
-  'Plumber / HVAC / Trades',
-  'Dental / Healthcare',
-  'Cleaning / Pressure Washing',
-  'Something Else',
-];
-
-const ROADMAP_STEPS = [
-  { num: 1, label: '1. Business & City' },
-  { num: 2, label: '2. Market Scan' },
-  { num: 3, label: '3. Custom Scope' },
-  { num: 4, label: '4. Instant Blueprint' },
-];
+function getNiche(biz = '') {
+  const s = biz.toLowerCase();
+  if (s.includes('barber') || s.includes('salon') || s.includes('hair') || s.includes('braid') || s.includes('nail')) return NICHES.barber;
+  if (s.includes('restaurant') || s.includes('food') || s.includes('cafe') || s.includes('pizza') || s.includes('taco') || s.includes('catering')) return NICHES.food;
+  if (s.includes('church') || s.includes('ministry') || s.includes('org') || s.includes('nonprofit')) return NICHES.church;
+  if (s.includes('plumb') || s.includes('hvac') || s.includes('roof') || s.includes('clean') || s.includes('landscap') || s.includes('electric') || s.includes('trade')) return NICHES.trades;
+  if (s.includes('dent') || s.includes('health') || s.includes('chiro') || s.includes('therapy') || s.includes('wellness') || s.includes('med')) return NICHES.health;
+  return NICHES.default;
+}
 
 export function branchForServiceSlug(slug = '') {
   const s = slug.toLowerCase();
@@ -32,130 +63,452 @@ export function branchForServiceSlug(slug = '') {
 }
 
 export default function SolutionFinder({ initialBranch = null }) {
-  // Scout State
-  const [currentStepNum, setCurrentStepNum] = useState(1);
-  const [messages, setMessages] = useState([
-    { role: 'assistant', content: INITIAL_GREETING, marketScan: null },
-  ]);
-  const [quickChips, setQuickChips] = useState(INITIAL_CHIPS);
-  const [gatheredData, setGatheredData] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
+  const [step, setStep] = useState(1);
+  const [messages, setMessages] = useState([]);
+  const [chips, setChips] = useState([]);
   const [inputVal, setInputVal] = useState('');
-  const [inputPlaceholder, setInputPlaceholder] = useState('e.g. Barbershop in Port St. Lucie or Italian restaurant in Austin...');
+  const [inputPlaceholder, setInputPlaceholder] = useState('Type your business and city...');
   const [isTyping, setIsTyping] = useState(false);
-  const [isArtifactReady, setIsArtifactReady] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-  const [recommendation, setRecommendation] = useState({
-    package_sku: 'web-basics',
-    package_title: 'Web Basics Bundle — $199',
-    price_formatted: '$199',
-    price_estimate: 199,
+  const [state, setState] = useState({
+    business: '',
+    city: '',
+    goal: '',
+    visuals: '',
+    when: '',
+    price: 199,
+    packageSku: 'web-basics',
+    packageTitle: 'Web Basics Bundle — $199',
+    email: '',
+    phone: '',
+    leadScoreHot: false,
   });
 
-  // Intake submission status
-  const [status, setStatus] = useState('idle'); // idle | submitting | success | error
+  const [status, setStatus] = useState('idle');
   const [requestId, setRequestId] = useState(null);
   const [registrationUrl, setRegistrationUrl] = useState(null);
-  const [serverMessage, setServerMessage] = useState(null);
 
-  const messagesEndRef = useRef(null);
+  const chatBodyRef = useRef(null);
+  const inputRef = useRef(null);
 
+  // Auto-scroll chat body
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isTyping, isArtifactReady]);
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [messages, isTyping, chips]);
 
-  // Initial branch handling
+  // Initial branch trigger if provided
   useEffect(() => {
     if (initialBranch) {
-      void handleUserSend(`I run a ${initialBranch} business.`);
+      openChatWithInitial(initialBranch);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialBranch]);
 
-  async function handleUserSend(textToSend) {
-    const text = (textToSend || inputVal).trim();
-    if (!text || isTyping) return;
-
-    setInputVal('');
-    const newMessages = [...messages, { role: 'user', content: text }];
-    setMessages(newMessages);
-    setIsTyping(true);
-
-    try {
-      const res = await getAiSolutionAdvice({
-        messages: newMessages,
-        gathered_data: gatheredData,
-        context: collectUtmParams(),
-      });
-
-      if (res?.turn) {
-        const turn = res.turn;
-        const updatedData = turn.gathered_data || gatheredData;
-        setGatheredData(updatedData);
-
-        if (turn.step_number) {
-          setCurrentStepNum(turn.step_number);
-        }
-
-        if (turn.recommendation) {
-          setRecommendation(turn.recommendation);
-        }
-
-        setQuickChips(turn.quick_chips || []);
-        if (turn.input_placeholder) {
-          setInputPlaceholder(turn.input_placeholder);
-        }
-
-        // Add assistant message with market scan if present
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: 'assistant',
-            content: turn.reply,
-            marketScan: turn.market_scan || null,
-          },
-        ]);
-
-        if (turn.is_artifact_ready) {
-          setIsArtifactReady(true);
-        }
-
-        if (turn.is_complete || updatedData.email) {
-          setIsComplete(true);
-          void submitIntake(updatedData, turn.recommendation || recommendation, newMessages);
-        }
-      }
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: "I've synthesized your custom scope below! Where should I email your complete PDF blueprint?",
-        },
-      ]);
-      setIsArtifactReady(true);
-    } finally {
-      setIsTyping(false);
+  function openChatWithInitial(initialText = '') {
+    setIsOpen(true);
+    document.body.style.overflow = 'hidden';
+    if (messages.length === 0) {
+      startChatFlow(initialText);
     }
   }
 
-  async function submitIntake(data, rec, allMsgs) {
+  function closeChat() {
+    setIsOpen(false);
+    document.body.style.overflow = '';
+  }
+
+  function startChatFlow(initialText = '') {
+    setStep(1);
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages([
+        {
+          id: 1,
+          who: 'bot',
+          text: "Hey — I'm Scout. Tell me two things: what kind of business you run, and what city you're in. I'll show you something useful in about 20 seconds.",
+        },
+      ]);
+      setChips([
+        { label: 'Barbershop / Salon', fn: () => handleBusinessSelect('Barbershop / Salon') },
+        { label: 'Restaurant / Food', fn: () => handleBusinessSelect('Restaurant / Food') },
+        { label: 'Trades & Home Services', fn: () => handleBusinessSelect('Trades & Home Services') },
+        { label: 'Healthcare & Wellness', fn: () => handleBusinessSelect('Healthcare & Wellness') },
+        { label: 'Church / Non-Profit', fn: () => handleBusinessSelect('Church / Non-Profit') },
+      ]);
+      setInputPlaceholder('e.g. Barbershop in Port St. Lucie...');
+
+      if (initialText) {
+        handleUserText(initialText);
+      }
+    }, 450);
+  }
+
+  function handleBusinessSelect(biz) {
+    appendUserMsg(biz);
+    setState((prev) => ({ ...prev, business: biz }));
+    setChips([]);
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), who: 'bot', text: `Nice. And what city or town are you located in?` },
+      ]);
+      setInputPlaceholder('e.g. Port St. Lucie, FL or Austin, TX');
+      inputRef.current?.focus();
+    }, 400);
+  }
+
+  function runMarketScan(biz, city) {
+    setStep(2);
+    setChips([]);
+    setIsTyping(true);
+
+    const niche = getNiche(biz);
+    const cityClean = city || 'your local area';
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          isScanCard: true,
+          scanData: {
+            niche: niche.label,
+            city: cityClean,
+            fact: niche.fact,
+            win: niche.win,
+            cost: niche.cost,
+          },
+        },
+      ]);
+
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now(),
+            who: 'bot',
+            text: "That's the landscape. Want me to scope what it'd take to get your site live? About a minute, three quick questions.",
+          },
+        ]);
+        setChips([
+          { label: 'Yes, scope it →', primary: true, fn: () => askGoal(biz, cityClean) },
+          { label: 'How much does this cost?', fn: () => askCost(biz, cityClean) },
+          { label: 'Talk to a real human', fn: () => escalateHuman() },
+        ]);
+      }, 500);
+    }, 1200);
+  }
+
+  function askCost(biz, city) {
+    appendUserMsg('How much does this cost?');
+    setChips([]);
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          text: "The scan is 100% free. If you want the site, a professional one-page build starts at $199 (about 55¢ a day). Multi-page and booking systems are $499. You'll see the exact, locked price right on screen before you commit.",
+        },
+      ]);
+      setChips([
+        { label: 'Okay, scope it →', primary: true, fn: () => askGoal(biz, city) },
+        { label: 'Talk to a real human', fn: () => escalateHuman() },
+      ]);
+    }, 450);
+  }
+
+  function askGoal(biz, city) {
+    appendUserMsg('Yes, scope it →');
+    setStep(3);
+    setChips([]);
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          text: "Question 1 of 3 — do you need customers to book appointments or buy online, or is this more of an informational 'here's who we are' site?",
+        },
+      ]);
+      setChips([
+        {
+          label: 'Bookings / Online Sales ($499)',
+          fn: () => {
+            setState((p) => ({ ...p, goal: 'Bookings & Payments', price: 499, packageSku: 'business-website', packageTitle: 'Business Website Bundle — $499' }));
+            askVisuals('Bookings / Online Sales ($499)');
+          },
+        },
+        {
+          label: 'Info + Contact Form ($199)',
+          fn: () => {
+            setState((p) => ({ ...p, goal: 'Info & Lead Capture', price: 199, packageSku: 'web-basics', packageTitle: 'Web Basics Bundle — $199' }));
+            askVisuals('Info + Contact Form ($199)');
+          },
+        },
+        {
+          label: 'Full Connected System ($3,999)',
+          fn: () => {
+            setState((p) => ({ ...p, goal: 'Full Business Growth System', price: 3999, packageSku: 'business-growth', packageTitle: 'Business Growth System — $3,999' }));
+            askVisuals('Full Connected System ($3,999)');
+          },
+        },
+      ]);
+    }, 450);
+  }
+
+  function askVisuals(answerText) {
+    appendUserMsg(answerText);
+    setChips([]);
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          text: 'Question 2 of 3 — do you already have photos and a logo ready, or should we help create the visuals too?',
+        },
+      ]);
+      setChips([
+        { label: 'I have them ready', fn: () => askWhen('I have them ready') },
+        { label: 'Need them created', fn: () => askWhen('Need them created') },
+        { label: 'Some of both', fn: () => askWhen('Some of both') },
+      ]);
+    }, 450);
+  }
+
+  function askWhen(answerText) {
+    appendUserMsg(answerText);
+    setState((p) => ({ ...p, visuals: answerText }));
+    setChips([]);
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          text: 'Last one — when do you want to be live?',
+        },
+      ]);
+      setChips([
+        { label: 'ASAP (3–5 business days)', fn: () => revealScope('ASAP (3–5 business days)') },
+        { label: 'Within this month', fn: () => revealScope('Within this month') },
+        { label: 'Just researching for now', fn: () => revealScope('Just researching for now') },
+      ]);
+    }, 450);
+  }
+
+  function revealScope(whenAnswer) {
+    appendUserMsg(whenAnswer);
+    setStep(4);
+    setState((p) => ({ ...p, when: whenAnswer }));
+    setChips([]);
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      const niche = getNiche(state.business);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          isScopeCard: true,
+          scopeData: {
+            niche: niche.label,
+            city: state.city || 'Your Area',
+            pages: state.price === 199 ? '1 Focused High-Conversion Page' : state.price === 499 ? 'Up to 5 Pages (Home, Services, Reviews, Booking, Contact)' : 'Comprehensive Multi-Page System',
+            features: state.goal || 'Contact form + Google Maps & local SEO',
+            visuals: state.visuals || 'Provided by client / assisted',
+            timeline: whenAnswer.includes('ASAP') ? 'Live in 3–5 business days' : 'Live in 5–10 business days',
+            price: state.price,
+            packageTitle: state.packageTitle,
+            packageSku: state.packageSku,
+          },
+        },
+      ]);
+
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now(),
+            who: 'bot',
+            text: "There it is — in writing, with a real number and a locked price. What email address should I use to send you this complete PDF blueprint?",
+          },
+        ]);
+        setChips([
+          { label: `Start with this Package ($${state.price}) →`, primary: true, fn: () => window.location.href = `/purchase?bundle=${state.packageSku}` },
+          { label: 'Talk to a real human', fn: () => escalateHuman() },
+        ]);
+        setInputPlaceholder('Enter your email to receive PDF blueprint...');
+        inputRef.current?.focus();
+      }, 500);
+    }, 1100);
+  }
+
+  function finishWithEmail(email) {
+    appendUserMsg(email);
+    setState((p) => ({ ...p, email }));
+    setChips([]);
+    setIsTyping(true);
+
+    // Save lead into Drupal pipeline
+    void submitIntakeData({ ...state, email });
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          text: `Done! Your project blueprint is on its way to ${email}. Your $${state.price} price is locked for 30 days with zero follow-up pressure. When you're ready, you can start the build with one click from that email or right here.`,
+        },
+      ]);
+      setChips([
+        { label: `Start My Build ($${state.price}) →`, primary: true, fn: () => window.location.href = `/purchase?bundle=${state.packageSku}` },
+        { label: 'Talk to a real human', fn: () => escalateHuman() },
+        { label: 'Done for now', fn: () => closeChat() },
+      ]);
+    }, 500);
+  }
+
+  function escalateHuman() {
+    appendUserMsg('I want to talk to a real human');
+    setState((p) => ({ ...p, leadScoreHot: true }));
+    setChips([]);
+    setIsTyping(true);
+
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          text: "Absolutely! I've flagged our senior team for a personal follow-up within one business day. What's the best phone number or email to reach you?",
+        },
+      ]);
+      setInputPlaceholder('Enter your phone or email...');
+      inputRef.current?.focus();
+    }, 450);
+  }
+
+  function appendUserMsg(text) {
+    setMessages((prev) => [...prev, { id: Date.now(), who: 'user', text }]);
+  }
+
+  function handleUserText(raw) {
+    const text = (raw || inputVal).trim();
+    if (!text || isTyping) return;
+    setInputVal('');
+
+    // If waiting for email
+    if (step === 4 && text.includes('@')) {
+      finishWithEmail(text);
+      return;
+    }
+
+    // If in initial step
+    if (step === 1) {
+      appendUserMsg(text);
+      // Check if business and city are supplied together (e.g. "Barbershop in Port St. Lucie")
+      const m = text.match(/^(.+?)\s+(?:in|near|around)\s+([A-Za-z][A-Za-z .']{2,})$/i)
+             || text.match(/^(.+?),\s*([A-Za-z][A-Za-z .']{2,})$/);
+
+      if (m && m[1].trim().length > 2) {
+        const biz = m[1].trim();
+        const city = m[2].trim();
+        setState((p) => ({ ...p, business: biz, city }));
+        runMarketScan(biz, city);
+        return;
+      }
+
+      if (!state.business) {
+        setState((p) => ({ ...p, business: text }));
+        setChips([]);
+        setIsTyping(true);
+        setTimeout(() => {
+          setIsTyping(false);
+          setMessages((prev) => [
+            ...prev,
+            { id: Date.now(), who: 'bot', text: `Nice. And what city or town are you located in?` },
+          ]);
+          setInputPlaceholder('e.g. Port St. Lucie, FL');
+          inputRef.current?.focus();
+        }, 400);
+        return;
+      }
+
+      if (!state.city) {
+        setState((p) => ({ ...p, city: text }));
+        runMarketScan(state.business, text);
+        return;
+      }
+    }
+
+    // General fallback message handling
+    appendUserMsg(text);
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), who: 'bot', text: "Got that noted! Where should we send your official project scope PDF?" },
+      ]);
+      setInputPlaceholder('Enter your email...');
+    }, 450);
+  }
+
+  async function submitIntakeData(fullData) {
     if (status === 'submitting' || requestId) return;
     setStatus('submitting');
 
-    const conversationTranscript = allMsgs.map((m) => `${m.role.toUpperCase()}: ${m.content}`).join('\n');
+    const transcript = messages.map((m) => `${m.who.toUpperCase()}: ${m.text || '[Card]'}`).join('\n');
 
     const payload = {
-      source: 'famtastic-scout-ai',
-      branch: rec?.package_sku || 'web-basics',
+      source: 'famtastic-scout-overlay',
+      branch: fullData.packageSku || 'web-basics',
       answers: {
-        ...data,
-        conversationTranscript,
-        recommendedPackage: rec?.package_title,
-        leadScoreHot: data.lead_score_hot || false,
+        businessName: fullData.business,
+        city: fullData.city,
+        goal: fullData.goal,
+        visuals: fullData.visuals,
+        timeline: fullData.when,
+        email: fullData.email,
+        phone: fullData.phone,
+        leadScoreHot: fullData.leadScoreHot,
+        conversationTranscript: transcript,
+        recommendedPackage: fullData.packageTitle,
       },
       estimate: {
-        low: rec?.price_estimate || 199,
-        high: rec?.price_estimate || 199,
+        low: fullData.price,
+        high: fullData.price,
       },
       utm: {
         ...collectUtmParams(),
@@ -169,269 +522,213 @@ export default function SolutionFinder({ initialBranch = null }) {
       const res = await postIntake(payload);
       setRequestId(res?.request_id || null);
       setRegistrationUrl(res?.registration_url || null);
-      setServerMessage(res?.message || 'Your project blueprint is saved and our team has been notified.');
       setStatus('success');
     } catch {
       setStatus('error');
     }
   }
 
-  function handleReset() {
-    setCurrentStepNum(1);
-    setMessages([{ role: 'assistant', content: INITIAL_GREETING, marketScan: null }]);
-    setQuickChips(INITIAL_CHIPS);
-    setGatheredData({});
-    setInputVal('');
-    setInputPlaceholder('e.g. Barbershop in Port St. Lucie or Italian restaurant in Austin...');
-    setIsTyping(false);
-    setIsArtifactReady(false);
-    setIsComplete(false);
-    setStatus('idle');
-    setRequestId(null);
-    setRegistrationUrl(null);
-    setServerMessage(null);
-    setRecommendation({
-      package_sku: 'web-basics',
-      package_title: 'Web Basics Bundle — $199',
-      price_formatted: '$199',
-      price_estimate: 199,
-    });
+  function handleHeroChipClick(nicheName) {
+    openChatWithInitial(nicheName);
   }
 
   return (
     <div className="sf" id="solution-finder">
-      <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
+      {/* ============ HERO ENTRY POINT (NOT a giant clunky panel) ============ */}
+      <section className="sf__hero-entry">
         <span className="sf__ai-badge">⚡ FAMtastic Scout · Instant Market Scan</span>
-        <h2 className="sf__title" style={{ margin: '0.4rem 0 0.5rem' }}>See What Your Market Is Doing in 20 Seconds</h2>
-        <p className="sf__hint" style={{ margin: 0 }}>
-          Real local competitive scans, custom sitemaps, and exact pricing—before you spend a dime.
+        <h2 className="sf__hero-title">
+          See what your market is doing <span className="sf__accent-green">in 20 seconds.</span>
+        </h2>
+        <p className="sf__hero-sub">
+          Real local competitive scans, a custom sitemap, and exact pricing—before you spend a dime. No account. No email. Just answers.
         </p>
-      </div>
 
-      {/* 4-Step Roadmap Bar */}
-      <div className="sf__scout-roadmap" role="progressbar" aria-valuenow={currentStepNum} aria-valuemin={1} aria-valuemax={4}>
-        {ROADMAP_STEPS.map((s) => {
-          const isActive = currentStepNum === s.num;
-          const isPast = currentStepNum > s.num;
-          return (
-            <div
-              key={s.num}
-              className={`sf__scout-step-item${isActive ? ' is-active' : ''}${isPast ? ' is-past' : ''}`}
-            >
-              <div className="sf__scout-step-dot" />
-              <span>{s.label}</span>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="sf__chat-container">
-        {/* Header with status and live estimate pill */}
-        <div className="sf__chat-header">
-          <div className="sf__chat-header-info">
-            <div className="sf__chat-status-dot" />
-            <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>FAMtastic Scout (AI Market Advisor)</span>
-          </div>
-          <div className="sf__live-estimate-pill">
-            <span>Price: {recommendation.price_formatted || '$199'}</span>
-          </div>
-        </div>
-
-        {/* Message Stream */}
-        <div className="sf__chat-messages">
-          {messages.map((msg, idx) => (
-            <motion.div
-              key={idx}
-              className={`sf__msg sf__msg--${msg.role}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25 }}
-            >
-              <div className="sf__msg-avatar">
-                {msg.role === 'assistant' ? '✦' : 'You'}
-              </div>
-              <div className="sf__msg-bubble">
-                <div>{msg.content}</div>
-
-                {/* Render Market Scan Radar Box when present */}
-                {msg.marketScan && (
-                  <motion.div
-                    className="sf__market-scan-box"
-                    initial={{ opacity: 0, scale: 0.96 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="sf__market-scan-header">
-                      <div className="sf__market-scan-radar" />
-                      <span>{msg.marketScan.category} · {msg.marketScan.city} Scan</span>
-                    </div>
-                    <div className="sf__market-scan-headline">{msg.marketScan.headline}</div>
-                    <div className="sf__market-scan-factor">
-                      <strong>Winning Formula:</strong> {msg.marketScan.key_factor}
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
-          ))}
-
-          {isTyping && (
-            <motion.div
-              className="sf__msg sf__msg--assistant"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <div className="sf__msg-avatar">✦</div>
-              <div className="sf__msg-bubble">
-                <div className="sf__typing-indicator">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Quick Chips & Text Input */}
-        <div className="sf__chat-footer">
-          {quickChips && quickChips.length > 0 && !isComplete && (
-            <div className="sf__chat-chips" role="group" aria-label="Suggested responses">
-              {quickChips.map((chip, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  className="sf__chat-chip-btn"
-                  onClick={() => void handleUserSend(chip)}
-                  disabled={isTyping}
-                >
-                  {chip}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <form
-            className="sf__chat-input-bar"
-            onSubmit={(e) => {
-              e.preventDefault();
-              void handleUserSend(inputVal);
-            }}
+        <div className="sf__entry-box">
+          <button
+            type="button"
+            className="sf__entry-btn"
+            onClick={() => openChatWithInitial('')}
+            aria-haspopup="dialog"
           >
-            <input
-              type="text"
-              className="sf__chat-input"
-              value={inputVal}
-              onChange={(e) => setInputVal(e.target.value)}
-              placeholder={inputPlaceholder}
-              disabled={isTyping}
-              aria-label="Your message to Scout"
-            />
-            <button
-              type="submit"
-              className="sf__chat-send-btn"
-              disabled={isTyping || !inputVal.trim()}
-              title="Send message"
-            >
-              ➤
-            </button>
-          </form>
-        </div>
-      </div>
+            <span className="sf__entry-btn-text">Tell Scout your business + city…</span>
+            <span className="sf__entry-btn-go">Start free scan →</span>
+          </button>
 
-      {/* Payoff Artifact (Rendered on-screen!) */}
+          <div className="sf__hero-chips">
+            <button type="button" onClick={() => handleHeroChipClick('Barbershop in Port St. Lucie')}>Barbershop</button>
+            <button type="button" onClick={() => handleHeroChipClick('Restaurant & Catering')}>Restaurant</button>
+            <button type="button" onClick={() => handleHeroChipClick('Church & Community')}>Church</button>
+            <button type="button" onClick={() => handleHeroChipClick('Plumbing & Trades')}>Trades</button>
+            <button type="button" onClick={() => handleHeroChipClick('Dental & Healthcare')}>Healthcare</button>
+          </div>
+
+          <p className="sf__entry-hint">
+            <strong>20 seconds.</strong> Free instant scan · No sign-up to look · <strong>From $199</strong>
+          </p>
+        </div>
+
+        <div className="sf__trust-row">
+          <span><strong>22+ yrs</strong> engineering systems</span>
+          <span><strong>Fixed price</strong> before we start</span>
+          <span><strong>Verified working</strong> before you pay</span>
+        </div>
+      </section>
+
+      {/* ============ CHAT OVERLAY (Mobile Full-Screen / Desktop Focused Modal Sheet) ============ */}
       <AnimatePresence>
-        {isArtifactReady && recommendation && (
+        {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.45 }}
-            style={{ marginTop: '2rem' }}
+            className="sf__overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Chat with FAMtastic Scout"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
           >
-            <div className="sf__ai-card">
-              <div className="sf__ai-header">
-                <div>
-                  <span className="sf__ai-badge">⚡ Instant Project Blueprint</span>
-                  <h3>{recommendation.package_title}</h3>
-                  <small style={{ color: 'var(--fam-text-muted)' }}>
-                    Turnaround: {recommendation.timeline || '3–5 business days'} · 1st-Year Hosting & Domain Included
-                  </small>
+            <motion.div
+              className="sf__sheet"
+              initial={{ scale: 0.96, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.96, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Header */}
+              <div className="sf__chat-head">
+                <div className="sf__avatar">S</div>
+                <div className="sf__who">
+                  <b>Scout</b>
+                  <span>AI Market Advisor · online</span>
                 </div>
-                <div className="sf__ai-price-pill">
-                  {recommendation.price_formatted}
-                </div>
-              </div>
-
-              <div className="sf__ai-rationale">
-                <strong>Target Deliverable:</strong>
-                <p style={{ margin: '0.4rem 0 0' }}>
-                  {recommendation.personalized_rationale || 'Engineered for your local market with mobile lead capture, SEO indexing, and hosting included.'}
-                </p>
-              </div>
-
-              <div className="sf__ai-grid">
-                <div className="sf__ai-grid-box">
-                  <h4>Recommended Architecture</h4>
-                  <ul>
-                    {(recommendation.recommended_pages || ['Home & Fast Booking', 'Services & Price Guide', 'Verified Reviews', 'Contact & Hours']).map((p) => (
-                      <li key={p}>{p}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="sf__ai-grid-box">
-                  <h4>Included Deliverables</h4>
-                  <ul>
-                    {(recommendation.recommended_features || ['Mobile-responsive design', 'Lead capture & email alerts', 'Foundational local SEO', 'First-year hosting & domain']).map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {serverMessage && (
-                <p className="sf__note" style={{ marginBottom: '1.25rem' }}>
-                  ✓ {serverMessage}
-                </p>
-              )}
-
-              <div className="sf__result-actions">
-                <Link
-                  to={`/purchase?bundle=${encodeURIComponent(recommendation.package_sku || 'web-basics')}`}
-                  className="v1-btn v1-btn--primary"
-                >
-                  Start with this Package ({recommendation.price_formatted}) →
-                </Link>
-
-                <button
-                  type="button"
-                  className="v1-btn v1-btn--ghost"
-                  onClick={() => void handleUserSend('I want to talk to a real human')}
-                >
-                  Talk to a Real Human
+                <button type="button" className="sf__chat-close" onClick={closeChat} aria-label="Close chat">
+                  ✕
                 </button>
+              </div>
 
-                {registrationUrl && (
-                  <a
-                    href={registrationUrl}
-                    className="v1-btn v1-btn--ghost"
-                  >
-                    Access Your Client Portal Brief →
-                  </a>
+              {/* Progress Bar */}
+              <div className="sf__progress-wrap">
+                <div className="sf__progress-label">
+                  <span>Step {step} of 4 · {step === 1 ? 'Your business' : step === 2 ? 'Market scan' : step === 3 ? 'Custom scope' : 'Instant blueprint'}</span>
+                  <span>{step * 25}%</span>
+                </div>
+                <div className="sf__progress-bar">
+                  <div className="sf__progress-bar-fill" style={{ width: `${step * 25}%` }} />
+                </div>
+              </div>
+
+              {/* Chat Body */}
+              <div className="sf__chat-body" ref={chatBodyRef}>
+                {messages.map((msg) => (
+                  <div key={msg.id} className={`sf__msg-row ${msg.who}`}>
+                    {msg.isScanCard ? (
+                      <div className="sf__scan-card">
+                        <span className="sf__scan-tag">Live Market Scan</span>
+                        <h3>{msg.scanData.niche}</h3>
+                        <div className="sf__scan-city">{msg.scanData.city}</div>
+                        <div className="sf__scan-item">
+                          <span className="sf__scan-dot">✓</span>
+                          <span>{msg.scanData.fact}</span>
+                        </div>
+                        <div className="sf__scan-item">
+                          <span className="sf__scan-dot">✓</span>
+                          <span>{msg.scanData.win}</span>
+                        </div>
+                        <div className="sf__scan-verdict">
+                          <strong>The gap:</strong> {msg.scanData.cost}
+                        </div>
+                      </div>
+                    ) : msg.isScopeCard ? (
+                      <div className="sf__scope-card">
+                        <span className="sf__scope-tag">Your Project Scope</span>
+                        <h3>{msg.scopeData.niche}</h3>
+                        <div className="sf__scope-city">{msg.scopeData.city}</div>
+
+                        <div className="sf__scope-row">
+                          <span className="k">Pages</span>
+                          <span className="v">{msg.scopeData.pages}</span>
+                        </div>
+                        <div className="sf__scope-row">
+                          <span className="k">Features</span>
+                          <span className="v">{msg.scopeData.features}</span>
+                        </div>
+                        <div className="sf__scope-row">
+                          <span className="k">Visuals</span>
+                          <span className="v">{msg.scopeData.visuals}</span>
+                        </div>
+                        <div className="sf__scope-row">
+                          <span className="k">Timeline</span>
+                          <span className="v">{msg.scopeData.timeline}</span>
+                        </div>
+
+                        <div className="sf__scope-price-box">
+                          <span className="label">Fixed Price</span>
+                          <span className="amount">${msg.scopeData.price}</span>
+                        </div>
+                        <div className="sf__scope-note">
+                          Price locked for 30 days · 1st-year hosting & domain included
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="sf__bubble">{msg.text}</div>
+                    )}
+                  </div>
+                ))}
+
+                {isTyping && (
+                  <div className="sf__msg-row bot">
+                    <div className="sf__typing-pill">
+                      <span /><span /><span />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Chat Footer */}
+              <div className="sf__chat-foot">
+                {chips && chips.length > 0 && (
+                  <div className="sf__chips-row">
+                    {chips.map((chip, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        className={`sf__chip-btn${chip.primary ? ' is-primary' : ''}`}
+                        onClick={chip.fn}
+                      >
+                        {chip.label}
+                      </button>
+                    ))}
+                  </div>
                 )}
 
-                <button
-                  type="button"
-                  className="v1-btn v1-btn--ghost"
-                  onClick={handleReset}
+                <form
+                  className="sf__input-form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleUserText(inputVal);
+                  }}
                 >
-                  ↺ Scan Another Business
-                </button>
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    className="sf__text-input"
+                    value={inputVal}
+                    onChange={(e) => setInputVal(e.target.value)}
+                    placeholder={inputPlaceholder}
+                    disabled={isTyping}
+                  />
+                  <button
+                    type="submit"
+                    className="sf__send-btn"
+                    disabled={isTyping || !inputVal.trim()}
+                    aria-label="Send message"
+                  >
+                    ➤
+                  </button>
+                </form>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
