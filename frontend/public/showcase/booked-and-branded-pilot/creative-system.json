@@ -1,6 +1,6 @@
 {
   "schema": "famtastic.booked-branded-creative-system.v2",
-  "revision_id": "booked-branded-v2-20260827",
+  "revision_id": "booked-branded-v3-20260827",
   "shay": {
     "name": "Shay",
     "title": "FAMtastic Designs AI Business Concierge",
@@ -9,44 +9,140 @@
   },
   "offer": {
     "name": "Booked & Branded",
-    "status": "founding-pilot recommendation; not a live Commerce SKU",
+    "status": "starter package proposal; not an activated Commerce SKU",
+    "status_display": "Start useful. Add power when it pays.",
     "headline": "Own the front door. Keep the chair moving.",
-    "promise": "A branded website and phone-friendly operating starter for independent appointment professionals who have outgrown the look and limits of a generic booking profile.",
-    "price_hypothesis": "$199 one-time founding pilot",
+    "promise": "A branded website, a useful booking path, and a phone-friendly operating starter for independent appointment professionals who want more control without another large monthly bill.",
+    "price_hypothesis": "$199 one-time launch",
+    "hosting_renewal": "$9.99/month beginning in month 13, only after separate recurring authorization",
+    "value_message": "The starter should help the owner look better, answer fewer repetitive messages, and make the next booking easier. Optional upgrades arrive only when the extra capability can earn its place.",
     "core": [
       "One custom mobile-first website direction selected from three working proofs",
       "One-owner, one-location phone Booking Desk starter",
       "Up to 12 services with duration, price, preparation, and policy notes",
-      "Request-to-book with confirm, propose-another-time, or decline decisions",
+      "One reviewed starter booking path: keep the current link, connect a personal Google booking page, connect Cal.com, or use request-to-book",
+      "Request-to-book with confirm, propose-another-time, or decline decisions when that mode is selected",
       "Blackout dates, availability windows, and request status",
       "Business-owned Square, Stripe Payment Link, Cash App Business, or reviewed payment handoff",
       "A decorative-to-live QR placement after the business connects its own approved destination",
       "Fresh consent-based testimonials with owner moderation",
-      "One year of FAMtastic-managed hosting and the existing Web Basics domain path",
+      "One year of FAMtastic-managed hosting and the existing Web Basics domain path; normal hosting is $9.99/month beginning in month 13",
       "Shay-guided setup, proof explanation, and launch handoff"
     ],
+    "booking_paths": [
+      {
+        "id": "keep-current",
+        "label": "Keep what already works",
+        "description": "Use the branded site as the front door and send booking traffic to the owner’s current platform while the new system proves itself."
+      },
+      {
+        "id": "google-appointment-schedule",
+        "label": "Use the owner’s Google account",
+        "description": "Connect a personal Google appointment-schedule link or embed when the owner’s account and selected features support it."
+      },
+      {
+        "id": "calcom",
+        "label": "Connect Cal.com",
+        "description": "Link or embed an owner-controlled Cal.com individual booking page; provider terms and advanced features remain the owner’s choice."
+      },
+      {
+        "id": "request-to-book",
+        "label": "Start with request-to-book",
+        "description": "Let clients request a service and preferred time, then give the owner the final confirmation from the phone-friendly desk."
+      }
+    ],
     "launch_path": [
-      "Keep the current booking profile available during setup",
+      "Choose the lightest booking path that already fits the owner’s day",
       "Launch the branded site as the public front door",
-      "Route requests through the bounded Booking Desk starter",
-      "Move or deepen scheduling only after conflict, recovery, notification, and owner-control tests pass"
+      "Watch which services, buttons, and requests turn into real appointments",
+      "Add scheduling, reminders, payments, SEO, or automation only when the business can use the extra power"
     ],
-    "not_included": [
-      "Real-time multi-staff calendar synchronization",
-      "POS replacement, payroll, inventory, chair rental, or commission accounting",
-      "Review scraping or migration from Booksy or another platform",
-      "Payment custody, stored card or bank details, or FAMtastic merchant processing",
-      "Automatic SMS, data migration, or client-record import",
-      "A promise to replace every feature of an existing booking platform"
+    "upgrade_packages": [
+      {
+        "id": "launch",
+        "name": "Launch",
+        "price": "$199 one time",
+        "status": "proposed Booked & Branded starter",
+        "outcome": "A branded public home, one starter booking path, phone-friendly owner controls, business-owned payment handoff, and one year of hosting."
+      },
+      {
+        "id": "keep-running",
+        "name": "Keep it running",
+        "price": "$9.99/month from month 13",
+        "status": "existing basic hosting renewal; separate authorization required",
+        "outcome": "Managed hosting and SSL support continue after the included first year without forcing a larger operating package."
+      },
+      {
+        "id": "booking-plus",
+        "name": "Appointment Scheduling",
+        "price": "$149 one time",
+        "status": "existing optional add-on",
+        "outcome": "A separately tested scheduling setup for owners who are ready for a deeper calendar connection or booking configuration."
+      },
+      {
+        "id": "growth",
+        "name": "Grow the system",
+        "price": "Choose only what helps",
+        "status": "optional existing add-ons or separately scoped work",
+        "outcome": "Add local SEO, analytics, reminders, lead follow-up, maintenance, business email, or AI customer help as the business grows."
+      }
     ],
-    "future_addons": [
-      "Live calendar and conflict-management integration",
-      "Multi-staff scheduling and permissions",
-      "SMS confirmations and reminders",
-      "Client history, notes, and consent-managed files",
-      "Local SEO and review-request automation",
-      "Business email, maintenance, analytics, and AI customer help"
-    ]
+    "growth_signals": [
+      "Clients still ask the same service, price, preparation, or policy questions in DMs",
+      "The owner is losing time confirming appointments or chasing deposits",
+      "Multiple calendars, chairs, or team members create conflict risk",
+      "The site is attracting attention but the owner cannot see which actions turn into bookings",
+      "Repeat clients and fresh testimonials need a more consistent follow-up path"
+    ],
+    "booking_option_research": [
+      {
+        "provider": "Google Calendar appointment schedules",
+        "source": "https://support.google.com/calendar/answer/10729749?hl=en",
+        "verified_on": "2026-08-27",
+        "basis": "A personal Google Account or supported Workspace account can create an appointment schedule; some advanced features require an eligible subscription."
+      },
+      {
+        "provider": "Google Calendar website sharing",
+        "source": "https://support.google.com/calendar/answer/10733297?hl=en-CA",
+        "verified_on": "2026-08-27",
+        "basis": "Google provides booking-page links, buttons, and inline website embeds."
+      },
+      {
+        "provider": "Cal.com",
+        "source": "https://cal.com/pricing",
+        "verified_on": "2026-08-27",
+        "basis": "Cal.com currently lists an individual free plan; hosted plan terms can change."
+      },
+      {
+        "provider": "Cal.com embed",
+        "source": "https://cal.com/help/embedding/adding-embed",
+        "verified_on": "2026-08-27",
+        "basis": "Cal.com supports inline and popup website embeds."
+      }
+    ],
+    "site_studio_contract": {
+      "status": "portable proposal contract; not imported into Site Studio",
+      "booking.mode": ["external_link", "embedded_calendar", "request_to_book", "future_two_way_sync"],
+      "booking.provider": ["existing_provider", "google_appointment_schedule", "calcom", "famtastic_request_to_book", "reviewed_other"],
+      "booking.owner_account": "required for external booking and payment providers; credentials never belong in the public site",
+      "booking.embed_url": "optional validated public URL",
+      "booking.payment_destination": "optional owner-controlled reviewed destination",
+      "booking.upgrade_tier": ["starter", "appointment_scheduling", "custom_operations"],
+      "commercial_rule": "Never infer or activate an upgrade from a design proof. Record the customer’s choice and required authorization first."
+    }
+  },
+  "commercial_truth": {
+    "starter_source": "backend/config/famtastic-products.json#FAM-FOOT-199",
+    "hosting_source": "backend/config/famtastic-products.json#FAM-HOST-999",
+    "scheduling_source": "backend/config/famtastic-products.json#FAM-SCHEDULING",
+    "activated_by_this_demo": false,
+    "email_sent_by_this_demo": false,
+    "note": "Booked & Branded remains a product proposal. The referenced Web Basics, hosting-renewal, and appointment-scheduling products already exist; this static showcase does not purchase or activate them."
+  },
+  "package_guardrails": {
+    "customer_facing_rule": "Lead with the useful starting point and the path to more bookings. Put technical boundaries in setup and scope records, not fear-heavy sales copy.",
+    "capability_rule": "A linked or embedded external booking page is not the same as a FAMtastic-operated scheduling backend. Deeper integrations require separate configuration and proof.",
+    "payments_rule": "The owner controls provider accounts and payment destinations; FAMtastic does not hold cards, bank data, or merchant credentials in this demonstration."
   },
   "specialists": [
     {

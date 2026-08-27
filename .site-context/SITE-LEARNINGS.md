@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — A low-cost starter should reveal the upgrade path, not lead with exclusions
+
+- Observation: describing a proposed $19.99 renewal and dedicating a major
+  sales section to what $199 “does not pretend to include” made the starter
+  feel like a future bill and a list of missing features. That framing worked
+  as an internal scope warning but weakened the customer value story.
+- Guidance: lead with the smallest useful outcome, keep the canonical Web
+  Basics hosting renewal at $9.99 monthly after the included year, and show
+  optional upgrades as responses to observed business signals. A booking
+  starter can link or embed an owner-controlled provider or use request-to-book
+  without claiming that FAMtastic already operates a full scheduling backend.
+  Keep provider credentials with the owner, validate external URLs and mobile
+  behavior during setup, and preserve commercial truth in the contract and
+  Build DNA instead of filling the sales page with fear-heavy exclusions.
+
 This file records production behavior, deployment constraints, incident
 findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative

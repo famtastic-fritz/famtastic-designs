@@ -1,5 +1,34 @@
 # Product changelog
 
+## 2026-08-27 — Booked & Branded starter-first value ladder
+
+- Reframed the fictional Booked & Branded showcase around the smallest useful
+  customer win: a proposed $199 one-time launch with one year of hosting, one
+  reviewed starter booking path, and the normal $9.99 monthly basic-hosting
+  renewal beginning in month 13 only after separate authorization.
+- Removed fear-heavy “what $199 does not include” language from the emails,
+  concept rooms, proofs, and package page. The customer-facing story now shows
+  how clearer services, easier booking, owner-controlled payment direction,
+  and fresh testimonials can help the business earn more appointments before
+  asking it to buy more software.
+- Added four provider-neutral starter paths: keep the current booking link,
+  connect a supported personal Google appointment page, connect Cal.com, or
+  use the FAMtastic request-to-book concept. Official Google and Cal.com
+  documentation was checked on 2026-08-27; provider availability and paid
+  features are rechecked during setup rather than hard-coded as promises.
+- Made the existing $149 Appointment Scheduling product the first optional
+  upgrade and positioned SEO, analytics, reminders, maintenance, business
+  email, lead follow-up, and AI help as later choices triggered by real
+  business need. No new SKU, checkout, subscription, provider account, or
+  recurring charge was created or activated.
+- Encoded vendor-neutral Site Studio fields for booking mode, provider,
+  owner-controlled account, validated embed URL, payment destination, and
+  upgrade tier. The contract is portable but has not been imported into Site
+  Studio or connected to a live booking provider.
+- Expanded the browser acceptance to 21 copy-contract checks in addition to
+  all 22 routes at desktop and 390px. The rendered package and representative
+  email were visually reviewed; no new image-provider call was required.
+
 ## 2026-08-27 — Booked & Branded four-business proof pilot
 
 - Upgraded the pilot into a reusable creative and offer system: Shay now

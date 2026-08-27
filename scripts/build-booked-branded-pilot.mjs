@@ -148,12 +148,14 @@ function emailPage(business) {
           <p>The proposed <strong>${esc(creative.offer.price_hypothesis)} Booked &amp; Branded package</strong> includes:</p>
           <ul>
             <li>a selected custom mobile-ready direction;</li>
-            <li>a one-owner phone Booking Desk starter;</li>
+            <li>one useful booking path—keep the current link, connect an owner-controlled Google or Cal.com page, or use request-to-book;</li>
+            <li>a one-owner phone Booking Desk starter when request-to-book is selected;</li>
             <li>up to 12 services, availability windows, and policy notes;</li>
-            <li>request-to-book plus business-owned payment/QR handoff; and</li>
+            <li>a business-owned payment/QR handoff; and</li>
             <li>fresh consent-based testimonials and Shay-guided setup.</li>
           </ul>
-          <p>You can keep your current booking platform while testing it. Nothing needs to switch until the new flow works for you.</p>
+          <p><strong>One year of hosting is included.</strong> Normal hosting is $9.99 a month beginning in month 13, and only after separate authorization.</p>
+          <p>You can keep your current booking platform while testing the new front door. If the starter does the job, keep it simple. If reminders, deeper calendar setup, multi-staff scheduling, or growth tools would save time or win more appointments, those become optional upgrades—not surprise requirements.</p>
           <a class="mail-cta" href="${roomUrl}">See the 3 worlds I prepared for ${esc(business.name)} →</a>
           <p class="shay-signoff"><span class="shay-orb">S</span><span><strong>Shay</strong><br>${esc(creative.shay.title)}<br><small>with Fritz and the FAMtastic Designs team</small></span></p>
           <div class="mail-footer">
@@ -194,13 +196,13 @@ function roomPage(business) {
           <a class="back-link" href="${publicBase}/emails/${business.slug}/">← Return to the email</a>
           <div class="eyebrow">Private concept-room simulation · 3 of 3 ready</div>
           <h1>${esc(business.name)}</h1>
-          <p>Same business truth, three materially different compositions. Every direction includes the proposed public site, request-to-book flow, phone Booking Desk, payment/QR boundary, and controlled testimonial treatment.</p>
+          <p>Same business truth, three materially different compositions. Every direction shows the public site, a starter booking path, phone-friendly owner controls, business-owned payment/QR handoff, and a fresh-testimonial path.</p>
           <div class="room-meta"><span>${esc(business.location)}</span><span>${esc(business.specialty)}</span><span>Fictional demonstration</span></div>
         </header>
         <section class="direction-grid" aria-label="Three design directions">${directions}</section>
         <section class="room-offer">
-          <div><h3>The proposed $199 boundary</h3><p>One operator, one location, up to 12 services, request-to-book, phone controls, one business-owned payment destination, booking/payment QR, and fresh consent-based testimonials.</p></div>
-          <div><h3>The honest expansion</h3><p>Keep the current platform during testing. Add instant calendar connections, multi-staff operations, SMS, full POS, memberships, or deeper payments only after those capabilities are separately scoped and proven.</p></div>
+          <div><h3>Start useful for $199</h3><p>Launch the branded front door, publish up to 12 services, choose one starter booking path, connect a business-owned payment destination, and get one year of hosting.</p></div>
+          <div><h3>Grow when it pays</h3><p>Keep hosting at the normal $9.99 monthly renewal beginning in month 13. Add the $149 Appointment Scheduling setup or other growth tools only when the business is ready to use them.</p></div>
         </section>
         <p class="room-package-link">${button(`${publicBase}/package/`, 'See the complete Booked & Branded package')}</p>
       </main>`
@@ -210,8 +212,9 @@ function roomPage(business) {
 function packagePage() {
   const core = creative.offer.core.map(item => `<li>${esc(item)}</li>`).join('');
   const launch = creative.offer.launch_path.map((item, index) => `<li><b>${index + 1}</b><span>${esc(item)}</span></li>`).join('');
-  const excluded = creative.offer.not_included.map(item => `<li>${esc(item)}</li>`).join('');
-  const addons = creative.offer.future_addons.map(item => `<li>${esc(item)}</li>`).join('');
+  const bookingPaths = creative.offer.booking_paths.map((item, index) => `<article><b>0${index + 1}</b><h3>${esc(item.label)}</h3><p>${esc(item.description)}</p></article>`).join('');
+  const upgrades = creative.offer.upgrade_packages.map((item, index) => `<article class="upgrade-step upgrade-${esc(item.id)}"><div><span>0${index + 1}</span><small>${esc(item.status)}</small></div><h3>${esc(item.name)}</h3><strong>${esc(item.price)}</strong><p>${esc(item.outcome)}</p></article>`).join('');
+  const growthSignals = creative.offer.growth_signals.map(item => `<li>${esc(item)}</li>`).join('');
   const specialists = creative.specialists.map(item => `<article><span>${esc(item.label)}</span><p>${esc(item.job)}</p></article>`).join('');
   return template({
     title: `${creative.offer.name} — Founding pilot package`,
@@ -223,24 +226,26 @@ function packagePage() {
           <div class="shell package-hero-grid">
             <div>
               <a class="back-link" href="${publicBase}/">← Return to the four-business proof</a>
-              <p class="kicker">${esc(creative.offer.status)}</p>
+              <p class="kicker">${esc(creative.offer.status_display)}</p>
               <h1>${esc(creative.offer.headline)}</h1>
               <p class="package-lede">${esc(creative.offer.promise)}</p>
-              <div class="package-actions">${button(`${publicBase}/#proofs`, 'See the four proof stories')}${button('#package-boundary', 'Read the honest boundary', true)}</div>
+              <div class="package-actions">${button(`${publicBase}/#proofs`, 'See the four proof stories')}${button('#package-upgrades', 'See the upgrade path', true)}</div>
             </div>
-            <aside class="package-price-card"><small>Founding-pilot hypothesis</small><strong>${esc(creative.offer.price_hypothesis)}</strong><p>Designed as the first owned layer beyond a generic booking profile. This page is a proposal and demonstration—not a checkout or activated Commerce product.</p></aside>
+            <aside class="package-price-card"><small>Proposed starter</small><strong>${esc(creative.offer.price_hypothesis)}</strong><p>One year of hosting included. Keep the site running for the normal $9.99 monthly hosting renewal beginning in month 13. Booking and growth upgrades stay optional.</p></aside>
           </div>
         </section>
 
-        <section class="package-principle"><div class="shell"><p>Keep the booking tool while the new front door earns trust.</p><span>Then deepen the operating layer only when the business needs it.</span></div></section>
+        <section class="package-principle"><div class="shell"><p>Start with the smallest system that can help win the next appointment.</p><span>Keep what works. Add power when the extra capability can earn its place.</span></div></section>
 
-        <section class="package-section"><div class="shell package-split"><div><p class="kicker">What the pilot contains</p><h2>A brand layer and a daily-work layer.</h2><p>The public website explains the business with its own visual language. The phone Booking Desk gives one owner a bounded place to see requests, make decisions, manage services, and hand clients to a business-owned payment destination.</p></div><ul class="package-checklist">${core}</ul></div></section>
+        <section class="package-section"><div class="shell package-split"><div><p class="kicker">Included from day one</p><h2>A better front door and a useful next step.</h2><p>The public website gives the business its own visual language, explains services before the client has to ask, and connects each person to a booking path the owner can actually manage.</p></div><ul class="package-checklist">${core}</ul></div></section>
 
-        <section class="package-section package-dark"><div class="shell"><div class="section-head"><div><p class="kicker">Phone-first by design</p><h2>Small enough to learn. Useful enough to matter.</h2></div><p>The starter is intentionally not a fake all-in-one platform. It centers the decisions a solo barber or stylist actually makes between appointments.</p></div><div class="package-desk-grid"><article><b>01</b><h3>Request</h3><p>Client chooses a service and preferred time with preparation context.</p></article><article><b>02</b><h3>Decide</h3><p>Owner confirms, proposes another time, or declines from the phone.</p></article><article><b>03</b><h3>Collect</h3><p>Owner sends a reviewed Square, Stripe, or Cash App Business destination.</p></article><article><b>04</b><h3>Follow up</h3><p>Completed clients can leave a fresh, permission-based testimonial.</p></article></div></div></section>
+        <section class="package-section package-dark"><div class="shell"><div class="section-head"><div><p class="kicker">Built around the next appointment</p><h2>Look established. Answer less. Book more easily.</h2></div><p>The starter puts service details, policies, booking, payment direction, and fresh testimonials in one branded path clients can use from a phone.</p></div><div class="package-desk-grid"><article><b>01</b><h3>Explain</h3><p>Clients see services, pricing, preparation, and policies before sending another DM.</p></article><article><b>02</b><h3>Book</h3><p>Use the current provider, Google, Cal.com, or request-to-book—whichever fits today.</p></article><article><b>03</b><h3>Collect</h3><p>Send clients to the owner’s reviewed Square, Stripe, or Cash App Business destination.</p></article><article><b>04</b><h3>Grow</h3><p>Turn completed visits into fresh testimonials and use real activity to choose the next upgrade.</p></article></div></div></section>
 
-        <section class="package-section"><div class="shell package-split"><div><p class="kicker">A safer bridge away from platform sameness</p><h2>No forced overnight switch.</h2><ol class="launch-path">${launch}</ol></div><div class="package-phone"><span class="package-phone-glow"></span><div class="mini-phone"><small>Booked &amp; Branded</small><h3>Today’s chair</h3><p><b>3</b> requests waiting</p><p><b>1</b> deposit due</p><span>Confirm · Suggest time · Services</span></div></div></div></section>
+        <section class="package-section booking-paths"><div class="shell"><div class="section-head"><div><p class="kicker">One starter, four practical paths</p><h2>Use the booking tool that fits the owner now.</h2></div><p>A personal Google appointment page, Cal.com, the current provider, or FAMtastic request-to-book can sit behind the branded experience. The owner keeps control of provider accounts and chooses the path during setup.</p></div><div class="booking-path-grid">${bookingPaths}</div><p class="provider-note">Provider availability and paid features can change. FAMtastic confirms the selected account, link or embed, privacy settings, and mobile behavior during setup.</p></div></section>
 
-        <section class="package-section package-boundary" id="package-boundary"><div class="shell"><div class="section-head"><div><p class="kicker">The honest boundary</p><h2>What $199 does not pretend to include.</h2></div><p>These are future scopes or integrations, not hidden promises inside the founding-pilot demonstration.</p></div><div class="boundary-grid"><div><h3>Not inside this pilot</h3><ul>${excluded}</ul></div><div><h3>Natural next add-ons</h3><ul>${addons}</ul></div></div></div></section>
+        <section class="package-section"><div class="shell package-split"><div><p class="kicker">A low-risk way to grow</p><h2>No forced overnight switch.</h2><ol class="launch-path">${launch}</ol></div><div class="package-phone"><span class="package-phone-glow"></span><div class="mini-phone"><small>Booked &amp; Branded</small><h3>Today’s chair</h3><p><b>3</b> requests waiting</p><p><b>1</b> deposit due</p><span>Confirm · Suggest time · Services</span></div></div></div></section>
+
+        <section class="package-section package-upgrades" id="package-upgrades"><div class="shell"><div class="section-head"><div><p class="kicker">A pipeline, not a one-and-done sale</p><h2>Start cheap. Upgrade from evidence.</h2></div><p>${esc(creative.offer.value_message)}</p></div><div class="upgrade-ladder">${upgrades}</div><div class="growth-signal"><div><p class="kicker">When is it time to add more?</p><h3>Let the business tell us.</h3></div><ul>${growthSignals}</ul></div></div></section>
 
         <section class="package-section shay-package"><div class="shell package-split"><div><span class="shay-orb package-orb">S</span><p class="kicker">The business face</p><h2>Meet Shay, your AI Business Concierge.</h2><p>Shay explains the proof choices, gathers decisions, keeps setup understandable, and knows when to bring in Fritz or the FAMtastic team. Human authority stays with the team for pricing, scope, approvals, payment, and launch.</p></div><div class="specialist-grid">${specialists}</div></div></section>
 
@@ -321,7 +326,7 @@ function proofPage(business, direction) {
               <div class="experience-copy">
                 <p class="kicker">The operating difference</p>
                 <h2>The site and the workday share one truth.</h2>
-                <p>The starter does not pretend to replace a full multi-staff platform. It gives a solo operator the useful core: see new requests, confirm or suggest another time, manage services and blackout dates, send a business-owned deposit link, and request a fresh testimonial after completion.</p>
+                <p>Start with the useful core: show services clearly, choose a booking path that fits the owner today, see new requests when request-to-book is selected, send a business-owned deposit link, and invite a fresh testimonial after completion. Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades for the moment they can save time or unlock more appointments.</p>
                 <div class="flow-list">
                   <div class="flow-item"><b>1</b><span><strong>Client requests</strong><br>Service, preferred time, and essential preparation context.</span></div>
                   <div class="flow-item"><b>2</b><span><strong>Owner decides</strong><br>Confirm, propose another time, or decline without losing the request.</span></div>
@@ -351,14 +356,14 @@ function proofPage(business, direction) {
 
           <section class="proof-section">
             <div class="shell">
-              <div class="section-head"><div><p class="kicker">Fresh consent-based proof</p><h2>Reviews that belong to this chapter.</h2></div><p>No Booksy review scraping. Completed clients may submit a fresh testimonial with permission; the owner can moderate privacy and abuse without review-gating negative feedback.</p></div>
+              <div class="section-head"><div><p class="kicker">Build an owned reputation</p><h2>Let the good work keep working.</h2></div><p>Keep existing public review links visible while inviting completed clients to leave fresh, permission-based testimonials here. The owner can moderate privacy and abuse without filtering out honest negative feedback.</p></div>
               <div class="review-grid"><article class="review-card"><span class="stars">★★★★★</span><p>“Sample placement: clear service details and an easy confirmation made the whole visit feel organized.”</p><small>Fictional client · Demonstration copy</small></article><article class="review-card"><span class="stars">★★★★★</span><p>“Sample placement: the result felt personal—and the booking experience finally matched it.”</p><small>Fictional client · Demonstration copy</small></article></div>
             </div>
           </section>
 
           <section class="proof-section" id="request">
             <div class="shell">
-              <div class="section-head"><div><p class="kicker">Request-to-book starter</p><h2>Ask for the chair. Get a real confirmation.</h2></div><p>This bounded pilot avoids silent double-booking: the client requests a preferred time and the owner confirms it from the Booking Desk.</p></div>
+              <div class="section-head"><div><p class="kicker">Choose the booking path</p><h2>Make the next appointment easy.</h2></div><p>This proof demonstrates request-to-book. A live setup can instead link or embed an owner-controlled Google appointment page, Cal.com page, or current provider after the selected path is reviewed on desktop and phone.</p></div>
               <form class="booking-form" aria-label="Non-submitting demonstration booking form">
                 <label>Service<select><option>${esc(business.services[0].name)}</option><option>${esc(business.services[1].name)}</option><option>${esc(business.services[2].name)}</option></select></label>
                 <label>Preferred day<input type="text" value="Saturday" readonly></label>
@@ -442,7 +447,7 @@ for (const absolute of artifactPaths) {
     path: relative(repositoryRoot, absolute),
     bytes: info.size,
     sha256: sha256(contents),
-    role: absolute.endsWith('.webp') ? 'generated-image-final' : absolute.endsWith('.html') ? 'customer-facing-static-proof' : 'proof-support'
+    role: /\.(?:avif|jpe?g|png|webp)$/i.test(absolute) ? 'generated-image-final' : absolute.endsWith('.html') ? 'customer-facing-static-proof' : 'proof-support'
   });
 }
 
@@ -450,7 +455,7 @@ const generatedReceipt = existsSync(generationReceiptPath)
   ? JSON.parse(await readFile(generationReceiptPath, 'utf8'))
   : null;
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' }).trim();
-const createdAt = generatedReceipt?.completed_at || new Date().toISOString();
+const createdAt = new Date().toISOString();
 const localStage = (stage_id, capability, outputs = []) => ({
   stage_id,
   capability,
@@ -476,7 +481,7 @@ const buildDna = {
   },
   recipe: {
     routine: 'website_proof.generate.v1',
-    version: 'booked-branded.v2',
+    version: 'booked-branded.v3',
     build_class: 'medium',
     offer_status: creative.offer.status,
     public_base: canonicalBase,
@@ -488,10 +493,18 @@ const buildDna = {
     directions_per_business: 3,
     email_sent: false,
     payment_enabled: false,
-    customer_data_used: false
+    customer_data_used: false,
+    commerce_sku_activated: false,
+    booking_provider_connected: false,
+    booking_upgrade_activated: false
   },
   stages: [
     localStage('offer-and-shay', 'offer-positioning-and-concierge-boundary', ['creative-system.json', 'package/index.html']),
+    {
+      stage_id: 'booking-option-research', capability: 'official-booking-option-validation', attempt: 1,
+      execution: { provider: { id: 'official-provider-documentation' }, model: { status: 'not_applicable' }, timing: { status: 'reported', completed_at: createdAt }, cost: { status: 'not_applicable', amount_usd: 0 } },
+      result: { status: 'completed', verified_on: '2026-08-27', outputs: creative.offer.booking_option_research.map(item => item.source) }
+    },
     localStage('shape-direction', 'shape-composition-system', Object.keys(creative.archetypes)),
     localStage('type-direction', 'typographic-composition-system', Object.keys(creative.archetypes)),
     localStage('message-direction', 'proof-message-system', Object.keys(creative.archetypes)),
@@ -523,7 +536,7 @@ const buildDna = {
   retrieval: {
     filesystem: { status: 'available', root: 'frontend/public/showcase/booked-and-branded-pilot' },
     database: { status: 'not_registered', reason: 'Static fictional showcase; no prospect, customer, proof, or Commerce record.' },
-    site_studio: { status: 'not_handed_off', reason: 'Reusable creative system is ready for later Site Studio translation.' }
+    site_studio: { status: 'contract_ready_not_imported', source: 'frontend/public/showcase/booked-and-branded-pilot/creative-system.json#offer.site_studio_contract', reason: 'Vendor-neutral booking modes and upgrade tiers are encoded for a later Site Studio build translation; no Studio import or provider connection occurred.' }
   },
   integrity: { artifact_hash_algorithm: 'sha256', credential_values_retained: false }
 };

@@ -11,6 +11,9 @@ Date: 2026-08-27
 - Twelve distinct reference-led Gemini images, one per proof direction.
 - One complete package-proposal page and one reusable shape/type/message/image
   creative-system contract.
+- One starter-first value ladder: proposed $199 launch, one included starter
+  booking path, normal $9.99 monthly hosting beginning in month 13, existing
+  optional $149 Appointment Scheduling setup, and later growth choices.
 - Public base live at
   `https://famtasticdesigns.com/showcase/booked-and-branded-pilot/`.
 
@@ -25,6 +28,12 @@ and review controls are non-submitting visual demonstrations.
 This public static showcase proves the product story and responsive visual
 system. It does not replace the CRM-bound signed public-preview lane required
 for real recipient proofs.
+
+The booking choices are proposal paths rather than active integrations. The
+showcase does not connect a Google, Cal.com, payment, or customer account. It
+records the portable Site Studio contract and leaves provider ownership,
+commercial selection, setup, testing, and authorization for a later real
+customer workflow.
 
 ## Image evidence
 
@@ -50,6 +59,7 @@ contract, and final artifact hashes are recorded under
 
 - Static routes tested: 22.
 - Viewport checks: 44 (1440px and 390px).
+- Copy-contract checks: 21.
 - Retained screenshots: 14.
 - Broken images: 0.
 - Horizontal-overflow failures: 0.
@@ -64,8 +74,8 @@ The standard customer-journey proof also passed with its required safe
 adapters: local isolated database, memory email, stub payment, fixture DNS, and
 isolated deployment. The two local evidence hashes were:
 
-- Journey evidence: `009262ea080bcbf4a0dae7da37ee9505803709010e3cdde38b36e5b7fa817be8`.
-- Lifecycle evidence: `fdfd89029b176362f313f7c9e6edbbf2ad783b83cab149b84f4a495b001d59c0`.
+- Journey evidence: `19342e39e026077d070c365b17150d4727ead0e202c8d77149b75f01abe29d38`.
+- Lifecycle evidence: `5e4b499ee846e7d6f7cdd293216bd3ce1c6d5ae88b3e94e3cc400072ca4ebc30`.
 
 ## Review state
 

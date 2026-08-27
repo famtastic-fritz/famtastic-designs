@@ -2,9 +2,9 @@
   "schema": "famtastic.booked-branded-demo.v1",
   "offer": {
     "name": "Booked & Branded",
-    "price": "$199 founding pilot",
+    "price": "$199 one-time launch",
     "tagline": "Your chair. Your brand. Your booking flow.",
-    "renewal_note": "Proposed $19.99/month beginning in month 13; not activated or purchasable in this demonstration."
+    "renewal_note": "One year of hosting is included. Normal hosting is $9.99/month beginning in month 13 and requires separate recurring authorization."
   },
   "businesses": [
     {

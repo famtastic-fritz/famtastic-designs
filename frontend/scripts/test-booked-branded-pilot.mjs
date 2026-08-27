@@ -22,9 +22,32 @@ for (const business of data.businesses) {
   for (const direction of business.directions) routes.push(`/proofs/${business.slug}/${direction.id}/`);
 }
 
-const browser = await chromium.launch({ headless: true });
 const errors = [];
 const routeEvidence = [];
+const copyEvidence = [];
+
+async function inspectCopy(relativePath, requiredPhrases = []) {
+  const contents = await readFile(join(publicRoot, relativePath), 'utf8');
+  const forbiddenPhrases = ['$19.99', 'does not pretend', 'Not inside this pilot', 'No Booksy review scraping'];
+  for (const phrase of requiredPhrases) {
+    if (!contents.includes(phrase)) errors.push(`${relativePath} is missing required value copy: ${phrase}`);
+  }
+  for (const phrase of forbiddenPhrases) {
+    if (contents.includes(phrase)) errors.push(`${relativePath} still contains value-scaring copy: ${phrase}`);
+  }
+  copyEvidence.push({ relative_path: relativePath, required_phrases: requiredPhrases, forbidden_phrases_absent: forbiddenPhrases.filter(phrase => !contents.includes(phrase)) });
+}
+
+await inspectCopy('package/index.html', ['Start cheap. Upgrade from evidence.', '$9.99/month from month 13', '$149 one time', 'Use the booking tool that fits the owner now.']);
+for (const business of data.businesses) {
+  await inspectCopy(`emails/${business.slug}/index.html`, ['Normal hosting is $9.99 a month', 'optional upgrades—not surprise requirements']);
+  await inspectCopy(`rooms/${business.slug}/index.html`, ['Start useful for $199', 'Grow when it pays']);
+  for (const direction of business.directions) {
+    await inspectCopy(`proofs/${business.slug}/${direction.id}/index.html`, ['Make the next appointment easy.', 'Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades']);
+  }
+}
+
+const browser = await chromium.launch({ headless: true });
 
 async function inspectRoute(route, viewport) {
   const page = await browser.newPage({ viewport });
@@ -115,8 +138,10 @@ const report = {
   routes_tested: routes.length,
   viewport_checks: routeEvidence.length,
   screenshots: 14,
+  copy_checks: copyEvidence.length,
   errors,
   passed: errors.length === 0,
+  copy_evidence: copyEvidence,
   route_evidence: routeEvidence
 };
 const reportPath = join(evidenceDir, 'qa-report.json');
@@ -137,6 +162,7 @@ browserStage.result = {
   routes_tested: routes.length,
   viewport_checks: routeEvidence.length,
   screenshots: 14,
+  copy_checks: copyEvidence.length,
   evidence_ref: 'docs/evidence/booked-branded-four-proof-pilot/qa-report.json'
 };
 const visualStage = buildDna.stages.find(stage => stage.stage_id === 'visual-review');
