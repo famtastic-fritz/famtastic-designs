@@ -5,6 +5,17 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — Product demos must separate visual proof from operational proof
+
+- Observation: the four-business Booked & Branded showcase can accurately
+  prove art direction, responsive layouts, email-to-room navigation, and the
+  intended phone Booking Desk interaction model without claiming that booking,
+  payments, QR handoff, or review storage are live.
+- Guidance: keep the fictional disclosure visible on every route and carry the
+  same boundary in Build DNA and release evidence. Treat the static showcase
+  as a sales/product artifact; route any real prospect, account claim, email,
+  or mutable workflow through the separately proven owner-gated CRM path.
+
 ## 2026-08-27 — Platform-only operators need a branded bridge, not an instant rip-and-replace
 
 - Observation: the no-independent-site screen surfaced beauty and barber

@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — A platform-independence offer needs to show brand and operations together
+
+- Observation: a branded homepage alone does not prove the Booked & Branded
+  idea. The persuasive unit is an actual outreach email leading to three
+  visible choices, with one direction showing how booking requests, deposits,
+  reviews, and daily decisions could feel on the operator's phone.
+- Guidance: demonstrate the emotional upgrade and the operating upgrade in the
+  same proof set, while keeping capability language exact. Label sample people,
+  appointments, reviews, payments, and QR codes as fictional; do not turn a
+  static Booking Desk into a backend claim. Keep generated-image provider,
+  prompt, artifact hash, cost status, browser QA, and reviewer state in Build
+  DNA. Public product demonstrations may use unlisted static routes, but real
+  recipient proofs must still use the CRM-bound signed delivery lane.
+
 ## 2026-08-27 — Platform-only leads are a distinct product opportunity
 
 - Observation: correcting the first-site cohort exposed a more specific need:

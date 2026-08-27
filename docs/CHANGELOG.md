@@ -1,5 +1,27 @@
 # Product changelog
 
+## 2026-08-27 — Booked & Branded four-business proof pilot
+
+- Built an unlisted, no-index product demonstration for four explicitly
+  fictional Florida beauty operators: a Black barber in Port St. Lucie, a
+  Black natural-hair stylist in Fort Pierce, a Latino barber in West Palm
+  Beach, and a white colorist/stylist in Miami. Each business has an email
+  preview, a three-direction concept room, and distinct editorial,
+  high-energy, and operator-first proofs: 4 emails, 4 rooms, and 12 sites.
+- Added four original, fictional-subject hero images and recorded the prompts,
+  output references, final artifact hashes, and truthful provider-reported
+  cost state in `famtastic.build-dna.v1`. The built-in generator did not
+  return a model or billing receipt; those fields remain
+  `provider_did_not_report` rather than being guessed.
+- Added a deterministic static builder and a Playwright acceptance runner.
+  Twenty-one routes passed at 1440px and 390px, with 42 viewport checks, no
+  broken images, no horizontal overflow, no console errors, and 13 retained
+  screenshots. The standard synthetic customer-journey proof also passed in
+  local DB, memory-email, stub-payment, fixture-DNS mode.
+- Every page identifies itself as fictional. No customer data was used, no
+  email was sent, no payment was enabled, and the phone Booking Desk is a
+  visual product proof rather than a persistent production backend.
+
 ## 2026-08-27 — Booked & Branded founding-pilot proposal (draft only)
 
 - Captured a proposed $199 founding package for solo barbers, braiders,

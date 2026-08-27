@@ -1,0 +1,261 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "run": {
+    "run_id": "booked-branded-four-proof-pilot-20260827",
+    "routine": "website_proof.generate.v1",
+    "source_lane": "famtastic-owned-product-demonstration",
+    "created_at": "2026-08-27T18:18:00Z",
+    "public_base": "https://famtasticdesigns.com/showcase/booked-and-branded-pilot",
+    "business_count": 4,
+    "directions_per_business": 3,
+    "email_sent": false,
+    "payment_enabled": false,
+    "customer_data_used": false
+  },
+  "recipe": {
+    "offer": "Booked & Branded — $199 founding pilot draft",
+    "audience_examples": [
+      "Black barber in Port St. Lucie",
+      "Black hair stylist in Fort Pierce",
+      "Hispanic barber in West Palm Beach",
+      "white hair stylist in Miami"
+    ],
+    "direction_system": [
+      "editorial restraint",
+      "high-energy brand world",
+      "operator-first system"
+    ],
+    "operational_surface": "static phone Booking Desk demonstration",
+    "disclaimer": "All businesses, people, services, requests, reviews, and profile facts are fictional demonstration content."
+  },
+  "image_generation": {
+    "schema": "famtastic.booked-branded-image-prompts.v1",
+    "provider": "openai-built-in-image-generation",
+    "model": "provider_did_not_report",
+    "cost": {
+      "status": "provider_did_not_report",
+      "authorized_cap_usd": 1
+    },
+    "prompts": [
+      {
+        "business_slug": "coastline-crown-barbers",
+        "output_ref": "exec-83ed3784-de53-4ac5-80b0-410d2672540e.png",
+        "prompt": "Premium 16:9 editorial documentary photograph of a skilled Black male barber giving a precise taper and beard lineup to a Black male client in a polished Port St. Lucie barbershop. Warm coastal Florida daylight, dark walnut, brushed brass, clean mirrors, authentic tools; subjects on the right with negative space on the left. Fictional people; no text, logos, watermarks, distorted hands, extra fingers, or duplicated tools."
+      },
+      {
+        "business_slug": "velvet-coil-atelier",
+        "output_ref": "exec-91c5e205-5c65-4d61-8070-aa1d89c6c6be.png",
+        "prompt": "Premium 16:9 beauty editorial photograph of a skilled Black female stylist finishing defined healthy curls on a Black female client in an intimate Treasure Coast studio. Textured plaster, terracotta, linen, amber unlabeled bottles, soft window light; subjects left with negative space on the right. Fictional people; no text, logos, watermarks, distorted hair, extra fingers, or duplicated tools."
+      },
+      {
+        "business_slug": "palmera-fade-society",
+        "output_ref": "exec-a4e9fe7b-7eaf-4cbb-811b-07b44b5579e8.png",
+        "prompt": "Premium 16:9 street-editorial photograph of a skilled Latino male barber finishing a sharp fade on a Latino male client in a contemporary West Palm Beach barbershop. Tropical daylight, cream terrazzo, sea-glass tile, chrome, coral accent; subjects left with negative space on the right. Fictional people; no flags, clichés, text, logos, watermarks, distorted hands, extra fingers, or duplicated tools."
+      },
+      {
+        "business_slug": "saltline-color-house",
+        "output_ref": "exec-d1f6042b-ab45-4968-9ec6-26ff009b7a75.png",
+        "prompt": "Premium 16:9 fashion-beauty photograph of a skilled white female stylist creating dimensional sunlit color and a textured cut for a white female client in a design-forward Miami studio. Sculptural white space, pale oak, travertine, cobalt glass, diffused coastal light; subjects right with negative space on the left. Fictional people; no text, logos, watermarks, labels, distorted hands, extra fingers, or duplicated tools."
+      }
+    ]
+  },
+  "construction": {
+    "agent": "codex",
+    "provider": "local-deterministic-static-builder",
+    "model": "not_applicable",
+    "generator": "scripts/build-booked-branded-pilot.mjs",
+    "output": "frontend/public/showcase/booked-and-branded-pilot"
+  },
+  "qa": {
+    "static_build": "passed",
+    "browser_desktop": "passed",
+    "browser_mobile_390": "passed",
+    "link_validation": "passed",
+    "primary_visual_review": "passed",
+    "primary_visual_review_notes": "The overview, all four rooms, all four operator-first mobile directions, one email, and one complete three-direction desktop set were inspected. Direction A is editorial, B is cinematic/high-signal, and C is operator-first; no text collision, broken image, or fictional-to-real ambiguity was observed.",
+    "independent_review": "reserved_for_owner",
+    "evidence": {
+      "path": "docs/evidence/booked-branded-four-proof-pilot/qa-report.json",
+      "sha256": "a4cab2a7b229f693d69d222edda70d1d2fa5c829fb157252a91ba8d7a4762b05",
+      "routes_tested": 21,
+      "viewport_checks": 42,
+      "screenshots": 13
+    }
+  },
+  "cost": {
+    "authorized_image_cap_usd": 1,
+    "actual_usd": null,
+    "status": "provider_did_not_report",
+    "note": "The built-in image generation tool returned no billing or usage receipt; no paid fallback provider was called."
+  },
+  "artifacts": [
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/assets/coastline-crown.webp",
+      "bytes": 173596,
+      "sha256": "08a095ac00b41fe4ae3ce39db92274473c8a356cb90460af0d5a96865ad40a32",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/assets/palmera-fade.webp",
+      "bytes": 232806,
+      "sha256": "99a7b4c5320f2fea0b4ba4b733a2bcaf4807998c64acc4494621277e672dcc10",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/assets/saltline-color.webp",
+      "bytes": 153356,
+      "sha256": "2c63197d89c3011538ef759e44f5c881d9915e1ef921ccee6699f0a4540c1cd5",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/assets/velvet-coil.webp",
+      "bytes": 212642,
+      "sha256": "326693b176ea8590940f89cd01a900750086fb86ca9ff2a57d7313ee231998c8",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/emails/coastline-crown-barbers/index.html",
+      "bytes": 3400,
+      "sha256": "917a2199a869e51b5360d0d0d2dc88344fd429346e10e6d1e3865467840ff046",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/emails/palmera-fade-society/index.html",
+      "bytes": 3374,
+      "sha256": "5ac96b57279b188acfbcce617ba934ecf83f6dcdac2b89c2e0ebb7f22da0485b",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/emails/saltline-color-house/index.html",
+      "bytes": 3379,
+      "sha256": "591921873346316bf42a77e14e7eda74b4594e396ad5f8867d6eb9d960821095",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/emails/velvet-coil-atelier/index.html",
+      "bytes": 3366,
+      "sha256": "f2a18e7af2d0f8061219a4e8b5a633bfd6be54f37ea7952fd1755025da881f4a",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/image-prompts.json",
+      "bytes": 2494,
+      "sha256": "be7edb0911fc96d21b7cb2aa04454234e8955768042030e08269824d5e5676f3",
+      "role": "proof-support"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/index.html",
+      "bytes": 5293,
+      "sha256": "835b7712b30b192d86460d6e484e1ae426854c75b34ca093f25ee8c2a43a9190",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/pilot-data.json",
+      "bytes": 8172,
+      "sha256": "a93e9ce5b1014e93e8ceeb7016100776c25077fd12c1c57712b8cff9f440340b",
+      "role": "proof-support"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/a/index.html",
+      "bytes": 9747,
+      "sha256": "0663b652ee0e0fdf0290f5aaa417a7716a9fbb921f846dc922b9fad2697b5d31",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/b/index.html",
+      "bytes": 9736,
+      "sha256": "01499208d4819f526980288778548ff4cc70f705f9a01bcad0a8522da9fad59d",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/c/index.html",
+      "bytes": 9768,
+      "sha256": "97ed8db2e346c14b48ecf8f526c8c7c54955603da11c2d4d8be6e8c38d5d8d90",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/a/index.html",
+      "bytes": 9716,
+      "sha256": "6b6f4f13487c651a7a5751731f4ade05aaf3f613df109d4308660acf94914f77",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/b/index.html",
+      "bytes": 9734,
+      "sha256": "d58cf6ae10eb8d449dbea9d6081efd6d304483c51cbe5b9ba26d25e6f0f738d1",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/c/index.html",
+      "bytes": 9782,
+      "sha256": "083abeb55fe230f39575849711aff2f218e62eee96b04ff4d941753c61ba1fa8",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/a/index.html",
+      "bytes": 9761,
+      "sha256": "57affa95b6c1bdc00e30bee7e8de60d8727466aa4409ac469a066a7d315e8d33",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/b/index.html",
+      "bytes": 9766,
+      "sha256": "b74f8481db29a9cfb3b47ca9fc8fc57b9ad3b3a4020e0c278da4ea72d4e78425",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/c/index.html",
+      "bytes": 9812,
+      "sha256": "e84c09329c3b4d507774bcc771e4f82c3725f3de4570066ce9f88864f07a0882",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/a/index.html",
+      "bytes": 9777,
+      "sha256": "637cd82158225d66282e1e0061fbddc9c9e26962e8f2300a7c2ec2c3d84b40e0",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/b/index.html",
+      "bytes": 9766,
+      "sha256": "c550feddbb1ec4ab2c477d4fd4a6d16481e63cb821e1beb81af8c3dcaadf6d1f",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/c/index.html",
+      "bytes": 9811,
+      "sha256": "ac437b34eefd9f7b30e4eb6447168a6fc5bf0c1904196fb223a5d38b1ed3d3e6",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/coastline-crown-barbers/index.html",
+      "bytes": 4241,
+      "sha256": "6121c1f0909cdac4f03a57f7ecb33e5aca01621252be66b121df9a5bd41fe119",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/palmera-fade-society/index.html",
+      "bytes": 4233,
+      "sha256": "d416708d3a3c5f09f49b79a65efe0625bb388045e3e485b33359b0bd2832d4b1",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/saltline-color-house/index.html",
+      "bytes": 4242,
+      "sha256": "35e674b1923fde674b8117afa3b92b1aaac1852fdaafff7b6b9ba1fa60c55736",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/velvet-coil-atelier/index.html",
+      "bytes": 4189,
+      "sha256": "0ca8a82685222223f6581e1fe4d38e12e1737dcd8662d4db0d37fb81c3a7b970",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/styles.css",
+      "bytes": 20638,
+      "sha256": "6bf16508349f6019ed6ad7b3c44034843857126337476ff066068890f117dd00",
+      "role": "proof-support"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "famtastic.booked-branded-image-prompts.v1",
+  "provider": "openai-built-in-image-generation",
+  "model": "provider_did_not_report",
+  "cost": {
+    "status": "provider_did_not_report",
+    "authorized_cap_usd": 1
+  },
+  "prompts": [
+    {
+      "business_slug": "coastline-crown-barbers",
+      "output_ref": "exec-83ed3784-de53-4ac5-80b0-410d2672540e.png",
+      "prompt": "Premium 16:9 editorial documentary photograph of a skilled Black male barber giving a precise taper and beard lineup to a Black male client in a polished Port St. Lucie barbershop. Warm coastal Florida daylight, dark walnut, brushed brass, clean mirrors, authentic tools; subjects on the right with negative space on the left. Fictional people; no text, logos, watermarks, distorted hands, extra fingers, or duplicated tools."
+    },
+    {
+      "business_slug": "velvet-coil-atelier",
+      "output_ref": "exec-91c5e205-5c65-4d61-8070-aa1d89c6c6be.png",
+      "prompt": "Premium 16:9 beauty editorial photograph of a skilled Black female stylist finishing defined healthy curls on a Black female client in an intimate Treasure Coast studio. Textured plaster, terracotta, linen, amber unlabeled bottles, soft window light; subjects left with negative space on the right. Fictional people; no text, logos, watermarks, distorted hair, extra fingers, or duplicated tools."
+    },
+    {
+      "business_slug": "palmera-fade-society",
+      "output_ref": "exec-a4e9fe7b-7eaf-4cbb-811b-07b44b5579e8.png",
+      "prompt": "Premium 16:9 street-editorial photograph of a skilled Latino male barber finishing a sharp fade on a Latino male client in a contemporary West Palm Beach barbershop. Tropical daylight, cream terrazzo, sea-glass tile, chrome, coral accent; subjects left with negative space on the right. Fictional people; no flags, clichés, text, logos, watermarks, distorted hands, extra fingers, or duplicated tools."
+    },
+    {
+      "business_slug": "saltline-color-house",
+      "output_ref": "exec-d1f6042b-ab45-4968-9ec6-26ff009b7a75.png",
+      "prompt": "Premium 16:9 fashion-beauty photograph of a skilled white female stylist creating dimensional sunlit color and a textured cut for a white female client in a design-forward Miami studio. Sculptural white space, pale oak, travertine, cobalt glass, diffused coastal light; subjects right with negative space on the left. Fictional people; no text, logos, watermarks, labels, distorted hands, extra fingers, or duplicated tools."
+    }
+  ]
+}

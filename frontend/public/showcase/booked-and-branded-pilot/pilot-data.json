@@ -1,0 +1,119 @@
+{
+  "schema": "famtastic.booked-branded-demo.v1",
+  "offer": {
+    "name": "Booked & Branded",
+    "price": "$199 founding pilot",
+    "tagline": "Your chair. Your brand. Your booking flow.",
+    "renewal_note": "Proposed $19.99/month beginning in month 13; not activated or purchasable in this demonstration."
+  },
+  "businesses": [
+    {
+      "slug": "coastline-crown-barbers",
+      "name": "Coastline Crown Barbers",
+      "location": "Port St. Lucie, Florida",
+      "operator": "Solo barber",
+      "specialty": "precision fades, beard architecture, and polished everyday grooming",
+      "image": "coastline-crown.webp",
+      "palette": { "ink": "#10100f", "paper": "#f2ede3", "accent": "#c89a47", "accent2": "#4e5f44" },
+      "mark": "CC",
+      "services": [
+        { "name": "Crown Cut", "time": "45 min", "price": "$45" },
+        { "name": "Cut + Beard", "time": "65 min", "price": "$65" },
+        { "name": "Junior Crown", "time": "35 min", "price": "$30" }
+      ],
+      "hours": "Tue–Sat · 9:00 AM–6:00 PM",
+      "policy": "Requests are confirmed personally. A $15 business-owned deposit link may be sent after confirmation.",
+      "requests": [
+        { "initials": "JB", "name": "J. Brooks", "service": "Cut + Beard", "time": "Today · 2:30 PM", "status": "Needs reply" },
+        { "initials": "AC", "name": "A. Cole", "service": "Crown Cut", "time": "Today · 4:00 PM", "status": "Confirmed" },
+        { "initials": "MJ", "name": "M. Jones", "service": "Junior Crown", "time": "Sat · 10:00 AM", "status": "Deposit due" }
+      ],
+      "directions": [
+        { "id": "a", "name": "The Crown Standard", "label": "Editorial restraint", "headline": "Precision belongs in every detail.", "subhead": "A quiet, confident home for grooming that earns the second look." },
+        { "id": "b", "name": "772 After Dark", "label": "High-energy culture", "headline": "Fresh cut. Clear signal.", "subhead": "A bolder street-editorial direction built for the scroll and the chair." },
+        { "id": "c", "name": "Chairside Command", "label": "Operator-first system", "headline": "Run the chair from the phone in your hand.", "subhead": "Brand, booking requests, deposits, and reviews in one focused operating view." }
+      ]
+    },
+    {
+      "slug": "velvet-coil-atelier",
+      "name": "Velvet Coil Atelier",
+      "location": "Fort Pierce, Florida",
+      "operator": "Independent natural-hair stylist",
+      "specialty": "healthy curls, silk presses, and texture-first care rituals",
+      "image": "velvet-coil.webp",
+      "palette": { "ink": "#341c24", "paper": "#f4e5d5", "accent": "#bd653e", "accent2": "#866174" },
+      "mark": "VC",
+      "services": [
+        { "name": "Signature Curl Session", "time": "120 min", "price": "$120" },
+        { "name": "Silk Press Ritual", "time": "105 min", "price": "$95" },
+        { "name": "Coil Care Reset", "time": "75 min", "price": "$75" }
+      ],
+      "hours": "Wed–Sun · By confirmed request",
+      "policy": "A short consultation is required for first-time color or corrective-care requests.",
+      "requests": [
+        { "initials": "AR", "name": "A. Reed", "service": "Signature Curl Session", "time": "Thu · 11:00 AM", "status": "Needs reply" },
+        { "initials": "TN", "name": "T. Neal", "service": "Silk Press Ritual", "time": "Fri · 1:30 PM", "status": "Confirmed" },
+        { "initials": "KW", "name": "K. Wells", "service": "Coil Care Reset", "time": "Sun · 10:00 AM", "status": "Consultation" }
+      ],
+      "directions": [
+        { "id": "a", "name": "Soft Power", "label": "Warm beauty editorial", "headline": "Healthy texture, held with intention.", "subhead": "An intimate studio story centered on care, ritual, and visible expertise." },
+        { "id": "b", "name": "Coil Culture", "label": "Expressive brand world", "headline": "Let the texture lead.", "subhead": "A richer, image-forward direction with confident type and tactile rhythm." },
+        { "id": "c", "name": "The Studio Ritual", "label": "Care-path system", "headline": "Every request arrives with the context you need.", "subhead": "A calmer way to manage consultations, services, deposits, and follow-up from one phone." }
+      ]
+    },
+    {
+      "slug": "palmera-fade-society",
+      "name": "Palmera Fade Society",
+      "location": "West Palm Beach, Florida",
+      "operator": "Independent barber",
+      "specialty": "crisp fades, beard detailing, and social neighborhood energy",
+      "image": "palmera-fade.webp",
+      "palette": { "ink": "#102522", "paper": "#f1e7d6", "accent": "#ef714f", "accent2": "#66a894" },
+      "mark": "PF",
+      "services": [
+        { "name": "Fresh Fade", "time": "45 min", "price": "$45" },
+        { "name": "Fade + Beard", "time": "70 min", "price": "$70" },
+        { "name": "Father + Son", "time": "90 min", "price": "$80" }
+      ],
+      "hours": "Mon–Sat · 10:00 AM–7:00 PM",
+      "policy": "Same-day requests are welcome when the chair is open; confirmation is required before arrival.",
+      "requests": [
+        { "initials": "LM", "name": "L. Morales", "service": "Fresh Fade", "time": "Today · 3:15 PM", "status": "Needs reply" },
+        { "initials": "ER", "name": "E. Rivera", "service": "Fade + Beard", "time": "Today · 5:00 PM", "status": "Confirmed" },
+        { "initials": "CG", "name": "C. Garcia", "service": "Father + Son", "time": "Sat · 12:30 PM", "status": "Deposit due" }
+      ],
+      "directions": [
+        { "id": "a", "name": "Palm Line", "label": "Modern neighborhood", "headline": "Sharp work. Easy next move.", "subhead": "A bright, clear booking path with West Palm energy and no extra noise." },
+        { "id": "b", "name": "Calle Moderno", "label": "Social-first identity", "headline": "La silla está lista.", "subhead": "A fast, vivid direction that turns craft, culture, and availability into one signal." },
+        { "id": "c", "name": "The Daily Chair", "label": "Fast operator workflow", "headline": "See the day. Confirm the chair. Keep moving.", "subhead": "A bilingual-ready operating direction designed around the decisions a solo barber makes between clients." }
+      ]
+    },
+    {
+      "slug": "saltline-color-house",
+      "name": "Saltline Color House",
+      "location": "Miami, Florida",
+      "operator": "Independent colorist and stylist",
+      "specialty": "dimensional color, polished texture, and sunlit lived-in finishes",
+      "image": "saltline-color.webp",
+      "palette": { "ink": "#17213a", "paper": "#f4f0e8", "accent": "#2055d6", "accent2": "#d7ae69" },
+      "mark": "SC",
+      "services": [
+        { "name": "Dimensional Color", "time": "180 min", "price": "from $240" },
+        { "name": "Cut + Finish", "time": "75 min", "price": "$110" },
+        { "name": "Gloss + Style", "time": "60 min", "price": "$85" }
+      ],
+      "hours": "Tue–Sat · Appointment requests only",
+      "policy": "New color clients begin with a photo consultation before time and deposit are confirmed.",
+      "requests": [
+        { "initials": "ES", "name": "E. Stone", "service": "Dimensional Color", "time": "Wed · 10:00 AM", "status": "Photo review" },
+        { "initials": "LB", "name": "L. Bennett", "service": "Cut + Finish", "time": "Thu · 2:00 PM", "status": "Confirmed" },
+        { "initials": "CM", "name": "C. Moore", "service": "Gloss + Style", "time": "Sat · 11:30 AM", "status": "Deposit due" }
+      ],
+      "directions": [
+        { "id": "a", "name": "Sunwashed", "label": "Airy color editorial", "headline": "Color that looks like it belongs to you.", "subhead": "A light-filled, premium direction with space for the work to breathe." },
+        { "id": "b", "name": "Blue Hour", "label": "Miami fashion energy", "headline": "Turn the light up.", "subhead": "A sharper art-direction system with cobalt signal, oversized type, and a confident booking path." },
+        { "id": "c", "name": "The Color Ledger", "label": "Consultation-first operations", "headline": "The right color starts before the chair.", "subhead": "A phone-managed intake and appointment flow that gives complex services the context they deserve." }
+      ]
+    }
+  ]
+}
