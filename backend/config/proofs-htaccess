@@ -1,1 +1,10 @@
-Require all denied
+# Proof campaigns are stored in cryptographically random directory names.
+# Direct access is allowed for pilot-mode proof previews.
+# For production, replace with token-authenticated delivery.
+<IfModule mod_authz_core.c>
+  Require all granted
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Allow from all
+</IfModule>
