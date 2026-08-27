@@ -42,7 +42,7 @@ release.
 
 Set FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 only for an owner-gated public-preview
 pilot. In that mode the deployment writes and verifies the durable Drupal
-pilot lock before promotion. Fresh cPanel `drush cron` processes therefore
+pilot lock before promotion. Fresh cPanel drush cron processes therefore
 skip this module's general automation, outbox, SLA, and lifecycle behavior
 even though they do not inherit this deployment shell's environment. Exact
 owner-approved preview delivery must use famtastic:preview-delivery-dispatch.
@@ -63,13 +63,13 @@ authorized apply may suspend only one of these exact marker/command pairs:
 Preflight validates the exact marker and the immediately following byte-exact
 command. Apply stores a mode-0600 full-crontab backup under the private deploy
 directory, removes only authorized pairs, and proves no active broad
-`famtastic:lifecycle-run` or `drush cron` entry remains before old code is
+famtastic:lifecycle-run or drush cron entry remains before old code is
 promoted. The scheduler remains suspended after both success and failure;
 restoration is a separate owner-authorized end-pilot operation so a stale backup
 can never overwrite later crontab changes or reopen shared dispatch implicitly.
 
 Before a pilot can apply, the deployer verifies that the historical
-`cold-260-aug-2026` generic proof queue is empty. It never quarantines it by
+cold-260-aug-2026 generic proof queue is empty. It never quarantines it by
 default. To authorize only that exact pre-pilot quarantine, repeat both values:
   FAMTASTIC_PILOT_LEGACY_QUARANTINE_CAMPAIGN=cold-260-aug-2026
   FAMTASTIC_PILOT_LEGACY_QUARANTINE_CONFIRM=cold-260-aug-2026
