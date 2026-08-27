@@ -616,9 +616,11 @@ class CampaignMessageService {
     $lines[] = '';
     $lines[] = 'Lock in your $199 Starter Special in minutes — no calls, no meetings, just results. Pick your favorite direction and checkout directly from your proof room. Want more options? Create a free project space to unlock additional designs and manage everything in one place.';
     $lines[] = '';
-    $lines[] = '— FAMtastic Designs';
+    $lines[] = '— Shay — Your AI Growth Partner';
     $lines[] = '';
-    $lines[] = $postalAddress;
+    // CAN-SPAM requires postal address but keep it minimal — single compact line
+    $compactAddress = str_replace("\n", ' · ', $postalAddress);
+    $lines[] = $compactAddress;
     $lines[] = '';
     $lines[] = sprintf('Why you are receiving this: we found your business contact information in a public business listing while researching local %s businesses that may benefit from a stronger web presence.', $category);
     $lines[] = '';
