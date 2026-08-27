@@ -191,3 +191,22 @@ export function formatPrice(minorUnits, currency = 'usd') {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency.toUpperCase() })
     .format((minorUnits || 0) / 100);
 }
+
+export async function getAiSolutionAdvice(payload = {}) {
+  const res = await fetch(`${BASE}/api/v1/ai/solution-advisor`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  return parse(res);
+}
+
+export async function synthesizeAiBrief(payload = {}) {
+  const res = await fetch(`${BASE}/api/v1/ai/brief-synthesizer`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  return parse(res);
+}
+

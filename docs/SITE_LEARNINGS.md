@@ -1,5 +1,25 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Platform-only leads are a distinct product opportunity
+
+- Observation: correcting the first-site cohort exposed a more specific need:
+  appointment businesses may already have functional booking profiles but
+  still lack a distinctive owned customer experience and a flexible growth
+  path. Treating them as simply “offline” would miss the actual problem and
+  make the outreach feel generic.
+- Guidance: market an owned branded front door plus a small phone-manageable
+  operating layer, not an unsupported feature-for-feature platform replacement.
+  Keep the booking engine pluggable: bridge the current platform first,
+  introduce request-to-book as the bounded starter, and sell real-time
+  scheduling only after conflict/recovery proof. Keep processor accounts owned
+  by the business and describe reported platform dissatisfaction as a pilot
+  hypothesis until interviews and usage evidence validate it.
+
+## 2026-08-27 — Drupal AI integration in decoupled frontend must have deterministic fallbacks
+
+- Observation: Connecting decoupled React interfaces (like the Solution Finder) to Drupal AI provides natural-language understanding, but AI provider API keys, model rate limits, or external latency must not become single points of failure for public visitor conversions.
+- Guidance: Wrap Drupal AI calls in a dedicated service layer that falls back seamlessly to high-accuracy deterministic catalog matching when external AI providers are unconfigured or unavailable. The visitor experience must always complete with a clean recommendation.
+
 ## 2026-08-27 — Drupal admin URL generation must use routes, not raw userInput paths
 
 - Observation: When Drupal is deployed in a subpath (e.g. `/web` behind a React frontend at `/`), `Url::fromUserInput('/admin/...')` generates URLs targeting `https://famtasticdesigns.com/admin/...` rather than `https://famtasticdesigns.com/web/admin/...`, resulting in 404s for Commerce, Content, and Entity edit links.

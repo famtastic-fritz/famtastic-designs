@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { AnimatePresence, motion } from 'framer-motion';
-import { collectUtmParams, postIntake } from '../api/pipeline.js';
+import { collectUtmParams, getAiSolutionAdvice, postIntake } from '../api/pipeline.js';
 
 const CONTACT_EMAIL = 'hello@famtasticdesigns.com';
 
@@ -27,11 +27,11 @@ const KEYWORDS = {
 };
 
 const PLACEHOLDERS = [
-  'A website for my restaurant...',
-  'A mobile app for my customers...',
-  'An AI chatbot for leads...',
-  'A portal where clients log in...',
-  'A custom system for my workflow...',
+  'A website for my restaurant with online catering requests...',
+  'A mobile app for my fitness clients...',
+  'An AI chatbot to answer customer questions 24/7...',
+  'A client portal where customers log in and upload files...',
+  'A custom business growth system for my dental practice...',
 ];
 
 const money = (n) => `$${n.toLocaleString('en-US')}`;
@@ -99,52 +99,38 @@ const BRANCHES = {
           {
             name: 'domainChoice', label: 'Domain situation', type: 'select', required: true,
             options: [
-              { value: 'new_domain', label: 'I need a new domain' },
-              { value: 'existing_domain', label: 'I already own a domain' },
-              { value: 'undecided', label: 'I am not sure' },
+              { value: 'own_domain', label: 'I already own a domain' },
+              { value: 'need_new_domain', label: 'I need a new domain registered (included in year 1)' },
+              { value: 'undecided', label: 'Not sure yet' },
             ],
           },
-          { name: 'domainDetails', label: 'Domain, hosting, email, or repository details', type: 'textarea', required: false, placeholder: 'Desired domains or an existing domain, registrar, host, email provider, website login, Git repository, or anything you know.' },
-          { name: 'businessEmailNeeds', label: 'Custom business email needs', type: 'textarea', required: false, placeholder: 'Examples: info@, sales@, two mailboxes, forwarding only, or help choosing.' },
-          { name: 'referenceSites', label: 'Sites you like or dislike—and why', type: 'textarea', required: false, placeholder: 'URLs plus what to borrow or avoid. We use the reasons, not just the links.' },
+          {
+            name: 'businessEmail', label: 'Business email situation', type: 'select', required: true,
+            options: [
+              { value: 'have_email', label: 'I already have a professional email' },
+              { value: 'need_setup', label: 'I need help setting up professional email' },
+              { value: 'not_needed', label: 'Not needed right now' },
+            ],
+          },
+          {
+            name: 'referenceSites', label: 'Websites or brands you admire (optional)', type: 'textarea', required: false,
+            placeholder: 'Paste links or describe the visual style you like...',
+          },
         ],
       },
       {
-        title: 'Features, budget & timeline',
+        title: 'Features you need',
         fields: [
           {
-            name: 'aiFeatures', label: 'Want AI features?', type: 'multi', required: false,
+            name: 'features', label: 'Check all that apply', type: 'multi', required: true,
             options: [
-              { value: 'chatbot', label: 'AI chatbot' },
-              { value: 'automation', label: 'Automation' },
-              { value: 'none', label: 'No thanks' },
-            ],
-          },
-          {
-            name: 'budget', label: 'Budget', type: 'select', required: true,
-            options: [
-              { value: '199', label: '$199 starter' },
-              { value: '500-2k', label: '$500 – $2K' },
-              { value: '2k-5k', label: '$2K – $5K' },
-              { value: '5k+', label: '$5K+' },
-            ],
-          },
-          {
-            name: 'timeline', label: 'Timeline', type: 'select', required: true,
-            options: [
-              { value: 'asap', label: 'ASAP' },
-              { value: '1-week', label: 'Within 1 week' },
-              { value: '1-month', label: 'Within 1 month' },
-              { value: 'flexible', label: 'Flexible' },
-            ],
-          },
-          { name: 'customNeeds', label: 'Anything else you need—even if we do not list it?', type: 'textarea', required: false, placeholder: 'Products, services, integrations, accessibility, legal, or unusual workflow needs.' },
-          {
-            name: 'mockupInterest', label: 'What would help you decide?', type: 'select', required: true,
-            options: [
-              { value: 'mockup', label: 'A no-account mockup / visual direction' },
-              { value: 'quote', label: 'A quote and recommendation' },
-              { value: 'both', label: 'Both a mockup and quote' },
+              { value: 'contact', label: 'Contact Form' },
+              { value: 'booking', label: 'Online Booking / Scheduling' },
+              { value: 'ecommerce', label: 'Online Store / Payments' },
+              { value: 'blog', label: 'Blog / Articles' },
+              { value: 'reviews', label: 'Customer Reviews / Testimonials' },
+              { value: 'chat', label: 'Live Chat / AI Chatbot' },
+              { value: 'none', label: 'Just the essentials' },
             ],
           },
         ],
@@ -156,53 +142,31 @@ const BRANCHES = {
     label: 'Mobile App',
     steps: [
       {
-        title: 'Tell us about your business',
+        title: 'Tell us about your app idea',
         fields: [
-          { name: 'businessName', label: 'Business name', type: 'text', required: true, autoComplete: 'organization' },
-          { name: 'industry', label: 'Industry', type: 'text', required: true, placeholder: 'e.g. fitness, delivery, retail' },
+          { name: 'businessName', label: 'Project or business name', type: 'text', required: true },
+          { name: 'platforms', label: 'Platforms needed', type: 'select', required: true,
+            options: [
+              { value: 'both', label: 'iOS & Android (Cross-platform)' },
+              { value: 'ios', label: 'iOS only' },
+              { value: 'android', label: 'Android only' },
+            ],
+          },
+          { name: 'appSummary', label: 'What is the core purpose of the app?', type: 'textarea', required: true, placeholder: 'Describe what users will do in the app...' },
         ],
       },
       {
-        title: 'Platform & purpose',
+        title: 'Core app features',
         fields: [
           {
-            name: 'platform', label: 'Platform', type: 'select', required: true,
+            name: 'appFeatures', label: 'Key capabilities', type: 'multi', required: true,
             options: [
-              { value: 'ios', label: 'iOS' },
-              { value: 'android', label: 'Android' },
-              { value: 'both', label: 'Both' },
-            ],
-          },
-          {
-            name: 'purpose', label: 'What is the app for?', type: 'select', required: true,
-            options: [
-              { value: 'customer', label: 'Customer app' },
-              { value: 'internal', label: 'Internal tool' },
-              { value: 'marketplace', label: 'Marketplace' },
-            ],
-          },
-        ],
-      },
-      {
-        title: 'Features & budget',
-        fields: [
-          {
-            name: 'features', label: 'Features you need', type: 'multi', required: true,
-            options: [
-              { value: 'push', label: 'Push notifications' },
-              { value: 'payments', label: 'Payments' },
-              { value: 'login', label: 'User login' },
-              { value: 'booking', label: 'Booking' },
-              { value: 'maps', label: 'Maps / GPS' },
-              { value: 'chat', label: 'In-app chat' },
-            ],
-          },
-          {
-            name: 'budget', label: 'Budget', type: 'select', required: true,
-            options: [
-              { value: '5k-10k', label: '$5K – $10K' },
-              { value: '10k-25k', label: '$10K – $25K' },
-              { value: '25k+', label: '$25K+' },
+              { value: 'auth', label: 'User Accounts / Login' },
+              { value: 'payments', label: 'In-App Payments / Subscriptions' },
+              { value: 'push', label: 'Push Notifications' },
+              { value: 'chat', label: 'In-App Messaging' },
+              { value: 'maps', label: 'GPS / Location Services' },
+              { value: 'offline', label: 'Offline Support' },
             ],
           },
         ],
@@ -214,47 +178,19 @@ const BRANCHES = {
     label: 'AI Chatbot',
     steps: [
       {
-        title: 'Tell us about your business',
+        title: 'Where will your AI chatbot live?',
         fields: [
-          { name: 'businessName', label: 'Business name', type: 'text', required: true, autoComplete: 'organization' },
-          { name: 'industry', label: 'Industry', type: 'text', required: true, placeholder: 'e.g. salon, HVAC, real estate' },
-        ],
-      },
-      {
-        title: 'Where & why',
-        fields: [
+          { name: 'businessName', label: 'Business name', type: 'text', required: true },
           {
-            name: 'deployWhere', label: 'Where should it live?', type: 'select', required: true,
+            name: 'channels', label: 'Channels needed', type: 'multi', required: true,
             options: [
-              { value: 'website', label: 'Website' },
-              { value: 'facebook', label: 'Facebook' },
-              { value: 'sms', label: 'SMS' },
-              { value: 'all', label: 'All of them' },
+              { value: 'website', label: 'On my website' },
+              { value: 'whatsapp', label: 'WhatsApp' },
+              { value: 'instagram', label: 'Instagram / Messenger' },
+              { value: 'internal', label: 'Internal Staff Assistant' },
             ],
           },
-          {
-            name: 'purpose', label: 'Main purpose', type: 'select', required: true,
-            options: [
-              { value: 'lead-capture', label: 'Lead capture' },
-              { value: 'faq', label: 'Answering FAQs' },
-              { value: 'booking', label: 'Booking' },
-              { value: 'all', label: 'All of the above' },
-            ],
-          },
-        ],
-      },
-      {
-        title: 'Expected volume',
-        fields: [
-          {
-            name: 'monthlyConversations', label: 'Approx. monthly conversations', type: 'select', required: true,
-            options: [
-              { value: '<100', label: 'Under 100' },
-              { value: '100-500', label: '100 – 500' },
-              { value: '500-2k', label: '500 – 2,000' },
-              { value: '2k+', label: '2,000+' },
-            ],
-          },
+          { name: 'botGoal', label: 'What should the chatbot do?', type: 'textarea', required: true, placeholder: 'e.g. Answer FAQ, qualify leads, book appointments, check order status...' },
         ],
       },
       CONTACT_STEP,
@@ -264,40 +200,18 @@ const BRANCHES = {
     label: 'Client Portal',
     steps: [
       {
-        title: 'Tell us about your business',
+        title: 'Tell us about your portal',
         fields: [
-          { name: 'businessName', label: 'Business name', type: 'text', required: true, autoComplete: 'organization' },
-          {
-            name: 'clientCount', label: 'How many clients do you have?', type: 'select', required: true,
+          { name: 'businessName', label: 'Business name', type: 'text', required: true },
+          { name: 'userType', label: 'Who will log in?', type: 'select', required: true,
             options: [
-              { value: '<10', label: 'Under 10' },
-              { value: '10-50', label: '10 – 50' },
-              { value: '50-200', label: '50 – 200' },
-              { value: '200+', label: '200+' },
+              { value: 'clients', label: 'Clients / Customers' },
+              { value: 'employees', label: 'Internal Employees' },
+              { value: 'partners', label: 'Vendors / Partners' },
+              { value: 'mixed', label: 'Both Clients and Staff' },
             ],
           },
-        ],
-      },
-      {
-        title: 'Portal features',
-        fields: [
-          {
-            name: 'features', label: 'What should clients be able to do?', type: 'multi', required: true,
-            options: [
-              { value: 'login', label: 'Secure login' },
-              { value: 'files', label: 'File sharing' },
-              { value: 'payments', label: 'Payments' },
-              { value: 'messaging', label: 'Messaging' },
-            ],
-          },
-          {
-            name: 'budget', label: 'Budget', type: 'select', required: true,
-            options: [
-              { value: '3k-5k', label: '$3K – $5K' },
-              { value: '5k-10k', label: '$5K – $10K' },
-              { value: '10k+', label: '$10K+' },
-            ],
-          },
+          { name: 'portalGoal', label: 'What key actions will users take?', type: 'textarea', required: true, placeholder: 'e.g. View invoices, upload docs, track project progress...' },
         ],
       },
       CONTACT_STEP,
@@ -307,91 +221,31 @@ const BRANCHES = {
     label: 'Custom System',
     steps: [
       {
-        title: 'Tell us about your business',
+        title: 'Describe your custom system',
         fields: [
-          { name: 'businessName', label: 'Business name', type: 'text', required: true, autoComplete: 'organization' },
-          { name: 'industry', label: 'Industry', type: 'text', required: true, placeholder: 'e.g. logistics, healthcare, trades' },
-        ],
-      },
-      {
-        title: 'What are you trying to do?',
-        fields: [
-          { name: 'description', label: "Describe what you're trying to do", type: 'textarea', required: true, placeholder: 'The more detail, the sharper the quote.' },
-          { name: 'painPoints', label: 'Current pain points', type: 'textarea', required: true, placeholder: 'What is slow, manual, or breaking today?' },
-        ],
-      },
-      {
-        title: 'Budget & timeline',
-        fields: [
-          {
-            name: 'budget', label: 'Approx. budget', type: 'select', required: true,
+          { name: 'businessName', label: 'Business name', type: 'text', required: true },
+          { name: 'systemType', label: 'What type of system is this?', type: 'select', required: true,
             options: [
-              { value: '<2k', label: 'Under $2K' },
-              { value: '2k-5k', label: '$2K – $5K' },
-              { value: '5k-10k', label: '$5K – $10K' },
-              { value: '10k+', label: '$10K+' },
+              { value: 'crm', label: 'Custom CRM / Lead Management' },
+              { value: 'workflow', label: 'Internal Workflow Automation' },
+              { value: 'api', label: 'API / Database Integration' },
+              { value: 'other', label: 'Unique Proprietary Tool' },
             ],
           },
-          {
-            name: 'timeline', label: 'Timeline', type: 'select', required: true,
-            options: [
-              { value: 'asap', label: 'ASAP' },
-              { value: '1-month', label: 'Within 1 month' },
-              { value: 'quarter', label: 'This quarter' },
-              { value: 'flexible', label: 'Flexible' },
-            ],
-          },
+          { name: 'systemDetails', label: 'Tell us what you want to automate or build', type: 'textarea', required: true, placeholder: 'Describe your current manual process and desired outcome...' },
         ],
       },
       CONTACT_STEP,
     ],
   },
   unsure: {
-    label: 'Guided',
+    label: 'General Inquiry',
     steps: [
       {
-        title: 'What does your business do?',
+        title: 'Tell us what you are trying to accomplish',
         fields: [
-          { name: 'businessDescription', label: 'In a sentence or two', type: 'textarea', required: true, placeholder: 'e.g. We groom dogs and take appointments over the phone.' },
-        ],
-      },
-      {
-        title: 'What is your biggest challenge?',
-        fields: [
-          {
-            name: 'challenges', label: 'Pick all that apply', type: 'multi', required: true,
-            options: [
-              { value: 'no-presence', label: 'No online presence' },
-              { value: 'leads', label: 'Not enough leads' },
-              { value: 'missed-messages', label: 'Missed calls & messages' },
-              { value: 'busywork', label: 'Too much manual busywork' },
-              { value: 'client-communication', label: 'Keeping clients updated' },
-              { value: 'payments-booking', label: 'Payments & booking' },
-            ],
-          },
-        ],
-      },
-      {
-        title: 'Where are you starting from?',
-        fields: [
-          {
-            name: 'currentAssets', label: 'What do you currently have?', type: 'select', required: true,
-            options: [
-              { value: 'nothing', label: 'Nothing yet' },
-              { value: 'social', label: 'Social media only' },
-              { value: 'basic-site', label: 'A basic website' },
-              { value: 'site-and-social', label: 'Website + social' },
-            ],
-          },
-          {
-            name: 'volume', label: 'Rough customer volume', type: 'select', required: true,
-            options: [
-              { value: 'starting', label: 'Just starting out' },
-              { value: '1-50', label: '1 – 50 / month' },
-              { value: '50-200', label: '50 – 200 / month' },
-              { value: '200+', label: '200+ / month' },
-            ],
-          },
+          { name: 'businessName', label: 'Business name', type: 'text', required: true },
+          { name: 'goal', label: 'What is your main goal right now?', type: 'textarea', required: true, placeholder: 'Tell us what your business needs in plain English...' },
         ],
       },
       CONTACT_STEP,
@@ -400,119 +254,16 @@ const BRANCHES = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Deterministic estimate tables (derived from the package ladder     */
-/* $199 / $499 / $1,999 / $3,999 / $6,999)                             */
+/* Recommendation and Estimate Engine                                 */
 /* ------------------------------------------------------------------ */
 
-function estimateWebsite(v) {
-  const base = { '1': [199, 499], '3-5': [499, 1999], '5-10': [1999, 3999], '10+': [3999, 6999] }[v.pages] || [499, 1999];
-  let [low, high] = base;
-  const includes = ['Custom design & build', 'Mobile-first responsive layout', 'On-page SEO basics', 'Launch + analytics setup'];
-  if (v.aiFeatures?.includes('chatbot')) {
-    low += 199; high += 500;
-    includes.push('AI chatbot trained on your business');
-  }
-  if (v.aiFeatures?.includes('automation')) {
-    low += 499; high += 1000;
-    includes.push('Workflow automation (leads, follow-ups, notifications)');
-  }
-  if (v.brandStatus === 'help_needed') {
-    low += 249; high += 249;
-    includes.push('Logo and Brand Starter add-on');
-  }
-  if (String(v.businessEmailNeeds || '').trim()) {
-    low += 99; high += 99;
-    includes.push('Business Email Setup add-on');
-  }
-  return { low, high, includes };
-}
-
-function estimateApp(v) {
-  let [low, high] = v.platform === 'both' ? [8000, 15000] : [5000, 10000];
-  if (v.purpose === 'marketplace') { low += 5000; high += 10000; }
-  if (v.purpose === 'customer') { low += 1000; high += 3000; }
-  const featureCount = (v.features || []).length;
-  low += featureCount * 500;
-  high += featureCount * 1500;
-  const includes = ['UX/UI design', 'Native-quality iOS/Android build', 'App Store & Play submission', '30 days post-launch support'];
-  return { low, high, includes };
-}
-
-function estimateChatbot(v) {
-  let [low, high] = v.deployWhere === 'all' ? [499, 999] : [199, 499];
-  if (v.purpose === 'booking') { low += 200; high += 500; }
-  if (v.purpose === 'all') { low += 300; high += 700; }
-  if (v.monthlyConversations === '500-2k') { low += 100; high += 300; }
-  if (v.monthlyConversations === '2k+') { low += 300; high += 800; }
-  const includes = ['Bot trained on your FAQs & services', 'Lead capture with instant notifications', 'Conversation transcripts', 'Monthly tuning & reporting'];
-  return { low, high, includes };
-}
-
-function estimatePortal(v) {
-  let [low, high] = { '<10': [3000, 5000], '10-50': [4000, 6000], '50-200': [6000, 10000], '200+': [10000, 15000] }[v.clientCount] || [3000, 5000];
-  const adds = { files: [500, 1000], payments: [1000, 2000], messaging: [800, 1500] };
-  for (const f of v.features || []) {
-    if (adds[f]) { low += adds[f][0]; high += adds[f][1]; }
-  }
-  const includes = ['Secure client logins', 'Branded dashboard', 'Admin console', 'Onboarding & training'];
-  return { low, high, includes };
-}
-
-function estimateCustom(v) {
-  const map = { '<2k': [1999, 3999], '2k-5k': [2000, 5000], '5k-10k': [5000, 10000], '10k+': [10000, 25000] };
-  const [low, high] = map[v.budget] || [1999, 6999];
-  const includes = ['Discovery & workflow mapping', 'Fixed-scope proposal before build', 'Weekly progress check-ins', 'Verified working before final payment'];
-  return { low, high, includes, review: true };
-}
-
-function recommendBranch(v) {
-  const c = v.challenges || [];
-  if (c.includes('missed-messages') || c.includes('client-communication')) return 'chatbot';
-  if (c.includes('busywork')) return 'custom';
-  if (c.includes('payments-booking')) return 'portal';
-  return 'website'; // no-presence / leads / default
-}
-
-const UNSURE_BASE = {
-  website: { low: 499, high: 1999 },
-  chatbot: { low: 199, high: 499 },
-  portal: { low: 3000, high: 5000 },
-  custom: { low: 1999, high: 6999 },
-  app: { low: 5000, high: 10000 },
-};
-
-function estimateUnsure(v, recommended) {
-  const { low, high } = UNSURE_BASE[recommended] || UNSURE_BASE.website;
-  const includes = [`Recommended solution: ${BRANCHES[recommended].label}`, 'Fixed-scope proposal before build', 'Verified working before final payment'];
-  return { low, high, includes };
-}
-
-function computeEstimate(branch, values, recommended) {
-  switch (branch) {
-    case 'website': return estimateWebsite(values);
-    case 'app': return estimateApp(values);
-    case 'chatbot': return estimateChatbot(values);
-    case 'portal': return estimatePortal(values);
-    case 'custom': return estimateCustom(values);
-    case 'unsure': return estimateUnsure(values, recommended);
-    default: return { low: 199, high: 499, includes: [] };
-  }
-}
-
-/* ------------------------------------------------------------------ */
-/* Search matching                                                    */
-/* ------------------------------------------------------------------ */
-
-function matchBranch(query) {
-  const q = query.trim().toLowerCase();
-  if (!q) return null;
-  let best = null;
-  let bestScore = 0;
-  for (const [id, words] of Object.entries(KEYWORDS)) {
-    const score = words.reduce((acc, w) => (q.includes(w) ? acc + w.length : acc), 0);
-    if (score > bestScore) { best = id; bestScore = score; }
-  }
-  return best;
+function recommendBranch(values) {
+  const goal = (values.goal || '').toLowerCase();
+  if (goal.includes('app') || goal.includes('mobile')) return 'app';
+  if (goal.includes('chat') || goal.includes('bot') || goal.includes('ai')) return 'chatbot';
+  if (goal.includes('portal') || goal.includes('dashboard') || goal.includes('login')) return 'portal';
+  if (goal.includes('system') || goal.includes('custom') || goal.includes('crm')) return 'custom';
+  return 'website';
 }
 
 /** Map a service slug (e.g. /services/ai-chatbot) to a branch id. */
@@ -526,8 +277,54 @@ export function branchForServiceSlug(slug = '') {
   return null;
 }
 
+
+function computeEstimate(branch, values, recommended) {
+  const target = branch === 'unsure' ? (recommended || 'website') : branch;
+  let low = 499;
+  let high = 1999;
+  const includes = [];
+
+  if (target === 'website') {
+    if (values.pages === '1') {
+      low = 199;
+      high = 199;
+      includes.push('One focused business page', '1st-year hosting included', 'Domain connection', 'Lead-capture form');
+    } else if (values.pages === '3-5') {
+      low = 499;
+      high = 499;
+      includes.push('Up to 5 business pages', 'Mobile-first responsive design', 'Local SEO & GA4', '1st-year hosting included');
+    } else if (values.pages === '5-10') {
+      low = 1999;
+      high = 1999;
+      includes.push('Up to 5 custom page designs', 'Brand discovery & architecture', 'Original visual design system', 'Conversion tracking');
+    } else {
+      low = 3999;
+      high = 3999;
+      includes.push('Business Growth System (up to 10 pages)', 'Booking / CRM integration', 'Lead automation workflows', 'Dual-grain UTM attribution');
+    }
+  } else if (target === 'chatbot') {
+    low = 499;
+    high = 1499;
+    includes.push('AI chatbot setup & training', 'Website embed or WhatsApp connection', 'Lead capture & routing to owner');
+  } else if (target === 'portal') {
+    low = 3999;
+    high = 6999;
+    includes.push('Secure client portal authentication', 'Document upload & status tracking', 'Stripe customer integration');
+  } else if (target === 'app') {
+    low = 4999;
+    high = 8999;
+    includes.push('iOS & Android cross-platform app', 'Push notifications & auth', 'App store preparation');
+  } else {
+    low = 2999;
+    high = 5999;
+    includes.push('Custom workflow automation', 'API / database integration', 'Owner training & documentation');
+  }
+
+  return { low, high, includes, review: high >= 3999 };
+}
+
 /* ------------------------------------------------------------------ */
-/* Component                                                          */
+/* Main SolutionFinder Component                                      */
 /* ------------------------------------------------------------------ */
 
 export default function SolutionFinder({ initialBranch = null }) {
@@ -546,17 +343,59 @@ export default function SolutionFinder({ initialBranch = null }) {
   const [offlineEstimate, setOfflineEstimate] = useState(false);
   const searchRef = useRef(null);
 
+  // AI Advisor State
+  const [aiData, setAiData] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState(null);
+
   // Cycling placeholder examples.
   useEffect(() => {
-    const t = setInterval(() => setPlaceholderIdx((i) => (i + 1) % PLACEHOLDERS.length), 3000);
+    const t = setInterval(() => setPlaceholderIdx((i) => (i + 1) % PLACEHOLDERS.length), 3200);
     return () => clearInterval(t);
   }, []);
-
-  const matched = useMemo(() => matchBranch(query), [query]);
 
   const steps = branch ? BRANCHES[branch].steps : [];
   const step = steps[stepIndex];
   const isLastStep = stepIndex === steps.length - 1;
+
+  async function handleAiConsult(promptText, extraAnswers = {}) {
+    const text = (promptText || query).trim();
+    if (!text && Object.keys(extraAnswers).length === 0) return;
+    setAiLoading(true);
+    setAiError(null);
+    setStage('ai_consult');
+
+    try {
+      const res = await getAiSolutionAdvice({
+        prompt: text,
+        answers: { ...values, ...extraAnswers },
+        utm: collectUtmParams(),
+      });
+      if (res?.recommendation) {
+        setAiData(res.recommendation);
+      } else {
+        throw new Error('Could not compute advice');
+      }
+    } catch {
+      // Fallback locally
+      const rec = recommendBranch({ goal: text, ...extraAnswers });
+      const est = computeEstimate(rec, extraAnswers, rec);
+      setAiData({
+        package_sku: est.low === 199 ? 'web-basics' : est.low === 499 ? 'business-website' : est.low === 1999 ? 'custom-website' : 'business-growth',
+        package_title: est.low === 199 ? 'Web Basics Bundle — $199' : est.low === 499 ? 'Business Website Bundle — $499' : est.low === 1999 ? 'Custom Website — $1,999' : 'Business Growth System — $3,999',
+        price_estimate: est.low,
+        price_formatted: money(est.low),
+        timeline: 'Confirmed after intake',
+        personalized_rationale: 'Tailored for your business requirements with hosting and domain included.',
+        recommended_pages: est.includes.slice(0, 4),
+        recommended_features: est.includes,
+        follow_up_questions: [],
+        scope_summary: 'Starter recommendation prepared by FAMtastic.',
+      });
+    } finally {
+      setAiLoading(false);
+    }
+  }
 
   function startBranch(id, prefill = {}) {
     setBranch(id);
@@ -575,9 +414,9 @@ export default function SolutionFinder({ initialBranch = null }) {
   function handleEnterKey(event) {
     if (event.key !== 'Enter') return;
     event.preventDefault();
-    const target = matched || 'unsure';
-    const prefill = !matched && query.trim() ? { businessDescription: query.trim() } : {};
-    startBranch(target, prefill);
+    if (query.trim()) {
+      void handleAiConsult(query.trim());
+    }
   }
 
   function setValue(name, value) {
@@ -694,7 +533,9 @@ export default function SolutionFinder({ initialBranch = null }) {
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="v1-eyebrow" style={{ textAlign: 'center' }}>Solution Finder</p>
+            <div style={{ textAlign: 'center' }}>
+              <span className="sf__ai-badge">⚡ AI-Powered Project Advisor</span>
+            </div>
             <h2 className="sf__title">What can we help you build?</h2>
 
             <div className="sf__search-wrap">
@@ -706,15 +547,16 @@ export default function SolutionFinder({ initialBranch = null }) {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleEnterKey}
                 placeholder={PLACEHOLDERS[placeholderIdx]}
-                aria-label="Describe what you want to build"
+                aria-label="Describe what you want to build in plain English"
               />
               <button
                 type="button"
                 className="sf__search-go"
-                onClick={() => handleEnterKey({ key: 'Enter', preventDefault: () => {} })}
-                aria-label="Start"
+                onClick={() => void handleAiConsult(query)}
+                aria-label="Ask AI Advisor"
+                title="Consult AI Advisor"
               >
-                →
+                ✦
               </button>
             </div>
 
@@ -723,14 +565,129 @@ export default function SolutionFinder({ initialBranch = null }) {
                 <button
                   key={chip.id}
                   type="button"
-                  className={`sf__chip${matched === chip.id ? ' is-match' : ''}`}
-                  onClick={() => startBranch(chip.id)}
+                  className="sf__chip"
+                  onClick={() => {
+                    if (chip.id === 'unsure') {
+                      startBranch('unsure');
+                    } else {
+                      void handleAiConsult(`I need a ${chip.label} for my business`);
+                    }
+                  }}
                 >
                   {chip.label}
                 </button>
               ))}
             </div>
-            <p className="sf__hint">Share the basics in about 60 seconds. We’ll save your request and show a starter recommendation.</p>
+            <p className="sf__hint">
+              Describe your project in plain English or pick a category. Our Drupal AI advisor will analyze your requirements and recommend the exact package.
+            </p>
+          </motion.div>
+        )}
+
+        {stage === 'ai_consult' && (
+          <motion.div
+            key="ai_consult"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {aiLoading && (
+              <div className="sf__ai-loading">
+                <div className="sf__ai-spinner" />
+                <span className="sf__ai-badge">⚡ Drupal AI Engine</span>
+                <h3>Analyzing your project requirements...</h3>
+                <p className="sf__note">Evaluating your business scope against our 16-SKU catalog and pricing ladder.</p>
+              </div>
+            )}
+
+            {!aiLoading && aiData && (
+              <div className="sf__ai-card">
+                <div className="sf__ai-header">
+                  <div>
+                    <span className="sf__ai-badge">⚡ Recommended by Drupal AI</span>
+                    <h3>{aiData.package_title}</h3>
+                    <small style={{ color: 'var(--fam-text-muted)' }}>Estimated Delivery: {aiData.timeline}</small>
+                  </div>
+                  <div className="sf__ai-price-pill">
+                    {aiData.price_formatted}
+                  </div>
+                </div>
+
+                <div className="sf__ai-rationale">
+                  <strong>Why this fits your business:</strong>
+                  <p style={{ margin: '0.4rem 0 0' }}>{aiData.personalized_rationale}</p>
+                </div>
+
+                <div className="sf__ai-grid">
+                  <div className="sf__ai-grid-box">
+                    <h4>Recommended Architecture</h4>
+                    <ul>
+                      {aiData.recommended_pages?.map((p) => (
+                        <li key={p}>{p}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="sf__ai-grid-box">
+                    <h4>Included Capabilities</h4>
+                    <ul>
+                      {aiData.recommended_features?.map((f) => (
+                        <li key={f}>{f}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {aiData.follow_up_questions && aiData.follow_up_questions.length > 0 && (
+                  <div className="sf__ai-followups">
+                    <p>✦ Tailor this scope further:</p>
+                    {aiData.follow_up_questions.map((q) => (
+                      <div key={q.id || q.question} style={{ marginTop: '0.5rem' }}>
+                        <small style={{ display: 'block', marginBottom: '0.4rem', color: 'var(--fam-text-muted)' }}>{q.question}</small>
+                        <div className="sf__ai-followup-chips">
+                          {q.options?.map((opt) => (
+                            <button
+                              key={opt}
+                              type="button"
+                              className="sf__chip"
+                              onClick={() => void handleAiConsult(query, { [q.id || 'clarify']: opt })}
+                            >
+                              {opt}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="sf__result-actions">
+                  <Link
+                    to={`/purchase?bundle=${encodeURIComponent(aiData.package_sku)}`}
+                    className="v1-btn v1-btn--primary"
+                  >
+                    Start with this Package ({aiData.price_formatted}) →
+                  </Link>
+
+                  <button
+                    type="button"
+                    className="v1-btn v1-btn--ghost"
+                    onClick={() => startBranch('website', { businessDescription: query, ...values })}
+                  >
+                    Customize Details Step-by-Step
+                  </button>
+
+                  <button
+                    type="button"
+                    className="v1-btn v1-btn--ghost"
+                    onClick={() => { setStage('entry'); setAiData(null); setQuery(''); }}
+                  >
+                    Start Over
+                  </button>
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -936,7 +893,7 @@ export default function SolutionFinder({ initialBranch = null }) {
               <button
                 type="button"
                 className="v1-btn v1-btn--ghost"
-                onClick={() => { setStage('entry'); setValues({}); setBranch(null); setStepIndex(0); setStatus('idle'); setSubmitError(null); setServerMessage(null); setRequestId(null); setRegistrationUrl(null); setOfflineEstimate(false); setQuery(''); }}
+                onClick={() => { setStage('entry'); setValues({}); setBranch(null); setStepIndex(0); setStatus('idle'); setSubmitError(null); setServerMessage(null); setRequestId(null); setRegistrationUrl(null); setOfflineEstimate(false); setQuery(''); setAiData(null); }}
               >
                 Start over
               </button>

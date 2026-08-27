@@ -1,5 +1,29 @@
 # Product changelog
 
+## 2026-08-27 — Booked & Branded founding-pilot proposal (draft only)
+
+- Captured a proposed $199 founding package for solo barbers, braiders,
+  stylists, and adjacent appointment businesses whose current public path is a
+  booking-platform profile. The proposal includes a custom mobile website, a
+  deliberately small phone Booking Desk, request-to-book, business-owned
+  payment/QR handoff, fresh moderated reviews, and a Booksy-compatible bridge
+  rather than an unsupported feature-parity promise.
+- Defined the recommended founding boundary: five warm pilot operators, one
+  operator/location, up to 12 services, request-to-book rather than unproven
+  real-time scheduling, no payment custody, no platform scraping, and no
+  multi-staff/POS/SMS behavior. Proposed pricing and renewal remain
+  recommendations; no SKU, recurring charge, catalog entry, proof, or outreach
+  was created.
+- Added a three-email owner-gated outreach concept and a post-registration
+  Booking Independence Plan. No campaign recipient, public page, or email was
+  published or sent.
+
+## 2026-08-27 — Drupal AI-powered Solution Finder and Project Intake Advisor
+
+- Connected Drupal AI (`ai.provider`) to the React frontend with dedicated REST endpoints (`/api/v1/ai/solution-advisor` and `/api/v1/ai/brief-synthesizer`).
+- Built `AiSolutionAdvisorService` to evaluate plain-English customer requests against FAMtastic's 16-SKU package ladder ($199–$6,999) with zero-downtime deterministic fallback.
+- Upgraded `SolutionFinder.jsx` with an interactive AI consultation mode, real-time scope analysis, recommended sitemaps, included features, and direct 1-click package checkout.
+
 ## 2026-08-27 — FAMtastic Operations backend route fixes, manifest sync, and batch approvals
 
 - Replaced raw `Url::fromUserInput` calls in `OperationsController` with proper route references (`commerce.admin_commerce`, `system.admin_content`, `entity.famtastic_prospect.edit_form`) to eliminate 404s under Drupal's `/web` base path in production.

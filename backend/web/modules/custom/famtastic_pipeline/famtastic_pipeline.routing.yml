@@ -808,3 +808,20 @@ famtastic_pipeline.studio_export_brief:
     parameters:
       famtastic_project:
         type: 'entity:famtastic_project'
+
+famtastic_pipeline.ai_solution_advisor:
+  path: '/api/v1/ai/solution-advisor'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AiSolutionAdvisorController::advise'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+
+famtastic_pipeline.ai_brief_synthesizer:
+  path: '/api/v1/ai/brief-synthesizer'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AiSolutionAdvisorController::synthesize'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+

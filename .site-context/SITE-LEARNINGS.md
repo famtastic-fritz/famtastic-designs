@@ -5,6 +5,18 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — Platform-only operators need a branded bridge, not an instant rip-and-replace
+
+- Observation: the no-independent-site screen surfaced beauty and barber
+  businesses whose booking-platform profiles are functional but visually and
+  operationally separate from an owned brand experience. That is a distinct
+  campaign and product hypothesis, not a generic “no website” diagnosis.
+- Guidance: begin with a branded site and pluggable booking path. Keep the
+  existing platform available during testing, use a bounded request-to-book
+  Booking Desk for the $199 starter, and do not promise native live scheduling,
+  payment custody, client migration, or review migration until each capability
+  is separately implemented and proven.
+
 ## 2026-08-27 — First-site outreach must not use an existing-site cohort
 
 - Observation: a review cohort selected for source-verification convenience
