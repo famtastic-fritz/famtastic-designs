@@ -2132,10 +2132,77 @@ function famtastic_pipeline_update_8041(&$sandbox) {
   return t('Updated public preview delivery records with the current schema.');
 }
 
+/**
+ * Fails before any 8042 DDL when a populated cold table cannot receive its
+ * declared immutable identity fields and unique keys safely.
+ */
+function _famtastic_pipeline_assert_cold_proof_schema_preflight($database, $schema, array $definitions): void {
+  foreach ($definitions as $table => $definition) {
+    if (!$schema->tableExists($table) || !(bool) $database->select($table, 't')->countQuery()->execute()->fetchField()) {
+      continue;
+    }
+    $unsafe = [];
+    foreach ($definition['fields'] as $name => $field) {
+      if (
+        !$schema->fieldExists($table, $name)
+        && !empty($field['not null'])
+        && !array_key_exists('default', $field)
+      ) {
+        $unsafe[] = $name;
+      }
+    }
+    // A preexisting partial table can have the identity columns while still
+    // lack their declared unique keys. Check every existing value before DDL:
+    // adding a key after a late duplicate/null failure would leave an
+    // ambiguous cohort or ingress identity in a half-upgraded table. These
+    // field names come only from the module schema, never user input.
+    foreach ((array) ($definition['unique keys'] ?? []) as $keyName => $keyFields) {
+      $keyFields = array_values((array) $keyFields);
+      $allFieldsExist = $keyFields !== [];
+      foreach ($keyFields as $field) {
+        if (!$schema->fieldExists($table, $field)) {
+          $unsafe[] = 'unique key ' . $keyName . ' missing field ' . $field;
+          $allFieldsExist = FALSE;
+          continue;
+        }
+        $values = $database->select($table, 't')->fields('t', [$field])->execute()->fetchCol();
+        foreach ($values as $value) {
+          if ($value === NULL || trim((string) $value) === '') {
+            $unsafe[] = 'unique key ' . $keyName . ' has NULL/empty ' . $field;
+            break;
+          }
+        }
+      }
+      if (!$allFieldsExist) {
+        continue;
+      }
+      $duplicates = $database->select($table, 't')->fields('t', $keyFields);
+      $duplicates->addExpression('COUNT(*)', 'famtastic_duplicate_count');
+      foreach ($keyFields as $field) {
+        $duplicates->groupBy($field);
+      }
+      if ($duplicates->having('COUNT(*) > 1')->range(0, 1)->execute()->fetchAssoc()) {
+        $unsafe[] = 'duplicate values for unique key ' . $keyName;
+      }
+    }
+    if ($unsafe) {
+      throw new \RuntimeException(sprintf(
+        'Cannot safely extend populated %s; required identity fields or unique keys are missing, blank, or duplicated: %s. Repair or export the malformed historical table before rerunning update 8042.',
+        $table,
+        implode(', ', $unsafe),
+      ));
+    }
+  }
+}
+
 /** Adds frozen cold-cohort contracts and scheduled owner-gated release state. */
 function famtastic_pipeline_update_8042(&$sandbox) {
   $database = \Drupal::database();
   $schema = $database->schema();
+  $cold = _famtastic_pipeline_cold_proof_schema();
+  // Run this before any 8042 schema mutation, including unrelated additive
+  // fields, so a malformed cold identity table cannot leave a partial update.
+  _famtastic_pipeline_assert_cold_proof_schema_preflight($database, $schema, $cold);
   $preview = _famtastic_pipeline_preview_delivery_schema()['famtastic_preview_delivery'];
   foreach ($preview['fields'] as $name => $field) {
     if (!$schema->fieldExists('famtastic_preview_delivery', $name)) {
@@ -2158,34 +2225,10 @@ function famtastic_pipeline_update_8042(&$sandbox) {
       $schema->addIndex('famtastic_email_message', $name, $fields, $messages);
     }
   }
-  foreach (_famtastic_pipeline_cold_proof_schema() as $table => $definition) {
+  foreach ($cold as $table => $definition) {
     if (!$schema->tableExists($table)) {
       $schema->createTable($table, $definition);
       continue;
-    }
-    // Fail before making any partial alteration if a malformed historical
-    // table lacks a required, non-default field. The known additive link
-    // (`proof_campaign_id`) is nullable and is deliberately left NULL for
-    // unreconstructable historical rows.
-    $hasRows = (bool) $database->select($table, 't')->countQuery()->execute()->fetchField();
-    $unsafe = [];
-    if ($hasRows) {
-      foreach ($definition['fields'] as $name => $field) {
-        if (
-          !$schema->fieldExists($table, $name)
-          && !empty($field['not null'])
-          && !array_key_exists('default', $field)
-        ) {
-          $unsafe[] = $name;
-        }
-      }
-    }
-    if ($unsafe) {
-      throw new \RuntimeException(sprintf(
-        'Cannot safely extend populated %s; required fields are missing: %s. Repair or export the malformed historical table before rerunning update 8042.',
-        $table,
-        implode(', ', $unsafe),
-      ));
     }
     foreach ($definition['fields'] as $name => $field) {
       if (!$schema->fieldExists($table, $name)) {
@@ -2199,6 +2242,11 @@ function famtastic_pipeline_update_8042(&$sandbox) {
     foreach ($definition['indexes'] as $name => $fields) {
       if (!$schema->indexExists($table, $name)) {
         $schema->addIndex($table, $name, $fields, $definition);
+      }
+    }
+    foreach ((array) ($definition['unique keys'] ?? []) as $name => $fields) {
+      if (!$schema->indexExists($table, $name)) {
+        $schema->addUniqueKey($table, $name, $fields);
       }
     }
   }

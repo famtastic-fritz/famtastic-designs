@@ -390,20 +390,19 @@ class CampaignMessageService {
   }
 
   /**
-   * Suppresses a recipient from an opaque unsubscribe link.
+   * Suppresses a recipient from the legacy opaque GET unsubscribe link.
+   *
+   * Verified-cold commercial mail must use its confirmation/one-click POST
+   * route. Rejecting its keys here prevents a copied or transformed cold key
+   * from making a GET prefetch mutate suppression state through the older
+   * endpoint, while all non-cold historical mail keeps its GET behavior.
    */
   public function unsubscribe(string $unsubscribeKey): bool {
     $message = $this->loadBy('unsubscribe_key', $unsubscribeKey);
-    if (!$message) {
+    if (!$message || (string) ($message['template_key'] ?? '') === 'verified_cold_preview') {
       return FALSE;
     }
-    $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($message['prospect_id']);
-    if (!$prospect) {
-      return FALSE;
-    }
-    $this->ledger->recordConsent((string) $prospect->get('public_email')->value, 'unsubscribed', (int) $prospect->id());
-    $this->setStatus((int) $message['id'], 'unsubscribed');
-    return TRUE;
+    return $this->unsubscribeMessage($message);
   }
 
   /**
@@ -418,7 +417,18 @@ class CampaignMessageService {
     if (!$message || (string) ($message['template_key'] ?? '') !== 'verified_cold_preview') {
       return FALSE;
     }
-    return $this->unsubscribe($unsubscribeKey);
+    return $this->unsubscribeMessage($message);
+  }
+
+  /** Applies the durable consent/status change after a lane-specific check. */
+  private function unsubscribeMessage(array $message): bool {
+    $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($message['prospect_id']);
+    if (!$prospect) {
+      return FALSE;
+    }
+    $this->ledger->recordConsent((string) $prospect->get('public_email')->value, 'unsubscribed', (int) $prospect->id());
+    $this->setStatus((int) $message['id'], 'unsubscribed');
+    return TRUE;
   }
 
   public function load(int $id): ?array {

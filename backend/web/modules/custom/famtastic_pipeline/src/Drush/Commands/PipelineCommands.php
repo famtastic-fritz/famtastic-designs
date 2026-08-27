@@ -478,6 +478,9 @@ class PipelineCommands extends DrushCommands {
       }
       /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
       $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+      if ($proofs->isVerifiedColdCampaignId($campaignId)) {
+        throw new \InvalidArgumentException('Verified-cold proof imports require famtastic:verified-cold-proof-import so Build DNA and the exact callback are recorded atomically.');
+      }
       $result = $proofs->acceptCallback(
         (string) ($payload['event_id'] ?? ''),
         $campaignId,
@@ -583,27 +586,22 @@ class PipelineCommands extends DrushCommands {
       ) {
         throw new \InvalidArgumentException('Callback, Build DNA, and verified-cold delivery do not share one exact immutable runtime binding.');
       }
-      // A malformed callback must not leave a Build DNA projection claiming a
-      // completed proof set. Keep the immutable projection and callback
-      // persistence in the same local database transaction; the callback
-      // validates all variants before writing its proof entities/files.
-      $transaction = \Drupal::database()->startTransaction();
-      try {
-        /** @var \Drupal\famtastic_pipeline\Service\BuildTelemetryService $telemetry */
-        $telemetry = \Drupal::service('famtastic_pipeline.build_telemetry');
-        $buildRunId = $telemetry->recordBuildDna($dna);
-        /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
-        $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
-        $result = $proofs->acceptCallback(
-          (string) ($payload['event_id'] ?? ''),
-          $campaignId,
-          (string) ($payload['job_id'] ?? ''),
-          is_array($payload['variants'] ?? NULL) ? $payload['variants'] : [],
-        );
-      }
-      catch (\Throwable $error) {
-        $transaction->rollBack();
-        throw $error;
+      // This service operation records Build DNA and accepts the callback in
+      // one transaction. The generic callback method refuses verified-cold,
+      // so no future caller can accidentally make a delivery review-ready
+      // without the immutable Build DNA projection.
+      /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
+      $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+      $result = $proofs->acceptVerifiedColdCallback(
+        (string) ($payload['event_id'] ?? ''),
+        $campaignId,
+        (string) ($payload['job_id'] ?? ''),
+        is_array($payload['variants'] ?? NULL) ? $payload['variants'] : [],
+        $dna,
+      );
+      $buildRunId = (int) ($result['build_run_id'] ?? 0);
+      if ($buildRunId < 1) {
+        throw new \RuntimeException('Verified-cold Build DNA import did not return a durable build run ID.');
       }
     }
     catch (\Throwable $error) {

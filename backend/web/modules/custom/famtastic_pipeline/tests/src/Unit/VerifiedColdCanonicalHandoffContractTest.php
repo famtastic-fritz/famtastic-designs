@@ -51,8 +51,8 @@ final class VerifiedColdCanonicalHandoffContractTest extends UnitTestCase {
     $this->assertStringContainsString('privateRegularFile', $commands);
     $this->assertStringContainsString('verifyCallbackSignature', $commands);
     $this->assertStringContainsString('verifiedColdCallbackContractForCampaign', $commands);
-    $this->assertStringContainsString('recordBuildDna($dna)', $commands);
-    $this->assertStringContainsString('acceptCallback(', $commands);
+    $this->assertStringContainsString('acceptVerifiedColdCallback(', $commands);
+    $this->assertStringContainsString('Build DNA and the exact callback are recorded atomically', $commands);
     $this->assertStringNotContainsString('promote-local-proof-godaddy', $commands);
     $this->assertStringContainsString("'famtastic.verified-cold-proof-callback.v1'", $assembler);
     $this->assertStringContainsString('signed_asset_manifest_sha256', $assembler);

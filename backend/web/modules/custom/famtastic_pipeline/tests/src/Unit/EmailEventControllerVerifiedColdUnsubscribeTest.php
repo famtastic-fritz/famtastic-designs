@@ -13,6 +13,31 @@ use Symfony\Component\HttpFoundation\Request;
 /** @group famtastic_pipeline */
 final class EmailEventControllerVerifiedColdUnsubscribeTest extends UnitTestCase {
 
+  public function testLegacyEndpointDoesNotTreatARejectedColdKeyAsSuccess(): void {
+    $key = str_repeat('9', 48);
+    $messages = $this->createMock(CampaignMessageService::class);
+    $messages->expects($this->once())->method('unsubscribe')->with($key)->willReturn(FALSE);
+    $messages->expects($this->never())->method('unsubscribeVerifiedCold');
+    $tokens = $this->createMock(TokenManager::class);
+
+    $response = (new EmailEventController($messages, $tokens))->unsubscribe($key);
+
+    $this->assertSame(404, $response->getStatusCode());
+    $this->assertStringContainsString('invalid_unsubscribe_link', (string) $response->getContent());
+  }
+
+  public function testLegacyEndpointKeepsNonColdGetCompatibility(): void {
+    $key = str_repeat('8', 48);
+    $messages = $this->createMock(CampaignMessageService::class);
+    $messages->expects($this->once())->method('unsubscribe')->with($key)->willReturn(TRUE);
+    $tokens = $this->createMock(TokenManager::class);
+
+    $response = (new EmailEventController($messages, $tokens))->unsubscribe($key);
+
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertStringContainsString('You have been unsubscribed.', (string) $response->getContent());
+  }
+
   public function testGetRendersConfirmationWithoutMutatingSuppressionState(): void {
     $key = str_repeat('a', 48);
     $messages = $this->createMock(CampaignMessageService::class);

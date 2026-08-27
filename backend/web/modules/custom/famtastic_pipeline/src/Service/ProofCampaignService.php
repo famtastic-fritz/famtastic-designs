@@ -358,9 +358,46 @@ class ProofCampaignService {
   }
 
   /**
-   * Accepts one idempotent core, frozen public-cohort, or showcase callback.
+   * Accepts one idempotent non-verified-cold callback.
+   *
+   * Verified-cold proof artifacts have a separate, Build-DNA-backed import
+   * transaction. Keeping this public generic entry point fail-closed prevents
+   * a future CLI or HTTP caller from treating a valid callback payload as a
+   * substitute for that immutable provenance record.
    */
   public function acceptCallback(string $eventId, string $campaignId, string $studioJobId, array $variants): array {
+    return $this->acceptCallbackInternal($eventId, $campaignId, $studioJobId, $variants, FALSE);
+  }
+
+  /**
+   * Atomically records Build DNA and accepts one exact verified-cold callback.
+   *
+   * This is intentionally the only service entry point that can complete a
+   * verified-cold campaign. The private importer has already authenticated
+   * its files, checksum, and HMAC; this service repeats the immutable
+   * delivery/job/event/Build-DNA provenance checks so another caller cannot
+   * bypass the transaction by calling the generic callback method.
+   */
+  public function acceptVerifiedColdCallback(string $eventId, string $campaignId, string $studioJobId, array $variants, array $buildDna): array {
+    $transaction = $this->database->startTransaction();
+    try {
+      $this->assertVerifiedColdPrivateImportProvenance($eventId, $campaignId, $studioJobId, $buildDna);
+      $buildRunId = $this->buildTelemetry->recordBuildDna($buildDna);
+      $result = $this->acceptCallbackInternal($eventId, $campaignId, $studioJobId, $variants, TRUE);
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+    unset($transaction);
+    $result['build_run_id'] = $buildRunId;
+    return $result;
+  }
+
+  /**
+   * Shared callback implementation after the source-lane boundary is known.
+   */
+  private function acceptCallbackInternal(string $eventId, string $campaignId, string $studioJobId, array $variants, bool $verifiedColdPrivateImport): array {
     if ($eventId === '' || strlen($eventId) > 255) {
       throw new \InvalidArgumentException('callback event_id is required.');
     }
@@ -381,6 +418,9 @@ class ProofCampaignService {
       throw new \RuntimeException('The public proof callback has no frozen delivery profile.');
     }
     $requiresSignedAssets = $publicSourceLane === 'verified_cold';
+    if ($requiresSignedAssets && !$verifiedColdPrivateImport) {
+      throw new \InvalidArgumentException('Verified-cold callbacks require the private Build DNA importer and cannot use the generic callback path.');
+    }
     if ($requiresSignedAssets) {
       // The external builder may only complete the exact ingress-created
       // runtime binding. A fresh event ID or a substituted job ID would break
@@ -574,6 +614,45 @@ class ProofCampaignService {
       (int) $campaign->get('prospect_id')->target_id,
       (int) $campaign->id(),
     ) === 'verified_cold';
+  }
+
+  /**
+   * Rechecks the private importer evidence before it can write Build DNA or
+   * proof artifacts. The Drush command performs its own file/HMAC checks;
+   * this service boundary protects future callers that might otherwise call
+   * the callback service with a syntactically valid generic payload.
+   */
+  private function assertVerifiedColdPrivateImportProvenance(string $eventId, string $campaignId, string $studioJobId, array $buildDna): void {
+    if (($buildDna['schema'] ?? '') !== 'famtastic.build-dna.v1') {
+      throw new \InvalidArgumentException('Verified-cold callback requires a finalized Build DNA manifest.');
+    }
+    $campaign = $this->loadByCampaignId($campaignId);
+    if (!$campaign || !hash_equals((string) $campaign->get('studio_job_id')->value, $studioJobId)) {
+      throw new \InvalidArgumentException('Unknown verified-cold campaign or Site Studio job.');
+    }
+    $prospectId = (int) $campaign->get('prospect_id')->target_id;
+    $proofCampaignId = (int) $campaign->id();
+    if ($this->previews->sourceLaneForCampaign($prospectId, $proofCampaignId) !== 'verified_cold') {
+      throw new \InvalidArgumentException('The private Build DNA importer may accept verified-cold campaigns only.');
+    }
+    $runtime = $this->previews->verifiedColdCallbackContractForCampaign($prospectId, $proofCampaignId);
+    $run = is_array($buildDna['run'] ?? NULL) ? $buildDna['run'] : [];
+    $runStartedAt = (string) ($run['started_at'] ?? $run['run_started_at'] ?? '');
+    if (
+      !$runtime
+      || (int) ($run['prospect_id'] ?? 0) !== $prospectId
+      || (int) ($run['proof_campaign_id'] ?? 0) !== $proofCampaignId
+      || (int) ($run['public_preview_delivery_id'] ?? 0) !== (int) $runtime['public_preview_delivery_id']
+      || !hash_equals($campaignId, (string) ($run['campaign_id'] ?? ''))
+      || !hash_equals('verified_cold', (string) ($run['source_lane'] ?? ''))
+      || !hash_equals($studioJobId, (string) ($runtime['job_id'] ?? ''))
+      || !hash_equals($studioJobId, (string) ($run['job_id'] ?? ''))
+      || !hash_equals($eventId, (string) ($runtime['callback_event_id'] ?? ''))
+      || !hash_equals($eventId, (string) ($run['callback_event_id'] ?? ''))
+      || !hash_equals((string) ($runtime['run_started_at'] ?? ''), $runStartedAt)
+    ) {
+      throw new \InvalidArgumentException('Verified-cold callback, Build DNA, and immutable delivery runtime do not share one exact binding.');
+    }
   }
 
   /** Rebuilds the callback telemetry projection idempotently on a retry. */

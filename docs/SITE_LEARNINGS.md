@@ -1,5 +1,25 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — A cold callback cannot inherit the generic local importer
+
+- Observation: the generic local proof importer could call the normal callback
+  service for a persisted `verified_cold` campaign. Even a valid-looking
+  payload could therefore bypass the private Build DNA/HMAC import contract;
+  a copied cold unsubscribe key could also reach the historical mutating GET
+  route.
+- Guidance: deny the cold lane both at the generic command and at the generic
+  service entry point. Give the private cold importer one transaction that
+  rechecks the exact delivery/job/event/Build-DNA binding before it records
+  either projection or proof artifacts. Prove an exact runtime-bound generic
+  payload changes no variants, Build DNA, or delivery state, while an ordinary
+  local import still works. The legacy GET route must reject cold keys without
+  consent mutation; only the confirmation POST may suppress cold mail.
+- Guidance: migration repair is a safety boundary too. Before `8042` changes
+  a populated cold table, reject missing, NULL, blank, or duplicate immutable
+  cohort/ingress keys, then use Drupal's Schema API to restore a missing
+  declared unique key. Rehearse the actual update on disposable MariaDB rather
+  than infer behavior from source inspection.
+
 ## 2026-08-27 — A held cold-proof email is not permission to use SMTP
 
 - Observation: the exact public-preview dispatcher called the transactional

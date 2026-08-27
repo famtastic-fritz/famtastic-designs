@@ -24,8 +24,16 @@ approval → deployment/domain/hosting/renewal pipeline for FAMtastic Designs.
 - **Drush commands:** `famtastic:prospect-create` (fpc),
   `famtastic:studio-generate` (fsg), `famtastic:proof-local-export` (fple),
   `famtastic:proof-local-refresh-export` (fplre),
-  `famtastic:proof-local-import` (fpli), and
+  `famtastic:proof-local-import` (fpli),
+  `famtastic:verified-cold-proof-import` (fvcpi), and
   `famtastic:campaign-snapshot-backfill` (fcsb).
+
+`famtastic:proof-local-import` remains the ordinary local/core proof importer.
+It intentionally rejects `verified_cold` campaigns. Those private,
+runtime-bound artifacts must use `famtastic:verified-cold-proof-import`, which
+requires the exact delivery, checksummed/HMAC-authenticated callback, and
+matching immutable Build DNA manifest before it can write artifacts. Neither
+command stages mail, dispatches email, or promotes a public room by itself.
 
 ## API (all token-scoped via the `X-Prospect-Token` header)
 

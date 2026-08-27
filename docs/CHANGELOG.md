@@ -1,5 +1,30 @@
 # Product changelog
 
+## 2026-08-27 — Verified-cold import and legacy-unsubscribe containment (local acceptance only; not deployed)
+
+- `famtastic:proof-local-import` now rejects an exact runtime-bound
+  `verified_cold` campaign before callback processing. The only allowed cold
+  completion path is `famtastic:verified-cold-proof-import`, whose service
+  operation rechecks the immutable delivery/job/event/Build-DNA tuple and
+  records Build DNA plus the callback within one database transaction. The
+  generic service callback independently fails closed for cold, so a future
+  in-process caller cannot bypass the private importer.
+- The fresh SQLite acceptance fixture supplied a syntactically valid a/b/c
+  cold callback with signed-media-shaped assets and exact ingress IDs. The
+  generic command and direct generic service call both rejected it with no
+  proof variants, Build DNA rows, or delivery-state mutation; a separate
+  ordinary local a/b/c import still completed successfully.
+- The historical GET unsubscribe endpoint now rejects a
+  `verified_cold_preview` key without changing its message or consent record.
+  The cold confirmation POST remains the only mutating cold lane, while
+  historical non-cold GET unsubscribe behavior remains compatible.
+- Update `8042` now preflights populated cold cohort/ingress tables for
+  missing required identity fields and NULL, blank, or duplicate declared
+  `cohort_key`/`ingress_key` values before any DDL, then restores missing
+  declared unique keys through Drupal 11's Schema API. Disposable MariaDB
+  rehearsal passed clean partial-table repair, duplicate insert rejection,
+  and no-cold-DDL failures for malformed historical identity data.
+
 ## 2026-08-27 — Verified-cold commercial-send safety gates (local acceptance only; not deployed)
 
 - Verified-cold tracked click and unsubscribe URLs now use the canonical public

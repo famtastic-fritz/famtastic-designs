@@ -123,6 +123,15 @@ checksums, the configured callback HMAC, delivery/campaign/job/event/start-time
 identity, and an immutable Build DNA projection. It records artifacts only;
 owner review, public room staging, and email still remain separate gates.
 
+The historical generic local importer (`famtastic:proof-local-import`) is not
+an alternate cold route. It identifies the persisted `verified_cold` lane and
+rejects the payload before generic callback processing. The generic callback
+service repeats that denial even for an exact runtime-bound tuple. The private
+importer invokes the dedicated transaction that rechecks the runtime against
+Build DNA, writes the immutable Build DNA projection, and accepts the callback;
+failure rolls those database changes back. Ordinary non-cold local proof imports
+retain the generic command.
+
 ## Owner and commercial-send gates
 
 Proof generation does not send email. A ready set still needs Build DNA,
@@ -142,6 +151,11 @@ The public Drupal endpoint is canonicalized as
 `FAMTASTIC_PUBLIC_API_BASE_URL` must be same-origin and end exactly at `/web`.
 A malformed stored cold destination returns a private 404 and never falls back
 to the legacy token lane.
+
+The legacy GET unsubscribe endpoint also rejects a `verified_cold_preview`
+key without recording consent or changing message status. Cold suppression can
+occur only through the confirmation route's RFC 8058 one-click POST; non-cold
+historical GET links remain on their existing compatibility path.
 
 Campaign approval is required when the owner holds/dispatches the message, not
 when they stage it, so a full batch can be inspected before a campaign is

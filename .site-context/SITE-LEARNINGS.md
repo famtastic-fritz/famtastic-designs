@@ -5,6 +5,22 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — Verified-cold is a private importer lane, not a generic callback flavor
+
+- Observation: a generic local import can be structurally valid while still
+  lacking the immutable Build DNA provenance required for a verified-cold
+  public proof. A cold key also resembles the legacy unsubscribe key shape,
+  so route choice—not token shape—must determine whether a mutation is legal.
+- Guidance: reject verified-cold in the generic local command and generic
+  service callback, then accept it only through the private exact-delivery
+  importer transaction that validates the delivery/job/event/Build-DNA tuple.
+  Test that a runtime-bound generic payload leaves variants, Build DNA, and
+  delivery state unchanged, while non-cold local import remains compatible.
+  Reject cold keys on the legacy GET unsubscribe route; only the one-click POST
+  confirmation path may mutate consent. For update `8042`, validate nonempty
+  cold identity fields and duplicates before any DDL, then restore missing
+  declared unique keys using Drupal's Schema API and a disposable MariaDB run.
+
 ## 2026-08-27 — A deploy-shell flag is not a cron safety boundary
 
 - Observation: cPanel starts each scheduled `drush cron` and

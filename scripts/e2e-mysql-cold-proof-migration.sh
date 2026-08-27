@@ -101,6 +101,8 @@ drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
 "${drush[@]}" php:eval '
   $db = \Drupal::database();
   $schema = $db->schema();
+  $schema->dropUniqueKey("famtastic_cold_proof_cohort", "cohort_key");
+  $schema->dropUniqueKey("famtastic_cold_proof_ingress", "ingress_key");
   $schema->dropIndex("famtastic_cold_proof_ingress", "proof_campaign");
   $schema->dropField("famtastic_cold_proof_ingress", "proof_campaign_id");
   $now = \Drupal::time()->getRequestTime();
@@ -127,13 +129,113 @@ drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
   famtastic_pipeline_update_8042($sandbox);
   famtastic_pipeline_update_8042($sandbox);
   $row = $db->select("famtastic_cold_proof_ingress", "i")->fields("i", ["proof_campaign_id"])->condition("source_record_id", "legacy-row")->execute()->fetchAssoc();
+  $validCohortUnique = $schema->indexExists("famtastic_cold_proof_cohort", "cohort_key");
+  $validIngressUnique = $schema->indexExists("famtastic_cold_proof_ingress", "ingress_key");
+  $duplicateCohortRejected = FALSE;
+  try {
+    $db->insert("famtastic_cold_proof_cohort")->fields([
+      "cohort_key" => "mysql-legacy-fixture", "campaign_id" => 2, "campaign_key" => "mysql-legacy-fixture-duplicate", "source_name" => "fixture",
+      "package_profile" => "anonymous_safe_medium_ultra_v1", "direction_count" => 3, "direction_contract" => "{}", "profile_snapshot_hash" => str_repeat("c", 64),
+      "source_lane" => "verified_cold", "status" => "seeded", "created" => $now, "changed" => $now,
+    ])->execute();
+  }
+  catch (\Throwable) {
+    $duplicateCohortRejected = TRUE;
+  }
+  $duplicateIngressRejected = FALSE;
+  try {
+    $db->insert("famtastic_cold_proof_ingress")->fields([
+      "ingress_key" => hash("sha256", "mysql-legacy-fixture"), "cohort_id" => $cohort, "source_record_id" => "legacy-row-duplicate", "source_lane" => "verified_cold",
+      "source_url" => "https://example.test/source-duplicate", "source_provenance" => "local fixture", "source_timeframe" => "checked 2026-08-27",
+      "website_observation_status" => "verified_present", "website_observation_fact" => "Fixture fact", "corroborated_fact" => "Fixture corroboration", "proof_teaser" => "Fixture teaser",
+      "evidence_hash" => str_repeat("d", 64), "status" => "seeded", "created" => $now, "changed" => $now,
+    ])->execute();
+  }
+  catch (\Throwable) {
+    $duplicateIngressRejected = TRUE;
+  }
+
+  // Rebuild only the disposable cold tables for invalid-data rehearsals.
+  // Each malformed case must fail before update 8042 adds either unique key.
+  $definitions = _famtastic_pipeline_cold_proof_schema();
+  $resetCold = static function () use ($db, $schema, $definitions): void {
+    foreach (["famtastic_cold_proof_ingress", "famtastic_cold_proof_cohort"] as $table) {
+      if ($schema->tableExists($table)) {
+        $schema->dropTable($table);
+      }
+    }
+    foreach (["famtastic_cold_proof_cohort", "famtastic_cold_proof_ingress"] as $table) {
+      $schema->createTable($table, $definitions[$table]);
+      foreach ((array) ($definitions[$table]["unique keys"] ?? []) as $name => $fields) {
+        $schema->dropUniqueKey($table, $name);
+      }
+    }
+  };
+  $insertCohort = static function (string $key) use ($db, $now): int {
+    return (int) $db->insert("famtastic_cold_proof_cohort")->fields([
+      "cohort_key" => $key, "campaign_id" => 1, "campaign_key" => "migration-validation", "source_name" => "fixture",
+      "package_profile" => "anonymous_safe_medium_ultra_v1", "direction_count" => 3, "direction_contract" => "{}", "profile_snapshot_hash" => str_repeat("e", 64),
+      "source_lane" => "verified_cold", "status" => "seeded", "created" => $now, "changed" => $now,
+    ])->execute();
+  };
+  $insertIngress = static function (int $cohortId, mixed $key, string $record) use ($db, $now): void {
+    $db->insert("famtastic_cold_proof_ingress")->fields([
+      "ingress_key" => $key, "cohort_id" => $cohortId, "source_record_id" => $record, "source_lane" => "verified_cold",
+      "source_url" => "https://example.test/" . $record, "source_provenance" => "local fixture", "source_timeframe" => "checked 2026-08-27",
+      "website_observation_status" => "verified_present", "website_observation_fact" => "Fixture fact", "corroborated_fact" => "Fixture corroboration", "proof_teaser" => "Fixture teaser",
+      "evidence_hash" => str_repeat("f", 64), "status" => "seeded", "created" => $now, "changed" => $now,
+    ])->execute();
+  };
+  $expectPreflightFailure = static function (string $needle) use ($schema): bool {
+    $sandbox = [];
+    try {
+      famtastic_pipeline_update_8042($sandbox);
+    }
+    catch (\RuntimeException $error) {
+      return str_contains($error->getMessage(), $needle)
+        && !$schema->indexExists("famtastic_cold_proof_cohort", "cohort_key")
+        && !$schema->indexExists("famtastic_cold_proof_ingress", "ingress_key");
+    }
+    return FALSE;
+  };
+
+  $resetCold();
+  $insertCohort("");
+  $emptyCohortRejected = $expectPreflightFailure("NULL/empty cohort_key");
+
+  $resetCold();
+  $nullableIngress = $definitions["famtastic_cold_proof_ingress"]["fields"]["ingress_key"];
+  $nullableIngress["not null"] = FALSE;
+  $schema->changeField("famtastic_cold_proof_ingress", "ingress_key", "ingress_key", $nullableIngress);
+  $nullIngressCohort = $insertCohort("null-ingress-cohort");
+  $insertIngress($nullIngressCohort, NULL, "null-ingress-row");
+  $nullIngressRejected = $expectPreflightFailure("NULL/empty ingress_key");
+
+  $resetCold();
+  $insertCohort("duplicate-cohort");
+  $insertCohort("duplicate-cohort");
+  $duplicateCohortPreflightRejected = $expectPreflightFailure("duplicate values for unique key cohort_key");
+
+  $resetCold();
+  $duplicateIngressCohort = $insertCohort("duplicate-ingress-cohort");
+  $insertIngress($duplicateIngressCohort, str_repeat("a", 64), "duplicate-ingress-one");
+  $insertIngress($duplicateIngressCohort, str_repeat("a", 64), "duplicate-ingress-two");
+  $duplicateIngressPreflightRejected = $expectPreflightFailure("duplicate values for unique key ingress_key");
   print json_encode([
     "field" => $schema->fieldExists("famtastic_cold_proof_ingress", "proof_campaign_id"),
     "index" => $schema->indexExists("famtastic_cold_proof_ingress", "proof_campaign"),
+    "cohort_unique" => $validCohortUnique,
+    "ingress_unique" => $validIngressUnique,
     "legacy_is_null" => $row !== FALSE && $row["proof_campaign_id"] === NULL,
     "idempotent_second_pass" => true,
+    "duplicate_cohort_rejected" => $duplicateCohortRejected,
+    "duplicate_ingress_rejected" => $duplicateIngressRejected,
+    "empty_cohort_rejected" => $emptyCohortRejected,
+    "null_ingress_rejected" => $nullIngressRejected,
+    "duplicate_cohort_preflight_rejected" => $duplicateCohortPreflightRejected,
+    "duplicate_ingress_preflight_rejected" => $duplicateIngressPreflightRejected,
   ]);
 ' > "$sandbox/result.json"
 
-jq -e '.field == true and .index == true and .legacy_is_null == true and .idempotent_second_pass == true' "$sandbox/result.json" >/dev/null
-echo "PASS: update 8042 adds the nullable canonical proof link/index to a populated legacy cold table on disposable MariaDB, passes Drupal 11 Schema API twice, and never invents historical campaign IDs."
+jq -e '.field == true and .index == true and .cohort_unique == true and .ingress_unique == true and .legacy_is_null == true and .idempotent_second_pass == true and .duplicate_cohort_rejected == true and .duplicate_ingress_rejected == true and .empty_cohort_rejected == true and .null_ingress_rejected == true and .duplicate_cohort_preflight_rejected == true and .duplicate_ingress_preflight_rejected == true' "$sandbox/result.json" >/dev/null
+echo "PASS: update 8042 restores the nullable proof link/index plus declared cohort/ingress uniques, rejects duplicate inserts, and fails before cold-table DDL for null, empty, or duplicate identity values on disposable MariaDB."

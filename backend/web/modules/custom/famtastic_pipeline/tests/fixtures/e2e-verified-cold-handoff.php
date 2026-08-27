@@ -245,6 +245,43 @@ try {
       throw new RuntimeException('Verified-cold callback accepted a substituted job or event identity.');
     }
   }
+  // The generic service method must remain closed even when a future caller
+  // presents the exact immutable event/job/campaign tuple. This is separate
+  // from the generic Drush command guard: it proves no alternate in-process
+  // caller can create variants, Build DNA, or a review-ready delivery without
+  // the dedicated transaction that receives a finalized Build DNA manifest.
+  $genericServiceVariantsBefore = (int) $database->select('proof_variant', 'v')
+    ->condition('campaign_id', (int) $lead['proof_campaign_id'])->countQuery()->execute()->fetchField();
+  $genericServiceBuildsBefore = (int) $database->select('famtastic_build_run', 'b')
+    ->condition('proof_campaign_id', (int) $lead['proof_campaign_id'])->countQuery()->execute()->fetchField();
+  $genericServiceDeliveryBefore = (string) $database->select('famtastic_preview_delivery', 'p')->fields('p', ['state'])
+    ->condition('id', $deliveryId)->range(0, 1)->execute()->fetchField();
+  $exactGenericServiceRejected = FALSE;
+  try {
+    $proofs->acceptCallback(
+      (string) $binding['callback_event_id'],
+      (string) $binding['campaign_id'],
+      (string) $binding['job_id'],
+      [],
+    );
+  }
+  catch (InvalidArgumentException $error) {
+    $exactGenericServiceRejected = str_contains($error->getMessage(), 'private Build DNA importer');
+  }
+  $genericServiceVariantsAfter = (int) $database->select('proof_variant', 'v')
+    ->condition('campaign_id', (int) $lead['proof_campaign_id'])->countQuery()->execute()->fetchField();
+  $genericServiceBuildsAfter = (int) $database->select('famtastic_build_run', 'b')
+    ->condition('proof_campaign_id', (int) $lead['proof_campaign_id'])->countQuery()->execute()->fetchField();
+  $genericServiceDeliveryAfter = (string) $database->select('famtastic_preview_delivery', 'p')->fields('p', ['state'])
+    ->condition('id', $deliveryId)->range(0, 1)->execute()->fetchField();
+  if (
+    !$exactGenericServiceRejected
+    || $genericServiceVariantsAfter !== $genericServiceVariantsBefore
+    || $genericServiceBuildsAfter !== $genericServiceBuildsBefore
+    || $genericServiceDeliveryAfter !== $genericServiceDeliveryBefore
+  ) {
+    throw new RuntimeException('Generic verified-cold service callback bypassed the Build DNA transaction or mutated campaign state.');
+  }
   // A campaign can be staged for inspection while draft, but its commercial
   // message cannot be held. This regression proves the failed owner approval
   // leaves no held outbox and no email_approved delivery state behind.
@@ -324,6 +361,23 @@ try {
   ) {
     throw new RuntimeException('Verified-cold unsubscribe GET did not remain a non-mutating confirmation page.');
   }
+  // A copied cold key can be transformed back into the historical GET route.
+  // That legacy endpoint must reject it before it records consent or changes
+  // the cold message; only the confirmation POST below may do either.
+  $coldConsentBeforeLegacyGet = (int) $database->select('famtastic_consent', 'c')
+    ->condition('prospect_id', (int) $draftProspect->id())->countQuery()->execute()->fetchField();
+  $legacyColdResponse = $unsubscribeController->unsubscribe($unsubscribeKey);
+  $afterLegacyColdGet = $database->select('famtastic_email_message', 'm')->fields('m', ['status'])
+    ->condition('id', (int) $message['id'])->range(0, 1)->execute()->fetchAssoc();
+  $coldConsentAfterLegacyGet = (int) $database->select('famtastic_consent', 'c')
+    ->condition('prospect_id', (int) $draftProspect->id())->countQuery()->execute()->fetchField();
+  if (
+    $legacyColdResponse->getStatusCode() !== 404
+    || !$afterLegacyColdGet || (string) $afterLegacyColdGet['status'] !== 'staged'
+    || $coldConsentAfterLegacyGet !== $coldConsentBeforeLegacyGet
+  ) {
+    throw new RuntimeException('Legacy unsubscribe GET accepted a verified-cold key or changed its consent state.');
+  }
   $confirmed = $unsubscribeController->verifiedColdUnsubscribe(
     Request::create($unsubscribePath, 'POST', ['List-Unsubscribe' => 'One-Click']),
     $unsubscribeKey,
@@ -365,6 +419,14 @@ try {
   if ($legacyResponse->getStatusCode() !== 404 || !$legacyAfter || (string) $legacyAfter['status'] !== 'staged') {
     throw new RuntimeException('Verified-cold unsubscribe endpoint modified a legacy campaign message.');
   }
+  // Historical non-cold mail retains its original GET unsubscribe behavior;
+  // the cold route hardening must not make prior commercial links inert.
+  $legacyGetResponse = $unsubscribeController->unsubscribe($legacyKey);
+  $legacyAfterGet = $database->select('famtastic_email_message', 'm')->fields('m', ['status'])
+    ->condition('id', $legacyMessageId)->range(0, 1)->execute()->fetchAssoc();
+  if ($legacyGetResponse->getStatusCode() !== 200 || !$legacyAfterGet || (string) $legacyAfterGet['status'] !== 'unsubscribed') {
+    throw new RuntimeException('Legacy non-cold unsubscribe GET no longer preserves its historical behavior.');
+  }
   file_put_contents($statePath, json_encode([
     'lead' => $lead,
     'duplicate_reimport' => 'already_ingressed',
@@ -373,6 +435,8 @@ try {
     'cold_dispatch_gate' => 'denied_before_claim',
     'draft_owner_gate' => 'rejected_without_partial_hold',
     'cold_one_click_unsubscribe' => 'get_safe_post_suppressed',
+    'cold_legacy_unsubscribe' => 'rejected_without_mutation',
+    'cold_generic_service' => 'rejected_without_state_change',
   ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
 }
 finally {
