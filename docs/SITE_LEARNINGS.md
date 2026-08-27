@@ -729,6 +729,19 @@ queued.
   discovery, and measurement skills cover the current gaps; outreach, email,
   spend, and customer-data execution skills remain explicit on-demand choices
   until their authority and lifecycle proof are reviewed.
+
+## 2026-08-27 — Signed proof images are evidence, not public files
+
+- A proof HTML page and its image bytes have different access boundaries. Store
+  each explicitly declared image under a denied asset subtree, freeze its
+  normalized SHA/MIME/path/size manifest with the room, and rehash it through a
+  signature-scoped controller on every request. Never solve relative image URLs
+  by rewriting the stored HTML or by exposing a static `/proofs/.../assets/...`
+  path.
+- For the `verified_cold` lane, image evidence is a quality gate: every frozen
+  direction needs at least one asset and every asset SHA must already exist in
+  the registered Build DNA manifest. Assetless legacy rooms remain a deliberate
+  compatibility lane, not a reason to weaken new cold proof checks.
 ## 2026-08-24 — Catalog truth must live in exactly one place (and reconcile at deploy)
 
 - Prod Commerce held 14 variations while `famtastic-products.json` advertised 16; the $499 tier was unsellable and checkout died with `product_unavailable` AFTER intake+proofs. Rule: backend deploys run setup-commerce.php + fail on advertised≠sellable SKU drift. Never add a SKU to config without seeding, or vice versa.

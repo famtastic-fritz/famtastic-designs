@@ -157,6 +157,54 @@ The callback:
 
 An invalid or partial callback never marks proofs ready.
 
+### Optional signed proof assets
+
+An individual variant may also include a deliberately small `assets` list:
+
+```json
+{
+  "asset_id": "hero",
+  "relative_path": "hero.webp",
+  "media_type": "image/webp",
+  "base64": "<raw base64 only>",
+  "sha256": "<lowercase sha256 of decoded bytes>"
+}
+```
+
+`asset_id` is lowercase `[a-z][a-z0-9_-]{0,63}` and `relative_path` is a
+non-absolute, non-traversing path (at most six safe segments). The callback
+accepts only JPEG, PNG, WebP, and AVIF, validates the filename extension,
+declared MIME, decoded magic bytes, exact hash, and the 1.5 MB per-file / 3 MB
+per-direction / four-assets-per-direction limits. It rejects data URLs,
+symlinks (at local-promotion packing time), unlisted files, and a missing or
+changed hash.
+
+Generated HTML must use `assets/<relative_path>` (for example,
+`<img src="assets/hero.webp">`). FAMtastic stores the original byte at the
+protected deterministic location
+`web/proofs/<campaign>/<direction>/assets/<relative_path>` and records only a
+normalized, byte-free `design_dna.asset_manifest` with its SHA-256, size, MIME,
+and artifact path. The raw `base64` must never be copied into Design DNA.
+
+For public concept rooms, images are served only through the current signed
+proof URL:
+
+```text
+/api/public-preview/<delivery>/<signature>/proofs/<a-f>/assets/<relative_path>
+```
+
+The proof response injects a proof-level signed `<base>` at serve time so the
+relative `assets/...` URL resolves once. It does not rewrite the stored HTML or
+its Build DNA hash. The raw asset directory remains denied to static access;
+do not substitute a public `/proofs/.../assets/...` link. A frozen room accepts
+only the directions in its snapshot (one through six `a`–`f` as configured by
+its delivery profile), not an inferred directory listing.
+
+When `build_dna.run.source_lane` is `verified_cold`, each frozen direction must
+contain at least one signed asset and every asset SHA must be present in the
+registered Build DNA artifact manifest before the room can stage. Assetless
+legacy/non-`verified_cold` rooms remain readable until regenerated.
+
 ## Pilot boundary
 
 The image-free pilot is an intentional temporary production option for a

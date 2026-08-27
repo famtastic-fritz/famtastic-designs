@@ -6,6 +6,29 @@
 - Added `backend/scripts/rehearse-preview-delivery-8041.php`, a guarded disposable-MariaDB rehearsal that proves clean creation, safe nonempty partial-table completion, and no-mutation failure for missing ownership or duplicate IDs. The observed production table is absent, so production will take the separately proven clean-create path.
 - No migration was applied to production, no lead was imported, no proof was generated, and no email was sent. The normal backend release still requires current `main`, production preflight, `drush updb`, and schema inspection.
 
+## 2026-08-27 — Signed proof-media contract (local acceptance only; not deployed)
+
+- Added an optional, bounded `variants[].assets[]` callback contract for proof
+  imagery. Every asset is validated as an explicitly named JPEG, PNG, WebP, or
+  AVIF byte payload with a safe relative path, matching extension/MIME/magic
+  bytes, exact SHA-256, per-file/per-direction limits, and no directory walk.
+- The callback writes only validated bytes under a protected proof asset subtree
+  and derives the byte-free `design_dna.asset_manifest` from the saved files.
+  Base64 is never persisted in proof metadata.
+- Signed public concept rooms freeze the normalized asset manifest alongside the
+  HTML snapshot. The image controller checks the current signed share, frozen
+  direction/profile, path, size, and SHA-256 on every read; stale, revoked, or
+  tampered assets fail closed. Stored HTML is not rewritten: an asset-bearing
+  response receives a signed proof-level `<base>` only at read time.
+- The `verified_cold` Build DNA lane now requires at least one frozen signed
+  asset per direction and every asset SHA in the immutable Build DNA manifest.
+  Existing assetless, non-`verified_cold` rooms remain compatible.
+- `scripts/e2e-signed-proof-assets.sh` passed in a fresh local SQLite sandbox:
+  it covers malformed input, path/hash/MIME/magic rejection, protected signed
+  delivery, relative `assets/...` resolution, tamper detection, revoke, and
+  legacy assetless compatibility. No provider, SMTP, customer, payment,
+  deployment, import, or production state was touched.
+
 ## 2026-08-26 — Owner-gated public preview delivery release candidate (not deployed)
 
 - Forward-ported the signed, read-only three-concept room and same-email verified-account claim onto current `main`, including an industry-neutral public room, immutable per-delivery context/research/artifact snapshots, customer-only research retrieval, and redacted/allowlisted anonymous build context.

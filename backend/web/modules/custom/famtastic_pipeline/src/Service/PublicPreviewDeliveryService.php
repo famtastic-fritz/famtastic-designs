@@ -636,7 +636,7 @@ final class PublicPreviewDeliveryService {
       return NULL;
     }
     $variants = $this->snapshotVariants($row);
-    if (count($variants) !== 3) {
+    if ($variants === []) {
       return NULL;
     }
     $now = $this->time->getRequestTime();
@@ -651,7 +651,7 @@ final class PublicPreviewDeliveryService {
     return [
       'public_id' => (string) $row['public_id'],
       'business_name' => $prospect->label(),
-      'proof_count' => 3,
+      'proof_count' => count($variants),
       'private_label' => 'Private review concept · Not yet published.',
       'public_context' => (string) ($row['public_context_snapshot'] ?? ''),
       'research_teaser' => (string) ($row['research_teaser_snapshot'] ?? ''),
@@ -692,7 +692,7 @@ final class PublicPreviewDeliveryService {
       return NULL;
     }
     $direction = strtolower($direction);
-    if (!in_array($direction, ['a', 'b', 'c'], TRUE)) {
+    if (preg_match('/^[a-f]$/', $direction) !== 1) {
       return NULL;
     }
     foreach ($this->snapshotVariants($row) as $variant) {
@@ -701,6 +701,77 @@ final class PublicPreviewDeliveryService {
       }
     }
     return NULL;
+  }
+
+  /**
+   * Resolves one frozen image only while the signed room remains valid.
+   *
+   * This intentionally rehashes the file at read time. A later write, path
+   * swap, revocation, or expiration therefore fails closed instead of leaking
+   * a mutable filesystem asset through an otherwise valid concept-room link.
+   */
+  public function publicAsset(string $publicId, string $signature, string $direction, string $relativePath): ?array {
+    try {
+      $relativePath = ProofAssetContract::normalizeRelativePath($relativePath);
+    }
+    catch (\InvalidArgumentException) {
+      return NULL;
+    }
+    $row = $this->loadBy('public_id', strtolower($publicId));
+    if (!$row || !$this->isCurrentShare($row, $signature)) {
+      return NULL;
+    }
+    $direction = strtolower($direction);
+    if (preg_match('/^[a-f]$/', $direction) !== 1) {
+      return NULL;
+    }
+    $campaign = $this->entities->getStorage('proof_campaign')->load((int) ($row['proof_campaign_id'] ?? 0));
+    if (!$campaign instanceof ProofCampaign) {
+      return NULL;
+    }
+    foreach ($this->snapshotVariants($row) as $variant) {
+      if ($variant['direction_id'] !== $direction) {
+        continue;
+      }
+      foreach ($variant['assets'] as $asset) {
+        if (!hash_equals($asset['relative_path'], $relativePath)) {
+          continue;
+        }
+        try {
+          $expected = ProofAssetContract::artifactPath((string) $campaign->get('campaign_id')->value, $direction, $asset['relative_path']);
+        }
+        catch (\InvalidArgumentException) {
+          return NULL;
+        }
+        if (!hash_equals($expected, $asset['artifact_path'])) {
+          return NULL;
+        }
+        $path = dirname(\Drupal::root()) . '/' . $asset['artifact_path'];
+        $real = realpath($path);
+        $root = realpath(\Drupal::root() . '/proofs');
+        $expectedRoot = $root ? $root . DIRECTORY_SEPARATOR . (string) $campaign->get('campaign_id')->value . DIRECTORY_SEPARATOR . $direction . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR : '';
+        if (!$real || $expectedRoot === '' || !str_starts_with($real, $expectedRoot) || !is_file($real)) {
+          return NULL;
+        }
+        // Verify the exact bytes returned to the controller rather than a
+        // prior filesystem snapshot, closing a check/read race on mutable
+        // storage.
+        $bytes = file_get_contents($real);
+        if ($bytes === FALSE || !hash_equals($asset['sha256'], hash('sha256', $bytes)) || strlen($bytes) !== (int) $asset['size_bytes']) {
+          return NULL;
+        }
+        return $asset + ['bytes' => $bytes];
+      }
+    }
+    return NULL;
+  }
+
+  /** The injected document base that routes every relative media URL by signature. */
+  public function publicAssetBaseUrl(string $publicId, string $signature, string $direction): string {
+    // Stored proof HTML uses relative asset URLs such as "assets/hero.webp".
+    // The signed reader is rooted at the proof URL, not its assets directory,
+    // so the browser resolves that relative path exactly once.
+    return '/web/api/public-preview/' . rawurlencode($publicId) . '/' . rawurlencode($signature) . '/proofs/' . rawurlencode(strtolower($direction)) . '/';
   }
 
   /** Records a non-sensitive signup start without advancing delivery state. */
@@ -778,7 +849,7 @@ final class PublicPreviewDeliveryService {
   }
 
   /**
-   * @return array{campaign_id:int,campaign_public_id:string,prospect_id:int,artifact_hashes:list<string>,variants:list<array{direction_id:string,direction_name:string,artifact_path:string,artifact_hash:string}>}
+   * @return array{campaign_id:int,campaign_public_id:string,prospect_id:int,artifact_hashes:list<string>,asset_hashes:list<string>,variants:list<array{direction_id:string,direction_name:string,artifact_path:string,artifact_hash:string,assets:list<array{asset_id:string,relative_path:string,media_type:string,sha256:string,size_bytes:int,artifact_path:string}>}>}
    */
   private function assertCompleteCoreCampaign(int $campaignId, int $prospectId): array {
     $campaign = $this->entities->getStorage('proof_campaign')->load($campaignId);
@@ -792,6 +863,7 @@ final class PublicPreviewDeliveryService {
       throw new \RuntimeException('Public concept rooms require exactly the three configured core proof directions.');
     }
     $hashes = [];
+    $assetHashes = [];
     $snapshot = [];
     foreach ($variants as $variant) {
       $direction = (string) $variant->get('direction_id')->value;
@@ -800,12 +872,17 @@ final class PublicPreviewDeliveryService {
         throw new \RuntimeException('Public concept rooms cannot stage pilot, fixture, or mock proof variants.');
       }
       $evidence = $this->proofArtifactEvidence($variant);
+      $assets = $this->proofAssetEvidence($variant, (string) $campaign->get('campaign_id')->value, $direction);
       $hashes[] = $evidence['artifact_hash'];
+      foreach ($assets as $asset) {
+        $assetHashes[] = $asset['sha256'];
+      }
       $snapshot[] = [
         'direction_id' => $direction,
         'direction_name' => mb_substr(trim(strip_tags((string) $variant->get('direction_name')->value)), 0, 255) ?: $direction,
         'artifact_path' => $evidence['artifact_path'],
         'artifact_hash' => $evidence['artifact_hash'],
+        'assets' => $assets,
       ];
     }
     return [
@@ -813,6 +890,7 @@ final class PublicPreviewDeliveryService {
       'campaign_public_id' => (string) $campaign->get('campaign_id')->value,
       'prospect_id' => $prospectId,
       'artifact_hashes' => $hashes,
+      'asset_hashes' => $assetHashes,
       'variants' => $snapshot,
     ];
   }
@@ -835,6 +913,22 @@ final class PublicPreviewDeliveryService {
     foreach ($campaignEvidence['artifact_hashes'] as $artifactHash) {
       if (!$this->manifestContainsArtifact($manifest, $artifactHash)) {
         throw new \RuntimeException('Every served public proof artifact must be present in the registered Build DNA manifest.');
+      }
+    }
+    // The verified cold lane is deliberately quality-bearing: every direction
+    // must carry frozen media, and every served media hash must be present in
+    // the immutable Build DNA evidence. Existing assetless public rooms remain
+    // readable until they are deliberately replaced on the new lane.
+    if (strtolower(trim((string) ($run['source_lane'] ?? ''))) === 'verified_cold') {
+      foreach ($campaignEvidence['variants'] as $variant) {
+        if (empty($variant['assets'])) {
+          throw new \RuntimeException('Verified cold public proofs require at least one signed asset in every direction.');
+        }
+      }
+      foreach ($campaignEvidence['asset_hashes'] as $assetHash) {
+        if (!$this->manifestContainsArtifact($manifest, $assetHash)) {
+          throw new \RuntimeException('Every signed cold-proof asset must be present in the registered Build DNA manifest.');
+        }
       }
     }
     if ($researchEvidenceHash !== '' && !$this->manifestContainsArtifact($manifest, $researchEvidenceHash, $researchEvidenceRole)) {
@@ -919,6 +1013,47 @@ final class PublicPreviewDeliveryService {
     return ['artifact_path' => $stored, 'artifact_hash' => $hash];
   }
 
+  /**
+   * Rehashes the precise protected image files named by direction DNA.
+   *
+   * @return list<array{asset_id:string,relative_path:string,media_type:string,sha256:string,size_bytes:int,artifact_path:string}>
+   */
+  private function proofAssetEvidence(object $variant, string $campaignId, string $direction): array {
+    $dna = json_decode((string) $variant->get('design_dna')->value, TRUE);
+    if (!is_array($dna)) {
+      throw new \RuntimeException('A public proof asset manifest is unreadable.');
+    }
+    try {
+      $assets = ProofAssetContract::normalizeStoredManifest($dna['asset_manifest'] ?? []);
+    }
+    catch (\InvalidArgumentException) {
+      throw new \RuntimeException('A public proof asset manifest is unsafe.');
+    }
+    $root = realpath(\Drupal::root() . '/proofs');
+    if (!$root) {
+      throw new \RuntimeException('Protected proof asset storage is unavailable.');
+    }
+    foreach ($assets as &$asset) {
+      $expected = ProofAssetContract::artifactPath($campaignId, $direction, $asset['relative_path']);
+      if (!hash_equals($expected, $asset['artifact_path'])) {
+        throw new \RuntimeException('A public proof asset is not stored at its declared protected path.');
+      }
+      $path = dirname(\Drupal::root()) . '/' . $asset['artifact_path'];
+      $real = realpath($path);
+      $expectedRoot = $root . DIRECTORY_SEPARATOR . $campaignId . DIRECTORY_SEPARATOR . $direction . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
+      if (!$real || !str_starts_with($real, $expectedRoot) || !is_file($real)) {
+        throw new \RuntimeException('A public proof asset is unavailable for Build DNA verification.');
+      }
+      $hash = hash_file('sha256', $real);
+      $size = filesize($real);
+      if ($hash === FALSE || $size === FALSE || !hash_equals($asset['sha256'], $hash) || (int) $size !== (int) $asset['size_bytes']) {
+        throw new \RuntimeException('A public proof asset no longer matches its frozen manifest.');
+      }
+    }
+    unset($asset);
+    return $assets;
+  }
+
   /** Decodes and validates the exact staged concept-room artifact set. */
   private function snapshotVariants(array $row): array {
     try {
@@ -927,7 +1062,10 @@ final class PublicPreviewDeliveryService {
     catch (\Throwable) {
       return [];
     }
-    if (!is_array($decoded) || count($decoded) !== 3) {
+    // The signed reader trusts only the frozen delivery snapshot. The current
+    // public pilot freezes a/b/c, while future configured profiles may freeze
+    // any intentional one-to-six subset of a-f without changing this route.
+    if (!is_array($decoded) || count($decoded) < 1 || count($decoded) > 6) {
       return [];
     }
     $valid = [];
@@ -937,7 +1075,13 @@ final class PublicPreviewDeliveryService {
       $name = mb_substr(trim(strip_tags((string) ($variant['direction_name'] ?? ''))), 0, 255);
       $path = (string) ($variant['artifact_path'] ?? '');
       $hash = strtolower((string) ($variant['artifact_hash'] ?? ''));
-      if (!in_array($direction, ['a', 'b', 'c'], TRUE) || isset($valid[$direction]) || $name === '' || $path === '' || preg_match('/^[a-f0-9]{64}$/', $hash) !== 1) {
+      if (preg_match('/^[a-f]$/', $direction) !== 1 || isset($valid[$direction]) || $name === '' || $path === '' || preg_match('/^[a-f0-9]{64}$/', $hash) !== 1) {
+        return [];
+      }
+      try {
+        $assets = ProofAssetContract::normalizeStoredManifest($variant['assets'] ?? []);
+      }
+      catch (\InvalidArgumentException) {
         return [];
       }
       $valid[$direction] = [
@@ -945,6 +1089,7 @@ final class PublicPreviewDeliveryService {
         'direction_name' => $name,
         'artifact_path' => $path,
         'artifact_hash' => $hash,
+        'assets' => $assets,
       ];
     }
     ksort($valid);

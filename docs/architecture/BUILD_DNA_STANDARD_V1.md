@@ -81,6 +81,13 @@ private account passwords, and session transcripts are prohibited. Session
 metadata is limited to relevant runtime/tool/agent identifiers and disclosed
 capabilities.
 
+For a signed proof image, retain the normalized proof `asset_manifest` in the
+direction DNA and add a matching Build DNA artifact entry with the exact SHA-256
+of the stored byte. The manifest may name `asset_id`, safe `relative_path`,
+media type, byte size, and protected artifact path; it must never contain the
+base64 source. A `run.source_lane` of `verified_cold` makes those asset hashes a
+stage gate for public proof delivery, not a best-effort annotation.
+
 ## Site Studio boundary
 
 FAMtastic owns the Build DNA up to the immutable packet boundary. When a preview

@@ -37,7 +37,21 @@ famtastic_pipeline.public_preview_proof:
     _access: 'TRUE'
     preview_delivery: '[0-9a-f-]{36}'
     signature: '[0-9a-f]{64}'
-    direction: 'a|b|c'
+    direction: 'a|b|c|d|e|f'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.public_preview_asset:
+  path: '/api/public-preview/{preview_delivery}/{signature}/proofs/{direction}/assets/{asset_path}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PublicPreviewController::asset'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    preview_delivery: '[0-9a-f-]{36}'
+    signature: '[0-9a-f]{64}'
+    direction: 'a|b|c|d|e|f'
+    asset_path: '.+'
   options:
     no_cache: 'TRUE'
 

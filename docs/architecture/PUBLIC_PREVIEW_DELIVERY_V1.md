@@ -21,6 +21,21 @@ Public lead + intake
 
 - A public room is never created from an image-free pilot, fixture, mock, or chat-only page. Its campaign must contain exactly `a/b/c` core directions, while its stored direction labels remain configurable per run. Its immutable Build DNA projection must be registered before staging. This is enforced both during public-job creation and at the final stage gate.
 - The public-preview Build DNA run must name the exact `prospect_id`, Drupal `proof_campaign_id`, and public `campaign_id`; all three served proof HTML hashes must appear in its artifact manifest. A staging attempt fails closed if any of those correlations is missing.
+- A callback may carry an optional, explicitly declared per-direction image
+  manifest. FAMtastic validates safe IDs/paths, JPEG/PNG/WebP/AVIF MIME,
+  extension, magic bytes, SHA-256, and bounded sizes before writing each image
+  under the denied `web/proofs/<campaign>/<direction>/assets/` subtree. The
+  frozen room stores only normalized asset metadata, rehashes it on every
+  signed request, and serves it only from
+  `/api/public-preview/<delivery>/<signature>/proofs/<direction>/assets/<path>`.
+  Stored proof HTML remains immutable; its response-only proof-level `<base>`
+  maps `assets/<path>` to that signed controller route.
+- `run.source_lane=verified_cold` is an explicit quality lane: every frozen
+  direction must carry at least one signed image and every image SHA-256 must
+  be present in the registered Build DNA manifest. This is intentionally not
+  retroactive: older assetless rooms in another lane remain readable until
+  regenerated. Frozen snapshots, rather than an `a/b/c` route assumption,
+  decide which configured `a`–`f` directions a room can serve.
 - A room includes only a business label, three working concept links, a safe per-delivery context note, an optional bounded research teaser, and the account-creation handoff. It excludes email/contact values, intake answers, account IDs, prices, packages, grants, selection, revision, payment, and checkout. The anonymous provider brief is separately allowlisted and redacted; raw public request JSON and prospect phone/email/address do not cross into the Site Studio dispatch payload.
 - Signing up does not select a proof or create an offer. The email must be verified before the same-email account claims the delivery; claim data is recorded without advancing or consuming the delivery state, so a lead that signs up early cannot fall through to generic outreach. Revoked and expired rooms remain unavailable but still preserve their original Prospect/proof history for that verified account.
 - A research teaser requires a bounded source summary plus the SHA-256 and exact `research*` artifact role from registered Build DNA. The stored report, if supplied, is retrievable only by the verified same-email customer; do not promise a report that was not stored.

@@ -460,8 +460,8 @@ class PipelineCommands extends DrushCommands {
     'confirm' => '',
     'checksum' => '',
   ]): int {
-    if (!is_file($path) || !is_readable($path) || filesize($path) > 8 * 1024 * 1024) {
-      $this->logger()->error('Payload is missing, unreadable, or larger than 8 MB.');
+    if (!is_file($path) || !is_readable($path) || filesize($path) > \Drupal\famtastic_pipeline\Service\ProofAssetContract::MAX_CALLBACK_BYTES) {
+      $this->logger()->error('Payload is missing, unreadable, or larger than the signed proof asset limit.');
       return self::EXIT_FAILURE;
     }
     $expectedChecksum = strtolower(trim((string) $options['checksum']));

@@ -6,6 +6,7 @@ namespace Drupal\famtastic_pipeline\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Site\Settings;
+use Drupal\famtastic_pipeline\Service\ProofAssetContract;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -39,7 +40,7 @@ final class SiteStudioCallbackController extends ControllerBase {
    * Accepts a signed proof callback or build-success packet.
    */
   public function handle(Request $request): JsonResponse {
-    if (strlen($request->getContent()) > 2 * 1024 * 1024) {
+    if (strlen($request->getContent()) > ProofAssetContract::MAX_CALLBACK_BYTES) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'request_too_large'], 413);
     }
     $secret = getenv('SITE_STUDIO_CALLBACK_SECRET') ?: Settings::get('site_studio_callback_secret');

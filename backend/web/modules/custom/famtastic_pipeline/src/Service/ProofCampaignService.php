@@ -355,6 +355,7 @@ class ProofCampaignService {
       if (preg_match('/<(script|iframe|object|embed|base)\b|\son[a-z]+\s*=|javascript\s*:/i', $html)) {
         throw new \InvalidArgumentException('Proof HTML contains disallowed active content.');
       }
+      $assets = ProofAssetContract::normalizeCallbackAssets($variant['assets'] ?? NULL);
       $thumbnail = NULL;
       $thumbnailBase64 = (string) ($variant['thumbnail_base64'] ?? '');
       if ($thumbnailBase64 !== '') {
@@ -378,6 +379,7 @@ class ProofCampaignService {
         'thumbnail' => $thumbnail,
         'thumbnail_extension' => (($variant['thumbnail_media_type'] ?? '') === 'image/png') ? 'png' : 'jpg',
         'design_dna' => is_array($variant['design_dna'] ?? NULL) ? $variant['design_dna'] : [],
+        'assets' => $assets,
       ];
     }
     if (array_keys($validated) !== array_keys($requiredDirections)) {
@@ -417,6 +419,7 @@ class ProofCampaignService {
     $created = [];
     foreach ($validated as $direction => $variant) {
       $path = $this->writeCallbackArtifact($campaignId, $direction, $variant['html']);
+      $assetManifest = $this->writeCallbackAssets($campaignId, $direction, $variant['assets']);
       $thumbnailPath = $variant['thumbnail'] === NULL
         ? NULL
         : $this->writeCallbackThumbnail($campaignId, $direction, $variant['thumbnail'], $variant['thumbnail_extension']);
@@ -425,11 +428,15 @@ class ProofCampaignService {
         'direction_id' => $direction,
       ]);
       $directionName = mb_substr(trim(strip_tags((string) ($variant['design_dna']['direction_name'] ?? self::DIRECTIONS[$direction]))), 0, 255);
+      $designDna = $variant['design_dna'];
+      // The stored manifest is generated from validated bytes and the exact
+      // protected artifact locations. Never trust an upstream DNA asset list.
+      $designDna['asset_manifest'] = $assetManifest;
       $entity
         ->set('direction_name', $directionName ?: self::DIRECTIONS[$direction])
         ->set('artifact_path', $path)
         ->set('thumbnail_path', $thumbnailPath)
-        ->set('design_dna', json_encode($variant['design_dna'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))
+        ->set('design_dna', json_encode($designDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))
         ->set('preview_url', $request
           ? '/web/admin/famtastic/website-request/' . (int) $request['id'] . '/proof/' . $direction
           : $this->previewUrl($campaignId, $direction));
@@ -796,6 +803,61 @@ class ProofCampaignService {
     $this->fileSystem->prepareDirectory($absolute, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     $this->fileSystem->saveData($html, $absolute . '/index.html', FileSystemInterface::EXISTS_REPLACE);
     return $relative;
+  }
+
+  /**
+   * Stores a callback's validated media below the protected proof directory.
+   *
+   * The returned manifest is intentionally byte-free and becomes part of the
+   * direction's immutable design DNA. Public rooms later freeze this manifest
+   * and rehash the files on every signed asset request.
+   *
+   * @param list<array{asset_id:string,relative_path:string,media_type:string,bytes:string,sha256:string,size_bytes:int}> $assets
+   *
+   * @return list<array{asset_id:string,relative_path:string,media_type:string,sha256:string,size_bytes:int,artifact_path:string}>
+   */
+  protected function writeCallbackAssets(string $campaignId, string $direction, array $assets): array {
+    if ($assets === []) {
+      return [];
+    }
+    // The asset subtree is denied independently of the parent proof page.
+    // A generic/static proof can therefore never become an accidental bypass
+    // for original image bytes while a signed-room controller remains the only
+    // public delivery route.
+    $assetsDirectory = \Drupal::root() . '/proofs/' . $campaignId . '/' . $direction . '/assets';
+    if (!$this->fileSystem->prepareDirectory($assetsDirectory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
+      throw new \RuntimeException('Unable to prepare protected proof asset storage.');
+    }
+    $rules = "<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n  Order allow,deny\n  Deny from all\n</IfModule>\n";
+    if ($this->fileSystem->saveData($rules, $assetsDirectory . '/.htaccess', FileSystemInterface::EXISTS_REPLACE) === FALSE) {
+      throw new \RuntimeException('Unable to protect proof assets from static access.');
+    }
+    $manifest = [];
+    foreach ($assets as $asset) {
+      $relative = ProofAssetContract::artifactPath($campaignId, $direction, $asset['relative_path']);
+      $absolute = dirname(\Drupal::root()) . '/' . $relative;
+      $directory = dirname($absolute);
+      if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
+        throw new \RuntimeException('Unable to prepare protected proof asset storage.');
+      }
+      if ($this->fileSystem->saveData($asset['bytes'], $absolute, FileSystemInterface::EXISTS_REPLACE) === FALSE) {
+        throw new \RuntimeException('Unable to write protected proof asset.');
+      }
+      $actualHash = hash_file('sha256', $absolute);
+      $actualSize = filesize($absolute);
+      if ($actualHash === FALSE || $actualSize === FALSE || !hash_equals($asset['sha256'], $actualHash) || (int) $actualSize !== (int) $asset['size_bytes']) {
+        throw new \RuntimeException('Protected proof asset verification failed after storage.');
+      }
+      $manifest[] = [
+        'asset_id' => $asset['asset_id'],
+        'relative_path' => $asset['relative_path'],
+        'media_type' => $asset['media_type'],
+        'sha256' => $asset['sha256'],
+        'size_bytes' => $asset['size_bytes'],
+        'artifact_path' => $relative,
+      ];
+    }
+    return $manifest;
   }
 
   /**

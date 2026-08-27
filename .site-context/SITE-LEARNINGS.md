@@ -269,6 +269,12 @@ Permanent rules:
   still an active application.
 - Live providers, outreach, DNS mutation, domain purchase, and production
   release remain explicit approval gates.
+- Signed proof images are evidence, not public files: validate an explicit
+  bounded asset list, store it below a denied asset subtree, freeze the
+  SHA/MIME/path/size manifest, and serve it only through a current signed room
+  controller that rehashes before read. A `verified_cold` room requires an
+  asset per direction and matching Build DNA hashes; legacy assetless rooms
+  remain compatible rather than silently bypassing the new quality gate.
 
 ## 2026-07-30 — Blank page caused by flattened Vite assets
 

@@ -157,6 +157,14 @@ Each direction includes:
 - desktop and mobile screenshot evidence;
 - a stable selectable proof identifier.
 
+When original/generated imagery is used, it is an explicit, hash-addressed
+direction asset rather than an untracked page-relative file. The callback and
+Build DNA record preserve its safe relative path, MIME, byte size, artifact
+path, rights status, and SHA-256; raw base64 is transport-only. A signed public
+room may serve that byte only through its signed asset controller, with static
+asset paths denied. For `verified_cold` runs, at least one such asset is
+required per delivered direction and all hashes are Build DNA evidence.
+
 Changing only colors, fonts, or hero copy on one template fails this contract.
 The deterministic no-image renderer is not a customer-deliverable proof engine.
 When a qualified creative provider is unavailable, the run must wait in a
