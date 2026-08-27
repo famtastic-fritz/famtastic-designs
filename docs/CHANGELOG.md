@@ -12,6 +12,10 @@
   directory, removes only that pair during apply, and refuses duplicate,
   unmarked, or altered lifecycle commands. Normal non-pilot deployments retain
   their existing scheduler behavior.
+- A failed backend promotion now restores the prior `famtastic_customer` theme
+  alongside the module and admin theme; successful releases remove its
+  temporary prior-theme directory. This keeps public proof and portal UI paired
+  with the restored backend code.
 - This was source-only validation: no scheduler, production code, database,
   proof, lead, provider, or email state was changed.
 

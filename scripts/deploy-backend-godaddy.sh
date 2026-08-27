@@ -491,6 +491,13 @@ rollback_code() {
       mv "$production_admin_theme" "$failed_admin_theme" 2>/dev/null || true
       mv "$previous_admin_theme" "$production_admin_theme"
     fi
+    if [[ -d "$previous_customer_theme" ]]; then
+      # Keep the customer-facing theme paired with the restored backend code.
+      # A failed promotion must not leave its new portal/proof UI live.
+      failed_customer_theme="$production_dir/web/themes/custom/.famtastic_customer-failed-$timestamp"
+      mv "$production_customer_theme" "$failed_customer_theme" 2>/dev/null || true
+      mv "$previous_customer_theme" "$production_customer_theme"
+    fi
     tar -C "$production_dir" -xzf "$dependency_backup" vendor web/core web/modules/contrib composer.json composer.lock 2>/dev/null || true
     if [[ -f "$previous_services" ]]; then
       mv "$production_services" "$production_services.failed-$timestamp" 2>/dev/null || true
@@ -635,6 +642,7 @@ fi
 
 rm -rf "$previous_module"
 rm -rf "$previous_admin_theme"
+rm -rf "$previous_customer_theme"
 chmod u+w "$settings_dir"
 rm -f "$previous_services"
 chmod "$settings_mode" "$settings_dir"

@@ -4,10 +4,11 @@
 
 The Drupal custom module in
 `backend/web/modules/custom/famtastic_pipeline` is the canonical transactional
-backend source. The checked-in `famtastic_admin` theme is the canonical admin
-presentation source. Governed editorial fields and the draft demand library are
-promoted by the same deployment lane. Production is not edited or uploaded
-manually. Any authorized agent uses the same checked-in deployment script.
+backend source. The checked-in `famtastic_admin` and `famtastic_customer`
+themes are the canonical admin and customer presentation sources. Governed
+editorial fields and the draft demand library are promoted by the same
+deployment lane. Production is not edited or uploaded manually. Any authorized
+agent uses the same checked-in deployment script.
 
 Production currently has a mixed Drupal runtime in `~/public_html` with its
 vendor tree but no root `composer.json`. The deployment lane therefore validates
@@ -42,9 +43,9 @@ The script:
 3. validates `composer.json`/`composer.lock`, checks locked production platform
    requirements, and PHP-lints the module in the private release without
    installing a duplicate Drupal vendor tree;
-4. backs up the current custom module, admin theme, dependencies, configuration,
-   and Drupal database;
-5. stages and swaps the custom module and admin theme;
+4. backs up the current custom module, admin/customer themes, dependencies,
+   configuration, and Drupal database;
+5. stages and swaps the custom module and both themes;
 6. runs `drush updatedb -y`, idempotently installs the governed demand-library
    fields through Drupal's entity API, and seeds the idempotent draft library;
 7. rebuilds caches and verifies the sitemap route and pipeline entity definitions;
@@ -105,8 +106,10 @@ supports a separate, explicit scheduler restoration; a failed code deployment
 does not automatically re-enable broad dispatch.
 
 If code promotion or a Drupal command fails, the script restores the prior
-module and rebuilds cache. Database updates cannot be assumed reversible, so
-the pre-update SQL dump is retained and its path is printed.
+module plus both the admin and customer themes, then rebuilds cache. On a
+successful deployment it removes the temporary prior-theme directories. Database
+updates cannot be assumed reversible, so the pre-update SQL dump is retained and
+its path is printed.
 
 ## Verification
 
@@ -131,6 +134,10 @@ Use the exact paths in `.backend-release`. Restore code first:
 ```bash
 tar -xzf ~/backups/famtastic-pipeline-TIMESTAMP-SHA.tgz \
   -C ~/public_html/web/modules/custom
+tar -xzf ~/backups/famtastic-admin-TIMESTAMP-SHA.tgz \
+  -C ~/public_html/web/themes/custom
+tar -xzf ~/backups/famtastic-customer-TIMESTAMP-SHA.tgz \
+  -C ~/public_html/web/themes/custom
 cd ~/public_html
 vendor/bin/drush cr
 ```
