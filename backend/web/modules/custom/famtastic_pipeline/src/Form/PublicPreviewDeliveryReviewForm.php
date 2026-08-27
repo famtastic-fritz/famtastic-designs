@@ -38,13 +38,14 @@ final class PublicPreviewDeliveryReviewForm extends FormBase {
     $this->delivery = $this->database->select('famtastic_preview_delivery', 'p')->fields('p')
       ->condition('id', $preview_delivery)->execute()->fetchAssoc() ?: [];
     if (!$this->delivery) return ['missing' => ['#markup' => '<p>Preview delivery not found.</p>']];
+    $proofCount = max(1, min(6, (int) ($this->delivery['package_variant_count'] ?? 3)));
     $form['summary'] = [
       '#type' => 'item',
       '#title' => $this->t('Public preview delivery #@id — @state', ['@id' => $preview_delivery, '@state' => str_replace('_', ' ', (string) $this->delivery['state'])]),
       '#markup' => '<p><strong>Recipient:</strong> ' . htmlspecialchars((string) $this->delivery['recipient_address_snapshot']) . '</p><p>Nothing is customer-visible or sent until the explicit approval action below. The room is read-only and contains no price, offer, selection, checkout, or intake data.</p>',
     ];
     if (in_array($this->delivery['state'], ['lead_captured', 'preview_requested', 'research_ready', 'proof_ready_owner_review', 'share_revoked'], TRUE)) {
-      $form['proof_campaign_id'] = ['#type' => 'number', '#title' => $this->t('Ready core proof campaign ID'), '#min' => 1, '#required' => TRUE];
+      $form['proof_campaign_id'] = ['#type' => 'number', '#title' => $this->t('Ready proof campaign ID'), '#min' => 1, '#required' => TRUE];
       $form['build_dna_id'] = ['#type' => 'textfield', '#title' => $this->t('Registered Build DNA ID'), '#required' => TRUE, '#maxlength' => 170];
       $form['build_dna_hash'] = ['#type' => 'textfield', '#title' => $this->t('Build DNA SHA-256'), '#required' => TRUE, '#maxlength' => 64];
       $form['public_context'] = ['#type' => 'textarea', '#title' => $this->t('Safe public context for the room (optional)'), '#rows' => 3, '#description' => $this->t('Industry-neutral, factual context shown in the public room. Do not state unverified business facts.')];
@@ -53,7 +54,7 @@ final class PublicPreviewDeliveryReviewForm extends FormBase {
       $form['research_report'] = ['#type' => 'textarea', '#title' => $this->t('Verified-customer research report (optional)'), '#rows' => 6, '#description' => $this->t('Only the same-email verified customer can retrieve this snapshot through the customer API.')];
       $form['research_evidence_hash'] = ['#type' => 'textfield', '#title' => $this->t('Build DNA research-artifact SHA-256 (optional)'), '#maxlength' => 64];
       $form['research_evidence_role'] = ['#type' => 'textfield', '#title' => $this->t('Build DNA research-artifact role (optional)'), '#maxlength' => 128, '#description' => $this->t('When research is supplied, use the exact artifact role containing “research” from Build DNA.')];
-      $form['confirm_stage'] = ['#type' => 'checkbox', '#title' => $this->t('I verified three real direction proofs, research boundaries, Browser QA, independent review, and registered Build DNA.'), '#required' => TRUE];
+      $form['confirm_stage'] = ['#type' => 'checkbox', '#title' => $this->t('I verified all @count real direction proofs, research boundaries, Browser QA, independent review, and registered Build DNA.', ['@count' => $proofCount]), '#required' => TRUE];
       $form['actions']['#type'] = 'actions';
       $form['actions']['stage'] = ['#type' => 'submit', '#value' => $this->t('Stage private preview email'), '#preview_action' => 'stage', '#button_type' => 'primary'];
     }

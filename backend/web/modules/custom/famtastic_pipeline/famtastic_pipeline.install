@@ -1164,6 +1164,16 @@ function _famtastic_pipeline_preview_delivery_schema(): array {
         'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
         'intake_id' => $entity,
         'proof_campaign_id' => $entity,
+        // Frozen per-delivery proof profile: never resolve a later global
+        // configuration revision after this public lead has been created.
+        'package_profile' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+        'package_variant_count' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 3],
+        'proof_profile_snapshot' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE],
+        'proof_profile_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        // `verified_cold` is a strict media-gate marker, not a marketing label.
+        'source_lane' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'anonymous_public'],
+        'scheduled_release_at' => $nullableTime,
+        'scheduled_release_set_at' => $nullableTime,
         // A staged room serves this exact direction/path/hash set, not whatever
         // mutable proof_variant rows happen to contain later.
         'proof_variant_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
@@ -1191,6 +1201,7 @@ function _famtastic_pipeline_preview_delivery_schema(): array {
         'owner_approved_at' => $nullableTime,
         'owner_approved_by_uid' => $entity,
         'email_outbox_id' => $entity,
+        'commercial_message_id' => $entity,
         'dispatch_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE, 'default' => ''],
         'dispatch_claimed_at' => $nullableTime,
         'dispatch_completed_at' => $nullableTime,
@@ -1219,8 +1230,75 @@ function _famtastic_pipeline_preview_delivery_schema(): array {
         'customer_state' => ['customer_id', 'state'],
         'proof_campaign' => ['proof_campaign_id'],
         'outbox' => ['email_outbox_id'],
+        'commercial_message' => ['commercial_message_id'],
         'dispatch' => ['dispatch_key'],
+        'scheduled_release' => ['state', 'scheduled_release_at'],
         'share_expiry' => ['state', 'share_expires_at'],
+      ],
+    ],
+  ];
+}
+
+/** Source/audit records for cold cohorts that enter the public proof lane. */
+function _famtastic_pipeline_cold_proof_schema(): array {
+  $id = ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE];
+  $entity = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
+  $nullableTime = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  return [
+    'famtastic_cold_proof_cohort' => [
+      'description' => 'Immutable verified-source cold proof cohort contract; never a mail queue.',
+      'fields' => [
+        'id' => $id,
+        'cohort_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+        'campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'campaign_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+        'source_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+        'source_lane' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'verified_cold'],
+        'package_profile' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+        'direction_count' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'direction_contract' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+        'profile_snapshot_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'scheduled_release_at' => $nullableTime,
+        'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'seeded'],
+        'created' => $time,
+        'changed' => $time,
+      ],
+      'primary key' => ['id'],
+      'unique keys' => ['cohort_key' => ['cohort_key']],
+      'indexes' => ['campaign' => ['campaign_id'], 'scheduled_release' => ['scheduled_release_at', 'status']],
+    ],
+    'famtastic_cold_proof_ingress' => [
+      'description' => 'Per-lead verified public source and explicit public-preview job linkage.',
+      'fields' => [
+        'id' => $id,
+        'ingress_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'cohort_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'prospect_id' => $entity,
+        'intake_id' => $entity,
+        'preview_delivery_id' => $entity,
+        'proof_job_id' => $entity,
+        'source_record_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+        'source_lane' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'verified_cold'],
+        'source_url' => ['type' => 'varchar', 'length' => 2048, 'not null' => TRUE],
+        'source_provenance' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+        'source_timeframe' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+        'website_observation_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+        'website_observation_fact' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+        'corroborated_fact' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+        'proof_teaser' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+        'evidence_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'scheduled_release_at' => $nullableTime,
+        'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'seeded'],
+        'created' => $time,
+        'changed' => $time,
+      ],
+      'primary key' => ['id'],
+      'unique keys' => ['ingress_key' => ['ingress_key']],
+      'indexes' => [
+        'cohort_record' => ['cohort_id', 'source_record_id'],
+        'delivery' => ['preview_delivery_id'],
+        'scheduled_release' => ['scheduled_release_at', 'status'],
       ],
     ],
   ];
@@ -1265,6 +1343,7 @@ function _famtastic_pipeline_lifecycle_schema(): array {
     'indexes' => ['queue' => ['status', 'available_at'], 'recipient' => ['recipient', 'created']],
   ];
   $tables += _famtastic_pipeline_preview_delivery_schema();
+  $tables += _famtastic_pipeline_cold_proof_schema();
   $tables['famtastic_support_case'] = [
     'description' => 'Operational support case workflow linked to a portal thread.',
     'fields' => [
@@ -1669,6 +1748,7 @@ function _famtastic_pipeline_email_message_schema(): array {
       'subject' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
       'body_snapshot' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
       'proof_campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'preview_delivery_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'proof_url' => ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE, 'default' => ''],
       'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
       'provider' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
@@ -1696,6 +1776,7 @@ function _famtastic_pipeline_email_message_schema(): array {
       'provider_message' => ['provider', 'provider_message_id'],
       'prospect' => ['prospect_id'],
       'proof_campaign' => ['proof_campaign_id'],
+      'preview_delivery' => ['preview_delivery_id'],
     ],
   ];
 }
@@ -2047,4 +2128,37 @@ function famtastic_pipeline_update_8041(&$sandbox) {
     }
   }
   return t('Updated public preview delivery records with the current schema.');
+}
+
+/** Adds frozen cold-cohort contracts and scheduled owner-gated release state. */
+function famtastic_pipeline_update_8042(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $preview = _famtastic_pipeline_preview_delivery_schema()['famtastic_preview_delivery'];
+  foreach ($preview['fields'] as $name => $field) {
+    if (!$schema->fieldExists('famtastic_preview_delivery', $name)) {
+      $schema->addField('famtastic_preview_delivery', $name, $field);
+    }
+  }
+  foreach ($preview['indexes'] as $name => $fields) {
+    if (!$schema->indexExists('famtastic_preview_delivery', $name)) {
+      $schema->addIndex('famtastic_preview_delivery', $name, $fields);
+    }
+  }
+  $messages = _famtastic_pipeline_email_message_schema();
+  foreach ($messages['fields'] as $name => $field) {
+    if (!$schema->fieldExists('famtastic_email_message', $name)) {
+      $schema->addField('famtastic_email_message', $name, $field);
+    }
+  }
+  foreach ($messages['indexes'] as $name => $fields) {
+    if (!$schema->indexExists('famtastic_email_message', $name)) {
+      $schema->addIndex('famtastic_email_message', $name, $fields);
+    }
+  }
+  foreach (_famtastic_pipeline_cold_proof_schema() as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+    }
+  }
+  return t('Added verified cold-proof cohort records, frozen direction profiles, and scheduled owner-gated release fields.');
 }

@@ -1,0 +1,30 @@
+{
+  "schema_version": "famtastic.cold_proof_campaign_seed.v1",
+  "cohort": {
+    "cohort_key": "fixture-cold-proof-2026-08",
+    "campaign_key": "fixture-cold-proof-2026-08",
+    "source_name": "fixture public directory",
+    "scheduled_release_at": "2026-08-28T15:00:00Z"
+  },
+  "leads": [
+    {
+      "source_record_id": "fixture-001",
+      "business_name": "Fixture Braids",
+      "business_category": "Hair styling",
+      "business_description": "Appointment-based natural hair styling.",
+      "service_area": "Port Saint Lucie, Florida",
+      "email": "fixture-braids@example.test",
+      "website_observation": {
+        "status": "confirmed_absent",
+        "fact": "The verified public listing dated 2026-08-26 includes no website field."
+      },
+      "public_source": {
+        "url": "https://directory.example.test/fixture-braids",
+        "provenance": "public business directory record",
+        "timeframe": "verified 2026-08-26"
+      },
+      "corroborated_fact": "The public listing identifies the business as appointment-based natural hair styling.",
+      "proof_teaser": "A private three-direction concept review can show a stronger starting point without claiming unverified services."
+    }
+  ]
+}

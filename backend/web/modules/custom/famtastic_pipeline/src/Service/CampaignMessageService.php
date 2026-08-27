@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\famtastic_pipeline\Service;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Site\Settings;
@@ -13,7 +14,7 @@ use Drupal\famtastic_pipeline\Entity\Prospect;
 /**
  * Stages and sends attributable campaign email behind an explicit gate.
  */
-final class CampaignMessageService {
+class CampaignMessageService {
 
   private const TEMPLATE_VERSION = 2;
 
@@ -24,6 +25,7 @@ final class CampaignMessageService {
     private readonly TokenManager $tokens,
     private readonly OutreachMailer $mailer,
     private readonly TimeInterface $time,
+    private readonly ConfigFactoryInterface $configFactory,
   ) {}
 
   /**
@@ -91,6 +93,9 @@ final class CampaignMessageService {
       ->fields('m', ['id', 'prospect_id'])
       ->condition('campaign_id', $campaign['id'])
       ->condition('status', 'staged')
+      // Verified cold proof rooms have their own owner-approved exact-ID
+      // dispatcher. They may never leak into this broad campaign queue.
+      ->condition('template_key', 'verified_cold_preview', '<>')
       ->execute()
       ->fetchAllKeyed();
     foreach ($ids as $messageId => $prospectId) {
@@ -115,6 +120,9 @@ final class CampaignMessageService {
     $message = $this->load($messageId);
     if (!$message) {
       throw new \RuntimeException('Email message does not exist.');
+    }
+    if ((string) ($message['template_key'] ?? '') === 'verified_cold_preview') {
+      throw new \RuntimeException('Verified-cold commercial previews must use the exact-ID public preview dispatcher.');
     }
     if (in_array($message['status'], ['sent', 'delivered', 'opened', 'clicked'], TRUE)) {
       return $message;
@@ -316,6 +324,54 @@ final class CampaignMessageService {
     );
     $this->setStatus((int) $message['id'], $type);
     return $this->entityTypeManager->getStorage('famtastic_prospect')->load($message['prospect_id']);
+  }
+
+  /**
+   * Returns a stored signed-room destination only for the verified-cold
+   * commercial template. Legacy campaign clicks retain their token flow.
+   */
+  public function verifiedColdClickDestination(string $trackingKey): ?string {
+    $message = $this->loadBy('tracking_key', $trackingKey);
+    if (!$message || (string) $message['template_key'] !== 'verified_cold_preview') {
+      return NULL;
+    }
+    $url = trim((string) ($message['proof_url'] ?? ''));
+    $base = rtrim((string) (
+      getenv('FAMTASTIC_PUBLIC_BASE_URL')
+      ?: $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')
+      ?: 'https://famtasticdesigns.com'
+    ), '/');
+    return $this->isVerifiedColdProofUrl($url, $base) ? $url : NULL;
+  }
+
+  /** Validates one stored, same-origin signed public-preview room URL. */
+  private function isVerifiedColdProofUrl(string $url, string $base): bool {
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+      return FALSE;
+    }
+    $parts = parse_url($url);
+    $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+    $host = strtolower((string) ($parts['host'] ?? ''));
+    $baseParts = parse_url($base);
+    $baseHost = strtolower((string) ($baseParts['host'] ?? ''));
+    if (
+      !in_array($scheme, ['http', 'https'], TRUE)
+      || $host === ''
+      || $host !== $baseHost
+      || (int) ($parts['port'] ?? 0) !== (int) ($baseParts['port'] ?? 0)
+      || isset($parts['user'])
+      || isset($parts['pass'])
+      || isset($parts['query'])
+      || isset($parts['fragment'])
+    ) {
+      return FALSE;
+    }
+    // The signed room path is intentionally narrow: no arbitrary stored
+    // redirect, no legacy token exchange, no customer/account surface.
+    if (preg_match('#^/proofs/preview/[0-9a-f-]{36}/[a-f0-9]{64}$#', (string) ($parts['path'] ?? '')) !== 1) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
   /**

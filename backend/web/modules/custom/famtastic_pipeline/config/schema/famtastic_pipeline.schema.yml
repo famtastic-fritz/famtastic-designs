@@ -48,3 +48,51 @@ famtastic_pipeline.settings:
           sequence:
             type: string
             label: 'Inclusion'
+
+famtastic_pipeline.proof_cohorts:
+  type: config_object
+  label: 'FAMtastic proof cohort profiles'
+  mapping:
+    anonymous:
+      type: mapping
+      label: 'Anonymous public proof profiles'
+      mapping:
+        default_profile:
+          type: string
+          label: 'Default anonymous profile ID'
+        profiles:
+          type: sequence
+          label: 'Named anonymous profiles'
+          sequence:
+            type: mapping
+            label: 'Anonymous profile'
+            mapping:
+              audience:
+                type: string
+                label: 'Audience'
+              direction_count:
+                type: integer
+                label: 'Direction count'
+              directions:
+                type: sequence
+                label: 'Direction contract'
+                sequence:
+                  type: mapping
+                  label: 'Direction'
+                  mapping:
+                    name:
+                      type: string
+                      label: 'Direction label'
+                    intent:
+                      type: string
+                      label: 'Direction intent'
+    cold:
+      type: mapping
+      label: 'Verified cold-proof eligibility'
+      mapping:
+        website_observation_statuses:
+          type: sequence
+          label: 'Allowed explicit website observation statuses'
+          sequence:
+            type: string
+            label: 'Observation status'

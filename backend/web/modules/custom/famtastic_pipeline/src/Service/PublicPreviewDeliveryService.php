@@ -18,7 +18,7 @@ use Drupal\famtastic_pipeline\Entity\Prospect;
  * Owns public-lead concept-room delivery without becoming a second CRM.
  *
  * A delivery is deliberately inert until an owner stages a complete, audited
- * three-direction core campaign and explicitly approves its one invitation.
+ * configured proof cohort and explicitly approves its one invitation.
  */
 final class PublicPreviewDeliveryService {
 
@@ -40,17 +40,50 @@ final class PublicPreviewDeliveryService {
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
     private readonly OutreachMailer $mailer,
+    private readonly ProofCohortProfileResolverInterface $profiles,
+    private readonly ColdProofCommercialMessageService $coldMessages,
   ) {}
 
   /** Creates (or returns) the durable, non-sendable delivery for a public lead. */
-  public function createForPublicLead(int $prospectId, int $intakeId = 0): array {
+  public function createForPublicLead(
+    int $prospectId,
+    int $intakeId = 0,
+    ?string $packageProfile = NULL,
+    ?int $scheduledReleaseAt = NULL,
+    string $sourceLane = 'anonymous_public',
+  ): array {
     $prospect = $this->prospect($prospectId);
     $email = $this->email($prospect);
+    $profile = $this->profiles->resolveAnonymous($packageProfile);
+    $profileSnapshot = $this->profileSnapshot($profile);
+    $sourceLane = trim($sourceLane);
+    if (!in_array($sourceLane, ['anonymous_public', 'verified_cold'], TRUE)) {
+      throw new \InvalidArgumentException('Public preview source lane is invalid.');
+    }
+    $scheduledReleaseAt = $this->normalizeScheduledReleaseAt($scheduledReleaseAt);
     $key = 'public-preview:prospect:' . $prospectId;
     if ($existing = $this->loadBy('delivery_key', $key)) {
-      if ($intakeId > 0 && (int) ($existing['intake_id'] ?? 0) !== $intakeId && in_array($existing['state'], ['lead_captured', 'preview_requested', 'research_ready'], TRUE)) {
+      $mutable = in_array($existing['state'], ['lead_captured', 'preview_requested', 'research_ready'], TRUE);
+      if ((string) ($existing['package_profile'] ?? '') !== '' && (string) $existing['package_profile'] !== $profile['id']) {
+        if (!$mutable) {
+          throw new \RuntimeException('A public preview delivery profile cannot change after proof review begins.');
+        }
+      }
+      if ($mutable && (
+        ($intakeId > 0 && (int) ($existing['intake_id'] ?? 0) !== $intakeId)
+        || (string) ($existing['package_profile'] ?? '') !== $profile['id']
+        || (int) ($existing['scheduled_release_at'] ?? 0) !== (int) ($scheduledReleaseAt ?? 0)
+        || (string) ($existing['source_lane'] ?? 'anonymous_public') !== $sourceLane
+      )) {
         $this->database->update('famtastic_preview_delivery')->fields([
-          'intake_id' => $intakeId,
+          'intake_id' => $intakeId ?: ($existing['intake_id'] ?? NULL),
+          'package_profile' => $profile['id'],
+          'package_variant_count' => $profile['direction_count'],
+          'proof_profile_snapshot' => $profileSnapshot,
+          'proof_profile_hash' => hash('sha256', $profileSnapshot),
+          'source_lane' => $sourceLane,
+          'scheduled_release_at' => $scheduledReleaseAt,
+          'scheduled_release_set_at' => $scheduledReleaseAt ? $this->time->getRequestTime() : NULL,
           'changed' => $this->time->getRequestTime(),
         ])->condition('id', $existing['id'])->execute();
         return $this->require((int) $existing['id']);
@@ -67,6 +100,13 @@ final class PublicPreviewDeliveryService {
       'recipient_hash' => $this->ledger->contactHash($email),
       // This snapshot exists solely for the owner-approved transactional send.
       'recipient_address_snapshot' => $email,
+      'package_profile' => $profile['id'],
+      'package_variant_count' => $profile['direction_count'],
+      'proof_profile_snapshot' => $profileSnapshot,
+      'proof_profile_hash' => hash('sha256', $profileSnapshot),
+      'source_lane' => $sourceLane,
+      'scheduled_release_at' => $scheduledReleaseAt,
+      'scheduled_release_set_at' => $scheduledReleaseAt ? $now : NULL,
       'subject_snapshot' => '',
       'text_snapshot' => '',
       'proof_variant_snapshot' => '',
@@ -76,16 +116,22 @@ final class PublicPreviewDeliveryService {
       'changed' => $now,
     ])->execute();
     $row = $this->load($id);
-    $this->event($row, 'preview.lead_captured');
+    $this->event($row, 'preview.lead_captured', [
+      'package_profile' => $profile['id'],
+      'direction_count' => $profile['direction_count'],
+      'source_lane' => $sourceLane,
+      'scheduled_release_at' => $scheduledReleaseAt,
+    ]);
     return $row;
   }
 
   /**
-   * Queues the canonical initial three-direction job exactly once for this
+   * Queues the frozen initial proof cohort job exactly once for this
    * delivery. It creates no public link and sends no email.
    */
   public function queueInitialProof(int $deliveryId): int {
     $row = $this->require($deliveryId);
+    $profile = $this->profileForDelivery($row);
     $jobKey = 'public-preview:proof.generate:delivery:' . $deliveryId;
     $existing = $this->database->select('famtastic_job', 'j')->fields('j', ['id'])
       ->condition('job_key', $jobKey)->range(0, 1)->execute()->fetchField();
@@ -102,7 +148,12 @@ final class PublicPreviewDeliveryService {
         'routine' => 'website_proof.generate.v1',
         'prospect_id' => (int) $row['prospect_id'],
         'public_preview_delivery_id' => $deliveryId,
-        'required_variants' => 3,
+        'public_preview_package_profile' => $profile['id'],
+        'source_lane' => (string) ($row['source_lane'] ?? 'anonymous_public'),
+        // The full contract is repeated in the durable job payload. A worker
+        // must not silently resolve a later config revision for this lead.
+        'public_preview_proof_profile' => $profile,
+        'required_variants' => $profile['direction_count'],
       ],
       (int) $row['prospect_id'],
     );
@@ -112,7 +163,11 @@ final class PublicPreviewDeliveryService {
       'last_event_at' => $now,
       'changed' => $now,
     ])->condition('id', $deliveryId)->condition('state', ['lead_captured', 'preview_requested', 'research_ready'], 'IN')->execute();
-    $this->event($this->require($deliveryId), 'preview.proof_job_queued', ['job_id' => $jobId]);
+    $this->event($this->require($deliveryId), 'preview.proof_job_queued', [
+      'job_id' => $jobId,
+      'package_profile' => $profile['id'],
+      'direction_count' => $profile['direction_count'],
+    ]);
     return $jobId;
   }
 
@@ -122,6 +177,7 @@ final class PublicPreviewDeliveryService {
    */
   public function publicIntakeProofContext(int $deliveryId): array {
     $delivery = $this->require($deliveryId);
+    $profile = $this->profileForDelivery($delivery);
     $intakeId = (int) ($delivery['intake_id'] ?? 0);
     /** @var \Drupal\famtastic_pipeline\Entity\Intake|null $intake */
     $intake = $intakeId ? $this->entities->getStorage('famtastic_intake')->load($intakeId) : NULL;
@@ -150,17 +206,20 @@ final class PublicPreviewDeliveryService {
       'existing_domain' => $field($intake, 'existing_domain', 255),
       'fact_boundary' => 'Use only this preliminary public brief and supplied prospect facts. Do not infer or invent services, outcomes, prices, staff, availability, partners, or customer claims.',
     ];
+    if ($evidence = $this->coldProofIngressEvidence($deliveryId)) {
+      $brief['verified_source'] = $evidence;
+      $brief['fact_boundary'] = 'Use only the supplied preliminary public brief and the explicitly corroborated fact in verified_source. The proof teaser is a non-factual invitation cue, not a statement of current operations. Do not infer or invent services, outcomes, prices, staff, availability, partners, or customer claims.';
+    }
     return [
       'public_preview_delivery_id' => $deliveryId,
+      'public_preview_package_profile' => $profile['id'],
+      'public_preview_proof_profile' => $profile,
+      'source_lane' => (string) ($delivery['source_lane'] ?? 'anonymous_public'),
       'website_discovery_v2' => $brief,
       'website_discovery_v3' => $brief,
-      // Labels are run-scoped guidance for the provider; the public room
-      // renders the labels returned with the frozen staged artifacts.
-      'public_preview_direction_contract' => [
-        'a' => ['name' => 'Safe', 'intent' => 'polished, familiar, credible, and low-risk'],
-        'b' => ['name' => 'Medium FAMtastic', 'intent' => 'expressive and distinctive while remaining practical'],
-        'c' => ['name' => 'Ultra FAMtastic', 'intent' => 'the strongest campaign-level visual idea that remains usable'],
-      ],
+      // The cohort snapshot, rather than an importer literal, owns these
+      // labels and intents. The public room renders the frozen artifacts.
+      'public_preview_direction_contract' => $profile['directions'],
     ];
   }
 
@@ -222,22 +281,32 @@ final class PublicPreviewDeliveryService {
     if ((int) ($row['proof_campaign_id'] ?? 0) !== $proofCampaignId) {
       throw new \RuntimeException('Stage only the exact proof campaign bound to this public delivery.');
     }
-    $campaignEvidence = $this->assertCompleteCoreCampaign($proofCampaignId, (int) $row['prospect_id']);
+    $profile = $this->profileForDelivery($row);
+    $campaignEvidence = $this->assertCompleteProofCampaign($proofCampaignId, (int) $row['prospect_id'], $profile);
     $buildDnaId = trim($buildDnaId);
     $buildDnaHash = strtolower(trim($buildDnaHash));
     if ($buildDnaId === '' || !preg_match('/^[a-f0-9]{64}$/', $buildDnaHash)) {
       throw new \InvalidArgumentException('A Build DNA identifier and SHA-256 hash are required before staging.');
     }
     $research = $this->normalizeResearch($research);
-    $this->assertRegisteredBuildDna($buildDnaId, $buildDnaHash, $campaignEvidence, $research['evidence_hash'], $research['evidence_role']);
+    $this->assertRegisteredBuildDna($buildDnaId, $buildDnaHash, $campaignEvidence, $research['evidence_hash'], $research['evidence_role'], (string) ($row['source_lane'] ?? 'anonymous_public'));
     $now = $this->time->getRequestTime();
     $expires = $now + (14 * 86400);
     $version = max(1, (int) $row['share_version']);
     $signature = $this->shareSignature((string) $row['public_id'], $version);
     $shareUrl = $this->shareUrl((string) $row['public_id'], $signature);
-    $business = $this->prospect((int) $row['prospect_id'])->label();
-    $subject = 'Three website directions for ' . $business;
-    $text = $this->invitationBody($business, $shareUrl, $this->registrationUrl((string) $row['public_id']), $research);
+    $prospect = $this->prospect((int) $row['prospect_id']);
+    $business = $prospect->label();
+    $proofCount = (int) $profile['direction_count'];
+    $subject = $this->proofCountLabel($proofCount) . ' website directions for ' . $business;
+    $text = $this->invitationBody($business, $shareUrl, $this->registrationUrl((string) $row['public_id']), $research, $proofCount);
+    $commercialMessageId = NULL;
+    if ((string) ($row['source_lane'] ?? 'anonymous_public') === 'verified_cold') {
+      $commercial = $this->coldMessages->stage($row, $prospect, $subject, $text, $shareUrl);
+      $commercialMessageId = (int) $commercial['id'];
+      $subject = (string) $commercial['subject'];
+      $text = (string) $commercial['body_snapshot'];
+    }
     $this->database->update('famtastic_preview_delivery')->fields([
       'proof_campaign_id' => $proofCampaignId,
       'proof_variant_snapshot' => json_encode($campaignEvidence['variants'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
@@ -251,6 +320,7 @@ final class PublicPreviewDeliveryService {
       'expires_at' => $expires,
       'subject_snapshot' => $subject,
       'text_snapshot' => $text,
+      'commercial_message_id' => $commercialMessageId,
       'public_context_snapshot' => $research['public_context'],
       'research_teaser_snapshot' => $research['teaser'],
       'research_sources_snapshot' => $research['sources'],
@@ -273,6 +343,7 @@ final class PublicPreviewDeliveryService {
       'build_dna_id' => $buildDnaId,
       'research_snapshot_hash' => $research['snapshot_hash'],
       'research_evidence_hash' => $research['evidence_hash'],
+      'commercial_message_id' => $commercialMessageId,
     ]);
     return $row;
   }
@@ -306,13 +377,34 @@ final class PublicPreviewDeliveryService {
   }
 
   /**
+   * Returns the frozen profile for one exact public campaign, never a global
+   * default. Non-public campaigns intentionally return NULL.
+   */
+  public function proofProfileForCampaign(int $prospectId, int $proofCampaignId): ?array {
+    $row = $this->database->select('famtastic_preview_delivery', 'p')->fields('p')
+      ->condition('prospect_id', $prospectId)
+      ->condition('proof_campaign_id', $proofCampaignId)
+      ->range(0, 1)->execute()->fetchAssoc();
+    return $row ? $this->profileForDelivery($row) : NULL;
+  }
+
+  /** Returns the immutable source lane for the exact campaign, if public. */
+  public function sourceLaneForCampaign(int $prospectId, int $proofCampaignId): ?string {
+    $lane = $this->database->select('famtastic_preview_delivery', 'p')->fields('p', ['source_lane'])
+      ->condition('prospect_id', $prospectId)
+      ->condition('proof_campaign_id', $proofCampaignId)
+      ->range(0, 1)->execute()->fetchField();
+    return $lane === FALSE ? NULL : (string) $lane;
+  }
+
+  /**
    * Marks one known public delivery ready. Unlike the legacy prospect lookup,
    * this exact-ID path can never fall back to generic outreach on a retry.
    */
   public function markCampaignReadyForDelivery(int $deliveryId, int $proofCampaignId): bool {
     $row = $this->require($deliveryId);
     $prospectId = (int) $row['prospect_id'];
-    $this->assertCompleteCoreCampaign($proofCampaignId, $prospectId);
+    $this->assertCompleteProofCampaign($proofCampaignId, $prospectId, $this->profileForDelivery($row));
     $boundCampaignId = (int) ($row['proof_campaign_id'] ?? 0);
     if ($boundCampaignId && $boundCampaignId !== $proofCampaignId) {
       throw new \RuntimeException('This public delivery already belongs to a different proof campaign.');
@@ -353,6 +445,14 @@ final class PublicPreviewDeliveryService {
     }
     if ($this->ledger->isSuppressed((string) $row['recipient_address_snapshot'])) {
       throw new \RuntimeException('A suppressed contact cannot receive a public preview invitation.');
+    }
+    // For commercial verified-cold delivery, establish the campaign-approved
+    // hold before exposing any outbox row or marking the delivery approved.
+    // A draft/revoked campaign therefore fails closed without a dispatchable
+    // preview record. The commercial hold is idempotent for safe recovery if
+    // a later local write is interrupted.
+    if ((string) ($row['source_lane'] ?? 'anonymous_public') === 'verified_cold') {
+      $this->coldMessages->hold($deliveryId);
     }
     $now = $this->time->getRequestTime();
     $key = 'preview-delivery:' . $deliveryId . ':share:' . (int) $row['share_version'];
@@ -437,6 +537,9 @@ final class PublicPreviewDeliveryService {
         ])->condition('id', $id)->condition('state', 'email_approved')->execute() !== 1) {
           throw new \RuntimeException('Preview delivery ' . $id . ' changed before targeted dispatch could begin.');
         }
+        if ((string) ($delivery['source_lane'] ?? 'anonymous_public') === 'verified_cold') {
+          $this->coldMessages->claim($id);
+        }
         $claimed[] = [
           'id' => $id,
           'outbox_id' => $outboxId,
@@ -500,6 +603,15 @@ final class PublicPreviewDeliveryService {
       throw new \RuntimeException('This invitation is being dispatched. Wait for its recorded SMTP result before revoking the room.');
     }
     $now = $this->time->getRequestTime();
+    // Cancel the exact, not-yet-sent commercial snapshot before changing the
+    // room version. This prevents an orphan held cold message from surviving
+    // a revoked room and being mistaken for a later eligible send.
+    if (
+      (string) ($row['source_lane'] ?? 'anonymous_public') === 'verified_cold'
+      && in_array((string) $row['state'], ['email_staged', 'email_approved'], TRUE)
+    ) {
+      $this->coldMessages->revoke($deliveryId, 'public_preview_share_revoked_before_dispatch');
+    }
     // A held invitation is not visible to the general lifecycle dispatcher,
     // but revoke it explicitly as well so it cannot be mistaken for an
     // eligible exact-ID dispatch after this delivery is restaged.
@@ -540,6 +652,9 @@ final class PublicPreviewDeliveryService {
       if ($outboxUpdated !== 1 || $deliveryUpdated !== 1) {
         throw new \RuntimeException('Targeted preview dispatch acceptance could not be recorded safely.');
       }
+      if ($this->isVerifiedColdDelivery($deliveryId)) {
+        $this->coldMessages->accepted($deliveryId, $providerMessageId);
+      }
     }
     catch (\Throwable $error) {
       $transaction->rollBack();
@@ -579,6 +694,9 @@ final class PublicPreviewDeliveryService {
       if ($outboxUpdated !== 1 || $deliveryUpdated !== 1) {
         throw new \RuntimeException('Provider acceptance could not be marked for receipt reconciliation.');
       }
+      if ($this->isVerifiedColdDelivery($deliveryId)) {
+        $this->coldMessages->receiptUnknown($deliveryId, $providerMessageId);
+      }
     }
     catch (\Throwable $receiptError) {
       $transaction->rollBack();
@@ -617,6 +735,9 @@ final class PublicPreviewDeliveryService {
       if ($outboxUpdated !== 1 || $deliveryUpdated !== 1) {
         throw new \RuntimeException('Targeted preview dispatch failure could not be recorded safely.');
       }
+      if ($this->isVerifiedColdDelivery($deliveryId)) {
+        $this->coldMessages->failed($deliveryId, $message);
+      }
       $this->event($this->require($deliveryId), 'preview.email_dispatch_failed', [
         'outbox_id' => $outboxId,
         'dispatch_key' => $dispatchKey,
@@ -635,8 +756,9 @@ final class PublicPreviewDeliveryService {
     if (!$row || !$this->isCurrentShare($row, $signature)) {
       return NULL;
     }
-    $variants = $this->snapshotVariants($row);
-    if ($variants === []) {
+    $profile = $this->profileForDelivery($row);
+    $variants = $this->snapshotVariants($row, $profile);
+    if (count($variants) !== $profile['direction_count']) {
       return NULL;
     }
     $now = $this->time->getRequestTime();
@@ -651,7 +773,8 @@ final class PublicPreviewDeliveryService {
     return [
       'public_id' => (string) $row['public_id'],
       'business_name' => $prospect->label(),
-      'proof_count' => count($variants),
+      'proof_count' => $profile['direction_count'],
+      'proof_profile' => ['id' => $profile['id'], 'directions' => $profile['directions']],
       'private_label' => 'Private review concept · Not yet published.',
       'public_context' => (string) ($row['public_context_snapshot'] ?? ''),
       'research_teaser' => (string) ($row['research_teaser_snapshot'] ?? ''),
@@ -691,11 +814,12 @@ final class PublicPreviewDeliveryService {
     if (!$row || !$this->isCurrentShare($row, $signature)) {
       return NULL;
     }
+    $profile = $this->profileForDelivery($row);
     $direction = strtolower($direction);
-    if (preg_match('/^[a-f]$/', $direction) !== 1) {
+    if (!array_key_exists($direction, $profile['directions'])) {
       return NULL;
     }
-    foreach ($this->snapshotVariants($row) as $variant) {
+    foreach ($this->snapshotVariants($row, $profile) as $variant) {
       if ($variant['direction_id'] === $direction) {
         return $variant;
       }
@@ -722,14 +846,15 @@ final class PublicPreviewDeliveryService {
       return NULL;
     }
     $direction = strtolower($direction);
-    if (preg_match('/^[a-f]$/', $direction) !== 1) {
+    $profile = $this->profileForDelivery($row);
+    if (!array_key_exists($direction, $profile['directions'])) {
       return NULL;
     }
     $campaign = $this->entities->getStorage('proof_campaign')->load((int) ($row['proof_campaign_id'] ?? 0));
     if (!$campaign instanceof ProofCampaign) {
       return NULL;
     }
-    foreach ($this->snapshotVariants($row) as $variant) {
+    foreach ($this->snapshotVariants($row, $profile) as $variant) {
       if ($variant['direction_id'] !== $direction) {
         continue;
       }
@@ -848,10 +973,117 @@ final class PublicPreviewDeliveryService {
     $this->event($this->require((int) $row['id']), $state === 'submitted' ? 'preview.request_submitted' : 'preview.request_attached', ['website_request_id' => $requestId]);
   }
 
+  /** Resolves the immutable cohort profile selected for this public delivery. */
+  private function profileForDelivery(array $delivery): array {
+    $snapshot = trim((string) ($delivery['proof_profile_snapshot'] ?? ''));
+    if ($snapshot !== '') {
+      try {
+        $profile = json_decode($snapshot, TRUE, 16, JSON_THROW_ON_ERROR);
+      }
+      catch (\Throwable) {
+        throw new \RuntimeException('The stored public proof cohort snapshot is unreadable.');
+      }
+      if (!is_array($profile) || (string) ($profile['audience'] ?? '') !== 'anonymous_public') {
+        throw new \RuntimeException('The stored public proof cohort snapshot is invalid.');
+      }
+      $profile['id'] = trim((string) ($profile['id'] ?? ''));
+      $profile['direction_count'] = (int) ($profile['direction_count'] ?? 0);
+      $profile['directions'] = (array) ($profile['directions'] ?? []);
+      $expected = array_slice(['a', 'b', 'c', 'd', 'e', 'f'], 0, $profile['direction_count']);
+      if ($profile['id'] === '' || $profile['direction_count'] < 1 || $profile['direction_count'] > 6 || array_keys($profile['directions']) !== $expected) {
+        throw new \RuntimeException('The stored public proof cohort does not define a bounded direction contract.');
+      }
+      foreach ($profile['directions'] as $definition) {
+        if (!is_array($definition) || trim((string) ($definition['name'] ?? '')) === '' || trim((string) ($definition['intent'] ?? '')) === '') {
+          throw new \RuntimeException('The stored public proof cohort has an incomplete direction definition.');
+        }
+      }
+      if ((int) ($delivery['package_variant_count'] ?? 0) !== $profile['direction_count']) {
+        throw new \RuntimeException('The stored public preview direction count does not match its frozen cohort profile.');
+      }
+      $storedHash = strtolower(trim((string) ($delivery['proof_profile_hash'] ?? '')));
+      if ($storedHash !== '' && !hash_equals($storedHash, hash('sha256', $snapshot))) {
+        throw new \RuntimeException('The stored public proof cohort snapshot failed integrity verification.');
+      }
+      return $profile;
+    }
+    $profileId = trim((string) ($delivery['package_profile'] ?? ''));
+    $profile = $this->profiles->resolveAnonymous($profileId ?: NULL);
+    if ((int) ($delivery['package_variant_count'] ?? 0) > 0 && (int) $delivery['package_variant_count'] !== $profile['direction_count']) {
+      throw new \RuntimeException('The stored public preview direction count no longer matches its named cohort profile.');
+    }
+    return $profile;
+  }
+
+  private function isVerifiedColdDelivery(int $deliveryId): bool {
+    return (bool) $this->database->select('famtastic_preview_delivery', 'p')->fields('p', ['id'])
+      ->condition('id', $deliveryId)
+      ->condition('source_lane', 'verified_cold')
+      ->range(0, 1)->execute()->fetchField();
+  }
+
+  /** Stable JSON for the delivery/job/Build DNA proof-profile contract. */
+  private function profileSnapshot(array $profile): string {
+    return json_encode([
+      'id' => (string) $profile['id'],
+      'audience' => 'anonymous_public',
+      'direction_count' => (int) $profile['direction_count'],
+      'directions' => $profile['directions'],
+    ], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+  }
+
+  /** Accepts an optional, auditable Unix release time; never releases a room. */
+  private function normalizeScheduledReleaseAt(?int $scheduledReleaseAt): ?int {
+    if ($scheduledReleaseAt === NULL || $scheduledReleaseAt === 0) {
+      return NULL;
+    }
+    if ($scheduledReleaseAt < 1) {
+      throw new \InvalidArgumentException('Scheduled public-preview release time must be a positive Unix timestamp.');
+    }
+    return $scheduledReleaseAt;
+  }
+
+  /**
+   * Gets the evidence allowlist for a cold cohort without exposing a lead's
+   * contact data to a public proof worker or room.
+   */
+  private function coldProofIngressEvidence(int $deliveryId): ?array {
+    if (!$this->database->schema()->tableExists('famtastic_cold_proof_ingress')) {
+      return NULL;
+    }
+    $row = $this->database->select('famtastic_cold_proof_ingress', 'i')->fields('i', [
+      'source_url', 'source_provenance', 'source_timeframe', 'website_observation_status', 'website_observation_fact', 'corroborated_fact', 'proof_teaser', 'evidence_hash',
+    ])->condition('preview_delivery_id', $deliveryId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$row) {
+      return NULL;
+    }
+    $safe = static function (mixed $value, int $maximum): string {
+      $value = preg_replace('/\s+/u', ' ', trim(strip_tags((string) $value))) ?? '';
+      return mb_substr($value, 0, $maximum);
+    };
+    $sourceUrl = trim((string) $row['source_url']);
+    $parts = parse_url($sourceUrl);
+    if (is_array($parts) && isset($parts['scheme'], $parts['host'])) {
+      $sourceUrl = $parts['scheme'] . '://' . $parts['host'] . ($parts['path'] ?? '');
+    }
+    return [
+      'source_url' => $safe($sourceUrl, 2048),
+      'source_provenance' => $safe($row['source_provenance'], 255),
+      'source_timeframe' => $safe($row['source_timeframe'], 128),
+      'website_observation' => [
+        'status' => $safe($row['website_observation_status'], 32),
+        'fact' => $safe($row['website_observation_fact'], 600),
+      ],
+      'corroborated_fact' => $safe($row['corroborated_fact'], 1200),
+      'proof_teaser' => $safe($row['proof_teaser'], 600),
+      'evidence_hash' => strtolower(trim((string) $row['evidence_hash'])),
+    ];
+  }
+
   /**
    * @return array{campaign_id:int,campaign_public_id:string,prospect_id:int,artifact_hashes:list<string>,asset_hashes:list<string>,variants:list<array{direction_id:string,direction_name:string,artifact_path:string,artifact_hash:string,assets:list<array{asset_id:string,relative_path:string,media_type:string,sha256:string,size_bytes:int,artifact_path:string}>}>}
    */
-  private function assertCompleteCoreCampaign(int $campaignId, int $prospectId): array {
+  private function assertCompleteProofCampaign(int $campaignId, int $prospectId, array $profile): array {
     $campaign = $this->entities->getStorage('proof_campaign')->load($campaignId);
     if (!$campaign instanceof ProofCampaign || (int) $campaign->get('prospect_id')->target_id !== $prospectId || $campaign->get('generation_status')->value !== 'ready') {
       throw new \RuntimeException('A ready proof campaign for this public lead is required.');
@@ -859,12 +1091,13 @@ final class PublicPreviewDeliveryService {
     $variants = $this->variants($campaignId);
     $directions = array_map(static fn ($variant): string => (string) $variant->get('direction_id')->value, $variants);
     sort($directions);
-    if ($directions !== ['a', 'b', 'c']) {
-      throw new \RuntimeException('Public concept rooms require exactly the three configured core proof directions.');
+    if ($directions !== array_keys($profile['directions'])) {
+      throw new \RuntimeException('Public concept rooms require exactly the directions frozen in their cohort profile.');
     }
     $hashes = [];
     $assetHashes = [];
     $snapshot = [];
+    $requiresSignedAssets = $this->sourceLaneForCampaign($prospectId, $campaignId) === 'verified_cold';
     foreach ($variants as $variant) {
       $direction = (string) $variant->get('direction_id')->value;
       $dna = json_decode((string) $variant->get('design_dna')->value, TRUE);
@@ -873,8 +1106,12 @@ final class PublicPreviewDeliveryService {
       }
       $evidence = $this->proofArtifactEvidence($variant);
       $assets = $this->proofAssetEvidence($variant, (string) $campaign->get('campaign_id')->value, $direction);
+      if ($requiresSignedAssets && $assets === []) {
+        throw new \RuntimeException('Verified-cold public proof directions require at least one signed visual asset.');
+      }
       $hashes[] = $evidence['artifact_hash'];
       foreach ($assets as $asset) {
+        $hashes[] = $asset['sha256'];
         $assetHashes[] = $asset['sha256'];
       }
       $snapshot[] = [
@@ -896,7 +1133,7 @@ final class PublicPreviewDeliveryService {
   }
 
   /** Requires the immutable Drupal projection before a public handoff. */
-  private function assertRegisteredBuildDna(string $buildDnaId, string $buildDnaHash, array $campaignEvidence, string $researchEvidenceHash = '', string $researchEvidenceRole = ''): void {
+  private function assertRegisteredBuildDna(string $buildDnaId, string $buildDnaHash, array $campaignEvidence, string $researchEvidenceHash = '', string $researchEvidenceRole = '', string $sourceLane = 'anonymous_public'): void {
     $row = $this->database->select('famtastic_build_run', 'b')->fields('b', ['artifact_checksum', 'output_manifest', 'prospect_id', 'proof_campaign_id'])
       ->condition('build_key', 'build-dna:' . $buildDnaId)->range(0, 1)->execute()->fetchAssoc();
     if (!$row || !hash_equals((string) $row['artifact_checksum'], $buildDnaHash)) {
@@ -909,6 +1146,9 @@ final class PublicPreviewDeliveryService {
     $run = is_array($manifest['run'] ?? NULL) ? $manifest['run'] : [];
     if (!hash_equals($campaignEvidence['campaign_public_id'], trim((string) ($run['campaign_id'] ?? '')))) {
       throw new \RuntimeException('The Build DNA run must name this exact public proof campaign.');
+    }
+    if ($sourceLane === 'verified_cold' && !hash_equals('verified_cold', (string) ($run['source_lane'] ?? ''))) {
+      throw new \RuntimeException('Verified-cold public proof staging requires Build DNA run.source_lane=verified_cold.');
     }
     foreach ($campaignEvidence['artifact_hashes'] as $artifactHash) {
       if (!$this->manifestContainsArtifact($manifest, $artifactHash)) {
@@ -1055,17 +1295,14 @@ final class PublicPreviewDeliveryService {
   }
 
   /** Decodes and validates the exact staged concept-room artifact set. */
-  private function snapshotVariants(array $row): array {
+  private function snapshotVariants(array $row, array $profile): array {
     try {
       $decoded = json_decode((string) ($row['proof_variant_snapshot'] ?? ''), TRUE, 16, JSON_THROW_ON_ERROR);
     }
     catch (\Throwable) {
       return [];
     }
-    // The signed reader trusts only the frozen delivery snapshot. The current
-    // public pilot freezes a/b/c, while future configured profiles may freeze
-    // any intentional one-to-six subset of a-f without changing this route.
-    if (!is_array($decoded) || count($decoded) < 1 || count($decoded) > 6) {
+    if (!is_array($decoded) || count($decoded) !== $profile['direction_count']) {
       return [];
     }
     $valid = [];
@@ -1075,7 +1312,7 @@ final class PublicPreviewDeliveryService {
       $name = mb_substr(trim(strip_tags((string) ($variant['direction_name'] ?? ''))), 0, 255);
       $path = (string) ($variant['artifact_path'] ?? '');
       $hash = strtolower((string) ($variant['artifact_hash'] ?? ''));
-      if (preg_match('/^[a-f]$/', $direction) !== 1 || isset($valid[$direction]) || $name === '' || $path === '' || preg_match('/^[a-f0-9]{64}$/', $hash) !== 1) {
+      if (!array_key_exists($direction, $profile['directions']) || isset($valid[$direction]) || $name === '' || $path === '' || preg_match('/^[a-f0-9]{64}$/', $hash) !== 1) {
         return [];
       }
       try {
@@ -1093,7 +1330,7 @@ final class PublicPreviewDeliveryService {
       ];
     }
     ksort($valid);
-    return array_keys($valid) === ['a', 'b', 'c'] ? array_values($valid) : [];
+    return array_keys($valid) === array_keys($profile['directions']) ? array_values($valid) : [];
   }
 
   private function variants(int $campaignId): array {
@@ -1137,12 +1374,20 @@ final class PublicPreviewDeliveryService {
     return rtrim((string) (getenv('FRONTEND_BASE_URL') ?: $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url') ?: 'https://famtasticdesigns.com'), '/');
   }
 
-  private function invitationBody(string $business, string $shareUrl, string $registrationUrl, array $research): string {
+  private function invitationBody(string $business, string $shareUrl, string $registrationUrl, array $research, int $proofCount): string {
     $researchNote = '';
     if ($research['teaser'] !== '') {
       $researchNote = "\n\nA short research note from this early review (not a statement of your current operations):\n{$research['teaser']}\n\nSources reviewed:\n{$research['sources']}";
     }
-    return "Hi,\n\nWe prepared three exploratory website directions for {$business}. They are a starting point from safe public context and the general details available so far—not a final site scope or a statement of current services, facts, partners, outcomes, or availability.{$researchNote}\n\nView your private concept room:\n{$shareUrl}\n\nCreate your free FAMtastic Designs workspace with this same email to save this work, add the current pages, audiences, assets, integrations, references, and style preferences that should guide the next refinement.\n\nCreate your free workspace:\n{$registrationUrl}\n\nThe concept room is private and review-only. Nothing is published, selected, priced, or purchased from it.\n\nFAMtastic Concierge\nFAMtastic Designs\nhttps://famtasticdesigns.com";
+    $countLabel = strtolower($this->proofCountLabel($proofCount));
+    return "Hi,\n\nWe prepared {$countLabel} exploratory website directions for {$business}. They are a starting point from safe public context and the general details available so far—not a final site scope or a statement of current services, facts, partners, outcomes, or availability.{$researchNote}\n\nView your private concept room:\n{$shareUrl}\n\nCreate your free FAMtastic Designs workspace with this same email to save this work, add the current pages, audiences, assets, integrations, references, and style preferences that should guide the next refinement.\n\nCreate your free workspace:\n{$registrationUrl}\n\nThe concept room is private and review-only. Nothing is published, selected, priced, or purchased from it.\n\nFAMtastic Concierge\nFAMtastic Designs\nhttps://famtasticdesigns.com";
+  }
+
+  private function proofCountLabel(int $count): string {
+    return match ($count) {
+      1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five', 6 => 'Six',
+      default => (string) $count,
+    };
   }
 
   private function prospect(int $id): Prospect {

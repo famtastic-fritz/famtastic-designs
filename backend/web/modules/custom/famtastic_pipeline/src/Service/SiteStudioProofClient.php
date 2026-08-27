@@ -25,7 +25,7 @@ final class SiteStudioProofClient {
   }
 
   /**
-   * Dispatches an exactly-three proof request and returns the remote job id.
+   * Dispatches the frozen proof-direction contract and returns the remote job id.
    */
   public function dispatch(Prospect $prospect, ProofCampaign $campaign, array $context = []): string {
     $endpoint = $this->endpoint();
@@ -49,19 +49,26 @@ final class SiteStudioProofClient {
         'hours' => $prospect->get('hours')->value,
       ];
     }
+    $directionContract = $this->directionContract($context) ?? [
+      'a' => ['name' => 'Safe', 'intent' => 'polished, familiar, credible, low-risk'],
+      'b' => ['name' => 'Wild', 'intent' => 'expressive, energetic, clearly differentiated'],
+      'c' => ['name' => 'OMG', 'intent' => 'campaign-level concept with the strongest visual idea'],
+    ];
     $payload = [
       'schema_version' => 2,
       'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1'),
+      'source_lane' => (string) ($context['source_lane'] ?? ''),
       'idempotency_key' => 'proof:' . $campaign->get('campaign_id')->value,
       'campaign_id' => $campaign->get('campaign_id')->value,
       'prospect' => $prospectPayload,
-      'directions' => ProofCampaignService::CORE_DIRECTIONS,
-      'required_variant_count' => 3,
-      'direction_contract' => $this->directionContract($context) ?? [
-        'a' => ['name' => 'Safe', 'intent' => 'polished, familiar, credible, low-risk'],
-        'b' => ['name' => 'Wild', 'intent' => 'expressive, energetic, clearly differentiated'],
-        'c' => ['name' => 'OMG', 'intent' => 'campaign-level concept with the strongest visual idea'],
-      ],
+      'directions' => array_map(static fn (array $definition): string => $definition['name'], $directionContract),
+      'required_variant_count' => count($directionContract),
+      'direction_contract' => $directionContract,
+      'asset_contract' => (string) ($context['source_lane'] ?? '') === 'verified_cold' ? [
+        'required_per_direction' => 1,
+        'shape' => ['asset_id', 'relative_path', 'media_type', 'base64', 'sha256'],
+        'build_dna_artifact_sha_required' => TRUE,
+      ] : NULL,
       'callback_url' => $callbackBase . '/api/pipeline/site-studio/callback',
       'project' => [
         'project_id' => (int) ($context['project_id'] ?? 0),
@@ -105,7 +112,8 @@ final class SiteStudioProofClient {
   /** Uses a configured/public-run direction contract only when it is complete. */
   private function directionContract(array $context): ?array {
     $contract = $context['public_preview_direction_contract'] ?? NULL;
-    if (!is_array($contract) || array_keys($contract) !== ['a', 'b', 'c']) {
+    $count = is_array($contract) ? count($contract) : 0;
+    if ($count < 1 || $count > 6 || array_keys($contract) !== array_slice(['a', 'b', 'c', 'd', 'e', 'f'], 0, $count)) {
       return NULL;
     }
     $result = [];

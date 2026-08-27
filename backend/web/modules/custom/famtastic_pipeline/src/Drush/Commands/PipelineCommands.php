@@ -784,6 +784,77 @@ class PipelineCommands extends DrushCommands {
     }
   }
 
+  /**
+   * Validates or ingresses a source-backed cold cohort into owner-gated proof
+   * delivery. It never sends email, invokes the generic outreach lane, or
+   * executes a proof provider.
+   */
+  #[CLI\Command(name: 'famtastic:cold-proof-ingress', aliases: ['fcpi'])]
+  #[CLI\Argument(name: 'path', description: 'Absolute path to a famtastic.cold_proof_campaign_seed.v1 JSON file.')]
+  #[CLI\Option(name: 'dry-run', description: 'Validate/import-score only; write nothing (default: true).')]
+  #[CLI\Option(name: 'confirm', description: 'For a write, must exactly repeat cohort.cohort_key from the seed.')]
+  #[CLI\Usage(name: 'drush fcpi /private/cold.json --dry-run', description: 'Validate a source-backed seed without writing or sending.')]
+  #[CLI\Usage(name: 'drush fcpi /private/cold.json --dry-run=0 --confirm=atlanta-braiders-2026-08', description: 'Create public-preview proof jobs only; owner review/send remain separate.')]
+  public function coldProofIngress(string $path, array $options = ['dry-run' => TRUE, 'confirm' => '']): int {
+    $dryRun = filter_var($options['dry-run'], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);
+    $dryRun = $dryRun !== FALSE;
+    if (!$dryRun) {
+      try {
+        $seed = json_decode((string) file_get_contents($path), TRUE, 32, JSON_THROW_ON_ERROR);
+        $key = is_array($seed) ? trim((string) ($seed['cohort']['cohort_key'] ?? '')) : '';
+      }
+      catch (\Throwable) {
+        $key = '';
+      }
+      if ($key === '' || !hash_equals($key, trim((string) $options['confirm']))) {
+        $this->logger()->error('Cold-proof ingress write requires --confirm=<exact cohort.cohort_key>.');
+        return self::EXIT_FAILURE;
+      }
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\ColdProofIngressService $ingress */
+      $ingress = \Drupal::service('famtastic_pipeline.cold_proof_ingress');
+      $result = $ingress->importSeed($path, $dryRun);
+      $this->io()->writeln(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
+  /**
+   * Checks only due, owner-approved verified-cold deliveries.
+   *
+   * The command defaults to dry-run. Its explicit execute token delegates
+   * exact due IDs to the existing public-preview dispatcher, never lifecycle.
+   */
+  #[CLI\Command(name: 'famtastic:cold-proof-scheduled-release', aliases: ['fcpsr'])]
+  #[CLI\Option(name: 'limit', description: 'Maximum due approved deliveries to inspect/release (1-10).')]
+  #[CLI\Option(name: 'execute', description: 'Must equal scheduled-owner-approved-cold-preview to dispatch exact due held IDs.')]
+  #[CLI\Usage(name: 'drush fcpsr --limit=10', description: 'List due owner-approved cold preview deliveries only.')]
+  #[CLI\Usage(name: 'drush fcpsr --limit=10 --execute=scheduled-owner-approved-cold-preview', description: 'Targeted scheduled release after owner approval; never general lifecycle mail.')]
+  public function coldProofScheduledRelease(array $options = ['limit' => 10, 'execute' => '']): int {
+    $limit = (int) $options['limit'];
+    if ($limit < 1 || $limit > 10) {
+      $this->logger()->error('--limit must be between 1 and 10.');
+      return self::EXIT_FAILURE;
+    }
+    $execute = hash_equals('scheduled-owner-approved-cold-preview', trim((string) $options['execute']));
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\ColdProofScheduledReleaseService $release */
+      $release = \Drupal::service('famtastic_pipeline.cold_proof_scheduled_release');
+      $result = $release->releaseDue($limit, !$execute);
+      $this->io()->writeln(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
   /** Parses exact, unique numeric IDs for an operator-confirmed bounded action. */
   private function exactPositiveIds(string $raw, int $maximum): array {
     $tokens = array_filter(array_map('trim', explode(',', $raw)), static fn (string $value): bool => $value !== '');

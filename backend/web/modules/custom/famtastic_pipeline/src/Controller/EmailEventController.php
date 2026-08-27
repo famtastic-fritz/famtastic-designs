@@ -45,6 +45,11 @@ final class EmailEventController extends ControllerBase {
     if (!$prospect) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_tracking_link'], 404);
     }
+    if ($destination = $this->messages->verifiedColdClickDestination($tracking_key)) {
+      return new TrustedRedirectResponse($destination, 302, [
+        'Cache-Control' => 'no-store, private',
+      ]);
+    }
     $token = $this->tokens->generate();
     $prospect
       ->set('token_hash', $token['hash'])

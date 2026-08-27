@@ -19,13 +19,35 @@ services:
     class: Drupal\famtastic_pipeline\Service\LeadIngestionService
     arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@datetime.time']
 
+  famtastic_pipeline.proof_cohort_profiles:
+    class: Drupal\famtastic_pipeline\Service\ProofCohortProfileService
+    arguments: ['@config.factory']
+
+  Drupal\famtastic_pipeline\Service\ProofCohortProfileResolverInterface: '@famtastic_pipeline.proof_cohort_profiles'
+
+  famtastic_pipeline.cold_proof_seed_validator:
+    class: Drupal\famtastic_pipeline\Service\ColdProofCampaignSeedValidator
+    arguments: ['@config.factory']
+
+  famtastic_pipeline.cold_proof_ingress:
+    class: Drupal\famtastic_pipeline\Service\ColdProofIngressService
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@famtastic_pipeline.lead_ingestion', '@famtastic_pipeline.public_preview_deliveries', '@famtastic_pipeline.proof_cohort_profiles', '@famtastic_pipeline.cold_proof_seed_validator', '@famtastic_pipeline.operational_ledger']
+
+  famtastic_pipeline.cold_proof_commercial_messages:
+    class: Drupal\famtastic_pipeline\Service\ColdProofCommercialMessageService
+    arguments: ['@database', '@config.factory', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.mailer']
+
+  famtastic_pipeline.cold_proof_scheduled_release:
+    class: Drupal\famtastic_pipeline\Service\ColdProofScheduledReleaseService
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.public_preview_deliveries', '@famtastic_pipeline.operational_ledger']
+
   famtastic_pipeline.automation_worker:
     class: Drupal\famtastic_pipeline\Service\AutomationWorker
     arguments: ['@famtastic_pipeline.operational_ledger', '@entity_type.manager', '@famtastic_pipeline.proof_campaign_service', '@famtastic_pipeline.campaign_messages', '@famtastic_pipeline.customer_deployment', '@famtastic_pipeline.domain_lifecycle', '@famtastic_pipeline.hosting_lifecycle', '@famtastic_pipeline.customer_portal', '@famtastic_pipeline.public_preview_deliveries']
 
   famtastic_pipeline.campaign_messages:
     class: Drupal\famtastic_pipeline\Service\CampaignMessageService
-    arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.token_manager', '@famtastic_pipeline.mailer', '@datetime.time']
+    arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.token_manager', '@famtastic_pipeline.mailer', '@datetime.time', '@config.factory']
 
   famtastic_pipeline.site_studio_proof_client:
     class: Drupal\famtastic_pipeline\Service\SiteStudioProofClient
@@ -114,7 +136,7 @@ services:
 
   famtastic_pipeline.public_preview_deliveries:
     class: Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.mailer']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.mailer', '@famtastic_pipeline.proof_cohort_profiles', '@famtastic_pipeline.cold_proof_commercial_messages']
 
   famtastic_pipeline.grant_codes:
     class: Drupal\famtastic_pipeline\Service\GrantCodeService

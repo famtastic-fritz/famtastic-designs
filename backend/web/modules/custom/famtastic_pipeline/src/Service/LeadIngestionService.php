@@ -81,13 +81,60 @@ final class LeadIngestionService {
    * Imports one normalized source row.
    */
   public function importRow(array $row, string $source, string $campaignKey, bool $dryRun = FALSE): array {
+    return $this->importRowInternal($row, $source, $campaignKey, $dryRun, TRUE, 'email');
+  }
+
+  /**
+   * Imports one source-verified cold-preview row without creating the legacy
+   * generic prospect proof/outreach job.
+   *
+   * The caller must create a public preview delivery and use its dedicated
+   * job key. Keeping this path separate prevents a cold cohort from falling
+   * through to `proof.generate:prospect:*` or `outreach.prepare`.
+   */
+  public function importRowWithoutGenericProof(
+    array $row,
+    string $source,
+    string $campaignKey,
+    bool $dryRun = FALSE,
+    string $campaignChannel = 'public_preview',
+    bool $requireVerifiedWebsiteObservation = FALSE,
+  ): array {
+    return $this->importRowInternal($row, $source, $campaignKey, $dryRun, FALSE, $campaignChannel, $requireVerifiedWebsiteObservation);
+  }
+
+  /** Ensures a campaign record without creating prospects, jobs, or mail. */
+  public function ensureCampaignForChannel(string $campaignKey, string $source, string $campaignChannel = 'public_preview'): int {
+    $campaignKey = $this->clean($campaignKey, 128);
+    $source = $this->clean($source, 128);
+    $campaignChannel = $this->clean($campaignChannel, 64);
+    if ($campaignKey === '' || $source === '' || $campaignChannel === '') {
+      throw new \InvalidArgumentException('Campaign key, source, and channel are required.');
+    }
+    return $this->ensureCampaign($campaignKey, $source, $campaignChannel);
+  }
+
+  /**
+   * Shared persistent import path. Generic import remains backward-compatible;
+   * only the explicit cold-preview method may opt out of generic proof jobs.
+   */
+  private function importRowInternal(
+    array $row,
+    string $source,
+    string $campaignKey,
+    bool $dryRun,
+    bool $enqueueGenericProof,
+    string $campaignChannel,
+    bool $requireVerifiedWebsiteObservation = FALSE,
+  ): array {
     $source = $this->clean($source, 128);
     $campaignKey = $this->clean($campaignKey, 128);
-    if ($source === '' || $campaignKey === '') {
-      throw new \InvalidArgumentException('Source and campaign are required.');
+    $campaignChannel = $this->clean($campaignChannel, 64);
+    if ($source === '' || $campaignKey === '' || $campaignChannel === '') {
+      throw new \InvalidArgumentException('Source, campaign, and channel are required.');
     }
     $normalized = $this->normalize($row);
-    $assessment = $this->assess($normalized);
+    $assessment = $this->assess($normalized, $requireVerifiedWebsiteObservation);
     $dedupeKey = $this->dedupeKey($normalized);
     $sourceRecordId = $this->clean((string) ($row['source_record_id'] ?? $row['id'] ?? ''), 255);
     $importKey = hash('sha256', implode('|', [$source, $campaignKey, $sourceRecordId, $dedupeKey]));
@@ -110,7 +157,7 @@ final class LeadIngestionService {
 
     $transaction = $this->database->startTransaction();
     try {
-      $campaignId = $this->ensureCampaign($campaignKey, $source);
+      $campaignId = $this->ensureCampaign($campaignKey, $source, $campaignChannel);
       $prospectId = NULL;
       if ($assessment['status'] === 'qualified') {
         $prospect = Prospect::create([
@@ -147,12 +194,14 @@ final class LeadIngestionService {
           $prospectId,
           $campaignId,
         );
-        $this->ledger->enqueue(
-          'proof.generate:prospect:' . $prospectId,
-          'proof.generate',
-          ['prospect_id' => $prospectId, 'required_variants' => 3],
-          $prospectId,
-        );
+        if ($enqueueGenericProof) {
+          $this->ledger->enqueue(
+            'proof.generate:prospect:' . $prospectId,
+            'proof.generate',
+            ['prospect_id' => $prospectId, 'required_variants' => 3],
+            $prospectId,
+          );
+        }
       }
       $this->database->insert('famtastic_lead_import')
         ->fields([
@@ -201,6 +250,9 @@ final class LeadIngestionService {
       'email' => $email,
       'phone' => $phone,
       'website_url' => $website,
+      'verified_website_observation' => in_array((string) ($row['verified_website_observation'] ?? ''), ['confirmed_absent', 'observed_outdated', 'verified_present', 'exploratory'], TRUE)
+        ? (string) $row['verified_website_observation']
+        : '',
       'upgrade_signal' => filter_var($row['upgrade_signal'] ?? FALSE, FILTER_VALIDATE_BOOL)
         || in_array(mb_strtolower(trim((string) ($row['website_quality'] ?? ''))), ['poor', 'outdated', 'broken'], TRUE),
     ];
@@ -209,7 +261,7 @@ final class LeadIngestionService {
   /**
    * Produces deterministic qualification and target-offer facts.
    */
-  private function assess(array $lead): array {
+  private function assess(array $lead, bool $requireVerifiedWebsiteObservation = FALSE): array {
     $reasons = [];
     if ($lead['business_name'] === '') {
       return ['status' => 'invalid', 'score' => 0, 'target_offer' => '', 'reasons' => ['Missing business name.']];
@@ -217,9 +269,36 @@ final class LeadIngestionService {
     if ($lead['email'] === '') {
       return ['status' => 'invalid', 'score' => 0, 'target_offer' => '', 'reasons' => ['Missing or invalid outreach email.']];
     }
+    $observation = (string) ($lead['verified_website_observation'] ?? '');
+    if ($requireVerifiedWebsiteObservation && !in_array($observation, ['confirmed_absent', 'observed_outdated', 'verified_present', 'exploratory'], TRUE)) {
+      return ['status' => 'unqualified', 'score' => 0, 'target_offer' => '', 'reasons' => ['Cold proof requires an explicit verified website observation; unknown website status cannot be inferred.']];
+    }
+    if ($requireVerifiedWebsiteObservation && in_array($observation, ['verified_present', 'exploratory'], TRUE)) {
+      if ($observation === 'verified_present' && $lead['website_url'] === '') {
+        return ['status' => 'unqualified', 'score' => 0, 'target_offer' => '', 'reasons' => ['Verified-present cold proof requires its corroborated public website URL.']];
+      }
+      return [
+        'status' => 'qualified',
+        'score' => 50,
+        // A public concept review is intentionally not an inferred offer or
+        // diagnosis. The proof is allowed to explore strategy, not claim a
+        // missing, weak, or outdated website.
+        'target_offer' => '',
+        'reasons' => ['Verified public business context supports an exploratory concept review; no website weakness or absence is inferred.'],
+      ];
+    }
     if ($lead['website_url'] === '') {
-      $reasons[] = 'No website detected.';
+      if ($requireVerifiedWebsiteObservation && $observation !== 'confirmed_absent') {
+        return ['status' => 'unqualified', 'score' => 0, 'target_offer' => '', 'reasons' => ['Cold proof has no public website URL and no confirmed-absent observation.']];
+      }
+      $reasons[] = $requireVerifiedWebsiteObservation
+        ? 'Verified source records a confirmed absence of a public website.'
+        : 'No website detected.';
       return ['status' => 'qualified', 'score' => 100, 'target_offer' => 'essential_199', 'reasons' => $reasons];
+    }
+    if ($requireVerifiedWebsiteObservation && $observation === 'observed_outdated') {
+      $reasons[] = 'Existing website has a verified upgrade observation.';
+      return ['status' => 'qualified', 'score' => 80, 'target_offer' => 'business_499', 'reasons' => $reasons];
     }
     if ($lead['upgrade_signal']) {
       $reasons[] = 'Existing website has an explicit upgrade signal.';
@@ -275,14 +354,17 @@ final class LeadIngestionService {
     return (bool) $query->condition($or)->execute();
   }
 
-  private function ensureCampaign(string $campaignKey, string $source): int {
+  private function ensureCampaign(string $campaignKey, string $source, string $channel): int {
     $existing = $this->database->select('famtastic_campaign', 'c')
-      ->fields('c', ['id'])
+      ->fields('c', ['id', 'channel'])
       ->condition('campaign_key', $campaignKey)
       ->execute()
-      ->fetchField();
+      ->fetchAssoc();
     if ($existing) {
-      return (int) $existing;
+      if ((string) ($existing['channel'] ?? '') !== '' && (string) $existing['channel'] !== $channel) {
+        throw new \RuntimeException('Campaign key already belongs to a different delivery channel.');
+      }
+      return (int) $existing['id'];
     }
     $now = $this->time->getRequestTime();
     return (int) $this->database->insert('famtastic_campaign')
@@ -290,7 +372,7 @@ final class LeadIngestionService {
         'campaign_key' => $campaignKey,
         'name' => $campaignKey,
         'status' => 'draft',
-        'channel' => 'email',
+        'channel' => $channel,
         'source_filter' => json_encode(['source' => $source], JSON_THROW_ON_ERROR),
         'created' => $now,
         'changed' => $now,

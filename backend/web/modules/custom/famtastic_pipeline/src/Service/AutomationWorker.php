@@ -64,7 +64,7 @@ final class AutomationWorker {
   }
 
   /**
-   * Produces exactly three isolated proof variants or throws for retry.
+   * Produces the frozen proof cohort variants or throws for retry.
    */
   private function generateProofs(array $job): array {
     $context = (array) ($job['payload'] ?? []);
@@ -75,6 +75,15 @@ final class AutomationWorker {
     }
     elseif ($publicPreviewDeliveryId) {
       $context = array_replace($context, $this->previews->publicIntakeProofContext($publicPreviewDeliveryId));
+    }
+    $expectedDirections = ['a', 'b', 'c'];
+    if ($publicPreviewDeliveryId) {
+      $profile = (array) ($context['public_preview_proof_profile'] ?? []);
+      $contract = (array) ($profile['directions'] ?? []);
+      $expectedDirections = array_keys($contract);
+      if (count($expectedDirections) < 1 || count($expectedDirections) > 6 || $expectedDirections !== array_slice(['a', 'b', 'c', 'd', 'e', 'f'], 0, count($expectedDirections))) {
+        throw new \RuntimeException('Public proof job has no valid frozen direction contract.');
+      }
     }
     $prospectId = (int) ($job['payload']['prospect_id'] ?? $job['prospect_id'] ?? 0);
     $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($prospectId);
@@ -117,8 +126,8 @@ final class AutomationWorker {
         'studio_job_id' => $created['campaign']->get('studio_job_id')->value,
       ];
     }
-    if (count($variants) !== 3) {
-      throw new \RuntimeException(sprintf('Site Studio returned %d proof variants; exactly 3 are required.', count($variants)));
+    if (count($variants) !== count($expectedDirections)) {
+      throw new \RuntimeException(sprintf('Site Studio returned %d proof variants; exactly %d are required by this proof cohort.', count($variants), count($expectedDirections)));
     }
     $directions = [];
     $paths = [];
@@ -129,13 +138,14 @@ final class AutomationWorker {
       if ($path !== '' && !str_starts_with($path, '/') && !is_file($path)) {
         $absolutePath = dirname(\Drupal::root()) . '/' . ltrim($path, '/');
       }
-      if (!in_array($direction, ['a', 'b', 'c'], TRUE) || $path === '' || !is_file($absolutePath)) {
+      if (!in_array($direction, $expectedDirections, TRUE) || $path === '' || !is_file($absolutePath)) {
         throw new \RuntimeException('A proof variant is invalid or its isolated artifact is missing.');
       }
       $directions[] = $direction;
       $paths[] = realpath($absolutePath) ?: $absolutePath;
     }
-    if (count(array_unique($directions)) !== 3 || count(array_unique($paths)) !== 3) {
+    sort($directions);
+    if ($directions !== $expectedDirections || count(array_unique($paths)) !== count($expectedDirections)) {
       throw new \RuntimeException('Proof variants are not distinct and isolated.');
     }
     $pilotSources = array_filter($variants, static function ($variant): bool {
@@ -156,7 +166,7 @@ final class AutomationWorker {
       'proof.ready',
       [
         'campaign_id' => $campaign->get('campaign_id')->value,
-        'variant_count' => 3,
+        'variant_count' => count($expectedDirections),
         'directions' => $directions,
       ],
       $prospectId,
@@ -192,7 +202,7 @@ final class AutomationWorker {
     }
     return [
       'campaign_id' => $campaign->get('campaign_id')->value,
-      'variant_count' => 3,
+      'variant_count' => count($expectedDirections),
       'directions' => $directions,
     ];
   }

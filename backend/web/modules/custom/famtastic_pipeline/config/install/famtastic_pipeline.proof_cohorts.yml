@@ -1,0 +1,26 @@
+# Named proof cohort contracts. A cohort stores a snapshot of one selected
+# profile, so a later config change cannot rewrite a queued public proof run.
+anonymous:
+  default_profile: anonymous_safe_medium_ultra_v1
+  profiles:
+    anonymous_safe_medium_ultra_v1:
+      audience: anonymous_public
+      direction_count: 3
+      directions:
+        a:
+          name: Safe
+          intent: 'Polished, familiar, credible, and low-risk.'
+        b:
+          name: Medium FAMtastic
+          intent: 'Expressive and distinctive while remaining practical.'
+        c:
+          name: Ultra FAMtastic
+          intent: 'The strongest campaign-level visual idea that remains usable.'
+
+# Cold eligibility is explicit research evidence, never an inferred diagnosis.
+cold:
+  website_observation_statuses:
+    - confirmed_absent
+    - observed_outdated
+    - verified_present
+    - exploratory

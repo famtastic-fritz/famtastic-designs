@@ -294,7 +294,7 @@ class ProofCampaignService {
   }
 
   /**
-   * Accepts one idempotent core or showcase three-direction callback.
+   * Accepts one idempotent core, frozen public-cohort, or showcase callback.
    */
   public function acceptCallback(string $eventId, string $campaignId, string $studioJobId, array $variants): array {
     if ($eventId === '' || strlen($eventId) > 255) {
@@ -307,6 +307,16 @@ class ProofCampaignService {
     $prospectId = (int) $campaign->get('prospect_id')->target_id;
     $isShowcase = str_starts_with($studioJobId, 'local-showcase-');
     $isPublicPreviewCampaign = !$isShowcase && $this->previews->isPublicDeliveryForCampaign($prospectId, (int) $campaign->id());
+    $publicProfile = $isPublicPreviewCampaign
+      ? $this->previews->proofProfileForCampaign($prospectId, (int) $campaign->id())
+      : NULL;
+    $publicSourceLane = $isPublicPreviewCampaign
+      ? $this->previews->sourceLaneForCampaign($prospectId, (int) $campaign->id())
+      : NULL;
+    if ($isPublicPreviewCampaign && !$publicProfile) {
+      throw new \RuntimeException('The public proof callback has no frozen delivery profile.');
+    }
+    $requiresSignedAssets = $publicSourceLane === 'verified_cold';
     $request = NULL;
     if (!$isPublicPreviewCampaign) {
       // New request jobs bind their campaign before remote dispatch. Prefer
@@ -335,9 +345,11 @@ class ProofCampaignService {
       $this->finalizeCallbackDelivery($campaign, $request, $existingVariants);
       return ['newly_processed' => FALSE, 'campaign' => $campaign, 'variants' => $existingVariants];
     }
-    $requiredDirections = $isShowcase ? self::SHOWCASE_DIRECTIONS : self::CORE_DIRECTIONS;
+    $requiredDirections = $isShowcase
+      ? self::SHOWCASE_DIRECTIONS
+      : ($publicProfile ? array_map(static fn (array $definition): string => (string) $definition['name'], $publicProfile['directions']) : self::CORE_DIRECTIONS);
     if (count($variants) !== count($requiredDirections)) {
-      throw new \InvalidArgumentException('Exactly three variants are required for this proof set.');
+      throw new \InvalidArgumentException(sprintf('Exactly %d variants are required for this proof set.', count($requiredDirections)));
     }
     $validated = [];
     foreach ($variants as $variant) {
@@ -347,7 +359,7 @@ class ProofCampaignService {
       $direction = strtolower((string) ($variant['direction_id'] ?? ''));
       $html = (string) ($variant['html'] ?? '');
       if (!array_key_exists($direction, $requiredDirections) || isset($validated[$direction])) {
-        throw new \InvalidArgumentException('Variants must contain the three unique directions required by this proof set.');
+        throw new \InvalidArgumentException('Variants must contain the unique directions required by this proof set.');
       }
       if ($html === '' || strlen($html) > 500000) {
         throw new \InvalidArgumentException('Each proof HTML artifact is required and limited to 500 KB.');
@@ -373,6 +385,9 @@ class ProofCampaignService {
         if (!$validSignature) {
           throw new \InvalidArgumentException('Proof thumbnail bytes do not match the declared media type.');
         }
+      }
+      if ($requiresSignedAssets && $assets === []) {
+        throw new \InvalidArgumentException('Verified-cold proof directions require at least one signed visual asset.');
       }
       $validated[$direction] = [
         'html' => $html,
@@ -427,13 +442,15 @@ class ProofCampaignService {
         'campaign_id' => $campaign->id(),
         'direction_id' => $direction,
       ]);
-      $directionName = mb_substr(trim(strip_tags((string) ($variant['design_dna']['direction_name'] ?? self::DIRECTIONS[$direction]))), 0, 255);
+      $fallbackDirectionName = (string) ($requiredDirections[$direction] ?? self::DIRECTIONS[$direction]);
+      $directionName = mb_substr(trim(strip_tags((string) ($variant['design_dna']['direction_name'] ?? $fallbackDirectionName))), 0, 255);
       $designDna = $variant['design_dna'];
       // The stored manifest is generated from validated bytes and the exact
       // protected artifact locations. Never trust an upstream DNA asset list.
       $designDna['asset_manifest'] = $assetManifest;
+      $designDna['source_lane'] = $publicSourceLane ?: ($designDna['source_lane'] ?? '');
       $entity
-        ->set('direction_name', $directionName ?: self::DIRECTIONS[$direction])
+        ->set('direction_name', $directionName ?: $fallbackDirectionName)
         ->set('artifact_path', $path)
         ->set('thumbnail_path', $thumbnailPath)
         ->set('design_dna', json_encode($designDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))
@@ -449,13 +466,13 @@ class ProofCampaignService {
       ->set('generation_status', 'ready')
       ->set('ready_at', $this->time->getRequestTime())
       ->save();
+    $completeVariants = $isShowcase ? $this->loadVariants($campaign) : $created;
     $this->ledger->recordEvent(
       'proof.callback:' . $eventId,
       'proof.ready',
-      ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => $isShowcase ? 6 : 3, 'refresh' => $isRefresh, 'showcase' => $isShowcase],
+      ['campaign_id' => $campaignId, 'studio_job_id' => $studioJobId, 'variant_count' => count($completeVariants), 'refresh' => $isRefresh, 'showcase' => $isShowcase, 'public_cohort' => $publicProfile ? $publicProfile['id'] : '', 'source_lane' => $publicSourceLane ?: ''],
       $prospectId,
     );
-    $completeVariants = $isShowcase ? $this->loadVariants($campaign) : $created;
     $this->finalizeCallbackDelivery($campaign, $request, $completeVariants);
     $this->recordCallbackTelemetry($campaign, $completeVariants, $isShowcase);
     return ['newly_processed' => TRUE, 'campaign' => $campaign, 'variants' => $completeVariants];
@@ -471,6 +488,16 @@ class ProofCampaignService {
     $dna = $first ? json_decode((string) $first->get('design_dna')->value, TRUE) : [];
     $dna = is_array($dna) ? $dna : [];
     $telemetry = is_array($dna['telemetry'] ?? NULL) ? $dna['telemetry'] : [];
+    $prospectId = (int) $campaign->get('prospect_id')->target_id;
+    $sourceLane = $this->previews->sourceLaneForCampaign($prospectId, (int) $campaign->id()) ?: '';
+    $inputSnapshot = is_array($telemetry['input_snapshot'] ?? NULL) ? $telemetry['input_snapshot'] : [];
+    if ($sourceLane !== '') {
+      $inputSnapshot['source_lane'] = $sourceLane;
+      $inputSnapshot['required_directions'] = array_map(static fn (ProofVariant $variant): string => (string) $variant->get('direction_id')->value, $variants);
+      $inputSnapshot['asset_contract'] = $sourceLane === 'verified_cold'
+        ? 'variants[].assets[] requires asset_id, relative_path, media_type, base64, sha256; at least one asset per direction'
+        : 'optional';
+    }
     $this->buildTelemetry->recordStudioProof($prospect, $campaign, $variants, [
       'build_key_suffix' => $isShowcase ? 'site-studio-showcase' : 'site-studio',
       'flow_key' => $telemetry['flow_key'] ?? 'site-studio-local-promotion',
@@ -478,7 +505,7 @@ class ProofCampaignService {
       'provider' => $telemetry['provider'] ?? ($dna['provider'] ?? 'site_studio_local'),
       'agent_name' => $telemetry['agent_name'] ?? ($dna['agent'] ?? 'shay'),
       'prompt_snapshot' => $telemetry['prompt_snapshot'] ?? '',
-      'input_snapshot' => $telemetry['input_snapshot'] ?? [],
+      'input_snapshot' => $inputSnapshot,
       'source_sha' => $telemetry['source_sha'] ?? '',
     ]);
   }
