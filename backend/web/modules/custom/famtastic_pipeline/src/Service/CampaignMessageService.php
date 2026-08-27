@@ -614,7 +614,7 @@ class CampaignMessageService {
     $lines[] = '';
     $lines[] = 'Our $199 Website Starter Special gets you a professional, mobile-ready site with hosting included. Perfect for small businesses that want to look bigger without spending bigger.';
     $lines[] = '';
-    $lines[] = 'Want to talk it through? Reply to this email or call (772) 708-5747.';
+    $lines[] = 'Lock in your $199 Starter Special in minutes — no calls, no meetings, just results. Pick your favorite direction and checkout directly from your proof room. Want more options? Create a free project space to unlock additional designs and manage everything in one place.';
     $lines[] = '';
     $lines[] = '— FAMtastic Designs';
     $lines[] = '';
