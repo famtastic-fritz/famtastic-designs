@@ -115,6 +115,7 @@ jq -e '
   (.lead.proof_job_id | type == "number") and
   .duplicate_reimport == "already_ingressed" and
   .draft_owner_gate == "rejected_without_partial_hold" and
+  .cold_one_click_unsubscribe == "get_safe_post_suppressed" and
   .cold_dispatch_gate == "denied_before_claim" and
   .public_brief_pii == "redacted" and
   .bundle.schema == "famtastic.verified-cold-proof-handoff.v1" and
@@ -146,4 +147,4 @@ test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_email_message WH
 test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_job WHERE job_type = 'proof.generate'" | tr -d '[:space:]')" = "0"
 test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_job WHERE job_type = 'public_preview.generate'" | tr -d '[:space:]')" = "1"
 
-echo "PASS: verified-cold ingress creates exact prospect/delivery/campaign/job identities and a private runner handoff; malformed cold clicks fail closed, default SMTP cannot claim a held cold delivery, and a draft owner gate leaves no active outbox or commercial message. No provider, SMTP send, public share, payment, or production action occurred."
+echo "PASS: verified-cold ingress creates exact prospect/delivery/campaign/job identities and a private runner handoff; malformed cold clicks fail closed, unsubscribe GET is non-mutating while one-click POST suppresses the exact cold record, default SMTP cannot claim a held cold delivery, and a draft owner gate leaves no active outbox or commercial message. No provider, SMTP send, public share, payment, or production action occurred."

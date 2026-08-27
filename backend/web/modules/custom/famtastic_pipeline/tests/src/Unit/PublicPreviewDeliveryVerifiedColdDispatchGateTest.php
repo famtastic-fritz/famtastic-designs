@@ -26,4 +26,20 @@ final class PublicPreviewDeliveryVerifiedColdDispatchGateTest extends UnitTestCa
     $this->assertLessThan($mailer, $gate);
   }
 
+  public function testVerifiedColdDispatchPassesOnlyItsBoundOneClickUrlToMailer(): void {
+    $source = file_get_contents(dirname(__DIR__, 3) . '/src/Service/PublicPreviewDeliveryService.php');
+    $this->assertIsString($source);
+    $start = strpos($source, 'public function dispatchApproved');
+    $end = strpos($source, 'public function revoke', $start ?: 0);
+    $method = substr($source, (int) $start, (int) $end - (int) $start);
+
+    $url = strpos($method, '$this->coldMessages->oneClickUnsubscribeUrl($id)');
+    $mailer = strpos($method, '$this->mailer->send(');
+
+    $this->assertIsInt($url);
+    $this->assertIsInt($mailer);
+    $this->assertLessThan($mailer, $url);
+    $this->assertStringContainsString("\$item['one_click_unsubscribe_url']", $method);
+  }
+
 }

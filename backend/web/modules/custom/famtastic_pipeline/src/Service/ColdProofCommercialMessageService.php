@@ -220,7 +220,7 @@ class ColdProofCommercialMessageService {
   private function commercialBody(string $coreBody, string $shareUrl, string $tracking, string $unsubscribe, string $postal): string {
     $apiBase = $this->publicApiBase();
     $click = $apiBase . '/api/pipeline/email/click/' . $tracking;
-    $unsub = $apiBase . '/api/pipeline/email/unsubscribe/' . $unsubscribe;
+    $unsub = $this->oneClickUnsubscribeUrlForKey($unsubscribe);
     // Keep the raw signed room URL only in the server-side proof_url column.
     // Every customer-facing CTA must cross the click ledger first.
     $body = str_replace($shareUrl, $click, trim($coreBody));
@@ -232,6 +232,34 @@ class ColdProofCommercialMessageService {
       . "\n\nWhy you are receiving this: we found your business contact information in a verified public source while researching businesses that may benefit from a stronger web presence."
       . "\n\nFAMtastic Designs\n{$postal}"
       . "\n\nTo stop receiving commercial email from us, unsubscribe here:\n{$unsub}";
+  }
+
+  /**
+   * Returns the exact one-click URL for a bound verified-cold invitation.
+   *
+   * PublicPreviewDeliveryService supplies this only to the shared mailer for
+   * the commercial lane.  It is deliberately derived from the same frozen
+   * message record as the visible footer rather than from a caller-provided
+   * URL.
+   */
+  public function oneClickUnsubscribeUrl(int $deliveryId): string {
+    $message = $this->messageForDelivery($deliveryId);
+    if (!$message) {
+      throw new \RuntimeException('Verified-cold commercial message has no valid one-click unsubscribe key.');
+    }
+    $key = trim((string) ($message['unsubscribe_key'] ?? ''));
+    if (preg_match('/^[a-f0-9]{48}$/', $key) !== 1) {
+      throw new \RuntimeException('Verified-cold commercial message has no valid one-click unsubscribe key.');
+    }
+    return $this->oneClickUnsubscribeUrlForKey($key);
+  }
+
+  /** Builds the public /web one-click unsubscribe endpoint from an opaque key. */
+  private function oneClickUnsubscribeUrlForKey(string $unsubscribeKey): string {
+    if (preg_match('/^[a-f0-9]{48}$/', $unsubscribeKey) !== 1) {
+      throw new \InvalidArgumentException('Verified-cold unsubscribe key is invalid.');
+    }
+    return $this->publicApiBase() . '/api/pipeline/email/unsubscribe/confirm/' . $unsubscribeKey;
   }
 
   private function campaignForProspect(Prospect $prospect): array {

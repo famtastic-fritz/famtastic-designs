@@ -406,6 +406,21 @@ class CampaignMessageService {
     return TRUE;
   }
 
+  /**
+   * Suppresses only a verified-cold commercial recipient.
+   *
+   * The one-click endpoint is intentionally separate from the legacy
+   * unsubscribe URL.  That lets a cold-email link use a POST confirmation
+   * without changing the historical GET contract for older campaign mail.
+   */
+  public function unsubscribeVerifiedCold(string $unsubscribeKey): bool {
+    $message = $this->loadBy('unsubscribe_key', $unsubscribeKey);
+    if (!$message || (string) ($message['template_key'] ?? '') !== 'verified_cold_preview') {
+      return FALSE;
+    }
+    return $this->unsubscribe($unsubscribeKey);
+  }
+
   public function load(int $id): ?array {
     return $this->loadBy('id', $id);
   }

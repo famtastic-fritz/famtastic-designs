@@ -78,6 +78,63 @@ final class EmailEventController extends ControllerBase {
     );
   }
 
+  /**
+   * Confirmation boundary for verified-cold commercial mail.
+   *
+   * A human follows the GET link to a plain confirmation page.  Only a POST
+   * carrying the RFC 8058 one-click form value changes suppression state, so
+   * security scanners and mail prefetchers cannot unsubscribe someone merely
+   * by following the link.
+   */
+  public function verifiedColdUnsubscribe(Request $request, string $unsubscribe_key): Response {
+    if ($request->isMethod('GET')) {
+      // Drupal is mounted at the public /web document root.  Keep this action
+      // as a fixed public path rather than rebuilding it from an internal
+      // Request base path, which may omit /web behind a proxy.
+      $action = '/web/api/pipeline/email/unsubscribe/confirm/' . $unsubscribe_key;
+      return new Response(
+        '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Confirm unsubscribe</title></head><body><main><h1>Stop commercial emails from FAMtastic Designs?</h1><p>Choose confirm to stop future commercial email at this address.</p><form method="post" action="' . htmlspecialchars($action, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"><input type="hidden" name="List-Unsubscribe" value="One-Click"><button type="submit">Confirm unsubscribe</button></form></main></body></html>',
+        200,
+        [
+          'Content-Type' => 'text/html; charset=UTF-8',
+          'Cache-Control' => 'no-store, private',
+          'Content-Security-Policy' => "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'",
+          'Referrer-Policy' => 'no-referrer',
+          'X-Content-Type-Options' => 'nosniff',
+        ],
+      );
+    }
+
+    // RFC 8058 one-click clients submit this form field in a POST body.  The
+    // same field is present in the human confirmation form above.
+    if ((string) $request->request->get('List-Unsubscribe', '') !== 'One-Click') {
+      return new JsonResponse([
+        'ok' => FALSE,
+        'error' => 'unsubscribe_confirmation_required',
+      ], 400, ['Cache-Control' => 'no-store, private']);
+    }
+
+    $ok = $this->messages->unsubscribeVerifiedCold($unsubscribe_key);
+    if (!$ok) {
+      return new JsonResponse([
+        'ok' => FALSE,
+        'error' => 'invalid_unsubscribe_link',
+      ], 404, ['Cache-Control' => 'no-store, private']);
+    }
+
+    return new Response(
+      '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Unsubscribed</title></head><body><main><h1>You have been unsubscribed.</h1><p>You will no longer receive commercial email from FAMtastic Designs at this address.</p></main></body></html>',
+      200,
+      [
+        'Content-Type' => 'text/html; charset=UTF-8',
+        'Cache-Control' => 'no-store, private',
+        'Content-Security-Policy' => "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'",
+        'Referrer-Policy' => 'no-referrer',
+        'X-Content-Type-Options' => 'nosniff',
+      ],
+    );
+  }
+
   public function provider(Request $request): JsonResponse {
     if (strlen($request->getContent()) > 65536) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'request_too_large'], 413);

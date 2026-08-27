@@ -368,6 +368,17 @@ famtastic_pipeline.email_unsubscribe:
     _access: 'TRUE'
     unsubscribe_key: '[a-f0-9]{48}'
 
+famtastic_pipeline.email_unsubscribe_verified_cold:
+  path: '/api/pipeline/email/unsubscribe/confirm/{unsubscribe_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\EmailEventController::verifiedColdUnsubscribe'
+  methods: [GET, POST]
+  requirements:
+    _access: 'TRUE'
+    unsubscribe_key: '[a-f0-9]{48}'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.email_provider:
   path: '/api/pipeline/email/provider-event'
   defaults:

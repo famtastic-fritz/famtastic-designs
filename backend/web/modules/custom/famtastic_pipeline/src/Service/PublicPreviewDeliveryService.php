@@ -662,8 +662,10 @@ final class PublicPreviewDeliveryService {
         ])->condition('id', $id)->condition('state', 'email_approved')->execute() !== 1) {
           throw new \RuntimeException('Preview delivery ' . $id . ' changed before targeted dispatch could begin.');
         }
+        $oneClickUnsubscribeUrl = NULL;
         if ((string) ($delivery['source_lane'] ?? 'anonymous_public') === 'verified_cold') {
           $this->coldMessages->claim($id);
+          $oneClickUnsubscribeUrl = $this->coldMessages->oneClickUnsubscribeUrl($id);
         }
         $claimed[] = [
           'id' => $id,
@@ -671,6 +673,7 @@ final class PublicPreviewDeliveryService {
           'recipient' => (string) $outbox['recipient'],
           'subject' => (string) $outbox['subject'],
           'body' => (string) $outbox['body'],
+          'one_click_unsubscribe_url' => $oneClickUnsubscribeUrl,
         ];
       }
       foreach ($claimed as $item) {
@@ -697,7 +700,12 @@ final class PublicPreviewDeliveryService {
       $providerAccepted = FALSE;
       $providerMessageId = '';
       try {
-        $providerMessageId = $this->mailer->send($item['recipient'], $item['subject'], $item['body']);
+        $providerMessageId = $this->mailer->send(
+          $item['recipient'],
+          $item['subject'],
+          $item['body'],
+          $item['one_click_unsubscribe_url'],
+        );
         $providerAccepted = TRUE;
         $this->recordDispatchAccepted($item['id'], $item['outbox_id'], $dispatchKey, $providerMessageId);
         $result['sent']++;

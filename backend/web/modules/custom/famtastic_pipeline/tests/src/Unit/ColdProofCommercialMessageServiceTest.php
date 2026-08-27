@@ -42,7 +42,8 @@ final class ColdProofCommercialMessageServiceTest extends UnitTestCase {
     $body = $method->invoke($service, "View your private concept room:\n{$signed}", $signed, str_repeat('a', 48), str_repeat('c', 48), '1729 Example Boulevard');
     $this->assertStringNotContainsString($signed, $body);
     $this->assertStringContainsString('https://famtasticdesigns.com/web/api/pipeline/email/click/' . str_repeat('a', 48), $body);
-    $this->assertStringContainsString('https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/' . str_repeat('c', 48), $body);
+    $this->assertStringContainsString('https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/confirm/' . str_repeat('c', 48), $body);
+    $this->assertStringNotContainsString('https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/' . str_repeat('c', 48), $body);
     $this->assertStringNotContainsString('https://famtasticdesigns.com/api/pipeline/email/click/', $body);
   }
 

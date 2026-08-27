@@ -38,14 +38,15 @@ class OutreachMailer {
    * The campaign boundary uses PHPMailer directly so a provider message id is
    * returned and an SMTP rejection cannot be mistaken for successful delivery.
    */
-  public function send(string $to, string $subject, string $body): string {
+  public function send(string $to, string $subject, string $body, ?string $oneClickUnsubscribeUrl = NULL): string {
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
       throw new RuntimeException('notification_recipient_invalid');
     }
+    $oneClickHeaders = $this->oneClickUnsubscribeHeaders($oneClickUnsubscribeUrl);
 
     $transport = (string) (getenv('FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT') ?: Settings::get('famtastic_transactional_email_transport', 'smtp'));
     if ($transport === 'memory') {
-      return $this->captureMemoryMessage($to, $subject, $body);
+      return $this->captureMemoryMessage($to, $subject, $body, $oneClickHeaders);
     }
     if ($transport !== 'smtp') {
       throw new RuntimeException('notification_transport_invalid');
@@ -89,6 +90,9 @@ class OutreachMailer {
       }
       $mailer->addAddress($to);
       $mailer->Subject = $subject;
+      foreach ($oneClickHeaders as $name => $value) {
+        $mailer->addCustomHeader($name, $value);
+      }
       // Keep the operational record and the plain-text alternative readable,
       // while giving every customer and owner notification a consistent,
       // mobile-safe presentation.  Callers deliberately provide plain text so
@@ -118,6 +122,42 @@ class OutreachMailer {
       '@message_id' => $providerMessageId,
     ]);
     return $providerMessageId;
+  }
+
+  /**
+   * Builds the RFC 8058 headers for a verified-cold commercial invitation.
+   *
+   * Callers cannot inject arbitrary headers here: the only accepted URL is
+   * the opaque POST-confirmation endpoint exposed under the public Drupal
+   * document root.  Ordinary notifications leave this empty.
+   *
+   * @return array<string, string>
+   */
+  private function oneClickUnsubscribeHeaders(?string $url): array {
+    $url = trim((string) $url);
+    if ($url === '') {
+      return [];
+    }
+    if (str_contains($url, "\r") || str_contains($url, "\n") || !filter_var($url, FILTER_VALIDATE_URL)) {
+      throw new RuntimeException('notification_one_click_unsubscribe_invalid');
+    }
+    $parts = parse_url($url);
+    if (
+      !is_array($parts)
+      || strtolower((string) ($parts['scheme'] ?? '')) !== 'https'
+      || trim((string) ($parts['host'] ?? '')) === ''
+      || isset($parts['user'])
+      || isset($parts['pass'])
+      || isset($parts['query'])
+      || isset($parts['fragment'])
+      || preg_match('#^/web/api/pipeline/email/unsubscribe/confirm/[a-f0-9]{48}$#', (string) ($parts['path'] ?? '')) !== 1
+    ) {
+      throw new RuntimeException('notification_one_click_unsubscribe_invalid');
+    }
+    return [
+      'List-Unsubscribe' => '<' . $url . '>',
+      'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click',
+    ];
   }
 
   /**
@@ -172,19 +212,23 @@ class OutreachMailer {
   /**
    * Captures deterministic test messages without contacting an SMTP server.
    */
-  private function captureMemoryMessage(string $to, string $subject, string $body): string {
+  private function captureMemoryMessage(string $to, string $subject, string $body, array $headers = []): string {
     $path = trim((string) (getenv('FAMTASTIC_TRANSACTIONAL_EMAIL_CAPTURE') ?: Settings::get('famtastic_transactional_email_capture', '')));
     if ($path === '' || !is_dir(dirname($path)) || !is_writable(dirname($path))) {
       throw new RuntimeException('notification_capture_path_invalid');
     }
     $messageId = sprintf('<famtastic-test-%s@memory.invalid>', bin2hex(random_bytes(16)));
-    $record = json_encode([
+    $recordData = [
       'message_id' => $messageId,
       'to' => mb_strtolower($to),
       'subject' => $subject,
       'body' => $body,
       'captured_at' => gmdate(DATE_ATOM),
-    ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . "\n";
+    ];
+    if ($headers !== []) {
+      $recordData['headers'] = $headers;
+    }
+    $record = json_encode($recordData, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . "\n";
     if (file_put_contents($path, $record, FILE_APPEND | LOCK_EX) === FALSE) {
       throw new RuntimeException('notification_capture_failed');
     }
