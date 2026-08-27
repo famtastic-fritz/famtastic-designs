@@ -69,21 +69,19 @@ final class ColdProofIngressService {
     try {
       $campaignId = $this->leads->ensureCampaignForChannel($cohort['campaign_key'], $cohort['source_name'], 'public_preview');
       $cohortRow = $this->ensureCohort($cohort, $campaignId);
-      // Drupal database drivers return scalar query results as strings. Cast
-      // once at the persistence boundary so the idempotency key is identical
-      // on every driver and strict downstream signatures cannot receive a
-      // database string.
-      $cohortId = (int) ($cohortRow['id'] ?? 0);
-      if ($cohortId < 1) {
-        throw new \RuntimeException('Cold proof cohort persistence did not return a valid ID.');
-      }
+      $cohortId = $this->persistedId($cohortRow['id'] ?? NULL, 'Cold proof cohort');
       foreach ($seed['leads'] as $lead) {
         $existing = $this->existingIngress($cohortId, $lead['source_record_id'], $lead['evidence_hash']);
         if ($existing) {
+          $existingProspectId = $this->optionalPersistedId($existing['prospect_id'] ?? NULL, 'Existing cold proof prospect');
+          $existingIntakeId = $this->optionalPersistedId($existing['intake_id'] ?? NULL, 'Existing cold proof intake');
+          $existingDeliveryId = $this->optionalPersistedId($existing['preview_delivery_id'] ?? NULL, 'Existing cold proof preview delivery');
+          $existingProofCampaignId = $this->optionalPersistedId($existing['proof_campaign_id'] ?? NULL, 'Existing cold proof campaign');
+          $existingProofJobId = $this->optionalPersistedId($existing['proof_job_id'] ?? NULL, 'Existing cold proof job');
           $results[] = $this->result($lead, [
-            'status' => 'duplicate', 'score' => 0, 'target_offer' => '', 'prospect_id' => $existing['prospect_id'] ?: NULL,
+            'status' => 'duplicate', 'score' => 0, 'target_offer' => '', 'prospect_id' => $existingProspectId,
             'dedupe_key' => '', 'reasons' => ['This exact verified-source lead was already ingressed.'],
-          ], $existing['intake_id'] ?: NULL, $existing['preview_delivery_id'] ?: NULL, $existing['proof_campaign_id'] ?: NULL, $existing['proof_job_id'] ?: NULL, 'already_ingressed', $profile['id']);
+          ], $existingIntakeId, $existingDeliveryId, $existingProofCampaignId, $existingProofJobId, 'already_ingressed', $profile['id']);
           continue;
         }
         $import = $this->leads->importRowWithoutGenericProof(
@@ -294,6 +292,34 @@ final class ColdProofIngressService {
     $row = $this->database->select('famtastic_cold_proof_ingress', 'i')->fields('i')
       ->condition('ingress_key', $key)->range(0, 1)->execute()->fetchAssoc();
     return $row ?: NULL;
+  }
+
+  /**
+   * Converts an ID returned by Drupal's database layer without weakening IDs.
+   *
+   * PDO returns integer primary keys as numeric strings on supported drivers.
+   * Accept exactly those canonical positive decimal strings (or a positive
+   * integer) and fail closed for empty, signed, decimal, or overflowing input.
+   */
+  private function persistedId(mixed $value, string $record): int {
+    if (is_int($value) && $value > 0) {
+      return $value;
+    }
+    if (is_string($value) && preg_match('/^[1-9][0-9]*$/D', $value) === 1) {
+      $id = (int) $value;
+      if ($id > 0 && (string) $id === $value) {
+        return $id;
+      }
+    }
+    throw new \RuntimeException($record . ' was persisted without a valid canonical ID.');
+  }
+
+  /** Returns a nullable foreign key while rejecting malformed stored values. */
+  private function optionalPersistedId(mixed $value, string $record): ?int {
+    if ($value === NULL || $value === '') {
+      return NULL;
+    }
+    return $this->persistedId($value, $record);
   }
 
   private function insertIngress(int $cohortId, array $lead, array $import, ?int $intakeId, ?int $deliveryId, ?int $proofCampaignId, ?int $jobId, string $status): void {

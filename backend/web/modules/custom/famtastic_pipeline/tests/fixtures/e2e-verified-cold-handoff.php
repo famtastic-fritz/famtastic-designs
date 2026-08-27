@@ -58,6 +58,38 @@ try {
   if ($deliveryId < 1 || (int) ($lead['proof_campaign_id'] ?? 0) < 1 || (int) ($lead['proof_job_id'] ?? 0) < 1) {
     throw new RuntimeException('Cold ingress did not produce exact canonical delivery, campaign, and job IDs.');
   }
+  // PDO returns this persisted cohort primary key as a string. Re-importing
+  // the exact seed must safely match it as the existing ingress rather than
+  // accepting an invalid scalar or creating a second proof job.
+  $duplicate = $ingress->importSeed($seedPath, FALSE);
+  $duplicateLead = $duplicate['leads'][0] ?? [];
+  if (
+    ($duplicateLead['action'] ?? '') !== 'already_ingressed'
+    || (int) ($duplicateLead['preview_delivery_id'] ?? 0) !== $deliveryId
+    || (int) ($duplicateLead['proof_campaign_id'] ?? 0) !== (int) $lead['proof_campaign_id']
+    || (int) ($duplicateLead['proof_job_id'] ?? 0) !== (int) $lead['proof_job_id']
+  ) {
+    throw new RuntimeException('Re-import did not safely reuse the canonical persisted cohort ID and ingress identity.');
+  }
+  // The small coercion boundary must not turn malformed persisted scalar
+  // values into a different canonical ID. Exercise it directly alongside the
+  // real PDO-string re-import above.
+  $persistedId = new ReflectionMethod(ColdProofIngressService::class, 'persistedId');
+  if ($persistedId->invoke($ingress, '42', 'fixture ID') !== 42) {
+    throw new RuntimeException('Canonical PDO numeric string was not accepted as an ID.');
+  }
+  foreach ([NULL, '', '0', '01', '+1', '1.0', '1 ', '9223372036854775808'] as $invalidId) {
+    $rejected = FALSE;
+    try {
+      $persistedId->invoke($ingress, $invalidId, 'fixture invalid ID');
+    }
+    catch (RuntimeException) {
+      $rejected = TRUE;
+    }
+    if (!$rejected) {
+      throw new RuntimeException('Malformed persisted scalar ID was accepted.');
+    }
+  }
   /** @var ColdProofBuildHandoffService $handoffs */
   $handoffs = \Drupal::service('famtastic_pipeline.cold_proof_build_handoff');
   $bundle = $handoffs->export([$deliveryId]);
@@ -164,6 +196,7 @@ try {
   }
   file_put_contents($statePath, json_encode([
     'lead' => $lead,
+    'duplicate_reimport' => 'already_ingressed',
     'bundle' => $bundle,
     'draft_owner_gate' => 'rejected_without_partial_hold',
   ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));

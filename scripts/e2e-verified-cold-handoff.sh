@@ -10,13 +10,32 @@ sandbox="$(mktemp -d "${TMPDIR:-/tmp}/famtastic-verified-cold-handoff.XXXXXX")"
 run_id="$(date +%s)-$$"
 
 cleanup() {
+  local original_exit=$?
+  local cleanup_exit=0
+  trap - EXIT
   case "$sandbox" in
     "${TMPDIR:-/tmp}/famtastic-verified-cold-handoff."*)
-      chmod -R u+rwX "$sandbox" 2>/dev/null || true
-      rm -rf "$sandbox"
+      # Drupal hardens sites/default after installation. Restore only the
+      # disposable fixture's owner access so cleanup neither leaves debris nor
+      # replaces the test's real pass/fail status.
+      if ! chmod -R u+rwX "$sandbox" 2>/dev/null; then
+        echo "Could not restore fixture permissions before cleanup: $sandbox" >&2
+        cleanup_exit=1
+      fi
+      if ! rm -rf "$sandbox"; then
+        echo "Could not remove fixture sandbox: $sandbox" >&2
+        cleanup_exit=1
+      fi
       ;;
-    *) echo "Refusing to remove unexpected sandbox: $sandbox" >&2 ;;
+    *)
+      echo "Refusing to remove unexpected sandbox: $sandbox" >&2
+      cleanup_exit=1
+      ;;
   esac
+  if [ "$original_exit" -ne 0 ]; then
+    exit "$original_exit"
+  fi
+  exit "$cleanup_exit"
 }
 trap cleanup EXIT
 
@@ -94,6 +113,7 @@ jq -e '
   (.lead.preview_delivery_id | type == "number") and
   (.lead.proof_campaign_id | type == "number") and
   (.lead.proof_job_id | type == "number") and
+  .duplicate_reimport == "already_ingressed" and
   .draft_owner_gate == "rejected_without_partial_hold" and
   .bundle.schema == "famtastic.verified-cold-proof-handoff.v1" and
   (.bundle.deliveries | length) == 1 and

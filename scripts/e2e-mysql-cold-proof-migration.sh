@@ -15,11 +15,33 @@ database_password="coldproof-$(openssl rand -hex 12)"
 root_password="root-$(openssl rand -hex 12)"
 
 cleanup() {
+  local original_exit=$?
+  local cleanup_exit=0
+  trap - EXIT
   docker rm -f "$container_name" >/dev/null 2>&1 || true
   case "$sandbox" in
-    "${TMPDIR:-/tmp}/${test_name}."*) rm -rf "$sandbox" ;;
-    *) echo "Refusing to remove unexpected sandbox: $sandbox" >&2 ;;
+    "${TMPDIR:-/tmp}/${test_name}."*)
+      # Drupal hardens sites/default after installation. Restore only the
+      # disposable fixture's owner access so cleanup neither leaves debris nor
+      # replaces the test's real pass/fail status.
+      if ! chmod -R u+rwX "$sandbox" 2>/dev/null; then
+        echo "Could not restore fixture permissions before cleanup: $sandbox" >&2
+        cleanup_exit=1
+      fi
+      if ! rm -rf "$sandbox"; then
+        echo "Could not remove fixture sandbox: $sandbox" >&2
+        cleanup_exit=1
+      fi
+      ;;
+    *)
+      echo "Refusing to remove unexpected sandbox: $sandbox" >&2
+      cleanup_exit=1
+      ;;
   esac
+  if [ "$original_exit" -ne 0 ]; then
+    exit "$original_exit"
+  fi
+  exit "$cleanup_exit"
 }
 trap cleanup EXIT
 
@@ -61,8 +83,8 @@ for runtime_file in .ht.router.php .htaccess autoload.php autoload_runtime.php i
   cp "$runtime_backend/web/$runtime_file" "$sandbox/backend/web/$runtime_file"
 done
 cp "$runtime_backend/web/sites/default/default.settings.php" "$sandbox/backend/web/sites/default/default.settings.php"
-mkdir -p "$sandbox/backend/web/sites/default/files" "$sandbox/backend/private"
 chmod -R u+rwX "$sandbox/backend/web/sites/default"
+mkdir -p "$sandbox/backend/web/sites/default/files" "$sandbox/backend/private"
 perl -0pi -e 's/\n\$databases\['\''default'\''\]\['\''default'\''\] = array \(\n.*?\n\);\n/\n/s' "$sandbox/backend/web/sites/default/settings.php"
 
 drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
@@ -93,7 +115,9 @@ drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
     "website_observation_status" => "verified_present", "website_observation_fact" => "Fixture fact", "corroborated_fact" => "Fixture corroboration", "proof_teaser" => "Fixture teaser",
     "evidence_hash" => str_repeat("b", 64), "status" => "seeded", "created" => $now, "changed" => $now,
   ])->execute();
-  module_load_include("install", "famtastic_pipeline");
+  // Drupal 11 no longer provides module_load_include(). This isolated
+  // fixture loads the installed module update hook directly.
+  require_once DRUPAL_ROOT . "/modules/custom/famtastic_pipeline/famtastic_pipeline.install";
   $sandbox = [];
   // Invoke the real Drupal update hook against MariaDB, rather than merely
   // inspecting its source. A three-argument Schema API addIndex call fails
