@@ -21,11 +21,16 @@ function famtastic_pipeline_page_attachments(array &$attachments): void {
   if (str_starts_with($routeName, 'commerce_checkout.')) {
     $attachments['#attached']['library'][] = 'famtastic_pipeline/commerce_checkout';
   }
-  // Suppress the React frontend header on user account pages — the admin
-  // toolbar already provides navigation; mixing both creates visual chaos.
-  if (str_starts_with($routeName, 'user.') || str_starts_with($routeName, 'profile.')) {
-    $attachments['#attached']['library'][] = 'famtastic_pipeline/user_page_clean';
+  // Suppress the React frontend header on user account pages and error pages —
+  // the admin toolbar already provides navigation; mixing both creates visual chaos.
+  $suppressRoutes = ['user.', 'profile.', 'system.403', 'system.404'];
+  foreach ($suppressRoutes as $prefix) {
+    if (str_starts_with($routeName, $prefix)) {
+      $attachments['#attached']['library'][] = 'famtastic_pipeline/user_page_clean';
+      break;
+    }
   }
+
 }
 
 /**
