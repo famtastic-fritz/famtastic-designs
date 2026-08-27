@@ -1,27 +1,29 @@
 {
   "schema": "famtastic.booked-branded-live-acceptance.v1",
-  "checked_at": "2026-08-27T18:57:00Z",
+  "checked_at": "2026-08-27T20:08:00Z",
   "deployment": {
-    "commit": "412a8f51451e684d987d2ba80971531acee4d067",
-    "rollback_archive": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T185348Z-412a8f51451e684d987d2ba80971531acee4d067.tgz"
+    "commit": "b91038f2db841b9375d3fdd912ba636c04088361",
+    "rollback_archive": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T200346Z-b91038f2db841b9375d3fdd912ba636c04088361.tgz"
   },
   "hosts": [
     {
       "origin": "https://famtasticdesigns.com",
       "existing_react_homepage": "passed",
-      "showcase_routes": 21,
+      "showcase_routes": 22,
       "viewport": "1440x1000",
       "status": "passed"
     },
     {
       "origin": "https://www.famtasticdesigns.com",
       "existing_react_homepage": "passed",
-      "showcase_routes": 21,
+      "showcase_routes": 22,
       "viewport": "390x844",
       "status": "passed"
     }
   ],
   "showcase_assertions": {
+    "route_checks": 44,
+    "homepage_checks": 2,
     "http_200": true,
     "h1_rendered": true,
     "fictional_disclosure_present": true,
@@ -32,11 +34,13 @@
   },
   "asset_assertions": {
     "hosts_checked": 2,
-    "assets_per_host": 4,
+    "assets_per_host": 12,
+    "asset_checks": 24,
     "status": 200,
-    "content_type": "image/webp",
-    "exact_committed_byte_sizes": true
+    "content_type": "image/jpeg",
+    "exact_committed_byte_sizes": true,
+    "exact_sha256": true
   },
-  "observation": "The first www mobile overview snapshot checked a lazy image before staged scrolling completed. Direct HTTP asset verification and a repeated staged-scroll browser check loaded all four images at natural width 1672 with no errors; this was test timing, not a production defect.",
+  "observation": "The first www mobile overview probe checked two lazy images before staged scrolling loaded them. A repeated 180 ms staged-scroll check loaded all four overview images at natural size 1672x941 with no errors. Direct downloads of all 12 final Gemini assets on both hosts also matched committed byte counts and SHA-256; this was browser timing, not a missing production asset.",
   "passed": true
 }

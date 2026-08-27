@@ -74,18 +74,16 @@ all four operator-first mobile pages, the representative Shay email, the
 complete three-direction desktop set, and all 12 source images. Independent
 review is deliberately reserved for the owner.
 
-## Previous production acceptance
+## Production acceptance
 
 The governed frontend deployment published commit
-`412a8f51451e684d987d2ba80971531acee4d067` and retained rollback archive
-`/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T185348Z-412a8f51451e684d987d2ba80971531acee4d067.tgz`.
+`b91038f2db841b9375d3fdd912ba636c04088361` and retained rollback archive
+`/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T200346Z-b91038f2db841b9375d3fdd912ba636c04088361.tgz`.
 
-Real-browser acceptance covered the existing React homepage and the original 21
+Real-browser acceptance covered the existing React homepage and all 22
 showcase routes on both `https://famtasticdesigns.com` and
 `https://www.famtasticdesigns.com`. Apex desktop and `www` mobile checks found
 HTTP 200, a rendered H1, the fictional disclosure, `noindex`, no horizontal
-overflow, no console/page errors, and no broken images. All four hero assets
-also returned `200 image/webp` with their exact committed byte sizes on both
-hosts. See `live-acceptance.json`. This section does not yet claim deployment of
-the 12-image/package revision; final production acceptance will replace it
-after governed release.
+overflow, no console/page errors, and no broken images. All 12 final Gemini
+assets returned `200 image/jpeg` with their exact committed byte sizes and
+SHA-256 on both hosts. See `live-acceptance.json`.
