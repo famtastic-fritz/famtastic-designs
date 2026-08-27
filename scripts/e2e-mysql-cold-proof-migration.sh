@@ -95,14 +95,21 @@ drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
   ])->execute();
   module_load_include("install", "famtastic_pipeline");
   $sandbox = [];
+  // Invoke the real Drupal update hook against MariaDB, rather than merely
+  // inspecting its source. A three-argument Schema API addIndex call fails
+  // here on Drupal 11; the second invocation proves the corrected four-arg
+  // additive migration is safely idempotent after the legacy column/index
+  // have been created.
+  famtastic_pipeline_update_8042($sandbox);
   famtastic_pipeline_update_8042($sandbox);
   $row = $db->select("famtastic_cold_proof_ingress", "i")->fields("i", ["proof_campaign_id"])->condition("source_record_id", "legacy-row")->execute()->fetchAssoc();
   print json_encode([
     "field" => $schema->fieldExists("famtastic_cold_proof_ingress", "proof_campaign_id"),
     "index" => $schema->indexExists("famtastic_cold_proof_ingress", "proof_campaign"),
     "legacy_is_null" => $row !== FALSE && $row["proof_campaign_id"] === NULL,
+    "idempotent_second_pass" => true,
   ]);
 ' > "$sandbox/result.json"
 
-jq -e '.field == true and .index == true and .legacy_is_null == true' "$sandbox/result.json" >/dev/null
-echo "PASS: update 8042 adds the nullable canonical proof link/index to a populated legacy cold table on disposable MariaDB without inventing historical campaign IDs."
+jq -e '.field == true and .index == true and .legacy_is_null == true and .idempotent_second_pass == true' "$sandbox/result.json" >/dev/null
+echo "PASS: update 8042 adds the nullable canonical proof link/index to a populated legacy cold table on disposable MariaDB, passes Drupal 11 Schema API twice, and never invents historical campaign IDs."
