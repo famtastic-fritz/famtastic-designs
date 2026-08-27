@@ -1,17 +1,17 @@
 {
   "schema": "famtastic.build-dna.v1",
-  "build_id": "booked-branded-v4-20260827",
+  "build_id": "booked-branded-v5-20260827",
   "classification": "fictional-product-demonstration",
-  "created_at": "2026-08-27T20:43:46.764Z",
+  "created_at": "2026-08-27T21:15:32.753Z",
   "repository": {
     "name": "FAMtastic",
-    "revision": "7be3576f0d5519ca3ce9cc7bb794594f7c5f7b79",
+    "revision": "0b61e0b1ecdcb7aa1e078332750136a60ece496a",
     "worktree": "booked-branded-four-proof-pilot",
     "revision_status": "source_revision_before_artifact_commit"
   },
   "recipe": {
     "routine": "website_proof.generate.v1",
-    "version": "booked-branded.v4",
+    "version": "booked-branded.v5",
     "build_class": "medium",
     "offer_status": "starter package proposal; not an activated Commerce SKU",
     "public_base": "https://famtasticdesigns.com/showcase/booked-and-branded-pilot",
@@ -74,7 +74,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T20:43:46.764Z"
+          "completed_at": "2026-08-27T21:15:32.753Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -177,6 +177,36 @@
       }
     },
     {
+      "stage_id": "template-material-studies",
+      "capability": "reference-led-material-system-generation",
+      "attempt": 1,
+      "execution": {
+        "provider": {
+          "id": "openai-imagegen-builtin"
+        },
+        "model": {
+          "status": "provider_did_not_report"
+        },
+        "timing": {
+          "status": "reported",
+          "completed_at": "2026-08-27T20:59:56Z"
+        },
+        "cost": {
+          "status": "provider_did_not_report"
+        }
+      },
+      "result": {
+        "status": "completed",
+        "selected_image_count": 4,
+        "outputs": [
+          "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/crown-craft-material.webp",
+          "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/coil-clay-material.webp",
+          "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/palmera-press-material.webp",
+          "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/saltline-prism-material.webp"
+        ]
+      }
+    },
+    {
       "stage_id": "gemini-reference-images",
       "capability": "reference-led-image-generation",
       "attempt": 1,
@@ -245,6 +275,7 @@
         "outputs": [
           "index.html",
           "package/index.html",
+          "template-lab/index.html",
           "4 emails",
           "4 rooms",
           "12 proof pages"
@@ -264,7 +295,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T20:44:49.556Z"
+          "completed_at": "2026-08-27T21:16:22.243Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -273,10 +304,10 @@
       },
       "result": {
         "status": "completed",
-        "routes_tested": 22,
-        "viewport_checks": 44,
-        "screenshots": 14,
-        "copy_checks": 21,
+        "routes_tested": 23,
+        "viewport_checks": 46,
+        "screenshots": 16,
+        "copy_checks": 22,
         "evidence_ref": "docs/evidence/booked-branded-four-proof-pilot/qa-report.json"
       }
     },
@@ -293,7 +324,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T20:44:49.557Z"
+          "completed_at": "2026-08-27T21:16:22.244Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -302,7 +333,7 @@
       },
       "result": {
         "status": "completed",
-        "notes": "The overview, package, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. Direction A is editorial, B is a high-signal campaign, and C is operator-first; all twelve reference-led images are distinct and no text collision, broken image, or fictional-to-real ambiguity was observed.",
+        "notes": "The overview, package, Template Lab at desktop and mobile, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. Direction A is editorial, B is a high-signal campaign, and C is operator-first; all twelve reference-led images and all four material systems are distinct and no text collision, broken image, or fictional-to-real ambiguity was observed.",
         "independent_review": "reserved_for_owner"
       }
     }
@@ -442,8 +473,8 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/creative-system.json",
-      "bytes": 16569,
-      "sha256": "e60ade50ca26332ccc0496a9a7c51d5d29620aa8495046f61606c8c81041fa15",
+      "bytes": 23299,
+      "sha256": "5ca5de43aeac5ec188d4fb847b70fbcd6828c6f18408fccd448b7cb33ad84d50",
       "role": "proof-support"
     },
     {
@@ -478,14 +509,14 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/index.html",
-      "bytes": 6346,
-      "sha256": "5b431cf00b241cbe068b29070ff0f89ee0044b3f7775600f8d242f365a7db467",
+      "bytes": 6459,
+      "sha256": "d93d7b4e64de6b9c172db21622522daa066a642daac6dce67bd8af1464052637",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/package/index.html",
-      "bytes": 11348,
-      "sha256": "09ef65f142300e3b64cc7ec8d958eed8878c719002a323eda178d518d099dc4c",
+      "bytes": 11875,
+      "sha256": "59dc24f0cb7926f8cceca81b07a20365e17c9d8b05cdd4d286da722ac326fd02",
       "role": "customer-facing-static-proof"
     },
     {
@@ -592,15 +623,51 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/styles.css",
-      "bytes": 34676,
-      "sha256": "6db7121a6fb057486997d0ac4dc6e34d4460716152932b635bdc5f0736859b7c",
+      "bytes": 50104,
+      "sha256": "8ebb18a4c1b1ad0952d4cdfc888afcb58fd6c31cdda4a2b6e7bbc655cdc6eb35",
+      "role": "proof-support"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/coil-clay-material.webp",
+      "bytes": 367370,
+      "sha256": "d1c5cd15c7437a2f6ad653fdb0580f8bfca6f7677fda70b1a6ffd36bd4cd759a",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/crown-craft-material.webp",
+      "bytes": 261024,
+      "sha256": "5704006090ba513b3f9af0fc02bf0579c68496190ab2f1cdd9777bd67e784027",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/palmera-press-material.webp",
+      "bytes": 475076,
+      "sha256": "86488e3cb111b1c3ffd7718ef77001ece6c9e77ce50803124a8e445f8cf2fd36",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/saltline-prism-material.webp",
+      "bytes": 219504,
+      "sha256": "94bdd29e7c1ba0aea8b38816266e655e9c7184d92853d14f294f39ab0194d3d9",
+      "role": "generated-image-final"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/index.html",
+      "bytes": 16827,
+      "sha256": "3fc1e3e4801c2a4d8cf2655e2476a91695c7d3af1fb49bd9a574989dc7a78749",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/material-generation-receipt.json",
+      "bytes": 2994,
+      "sha256": "bd0191e8fc94dac1bd49f044653cd0f63227fb43d7593cb7209d445ab6e02b44",
       "role": "proof-support"
     },
     {
       "role": "browser-qa-report",
       "path": "docs/evidence/booked-branded-four-proof-pilot/qa-report.json",
-      "bytes": 24456,
-      "sha256": "38f032ec72f6bfed08413b30e2704e471c5bae1f94a3fc54e0a0845ffabc25cb"
+      "bytes": 25748,
+      "sha256": "916383cdbdb16dedf6151ed0fc626921d8ec82cf72db8553e321ef8982d93d25"
     }
   ],
   "retrieval": {

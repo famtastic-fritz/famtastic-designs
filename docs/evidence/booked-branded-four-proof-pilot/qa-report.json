@@ -1,11 +1,11 @@
 {
   "schema": "famtastic.booked-branded-qa.v1",
-  "generated_at": "2026-08-27T20:44:49.556Z",
-  "base_url": "http://127.0.0.1:4191/showcase/booked-and-branded-pilot",
-  "routes_tested": 22,
-  "viewport_checks": 44,
-  "screenshots": 14,
-  "copy_checks": 21,
+  "generated_at": "2026-08-27T21:16:22.243Z",
+  "base_url": "http://127.0.0.1:4180/showcase/booked-and-branded-pilot",
+  "routes_tested": 23,
+  "viewport_checks": 46,
+  "screenshots": 16,
+  "copy_checks": 22,
   "errors": [],
   "passed": true,
   "copy_evidence": [
@@ -18,6 +18,23 @@
         "Use the booking tool that fits the owner now.",
         "Your QR. Your account. Your money.",
         "FAMtastic does not process, receive, settle, or reconcile the payment."
+      ],
+      "forbidden_phrases_absent": [
+        "$19.99",
+        "does not pretend",
+        "Not inside this pilot",
+        "No Booksy review scraping"
+      ]
+    },
+    {
+      "relative_path": "template-lab/index.html",
+      "required_phrases": [
+        "The system underneath should feel repeatable.",
+        "The website basics do not disappear.",
+        "One branded forwarding address",
+        "Booksy or another current provider",
+        "FAMtastic does not process or receive the payment.",
+        "Shay is FAMtastic Designs’ AI Business Concierge."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -347,6 +364,28 @@
       "status": 200,
       "title": "Booked & Branded — Founding pilot package",
       "h1": "Own the front door. Keep the chair moving.",
+      "width": 390,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/template-lab/",
+      "viewport": 1440,
+      "status": 200,
+      "title": "Booked & Branded Template Lab — FAMtastic Designs",
+      "h1": "A template should feel hand built.The system underneath should feel repeatable.",
+      "width": 1440,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/template-lab/",
+      "viewport": 390,
+      "status": 200,
+      "title": "Booked & Branded Template Lab — FAMtastic Designs",
+      "h1": "A template should feel hand built.The system underneath should feel repeatable.",
       "width": 390,
       "brokenImages": [],
       "fictionalLabel": true,

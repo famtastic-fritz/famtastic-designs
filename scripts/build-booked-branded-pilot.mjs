@@ -18,6 +18,7 @@ const canonicalBase = 'https://famtasticdesigns.com' + publicBase;
 const generatedImageRoot = join(publicRoot, 'assets/directions');
 const generationReceiptPath = join(generatedImageRoot, 'generation-receipt.json');
 const generatedPromptManifestPath = join(generatedImageRoot, 'prompt-manifest.json');
+const materialReceiptPath = join(publicRoot, 'template-lab/material-generation-receipt.json');
 
 function esc(value) {
   return String(value)
@@ -84,7 +85,7 @@ function button(href, label, secondary = false) {
 function pilotIndex() {
   const cards = data.businesses.map((business, index) => `
     <article class="pilot-card">
-      <img class="pilot-card-image" src="${publicBase}/assets/${esc(business.image)}" alt="Fictional editorial hero created for ${esc(business.name)}" width="1672" height="941"${index === 0 ? '' : ' loading="lazy"'}>
+      <img class="pilot-card-image" src="${publicBase}/assets/${esc(business.image)}" alt="Fictional editorial hero created for ${esc(business.name)}" width="1672" height="941">
       <div class="pilot-card-body">
         <div class="pilot-card-meta"><span>${esc(business.location)}</span><span>${esc(business.operator)}</span></div>
         <h2>${esc(business.name)}</h2>
@@ -112,6 +113,7 @@ function pilotIndex() {
             <strong>${esc(creative.offer.price_hypothesis)} · package proposal</strong>
             <p>${esc(creative.offer.promise)}</p>
             ${button(`${publicBase}/package/`, 'See the complete package')}
+            ${button(`${publicBase}/template-lab/`, 'Open the Template Lab', true)}
           </aside>
         </div>
       </header>
@@ -230,7 +232,7 @@ function packagePage() {
               <p class="kicker">${esc(creative.offer.status_display)}</p>
               <h1>${esc(creative.offer.headline)}</h1>
               <p class="package-lede">${esc(creative.offer.promise)}</p>
-              <div class="package-actions">${button(`${publicBase}/#proofs`, 'See the four proof stories')}${button('#package-upgrades', 'See the upgrade path', true)}</div>
+              <div class="package-actions">${button(`${publicBase}/#proofs`, 'See the four proof stories')}${button(`${publicBase}/template-lab/`, 'Open the Template Lab', true)}${button('#package-upgrades', 'See the upgrade path', true)}</div>
             </div>
             <aside class="package-price-card"><small>Proposed starter</small><strong>${esc(creative.offer.price_hypothesis)}</strong><p>One year of hosting included. Keep the site running for the normal $9.99 monthly hosting renewal beginning in month 13. Booking and growth upgrades stay optional.</p></aside>
           </div>
@@ -250,7 +252,84 @@ function packagePage() {
 
         <section class="package-section shay-package"><div class="shell package-split"><div><span class="shay-orb package-orb">S</span><p class="kicker">The business face</p><h2>Meet Shay, your AI Business Concierge.</h2><p>Shay explains the proof choices, gathers decisions, keeps setup understandable, and knows when to bring in Fritz or the FAMtastic team. Human authority stays with the team for pricing, scope, approvals, payment, and launch.</p></div><div class="specialist-grid">${specialists}</div></div></section>
 
-        <section class="package-final"><div class="shell"><p class="kicker">Proof before promise</p><h2>Four fictional businesses. Twelve working directions. One reusable product thesis.</h2>${button(`${publicBase}/#proofs`, 'Open the four-business showcase')}</div></section>
+        <section class="package-final"><div class="shell"><p class="kicker">Proof before promise</p><h2>Four fictional businesses. Twelve working directions. Four reusable visual families.</h2>${button(`${publicBase}/template-lab/`, 'Open the Template Lab')}</div></section>
+      </main>`
+  });
+}
+
+function templateLabPage() {
+  const foundation = [
+    ['Your web address', 'A custom domain or an owner-controlled existing domain connected to the new site.'],
+    ['One branded forwarding address', 'A customer-approved address such as bookings@yourdomain.com delivers into the inbox the owner already checks. A hosted mailbox and sending as that address remain an upgrade.'],
+    ['Contact that works', 'A protected contact form with verified delivery, plus click-to-call, click-to-text, and approved social links.'],
+    ['Find the business', 'Location or service area, accurate hours, parking or arrival notes, and a map only when the owner wants one.'],
+    ['Services before DMs', 'Services, starting prices, duration, preparation, policies, and what the client should choose next.'],
+    ['Proof of the work', 'A responsive, owner-approved gallery and consent-based testimonials—not copied reviews or invented results.'],
+    ['Booking that fits today', 'Keep Booksy or another current provider, connect Google or Cal.com, or use FAMtastic request-to-book. No forced overnight switch.'],
+    ['Owner-controlled QR', 'Display the business’s approved Cash App or existing payment QR. FAMtastic does not process or receive the payment.'],
+    ['Launch quality', 'One year of hosting, SSL, responsive behavior, keyboard access, reduced-motion support, performance checks, and launch QA.']
+  ];
+  const foundationCards = foundation.map(([title, description], index) => `<article><b>${String(index + 1).padStart(2, '0')}</b><h3>${esc(title)}</h3><p>${esc(description)}</p></article>`).join('');
+  const families = creative.template_lab.families.map((family, index) => {
+    const business = data.businesses.find(item => item.slug === family.business_slug);
+    if (!business) throw new Error(`Missing business for template family ${family.id}.`);
+    const materials = family.material_language.map(item => `<span>${esc(item)}</span>`).join('');
+    const motifs = family.motif_language.map(item => `<li>${esc(item)}</li>`).join('');
+    return `<article class="lab-family lab-family-${esc(family.id)}" style="--family-ink:${esc(business.palette.ink)};--family-paper:${esc(business.palette.paper)};--family-accent:${esc(business.palette.accent)};--family-accent2:${esc(business.palette.accent2)}">
+      <div class="lab-family-art">
+        <img src="${publicBase}/template-lab/assets/${esc(family.material_asset)}" alt="Generated material study for the fictional ${esc(family.name)} template family" width="1672" height="941">
+        <span class="lab-family-number">0${index + 1}</span>
+        <div class="lab-material-tags">${materials}</div>
+      </div>
+      <div class="lab-family-copy">
+        <p class="kicker">Reusable family · ${esc(business.operator)}</p>
+        <div class="lab-type-lockup"><small>${esc(family.name)}</small><h2>${esc(family.signal)}</h2><span>${esc(business.location)}</span></div>
+        <p class="lab-thesis">${esc(family.type_composition)} ${esc(family.module_shape)}</p>
+        <div class="lab-family-system">
+          <div><small>Motif grammar</small><ul>${motifs}</ul></div>
+          <div><small>Adaptation rule</small><p>${esc(family.adaptation_rule)}</p></div>
+        </div>
+        <div class="lab-family-actions">${button(`${publicBase}/rooms/${business.slug}/`, 'Open the existing 3-proof room')}${button(`${publicBase}/proofs/${business.slug}/c/#owner-desk`, 'See the phone Booking Desk', true)}</div>
+      </div>
+    </article>`;
+  }).join('');
+  const upgrades = creative.template_lab.growth_layer.map((item, index) => `<li><span>${String(index + 1).padStart(2, '0')}</span><p>${esc(item)}</p></li>`).join('');
+  return template({
+    title: 'Booked & Branded Template Lab — FAMtastic Designs',
+    description: 'Four reusable, research-led visual systems and the complete business foundation behind the fictional Booked & Branded pilot.',
+    className: 'template-lab-page',
+    body: `${ribbon()}
+      <main>
+        <section class="lab-hero">
+          <div class="shell lab-hero-grid">
+            <div>
+              <a class="back-link" href="${publicBase}/">← Return to the live proof pilot</a>
+              <p class="kicker">FAMtastic Template Lab · research first</p>
+              <h1>A template should feel <em>hand built.</em><br>The system underneath should feel repeatable.</h1>
+              <p>These are not four one-page recolors. Each family has its own material world, typography composition, shape grammar, content rhythm, booking behavior, and rules for adapting to the next real business.</p>
+              <div class="lab-hero-actions">${button('#families', 'See the four families')}${button('#foundation', 'See what every client gets', true)}</div>
+            </div>
+            <aside class="lab-manifesto">
+              <span>THE RULE</span>
+              <strong>Own the front door.<br>Connect what works.<br>Add what earns.</strong>
+              <p>Booksy or another platform can remain the booking engine on day one. FAMtastic gives the business an owned brand, a complete web foundation, and a visible path toward more control.</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="lab-system-strip"><div class="shell"><div><b>Research</b><span>real specialty, market, client questions, neighborhood, and owner goals</span></div><div><b>Compose</b><span>type, shape, message, texture, imagery, and native business motifs</span></div><div><b>Build</b><span>real HTML, real forms, real links, real accessibility, and phone behavior</span></div><div><b>Grow</b><span>measure what helps, then offer the next useful capability</span></div></div></section>
+
+        <section class="lab-families" id="families"><div class="shell"><header class="lab-section-head"><p class="kicker">Four visual engines</p><h2>Not color palettes.<br><em>Business-native worlds.</em></h2><p>The generated artwork supplies atmosphere and material depth. Native HTML and CSS still own every readable word, button, price, form, map, and operating state.</p></header>${families}</div></section>
+
+        <section class="lab-foundation" id="foundation"><div class="shell"><header class="lab-section-head"><p class="kicker">The $199 foundation · proposed Booked & Branded scope</p><h2>Booking is the value add.<br><em>The website basics do not disappear.</em></h2><p>The starter must already feel like a serious business website. The booking path, payment QR, and phone workflow make it more useful; they do not replace identity, contact, location, services, content, or trust.</p></header><div class="lab-foundation-grid">${foundationCards}</div></div></section>
+
+        <section class="lab-platform-bridge"><div class="shell lab-bridge-grid"><div><p class="kicker">Meet owners where they are</p><h2>Do not demand a breakup before the first date.</h2><p>The branded site can send clients into the owner’s current Booksy or other provider account while the owner keeps the calendar and client workflow they know. The website immediately improves the story around that booking link.</p><ol><li><b>Now</b><span>Branded home + current booking link + domain + forwarding address + contact + map + services + gallery + QR.</span></li><li><b>Next</b><span>Watch real questions, clicks, and appointment behavior. Improve copy, services, follow-up, and proof.</span></li><li><b>Later</b><span>Move into deeper scheduling, reminders, CRM, analytics, local SEO, or automation only when it creates value.</span></li></ol></div><div class="lab-owner-phone" aria-label="Static phone owner dashboard concept"><div class="lab-phone-top"><span>9:41</span><span>FAMtastic Desk</span><span>•••</span></div><small>Good morning, Jordan</small><h3>Your business, from your phone.</h3><div class="lab-phone-metric"><b>4</b><span>booking taps this week</span></div><div class="lab-phone-row"><span>New contact</span><strong>2</strong></div><div class="lab-phone-row"><span>Review to approve</span><strong>1</strong></div><div class="lab-phone-row"><span>Top service</span><strong>Signature Cut</strong></div><div class="lab-phone-actions"><span>Update hours</span><span>Edit services</span><span>View requests</span><span>Share QR</span></div><p>Demonstration only · No real account or activity</p></div></div></section>
+
+        <section class="lab-growth"><div class="shell lab-growth-grid"><div><p class="kicker">The customer-growth engine</p><h2>Give first.<br>Prove value.<br><em>Earn the upgrade.</em></h2><p>The starter is intentionally affordable and useful. Each upgrade answers a real signal from the business instead of creating anxiety on day one.</p></div><ol>${upgrades}</ol></div></section>
+
+        <section class="lab-shay"><div class="shell lab-shay-grid"><div><span class="shay-orb package-orb">S</span><p class="kicker">The FAMtastic business face</p><h2>Shay explains the value without overselling the machinery.</h2><p>Shay is FAMtastic Designs’ AI Business Concierge. She helps the owner compare proofs, understand what is included, collect setup choices, and see the next useful step. Fritz and the FAMtastic team retain authority for price, scope, approval, payment, and launch.</p></div><aside><small>Future motion layer</small><strong>HyperFrames can animate the approved motif—not invent the business.</strong><p>A short texture loop, reveal, or social explainer can become a later campaign asset. Reduced-motion-safe static design remains the default, and motion never changes pricing or publishes itself.</p></aside></div></section>
+
+        <section class="lab-final"><div class="shell"><p class="kicker">No work thrown away</p><h2>The four current proofs become the first training examples for a reusable niche system.</h2><div>${button(`${publicBase}/`, 'Return to the four proof stories')}${button(`${publicBase}/package/`, 'Review the complete package', true)}</div></div></section>
       </main>`
   });
 }
@@ -408,6 +487,7 @@ for (const generated of ['emails', 'rooms', 'proofs', 'package']) {
 
 await write('index.html', pilotIndex());
 await write('package/index.html', packagePage());
+await write('template-lab/index.html', templateLabPage());
 
 for (const business of data.businesses) {
   await write(`emails/${business.slug}/index.html`, emailPage(business));
@@ -455,6 +535,9 @@ for (const absolute of artifactPaths) {
 const generatedReceipt = existsSync(generationReceiptPath)
   ? JSON.parse(await readFile(generationReceiptPath, 'utf8'))
   : null;
+const materialReceipt = existsSync(materialReceiptPath)
+  ? JSON.parse(await readFile(materialReceiptPath, 'utf8'))
+  : null;
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' }).trim();
 const createdAt = new Date().toISOString();
 const localStage = (stage_id, capability, outputs = []) => ({
@@ -482,7 +565,7 @@ const buildDna = {
   },
   recipe: {
     routine: 'website_proof.generate.v1',
-    version: 'booked-branded.v4',
+    version: 'booked-branded.v5',
     build_class: 'medium',
     offer_status: creative.offer.status,
     public_base: canonicalBase,
@@ -511,6 +594,16 @@ const buildDna = {
     localStage('type-direction', 'typographic-composition-system', Object.keys(creative.archetypes)),
     localStage('message-direction', 'proof-message-system', Object.keys(creative.archetypes)),
     {
+      stage_id: 'template-material-studies', capability: 'reference-led-material-system-generation', attempt: 1,
+      execution: {
+        provider: { id: materialReceipt?.provider || 'openai-imagegen-builtin' },
+        model: { status: materialReceipt?.model_status || 'provider_did_not_report' },
+        timing: { status: materialReceipt ? 'reported' : 'not_started', completed_at: materialReceipt?.completed_at },
+        cost: { status: materialReceipt?.cost_status || 'provider_did_not_report' }
+      },
+      result: { status: materialReceipt ? 'completed' : 'planned', selected_image_count: materialReceipt?.artifacts?.length || 0, outputs: materialReceipt?.artifacts?.map(item => item.path) || [] }
+    },
+    {
       stage_id: 'gemini-reference-images',
       capability: 'reference-led-image-generation',
       attempt: 1,
@@ -522,7 +615,7 @@ const buildDna = {
       },
       result: { status: generatedReceipt ? 'completed' : 'planned', provider_generation_count: generatedReceipt?.provider_generation_count || 0, selected_image_count: generatedReceipt?.image_count || 0, outputs: generatedReceipt?.artifacts.map(item => item.filename) || [] }
     },
-    localStage('static-construction', 'static-proof-construction', ['index.html', 'package/index.html', '4 emails', '4 rooms', '12 proof pages']),
+    localStage('static-construction', 'static-proof-construction', ['index.html', 'package/index.html', 'template-lab/index.html', '4 emails', '4 rooms', '12 proof pages']),
     {
       stage_id: 'browser-qa', capability: 'responsive-browser-qa', attempt: 1,
       execution: { provider: { id: 'playwright-local' }, model: { status: 'not_applicable' }, timing: { status: 'pending' }, cost: { status: 'not_applicable', amount_usd: 0 } },

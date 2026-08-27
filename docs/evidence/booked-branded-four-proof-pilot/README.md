@@ -11,6 +11,19 @@ Date: 2026-08-27
 - Twelve distinct reference-led Gemini images, one per proof direction.
 - One complete package-proposal page and one reusable shape/type/message/image
   creative-system contract.
+- One additive Template Lab with four research-led visual families: Crown &
+  Craft, Coil & Clay, Palmera Press, and Saltline Prism. Each includes its own
+  material, motif, typography, shape, and adaptation rules rather than a
+  recolored page shell.
+- Four reference-led material studies created with the built-in image
+  generation tool. Provider model and cost were not reported; no paid Gemini,
+  OpenArt, HeyGen, HyperFrames, or other provider job was called for this set.
+- A complete proposed starter website foundation: domain, one branded
+  forwarding address into the owner's existing inbox, protected contact form,
+  call/text/social links, location/service area/hours/map when needed,
+  services/prices/preparation/policies, gallery, booking path, owner QR,
+  hosting, SSL, accessibility, responsive behavior, performance, and launch
+  checks.
 - One starter-first value ladder: proposed $199 launch, one included starter
   booking path, normal $9.99 monthly hosting beginning in month 13, existing
   optional $149 Appointment Scheduling setup, and later growth choices.
@@ -62,10 +75,11 @@ contract, and final artifact hashes are recorded under
 
 ## Local acceptance
 
-- Static routes tested: 22.
-- Viewport checks: 44 (1440px and 390px).
-- Copy-contract checks: 21, including the owner-QR/no-processing boundary.
-- Retained screenshots: 14.
+- Static routes tested: 23.
+- Viewport checks: 46 (1440px and 390px).
+- Copy-contract checks: 22, including the complete-site foundation,
+  current-provider bridge, owner-QR/no-processing boundary, and Shay role.
+- Retained screenshots: 16, including full Template Lab desktop and mobile.
 - Broken images: 0.
 - Horizontal-overflow failures: 0.
 - Browser console/page errors: 0.
@@ -84,10 +98,18 @@ isolated deployment. The two local evidence hashes were:
 
 ## Review state
 
-Primary visual review passed across the overview, package page, all four rooms,
-all four operator-first mobile pages, the representative Shay email, the
-complete three-direction desktop set, and all 12 source images. Independent
-review is deliberately reserved for the owner.
+Primary visual review passed across the overview, package page, Template Lab at
+desktop and mobile, all four rooms, all four operator-first mobile pages, the
+representative Shay email, the complete three-direction desktop set, all 12
+source images, and all four generated material fields. Independent review is
+deliberately reserved for the owner.
+
+## Template Lab release state
+
+The Template Lab and four material systems are locally complete and tested but
+are not included in the production acceptance record below. They do not replace
+or invalidate the already-published proof rooms. Production deployment remains
+a separate explicit action.
 
 ## Production acceptance
 

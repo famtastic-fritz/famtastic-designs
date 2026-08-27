@@ -1,5 +1,32 @@
 # Product changelog
 
+## 2026-08-27 — Booked & Branded reusable Template Lab
+
+- Added four materially different, research-led template families around the
+  existing fictional proof businesses: Crown & Craft, Coil & Clay, Palmera
+  Press, and Saltline Prism. Each records its own texture, motif, typography,
+  shape, and adaptation rules; the current proof rooms remain intact.
+- Created four reference-led material fields with the built-in image generation
+  tool and retained a no-customer-data receipt with provider/model/cost truth.
+  Native HTML and CSS continue to own all readable text, pricing, controls,
+  forms, maps, accessibility, and responsive layout.
+- Restored the complete website foundation to the proposed $199 Booked &
+  Branded scope: domain, one branded forwarding address into the existing
+  inbox, protected contact form, call/text/social, location and map when
+  needed, services, prices, preparation, policies, gallery, booking, owner QR,
+  hosting, SSL, responsive/accessibility/performance checks, and launch QA.
+- Positioned Booksy and other existing booking providers as valid day-one
+  bridges behind the owned branded front door. Deeper scheduling, hosted
+  mailbox/sending-as, reminders, SEO, analytics, maintenance, automation, and
+  AI help remain evidence-led upgrades rather than surprise requirements.
+- Added a vendor-neutral Site Studio translation contract for identity,
+  forwarding alias, contact form, location modes, foundation modules, booking,
+  owner QR, upgrade tiers, media authority, and optional HyperFrames motion.
+- Local acceptance passed 23 routes at 1440px and 390px, 22 copy contracts, 46
+  viewport checks, and 16 retained screenshots. The Template Lab is local-only;
+  no production deploy, email, booking account, payment, or customer record was
+  created by this revision.
+
 ## 2026-08-27 — Booked & Branded owner-QR payment boundary
 
 - Removed payment processing from the Booked & Branded offer. The starter now

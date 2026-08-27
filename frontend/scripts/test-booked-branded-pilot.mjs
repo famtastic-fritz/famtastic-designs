@@ -17,6 +17,7 @@ await mkdir(screenshotDir, { recursive: true });
 
 const routes = ['/'];
 routes.push('/package/');
+routes.push('/template-lab/');
 for (const business of data.businesses) {
   routes.push(`/emails/${business.slug}/`, `/rooms/${business.slug}/`);
   for (const direction of business.directions) routes.push(`/proofs/${business.slug}/${direction.id}/`);
@@ -39,6 +40,7 @@ async function inspectCopy(relativePath, requiredPhrases = []) {
 }
 
 await inspectCopy('package/index.html', ['Start cheap. Upgrade from evidence.', '$9.99/month from month 13', '$149 one time', 'Use the booking tool that fits the owner now.', 'Your QR. Your account. Your money.', 'FAMtastic does not process, receive, settle, or reconcile the payment.']);
+await inspectCopy('template-lab/index.html', ['The system underneath should feel repeatable.', 'The website basics do not disappear.', 'One branded forwarding address', 'Booksy or another current provider', 'FAMtastic does not process or receive the payment.', 'Shay is FAMtastic Designs’ AI Business Concierge.']);
 for (const business of data.businesses) {
   await inspectCopy(`emails/${business.slug}/index.html`, ['Normal hosting is $9.99 a month', 'optional upgrades—not surprise requirements', 'Payment-processing and optional messaging costs are paid directly by the business']);
   await inspectCopy(`rooms/${business.slug}/index.html`, ['Start useful for $199', 'Grow when it pays', 'business’s own approved payment QR']);
@@ -58,15 +60,13 @@ async function inspectRoute(route, viewport) {
   page.on('pageerror', error => consoleErrors.push(error.message));
   const response = await page.goto(base + route, { waitUntil: 'networkidle' });
   await page.evaluate(async () => {
-    const distance = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-    for (let y = 0; y < distance; y += Math.max(300, window.innerHeight * .75)) {
-      window.scrollTo(0, y);
-      await new Promise(resolve => setTimeout(resolve, 35));
+    for (const image of document.images) {
+      image.scrollIntoView({ block: 'center' });
+      await new Promise(resolve => setTimeout(resolve, 45));
     }
-    window.scrollTo(0, distance);
-    await new Promise(resolve => setTimeout(resolve, 200));
     window.scrollTo(0, 0);
   });
+  await page.waitForFunction(() => [...document.images].every(image => image.complete), null, { timeout: 10000 }).catch(() => {});
   await page.waitForTimeout(100);
   const status = response?.status() || 0;
   const metrics = await page.evaluate(() => ({
@@ -103,6 +103,15 @@ try {
   await packagePage.screenshot({ path: join(screenshotDir, 'booked-branded-package-desktop.png'), fullPage: true });
   await packagePage.close();
 
+  const labDesktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  await labDesktop.goto(base + '/template-lab/', { waitUntil: 'networkidle' });
+  await labDesktop.screenshot({ path: join(screenshotDir, 'template-lab-desktop.png'), fullPage: true });
+  await labDesktop.close();
+  const labMobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await labMobile.goto(base + '/template-lab/', { waitUntil: 'networkidle' });
+  await labMobile.screenshot({ path: join(screenshotDir, 'template-lab-mobile.png'), fullPage: true });
+  await labMobile.close();
+
   for (const business of data.businesses) {
     const room = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
     await room.goto(`${base}/rooms/${business.slug}/`, { waitUntil: 'networkidle' });
@@ -137,7 +146,7 @@ const report = {
   base_url: base,
   routes_tested: routes.length,
   viewport_checks: routeEvidence.length,
-  screenshots: 14,
+  screenshots: 16,
   copy_checks: copyEvidence.length,
   errors,
   passed: errors.length === 0,
@@ -161,7 +170,7 @@ browserStage.result = {
   status: 'completed',
   routes_tested: routes.length,
   viewport_checks: routeEvidence.length,
-  screenshots: 14,
+  screenshots: 16,
   copy_checks: copyEvidence.length,
   evidence_ref: 'docs/evidence/booked-branded-four-proof-pilot/qa-report.json'
 };
@@ -171,7 +180,7 @@ visualStage.execution.timing = primaryReviewPassed ? { status: 'reported', compl
 visualStage.result = primaryReviewPassed
   ? {
       status: 'completed',
-      notes: 'The overview, package, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. Direction A is editorial, B is a high-signal campaign, and C is operator-first; all twelve reference-led images are distinct and no text collision, broken image, or fictional-to-real ambiguity was observed.',
+      notes: 'The overview, package, Template Lab at desktop and mobile, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. Direction A is editorial, B is a high-signal campaign, and C is operator-first; all twelve reference-led images and all four material systems are distinct and no text collision, broken image, or fictional-to-real ambiguity was observed.',
       independent_review: 'reserved_for_owner'
     }
   : { status: 'pending', independent_review: 'reserved_for_owner' };
@@ -184,5 +193,5 @@ buildDna.artifacts.push({
 });
 await writeFile(buildDnaPath, JSON.stringify(buildDna, null, 2) + '\n');
 
-console.log(`PASS: ${routes.length} routes at desktop and 390px; 14 screenshots captured.`);
+console.log(`PASS: ${routes.length} routes at desktop and 390px; 16 screenshots captured.`);
 console.log(`Evidence: ${reportPath}`);
