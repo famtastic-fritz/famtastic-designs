@@ -402,6 +402,7 @@ find "$source_module" -type f -name '*.php' -print0 |
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 module_backup="$HOME/backups/famtastic-pipeline-$timestamp-$commit_sha.tgz"
 admin_theme_backup="$HOME/backups/famtastic-admin-$timestamp-$commit_sha.tgz"
+customer_theme_backup="$HOME/backups/famtastic-customer-$timestamp-$commit_sha.tgz"
 services_backup="$HOME/backups/famtastic-services-$timestamp-$commit_sha.yml"
 commercial_config_backup="$HOME/backups/famtastic-commercial-config-$timestamp-$commit_sha.tgz"
 commercial_config_backup_stage="$deploy_dir/tmp/commercial-config-$timestamp"
@@ -421,7 +422,7 @@ previous_services="$production_dir/web/sites/default/.services-previous-$timesta
 
 tar -C "$(dirname "$production_module")" -czf "$module_backup" "$(basename "$production_module")"
 tar -C "$(dirname "$production_admin_theme")" -czf "$admin_theme_backup" "$(basename "$production_admin_theme")"
-tar -C "$(dirname "$production_customer_theme")" -czf "${customer_theme_backup:-$HOME/backups/famtastic-customer-$timestamp-$commit_sha.tgz}" "$(basename "$production_customer_theme")" 2>/dev/null || true
+tar -C "$(dirname "$production_customer_theme")" -czf "$customer_theme_backup" "$(basename "$production_customer_theme")" 2>/dev/null || true
 tar -C "$production_dir" -czf "$dependency_backup" vendor web/core web/modules/contrib composer.json composer.lock
 cp -p "$production_services" "$services_backup"
 mkdir -p "$production_config_dir"
@@ -631,6 +632,7 @@ fi
   printf 'php=%s\n' "$(php -r 'echo PHP_VERSION;')"
   printf 'module_backup=%s\n' "$module_backup"
   printf 'admin_theme_backup=%s\n' "$admin_theme_backup"
+  printf 'customer_theme_backup=%s\n' "$customer_theme_backup"
   printf 'services_backup=%s\n' "$services_backup"
   printf 'database_backup=%s\n' "$database_backup"
   printf 'dependency_backup=%s\n' "$dependency_backup"
