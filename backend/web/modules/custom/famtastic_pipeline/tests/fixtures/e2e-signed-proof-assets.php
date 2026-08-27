@@ -88,7 +88,7 @@ $variants = static function (bool $withAssets, string $suffix) use ($asset, $png
   return $result;
 };
 
-$recordDna = static function (string $buildId, Prospect $prospect, object $campaign, ?string $sourceLane) use ($entities, $telemetry): array {
+$recordDna = static function (string $buildId, Prospect $prospect, object $campaign) use ($entities, $telemetry): array {
   $variantIds = $entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
     ->condition('campaign_id', (int) $campaign->id())->sort('direction_id')->execute();
   $variants = $entities->getStorage('proof_variant')->loadMultiple($variantIds);
@@ -119,9 +119,6 @@ $recordDna = static function (string $buildId, Prospect $prospect, object $campa
     'started_at' => gmdate(DATE_ATOM),
     'completed_at' => gmdate(DATE_ATOM),
   ];
-  if ($sourceLane !== NULL) {
-    $run['source_lane'] = $sourceLane;
-  }
   $dna = [
     'schema' => 'famtastic.build-dna.v1',
     'build_id' => $buildId,
@@ -148,7 +145,7 @@ $recordDna = static function (string $buildId, Prospect $prospect, object $campa
   return ['id' => $buildId, 'hash' => (string) $row['artifact_checksum']];
 };
 
-$create = static function (string $label, bool $withAssets, ?string $sourceLane) use ($run, $entities, $proofs, $previews, $variants, $recordDna): array {
+$create = static function (string $label, bool $withAssets) use ($run, $entities, $proofs, $previews, $variants, $recordDna): array {
   /** @var Prospect $prospect */
   $prospect = $entities->getStorage('famtastic_prospect')->create([
     'business_name' => 'Signed Asset ' . $label . ' ' . $run,
@@ -182,26 +179,58 @@ $create = static function (string $label, bool $withAssets, ?string $sourceLane)
   }
 
   $proofs->acceptCallback('good-assets-' . $label . '-' . $run, (string) $campaign->get('campaign_id')->value, $job, $variants($withAssets, $label));
-  $build = $recordDna('signed-assets-' . $label . '-' . $run, $prospect, $campaign, $sourceLane);
+  $build = $recordDna('signed-assets-' . $label . '-' . $run, $prospect, $campaign);
   return compact('prospect', 'delivery', 'campaign', 'build', 'job');
 };
 
-$rich = $create('cold', TRUE, 'verified_cold');
-// The quality lane fails closed when any direction lacks frozen visual proof.
-$coldEmpty = $create('cold-empty', FALSE, 'verified_cold');
-$coldEmptyRejected = FALSE;
-try {
-  $previews->stage((int) $coldEmpty['delivery']['id'], (int) $coldEmpty['campaign']->id(), $coldEmpty['build']['id'], $coldEmpty['build']['hash']);
-}
-catch (RuntimeException) {
-  $coldEmptyRejected = TRUE;
-}
-if (!$coldEmptyRejected) {
-  throw new RuntimeException('Verified cold staging accepted an assetless proof set.');
-}
+$invalidVerifiedColdBase = [
+  'schema' => 'famtastic.build-dna.v1',
+  'build_id' => 'signed-assets-invalid-cold-' . $run,
+  'created_at' => gmdate(DATE_ATOM),
+  'repository' => ['revision' => str_repeat('a', 40)],
+  'recipe' => ['routine' => 'website_proof.generate.v1'],
+  'stages' => [[
+    'stage_id' => 'fixture-provider',
+    'execution' => ['provider' => ['id' => 'fixture-provider'], 'model' => ['id' => 'fixture-model']],
+    'result' => ['status' => 'passed'],
+  ]],
+  'artifacts' => [],
+];
+// This signed-reader fixture uses the local/public-preview promotion lane, not
+// verified cold. Keep the verified-cold boundary covered here as negative
+// input: no caller can label a local fixture as a commercial run without the
+// ingress-frozen runtime tuple and a/b/c signed asset ledger.
+$assertThrows(static function () use ($telemetry, $invalidVerifiedColdBase): void {
+  $dna = $invalidVerifiedColdBase;
+  $dna['run'] = [
+    'source_lane' => 'verified_cold',
+    'campaign_id' => 'pc-signed-assets-invalid-runtime',
+    'prospect_id' => 1,
+    'proof_campaign_id' => 1,
+    'started_at' => gmdate(DATE_ATOM),
+  ];
+  $telemetry->recordBuildDna($dna);
+}, 'verified-cold runtime identity');
+$assertThrows(static function () use ($telemetry, $invalidVerifiedColdBase, $run): void {
+  $dna = $invalidVerifiedColdBase;
+  $dna['build_id'] .= '-assets';
+  $dna['run'] = [
+    'source_lane' => 'verified_cold',
+    'campaign_id' => 'pc-signed-assets-invalid-assets-' . $run,
+    'prospect_id' => 1,
+    'proof_campaign_id' => 1,
+    'public_preview_delivery_id' => 1,
+    'job_id' => 'cold-preview-fixture-' . $run,
+    'callback_event_id' => 'cold-proof-callback-fixture-' . $run,
+    'started_at' => gmdate(DATE_ATOM),
+  ];
+  $telemetry->recordBuildDna($dna);
+}, 'verified-cold signed asset ledger');
+
+$rich = $create('rich', TRUE);
 
 // Existing assetless rooms must remain readable until explicitly regenerated.
-$legacy = $create('legacy', FALSE, NULL);
+$legacy = $create('legacy', FALSE);
 
 $states = ['rich' => $rich, 'legacy' => $legacy];
 foreach ($states as $key => $state) {
