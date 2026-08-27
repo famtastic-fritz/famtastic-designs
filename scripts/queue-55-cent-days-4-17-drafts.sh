@@ -201,6 +201,7 @@ try:
                                  "Authorization: " + os.environ["POSTIZ_KEY"], "-H",
                                  "Content-Type: application/json", "-d", json.dumps(body),
                                  base_url + "/posts"], capture_output=True, text=True)
+        time.sleep(2)  # Rate limit: avoid HTTP 429 from Postiz
         try:
             created = json.loads(create.stdout)
         except Exception:

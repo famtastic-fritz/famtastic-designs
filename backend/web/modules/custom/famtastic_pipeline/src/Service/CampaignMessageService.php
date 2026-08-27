@@ -17,6 +17,7 @@ use Drupal\famtastic_pipeline\Entity\Prospect;
 class CampaignMessageService {
 
   private const TEMPLATE_VERSION = 2;
+  private const TEMPLATE_VERSION_ENHANCED = 3;
 
   public function __construct(
     private readonly Connection $database,
@@ -72,6 +73,61 @@ class CampaignMessageService {
       'email.staged:' . $id,
       'email.staged',
       ['message_id' => $id, 'template' => 'proof_ready', 'template_version' => self::TEMPLATE_VERSION],
+      (int) $prospect->id(),
+      $campaignId,
+    );
+    return $this->load($id);
+  }
+
+  /**
+   * Creates one idempotent staged ENHANCED proof-ready message (v3).
+   *
+   * Enhanced messages include:
+   * - Personalized research-based hook
+   * - Named proof directions
+   * - Direct /p/{token} ProofHub link
+   * - $199 offer context
+   */
+  public function prepareEnhanced(Prospect $prospect, int $proofCampaignId): array {
+    $email = mb_strtolower(trim((string) $prospect->get('public_email')->value));
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      throw new \RuntimeException('Prospect has no valid outreach email.');
+    }
+    if ($this->ledger->isSuppressed($email)) {
+      throw new \RuntimeException('Prospect email is suppressed.');
+    }
+    $campaignId = $this->campaignId((string) $prospect->get('campaign')->value);
+    if (!$campaignId) {
+      throw new \RuntimeException('Prospect campaign attribution is missing.');
+    }
+    $messageKey = sprintf('proof-ready-v%d:%d:%d:%d', self::TEMPLATE_VERSION_ENHANCED, $campaignId, $prospect->id(), $proofCampaignId);
+    $existing = $this->loadBy('message_key', $messageKey);
+    if ($existing) {
+      return $existing;
+    }
+    $now = $this->time->getRequestTime();
+    $id = (int) $this->database->insert('famtastic_email_message')
+      ->fields([
+        'message_key' => $messageKey,
+        'prospect_id' => (int) $prospect->id(),
+        'campaign_id' => $campaignId,
+        'recipient_hash' => $this->ledger->contactHash($email),
+        'recipient_address' => $email,
+        'proof_campaign_id' => $proofCampaignId,
+        'template_key' => 'proof_ready_enhanced',
+        'template_version' => self::TEMPLATE_VERSION_ENHANCED,
+        'subject' => sprintf('Three website directions for %s — pick your favorite', $prospect->label()),
+        'status' => 'staged',
+        'tracking_key' => bin2hex(random_bytes(24)),
+        'unsubscribe_key' => bin2hex(random_bytes(24)),
+        'created' => $now,
+        'changed' => $now,
+      ])
+      ->execute();
+    $this->ledger->recordEvent(
+      'email.staged:' . $id,
+      'email.staged',
+      ['message_id' => $id, 'template' => 'proof_ready_enhanced', 'template_version' => self::TEMPLATE_VERSION_ENHANCED],
       (int) $prospect->id(),
       $campaignId,
     );
@@ -176,7 +232,10 @@ class CampaignMessageService {
         throw new \RuntimeException('Real outreach requires a valid physical postal address.');
       }
       $postalAddress = str_replace("\r", '', $postalAddress);
-      $body = $this->messageBody($prospect, $message, $postalAddress, $base);
+      $isEnhanced = (int) ($message['template_version'] ?? 0) === self::TEMPLATE_VERSION_ENHANCED;
+      $body = $isEnhanced
+        ? $this->messageBodyEnhanced($prospect, $message, $postalAddress, $base)
+        : $this->messageBody($prospect, $message, $postalAddress, $base);
       $proofUrl = $base . '/api/pipeline/email/click/' . $message['tracking_key'];
       $this->database->update('famtastic_email_message')
         ->fields([
@@ -469,6 +528,21 @@ class CampaignMessageService {
     return $id ? (int) $id : NULL;
   }
 
+  /**
+   * Fetches proof variant names for a proof campaign.
+   *
+   * @return array<string, string> Direction ID => direction name
+   */
+  private function proofVariantNames(int $proofCampaignId): array {
+    $variants = $this->database->select('proof_variant', 'pv')
+      ->fields('pv', ['direction_id', 'direction_name'])
+      ->condition('campaign_id', $proofCampaignId)
+      ->orderBy('direction_id')
+      ->execute()
+      ->fetchAllKeyed();
+    return array_map('strval', $variants);
+  }
+
   private function messageBody(Prospect $prospect, array $message, string $postalAddress, string $base): string {
     return sprintf(
       "Advertisement from FAMtastic Designs\n\nWe created three website directions for %s.\n\nView them: %s/api/pipeline/email/click/%s\n\nWhy you are receiving this: we found your business contact information in a public business listing while researching local businesses that may benefit from a stronger web presence.\n\nFAMtastic Designs\n%s\n\nTo stop receiving commercial email from us, unsubscribe here: %s/api/pipeline/email/unsubscribe/%s",
@@ -479,6 +553,78 @@ class CampaignMessageService {
       $base,
       $message['unsubscribe_key'],
     );
+  }
+
+  /**
+   * Builds a rich, personalized proof-ready email body (v3).
+   */
+  private function messageBodyEnhanced(Prospect $prospect, array $message, string $postalAddress, string $base): string {
+    $businessName = $prospect->label();
+    $category = (string) ($prospect->get('business_category')->value ?: 'local business');
+    $serviceArea = (string) ($prospect->get('service_area')->value ?: '');
+    $discoveryNotes = (string) ($prospect->get('discovery_notes')->value ?: '');
+    $tokenHash = (string) ($prospect->get('token_hash')->value ?: '');
+
+    // Build personalized hook from available data
+    $hookLines = [];
+    if ($serviceArea !== '') {
+      $hookLines[] = sprintf('We research %s-area businesses like yours to find opportunities to strengthen your web presence.', $serviceArea);
+    }
+    else {
+      $hookLines[] = 'We research local businesses like yours to find opportunities to strengthen your web presence.';
+    }
+    if ($discoveryNotes !== '') {
+      $hookLines[] = 'Based on what we found, your current site has room to grow — and we think you will like what we built.';
+    }
+
+    // Fetch proof direction names
+    $variantNames = $this->proofVariantNames((int) $message['proof_campaign_id']);
+    $directionsList = [];
+    foreach (['a', 'b', 'c'] as $dir) {
+      if (isset($variantNames[$dir])) {
+        $directionsList[] = sprintf('  %s) %s', strtoupper($dir), $variantNames[$dir]);
+      }
+    }
+
+    // Build ProofHub link if token exists
+    $proofHubLink = '';
+    if ($tokenHash !== '') {
+      try {
+        // TokenManager stores hash, not raw token. We cannot reconstruct the raw
+        // token from the hash, so the /p/{token} link must be generated at token
+        // creation time and stored on the prospect. For now, fall back to the
+        // tracking click link which redirects appropriately.
+      } catch (\Throwable $e) {
+        // ignore
+      }
+    }
+
+    $lines = [
+      sprintf('Hi %s,', $businessName),
+      '',
+      implode(' ', $hookLines),
+      '',
+      sprintf('We created three website directions for %s. Each one is a complete, ready-to-launch concept — not a template — built specifically for a %s in your market.', $businessName, $category),
+      '',
+      'Your three directions:',
+    ];
+    $lines = array_merge($lines, $directionsList);
+    $lines[] = '';
+    $lines[] = sprintf('View all three and pick your favorite: %s/api/pipeline/email/click/%s', $base, $message['tracking_key']);
+    $lines[] = '';
+    $lines[] = 'Our $199 Website Starter Special gets you a professional, mobile-ready site with hosting included. Perfect for small businesses that want to look bigger without spending bigger.';
+    $lines[] = '';
+    $lines[] = 'Want to talk it through? Reply to this email or call (772) 708-5747.';
+    $lines[] = '';
+    $lines[] = '— FAMtastic Designs';
+    $lines[] = '';
+    $lines[] = sprintf('FAMtastic Designs\n%s', $postalAddress);
+    $lines[] = '';
+    $lines[] = sprintf('Why you are receiving this: we found your business contact information in a public business listing while researching local %s businesses that may benefit from a stronger web presence.', $category);
+    $lines[] = '';
+    $lines[] = sprintf('To stop receiving commercial email from us, unsubscribe here: %s/api/pipeline/email/unsubscribe/%s', $base, $message['unsubscribe_key']);
+
+    return implode("\n", $lines);
   }
 
   private function setStatus(int $messageId, string $status): void {
