@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Remote deploy arguments must survive SSH command serialization
+
+- Observation: `ssh host command arg...` is interpreted as a remote shell
+  command, not an argv-preserving transport. Empty optional pilot-confirmation
+  arguments disappeared, shifting later values and causing the remote deploy
+  script to stop before it could inspect a scheduler.
+- Guidance: encode every remote deploy argument into a nonempty shell-safe
+  token and decode it only inside the remote script. The deployment fixture
+  must emulate SSH's command flattening so it catches empty-argument regressions.
+  Operator help output must likewise treat backticks as plain prose, not shell
+  substitutions.
+
 ## 2026-08-27 — A cold callback cannot inherit the generic local importer
 
 - Observation: the generic local proof importer could call the normal callback

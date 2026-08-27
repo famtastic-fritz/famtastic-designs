@@ -5,6 +5,16 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — SSH is not an argv-preserving remote deployment transport
+
+- Observation: optional empty pilot-confirmation values vanished when OpenSSH
+  serialized the remote command, shifting later positional arguments and
+  stopping a read-only deploy preflight before it could inspect the remote
+  scheduler.
+- Guidance: encode every remote deploy value as a nonempty shell-safe token,
+  decode it inside the remote script, and make the local fixture mimic SSH's
+  flattening. Keep deploy help text free of command substitutions as well.
+
 ## 2026-08-27 — Verified-cold is a private importer lane, not a generic callback flavor
 
 - Observation: a generic local import can be structurally valid while still

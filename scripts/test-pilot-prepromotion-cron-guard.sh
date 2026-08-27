@@ -41,7 +41,9 @@ printf '%s\n' \
   'shift' \
   'test "$1" = "bash" && test "$2" = "-s" && test "$3" = "--"' \
   'shift 3' \
-  'HOME="$FAMTASTIC_FIXTURE_HOME" PATH="$FAMTASTIC_FIXTURE_BIN:$PATH" bash -s -- "$@"' > "$fixture_bin/ssh"
+  'remote_command="bash -s --"' \
+  'for argument in "$@"; do remote_command+=" $argument"; done' \
+  'HOME="$FAMTASTIC_FIXTURE_HOME" PATH="$FAMTASTIC_FIXTURE_BIN:$PATH" bash -c "$remote_command"' > "$fixture_bin/ssh"
 chmod +x "$fixture_bin/ssh"
 
 printf '%s\n' \

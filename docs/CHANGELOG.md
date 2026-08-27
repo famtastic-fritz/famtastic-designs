@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-08-27 — Pilot deploy preflight argument preservation (local acceptance only; not deployed)
+
+- The governed backend deployer now transports optional pilot confirmations as
+  nonempty, shell-safe tokens before it invokes the remote script. OpenSSH
+  flattens a remote command into shell text and otherwise drops blank
+  positional values, which can shift the required arguments and fail before
+  scheduler inspection. The local scheduler fixture now emulates that behavior.
+- The deployment help path is side-effect free: documentation text no longer
+  executes command substitutions when an operator asks for `--help`.
+
 ## 2026-08-27 — Verified-cold import and legacy-unsubscribe containment (local acceptance only; not deployed)
 
 - `famtastic:proof-local-import` now rejects an exact runtime-bound

@@ -211,24 +211,43 @@ fi
 remote_mode="preflight"
 [[ "$APPLY" == true ]] && remote_mode="apply"
 
+encode_remote_arg() {
+  # OpenSSH serializes its remote command as shell text, which drops empty
+  # positional arguments. Pilot confirmations are deliberately optional, so
+  # transmit every value as a nonempty base64 token instead.
+  if [[ -z "$1" ]]; then
+    # `_` cannot occur in standard base64 output and stays a shell-safe token.
+    printf '_'
+    return
+  fi
+  printf '%s' "$1" | base64 | tr -d '\n'
+}
+
 ssh -T "$SSH_TARGET" bash -s -- \
-  "$remote_mode" "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" "$PILOT_EXACT_DISPATCH_ONLY" "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON" "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON_CONFIRM" "$PILOT_SUSPEND_MARKED_DRUPAL_CRON" "$PILOT_SUSPEND_MARKED_DRUPAL_CRON_CONFIRM" "$PILOT_SUSPEND_MARKED_JOBS_RUN_CRON" "$PILOT_SUSPEND_MARKED_JOBS_RUN_CRON_CONFIRM" "$PILOT_LEGACY_QUARANTINE_CAMPAIGN" "$PILOT_LEGACY_QUARANTINE_CONFIRM" <<'REMOTE'
+  "$(encode_remote_arg "$remote_mode")" "$(encode_remote_arg "$REMOTE_ROOT")" "$(encode_remote_arg "$REMOTE_DEPLOY_BASE")" "$(encode_remote_arg "$REPOSITORY_URL")" "$(encode_remote_arg "$COMMIT_SHA")" "$(encode_remote_arg "$PILOT_EXACT_DISPATCH_ONLY")" "$(encode_remote_arg "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON")" "$(encode_remote_arg "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON_CONFIRM")" "$(encode_remote_arg "$PILOT_SUSPEND_MARKED_DRUPAL_CRON")" "$(encode_remote_arg "$PILOT_SUSPEND_MARKED_DRUPAL_CRON_CONFIRM")" "$(encode_remote_arg "$PILOT_SUSPEND_MARKED_JOBS_RUN_CRON")" "$(encode_remote_arg "$PILOT_SUSPEND_MARKED_JOBS_RUN_CRON_CONFIRM")" "$(encode_remote_arg "$PILOT_LEGACY_QUARANTINE_CAMPAIGN")" "$(encode_remote_arg "$PILOT_LEGACY_QUARANTINE_CONFIRM")" <<'REMOTE'
 set -euo pipefail
 
-mode="$1"
-remote_root="$2"
-deploy_base="$3"
-repository_url="$4"
-commit_sha="$5"
-pilot_exact_dispatch_only="$6"
-pilot_suspend_marked_lifecycle_cron="$7"
-pilot_suspend_marked_lifecycle_cron_confirm="$8"
-pilot_suspend_marked_drupal_cron="$9"
-pilot_suspend_marked_drupal_cron_confirm="${10}"
-pilot_suspend_marked_jobs_run_cron="${11}"
-pilot_suspend_marked_jobs_run_cron_confirm="${12}"
-pilot_legacy_quarantine_campaign="${13}"
-pilot_legacy_quarantine_confirm="${14}"
+decode_remote_arg() {
+  if [[ "$1" == "_" ]]; then
+    return
+  fi
+  printf '%s' "$1" | base64 -d
+}
+
+mode="$(decode_remote_arg "$1")"
+remote_root="$(decode_remote_arg "$2")"
+deploy_base="$(decode_remote_arg "$3")"
+repository_url="$(decode_remote_arg "$4")"
+commit_sha="$(decode_remote_arg "$5")"
+pilot_exact_dispatch_only="$(decode_remote_arg "$6")"
+pilot_suspend_marked_lifecycle_cron="$(decode_remote_arg "$7")"
+pilot_suspend_marked_lifecycle_cron_confirm="$(decode_remote_arg "$8")"
+pilot_suspend_marked_drupal_cron="$(decode_remote_arg "$9")"
+pilot_suspend_marked_drupal_cron_confirm="$(decode_remote_arg "${10}")"
+pilot_suspend_marked_jobs_run_cron="$(decode_remote_arg "${11}")"
+pilot_suspend_marked_jobs_run_cron_confirm="$(decode_remote_arg "${12}")"
+pilot_legacy_quarantine_campaign="$(decode_remote_arg "${13}")"
+pilot_legacy_quarantine_confirm="$(decode_remote_arg "${14}")"
 production_dir="$HOME/$remote_root"
 deploy_dir="$HOME/$deploy_base"
 mirror_dir="$deploy_dir/repository.git"
