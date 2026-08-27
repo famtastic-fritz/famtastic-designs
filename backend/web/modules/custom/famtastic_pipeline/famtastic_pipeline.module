@@ -43,6 +43,11 @@ function famtastic_pipeline_page_attachments(array &$attachments): void {
 function famtastic_pipeline_user_insert(UserInterface $account): void {
   try {
     $portal = \Drupal::service('famtastic_pipeline.customer_portal');
+    // A validated public-preview continuation is established by the branded
+    // registration controller before User::save(). Keep this hook from
+    // mistaking its inherited prospect discovery notes for a submitted
+    // customer request before that customer proves control of the email.
+    $isPublicPreviewRegistration = $portal->hasPendingPublicPreviewRegistration((string) $account->getEmail());
     $customer = $portal->customerForUid((int) $account->id());
     if (!$customer) {
       $customer = $portal->createCustomer($account, [
@@ -56,8 +61,10 @@ function famtastic_pipeline_user_insert(UserInterface $account): void {
     if ($customerRole && !$account->hasRole('famtastic_customer')) {
       $account->addRole('famtastic_customer')->save();
     }
-    // Auto-create website request from prospect discovery data when available.
-    if (!empty($customer['prospect_id']) && !empty($customer['id'])) {
+    // Preserve the historical convenience for ordinary registrations only.
+    // Public-preview claims happen after email verification and the customer
+    // then explicitly creates their detailed portal request.
+    if (!$isPublicPreviewRegistration && !empty($customer['prospect_id']) && !empty($customer['id'])) {
       $organizations = $portal->organizations((int) $customer['id']);
       if ($organizations) {
         $portal->createWebsiteRequestFromProspectDiscovery(

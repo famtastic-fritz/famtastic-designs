@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — A public-preview signup is an account claim, not a request submission
+
+- Observation: Drupal's user-insert hook sees the same-email Prospect during
+  account creation. Its ordinary convenience path could immediately turn
+  existing discovery notes into a submitted website request, enqueue both
+  customer/staff request notifications, and add a generic proof job before the
+  public-room recipient had verified control of the email.
+- Guidance: validate a signed public-preview continuation before saving the
+  Drupal user and carry only a request-scoped, non-persistent intent through
+  the insert hook. Record the non-advancing signup event, skip the generic
+  discovery auto-create path, and clear the intent after the controller
+  returns. Claim the matching preview only from the consumed verification
+  token; any owner registration alert belongs after verification and must say
+  that verification completed. Do not
+  suppress normal registrations with no valid continuation.
+
 ## 2026-08-27 — A Drupal schema upgrade must preflight nonempty partial tables
 
 - Observation: update `8041` originally created the absent-table path correctly, but its attempted partial-table repair passed too few arguments to Drupal 11's `Schema::addIndex()` and could let the Schema API restore `NOT NULL` on a missing field before legacy rows had a valid value. That turns an intended recovery branch into a late SQL failure.

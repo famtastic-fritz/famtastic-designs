@@ -18,6 +18,19 @@ use Drupal\famtastic_pipeline\Entity\Order;
  */
 final class CustomerPortalService {
 
+  /**
+   * Request-scoped, already-validated public-preview registration intents.
+   *
+   * Drupal invokes hook_user_insert() during the user save in the same
+   * request. The hook needs this small, non-persistent handoff to avoid
+   * treating a public-preview signup as a fully submitted website request.
+   * Durable preview history is still recorded by PublicPreviewDeliveryService
+   * and is claimed only after email verification.
+   *
+   * @var array<string, array{public_id:string, continuation:string}>
+   */
+  private array $pendingPreviewRegistrations = [];
+
   public function __construct(
     private readonly Connection $database,
     private readonly EntityTypeManagerInterface $entities,
@@ -35,10 +48,70 @@ final class CustomerPortalService {
     return $row ?: NULL;
   }
 
+  /** Returns one durable customer record by its internal identifier. */
+  public function customerForId(int $customerId): ?array {
+    $row = $this->database->select('famtastic_customer', 'c')
+      ->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
+    return $row ?: NULL;
+  }
+
   public function customerForEmail(string $email): ?array {
     $row = $this->database->select('famtastic_customer', 'c')->fields('c')
       ->condition('email', mb_strtolower(trim($email)))->execute()->fetchAssoc();
     return $row ?: NULL;
+  }
+
+  /**
+   * Starts the one-request registration handoff for a valid public preview.
+   *
+   * The continuation has to be validated before User::save(), because
+   * hook_user_insert() is what otherwise turns same-email discovery notes
+   * into a submitted website request and queues the generic proof job. This
+   * method deliberately mirrors the acceptance checks in
+   * PublicPreviewDeliveryService::markSignupStarted(); it does not claim the
+   * preview, create a request, or change its delivery state.
+   */
+  public function beginPublicPreviewRegistration(string $email, string $continuation): ?string {
+    $email = mb_strtolower(trim($email));
+    [$publicId, $signature] = array_pad(explode('.', trim($continuation), 2), 2, '');
+    $publicId = mb_strtolower(trim($publicId));
+    $signature = trim($signature);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)
+      || preg_match('/^[a-f0-9-]{36}$/', $publicId) !== 1
+      || preg_match('/^[a-f0-9]{64}$/', $signature) !== 1) {
+      return NULL;
+    }
+
+    $delivery = $this->database->select('famtastic_preview_delivery', 'p')->fields('p')
+      ->condition('public_id', $publicId)->range(0, 1)->execute()->fetchAssoc();
+    $expectedSignature = $delivery
+      ? hash_hmac('sha256', 'public-preview-continuation-v1|' . (string) $delivery['public_id'], Settings::getHashSalt())
+      : '';
+    if (!$delivery
+      || !hash_equals($expectedSignature, $signature)
+      || !hash_equals((string) $delivery['recipient_hash'], $this->ledger->contactHash($email))
+      || in_array((string) $delivery['state'], ['share_revoked', 'expired'], TRUE)) {
+      return NULL;
+    }
+
+    $this->pendingPreviewRegistrations[$this->previewRegistrationKey($email)] = [
+      'public_id' => (string) $delivery['public_id'],
+      'continuation' => (string) $delivery['public_id'] . '.' . $signature,
+    ];
+    // This is a non-sensitive, non-advancing audit event. The delivery still
+    // has no customer_id until markVerified() runs after token verification.
+    $this->previews->markSignupStarted((string) $delivery['public_id'] . '.' . $signature, $email);
+    return (string) $delivery['public_id'];
+  }
+
+  /** True only during the controller request that supplied a valid handoff. */
+  public function hasPendingPublicPreviewRegistration(string $email): bool {
+    return isset($this->pendingPreviewRegistrations[$this->previewRegistrationKey($email)]);
+  }
+
+  /** Clears the request-scoped hook handoff after registration returns. */
+  public function endPublicPreviewRegistration(string $email): void {
+    unset($this->pendingPreviewRegistrations[$this->previewRegistrationKey($email)]);
   }
 
   /** Returns a claimed preview's research snapshot to its verified owner only. */
@@ -730,6 +803,18 @@ final class CustomerPortalService {
       "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nVerification is pending.\nOpen customers: https://famtasticdesigns.com/web/admin/famtastic/metric/customers");
   }
 
+  /** Queues a truthful owner alert only after a preview signup is verified. */
+  public function queueVerifiedPreviewRegistrationNotification(int $customerId): void {
+    $customer = $this->customerForId($customerId);
+    if (!$customer) {
+      return;
+    }
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
+    $this->queueNotification('customer:' . (int) $customer['id'] . ':staff-registration', 'operational', $admin,
+      'Verified FAMtastic customer registration — ' . (string) $customer['display_name'],
+      "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nEmail verification completed.\nOpen customers: https://famtasticdesigns.com/web/admin/famtastic/metric/customers");
+  }
+
   /** Enqueues the canonical pre-purchase proof routine exactly once. */
   private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake): void {
     $this->ledger->enqueue(
@@ -1150,6 +1235,10 @@ final class CustomerPortalService {
     $ids = $this->entities->getStorage('famtastic_prospect')->getQuery()->accessCheck(FALSE)
       ->condition('public_email', $email)->sort('id', 'DESC')->range(0, 1)->execute();
     return $ids ? (int) reset($ids) : NULL;
+  }
+
+  private function previewRegistrationKey(string $email): string {
+    return hash('sha256', mb_strtolower(trim($email)));
   }
 
   private function claimProspectResources(int $organizationId, int $prospectId): void {

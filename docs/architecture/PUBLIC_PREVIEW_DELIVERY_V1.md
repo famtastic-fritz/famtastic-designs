@@ -37,7 +37,16 @@ Public lead + intake
   regenerated. Frozen snapshots, rather than an `a/b/c` route assumption,
   decide which configured `a`–`f` directions a room can serve.
 - A room includes only a business label, three working concept links, a safe per-delivery context note, an optional bounded research teaser, and the account-creation handoff. It excludes email/contact values, intake answers, account IDs, prices, packages, grants, selection, revision, payment, and checkout. The anonymous provider brief is separately allowlisted and redacted; raw public request JSON and prospect phone/email/address do not cross into the Site Studio dispatch payload.
-- Signing up does not select a proof or create an offer. The email must be verified before the same-email account claims the delivery; claim data is recorded without advancing or consuming the delivery state, so a lead that signs up early cannot fall through to generic outreach. Revoked and expired rooms remain unavailable but still preserve their original Prospect/proof history for that verified account.
+- Signing up does not select a proof or create an offer. A valid continuation is
+  checked before Drupal inserts the user, so the insert hook cannot turn shared
+  Prospect discovery notes into a customer request, request notification, or
+  generic proof job before verification. The email must be verified before the
+  same-email account claims the delivery; claim data is recorded without
+  advancing or consuming the delivery state, so a lead that signs up early
+  cannot fall through to generic outreach. Revoked and expired rooms remain
+  unavailable but still preserve their original Prospect/proof history for that
+  verified account. Registrations with no valid continuation retain their
+  ordinary portal behavior.
 - A research teaser requires a bounded source summary plus the SHA-256 and exact `research*` artifact role from registered Build DNA. The stored report, if supplied, is retrievable only by the verified same-email customer; do not promise a report that was not stored.
 - Staging freezes the subject, text, context, research teaser, source summary, report, and exact direction/entity/path/SHA-256 snapshot. The signed proof controller rehashes that frozen artifact on every serve; a later mutable variant refresh cannot silently alter the room. Only the proof-review role can approve one held invitation. `famtastic:preview-delivery-dispatch` then requires an exact confirmed list of one to ten IDs; it never runs the general lifecycle/outbox dispatcher. SMTP acceptance is recorded separately from inbox delivery; a provider-accepted receipt-write problem enters reconciliation rather than being marked retryable.
 - The share signature is server-derived and versioned. Revoke rotates the version immediately, cancels an unsent held invitation, and a replacement stage clears the old revocation marker. A room cannot be revoked while SMTP dispatch is in progress, preventing a real acceptance receipt from being misrecorded. Public responses are private, no-store, no-referrer, and no-index.

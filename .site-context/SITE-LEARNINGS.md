@@ -5,6 +5,25 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — Public-preview continuation must isolate account signup from generic request automation
+
+Observation: a public-preview recipient can share an email with a Prospect
+that already has discovery notes. During user save, the ordinary insert helper
+used to see that Prospect and create a submitted website request, two request
+notifications, and a generic proof job before the recipient had verified the
+account.
+
+Guidance:
+
+- Validate the signed continuation before saving the Drupal user and keep only
+  an in-request intent so the hook can skip the automatic discovery path.
+  Persist only the non-advancing preview signup event; the same-email preview
+  gets a customer record only after token verification. Any deferred owner
+  alert must state that verification completed.
+- Preserve ordinary account behavior when the continuation is missing,
+  malformed, revoked, expired, or bound to another email. A regression must
+  prove both paths with local-only mail and a SQLite database before release.
+
 ## 2026-08-27 — Preview migration repair must validate legacy rows before DDL
 
 Observation: the owner-gated preview migration's clean create was valid, but

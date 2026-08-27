@@ -69,29 +69,43 @@ final class CustomerPortalController extends ControllerBase {
       return $this->error('try_later', 429, 'Please wait before trying again.');
     }
     $this->flood->register('famtastic_portal_register', 3600, $identifier);
+    // This validates the continuation before User::save() fires
+    // hook_user_insert(). An invalid or unrelated value is intentionally a
+    // no-op so ordinary registration retains its existing behavior.
+    $previewDelivery = $this->portal->beginPublicPreviewRegistration($email, (string) ($data['preview_continuation'] ?? ''));
     $storage = $this->entityTypeManager()->getStorage('user');
-    if ($existingUsers = $storage->loadByProperties(['mail' => $email])) {
-      /** @var \Drupal\user\UserInterface $existingUser */
-      $existingUser = reset($existingUsers);
-      $existingCustomer = $this->portal->customerForUid((int) $existingUser->id());
-      if ($existingCustomer && empty($existingCustomer['verified_at'])) {
-        $this->sendVerification($request, $existingCustomer);
+    try {
+      if ($existingUsers = $storage->loadByProperties(['mail' => $email])) {
+        /** @var \Drupal\user\UserInterface $existingUser */
+        $existingUser = reset($existingUsers);
+        $existingCustomer = $this->portal->customerForUid((int) $existingUser->id());
+        if ($existingCustomer && empty($existingCustomer['verified_at'])) {
+          $this->sendVerification($request, $existingCustomer, $previewDelivery);
+        }
+        elseif ($existingCustomer) {
+          $this->portal->claimPreviewsForVerifiedCustomer((int) $existingCustomer['id']);
+        }
+        return new JsonResponse(['ok' => TRUE, 'verification_required' => TRUE], 202);
       }
-      elseif ($existingCustomer) {
-        $this->portal->claimPreviewsForVerifiedCustomer((int) $existingCustomer['id']);
+      /** @var \Drupal\user\UserInterface $user */
+      $user = $storage->create([
+        'name' => $email, 'mail' => $email, 'pass' => $password,
+        'status' => TRUE, 'roles' => ['authenticated'],
+      ]);
+      $user->save();
+      $customer = $this->portal->createCustomer($user, $data);
+      // The preview path receives only its verification email at this point.
+      // Its owner alert is queued after the one-time verification token is
+      // consumed; it never inherits generic request notifications or jobs.
+      if ($previewDelivery === NULL) {
+        $this->portal->queueRegistrationNotification($customer);
       }
-      return new JsonResponse(['ok' => TRUE, 'verification_required' => TRUE], 202);
+      $this->sendVerification($request, $customer, $previewDelivery);
+      return new JsonResponse(['ok' => TRUE, 'verification_required' => TRUE], 201);
     }
-    /** @var \Drupal\user\UserInterface $user */
-    $user = $storage->create([
-      'name' => $email, 'mail' => $email, 'pass' => $password,
-      'status' => TRUE, 'roles' => ['authenticated'],
-    ]);
-    $user->save();
-    $customer = $this->portal->createCustomer($user, $data);
-    $this->portal->queueRegistrationNotification($customer);
-    $this->sendVerification($request, $customer);
-    return new JsonResponse(['ok' => TRUE, 'verification_required' => TRUE], 201);
+    finally {
+      $this->portal->endPublicPreviewRegistration($email);
+    }
   }
 
   public function verify(Request $request): JsonResponse {
@@ -99,6 +113,10 @@ final class CustomerPortalController extends ControllerBase {
     $record = $this->portal->consumeToken((string) ($data['token'] ?? ''), 'verify');
     if (!$record) return $this->error('invalid_or_expired_token', 422, 'This verification link is invalid or expired.');
     $this->portal->markVerified((int) $record['customer_id']);
+    $payload = json_decode((string) ($record['payload'] ?? ''), TRUE);
+    if (is_array($payload) && ($payload['registration_flow'] ?? '') === 'public_preview_v1') {
+      $this->portal->queueVerifiedPreviewRegistrationNotification((int) $record['customer_id']);
+    }
     return new JsonResponse(['ok' => TRUE]);
   }
 
@@ -493,8 +511,14 @@ final class CustomerPortalController extends ControllerBase {
     ], 'organizations' => array_map(fn(array $o): array => array_diff_key($o, ['id' => TRUE]), $this->portal->organizations((int) $customer['id']))]));
   }
 
-  private function sendVerification(Request $request, array $customer): void {
-    $token = $this->portal->issueToken((int) $customer['id'], (string) $customer['email'], 'verify');
+  private function sendVerification(Request $request, array $customer, ?string $previewDelivery = NULL): void {
+    $payload = $previewDelivery === NULL ? [] : [
+      // The continuation itself is not copied into the token. It was already
+      // validated and recorded against the delivery before User::save().
+      'registration_flow' => 'public_preview_v1',
+      'preview_delivery' => $previewDelivery,
+    ];
+    $token = $this->portal->issueToken((int) $customer['id'], (string) $customer['email'], 'verify', $payload);
     $url = $request->getSchemeAndHttpHost() . '/verify-email?token=' . rawurlencode($token);
     $this->mailer->send((string) $customer['email'], 'Verify your FAMtastic Designs account', "Verify your customer account:\n\n{$url}\n\nThis link expires in 24 hours.");
   }

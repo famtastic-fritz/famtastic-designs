@@ -1,5 +1,24 @@
 # Product changelog
 
+## 2026-08-27 — Public-preview registration isolation (local acceptance only; not deployed)
+
+- A valid signed public-preview continuation is now validated before the Drupal
+  user-save hook runs. That request-scoped handoff prevents inherited Prospect
+  discovery notes from automatically creating a submitted website request,
+  queued request notifications, or a generic website-proof job before the
+  recipient verifies the email.
+- The continuation is recorded only as a non-advancing preview signup event.
+  The exact same-email delivery remains unclaimed until verification; after
+  the one-time token is consumed it is claimed idempotently and a truthful
+  verified-registration owner alert is queued. No public proof selection, request,
+  pricing, checkout, or customer email is added by the claim.
+- Ordinary registrations without a valid continuation retain the existing
+  discovery-to-request, customer/staff notification, and generic proof-job
+  behavior. The preview-registration isolation test passed against a fresh
+  local SQLite Drupal install and memory-only transactional mail, proving both
+  lanes. No deployment, import, provider call, proof generation, outbox
+  dispatch, or customer email occurred.
+
 ## 2026-08-27 — Public-preview migration 8041 rehearsal hardening (not deployed)
 
 - Corrected the Drupal 11 `Schema::addIndex()` invocation in update `8041` and made its existing-table branch preflight all missing required fields and identity duplicates before any DDL. A recoverable partial table can receive a missing empty frozen-email snapshot; an unmappable Prospect/public ID/delivery key or duplicate identity now fails closed with an actionable update error.
