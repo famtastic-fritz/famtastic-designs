@@ -27,6 +27,7 @@ final class ColdProofIngressService {
     private readonly TimeInterface $time,
     private readonly LeadIngestionService $leads,
     private readonly PublicPreviewDeliveryService $previews,
+    private readonly ProofCampaignService $proofCampaigns,
     private readonly ProofCohortProfileResolverInterface $profiles,
     private readonly ColdProofCampaignSeedValidator $validator,
     private readonly OperationalLedger $ledger,
@@ -59,7 +60,7 @@ final class ColdProofIngressService {
           'public_preview',
           TRUE,
         );
-        $results[] = $this->result($lead, $result, NULL, NULL, NULL, 'would_not_write', $profile['id']);
+        $results[] = $this->result($lead, $result, NULL, NULL, NULL, NULL, 'would_not_write', $profile['id']);
       }
       return $this->report($cohort, TRUE, $results);
     }
@@ -74,7 +75,7 @@ final class ColdProofIngressService {
           $results[] = $this->result($lead, [
             'status' => 'duplicate', 'score' => 0, 'target_offer' => '', 'prospect_id' => $existing['prospect_id'] ?: NULL,
             'dedupe_key' => '', 'reasons' => ['This exact verified-source lead was already ingressed.'],
-          ], $existing['intake_id'] ?: NULL, $existing['preview_delivery_id'] ?: NULL, $existing['proof_job_id'] ?: NULL, 'already_ingressed', $profile['id']);
+          ], $existing['intake_id'] ?: NULL, $existing['preview_delivery_id'] ?: NULL, $existing['proof_campaign_id'] ?: NULL, $existing['proof_job_id'] ?: NULL, 'already_ingressed', $profile['id']);
           continue;
         }
         $import = $this->leads->importRowWithoutGenericProof(
@@ -87,6 +88,8 @@ final class ColdProofIngressService {
         );
         $intakeId = NULL;
         $deliveryId = NULL;
+        $proofCampaignId = NULL;
+        $publicCampaignId = NULL;
         $jobId = NULL;
         $runtimeRun = [];
         $status = (string) $import['status'];
@@ -100,6 +103,19 @@ final class ColdProofIngressService {
             'verified_cold',
           );
           $deliveryId = (int) $delivery['id'];
+          $prospect = $this->entities->getStorage('famtastic_prospect')->load((int) $import['prospect_id']);
+          if (!$prospect) {
+            throw new \RuntimeException('Cold proof prospect could not be reloaded before campaign binding.');
+          }
+          // Freeze canonical campaign identities before the job exists. The
+          // worker and external runner receive these exact IDs rather than
+          // inventing values that no callback or Build DNA projection can bind.
+          $proofCampaign = $this->proofCampaigns->createQueuedPublicPreviewCampaign(
+            $prospect,
+            $this->previews->publicIntakeProofContext($deliveryId),
+          );
+          $proofCampaignId = (int) $proofCampaign->id();
+          $publicCampaignId = (string) $proofCampaign->get('campaign_id')->value;
           $jobId = $this->previews->queueInitialProof($deliveryId);
           // Reload the persisted payload after enqueue. If another importer
           // won the idempotency race, this prevents our audit event from
@@ -107,7 +123,7 @@ final class ColdProofIngressService {
           $runtimeRun = (array) ($this->previews->publicIntakeProofContext($deliveryId)['build_dna_run'] ?? []);
           $status = 'preview_requested';
         }
-        $this->insertIngress($cohortRow['id'], $lead, $import, $intakeId, $deliveryId, $jobId, $status);
+        $this->insertIngress($cohortRow['id'], $lead, $import, $intakeId, $deliveryId, $proofCampaignId, $jobId, $status);
         if ($deliveryId && $jobId) {
           $this->ledger->recordEvent(
             'cold-proof.ingressed:' . $cohortRow['cohort_key'] . ':' . $lead['source_record_id'] . ':' . $lead['evidence_hash'],
@@ -117,6 +133,8 @@ final class ColdProofIngressService {
               'package_profile' => $profile['id'],
               'direction_count' => $profile['direction_count'],
               'preview_delivery_id' => $deliveryId,
+              'proof_campaign_id' => $proofCampaignId,
+              'campaign_id' => $publicCampaignId,
               'proof_job_id' => $jobId,
               'job_id' => (string) ($runtimeRun['job_id'] ?? ''),
               'callback_event_id' => (string) ($runtimeRun['callback_event_id'] ?? ''),
@@ -131,7 +149,7 @@ final class ColdProofIngressService {
         }
         $reportedImport = $import;
         $reportedImport['status'] = $status;
-        $results[] = $this->result($lead, $reportedImport, $intakeId, $deliveryId, $jobId, $deliveryId ? 'preview_job_queued' : 'not_eligible_for_preview', $profile['id']);
+        $results[] = $this->result($lead, $reportedImport, $intakeId, $deliveryId, $proofCampaignId, $jobId, $deliveryId ? 'preview_job_queued' : 'not_eligible_for_preview', $profile['id'], $publicCampaignId);
       }
     }
     catch (\Throwable $error) {
@@ -270,7 +288,7 @@ final class ColdProofIngressService {
     return $row ?: NULL;
   }
 
-  private function insertIngress(int $cohortId, array $lead, array $import, ?int $intakeId, ?int $deliveryId, ?int $jobId, string $status): void {
+  private function insertIngress(int $cohortId, array $lead, array $import, ?int $intakeId, ?int $deliveryId, ?int $proofCampaignId, ?int $jobId, string $status): void {
     $now = $this->time->getRequestTime();
     $key = hash('sha256', implode('|', [$cohortId, $lead['source_record_id'], $lead['evidence_hash']]));
     $this->database->insert('famtastic_cold_proof_ingress')->fields([
@@ -279,6 +297,7 @@ final class ColdProofIngressService {
       'prospect_id' => $import['prospect_id'] ?: NULL,
       'intake_id' => $intakeId,
       'preview_delivery_id' => $deliveryId,
+      'proof_campaign_id' => $proofCampaignId,
       'proof_job_id' => $jobId,
       'source_record_id' => $lead['source_record_id'],
       'source_lane' => 'verified_cold',
@@ -297,7 +316,7 @@ final class ColdProofIngressService {
     ])->execute();
   }
 
-  private function result(array $lead, array $import, ?int $intakeId, ?int $deliveryId, ?int $jobId, string $action, string $packageProfile): array {
+  private function result(array $lead, array $import, ?int $intakeId, ?int $deliveryId, ?int $proofCampaignId, ?int $jobId, string $action, string $packageProfile, ?string $campaignId = NULL): array {
     return [
       'source_record_id' => $lead['source_record_id'],
       'status' => (string) $import['status'],
@@ -305,6 +324,8 @@ final class ColdProofIngressService {
       'prospect_id' => $import['prospect_id'] ?: NULL,
       'intake_id' => $intakeId,
       'preview_delivery_id' => $deliveryId,
+      'proof_campaign_id' => $proofCampaignId,
+      'campaign_id' => $campaignId,
       'proof_job_id' => $jobId,
       'package_profile' => $packageProfile,
       'source_lane' => 'verified_cold',

@@ -178,6 +178,70 @@ class ProofCampaignService {
   }
 
   /**
+   * Creates, binds, and persists an inert public-preview campaign before a
+   * worker is allowed to invoke a creative provider.
+   *
+   * Cold ingress needs the exact Drupal entity ID and public campaign ID in
+   * its durable job/Build-DNA contract. Creating the campaign only after a
+   * generic worker claims the job leaves a runner with synthetic identifiers
+   * that cannot be safely correlated with a callback or immutable evidence.
+   * This method intentionally does not dispatch Site Studio, render a pilot,
+   * create variants, or send anything.
+   */
+  public function createQueuedPublicPreviewCampaign(Prospect $prospect, array $context): ProofCampaign {
+    $deliveryId = (int) ($context['public_preview_delivery_id'] ?? 0);
+    if ($deliveryId < 1 || !empty($context['website_request_id'])) {
+      throw new \InvalidArgumentException('A queued public-preview campaign requires one public delivery and no website request.');
+    }
+    $boundCampaignId = $this->previews->initialProofCampaignId($deliveryId);
+    if ($boundCampaignId) {
+      $bound = $this->getForId($prospect, $boundCampaignId);
+      if (!$bound) {
+        throw new \RuntimeException('The public delivery references an unavailable proof campaign.');
+      }
+      return $bound['campaign'];
+    }
+
+    $businessName = (string) ($prospect->get('business_name')->value ?: 'Your Business');
+    $campaignId = $this->buildCampaignId($businessName);
+    $now = $this->time->getRequestTime();
+    /** @var \Drupal\famtastic_pipeline\Entity\ProofCampaign $campaign */
+    $campaign = $this->entityTypeManager->getStorage('proof_campaign')->create([
+      'campaign_id' => $campaignId,
+      'prospect_id' => $prospect->id(),
+      'business_name' => $businessName,
+      'status' => 'active',
+      // The handoff bundle carries this opaque callback identity. It is
+      // created before any provider work, so a local/offline runner can never
+      // invent an ID that Drupal cannot bind on callback.
+      'generation_status' => 'waiting_callback',
+      'studio_job_id' => 'cold-preview-' . bin2hex(random_bytes(16)),
+      'expires_at' => $now + self::TTL,
+    ]);
+    $campaign->save();
+    try {
+      $this->previews->bindInitialProofCampaign($deliveryId, (int) $campaign->id());
+    }
+    catch (\Throwable $error) {
+      // Do not leave an unbound identity that a later callback could target.
+      $campaign->delete();
+      throw $error;
+    }
+    $this->ledger->recordEvent(
+      'proof.public_preview_queued:' . $campaignId,
+      'proof.queued',
+      [
+        'campaign_id' => $campaignId,
+        'proof_campaign_id' => (int) $campaign->id(),
+        'public_preview_delivery_id' => $deliveryId,
+        'source_lane' => (string) ($context['source_lane'] ?? 'anonymous_public'),
+      ],
+      (int) $prospect->id(),
+    );
+    return $campaign;
+  }
+
+  /**
    * Creates an idempotent waiting campaign for an offline/local Site Studio.
    */
   public function createLocalHandoff(Prospect $prospect): ProofCampaign {

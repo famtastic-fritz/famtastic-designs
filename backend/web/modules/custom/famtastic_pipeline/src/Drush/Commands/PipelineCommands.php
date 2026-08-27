@@ -949,6 +949,82 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Exports exact verified-cold campaign bindings for a proof runner.
+   *
+   * The default is stdout-only. A file export requires explicit exact-ID
+   * confirmation, writes one new private file at mode 0600, and never invokes
+   * a provider, callback, mailer, owner approval, or dispatcher.
+   */
+  #[CLI\Command(name: 'famtastic:cold-proof-handoff-export', aliases: ['fcphe'])]
+  #[CLI\Option(name: 'ids', description: 'Comma-separated exact verified-cold preview-delivery IDs (1-10).')]
+  #[CLI\Option(name: 'output', description: 'Optional new absolute private file path for the JSON handoff bundle.')]
+  #[CLI\Option(name: 'confirm', description: 'Required only with --output; exactly repeat normalized IDs.')]
+  #[CLI\Usage(name: 'drush fcphe --ids=41', description: 'Print a read-only verified-cold runner handoff bundle.')]
+  #[CLI\Usage(name: 'drush fcphe --ids=41,42 --output=/private/famtastic/cold-handoff.json --confirm=41,42', description: 'Write one explicit private handoff bundle; no provider or mail action occurs.')]
+  public function coldProofHandoffExport(array $options = ['ids' => '', 'output' => '', 'confirm' => '']): int {
+    try {
+      $ids = $this->exactPositiveIds((string) $options['ids'], 10);
+    }
+    catch (\InvalidArgumentException $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $output = trim((string) $options['output']);
+    if ($output !== '') {
+      $expected = implode(',', $ids);
+      if (!hash_equals($expected, trim((string) $options['confirm']))) {
+        $this->logger()->error('Private handoff export requires --confirm=' . $expected . '.');
+        return self::EXIT_FAILURE;
+      }
+      $privateRoot = \Drupal::service('file_system')->realpath('private://');
+      $rawParent = rtrim(dirname($output), DIRECTORY_SEPARATOR);
+      $parent = realpath($rawParent);
+      $privateRoot = is_string($privateRoot) ? rtrim($privateRoot, DIRECTORY_SEPARATOR) : '';
+      $parent = is_string($parent) ? rtrim($parent, DIRECTORY_SEPARATOR) : '';
+      $target = $parent === '' ? '' : $parent . DIRECTORY_SEPARATOR . basename($output);
+      $insidePrivate = $privateRoot !== '' && ($parent === $privateRoot || str_starts_with($parent, $privateRoot . DIRECTORY_SEPARATOR));
+      // A handoff can include commercially sensitive source context. Never
+      // follow an output symlink or write outside Drupal's configured private
+      // filesystem, even when the caller supplied a valid absolute path.
+      if (
+        !str_starts_with($output, '/')
+        || $parent === ''
+        || $rawParent !== $parent
+        || !$insidePrivate
+        || !is_writable($parent)
+        || file_exists($output)
+        || is_link($output)
+        || $target === ''
+        || str_contains($output, '..' . DIRECTORY_SEPARATOR)
+      ) {
+        $this->logger()->error('--output must be a new non-symlink regular file below Drupal\'s configured writable private directory.');
+        return self::EXIT_FAILURE;
+      }
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\ColdProofBuildHandoffService $handoffs */
+      $handoffs = \Drupal::service('famtastic_pipeline.cold_proof_build_handoff');
+      $bundle = $handoffs->export($ids);
+      $json = json_encode($bundle, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n";
+      if ($output !== '') {
+        if (file_put_contents($output, $json, LOCK_EX) === FALSE) {
+          throw new \RuntimeException('Could not write the requested cold-proof handoff file.');
+        }
+        @chmod($output, 0600);
+      }
+      $this->io()->writeln($json);
+      if ($output !== '') {
+        $this->logger()->success('Wrote a private read-only cold-proof handoff bundle. No provider, callback, mail, or dispatch action occurred.');
+      }
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
+  /**
    * Checks only due, owner-approved verified-cold deliveries.
    *
    * The command defaults to dry-run. Its explicit execute token delegates

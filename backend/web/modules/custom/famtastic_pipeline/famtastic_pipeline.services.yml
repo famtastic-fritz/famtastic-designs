@@ -31,7 +31,7 @@ services:
 
   famtastic_pipeline.cold_proof_ingress:
     class: Drupal\famtastic_pipeline\Service\ColdProofIngressService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@famtastic_pipeline.lead_ingestion', '@famtastic_pipeline.public_preview_deliveries', '@famtastic_pipeline.proof_cohort_profiles', '@famtastic_pipeline.cold_proof_seed_validator', '@famtastic_pipeline.operational_ledger']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@famtastic_pipeline.lead_ingestion', '@famtastic_pipeline.public_preview_deliveries', '@famtastic_pipeline.proof_campaign_service', '@famtastic_pipeline.proof_cohort_profiles', '@famtastic_pipeline.cold_proof_seed_validator', '@famtastic_pipeline.operational_ledger']
 
   famtastic_pipeline.cold_proof_commercial_messages:
     class: Drupal\famtastic_pipeline\Service\ColdProofCommercialMessageService
@@ -40,6 +40,10 @@ services:
   famtastic_pipeline.cold_proof_scheduled_release:
     class: Drupal\famtastic_pipeline\Service\ColdProofScheduledReleaseService
     arguments: ['@database', '@datetime.time', '@famtastic_pipeline.public_preview_deliveries', '@famtastic_pipeline.operational_ledger']
+
+  famtastic_pipeline.cold_proof_build_handoff:
+    class: Drupal\famtastic_pipeline\Service\ColdProofBuildHandoffService
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@famtastic_pipeline.public_preview_deliveries']
 
   famtastic_pipeline.automation_worker:
     class: Drupal\famtastic_pipeline\Service\AutomationWorker
