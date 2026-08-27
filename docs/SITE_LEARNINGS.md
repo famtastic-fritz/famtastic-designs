@@ -1,5 +1,28 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Reference-led image generation still needs a visual rejection loop
+
+- Observation: the first 12-image Gemini reference-led pass preserved casting,
+  palette, and business context but several frames invented poster text or UI
+  overlays even though exclusions prohibited them. Hashes and provider receipts
+  proved execution; they did not prove visual fitness.
+- Guidance: keep typography, shapes, and interface language in native HTML/CSS.
+  Prompts should demand one uninterrupted photograph, remove layout/type jargon,
+  turn phone screens away or dark, and reserve empty photographic space for real
+  page typography. Visually inspect every frame; reject the full batch or a
+  targeted artifact when needed, retain the receipt/reason, and include rejected
+  generations in the cumulative cost record.
+
+## 2026-08-27 — Shay can be the business face without becoming business authority
+
+- Observation: naming Shay the FAMtastic Designs AI Business Concierge makes
+  the outreach and proof handoff feel guided instead of automated, while the
+  email stays more trustworthy when it states what Shay does and when a person
+  takes over.
+- Guidance: let Shay explain proofs, collect decisions, and organize setup.
+  Keep pricing, scope, approval, payment, and launch authority with Fritz and
+  the FAMtastic team, and carry that same boundary into Site Studio handoffs.
+
 ## 2026-08-27 — A platform-independence offer needs to show brand and operations together
 
 - Observation: a branded homepage alone does not prove the Booked & Branded

@@ -6,8 +6,11 @@ Date: 2026-08-27
 
 - Four fictional Florida beauty businesses.
 - One email preview and one three-direction concept room per business.
-- Twelve responsive proof sites: editorial, high-energy, and operator-first.
-- Four original generated hero images.
+- Twelve responsive proof sites: Signature Editorial, Signal Campaign, and
+  Chairside OS.
+- Twelve distinct reference-led Gemini images, one per proof direction.
+- One complete package-proposal page and one reusable shape/type/message/image
+  creative-system contract.
 - Public base live at
   `https://famtasticdesigns.com/showcase/booked-and-branded-pilot/`.
 
@@ -25,20 +28,29 @@ for real recipient proofs.
 
 ## Image evidence
 
-The provider was the built-in OpenAI image-generation tool. It returned image
-artifacts but did not return a model identifier, usage amount, or billing
-receipt. Build DNA therefore records `provider_did_not_report` for model and
-cost. No fallback image provider was called. The owner-authorized image cap was
-USD 1.00.
+The final image series ran through the Gemini Developer Interactions API with
+model `gemini-3.1-flash-lite-image`. The first 12-image pass was rejected
+because several outputs invented poster text or interface overlays. A corrected
+12-image pass produced 11 approved images; one targeted Palmera replacement
+removed its remaining generated sign. The final set therefore contains 12
+approved images from 25 provider generations.
 
-The four final WebP asset hashes and exact prompts are recorded in
-`frontend/public/showcase/booked-and-branded-pilot/build-dna.json`.
+The receipt records interaction IDs, usage objects, prompt/reference/output
+SHA-256, timings, selection decisions, and an estimated cumulative cost of USD
+0.8400. Provider-billed cost remains pending reconciliation. The hard
+owner-authorized ceiling was USD 1.00, and no premium fallback was called.
+
+The selected image bytes, exact prompts, provider evidence, creative-system
+contract, and final artifact hashes are recorded under
+`frontend/public/showcase/booked-and-branded-pilot/` and its canonical
+`build-dna.json`. Raw receipts for the three attempts are retained in
+`provider-receipts/`; rejected image bytes are excluded from the public build.
 
 ## Local acceptance
 
-- Static routes tested: 21.
-- Viewport checks: 42 (1440px and 390px).
-- Retained screenshots: 13.
+- Static routes tested: 22.
+- Viewport checks: 44 (1440px and 390px).
+- Retained screenshots: 14.
 - Broken images: 0.
 - Horizontal-overflow failures: 0.
 - Browser console/page errors: 0.
@@ -52,26 +64,28 @@ The standard customer-journey proof also passed with its required safe
 adapters: local isolated database, memory email, stub payment, fixture DNS, and
 isolated deployment. The two local evidence hashes were:
 
-- Journey evidence: `1db4c3bf4c586f21e17f91dac9a128a27b6c600ca4da3dbdeea6ada41cece1d7`.
-- Lifecycle evidence: `c688f93e3cd3605bdbf6298b14e6372dbbca39023406ce8c2483299f207519f7`.
+- Journey evidence: `009262ea080bcbf4a0dae7da37ee9505803709010e3cdde38b36e5b7fa817be8`.
+- Lifecycle evidence: `fdfd89029b176362f313f7c9e6edbbf2ad783b83cab149b84f4a495b001d59c0`.
 
 ## Review state
 
-Primary visual review passed across the overview, all four rooms, all four
-operator-first mobile pages, the representative email, and the complete
-three-direction desktop set. Independent review is deliberately reserved for
-the owner.
+Primary visual review passed across the overview, package page, all four rooms,
+all four operator-first mobile pages, the representative Shay email, the
+complete three-direction desktop set, and all 12 source images. Independent
+review is deliberately reserved for the owner.
 
-## Production acceptance
+## Previous production acceptance
 
 The governed frontend deployment published commit
 `412a8f51451e684d987d2ba80971531acee4d067` and retained rollback archive
 `/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T185348Z-412a8f51451e684d987d2ba80971531acee4d067.tgz`.
 
-Real-browser acceptance covered the existing React homepage and all 21
+Real-browser acceptance covered the existing React homepage and the original 21
 showcase routes on both `https://famtasticdesigns.com` and
 `https://www.famtasticdesigns.com`. Apex desktop and `www` mobile checks found
 HTTP 200, a rendered H1, the fictional disclosure, `noindex`, no horizontal
 overflow, no console/page errors, and no broken images. All four hero assets
 also returned `200 image/webp` with their exact committed byte sizes on both
-hosts. See `live-acceptance.json`.
+hosts. See `live-acceptance.json`. This section does not yet claim deployment of
+the 12-image/package revision; final production acceptance will replace it
+after governed release.

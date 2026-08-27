@@ -1,0 +1,182 @@
+{
+  "schema": "famtastic.booked-branded-creative-system.v2",
+  "revision_id": "booked-branded-v2-20260827",
+  "shay": {
+    "name": "Shay",
+    "title": "FAMtastic Designs AI Business Concierge",
+    "email_from": "Shay at FAMtastic Designs",
+    "role_boundary": "Shay explains proofs, gathers decisions, and keeps the handoff organized. Fritz and the FAMtastic team retain human authority for price, scope, approval, payment, and launch decisions."
+  },
+  "offer": {
+    "name": "Booked & Branded",
+    "status": "founding-pilot recommendation; not a live Commerce SKU",
+    "headline": "Own the front door. Keep the chair moving.",
+    "promise": "A branded website and phone-friendly operating starter for independent appointment professionals who have outgrown the look and limits of a generic booking profile.",
+    "price_hypothesis": "$199 one-time founding pilot",
+    "core": [
+      "One custom mobile-first website direction selected from three working proofs",
+      "One-owner, one-location phone Booking Desk starter",
+      "Up to 12 services with duration, price, preparation, and policy notes",
+      "Request-to-book with confirm, propose-another-time, or decline decisions",
+      "Blackout dates, availability windows, and request status",
+      "Business-owned Square, Stripe Payment Link, Cash App Business, or reviewed payment handoff",
+      "A decorative-to-live QR placement after the business connects its own approved destination",
+      "Fresh consent-based testimonials with owner moderation",
+      "One year of FAMtastic-managed hosting and the existing Web Basics domain path",
+      "Shay-guided setup, proof explanation, and launch handoff"
+    ],
+    "launch_path": [
+      "Keep the current booking profile available during setup",
+      "Launch the branded site as the public front door",
+      "Route requests through the bounded Booking Desk starter",
+      "Move or deepen scheduling only after conflict, recovery, notification, and owner-control tests pass"
+    ],
+    "not_included": [
+      "Real-time multi-staff calendar synchronization",
+      "POS replacement, payroll, inventory, chair rental, or commission accounting",
+      "Review scraping or migration from Booksy or another platform",
+      "Payment custody, stored card or bank details, or FAMtastic merchant processing",
+      "Automatic SMS, data migration, or client-record import",
+      "A promise to replace every feature of an existing booking platform"
+    ],
+    "future_addons": [
+      "Live calendar and conflict-management integration",
+      "Multi-staff scheduling and permissions",
+      "SMS confirmations and reminders",
+      "Client history, notes, and consent-managed files",
+      "Local SEO and review-request automation",
+      "Business email, maintenance, analytics, and AI customer help"
+    ]
+  },
+  "specialists": [
+    {
+      "id": "shay-offer-orchestrator",
+      "label": "Shay",
+      "job": "Keeps the customer promise, proof choices, questions, and human handoff understandable."
+    },
+    {
+      "id": "shape-director",
+      "label": "Shape Director",
+      "job": "Turns one business-native motif into containers, edges, crops, dividers, and interaction rhythm."
+    },
+    {
+      "id": "type-director",
+      "label": "Type Director",
+      "job": "Builds hierarchy through scale, contrast, outline, serif-versus-sans tension, and editorial composition."
+    },
+    {
+      "id": "message-director",
+      "label": "Message Director",
+      "job": "Gives each direction one argument, one voice, one next action, and no invented customer claim."
+    },
+    {
+      "id": "gemini-reference-image-studio",
+      "label": "Gemini Lite Image Studio",
+      "job": "Uses the owned pilot hero as a visual canon and creates a distinct reference-led frame for every direction."
+    }
+  ],
+  "archetypes": {
+    "a": {
+      "name": "Signature Editorial",
+      "type": {
+        "display_family": "Lora",
+        "body_family": "Metropolis",
+        "composition": "large high-contrast serif, italic detail words, quiet uppercase metadata, disciplined reading width"
+      },
+      "shape": {
+        "grammar": "arched portrait windows, hairline rules, soft paper panels, circular craft seals",
+        "radius": "36px",
+        "pattern": "fine offset contour lines"
+      },
+      "message": {
+        "argument": "The work deserves the same care before the appointment as it receives in the chair.",
+        "tone": "measured, intimate, assured",
+        "cta": "Request a considered appointment"
+      },
+      "image_direction": "Create a quiet premium editorial frame with tactile materials, natural window light, a deliberate craft gesture, human warmth, and generous negative space for elegant serif typography."
+    },
+    "b": {
+      "name": "Signal Campaign",
+      "type": {
+        "display_family": "Metropolis",
+        "body_family": "Metropolis",
+        "composition": "oversized condensed-feeling uppercase, outlined echo words, staggered labels, high-contrast rhythm"
+      },
+      "shape": {
+        "grammar": "cropped bands, rotated ticket tabs, hard diagonals, oversized rings and signal bars",
+        "radius": "8px",
+        "pattern": "repeating directional stripes and registration marks"
+      },
+      "message": {
+        "argument": "A strong result should be recognizable before the logo appears.",
+        "tone": "fast, social, magnetic",
+        "cta": "Claim the next opening"
+      },
+      "image_direction": "Create a cinematic campaign frame with stronger contrast, candid motion, flash or colored practical light, an unusual crop, layered foreground depth, and clean negative space for oversized display typography."
+    },
+    "c": {
+      "name": "Chairside OS",
+      "type": {
+        "display_family": "Metropolis",
+        "body_family": "Metropolis",
+        "composition": "dense interface labels, strong numeric hierarchy, compact utility type, one contrasting editorial phrase"
+      },
+      "shape": {
+        "grammar": "stacked status tiles, phone-safe cards, timeline rails, confirmation chips and modular docks",
+        "radius": "22px",
+        "pattern": "subtle scheduling grid with status dots"
+      },
+      "message": {
+        "argument": "The owner should see the day, make the decision, and keep moving from one phone.",
+        "tone": "clear, capable, calm",
+        "cta": "See the Booking Desk"
+      },
+      "image_direction": "Create an operator-first documentary frame between appointments: the owner uses a phone naturally in the real workspace, with service tools and brand materials visible, clean anatomy and screen-safe negative space. Do not render readable phone UI."
+    }
+  },
+  "businesses": {
+    "coastline-crown-barbers": {
+      "motifs": ["crown arc", "clipper line", "coastal horizon"],
+      "scenes": {
+        "a": "A composed after-cut portrait beside a walnut station: the Black barber brushes the client’s shoulder while the finished taper and beard line catch warm coastal daylight.",
+        "b": "A lively early-evening barbershop moment: the Black barber pivots around the chair during a finishing pass, chrome tools and amber light creating streaks and foreground depth.",
+        "c": "Between clients, the Black barber stands beside the clean chair reviewing a phone with clippers, appointment notebook, and an unbranded payment placard nearby."
+      }
+    },
+    "velvet-coil-atelier": {
+      "motifs": ["coil spiral", "parting line", "folded linen"],
+      "scenes": {
+        "a": "A quiet finishing ritual: the Black stylist separates one healthy curl beside a terracotta-toned station while the client sees the final shape in soft window light.",
+        "b": "An expressive texture-in-motion portrait: the client turns gently as defined curls catch a warm flash, with translucent product silhouettes and layered fabric in the foreground.",
+        "c": "The Black stylist reviews a consultation request on her phone beside a neat color-and-care station with a curl diagram, folded towel, and unbranded amber bottles."
+      }
+    },
+    "palmera-fade-society": {
+      "motifs": ["palm cut", "fade gradient", "street-corner tile"],
+      "scenes": {
+        "a": "A bright West Palm neighborhood portrait after a finished fade: the Latino barber and client share a relaxed mirror-side moment in cream terrazzo and sea-glass light.",
+        "b": "A kinetic late-afternoon finishing scene shot low and close: the Latino barber details the hairline as coral light, chrome, palm shadow, and layered reflections create campaign energy.",
+        "c": "The Latino barber checks a same-day request on his phone at the empty chair, with a bilingual service card, clean tools, and a simple unbranded deposit placard in view."
+      }
+    },
+    "saltline-color-house": {
+      "motifs": ["color ribbon", "sun arc", "blue glass block"],
+      "scenes": {
+        "a": "A sunwashed reveal: the white colorist lifts a finished dimensional section beside a pale-oak station as natural Miami light shows tone and texture accurately.",
+        "b": "A fashion-led blue-hour portrait with the client turning through cobalt and warm gold light, translucent color ribbons and mirror reflections creating a dramatic layered crop.",
+        "c": "Before a color appointment, the white stylist reviews a photo-consultation request on her phone beside swatch cards, a clean mixing station, and a cobalt glass object."
+      }
+    }
+  },
+  "image_rules": {
+    "model": "gemini-3.1-flash-lite-image",
+    "api": "Gemini Developer API Interactions",
+    "aspect_ratio": "16:9",
+    "image_size": "1K",
+    "estimated_cost_per_image_usd": 0.0336,
+    "image_count": 12,
+    "estimated_total_usd": 0.4032,
+    "reference_rule": "Use the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.",
+    "exclusions": "No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing."
+  }
+}

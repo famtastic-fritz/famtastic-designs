@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { existsSync } from 'node:fs';
 import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,37 +11,13 @@ const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicRoot = join(repositoryRoot, 'frontend/public/showcase/booked-and-branded-pilot');
 const dataPath = join(publicRoot, 'pilot-data.json');
 const data = JSON.parse(await readFile(dataPath, 'utf8'));
+const creativePath = join(publicRoot, 'creative-system.json');
+const creative = JSON.parse(await readFile(creativePath, 'utf8'));
 const publicBase = '/showcase/booked-and-branded-pilot';
 const canonicalBase = 'https://famtasticdesigns.com' + publicBase;
-
-const imagePrompts = {
-  schema: 'famtastic.booked-branded-image-prompts.v1',
-  provider: 'openai-built-in-image-generation',
-  model: 'provider_did_not_report',
-  cost: { status: 'provider_did_not_report', authorized_cap_usd: 1 },
-  prompts: [
-    {
-      business_slug: 'coastline-crown-barbers',
-      output_ref: 'exec-83ed3784-de53-4ac5-80b0-410d2672540e.png',
-      prompt: 'Premium 16:9 editorial documentary photograph of a skilled Black male barber giving a precise taper and beard lineup to a Black male client in a polished Port St. Lucie barbershop. Warm coastal Florida daylight, dark walnut, brushed brass, clean mirrors, authentic tools; subjects on the right with negative space on the left. Fictional people; no text, logos, watermarks, distorted hands, extra fingers, or duplicated tools.'
-    },
-    {
-      business_slug: 'velvet-coil-atelier',
-      output_ref: 'exec-91c5e205-5c65-4d61-8070-aa1d89c6c6be.png',
-      prompt: 'Premium 16:9 beauty editorial photograph of a skilled Black female stylist finishing defined healthy curls on a Black female client in an intimate Treasure Coast studio. Textured plaster, terracotta, linen, amber unlabeled bottles, soft window light; subjects left with negative space on the right. Fictional people; no text, logos, watermarks, distorted hair, extra fingers, or duplicated tools.'
-    },
-    {
-      business_slug: 'palmera-fade-society',
-      output_ref: 'exec-a4e9fe7b-7eaf-4cbb-811b-07b44b5579e8.png',
-      prompt: 'Premium 16:9 street-editorial photograph of a skilled Latino male barber finishing a sharp fade on a Latino male client in a contemporary West Palm Beach barbershop. Tropical daylight, cream terrazzo, sea-glass tile, chrome, coral accent; subjects left with negative space on the right. Fictional people; no flags, clichés, text, logos, watermarks, distorted hands, extra fingers, or duplicated tools.'
-    },
-    {
-      business_slug: 'saltline-color-house',
-      output_ref: 'exec-d1f6042b-ab45-4968-9ec6-26ff009b7a75.png',
-      prompt: 'Premium 16:9 fashion-beauty photograph of a skilled white female stylist creating dimensional sunlit color and a textured cut for a white female client in a design-forward Miami studio. Sculptural white space, pale oak, travertine, cobalt glass, diffused coastal light; subjects right with negative space on the left. Fictional people; no text, logos, watermarks, labels, distorted hands, extra fingers, or duplicated tools.'
-    }
-  ]
-};
+const generatedImageRoot = join(publicRoot, 'assets/directions');
+const generationReceiptPath = join(generatedImageRoot, 'generation-receipt.json');
+const generatedPromptManifestPath = join(generatedImageRoot, 'prompt-manifest.json');
 
 function esc(value) {
   return String(value)
@@ -53,6 +31,20 @@ function esc(value) {
 function possessive(value) {
   const text = String(value);
   return text.toLowerCase().endsWith('s') ? `${text}’` : `${text}’s`;
+}
+
+function systemFor(business, direction) {
+  const archetype = creative.archetypes?.[direction.id];
+  const businessSystem = creative.businesses?.[business.slug];
+  if (!archetype || !businessSystem) throw new Error(`Creative system is incomplete for ${business.slug}/${direction.id}.`);
+  return { archetype, businessSystem };
+}
+
+function directionImage(business, direction) {
+  const filename = `${business.slug}-${direction.id}.jpg`;
+  return existsSync(join(generatedImageRoot, filename))
+    ? `${publicBase}/assets/directions/${filename}`
+    : `${publicBase}/assets/${business.image}`;
 }
 
 function template({ title, description, body, className = '' }) {
@@ -77,9 +69,12 @@ function ribbon() {
   return '<div class="demo-ribbon"><span>Fictional demonstration</span> No real business, client, review, appointment, payment, or email</div>';
 }
 
-function vars(business) {
+function vars(business, direction) {
   const { ink, paper, accent, accent2 } = business.palette;
-  return `--ink:${esc(ink)};--paper:${esc(paper)};--accent:${esc(accent)};--accent2:${esc(accent2)}`;
+  const { archetype } = systemFor(business, direction);
+  const display = archetype.type.display_family === 'Lora' ? 'Lora' : 'Metropolis';
+  const body = archetype.type.body_family === 'Lora' ? 'Lora' : 'Metropolis';
+  return `--ink:${esc(ink)};--paper:${esc(paper)};--accent:${esc(accent)};--accent2:${esc(accent2)};--display-font:${display};--body-font:${body};--shape-radius:${esc(archetype.shape.radius)}`;
 }
 
 function button(href, label, secondary = false) {
@@ -114,12 +109,14 @@ function pilotIndex() {
             <p class="pilot-hero-copy">Four fictional businesses. Three real design directions each. One offer that lets an appointment professional own the front door and run the daily request flow from a phone.</p>
           </div>
           <aside class="pilot-note">
-            <strong>$199 founding-pilot thesis</strong>
-            <p>Custom site + phone Booking Desk + request-to-book + business-owned payment and QR handoff + fresh moderated testimonial showcase. Real-time multi-staff scheduling remains a later, separately proven add-on.</p>
+            <strong>${esc(creative.offer.price_hypothesis)} · package proposal</strong>
+            <p>${esc(creative.offer.promise)}</p>
+            ${button(`${publicBase}/package/`, 'See the complete package')}
           </aside>
         </div>
       </header>
-      <main class="shell pilot-grid">${cards}</main>`
+      <section class="specialist-rail"><div class="shell"><p class="kicker">Not three color swaps</p><div class="specialist-grid">${creative.specialists.map(item => `<article><span>${esc(item.label)}</span><p>${esc(item.job)}</p></article>`).join('')}</div></div></section>
+      <main class="shell pilot-grid" id="proofs">${cards}</main>`
   });
 }
 
@@ -136,8 +133,8 @@ function emailPage(business) {
           <a class="back-link" href="${publicBase}/">← All four email proofs</a>
           <h1>What if ${esc(possessive(business.name))} booking page looked like its brand?</h1>
           <div class="sender">
-            <span class="sender-mark">FD</span>
-            <span><strong>FAMtastic Designs</strong><small>to Demo recipient · No message sent</small></span>
+            <span class="sender-mark">S</span>
+            <span><strong>${esc(creative.shay.email_from)}</strong><small>${esc(creative.shay.title)} · to Demo recipient · No message sent</small></span>
             <small>Today · 2:30 PM</small>
           </div>
         </div>
@@ -145,19 +142,20 @@ function emailPage(business) {
           <div class="mail-brand">FAMTASTIC DESIGNS</div>
           <h2>I built the alternative before asking you to imagine it.</h2>
           <p>Hi there,</p>
-          <p>I found ${esc(business.name)} through a public booking-platform profile. You already made it possible for clients to book—the opportunity is giving them a place that looks and feels like <em>your</em> business before they choose a service.</p>
-          <p>Your profile’s focus on ${esc(business.specialty)} became the starting point. I used that—not a generic salon template—to create three complete visual directions for ${esc(business.name)}.</p>
-          <p>The proposed <strong>$199 Booked &amp; Branded founding pilot</strong> includes:</p>
+          <p>I’m <strong>Shay, FAMtastic Designs’ AI Business Concierge.</strong> I help owners understand what we built, gather the decisions the team needs, and bring Fritz in when price, scope, approval, or launch needs a person.</p>
+          <p>For this fictional example, I found ${esc(business.name)} through a public booking-platform profile. Booking may already work—the opportunity is giving clients a place that looks and feels like <em>your</em> business before they choose a service.</p>
+          <p>The focus on ${esc(business.specialty)} became the starting point. I coordinated separate shape, typography, message, and reference-image passes so the link below contains three complete visual worlds—not one template in three colors.</p>
+          <p>The proposed <strong>${esc(creative.offer.price_hypothesis)} Booked &amp; Branded package</strong> includes:</p>
           <ul>
-            <li>your own mobile-ready website;</li>
-            <li>a phone-friendly Booking Desk;</li>
-            <li>service, availability, and policy management;</li>
-            <li>booking and business-owned payment/QR options; and</li>
-            <li>a small, consent-based testimonial showcase.</li>
+            <li>a selected custom mobile-ready direction;</li>
+            <li>a one-owner phone Booking Desk starter;</li>
+            <li>up to 12 services, availability windows, and policy notes;</li>
+            <li>request-to-book plus business-owned payment/QR handoff; and</li>
+            <li>fresh consent-based testimonials and Shay-guided setup.</li>
           </ul>
           <p>You can keep your current booking platform while testing it. Nothing needs to switch until the new flow works for you.</p>
-          <a class="mail-cta" href="${roomUrl}">See ${esc(possessive(business.name))} three directions →</a>
-          <p>— Fritz @ FAMtastic Designs</p>
+          <a class="mail-cta" href="${roomUrl}">See the 3 worlds I prepared for ${esc(business.name)} →</a>
+          <p class="shay-signoff"><span class="shay-orb">S</span><span><strong>Shay</strong><br>${esc(creative.shay.title)}<br><small>with Fritz and the FAMtastic Designs team</small></span></p>
           <div class="mail-footer">
             <p><strong>Fictional proof only:</strong> this email was rendered for the Booked &amp; Branded product test and was not sent. The business, recipient, profile facts, and service details are fictional.</p>
             <p>FAMtastic Designs · 1729 NW St. Lucie West Blvd #1181 · Port Saint Lucie, FL 34986</p>
@@ -169,19 +167,23 @@ function emailPage(business) {
 }
 
 function roomPage(business) {
-  const directions = business.directions.map(direction => `
-    <article class="direction-card">
+  const directions = business.directions.map(direction => {
+    const { archetype, businessSystem } = systemFor(business, direction);
+    return `
+    <article class="direction-card card-${esc(direction.id)}">
       <div class="direction-preview">
-        <img src="${publicBase}/assets/${esc(business.image)}" alt="Fictional ${esc(business.name)} direction ${esc(direction.id.toUpperCase())} preview" width="1672" height="941">
+        <img src="${directionImage(business, direction)}" alt="Fictional ${esc(business.name)} direction ${esc(direction.id.toUpperCase())} preview" width="1376" height="768">
         <span class="direction-letter">${esc(direction.id)}</span>
       </div>
       <div class="direction-card-body">
         <small>${esc(direction.label)}</small>
         <h2>${esc(direction.name)}</h2>
         <p>${esc(direction.subhead)}</p>
+        <ul class="direction-dna"><li>${esc(archetype.type.composition)}</li><li>${esc(archetype.shape.grammar)}</li><li>${esc(businessSystem.motifs.join(' · '))}</li></ul>
         ${button(`${publicBase}/proofs/${business.slug}/${direction.id}/`, 'Open working direction')}
       </div>
-    </article>`).join('');
+    </article>`;
+  }).join('');
   return template({
     title: `${business.name} — Three private directions`,
     description: `Three fictional Booked & Branded directions for ${business.name}.`,
@@ -197,9 +199,52 @@ function roomPage(business) {
         </header>
         <section class="direction-grid" aria-label="Three design directions">${directions}</section>
         <section class="room-offer">
-          <div><h3>The $199 boundary</h3><p>One operator, one location, up to 12 services, request-to-book, phone controls, one business-owned payment destination, booking/payment QR, and fresh consent-based testimonials.</p></div>
+          <div><h3>The proposed $199 boundary</h3><p>One operator, one location, up to 12 services, request-to-book, phone controls, one business-owned payment destination, booking/payment QR, and fresh consent-based testimonials.</p></div>
           <div><h3>The honest expansion</h3><p>Keep the current platform during testing. Add instant calendar connections, multi-staff operations, SMS, full POS, memberships, or deeper payments only after those capabilities are separately scoped and proven.</p></div>
         </section>
+        <p class="room-package-link">${button(`${publicBase}/package/`, 'See the complete Booked & Branded package')}</p>
+      </main>`
+  });
+}
+
+function packagePage() {
+  const core = creative.offer.core.map(item => `<li>${esc(item)}</li>`).join('');
+  const launch = creative.offer.launch_path.map((item, index) => `<li><b>${index + 1}</b><span>${esc(item)}</span></li>`).join('');
+  const excluded = creative.offer.not_included.map(item => `<li>${esc(item)}</li>`).join('');
+  const addons = creative.offer.future_addons.map(item => `<li>${esc(item)}</li>`).join('');
+  const specialists = creative.specialists.map(item => `<article><span>${esc(item.label)}</span><p>${esc(item.job)}</p></article>`).join('');
+  return template({
+    title: `${creative.offer.name} — Founding pilot package`,
+    description: 'A truthful demonstration of the proposed Booked & Branded website and phone Booking Desk starter for independent appointment professionals.',
+    className: 'package-page',
+    body: `${ribbon()}
+      <main>
+        <section class="package-hero">
+          <div class="shell package-hero-grid">
+            <div>
+              <a class="back-link" href="${publicBase}/">← Return to the four-business proof</a>
+              <p class="kicker">${esc(creative.offer.status)}</p>
+              <h1>${esc(creative.offer.headline)}</h1>
+              <p class="package-lede">${esc(creative.offer.promise)}</p>
+              <div class="package-actions">${button(`${publicBase}/#proofs`, 'See the four proof stories')}${button('#package-boundary', 'Read the honest boundary', true)}</div>
+            </div>
+            <aside class="package-price-card"><small>Founding-pilot hypothesis</small><strong>${esc(creative.offer.price_hypothesis)}</strong><p>Designed as the first owned layer beyond a generic booking profile. This page is a proposal and demonstration—not a checkout or activated Commerce product.</p></aside>
+          </div>
+        </section>
+
+        <section class="package-principle"><div class="shell"><p>Keep the booking tool while the new front door earns trust.</p><span>Then deepen the operating layer only when the business needs it.</span></div></section>
+
+        <section class="package-section"><div class="shell package-split"><div><p class="kicker">What the pilot contains</p><h2>A brand layer and a daily-work layer.</h2><p>The public website explains the business with its own visual language. The phone Booking Desk gives one owner a bounded place to see requests, make decisions, manage services, and hand clients to a business-owned payment destination.</p></div><ul class="package-checklist">${core}</ul></div></section>
+
+        <section class="package-section package-dark"><div class="shell"><div class="section-head"><div><p class="kicker">Phone-first by design</p><h2>Small enough to learn. Useful enough to matter.</h2></div><p>The starter is intentionally not a fake all-in-one platform. It centers the decisions a solo barber or stylist actually makes between appointments.</p></div><div class="package-desk-grid"><article><b>01</b><h3>Request</h3><p>Client chooses a service and preferred time with preparation context.</p></article><article><b>02</b><h3>Decide</h3><p>Owner confirms, proposes another time, or declines from the phone.</p></article><article><b>03</b><h3>Collect</h3><p>Owner sends a reviewed Square, Stripe, or Cash App Business destination.</p></article><article><b>04</b><h3>Follow up</h3><p>Completed clients can leave a fresh, permission-based testimonial.</p></article></div></div></section>
+
+        <section class="package-section"><div class="shell package-split"><div><p class="kicker">A safer bridge away from platform sameness</p><h2>No forced overnight switch.</h2><ol class="launch-path">${launch}</ol></div><div class="package-phone"><span class="package-phone-glow"></span><div class="mini-phone"><small>Booked &amp; Branded</small><h3>Today’s chair</h3><p><b>3</b> requests waiting</p><p><b>1</b> deposit due</p><span>Confirm · Suggest time · Services</span></div></div></div></section>
+
+        <section class="package-section package-boundary" id="package-boundary"><div class="shell"><div class="section-head"><div><p class="kicker">The honest boundary</p><h2>What $199 does not pretend to include.</h2></div><p>These are future scopes or integrations, not hidden promises inside the founding-pilot demonstration.</p></div><div class="boundary-grid"><div><h3>Not inside this pilot</h3><ul>${excluded}</ul></div><div><h3>Natural next add-ons</h3><ul>${addons}</ul></div></div></div></section>
+
+        <section class="package-section shay-package"><div class="shell package-split"><div><span class="shay-orb package-orb">S</span><p class="kicker">The business face</p><h2>Meet Shay, your AI Business Concierge.</h2><p>Shay explains the proof choices, gathers decisions, keeps setup understandable, and knows when to bring in Fritz or the FAMtastic team. Human authority stays with the team for pricing, scope, approvals, payment, and launch.</p></div><div class="specialist-grid">${specialists}</div></div></section>
+
+        <section class="package-final"><div class="shell"><p class="kicker">Proof before promise</p><h2>Four fictional businesses. Twelve working directions. One reusable product thesis.</h2>${button(`${publicBase}/#proofs`, 'Open the four-business showcase')}</div></section>
       </main>`
   });
 }
@@ -231,28 +276,37 @@ function serviceCards(business) {
 
 function proofPage(business, direction) {
   const other = business.directions.filter(item => item.id !== direction.id);
+  const { archetype, businessSystem } = systemFor(business, direction);
+  const ownerDeskLabel = direction.id === 'c' ? 'How the flow works' : 'See the Booking Desk';
   return template({
     title: `${business.name} — ${direction.name}`,
     description: `${direction.label} Booked & Branded demonstration for ${business.name}.`,
     className: `proof-page dir-${direction.id}`,
     body: `${ribbon()}
-      <div style="${vars(business)}">
+      <div style="${vars(business, direction)}">
         <nav class="proof-nav" aria-label="Primary">
           <a class="brand-lockup" href="${publicBase}/rooms/${business.slug}/"><span class="brand-mark">${esc(business.mark)}</span><span>${esc(business.name)}</span></a>
-          <div class="proof-nav-links"><a href="#services">Services</a><a href="#owner-desk">Owner desk</a>${button('#request', 'Request a time')}</div>
+          <div class="proof-nav-links"><a href="#services">Services</a><a href="#owner-desk">Owner desk</a>${button('#request', archetype.message.cta)}</div>
         </nav>
         <main>
           <section class="proof-hero">
             <div class="proof-hero-copy">
               <span class="overline">${esc(direction.name)} · ${esc(business.location)}</span>
-              <h1>${esc(direction.headline)}</h1>
+              <h1 data-echo="${esc(direction.headline)}">${esc(direction.headline)}</h1>
               <p>${esc(direction.subhead)}</p>
-              <div class="proof-actions">${button('#request', 'Request a time')}${button('#owner-desk', 'See the Booking Desk', true)}</div>
+              <div class="proof-actions">${button('#request', archetype.message.cta)}${button('#owner-desk', ownerDeskLabel, true)}</div>
             </div>
             <div class="proof-hero-media">
-              <img src="${publicBase}/assets/${esc(business.image)}" alt="Fictional ${esc(business.operator)} working in the ${esc(business.name)} demonstration" width="1672" height="941">
+              <img src="${directionImage(business, direction)}" alt="Fictional ${esc(business.operator)} in the ${esc(direction.name)} art direction for ${esc(business.name)}" width="1376" height="768">
               <div class="proof-hero-tag"><strong>${esc(business.hours)}</strong><br>${esc(business.policy)}</div>
             </div>
+          </section>
+
+          <section class="creative-dna-strip" aria-label="Direction creative system">
+            <div><small>Type Director</small><strong>${esc(archetype.type.display_family)} × ${esc(archetype.type.body_family)}</strong><span>${esc(archetype.type.composition)}</span></div>
+            <div><small>Shape Director</small><strong>${esc(archetype.name)}</strong><span>${esc(archetype.shape.grammar)}</span></div>
+            <div><small>Message Director</small><strong>${esc(archetype.message.tone)}</strong><span>${esc(archetype.message.argument)}</span></div>
+            <div><small>Native motifs</small><strong>${esc(businessSystem.motifs.join(' · '))}</strong><span>Original symbolic language, never a copied platform identity.</span></div>
           </section>
 
           <section class="proof-section" id="services">
@@ -342,12 +396,12 @@ function sha256(buffer) {
   return createHash('sha256').update(buffer).digest('hex');
 }
 
-for (const generated of ['emails', 'rooms', 'proofs']) {
+for (const generated of ['emails', 'rooms', 'proofs', 'package']) {
   await rm(join(publicRoot, generated), { recursive: true, force: true });
 }
 
 await write('index.html', pilotIndex());
-await write('image-prompts.json', JSON.stringify(imagePrompts, null, 2) + '\n');
+await write('package/index.html', packagePage());
 
 for (const business of data.businesses) {
   await write(`emails/${business.slug}/index.html`, emailPage(business));
@@ -356,6 +410,26 @@ for (const business of data.businesses) {
     await write(`proofs/${business.slug}/${direction.id}/index.html`, proofPage(business, direction));
   }
 }
+
+const promptManifest = existsSync(generatedPromptManifestPath)
+  ? JSON.parse(await readFile(generatedPromptManifestPath, 'utf8'))
+  : {
+      schema: 'famtastic.booked-branded-reference-prompts.v1',
+      request_id: creative.revision_id,
+      provider: 'google-gemini-api',
+      api: 'interactions',
+      model: creative.image_rules.model,
+      status: 'planned_not_executed',
+      prompts: data.businesses.flatMap(business => business.directions.map(direction => ({
+        business_slug: business.slug,
+        direction_id: direction.id,
+        direction_name: direction.name,
+        reference_path: `frontend/public/showcase/booked-and-branded-pilot/assets/${business.image}`,
+        image_direction: creative.archetypes[direction.id].image_direction,
+        scene: creative.businesses[business.slug].scenes[direction.id]
+      })))
+    };
+await write('image-prompts.json', JSON.stringify(promptManifest, null, 2) + '\n');
 
 const artifactPaths = (await walk(publicRoot))
   .filter(path => !path.endsWith('build-dna.json'))
@@ -372,49 +446,86 @@ for (const absolute of artifactPaths) {
   });
 }
 
+const generatedReceipt = existsSync(generationReceiptPath)
+  ? JSON.parse(await readFile(generationReceiptPath, 'utf8'))
+  : null;
+const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' }).trim();
+const createdAt = generatedReceipt?.completed_at || new Date().toISOString();
+const localStage = (stage_id, capability, outputs = []) => ({
+  stage_id,
+  capability,
+  attempt: 1,
+  execution: {
+    provider: { id: 'famtastic-local-builder' },
+    model: { status: 'not_applicable' },
+    timing: { status: 'not_metered' },
+    cost: { status: 'not_applicable', amount_usd: 0 }
+  },
+  result: { status: 'completed', outputs }
+});
 const buildDna = {
   schema: 'famtastic.build-dna.v1',
-  run: {
-    run_id: 'booked-branded-four-proof-pilot-20260827',
+  build_id: creative.revision_id,
+  classification: 'fictional-product-demonstration',
+  created_at: createdAt,
+  repository: {
+    name: 'FAMtastic',
+    revision,
+    worktree: 'booked-branded-four-proof-pilot',
+    revision_status: 'source_revision_before_artifact_commit'
+  },
+  recipe: {
     routine: 'website_proof.generate.v1',
-    source_lane: 'famtastic-owned-product-demonstration',
-    created_at: '2026-08-27T18:18:00Z',
+    version: 'booked-branded.v2',
+    build_class: 'medium',
+    offer_status: creative.offer.status,
     public_base: canonicalBase,
+    direction_system: Object.values(creative.archetypes).map(item => item.name)
+  },
+  run: {
+    source_lane: 'famtastic-owned-product-demonstration',
     business_count: data.businesses.length,
     directions_per_business: 3,
     email_sent: false,
     payment_enabled: false,
     customer_data_used: false
   },
-  recipe: {
-    offer: 'Booked & Branded — $199 founding pilot draft',
-    audience_examples: ['Black barber in Port St. Lucie', 'Black hair stylist in Fort Pierce', 'Hispanic barber in West Palm Beach', 'white hair stylist in Miami'],
-    direction_system: ['editorial restraint', 'high-energy brand world', 'operator-first system'],
-    operational_surface: 'static phone Booking Desk demonstration',
-    disclaimer: 'All businesses, people, services, requests, reviews, and profile facts are fictional demonstration content.'
+  stages: [
+    localStage('offer-and-shay', 'offer-positioning-and-concierge-boundary', ['creative-system.json', 'package/index.html']),
+    localStage('shape-direction', 'shape-composition-system', Object.keys(creative.archetypes)),
+    localStage('type-direction', 'typographic-composition-system', Object.keys(creative.archetypes)),
+    localStage('message-direction', 'proof-message-system', Object.keys(creative.archetypes)),
+    {
+      stage_id: 'gemini-reference-images',
+      capability: 'reference-led-image-generation',
+      attempt: 1,
+      execution: {
+        provider: { id: 'google-gemini-api', api: 'interactions' },
+        model: { id: creative.image_rules.model, status: generatedReceipt ? 'reported' : 'planned' },
+        timing: generatedReceipt ? { status: 'reported', started_at: generatedReceipt.started_at, completed_at: generatedReceipt.completed_at, duration_ms: Date.parse(generatedReceipt.completed_at) - Date.parse(generatedReceipt.started_at) } : { status: 'not_started' },
+        cost: generatedReceipt ? { status: generatedReceipt.cost_status, amount_usd: generatedReceipt.estimated_cost_usd, ceiling_usd: generatedReceipt.cost_ceiling_usd } : { status: 'planned_estimate', amount_usd: creative.image_rules.estimated_total_usd, ceiling_usd: 1 }
+      },
+      result: { status: generatedReceipt ? 'completed' : 'planned', provider_generation_count: generatedReceipt?.provider_generation_count || 0, selected_image_count: generatedReceipt?.image_count || 0, outputs: generatedReceipt?.artifacts.map(item => item.filename) || [] }
+    },
+    localStage('static-construction', 'static-proof-construction', ['index.html', 'package/index.html', '4 emails', '4 rooms', '12 proof pages']),
+    {
+      stage_id: 'browser-qa', capability: 'responsive-browser-qa', attempt: 1,
+      execution: { provider: { id: 'playwright-local' }, model: { status: 'not_applicable' }, timing: { status: 'pending' }, cost: { status: 'not_applicable', amount_usd: 0 } },
+      result: { status: 'pending' }
+    },
+    {
+      stage_id: 'visual-review', capability: 'primary-visual-review', attempt: 1,
+      execution: { provider: { id: 'codex-visual-review' }, model: { status: 'not_applicable' }, timing: { status: 'pending' }, cost: { status: 'not_applicable', amount_usd: 0 } },
+      result: { status: 'pending', independent_review: 'reserved_for_owner' }
+    }
+  ],
+  artifacts,
+  retrieval: {
+    filesystem: { status: 'available', root: 'frontend/public/showcase/booked-and-branded-pilot' },
+    database: { status: 'not_registered', reason: 'Static fictional showcase; no prospect, customer, proof, or Commerce record.' },
+    site_studio: { status: 'not_handed_off', reason: 'Reusable creative system is ready for later Site Studio translation.' }
   },
-  image_generation: imagePrompts,
-  construction: {
-    agent: 'codex',
-    provider: 'local-deterministic-static-builder',
-    model: 'not_applicable',
-    generator: 'scripts/build-booked-branded-pilot.mjs',
-    output: 'frontend/public/showcase/booked-and-branded-pilot'
-  },
-  qa: {
-    static_build: 'pending',
-    browser_desktop: 'pending',
-    browser_mobile_390: 'pending',
-    link_validation: 'pending',
-    independent_review: 'pending'
-  },
-  cost: {
-    authorized_image_cap_usd: 1,
-    actual_usd: null,
-    status: 'provider_did_not_report',
-    note: 'The built-in image generation tool returned no billing or usage receipt; no paid fallback provider was called.'
-  },
-  artifacts
+  integrity: { artifact_hash_algorithm: 'sha256', credential_values_retained: false }
 };
 
 await write('build-dna.json', JSON.stringify(buildDna, null, 2) + '\n');

@@ -2,6 +2,21 @@
 
 ## 2026-08-27 — Booked & Branded four-business proof pilot
 
+- Upgraded the pilot into a reusable creative and offer system: Shay now
+  appears as the FAMtastic Designs AI Business Concierge, a truthful package
+  page defines the proposed $199 starter and expansion boundary, and explicit
+  Shape, Type, Message, and Gemini Lite Image Studio roles drive three
+  materially different templates rather than color swaps.
+- Added one distinct Gemini Flash Lite reference-led photograph to every proof
+  direction. Primary review rejected generated poster/UI text in the first
+  batch, repaired the photo-only prompt, and selected 12 clean frames from 25
+  provider generations. Receipts retain interaction IDs, usage, timing, exact
+  hashes, rejection reasons, and a cumulative USD 0.8400 estimate pending
+  provider reconciliation; the USD 1.00 ceiling was not exceeded.
+- Replaced the earlier noncanonical pilot evidence object with a validated
+  `famtastic.build-dna.v1` record covering the creative specialists, provider
+  route, prompt and output artifacts, responsive QA, retrieval state, and
+  customer/Commerce/no-send boundaries.
 - Published the unlisted showcase at
   `https://famtasticdesigns.com/showcase/booked-and-branded-pilot/` in frontend
   release `412a8f51451e684d987d2ba80971531acee4d067`. Real-browser acceptance
@@ -14,14 +29,11 @@
   Beach, and a white colorist/stylist in Miami. Each business has an email
   preview, a three-direction concept room, and distinct editorial,
   high-energy, and operator-first proofs: 4 emails, 4 rooms, and 12 sites.
-- Added four original, fictional-subject hero images and recorded the prompts,
-  output references, final artifact hashes, and truthful provider-reported
-  cost state in `famtastic.build-dna.v1`. The built-in generator did not
-  return a model or billing receipt; those fields remain
-  `provider_did_not_report` rather than being guessed.
+- The original four fictional-subject hero images remain the owned visual-canon
+  references for the expanded 12-image series.
 - Added a deterministic static builder and a Playwright acceptance runner.
-  Twenty-one routes passed at 1440px and 390px, with 42 viewport checks, no
-  broken images, no horizontal overflow, no console errors, and 13 retained
+  Twenty-two routes passed at 1440px and 390px, with 44 viewport checks, no
+  broken images, no horizontal overflow, no console errors, and 14 retained
   screenshots. The standard synthetic customer-journey proof also passed in
   local DB, memory-email, stub-payment, fixture-DNS mode.
 - Every page identifies itself as fictional. No customer data was used, no

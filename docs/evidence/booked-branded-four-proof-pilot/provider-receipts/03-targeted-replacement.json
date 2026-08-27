@@ -1,0 +1,65 @@
+{
+  "schema": "famtastic.gemini-flash-lite-reference-image-receipt.v1",
+  "status": "complete",
+  "request_id": "booked-branded-v2-20260827-palmera-b-corrected",
+  "provider": "google-gemini-api",
+  "api": "interactions",
+  "model": "gemini-3.1-flash-lite-image",
+  "credential_source": "macos_keychain:FAMtastic.Gemini.Image:famtastic-gemini-image-worker",
+  "credential_value_retained": false,
+  "requested_output": {
+    "aspect_ratio": "16:9",
+    "image_size": "1K",
+    "mime_type": "image/jpeg"
+  },
+  "image_count": 1,
+  "estimated_cost_usd": 0.0336,
+  "cost_ceiling_usd": 0.05,
+  "cost_status": "estimated_pending_provider_reconciliation",
+  "started_at": "2026-08-27T19:50:19.065Z",
+  "completed_at": "2026-08-27T19:50:24.838Z",
+  "artifacts": [
+    {
+      "business_slug": "palmera-fade-society",
+      "direction_id": "b",
+      "direction_name": "Calle Moderno",
+      "filename": "palmera-fade-society-b.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/palmera-fade.webp",
+      "reference_sha256": "99a7b4c5320f2fea0b4ba4b733a2bcaf4807998c64acc4494621277e672dcc10",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Palmera Fade Society concept in West Palm Beach, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Signal Campaign. Create a cinematic campaign frame with stronger contrast, candid motion, flash or colored practical light, an unusual crop, layered foreground depth, and clean negative space for oversized display typography.\n\nScene: A kinetic late-afternoon finishing scene shot low and close: the Latino barber details the hairline as coral light, chrome, palm shadow, and layered reflections create campaign energy.\n\nUse these motifs only as subtle physical composition cues: palm cut, fade gradient, street-corner tile. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "cf56eafed02ccac3f1d9466da70a679d2c7105f26c9cfdf4ad7f68fd70d7bb0b",
+      "provider_interaction_id": "v1_ChdfNVNRYXFLYk80YUdxdHNQN3Jyc3NBSRIXXzVTUWFxS2JPNGFHcXRzUDdycnNzQUk",
+      "provider_status": "completed",
+      "provider_response_sha256": "662def73d5819e21814d625ff48bcd1e09cdb5289d83a550a8c4e704a9aac4fb",
+      "usage": {
+        "total_tokens": 3131,
+        "total_input_tokens": 1525,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 405
+          },
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1606,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1978
+      },
+      "duration_ms": 5772,
+      "bytes": 618294,
+      "sha256": "1beac06f1f451b788cb1b2bf75b41c21556af83c82c61aa5386ec8bd0a1ef7d7"
+    }
+  ]
+}

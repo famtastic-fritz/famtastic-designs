@@ -16,6 +16,7 @@ const screenshotDir = join(evidenceDir, 'screenshots');
 await mkdir(screenshotDir, { recursive: true });
 
 const routes = ['/'];
+routes.push('/package/');
 for (const business of data.businesses) {
   routes.push(`/emails/${business.slug}/`, `/rooms/${business.slug}/`);
   for (const direction of business.directions) routes.push(`/proofs/${business.slug}/${direction.id}/`);
@@ -74,6 +75,11 @@ try {
   await overview.screenshot({ path: join(screenshotDir, 'pilot-overview-desktop.png'), fullPage: true });
   await overview.close();
 
+  const packagePage = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  await packagePage.goto(base + '/package/', { waitUntil: 'networkidle' });
+  await packagePage.screenshot({ path: join(screenshotDir, 'booked-branded-package-desktop.png'), fullPage: true });
+  await packagePage.close();
+
   for (const business of data.businesses) {
     const room = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
     await room.goto(`${base}/rooms/${business.slug}/`, { waitUntil: 'networkidle' });
@@ -108,7 +114,7 @@ const report = {
   base_url: base,
   routes_tested: routes.length,
   viewport_checks: routeEvidence.length,
-  screenshots: 13,
+  screenshots: 14,
   errors,
   passed: errors.length === 0,
   route_evidence: routeEvidence
@@ -124,23 +130,33 @@ if (errors.length) {
 const buildDnaPath = join(publicRoot, 'build-dna.json');
 const buildDna = JSON.parse(await readFile(buildDnaPath, 'utf8'));
 const reportBytes = await readFile(reportPath);
-buildDna.qa = {
-  static_build: 'passed',
-  browser_desktop: 'passed',
-  browser_mobile_390: 'passed',
-  link_validation: 'passed',
-  primary_visual_review: 'passed',
-  primary_visual_review_notes: 'The overview, all four rooms, all four operator-first mobile directions, one email, and one complete three-direction desktop set were inspected. Direction A is editorial, B is cinematic/high-signal, and C is operator-first; no text collision, broken image, or fictional-to-real ambiguity was observed.',
-  independent_review: 'reserved_for_owner',
-  evidence: {
-    path: 'docs/evidence/booked-branded-four-proof-pilot/qa-report.json',
-    sha256: createHash('sha256').update(reportBytes).digest('hex'),
-    routes_tested: routes.length,
-    viewport_checks: routeEvidence.length,
-    screenshots: 13
-  }
+const browserStage = buildDna.stages.find(stage => stage.stage_id === 'browser-qa');
+browserStage.execution.timing = { status: 'reported', completed_at: report.generated_at };
+browserStage.result = {
+  status: 'completed',
+  routes_tested: routes.length,
+  viewport_checks: routeEvidence.length,
+  screenshots: 14,
+  evidence_ref: 'docs/evidence/booked-branded-four-proof-pilot/qa-report.json'
 };
+const visualStage = buildDna.stages.find(stage => stage.stage_id === 'visual-review');
+const primaryReviewPassed = process.env.BOOKED_BRANDED_PRIMARY_VISUAL_REVIEW === 'passed';
+visualStage.execution.timing = primaryReviewPassed ? { status: 'reported', completed_at: new Date().toISOString() } : { status: 'pending' };
+visualStage.result = primaryReviewPassed
+  ? {
+      status: 'completed',
+      notes: 'The overview, package, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. Direction A is editorial, B is a high-signal campaign, and C is operator-first; all twelve reference-led images are distinct and no text collision, broken image, or fictional-to-real ambiguity was observed.',
+      independent_review: 'reserved_for_owner'
+    }
+  : { status: 'pending', independent_review: 'reserved_for_owner' };
+buildDna.artifacts = buildDna.artifacts.filter(artifact => artifact.role !== 'browser-qa-report');
+buildDna.artifacts.push({
+  role: 'browser-qa-report',
+  path: 'docs/evidence/booked-branded-four-proof-pilot/qa-report.json',
+  bytes: reportBytes.length,
+  sha256: createHash('sha256').update(reportBytes).digest('hex')
+});
 await writeFile(buildDnaPath, JSON.stringify(buildDna, null, 2) + '\n');
 
-console.log(`PASS: ${routes.length} routes at desktop and 390px; 13 screenshots captured.`);
+console.log(`PASS: ${routes.length} routes at desktop and 390px; 14 screenshots captured.`);
 console.log(`Evidence: ${reportPath}`);

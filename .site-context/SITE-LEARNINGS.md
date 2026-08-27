@@ -5,6 +5,27 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — Native design systems should own text; generated images should stay photographic
+
+- Observation: a valid reference-led provider receipt did not stop Gemini from
+  inventing poster words and interface overlays. The second photo-only prompt
+  plus one targeted repair produced a clean 12-frame Booked & Branded series.
+- Guidance: separate the agents by medium. Shape, Type, and Message directors
+  define reusable native HTML/CSS composition; the image worker supplies only
+  realistic photographic material and empty space. Inspect every output, record
+  rejected attempts and their cost, and never promote generated text as UI or
+  customer copy.
+
+## 2026-08-27 — Customer-facing AI needs a named human-authority handoff
+
+- Observation: Shay is useful as the business face when the email clearly names
+  her as the FAMtastic Designs AI Business Concierge and immediately explains
+  the boundary.
+- Guidance: Shay may explain, gather, and coordinate. Fritz and the FAMtastic
+  team retain pricing, scope, approval, payment, and launch decisions. Site
+  Studio translations must preserve that boundary rather than silently giving
+  a model business authority.
+
 ## 2026-08-27 — Product demos must separate visual proof from operational proof
 
 - Observation: the four-business Booked & Branded showcase can accurately

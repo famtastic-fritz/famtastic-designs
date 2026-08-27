@@ -1,0 +1,545 @@
+{
+  "schema": "famtastic.gemini-flash-lite-reference-image-receipt.v1",
+  "status": "complete_after_primary_quality_repair",
+  "request_id": "booked-branded-v2-20260827-final",
+  "provider": "google-gemini-api",
+  "api": "interactions",
+  "model": "gemini-3.1-flash-lite-image",
+  "credential_source": "macos_keychain:FAMtastic.Gemini.Image:famtastic-gemini-image-worker",
+  "credential_value_retained": false,
+  "requested_output": {
+    "aspect_ratio": "16:9",
+    "image_size": "1K",
+    "mime_type": "image/jpeg"
+  },
+  "image_count": 12,
+  "provider_generation_count": 25,
+  "estimated_cost_usd": 0.84,
+  "cost_ceiling_usd": 1,
+  "cost_status": "estimated_pending_provider_reconciliation",
+  "started_at": "2026-08-27T19:43:58.117Z",
+  "completed_at": "2026-08-27T19:50:24.838Z",
+  "quality_selection": {
+    "initial_batch": {
+      "status": "rejected",
+      "reason": "Generated typography or interface overlays violated the photo-only quality contract.",
+      "receipt_sha256": "24d49d8b0db82eac492afd777334231d5b21f215281b050d39708f587a881869"
+    },
+    "corrected_batch": {
+      "status": "selected_except_one",
+      "reason": "Eleven photo-only outputs passed; Palmera direction B retained generated sign text.",
+      "receipt_sha256": "2b7d7f1e497a596b9616354399abd62928f50b5e422d4042e1c02b16b8e59250"
+    },
+    "targeted_replacement": {
+      "status": "selected",
+      "reason": "Photo-only replacement passed primary visual review.",
+      "receipt_sha256": "54d16f69837d89be79dfc8a23a1cb8136ff9d6a80b8b13c903b218d57bd7d78d"
+    }
+  },
+  "artifacts": [
+    {
+      "business_slug": "coastline-crown-barbers",
+      "direction_id": "a",
+      "direction_name": "The Crown Standard",
+      "filename": "coastline-crown-barbers-a.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/coastline-crown.webp",
+      "reference_sha256": "08a095ac00b41fe4ae3ce39db92274473c8a356cb90460af0d5a96865ad40a32",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Coastline Crown Barbers concept in Port St. Lucie, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Signature Editorial. Create a quiet premium editorial frame with tactile materials, natural window light, a deliberate craft gesture, human warmth, and generous negative space for elegant serif typography.\n\nScene: A composed after-cut portrait beside a walnut station: the Black barber brushes the client’s shoulder while the finished taper and beard line catch warm coastal daylight.\n\nUse these motifs only as subtle physical composition cues: crown arc, clipper line, coastal horizon. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "bf69e007e234f08881bbad618d64b292a74bc13b6e9398a07e09556ce802de63",
+      "provider_interaction_id": "v1_ChduNVNRYXNTZEE0LUh6N0lQbTV6Z3NBcxIXbjVTUWFzU2RBNC1IejdJUG01emdzQXM",
+      "provider_status": "completed",
+      "provider_response_sha256": "fb02cb6818c520172817da29dd5c323cebe77d81e62154ac7a77b7bb82a49618",
+      "usage": {
+        "total_tokens": 3106,
+        "total_input_tokens": 1518,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 398
+          },
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1588,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1971
+      },
+      "duration_ms": 4602,
+      "bytes": 570085,
+      "sha256": "e4cd768663c18f5879dede64ae13b25eed3959600609a12e7bcf5c7970736fa8"
+    },
+    {
+      "business_slug": "coastline-crown-barbers",
+      "direction_id": "b",
+      "direction_name": "772 After Dark",
+      "filename": "coastline-crown-barbers-b.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/coastline-crown.webp",
+      "reference_sha256": "08a095ac00b41fe4ae3ce39db92274473c8a356cb90460af0d5a96865ad40a32",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Coastline Crown Barbers concept in Port St. Lucie, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Signal Campaign. Create a cinematic campaign frame with stronger contrast, candid motion, flash or colored practical light, an unusual crop, layered foreground depth, and clean negative space for oversized display typography.\n\nScene: A lively early-evening barbershop moment: the Black barber pivots around the chair during a finishing pass, chrome tools and amber light creating streaks and foreground depth.\n\nUse these motifs only as subtle physical composition cues: crown arc, clipper line, coastal horizon. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "30cf36a7796a534654464ffe561b61a5312a8b2c15873c39e70d44c2d1538a13",
+      "provider_interaction_id": "v1_ChdvNVNRYXJYUkhQaW9tdGtQZ2VtMWtBaxIXbzVTUWFyWFJIUGlvbXRrUGdlbTFrQWs",
+      "provider_status": "completed",
+      "provider_response_sha256": "ee67ad6932ce0089107319cb3dce90601448e28116813b6dc4c7e6dd459e9f81",
+      "usage": {
+        "total_tokens": 3079,
+        "total_input_tokens": 1522,
+        "input_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          },
+          {
+            "modality": "text",
+            "tokens": 402
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1557,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1975
+      },
+      "duration_ms": 4532,
+      "bytes": 519075,
+      "sha256": "a64975f5c9d777886390882c22192f0d69e10cc067160081ee1e62e58c14d46e"
+    },
+    {
+      "business_slug": "coastline-crown-barbers",
+      "direction_id": "c",
+      "direction_name": "Chairside Command",
+      "filename": "coastline-crown-barbers-c.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/coastline-crown.webp",
+      "reference_sha256": "08a095ac00b41fe4ae3ce39db92274473c8a356cb90460af0d5a96865ad40a32",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Coastline Crown Barbers concept in Port St. Lucie, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Chairside OS. Create an operator-first documentary frame between appointments: the owner uses a phone naturally in the real workspace, with service tools and brand materials visible, clean anatomy and screen-safe negative space. Do not render readable phone UI.\n\nScene: Between clients, the Black barber stands beside the clean chair reviewing a phone with clippers, appointment notebook, and an unbranded payment placard nearby.\n\nUse these motifs only as subtle physical composition cues: crown arc, clipper line, coastal horizon. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "4108c5a8fd29a8407daf344508734148e9797c47d0bc0dc5e772eb24ecea498b",
+      "provider_interaction_id": "v1_ChdwNVNRYXBHQ05hN2dxdHNQcFo3cGlRWRIXcDVTUWFwR0NOYTdncXRzUHBaN3BpUVk",
+      "provider_status": "completed",
+      "provider_response_sha256": "c8d973176ee6d27470df6a8c6c574971b09e2f339472a8478cc0dda8a96460e3",
+      "usage": {
+        "total_tokens": 3112,
+        "total_input_tokens": 1530,
+        "input_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          },
+          {
+            "modality": "text",
+            "tokens": 410
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1582,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1983
+      },
+      "duration_ms": 4323,
+      "bytes": 487866,
+      "sha256": "4967d31198682bde79dd4d6d50efbab9b43669f2e3f2db540a9f47bab4b67bcf"
+    },
+    {
+      "business_slug": "velvet-coil-atelier",
+      "direction_id": "a",
+      "direction_name": "Soft Power",
+      "filename": "velvet-coil-atelier-a.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/velvet-coil.webp",
+      "reference_sha256": "326693b176ea8590940f89cd01a900750086fb86ca9ff2a57d7313ee231998c8",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Velvet Coil Atelier concept in Fort Pierce, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Signature Editorial. Create a quiet premium editorial frame with tactile materials, natural window light, a deliberate craft gesture, human warmth, and generous negative space for elegant serif typography.\n\nScene: A quiet finishing ritual: the Black stylist separates one healthy curl beside a terracotta-toned station while the client sees the final shape in soft window light.\n\nUse these motifs only as subtle physical composition cues: coil spiral, parting line, folded linen. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "be134ea20928e99cacc07bbc6e9afedab9ad49c6b207977b0e9f19516f38d28a",
+      "provider_interaction_id": "v1_ChdySlNRYXVXZkZvYmhxdHNQN3VLUmtBVRIXckpTUWF1V2ZGb2JocXRzUDd1S1JrQVU",
+      "provider_status": "completed",
+      "provider_response_sha256": "d984e9e19f72b0a32a5e483894f64c0e42d9ada773c3b5204f0ec7ad0e2c95dd",
+      "usage": {
+        "total_tokens": 3082,
+        "total_input_tokens": 1512,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 392
+          },
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1570,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1965
+      },
+      "duration_ms": 4636,
+      "bytes": 593920,
+      "sha256": "25a93df0d758f48ec8019e24fee1470435c2591c24209bd50610a178e5f9762a"
+    },
+    {
+      "business_slug": "velvet-coil-atelier",
+      "direction_id": "b",
+      "direction_name": "Coil Culture",
+      "filename": "velvet-coil-atelier-b.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/velvet-coil.webp",
+      "reference_sha256": "326693b176ea8590940f89cd01a900750086fb86ca9ff2a57d7313ee231998c8",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Velvet Coil Atelier concept in Fort Pierce, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Signal Campaign. Create a cinematic campaign frame with stronger contrast, candid motion, flash or colored practical light, an unusual crop, layered foreground depth, and clean negative space for oversized display typography.\n\nScene: An expressive texture-in-motion portrait: the client turns gently as defined curls catch a warm flash, with translucent product silhouettes and layered fabric in the foreground.\n\nUse these motifs only as subtle physical composition cues: coil spiral, parting line, folded linen. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "eb5bbfe0733b993710a87279604b6f28af6c95be98a0f8e3f84dc3ce794989e3",
+      "provider_interaction_id": "v1_ChdzSlNRYXZLTUY2ZS1xdHNQcHBXaTZBURIXc0pTUWF2S01GNmUtcXRzUHBwV2k2QVE",
+      "provider_status": "completed",
+      "provider_response_sha256": "e442e73113faefc567d460f46c13528edd39a31a3f1b4f22ab1fd94ab76eed23",
+      "usage": {
+        "total_tokens": 3045,
+        "total_input_tokens": 1518,
+        "input_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          },
+          {
+            "modality": "text",
+            "tokens": 398
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1527,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1971
+      },
+      "duration_ms": 3687,
+      "bytes": 594784,
+      "sha256": "6aeb9bcf4596897e115b01a1d590cef8deedbd7ebcdf9f356f319403cfb0ffbb"
+    },
+    {
+      "business_slug": "velvet-coil-atelier",
+      "direction_id": "c",
+      "direction_name": "The Studio Ritual",
+      "filename": "velvet-coil-atelier-c.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/velvet-coil.webp",
+      "reference_sha256": "326693b176ea8590940f89cd01a900750086fb86ca9ff2a57d7313ee231998c8",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Velvet Coil Atelier concept in Fort Pierce, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Chairside OS. Create an operator-first documentary frame between appointments: the owner uses a phone naturally in the real workspace, with service tools and brand materials visible, clean anatomy and screen-safe negative space. Do not render readable phone UI.\n\nScene: The Black stylist reviews a consultation request on her phone beside a neat color-and-care station with a curl diagram, folded towel, and unbranded amber bottles.\n\nUse these motifs only as subtle physical composition cues: coil spiral, parting line, folded linen. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "8e9729bd8b9e000cde1e7dbcccba137f3f7133cbfb277ae9d0eb1da4dd916f65",
+      "provider_interaction_id": "v1_Chd0SlNRYXVDUkZLQ2ttdGtQbjRPQ3NRaxIXdEpTUWF1Q1JGS0NrbXRrUG40T0NzUWs",
+      "provider_status": "completed",
+      "provider_response_sha256": "a349b93fb1871af6d164964fe133ad7eb1b5839b5ccbcad43c885b6c74d92813",
+      "usage": {
+        "total_tokens": 3105,
+        "total_input_tokens": 1530,
+        "input_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          },
+          {
+            "modality": "text",
+            "tokens": 410
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1575,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1983
+      },
+      "duration_ms": 4182,
+      "bytes": 622751,
+      "sha256": "eb2603e6eb294c57ef29d3642fdaf22389a4436a086472d7f2f269be289b8d77"
+    },
+    {
+      "business_slug": "palmera-fade-society",
+      "direction_id": "a",
+      "direction_name": "Palm Line",
+      "filename": "palmera-fade-society-a.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/palmera-fade.webp",
+      "reference_sha256": "99a7b4c5320f2fea0b4ba4b733a2bcaf4807998c64acc4494621277e672dcc10",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Palmera Fade Society concept in West Palm Beach, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Signature Editorial. Create a quiet premium editorial frame with tactile materials, natural window light, a deliberate craft gesture, human warmth, and generous negative space for elegant serif typography.\n\nScene: A bright West Palm neighborhood portrait after a finished fade: the Latino barber and client share a relaxed mirror-side moment in cream terrazzo and sea-glass light.\n\nUse these motifs only as subtle physical composition cues: palm cut, fade gradient, street-corner tile. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "589d2aab690c92c9f99f48b7313ded6c6795b851570bdf29a63942402e858c61",
+      "provider_interaction_id": "v1_Chd1WlNRYXV2WUFfbUlxdHNQOXNDczZRURIXdVpTUWF1dllBX21JcXRzUDlzQ3M2UVE",
+      "provider_status": "completed",
+      "provider_response_sha256": "4d31e2660c75d4bb95fe4a392ba2b49bd3c3ccf2e03009a75ef189ac2537c8de",
+      "usage": {
+        "total_tokens": 3122,
+        "total_input_tokens": 1518,
+        "input_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          },
+          {
+            "modality": "text",
+            "tokens": 398
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1604,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1971
+      },
+      "duration_ms": 4875,
+      "bytes": 533398,
+      "sha256": "9d1c9bb2d8fb5ad4f01d20290116c792b9cff5e2078808748561c3144e092b7f"
+    },
+    {
+      "business_slug": "palmera-fade-society",
+      "direction_id": "b",
+      "direction_name": "Calle Moderno",
+      "filename": "palmera-fade-society-b.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/palmera-fade.webp",
+      "reference_sha256": "99a7b4c5320f2fea0b4ba4b733a2bcaf4807998c64acc4494621277e672dcc10",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Palmera Fade Society concept in West Palm Beach, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Signal Campaign. Create a cinematic campaign frame with stronger contrast, candid motion, flash or colored practical light, an unusual crop, layered foreground depth, and clean negative space for oversized display typography.\n\nScene: A kinetic late-afternoon finishing scene shot low and close: the Latino barber details the hairline as coral light, chrome, palm shadow, and layered reflections create campaign energy.\n\nUse these motifs only as subtle physical composition cues: palm cut, fade gradient, street-corner tile. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "cf56eafed02ccac3f1d9466da70a679d2c7105f26c9cfdf4ad7f68fd70d7bb0b",
+      "provider_interaction_id": "v1_ChdfNVNRYXFLYk80YUdxdHNQN3Jyc3NBSRIXXzVTUWFxS2JPNGFHcXRzUDdycnNzQUk",
+      "provider_status": "completed",
+      "provider_response_sha256": "662def73d5819e21814d625ff48bcd1e09cdb5289d83a550a8c4e704a9aac4fb",
+      "usage": {
+        "total_tokens": 3131,
+        "total_input_tokens": 1525,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 405
+          },
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1606,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1978
+      },
+      "duration_ms": 5772,
+      "bytes": 618294,
+      "sha256": "1beac06f1f451b788cb1b2bf75b41c21556af83c82c61aa5386ec8bd0a1ef7d7"
+    },
+    {
+      "business_slug": "palmera-fade-society",
+      "direction_id": "c",
+      "direction_name": "The Daily Chair",
+      "filename": "palmera-fade-society-c.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/palmera-fade.webp",
+      "reference_sha256": "99a7b4c5320f2fea0b4ba4b733a2bcaf4807998c64acc4494621277e672dcc10",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Palmera Fade Society concept in West Palm Beach, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Chairside OS. Create an operator-first documentary frame between appointments: the owner uses a phone naturally in the real workspace, with service tools and brand materials visible, clean anatomy and screen-safe negative space. Do not render readable phone UI.\n\nScene: The Latino barber checks a same-day request on his phone at the empty chair, with a bilingual service card, clean tools, and a simple unbranded deposit placard in view.\n\nUse these motifs only as subtle physical composition cues: palm cut, fade gradient, street-corner tile. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "a42dd065aadd580868391189857c7fa6ae6af103019e353431551f03360b9122",
+      "provider_interaction_id": "v1_Chd4SlNRYXBuNkpkT1ZtdGtQaU9TNGtBSRIXeEpTUWFwbjZKZE9WbXRrUGlPUzRrQUk",
+      "provider_status": "completed",
+      "provider_response_sha256": "502d96f28eb4014b180c1aa997a8e562b9ea55cc3dbafe8fb376818edbdd44b3",
+      "usage": {
+        "total_tokens": 3248,
+        "total_input_tokens": 1537,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 417
+          },
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1711,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1990
+      },
+      "duration_ms": 5444,
+      "bytes": 629931,
+      "sha256": "6fb52dfe1687043f50262d7fc08fa731ccd06ed58b2599e29c2978a09f205500"
+    },
+    {
+      "business_slug": "saltline-color-house",
+      "direction_id": "a",
+      "direction_name": "Sunwashed",
+      "filename": "saltline-color-house-a.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/saltline-color.webp",
+      "reference_sha256": "2c63197d89c3011538ef759e44f5c881d9915e1ef921ccee6699f0a4540c1cd5",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Saltline Color House concept in Miami, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Signature Editorial. Create a quiet premium editorial frame with tactile materials, natural window light, a deliberate craft gesture, human warmth, and generous negative space for elegant serif typography.\n\nScene: A sunwashed reveal: the white colorist lifts a finished dimensional section beside a pale-oak station as natural Miami light shows tone and texture accurately.\n\nUse these motifs only as subtle physical composition cues: color ribbon, sun arc, blue glass block. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "84d659e8c4c61f3b3d32b49a3eddc009b04e197e17461b0c9dfa1cf4cb95a190",
+      "provider_interaction_id": "v1_Chd5WlNRYXBuQk1vQ25tdGtQX3NtU3FRaxIXeVpTUWFwbkJNb0NubXRrUF9zbVNxUWs",
+      "provider_status": "completed",
+      "provider_response_sha256": "fb606f774cb0bf130a08d19ecaf2d5ff46b697e23cb5a4bd24ae238f41acf33e",
+      "usage": {
+        "total_tokens": 3062,
+        "total_input_tokens": 1513,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 393
+          },
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1549,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1966
+      },
+      "duration_ms": 4880,
+      "bytes": 538252,
+      "sha256": "dba8f5e5859a08d9cf2f9cbfc7276c3a53c56b6ec0d5b6d669bf60b501ed566f"
+    },
+    {
+      "business_slug": "saltline-color-house",
+      "direction_id": "b",
+      "direction_name": "Blue Hour",
+      "filename": "saltline-color-house-b.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/saltline-color.webp",
+      "reference_sha256": "2c63197d89c3011538ef759e44f5c881d9915e1ef921ccee6699f0a4540c1cd5",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Saltline Color House concept in Miami, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Signal Campaign. Create a cinematic campaign frame with stronger contrast, candid motion, flash or colored practical light, an unusual crop, layered foreground depth, and clean negative space for oversized display typography.\n\nScene: A fashion-led blue-hour portrait with the client turning through cobalt and warm gold light, translucent color ribbons and mirror reflections creating a dramatic layered crop.\n\nUse these motifs only as subtle physical composition cues: color ribbon, sun arc, blue glass block. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "c90fe1cc76140bbd5b63eb9bd0a27ecd6de6294ef8a9995f04703fe8a3b9247f",
+      "provider_interaction_id": "v1_Chd6NVNRYXQ2YUY0dXJxdHNQcmEyQWdBURIXejVTUWF0NmFGNHVycXRzUHJhMkFnQVE",
+      "provider_status": "completed",
+      "provider_response_sha256": "a803ee93f97aeff08ecf4a60ff2084ded24151a556bbbf07660e0055482fc492",
+      "usage": {
+        "total_tokens": 3230,
+        "total_input_tokens": 1518,
+        "input_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          },
+          {
+            "modality": "text",
+            "tokens": 398
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1712,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1971
+      },
+      "duration_ms": 5829,
+      "bytes": 651149,
+      "sha256": "d1f39ee5f25f578aff710bbea209f46baae22ab451144c2f5e35a430608ba6c9"
+    },
+    {
+      "business_slug": "saltline-color-house",
+      "direction_id": "c",
+      "direction_name": "The Color Ledger",
+      "filename": "saltline-color-house-c.jpg",
+      "mime_type": "image/jpeg",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/saltline-color.webp",
+      "reference_sha256": "2c63197d89c3011538ef759e44f5c881d9915e1ef921ccee6699f0a4540c1cd5",
+      "prompt": "Create one wholly new premium 16:9 photographic frame for the fictional Saltline Color House concept in Miami, Florida. The entire output must be an uninterrupted realistic photograph, not a poster, ad layout, mood board, website, interface, or graphic design.\n\nUse the attached owned fictional hero only as a visual canon. Preserve palette, material, lighting credibility, craft context, and casting intent. Create a wholly new photograph; do not reproduce pixels, exact people, faces, pose, crop, or background.\n\nDirection: Chairside OS. Create an operator-first documentary frame between appointments: the owner uses a phone naturally in the real workspace, with service tools and brand materials visible, clean anatomy and screen-safe negative space. Do not render readable phone UI.\n\nScene: Before a color appointment, the white stylist reviews a photo-consultation request on her phone beside swatch cards, a clean mixing station, and a cobalt glass object.\n\nUse these motifs only as subtle physical composition cues: color ribbon, sun arc, blue glass block. Preserve generous naturally empty photographic space on one side so FAMtastic can place real HTML typography outside the image.\n\nPalette and material continuity should feel related to the attached reference without copying it. No words, logos, booking-platform UI, trademarks, flags, watermarks, readable phone screens, celebrity or identifiable real person, cloned faces, duplicated tools, malformed hands, extra fingers, unsafe practice, or generic stock-photo posing.\n\nABSOLUTE PHOTO-ONLY RULE: render no letters, words, numbers, logos, symbols, signs, labels, watermarks, captions, graphic overlays, interface panels, charts, badges, appointment data, brand marks, or pseudo-text anywhere in the image. Remove or turn away every readable package, card, notebook, placard, calendar, and screen. If a phone is present, show only its back or a completely dark screen at an oblique angle. Native HTML—not the image—will provide every word and UI element.",
+      "prompt_sha256": "b1f024a7cb12af335fb6b5700b5dd31450b3a46619a5cc8774f7650d8d311b92",
+      "provider_interaction_id": "v1_ChYxSlNRYXUtRkFvZURtdGtQeGFTeWVBEhYxSlNRYXUtRkFvZURtdGtQeGFTeWVB",
+      "provider_status": "completed",
+      "provider_response_sha256": "c4e6145d5fed9c4cb0a0c3c3d97136cd60aacb997d7ee55e691e0ba04b6db521",
+      "usage": {
+        "total_tokens": 3144,
+        "total_input_tokens": 1531,
+        "input_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          },
+          {
+            "modality": "text",
+            "tokens": 411
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1613,
+        "output_tokens_by_modality": [
+          {
+            "modality": "image",
+            "tokens": 1120
+          }
+        ],
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 1984
+      },
+      "duration_ms": 4942,
+      "bytes": 559227,
+      "sha256": "f1fa20d398ba6fe5266dd3bb62f9f80c64124bbb6d0984f1a7f389d41e227f49"
+    }
+  ]
+}
