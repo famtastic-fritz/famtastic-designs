@@ -5,6 +5,17 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — Deployment evidence does not authorize a commercial send
+
+- Observation: production now has the verified-cold schema, route shells,
+  durable pilot lock, and exact legacy-campaign quarantine, but it has no
+  imported pilot cohort, generated art receipt, staged room, recipient claim,
+  or SMTP delivery receipt.
+- Guidance: treat this as a technical foundation release only. Keep broad
+  lifecycle/outbox paths locked and require the separate source validation,
+  Build DNA, owner review, exact-ID approval, and explicit send decision
+  before any recipient is contacted.
+
 ## 2026-08-27 — SSH is not an argv-preserving remote deployment transport
 
 - Observation: optional empty pilot-confirmation values vanished when OpenSSH

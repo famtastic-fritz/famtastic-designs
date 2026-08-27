@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Pilot activation must be a sequence, not a feature switch
+
+- Observation: the verified-cold code could be safely deployed only after the
+  public API base was explicitly canonical, the historical exact-campaign
+  queue was accounted for, and the one marked broad lifecycle scheduler was
+  suspended before old code could run. The deployed database and route proof
+  still do not constitute a recipient proof or a commercial-send proof.
+- Guidance: retain the durable exact-pilot lock until the separate owner-gated
+  cohort has passed Build DNA, room, claim, and explicit send acceptance. Use
+  only the exact dispatcher for that later delivery; never reopen or substitute
+  a broad lifecycle run merely because the release itself succeeded.
+
 ## 2026-08-27 — Remote deploy arguments must survive SSH command serialization
 
 - Observation: `ssh host command arg...` is interpreted as a remote shell

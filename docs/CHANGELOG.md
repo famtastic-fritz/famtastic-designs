@@ -1,5 +1,19 @@
 # Product changelog
 
+## 2026-08-27 — Verified-cold pilot foundation deployed (no outreach sent)
+
+- Production now runs `d5435a19` for the owner-gated public-preview and
+  verified-cold foundation. Updates 8041–8043 completed; the frontend also
+  carries bounded React rewrites for signed preview rooms and customer
+  `/login`, `/verify-email`, and `/reset-password` links.
+- The release entered exact-pilot mode: broad lifecycle dispatch is durably
+  locked, only its marker-owned cron was suspended, and the exact historical
+  cold-260 job queue was quarantined (242 claimable jobs to zero). No generic
+  notification outbox was guessed at or cancelled.
+- Technical production proof is limited to routing, migration, lock, and
+  quarantine evidence. No new cohort import, Gemini call, proof delivery, or
+  customer/commercial email occurred.
+
 ## 2026-08-27 — Pilot deploy preflight argument preservation (local acceptance only; not deployed)
 
 - The governed backend deployer now transports optional pilot confirmations as

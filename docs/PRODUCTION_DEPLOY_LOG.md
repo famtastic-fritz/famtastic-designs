@@ -1,5 +1,39 @@
 # Production Deploy Log
 
+## 2026-08-27 — Exact-ID verified-cold pilot foundation
+
+- Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
+- Backend and frontend release: `d5435a19e80344a8f0194705e3f867ee2674bac2`
+- Backend release record: 2026-08-27T08:55:30Z, PHP 8.3.32
+- Frontend release record: 2026-08-27T08:56:35Z, Node v22.23.2
+- Scope: deployed the owner-gated public-preview/verified-cold foundation,
+  its signed asset route, same-email registration isolation, exact-ID
+  commercial-send gates, and the bounded account-route shell rewrites.
+  Drupal updates 8041–8043 completed and an authoritative update-status check
+  found no remaining database updates.
+- Operational protection: set the durable exact-pilot lock to `1`, suspended
+  only the marker-owned lifecycle cron (with a retained private backup), and
+  quarantined the exact `cold-260-aug-2026` legacy work after promotion:
+  242 claimable jobs became 0; active/unknown work and campaign-owned generic
+  messages were 0 before and after. No notification-outbox row was
+  heuristically altered.
+- Result: successful technical release. No cohort was imported, no Gemini
+  image was generated, no public room was staged, and no customer or
+  commercial email was sent by this release.
+
+### Acceptance evidence
+
+- A real browser on apex and `www` loaded `/verify-email?token=<synthetic>`
+  into the React account page and rendered its expected invalid/expired state,
+  rather than Apache's prior 404. An iPhone Safari user-agent request returned
+  the same app shell with HTTP 200.
+- A syntactically valid synthetic signed preview URL reached the branded
+  unavailable-room state, proving the new narrow SPA rewrite; its backing API
+  returned 404 with no data. Raw legacy proof storage remained HTTP 403.
+- Browser and HTTP acceptance are route proof only. A real owner-approved
+  preview, Build DNA, anonymous recipient room, same-email claim, provider
+  receipt, and explicit exact-ID commercial send remain separate evidence.
+
 ## 2026-08-26 — Signed anonymous proof-room routing
 
 - Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
