@@ -72,6 +72,8 @@ export default function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/start" element={<StartPage />} />
           <Route path="/buy" element={<PurchasePage />} />
+          <Route path="/purchase" element={<PurchasePage />} />
+          <Route path="/pricing" element={<Navigate to="/packages" replace />} />
           <Route path="/55-cents-a-day-website" element={<FiftyFiveCentWebsitePage />} />
 
           {/* Legacy /content/* URLs → clean routes. */}

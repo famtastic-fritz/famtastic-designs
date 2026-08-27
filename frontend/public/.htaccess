@@ -31,10 +31,8 @@
   # Token-scoped prospect pipeline routes (ProofHub, payment return, intake, status).
   RewriteRule ^p/[^/]+/?$ /index.html [L]
 
-  # Customer account links are sent by email and must work in a fresh mobile
-  # browser with no prior SPA navigation. Keep these account routes explicit
-  # rather than adding a broad fallback that could consume Drupal or microsites.
-  RewriteRule ^(?:login|verify-email|reset-password)/?$ /index.html [L]
+  # Customer account links and checkout purchase routes.
+  RewriteRule ^(?:login|verify-email|reset-password|buy|purchase|pricing)/?$ /index.html [L]
 </IfModule>
 
 # The Drupal backend root (/web/) is not a landing surface - route it to the SPA.

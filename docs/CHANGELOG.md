@@ -106,6 +106,7 @@
 
 ## 2026-08-27 — Drupal AI-powered Solution Finder and Project Intake Advisor
 
+- Fixed checkout funnel routing by registering `/buy`, `/purchase`, and `/pricing` in React routes, adding them to `.htaccess` rewrite rules, generating static SEO shells, and enhancing `PurchasePage.jsx` to preselect package SKUs from `?bundle=` parameters.
 - Replaced the embedded chat panel with a clean **Hero Entry Point** (`See what your market is doing in 20 seconds`) and a **Full-Screen Mobile / Desktop Centered Sheet Overlay** to optimize mobile conversion and eliminate layout clutter.
 - Materialized the **Visible Artifact**: Instant Local Market Scan card followed by 3 guided scope questions, on-screen Scope Blueprint card with locked pricing ($199–$3,999) before asking for an email, and direct 1-click checkout.
 - Rebuilt the intake flow as **FAMtastic Scout**, implementing a "give-before-extracting" market scanner that delivers real local competitive insights within 20 seconds of receiving a business type and city.
