@@ -16,6 +16,12 @@ FAMtastic Designs has one supported application stack:
 | Repository agent skills | `agent-skills/` | versioned callable procedures |
 | Operational guidance | `docs/` | repository documentation |
 
+The canonical reusable-site composition contract is
+`docs/architecture/FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1.md`. Industry or
+campaign component registries are implementations and evidence; they do not
+replace the general doctrine. Git collaboration and production parity follow
+`docs/GIT_SYNC_AND_RELEASE_DISCIPLINE.md`.
+
 The target Shay specialist-agent architecture for website intake, research,
 commercial analysis, proofs, contracts, implementation, QA, provider failover,
 monitoring, and governed learning is
@@ -35,6 +41,11 @@ accepted as the production baseline. Git history remains the archive.
 4. Commit the complete change and merge it to `main`.
 5. Deploy the exact committed SHA through the repository deployment scripts.
 6. Verify the release marker, both apex and `www` frontends, and affected APIs.
+
+At the start, before push, and before deployment, fetch and inspect remote
+divergence and incoming commits. A pushed feature branch is not production;
+only an approved exact `origin/main` SHA deployed through the checked-in script
+changes production.
 
 No agent or person should edit `public_html`, upload a flattened build, maintain
 a parallel deployment procedure, or treat generated output as an independent

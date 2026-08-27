@@ -53,6 +53,20 @@ new purchases. Stripe holds payment credentials; Drupal must not store cards.
 The complete proof and intake contract is versioned in
 `docs/WEBSITE_PROOF_PRODUCTION_STANDARD_V1.md`.
 
+## Page and component doctrine
+
+Every website build follows
+`docs/architecture/FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1.md`. A page is an
+ordered recipe of stable component instances; a component is a versioned typed
+contract made from fields, slots, repeaters, actions, parts, and optional
+motion. One-page packages are starter recipes, not architectural dead ends.
+
+Changing a media slot is not a new template. Upgrades move and extend the same
+component instances while preserving their content, visual system, business
+bindings, and Build DNA. FAMtastic owns the approved recipe and customer truth;
+Site Studio consumes that immutable context and returns truthful continuation
+evidence rather than silently redesigning or rerunning it.
+
 ## Preview-provider doctrine
 
 `website_proof.generate.v1` is the only supported creative-preview routine.
@@ -110,6 +124,9 @@ and renewal/cancellation treatment.
   installed `prove-famtastic-customer-journey` skill. Classify every claim as
   locally proven, test-provider proven, production smoke-tested, or blocked.
 - Deploy only a clean, pushed SHA through the checked-in deployment scripts.
+- Sync through `docs/GIT_SYNC_AND_RELEASE_DISCIPLINE.md`: fetch and inspect
+  incoming commits before implementation, push, and deploy. Never equate a
+  pushed branch with an approved or browser-proven production release.
 - Append material decisions and evidence to `docs/SITE_LEARNINGS.md`,
   `docs/CHANGELOG.md`, and the FAMtastic Drive decision log.
 

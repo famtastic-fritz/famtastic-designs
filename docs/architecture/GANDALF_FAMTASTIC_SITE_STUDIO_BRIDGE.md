@@ -37,16 +37,26 @@ Site Studio does not need a new engine. Its boundary adapter should:
 2. Refuse an already-seen `idempotency_key` unless returning the prior result.
 3. Verify the packet signature when transport is networked.
 4. Place the supplied brief, research, selected direction contracts, preview HTML, art, and evidence into its existing recipe context.
-5. Run its existing registered/YAML-sequenced stages.
-6. Preserve the inbound Build DNA as read-only lineage; journal Site Studio's
+5. When present, consume the immutable page-recipe and component-binding
+   snapshot defined by `FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1.md`; preserve
+   stable page, instance, component, field, slot, repeater, and action identity.
+6. Run its existing registered/YAML-sequenced stages.
+7. Preserve the inbound Build DNA as read-only lineage; journal Site Studio's
    actual stages separately and return its build ID, output checksums, timing,
    exposed provider/model facts, warnings, and a Build DNA continuation
    reference in the signed success packet. Do not invent missing runtime facts.
-6. Preserve its own real per-stage journal and reversible checkpoints.
-7. Return `site-studio.build-success.v1` with artifact URIs, SHA-256 values, real stage ledger, warnings, timestamps, and the original correlation IDs.
-8. Sign the exact raw success body with the shared callback secret.
+8. Preserve its own real per-stage journal and reversible checkpoints.
+9. Return `site-studio.build-success.v1` with artifact URIs, SHA-256 values, real stage ledger, warnings, timestamps, and the original correlation IDs.
+10. Sign the exact raw success body with the shared callback secret.
 
 No Site Studio build-process modification was made by this work. The adapter is a boundary responsibility for the Site Studio lane.
+
+The packet may describe a one-page starter or multiple page recipes. Site
+Studio must not flatten a componentized handoff into an unrelated one-off page,
+infer component identity from HTML, or make a media-slot replacement appear to
+be a new template. A later upgrade moves or extends the same component
+instances and returns their continuation lineage; it does not restart the
+customer's selected visual system.
 
 ## Correlation invariants
 

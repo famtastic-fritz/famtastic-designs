@@ -1,5 +1,10 @@
 # Booked & Branded component system v1
 
+This is an implementation and local proof of
+`docs/architecture/FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1.md`. When the two
+documents differ, the general doctrine governs and this file records the niche
+recipe and its evidence.
+
 ## Decision
 
 Treat every Booked & Branded site as an ordered page recipe, not a fixed HTML

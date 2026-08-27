@@ -1,5 +1,25 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Reusable component evidence needs repository-wide doctrine
+
+- Observation: a strong component proof can still be lost if only its niche
+  implementation describes the rules; another builder may see the rendered
+  page but miss stable identity, upgrade continuity, and the FAMtastic/Site
+  Studio authority boundary.
+- Guidance: keep one canonical page/component doctrine and link it from every
+  agent entry point, Build DNA, and Site Studio handoff. Treat the niche registry
+  as evidence, not the only definition of the system.
+
+## 2026-08-27 — Sync is a reviewed operating step, not a background pull
+
+- Observation: the component branch and `origin/main` each had five commits the
+  other side did not contain, so continuing without a fetch would have hidden
+  current Solution Finder, checkout, and proof-access work from the build lane.
+- Guidance: fetch and inspect divergence at task start, before push, and before
+  deploy. Reconcile incoming commits deliberately and rerun acceptance. Never
+  auto-pull a dirty worktree or production document root, and never equate a
+  pushed branch with deployed production.
+
 ## 2026-08-27 — One-page proof sections should be portable component instances
 
 - Observation: generating several pages through one renderer reduces code

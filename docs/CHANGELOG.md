@@ -1,5 +1,22 @@
 # Product changelog
 
+## 2026-08-27 — Page/component doctrine and Git sync discipline
+
+- Promoted the Booked & Branded page/component proof into a general FAMtastic
+  doctrine: every site is composed from page recipes, stable component
+  instances, versioned components, typed bindings, and named parts; a one-page
+  site is a starter recipe rather than a permanent architecture.
+- Linked the doctrine through Claude, Codex, the shared agent contract, Build
+  DNA, Site Studio integration, the Gandalf bridge, and repository source-of-
+  truth guidance so all build agents receive the same continuity rules.
+- Added an explicit Git synchronization and release contract requiring agents
+  to fetch, inspect incoming commits, reconcile deliberately, test, and push
+  reviewed work. A pushed feature branch remains distinct from an approved
+  `origin/main` SHA and a browser-proven production deployment.
+- Rebased the component proof branch onto the five newer `origin/main` commits,
+  preserving the Solution Finder, proof-access, and checkout changes alongside
+  the component work. No deployment or production mutation occurred.
+
 ## 2026-08-27 — Booked & Branded page/component/part proof
 
 - Converted the twelve working proof pages from one embedded page function to

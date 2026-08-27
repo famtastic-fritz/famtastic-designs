@@ -1,5 +1,26 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Component architecture belongs in every agent's doctrine
+
+- Observation: the Booked & Branded Component Lab proved a useful model, but a
+  proof-specific document alone would not reliably teach Claude, Codex, Shay,
+  or Site Studio how to preserve a customer's theme during future upgrades.
+- Guidance: use one repository-wide doctrine for site → page recipe → component
+  instance → component → part. Link the same rules from agent entry points,
+  Build DNA, and the Site Studio bridge; keep individual niche registries as
+  implementations and evidence.
+
+## 2026-08-27 — Multi-agent Git work needs explicit synchronization points
+
+- Observation: this feature branch was five commits ahead of its old base while
+  `origin/main` also had five newer commits. Without reading and reconciling the
+  incoming history, either the component work or current Solution Finder,
+  checkout, and proof-access work could have been omitted from the next handoff.
+- Guidance: fetch and inspect remote divergence at task start, before push, and
+  before deploy; preserve understood changes during rebase/merge; rerun tests;
+  and report branch, pushed SHA, merged-main status, and production release
+  evidence separately. Never schedule blind pulls into dirty worktrees.
+
 ## 2026-08-27 — Solution Finder UX: Hero Entry Point & Modal Takeover Beat Embedded Forms
 
 - Observation: A permanently embedded chatbot panel on landing pages consumes excessive screen real estate—especially on mobile—and feels like a traditional form wearing a chat costume. Visitors hesitate to engage because the interface demands answers before demonstrating competence.
