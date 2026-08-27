@@ -14,13 +14,26 @@ fact, non-factual proof teaser, recipient email, and a fact-backed website
 observation. `unknown` website status is rejected: an omitted URL is never
 treated as proof that a business has no website.
 
-The enabled observation vocabulary is configuration-backed and currently
-includes `confirmed_absent`, `observed_outdated`, `verified_present`, and
-`exploratory`. The latter two create a respectful research-backed concept /
-strategy review only: the proof and commercial email must not diagnose a weak
-site, claim a missing website, or infer an offer from the observation. A
-verified-present or observed-outdated observation requires its corroborated
-public website URL; confirmed-absent may not carry one.
+The currently shipped `campaign_profile` is `first_site` (it is the default
+when omitted). It has one exact eligibility rule: `website_observation.status`
+must be `confirmed_absent` **and** `website_url` must be blank. A
+`verified_present`, `observed_outdated`, or `exploratory` observation—and any
+nonblank independent website URL—is rejected before a dry run can score it or
+an ingress can create a Prospect, campaign, delivery, job, or email record.
+A public social profile or third-party booking/listing page may be cited as
+the `public_source` and described in the corroborated fact when no independent
+business site is found; it must not be copied into `website_url`, which is the
+independent-site field for this profile.
+This is intentionally stricter than a generic research context: an existing
+site may be appropriate for a later redesign/upgrade offer, but it is not a
+valid recipient for the $199 first-site campaign. That future lane needs its
+own reviewed campaign contract and may not be created by widening
+`first_site`.
+
+The install-time observation vocabulary likewise defaults to
+`confirmed_absent`; the first-site validator and final ingress check remain
+the enforcement authority even if a legacy active configuration contains a
+wider vocabulary.
 
 ## Stored contract
 
@@ -41,11 +54,11 @@ The numeric scheduler row is exposed only as `job.id` for audit; it is never
 the callback-facing `job_id`. The lane never creates `proof.generate:prospect:*`,
 `outreach.prepare`, or `outreach.send` work.
 
-`proof_profile` is selected per cohort and frozen on both delivery and job.
-Profiles support one through six ordered directions (`a` through `f`); the
-installed anonymous default remains three: Safe, Medium FAMtastic, Ultra
-FAMtastic. The public room and callback validation use the frozen count, not a
-global default.
+`campaign_profile` and `proof_profile` are selected per cohort and frozen in
+the immutable cohort snapshot. Proof profiles support one through six ordered
+directions (`a` through `f`); the installed anonymous default remains three:
+Safe, Medium FAMtastic, Ultra FAMtastic. The public room and callback
+validation use the frozen count, not a global default.
 
 Cold deliveries persist `source_lane: verified_cold`. That marker is passed to
 the proof worker, Site Studio request, callback telemetry, and Build DNA. A

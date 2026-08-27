@@ -5,6 +5,20 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — First-site outreach must not use an existing-site cohort
+
+- Observation: a review cohort selected for source-verification convenience
+  contained businesses with independent websites. That may be valid research
+  for a future redesign offer, but it contradicts the $199 first-site promise
+  and would make the personalized proof and email premise untrustworthy.
+- Guidance: verified-cold `first_site` seeds require a cited
+  `confirmed_absent` observation and a blank `website_url`; reject every other
+  status and any nonblank URL during validation and again at ingress. Freeze
+  that campaign purpose with the cohort evidence. Keep existing-site
+  redesign/upgrade targeting out of this lane until it has its own offer,
+  copy, qualification, review, and approval contract. A rejected review is
+  not an import or a send.
+
 ## 2026-08-27 — Security dependency releases preserve pilot locks
 
 - Observation: the Entity API advisory required a locked Composer deployment,

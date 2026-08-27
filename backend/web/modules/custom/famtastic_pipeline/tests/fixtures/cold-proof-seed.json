@@ -4,6 +4,7 @@
     "cohort_key": "fixture-cold-proof-2026-08",
     "campaign_key": "fixture-cold-proof-2026-08",
     "source_name": "fixture public directory",
+    "campaign_profile": "first_site",
     "scheduled_release_at": "2026-08-28T15:00:00Z"
   },
   "leads": [

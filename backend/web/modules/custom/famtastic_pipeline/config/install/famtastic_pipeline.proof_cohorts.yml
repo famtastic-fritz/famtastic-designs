@@ -18,9 +18,9 @@ anonymous:
           intent: 'The strongest campaign-level visual idea that remains usable.'
 
 # Cold eligibility is explicit research evidence, never an inferred diagnosis.
+# The currently shipped first-site campaign accepts only a corroborated absence
+# of an independent business website. A future redesign campaign needs its own
+# reviewed profile rather than widening this first-site vocabulary.
 cold:
   website_observation_statuses:
     - confirmed_absent
-    - observed_outdated
-    - verified_present
-    - exploratory

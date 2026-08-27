@@ -18,6 +18,17 @@ final class ColdProofCampaignSeedValidator {
   public const SCHEMA_VERSION = 'famtastic.cold_proof_campaign_seed.v1';
 
   /**
+   * The only currently supported cold-campaign purpose.
+   *
+   * A verified-cold proof is not a generic website-redesign campaign. Its
+   * current commercial promise is a first owned website, so accepting a lead
+   * with an independent website would make the evidence and offer disagree.
+   * Future campaign purposes need their own explicit contract; they must not
+   * be introduced by loosening this profile.
+   */
+  public const CAMPAIGN_PROFILE_FIRST_SITE = 'first_site';
+
+  /**
    * These are eligibility descriptions, not creative or sales diagnoses.
    * A deploy may narrow this list through the proof-cohorts configuration,
    * but it can never add an arbitrary model-authored status.
@@ -50,7 +61,7 @@ final class ColdProofCampaignSeedValidator {
       if (!is_array($lead)) {
         throw new \InvalidArgumentException(sprintf('Cold proof lead %d must be an object.', $offset + 1));
       }
-      $item = $this->lead($lead, $offset + 1, $cohort['scheduled_release_at']);
+      $item = $this->lead($lead, $offset + 1, $cohort['scheduled_release_at'], $cohort['campaign_profile']);
       if (isset($seen[$item['source_record_id']])) {
         throw new \InvalidArgumentException('Cold proof seed has a duplicate source_record_id: ' . $item['source_record_id']);
       }
@@ -68,6 +79,10 @@ final class ColdProofCampaignSeedValidator {
     $key = $this->key($cohort['cohort_key'] ?? '', 'cohort_key');
     $campaign = $this->key($cohort['campaign_key'] ?? '', 'campaign_key');
     $source = $this->text($cohort['source_name'] ?? '', 128, 'source_name', 2);
+    $campaignProfile = strtolower(trim((string) ($cohort['campaign_profile'] ?? self::CAMPAIGN_PROFILE_FIRST_SITE)));
+    if ($campaignProfile !== self::CAMPAIGN_PROFILE_FIRST_SITE) {
+      throw new \InvalidArgumentException('cohort.campaign_profile must be first_site for the current verified-cold campaign.');
+    }
     $profile = trim((string) ($cohort['package_profile'] ?? ''));
     if ($profile !== '' && preg_match('/^[a-z0-9][a-z0-9_.-]{2,127}$/', $profile) !== 1) {
       throw new \InvalidArgumentException('cohort.package_profile is invalid.');
@@ -76,12 +91,13 @@ final class ColdProofCampaignSeedValidator {
       'cohort_key' => $key,
       'campaign_key' => $campaign,
       'source_name' => $source,
+      'campaign_profile' => $campaignProfile,
       'package_profile' => $profile,
       'scheduled_release_at' => $this->timestamp($cohort['scheduled_release_at'] ?? NULL, 'cohort.scheduled_release_at'),
     ];
   }
 
-  private function lead(array $lead, int $number, ?int $cohortReleaseAt): array {
+  private function lead(array $lead, int $number, ?int $cohortReleaseAt, string $campaignProfile): array {
     $record = $this->text($lead['source_record_id'] ?? '', 255, "leads[$number].source_record_id", 1);
     $email = mb_strtolower(trim((string) ($lead['email'] ?? $lead['public_email'] ?? '')));
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -98,6 +114,12 @@ final class ColdProofCampaignSeedValidator {
     }
     if ($website !== '' && !$this->isPublicUrl($website)) {
       throw new \InvalidArgumentException("leads[$number].website_url must be a public http(s) URL when supplied.");
+    }
+    if ($campaignProfile === self::CAMPAIGN_PROFILE_FIRST_SITE && $website !== '') {
+      throw new \InvalidArgumentException("leads[$number].website_url must be blank for the first_site campaign profile.");
+    }
+    if ($campaignProfile === self::CAMPAIGN_PROFILE_FIRST_SITE && $websiteObservation['status'] !== 'confirmed_absent') {
+      throw new \InvalidArgumentException("leads[$number].website_observation.status must be confirmed_absent for the first_site campaign profile.");
     }
     if (in_array($websiteObservation['status'], ['observed_outdated', 'verified_present'], TRUE) && $website === '') {
       throw new \InvalidArgumentException("leads[$number].website_url is required for the supplied website observation.");

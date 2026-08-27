@@ -42,6 +42,7 @@ final class ColdProofCampaignSeedValidatorTest extends UnitTestCase {
 
   public function testRequiresSourceFactTeaserAndExplicitWebsiteObservation(): void {
     $validated = (new ColdProofCampaignSeedValidator())->validate($this->seed());
+    $this->assertSame(ColdProofCampaignSeedValidator::CAMPAIGN_PROFILE_FIRST_SITE, $validated['cohort']['campaign_profile']);
     $this->assertSame('', $validated['cohort']['package_profile']);
     $this->assertSame('confirmed_absent', $validated['leads'][0]['website_observation']['status']);
     $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $validated['leads'][0]['evidence_hash']);
@@ -55,7 +56,7 @@ final class ColdProofCampaignSeedValidatorTest extends UnitTestCase {
     (new ColdProofCampaignSeedValidator())->validate($seed);
   }
 
-  public function testVerifiedPresentProducesAnExploratoryEligibleSeedWithoutAWebsiteDiagnosis(): void {
+  public function testFirstSiteRejectsAVerifiedPresentWebsiteEvenWhenTheUrlIsCorroborated(): void {
     $seed = $this->seed();
     $seed['leads'][0]['website_observation'] = [
       'status' => 'verified_present',
@@ -63,13 +64,54 @@ final class ColdProofCampaignSeedValidatorTest extends UnitTestCase {
     ];
     $seed['leads'][0]['website_url'] = 'https://test-studio.example.test/book';
 
-    $validated = (new ColdProofCampaignSeedValidator())->validate($seed);
-
-    $this->assertSame('verified_present', $validated['leads'][0]['website_observation']['status']);
-    $this->assertSame('https://test-studio.example.test/book', $validated['leads'][0]['website_url']);
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('must be blank for the first_site campaign profile');
+    (new ColdProofCampaignSeedValidator())->validate($seed);
   }
 
-  public function testObservedOutdatedRequiresTheCorroboratedWebsiteUrl(): void {
+  public function testFirstSiteRejectsVerifiedPresentBeforeAnExistingSiteCanBecomeAConceptReview(): void {
+    $seed = $this->seed();
+    $seed['leads'][0]['website_observation'] = [
+      'status' => 'verified_present',
+      'fact' => 'The public business profile links to a current appointment site dated 2026-08-26.',
+    ];
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('must be confirmed_absent for the first_site campaign profile');
+    (new ColdProofCampaignSeedValidator())->validate($seed);
+  }
+
+  public function testFirstSiteRejectsAnIndependentWebsiteEvenWhenTheObservationClaimsItIsAbsent(): void {
+    $seed = $this->seed();
+    $seed['leads'][0]['website_url'] = 'https://test-studio.example.test';
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('must be blank for the first_site campaign profile');
+    (new ColdProofCampaignSeedValidator())->validate($seed);
+  }
+
+  public function testFirstSiteRejectsAnyWebsiteObservationOtherThanConfirmedAbsent(): void {
+    $seed = $this->seed();
+    $seed['leads'][0]['website_observation'] = [
+      'status' => 'exploratory',
+      'fact' => 'The public business directory record was checked on 2026-08-26.',
+    ];
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('must be confirmed_absent for the first_site campaign profile');
+    (new ColdProofCampaignSeedValidator())->validate($seed);
+  }
+
+  public function testOnlyTheFirstSiteCampaignProfileIsSupported(): void {
+    $seed = $this->seed();
+    $seed['cohort']['campaign_profile'] = 'website_redesign';
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('campaign_profile must be first_site');
+    (new ColdProofCampaignSeedValidator())->validate($seed);
+  }
+
+  public function testFirstSiteRejectsObservedOutdatedBeforeItCanBecomeAnUpgradeCampaign(): void {
     $seed = $this->seed();
     $seed['leads'][0]['website_observation'] = [
       'status' => 'observed_outdated',
@@ -77,7 +119,7 @@ final class ColdProofCampaignSeedValidatorTest extends UnitTestCase {
     ];
 
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('website_url is required');
+    $this->expectExceptionMessage('must be confirmed_absent for the first_site campaign profile');
     (new ColdProofCampaignSeedValidator())->validate($seed);
   }
 

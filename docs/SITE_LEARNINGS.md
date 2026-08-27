@@ -5,6 +5,20 @@
 - Observation: When Drupal is deployed in a subpath (e.g. `/web` behind a React frontend at `/`), `Url::fromUserInput('/admin/...')` generates URLs targeting `https://famtasticdesigns.com/admin/...` rather than `https://famtasticdesigns.com/web/admin/...`, resulting in 404s for Commerce, Content, and Entity edit links.
 - Guidance: Always use `Url::fromRoute()` (such as `commerce.admin_commerce`, `system.admin_content`, `entity.<entity_type>.edit_form`) in controllers and forms. Drupal's route system automatically prepends the correct active base path in both local and production environments.
 
+## 2026-08-27 — First-site outreach must not use an existing-site cohort
+
+- Observation: a review cohort selected for source-verification convenience
+  contained businesses with independent websites. That may be valid research
+  for a future redesign offer, but it contradicts the $199 first-site promise
+  and would make the personalized proof and email premise untrustworthy.
+- Guidance: verified-cold `first_site` seeds require a cited
+  `confirmed_absent` observation and a blank `website_url`; reject every other
+  status and any nonblank URL during validation and again at ingress. Freeze
+  that campaign purpose with the cohort evidence. Keep existing-site
+  redesign/upgrade targeting out of this lane until it has its own offer,
+  copy, qualification, review, and approval contract. A rejected review is
+  not an import or a send.
+
 ## 2026-08-27 — Drupal security fixes are full locked-dependency releases
 
 - Observation: the active Entity API advisory applied because Entity API and

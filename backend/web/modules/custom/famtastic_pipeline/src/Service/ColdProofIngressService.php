@@ -40,6 +40,16 @@ final class ColdProofIngressService {
    */
   public function importSeed(string $path, bool $dryRun = FALSE): array {
     $seed = $this->readSeed($path);
+    $campaignProfile = (string) ($seed['cohort']['campaign_profile'] ?? '');
+    if ($campaignProfile !== ColdProofCampaignSeedValidator::CAMPAIGN_PROFILE_FIRST_SITE) {
+      throw new \LogicException('Verified-cold ingress accepts only the first_site campaign profile.');
+    }
+    // Keep the write boundary defensive even though the seed validator has
+    // already checked these facts. A future caller or validator regression
+    // must not let an independent website cross into the first-site campaign.
+    foreach ($seed['leads'] as $lead) {
+      $this->assertFirstSiteEligibility($lead);
+    }
     $profile = $this->profiles->resolveAnonymous((string) ($seed['cohort']['package_profile'] ?? ''));
     // Validator always includes package_profile (possibly empty); use a
     // replacement merge so the resolved default is what gets frozen.
@@ -47,6 +57,9 @@ final class ColdProofIngressService {
       'package_profile' => $profile['id'],
       'direction_count' => $profile['direction_count'],
       'direction_contract' => $profile['directions'],
+      // The seed validator and ingress both fail closed to first_site. Keep
+      // that declared purpose in every immutable cohort snapshot and report.
+      'campaign_profile' => $campaignProfile,
       'source_lane' => 'verified_cold',
     ]);
     $results = [];
@@ -136,6 +149,7 @@ final class ColdProofIngressService {
             'cold_proof.ingressed',
             [
               'cohort_key' => $cohortRow['cohort_key'],
+              'campaign_profile' => $cohort['campaign_profile'],
               'package_profile' => $profile['id'],
               'direction_count' => $profile['direction_count'],
               'preview_delivery_id' => $deliveryId,
@@ -180,6 +194,7 @@ final class ColdProofIngressService {
         'cohort_key' => $cohort['cohort_key'],
         'campaign_key' => $cohort['campaign_key'],
         'source_name' => $cohort['source_name'],
+        'campaign_profile' => $cohort['campaign_profile'],
         'package_profile' => $cohort['package_profile'],
         'direction_count' => $cohort['direction_count'],
         'source_lane' => $cohort['source_lane'],
@@ -208,6 +223,19 @@ final class ColdProofIngressService {
       throw new \InvalidArgumentException('Cold proof seed must be a JSON object.');
     }
     return $this->validator->validate($decoded);
+  }
+
+  /**
+   * Defends the first-site boundary at the final write ingress.
+   *
+   * @param array{website_observation?:array{status?:string},website_url?:string} $lead
+   */
+  private function assertFirstSiteEligibility(array $lead): void {
+    $status = (string) ($lead['website_observation']['status'] ?? '');
+    $website = trim((string) ($lead['website_url'] ?? ''));
+    if ($status !== 'confirmed_absent' || $website !== '') {
+      throw new \LogicException('Verified-cold first_site ingress requires confirmed_absent and a blank website_url.');
+    }
   }
 
   private function leadImportRow(array $lead): array {
@@ -251,6 +279,7 @@ final class ColdProofIngressService {
   /** Creates one immutable cohort configuration or proves an existing match. */
   private function ensureCohort(array $cohort, int $campaignId): array {
     $snapshot = json_encode([
+      'campaign_profile' => $cohort['campaign_profile'],
       'package_profile' => $cohort['package_profile'],
       'direction_count' => $cohort['direction_count'],
       'direction_contract' => $cohort['direction_contract'],

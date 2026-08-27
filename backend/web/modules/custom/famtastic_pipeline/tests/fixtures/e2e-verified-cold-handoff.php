@@ -32,6 +32,7 @@ try {
       'cohort_key' => 'fixture-cold-' . $run,
       'campaign_key' => 'fixture-cold-' . $run,
       'source_name' => 'Local verified-source fixture',
+      'campaign_profile' => ColdProofCampaignSeedValidator::CAMPAIGN_PROFILE_FIRST_SITE,
     ],
     'leads' => [[
       'source_record_id' => 'fixture-record-' . $run,
@@ -58,6 +59,9 @@ try {
   /** @var ColdProofIngressService $ingress */
   $ingress = \Drupal::service('famtastic_pipeline.cold_proof_ingress');
   $result = $ingress->importSeed($seedPath, FALSE);
+  if (($result['cohort']['campaign_profile'] ?? '') !== ColdProofCampaignSeedValidator::CAMPAIGN_PROFILE_FIRST_SITE) {
+    throw new RuntimeException('Cold ingress did not freeze the first-site campaign profile in its report.');
+  }
   $lead = $result['leads'][0] ?? [];
   $deliveryId = (int) ($lead['preview_delivery_id'] ?? 0);
   if ($deliveryId < 1 || (int) ($lead['proof_campaign_id'] ?? 0) < 1 || (int) ($lead['proof_job_id'] ?? 0) < 1) {

@@ -7,6 +7,25 @@
 - Added `SocialRecordSyncForm` (`/admin/famtastic/social-records/sync`) to allow in-admin 1-click sync of campaign manifest moments into `famtastic_social_record` while preserving database gate decisions.
 - Added `SocialRecordBatchGateForm` (`/admin/famtastic/social-record/batch/{day}/{gate}/{direction}`) enabling 1-click batch approval of all moments and gates for any campaign day.
 
+## 2026-08-27 — First-site verified-cold cohort guard (local-only; not deployed)
+
+- The verified-cold seed now defaults to the explicit `first_site` campaign
+  profile and rejects every lead unless its source-backed website observation
+  is exactly `confirmed_absent` and its `website_url` is blank. A corroborated
+  existing website, including `verified_present`, cannot enter even a dry run,
+  Prospect import, proof delivery, or commercial-email path for the $199
+  first-site campaign.
+- The ingress repeats that check before its write boundary and freezes the
+  campaign profile in the immutable cohort snapshot, audit event, and dry-run
+  report. Existing-site redesign/upgrade outreach remains a separate,
+  unimplemented campaign decision rather than a fallback interpretation of
+  the first-site offer.
+- Focused validator coverage and the local verified-cold fixture cover the
+  defaulted profile, explicit first-site profile, nonblank URL rejection, and
+  `verified_present`/other-status rejection. No cohort was imported, no
+  provider was called, no proof was generated, and no email or production
+  change occurred.
+
 ## 2026-08-27 — Drupal security maintenance deployed
 
 - Production now runs backend release `aad97433f88e6f0a2724c556d0bdc9b4f820710b`.
