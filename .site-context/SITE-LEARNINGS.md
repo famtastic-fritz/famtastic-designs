@@ -24,6 +24,25 @@ Guidance:
   disposable MariaDB database. PHP lint and a hand-written SQL sketch are not
   substitutes for Drupal's actual MySQL Schema API.
 
+## 2026-08-27 — Receipt-backed proof art needs a portable asset contract
+
+- A local proof bundle that merely says an image model was planned is not a
+  receipt-backed proof. The finalizer requires a `verified_cold` cohort, the
+  exact anonymous Safe/Medium/Ultra profile, every a/b/c direction, and a
+  Gemini Flash Lite receipt whose selected result matches both the exact prompt
+  artifact hash and supplied source-image hash/byte count.
+- Do not base64 large hero artwork into proof HTML. Normalize the externally
+  supplied PNG/JPEG locally to `assets/hero.webp`, record the individual asset
+  hash and `relative_path: hero.webp` in each direction `assets.json` and the
+  `famtastic.signed-proof-assets.v1` manifest, then let the canonical signed
+  asset importer own protected serving. A local relative asset is not public
+  delivery evidence by itself.
+- The local serializer can form the exact callback `assets[]` objects
+  (`asset_id`, `relative_path`, `media_type`, `base64`, `sha256`) without
+  sending. It must not be mistaken for import or delivery: browser screenshots,
+  independent visual/rights review, canonical Drupal import, owner approval,
+  and transactional outbox remain separate gates.
+
 ## 2026-08-26 — Personalization requires corroborated evidence, not a raw lead row
 
 Observation: a contact list alone cannot establish services, booking behavior,

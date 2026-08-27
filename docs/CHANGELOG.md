@@ -15,6 +15,25 @@
 - The current XLSX/cold importer is deliberately **not** connected: it lacks verified source/recipient eligibility and the required personalized public-intake/research snapshot. A production-like MySQL migration validation is still required for the `8041` existing-table upgrade path.
 - No migration was applied, no lead was imported, no proof was generated, no email was sent, and no production deployment occurred in this release-candidate worktree. The existing direct public-request SMTP acknowledgment and cold-email campaign compliance integration remain separate follow-up work.
 
+## 2026-08-27 — Receipt-backed local proof finalizer added
+
+- Added a deliberately local-only finalizer for Beauty / Hair / Braiding proof
+  cohorts. It accepts only the `verified_cold` source lane and the current
+  `anonymous_safe_medium_ultra_v1` Safe/Medium/Ultra package, requires all
+  three directions, validates supplied Gemini Flash Lite image receipts against
+  the exact generated prompt hashes and source-image hashes, and never invokes
+  Gemini, Drupal, production, promotion, or email.
+- The finalizer normalizes supplied PNG/JPEG heroes with local `cwebp` into
+  portable `assets/hero.webp` files, replaces the generated SVG fallback, and
+  emits `famtastic.signed-proof-assets.v1` stored manifests plus a local
+  serializer for the canonical callback `assets[]` wire shape. Per-asset
+  hashes, normalized receipt evidence, finalization report, QA, and Build DNA
+  are recorded without claiming browser, owner, or customer delivery proof.
+- Added an executable dry-run/fixture contract test that proves no mutation on
+  dry run, rejects mismatched image receipts and a wrong source lane, validates
+  final Build DNA hashes, asserts a linked WebP hero for each direction, and
+  verifies the no-send callback-asset serialization shape.
+
 ## 2026-08-26 — Local Beauty / Hair / Braiding proof cohort preparation added
 
 - Added a local-only first-ten cohort builder under

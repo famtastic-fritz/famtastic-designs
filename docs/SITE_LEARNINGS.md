@@ -12,6 +12,25 @@
 - Guidance: a held targeted preview email must never become a broad lifecycle candidate. Do not permit revocation while it is in SMTP dispatch, and treat cold outreach as a separate compliant campaign-message lane until postal/unsubscribe/provider-event receipts exist.
 - Guidance: one Prospect can have public and registered proof work, so prospect lookup is not campaign ownership. Bind public and request proof campaigns before remote dispatch; retries must use that exact binding. A staged room must snapshot and rehash its served paths, not re-query mutable `proof_variant` rows.
 
+## 2026-08-27 — Receipt-backed proof art needs a portable asset contract
+
+- A local proof bundle that merely says an image model was planned is not a
+  receipt-backed proof. The finalizer requires a `verified_cold` cohort, the
+  exact anonymous Safe/Medium/Ultra profile, every a/b/c direction, and a
+  Gemini Flash Lite receipt whose selected result matches both the exact prompt
+  artifact hash and supplied source-image hash/byte count.
+- Do not base64 large hero artwork into proof HTML. Normalize the externally
+  supplied PNG/JPEG locally to `assets/hero.webp`, record the individual asset
+  hash and `relative_path: hero.webp` in each direction `assets.json` and the
+  `famtastic.signed-proof-assets.v1` manifest, then let the canonical signed
+  asset importer own protected serving. A local relative asset is not public
+  delivery evidence by itself.
+- The local serializer can form the exact callback `assets[]` objects
+  (`asset_id`, `relative_path`, `media_type`, `base64`, `sha256`) without
+  sending. It must not be mistaken for import or delivery: browser screenshots,
+  independent visual/rights review, canonical Drupal import, owner approval,
+  and transactional outbox remain separate gates.
+
 ## 2026-08-26 — A lead list is not enough evidence for a personalized proof
 
 - Observation: a source list can contain business names and email addresses

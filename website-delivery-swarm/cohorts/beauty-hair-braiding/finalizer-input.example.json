@@ -1,0 +1,28 @@
+{
+  "schema": "famtastic.beauty-proof-cohort-finalizer-input.v1",
+  "source_lane": "verified_cold",
+  "package_profile": "anonymous_safe_medium_ultra_v1",
+  "cohort_manifest": "artifacts/beauty-proof-cohort/pc-example/cohort-manifest.json",
+  "bundles": [
+    {
+      "bundle": "artifacts/beauty-proof-cohort/pc-example/example-business-1234abcd",
+      "directions": {
+        "a": {
+          "image": "/secure/operator/pc-example/example-business-a.png",
+          "receipt": "/secure/operator/pc-example/example-business-a-receipt.json",
+          "receipt_result_id": "example-business-a"
+        },
+        "b": {
+          "image": "/secure/operator/pc-example/example-business-b.png",
+          "receipt": "/secure/operator/pc-example/example-business-b-receipt.json",
+          "receipt_result_id": "example-business-b"
+        },
+        "c": {
+          "image": "/secure/operator/pc-example/example-business-c.png",
+          "receipt": "/secure/operator/pc-example/example-business-c-receipt.json",
+          "receipt_result_id": "example-business-c"
+        }
+      }
+    }
+  ]
+}

@@ -192,7 +192,9 @@ function csvInput(path) {
     source: {
       kind: cleanText(rows[0].source_kind, 'source_kind', 100, false) || 'operator-mapped-csv',
       mapping_version: cleanText(rows[0].mapping_version, 'mapping_version', 100, false) || 'unspecified',
+      source_lane: cleanText(rows[0].source_lane, 'source_lane', 80, false) || 'unclassified',
     },
+    package_profile: cleanText(rows[0].package_profile, 'package_profile', 120, false) || 'anonymous_safe_medium_ultra_v1',
     leads: rows.map(function (row, index) {
       if (cleanText(row.campaign_id, 'campaign_id row ' + (index + 2), 128) !== campaign) {
         fail('Every CSV row must share one campaign_id.');
@@ -337,7 +339,9 @@ function normalizeInput(value) {
     source: value.source && typeof value.source === 'object' ? {
       kind: cleanText(value.source.kind, 'source.kind', 100, false) || 'operator-mapped-input',
       mapping_version: cleanText(value.source.mapping_version, 'source.mapping_version', 100, false) || 'unspecified',
-    } : { kind: 'operator-mapped-input', mapping_version: 'unspecified' },
+      source_lane: cleanText(value.source.source_lane, 'source.source_lane', 80, false) || 'unclassified',
+    } : { kind: 'operator-mapped-input', mapping_version: 'unspecified', source_lane: 'unclassified' },
+    package_profile: cleanText(value.package_profile, 'package_profile', 120, false) || 'anonymous_safe_medium_ultra_v1',
     leads,
   };
 }
@@ -718,7 +722,7 @@ function hub(lead, summary) {
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><title>Three private proof directions — ' + escapeHtml(lead.business_name) + '</title><style>*{box-sizing:border-box}body{margin:0;background:#080a08;color:#fff;font-family:Arial,sans-serif}.hero{padding:78px 5vw 56px;background:radial-gradient(circle at 85% 0,#5c8131,#080a08 54%)}.hero p{max-width:730px;color:#d3d9d3;line-height:1.65}.hero h1{font-size:clamp(56px,10vw,142px);line-height:.74;letter-spacing:-.09em;margin:20px 0}.badges{display:flex;flex-wrap:wrap;gap:9px}.badges span{border:1px solid #ffffff44;border-radius:99px;padding:9px 13px;font-size:11px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:36px 5vw 80px}.grid article{background:#141814;border:1px solid #ffffff27}.grid img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}.grid div{padding:24px}.grid p{font-size:10px;font-weight:900;letter-spacing:.13em;color:#c7ff31}.grid h2{font-size:29px;line-height:.92;margin:10px 0 30px}.grid a{color:#c7ff31;font-weight:800}.gate{padding:38px 5vw;background:#c7ff31;color:#0c1308;font-weight:700;line-height:1.55}@media(max-width:760px){.grid{grid-template-columns:1fr}.hero{padding-top:54px}}</style></head><body><header class="hero"><p>PRIVATE OWNER REVIEW · SOURCE-BACKED PREPARATION ONLY</p><h1>Three ways<br>to begin.</h1><p>Each card opens a complete responsive concept for ' + escapeHtml(lead.business_name) + '. Compare visual systems, not just colors. Actual business facts, original artwork, browser QA, independent visual review, and owner delivery approval are still required.</p><div class="badges"><span>3 directions</span><span>Safe / Medium / Ultra</span><span>No email sent</span><span>No live booking</span></div></header><main class="grid">' + cards + '</main><footer class="gate">This bundle is structurally compatible with the existing promotion contract. It remains customer-delivery blocked until every open gate in promotion-readiness.json is closed with real evidence.</footer></body></html>';
 }
 
-function leadBundle(lead, output, sourceHash, revision, createdAt) {
+function leadBundle(lead, output, sourceHash, revision, createdAt, packageProfile) {
   const folder = slug(lead.business_name) + '-' + lead.fingerprint.slice(0, 8);
   const bundle = join(output, folder);
   mkdirSync(bundle, { recursive: true });
@@ -857,6 +861,7 @@ function leadBundle(lead, output, sourceHash, revision, createdAt) {
       contact_reference: lead.contact_reference,
       input_fingerprint: lead.fingerprint,
       direction_ids: ['a', 'b', 'c'],
+      package_profile: packageProfile,
       public_profile_url_recorded: Boolean(lead.public_profile_url),
     },
     source_sha: revision === 'unavailable' ? '' : revision,
@@ -923,7 +928,7 @@ function main() {
   const createdAt = new Date().toISOString();
   mkdirSync(output, { recursive: true });
   const bundles = selected.map(function (lead) {
-    return leadBundle({ ...lead, campaign_id: input.campaign_id }, output, sourceHash, revision, createdAt);
+    return leadBundle({ ...lead, campaign_id: input.campaign_id }, output, sourceHash, revision, createdAt, input.package_profile);
   });
   const cohortPath = join(output, 'cohort-manifest.json');
   writeJson(cohortPath, {
@@ -933,6 +938,7 @@ function main() {
     campaign_id: input.campaign_id,
     cohort_label: input.cohort_label,
     source: input.source,
+    package_profile: input.package_profile,
     selected_count: bundles.length,
     source_input_sha256: sourceHash,
     contact_data_policy: 'Raw contact email is accepted only to compute a one-way contact_reference. It is not written to proof pages, manifests, Build DNA, or reports.',
