@@ -54,12 +54,36 @@ final class SiteStudioProofClient {
       'b' => ['name' => 'Wild', 'intent' => 'expressive, energetic, clearly differentiated'],
       'c' => ['name' => 'OMG', 'intent' => 'campaign-level concept with the strongest visual idea'],
     ];
+    $run = (array) ($context['build_dna_run'] ?? []);
+    if ((string) ($context['source_lane'] ?? '') === 'verified_cold') {
+      if (
+        (int) ($run['prospect_id'] ?? 0) !== (int) $prospect->id()
+        || (int) ($run['proof_campaign_id'] ?? 0) !== (int) $campaign->id()
+        || !hash_equals((string) $campaign->get('campaign_id')->value, (string) ($run['campaign_id'] ?? ''))
+        || !hash_equals('verified_cold', (string) ($run['source_lane'] ?? ''))
+        || !hash_equals((string) ($context['job_id'] ?? ''), (string) ($run['job_id'] ?? ''))
+        || !hash_equals((string) ($context['callback_event_id'] ?? ''), (string) ($run['callback_event_id'] ?? ''))
+        || !hash_equals((string) ($context['run_started_at'] ?? ''), (string) ($run['run_started_at'] ?? ''))
+        || !$this->canonicalRuntimeReference((string) ($run['job_id'] ?? ''))
+        || !$this->canonicalRuntimeReference((string) ($run['callback_event_id'] ?? ''))
+        || !$this->canonicalRuntimeTimestamp((string) ($run['run_started_at'] ?? ''))
+      ) {
+        throw new \RuntimeException('Verified-cold Site Studio dispatch requires an exact immutable Build DNA run identity.');
+      }
+    }
     $payload = [
       'schema_version' => 2,
       'routine' => (string) ($context['routine'] ?? 'website_proof.generate.v1'),
       'source_lane' => (string) ($context['source_lane'] ?? ''),
       'idempotency_key' => 'proof:' . $campaign->get('campaign_id')->value,
       'campaign_id' => $campaign->get('campaign_id')->value,
+      'proof_campaign_id' => (int) $campaign->id(),
+      'job_id' => (string) ($run['job_id'] ?? ''),
+      'callback_event_id' => (string) ($run['callback_event_id'] ?? ''),
+      'run_started_at' => (string) ($run['run_started_at'] ?? ''),
+      // Site Studio must copy this object unchanged into build-dna.run before
+      // hashing/registering evidence. It is not optional in verified_cold.
+      'build_dna_run' => $run,
       'prospect' => $prospectPayload,
       'directions' => array_map(static fn (array $definition): string => $definition['name'], $directionContract),
       'required_variant_count' => count($directionContract),
@@ -99,6 +123,17 @@ final class SiteStudioProofClient {
 
   private function endpoint(): string {
     return rtrim((string) (getenv('SITE_STUDIO_URL') ?: $this->configFactory->get('famtastic_pipeline.settings')->get('studio_url')), '/');
+  }
+
+  /** Reject locally invented job/event labels from the commercial cold lane. */
+  private function canonicalRuntimeReference(string $value): bool {
+    return preg_match('/^[A-Za-z0-9][A-Za-z0-9._:-]{1,254}$/', $value) === 1
+      && preg_match('/^(?:local-|beauty-proof:)/i', $value) !== 1;
+  }
+
+  /** Runtime start is recorded by ingress, never manufactured on dispatch. */
+  private function canonicalRuntimeTimestamp(string $value): bool {
+    return $value !== '' && strlen($value) <= 80 && strtotime($value) !== FALSE;
   }
 
   /** Keeps anonymous public proof inputs free of contact identifiers. */

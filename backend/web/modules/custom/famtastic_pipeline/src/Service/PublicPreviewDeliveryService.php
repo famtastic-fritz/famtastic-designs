@@ -132,7 +132,12 @@ final class PublicPreviewDeliveryService {
   public function queueInitialProof(int $deliveryId): int {
     $row = $this->require($deliveryId);
     $profile = $this->profileForDelivery($row);
-    $jobKey = 'public-preview:proof.generate:delivery:' . $deliveryId;
+    $proofCampaignId = (int) ($row['proof_campaign_id'] ?? 0);
+    $campaign = $proofCampaignId ? $this->entities->getStorage('proof_campaign')->load($proofCampaignId) : NULL;
+    if (!$campaign instanceof ProofCampaign || (int) $campaign->get('prospect_id')->target_id !== (int) $row['prospect_id']) {
+      throw new \RuntimeException('A public preview job requires its exact bound proof campaign before it can be queued.');
+    }
+    $jobKey = 'public-preview:generate:delivery:' . $deliveryId . ':campaign:' . $proofCampaignId;
     $existing = $this->database->select('famtastic_job', 'j')->fields('j', ['id'])
       ->condition('job_key', $jobKey)->range(0, 1)->execute()->fetchField();
     if ($existing) {
@@ -141,30 +146,87 @@ final class PublicPreviewDeliveryService {
     if (!in_array($row['state'], ['lead_captured', 'preview_requested', 'research_ready'], TRUE)) {
       throw new \RuntimeException('This public preview is no longer eligible for an initial proof job.');
     }
+    $sourceLane = (string) ($row['source_lane'] ?? 'anonymous_public');
+    $canonicalJobId = trim((string) $campaign->get('studio_job_id')->value);
+    if ($canonicalJobId === '') {
+      throw new \RuntimeException('A public preview job requires its canonical callback job ID before it can be queued.');
+    }
+    $now = $this->time->getRequestTime();
+    // These values are created at ingress/job creation, persisted in the
+    // immutable job payload, and later copied unchanged into the local
+    // runtime-binding and final Build DNA. They must never be manufactured by
+    // an exporter, builder, or callback after the fact.
+    $callbackEventId = 'cold-proof-callback-' . bin2hex(random_bytes(16));
+    $runStartedAt = gmdate(DATE_ATOM, $now);
+    $run = [
+      'prospect_id' => (int) $row['prospect_id'],
+      'proof_campaign_id' => $proofCampaignId,
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'source_lane' => $sourceLane,
+      'public_preview_delivery_id' => $deliveryId,
+      'job_id' => $canonicalJobId,
+      'callback_event_id' => $callbackEventId,
+      'run_started_at' => $runStartedAt,
+    ];
     $jobId = $this->ledger->enqueue(
       $jobKey,
-      'proof.generate',
+      // This is intentionally a distinct worker lane. A verified-source
+      // public proof cannot fall through a generic lead proof/outreach job.
+      'public_preview.generate',
       [
         'routine' => 'website_proof.generate.v1',
         'prospect_id' => (int) $row['prospect_id'],
         'public_preview_delivery_id' => $deliveryId,
+        'proof_campaign_id' => $proofCampaignId,
+        'campaign_id' => (string) $campaign->get('campaign_id')->value,
+        'job_id' => $canonicalJobId,
+        'callback_event_id' => $callbackEventId,
+        'run_started_at' => $runStartedAt,
         'public_preview_package_profile' => $profile['id'],
-        'source_lane' => (string) ($row['source_lane'] ?? 'anonymous_public'),
+        'source_lane' => $sourceLane,
         // The full contract is repeated in the durable job payload. A worker
         // must not silently resolve a later config revision for this lead.
         'public_preview_proof_profile' => $profile,
         'required_variants' => $profile['direction_count'],
+        // This immutable identity packet must be copied into run (not only
+        // design DNA) before a Build DNA file is hashed or registered.
+        'build_dna_run' => $run,
       ],
       (int) $row['prospect_id'],
     );
-    $now = $this->time->getRequestTime();
     $this->database->update('famtastic_preview_delivery')->fields([
       'state' => 'preview_requested',
       'last_event_at' => $now,
       'changed' => $now,
     ])->condition('id', $deliveryId)->condition('state', ['lead_captured', 'preview_requested', 'research_ready'], 'IN')->execute();
+    // `enqueue()` is idempotent. Reload the durable payload before any audit
+    // event so a concurrent caller that lost the unique job-key race cannot
+    // report its locally generated event/time instead of the stored contract.
+    $persisted = $this->database->select('famtastic_job', 'j')->fields('j', ['payload'])
+      ->condition('id', $jobId)->condition('job_key', $jobKey)->range(0, 1)->execute()->fetchAssoc();
+    try {
+      $persistedPayload = $persisted ? json_decode((string) $persisted['payload'], TRUE, 32, JSON_THROW_ON_ERROR) : NULL;
+    }
+    catch (\Throwable) {
+      $persistedPayload = NULL;
+    }
+    if (!is_array($persistedPayload)) {
+      throw new \RuntimeException('The queued public-preview job cannot be reloaded for its immutable runtime contract.');
+    }
+    $canonicalJobId = (string) ($persistedPayload['job_id'] ?? '');
+    $callbackEventId = (string) ($persistedPayload['callback_event_id'] ?? '');
+    $runStartedAt = (string) ($persistedPayload['run_started_at'] ?? '');
+    if ($sourceLane === 'verified_cold') {
+      $persistedRun = $this->runtimeRunForDelivery($this->require($deliveryId), $campaign, TRUE);
+      $canonicalJobId = (string) $persistedRun['job_id'];
+      $callbackEventId = (string) $persistedRun['callback_event_id'];
+      $runStartedAt = (string) $persistedRun['run_started_at'];
+    }
     $this->event($this->require($deliveryId), 'preview.proof_job_queued', [
-      'job_id' => $jobId,
+      'job_id' => $canonicalJobId,
+      'job_database_id' => $jobId,
+      'callback_event_id' => $callbackEventId,
+      'run_started_at' => $runStartedAt,
       'package_profile' => $profile['id'],
       'direction_count' => $profile['direction_count'],
     ]);
@@ -210,11 +272,23 @@ final class PublicPreviewDeliveryService {
       $brief['verified_source'] = $evidence;
       $brief['fact_boundary'] = 'Use only the supplied preliminary public brief and the explicitly corroborated fact in verified_source. The proof teaser is a non-factual invitation cue, not a statement of current operations. Do not infer or invent services, outcomes, prices, staff, availability, partners, or customer claims.';
     }
+    $campaignId = (int) ($delivery['proof_campaign_id'] ?? 0);
+    $campaign = $campaignId ? $this->entities->getStorage('proof_campaign')->load($campaignId) : NULL;
+    $run = NULL;
+    if ($campaign instanceof ProofCampaign && (int) $campaign->get('prospect_id')->target_id === (int) $delivery['prospect_id']) {
+      $run = $this->runtimeRunForDelivery($delivery, $campaign);
+    }
     return [
       'public_preview_delivery_id' => $deliveryId,
+      'proof_campaign_id' => $campaignId ?: NULL,
+      'campaign_id' => $run['campaign_id'] ?? '',
+      'job_id' => $run['job_id'] ?? '',
+      'callback_event_id' => $run['callback_event_id'] ?? '',
+      'run_started_at' => $run['run_started_at'] ?? '',
       'public_preview_package_profile' => $profile['id'],
       'public_preview_proof_profile' => $profile,
       'source_lane' => (string) ($delivery['source_lane'] ?? 'anonymous_public'),
+      'build_dna_run' => $run,
       'website_discovery_v2' => $brief,
       'website_discovery_v3' => $brief,
       // The cohort snapshot, rather than an importer literal, owns these
@@ -398,6 +472,36 @@ final class PublicPreviewDeliveryService {
   }
 
   /**
+   * Returns the ingress-frozen callback contract for one verified-cold
+   * campaign. The callback service uses this to reject an event or job ID
+   * invented by an external builder after the initial job was queued.
+   *
+   * @return array{public_preview_delivery_id:int,job_id:string,callback_event_id:string,run_started_at:string,build_dna_run:array}|null
+   */
+  public function verifiedColdCallbackContractForCampaign(int $prospectId, int $proofCampaignId): ?array {
+    $delivery = $this->database->select('famtastic_preview_delivery', 'p')->fields('p')
+      ->condition('prospect_id', $prospectId)
+      ->condition('proof_campaign_id', $proofCampaignId)
+      ->condition('source_lane', 'verified_cold')
+      ->range(0, 1)->execute()->fetchAssoc();
+    if (!$delivery) {
+      return NULL;
+    }
+    $campaign = $this->entities->getStorage('proof_campaign')->load($proofCampaignId);
+    if (!$campaign instanceof ProofCampaign || (int) $campaign->get('prospect_id')->target_id !== $prospectId) {
+      throw new \RuntimeException('Verified-cold callback contract has no matching proof campaign.');
+    }
+    $run = $this->runtimeRunForDelivery($delivery, $campaign, TRUE);
+    return [
+      'public_preview_delivery_id' => (int) $delivery['id'],
+      'job_id' => (string) $run['job_id'],
+      'callback_event_id' => (string) $run['callback_event_id'],
+      'run_started_at' => (string) $run['run_started_at'],
+      'build_dna_run' => $run,
+    ];
+  }
+
+  /**
    * Marks one known public delivery ready. Unlike the legacy prospect lookup,
    * this exact-ID path can never fall back to generic outreach on a retry.
    */
@@ -446,40 +550,53 @@ final class PublicPreviewDeliveryService {
     if ($this->ledger->isSuppressed((string) $row['recipient_address_snapshot'])) {
       throw new \RuntimeException('A suppressed contact cannot receive a public preview invitation.');
     }
-    // For commercial verified-cold delivery, establish the campaign-approved
-    // hold before exposing any outbox row or marking the delivery approved.
-    // A draft/revoked campaign therefore fails closed without a dispatchable
-    // preview record. The commercial hold is idempotent for safe recovery if
-    // a later local write is interrupted.
-    if ((string) ($row['source_lane'] ?? 'anonymous_public') === 'verified_cold') {
-      $this->coldMessages->hold($deliveryId);
-    }
     $now = $this->time->getRequestTime();
     $key = 'preview-delivery:' . $deliveryId . ':share:' . (int) $row['share_version'];
-    $this->database->merge('famtastic_notification_outbox')->key('notification_key', $key)->insertFields([
-      'notification_key' => $key,
-      'category' => 'transactional',
-      'recipient' => (string) $row['recipient_address_snapshot'],
-      'subject' => (string) $row['subject_snapshot'],
-      'body' => (string) $row['text_snapshot'],
-      'status' => 'held',
-      'attempts' => 0,
-      'max_attempts' => 5,
-      'available_at' => $now,
-      'created' => $now,
-      'changed' => $now,
-    ])->execute();
-    $outbox = $this->database->select('famtastic_notification_outbox', 'n')->fields('n')
-      ->condition('notification_key', $key)->execute()->fetchAssoc();
-    $this->database->update('famtastic_preview_delivery')->fields([
-      'state' => 'email_approved',
-      'owner_approved_at' => $now,
-      'owner_approved_by_uid' => $uid,
-      'email_outbox_id' => (int) $outbox['id'],
-      'queued_at' => $now,
-      'last_event_at' => $now,
-      'changed' => $now,
-    ])->condition('id', $deliveryId)->execute();
+    // The commercial record, held outbox, and delivery state are one atomic
+    // owner action. In particular, a draft campaign may make the commercial
+    // hold fail, but it must never leave an email_approved delivery or a held
+    // outbox behind for a generic process to find.
+    $transaction = $this->database->startTransaction();
+    try {
+      if ((string) ($row['source_lane'] ?? 'anonymous_public') === 'verified_cold') {
+        $this->coldMessages->hold($deliveryId);
+      }
+      $this->database->merge('famtastic_notification_outbox')->key('notification_key', $key)->insertFields([
+        'notification_key' => $key,
+        'category' => 'transactional',
+        'recipient' => (string) $row['recipient_address_snapshot'],
+        'subject' => (string) $row['subject_snapshot'],
+        'body' => (string) $row['text_snapshot'],
+        'status' => 'held',
+        'attempts' => 0,
+        'max_attempts' => 5,
+        'available_at' => $now,
+        'created' => $now,
+        'changed' => $now,
+      ])->execute();
+      $outbox = $this->database->select('famtastic_notification_outbox', 'n')->fields('n')
+        ->condition('notification_key', $key)->range(0, 1)->execute()->fetchAssoc();
+      if (!$outbox || (string) $outbox['status'] !== 'held') {
+        throw new \RuntimeException('The owner-held preview outbox could not be established safely.');
+      }
+      $updated = $this->database->update('famtastic_preview_delivery')->fields([
+        'state' => 'email_approved',
+        'owner_approved_at' => $now,
+        'owner_approved_by_uid' => $uid,
+        'email_outbox_id' => (int) $outbox['id'],
+        'queued_at' => $now,
+        'last_event_at' => $now,
+        'changed' => $now,
+      ])->condition('id', $deliveryId)->condition('state', 'email_staged')->execute();
+      if ($updated !== 1) {
+        throw new \RuntimeException('This preview changed before owner approval could be recorded.');
+      }
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+    unset($transaction);
     $row = $this->require($deliveryId);
     $this->event($row, 'preview.approved', ['owner_uid' => $uid]);
     $this->event($row, 'preview.email_held', ['outbox_id' => (int) $outbox['id']]);
@@ -603,34 +720,59 @@ final class PublicPreviewDeliveryService {
       throw new \RuntimeException('This invitation is being dispatched. Wait for its recorded SMTP result before revoking the room.');
     }
     $now = $this->time->getRequestTime();
-    // Cancel the exact, not-yet-sent commercial snapshot before changing the
-    // room version. This prevents an orphan held cold message from surviving
-    // a revoked room and being mistaken for a later eligible send.
-    if (
-      (string) ($row['source_lane'] ?? 'anonymous_public') === 'verified_cold'
-      && in_array((string) $row['state'], ['email_staged', 'email_approved'], TRUE)
-    ) {
-      $this->coldMessages->revoke($deliveryId, 'public_preview_share_revoked_before_dispatch');
-    }
-    // A held invitation is not visible to the general lifecycle dispatcher,
-    // but revoke it explicitly as well so it cannot be mistaken for an
-    // eligible exact-ID dispatch after this delivery is restaged.
-    $outboxId = (int) ($row['email_outbox_id'] ?? 0);
-    if ($row['state'] === 'email_approved' && $outboxId > 0) {
-      $this->database->update('famtastic_notification_outbox')->fields([
-        'status' => 'cancelled',
-        'last_error' => 'cancelled: public preview link revoked before targeted dispatch',
+    $state = (string) $row['state'];
+    $transaction = $this->database->startTransaction();
+    try {
+      // An approved invitation is revokeable only while its exact held outbox
+      // can be claimed for cancellation. If targeted dispatch won the race,
+      // do not rewrite the room state or the durable send history.
+      if ($state === 'email_approved') {
+        $outboxId = (int) ($row['email_outbox_id'] ?? 0);
+        $expectedKey = 'preview-delivery:' . $deliveryId . ':share:' . (int) $row['share_version'];
+        $outbox = $outboxId ? $this->database->select('famtastic_notification_outbox', 'n')->fields('n', ['id', 'notification_key', 'status'])
+          ->condition('id', $outboxId)->range(0, 1)->execute()->fetchAssoc() : FALSE;
+        if (!$outbox || !hash_equals($expectedKey, (string) $outbox['notification_key']) || $outbox['status'] !== 'held') {
+          throw new \RuntimeException('This invitation changed before revocation; it may already be dispatching.');
+        }
+        $cancelled = $this->database->update('famtastic_notification_outbox')->fields([
+          'status' => 'cancelled',
+          'last_error' => 'cancelled: public preview link revoked before targeted dispatch',
+          'changed' => $now,
+        ])->condition('id', $outboxId)->condition('status', 'held')->execute();
+        if ($cancelled !== 1) {
+          throw new \RuntimeException('This invitation changed before revocation; no room state was modified.');
+        }
+      }
+      // Cancel the exact, not-yet-sent commercial snapshot within the same
+      // transaction as the outbox/state transition. A held cold message can
+      // never survive a successfully revoked signed room.
+      if (
+        (string) ($row['source_lane'] ?? 'anonymous_public') === 'verified_cold'
+        && in_array($state, ['email_staged', 'email_approved'], TRUE)
+      ) {
+        $this->coldMessages->revoke($deliveryId, 'public_preview_share_revoked_before_dispatch');
+      }
+      $updated = $this->database->update('famtastic_preview_delivery')->fields([
+        'state' => 'share_revoked',
+        'share_version' => (int) $row['share_version'] + 1,
+        'share_revoked_at' => $now,
+        'share_revoked_by_uid' => $uid,
+        'last_event_at' => $now,
         'changed' => $now,
-      ])->condition('id', $outboxId)->condition('status', 'held')->execute();
+      ])->condition('id', $deliveryId)->condition('state', $state)->execute();
+      if ($updated !== 1) {
+        throw new \RuntimeException('This invitation changed before revocation; no partial revoke was retained.');
+      }
     }
-    $this->database->update('famtastic_preview_delivery')->fields([
-      'state' => 'share_revoked',
-      'share_version' => (int) $row['share_version'] + 1,
-      'share_revoked_at' => $now,
-      'share_revoked_by_uid' => $uid,
-      'last_event_at' => $now,
-      'changed' => $now,
-    ])->condition('id', $deliveryId)->execute();
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      $latest = $this->require($deliveryId);
+      if ((string) ($latest['state'] ?? '') === 'email_dispatching') {
+        throw new \RuntimeException('This invitation began targeted dispatch before revocation could claim its held outbox; the room was not revoked.', 0, $error);
+      }
+      throw $error;
+    }
+    unset($transaction);
     $row = $this->require($deliveryId);
     $this->event($row, 'preview.share_revoked', ['owner_uid' => $uid]);
     return $row;
@@ -1022,6 +1164,84 @@ final class PublicPreviewDeliveryService {
       ->range(0, 1)->execute()->fetchField();
   }
 
+  /**
+   * Resolves the one durable runtime identity packet for this public delivery.
+   *
+   * Before the dedicated job exists, the initial campaign-binding call may
+   * return the four ownership fields only. Once a job exists, a verified-cold
+   * context must contain the complete ingress-created callback tuple; it may
+   * not fall back to a rebuilt timestamp or local placeholder.
+   */
+  private function runtimeRunForDelivery(array $delivery, ProofCampaign $campaign, bool $required = FALSE): array {
+    $deliveryId = (int) ($delivery['id'] ?? 0);
+    $proofCampaignId = (int) $campaign->id();
+    $prospectId = (int) ($delivery['prospect_id'] ?? 0);
+    $sourceLane = (string) ($delivery['source_lane'] ?? 'anonymous_public');
+    $base = [
+      'prospect_id' => $prospectId,
+      'proof_campaign_id' => $proofCampaignId,
+      'campaign_id' => (string) $campaign->get('campaign_id')->value,
+      'source_lane' => $sourceLane,
+      'public_preview_delivery_id' => $deliveryId,
+    ];
+    $jobKey = 'public-preview:generate:delivery:' . $deliveryId . ':campaign:' . $proofCampaignId;
+    $job = $this->database->select('famtastic_job', 'j')->fields('j', ['payload'])
+      ->condition('job_key', $jobKey)->range(0, 1)->execute()->fetchAssoc();
+    if (!$job) {
+      if ($required) {
+        throw new \RuntimeException('Verified-cold callback contract has no dedicated public-preview job.');
+      }
+      return $base;
+    }
+    try {
+      $payload = json_decode((string) $job['payload'], TRUE, 32, JSON_THROW_ON_ERROR);
+    }
+    catch (\Throwable) {
+      throw new \RuntimeException('Public-preview job has an unreadable runtime identity packet.');
+    }
+    $run = is_array($payload['build_dna_run'] ?? NULL) ? $payload['build_dna_run'] : [];
+    if ($sourceLane !== 'verified_cold') {
+      return $run ?: $base;
+    }
+    $canonicalJobId = trim((string) $campaign->get('studio_job_id')->value);
+    $callbackEventId = trim((string) ($payload['callback_event_id'] ?? ''));
+    $runStartedAt = trim((string) ($payload['run_started_at'] ?? ''));
+    $complete = (
+      (int) ($payload['prospect_id'] ?? 0) === $prospectId
+      && (int) ($payload['public_preview_delivery_id'] ?? 0) === $deliveryId
+      && (int) ($payload['proof_campaign_id'] ?? 0) === $proofCampaignId
+      && hash_equals((string) $campaign->get('campaign_id')->value, (string) ($payload['campaign_id'] ?? ''))
+      && hash_equals('verified_cold', (string) ($payload['source_lane'] ?? ''))
+      && $this->canonicalRuntimeReference($canonicalJobId)
+      && hash_equals($canonicalJobId, (string) ($payload['job_id'] ?? ''))
+      && $this->canonicalRuntimeReference($callbackEventId)
+      && $this->canonicalRuntimeTimestamp($runStartedAt)
+      && (int) ($run['prospect_id'] ?? 0) === $prospectId
+      && (int) ($run['public_preview_delivery_id'] ?? 0) === $deliveryId
+      && (int) ($run['proof_campaign_id'] ?? 0) === $proofCampaignId
+      && hash_equals((string) $campaign->get('campaign_id')->value, (string) ($run['campaign_id'] ?? ''))
+      && hash_equals('verified_cold', (string) ($run['source_lane'] ?? ''))
+      && hash_equals($canonicalJobId, (string) ($run['job_id'] ?? ''))
+      && hash_equals($callbackEventId, (string) ($run['callback_event_id'] ?? ''))
+      && hash_equals($runStartedAt, (string) ($run['run_started_at'] ?? ''))
+    );
+    if (!$complete) {
+      throw new \RuntimeException('Verified-cold public-preview job has an incomplete or mismatched immutable runtime identity packet.');
+    }
+    return $run;
+  }
+
+  /** Rejects local builder placeholders from the canonical callback contract. */
+  private function canonicalRuntimeReference(string $value): bool {
+    return preg_match('/^[A-Za-z0-9][A-Za-z0-9._:-]{1,254}$/', $value) === 1
+      && preg_match('/^(?:local-|beauty-proof:)/i', $value) !== 1;
+  }
+
+  /** The packet records an ISO time when the durable job is created. */
+  private function canonicalRuntimeTimestamp(string $value): bool {
+    return $value !== '' && strlen($value) <= 80 && strtotime($value) !== FALSE;
+  }
+
   /** Stable JSON for the delivery/job/Build DNA proof-profile contract. */
   private function profileSnapshot(array $profile): string {
     return json_encode([
@@ -1149,6 +1369,18 @@ final class PublicPreviewDeliveryService {
     }
     if ($sourceLane === 'verified_cold' && !hash_equals('verified_cold', (string) ($run['source_lane'] ?? ''))) {
       throw new \RuntimeException('Verified-cold public proof staging requires Build DNA run.source_lane=verified_cold.');
+    }
+    if ($sourceLane === 'verified_cold') {
+      $runtime = $this->verifiedColdCallbackContractForCampaign($campaignEvidence['prospect_id'], $campaignEvidence['campaign_id']);
+      $recordedStart = (string) ($run['started_at'] ?? $run['run_started_at'] ?? '');
+      if (!$runtime
+        || (int) ($run['public_preview_delivery_id'] ?? 0) !== (int) $runtime['public_preview_delivery_id']
+        || !hash_equals((string) $runtime['job_id'], (string) ($run['job_id'] ?? ''))
+        || !hash_equals((string) $runtime['callback_event_id'], (string) ($run['callback_event_id'] ?? ''))
+        || !hash_equals((string) $runtime['run_started_at'], $recordedStart)
+      ) {
+        throw new \RuntimeException('Verified-cold public proof staging requires the Build DNA run to match its ingress-frozen delivery, job, callback event, and recorded start time.');
+      }
     }
     foreach ($campaignEvidence['artifact_hashes'] as $artifactHash) {
       if (!$this->manifestContainsArtifact($manifest, $artifactHash)) {

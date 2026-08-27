@@ -15,6 +15,7 @@ import hmac
 import json
 import os
 import pathlib
+import re
 import shutil
 import struct
 import subprocess
@@ -62,6 +63,59 @@ def utcnow() -> str:
 def require(condition: bool, message: str):
     if not condition:
         raise ContractError(message)
+
+
+def normalize_build_dna_run_context(value: object, delivery_id: int | None = None) -> dict:
+    """Extract a canonical public-preview run identity from a safe handoff.
+
+    A verified-cold proof cannot use the old synthetic request/project labels
+    as its Build DNA identity. Its runner receives the exact Drupal identities
+    exported by FAMtastic and must place them in `build-dna.run` before any
+    manifest checksum is calculated.
+    """
+    if isinstance(value, dict) and value.get("schema") == "famtastic.verified-cold-proof-handoff.v1":
+        deliveries = value.get("deliveries")
+        require(isinstance(deliveries, list), "Verified-cold handoff has no deliveries list")
+        require(delivery_id is not None and delivery_id > 0, "A verified-cold handoff bundle requires --delivery-id")
+        matches = [item for item in deliveries if isinstance(item, dict) and item.get("public_preview_delivery_id") == delivery_id]
+        require(len(matches) == 1, "Requested verified-cold delivery is absent or ambiguous in handoff bundle")
+        value = matches[0]
+    require(isinstance(value, dict), "Build DNA run context must be an object")
+    run = value.get("build_dna_run", value)
+    require(isinstance(run, dict), "Build DNA run context must include build_dna_run")
+    normalized = {
+        "prospect_id": run.get("prospect_id"),
+        "proof_campaign_id": run.get("proof_campaign_id"),
+        "campaign_id": run.get("campaign_id"),
+        "source_lane": run.get("source_lane"),
+        "job_id": run.get("job_id", value.get("job_id") if isinstance(value, dict) else None),
+        "callback_event_id": run.get("callback_event_id", value.get("callback_event_id") if isinstance(value, dict) else None),
+        "run_started_at": run.get("run_started_at", run.get("started_at", value.get("run_started_at") if isinstance(value, dict) else None)),
+    }
+    if "public_preview_delivery_id" in run:
+        normalized["public_preview_delivery_id"] = run["public_preview_delivery_id"]
+    elif "public_preview_delivery_id" in value:
+        normalized["public_preview_delivery_id"] = value["public_preview_delivery_id"]
+    if normalized["source_lane"] == "verified_cold":
+        require(isinstance(normalized["prospect_id"], int) and normalized["prospect_id"] > 0, "verified_cold run requires numeric prospect_id")
+        require(isinstance(normalized["proof_campaign_id"], int) and normalized["proof_campaign_id"] > 0, "verified_cold run requires numeric proof_campaign_id")
+        require(isinstance(normalized["campaign_id"], str) and normalized["campaign_id"].strip() != "", "verified_cold run requires campaign_id")
+        for field in ("job_id", "callback_event_id"):
+            require(isinstance(normalized[field], str) and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{1,254}", normalized[field]) is not None, f"verified_cold run requires canonical {field}")
+            require(not normalized[field].lower().startswith(("local-", "beauty-proof:")), f"verified_cold run rejects local {field}")
+        require(isinstance(normalized["run_started_at"], str) and normalized["run_started_at"].strip() != "", "verified_cold run requires run_started_at")
+        try:
+            dt.datetime.fromisoformat(normalized["run_started_at"].replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise ContractError("verified_cold run requires ISO run_started_at") from exc
+        # The eventual Build DNA run uses `started_at`; retain the named
+        # ingress value too so the packet is directly auditable against the
+        # Drupal job payload and the e369 runtime binder.
+        normalized["started_at"] = normalized["run_started_at"]
+        require(isinstance(normalized.get("public_preview_delivery_id"), int) and normalized["public_preview_delivery_id"] > 0, "verified_cold run requires public_preview_delivery_id")
+    else:
+        require(normalized["source_lane"] in ("anonymous_public", ""), "Unsupported Build DNA source_lane")
+    return normalized
 
 
 def png_width(path: pathlib.Path) -> int:
@@ -225,7 +279,7 @@ def repository_revision() -> str:
 
 def build_dna_manifest(packet_id: str, request_id: str, project_id: str, build_class: str,
                        classification: str, ledger: list[dict], output: pathlib.Path,
-                       packet_files: pathlib.Path) -> dict:
+                       packet_files: pathlib.Path, run_context: dict | None = None) -> dict:
     build_id = f"build-{packet_id.removeprefix('packet-')}"
     stages = []
     for row in ledger:
@@ -253,12 +307,17 @@ def build_dna_manifest(packet_id: str, request_id: str, project_id: str, build_c
             "result": {"status": row["status"], "assertions": row["assertions"]},
         })
     artifacts = [artifact_record(output, path, "source_material") for path in sorted(packet_files.rglob("*")) if path.is_file()]
+    run = {"request_id": request_id, "project_id": project_id, "packet_id": packet_id}
+    if run_context:
+        # This merge happens before the returned manifest is dumped, copied,
+        # checksummed, signed, or registered.
+        run.update(run_context)
     return {
         "schema": "famtastic.build-dna.v1",
         "build_id": build_id,
         "classification": classification,
         "created_at": utcnow(),
-        "run": {"request_id": request_id, "project_id": project_id, "packet_id": packet_id},
+        "run": run,
         "repository": {"name": "famtastic-designs", "revision": repository_revision()},
         "recipe": {"routine": "website.preview.v2", "version": "1.0.0", "build_class": build_class},
         "stages": stages,
@@ -284,6 +343,7 @@ def prepare(args) -> pathlib.Path:
     packet_files.mkdir()
 
     intake = load(intake_path)
+    run_context = normalize_build_dna_run_context(load(pathlib.Path(args.run_context).resolve()), args.delivery_id) if args.run_context else None
     request_id = intake.get("request_id") or f"request:{uuid.uuid4()}"
     project_id = args.project_id or f"project:{hashlib.sha256(request_id.encode()).hexdigest()[:16]}"
     selected = [value.strip() for value in args.select.split(",") if value.strip()]
@@ -373,7 +433,7 @@ def prepare(args) -> pathlib.Path:
 
     packet_id = f"packet-{uuid.uuid4()}"
     classification = "locally_proven_golden_replay" if args.golden_replay else "provider_executed"
-    dna = build_dna_manifest(packet_id, request_id, project_id, args.build_class, classification, ledger, output, packet_files)
+    dna = build_dna_manifest(packet_id, request_id, project_id, args.build_class, classification, ledger, output, packet_files, run_context)
     dump(output / "build-dna.json", dna)
     shutil.copy2(output / "build-dna.json", packet_files / "build-dna.json")
 
@@ -392,6 +452,7 @@ def prepare(args) -> pathlib.Path:
         "created_at": utcnow(),
         "request_id": request_id,
         "project_id": project_id,
+        "build_dna_run": dna["run"],
         "customer": {"email": intake.get("customer", {}).get("email"), "account_state": "member"},
         "build_class": args.build_class,
         "classification": classification,
@@ -517,6 +578,8 @@ def parser() -> argparse.ArgumentParser:
     prep.add_argument("--artifact", required=True)
     prep.add_argument("--output", required=True)
     prep.add_argument("--project-id")
+    prep.add_argument("--run-context", help="Exact FAMtastic public-preview handoff object or handoff bundle JSON.")
+    prep.add_argument("--delivery-id", type=int, help="Exact delivery ID when --run-context is a multi-delivery handoff bundle.")
     prep.add_argument("--select", default="direction-e,direction-f")
     prep.add_argument("--build-class", default="medium")
     prep.add_argument("--golden-replay", action="store_true")

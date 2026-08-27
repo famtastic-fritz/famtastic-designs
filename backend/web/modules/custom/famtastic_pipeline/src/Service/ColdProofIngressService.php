@@ -88,6 +88,7 @@ final class ColdProofIngressService {
         $intakeId = NULL;
         $deliveryId = NULL;
         $jobId = NULL;
+        $runtimeRun = [];
         $status = (string) $import['status'];
         if ($status === 'qualified' && !empty($import['prospect_id'])) {
           $intakeId = $this->createAnonymousIntake((int) $import['prospect_id'], $lead);
@@ -100,6 +101,10 @@ final class ColdProofIngressService {
           );
           $deliveryId = (int) $delivery['id'];
           $jobId = $this->previews->queueInitialProof($deliveryId);
+          // Reload the persisted payload after enqueue. If another importer
+          // won the idempotency race, this prevents our audit event from
+          // describing a losing process's generated callback identity.
+          $runtimeRun = (array) ($this->previews->publicIntakeProofContext($deliveryId)['build_dna_run'] ?? []);
           $status = 'preview_requested';
         }
         $this->insertIngress($cohortRow['id'], $lead, $import, $intakeId, $deliveryId, $jobId, $status);
@@ -113,6 +118,9 @@ final class ColdProofIngressService {
               'direction_count' => $profile['direction_count'],
               'preview_delivery_id' => $deliveryId,
               'proof_job_id' => $jobId,
+              'job_id' => (string) ($runtimeRun['job_id'] ?? ''),
+              'callback_event_id' => (string) ($runtimeRun['callback_event_id'] ?? ''),
+              'run_started_at' => (string) ($runtimeRun['run_started_at'] ?? ''),
               'scheduled_release_at' => $lead['scheduled_release_at'],
               'evidence_hash' => $lead['evidence_hash'],
               'source_lane' => 'verified_cold',

@@ -53,6 +53,7 @@ final class AutomationWorker {
   private function execute(array $job): array {
     return match ($job['job_type']) {
       'proof.generate' => $this->generateProofs($job),
+      'public_preview.generate' => $this->generatePublicPreviewProofs($job),
       'outreach.prepare' => $this->prepareOutreach($job),
       'outreach.send' => $this->sendOutreach($job),
       'deployment.prepare' => $this->prepareDeployment($job),
@@ -66,10 +67,44 @@ final class AutomationWorker {
   /**
    * Produces the frozen proof cohort variants or throws for retry.
    */
-  private function generateProofs(array $job): array {
+  private function generatePublicPreviewProofs(array $job): array {
+    $context = (array) ($job['payload'] ?? []);
+    $deliveryId = (int) ($context['public_preview_delivery_id'] ?? 0);
+    $proofCampaignId = (int) ($context['proof_campaign_id'] ?? 0);
+    $campaignId = trim((string) ($context['campaign_id'] ?? ''));
+    $run = (array) ($context['build_dna_run'] ?? []);
+    $sourceLane = (string) ($context['source_lane'] ?? '');
+    if (
+      $deliveryId < 1
+      || $proofCampaignId < 1
+      || $campaignId === ''
+      || (int) ($run['prospect_id'] ?? 0) !== (int) ($context['prospect_id'] ?? $job['prospect_id'] ?? 0)
+      || (int) ($run['proof_campaign_id'] ?? 0) !== $proofCampaignId
+      || !hash_equals($campaignId, (string) ($run['campaign_id'] ?? ''))
+      || !in_array((string) ($run['source_lane'] ?? ''), ['anonymous_public', 'verified_cold'], TRUE)
+    ) {
+      throw new \RuntimeException('Public preview job is missing its exact campaign and Build DNA run identity contract.');
+    }
+    if ($sourceLane === 'verified_cold' && (
+      !hash_equals((string) ($context['job_id'] ?? ''), (string) ($run['job_id'] ?? ''))
+      || !hash_equals((string) ($context['callback_event_id'] ?? ''), (string) ($run['callback_event_id'] ?? ''))
+      || !hash_equals((string) ($context['run_started_at'] ?? ''), (string) ($run['run_started_at'] ?? ''))
+      || !$this->canonicalRuntimeReference((string) ($run['job_id'] ?? ''))
+      || !$this->canonicalRuntimeReference((string) ($run['callback_event_id'] ?? ''))
+      || !$this->canonicalRuntimeTimestamp((string) ($run['run_started_at'] ?? ''))
+    )) {
+      throw new \RuntimeException('Verified-cold public preview job is missing its ingress-frozen callback runtime contract.');
+    }
+    return $this->generateProofs($job, TRUE);
+  }
+
+  private function generateProofs(array $job, bool $dedicatedPublicPreview = FALSE): array {
     $context = (array) ($job['payload'] ?? []);
     $requestId = (int) ($context['website_request_id'] ?? 0);
     $publicPreviewDeliveryId = (int) ($context['public_preview_delivery_id'] ?? 0);
+    if ($publicPreviewDeliveryId && !$dedicatedPublicPreview) {
+      throw new \RuntimeException('Public previews must run through the dedicated public_preview.generate worker lane.');
+    }
     if ($requestId) {
       $context = array_replace($context, $this->portal->websiteRequestProofContext($requestId));
     }
@@ -101,9 +136,12 @@ final class AutomationWorker {
     }
     elseif ($publicPreviewDeliveryId) {
       $boundCampaignId = $this->previews->initialProofCampaignId($publicPreviewDeliveryId);
+      if ($boundCampaignId !== (int) ($context['proof_campaign_id'] ?? 0)) {
+        throw new \RuntimeException('Public preview job does not match its delivery-bound proof campaign.');
+      }
       $created = $boundCampaignId
         ? $this->proofCampaigns->getForId($prospect, $boundCampaignId)
-        : $this->proofCampaigns->createForProspect($prospect, $context);
+        : NULL;
       if (!$created) {
         throw new \RuntimeException('The public delivery references an unavailable proof campaign.');
       }
@@ -278,6 +316,17 @@ final class AutomationWorker {
       throw new \RuntimeException('Hosting activation is missing its project id.');
     }
     return $this->hosting->activate($projectId);
+  }
+
+  /** Reject local builder placeholders in a verified-cold worker payload. */
+  private function canonicalRuntimeReference(string $value): bool {
+    return preg_match('/^[A-Za-z0-9][A-Za-z0-9._:-]{1,254}$/', $value) === 1
+      && preg_match('/^(?:local-|beauty-proof:)/i', $value) !== 1;
+  }
+
+  /** The immutable contract stores an ISO time when its job was created. */
+  private function canonicalRuntimeTimestamp(string $value): bool {
+    return $value !== '' && strlen($value) <= 80 && strtotime($value) !== FALSE;
   }
 
 }

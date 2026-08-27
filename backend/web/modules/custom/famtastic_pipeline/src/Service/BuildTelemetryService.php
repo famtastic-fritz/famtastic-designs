@@ -132,6 +132,8 @@ final class BuildTelemetryService {
     if (!$stages) {
       throw new \InvalidArgumentException('Build DNA requires at least one stage.');
     }
+    $this->assertVerifiedColdRunIdentity($run);
+    $this->assertVerifiedColdAssetLedger($dna, $run);
 
     $firstExecution = [];
     foreach ($stages as $stage) {
@@ -142,7 +144,7 @@ final class BuildTelemetryService {
     }
     $provider = is_array($firstExecution['provider'] ?? NULL) ? $firstExecution['provider'] : [];
     $model = is_array($firstExecution['model'] ?? NULL) ? $firstExecution['model'] : [];
-    $started = $this->timestamp($run['started_at'] ?? $dna['created_at'] ?? NULL) ?? $this->time->getRequestTime();
+    $started = $this->timestamp($run['started_at'] ?? $run['run_started_at'] ?? $dna['created_at'] ?? NULL) ?? $this->time->getRequestTime();
     $completed = $this->timestamp($run['completed_at'] ?? NULL);
     $prospectId = $this->numericId($run['prospect_id'] ?? NULL);
     $proofCampaignId = $this->numericId($run['proof_campaign_id'] ?? NULL);
@@ -263,6 +265,71 @@ final class BuildTelemetryService {
 
   private function json(mixed $value): string {
     return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+  }
+
+  /**
+   * A verified-cold marker is a media/commercial safety contract, not a label.
+   * Refuse to register a manifest that puts the marker outside `run` or omits
+   * the complete callback/runtime tuple needed by public-preview staging.
+   */
+  private function assertVerifiedColdRunIdentity(array $run): void {
+    if ((string) ($run['source_lane'] ?? '') !== 'verified_cold') {
+      return;
+    }
+    $prospectId = $this->numericId($run['prospect_id'] ?? NULL);
+    $proofCampaignId = $this->numericId($run['proof_campaign_id'] ?? NULL);
+    $campaignId = trim((string) ($run['campaign_id'] ?? ''));
+    $jobId = trim((string) ($run['job_id'] ?? ''));
+    $callbackEventId = trim((string) ($run['callback_event_id'] ?? ''));
+    $startedAt = trim((string) ($run['started_at'] ?? $run['run_started_at'] ?? ''));
+    if (
+      $prospectId === NULL
+      || $proofCampaignId === NULL
+      || $campaignId === ''
+      || !$this->canonicalRuntimeReference($jobId)
+      || !$this->canonicalRuntimeReference($callbackEventId)
+      || !$this->canonicalRuntimeTimestamp($startedAt)
+    ) {
+      throw new \InvalidArgumentException('Verified-cold Build DNA run requires prospect_id, proof_campaign_id, campaign_id, canonical job_id, callback_event_id, recorded start time, and source_lane before registration.');
+    }
+  }
+
+  /**
+   * The canonical verified-cold builder produces one signed visual asset per
+   * a/b/c direction and carries every byte hash in the immutable ledger.
+   * Other profile/binder combinations must use their own explicit importer;
+   * they cannot silently enter this fixed signed-asset contract.
+   */
+  private function assertVerifiedColdAssetLedger(array $dna, array $run): void {
+    if ((string) ($run['source_lane'] ?? '') !== 'verified_cold') {
+      return;
+    }
+    $assetDirections = [];
+    foreach ((array) ($dna['artifacts'] ?? []) as $artifact) {
+      if (!is_array($artifact) || !preg_match('/^proof-asset-([a-c])$/', (string) ($artifact['role'] ?? ''), $matches)) {
+        continue;
+      }
+      $hash = strtolower(trim((string) ($artifact['sha256'] ?? '')));
+      if (preg_match('/^[a-f0-9]{64}$/', $hash) !== 1 || isset($assetDirections[$matches[1]])) {
+        throw new \InvalidArgumentException('Verified-cold Build DNA asset ledger is invalid.');
+      }
+      $assetDirections[$matches[1]] = $hash;
+    }
+    ksort($assetDirections);
+    if (array_keys($assetDirections) !== ['a', 'b', 'c']) {
+      throw new \InvalidArgumentException('Verified-cold Build DNA requires one signed asset ledger entry for every a/b/c direction.');
+    }
+  }
+
+  /** Mirrors the local runtime binder’s opaque reference constraints. */
+  private function canonicalRuntimeReference(string $value): bool {
+    return preg_match('/^[A-Za-z0-9][A-Za-z0-9._:-]{1,254}$/', $value) === 1
+      && preg_match('/^(?:local-|beauty-proof:)/i', $value) !== 1;
+  }
+
+  /** Runtime start is frozen by ingress before any builder can run. */
+  private function canonicalRuntimeTimestamp(string $value): bool {
+    return $value !== '' && strlen($value) <= 80 && strtotime($value) !== FALSE;
   }
 
   private function timestamp(mixed $value): ?int {

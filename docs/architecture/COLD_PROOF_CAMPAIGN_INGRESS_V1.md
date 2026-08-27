@@ -24,9 +24,22 @@ public website URL; confirmed-absent may not carry one.
 
 ## Stored contract
 
-Each accepted seed creates or reuses an immutable cohort record and creates a
-dedicated `public-preview:proof.generate:delivery:<id>` job. It never creates
-`proof.generate:prospect:*`, `outreach.prepare`, or `outreach.send` work.
+Each accepted seed creates or reuses an immutable cohort record, then creates
+one delivery-bound `proof_campaign` and one dedicated
+`public-preview:generate:delivery:<id>:campaign:<id>`
+`public_preview.generate` job. The campaign entity ID, public campaign ID,
+opaque callback job ID, distinct callback event ID, delivery ID, and recorded
+run-start time are persisted in the exact job payload before any worker can
+run. The immutable `build_dna_run` tuple is:
+
+```text
+prospect_id, proof_campaign_id, campaign_id, job_id,
+callback_event_id, run_started_at, source_lane=verified_cold
+```
+
+The numeric scheduler row is exposed only as `job.id` for audit; it is never
+the callback-facing `job_id`. The lane never creates `proof.generate:prospect:*`,
+`outreach.prepare`, or `outreach.send` work.
 
 `proof_profile` is selected per cohort and frozen on both delivery and job.
 Profiles support one through six ordered directions (`a` through `f`); the
@@ -41,6 +54,74 @@ contract (`assets[]` with `asset_id`, `relative_path`, `media_type`, `base64`,
 and `sha256`), and every asset hash must appear in Build DNA before staging.
 The asset-capable callback/finalizer is the authority for actual media
 promotion; ingress only fails closed until it supplies those artifacts.
+
+## Safe runner handoff
+
+Before a local or remote builder starts, an operator can export one through
+ten exact verified-cold delivery bindings:
+
+```text
+drush famtastic:cold-proof-handoff-export --ids=41
+drush famtastic:cold-proof-handoff-export --ids=41,42 \
+  --output=/configured/private/famtastic/cold-handoff.json --confirm=41,42
+```
+
+Stdout contains no recipient, outbox, approval, share-token, or sender data.
+A file export requires exact-ID confirmation, a new non-symlink path below
+Drupal's configured private filesystem, and mode `0600`. It is read-only: no
+provider, callback, proof execution, email, approval, or dispatch occurs.
+
+The emitted schema is `famtastic.verified-cold-proof-handoff.v1`. Each delivery
+has direct binder fields named `prospect_id`, `proof_campaign_id`,
+`campaign_id`, `job_id`, `callback_event_id`, `run_started_at`, and
+`source_lane`; they are copied from the durable job, never generated on export.
+A builder must return the exact job/event pair and copy the supplied
+`build_dna_run` object unchanged into Build DNA `run` before its final hash is
+calculated (the current binder retains `run_started_at` and mirrors it as
+`run.started_at`).
+`BuildTelemetryService` rejects a `verified_cold` manifest that lacks the
+complete tuple or one SHA-256 asset-ledger entry per a/b/c direction. Staging
+then rechecks the final run against its delivery/job packet and every imported
+signed asset hash.
+
+### Current local signed-media importer
+
+The shipped Beauty / Hair / Braiding finalizer is intentionally the
+three-direction `anonymous_safe_medium_ultra_v1` adapter only. It accepts the
+frozen `a/b/c` profile and fails closed for another 1--6 profile; that is not a
+global profile restriction, only an honest statement that a compatible
+asset-capable finalizer must exist before another shape can be imported.
+
+For that adapter, the local handoff is explicit and never uses
+`scripts/promote-local-proof-godaddy.sh` (that historical promoter rejects
+runtime-bound `verified_cold` jobs):
+
+```text
+# 1. Create signed assets locally; no Drupal or network action.
+node website-delivery-swarm/cohorts/beauty-hair-braiding/serialize-signed-proof-assets.mjs \
+  --bundle /absolute/finalized-bundle \
+  --output /configured/private/famtastic/callback-assets.json
+
+# 2. Assemble page HTML, thumbnails, design DNA, assets, and exact runtime IDs.
+node website-delivery-swarm/cohorts/beauty-hair-braiding/assemble-verified-cold-callback.mjs \
+  --bundle /absolute/finalized-bundle \
+  --assets /configured/private/famtastic/callback-assets.json \
+  --output /configured/private/famtastic/verified-cold-callback.json
+
+# 3. Default is a no-write checksum/HMAC plan. `--apply-local` imports only
+#    the exact delivery through the narrow Drush command.
+scripts/import-verified-cold-proof.sh \
+  --delivery=41 --confirm=pc-example \
+  --callback=/configured/private/famtastic/verified-cold-callback.json \
+  --build-dna=/absolute/finalized-bundle/build-dna.json
+```
+
+The assembler refuses an unbound/tampered bundle, missing a/b/c page or
+thumbnail, missing signed asset, or an asset hash absent from Build DNA. The
+Drush importer additionally requires private non-symlink input paths, exact
+checksums, the configured callback HMAC, delivery/campaign/job/event/start-time
+identity, and an immutable Build DNA projection. It records artifacts only;
+owner review, public room staging, and email still remain separate gates.
 
 ## Owner and commercial-send gates
 

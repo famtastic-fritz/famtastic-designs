@@ -327,6 +327,11 @@ function boundDna(baseDna, document, bindingHash, artifacts) {
     job_id: document.job_id,
     callback_event_id: document.callback_event_id,
     callback: document.callback,
+    // Preserve the ingress field literally as well as the conventional
+    // Build-DNA `started_at` alias. This lets an importer compare the final
+    // immutable record directly with the durable job payload without a
+    // schema-specific inference.
+    run_started_at: document.run_started_at,
     started_at: document.run_started_at,
     bound_at: document.bound_at,
   };

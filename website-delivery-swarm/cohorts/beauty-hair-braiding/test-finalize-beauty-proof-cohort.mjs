@@ -10,6 +10,7 @@ const builder = join(repositoryRoot, 'website-delivery-swarm/cohorts/beauty-hair
 const binder = join(repositoryRoot, 'website-delivery-swarm/cohorts/beauty-hair-braiding/bind-beauty-proof-runtime.mjs');
 const finalizer = join(repositoryRoot, 'website-delivery-swarm/cohorts/beauty-hair-braiding/finalize-beauty-proof-cohort.mjs');
 const serializer = join(repositoryRoot, 'website-delivery-swarm/cohorts/beauty-hair-braiding/serialize-signed-proof-assets.mjs');
+const assembler = join(repositoryRoot, 'website-delivery-swarm/cohorts/beauty-hair-braiding/assemble-verified-cold-callback.mjs');
 const validator = join(repositoryRoot, 'website-delivery-swarm/scripts/validate-build-dna.mjs');
 const sourceInput = join(repositoryRoot, 'website-delivery-swarm/cohorts/beauty-hair-braiding/input.example.json');
 const artifactRoot = join(repositoryRoot, 'artifacts', 'beauty-proof-finalizer-tests-' + process.pid);
@@ -154,7 +155,7 @@ function inspectFinalized(output) {
   assert(manifest.proof_assets.schema === 'famtastic.signed-proof-assets.v1', 'signed asset manifest missing');
   assert(manifest.runtime_binding.status === 'bound', 'runtime binding was lost from finalized manifest');
   assert(dna.run.prospect_id === 701 && dna.run.proof_campaign_id === 801 && dna.run.campaign_id === manifest.campaign_id && dna.run.source_lane === 'verified_cold', 'final Build DNA lost its canonical runtime identity');
-  assert(dna.run.job_id === 'public-preview:proof.generate:delivery:901' && dna.run.callback_event_id.startsWith('cold-proof:callback:'), 'final Build DNA lost callback correlation');
+  assert(dna.run.job_id === 'public-preview:proof.generate:delivery:901' && dna.run.callback_event_id.startsWith('cold-proof:callback:') && dna.run.run_started_at === '2026-08-27T00:00:00.000Z' && dna.run.started_at === '2026-08-27T00:00:00.000Z', 'final Build DNA lost callback correlation');
   assert(quality.static_status === 'passed' && quality.customer_delivery_status === 'blocked', 'quality gates changed incorrectly');
   assert(!dna.stages.some(function (stage) { return stage.stage_id === 'preview-art'; }), 'declared art stage should be replaced');
   assert(['a', 'b', 'c'].every(function (direction) { return dna.stages.some(function (stage) { return stage.stage_id === 'preview-art-' + direction && stage.result.status === 'passed'; }); }), 'receipt-backed art stages missing');
@@ -180,9 +181,17 @@ function inspectFinalized(output) {
   const serialized = JSON.parse(readFileSync(serializedPath, 'utf8'));
   assert(serialized.variants.length === 3 && serialized.variants.every(function (variant) { return variant.assets.length === 1 && variant.assets[0].asset_id === 'hero' && variant.assets[0].base64.length > 0; }), 'callback asset serializer omitted a hero asset');
   assert(serialized.prospect_id === 701 && serialized.proof_campaign_id === 801 && serialized.job_id === 'public-preview:proof.generate:delivery:901' && serialized.event_id.startsWith('cold-proof:callback:'), 'serialized callback lost canonical runtime correlation');
+  const callbackPath = join(root, 'verified-cold.callback.json');
+  run(process.execPath, [assembler, '--bundle', root, '--assets', serializedPath, '--output', callbackPath]);
+  const callback = JSON.parse(readFileSync(callbackPath, 'utf8'));
+  assert(callback.schema === 'famtastic.verified-cold-proof-callback.v1' && callback.source_lane === 'verified_cold', 'verified-cold callback assembler emitted the wrong schema or lane');
+  assert(callback.prospect_id === 701 && callback.proof_campaign_id === 801 && callback.campaign_id === serialized.campaign_id && callback.job_id === serialized.job_id && callback.event_id === serialized.event_id && callback.run_started_at === '2026-08-27T00:00:00.000Z', 'verified-cold callback assembler lost runtime identity');
+  assert(callback.variants.length === 3 && callback.variants.every(function (variant) { return variant.html.includes('<html') && variant.thumbnail_base64.length > 0 && variant.assets.length === 1 && variant.assets[0].sha256.length === 64; }), 'verified-cold callback assembler omitted the importable page, thumbnail, or signed asset payload');
   writeJson(join(root, 'build-dna.json'), { ...dna, run: { ...dna.run, campaign_id: 'pc-mismatched' } });
   const tamperedDnaOutput = runFailure(process.execPath, [serializer, '--bundle', root, '--output', join(root, 'tampered.callback.json')]);
   assert(/Build DNA does not match/i.test(tamperedDnaOutput), 'callback serializer accepted a Build DNA/runtime-binding mismatch');
+  const tamperedCallbackOutput = runFailure(process.execPath, [assembler, '--bundle', root, '--assets', serializedPath, '--output', join(root, 'tampered.verified-cold.callback.json')]);
+  assert(/Build DNA does not match/i.test(tamperedCallbackOutput), 'verified-cold callback assembler accepted a Build DNA/runtime-binding mismatch');
 }
 
 try {

@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Fresh local-only proof that a verified-source seed creates canonical IDs and
+# a safe runner handoff. It never invokes a creative provider, callback, SMTP,
+# public share, owner approval, payment, deployment, or production host.
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+sandbox="$(mktemp -d "${TMPDIR:-/tmp}/famtastic-verified-cold-handoff.XXXXXX")"
+run_id="$(date +%s)-$$"
+
+cleanup() {
+  case "$sandbox" in
+    "${TMPDIR:-/tmp}/famtastic-verified-cold-handoff."*) rm -rf "$sandbox" ;;
+    *) echo "Refusing to remove unexpected sandbox: $sandbox" >&2 ;;
+  esac
+}
+trap cleanup EXIT
+
+for command_name in jq rsync; do
+  command -v "$command_name" >/dev/null || { echo "Missing required command: $command_name" >&2; exit 1; }
+done
+test -x "$repo_root/backend/vendor/bin/drush" || { echo "Run composer install in backend before this local acceptance test." >&2; exit 1; }
+runtime_vendor="$(cd -P "$repo_root/backend/vendor" && pwd)"
+runtime_backend="$(cd "$runtime_vendor/.." && pwd)"
+test -d "$runtime_backend/web/core" || { echo "The installed Drupal runtime is missing web/core." >&2; exit 1; }
+
+mkdir -p "$sandbox/backend"
+rsync -a --exclude vendor --exclude private --exclude 'web/sites/default/files' "$repo_root/backend/" "$sandbox/backend/"
+rsync -aL "$repo_root/backend/vendor/" "$sandbox/backend/vendor/"
+rsync -a "$runtime_backend/web/core/" "$sandbox/backend/web/core/"
+rsync -a --ignore-existing "$runtime_backend/web/modules/" "$sandbox/backend/web/modules/"
+rsync -a --ignore-existing "$runtime_backend/web/profiles/" "$sandbox/backend/web/profiles/"
+rsync -a --ignore-existing "$runtime_backend/web/themes/" "$sandbox/backend/web/themes/"
+for runtime_file in .ht.router.php .htaccess autoload.php autoload_runtime.php index.php robots.txt update.php; do
+  cp "$runtime_backend/web/$runtime_file" "$sandbox/backend/web/$runtime_file"
+done
+cp "$runtime_backend/web/sites/default/default.settings.php" "$sandbox/backend/web/sites/default/default.settings.php"
+mkdir -p "$sandbox/backend/web/sites/default/files" "$sandbox/backend/private"
+chmod -R u+rwX "$sandbox/backend/web/sites/default"
+perl -0pi -e 's/\n\$databases\['\''default'\''\]\['\''default'\''\] = array \(\n.*?\n\);\n/\n/s' "$sandbox/backend/web/sites/default/settings.php"
+
+drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
+"${drush[@]}" site:install standard --db-url="sqlite://sites/default/files/.ht.sqlite" --account-name=admin --account-pass=admin --account-mail=admin@famtastic.local --site-name="FAMtastic cold handoff fixture" --site-mail=no-reply@famtastic.local -y >/dev/null
+"${drush[@]}" en -y famtastic_pipeline >/dev/null
+"${drush[@]}" updb -y >/dev/null
+"${drush[@]}" cr >/dev/null
+
+state="$sandbox/state.json"
+FAMTASTIC_E2E_STATE="$state" FAMTASTIC_E2E_RUN="$run_id" \
+  "${drush[@]}" php:script "$sandbox/backend/web/modules/custom/famtastic_pipeline/tests/fixtures/e2e-verified-cold-handoff.php"
+
+jq -e '
+  .lead.status == "preview_requested" and
+  (.lead.prospect_id | type == "number") and
+  (.lead.preview_delivery_id | type == "number") and
+  (.lead.proof_campaign_id | type == "number") and
+  (.lead.proof_job_id | type == "number") and
+  .draft_owner_gate == "rejected_without_partial_hold" and
+  .bundle.schema == "famtastic.verified-cold-proof-handoff.v1" and
+  .bundle.deliveries | length == 1 and
+  .bundle.deliveries[0].source_lane == "verified_cold" and
+  .bundle.deliveries[0].job.job_type == "public_preview.generate" and
+  .bundle.deliveries[0].build_dna_run.source_lane == "verified_cold" and
+  (.bundle.deliveries[0].job_id | startswith("cold-preview-")) and
+  (.bundle.deliveries[0].callback_event_id | startswith("cold-proof-callback-")) and
+  (.bundle.deliveries[0].run_started_at | type == "string") and
+  .bundle.deliveries[0].build_dna_run.job_id == .bundle.deliveries[0].job_id and
+  .bundle.deliveries[0].build_dna_run.callback_event_id == .bundle.deliveries[0].callback_event_id and
+  .bundle.deliveries[0].build_dna_run.run_started_at == .bundle.deliveries[0].run_started_at
+' "$state" >/dev/null
+
+delivery_id="$(jq -r '.lead.preview_delivery_id' "$state")"
+private_root="$("${drush[@]}" php:eval 'echo \Drupal::service("file_system")->realpath("private://");')"
+test -n "$private_root"
+mkdir -p "$private_root/famtastic"
+output="$private_root/famtastic/cold-handoff.json"
+"${drush[@]}" famtastic:cold-proof-handoff-export --ids="$delivery_id" --output="$output" --confirm="$delivery_id" >/dev/null
+test "$(stat -f '%Lp' "$output")" = "600"
+jq -e '.source_lane == "verified_cold" and (.deliveries | length == 1)' "$output" >/dev/null
+
+test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_notification_outbox" | tr -d '[:space:]')" = "0"
+test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_email_message WHERE status = 'held'" | tr -d '[:space:]')" = "0"
+test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_email_message WHERE status = 'staged'" | tr -d '[:space:]')" = "1"
+test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_job WHERE job_type = 'proof.generate'" | tr -d '[:space:]')" = "0"
+test "$("${drush[@]}" sql:query "SELECT COUNT(*) FROM famtastic_job WHERE job_type = 'public_preview.generate'" | tr -d '[:space:]')" = "1"
+
+echo "PASS: verified-cold ingress creates exact prospect/delivery/campaign/job identities and a private runner handoff; a draft owner gate leaves no held outbox or commercial message. No provider, SMTP send, public share, payment, or production action occurred."

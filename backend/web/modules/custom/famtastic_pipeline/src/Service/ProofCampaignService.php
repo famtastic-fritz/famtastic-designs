@@ -317,6 +317,18 @@ class ProofCampaignService {
       throw new \RuntimeException('The public proof callback has no frozen delivery profile.');
     }
     $requiresSignedAssets = $publicSourceLane === 'verified_cold';
+    if ($requiresSignedAssets) {
+      // The external builder may only complete the exact ingress-created
+      // runtime binding. A fresh event ID or a substituted job ID would break
+      // the immutable Build DNA correlation even if its HTML/assets look valid.
+      $runtime = $this->previews->verifiedColdCallbackContractForCampaign($prospectId, (int) $campaign->id());
+      if (!$runtime
+        || !hash_equals((string) $runtime['job_id'], $studioJobId)
+        || !hash_equals((string) $runtime['callback_event_id'], $eventId)
+      ) {
+        throw new \InvalidArgumentException('Verified-cold callback does not match its ingress-frozen job and event identity.');
+      }
+    }
     $request = NULL;
     if (!$isPublicPreviewCampaign) {
       // New request jobs bind their campaign before remote dispatch. Prefer

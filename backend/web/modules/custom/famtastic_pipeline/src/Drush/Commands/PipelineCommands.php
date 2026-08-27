@@ -500,6 +500,130 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Imports one finalized verified-cold proof callback through its own narrow
+   * lane. This command is intentionally local/private-file only: it neither
+   * promotes a proof, stages an invitation, dispatches email, nor uses the
+   * generic local-proof promoter.
+   */
+  #[CLI\Command(name: 'famtastic:verified-cold-proof-import', aliases: ['fvcpi'])]
+  #[CLI\Argument(name: 'callbackPath', description: 'Absolute private path to one signed verified-cold callback JSON payload.')]
+  #[CLI\Argument(name: 'buildDnaPath', description: 'Absolute private path to the matching finalized Build DNA JSON.')]
+  #[CLI\Option(name: 'delivery', description: 'Exact numeric verified-cold public preview delivery ID.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the canonical public campaign ID.')]
+  #[CLI\Option(name: 'callback-checksum', description: 'Exact SHA-256 of the callback payload file.')]
+  #[CLI\Option(name: 'build-dna-checksum', description: 'Exact SHA-256 of the Build DNA file.')]
+  #[CLI\Option(name: 'callback-signature', description: 'sha256=<HMAC of the callback file with SITE_STUDIO_CALLBACK_SECRET>.')]
+  public function verifiedColdProofImport(string $callbackPath, string $buildDnaPath, array $options = [
+    'delivery' => 0,
+    'confirm' => '',
+    'callback-checksum' => '',
+    'build-dna-checksum' => '',
+    'callback-signature' => '',
+  ]): int {
+    $deliveryId = (int) ($options['delivery'] ?? 0);
+    if ($deliveryId < 1) {
+      $this->logger()->error('Verified-cold import requires --delivery=<exact-numeric-delivery-id>.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      $callback = $this->privateRegularFile($callbackPath, \Drupal\famtastic_pipeline\Service\ProofAssetContract::MAX_CALLBACK_BYTES, 'Callback payload');
+      $buildDna = $this->privateRegularFile($buildDnaPath, 10 * 1024 * 1024, 'Build DNA');
+      $callbackChecksum = $this->verifiedFileChecksum($callback, (string) ($options['callback-checksum'] ?? ''), 'callback-checksum');
+      $buildDnaChecksum = $this->verifiedFileChecksum($buildDna, (string) ($options['build-dna-checksum'] ?? ''), 'build-dna-checksum');
+      $this->verifyCallbackSignature((string) file_get_contents($callback), (string) ($options['callback-signature'] ?? ''));
+      $payload = json_decode((string) file_get_contents($callback), TRUE, 512, JSON_THROW_ON_ERROR);
+      $dna = json_decode((string) file_get_contents($buildDna), TRUE, 512, JSON_THROW_ON_ERROR);
+      if (!is_array($payload) || ($payload['schema'] ?? '') !== 'famtastic.verified-cold-proof-callback.v1') {
+        throw new \InvalidArgumentException('Callback payload has an unsupported verified-cold schema.');
+      }
+      if (!is_array($dna) || ($dna['schema'] ?? '') !== 'famtastic.build-dna.v1') {
+        throw new \InvalidArgumentException('Build DNA has an unsupported schema.');
+      }
+      $delivery = \Drupal::database()->select('famtastic_preview_delivery', 'p')->fields('p')
+        ->condition('id', $deliveryId)->condition('source_lane', 'verified_cold')->range(0, 1)->execute()->fetchAssoc();
+      if (!$delivery || (int) ($delivery['proof_campaign_id'] ?? 0) < 1) {
+        throw new \RuntimeException('Verified-cold import requires one delivery-bound proof campaign.');
+      }
+      /** @var \Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService $previews */
+      $previews = \Drupal::service('famtastic_pipeline.public_preview_deliveries');
+      $runtime = $previews->verifiedColdCallbackContractForCampaign((int) $delivery['prospect_id'], (int) $delivery['proof_campaign_id']);
+      $profile = $previews->proofProfileForCampaign((int) $delivery['prospect_id'], (int) $delivery['proof_campaign_id']);
+      // The shipped receipt-backed Beauty finalizer/assembler is deliberately
+      // the canonical a/b/c adapter. Profile configuration remains 1--6 at
+      // ingress, but a different shape must provide a compatible asset
+      // finalizer/importer instead of silently dropping directions here.
+      if (!is_array($profile) || array_keys((array) ($profile['directions'] ?? [])) !== ['a', 'b', 'c']) {
+        throw new \InvalidArgumentException('This verified-cold import adapter supports only the frozen a/b/c signed-media profile. Use a compatible finalizer/importer for another configured proof count.');
+      }
+      $run = is_array($dna['run'] ?? NULL) ? $dna['run'] : [];
+      $campaignId = (string) ($payload['campaign_id'] ?? '');
+      $payloadBindingHash = strtolower(trim((string) ($payload['runtime_binding_sha256'] ?? '')));
+      $runBindingHash = strtolower(trim((string) ($run['binding_sha256'] ?? '')));
+      if (!$runtime
+        || !hash_equals($campaignId, (string) ($options['confirm'] ?? ''))
+        || !hash_equals($campaignId, (string) $runtime['build_dna_run']['campaign_id'])
+        || !hash_equals($buildDnaChecksum, strtolower(trim((string) ($payload['build_dna_sha256'] ?? ''))))
+        || (int) ($payload['prospect_id'] ?? 0) !== (int) $delivery['prospect_id']
+        || (int) ($payload['proof_campaign_id'] ?? 0) !== (int) $delivery['proof_campaign_id']
+        || (int) ($payload['public_preview_delivery_id'] ?? 0) !== $deliveryId
+        || !hash_equals('verified_cold', (string) ($payload['source_lane'] ?? ''))
+        || !hash_equals((string) $runtime['job_id'], (string) ($payload['job_id'] ?? ''))
+        || !hash_equals((string) $runtime['callback_event_id'], (string) ($payload['event_id'] ?? ''))
+        || !hash_equals((string) $runtime['run_started_at'], (string) ($payload['run_started_at'] ?? ''))
+        || (int) ($run['prospect_id'] ?? 0) !== (int) $delivery['prospect_id']
+        || (int) ($run['proof_campaign_id'] ?? 0) !== (int) $delivery['proof_campaign_id']
+        || (int) ($run['public_preview_delivery_id'] ?? 0) !== $deliveryId
+        || !hash_equals($campaignId, (string) ($run['campaign_id'] ?? ''))
+        || !hash_equals('verified_cold', (string) ($run['source_lane'] ?? ''))
+        || !hash_equals((string) $runtime['job_id'], (string) ($run['job_id'] ?? ''))
+        || !hash_equals((string) $runtime['callback_event_id'], (string) ($run['callback_event_id'] ?? ''))
+        || !hash_equals((string) $runtime['run_started_at'], (string) ($run['started_at'] ?? $run['run_started_at'] ?? ''))
+        || preg_match('/^[a-f0-9]{64}$/', $payloadBindingHash) !== 1
+        || !hash_equals($payloadBindingHash, $runBindingHash)
+      ) {
+        throw new \InvalidArgumentException('Callback, Build DNA, and verified-cold delivery do not share one exact immutable runtime binding.');
+      }
+      // A malformed callback must not leave a Build DNA projection claiming a
+      // completed proof set. Keep the immutable projection and callback
+      // persistence in the same local database transaction; the callback
+      // validates all variants before writing its proof entities/files.
+      $transaction = \Drupal::database()->startTransaction();
+      try {
+        /** @var \Drupal\famtastic_pipeline\Service\BuildTelemetryService $telemetry */
+        $telemetry = \Drupal::service('famtastic_pipeline.build_telemetry');
+        $buildRunId = $telemetry->recordBuildDna($dna);
+        /** @var \Drupal\famtastic_pipeline\Service\ProofCampaignService $proofs */
+        $proofs = \Drupal::service('famtastic_pipeline.proof_campaign_service');
+        $result = $proofs->acceptCallback(
+          (string) ($payload['event_id'] ?? ''),
+          $campaignId,
+          (string) ($payload['job_id'] ?? ''),
+          is_array($payload['variants'] ?? NULL) ? $payload['variants'] : [],
+        );
+      }
+      catch (\Throwable $error) {
+        $transaction->rollBack();
+        throw $error;
+      }
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+    $this->io()->writeln(json_encode([
+      'delivery_id' => $deliveryId,
+      'campaign_id' => $campaignId,
+      'build_run_id' => $buildRunId,
+      'newly_processed' => (bool) $result['newly_processed'],
+      'variant_count' => count($result['variants']),
+      'callback_checksum' => $callbackChecksum,
+      'status' => 'proofs_imported_owner_review_required',
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $this->logger()->success('Verified-cold proof imported. Build DNA and signed assets are registered; owner staging and delivery remain locked.');
+    return self::EXIT_SUCCESS;
+  }
+
+  /**
    * Runs protection, automation, and notification dispatch as one observable cycle.
    */
   #[CLI\Command(name: 'famtastic:lifecycle-run', aliases: ['flr'])]
@@ -852,6 +976,44 @@ class PipelineCommands extends DrushCommands {
     catch (\Throwable $error) {
       $this->logger()->error($error->getMessage());
       return self::EXIT_FAILURE;
+    }
+  }
+
+  /** Resolves one non-symlink regular file below Drupal's private filesystem. */
+  private function privateRegularFile(string $path, int $maximumBytes, string $label): string {
+    $path = trim($path);
+    $privateRoot = \Drupal::service('file_system')->realpath('private://');
+    $root = is_string($privateRoot) ? rtrim($privateRoot, DIRECTORY_SEPARATOR) : '';
+    $real = $path !== '' && str_starts_with($path, '/') && !is_link($path) ? realpath($path) : FALSE;
+    if (!is_string($real) || $root === '' || !str_starts_with($real, $root . DIRECTORY_SEPARATOR) || !is_file($real) || is_link($real)) {
+      throw new \InvalidArgumentException($label . ' must be a non-symlink regular file under Drupal\'s configured private filesystem.');
+    }
+    $bytes = filesize($real);
+    if ($bytes === FALSE || $bytes < 1 || $bytes > $maximumBytes) {
+      throw new \InvalidArgumentException($label . ' is empty or exceeds its bounded import limit.');
+    }
+    return $real;
+  }
+
+  /** Verifies an operator-provided SHA without printing the private file path. */
+  private function verifiedFileChecksum(string $path, string $expected, string $optionName): string {
+    $expected = strtolower(trim($expected));
+    $actual = hash_file('sha256', $path);
+    if ($actual === FALSE || preg_match('/^[a-f0-9]{64}$/', $expected) !== 1 || !hash_equals($expected, $actual)) {
+      throw new \InvalidArgumentException('--' . $optionName . ' must exactly match its private file SHA-256.');
+    }
+    return $actual;
+  }
+
+  /** Requires the same HMAC boundary used by the Site Studio callback route. */
+  private function verifyCallbackSignature(string $body, string $provided): void {
+    $secret = getenv('SITE_STUDIO_CALLBACK_SECRET') ?: \Drupal\Core\Site\Settings::get('site_studio_callback_secret');
+    if (!is_string($secret) || $secret === '') {
+      throw new \RuntimeException('Verified-cold import requires the configured Site Studio callback secret.');
+    }
+    $expected = 'sha256=' . hash_hmac('sha256', $body, $secret);
+    if (!hash_equals($expected, trim($provided))) {
+      throw new \InvalidArgumentException('Verified-cold callback signature is invalid.');
     }
   }
 

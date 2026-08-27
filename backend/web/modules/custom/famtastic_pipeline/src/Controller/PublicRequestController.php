@@ -13,6 +13,7 @@ use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\AttributionService;
 use Drupal\famtastic_pipeline\Service\ConciergeWebhookService;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
+use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService;
 use Drupal\famtastic_pipeline\Service\TokenManager;
 use Psr\Log\LoggerInterface;
@@ -31,6 +32,7 @@ class PublicRequestController extends ControllerBase {
     protected OutreachMailer $mailer,
     protected ConciergeWebhookService $concierge,
     protected PublicPreviewDeliveryService $previews,
+    protected ProofCampaignService $proofCampaigns,
     protected ConfigFactoryInterface $pipelineConfigFactory,
     protected TimeInterface $time,
     protected LoggerInterface $logger,
@@ -48,6 +50,7 @@ class PublicRequestController extends ControllerBase {
       $container->get('famtastic_pipeline.mailer'),
       $container->get('famtastic_pipeline.concierge_webhooks'),
       $container->get('famtastic_pipeline.public_preview_deliveries'),
+      $container->get('famtastic_pipeline.proof_campaign_service'),
       $container->get('config.factory'),
       $container->get('datetime.time'),
       $container->get('logger.channel.famtastic_pipeline'),
@@ -138,6 +141,14 @@ class PublicRequestController extends ControllerBase {
 
     $intake = $this->saveRequest($prospect, $data, $answers, $type);
     $previewDelivery = $this->previews->createForPublicLead((int) $prospect->id(), (int) $intake->id());
+    // Public intake uses the same delivery-scoped campaign binding as a
+    // verified cold lead. The dedicated job must never create a generic
+    // campaign after claim, otherwise its callback cannot be correlated to
+    // this public delivery.
+    $this->proofCampaigns->createQueuedPublicPreviewCampaign(
+      $prospect,
+      $this->previews->publicIntakeProofContext((int) $previewDelivery['id']),
+    );
     $this->previews->queueInitialProof((int) $previewDelivery['id']);
     $registrationUrl = $this->registrationUrl((string) $previewDelivery['public_id']);
     try {

@@ -398,6 +398,7 @@ function runtimeBindingForBundle(bundle, manifest, baseDna, cohortCampaignId) {
   exactValue(run.source_lane, REQUIRED_SOURCE_LANE, 'Build DNA run source_lane');
   exactValue(run.job_id, jobId, 'Build DNA run job_id');
   exactValue(run.callback_event_id, callbackEventId, 'Build DNA run callback_event_id');
+  exactValue(run.run_started_at, runStartedAt, 'Build DNA run run_started_at');
   exactValue(run.started_at, runStartedAt, 'Build DNA run started_at');
   if (!isObject(run.callback)) fail('Build DNA run callback must be an object.');
   exactValue(run.callback.event_id, callbackEventId, 'Build DNA run callback event');

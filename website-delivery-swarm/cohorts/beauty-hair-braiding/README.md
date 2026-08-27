@@ -171,6 +171,44 @@ canonical wrapper must still build and checksum the complete callback, then
 perform its own explicit owner-authorized import; serializing an asset file is
 not promotion.
 
+The current canonical local callback path is deliberately separate from the
+historical `scripts/promote-local-proof-godaddy.sh` route. That historical
+promoter is not valid for runtime-bound `verified_cold` work. First assemble
+the complete, importable callback from the finalized bundle and the serialized
+asset file:
+
+    node website-delivery-swarm/cohorts/beauty-hair-braiding/assemble-verified-cold-callback.mjs \
+      --bundle artifacts/beauty-proof-cohort/pc-example/example-business-1234abcd \
+      --assets /secure/operator/pc-example.callback-assets.json \
+      --output /configured/private/famtastic/pc-example.verified-cold.callback.json
+
+The assembler is local-only. It copies the finalized HTML, PNG/JPEG thumbnail,
+direction DNA, and canonical signed `assets[]` bytes into one bounded callback
+while verifying every runtime ID and every Build DNA asset/page hash. It is
+fixed to the current signed a/b/c package; a different configured 1--6 cohort
+must supply its own compatible finalizer/import adapter and will fail closed
+here rather than silently dropping directions.
+
+Then inspect the checksum plan (no database write) or explicitly import it
+through the narrow local Drupal lane:
+
+    scripts/import-verified-cold-proof.sh \
+      --delivery 303 --confirm pc-example \
+      --callback /configured/private/famtastic/pc-example.verified-cold.callback.json \
+      --build-dna artifacts/beauty-proof-cohort/pc-example/example-business-1234abcd/build-dna.json
+
+    scripts/import-verified-cold-proof.sh \
+      --delivery 303 --confirm pc-example \
+      --callback /configured/private/famtastic/pc-example.verified-cold.callback.json \
+      --build-dna artifacts/beauty-proof-cohort/pc-example/example-business-1234abcd/build-dna.json \
+      --apply-local
+
+`--apply-local` requires the existing `SITE_STUDIO_CALLBACK_SECRET`, computes
+the callback HMAC without printing the secret, and calls only
+`famtastic:verified-cold-proof-import`. It does not promote, publish, stage a
+room, or send email. Importing proof artifacts leaves the owner-review gate in
+place.
+
 First validate without changing the prepared bundles:
 
     node website-delivery-swarm/cohorts/beauty-hair-braiding/finalize-beauty-proof-cohort.mjs \

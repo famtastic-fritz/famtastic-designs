@@ -96,7 +96,7 @@ try {
   assert(sidecar.status === 'bound' && sidecar.prospect_id === 1101 && sidecar.proof_campaign_id === 1201, 'sidecar did not preserve exact canonical IDs');
   assert(manifest.source_lane === 'verified_cold' && manifest.campaign_id === cohort.campaign_id && manifest.job_id === sidecar.job_id && manifest.event_id === sidecar.callback_event_id, 'manifest did not receive exact callback correlation');
   assert(dna.run.prospect_id === 1101 && dna.run.proof_campaign_id === 1201 && dna.run.campaign_id === cohort.campaign_id && dna.run.source_lane === 'verified_cold', 'Build DNA run did not receive exact public proof identity');
-  assert(dna.run.job_id === sidecar.job_id && dna.run.callback_event_id === sidecar.callback_event_id && dna.run.public_preview_delivery_id === 1301, 'Build DNA run did not receive exact job/callback correlation');
+  assert(dna.run.job_id === sidecar.job_id && dna.run.callback_event_id === sidecar.callback_event_id && dna.run.run_started_at === sidecar.run_started_at && dna.run.started_at === sidecar.run_started_at && dna.run.public_preview_delivery_id === 1301, 'Build DNA run did not receive exact job/callback correlation');
   assert(dna.artifacts.some(function (artifact) { return artifact.role === 'runtime-binding' && artifact.sha256 === manifest.runtime_binding.sha256; }), 'Build DNA does not carry the immutable runtime-binding hash');
   run(process.execPath, [validator, join(root, 'build-dna.json'), repositoryRoot]);
   const replayOutput = runFailure(process.execPath, [binder, '--input', valid]);
