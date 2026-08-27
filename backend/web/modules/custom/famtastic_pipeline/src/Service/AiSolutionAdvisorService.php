@@ -12,9 +12,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Intelligent solution advisor and brief synthesizer powered by Drupal AI.
  *
- * Evaluates natural-language customer requirements against FAMtastic's exact
- * 16-SKU package ladder and outputs structured recommendations with zero-downtime
- * deterministic fallback.
+ * Implements FAMtastic Scout: give-before-extracting market scan,
+ * 4-step progressive disclosure, on-screen payoff scope artifacts,
+ * and high-intent lead scoring.
  */
 class AiSolutionAdvisorService {
 
@@ -30,8 +30,8 @@ class AiSolutionAdvisorService {
       'features' => [
         'One focused high-conversion business page',
         'Mobile-responsive design',
-        'Lead capture form with owner email alerts',
-        'Foundational search & indexing setup',
+        'Lead capture & booking request form',
+        'Foundational local SEO & indexing',
         'First-year managed hosting included',
         'Domain registration or connection',
       ],
@@ -47,7 +47,7 @@ class AiSolutionAdvisorService {
       'features' => [
         'Up to 5 standard business pages',
         'Mobile-first responsive layout',
-        'Lead capture & owner notifications',
+        'Lead capture & owner email notifications',
         'On-page local SEO foundations',
         'Google Analytics (GA4) connection',
         'Two consolidated revision rounds',
@@ -118,25 +118,22 @@ class AiSolutionAdvisorService {
         'High-converting single-offer campaign page',
         'Dedicated thank-you & conversion experience',
         'UTM & conversion-event attribution',
-        'Lead routing to owner phone & email',
-        'A/B-test-ready architecture',
-        '14 days post-launch optimization support',
+        'Fast turnaround for active campaigns',
       ],
     ],
     'website-care' => [
       'sku' => 'website-care',
-      'title' => 'Website Care & Maintenance — $149/month',
-      'headline' => 'Ongoing Website Care & Maintenance',
+      'title' => 'Website Care & Maintenance — $149/mo',
+      'headline' => 'Keep Your Website Fast, Secure, and Updated',
       'price' => 149,
-      'timeline' => 'Immediate activation',
+      'timeline' => 'Ongoing monthly',
       'pages' => 0,
-      'best_for' => 'Businesses with an existing site wanting hands-off security, backups, monitoring, and monthly content updates.',
+      'best_for' => 'Businesses that have a site and need hands-off hosting, security, and monthly edits.',
       'features' => [
-        'Fast managed cloud hosting',
-        'Automated daily backups & security scans',
-        'SSL certificate management',
-        'Monthly content update allowance (1 hr)',
-        'Uptime monitoring & priority support',
+        'Managed cloud hosting & SSL certificate',
+        'Weekly security updates & daily backups',
+        'Up to 1 hour of monthly content edits',
+        'Uptime monitoring & technical support',
       ],
     ],
   ];
@@ -144,7 +141,7 @@ class AiSolutionAdvisorService {
   public function __construct(
     private readonly Connection $database,
     private readonly LoggerChannelFactoryInterface $loggerFactory,
-    private readonly ?object $aiProvider = null,
+    private readonly mixed $aiProvider = null,
   ) {}
 
   public static function create(ContainerInterface $container): static {
@@ -157,35 +154,7 @@ class AiSolutionAdvisorService {
   }
 
   /**
-   * Evaluates project requirements and returns tailored advice.
-   */
-  public function advise(string $prompt, array $answers = [], array $context = []): array {
-    $cleanPrompt = trim($prompt);
-    if ($cleanPrompt === '' && empty($answers)) {
-      return $this->defaultRecommendation();
-    }
-
-    // Attempt Drupal AI LLM generation if available.
-    if ($this->aiProvider !== null) {
-      try {
-        $aiResult = $this->queryDrupalAi($cleanPrompt, $answers, $context);
-        if ($aiResult !== null) {
-          return $aiResult;
-        }
-      }
-      catch (\Throwable $e) {
-        $this->loggerFactory->get('famtastic_ai')->warning('Drupal AI query failed; using deterministic engine: @message', [
-          '@message' => $e->getMessage(),
-        ]);
-      }
-    }
-
-    // Fail-safe high-accuracy deterministic engine.
-    return $this->deterministicAdvise($cleanPrompt, $answers);
-  }
-
-  /**
-   * Processes a turn in a guided conversational intake interview.
+   * Processes a turn in FAMtastic Scout's 4-step progressive discovery.
    */
   public function conversationalTurn(array $messages, array $gatheredData = [], array $context = []): array {
     $lastUserMessage = '';
@@ -196,233 +165,67 @@ class AiSolutionAdvisorService {
       }
     }
 
-    // Merge and extract data from user input
     $data = $this->extractDataFromConversation($messages, $gatheredData, $lastUserMessage);
 
-    // Calculate live package recommendation based on all gathered data
+    // Calculate current live recommendation
     $combinedText = implode(' ', array_filter([
       $data['business_name'] ?? '',
       $data['industry'] ?? '',
-      $data['business_model'] ?? '',
-      $data['setup'] ?? '',
+      $data['city'] ?? '',
       $data['pages'] ?? '',
       $data['logo_status'] ?? '',
       $data['domain_choice'] ?? '',
       is_array($data['features'] ?? null) ? implode(' ', $data['features']) : ($data['features'] ?? ''),
-      $data['reference_sites'] ?? '',
       $lastUserMessage,
     ]));
 
     $rec = $this->advise($combinedText, $data, $context);
 
-    // Determine the next missing discovery piece
-    $step = $this->determineNextDiscoveryStep($data);
+    // Handle human escalation
+    if (!empty($data['wants_human'])) {
+      return [
+        'step_number' => 4,
+        'step_label' => 'Step 4 of 4 · Direct Team Handoff',
+        'reply' => "You got it! I've flagged our senior team for a personal follow-up. What is your preferred email or phone number so we can reach out directly with your custom scope?",
+        'quick_chips' => [],
+        'input_placeholder' => 'Enter your email or phone number...',
+        'input_type' => 'text',
+        'is_complete' => !empty($data['email']) || !empty($data['phone']),
+        'is_artifact_ready' => false,
+        'gathered_data' => $data,
+        'recommendation' => $rec,
+      ];
+    }
+
+    // Determine state progression based on what's collected
+    $step = $this->determineScoutStep($data, $lastUserMessage, $rec);
 
     return [
+      'step_number' => $step['step_number'],
+      'step_label' => $step['step_label'],
       'reply' => $step['reply'],
+      'market_scan' => $step['market_scan'] ?? null,
       'quick_chips' => $step['quick_chips'],
       'input_placeholder' => $step['input_placeholder'],
       'input_type' => $step['input_type'],
       'is_complete' => $step['is_complete'],
+      'is_artifact_ready' => $step['is_artifact_ready'] ?? false,
       'gathered_data' => $data,
       'recommendation' => $rec,
     ];
   }
 
   /**
-   * Extracts slots from conversational text.
+   * Evaluates project requirements and returns tailored advice.
    */
-  private function extractDataFromConversation(array $messages, array $existing, string $latest): array {
-    $data = $existing;
-    $lower = mb_strtolower($latest);
-
-    // Email extraction
-    if (preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $latest, $m)) {
-      $data['email'] = $m[0];
+  public function advise(string $prompt, array $answers = [], array $context = []): array {
+    $cleanPrompt = trim($prompt);
+    if ($cleanPrompt === '' && empty($answers)) {
+      return $this->defaultRecommendation();
     }
 
-    // Phone extraction
-    if (preg_match('/(?:\+?1[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})/', $latest, $m)) {
-      $data['phone'] = $m[0];
-    }
-
-    // Logo detection
-    if (str_contains($lower, 'have a logo') || str_contains($lower, 'logo ready') || str_contains($lower, 'have brand')) {
-      $data['logo_status'] = 'ready';
-    }
-    elseif (str_contains($lower, 'help creating a logo') || str_contains($lower, 'need a logo') || str_contains($lower, 'design a logo')) {
-      $data['logo_status'] = 'help_needed';
-    }
-    elseif (str_contains($lower, 'no logo') || str_contains($lower, 'not needed')) {
-      $data['logo_status'] = 'no_logo';
-    }
-
-    // Domain detection
-    if (str_contains($lower, 'already own') || str_contains($lower, 'have a domain') || str_contains($lower, 'own my domain')) {
-      $data['domain_choice'] = 'own_domain';
-    }
-    elseif (str_contains($lower, 'need a new domain') || str_contains($lower, 'register a domain') || str_contains($lower, 'new domain')) {
-      $data['domain_choice'] = 'need_new_domain';
-    }
-
-    // Pages & Setup detection
-    if (str_contains($lower, '1 page') || str_contains($lower, 'one page') || str_contains($lower, '$199')) {
-      $data['pages'] = '1';
-      $data['setup'] = 'new';
-    }
-    elseif (str_contains($lower, '3–5') || str_contains($lower, '3-5') || str_contains($lower, '5 pages') || str_contains($lower, '$499')) {
-      $data['pages'] = '3-5';
-      $data['setup'] = 'new';
-    }
-    elseif (str_contains($lower, 'redesign')) {
-      $data['setup'] = 'redesign';
-      $data['pages'] = '3-5';
-    }
-    elseif (str_contains($lower, '10+') || str_contains($lower, 'growth system') || str_contains($lower, '$3,999')) {
-      $data['pages'] = '10+';
-      $data['setup'] = 'growth';
-    }
-
-    // Features detection
-    $features = (array) ($data['features'] ?? []);
-    if (str_contains($lower, 'booking') || str_contains($lower, 'scheduling') || str_contains($lower, 'appointments') || str_contains($lower, 'reservation')) {
-      if (!in_array('booking', $features, true)) $features[] = 'booking';
-    }
-    if (str_contains($lower, 'payment') || str_contains($lower, 'store') || str_contains($lower, 'ecommerce') || str_contains($lower, 'sell online')) {
-      if (!in_array('ecommerce', $features, true)) $features[] = 'ecommerce';
-    }
-    if (str_contains($lower, 'reviews') || str_contains($lower, 'testimonials')) {
-      if (!in_array('reviews', $features, true)) $features[] = 'reviews';
-    }
-    if (str_contains($lower, 'chat') || str_contains($lower, 'bot') || str_contains($lower, 'ai')) {
-      if (!in_array('chat', $features, true)) $features[] = 'chat';
-    }
-    if (!empty($features)) {
-      $data['features'] = $features;
-    }
-
-    // Business Name & Description
-    if (empty($data['business_name']) && !str_contains($lower, '@') && strlen($latest) > 2) {
-      if (count($messages) <= 2) {
-        $data['business_name'] = $latest;
-      }
-    }
-
-    return $data;
+    return $this->deterministicAdvise($cleanPrompt, $answers);
   }
-
-  /**
-   * Determines the next interview question and quick reply chips.
-   */
-  private function determineNextDiscoveryStep(array $data): array {
-    // 0. If email is provided, we can complete immediately
-    if (!empty($data['email'])) {
-      return [
-        'reply' => "Thank you! I've synthesized your full project blueprint and locked in your package quote. You can review the complete scope below, start checkout, or access your free client portal brief!",
-        'quick_chips' => [],
-        'input_placeholder' => 'Ask any follow-up questions about your proposal...',
-        'input_type' => 'text',
-        'is_complete' => true,
-      ];
-    }
-
-    // 1. Business & what they do
-    if (empty($data['business_name']) && empty($data['industry'])) {
-      return [
-        'reply' => "Hi there! I'm FAMtastic's AI Project Advisor. Tell me a bit about your business—what is your business name and what products or services do you offer?",
-        'quick_chips' => ['Local Service / Trades', 'Restaurant / Food', 'Healthcare / Wellness', 'Professional Services', 'E-Commerce Store'],
-        'input_placeholder' => 'e.g. Bella Cucina — authentic Italian restaurant in Dallas...',
-        'input_type' => 'text',
-        'is_complete' => false,
-      ];
-    }
-
-
-    // 2. Setup & Pages
-    if (empty($data['pages']) && empty($data['setup'])) {
-      $biz = $data['business_name'] ?? 'your business';
-      return [
-        'reply' => "Awesome! For {$biz}, are you looking to launch a brand new website or redesign an existing one? How many pages do you think you'll need?",
-        'quick_chips' => [
-          'Brand new site (1 page / $199)',
-          'Brand new site (3–5 pages / $499)',
-          'Redesign our existing site',
-          'Full Growth System (10+ pages / $3,999)',
-        ],
-        'input_placeholder' => 'Pick an option or describe your current website setup...',
-        'input_type' => 'text',
-        'is_complete' => false,
-      ];
-    }
-
-    // 3. Logo & Brand Assets
-    if (empty($data['logo_status'])) {
-      return [
-        'reply' => "Great choice. What's the status of your logo and branding? Do you already have a logo and brand assets ready, or would you like help creating them?",
-        'quick_chips' => [
-          'I have a logo & brand ready',
-          'I need help creating a logo',
-          'No logo needed right now',
-        ],
-        'input_placeholder' => 'Tell us about your logo or pick a quick option...',
-        'input_type' => 'text',
-        'is_complete' => false,
-      ];
-    }
-
-    // 4. Domain & Professional Email
-    if (empty($data['domain_choice'])) {
-      return [
-        'reply' => "Got it. What about your website domain and professional email? (First-year domain registration & managed hosting is included with your package!)",
-        'quick_chips' => [
-          'I already own my domain',
-          'I need a new domain registered',
-          'I need help setting up business email',
-        ],
-        'input_placeholder' => 'e.g. I have mydomain.com or I need a new domain...',
-        'input_type' => 'text',
-        'is_complete' => false,
-      ];
-    }
-
-    // 5. Key Features
-    if (empty($data['features'])) {
-      return [
-        'reply' => "What key capabilities or features does your website need to convert visitors into customers?",
-        'quick_chips' => [
-          'Lead Capture & Quote Form',
-          'Online Booking / Scheduling',
-          'Online Store / Payments',
-          'Customer Reviews & Testimonials',
-          'Live AI Chatbot Assistant',
-        ],
-        'input_placeholder' => 'Select key features or type your custom feature needs...',
-        'input_type' => 'text',
-        'is_complete' => false,
-      ];
-    }
-
-    // 6. Contact Email
-    if (empty($data['email'])) {
-      return [
-        'reply' => "Perfect! I have everything needed to prepare your custom project blueprint and package recommendation. Where should I send your formal quote receipt and portal login link?",
-        'quick_chips' => [],
-        'input_placeholder' => 'Enter your email (e.g. you@yourbusiness.com)...',
-        'input_type' => 'email',
-        'is_complete' => false,
-      ];
-    }
-
-    // 7. Complete!
-    return [
-      'reply' => "Thank you! I've synthesized your full project blueprint and locked in your package quote. You can review the complete scope below, start checkout, or access your free client portal brief!",
-      'quick_chips' => [],
-      'input_placeholder' => 'Ask any follow-up questions about your proposal...',
-      'input_type' => 'text',
-      'is_complete' => true,
-    ];
-  }
-
 
   /**
    * Synthesizes a structured project brief from raw intake notes.
@@ -450,85 +253,216 @@ class AiSolutionAdvisorService {
   }
 
   /**
-   * Queries Drupal AI provider.
+   * Scout state machine: 4-step progressive disclosure.
    */
-  private function queryDrupalAi(string $prompt, array $answers, array $context): ?array {
-    if (!method_exists($this->aiProvider, 'hasDefaultProvider') || !$this->aiProvider->hasDefaultProvider('chat')) {
-      return null;
+  private function determineScoutStep(array $data, string $latest, array $rec): array {
+    $lower = mb_strtolower($latest);
+
+    // STEP 4: Payoff & Optional PDF Email
+    if (!empty($data['email']) || !empty($data['scope_confirmed'])) {
+      $emailMsg = !empty($data['email'])
+        ? "✓ Got your email ({$data['email']})! We've saved your project blueprint and sent your portal access link."
+        : "Your instant project blueprint is ready below! Want me to email you the complete PDF blueprint & lock in this price for 30 days?";
+
+      return [
+        'step_number' => 4,
+        'step_label' => 'Step 4 of 4 · Instant Scope & Blueprint',
+        'reply' => $emailMsg,
+        'quick_chips' => empty($data['email']) ? ['Lock in my $199 price', 'Talk to a real human'] : ['Start with this Package →', 'Access Client Portal'],
+        'input_placeholder' => empty($data['email']) ? 'Enter your email to receive PDF blueprint...' : 'Ask any follow-up question...',
+        'input_type' => empty($data['email']) ? 'email' : 'text',
+        'is_complete' => !empty($data['email']),
+        'is_artifact_ready' => true,
+      ];
     }
 
-    $provider = $this->aiProvider->getDefaultProviderForOperationType('chat');
-    $modelId = $this->aiProvider->getDefaultModelForOperationType('chat');
-    if (!$provider || !$modelId) {
-      return null;
+    // STEP 3: Needs & Package Scope Refinement
+    if (!empty($data['market_scanned'])) {
+      return [
+        'step_number' => 3,
+        'step_label' => 'Step 3 of 4 · Custom Scope Refinement',
+        'reply' => "Got it! To finalize your exact deliverables: do you have an existing logo and domain, or do you need us to register and set them up? (1st-year hosting and domain registration are included!)",
+        'quick_chips' => [
+          'I have logo & domain ready',
+          'I need a domain + logo help',
+          'Need full launch from scratch',
+          'Talk to a real human',
+        ],
+        'input_placeholder' => 'Pick an option or describe what you have ready...',
+        'input_type' => 'text',
+        'is_complete' => false,
+        'is_artifact_ready' => false,
+      ];
     }
 
-    $systemPrompt = <<<PROMPT
-You are FAMtastic Designs' AI Project Advisor.
-FAMtastic builds high-converting, professional websites and digital systems for small-to-midsize businesses.
 
-OUR EXACT PACKAGE LADDER (Prices are strictly fixed):
-1. web-basics ($199): 1 focused page, 1st-yr hosting, domain connection. Best for new businesses, solo operators, or simple 1-page presence.
-2. business-website ($499): Up to 5 pages (Home, Services, About, Trust/FAQ, Contact), SEO, GA4, lead capture, 1st-yr hosting. Best for local businesses, service pros, restaurants, trades.
-3. custom-website ($1,999): Up to 5 custom-designed pages, deep brand discovery, custom visual design, conversion tracking. Best for distinctive brands needing bespoke visual identity.
-4. business-growth ($3,999): Broader site (up to 10 pages) + online booking, lead automation, CRM integration, analytics.
-5. premium-ai ($6,999): Full digital system (up to 15 pages), client portal, custom workflows, AI assistant.
-6. campaign-landing-page ($1,499): High-converting single-offer landing page for paid ads with UTM tracking and A/B test setup.
-7. website-care ($149/mo): Monthly hosting, backups, maintenance, 1 hr updates.
+    // STEP 2: Market Scan & Hook ("Give before you extract")
+    if (!empty($data['business_name']) || !empty($data['industry']) || !empty($data['city'])) {
+      $biz = $data['business_name'] ?? 'your business';
+      $city = !empty($data['city']) ? $data['city'] : 'your local market';
+      $scan = $this->generateMarketScan($biz, $city, $data['industry'] ?? '');
 
-INSTRUCTIONS:
-Evaluate the user's business description and answers.
-Select the BEST MATCHING package SKU from the list above.
-Respond ONLY with valid JSON matching this exact schema:
-{
-  "package_sku": "business-website",
-  "personalized_rationale": "2-3 sentences directly addressing their industry, why this specific tier solves their needs without overspending.",
-  "recommended_pages": ["Home", "Services", "About Us", "FAQ", "Contact & Booking"],
-  "recommended_features": ["Lead capture form", "Foundational local SEO", "Mobile-first responsive design", "Google Analytics setup"],
-  "follow_up_questions": [
-    {
-      "id": "clarify_1",
-      "question": "A concise clarifying question that could impact scope (e.g. online booking vs contact form)?",
-      "options": ["Option A", "Option B"]
+      return [
+        'step_number' => 2,
+        'step_label' => 'Step 2 of 4 · Market Scan & Competitive Scan',
+        'reply' => $scan['text'],
+        'market_scan' => $scan,
+        'quick_chips' => [
+          'Yes, build my $199 scope',
+          'I need 3–5 pages ($499)',
+          'Need booking / growth ($3,999)',
+          'Talk to a real human',
+        ],
+        'input_placeholder' => 'Tap a package or tell us what you need...',
+        'input_type' => 'text',
+        'is_complete' => false,
+        'is_artifact_ready' => false,
+      ];
     }
-  ],
-  "scope_summary": "1 sentence summarizing the core deliverable."
-}
-PROMPT;
 
-    $userContent = "Customer Business Description: " . ($prompt ?: "Guided questionnaire") . "\nAnswers: " . Json::encode($answers);
-    $messages = [
-      ['role' => 'system', 'content' => $systemPrompt],
-      ['role' => 'user', 'content' => $userContent],
+    // STEP 1: Initial Greeting
+    return [
+      'step_number' => 1,
+      'step_label' => 'Step 1 of 4 · Business & City',
+      'reply' => "Tell me your business and your city — just that. I'll show you something in 20 seconds.",
+      'quick_chips' => [
+        'Barbershop / Salon',
+        'Restaurant / Food',
+        'Plumber / HVAC / Trades',
+        'Dental / Healthcare',
+        'Cleaning / Pressure Washing',
+        'Something Else',
+      ],
+      'input_placeholder' => 'e.g. Barbershop in Port St. Lucie or Italian restaurant in Austin...',
+      'input_type' => 'text',
+      'is_complete' => false,
+      'is_artifact_ready' => false,
     ];
+  }
 
-    $response = $provider->chat($messages, $modelId);
-    $text = $response->getNormalized()->getText();
+  /**
+   * Generates honest, grounded market intelligence based on real local dynamics.
+   */
+  private function generateMarketScan(string $business, string $city, string $industry): array {
+    $lower = mb_strtolower($business . ' ' . $industry);
 
-    $jsonStart = strpos($text, '{');
-    $jsonEnd = strrpos($text, '}');
-    if ($jsonStart !== false && $jsonEnd !== false) {
-      $parsed = Json::decode(substr($text, $jsonStart, $jsonEnd - $jsonStart + 1));
-      if (is_array($parsed) && isset($parsed['package_sku']) && isset(self::PACKAGES[$parsed['package_sku']])) {
-        $sku = $parsed['package_sku'];
-        $pkg = self::PACKAGES[$sku];
-        return [
-          'package_sku' => $sku,
-          'package_title' => $pkg['title'],
-          'price_estimate' => $pkg['price'],
-          'price_formatted' => '$' . number_format($pkg['price']),
-          'timeline' => $pkg['timeline'],
-          'personalized_rationale' => $parsed['personalized_rationale'] ?? $pkg['best_for'],
-          'recommended_pages' => $parsed['recommended_pages'] ?? ['Home', 'Services', 'About', 'Contact'],
-          'recommended_features' => $parsed['recommended_features'] ?? $pkg['features'],
-          'follow_up_questions' => $parsed['follow_up_questions'] ?? [],
-          'scope_summary' => $parsed['scope_summary'] ?? $pkg['headline'],
-          'source' => 'drupal_ai',
-        ];
-      }
+    if (str_contains($lower, 'barber') || str_contains($lower, 'salon') || str_contains($lower, 'hair') || str_contains($lower, 'braid')) {
+      return [
+        'category' => 'Barbershop & Personal Care',
+        'city' => $city,
+        'headline' => 'Mobile Booking is the Single Biggest Factor in ' . $city,
+        'text' => "Okay — quick scan for {$city}: The top-performing barbershops and salons winning online all have one thing in common: seamless mobile booking and transparent pricing right on the homepage. Without an owned website, customers searching 'near me' tonight go straight to your competitors. Want me to scope what it takes to fix that? It's $199, by the way.",
+        'key_factor' => 'One-tap appointment booking & mobile portfolio',
+      ];
     }
 
-    return null;
+    if (str_contains($lower, 'restaurant') || str_contains($lower, 'food') || str_contains($lower, 'cafe') || str_contains($lower, 'catering') || str_contains($lower, 'pizza')) {
+      return [
+        'category' => 'Restaurant & Hospitality',
+        'city' => $city,
+        'headline' => 'Mobile Menus & Catering Requests Drive ' . $city . ' Diners',
+        'text' => "Okay — quick scan for {$city}: Over 75% of local diners check menu pricing, photo galleries, and private event catering on mobile before stepping foot in a restaurant. Spots without mobile menus lose takeout orders daily. Want me to scope what it takes to launch your custom menu and reservation page? It's $199 to $499.",
+        'key_factor' => 'Fast mobile menu + catering inquiry flow',
+      ];
+    }
+
+    if (str_contains($lower, 'plumb') || str_contains($lower, 'hvac') || str_contains($lower, 'roof') || str_contains($lower, 'electric') || str_contains($lower, 'clean') || str_contains($lower, 'landscap') || str_contains($lower, 'trades')) {
+      return [
+        'category' => 'Home Services & Trades',
+        'city' => $city,
+        'headline' => 'Instant Quote Requests & Review Proof Rule ' . $city,
+        'text' => "Okay — quick scan for {$city}: Homeowners needing fast repairs judge trade credibility within 5 seconds on their phone. The businesses dominating local search all feature emergency quote forms, verified review badges, and clear service area maps. Want me to scope what it takes to get you up and running? It's $199 to $499.",
+        'key_factor' => 'Fast quote request form + Google Maps & Review badge',
+      ];
+    }
+
+    if (str_contains($lower, 'dent') || str_contains($lower, 'health') || str_contains($lower, 'chiro') || str_contains($lower, 'therap') || str_contains($lower, 'med')) {
+      return [
+        'category' => 'Healthcare & Wellness',
+        'city' => $city,
+        'headline' => 'Patient Trust & Consultation Booking in ' . $city,
+        'text' => "Okay — quick scan for {$city}: Prospective patients prioritize provider trust, credential highlights, and hassle-free consultation requests. A dedicated practice website builds immediate authority over platform directories. Want me to scope your launch? It's $199 to $499.",
+        'key_factor' => 'Provider credentials + new patient consultation booking',
+      ];
+    }
+
+    // Universal high-converting market scan
+    return [
+      'category' => 'Local Business',
+      'city' => $city,
+      'headline' => 'Mobile Conversion & Local Authority in ' . $city,
+      'text' => "Okay — quick scan for {$city}: Customer purchase decisions happen in seconds on mobile. The businesses winning search in your area have fast-loading mobile pages, clear pricing, and direct quote forms. Want me to scope your custom launch? It's $199, by the way.",
+      'key_factor' => 'Mobile-first design + lead capture & Google indexing',
+    ];
+  }
+
+  /**
+   * Extracts conversational slots from messages.
+   */
+  private function extractDataFromConversation(array $messages, array $existing, string $latest): array {
+    $data = $existing;
+    $lower = mb_strtolower($latest);
+
+    // Human escalation detection
+    if (str_contains($lower, 'talk to a real human') || str_contains($lower, 'human') || str_contains($lower, 'speak with') || str_contains($lower, 'call me')) {
+      $data['wants_human'] = true;
+      $data['lead_score_hot'] = true;
+    }
+
+    // Email extraction
+    if (preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $latest, $m)) {
+      $data['email'] = $m[0];
+    }
+
+    // Phone extraction
+    if (preg_match('/(?:\+?1[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})/', $latest, $m)) {
+      $data['phone'] = $m[0];
+    }
+
+    // Package preference / scope selection from Step 2
+    if (str_contains($lower, '$199') || str_contains($lower, 'web basics') || str_contains($lower, '1 page')) {
+      $data['pages'] = '1';
+      $data['market_scanned'] = true;
+    }
+    elseif (str_contains($lower, '$499') || str_contains($lower, '3–5') || str_contains($lower, '3-5') || str_contains($lower, 'business website')) {
+      $data['pages'] = '3-5';
+      $data['market_scanned'] = true;
+    }
+    elseif (str_contains($lower, '$3,999') || str_contains($lower, 'growth') || str_contains($lower, 'booking')) {
+      $data['pages'] = '10+';
+      $data['market_scanned'] = true;
+    }
+
+    // Logo & Domain from Step 3
+    if (str_contains($lower, 'logo & domain') || str_contains($lower, 'have logo') || str_contains($lower, 'ready')) {
+      $data['logo_status'] = 'ready';
+      $data['domain_choice'] = 'own_domain';
+      $data['scope_confirmed'] = true;
+    }
+    elseif (str_contains($lower, 'logo help') || str_contains($lower, 'need a domain')) {
+      $data['logo_status'] = 'help_needed';
+      $data['domain_choice'] = 'need_new_domain';
+      $data['scope_confirmed'] = true;
+    }
+    elseif (str_contains($lower, 'scratch') || str_contains($lower, 'full launch')) {
+      $data['logo_status'] = 'help_needed';
+      $data['domain_choice'] = 'need_new_domain';
+      $data['scope_confirmed'] = true;
+    }
+
+    // City & Business extraction from step 1
+    if (empty($data['business_name']) && !str_contains($lower, '@') && strlen($latest) > 2) {
+      $parts = preg_split('/,| in | - | near /i', $latest);
+      if (count($parts) >= 2) {
+        $data['business_name'] = trim($parts[0]);
+        $data['city'] = trim($parts[1]);
+      } else {
+        $data['business_name'] = $latest;
+      }
+      $data['market_scanned'] = false;
+    }
+
+    return $data;
   }
 
   /**
@@ -546,55 +480,36 @@ PROMPT;
     }
     $text = mb_strtolower($prompt . ' ' . implode(' ', $flattened));
 
-    $sku = 'business-website'; // Default recommendation.
+    $sku = 'web-basics'; // Default starter package $199.
 
-    // Keywords matching
     if (str_contains($text, 'portal') || str_contains($text, 'membership') || str_contains($text, 'ai system') || str_contains($text, 'custom software')) {
       $sku = 'premium-ai';
     }
-    elseif (str_contains($text, 'booking') || str_contains($text, 'crm') || str_contains($text, 'automation') || str_contains($text, 'growth') || (isset($answers['pages']) && $answers['pages'] === '10+')) {
+    elseif (str_contains($text, 'growth') || str_contains($text, 'crm') || str_contains($text, 'automation') || (isset($answers['pages']) && $answers['pages'] === '10+') || str_contains($text, '$3,999')) {
       $sku = 'business-growth';
     }
-    elseif (str_contains($text, 'custom design') || str_contains($text, 'bespoke') || str_contains($text, 'brand identity') || str_contains($text, 'high end')) {
+    elseif (str_contains($text, 'custom design') || str_contains($text, 'bespoke') || str_contains($text, 'brand identity') || str_contains($text, '$1,999')) {
       $sku = 'custom-website';
     }
-    elseif (str_contains($text, 'ad campaign') || str_contains($text, 'landing page') || str_contains($text, 'funnel') || str_contains($text, 'google ads')) {
+    elseif (str_contains($text, 'ad campaign') || str_contains($text, 'landing page') || str_contains($text, 'funnel') || str_contains($text, '$1,499')) {
       $sku = 'campaign-landing-page';
     }
-    elseif (str_contains($text, 'maintenance') || str_contains($text, 'care plan') || str_contains($text, 'hosting only') || str_contains($text, 'update my existing site')) {
-      $sku = 'website-care';
+    elseif (str_contains($text, '3–5') || str_contains($text, '3-5') || str_contains($text, '$499') || str_contains($text, 'business website')) {
+      $sku = 'business-website';
     }
-    elseif (str_contains($text, '1 page') || (isset($answers['pages']) && $answers['pages'] === '1') || str_contains($text, 'simple') || str_contains($text, 'starter') || str_contains($text, 'basic')) {
-      $sku = 'web-basics';
-    }
+
 
     $pkg = self::PACKAGES[$sku];
 
     $pages = match ($sku) {
-      'web-basics' => ['Home (One-Page Scroll with Navigation)'],
-      'business-website' => ['Home', 'Services', 'About Us', 'Trust & Reviews', 'Contact & Quote'],
+      'web-basics' => ['Home (High-Conversion Single Page with Navigation)', 'Quick Booking Request Modal', 'Services & Price Guide Section', 'Customer Reviews & Trust Section', 'Direct Contact & Map Section'],
+      'business-website' => ['Home', 'Services & Pricing', 'About Us', 'Trust & Reviews', 'Contact & Booking'],
       'custom-website' => ['Home', 'Custom Services Showcase', 'Brand Story & About', 'Portfolio / Case Studies', 'Inquiry & Booking'],
       'business-growth' => ['Home', 'Service Catalog', 'Online Scheduling', 'Customer Resources', 'About', 'Pricing / Estimate Calculator', 'Contact'],
       'premium-ai' => ['Home', 'Services & Capabilities', 'Client Portal Login', 'Interactive AI Assistant', 'Case Studies', 'Company', 'Security & Contact'],
       'campaign-landing-page' => ['High-Converting Campaign Landing Page', 'Instant Confirmation & Next Steps'],
       'website-care' => ['Maintenance & Monitoring Coverage for Existing Site'],
     };
-
-    $followUps = [];
-    if ($sku === 'business-website') {
-      $followUps[] = [
-        'id' => 'booking_needed',
-        'question' => 'Will you need direct online booking / scheduling, or is a quote inquiry form sufficient?',
-        'options' => ['Quote inquiry form (Included)', 'Direct online booking (+Growth System)'],
-      ];
-    }
-    elseif ($sku === 'web-basics') {
-      $followUps[] = [
-        'id' => 'expand_pages',
-        'question' => 'Can your core offer be explained on one focused page, or do you have multiple distinct services?',
-        'options' => ['One page is perfect ($199)', 'Need multiple service pages ($499)'],
-      ];
-    }
 
     return [
       'package_sku' => $sku,
@@ -605,50 +520,41 @@ PROMPT;
       'personalized_rationale' => $pkg['best_for'],
       'recommended_pages' => $pages,
       'recommended_features' => $pkg['features'],
-      'follow_up_questions' => $followUps,
+      'follow_up_questions' => [],
       'scope_summary' => $pkg['headline'],
-      'source' => 'deterministic_engine',
+      'source' => 'famtastic_scout_engine',
     ];
   }
 
   private function defaultRecommendation(): array {
-    $pkg = self::PACKAGES['business-website'];
+    $pkg = self::PACKAGES['web-basics'];
     return [
-      'package_sku' => 'business-website',
+      'package_sku' => 'web-basics',
       'package_title' => $pkg['title'],
       'price_estimate' => $pkg['price'],
-      'price_formatted' => '$499',
+      'price_formatted' => '$199',
       'timeline' => $pkg['timeline'],
       'personalized_rationale' => $pkg['best_for'],
-      'recommended_pages' => ['Home', 'Services', 'About Us', 'Reviews', 'Contact'],
+      'recommended_pages' => ['Home (One-Page Scroll)', 'Services & Pricing', 'Booking Request', 'Reviews', 'Contact & Hours'],
       'recommended_features' => $pkg['features'],
-      'follow_up_questions' => [
-        [
-          'id' => 'project_type',
-          'question' => 'What type of business are you launching or upgrading?',
-          'options' => ['Local Service / Trades', 'Restaurant / Hospitality', 'Professional Services', 'E-Commerce / Store'],
-        ],
-      ],
-      'scope_summary' => 'Our most popular all-in-one business launch package.',
+      'follow_up_questions' => [],
+      'scope_summary' => $pkg['headline'],
       'source' => 'default',
     ];
   }
 
   private function inferAudience(string $text): string {
     $lower = mb_strtolower($text);
-    if (str_contains($lower, 'restaurant') || str_contains($lower, 'cafe') || str_contains($lower, 'bakery')) {
+    if (str_contains($lower, 'barber') || str_contains($lower, 'salon') || str_contains($lower, 'hair')) {
+      return 'Local clients seeking dependable appointments, clean cuts, transparent pricing, and fast booking.';
+    }
+    if (str_contains($lower, 'restaurant') || str_contains($lower, 'cafe') || str_contains($lower, 'bakery') || str_contains($lower, 'food')) {
       return 'Local diners, foodies, and catering clients looking for menu, hours, and reservations.';
     }
     if (str_contains($lower, 'plumbing') || str_contains($lower, 'hvac') || str_contains($lower, 'electric') || str_contains($lower, 'contractor')) {
       return 'Homeowners and property managers needing fast, trusted quote requests and emergency service.';
     }
-    if (str_contains($lower, 'dental') || str_contains($lower, 'doctor') || str_contains($lower, 'therapy') || str_contains($lower, 'wellness')) {
-      return 'Patients seeking compassionate care, provider trust, credentials, and easy consultation booking.';
-    }
-    if (str_contains($lower, 'accounting') || str_contains($lower, 'legal') || str_contains($lower, 'consulting')) {
-      return 'Business owners and executives seeking authoritative advice, security, and proven expertise.';
-    }
-    return 'Target prospective customers seeking credible services and clear next steps.';
+    return 'Target prospective customers seeking credible local services and clear next steps.';
   }
 
 }

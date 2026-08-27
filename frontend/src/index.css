@@ -3081,6 +3081,94 @@ a:hover {
 }
 
 /* --- Conversational AI Project Interviewer Styles --- */
+.sf__scout-roadmap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+
+.sf__scout-step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--fam-text-muted);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.sf__scout-step-item.is-active {
+  color: var(--fam-lime, #7cfc00);
+  font-weight: 700;
+}
+
+.sf__scout-step-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sf__scout-step-item.is-active .sf__scout-step-dot {
+  background: var(--fam-lime, #7cfc00);
+  box-shadow: 0 0 8px var(--fam-lime, #7cfc00);
+}
+
+.sf__scout-step-item.is-past .sf__scout-step-dot {
+  background: var(--fam-lime, #7cfc00);
+}
+
+.sf__market-scan-box {
+  background: radial-gradient(circle at 100% 0%, rgba(124, 252, 0, 0.12), rgba(0, 0, 0, 0.35));
+  border: 1px solid rgba(124, 252, 0, 0.35);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  margin-top: 0.75rem;
+}
+
+.sf__market-scan-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fam-lime, #7cfc00);
+  margin-bottom: 0.4rem;
+}
+
+.sf__market-scan-radar {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--fam-lime, #7cfc00);
+  animation: sf-pulse 1.2s infinite ease-in-out;
+}
+
+.sf__market-scan-headline {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  margin: 0 0 0.4rem;
+}
+
+.sf__market-scan-factor {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border-left: 2px solid var(--fam-lime, #7cfc00);
+  margin-top: 0.5rem;
+}
+
 .sf__chat-container {
   background: rgba(20, 24, 33, 0.7);
   backdrop-filter: blur(16px);
@@ -3090,7 +3178,7 @@ a:hover {
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  height: clamp(520px, 75vh, 680px);
+  height: clamp(540px, 75vh, 700px);
 }
 
 .sf__chat-header {
@@ -3134,6 +3222,7 @@ a:hover {
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
 }
+
 
 .sf__chat-messages {
   flex: 1;
