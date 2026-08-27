@@ -1,5 +1,26 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Treat booking marketplaces as an acquisition channel, not the brand
+
+- Observation: a beauty operator may reasonably keep Booksy for discovery while
+  building an owned path for repeat booking, consent, reviews, referrals, and
+  brand authority. Because Booksy's Boost fee applies to the first Boost visit
+  and not later visits, the value of a direct-booking discount changes over the
+  customer lifecycle.
+- Guidance: run the transition as an evidence-led bridge. Keep Booksy available,
+  make direct booking an honest customer choice, let the business approve any
+  loyalty incentive, and measure whether it improves retention and ownership.
+  Never scrape client data, copy platform reviews, or trade benefits for reviews.
+
+## 2026-08-27 — Premium creative needs an options-and-finishing contract
+
+- Observation: a single paid generation proves execution but not creative
+  exploration or polish.
+- Guidance: generate three materially different candidates for every premium
+  visual position, select against the page's real composition, and finish the
+  chosen asset. Preserve candidates, rationale, finished artifact, prompt,
+  provider/model/cost truth, and hashes in Build DNA; keep page text native.
+
 ## 2026-08-27 — A low-cost starter should reveal the upgrade path, not lead with exclusions
 
 - Observation: describing a proposed $19.99 renewal and dedicating a major

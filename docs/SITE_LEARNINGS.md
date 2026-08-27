@@ -5,6 +5,27 @@
 - Observation: A permanently embedded chatbot panel on landing pages consumes excessive screen real estate—especially on mobile—and feels like a traditional form wearing a chat costume. Visitors hesitate to engage because the interface demands answers before demonstrating competence.
 - Guidance: Replace embedded chat widgets with a clean Hero Entry Point that makes a single promise ("See what your market is doing in 20 seconds") with one tap-to-start action. When triggered, open a focused full-screen overlay on mobile and a centered modal sheet on desktop. Structure the consultation to "give before extracting": deliver an instant Local Market Scan within 20 seconds, ask 3 guided scope questions via touch-friendly chips, and materialize the Scope Blueprint artifact with locked pricing directly on screen before asking for an email address.
 
+## 2026-08-27 — Marketplace discovery and owned retention can coexist
+
+- Observation: “leave Booksy” is too blunt. Booksy can still produce discovery
+  while an owned site gives the operator brand control, direct rebooking,
+  explicit consent, fresh reviews, referrals, and an upgrade path. Booksy's
+  current Boost model also charges 30% on the first Boost-acquired visit and 0%
+  on later visits, so a permanent direct discount is not automatically cheaper.
+- Guidance: keep the platform live during the pilot, let the operator choose a
+  time-bounded direct incentive or perk, and measure channel, repeat, consent,
+  workload, and completed-appointment outcomes. Never exchange a benefit for a
+  review or market to platform-derived contacts without applicable consent.
+
+## 2026-08-27 — Premium image execution needs three choices and a finish
+
+- Observation: one generated image can satisfy a receipt without proving that
+  the strongest creative direction was explored or selected.
+- Guidance: every premium image position gets three materially different
+  candidates, a documented selection/rejection decision, and a finishing pass
+  for crop, tonal balance, contrast, cleanup, sharpening, and artifacts. Retain
+  all candidates, the finished derivative, prompts, provider truth, cost, and
+  hashes in Build DNA. Native HTML/CSS continues to own readable text and UI.
 
 ## 2026-08-27 — A QR display is not a payment-processing product
 

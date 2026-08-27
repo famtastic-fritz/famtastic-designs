@@ -1,5 +1,23 @@
 # Product changelog
 
+## 2026-08-27 — Booksy-to-Owned Growth Bridge strategy
+
+- Reframed Booked & Branded as “Booksy for discovery; your website for
+  ownership,” with a controlled Tighten Up Your Locs founding case study rather
+  than an unsupported rip-and-replace promise.
+- Added first-visit versus repeat-visit incentive economics, a consented owned-
+  client growth loop, and an existing-catalog upgrade ladder while preserving
+  the proposed $199 starter and current product prices.
+- Named Shay AI the FAMtastic Designs AI Business Growth Guide and preserved the
+  human authority boundary for price, scope, approval, payment, launch, and
+  customer communication.
+- Defined six reusable niche visual families and a premium rule requiring three
+  materially different candidates, selection rationale, a finishing pass, and
+  complete Build DNA evidence for every premium image position.
+- Updated the initial outreach email to show how the platform and owned site can
+  coexist. No live price, product, campaign, email, customer record, image run,
+  deployment, or production surface changed.
+
 ## 2026-08-27 — Velvet Coil Ultra quality study
 
 - Kept the existing Booked & Branded proof rooms and four Template Lab families
