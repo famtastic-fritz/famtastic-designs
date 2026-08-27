@@ -2204,3 +2204,47 @@ function famtastic_pipeline_update_8042(&$sandbox) {
   }
   return t('Added verified cold-proof cohort records, frozen direction profiles, and scheduled owner-gated release fields.');
 }
+
+/**
+ * Restores the default public proof cohort config on upgraded installations.
+ *
+ * The profile was introduced as module install configuration. Drupal only
+ * applies config/install files when a module is first enabled, so an existing
+ * FAMtastic install can have the new public-preview schema while still lack
+ * the profile that every public proof delivery resolves. Only a wholly absent
+ * config object is restored here: a real operator configuration is never
+ * replaced or merged by an update hook.
+ */
+function famtastic_pipeline_update_8043(&$sandbox) {
+  if (_famtastic_pipeline_seed_default_proof_cohort_config()) {
+    return t('Restored the default anonymous public proof cohort profile for this upgraded installation.');
+  }
+  return t('Preserved the existing anonymous public proof cohort configuration.');
+}
+
+/**
+ * Creates the shipped proof cohort configuration only when it is absent.
+ *
+ * @return bool
+ *   TRUE when the install configuration was restored; FALSE when an active
+ *   configuration already existed.
+ */
+function _famtastic_pipeline_seed_default_proof_cohort_config(): bool {
+  $config = \Drupal::configFactory()->getEditable('famtastic_pipeline.proof_cohorts');
+  if ($config->getRawData() !== []) {
+    return FALSE;
+  }
+
+  $module_path = \Drupal::service('extension.list.module')->getPath('famtastic_pipeline');
+  $path = $module_path . '/config/install/famtastic_pipeline.proof_cohorts.yml';
+  $yaml = @file_get_contents($path);
+  if (!is_string($yaml) || $yaml === '') {
+    throw new \RuntimeException('The default proof cohort configuration is unavailable for this update.');
+  }
+  $data = \Drupal\Component\Serialization\Yaml::decode($yaml);
+  if (!is_array($data) || empty($data['anonymous']['default_profile']) || empty($data['anonymous']['profiles'])) {
+    throw new \RuntimeException('The default proof cohort configuration is malformed.');
+  }
+  $config->setData($data)->save(TRUE);
+  return TRUE;
+}

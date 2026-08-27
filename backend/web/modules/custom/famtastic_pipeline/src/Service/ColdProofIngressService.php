@@ -69,8 +69,16 @@ final class ColdProofIngressService {
     try {
       $campaignId = $this->leads->ensureCampaignForChannel($cohort['campaign_key'], $cohort['source_name'], 'public_preview');
       $cohortRow = $this->ensureCohort($cohort, $campaignId);
+      // Drupal database drivers return scalar query results as strings. Cast
+      // once at the persistence boundary so the idempotency key is identical
+      // on every driver and strict downstream signatures cannot receive a
+      // database string.
+      $cohortId = (int) ($cohortRow['id'] ?? 0);
+      if ($cohortId < 1) {
+        throw new \RuntimeException('Cold proof cohort persistence did not return a valid ID.');
+      }
       foreach ($seed['leads'] as $lead) {
-        $existing = $this->existingIngress($cohortRow['id'], $lead['source_record_id'], $lead['evidence_hash']);
+        $existing = $this->existingIngress($cohortId, $lead['source_record_id'], $lead['evidence_hash']);
         if ($existing) {
           $results[] = $this->result($lead, [
             'status' => 'duplicate', 'score' => 0, 'target_offer' => '', 'prospect_id' => $existing['prospect_id'] ?: NULL,
@@ -123,7 +131,7 @@ final class ColdProofIngressService {
           $runtimeRun = (array) ($this->previews->publicIntakeProofContext($deliveryId)['build_dna_run'] ?? []);
           $status = 'preview_requested';
         }
-        $this->insertIngress($cohortRow['id'], $lead, $import, $intakeId, $deliveryId, $proofCampaignId, $jobId, $status);
+        $this->insertIngress($cohortId, $lead, $import, $intakeId, $deliveryId, $proofCampaignId, $jobId, $status);
         if ($deliveryId && $jobId) {
           $this->ledger->recordEvent(
             'cold-proof.ingressed:' . $cohortRow['cohort_key'] . ':' . $lead['source_record_id'] . ':' . $lead['evidence_hash'],

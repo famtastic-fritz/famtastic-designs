@@ -11,7 +11,10 @@ run_id="$(date +%s)-$$"
 
 cleanup() {
   case "$sandbox" in
-    "${TMPDIR:-/tmp}/famtastic-verified-cold-handoff."*) rm -rf "$sandbox" ;;
+    "${TMPDIR:-/tmp}/famtastic-verified-cold-handoff."*)
+      chmod -R u+rwX "$sandbox" 2>/dev/null || true
+      rm -rf "$sandbox"
+      ;;
     *) echo "Refusing to remove unexpected sandbox: $sandbox" >&2 ;;
   esac
 }
@@ -36,15 +39,50 @@ for runtime_file in .ht.router.php .htaccess autoload.php autoload_runtime.php i
   cp "$runtime_backend/web/$runtime_file" "$sandbox/backend/web/$runtime_file"
 done
 cp "$runtime_backend/web/sites/default/default.settings.php" "$sandbox/backend/web/sites/default/default.settings.php"
-mkdir -p "$sandbox/backend/web/sites/default/files" "$sandbox/backend/private"
 chmod -R u+rwX "$sandbox/backend/web/sites/default"
+mkdir -p "$sandbox/backend/web/sites/default/files" "$sandbox/backend/private"
 perl -0pi -e 's/\n\$databases\['\''default'\''\]\['\''default'\''\] = array \(\n.*?\n\);\n/\n/s' "$sandbox/backend/web/sites/default/settings.php"
 
 drush=("$sandbox/backend/vendor/bin/drush" "--root=$sandbox/backend/web")
 "${drush[@]}" site:install standard --db-url="sqlite://sites/default/files/.ht.sqlite" --account-name=admin --account-pass=admin --account-mail=admin@famtastic.local --site-name="FAMtastic cold handoff fixture" --site-mail=no-reply@famtastic.local -y >/dev/null
 "${drush[@]}" en -y famtastic_pipeline >/dev/null
+# The profile was added after the module had long been enabled in production.
+# Rehearse exactly that upgrade gap: config/install is not reapplied to an
+# existing module, so update 8043 must restore a wholly absent profile before
+# verified-cold ingress can create a delivery. This sandbox is disposable.
+"${drush[@]}" config:delete -y famtastic_pipeline.proof_cohorts >/dev/null
+"${drush[@]}" php:eval '\Drupal::keyValue("system.schema")->set("famtastic_pipeline", 8042);'
 "${drush[@]}" updb -y >/dev/null
 "${drush[@]}" cr >/dev/null
+"${drush[@]}" php:eval '
+  $profile = \Drupal::service("famtastic_pipeline.proof_cohort_profiles")->resolveAnonymous();
+  if (
+    ($profile["id"] ?? "") !== "anonymous_safe_medium_ultra_v1"
+    || (int) ($profile["direction_count"] ?? 0) !== 3
+    || array_keys((array) ($profile["directions"] ?? [])) !== ["a", "b", "c"]
+  ) {
+    throw new \RuntimeException("Upgrade 8043 did not restore the canonical anonymous proof cohort profile.");
+  }
+'
+# A second rehearsal proves that the update does not overwrite a real active
+# configuration. Keep the allowed fixture status while adding a sentinel that
+# must survive the rerun, then remove only the synthetic sentinel.
+"${drush[@]}" php:eval '
+  $config = \Drupal::configFactory()->getEditable("famtastic_pipeline.proof_cohorts");
+  $statuses = (array) $config->get("cold.website_observation_statuses");
+  $statuses[] = "fixture_operator_status";
+  $config->set("cold.website_observation_statuses", array_values(array_unique($statuses)))->save(TRUE);
+  \Drupal::keyValue("system.schema")->set("famtastic_pipeline", 8042);
+'
+"${drush[@]}" updb -y >/dev/null
+"${drush[@]}" php:eval '
+  $config = \Drupal::configFactory()->getEditable("famtastic_pipeline.proof_cohorts");
+  $statuses = (array) $config->get("cold.website_observation_statuses");
+  if (!in_array("fixture_operator_status", $statuses, TRUE)) {
+    throw new \RuntimeException("Upgrade 8043 overwrote an active proof cohort configuration.");
+  }
+  $config->set("cold.website_observation_statuses", array_values(array_filter($statuses, static fn ($status): bool => $status !== "fixture_operator_status")))->save(TRUE);
+'
 
 state="$sandbox/state.json"
 FAMTASTIC_E2E_STATE="$state" FAMTASTIC_E2E_RUN="$run_id" \
@@ -58,7 +96,7 @@ jq -e '
   (.lead.proof_job_id | type == "number") and
   .draft_owner_gate == "rejected_without_partial_hold" and
   .bundle.schema == "famtastic.verified-cold-proof-handoff.v1" and
-  .bundle.deliveries | length == 1 and
+  (.bundle.deliveries | length) == 1 and
   .bundle.deliveries[0].source_lane == "verified_cold" and
   .bundle.deliveries[0].job.job_type == "public_preview.generate" and
   .bundle.deliveries[0].build_dna_run.source_lane == "verified_cold" and
