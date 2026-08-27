@@ -53,8 +53,8 @@ for runtime_file in .ht.router.php .htaccess autoload.php autoload_runtime.php i
   cp "$runtime_backend/web/$runtime_file" "$sandbox/backend/web/$runtime_file"
 done
 cp "$runtime_backend/web/sites/default/default.settings.php" "$sandbox/backend/web/sites/default/default.settings.php"
-mkdir -p "$sandbox/backend/web/sites/default/files" "$sandbox/backend/private"
 chmod -R u+rwX "$sandbox/backend/web/sites/default"
+mkdir -p "$sandbox/backend/web/sites/default/files" "$sandbox/backend/private"
 
 # The tracked developer settings file has a convenience SQLite connection for
 # an already-installed local checkout. Remove that one generated connection in
