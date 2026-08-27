@@ -19,6 +19,8 @@ const repositoryRoot = resolve(scriptDirectory, '../../..');
 const INPUT_SCHEMA = 'famtastic.beauty-proof-cohort-finalizer-input.v1';
 const FINALIZATION_SCHEMA = 'famtastic.beauty-proof-cohort-finalization.v1';
 const ASSET_SCHEMA = 'famtastic.signed-proof-assets.v1';
+const RUNTIME_BINDING_SCHEMA = 'famtastic.beauty-proof-runtime-binding.v1';
+const PROVEN_WORKER_RECEIPT_SCHEMA = 'famtastic.gemini-flash-lite-image-receipt.v1';
 const REQUIRED_SOURCE_LANE = 'verified_cold';
 const REQUIRED_PACKAGE_PROFILE = 'anonymous_safe_medium_ultra_v1';
 const REQUIRED_DIRECTIONS = ['a', 'b', 'c'];
@@ -133,6 +135,21 @@ function validHash(value, label) {
   return text.toLowerCase();
 }
 
+function positiveId(value, label) {
+  if (!Number.isSafeInteger(value) || value < 1) fail(label + ' must be a positive integer.');
+  return value;
+}
+
+function safeReference(value, label, maximum = 255) {
+  const text = cleanText(value, label, maximum);
+  if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{1,254}$/.test(text)) fail(label + ' contains unsafe characters.');
+  return text;
+}
+
+function exactValue(actual, expected, label) {
+  if (actual !== expected) fail(label + ' does not match the immutable runtime binding.');
+}
+
 function numberOrNull(value, label) {
   if (value === undefined || value === null || value === '') return null;
   if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) fail(label + ' must be a non-negative finite number.');
@@ -142,7 +159,7 @@ function numberOrNull(value, label) {
 function receiptCost(receipt) {
   const cost = isObject(receipt.cost) ? receipt.cost : {};
   const actual = numberOrNull(cost.usd ?? receipt.cost_usd, 'receipt cost_usd');
-  const expected = numberOrNull(cost.expected_usd ?? receipt.cost_usd_expected_per_image_output, 'receipt expected cost');
+  const expected = numberOrNull(cost.expected_usd ?? receipt.cost_usd_expected_per_image_output ?? receipt.estimated_cost_usd, 'receipt expected cost');
   const result = {
     status: actual === null ? 'receipt-recorded-without-billed-cost' : 'receipt-recorded',
     currency: 'USD',
@@ -153,11 +170,71 @@ function receiptCost(receipt) {
   return result;
 }
 
+/**
+ * Normalizes the receipt shape emitted by the existing authenticated Gemini
+ * worker. That worker intentionally records per-image duration and completion
+ * time but no fabricated per-image started_at; retain that as partial timing
+ * instead of manufacturing a timestamp.
+ */
+function normalizeProvenWorkerReceipt(receipt, raw, receiptPath, sourceImage, promptHash, requestedResultId) {
+  if (receipt.status !== 'complete') fail('Proven Gemini worker receipt.status must be complete.');
+  const provider = cleanText(receipt.provider, 'receipt.provider', 120);
+  if (!['google-gemini-api', 'gemini-developer-api'].includes(provider)) fail('receipt.provider must identify the Gemini Developer API.');
+  const api = cleanText(receipt.api, 'receipt.api', 120);
+  if (!['generateContent', 'interactions'].includes(api)) fail('receipt.api must be generateContent or interactions.');
+  const model = cleanText(receipt.model, 'receipt.model', 160);
+  if (model !== REQUIRED_MODEL) fail('receipt.model must be ' + REQUIRED_MODEL + '.');
+  const completedAt = requireIso(receipt.completed_at, 'receipt.completed_at');
+  if (!Array.isArray(receipt.artifacts) || receipt.artifacts.length === 0) fail('Proven Gemini worker receipt.artifacts must be a non-empty array.');
+  const resultId = cleanText(requestedResultId, 'receipt_result_id', 240);
+  const result = receipt.artifacts.find(function (item) { return isObject(item) && item.direction_id === resultId; });
+  if (!result) fail('Proven Gemini worker receipt does not contain direction_id ' + resultId + '.');
+  if (!isObject(result.usage_metadata) || Object.keys(result.usage_metadata).length === 0) {
+    fail('Proven Gemini worker receipt artifact requires non-empty usage_metadata evidence.');
+  }
+  const sourceBytes = readFileSync(sourceImage);
+  const mime = imageMime(sourceBytes);
+  if (!['image/png', 'image/jpeg'].includes(mime)) fail('External hero image must be a PNG or JPEG source image.');
+  const sourceSha = sha256(sourceBytes);
+  if (validHash(result.sha256, 'receipt artifact sha256') !== sourceSha) fail('Proven Gemini worker receipt artifact hash does not match supplied hero image.');
+  if (!Number.isInteger(result.bytes) || result.bytes !== sourceBytes.length) fail('Proven Gemini worker receipt artifact bytes do not match supplied hero image.');
+  if (cleanText(result.mime_type, 'receipt artifact mime_type', 80) !== mime) fail('Proven Gemini worker receipt artifact mime_type does not match supplied hero image.');
+  if (!Number.isInteger(result.duration_ms) || result.duration_ms <= 0) fail('Proven Gemini worker receipt artifact duration_ms must be a positive integer.');
+  if (validHash(result.prompt_sha256, 'receipt artifact prompt_sha256') !== promptHash) fail('Proven Gemini worker receipt artifact prompt hash does not match the exact generated prompt artifact.');
+  const normalized = {
+    schema: 'famtastic.gemini-image-provider-receipt.v1',
+    status: 'provider-receipt-validated',
+    source_schema: PROVEN_WORKER_RECEIPT_SCHEMA,
+    provider,
+    api,
+    model,
+    started_at: null,
+    completed_at: completedAt,
+    timing_status: 'partial-receipt-recorded',
+    provider_evidence: result.usage_metadata,
+    provider_receipt_source_sha256: sha256(raw),
+    cost: receiptCost(receipt),
+    result: {
+      id: resultId,
+      sha256: sourceSha,
+      bytes: sourceBytes.length,
+      mime_type: mime,
+      duration_ms: result.duration_ms,
+      prompt_sha256: promptHash,
+    },
+    privacy: 'Normalized local receipt intentionally excludes credentials and inline image bytes. The source worker did not expose a per-image started_at.',
+  };
+  return { sourceBytes, sourceSha, sourceMime: mime, sourceSize: sourceBytes.length, normalized, sourceReceiptSha: normalized.provider_receipt_source_sha256 };
+}
+
 function normalizeReceipt(receiptPath, sourceImage, promptHash, requestedResultId) {
   requireExistingFile(receiptPath, 'Provider receipt');
   const raw = readFileSync(receiptPath);
   const receipt = readJson(receiptPath, 'Provider receipt');
   requireSafeReceipt(receipt, receiptPath);
+  if (receipt.schema === PROVEN_WORKER_RECEIPT_SCHEMA) {
+    return normalizeProvenWorkerReceipt(receipt, raw, receiptPath, sourceImage, promptHash, requestedResultId);
+  }
   if (receipt.schema && receipt.schema !== 'famtastic.gemini-image-receipt.v1') {
     fail('Provider receipt schema must be famtastic.gemini-image-receipt.v1 when declared.');
   }
@@ -194,6 +271,7 @@ function normalizeReceipt(receiptPath, sourceImage, promptHash, requestedResultI
     model,
     started_at: startedAt,
     completed_at: completedAt,
+    timing_status: 'receipt-recorded',
     provider_evidence: receipt.usage_metadata || receipt.usageMetadata || receipt.response_sha256 || receipt.interaction_id,
     provider_receipt_source_sha256: sha256(raw),
     cost: receiptCost(receipt),
@@ -252,9 +330,107 @@ function loadInput(path) {
   if (cohort.schema !== 'famtastic.beauty-proof-cohort-output.v1') fail('cohort_manifest has an unsupported schema.');
   if (!isObject(cohort.source) || cohort.source.source_lane !== REQUIRED_SOURCE_LANE) fail('cohort_manifest source.source_lane must be ' + REQUIRED_SOURCE_LANE + '.');
   if (cohort.package_profile !== REQUIRED_PACKAGE_PROFILE) fail('cohort_manifest package_profile must be ' + REQUIRED_PACKAGE_PROFILE + '.');
+  if (cohort.runtime_binding_status !== 'bound-canonical-runtime' || cohort.runtime_binding_contract !== RUNTIME_BINDING_SCHEMA) fail('cohort_manifest must record the completed canonical runtime binding before finalization.');
   if (!Array.isArray(cohort.bundles) || cohort.bundles.length === 0 || cohort.selected_count !== cohort.bundles.length) fail('cohort_manifest must contain every selected bundle exactly once.');
   if (!Array.isArray(value.bundles) || value.bundles.length !== cohort.bundles.length) fail('Finalizer input must map every cohort bundle exactly once.');
   return { value, inputHash: fileHash(path), cohortPath, cohort };
+}
+
+/**
+ * Finalization is allowed only after the canonical ingress has bound the local
+ * skeleton to real Drupal/public/callback identities. The values are checked
+ * redundantly in the sidecar, promotion manifest, and Build DNA so a later
+ * import cannot accidentally stage the local placeholder job/event IDs.
+ */
+function runtimeBindingForBundle(bundle, manifest, baseDna, cohortCampaignId) {
+  const relativeBundle = repoRelative(bundle);
+  const bindingPath = join(bundle, 'runtime-binding.json');
+  requireExistingFile(bindingPath, 'Immutable runtime binding');
+  const binding = readJson(bindingPath, 'Immutable runtime binding');
+  requireObject(binding, 'Immutable runtime binding');
+  if (binding.schema !== RUNTIME_BINDING_SCHEMA || binding.status !== 'bound') fail('Prepared bundle requires a bound ' + RUNTIME_BINDING_SCHEMA + ' sidecar before finalization.');
+  const bindingHash = fileHash(bindingPath);
+  const prospectId = positiveId(binding.prospect_id, 'runtime binding prospect_id');
+  const proofCampaignId = positiveId(binding.proof_campaign_id, 'runtime binding proof_campaign_id');
+  const campaignId = safeReference(binding.campaign_id, 'runtime binding campaign_id', 128);
+  if (campaignId !== cohortCampaignId) fail('Runtime binding campaign_id must exactly match cohort manifest campaign_id.');
+  const jobId = safeReference(binding.job_id, 'runtime binding job_id');
+  const callbackEventId = safeReference(binding.callback_event_id, 'runtime binding callback_event_id');
+  if (/^(?:local-|beauty-proof:)/i.test(jobId) || /^(?:local-|beauty-proof:)/i.test(callbackEventId)) {
+    fail('Runtime binding still contains a local job or callback placeholder.');
+  }
+  const runStartedAt = requireIso(binding.run_started_at, 'runtime binding run_started_at');
+  if (!isObject(binding.callback)) fail('Runtime binding callback must be an object.');
+  exactValue(binding.callback.event_id, callbackEventId, 'Runtime binding callback event');
+  exactValue(binding.callback.job_id, jobId, 'Runtime binding callback job');
+  const publicPreviewDeliveryId = binding.public_preview_delivery_id === undefined ? undefined : positiveId(binding.public_preview_delivery_id, 'runtime binding public_preview_delivery_id');
+  if (!isObject(manifest.runtime_binding) || manifest.runtime_binding.schema !== RUNTIME_BINDING_SCHEMA || manifest.runtime_binding.status !== 'bound') {
+    fail('Prepared bundle manifest is missing its bound runtime binding summary.');
+  }
+  exactValue(manifest.source_lane, REQUIRED_SOURCE_LANE, 'Manifest source lane');
+  exactValue(manifest.campaign_id, campaignId, 'Manifest campaign_id');
+  exactValue(manifest.job_id, jobId, 'Manifest job_id');
+  exactValue(manifest.event_id, callbackEventId, 'Manifest event_id');
+  exactValue(validHash(manifest.runtime_binding.sha256, 'manifest runtime binding sha256'), bindingHash, 'Manifest runtime binding hash');
+  exactValue(manifest.runtime_binding.prospect_id, prospectId, 'Manifest prospect_id');
+  exactValue(manifest.runtime_binding.proof_campaign_id, proofCampaignId, 'Manifest proof_campaign_id');
+  exactValue(manifest.runtime_binding.campaign_id, campaignId, 'Manifest runtime binding campaign_id');
+  exactValue(manifest.runtime_binding.job_id, jobId, 'Manifest runtime binding job_id');
+  exactValue(manifest.runtime_binding.callback_event_id, callbackEventId, 'Manifest runtime binding callback_event_id');
+  if (publicPreviewDeliveryId === undefined) {
+    if (manifest.runtime_binding.public_preview_delivery_id !== undefined) fail('Manifest public_preview_delivery_id does not match runtime binding.');
+  }
+  else {
+    exactValue(manifest.runtime_binding.public_preview_delivery_id, publicPreviewDeliveryId, 'Manifest public_preview_delivery_id');
+  }
+  if (!isObject(baseDna.runtime_binding) || baseDna.runtime_binding.schema !== RUNTIME_BINDING_SCHEMA || baseDna.runtime_binding.status !== 'bound') {
+    fail('Prepared Build DNA is missing its bound runtime binding summary.');
+  }
+  exactValue(validHash(baseDna.runtime_binding.sha256, 'Build DNA runtime binding sha256'), bindingHash, 'Build DNA runtime binding hash');
+  const run = requireObject(baseDna.run, 'Prepared Build DNA run');
+  exactValue(run.schema, 'famtastic.build-dna-run.v1', 'Build DNA run schema');
+  exactValue(run.status, 'runtime-bound-pending-local-finalization', 'Build DNA run status');
+  exactValue(validHash(run.binding_sha256, 'Build DNA run binding sha256'), bindingHash, 'Build DNA run binding hash');
+  exactValue(run.binding_artifact, relativeBundle + '/runtime-binding.json', 'Build DNA run binding artifact');
+  exactValue(run.prospect_id, prospectId, 'Build DNA run prospect_id');
+  exactValue(run.proof_campaign_id, proofCampaignId, 'Build DNA run proof_campaign_id');
+  exactValue(run.campaign_id, campaignId, 'Build DNA run campaign_id');
+  exactValue(run.source_lane, REQUIRED_SOURCE_LANE, 'Build DNA run source_lane');
+  exactValue(run.job_id, jobId, 'Build DNA run job_id');
+  exactValue(run.callback_event_id, callbackEventId, 'Build DNA run callback_event_id');
+  exactValue(run.started_at, runStartedAt, 'Build DNA run started_at');
+  if (!isObject(run.callback)) fail('Build DNA run callback must be an object.');
+  exactValue(run.callback.event_id, callbackEventId, 'Build DNA run callback event');
+  exactValue(run.callback.job_id, jobId, 'Build DNA run callback job');
+  if (publicPreviewDeliveryId === undefined) {
+    if (run.public_preview_delivery_id !== undefined) fail('Build DNA run public_preview_delivery_id does not match runtime binding.');
+  }
+  else {
+    exactValue(run.public_preview_delivery_id, publicPreviewDeliveryId, 'Build DNA run public_preview_delivery_id');
+  }
+  const correlation = requireObject(baseDna.correlation, 'Prepared Build DNA correlation');
+  exactValue(correlation.prospect_id, prospectId, 'Build DNA correlation prospect_id');
+  exactValue(correlation.proof_campaign_id, proofCampaignId, 'Build DNA correlation proof_campaign_id');
+  exactValue(correlation.campaign_id, campaignId, 'Build DNA correlation campaign_id');
+  exactValue(correlation.source_lane, REQUIRED_SOURCE_LANE, 'Build DNA correlation source_lane');
+  exactValue(correlation.job_id, jobId, 'Build DNA correlation job_id');
+  exactValue(correlation.callback_event_id, callbackEventId, 'Build DNA correlation callback_event_id');
+  exactValue(validHash(correlation.runtime_binding_sha256, 'Build DNA correlation runtime binding sha256'), bindingHash, 'Build DNA correlation runtime binding hash');
+  const artifact = (baseDna.artifacts || []).find(function (item) { return isObject(item) && item.role === 'runtime-binding'; });
+  if (!artifact || artifact.path !== relativeBundle + '/runtime-binding.json' || validHash(artifact.sha256, 'Build DNA runtime binding artifact sha256') !== bindingHash) {
+    fail('Prepared Build DNA must contain the exact immutable runtime binding artifact hash.');
+  }
+  return {
+    path: bindingPath,
+    hash: bindingHash,
+    prospect_id: prospectId,
+    proof_campaign_id: proofCampaignId,
+    campaign_id: campaignId,
+    job_id: jobId,
+    callback_event_id: callbackEventId,
+    run_started_at: runStartedAt,
+    ...(publicPreviewDeliveryId === undefined ? {} : { public_preview_delivery_id: publicPreviewDeliveryId }),
+  };
 }
 
 function assetDescriptor(direction, webp) {
@@ -317,7 +493,12 @@ function stageForArt(root, direction, item) {
       provider: { id: receipt.provider },
       model: { id: receipt.model, status: 'provider-receipt-validated' },
       transport: receipt.api,
-      timing: { status: 'receipt-recorded', started_at: receipt.started_at, completed_at: receipt.completed_at, duration_ms: receipt.result.duration_ms },
+      timing: {
+        status: receipt.timing_status || 'receipt-recorded',
+        ...(receipt.started_at ? { started_at: receipt.started_at } : {}),
+        completed_at: receipt.completed_at,
+        duration_ms: receipt.result.duration_ms,
+      },
       cost,
       prompt: { artifact: root + '/' + direction + '/gemini-flash-lite-image-prompt.txt', sha256: receipt.result.prompt_sha256 },
       input: { externally_supplied_source_asset_sha256: receipt.result.sha256, media_type: receipt.result.mime_type, bytes: receipt.result.bytes },
@@ -376,6 +557,18 @@ function buildDna(bundle, baseDna, finalization, files, revision) {
     ...baseDna,
     classification: 'locally-finalized-with-externally-supplied-provider-receipts',
     finalized_at: finalization.finalized_at,
+    runtime_binding: {
+      ...baseDna.runtime_binding,
+      status: 'bound',
+      importable: false,
+      finalization_status: 'locally-finalized-not-imported',
+    },
+    run: {
+      ...baseDna.run,
+      status: 'locally-finalized-not-imported',
+      finalized_at: finalization.finalized_at,
+      completed_at: finalization.finalized_at,
+    },
     repository: { ...baseDna.repository, revision, worktree_state: 'local-finalizer-artifacts-not-promoted' },
     recipe: {
       ...baseDna.recipe,
@@ -388,7 +581,13 @@ function buildDna(bundle, baseDna, finalization, files, revision) {
         original_asset_route: 'Externally supplied Gemini Flash Lite output, verified against an exact prompt hash and provider receipt, then normalized locally to linked WebP assets',
       },
     },
-    correlation: { ...baseDna.correlation, source_lane: REQUIRED_SOURCE_LANE, package_profile: REQUIRED_PACKAGE_PROFILE, finalizer_input_sha256: finalization.input_sha256 },
+    correlation: {
+      ...baseDna.correlation,
+      source_lane: REQUIRED_SOURCE_LANE,
+      package_profile: REQUIRED_PACKAGE_PROFILE,
+      finalizer_input_sha256: finalization.input_sha256,
+      runtime_binding_sha256: bundle.runtimeBinding.hash,
+    },
     stages,
     artifacts: files.map(function (file) {
       return {
@@ -443,6 +642,7 @@ function plannedBundle(inputBundle, cohortBundle, cohortCampaignId, inputHash, t
   const baseDna = readJson(join(suppliedBundle, 'build-dna.json'), 'Prepared Build DNA');
   if (!baseDna.stages.some(function (stage) { return stage.stage_id === 'preview-art' && stage.result && stage.result.status === 'gated'; })) fail('Prepared Build DNA must still contain the declared preview-art gate.');
   const bundleRelative = repoRelative(suppliedBundle);
+  const runtimeBinding = runtimeBindingForBundle(suppliedBundle, manifest, baseDna, cohortCampaignId);
   const directionsPlan = REQUIRED_DIRECTIONS.map(function (direction) {
     const supplied = requireObject(directions[direction], 'bundles[].directions.' + direction);
     const image = resolve(cleanText(supplied.image, 'hero image for direction ' + direction, 4000));
@@ -493,6 +693,7 @@ function plannedBundle(inputBundle, cohortBundle, cohortCampaignId, inputHash, t
     cohortBundle,
     manifest,
     baseDna,
+    runtimeBinding,
     directions: directionsPlan,
     inputHash,
   };
@@ -508,6 +709,7 @@ function filesFor(bundle) {
     { role: 'promotion-readiness', path: join(bundle.root, 'promotion-readiness.json') },
     { role: 'owner-review-hub', path: join(bundle.root, 'index.html') },
     { role: 'run-report', path: join(bundle.root, 'run-report.md') },
+    { role: 'runtime-binding', path: join(bundle.root, 'runtime-binding.json'), rights_status: 'canonical-runtime-correlation' },
     { role: 'local-finalization-report', path: join(bundle.root, 'finalization-report.json') },
   ];
   bundle.directions.forEach(function (item) {
@@ -561,7 +763,7 @@ function applyBundle(bundle, finalization, revision) {
   readiness.required_before_customer_delivery = [
     'Playwright desktop and 390px browser QA with screenshots for the receipt-backed hero assets',
     'Independent visual and rights review plus any required repair',
-    'Canonical Drupal campaign/prospect/job mapping, signed-asset import, Build DNA registration, owner approval, and transactional outbox record',
+    'Canonical signed-asset import, immutable Build DNA registration, owner approval, and transactional outbox record',
   ];
   readiness.forbidden_actions_performed = [];
   const pages = {};
@@ -621,6 +823,16 @@ function applyBundle(bundle, finalization, revision) {
     source_lane: REQUIRED_SOURCE_LANE,
     package_profile: REQUIRED_PACKAGE_PROFILE,
     asset_contract: ASSET_SCHEMA,
+    runtime_binding: {
+      schema: RUNTIME_BINDING_SCHEMA,
+      sha256: bundle.runtimeBinding.hash,
+      prospect_id: bundle.runtimeBinding.prospect_id,
+      proof_campaign_id: bundle.runtimeBinding.proof_campaign_id,
+      campaign_id: bundle.runtimeBinding.campaign_id,
+      job_id: bundle.runtimeBinding.job_id,
+      callback_event_id: bundle.runtimeBinding.callback_event_id,
+      ...(bundle.runtimeBinding.public_preview_delivery_id === undefined ? {} : { public_preview_delivery_id: bundle.runtimeBinding.public_preview_delivery_id }),
+    },
     no_external_actions: ['no Gemini API call', 'no Drupal write', 'no proof promotion', 'no publication', 'no email send'],
     bundle: bundle.bundleRelative,
     directions: bundle.directions.map(function (item) {
@@ -637,7 +849,7 @@ function applyBundle(bundle, finalization, revision) {
       };
     }),
   };
-  const runReport = '# Receipt-backed local beauty proof finalization\n\n- Package: ' + REQUIRED_PACKAGE_PROFILE + '\n- Source lane: ' + REQUIRED_SOURCE_LANE + '\n- Directions: Safe (a), Medium FAMtastic (b), Ultra FAMtastic (c)\n- Hero route: externally supplied Gemini Flash Lite outputs validated against exact prompt hashes and local normalized `assets/hero.webp` files\n- Status: local only; no Gemini call, Drupal write, promotion, publication, or email.\n- Open gates: browser QA, independent visual/rights review, canonical signed-asset import, owner approval, and transactional outbox.\n';
+  const runReport = '# Receipt-backed local beauty proof finalization\n\n- Package: ' + REQUIRED_PACKAGE_PROFILE + '\n- Source lane: ' + REQUIRED_SOURCE_LANE + '\n- Directions: Safe (a), Medium FAMtastic (b), Ultra FAMtastic (c)\n- Canonical runtime binding: prospect ' + bundle.runtimeBinding.prospect_id + ', proof campaign ' + bundle.runtimeBinding.proof_campaign_id + ', public campaign ' + bundle.runtimeBinding.campaign_id + ', job ' + bundle.runtimeBinding.job_id + ', callback ' + bundle.runtimeBinding.callback_event_id + '\n- Hero route: externally supplied Gemini Flash Lite outputs validated against exact prompt hashes and local normalized `assets/hero.webp` files\n- Status: local only; no Gemini call, Drupal write, promotion, publication, or email.\n- Open gates: browser QA, independent visual/rights review, canonical signed-asset import, owner approval, and transactional outbox.\n';
   writeJson(join(bundle.root, 'manifest.json'), manifest);
   writeJson(join(bundle.root, 'image-prompts.json'), prompts);
   writeJson(join(bundle.root, 'promotion-readiness.json'), readiness);

@@ -18,6 +18,12 @@
   local SQLite Drupal install and memory-only transactional mail, proving both
   lanes. No deployment, import, provider call, proof generation, outbox
   dispatch, or customer email occurred.
+## 2026-08-27 — Canonical cold-proof Build DNA binding (local acceptance only; not deployed)
+
+- Added a local-only, immutable per-lead runtime-binding contract for the Beauty / Hair / Braiding proof cohort. A prepared bundle is now explicitly non-importable until canonical ingress supplies the exact Drupal Prospect ID, Proof Campaign ID, public campaign ID, job ID, callback event ID, and recorded start time; the binder never creates or guesses those values.
+- Binding writes a checksummed `runtime-binding.json`, replaces local placeholder manifest IDs, injects the complete `build-dna.run` projection expected by Drupal telemetry/public-preview staging, and rehashes the Build DNA artifact ledger. The finalizer and signed-asset callback serializer both reject absent, replayed, mismatched, or local-placeholder bindings.
+- The local finalizer now accepts the receipt shape emitted by the existing authenticated Gemini Flash Lite worker (`famtastic.gemini-flash-lite-image-receipt.v1`) without a second image route or provider call. Its missing per-image start timestamp remains an honest partial timing record rather than a fabricated value.
+- Added executable builder, runtime-binding, and finalizer tests for non-importable fixtures, no-mutation dry runs, exact ID/callback retention, receipt compatibility, Build DNA hash validation, and immutable replay rejection. No provider, Drupal, import, production, customer, or mail action occurred.
 
 ## 2026-08-27 — Public-preview migration 8041 rehearsal hardening (not deployed)
 

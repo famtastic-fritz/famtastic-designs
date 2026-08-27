@@ -55,6 +55,57 @@ Each lead bundle contains:
 The CSS/SVG artwork and generated PNG thumbnails are local fallbacks only. They
 are deliberately not described as receipt-backed image generation.
 
+## Canonical runtime binding (required before art finalization)
+
+The builder deliberately creates an **unbound, non-importable** local
+preparation package. Its `local-*` job ID and `beauty-proof:*` event ID are
+placeholders for static-contract checks only; they are never eligible for a
+Drupal Build DNA registration, signed-asset import, public room, or callback.
+
+After the canonical FAMtastic ingress has created the real Prospect, Proof
+Campaign, public campaign ID, and exact job/callback correlation, give this
+local-only binder a separate operator-only JSON input (see
+`runtime-binding-input.example.json`). It does not create or guess any ID. It
+requires one exact binding per selected bundle:
+
+```json
+{
+  "schema": "famtastic.beauty-proof-runtime-binding-input.v1",
+  "source_lane": "verified_cold",
+  "package_profile": "anonymous_safe_medium_ultra_v1",
+  "cohort_manifest": "artifacts/beauty-proof-cohort/pc-example/cohort-manifest.json",
+  "bindings": [{
+    "bundle": "artifacts/beauty-proof-cohort/pc-example/example-business-1234abcd",
+    "prospect_id": 101,
+    "proof_campaign_id": 202,
+    "public_preview_delivery_id": 303,
+    "campaign_id": "pc-example",
+    "job_id": "public-preview:proof.generate:delivery:303",
+    "callback_event_id": "cold-proof:callback:pc-example:1",
+    "run_started_at": "2026-08-27T00:00:00.000Z"
+  }]
+}
+```
+
+First validate the entire cohort without changing it:
+
+    node website-delivery-swarm/cohorts/beauty-hair-braiding/bind-beauty-proof-runtime.mjs \
+      --input /secure/operator/pc-example.runtime-binding.json \
+      --dry-run
+
+Then run the same command without `--dry-run`. It writes one immutable
+`runtime-binding.json` per bundle, injects the complete Build DNA `run`
+(`prospect_id`, `proof_campaign_id`, public `campaign_id`, `source_lane`, job,
+callback event, and recorded run start), replaces the local manifest IDs, and
+rehashes the Build DNA artifact ledger. It also marks the cohort manifest
+`bound-canonical-runtime` only after every selected bundle has passed its
+binding preflight. A second binding attempt, an absent binding, a mismatched
+campaign, or any local placeholder ID fails closed.
+
+The binder remains local-only. It does not call Gemini, Drupal, Site Studio,
+the importer, production, or mail. The finalizer and callback-asset serializer
+both reject an unbound or internally mismatched bundle.
+
 ## Receipt-backed local finalization
 
 Once a separate approved worker has generated one original PNG or JPEG hero per
@@ -82,6 +133,14 @@ a credential dump. Its required fields are:
 - optional actual or expected USD cost. The finalizer records only what the
   receipt supplies; it never invents a billed cost.
 
+The finalizer also accepts the existing authenticated worker's
+`famtastic.gemini-flash-lite-image-receipt.v1` output directly. For that
+receipt shape, set `receipt_result_id` to the worker artifact's exact
+`direction_id` (`a`, `b`, or `c`). The worker reports per-image duration and
+completion time but not a fabricated per-image start time; the finalizer keeps
+that timing status as `partial-receipt-recorded` rather than inventing it. This
+is a local receipt adapter only—no second image route or provider call is made.
+
 The finalizer rejects credential-like fields in a receipt and writes a compact
 normalized receipt without inline image bytes. It uses local `cwebp -q 95 -m
 6` to create `a|b|c/assets/hero.webp`, replaces only the prepared SVG art
@@ -103,9 +162,14 @@ writing a file and never sends it anywhere:
       --output /secure/operator/pc-example.callback-assets.json
 
 The eventual promotion wrapper consumes each serialized variant as its
-`variants[].assets` array. The canonical wrapper must still build and checksum
-the complete callback, then perform its own explicit owner-authorized import;
-serializing an asset file is not promotion.
+`variants[].assets` array. The serializer also carries the frozen canonical
+`prospect_id`, `proof_campaign_id`, public `campaign_id`, job, callback event,
+and runtime-binding SHA so the wrapper cannot silently recover the old local
+placeholder identity. Before it writes anything, it also verifies that final
+Build DNA names that same binding and includes every signed asset SHA. The
+canonical wrapper must still build and checksum the complete callback, then
+perform its own explicit owner-authorized import; serializing an asset file is
+not promotion.
 
 First validate without changing the prepared bundles:
 

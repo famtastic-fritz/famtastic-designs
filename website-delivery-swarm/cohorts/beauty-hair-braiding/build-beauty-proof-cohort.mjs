@@ -18,6 +18,7 @@ const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(scriptDirectory, '../../..');
 const INPUT_SCHEMA = 'famtastic.beauty-proof-cohort-input.v1';
 const OUTPUT_SCHEMA = 'famtastic.beauty-proof-cohort-output.v1';
+const RUNTIME_BINDING_SCHEMA = 'famtastic.beauty-proof-runtime-binding.v1';
 const DIRECTIONS = [
   {
     id: 'a',
@@ -614,6 +615,13 @@ function dna(lead, bundle, revision, createdAt, sourceHash, paths) {
       contact_reference: lead.contact_reference,
       source_input_sha256: sourceHash,
     },
+    runtime_binding: {
+      schema: RUNTIME_BINDING_SCHEMA,
+      status: 'unbound-local-preparation',
+      importable: false,
+      required_before_finalization: true,
+      reason: 'This local builder cannot create or infer Drupal prospect, proof campaign, job, or callback identities.',
+    },
     stages: [
       {
         stage_id: 'input-normalization',
@@ -693,10 +701,11 @@ function dna(lead, bundle, revision, createdAt, sourceHash, paths) {
       database: { status: 'not_registered', required_operation: 'Run the canonical Drupal Build DNA registration only after a real canonical request exists.' },
       site_studio: { status: 'not_created', required_operation: 'Copy this immutable Build DNA into packet-files only for an eligible handoff.' },
     },
-    integrity: { artifact_hash_algorithm: 'sha256', build_dna_status: 'skeleton-with-real-local-artifact-hashes' },
+    integrity: { artifact_hash_algorithm: 'sha256', build_dna_status: 'skeleton-with-real-local-artifact-hashes-unbound-runtime' },
     completion: {
       status: 'gated',
       open_gates: [
+        'A canonical per-lead runtime binding with exact Drupal prospect, proof campaign, public campaign, job, and callback identities',
         'No paid image generation was executed',
         'No browser screenshots or independent visual approval were executed',
         'No Drupal projection, owner approval, publication, or customer email occurred',
@@ -855,6 +864,14 @@ function leadBundle(lead, output, sourceHash, revision, createdAt, packageProfil
     agent_name: 'beauty-hair-braiding-proof-builder',
     flow_key: 'website_proof.generate.v1',
     task_key: 'proof.generate',
+    source_lane: 'local-preparation-unbound',
+    runtime_binding: {
+      schema: RUNTIME_BINDING_SCHEMA,
+      status: 'unbound-local-preparation',
+      importable: false,
+      required_before_finalization: true,
+      reason: 'Local IDs are placeholders only and must be replaced by the canonical ingress binding before finalization.',
+    },
     prompt_snapshot: 'Exact unexecuted Gemini Flash Lite prompts live in image-prompts.json. This local preparation manifest is not a customer-delivery receipt.',
     input_snapshot: {
       source_lead_id: lead.lead_id,
@@ -883,7 +900,7 @@ function leadBundle(lead, output, sourceHash, revision, createdAt, packageProfil
       'Gemini Flash Lite Image preflight, execution receipt, cost status, and original art embedding',
       'Playwright desktop and 390px browser QA with screenshots',
       'Independent visual review plus any required repair',
-      'Canonical Drupal campaign/prospect/job mapping, Build DNA registration, owner approval, and transactional outbox record',
+      'Canonical Drupal prospect/proof-campaign/public-campaign/job/callback runtime binding, Build DNA registration, owner approval, and transactional outbox record',
     ],
     safe_promotion_command: './scripts/promote-local-proof-godaddy.sh ' + repoRelative(bundle) + ' --directions=a,b,c',
     forbidden_actions_performed: [],
@@ -893,7 +910,7 @@ function leadBundle(lead, output, sourceHash, revision, createdAt, packageProfil
   writeFileSync(hubPath, hub(lead, directionSummary));
   paths.push({ role: 'owner-review-hub', path: hubPath });
   const runReportPath = join(bundle, 'run-report.md');
-  writeFileSync(runReportPath, '# Local Beauty / Hair / Braiding proof preparation\n\n- Business: ' + lead.business_name + '\n- Lead reference: ' + lead.lead_id + '\n- Contact reference: ' + lead.contact_reference + '\n- Campaign: ' + lead.campaign_id + '\n- Proof mix: Safe (a), Medium FAMtastic (b), Ultra FAMtastic (c)\n- Status: local preparation only; no provider call, Drupal write, publication, or email.\n- Review hub: index.html\n');
+  writeFileSync(runReportPath, '# Local Beauty / Hair / Braiding proof preparation\n\n- Business: ' + lead.business_name + '\n- Lead reference: ' + lead.lead_id + '\n- Contact reference: ' + lead.contact_reference + '\n- Campaign: ' + lead.campaign_id + '\n- Proof mix: Safe (a), Medium FAMtastic (b), Ultra FAMtastic (c)\n- Runtime binding: unbound local preparation. The local job/event IDs in this bundle are non-importable placeholders and cannot be finalized or registered until the canonical ingress supplies exact Drupal and callback identities.\n- Status: local preparation only; no provider call, Drupal write, publication, or email.\n- Review hub: index.html\n');
   paths.push({ role: 'run-report', path: runReportPath, retention: 'restricted-local' });
   const dnaPath = join(bundle, 'build-dna.json');
   writeJson(dnaPath, dna(lead, bundle, revision, createdAt, sourceHash, paths));
@@ -939,6 +956,7 @@ function main() {
     cohort_label: input.cohort_label,
     source: input.source,
     package_profile: input.package_profile,
+    runtime_binding_status: 'unbound-local-preparation',
     selected_count: bundles.length,
     source_input_sha256: sourceHash,
     contact_data_policy: 'Raw contact email is accepted only to compute a one-way contact_reference. It is not written to proof pages, manifests, Build DNA, or reports.',

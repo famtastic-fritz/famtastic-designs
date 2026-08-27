@@ -15,6 +15,26 @@
   token; any owner registration alert belongs after verification and must say
   that verification completed. Do not
   suppress normal registrations with no valid continuation.
+## 2026-08-27 — A local proof bundle cannot stand in for a canonical build run
+
+- Observation: the first-ten cohort builder could produce structurally valid
+  pages, prompts, and a Build DNA skeleton before Drupal had created the real
+  Prospect, Proof Campaign, public campaign, job, or callback event. Reusing
+  those local IDs at promotion time would let an otherwise valid asset package
+  be projected against the wrong campaign—or an invented placeholder.
+- Guidance: keep preparation visibly non-importable. Before receipt-backed
+  finalization, bind every selected lead through one immutable, checksummed
+  sidecar that carries exact canonical IDs and a recorded job start time;
+  mirror the same values into the manifest, `build_dna.run`, correlation, and
+  Build DNA artifact ledger. Finalization and callback serialization must
+  reject a missing, mismatched, replayed, or `local-*`/`beauty-proof:*`
+  placeholder binding. The binder is evidence preparation only, never a
+  Drupal, provider, publish, or email authority.
+- Guidance: use the existing Gemini Flash Lite worker receipt rather than
+  creating a parallel image route. When its receipt lacks a per-image start
+  timestamp, retain `partial-receipt-recorded` timing rather than guessing a
+  value; exact hashes, prompt hashes, byte counts, and provider evidence still
+  remain mandatory.
 
 ## 2026-08-27 — A Drupal schema upgrade must preflight nonempty partial tables
 

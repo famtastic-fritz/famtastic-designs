@@ -24,11 +24,13 @@ function assert(value, message) {
 function inspect(output, expected) {
   const manifest = JSON.parse(readFileSync(join(output, 'cohort-manifest.json'), 'utf8'));
   assert(manifest.selected_count === expected, 'wrong selected_count');
+  assert(manifest.runtime_binding_status === 'unbound-local-preparation', 'cohort must remain explicitly unbound and non-importable');
   assert(manifest.no_external_actions.length === 5, 'external action record incomplete');
   for (const bundle of manifest.bundles) {
     const root = join(repositoryRoot, bundle.bundle);
     const dna = JSON.parse(readFileSync(join(root, 'build-dna.json'), 'utf8'));
     assert(dna.classification === 'local-preparation-only', 'wrong DNA classification');
+    assert(dna.runtime_binding && dna.runtime_binding.status === 'unbound-local-preparation' && dna.runtime_binding.importable === false && dna.run === undefined, 'prepared Build DNA must remain explicitly non-importable before canonical binding');
     assert(dna.stages.some(function (stage) { return stage.stage_id === 'preview-art' && stage.result.status === 'gated'; }), 'art gate missing');
     for (const direction of ['a', 'b', 'c']) {
       const htmlPath = join(root, direction, 'index.html');

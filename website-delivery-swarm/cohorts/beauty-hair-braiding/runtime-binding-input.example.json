@@ -1,0 +1,18 @@
+{
+  "schema": "famtastic.beauty-proof-runtime-binding-input.v1",
+  "source_lane": "verified_cold",
+  "package_profile": "anonymous_safe_medium_ultra_v1",
+  "cohort_manifest": "artifacts/beauty-proof-cohort/pc-example/cohort-manifest.json",
+  "bindings": [
+    {
+      "bundle": "artifacts/beauty-proof-cohort/pc-example/example-business-1234abcd",
+      "prospect_id": 101,
+      "proof_campaign_id": 202,
+      "public_preview_delivery_id": 303,
+      "campaign_id": "pc-example",
+      "job_id": "public-preview:proof.generate:delivery:303",
+      "callback_event_id": "cold-proof:callback:pc-example:1",
+      "run_started_at": "2026-08-27T00:00:00.000Z"
+    }
+  ]
+}

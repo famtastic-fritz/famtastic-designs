@@ -10,6 +10,7 @@ import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 
 const ASSET_SCHEMA = 'famtastic.signed-proof-assets.v1';
+const RUNTIME_BINDING_SCHEMA = 'famtastic.beauty-proof-runtime-binding.v1';
 const DIRECTIONS = ['a', 'b', 'c'];
 const MAX_ASSET_BYTES = 1500000;
 
@@ -43,6 +44,83 @@ function imageMime(bytes) {
 function safePath(value) {
   if (typeof value !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,95}(\/[A-Za-z0-9][A-Za-z0-9._-]{0,95}){0,5}$/.test(value) || value.startsWith('.')) fail('Asset relative_path is unsafe.');
   return value;
+}
+
+function positiveId(value, label) {
+  if (!Number.isSafeInteger(value) || value < 1) fail(label + ' must be a positive integer.');
+  return value;
+}
+
+function safeReference(value, label, maximum = 255) {
+  const text = String(value || '').trim();
+  if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{1,254}$/.test(text) || text.length > maximum) fail(label + ' is unsafe.');
+  return text;
+}
+
+function validHash(value, label) {
+  const text = String(value || '').trim().toLowerCase();
+  if (!/^[a-f0-9]{64}$/.test(text)) fail(label + ' must be a SHA-256 hex digest.');
+  return text;
+}
+
+function runtimeBinding(bundle, manifest) {
+  const path = join(bundle, 'runtime-binding.json');
+  requireFile(path, 'Immutable runtime binding');
+  const binding = readJson(path, 'Immutable runtime binding');
+  if (!binding || typeof binding !== 'object' || Array.isArray(binding) || binding.schema !== RUNTIME_BINDING_SCHEMA || binding.status !== 'bound') {
+    fail('Bundle is missing a bound immutable runtime binding.');
+  }
+  if (!manifest.runtime_binding || manifest.runtime_binding.schema !== RUNTIME_BINDING_SCHEMA || manifest.runtime_binding.status !== 'bound') {
+    fail('Bundle manifest is missing its bound runtime binding summary.');
+  }
+  const hash = sha256(readFileSync(path));
+  if (validHash(manifest.runtime_binding.sha256, 'manifest runtime binding sha256') !== hash) fail('Bundle manifest runtime binding hash does not match the sidecar.');
+  const prospectId = positiveId(binding.prospect_id, 'runtime binding prospect_id');
+  const proofCampaignId = positiveId(binding.proof_campaign_id, 'runtime binding proof_campaign_id');
+  const campaignId = safeReference(binding.campaign_id, 'runtime binding campaign_id', 128);
+  const jobId = safeReference(binding.job_id, 'runtime binding job_id');
+  const eventId = safeReference(binding.callback_event_id, 'runtime binding callback_event_id');
+  if (binding.source_lane !== 'verified_cold' || manifest.source_lane !== 'verified_cold' || manifest.campaign_id !== campaignId || manifest.job_id !== jobId || manifest.event_id !== eventId) {
+    fail('Bundle manifest does not match its exact verified_cold runtime binding.');
+  }
+  if (/^(?:local-|beauty-proof:)/i.test(jobId) || /^(?:local-|beauty-proof:)/i.test(eventId)) fail('Runtime binding contains a local callback placeholder.');
+  const output = {
+    prospect_id: prospectId,
+    proof_campaign_id: proofCampaignId,
+    campaign_id: campaignId,
+    job_id: jobId,
+    event_id: eventId,
+    source_lane: 'verified_cold',
+    runtime_binding_sha256: hash,
+  };
+  if (binding.public_preview_delivery_id !== undefined) output.public_preview_delivery_id = positiveId(binding.public_preview_delivery_id, 'runtime binding public_preview_delivery_id');
+  return output;
+}
+
+function finalBuildDna(bundle, binding) {
+  const path = join(bundle, 'build-dna.json');
+  requireFile(path, 'Final Build DNA');
+  const dna = readJson(path, 'Final Build DNA');
+  if (!dna || typeof dna !== 'object' || Array.isArray(dna) || dna.schema !== 'famtastic.build-dna.v1' || !dna.run || typeof dna.run !== 'object' || Array.isArray(dna.run)) {
+    fail('Finalized bundle is missing a Build DNA run.');
+  }
+  const run = dna.run;
+  if (run.status !== 'locally-finalized-not-imported' || run.prospect_id !== binding.prospect_id || run.proof_campaign_id !== binding.proof_campaign_id || run.campaign_id !== binding.campaign_id || run.source_lane !== binding.source_lane || run.job_id !== binding.job_id || run.callback_event_id !== binding.event_id || validHash(run.binding_sha256, 'Build DNA run binding sha256') !== binding.runtime_binding_sha256) {
+    fail('Final Build DNA does not match the immutable runtime binding.');
+  }
+  return dna;
+}
+
+function assertDnaAssetHashes(dna, variants) {
+  const artifacts = Array.isArray(dna.artifacts) ? dna.artifacts : [];
+  variants.forEach(function (variant) {
+    variant.assets.forEach(function (asset) {
+      const found = artifacts.some(function (artifact) {
+        return artifact && artifact.role === 'proof-asset-' + variant.direction_id && artifact.sha256 === asset.sha256;
+      });
+      if (!found) fail('Final Build DNA is missing the exact signed asset hash for direction ' + variant.direction_id + '.');
+    });
+  });
 }
 
 function options(argv) {
@@ -106,13 +184,15 @@ function main() {
   requireFile(manifestPath, 'Bundle manifest');
   const manifest = readJson(manifestPath, 'Bundle manifest');
   if (manifest.proof_asset_contract !== ASSET_SCHEMA || !manifest.proof_assets || manifest.proof_assets.schema !== ASSET_SCHEMA) fail('Bundle is not a finalized signed-proof-asset bundle.');
+  const binding = runtimeBinding(bundle, manifest);
+  const dna = finalBuildDna(bundle, binding);
+  const variants = DIRECTIONS.map(function (direction) { return serializeDirection(bundle, manifest, direction); });
+  assertDnaAssetHashes(dna, variants);
   const payload = {
     schema: 'famtastic.signed-proof-assets.callback.v1',
     source_manifest_sha256: sha256(readFileSync(manifestPath)),
-    campaign_id: manifest.campaign_id,
-    job_id: manifest.job_id,
-    event_id: manifest.event_id,
-    variants: DIRECTIONS.map(function (direction) { return serializeDirection(bundle, manifest, direction); }),
+    ...binding,
+    variants,
     local_only: true,
     no_external_actions: ['no upload', 'no Drupal import', 'no publication', 'no email send'],
   };
