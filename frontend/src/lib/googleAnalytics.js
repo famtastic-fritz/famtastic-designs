@@ -1,18 +1,80 @@
-const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim();
+const measurementId = import.meta.env?.VITE_GA_MEASUREMENT_ID?.trim();
 
 let initialized = false;
 
-function safeLocation(path) {
-  const url = new URL(window.location.href);
-  const cleanPath = String(path || url.pathname)
+const sensitiveQueryKeys = new Set(['token', 'key', 'code', 'session', 'secret', 'continuation']);
+const locationEventKeys = new Set(['page_location', 'page_path', 'page_referrer', 'link_url', 'url', 'href', 'destination_url', 'redirect_url']);
+const continuationValue = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.[0-9a-f]{64}/i;
+
+function redactSearch(url) {
+  [...url.searchParams.keys()].forEach((key) => {
+    if (sensitiveQueryKeys.has(key.toLowerCase())) url.searchParams.delete(key);
+  });
+  url.hash = '';
+  return url;
+}
+
+function isContinuationValue(value) {
+  if (typeof value !== 'string') return false;
+  try {
+    return continuationValue.test(decodeURIComponent(value));
+  } catch {
+    return continuationValue.test(value);
+  }
+}
+
+function hasSensitiveQuery(value) {
+  if (typeof value !== 'string') return false;
+  try {
+    return /(?:^|[?&])(token|key|code|session|secret|continuation)=/i.test(decodeURIComponent(value));
+  } catch {
+    return /(?:^|[?&])(token|key|code|session|secret|continuation)=/i.test(value);
+  }
+}
+
+function cleanPathname(pathname) {
+  return pathname
     .replace(/^\/proofs\/share\/[^/]+\/[^/]+/, '/proofs/share/unlisted')
     .replace(/^\/proofs\/preview\/[^/]+\/[^/]+/, '/proofs/preview/unlisted')
     .replace(/^\/portal\/[^/]+/, '/portal/personalized')
     .replace(/^\/p\/[^/]+/, '/p/personalized');
-  url.pathname = cleanPath;
-  ['token', 'key', 'code', 'session', 'secret'].forEach((key) => url.searchParams.delete(key));
-  url.hash = '';
-  return { path: `${cleanPath}${url.search}`, location: url.toString() };
+}
+
+export function safeLocation(path) {
+  const current = new URL(window.location.href);
+  // React Router supplies `pathname + search`, so parse it as a URL before
+  // assigning a pathname. Otherwise `?continuation=...` is encoded into the
+  // pathname and survives query redaction.
+  const requested = path ? new URL(String(path), current.origin) : current;
+  const url = new URL(current.origin);
+  url.pathname = cleanPathname(requested.pathname);
+  url.search = requested.search;
+  redactSearch(url);
+  return { path: `${url.pathname}${url.search}`, location: url.toString() };
+}
+
+function safeEventUrl(value) {
+  if (typeof value !== 'string') return value;
+  const current = new URL(window.location.href);
+  const url = redactSearch(new URL(value, current.origin));
+  return url.toString();
+}
+
+export function safeEventParams(params = {}) {
+  if (!params || typeof params !== 'object' || Array.isArray(params)) return {};
+
+  return Object.fromEntries(Object.entries(params).flatMap(([key, value]) => {
+    const normalizedKey = key.toLowerCase();
+    // A continuation is a bearer credential. Reject direct values, aliases
+    // such as `preview_continuation`, and any arbitrary field that embeds one.
+    if (normalizedKey === 'continuation' || normalizedKey.endsWith('_continuation')) return [];
+
+    if (normalizedKey === 'page_location') return [[key, safeLocation(value).location]];
+    if (normalizedKey === 'page_path') return [[key, safeLocation(value).path]];
+    if (locationEventKeys.has(normalizedKey)) return [[key, safeEventUrl(value)]];
+    if (isContinuationValue(value) || hasSensitiveQuery(value)) return [];
+    return [[key, value]];
+  }));
 }
 
 export function initializeGoogleAnalytics() {
@@ -53,7 +115,7 @@ export function trackPageView(path) {
 export function trackEvent(name, params = {}) {
   try {
     if (!initializeGoogleAnalytics() && !initialized) return;
-    window.gtag('event', name, params);
+    window.gtag('event', name, safeEventParams(params));
   } catch {
     /* analytics must never break the page */
   }
