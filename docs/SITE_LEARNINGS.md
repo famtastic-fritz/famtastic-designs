@@ -18,6 +18,21 @@
   research through the shared public-content guard so email, phone, and
   credential-shaped text are redacted before a room, builder packet, or email.
 
+## 2026-08-27 — Exact-ID pilots need a durable cron lock and a clean legacy queue
+
+- Observation: a deployment-shell environment flag cannot control the next
+  cPanel `drush cron` process, and a newly added lock does not erase an old
+  generic proof queue. Leaving either gap open makes an owner-gated pilot
+  vulnerable to unrelated automation or the historical cold-260 work.
+- Guidance: persist the lock in Drupal config, enforce it at the start of both
+  broad runtime routes, and treat environment `1` only as an additive emergency
+  stop. A governed pilot release must inspect the lifecycle and Drupal cron
+  forms, only suspend an exact marker-owned lifecycle command, and record the
+  durable lock state. Require the historical exact queue to be zero; any
+  quarantine is a separately confirmed exact campaign action after the new
+  runtime is active, with a receipt and zero-count recheck. Never use generic
+  callbacks or dynamic due-date selection as alternate import/send paths.
+
 ## 2026-08-27 — A public-preview signup is an account claim, not a request submission
 
 - Observation: Drupal's user-insert hook sees the same-email Prospect during

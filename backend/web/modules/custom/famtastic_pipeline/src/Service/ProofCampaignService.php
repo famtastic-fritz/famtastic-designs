@@ -554,6 +554,28 @@ class ProofCampaignService {
     return ['newly_processed' => TRUE, 'campaign' => $campaign, 'variants' => $completeVariants];
   }
 
+  /**
+   * Returns TRUE only for a callback campaign bound to the verified-cold lane.
+   *
+   * The generic HTTP callback must not accept this lane, even with a valid
+   * HMAC: verified-cold needs the private importer to atomically register the
+   * matching Build DNA record and its immutable callback binding first.
+   */
+  public function isVerifiedColdCampaignId(string $campaignId): bool {
+    $campaignId = trim($campaignId);
+    if ($campaignId === '' || strlen($campaignId) > 255) {
+      return FALSE;
+    }
+    $campaign = $this->loadByCampaignId($campaignId);
+    if (!$campaign) {
+      return FALSE;
+    }
+    return $this->previews->sourceLaneForCampaign(
+      (int) $campaign->get('prospect_id')->target_id,
+      (int) $campaign->id(),
+    ) === 'verified_cold';
+  }
+
   /** Rebuilds the callback telemetry projection idempotently on a retry. */
   private function recordCallbackTelemetry(ProofCampaign $campaign, array $variants, bool $isShowcase): void {
     $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load((int) $campaign->get('prospect_id')->target_id);

@@ -23,6 +23,9 @@ famtastic_pipeline.settings:
     sla_alerts_enabled:
       type: boolean
       label: 'Send overdue lead alerts'
+    pilot_exact_dispatch_only:
+      type: boolean
+      label: 'Disable general automation and outbox dispatch for an exact-ID pilot'
     legacy_checkout_enabled:
       type: boolean
       label: 'Allow the legacy prospect-token checkout'

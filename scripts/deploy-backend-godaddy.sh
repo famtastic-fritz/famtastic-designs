@@ -16,6 +16,12 @@ PILOT_EXACT_DISPATCH_ONLY="${FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY:-0}"
 # explicit, reversible operations action for the one checked-in cron entry; it
 # must never become a broad crontab editor.
 PILOT_SUSPEND_MARKED_LIFECYCLE_CRON="${FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON:-0}"
+# The stale bypass queue is never changed implicitly. A pilot apply may use
+# these two repeated exact values to call the existing narrow quarantine
+# command; otherwise a non-zero stale queue is a release blocker.
+PILOT_LEGACY_QUARANTINE_CAMPAIGN="${FAMTASTIC_PILOT_LEGACY_QUARANTINE_CAMPAIGN:-}"
+PILOT_LEGACY_QUARANTINE_CONFIRM="${FAMTASTIC_PILOT_LEGACY_QUARANTINE_CONFIRM:-}"
+PILOT_LEGACY_CAMPAIGN_KEY='cold-260-aug-2026'
 APPLY=false
 
 usage() {
@@ -30,15 +36,27 @@ draft library, runs Drupal database updates and cache rebuild, and records the
 release.
 
 Set FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 only for an owner-gated public-preview
-pilot. In that mode the deployment refuses to proceed while an active broad
-famtastic:lifecycle-run cron entry exists, and it never installs one. Exact
+pilot. In that mode the deployment writes and verifies the durable Drupal
+pilot lock before promotion. Fresh cPanel `drush cron` processes therefore
+skip this module's general automation, outbox, SLA, and lifecycle behavior
+even though they do not inherit this deployment shell's environment. Exact
 owner-approved preview delivery must use famtastic:preview-delivery-dispatch.
 
 If that known scheduler is active, an authorized apply may suspend only the
 marked checked-in entry by also setting
 FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON=1. Preflight validates the exact
 marker/next-line pair first; apply backs up the crontab under the private deploy
-directory and refuses any other active lifecycle-run line.
+directory and refuses any other active lifecycle-run line. The deployer also
+reports active broad `drush cron` entries. It will not alter an unmarked Drupal
+cron line; the durable runtime lock is authoritative for that independent
+scheduler.
+
+Before a pilot can apply, the deployer verifies that the historical
+`cold-260-aug-2026` generic proof queue is empty. It never quarantines it by
+default. To authorize only that exact pre-pilot quarantine, repeat both values:
+  FAMTASTIC_PILOT_LEGACY_QUARANTINE_CAMPAIGN=cold-260-aug-2026
+  FAMTASTIC_PILOT_LEGACY_QUARANTINE_CONFIRM=cold-260-aug-2026
+The apply records a private receipt and still verifies the queued count is zero.
 USAGE
 }
 
@@ -68,6 +86,17 @@ esac
 if [[ "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON" == "1" && "$PILOT_EXACT_DISPATCH_ONLY" != "1" ]]; then
   echo "FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON=1 requires FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1." >&2
   exit 2
+fi
+
+if [[ -n "$PILOT_LEGACY_QUARANTINE_CAMPAIGN$PILOT_LEGACY_QUARANTINE_CONFIRM" ]]; then
+  if [[ "$PILOT_EXACT_DISPATCH_ONLY" != "1" ]]; then
+    echo "Legacy cold-proof quarantine variables require FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1." >&2
+    exit 2
+  fi
+  if [[ "$PILOT_LEGACY_QUARANTINE_CAMPAIGN" != "$PILOT_LEGACY_CAMPAIGN_KEY" || "$PILOT_LEGACY_QUARANTINE_CONFIRM" != "$PILOT_LEGACY_CAMPAIGN_KEY" ]]; then
+    echo "Legacy cold-proof quarantine requires both variables to exactly equal $PILOT_LEGACY_CAMPAIGN_KEY." >&2
+    exit 2
+  fi
 fi
 
 for required_command in git ssh; do
@@ -107,7 +136,7 @@ remote_mode="preflight"
 [[ "$APPLY" == true ]] && remote_mode="apply"
 
 ssh -T "$SSH_TARGET" bash -s -- \
-  "$remote_mode" "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" "$PILOT_EXACT_DISPATCH_ONLY" "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON" <<'REMOTE'
+  "$remote_mode" "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" "$PILOT_EXACT_DISPATCH_ONLY" "$PILOT_SUSPEND_MARKED_LIFECYCLE_CRON" "$PILOT_LEGACY_QUARANTINE_CAMPAIGN" "$PILOT_LEGACY_QUARANTINE_CONFIRM" <<'REMOTE'
 set -euo pipefail
 
 mode="$1"
@@ -117,6 +146,8 @@ repository_url="$4"
 commit_sha="$5"
 pilot_exact_dispatch_only="$6"
 pilot_suspend_marked_lifecycle_cron="$7"
+pilot_legacy_quarantine_campaign="$8"
+pilot_legacy_quarantine_confirm="$9"
 production_dir="$HOME/$remote_root"
 deploy_dir="$HOME/$deploy_base"
 mirror_dir="$deploy_dir/repository.git"
@@ -139,6 +170,7 @@ source_demand_seed="$backend_dir/scripts/seed-demand-content.php"
 source_package_normalizer="$backend_dir/scripts/normalize-package-ladder.php"
 production_config_dir="$production_dir/config"
 drush="$production_dir/vendor/bin/drush"
+legacy_cold_campaign_key='cold-260-aug-2026'
 
 case "$pilot_exact_dispatch_only" in
   0|1) ;;
@@ -158,6 +190,12 @@ if [[ "$pilot_suspend_marked_lifecycle_cron" == "1" && "$pilot_exact_dispatch_on
   echo "Remote marked scheduler suspension requires exact-dispatch-only mode." >&2
   exit 2
 fi
+if [[ -n "$pilot_legacy_quarantine_campaign$pilot_legacy_quarantine_confirm" ]]; then
+  if [[ "$pilot_exact_dispatch_only" != "1" || "$pilot_legacy_quarantine_campaign" != "$legacy_cold_campaign_key" || "$pilot_legacy_quarantine_confirm" != "$legacy_cold_campaign_key" ]]; then
+    echo "Remote legacy cold-proof quarantine authorization is invalid." >&2
+    exit 2
+  fi
+fi
 
 # The general lifecycle runner claims all eligible jobs and notifications. It
 # is intentionally prohibited for a controlled exact-ID preview pilot, where
@@ -168,6 +206,12 @@ current_crontab=''
 lifecycle_cron_backup=''
 lifecycle_cron_record=''
 scheduler_timestamp=''
+pilot_dispatch_lock_before=''
+pilot_dispatch_lock_record=''
+active_drupal_cron_count='not_inspected'
+legacy_cold_queue_before='not_checked'
+legacy_cold_queue_after='not_checked'
+legacy_cold_quarantine_receipt='none'
 
 load_current_crontab() {
   if ! current_crontab="$(crontab -l 2>&1)"; then
@@ -177,6 +221,155 @@ load_current_crontab() {
     fi
     current_crontab=''
   fi
+}
+
+# Drupal's hook_cron path is a second, independent broad worker. It is not
+# owned by this deployer today, so a non-destructive count is safer than
+# filtering/reinstalling an operator-managed line. The code-level durable
+# pilot lock makes this path a no-op after promotion.
+active_global_drupal_cron_count() {
+  printf '%s\n' "$current_crontab" | awk '
+    /^[[:space:]]*#/ { next }
+    /(^|[[:space:]])[^[:space:]]*drush[[:space:]]+cron([[:space:]]|$)/ { count++ }
+    END { print count + 0 }
+  '
+}
+
+report_active_global_drupal_cron() {
+  load_current_crontab
+  active_drupal_cron_count="$(active_global_drupal_cron_count)"
+  if [[ "$active_drupal_cron_count" == "0" ]]; then
+    echo "Pilot exact-dispatch-only: no active broad Drupal cron entry found."
+    return 0
+  fi
+  echo "Pilot exact-dispatch-only: detected $active_drupal_cron_count active broad drush cron entr$( [[ "$active_drupal_cron_count" == "1" ]] && printf 'y' || printf 'ies' )."
+  echo "It remains untouched because it is not a marker-owned deployer entry; the durable Drupal pilot lock must make famtastic_pipeline_cron a no-op after promotion."
+}
+
+# Read/write an intentional, auditable Drupal configuration value. This is
+# deliberately not based on getenv(): cPanel starts a new process for every
+# scheduled Drush command and does not inherit the deploy shell.
+read_pilot_dispatch_lock() {
+  local value
+  value="$("$drush" config:get famtastic_pipeline.settings pilot_exact_dispatch_only --format=string 2>/dev/null || true)"
+  case "$(printf '%s' "$value" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')" in
+    1|true|yes|on) printf '1\n' ;;
+    ''|0|false|no|off|null) printf '0\n' ;;
+    *)
+      echo "Pilot exact-dispatch lock has an invalid Drupal config value: $value" >&2
+      return 1
+      ;;
+  esac
+}
+
+assert_pilot_dispatch_lock() {
+  local expected="$1" actual
+  actual="$(read_pilot_dispatch_lock)"
+  if [[ "$actual" != "$expected" ]]; then
+    echo "Pilot exact-dispatch lock verification failed (expected $expected, got $actual)." >&2
+    return 1
+  fi
+}
+
+set_pilot_dispatch_lock() {
+  local desired="$1"
+  case "$desired" in
+    0|1) ;;
+    *) echo "Invalid desired pilot exact-dispatch lock value." >&2; return 1 ;;
+  esac
+  "$drush" config:set famtastic_pipeline.settings pilot_exact_dispatch_only "$desired" -y >/dev/null
+  "$drush" cr >/dev/null
+  assert_pilot_dispatch_lock "$desired"
+  pilot_dispatch_lock_record="durable-config:$desired"
+  echo "Pilot exact-dispatch durable Drupal lock verified: $desired."
+}
+
+# The historical campaign is counted through Drupal's database API rather than
+# a host-specific SQL syntax. Keep the exact job-key family used by the narrow
+# quarantine command: a campaign peer must not be affected merely because it
+# shares a prospect ID with an old import.
+legacy_cold_queued_proof_count() {
+  "$drush" php:eval '
+    $prospect_ids = array_map("intval", \Drupal::entityQuery("famtastic_prospect")
+      ->accessCheck(FALSE)
+      ->condition("campaign", "cold-260-aug-2026")
+      ->execute());
+    $count = 0;
+    if ($prospect_ids !== []) {
+      $count = (int) \Drupal::database()->select("famtastic_job", "j")
+        ->condition("job_type", "proof.generate")
+        ->condition("status", "queued")
+        ->condition("job_key", "proof.generate:prospect:%", "LIKE")
+        ->condition("prospect_id", $prospect_ids, "IN")
+        ->countQuery()->execute()->fetchField();
+    }
+    print $count;
+  ' | tr -d '[:space:]'
+}
+
+# This gate runs before promotion without invoking the quarantine command. A
+# production host may be one release behind this command, so execution must
+# wait until the new module/dependencies/cache are active. It still fails early
+# without explicit authorization so a pilot cannot cross the code boundary
+# carrying a known old generic queue by accident.
+preflight_legacy_cold_queue_gate() {
+  legacy_cold_queue_before="$(legacy_cold_queued_proof_count)"
+  case "$legacy_cold_queue_before" in
+    ''|*[!0-9]*)
+      echo "Pilot deployment refused: could not read a numeric stale cold-proof queue count." >&2
+      return 1
+      ;;
+  esac
+  if [[ "$legacy_cold_queue_before" == "0" ]]; then
+    echo "Pilot exact-dispatch-only preflight: historical cold-260 generic proof queue is already empty."
+    return 0
+  fi
+  if [[ "$pilot_legacy_quarantine_campaign" != "$legacy_cold_campaign_key" || "$pilot_legacy_quarantine_confirm" != "$legacy_cold_campaign_key" ]]; then
+    echo "Pilot deployment refused: $legacy_cold_queue_before queued historical cold-260 generic proof job(s) remain and no exact quarantine authorization was supplied." >&2
+    return 1
+  fi
+  if [[ "$mode" == "apply" ]]; then
+    echo "Pilot exact-dispatch-only: $legacy_cold_queue_before historical cold proof job(s) will be quarantined only after the new module is promoted, cache-rebuilt, and durable lock verified."
+  else
+    echo "Pilot exact-dispatch-only preflight: $legacy_cold_queue_before historical cold proof job(s) would be quarantined only during an authorized apply after module promotion."
+  fi
+}
+
+# Executes the explicit narrow command only after promotion. Keeping this
+# separate from the preflight gate avoids assuming that a production host
+# already contains the just-introduced Drush command.
+quarantine_legacy_cold_queue_after_promotion() {
+  local reason receipt
+  legacy_cold_queue_before="$(legacy_cold_queued_proof_count)"
+  case "$legacy_cold_queue_before" in
+    ''|*[!0-9]*)
+      echo "Pilot deployment refused: could not reread a numeric stale cold-proof queue count." >&2
+      return 1
+      ;;
+  esac
+  if [[ "$legacy_cold_queue_before" == "0" ]]; then
+    legacy_cold_queue_after='0'
+    echo "Pilot exact-dispatch-only: historical cold-260 generic proof queue remains empty after promotion."
+    return 0
+  fi
+  if [[ "$pilot_legacy_quarantine_campaign" != "$legacy_cold_campaign_key" || "$pilot_legacy_quarantine_confirm" != "$legacy_cold_campaign_key" ]]; then
+    echo "Pilot deployment refused: historical cold-260 generic proof queue changed during promotion and lacks exact quarantine authorization." >&2
+    return 1
+  fi
+  reason='Pre-pilot exact-dispatch safety quarantine for the legacy generic proof queue.'
+  receipt="$deploy_dir/tmp/cold-260-quarantine-$commit_sha-$(date -u +%Y%m%dT%H%M%SZ).log"
+  (umask 077; "$drush" famtastic:campaign-proof-quarantine --campaign="$legacy_cold_campaign_key" --confirm="$legacy_cold_campaign_key" --reason="$reason" > "$receipt" 2>&1)
+  test -s "$receipt" || {
+    echo "Pilot deployment refused: the explicit legacy quarantine produced no auditable receipt." >&2
+    return 1
+  }
+  legacy_cold_quarantine_receipt="$receipt"
+  legacy_cold_queue_after="$(legacy_cold_queued_proof_count)"
+  if [[ "$legacy_cold_queue_after" != "0" ]]; then
+    echo "Pilot deployment refused: explicit legacy quarantine did not reduce the historical generic proof queue to zero. Receipt: $receipt" >&2
+    return 1
+  fi
+  echo "Pilot exact-dispatch-only: quarantined $legacy_cold_queue_before historical cold proof job(s); receipt: $receipt"
 }
 
 active_global_lifecycle_count() {
@@ -301,6 +494,11 @@ prepare_pilot_lifecycle_mode() {
   assert_no_active_global_lifecycle_cron
 }
 
+prepare_pilot_scheduler_mode() {
+  prepare_pilot_lifecycle_mode
+  report_active_global_drupal_cron
+}
+
 for command_name in git php composer tar rsync crontab; do
   command -v "$command_name" >/dev/null || {
     echo "Remote prerequisite missing: $command_name" >&2
@@ -335,8 +533,23 @@ test "$remote_sha" = "$commit_sha" || {
 
 cd "$production_dir"
 "$drush" status --fields=bootstrap,db-status,drupal-version --format=list
+pilot_dispatch_lock_before="$(read_pilot_dispatch_lock)"
 if [[ "$pilot_exact_dispatch_only" == "1" ]]; then
-  prepare_pilot_lifecycle_mode
+  preflight_legacy_cold_queue_gate
+  # Suspend the known broad lifecycle runner before promotion. An unmarked
+  # Drupal cron line is deliberately only reported; the new module's durable
+  # lock is what makes its hook a no-op after promotion.
+  prepare_pilot_scheduler_mode
+  if [[ "$mode" == "apply" ]]; then
+    # Persist before promotion. The currently deployed module may not know
+    # this setting yet, but the new module reads it immediately after the
+    # code/cache promotion. A failed pilot deployment leaves it fail-closed.
+    set_pilot_dispatch_lock 1
+  else
+    echo "Pilot exact-dispatch-only preflight: durable Drupal lock is currently $pilot_dispatch_lock_before; apply will set and verify it as 1."
+  fi
+else
+  echo "Ordinary deployment preflight: durable pilot lock is currently $pilot_dispatch_lock_before; an authorized apply will set and verify it as 0 before enabling lifecycle scheduling."
 fi
 # A deployment must never land on (or silently leave) a maintenance-mode site.
 # Maintenance mode lives in STATE (not config) - Drupal core key.
@@ -603,10 +816,20 @@ echo "Sitemap generation verified."
 if [[ "$pilot_exact_dispatch_only" == "1" ]]; then
   # Recheck immediately before release recording: another process must not
   # activate the global worker halfway through an exact-ID pilot deployment.
+  # The durable config check is authoritative for separate cPanel drush cron
+  # processes, which do not inherit this script's environment.
+  assert_pilot_dispatch_lock 1
+  quarantine_legacy_cold_queue_after_promotion
   assert_no_active_global_lifecycle_cron
+  report_active_global_drupal_cron
   lifecycle_cron_record='disabled:pilot-exact-dispatch-only'
-  echo "Exact preview pilot: broad lifecycle scheduler remains disabled."
+  echo "Exact preview pilot: durable general-dispatch lock verified; broad lifecycle scheduler remains disabled."
 else
+  # A normal release intentionally clears the durable pilot lock only after
+  # the new code, database updates, and cache rebuild have all succeeded.
+  # That makes this transition explicit, auditable, and reversible by the
+  # next owner-approved pilot deployment.
+  set_pilot_dispatch_lock 0
   # Ordinary deployments retain the independent lifecycle runner. Mailbox
   # ingestion may fail without suppressing notification dispatch, proof jobs,
   # protection, or heartbeats.
@@ -638,6 +861,12 @@ fi
   printf 'dependency_backup=%s\n' "$dependency_backup"
   printf 'commercial_config_backup=%s\n' "$commercial_config_backup"
   printf 'demand_manifest_version=2\n'
+  printf 'pilot_exact_dispatch_lock=%s\n' "$pilot_dispatch_lock_record"
+  printf 'pilot_exact_dispatch_lock_before=%s\n' "$pilot_dispatch_lock_before"
+  printf 'active_broad_drupal_cron=%s\n' "$active_drupal_cron_count"
+  printf 'legacy_cold_proof_queue_before=%s\n' "$legacy_cold_queue_before"
+  printf 'legacy_cold_proof_queue_after=%s\n' "$legacy_cold_queue_after"
+  printf 'legacy_cold_proof_quarantine_receipt=%s\n' "$legacy_cold_quarantine_receipt"
   printf 'lifecycle_cron=%s\n' "$lifecycle_cron_record"
   printf 'lifecycle_cron_backup=%s\n' "${lifecycle_cron_backup:-none}"
 } > "$production_dir/.backend-release"

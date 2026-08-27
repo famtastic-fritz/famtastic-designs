@@ -164,17 +164,24 @@ content guard before reaching a builder packet, room snapshot, or invitation.
 It redacts copied email, phone, and common credential-shaped text; raw source
 records remain restricted operational evidence.
 
-Scheduled releases are optional and bounded:
+Dynamic scheduled release is disabled. The command may list due,
+owner-approved IDs for operator review, but it cannot send them:
 
 ```text
 drush famtastic:cold-proof-scheduled-release --limit=10
-drush famtastic:cold-proof-scheduled-release --limit=10 --execute=scheduled-owner-approved-cold-preview
 ```
 
-The default is dry-run. The execute path selects only due `verified_cold`
-deliveries already in `email_approved` with held outbox records and delegates
-their exact IDs to the dedicated dispatcher. It never calls lifecycle/global
-jobs or scans general outreach.
+Any `--execute` value fails closed. Due records can move only through the
+separately reviewed exact-ID dispatcher, with the IDs repeated in `--confirm`:
+
+```text
+drush famtastic:preview-delivery-dispatch --ids=41,42 --confirm=41,42
+```
+
+The generic Site Studio HTTP callback also rejects a declared or
+campaign-inferred `verified_cold` lane. Its Build DNA and callback payload must
+arrive through the private exact-delivery importer, which commits their immutable
+binding together before artifacts can enter owner review.
 
 Historical generic jobs for the prior 260-send batch remain a separate manual
 operator action:
@@ -188,3 +195,9 @@ drush famtastic:campaign-proof-quarantine \
 
 That command only quarantines exact queued legacy `proof.generate` records and
 records ledger events. It does not send, rebuild, or alter unrelated work.
+
+For an exact-ID pilot, backend deployment treats a nonzero count for this
+historical queue as a release blocker. It will invoke this command only after
+explicit repeated campaign confirmation through the governed pilot deploy
+variables; the resulting private receipt and zero-count recheck are release
+evidence, not an automatic cleanup side effect.

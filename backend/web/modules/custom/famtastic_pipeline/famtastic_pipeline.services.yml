@@ -23,6 +23,12 @@ services:
     class: Drupal\famtastic_pipeline\Service\ProofCohortProfileService
     arguments: ['@config.factory']
 
+  # This must read durable Drupal config because cPanel launches scheduled
+  # Drush commands without the deployment shell environment.
+  famtastic_pipeline.pilot_exact_dispatch_lock:
+    class: Drupal\famtastic_pipeline\Service\PilotExactDispatchLock
+    arguments: ['@config.factory']
+
   Drupal\famtastic_pipeline\Service\ProofCohortProfileResolverInterface: '@famtastic_pipeline.proof_cohort_profiles'
 
   famtastic_pipeline.cold_proof_seed_validator:
@@ -45,7 +51,7 @@ services:
 
   famtastic_pipeline.cold_proof_scheduled_release:
     class: Drupal\famtastic_pipeline\Service\ColdProofScheduledReleaseService
-    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.public_preview_deliveries', '@famtastic_pipeline.operational_ledger']
+    arguments: ['@database', '@datetime.time']
 
   famtastic_pipeline.cold_proof_build_handoff:
     class: Drupal\famtastic_pipeline\Service\ColdProofBuildHandoffService

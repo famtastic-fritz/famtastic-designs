@@ -8,19 +8,18 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
 
 /**
- * Releases only due, explicitly owner-approved verified-cold invitations.
+ * Lists due, explicitly owner-approved verified-cold invitations.
  *
  * This is deliberately not registered with the generic lifecycle runner. Its
- * only send boundary is PublicPreviewDeliveryService::dispatchApproved(),
- * which rechecks one to ten exact IDs and their held outbox rows.
+ * Dynamic due-record release is disabled. The only send boundary is the
+ * separately confirmed exact-ID CLI dispatcher, which rechecks one to ten
+ * operator-provided IDs and their held outbox rows.
  */
 final class ColdProofScheduledReleaseService {
 
   public function __construct(
     private readonly Connection $database,
     private readonly TimeInterface $time,
-    private readonly PublicPreviewDeliveryService $previews,
-    private readonly OperationalLedger $ledger,
   ) {}
 
   /** @return list<int> */
@@ -46,8 +45,8 @@ final class ColdProofScheduledReleaseService {
   }
 
   /**
-   * Checks due approved records and, only when requested, delegates their
-   * exact IDs to the dedicated owner-gated dispatcher.
+   * Lists due approved records. Executing a dynamic due-record selection is
+   * fail-closed even if a future caller bypasses the Drush command guard.
    */
   public function releaseDue(int $limit = 10, bool $dryRun = FALSE): array {
     $ids = $this->dueApprovedDeliveryIds($limit);
@@ -57,17 +56,8 @@ final class ColdProofScheduledReleaseService {
       'delivery_ids' => $ids,
       'dispatched' => NULL,
     ];
-    if ($dryRun || $ids === []) {
-      return $result;
-    }
-    // This call can never scan or release the global outbox.
-    $result['dispatched'] = $this->previews->dispatchApproved($ids);
-    foreach ($ids as $id) {
-      $this->ledger->recordEvent(
-        'cold-proof.scheduled-release:' . $id . ':' . $this->time->getRequestTime(),
-        'cold_proof.scheduled_release_dispatched',
-        ['preview_delivery_id' => $id, 'source_lane' => 'verified_cold'],
-      );
+    if (!$dryRun) {
+      throw new \LogicException('Dynamic verified-cold scheduled release is disabled. Dispatch only explicit operator-confirmed preview delivery IDs.');
     }
     return $result;
   }

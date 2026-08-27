@@ -23,6 +23,39 @@
   handoff fixture passed. The fixture proves redacted public evidence and no
   provider, SMTP, public-share, payment, deployment, or production action.
 
+## 2026-08-27 — Exact-ID pilot runtime and legacy-queue safety lock (local acceptance only; not deployed)
+
+- `FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1` is now persisted as the durable
+  `famtastic_pipeline.settings.pilot_exact_dispatch_only` switch during a
+  governed pilot apply, then read by every fresh Drupal process. Both
+  `hook_cron` and `famtastic:lifecycle-run` stop before protection, general
+  automation, general outbox dispatch, or SLA mail when that switch (or the
+  additive emergency environment lock) is active. A normal governed release
+  explicitly clears and verifies the durable switch only after its code,
+  update, and cache checks succeed.
+- Pilot preflight reports active broad `drush cron` entries as well as the
+  marker-owned lifecycle runner. It never edits an unmarked Drupal cron line;
+  the verified runtime lock is the authority for that path. The release record
+  captures durable-lock state, prior state, observed Drupal-cron count, and
+  lifecycle scheduler evidence.
+- A pilot now fails before release if the historical `cold-260-aug-2026`
+  generic proof queue is nonzero. It can quarantine only that exact queue when
+  both explicit campaign and repeated-confirmation environment values match;
+  the narrow command runs only after the new module, dependencies, updates,
+  cache, and durable lock are active, writes a private receipt, and rechecks
+  the queue before release recording. Nothing is quarantined implicitly.
+- The generic Site Studio HTTP callback now returns a private-import-required
+  response for an explicitly declared or campaign-inferred `verified_cold`
+  lane. Those artifacts must instead use the private exact-delivery Build DNA
+  importer. Dynamic due-record scheduled cold release is disabled; its command
+  may list only, while an execute token fails closed and exact owner-confirmed
+  preview IDs remain the sole delivery boundary.
+- `scripts/e2e-pilot-exact-dispatch-lock.sh` passed in a fresh SQLite Drupal
+  sandbox with memory-only mail. It proves durable-config and fresh-env cron
+  locks, normal behavior after both locks are off, declared and inferred
+  callback rejection, and scheduled-release refusal. No SMTP, provider,
+  customer, proof, deployment, or production state was used.
+
 ## 2026-08-27 — Exact-prompt Gemini Flash Lite cohort bridge (local acceptance only; not deployed)
 
 - Imported the previously proven Gemini Flash Lite image worker with its source

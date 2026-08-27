@@ -10,6 +10,11 @@ support_from_email: 'hello@famtasticdesigns.com'
 notification_to_email: 'fitzgerald.medine@gmail.com'
 lead_response_sla_days: 3
 sla_alerts_enabled: true
+# A governed pilot deployment may turn this on before an exact-ID public
+# preview run. It is deliberately durable so fresh cPanel `drush cron`
+# processes cannot fall back to general queue or outbox dispatch. Normal
+# releases explicitly turn it back off.
+pilot_exact_dispatch_only: false
 legacy_checkout_enabled: false
 # Site Studio proof generation endpoint. Empty = built-in stub generator.
 studio_url: ''

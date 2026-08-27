@@ -159,6 +159,16 @@ function famtastic_pipeline_mail(string $key, array &$message, array $params): v
  * Sends one durable alert when a public lead misses its first-response SLA.
  */
 function famtastic_pipeline_cron(): void {
+  /** @var \Drupal\famtastic_pipeline\Service\PilotExactDispatchLock $pilotLock */
+  $pilotLock = \Drupal::service('famtastic_pipeline.pilot_exact_dispatch_lock');
+  if ($pilotLock->isActive()) {
+    // A cPanel `drush cron` process gets a new environment, so this must be
+    // enforced from durable Drupal config rather than a deploy-shell export.
+    // Skip the complete hook: protection can queue operational mail and the
+    // SLA loop sends directly, neither of which belongs in an exact-ID pilot.
+    \Drupal::logger('famtastic_pipeline')->warning('Pilot exact-dispatch lock is active; hook_cron skipped all general automation, outbox, and SLA processing. Use only the exact preview delivery dispatcher for the approved IDs.');
+    return;
+  }
   try {
     $operations = \Drupal::service('famtastic_pipeline.lifecycle_operations');
     $operations->runProtection();

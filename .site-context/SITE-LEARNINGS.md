@@ -5,6 +5,25 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — A deploy-shell flag is not a cron safety boundary
+
+- Observation: cPanel starts each scheduled `drush cron` and
+  `famtastic:lifecycle-run` in a fresh shell. An environment variable passed to
+  a deployment command can therefore disappear before the next scheduled run,
+  allowing a shared general queue or outbox to resume during a supposedly
+  exact-ID proof pilot. The historical cold-260 generic proof queue is an
+  independent risk: a new lock does not remove already-queued jobs.
+- Guidance: make a pilot lock durable Drupal configuration, with an
+  environment value only as an additive emergency stop—not an override that
+  can reopen it. Both scheduler routes must check the same lock before any
+  protection, automation, outbox, SLA, or mail work. A governed pilot apply
+  must suspend only marker-owned lifecycle lines, report unmarked `drush cron`
+  lines, write the durable setting before promotion and verify it again after
+  the new code is active, and record the state in the release receipt. Require the stale exact campaign
+  queue to be zero; if quarantining is approved, do it only through the narrow
+  exact command after promotion and preserve its receipt. Never let a due-date
+  selector or a generic callback become a second send/import authority.
+
 ## 2026-08-27 — Proof-image prompts are byte-level evidence, not trim-safe copy
 
 Observation: the local cohort builder deliberately ends generated art prompts

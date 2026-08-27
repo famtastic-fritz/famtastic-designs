@@ -79,13 +79,22 @@ FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 ./scripts/deploy-backend-godaddy.sh
 FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 ./scripts/deploy-backend-godaddy.sh --apply
 ```
 
-In this mode the deployer refuses to proceed if an active
-`famtastic:lifecycle-run` crontab entry exists and does not install one. That
-general runner can process unrelated queued automation and notifications. The
-pilot invitation must instead be sent only by the exact-ID,
-owner-confirmed `famtastic:preview-delivery-dispatch` command. Disabling an
-existing global scheduler is a separate, explicitly authorized operations
-change; do not silently remove it during the release.
+In this mode the deployer persists and verifies
+`famtastic_pipeline.settings.pilot_exact_dispatch_only=1` before code
+promotion. That durable Drupal setting is the runtime authority: cPanel starts
+each `drush cron` process with a fresh shell, so deploy-shell environment
+variables alone cannot protect later automation. With the setting active,
+`famtastic_pipeline_cron()` and `famtastic:lifecycle-run` stop before any
+general protection, automation, outbox, SLA, or mail work. The pilot invitation
+must instead be sent only by the exact-ID, owner-confirmed
+`famtastic:preview-delivery-dispatch` command.
+
+The deployer still refuses an active broad `famtastic:lifecycle-run` entry and
+does not install one. It also records any active `drush cron` entries, but it
+does not alter an unmarked Drupal cron line because that would be an unsafe
+crontab rewrite; the durable runtime lock makes the module's hook a no-op after
+promotion. A normal non-pilot apply explicitly clears and verifies the durable
+setting only after its code, update, and cache checks pass.
 
 If the only active broad scheduler is exactly the checked-in
 `FAMTASTIC_LIFECYCLE_CRON_V1` marker followed immediately by its standard
@@ -104,6 +113,31 @@ production. Apply saves the complete pre-change crontab below
 to proceed if any other active lifecycle runner is present. The recorded backup
 supports a separate, explicit scheduler restoration; a failed code deployment
 does not automatically re-enable broad dispatch.
+
+### Historical generic-proof queue gate
+
+The `cold-260-aug-2026` generic proof queue must be empty before an exact-ID
+pilot is recorded as safe. Pilot preflight counts only its exact historical
+queued `proof.generate:prospect:*` jobs and refuses a nonzero count by default.
+It never quarantines work implicitly.
+
+If the owner explicitly authorizes that one narrow quarantine, repeat the exact
+campaign key in both variables on the apply command:
+
+```bash
+FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 \
+FAMTASTIC_PILOT_SUSPEND_MARKED_LIFECYCLE_CRON=1 \
+FAMTASTIC_PILOT_LEGACY_QUARANTINE_CAMPAIGN=cold-260-aug-2026 \
+FAMTASTIC_PILOT_LEGACY_QUARANTINE_CONFIRM=cold-260-aug-2026 \
+./scripts/deploy-backend-godaddy.sh --apply
+```
+
+The script only invokes the existing exact-campaign quarantine after the new
+module, dependencies, updates, cache rebuild, and durable runtime lock are
+active. It writes a private receipt, rechecks the exact queue is zero, and
+records the before/after count plus receipt location in `.backend-release`.
+If the running production release lacks that Drush command, the apply fails
+closed rather than guessing or modifying the queue directly.
 
 If code promotion or a Drupal command fails, the script restores the prior
 module plus both the admin and customer themes, then rebuilds cache. On a

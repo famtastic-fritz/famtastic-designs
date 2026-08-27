@@ -629,6 +629,14 @@ class PipelineCommands extends DrushCommands {
   #[CLI\Command(name: 'famtastic:lifecycle-run', aliases: ['flr'])]
   #[CLI\Option(name: 'limit', description: 'Maximum automation jobs and notifications to process (1-100).')]
   public function lifecycleRun(array $options = ['limit' => 25]): int {
+    /** @var \Drupal\famtastic_pipeline\Service\PilotExactDispatchLock $pilotLock */
+    $pilotLock = \Drupal::service('famtastic_pipeline.pilot_exact_dispatch_lock');
+    if ($pilotLock->isActive()) {
+      // Do not even run protection here: it can enqueue operational mail and
+      // the exact-ID pilot must never claim or prepare a shared queue item.
+      $this->logger()->error('Pilot exact-dispatch lock is active; famtastic:lifecycle-run is disabled. Use only famtastic:preview-delivery-dispatch with exact approved IDs.');
+      return self::EXIT_FAILURE;
+    }
     $limit = max(1, min(100, (int) $options['limit']));
     try {
       /** @var \Drupal\famtastic_pipeline\Service\LifecycleOperationsService $operations */
@@ -1025,27 +1033,29 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
-   * Checks only due, owner-approved verified-cold deliveries.
+   * Lists due, owner-approved verified-cold deliveries without sending them.
    *
-   * The command defaults to dry-run. Its explicit execute token delegates
-   * exact due IDs to the existing public-preview dispatcher, never lifecycle.
+   * Dynamic scheduled release is intentionally disabled. The only outbound
+   * boundary remains the separately confirmed exact-ID preview dispatcher.
    */
   #[CLI\Command(name: 'famtastic:cold-proof-scheduled-release', aliases: ['fcpsr'])]
-  #[CLI\Option(name: 'limit', description: 'Maximum due approved deliveries to inspect/release (1-10).')]
-  #[CLI\Option(name: 'execute', description: 'Must equal scheduled-owner-approved-cold-preview to dispatch exact due held IDs.')]
+  #[CLI\Option(name: 'limit', description: 'Maximum due approved deliveries to inspect (1-10).')]
+  #[CLI\Option(name: 'execute', description: 'Disabled. Any execute value is rejected; use the exact-ID dispatcher instead.')]
   #[CLI\Usage(name: 'drush fcpsr --limit=10', description: 'List due owner-approved cold preview deliveries only.')]
-  #[CLI\Usage(name: 'drush fcpsr --limit=10 --execute=scheduled-owner-approved-cold-preview', description: 'Targeted scheduled release after owner approval; never general lifecycle mail.')]
   public function coldProofScheduledRelease(array $options = ['limit' => 10, 'execute' => '']): int {
     $limit = (int) $options['limit'];
     if ($limit < 1 || $limit > 10) {
       $this->logger()->error('--limit must be between 1 and 10.');
       return self::EXIT_FAILURE;
     }
-    $execute = hash_equals('scheduled-owner-approved-cold-preview', trim((string) $options['execute']));
+    if (trim((string) $options['execute']) !== '') {
+      $this->logger()->error('Scheduled verified-cold release is disabled. Review the listed IDs, then use famtastic:preview-delivery-dispatch --ids=<exact-ids> --confirm=<exact-ids>.');
+      return self::EXIT_FAILURE;
+    }
     try {
       /** @var \Drupal\famtastic_pipeline\Service\ColdProofScheduledReleaseService $release */
       $release = \Drupal::service('famtastic_pipeline.cold_proof_scheduled_release');
-      $result = $release->releaseDue($limit, !$execute);
+      $result = $release->releaseDue($limit, TRUE);
       $this->io()->writeln(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
       return self::EXIT_SUCCESS;
     }

@@ -56,6 +56,19 @@ final class SiteStudioCallbackController extends ControllerBase {
     if (!is_array($data)) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_json'], 400);
     }
+    if ($this->declaresVerifiedColdLane($data)
+      || $this->proofCampaigns->isVerifiedColdCampaignId((string) ($data['campaign_id'] ?? ''))
+    ) {
+      // This route validates the generic Site Studio callback only. A
+      // verified-cold payload must arrive through the private importer, where
+      // the exact delivery/job/event tuple and Build DNA are atomically
+      // committed in one database transaction before any proof artifacts can
+      // become reviewable.
+      return new JsonResponse([
+        'ok' => FALSE,
+        'error' => 'verified_cold_private_import_required',
+      ], 403);
+    }
     try {
       if (($data['schema'] ?? '') === 'site-studio.build-success.v1') {
         $result = $this->buildPackets->acceptSuccess($data);
@@ -81,6 +94,23 @@ final class SiteStudioCallbackController extends ControllerBase {
       'newly_processed' => $result['newly_processed'],
       'variant_count' => count($result['variants']),
     ]);
+  }
+
+  /** Returns TRUE if any supported callback envelope declares verified-cold. */
+  private function declaresVerifiedColdLane(array $data): bool {
+    $candidates = [
+      $data['source_lane'] ?? NULL,
+      is_array($data['run'] ?? NULL) ? ($data['run']['source_lane'] ?? NULL) : NULL,
+      is_array($data['build_dna'] ?? NULL) && is_array($data['build_dna']['run'] ?? NULL)
+        ? ($data['build_dna']['run']['source_lane'] ?? NULL)
+        : NULL,
+    ];
+    foreach ($candidates as $candidate) {
+      if (is_string($candidate) && hash_equals('verified_cold', strtolower(trim($candidate)))) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }
