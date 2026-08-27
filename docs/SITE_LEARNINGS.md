@@ -5,6 +5,16 @@
 - Observation: A permanently embedded chatbot panel on landing pages consumes excessive screen real estate—especially on mobile—and feels like a traditional form wearing a chat costume. Visitors hesitate to engage because the interface demands answers before demonstrating competence.
 - Guidance: Replace embedded chat widgets with a clean Hero Entry Point that makes a single promise ("See what your market is doing in 20 seconds") with one tap-to-start action. When triggered, open a focused full-screen overlay on mobile and a centered modal sheet on desktop. Structure the consultation to "give before extracting": deliver an instant Local Market Scan within 20 seconds, ask 3 guided scope questions via touch-friendly chips, and materialize the Scope Blueprint artifact with locked pricing directly on screen before asking for an email address.
 
+## 2026-08-27 — Card personality must not break comparison alignment
+
+- Observation: translating and rotating the middle proof card added energy but
+  made the three options read as a broken grid rather than a deliberate set.
+- Guidance: keep card-level geometry aligned when the user's job is comparison.
+  Put visual personality inside the card through imagery, type, texture, shape,
+  and content composition; require desktop top and bottom edge parity in browser
+  QA. Version static stylesheet references when the release surface can retain a
+  previously cached visual defect.
+
 ## 2026-08-27 — Marketplace discovery and owned retention can coexist
 
 - Observation: “leave Booksy” is too blunt. Booksy can still produce discovery

@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Comparison grids need aligned outer geometry
+
+- Observation: a translated middle direction card looked accidentally
+  misaligned even though the offset was intentional.
+- Guidance: preserve a shared outer baseline for comparison cards and express
+  direction-specific personality inside each card. Browser QA should compare
+  the top and bottom coordinates, not only check for overflow.
+
 ## 2026-08-27 — Treat booking marketplaces as an acquisition channel, not the brand
 
 - Observation: a beauty operator may reasonably keep Booksy for discovery while

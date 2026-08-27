@@ -2,10 +2,10 @@
   "schema": "famtastic.build-dna.v1",
   "build_id": "booked-branded-v5-20260827",
   "classification": "fictional-product-demonstration",
-  "created_at": "2026-08-27T21:34:44.534Z",
+  "created_at": "2026-08-27T21:58:50.392Z",
   "repository": {
     "name": "FAMtastic",
-    "revision": "409f6a52b75547ae180911e8306f0db36d68ee93",
+    "revision": "1f28114571c7ae8700c18f15bbcc055574530165",
     "worktree": "booked-branded-four-proof-pilot",
     "revision_status": "source_revision_before_artifact_commit"
   },
@@ -74,7 +74,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T21:34:44.534Z"
+          "completed_at": "2026-08-27T21:58:50.392Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -325,7 +325,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T21:35:42.067Z"
+          "completed_at": "2026-08-27T22:01:57.213Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -354,7 +354,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T21:35:42.068Z"
+          "completed_at": "2026-08-27T22:01:57.215Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -509,26 +509,26 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/emails/coastline-crown-barbers/index.html",
-      "bytes": 4799,
-      "sha256": "d14f0369af7dc7d35e86aaa1965facb11c1af2ea9330046f5894982175abd78f",
+      "bytes": 4825,
+      "sha256": "41d65e98dced9445e11337c9a660c3835d29f350c3e2980eeea608040fee010c",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/emails/palmera-fade-society/index.html",
-      "bytes": 4775,
-      "sha256": "c8b446423631aa433521d825a15bcf15e140f52d317e6bc1caa00e03b7a4b3b8",
+      "bytes": 4801,
+      "sha256": "44e7b7fa72025566495e8487069e3761f773a6dc0c5c35ea7140ffa3afea3098",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/emails/saltline-color-house/index.html",
-      "bytes": 4780,
-      "sha256": "35024b711d1753fd8bb794884c34a756301679a5a1996c9abbe8cd38082ebd79",
+      "bytes": 4806,
+      "sha256": "c204c08a27a4fc710fb1a9b0c4390d35fbcf51414729c39777d17aa0cfd7dd3a",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/emails/velvet-coil-atelier/index.html",
-      "bytes": 4768,
-      "sha256": "4623312a767c0c3545a19a53213dfee83fdeda43099214c2509db5267922e82b",
+      "bytes": 4794,
+      "sha256": "cc739f75de09623b2a95c23a6e5f12b89fa64f34db0bf18700543cb92477caf0",
       "role": "customer-facing-static-proof"
     },
     {
@@ -539,14 +539,14 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/index.html",
-      "bytes": 6459,
-      "sha256": "d93d7b4e64de6b9c172db21622522daa066a642daac6dce67bd8af1464052637",
+      "bytes": 6485,
+      "sha256": "56aa6f2801d85f52bc6b7fcf37f4afcd39b8a49478490195c99f8c26d8d0a253",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/package/index.html",
-      "bytes": 11875,
-      "sha256": "59dc24f0cb7926f8cceca81b07a20365e17c9d8b05cdd4d286da722ac326fd02",
+      "bytes": 11901,
+      "sha256": "e3dc192e321acb0c7a363da81b48479a6443b9da0a52357e791fafd0df516b12",
       "role": "customer-facing-static-proof"
     },
     {
@@ -557,104 +557,104 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/a/index.html",
-      "bytes": 11079,
-      "sha256": "c6bcc77bf8965ec141ba787e5d0e416e71903c35215e9f24b8c06e5dc44c1bf5",
+      "bytes": 11105,
+      "sha256": "70587ecff58d2c8296082cd85d78d12d39fccd09707180a07b8602d4ca2f3a70",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/b/index.html",
-      "bytes": 11018,
-      "sha256": "7bf276836795e7b92201aba04f75c869807d5af7c12d885c5450297aee02cdc1",
+      "bytes": 11044,
+      "sha256": "87dc3e8a6429914205280f639638b43dc623744c07ac7252e70fd95486bdf017",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/c/index.html",
-      "bytes": 11116,
-      "sha256": "a3e91d8eabdc823ec3821f9b4998dbaf7df61687c11c9cf0f60f121a3978d92c",
+      "bytes": 11142,
+      "sha256": "6006ce05281e80ef9b7c02b44ec8b0fb49b689594cf2f2bf3f044a08d8a07a49",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/a/index.html",
-      "bytes": 11030,
-      "sha256": "801b4bc678bd5f091f138efb0deaa93a4e515b9827e6b1aa2b71fc0de4b38df8",
+      "bytes": 11056,
+      "sha256": "09c6408c705fffe38f002b550ef39ded62ed42f8f6ae6ede03ffe2e5272b07ed",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/b/index.html",
-      "bytes": 11010,
-      "sha256": "c51b14eb22e271fe5a5b9838341d7fd0e507d3977859ff886e69cddd070740da",
+      "bytes": 11036,
+      "sha256": "861ea5942c4038b9d8bac34b5aef9b43cd545e305f20d5f88730eb46320a02c6",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/c/index.html",
-      "bytes": 11105,
-      "sha256": "b049af86aea0cc031534ebb4d3924bb6cfbbf1bb635d656124ad5e61411631b4",
+      "bytes": 11131,
+      "sha256": "a8d52e001380c584e58d1d52119ff8f28cfd20058f3593fa64658d2c7094ea3a",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/a/index.html",
-      "bytes": 11101,
-      "sha256": "03644af405e6f8810dc1c26e9460f2107cb1bda10ebd3cddc5f6a71322b168dc",
+      "bytes": 11127,
+      "sha256": "5ec9bb966b02f0a248fb625cc63dd8c94a68cb8d5f82204038fcd85da0f18b89",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/b/index.html",
-      "bytes": 11048,
-      "sha256": "8b49e207c44d109de87a23e8e544b5aec41c9d6e6e9d14e45ed73b8f09d3b4c1",
+      "bytes": 11074,
+      "sha256": "2cd6b2a269ee3c6bb78a1e19aed8f402c0cafa9f5f4ea3669936e770582f9310",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/c/index.html",
-      "bytes": 11145,
-      "sha256": "4a8bcff28dc11f77a6c7aa30b3d0a35044de89f919bcd9f1c7c9bceaa590a5be",
+      "bytes": 11171,
+      "sha256": "ec3de116815adb7f7d464b046c830c3f010e7df4b263ca7919790aeaca6e257a",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/a/index.html",
-      "bytes": 11100,
-      "sha256": "96ca2e145ab35f1e55bc6d0095ccea215980326c395165f4b5fa9193a0ba2a67",
+      "bytes": 11126,
+      "sha256": "89fd76fb6d4f0cf03d9abef3e7062ee48d9b91ffb9cefaed72a76b94ed2064e3",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/b/index.html",
-      "bytes": 11039,
-      "sha256": "2b0ad16361d8fb0131e03c62a879af6c8416e0514d58de2fdb13b34ecfd23b96",
+      "bytes": 11065,
+      "sha256": "4f9c5e07930eba66caf59afc39cd2e519eed6ba7af9178be84334dc01c8bfc28",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/c/index.html",
-      "bytes": 11140,
-      "sha256": "84b20fb6a184863dcae9744c390e86b587cff577ee23cf2b4105165113434611",
+      "bytes": 11166,
+      "sha256": "e1378809caa35fd9378d66eb853f96fdb31a8618a6831cc5aa9dd035029dfc58",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/coastline-crown-barbers/index.html",
-      "bytes": 5398,
-      "sha256": "6c7d4be3ee8d4fb292c41ab6bad04102bf50aef7f0ce0087aec92a232330a657",
+      "bytes": 5424,
+      "sha256": "03950c9d8811aa242cbb4175ada5b7d38b7714e246819d42ceba9c4d98aaa1de",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/palmera-fade-society/index.html",
-      "bytes": 5376,
-      "sha256": "eca7675d14d8fef51b58df9805d2c569d52be711d92c1cd42e4835b6d593ba57",
+      "bytes": 5402,
+      "sha256": "910705bbf0dd1fd31ad6707de76d47585fc5569a0c550fcd901738e852a43131",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/saltline-color-house/index.html",
-      "bytes": 5367,
-      "sha256": "3f25223eec89774e58da97d6ff2f13ae4a92db66bb748617e7d639353f1fc2bb",
+      "bytes": 5393,
+      "sha256": "e4c7af684b4aff2213554d11c69a9c73db164a7b3e09b5b3c7faf03349dc59e5",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/velvet-coil-atelier/index.html",
-      "bytes": 5322,
-      "sha256": "70ae951044e7fbe5f25d20e07e317e02ef157198f01b229b43f6d5421fc6eaf3",
+      "bytes": 5348,
+      "sha256": "3575983d9b0ebd303624013dfad9c6f11ff8c01c8d8d8aac55f161936bc56c79",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/styles.css",
-      "bytes": 71143,
-      "sha256": "9e2195299ad3ceafdb78da3ceb6bce3c3524ae0c9a3b2e5b4c0385eddc3660e6",
+      "bytes": 71098,
+      "sha256": "ee81e0df9ad778ee511d79372f9a003bfa08a5da938cda243266f53aea69d0fe",
       "role": "proof-support"
     },
     {
@@ -683,8 +683,8 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/index.html",
-      "bytes": 17023,
-      "sha256": "5c2c72597cc4f3aa471070b6ae70fdc6a8282435b50f1c8f8cda20d442c1b9f1",
+      "bytes": 17049,
+      "sha256": "589cffc56c4be8e4b3c1d92e5efbcc3697e5641d7ff437d4707a144aa299eade",
       "role": "customer-facing-static-proof"
     },
     {
@@ -713,15 +713,15 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/wow-lab/velvet-coil-architecture/index.html",
-      "bytes": 9491,
-      "sha256": "9c5f4220d0d66d8a988514ae7ebe784550059adf5a4ccc7d4f6ffa1d3f6b5ae6",
+      "bytes": 9517,
+      "sha256": "7eabb4247a111ecc547c180b6d026868dd263c89a297095576ce1628584f2cf2",
       "role": "customer-facing-static-proof"
     },
     {
       "role": "browser-qa-report",
       "path": "docs/evidence/booked-branded-four-proof-pilot/qa-report.json",
       "bytes": 26922,
-      "sha256": "ca5c00575b40ae221ab7a529c46ec77af166313a4ff75fb8923c6ddd1d176c08"
+      "sha256": "2d96df0ec51abb8a03591f08ee9cb15e34850fb33bb6ca2190ea722c66313911"
     }
   ],
   "retrieval": {

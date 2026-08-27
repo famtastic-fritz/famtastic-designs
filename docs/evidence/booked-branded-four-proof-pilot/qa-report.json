@@ -1,6 +1,6 @@
 {
   "schema": "famtastic.booked-branded-qa.v1",
-  "generated_at": "2026-08-27T21:35:42.067Z",
+  "generated_at": "2026-08-27T22:01:57.213Z",
   "base_url": "http://127.0.0.1:4180/showcase/booked-and-branded-pilot",
   "routes_tested": 24,
   "viewport_checks": 48,

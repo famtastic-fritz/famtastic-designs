@@ -15,6 +15,7 @@ const creativePath = join(publicRoot, 'creative-system.json');
 const creative = JSON.parse(await readFile(creativePath, 'utf8'));
 const publicBase = '/showcase/booked-and-branded-pilot';
 const canonicalBase = 'https://famtasticdesigns.com' + publicBase;
+const assetRevision = '20260827-room-alignment';
 const generatedImageRoot = join(publicRoot, 'assets/directions');
 const generationReceiptPath = join(generatedImageRoot, 'generation-receipt.json');
 const generatedPromptManifestPath = join(generatedImageRoot, 'prompt-manifest.json');
@@ -59,7 +60,7 @@ function template({ title, description, body, className = '' }) {
   <meta name="description" content="${esc(description)}">
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
   <meta name="referrer" content="no-referrer">
-  <link rel="stylesheet" href="${publicBase}/styles.css">
+  <link rel="stylesheet" href="${publicBase}/styles.css?v=${assetRevision}">
 </head>
 <body class="${esc(className)}">
 ${body}

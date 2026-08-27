@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-08-27 — Booked & Branded room-card alignment
+
+- Removed the desktop-only vertical/rotational transform that pushed Direction
+  B below Directions A and C in every three-proof room.
+- Versioned the static showcase stylesheet reference so an already-open browser
+  does not keep rendering the removed transform from cache.
+- Added browser regression coverage across all four concept rooms requiring the
+  three desktop cards to share the same top and bottom edges.
+- No proof content, image, product, price, email, deployment, or production
+  surface changed.
+
 ## 2026-08-27 — Booksy-to-Owned Growth Bridge strategy
 
 - Reframed Booked & Branded as “Booksy for discovery; your website for

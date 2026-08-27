@@ -155,7 +155,7 @@ button, input, select { font: inherit; }
 .direction-dna li { margin-bottom: 6px; }
 .card-a { border-radius: 44px 44px 24px 24px; }
 .card-a .direction-preview { border-radius: 0 0 120px 0; }
-.card-b { transform: translateY(22px) rotate(-.45deg); border-radius: 8px; }
+.card-b { border-radius: 8px; }
 .card-b .direction-letter { border-radius: 4px; background: var(--lime); }
 .card-c { border-radius: 18px; background-image: linear-gradient(rgba(169,255,99,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(169,255,99,.04) 1px, transparent 1px); background-size: 24px 24px; }
 .card-c .direction-letter { border-radius: 13px; }
