@@ -5,6 +5,20 @@
 - Observation: A permanently embedded chatbot panel on landing pages consumes excessive screen real estate—especially on mobile—and feels like a traditional form wearing a chat costume. Visitors hesitate to engage because the interface demands answers before demonstrating competence.
 - Guidance: Replace embedded chat widgets with a clean Hero Entry Point that makes a single promise ("See what your market is doing in 20 seconds") with one tap-to-start action. When triggered, open a focused full-screen overlay on mobile and a centered modal sheet on desktop. Structure the consultation to "give before extracting": deliver an instant Local Market Scan within 20 seconds, ask 3 guided scope questions via touch-friendly chips, and materialize the Scope Blueprint artifact with locked pricing directly on screen before asking for an email address.
 
+## 2026-08-27 — Reusable sites need stable component identity below the page
+
+- Observation: the Booked & Branded builder already repeated one HTML function
+  across twelve proofs, but a repeated function alone did not expose which
+  sections could be hidden, moved, split into another page, or independently
+  templated. That made the reuse real in code but invisible to Site Studio.
+- Guidance: model page → section instance → versioned component → field, slot,
+  repeater, and action. Emit stable IDs from the structured recipe, never from
+  CSS position. Prove one controlled variable at a time: the first experiment
+  freezes nine component instances and permits only the hero-media source to
+  change. Later component variants must preserve typed field contracts and
+  Build DNA lineage so a one-page starter can become a multi-page upgrade
+  without visual or content loss.
+
 ## 2026-08-27 — Card personality must not break comparison alignment
 
 - Observation: translating and rotating the middle proof card added energy but

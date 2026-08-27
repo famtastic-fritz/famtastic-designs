@@ -1,11 +1,11 @@
 {
   "schema": "famtastic.booked-branded-qa.v1",
-  "generated_at": "2026-08-27T22:01:57.213Z",
-  "base_url": "http://127.0.0.1:4180/showcase/booked-and-branded-pilot",
-  "routes_tested": 24,
-  "viewport_checks": 48,
-  "screenshots": 20,
-  "copy_checks": 23,
+  "generated_at": "2026-08-27T22:36:41.403Z",
+  "base_url": "http://127.0.0.1:4198/showcase/booked-and-branded-pilot",
+  "routes_tested": 29,
+  "viewport_checks": 58,
+  "screenshots": 26,
+  "copy_checks": 24,
   "errors": [],
   "passed": true,
   "copy_evidence": [
@@ -35,6 +35,23 @@
         "Booksy or another current provider",
         "FAMtastic does not process or receive the payment.",
         "Shay is FAMtastic Designs’ AI Business Concierge."
+      ],
+      "forbidden_phrases_absent": [
+        "$19.99",
+        "does not pretend",
+        "Not inside this pilot",
+        "No Booksy review scraping"
+      ]
+    },
+    {
+      "relative_path": "component-lab/index.html",
+      "required_phrases": [
+        "One page.",
+        "Nine components.",
+        "Only the hero-media image slot changes.",
+        "Every section becomes",
+        "No basics get lost.",
+        "This becomes a builder"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -411,6 +428,28 @@
       "consoleErrors": []
     },
     {
+      "route": "/component-lab/",
+      "viewport": 1440,
+      "status": 200,
+      "title": "Booked & Branded Component Lab — FAMtastic Designs",
+      "h1": "One page.Nine components.Four media lives.",
+      "width": 1440,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/component-lab/",
+      "viewport": 390,
+      "status": 200,
+      "title": "Booked & Branded Component Lab — FAMtastic Designs",
+      "h1": "One page.Nine components.Four media lives.",
+      "width": 390,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
       "route": "/wow-lab/velvet-coil-architecture/",
       "viewport": 1440,
       "status": 200,
@@ -427,6 +466,94 @@
       "status": 200,
       "title": "Velvet Coil Atelier — Every Coil Is Architecture",
       "h1": "Every coilis architecture.",
+      "width": 390,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/component-lab/image-only/01-soft-power/",
+      "viewport": 1440,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Soft Power",
+      "h1": "Healthy texture, held with intention.",
+      "width": 1440,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/component-lab/image-only/01-soft-power/",
+      "viewport": 390,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Soft Power",
+      "h1": "Healthy texture, held with intention.",
+      "width": 390,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/component-lab/image-only/02-coil-culture/",
+      "viewport": 1440,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Soft Power",
+      "h1": "Healthy texture, held with intention.",
+      "width": 1440,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/component-lab/image-only/02-coil-culture/",
+      "viewport": 390,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Soft Power",
+      "h1": "Healthy texture, held with intention.",
+      "width": 390,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/component-lab/image-only/03-studio-ritual/",
+      "viewport": 1440,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Soft Power",
+      "h1": "Healthy texture, held with intention.",
+      "width": 1440,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/component-lab/image-only/03-studio-ritual/",
+      "viewport": 390,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Soft Power",
+      "h1": "Healthy texture, held with intention.",
+      "width": 390,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/component-lab/image-only/04-coil-architecture/",
+      "viewport": 1440,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Soft Power",
+      "h1": "Healthy texture, held with intention.",
+      "width": 1440,
+      "brokenImages": [],
+      "fictionalLabel": true,
+      "consoleErrors": []
+    },
+    {
+      "route": "/component-lab/image-only/04-coil-architecture/",
+      "viewport": 390,
+      "status": 200,
+      "title": "Velvet Coil Atelier — Soft Power",
+      "h1": "Healthy texture, held with intention.",
       "width": 390,
       "brokenImages": [],
       "fictionalLabel": true,

@@ -2,10 +2,10 @@
   "schema": "famtastic.build-dna.v1",
   "build_id": "booked-branded-v5-20260827",
   "classification": "fictional-product-demonstration",
-  "created_at": "2026-08-27T21:58:50.392Z",
+  "created_at": "2026-08-27T22:33:33.333Z",
   "repository": {
     "name": "FAMtastic",
-    "revision": "1f28114571c7ae8700c18f15bbcc055574530165",
+    "revision": "aace67a493ecf84c860ae35b9cfd7740d4f43021",
     "worktree": "booked-branded-four-proof-pilot",
     "revision_status": "source_revision_before_artifact_commit"
   },
@@ -19,7 +19,9 @@
       "Signature Editorial",
       "Signal Campaign",
       "Chairside OS"
-    ]
+    ],
+    "page_template_id": "booked-branded-one-page-v1",
+    "component_system_ref": "frontend/public/showcase/booked-and-branded-pilot/component-system.json"
   },
   "run": {
     "source_lane": "famtastic-owned-product-demonstration",
@@ -74,7 +76,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T21:58:50.392Z"
+          "completed_at": "2026-08-27T22:33:33.333Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -173,6 +175,34 @@
           "a",
           "b",
           "c"
+        ]
+      }
+    },
+    {
+      "stage_id": "component-system",
+      "capability": "page-section-part-componentization",
+      "attempt": 1,
+      "execution": {
+        "provider": {
+          "id": "famtastic-local-builder"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "not_metered"
+        },
+        "cost": {
+          "status": "not_applicable",
+          "amount_usd": 0
+        }
+      },
+      "result": {
+        "status": "completed",
+        "outputs": [
+          "component-system.json",
+          "component-lab/index.html",
+          "4 image-only component proofs"
         ]
       }
     },
@@ -305,10 +335,12 @@
           "index.html",
           "package/index.html",
           "template-lab/index.html",
+          "component-lab/index.html",
           "wow-lab/velvet-coil-architecture/index.html",
           "4 emails",
           "4 rooms",
-          "12 baseline proof pages"
+          "12 baseline proof pages",
+          "4 image-only component proofs"
         ]
       }
     },
@@ -325,7 +357,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T22:01:57.213Z"
+          "completed_at": "2026-08-27T22:36:41.403Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -334,10 +366,10 @@
       },
       "result": {
         "status": "completed",
-        "routes_tested": 24,
-        "viewport_checks": 48,
-        "screenshots": 20,
-        "copy_checks": 23,
+        "routes_tested": 29,
+        "viewport_checks": 58,
+        "screenshots": 26,
+        "copy_checks": 24,
         "evidence_ref": "docs/evidence/booked-branded-four-proof-pilot/qa-report.json"
       }
     },
@@ -354,7 +386,7 @@
         },
         "timing": {
           "status": "reported",
-          "completed_at": "2026-08-27T22:01:57.215Z"
+          "completed_at": "2026-08-27T22:36:41.405Z"
         },
         "cost": {
           "status": "not_applicable",
@@ -363,7 +395,7 @@
       },
       "result": {
         "status": "completed",
-        "notes": "The overview, package, Template Lab at desktop and mobile, the additive Velvet Coil Architecture quality study at desktop and mobile, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. The Ultra study uses a new information architecture and high-concept hero while retaining the baseline templates unchanged; no text collision, broken image, or fictional-to-real ambiguity was observed.",
+        "notes": "The overview, package, Template Lab, Component Lab, four image-only component proofs, the additive Velvet Coil Architecture quality study, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. The four image-only pages share the frozen one-page component recipe and alter only hero-media.src; no text collision, broken image, or fictional-to-real ambiguity was observed.",
         "independent_review": "reserved_for_owner"
       }
     }
@@ -502,6 +534,42 @@
       "role": "generated-image-final"
     },
     {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/image-only/01-soft-power/index.html",
+      "bytes": 14482,
+      "sha256": "9cf005329b24737d0870b2f900b8b30601dedc324e324fc0dafdadb299ec077f",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/image-only/02-coil-culture/index.html",
+      "bytes": 14482,
+      "sha256": "dd574e2aaca115de99b64b0b68da3114b43aebd6a3ae22e5522b2b5b29788088",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/image-only/03-studio-ritual/index.html",
+      "bytes": 14482,
+      "sha256": "914c11b493e53f2d4193b1b5c2ac404c2b15a49fb34a0b09cd4ddc7267679b5a",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/image-only/04-coil-architecture/index.html",
+      "bytes": 14488,
+      "sha256": "c2c3dd40193176fc78c22337f46965897afe06e8ac37bc67dbe1d19be135d8cf",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/index.html",
+      "bytes": 11594,
+      "sha256": "358f431e5b61cf15fac539b2a3ed9091a95b6ab1d0ace15565d3faa6ccf41408",
+      "role": "customer-facing-static-proof"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-system.json",
+      "bytes": 8839,
+      "sha256": "44100512eca27a1b6712d6ff46142122cea673c577313bb46abd7fc27cc97121",
+      "role": "proof-support"
+    },
+    {
       "path": "frontend/public/showcase/booked-and-branded-pilot/creative-system.json",
       "bytes": 23299,
       "sha256": "5ca5de43aeac5ec188d4fb847b70fbcd6828c6f18408fccd448b7cb33ad84d50",
@@ -509,26 +577,26 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/emails/coastline-crown-barbers/index.html",
-      "bytes": 4825,
-      "sha256": "41d65e98dced9445e11337c9a660c3835d29f350c3e2980eeea608040fee010c",
+      "bytes": 4824,
+      "sha256": "ab249f94e037b25755ade5e8bc1f611ca32f6681858b5f4855a60826baa135c6",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/emails/palmera-fade-society/index.html",
-      "bytes": 4801,
-      "sha256": "44e7b7fa72025566495e8487069e3761f773a6dc0c5c35ea7140ffa3afea3098",
+      "bytes": 4800,
+      "sha256": "592063cf98c8529be171ed16f5fb305902332daaa4b7bc722fe65e81c068a65a",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/emails/saltline-color-house/index.html",
-      "bytes": 4806,
-      "sha256": "c204c08a27a4fc710fb1a9b0c4390d35fbcf51414729c39777d17aa0cfd7dd3a",
+      "bytes": 4805,
+      "sha256": "c60c34e324cdeccce355882b54e6c4420b53b9c051cd0164ac83ad55663d9124",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/emails/velvet-coil-atelier/index.html",
-      "bytes": 4794,
-      "sha256": "cc739f75de09623b2a95c23a6e5f12b89fa64f34db0bf18700543cb92477caf0",
+      "bytes": 4793,
+      "sha256": "ea0b1dcbaeb30c63fe1d7bbe29ae5a39459205c98810ee4147b18b26347403c9",
       "role": "customer-facing-static-proof"
     },
     {
@@ -539,14 +607,14 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/index.html",
-      "bytes": 6485,
-      "sha256": "56aa6f2801d85f52bc6b7fcf37f4afcd39b8a49478490195c99f8c26d8d0a253",
+      "bytes": 6484,
+      "sha256": "b97365f97487afdfd97f6ae5dec33ce227b2c96c3b4a9b2180242a0bf028704e",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/package/index.html",
-      "bytes": 11901,
-      "sha256": "e3dc192e321acb0c7a363da81b48479a6443b9da0a52357e791fafd0df516b12",
+      "bytes": 11900,
+      "sha256": "4042fe9789498a816e706e8a9cf80339a6e9167621cb1cf62b152c2242c93419",
       "role": "customer-facing-static-proof"
     },
     {
@@ -557,104 +625,104 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/a/index.html",
-      "bytes": 11105,
-      "sha256": "70587ecff58d2c8296082cd85d78d12d39fccd09707180a07b8602d4ca2f3a70",
+      "bytes": 14439,
+      "sha256": "452afc51488e45ec9681537b6ccbeefd0bd485a80a82019306ea0af1eac9fbbc",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/b/index.html",
-      "bytes": 11044,
-      "sha256": "87dc3e8a6429914205280f639638b43dc623744c07ac7252e70fd95486bdf017",
+      "bytes": 14378,
+      "sha256": "acb9d3e0d13a4bd9dde07645fa62ca3acd528a966b7937ae9e408241332fb67d",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/c/index.html",
-      "bytes": 11142,
-      "sha256": "6006ce05281e80ef9b7c02b44ec8b0fb49b689594cf2f2bf3f044a08d8a07a49",
+      "bytes": 14476,
+      "sha256": "4d4620003677e56cf89524af2bba13f4571e42d6edcd291f3d3f30c3ce6a7313",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/a/index.html",
-      "bytes": 11056,
-      "sha256": "09c6408c705fffe38f002b550ef39ded62ed42f8f6ae6ede03ffe2e5272b07ed",
+      "bytes": 14390,
+      "sha256": "1070c677d82bf66f8278282107950dc3dd2e5c3a1c3a4ba8b5661e8d3df45d43",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/b/index.html",
-      "bytes": 11036,
-      "sha256": "861ea5942c4038b9d8bac34b5aef9b43cd545e305f20d5f88730eb46320a02c6",
+      "bytes": 14370,
+      "sha256": "5c814a008027a8d0374386fb9ea59822d4668b3451dc35032e5069da12dede1f",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/c/index.html",
-      "bytes": 11131,
-      "sha256": "a8d52e001380c584e58d1d52119ff8f28cfd20058f3593fa64658d2c7094ea3a",
+      "bytes": 14465,
+      "sha256": "21d8731717f4f0d23f2c74965882bb2b9fa5096c611ff40483312666120f842a",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/a/index.html",
-      "bytes": 11127,
-      "sha256": "5ec9bb966b02f0a248fb625cc63dd8c94a68cb8d5f82204038fcd85da0f18b89",
+      "bytes": 14461,
+      "sha256": "0a9008c6e9dfa7882b0109dadf9985a64579231e2bc6b37d33f04dca84ad8fab",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/b/index.html",
-      "bytes": 11074,
-      "sha256": "2cd6b2a269ee3c6bb78a1e19aed8f402c0cafa9f5f4ea3669936e770582f9310",
+      "bytes": 14408,
+      "sha256": "a00fa33c4d52e3639c6c1962b6cca2b11e40b533fd339c2b5549271e0a21ba49",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/c/index.html",
-      "bytes": 11171,
-      "sha256": "ec3de116815adb7f7d464b046c830c3f010e7df4b263ca7919790aeaca6e257a",
+      "bytes": 14505,
+      "sha256": "5cb26515e3286776754cc959ac6cb17bc72e34540480e84a7115a7bf0be15c82",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/a/index.html",
-      "bytes": 11126,
-      "sha256": "89fd76fb6d4f0cf03d9abef3e7062ee48d9b91ffb9cefaed72a76b94ed2064e3",
+      "bytes": 14460,
+      "sha256": "c28349fd5b3ca65b093be4761c1deef91dcb31441538b716793c99fb829ac2ac",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/b/index.html",
-      "bytes": 11065,
-      "sha256": "4f9c5e07930eba66caf59afc39cd2e519eed6ba7af9178be84334dc01c8bfc28",
+      "bytes": 14399,
+      "sha256": "9549a751c3059b7af030cead10e31015f37c20c702fb3c18697fd629a7047ef4",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/c/index.html",
-      "bytes": 11166,
-      "sha256": "e1378809caa35fd9378d66eb853f96fdb31a8618a6831cc5aa9dd035029dfc58",
+      "bytes": 14500,
+      "sha256": "1b11312f75457f81566c1ae3a1e80980154d01c2d8d943fb8dfbbf1307d86e83",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/coastline-crown-barbers/index.html",
-      "bytes": 5424,
-      "sha256": "03950c9d8811aa242cbb4175ada5b7d38b7714e246819d42ceba9c4d98aaa1de",
+      "bytes": 5423,
+      "sha256": "6c0f273f34e94646ef5accc41c70362da6fa27d45a63e4dce2896793e2358d15",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/palmera-fade-society/index.html",
-      "bytes": 5402,
-      "sha256": "910705bbf0dd1fd31ad6707de76d47585fc5569a0c550fcd901738e852a43131",
+      "bytes": 5401,
+      "sha256": "f65bf3c73d6ffb4e776bd2abcc47b4bbd217366c22cc00953f22d2910f7d9368",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/saltline-color-house/index.html",
-      "bytes": 5393,
-      "sha256": "e4c7af684b4aff2213554d11c69a9c73db164a7b3e09b5b3c7faf03349dc59e5",
+      "bytes": 5392,
+      "sha256": "4c5f6851d0c7cead247b80816f04e70e53209664dbc534ca435f7a8cf3bfa53c",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/velvet-coil-atelier/index.html",
-      "bytes": 5348,
-      "sha256": "3575983d9b0ebd303624013dfad9c6f11ff8c01c8d8d8aac55f161936bc56c79",
+      "bytes": 5347,
+      "sha256": "7fbe98a87ab1c0cabaaf0a9ee7a4ba9989a7d999e8d8eb4abb3bdad0833bbee3",
       "role": "customer-facing-static-proof"
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/styles.css",
-      "bytes": 71098,
-      "sha256": "ee81e0df9ad778ee511d79372f9a003bfa08a5da938cda243266f53aea69d0fe",
+      "bytes": 80654,
+      "sha256": "ad76bf62b92d8c9d761648d5adbb90d2724d6a98384735a454e5851470ead7e6",
       "role": "proof-support"
     },
     {
@@ -683,8 +751,8 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/index.html",
-      "bytes": 17049,
-      "sha256": "589cffc56c4be8e4b3c1d92e5efbcc3697e5641d7ff437d4707a144aa299eade",
+      "bytes": 17351,
+      "sha256": "39a96cd14a1367364f6b39e0110a748df9179a830622caf8049120b1698f8fda",
       "role": "customer-facing-static-proof"
     },
     {
@@ -713,15 +781,15 @@
     },
     {
       "path": "frontend/public/showcase/booked-and-branded-pilot/wow-lab/velvet-coil-architecture/index.html",
-      "bytes": 9517,
-      "sha256": "7eabb4247a111ecc547c180b6d026868dd263c89a297095576ce1628584f2cf2",
+      "bytes": 9516,
+      "sha256": "1abde09be68c36a6625a985df7675b80ef3b2d39f6a0ebfcb00e3a8079337b31",
       "role": "customer-facing-static-proof"
     },
     {
       "role": "browser-qa-report",
       "path": "docs/evidence/booked-branded-four-proof-pilot/qa-report.json",
-      "bytes": 26922,
-      "sha256": "2d96df0ec51abb8a03591f08ee9cb15e34850fb33bb6ca2190ea722c66313911"
+      "bytes": 30649,
+      "sha256": "f9c0a36ef020ed16a2e60ab21d97226304a63f9686dd7f1fddc43c3d6bafd482"
     }
   ],
   "retrieval": {

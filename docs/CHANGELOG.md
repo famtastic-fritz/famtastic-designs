@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-08-27 — Booked & Branded page/component/part proof
+
+- Converted the twelve working proof pages from one embedded page function to
+  a versioned one-page recipe with nine stable section-component instances and
+  explicit page, section, component, field, slot, repeater, and action identity.
+- Added a Component Lab that documents page → section → component → part,
+  implemented versus planned components, hide/reorder/media rules, and the
+  additive Site Studio translation boundary.
+- Added four Velvet Coil image-only pages that freeze all copy, typography,
+  palette, sections, fields, links, controls, ordering, and component variants;
+  only the `hero-media.src` binding changes across the four existing images.
+- Added a deterministic contract test requiring all four normalized pages to
+  share one SHA-256 hash and the same nine component signatures. No provider
+  call, image generation, email, customer record, deployment, or production
+  surface changed.
+
 ## 2026-08-27 — Booked & Branded room-card alignment
 
 - Removed the desktop-only vertical/rotational transform that pushed Direction

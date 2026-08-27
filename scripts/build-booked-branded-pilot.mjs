@@ -6,6 +6,7 @@ import { existsSync } from 'node:fs';
 import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { renderBookedBrandedOnePage } from './booked-branded-components.mjs';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicRoot = join(repositoryRoot, 'frontend/public/showcase/booked-and-branded-pilot');
@@ -13,9 +14,13 @@ const dataPath = join(publicRoot, 'pilot-data.json');
 const data = JSON.parse(await readFile(dataPath, 'utf8'));
 const creativePath = join(publicRoot, 'creative-system.json');
 const creative = JSON.parse(await readFile(creativePath, 'utf8'));
+const componentSystemPath = join(publicRoot, 'component-system.json');
+const componentSystem = JSON.parse(await readFile(componentSystemPath, 'utf8'));
+const onePageRecipe = componentSystem.page_templates.find(item => item.id === 'booked-branded-one-page-v1');
+if (!onePageRecipe) throw new Error('The Booked & Branded one-page component recipe is missing.');
 const publicBase = '/showcase/booked-and-branded-pilot';
 const canonicalBase = 'https://famtasticdesigns.com' + publicBase;
-const assetRevision = '20260827-room-alignment';
+const assetRevision = '20260827-components-v1';
 const generatedImageRoot = join(publicRoot, 'assets/directions');
 const generationReceiptPath = join(generatedImageRoot, 'generation-receipt.json');
 const generatedPromptManifestPath = join(generatedImageRoot, 'prompt-manifest.json');
@@ -309,7 +314,7 @@ function templateLabPage() {
               <p class="kicker">FAMtastic Template Lab · research first</p>
               <h1>A template should feel <em>hand built.</em><br>The system underneath should feel repeatable.</h1>
               <p>These are not four one-page recolors. Each family has its own material world, typography composition, shape grammar, content rhythm, booking behavior, and rules for adapting to the next real business.</p>
-              <div class="lab-hero-actions">${button('#families', 'See the four families')}${button('#foundation', 'See what every client gets', true)}</div>
+              <div class="lab-hero-actions">${button('#families', 'See the four families')}${button(`${publicBase}/component-lab/`, 'Open the Component Lab', true)}${button('#foundation', 'See what every client gets', true)}</div>
             </div>
             <aside class="lab-manifesto">
               <span>THE RULE</span>
@@ -331,7 +336,7 @@ function templateLabPage() {
 
         <section class="lab-shay"><div class="shell lab-shay-grid"><div><span class="shay-orb package-orb">S</span><p class="kicker">The FAMtastic business face</p><h2>Shay explains the value without overselling the machinery.</h2><p>Shay is FAMtastic Designs’ AI Business Concierge. She helps the owner compare proofs, understand what is included, collect setup choices, and see the next useful step. Fritz and the FAMtastic team retain authority for price, scope, approval, payment, and launch.</p></div><aside><small>Future motion layer</small><strong>HyperFrames can animate the approved motif—not invent the business.</strong><p>A short texture loop, reveal, or social explainer can become a later campaign asset. Reduced-motion-safe static design remains the default, and motion never changes pricing or publishes itself.</p></aside></div></section>
 
-        <section class="lab-final"><div class="shell"><p class="kicker">No work thrown away</p><h2>The four current proofs become the first training examples for a reusable niche system.</h2><div>${button(`${publicBase}/`, 'Return to the four proof stories')}${button(`${publicBase}/package/`, 'Review the complete package', true)}</div></div></section>
+        <section class="lab-final"><div class="shell"><p class="kicker">No work thrown away</p><h2>The four current proofs become the first training examples for a reusable niche system.</h2><div>${button(`${publicBase}/component-lab/`, 'See page → component → part')}${button(`${publicBase}/`, 'Return to the four proof stories', true)}${button(`${publicBase}/package/`, 'Review the complete package', true)}</div></div></section>
       </main>`
   });
 }
@@ -433,129 +438,87 @@ function wowLabPage() {
   });
 }
 
-function requestCards(business) {
-  return business.requests.map((request, index) => {
-    const actions = index === 0
-      ? '\n      <div class="request-actions"><span>Confirm</span><span>Suggest time</span></div>'
-      : '';
-    return `
-    <div class="request-card">
-      <div class="request-top">
-        <span class="request-avatar">${esc(request.initials)}</span>
-        <span><strong>${esc(request.name)}</strong><small>${esc(request.service)} · ${esc(request.time)}</small></span>
-        <span class="status-chip">${esc(request.status)}</span>
-      </div>${actions}
-    </div>`;
-  }).join('');
+function componentLabPage() {
+  const proof = componentSystem.image_only_proof;
+  const componentCards = componentSystem.components.map((component, index) => `<article class="component-card">
+    <div><span>${String(index + 1).padStart(2, '0')}</span><small>${esc(component.category)}</small></div>
+    <h3>${esc(component.name)}</h3>
+    <code>${esc(component.id)}</code>
+    <p>${component.can_hide ? 'May be hidden or shown.' : 'Required in this recipe.'} ${component.can_reorder ? 'May move within an allowed region.' : 'Position is locked for this recipe.'}</p>
+    <ul><li><b>${component.fields.length}</b> fields</li><li><b>${component.slots.length}</b> media slots</li><li><b>${component.repeaters.length}</b> repeaters</li><li><b>${component.parts.length}</b> named parts</li></ul>
+  </article>`).join('');
+  const variantCards = proof.variants.map((variant, index) => `<article class="swap-card">
+    <a href="${publicBase}/component-lab/image-only/${esc(variant.id)}/"><img src="${esc(variant.media_src)}" alt="Image-only component proof ${index + 1}" width="1376" height="768"></a>
+    <div><span>0${index + 1}</span><div><small>Only hero-media.src changes</small><h3>${esc(variant.label)}</h3></div>${button(`${publicBase}/component-lab/image-only/${variant.id}/`, 'Open identical page')}</div>
+  </article>`).join('');
+  const planned = componentSystem.planned_components.map(item => `<li><code>${esc(item)}</code></li>`).join('');
+  const mainRecipe = onePageRecipe.regions.main.map((section, index) => `<li><b>${String(index + 1).padStart(2, '0')}</b><span>${esc(section.instance_id)}</span><code>${esc(section.component_id)}</code></li>`).join('');
+  const recipeHash = createHash('sha256').update(JSON.stringify(onePageRecipe)).digest('hex');
+  return template({
+    title: 'Booked & Branded Component Lab — FAMtastic Designs',
+    description: 'A proof that one reusable page recipe can produce four media lives while its section components remain frozen.',
+    className: 'component-lab-page',
+    body: `${ribbon()}
+      <main>
+        <section class="component-lab-hero">
+          <div class="shell component-lab-hero-grid">
+            <div>
+              <a class="back-link" href="${publicBase}/template-lab/">← Return to the Template Lab</a>
+              <p class="kicker">FAMtastic Component Lab · proof of concept</p>
+              <h1>One page.<br><em>Nine components.</em><br>Four media lives.</h1>
+              <p>The page is now a recipe instead of a slab of HTML. Every section has a stable identity, every component has swappable parts, and the first controlled experiment changes one image slot—nothing else.</p>
+              <div class="component-lab-actions">${button('#image-proof', 'See the four image-only variants')}${button('#component-inventory', 'Inspect the component inventory', true)}</div>
+            </div>
+            <aside class="component-lab-equation" aria-label="Component system hierarchy">
+              <small>THE MODEL</small>
+              <div><b>Page</b><span>ordered recipe</span></div>
+              <i>↓</i>
+              <div><b>Section</b><span>component instance</span></div>
+              <i>↓</i>
+              <div><b>Component</b><span>versioned template</span></div>
+              <i>↓</i>
+              <div><b>Parts</b><span>fields · slots · repeaters · actions</span></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="component-proof-strip"><div class="shell"><div><b>1</b><span>page recipe</span></div><div><b>${componentSystem.components.length}</b><span>implemented components</span></div><div><b>4</b><span>image-only page variants</span></div><div><b>1</b><span>allowed field change</span></div></div></section>
+
+        <section class="component-recipe"><div class="shell component-recipe-grid"><div><p class="kicker">The frozen recipe</p><h2>Long page now.<br>Multi-page later.</h2><p>Hiding a section changes visibility. Moving it changes recipe order. Splitting the site later moves the same component instance into another page recipe—the component does not need to be rebuilt.</p><ol>${mainRecipe}</ol></div><aside><small>Recipe fingerprint</small><code>${recipeHash}</code><p>All four proof pages below carry this exact recipe. The automated contract normalizes the hero image URL and requires the remaining HTML to hash identically.</p></aside></div></section>
+
+        <section class="component-swap-proof" id="image-proof"><div class="shell"><header><p class="kicker">Controlled experiment 01</p><h2>Four more visual lives.<br><em>No component swap yet.</em></h2><p>Same Velvet Coil copy. Same typography. Same palette. Same nine components. Same fields, services, links, QR disclosure, reviews, form, and footer. Only the hero-media image slot changes.</p></header><div class="swap-grid">${variantCards}</div></div></section>
+
+        <section class="component-inventory" id="component-inventory"><div class="shell"><header><p class="kicker">The parts drawer</p><h2>Every section becomes<br><em>a reusable mini-template.</em></h2><p>Each card below can later have its own variants while preserving the field contract. A hero can become full-bleed or editorial split; services can become cards or a price list; the data stays portable.</p></header><div class="component-card-grid">${componentCards}</div></div></section>
+
+        <section class="component-next"><div class="shell component-next-grid"><div><p class="kicker">Foundation components next</p><h2>No basics get lost.</h2><p>The proof preserves the current page first. The next additions complete the reusable foundation: story, work gallery, protected contact, location/map/hours, and policies/FAQ.</p></div><ul>${planned}</ul></div></section>
+
+        <section class="component-studio-handoff"><div class="shell"><div><p class="kicker">Site Studio translation</p><h2>This becomes a builder—not another pile of pages.</h2><p>Site Studio can store the page recipe, open a component drawer, hide or reorder component instances, edit typed fields, and replace media slots. FAMtastic keeps the quality references, proof delivery, and business/customer history.</p></div><div>${button(`${publicBase}/template-lab/`, 'Return to the visual families')}${button(`${publicBase}/package/`, 'Review the package foundation', true)}</div></div></section>
+      </main>`
+  });
 }
 
-function serviceCards(business) {
-  return business.services.map(service => `
-    <article class="service-card">
-      <span>${esc(service.time)}</span>
-      <h3>${esc(service.name)}</h3>
-      <div class="service-price"><b>${esc(service.price)}</b><span>Request →</span></div>
-    </article>`).join('');
-}
-
-function proofPage(business, direction) {
-  const other = business.directions.filter(item => item.id !== direction.id);
+function proofPage(business, direction, { imageOverride = null, imageOnlyProof = false } = {}) {
   const { archetype, businessSystem } = systemFor(business, direction);
-  const ownerDeskLabel = direction.id === 'c' ? 'How the flow works' : 'See the Booking Desk';
+  const imageSrc = imageOverride || directionImage(business, direction);
+  const imageAlt = `Fictional ${business.operator} in the ${direction.name} art direction for ${business.name}`;
+  const componentPage = renderBookedBrandedOnePage({
+    recipe: onePageRecipe,
+    business,
+    direction,
+    archetype,
+    businessSystem,
+    publicBase,
+    imageSrc,
+    imageAlt,
+    esc,
+    button,
+    vars: vars(business, direction),
+  });
   return template({
     title: `${business.name} — ${direction.name}`,
     description: `${direction.label} Booked & Branded demonstration for ${business.name}.`,
-    className: `proof-page dir-${direction.id}`,
-    body: `${ribbon()}
-      <div style="${vars(business, direction)}">
-        <nav class="proof-nav" aria-label="Primary">
-          <a class="brand-lockup" href="${publicBase}/rooms/${business.slug}/"><span class="brand-mark">${esc(business.mark)}</span><span>${esc(business.name)}</span></a>
-          <div class="proof-nav-links"><a href="#services">Services</a><a href="#owner-desk">Owner desk</a>${button('#request', archetype.message.cta)}</div>
-        </nav>
-        <main>
-          <section class="proof-hero">
-            <div class="proof-hero-copy">
-              <span class="overline">${esc(direction.name)} · ${esc(business.location)}</span>
-              <h1 data-echo="${esc(direction.headline)}">${esc(direction.headline)}</h1>
-              <p>${esc(direction.subhead)}</p>
-              <div class="proof-actions">${button('#request', archetype.message.cta)}${button('#owner-desk', ownerDeskLabel, true)}</div>
-            </div>
-            <div class="proof-hero-media">
-              <img src="${directionImage(business, direction)}" alt="Fictional ${esc(business.operator)} in the ${esc(direction.name)} art direction for ${esc(business.name)}" width="1376" height="768">
-              <div class="proof-hero-tag"><strong>${esc(business.hours)}</strong><br>${esc(business.policy)}</div>
-            </div>
-          </section>
-
-          <section class="creative-dna-strip" aria-label="Direction creative system">
-            <div><small>Type Director</small><strong>${esc(archetype.type.display_family)} × ${esc(archetype.type.body_family)}</strong><span>${esc(archetype.type.composition)}</span></div>
-            <div><small>Shape Director</small><strong>${esc(archetype.name)}</strong><span>${esc(archetype.shape.grammar)}</span></div>
-            <div><small>Message Director</small><strong>${esc(archetype.message.tone)}</strong><span>${esc(archetype.message.argument)}</span></div>
-            <div><small>Native motifs</small><strong>${esc(businessSystem.motifs.join(' · '))}</strong><span>Original symbolic language, never a copied platform identity.</span></div>
-          </section>
-
-          <section class="proof-section" id="services">
-            <div class="shell">
-              <div class="section-head"><div><p class="kicker">Choose with confidence</p><h2>Services that explain themselves.</h2></div><p>Each service gives the client the price, time, preparation, and next step before they ask. The owner controls what is visible from the phone.</p></div>
-              <div class="service-grid">${serviceCards(business)}</div>
-            </div>
-          </section>
-
-          <section class="proof-section experience-band" id="owner-desk">
-            <div class="shell experience-grid">
-              <div class="experience-copy">
-                <p class="kicker">The operating difference</p>
-                <h2>The site and the workday share one truth.</h2>
-                <p>Start with the useful core: show services clearly, choose a booking path that fits the owner today, see new requests when request-to-book is selected, display the business’s own payment QR, and invite a fresh testimonial after completion. Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades for the moment they can save time or unlock more appointments.</p>
-                <div class="flow-list">
-                  <div class="flow-item"><b>1</b><span><strong>Client requests</strong><br>Service, preferred time, and essential preparation context.</span></div>
-                  <div class="flow-item"><b>2</b><span><strong>Owner decides</strong><br>Confirm, propose another time, or decline without losing the request.</span></div>
-                  <div class="flow-item"><b>3</b><span><strong>Business gets paid directly</strong><br>Show the operator’s own Cash App or existing payment QR. The payment stays between the client, business, and chosen provider.</span></div>
-                </div>
-              </div>
-              <div class="phone-wrap" aria-label="Static phone Booking Desk demonstration">
-                <div class="phone">
-                  <div class="phone-screen">
-                    <div class="phone-status"><span>9:41</span><span>Booked &amp; Branded</span><span>•••</span></div>
-                    <div class="desk-head"><small>${esc(business.name)}</small><h3>Today’s chair</h3></div>
-                    <div class="desk-tabs"><span>Requests</span><span>Schedule</span><span>Services</span><span>Reviews</span></div>
-                    <div class="request-list">${requestCards(business)}</div>
-                    <div class="desk-summary"><div><b>3</b><small>open requests</small></div><div><b>1</b><small>reply due</small></div></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section class="proof-section">
-            <div class="shell">
-              <div class="section-head"><div><p class="kicker">Your QR. Your account. Your money.</p><h2>Let clients scan the payment method you already use.</h2></div><p>The business supplies and approves its own Cash App or existing payment QR. This demonstration QR cannot be scanned or paid.</p></div>
-              <div class="qr-row"><div class="demo-qr" aria-label="Decorative non-scannable demo QR"></div><div><h3>FAMtastic displays it. The business gets paid directly.</h3><p>FAMtastic does not process, receive, settle, or reconcile the payment. Payment-processing and optional messaging costs are paid directly by the business to its chosen providers.</p></div></div>
-            </div>
-          </section>
-
-          <section class="proof-section">
-            <div class="shell">
-              <div class="section-head"><div><p class="kicker">Build an owned reputation</p><h2>Let the good work keep working.</h2></div><p>Keep existing public review links visible while inviting completed clients to leave fresh, permission-based testimonials here. The owner can moderate privacy and abuse without filtering out honest negative feedback.</p></div>
-              <div class="review-grid"><article class="review-card"><span class="stars">★★★★★</span><p>“Sample placement: clear service details and an easy confirmation made the whole visit feel organized.”</p><small>Fictional client · Demonstration copy</small></article><article class="review-card"><span class="stars">★★★★★</span><p>“Sample placement: the result felt personal—and the booking experience finally matched it.”</p><small>Fictional client · Demonstration copy</small></article></div>
-            </div>
-          </section>
-
-          <section class="proof-section" id="request">
-            <div class="shell">
-              <div class="section-head"><div><p class="kicker">Choose the booking path</p><h2>Make the next appointment easy.</h2></div><p>This proof demonstrates request-to-book. A live setup can instead link or embed an owner-controlled Google appointment page, Cal.com page, or current provider after the selected path is reviewed on desktop and phone.</p></div>
-              <form class="booking-form" aria-label="Non-submitting demonstration booking form">
-                <label>Service<select><option>${esc(business.services[0].name)}</option><option>${esc(business.services[1].name)}</option><option>${esc(business.services[2].name)}</option></select></label>
-                <label>Preferred day<input type="text" value="Saturday" readonly></label>
-                <label>Preferred time<input type="text" value="11:30 AM" readonly></label>
-                <label>Contact method<select><option>Text me</option><option>Email me</option></select></label>
-                <label class="wide">Anything the owner should know?<input type="text" value="First visit — looking for a consultation." readonly></label>
-                <span class="wide button" aria-disabled="true">Demonstration only — no request submitted</span>
-              </form>
-            </div>
-          </section>
-        </main>
-        <footer class="proof-footer"><div class="shell proof-footer-grid"><div><strong>${esc(business.name)}</strong><br><span>${esc(business.location)} · ${esc(business.hours)}</span></div><div>${button(`${publicBase}/rooms/${business.slug}/`, 'Compare all 3 directions', true)}</div></div></footer>
-      </div>`
+    className: `proof-page dir-${direction.id}${imageOnlyProof ? ' image-only-proof-page' : ''}`,
+    body: `${ribbon()}${componentPage}`
   });
 }
 
@@ -580,7 +543,7 @@ function sha256(buffer) {
   return createHash('sha256').update(buffer).digest('hex');
 }
 
-for (const generated of ['emails', 'rooms', 'proofs', 'package']) {
+for (const generated of ['emails', 'rooms', 'proofs', 'package', 'component-lab']) {
   await rm(join(publicRoot, generated), { recursive: true, force: true });
 }
 
@@ -588,6 +551,7 @@ await write('index.html', pilotIndex());
 await write('package/index.html', packagePage());
 await write('template-lab/index.html', templateLabPage());
 await write('wow-lab/velvet-coil-architecture/index.html', wowLabPage());
+await write('component-lab/index.html', componentLabPage());
 
 for (const business of data.businesses) {
   await write(`emails/${business.slug}/index.html`, emailPage(business));
@@ -595,6 +559,17 @@ for (const business of data.businesses) {
   for (const direction of business.directions) {
     await write(`proofs/${business.slug}/${direction.id}/index.html`, proofPage(business, direction));
   }
+}
+
+const imageOnlyProof = componentSystem.image_only_proof;
+const imageOnlyBusiness = data.businesses.find(item => item.slug === imageOnlyProof.business_slug);
+const imageOnlyDirection = imageOnlyBusiness?.directions.find(item => item.id === imageOnlyProof.direction_id);
+if (!imageOnlyBusiness || !imageOnlyDirection) throw new Error('The image-only component proof base is incomplete.');
+for (const variant of imageOnlyProof.variants) {
+  await write(`component-lab/image-only/${variant.id}/index.html`, proofPage(imageOnlyBusiness, imageOnlyDirection, {
+    imageOverride: variant.media_src,
+    imageOnlyProof: true,
+  }));
 }
 
 const promptManifest = existsSync(generatedPromptManifestPath)
@@ -672,7 +647,9 @@ const buildDna = {
     build_class: 'medium',
     offer_status: creative.offer.status,
     public_base: canonicalBase,
-    direction_system: Object.values(creative.archetypes).map(item => item.name)
+    direction_system: Object.values(creative.archetypes).map(item => item.name),
+    page_template_id: onePageRecipe.id,
+    component_system_ref: 'frontend/public/showcase/booked-and-branded-pilot/component-system.json'
   },
   run: {
     source_lane: 'famtastic-owned-product-demonstration',
@@ -696,6 +673,7 @@ const buildDna = {
     localStage('shape-direction', 'shape-composition-system', Object.keys(creative.archetypes)),
     localStage('type-direction', 'typographic-composition-system', Object.keys(creative.archetypes)),
     localStage('message-direction', 'proof-message-system', Object.keys(creative.archetypes)),
+    localStage('component-system', 'page-section-part-componentization', ['component-system.json', 'component-lab/index.html', '4 image-only component proofs']),
     {
       stage_id: 'template-material-studies', capability: 'reference-led-material-system-generation', attempt: 1,
       execution: {
@@ -728,7 +706,7 @@ const buildDna = {
       },
       result: { status: generatedReceipt ? 'completed' : 'planned', provider_generation_count: generatedReceipt?.provider_generation_count || 0, selected_image_count: generatedReceipt?.image_count || 0, outputs: generatedReceipt?.artifacts.map(item => item.filename) || [] }
     },
-    localStage('static-construction', 'static-proof-construction', ['index.html', 'package/index.html', 'template-lab/index.html', 'wow-lab/velvet-coil-architecture/index.html', '4 emails', '4 rooms', '12 baseline proof pages']),
+    localStage('static-construction', 'static-proof-construction', ['index.html', 'package/index.html', 'template-lab/index.html', 'component-lab/index.html', 'wow-lab/velvet-coil-architecture/index.html', '4 emails', '4 rooms', '12 baseline proof pages', '4 image-only component proofs']),
     {
       stage_id: 'browser-qa', capability: 'responsive-browser-qa', attempt: 1,
       execution: { provider: { id: 'playwright-local' }, model: { status: 'not_applicable' }, timing: { status: 'pending' }, cost: { status: 'not_applicable', amount_usd: 0 } },
@@ -750,5 +728,5 @@ const buildDna = {
 };
 
 await write('build-dna.json', JSON.stringify(buildDna, null, 2) + '\n');
-console.log(`Built ${data.businesses.length} email previews, ${data.businesses.length} concept rooms, and ${data.businesses.length * 3} proof directions.`);
+console.log(`Built ${data.businesses.length} email previews, ${data.businesses.length} concept rooms, ${data.businesses.length * 3} proof directions, and ${imageOnlyProof.variants.length} image-only component proofs.`);
 console.log(`Evidence: ${join(publicRoot, 'build-dna.json')}`);

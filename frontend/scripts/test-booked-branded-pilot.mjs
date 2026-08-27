@@ -10,6 +10,7 @@ const frontendRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const repositoryRoot = resolve(frontendRoot, '..');
 const publicRoot = join(frontendRoot, 'public/showcase/booked-and-branded-pilot');
 const data = JSON.parse(await readFile(join(publicRoot, 'pilot-data.json'), 'utf8'));
+const componentSystem = JSON.parse(await readFile(join(publicRoot, 'component-system.json'), 'utf8'));
 const base = (process.env.BOOKED_BRANDED_BASE_URL || 'http://127.0.0.1:4173/showcase/booked-and-branded-pilot').replace(/\/$/, '');
 const evidenceDir = join(repositoryRoot, 'docs/evidence/booked-branded-four-proof-pilot');
 const screenshotDir = join(evidenceDir, 'screenshots');
@@ -18,7 +19,9 @@ await mkdir(screenshotDir, { recursive: true });
 const routes = ['/'];
 routes.push('/package/');
 routes.push('/template-lab/');
+routes.push('/component-lab/');
 routes.push('/wow-lab/velvet-coil-architecture/');
+for (const variant of componentSystem.image_only_proof.variants) routes.push(`/component-lab/image-only/${variant.id}/`);
 for (const business of data.businesses) {
   routes.push(`/emails/${business.slug}/`, `/rooms/${business.slug}/`);
   for (const direction of business.directions) routes.push(`/proofs/${business.slug}/${direction.id}/`);
@@ -42,6 +45,7 @@ async function inspectCopy(relativePath, requiredPhrases = []) {
 
 await inspectCopy('package/index.html', ['Start cheap. Upgrade from evidence.', '$9.99/month from month 13', '$149 one time', 'Use the booking tool that fits the owner now.', 'Your QR. Your account. Your money.', 'FAMtastic does not process, receive, settle, or reconcile the payment.']);
 await inspectCopy('template-lab/index.html', ['The system underneath should feel repeatable.', 'The website basics do not disappear.', 'One branded forwarding address', 'Booksy or another current provider', 'FAMtastic does not process or receive the payment.', 'Shay is FAMtastic Designs’ AI Business Concierge.']);
+await inspectCopy('component-lab/index.html', ['One page.', 'Nine components.', 'Only the hero-media image slot changes.', 'Every section becomes', 'No basics get lost.', 'This becomes a builder']);
 await inspectCopy('wow-lab/velvet-coil-architecture/index.html', ['Every coil', 'is architecture.', 'THE TEXTURE ATLAS', 'THE CONSULTATION BLUEPRINT', 'Custom domain', 'Branded forwarding email', 'Owner’s payment QR', 'FAMtastic does not process']);
 for (const business of data.businesses) {
   await inspectCopy(`emails/${business.slug}/index.html`, ['Normal hosting is $9.99 a month', 'optional upgrades—not surprise requirements', 'Payment-processing and optional messaging costs are paid directly by the business']);
@@ -114,6 +118,22 @@ try {
   await labMobile.screenshot({ path: join(screenshotDir, 'template-lab-mobile.png'), fullPage: true });
   await labMobile.close();
 
+  const componentLabDesktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  await componentLabDesktop.goto(base + '/component-lab/', { waitUntil: 'networkidle' });
+  await componentLabDesktop.screenshot({ path: join(screenshotDir, 'component-lab-desktop.png'), fullPage: true });
+  await componentLabDesktop.close();
+  const componentLabMobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await componentLabMobile.goto(base + '/component-lab/', { waitUntil: 'networkidle' });
+  await componentLabMobile.screenshot({ path: join(screenshotDir, 'component-lab-mobile.png'), fullPage: true });
+  await componentLabMobile.close();
+
+  for (const variant of componentSystem.image_only_proof.variants) {
+    const imageOnlyPage = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+    await imageOnlyPage.goto(`${base}/component-lab/image-only/${variant.id}/`, { waitUntil: 'networkidle' });
+    await imageOnlyPage.screenshot({ path: join(screenshotDir, `image-only-${variant.id}-desktop.png`) });
+    await imageOnlyPage.close();
+  }
+
   const wowDesktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   await wowDesktop.goto(base + '/wow-lab/velvet-coil-architecture/', { waitUntil: 'networkidle' });
   await wowDesktop.screenshot({ path: join(screenshotDir, 'wow-top-desktop.png') });
@@ -159,7 +179,7 @@ const report = {
   base_url: base,
   routes_tested: routes.length,
   viewport_checks: routeEvidence.length,
-  screenshots: 20,
+  screenshots: 26,
   copy_checks: copyEvidence.length,
   errors,
   passed: errors.length === 0,
@@ -183,7 +203,7 @@ browserStage.result = {
   status: 'completed',
   routes_tested: routes.length,
   viewport_checks: routeEvidence.length,
-  screenshots: 20,
+  screenshots: 26,
   copy_checks: copyEvidence.length,
   evidence_ref: 'docs/evidence/booked-branded-four-proof-pilot/qa-report.json'
 };
@@ -193,7 +213,7 @@ visualStage.execution.timing = primaryReviewPassed ? { status: 'reported', compl
 visualStage.result = primaryReviewPassed
   ? {
       status: 'completed',
-      notes: 'The overview, package, Template Lab at desktop and mobile, the additive Velvet Coil Architecture quality study at desktop and mobile, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. The Ultra study uses a new information architecture and high-concept hero while retaining the baseline templates unchanged; no text collision, broken image, or fictional-to-real ambiguity was observed.',
+      notes: 'The overview, package, Template Lab, Component Lab, four image-only component proofs, the additive Velvet Coil Architecture quality study, all four rooms, all four operator-first mobile directions, one Shay email, and one complete three-direction desktop set were inspected. The four image-only pages share the frozen one-page component recipe and alter only hero-media.src; no text collision, broken image, or fictional-to-real ambiguity was observed.',
       independent_review: 'reserved_for_owner'
     }
   : { status: 'pending', independent_review: 'reserved_for_owner' };
@@ -206,5 +226,5 @@ buildDna.artifacts.push({
 });
 await writeFile(buildDnaPath, JSON.stringify(buildDna, null, 2) + '\n');
 
-console.log(`PASS: ${routes.length} routes at desktop and 390px; 20 screenshots captured.`);
+console.log(`PASS: ${routes.length} routes at desktop and 390px; 26 screenshots captured.`);
 console.log(`Evidence: ${reportPath}`);

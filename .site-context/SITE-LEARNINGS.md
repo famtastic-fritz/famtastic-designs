@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — One-page proof sections should be portable component instances
+
+- Observation: generating several pages through one renderer reduces code
+  duplication, but it does not by itself give the operator a component drawer,
+  hide/reorder behavior, media slots, or a safe future multi-page upgrade.
+- Guidance: give every page, section instance, component, field, and slot a
+  stable source-defined ID. Treat a media replacement as a slot-binding change,
+  not a new component, and test that every other byte remains frozen. When the
+  starter grows, move the same component instance between page recipes rather
+  than recreating it and risking a quality drop.
+
 ## 2026-08-27 — Comparison grids need aligned outer geometry
 
 - Observation: a translated middle direction card looked accidentally
