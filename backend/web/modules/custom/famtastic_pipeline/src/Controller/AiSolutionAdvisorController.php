@@ -34,9 +34,23 @@ class AiSolutionAdvisorController extends ControllerBase {
     $content = (string) $request->getContent();
     $data = Json::decode($content) ?: [];
 
+    $messages = is_array($data['messages'] ?? null) ? $data['messages'] : [];
+    $gatheredData = is_array($data['gathered_data'] ?? null) ? $data['gathered_data'] : [];
     $prompt = (string) ($data['prompt'] ?? '');
     $answers = is_array($data['answers'] ?? null) ? $data['answers'] : [];
     $context = is_array($data['context'] ?? null) ? $data['context'] : [];
+
+    if (!empty($messages)) {
+      $turn = $this->advisor->conversationalTurn($messages, $gatheredData, $context);
+      return new JsonResponse([
+        'status' => 'ok',
+        'turn' => $turn,
+        'recommendation' => $turn['recommendation'],
+      ], Response::HTTP_OK, [
+        'Access-Control-Allow-Origin' => '*',
+        'Cache-Control' => 'no-cache, private',
+      ]);
+    }
 
     $result = $this->advisor->advise($prompt, $answers, $context);
 
@@ -48,6 +62,7 @@ class AiSolutionAdvisorController extends ControllerBase {
       'Cache-Control' => 'no-cache, private',
     ]);
   }
+
 
   /**
    * Responds to brief synthesis requests.

@@ -185,6 +185,246 @@ class AiSolutionAdvisorService {
   }
 
   /**
+   * Processes a turn in a guided conversational intake interview.
+   */
+  public function conversationalTurn(array $messages, array $gatheredData = [], array $context = []): array {
+    $lastUserMessage = '';
+    for ($i = count($messages) - 1; $i >= 0; $i--) {
+      if (($messages[$i]['role'] ?? '') === 'user') {
+        $lastUserMessage = trim((string) ($messages[$i]['content'] ?? ''));
+        break;
+      }
+    }
+
+    // Merge and extract data from user input
+    $data = $this->extractDataFromConversation($messages, $gatheredData, $lastUserMessage);
+
+    // Calculate live package recommendation based on all gathered data
+    $combinedText = implode(' ', array_filter([
+      $data['business_name'] ?? '',
+      $data['industry'] ?? '',
+      $data['business_model'] ?? '',
+      $data['setup'] ?? '',
+      $data['pages'] ?? '',
+      $data['logo_status'] ?? '',
+      $data['domain_choice'] ?? '',
+      is_array($data['features'] ?? null) ? implode(' ', $data['features']) : ($data['features'] ?? ''),
+      $data['reference_sites'] ?? '',
+      $lastUserMessage,
+    ]));
+
+    $rec = $this->advise($combinedText, $data, $context);
+
+    // Determine the next missing discovery piece
+    $step = $this->determineNextDiscoveryStep($data);
+
+    return [
+      'reply' => $step['reply'],
+      'quick_chips' => $step['quick_chips'],
+      'input_placeholder' => $step['input_placeholder'],
+      'input_type' => $step['input_type'],
+      'is_complete' => $step['is_complete'],
+      'gathered_data' => $data,
+      'recommendation' => $rec,
+    ];
+  }
+
+  /**
+   * Extracts slots from conversational text.
+   */
+  private function extractDataFromConversation(array $messages, array $existing, string $latest): array {
+    $data = $existing;
+    $lower = mb_strtolower($latest);
+
+    // Email extraction
+    if (preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $latest, $m)) {
+      $data['email'] = $m[0];
+    }
+
+    // Phone extraction
+    if (preg_match('/(?:\+?1[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})/', $latest, $m)) {
+      $data['phone'] = $m[0];
+    }
+
+    // Logo detection
+    if (str_contains($lower, 'have a logo') || str_contains($lower, 'logo ready') || str_contains($lower, 'have brand')) {
+      $data['logo_status'] = 'ready';
+    }
+    elseif (str_contains($lower, 'help creating a logo') || str_contains($lower, 'need a logo') || str_contains($lower, 'design a logo')) {
+      $data['logo_status'] = 'help_needed';
+    }
+    elseif (str_contains($lower, 'no logo') || str_contains($lower, 'not needed')) {
+      $data['logo_status'] = 'no_logo';
+    }
+
+    // Domain detection
+    if (str_contains($lower, 'already own') || str_contains($lower, 'have a domain') || str_contains($lower, 'own my domain')) {
+      $data['domain_choice'] = 'own_domain';
+    }
+    elseif (str_contains($lower, 'need a new domain') || str_contains($lower, 'register a domain') || str_contains($lower, 'new domain')) {
+      $data['domain_choice'] = 'need_new_domain';
+    }
+
+    // Pages & Setup detection
+    if (str_contains($lower, '1 page') || str_contains($lower, 'one page') || str_contains($lower, '$199')) {
+      $data['pages'] = '1';
+      $data['setup'] = 'new';
+    }
+    elseif (str_contains($lower, '3–5') || str_contains($lower, '3-5') || str_contains($lower, '5 pages') || str_contains($lower, '$499')) {
+      $data['pages'] = '3-5';
+      $data['setup'] = 'new';
+    }
+    elseif (str_contains($lower, 'redesign')) {
+      $data['setup'] = 'redesign';
+      $data['pages'] = '3-5';
+    }
+    elseif (str_contains($lower, '10+') || str_contains($lower, 'growth system') || str_contains($lower, '$3,999')) {
+      $data['pages'] = '10+';
+      $data['setup'] = 'growth';
+    }
+
+    // Features detection
+    $features = (array) ($data['features'] ?? []);
+    if (str_contains($lower, 'booking') || str_contains($lower, 'scheduling') || str_contains($lower, 'appointments') || str_contains($lower, 'reservation')) {
+      if (!in_array('booking', $features, true)) $features[] = 'booking';
+    }
+    if (str_contains($lower, 'payment') || str_contains($lower, 'store') || str_contains($lower, 'ecommerce') || str_contains($lower, 'sell online')) {
+      if (!in_array('ecommerce', $features, true)) $features[] = 'ecommerce';
+    }
+    if (str_contains($lower, 'reviews') || str_contains($lower, 'testimonials')) {
+      if (!in_array('reviews', $features, true)) $features[] = 'reviews';
+    }
+    if (str_contains($lower, 'chat') || str_contains($lower, 'bot') || str_contains($lower, 'ai')) {
+      if (!in_array('chat', $features, true)) $features[] = 'chat';
+    }
+    if (!empty($features)) {
+      $data['features'] = $features;
+    }
+
+    // Business Name & Description
+    if (empty($data['business_name']) && !str_contains($lower, '@') && strlen($latest) > 2) {
+      if (count($messages) <= 2) {
+        $data['business_name'] = $latest;
+      }
+    }
+
+    return $data;
+  }
+
+  /**
+   * Determines the next interview question and quick reply chips.
+   */
+  private function determineNextDiscoveryStep(array $data): array {
+    // 0. If email is provided, we can complete immediately
+    if (!empty($data['email'])) {
+      return [
+        'reply' => "Thank you! I've synthesized your full project blueprint and locked in your package quote. You can review the complete scope below, start checkout, or access your free client portal brief!",
+        'quick_chips' => [],
+        'input_placeholder' => 'Ask any follow-up questions about your proposal...',
+        'input_type' => 'text',
+        'is_complete' => true,
+      ];
+    }
+
+    // 1. Business & what they do
+    if (empty($data['business_name']) && empty($data['industry'])) {
+      return [
+        'reply' => "Hi there! I'm FAMtastic's AI Project Advisor. Tell me a bit about your business—what is your business name and what products or services do you offer?",
+        'quick_chips' => ['Local Service / Trades', 'Restaurant / Food', 'Healthcare / Wellness', 'Professional Services', 'E-Commerce Store'],
+        'input_placeholder' => 'e.g. Bella Cucina — authentic Italian restaurant in Dallas...',
+        'input_type' => 'text',
+        'is_complete' => false,
+      ];
+    }
+
+
+    // 2. Setup & Pages
+    if (empty($data['pages']) && empty($data['setup'])) {
+      $biz = $data['business_name'] ?? 'your business';
+      return [
+        'reply' => "Awesome! For {$biz}, are you looking to launch a brand new website or redesign an existing one? How many pages do you think you'll need?",
+        'quick_chips' => [
+          'Brand new site (1 page / $199)',
+          'Brand new site (3–5 pages / $499)',
+          'Redesign our existing site',
+          'Full Growth System (10+ pages / $3,999)',
+        ],
+        'input_placeholder' => 'Pick an option or describe your current website setup...',
+        'input_type' => 'text',
+        'is_complete' => false,
+      ];
+    }
+
+    // 3. Logo & Brand Assets
+    if (empty($data['logo_status'])) {
+      return [
+        'reply' => "Great choice. What's the status of your logo and branding? Do you already have a logo and brand assets ready, or would you like help creating them?",
+        'quick_chips' => [
+          'I have a logo & brand ready',
+          'I need help creating a logo',
+          'No logo needed right now',
+        ],
+        'input_placeholder' => 'Tell us about your logo or pick a quick option...',
+        'input_type' => 'text',
+        'is_complete' => false,
+      ];
+    }
+
+    // 4. Domain & Professional Email
+    if (empty($data['domain_choice'])) {
+      return [
+        'reply' => "Got it. What about your website domain and professional email? (First-year domain registration & managed hosting is included with your package!)",
+        'quick_chips' => [
+          'I already own my domain',
+          'I need a new domain registered',
+          'I need help setting up business email',
+        ],
+        'input_placeholder' => 'e.g. I have mydomain.com or I need a new domain...',
+        'input_type' => 'text',
+        'is_complete' => false,
+      ];
+    }
+
+    // 5. Key Features
+    if (empty($data['features'])) {
+      return [
+        'reply' => "What key capabilities or features does your website need to convert visitors into customers?",
+        'quick_chips' => [
+          'Lead Capture & Quote Form',
+          'Online Booking / Scheduling',
+          'Online Store / Payments',
+          'Customer Reviews & Testimonials',
+          'Live AI Chatbot Assistant',
+        ],
+        'input_placeholder' => 'Select key features or type your custom feature needs...',
+        'input_type' => 'text',
+        'is_complete' => false,
+      ];
+    }
+
+    // 6. Contact Email
+    if (empty($data['email'])) {
+      return [
+        'reply' => "Perfect! I have everything needed to prepare your custom project blueprint and package recommendation. Where should I send your formal quote receipt and portal login link?",
+        'quick_chips' => [],
+        'input_placeholder' => 'Enter your email (e.g. you@yourbusiness.com)...',
+        'input_type' => 'email',
+        'is_complete' => false,
+      ];
+    }
+
+    // 7. Complete!
+    return [
+      'reply' => "Thank you! I've synthesized your full project blueprint and locked in your package quote. You can review the complete scope below, start checkout, or access your free client portal brief!",
+      'quick_chips' => [],
+      'input_placeholder' => 'Ask any follow-up questions about your proposal...',
+      'input_type' => 'text',
+      'is_complete' => true,
+    ];
+  }
+
+
+  /**
    * Synthesizes a structured project brief from raw intake notes.
    */
   public function synthesizeBrief(array $intakeData): array {
@@ -295,7 +535,16 @@ PROMPT;
    * Deterministic rule engine fallback.
    */
   private function deterministicAdvise(string $prompt, array $answers): array {
-    $text = mb_strtolower($prompt . ' ' . implode(' ', array_map('strval', $answers)));
+    $flattened = [];
+    foreach ($answers as $val) {
+      if (is_array($val)) {
+        $flattened[] = implode(' ', array_map('strval', $val));
+      }
+      elseif (is_scalar($val)) {
+        $flattened[] = (string) $val;
+      }
+    }
+    $text = mb_strtolower($prompt . ' ' . implode(' ', $flattened));
 
     $sku = 'business-website'; // Default recommendation.
 

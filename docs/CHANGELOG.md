@@ -20,9 +20,12 @@
 
 ## 2026-08-27 — Drupal AI-powered Solution Finder and Project Intake Advisor
 
+- Upgraded the Solution Finder into a full **Conversational AI Project Interviewer**, collecting business name, industry, logo status, domain/email situation, feature needs, and contact email with live package pricing and smart suggestion chips.
+- Added `conversationalTurn()` to `AiSolutionAdvisorService` for multi-turn slot extraction, dynamic discovery questioning, and automated intake brief recording.
 - Connected Drupal AI (`ai.provider`) to the React frontend with dedicated REST endpoints (`/api/v1/ai/solution-advisor` and `/api/v1/ai/brief-synthesizer`).
 - Built `AiSolutionAdvisorService` to evaluate plain-English customer requests against FAMtastic's 16-SKU package ladder ($199–$6,999) with zero-downtime deterministic fallback.
 - Upgraded `SolutionFinder.jsx` with an interactive AI consultation mode, real-time scope analysis, recommended sitemaps, included features, and direct 1-click package checkout.
+
 
 ## 2026-08-27 — FAMtastic Operations backend route fixes, manifest sync, and batch approvals
 

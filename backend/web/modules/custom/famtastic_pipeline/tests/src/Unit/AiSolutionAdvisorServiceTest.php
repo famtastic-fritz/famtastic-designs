@@ -93,4 +93,39 @@ class AiSolutionAdvisorServiceTest extends UnitTestCase {
     $this->assertStringContainsString('diners', mb_strtolower($brief['target_audience']));
   }
 
+  /**
+   * @covers ::conversationalTurn
+   */
+  public function testConversationalTurn(): void {
+    // Turn 1: user introduces business
+    $turn1 = $this->service->conversationalTurn([
+      ['role' => 'user', 'content' => 'Bella Cucina, an authentic Italian restaurant in Dallas'],
+    ], []);
+
+    $this->assertFalse($turn1['is_complete']);
+    $this->assertNotEmpty($turn1['reply']);
+    $this->assertNotEmpty($turn1['quick_chips']);
+    $this->assertSame('Bella Cucina, an authentic Italian restaurant in Dallas', $turn1['gathered_data']['business_name']);
+
+    // Turn 2: user provides pages and features
+    $turn2 = $this->service->conversationalTurn([
+      ['role' => 'user', 'content' => 'Bella Cucina, an authentic Italian restaurant in Dallas'],
+      ['role' => 'assistant', 'content' => $turn1['reply']],
+      ['role' => 'user', 'content' => 'Brand new site (3–5 pages / $499) with online booking and table reservations'],
+    ], $turn1['gathered_data']);
+
+    $this->assertSame('3-5', $turn2['gathered_data']['pages']);
+    $this->assertContains('booking', $turn2['gathered_data']['features']);
+
+    // Turn 3: user provides email to complete
+    $turn3 = $this->service->conversationalTurn([
+      ['role' => 'user', 'content' => 'Contact email is owner@bellacucina.com'],
+    ], $turn2['gathered_data']);
+
+    $this->assertTrue($turn3['is_complete']);
+    $this->assertSame('owner@bellacucina.com', $turn3['gathered_data']['email']);
+    $this->assertNotEmpty($turn3['recommendation']['package_title']);
+  }
+
 }
+
