@@ -109,6 +109,12 @@ export default function ProofHub() {
   const [terms, setTerms] = useState(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  function isCampaignExpired(next) {
+    if (!next) return false;
+    if (next.status === 'expired' || next.status === 'archived') return true;
+    const expiry = parseExpiry(next.expires_at);
+    return next.status === 'active' && expiry && expiry.getTime() < Date.now();
+  }
   function applyCampaign(next) {
     setCampaign(next);
     if (next.generation_status === 'waiting_callback' || next.generation_status === 'dispatching') {
@@ -158,9 +164,10 @@ export default function ProofHub() {
       }
       try {
         const existing = normalizeCampaign(await getProofCampaign(token));
-        if (existing) {
+        if (existing && !isCampaignExpired(existing)) {
           applyCampaign(existing);
         } else {
+          // Expired, archived, or missing — regenerate fresh proofs.
           await generate();
         }
       } catch (err) {
