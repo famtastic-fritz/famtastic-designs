@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Solution Finder UX: Hero Entry Point & Modal Takeover Beat Embedded Forms
+
+- Observation: A permanently embedded chatbot panel on landing pages consumes excessive screen real estate—especially on mobile—and feels like a traditional form wearing a chat costume. Visitors hesitate to engage because the interface demands answers before demonstrating competence.
+- Guidance: Replace embedded chat widgets with a clean Hero Entry Point that makes a single promise ("See what your market is doing in 20 seconds") with one tap-to-start action. When triggered, open a focused full-screen overlay on mobile and a centered modal sheet on desktop. Structure the consultation to "give before extracting": deliver an instant Local Market Scan within 20 seconds, ask 3 guided scope questions via touch-friendly chips, and materialize the Scope Blueprint artifact with locked pricing directly on screen before asking for an email address.
+
+
 ## 2026-08-27 — A QR display is not a payment-processing product
 
 - Observation: naming Square, Stripe, Cash App, payment links, and deposit
