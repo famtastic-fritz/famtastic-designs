@@ -32,6 +32,13 @@ final class PostizChannelsService {
   ) {}
 
   /**
+   * Returns the configured Postiz base URL.
+   */
+  public function baseUrl(): string {
+    return rtrim((string) (Settings::get('famtastic_postiz_base_url', 'http://127.0.0.1:4007')), '/');
+  }
+
+  /**
    * Channel health snapshot for the operations dashboard.
    *
    * @return array{configured: bool, reachable: bool, error: string, checked_at: int, platforms: array<int, array{identifier: string, name: string, state: string, detail: string}>}

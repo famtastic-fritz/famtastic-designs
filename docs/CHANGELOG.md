@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-08-27 — FAMtastic Operations backend route fixes, manifest sync, and batch approvals
+
+- Replaced raw `Url::fromUserInput` calls in `OperationsController` with proper route references (`commerce.admin_commerce`, `system.admin_content`, `entity.famtastic_prospect.edit_form`) to eliminate 404s under Drupal's `/web` base path in production.
+- Added dynamic Postiz URL resolution via `PostizChannelsService::baseUrl()`, reading `Settings::get('famtastic_postiz_base_url')` instead of hardcoded `127.0.0.1:4007`.
+- Added `SocialRecordSyncForm` (`/admin/famtastic/social-records/sync`) to allow in-admin 1-click sync of campaign manifest moments into `famtastic_social_record` while preserving database gate decisions.
+- Added `SocialRecordBatchGateForm` (`/admin/famtastic/social-record/batch/{day}/{gate}/{direction}`) enabling 1-click batch approval of all moments and gates for any campaign day.
+
 ## 2026-08-27 — Drupal security maintenance deployed
 
 - Production now runs backend release `aad97433f88e6f0a2724c556d0bdc9b4f820710b`.

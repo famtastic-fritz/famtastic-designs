@@ -686,6 +686,25 @@ famtastic_pipeline.social_record_gate:
     gate: 'content|media|publish'
     direction: 'approve|revoke'
 
+famtastic_pipeline.social_record_batch_gate:
+  path: '/admin/famtastic/social-record/batch/{day}/{gate}/{direction}'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\SocialRecordBatchGateForm'
+    _title: 'Batch campaign gate'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    day: '\d+'
+    gate: 'all|content|media|publish'
+    direction: 'approve|revoke'
+
+famtastic_pipeline.social_records_sync:
+  path: '/admin/famtastic/social-records/sync'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\SocialRecordSyncForm'
+    _title: 'Sync campaign manifest'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+
 famtastic_pipeline.marketing:
   path: '/admin/famtastic/marketing'
   defaults:

@@ -225,10 +225,26 @@ final class MarketingCommandController extends ControllerBase {
     foreach ($cards as $index => [$label, $value, $detail, $tone]) {
       $build['c_' . $index] = ['#markup' => '<article class="famtastic-command__pulse-card famtastic-command__pulse-card--' . Html::getClass($tone) . '"><span>' . Html::escape($label) . '</span><strong>' . Html::escape($value) . '</strong><p>' . Html::escape($detail) . '</p></article>'];
     }
+    $actions = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['famtastic-ops__actions', 'famtastic-command__actions']],
+      'sync' => [
+        '#type' => 'link',
+        '#title' => $this->t('⚡ Sync Manifest Records'),
+        '#url' => Url::fromRoute('famtastic_pipeline.social_records_sync'),
+        '#attributes' => ['class' => ['button', 'button--primary']],
+      ],
+      'queue' => [
+        '#type' => 'link',
+        '#title' => $this->t('Open Content Queue →'),
+        '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'queue']),
+        '#attributes' => ['class' => ['button']],
+      ],
+    ];
     $oneGate = ['#markup' => '<div class="famtastic-mkt__onegate"><strong>One gate needs you</strong><p>' . ($nextGate
       ? 'Content review is open for <code>' . Html::escape($nextGate['content_id']) . '</code> (day ' . (int) $nextGate['day'] . ', ' . Html::escape((string) $nextGate['moment']) . '). Message, media, and public release remain separate decisions.'
       : 'No content gates are open. Clean.') . '</p>' . Link::fromTextAndUrl('Review content record →', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'queue']))->toRenderable() . '</div>'];
-    return ['onegate' => $oneGate, 'cards' => $build];
+    return ['actions' => $actions, 'onegate' => $oneGate, 'cards' => $build];
   }
 
   private function tabQueue(): array {
@@ -243,15 +259,29 @@ final class MarketingCommandController extends ControllerBase {
           'link' => ['data' => $this->linkCell(Link::fromTextAndUrl($on ? 'revoke' : 'approve', Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $record['content_id'], 'gate' => $gate, 'direction' => $on ? 'revoke' : 'approve'])))],
         ]];
       }
+      $batchLink = Link::fromTextAndUrl('Approve Day ' . $record['day'], Url::fromRoute('famtastic_pipeline.social_record_batch_gate', ['day' => (int) $record['day'], 'gate' => 'all', 'direction' => 'approve']));
       $rows[] = [
         (int) $record['day'], (string) $record['moment'], Html::escape((string) $record['content_id']),
         (string) $record['scheduled_time_et'], Html::escape((string) $record['promise']),
         ['data' => ['#markup' => $this->badge((string) $record['state'])]],
         $cells[0], $cells[1], $cells[2],
         (string) ($record['postiz_draft_id'] ?: '—'),
+        ['data' => $this->linkCell($batchLink)],
       ];
     }
-    return $this->table('Content queue — first day of the actual campaign spine', 'Each row is the one content ID that must travel through copy, media, channel, UTM, evidence, and results. Draft-first: publishing stays off until the exact item is approved.', ['Day', 'Moment', 'Content ID', 'ET', 'Promise', 'State', 'Content', 'Media', 'Publish', 'Draft ID'], $rows, 'No records imported. Run backend/scripts/import-social-records.php.');
+    $page = $this->table('Content queue — first day of the actual campaign spine', 'Each row is the one content ID that must travel through copy, media, channel, UTM, evidence, and results. Draft-first: publishing stays off until the exact item is approved.', ['Day', 'Moment', 'Content ID', 'ET', 'Promise', 'State', 'Content', 'Media', 'Publish', 'Draft ID', 'Batch Day'], $rows, 'No records imported yet.');
+    $page['actions'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['famtastic-ops__actions']],
+      'sync' => [
+        '#type' => 'link',
+        '#title' => $this->t('⚡ Sync Manifest Records'),
+        '#url' => Url::fromRoute('famtastic_pipeline.social_records_sync'),
+        '#attributes' => ['class' => ['button', 'button--primary']],
+      ],
+    ];
+    $page['actions']['#weight'] = -20;
+    return $page;
   }
 
   private function tabCalendar(): array {
@@ -259,9 +289,30 @@ final class MarketingCommandController extends ControllerBase {
     foreach ($this->database->select('famtastic_social_record', 'r')->fields('r')
       ->orderBy('r.day')->orderBy('r.id')->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
       $on = (int) $record['approval_content'] + (int) $record['approval_media'] + (int) $record['approval_publish'];
-      $rows[] = [(int) $record['day'], ucfirst((string) $record['moment']), Html::escape((string) $record['content_id']), (string) $record['scheduled_time_et'], $on . '/3', ['data' => ['#markup' => $this->badge((string) $record['state'])]]];
+      $batchLink = Link::fromTextAndUrl('Approve Day ' . $record['day'] . ' →', Url::fromRoute('famtastic_pipeline.social_record_batch_gate', ['day' => (int) $record['day'], 'gate' => 'all', 'direction' => 'approve']));
+      $rows[] = [
+        (int) $record['day'],
+        ucfirst((string) $record['moment']),
+        Html::escape((string) $record['content_id']),
+        (string) $record['scheduled_time_et'],
+        $on . '/3',
+        ['data' => ['#markup' => $this->badge((string) $record['state'])]],
+        ['data' => $this->linkCell($batchLink)],
+      ];
     }
-    return $this->table('Calendar — live gate state', 'Gate counts per record. Days with no imported records show nothing rather than invented numbers.', ['Day', 'Moment', 'Content ID', 'ET', 'Gates', 'State'], $rows, 'No records imported yet.');
+    $page = $this->table('Calendar — live gate state', 'Gate counts per record. Days with no imported records show nothing rather than invented numbers.', ['Day', 'Moment', 'Content ID', 'ET', 'Gates', 'State', 'Batch Approval'], $rows, 'No records imported yet.');
+    $page['actions'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['famtastic-ops__actions']],
+      'sync' => [
+        '#type' => 'link',
+        '#title' => $this->t('⚡ Sync Manifest Records'),
+        '#url' => Url::fromRoute('famtastic_pipeline.social_records_sync'),
+        '#attributes' => ['class' => ['button', 'button--primary']],
+      ],
+    ];
+    $page['actions']['#weight'] = -20;
+    return $page;
   }
 
   private function tabChannels(): array {

@@ -60,13 +60,13 @@ final class OperationsController extends ControllerBase {
       ['Website Analytics', !empty($analytics['available']) ? 'Connected · 30-day reporting ready' : 'Connection needs attention', 'Traffic, engagement, top pages, and acquisition channels.', Url::fromRoute('famtastic_pipeline.analytics'), 'analytics'],
       ['Customers', $this->count('famtastic_customer') . ' customer accounts', 'Customer identity, contact details, consent, and business workspaces.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'customers']), 'customers'],
       ['Website Requests', $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started']) . ' active requests', 'Pre-purchase interviews, recommendations, private-offer candidates, and Commerce conversion.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), 'prospects'],
-      ['Commerce', $this->count('famtastic_order', ['payment_status' => 'paid']) . ' paid orders', 'Products, orders, payment status, subscriptions, and fulfillment.', Url::fromUserInput('/admin/commerce'), 'commerce'],
+      ['Commerce', $this->count('famtastic_order', ['payment_status' => 'paid']) . ' paid orders', 'Products, orders, payment status, subscriptions, and fulfillment.', Url::fromRoute('commerce.admin_commerce'), 'commerce'],
       ['Support', $openSupport . ' open conversations', 'Customer requests, project questions, replies, and service issues.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support']), 'support'],
       ['Notifications', $this->countIn('famtastic_notification_outbox', 'status', ['queued', 'retry', 'dead_letter']) . ' need attention', 'Receipts, acknowledgments, reminders, delivery attempts, and failures.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'notifications']), 'emails-sent'],
       ['Automation', $this->count('famtastic_worker_heartbeat') . ' monitored workers', 'Scheduled protection, last runs, retries, and worker health.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'workers']), 'open-jobs'],
       ['Grant Codes', $this->count('famtastic_grant_code', ['status' => 'active']) . ' active private grants', 'Owner comps, named customer grants, credits, partner benefits, redemption scope, and audit.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'grant-codes']), 'commerce'],
       ['Launch Approval', 'Owner decision record', 'Review exact product promises, provisional terms, Stripe evidence, and activation gates.', Url::fromRoute('famtastic_pipeline.launch_approval'), 'commerce'],
-      ['Content', $published . ' published items', 'Website pages, articles, FAQs, services, and packages.', Url::fromUserInput('/admin/content'), 'content'],
+      ['Content', $published . ' published items', 'Website pages, articles, FAQs, services, and packages.', Url::fromRoute('system.admin_content'), 'content'],
       ['Services', $this->count('famtastic_entitlement', ['status' => 'active']) . ' active entitlements', 'Hosting, domains, analytics, websites, and customer capabilities.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'services']), 'services'],
       ['Referrals', $this->count('famtastic_referral') . ' customer referrals', 'Introductions, privacy-safe status, and reward readiness.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'referrals']), 'referrals'],
       ['Marketing Command Center', $this->count('famtastic_social_record') . ' records under gates', 'One staff workspace over the campaign manifest: queue, calendar, channels, attribution, email, creative, Build DNA.', Url::fromRoute('famtastic_pipeline.marketing'), 'campaigns'],
@@ -171,7 +171,7 @@ final class OperationsController extends ControllerBase {
       $attentionItems[] = ['Approve the first batch', 'Days 1–3 sit as queued Postiz drafts. Review content/media/publish gates per record.', 'Open approval queue', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'social-records'])];
     }
     if ($scheduled === 0) {
-      $attentionItems[] = ['Queue and verify a provider event', 'Facebook is connected in Postiz; days 1–3 sit as drafts awaiting your queued-week review before any scheduling.', 'Open Postiz scheduler', Url::fromUri('http://127.0.0.1:4007')];
+      $attentionItems[] = ['Queue and verify a provider event', 'Facebook is connected in Postiz; days 1–3 sit as drafts awaiting your queued-week review before any scheduling.', 'Open Postiz scheduler', Url::fromUri($this->postizChannels->baseUrl())];
     }
     if ($failedSocial > 0) {
       $attentionItems[] = ['Resolve delivery failures', $failedSocial . ' social item(s) failed or remain unverified.', 'Open failures', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'open-exceptions'])];
@@ -205,9 +205,9 @@ final class OperationsController extends ControllerBase {
       'actions' => [
         '#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions', 'famtastic-command__actions']],
         'campaign-add' => ['#type' => 'link', '#title' => $this->t('＋ New campaign'), '#url' => Url::fromRoute('famtastic_pipeline.campaign_add'), '#attributes' => ['class' => ['button', 'button--primary']]],
-        'scheduler' => ['#type' => 'link', '#title' => $this->t('Open Postiz Scheduler ↗'), '#url' => Url::fromUri('http://127.0.0.1:4007'), '#attributes' => ['class' => ['button', 'button--primary'], 'target' => '_blank', 'rel' => 'noopener noreferrer']],
+        'scheduler' => ['#type' => 'link', '#title' => $this->t('Open Postiz Scheduler ↗'), '#url' => Url::fromUri($this->postizChannels->baseUrl()), '#attributes' => ['class' => ['button', 'button--primary'], 'target' => '_blank', 'rel' => 'noopener noreferrer']],
         'analytics' => ['#type' => 'link', '#title' => $this->t('Website Analytics'), '#url' => Url::fromRoute('famtastic_pipeline.analytics'), '#attributes' => ['class' => ['button']]],
-        'content' => ['#type' => 'link', '#title' => $this->t('Content Library'), '#url' => Url::fromUserInput('/admin/content'), '#attributes' => ['class' => ['button']]],
+        'content' => ['#type' => 'link', '#title' => $this->t('Content Library'), '#url' => Url::fromRoute('system.admin_content'), '#attributes' => ['class' => ['button']]],
       ],
       'today_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Owner view</span><h2>Campaign pulse</h2></div><p>Provider and business outcomes update as verified events arrive.</p></div>'],
       'today' => $this->commandCards($todayCards),
@@ -363,7 +363,7 @@ final class OperationsController extends ControllerBase {
         ]];
       }
       $draft = $record['postiz_draft_id'] !== ''
-        ? $this->linkCell(Link::fromTextAndUrl('draft ↗', Url::fromUri('http://127.0.0.1:4007', ['attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']])))
+        ? $this->linkCell(Link::fromTextAndUrl('draft ↗', Url::fromUri($this->postizChannels->baseUrl(), ['attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']])))
         : ['#markup' => '—'];
       $rows[] = [
         (int) $record['day'],
@@ -380,9 +380,19 @@ final class OperationsController extends ControllerBase {
       'Per-record approval state for the 17-day campaign, stored in your operations database. Approving content/media here is the owner decision the pipeline reads; publishing remains a separate bounded-batch decision.',
       ['Day', 'Moment', 'Promise', 'ET', 'State', 'Content', 'Media', 'Publish', 'Postiz'],
       $rows,
-      'No campaign records are imported yet. Run backend/scripts/import-social-records.php against the campaign manifest.',
+      'No campaign records are imported yet.',
     );
-    $page['import'] = ['#markup' => '<p class="famtastic-ops__lede"><code>drush php:script backend/scripts/import-social-records.php</code> syncs manifest state; approvals stored here always win.</p>'];
+    $page['actions'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['famtastic-ops__actions']],
+      'sync' => [
+        '#type' => 'link',
+        '#title' => $this->t('⚡ Sync Manifest Records'),
+        '#url' => Url::fromRoute('famtastic_pipeline.social_records_sync'),
+        '#attributes' => ['class' => ['button', 'button--primary']],
+      ],
+    ];
+    $page['actions']['#weight'] = -20;
     return $page;
   }
 
@@ -555,7 +565,7 @@ final class OperationsController extends ControllerBase {
       if (mb_strlen($briefText) > 180) {
         $briefText = mb_substr($briefText, 0, 177) . '…';
       }
-      $prospect = $record['prospect_id'] ? $this->linkCell(Link::fromTextAndUrl('#' . $record['prospect_id'], Url::fromUserInput('/admin/famtastic/prospect/' . $record['prospect_id'] . '/edit'))) : ['#markup' => '—'];
+      $prospect = $record['prospect_id'] ? $this->linkCell(Link::fromTextAndUrl('#' . $record['prospect_id'], Url::fromRoute('entity.famtastic_prospect.edit_form', ['famtastic_prospect' => $record['prospect_id']]))) : ['#markup' => '—'];
       $rows[] = [
         $record['project_name'], $record['organization_name'] ?: $record['business_name'],
         $record['customer_name'] . ' · ' . $record['customer_email'], ucwords(str_replace('_', ' ', $record['project_type'])),

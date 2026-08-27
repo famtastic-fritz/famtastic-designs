@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Drupal admin URL generation must use routes, not raw userInput paths
+
+- Observation: When Drupal is deployed in a subpath (e.g. `/web` behind a React frontend at `/`), `Url::fromUserInput('/admin/...')` generates URLs targeting `https://famtasticdesigns.com/admin/...` rather than `https://famtasticdesigns.com/web/admin/...`, resulting in 404s for Commerce, Content, and Entity edit links.
+- Guidance: Always use `Url::fromRoute()` (such as `commerce.admin_commerce`, `system.admin_content`, `entity.<entity_type>.edit_form`) in controllers and forms. Drupal's route system automatically prepends the correct active base path in both local and production environments.
+
 ## 2026-08-27 — Drupal security fixes are full locked-dependency releases
 
 - Observation: the active Entity API advisory applied because Entity API and
