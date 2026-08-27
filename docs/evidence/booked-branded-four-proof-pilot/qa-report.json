@@ -1,7 +1,7 @@
 {
   "schema": "famtastic.booked-branded-qa.v1",
-  "generated_at": "2026-08-27T20:26:30.303Z",
-  "base_url": "http://127.0.0.1:4188/showcase/booked-and-branded-pilot",
+  "generated_at": "2026-08-27T20:44:49.556Z",
+  "base_url": "http://127.0.0.1:4191/showcase/booked-and-branded-pilot",
   "routes_tested": 22,
   "viewport_checks": 44,
   "screenshots": 14,
@@ -15,7 +15,9 @@
         "Start cheap. Upgrade from evidence.",
         "$9.99/month from month 13",
         "$149 one time",
-        "Use the booking tool that fits the owner now."
+        "Use the booking tool that fits the owner now.",
+        "Your QR. Your account. Your money.",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -28,7 +30,8 @@
       "relative_path": "emails/coastline-crown-barbers/index.html",
       "required_phrases": [
         "Normal hosting is $9.99 a month",
-        "optional upgrades—not surprise requirements"
+        "optional upgrades—not surprise requirements",
+        "Payment-processing and optional messaging costs are paid directly by the business"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -41,7 +44,8 @@
       "relative_path": "rooms/coastline-crown-barbers/index.html",
       "required_phrases": [
         "Start useful for $199",
-        "Grow when it pays"
+        "Grow when it pays",
+        "business’s own approved payment QR"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -54,7 +58,8 @@
       "relative_path": "proofs/coastline-crown-barbers/a/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -67,7 +72,8 @@
       "relative_path": "proofs/coastline-crown-barbers/b/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -80,7 +86,8 @@
       "relative_path": "proofs/coastline-crown-barbers/c/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -93,7 +100,8 @@
       "relative_path": "emails/velvet-coil-atelier/index.html",
       "required_phrases": [
         "Normal hosting is $9.99 a month",
-        "optional upgrades—not surprise requirements"
+        "optional upgrades—not surprise requirements",
+        "Payment-processing and optional messaging costs are paid directly by the business"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -106,7 +114,8 @@
       "relative_path": "rooms/velvet-coil-atelier/index.html",
       "required_phrases": [
         "Start useful for $199",
-        "Grow when it pays"
+        "Grow when it pays",
+        "business’s own approved payment QR"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -119,7 +128,8 @@
       "relative_path": "proofs/velvet-coil-atelier/a/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -132,7 +142,8 @@
       "relative_path": "proofs/velvet-coil-atelier/b/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -145,7 +156,8 @@
       "relative_path": "proofs/velvet-coil-atelier/c/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -158,7 +170,8 @@
       "relative_path": "emails/palmera-fade-society/index.html",
       "required_phrases": [
         "Normal hosting is $9.99 a month",
-        "optional upgrades—not surprise requirements"
+        "optional upgrades—not surprise requirements",
+        "Payment-processing and optional messaging costs are paid directly by the business"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -171,7 +184,8 @@
       "relative_path": "rooms/palmera-fade-society/index.html",
       "required_phrases": [
         "Start useful for $199",
-        "Grow when it pays"
+        "Grow when it pays",
+        "business’s own approved payment QR"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -184,7 +198,8 @@
       "relative_path": "proofs/palmera-fade-society/a/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -197,7 +212,8 @@
       "relative_path": "proofs/palmera-fade-society/b/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -210,7 +226,8 @@
       "relative_path": "proofs/palmera-fade-society/c/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -223,7 +240,8 @@
       "relative_path": "emails/saltline-color-house/index.html",
       "required_phrases": [
         "Normal hosting is $9.99 a month",
-        "optional upgrades—not surprise requirements"
+        "optional upgrades—not surprise requirements",
+        "Payment-processing and optional messaging costs are paid directly by the business"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -236,7 +254,8 @@
       "relative_path": "rooms/saltline-color-house/index.html",
       "required_phrases": [
         "Start useful for $199",
-        "Grow when it pays"
+        "Grow when it pays",
+        "business’s own approved payment QR"
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -249,7 +268,8 @@
       "relative_path": "proofs/saltline-color-house/a/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -262,7 +282,8 @@
       "relative_path": "proofs/saltline-color-house/b/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",
@@ -275,7 +296,8 @@
       "relative_path": "proofs/saltline-color-house/c/index.html",
       "required_phrases": [
         "Make the next appointment easy.",
-        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades"
+        "Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades",
+        "FAMtastic does not process, receive, settle, or reconcile the payment."
       ],
       "forbidden_phrases_absent": [
         "$19.99",

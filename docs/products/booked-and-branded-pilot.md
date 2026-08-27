@@ -24,7 +24,7 @@ Booked & Branded gives the operator:
 - a service menu, policies, portfolio, and directions in one owned experience;
 - a simple booking-request path that does not require a full scheduler on day
   one;
-- owner-controlled payment and deposit links or QR codes; and
+- the business's own Cash App or existing payment QR displayed on the site; and
 - a limited, moderated review showcase built from fresh customer submissions.
 
 This is not a feature-for-feature Booksy replacement. It is the smallest useful
@@ -65,15 +65,16 @@ small operator surface that can evolve without rebuilding the website.
 - First 12 months of the site and starter Booking Desk included.
 - One standard available domain for year one, or connection of one
   customer-controlled domain.
-- Proposed renewal after month 12: **$19.99 per month** for hosting plus the
-  Booking Desk, only after separate recurring authorization.
+- Normal hosting renewal after month 12: **$9.99 per month**, only after
+  separate recurring authorization.
 - Payment-processor, messaging, premium-domain, and optional integration fees
-  remain the customer's responsibility and must be disclosed before purchase.
+  are paid directly by the business to its chosen providers and must be
+  disclosed before purchase.
 
-The $19.99 renewal is a recommendation, not an approved live price. The
-existing $9.99 hosting SKU covers basic hosting only; an operating booking
-surface creates a continuing service obligation and should not be hidden inside
-that renewal.
+Deeper appointment scheduling remains the existing optional **$149 one-time**
+setup rather than a forced renewal increase. SEO, analytics, reminders,
+maintenance, business email, follow-up, and AI assistance remain optional
+growth choices.
 
 ### Honest founding scarcity
 
@@ -90,7 +91,7 @@ scope.
    pages or additional capabilities are purchased; the starter is not a
    disposable theme.
 2. Up to 12 services with name, duration, price or “starting at” treatment,
-   preparation notes, and optional deposit instruction.
+   preparation notes, and optional customer-approved payment-QR instruction.
 3. Portfolio, business story, contact, location/directions, hours, booking and
    cancellation policies, and accessibility/contact alternatives.
 4. One operator and one location.
@@ -100,16 +101,15 @@ scope.
    - confirm, propose a change, cancel, complete, and mark no-show;
    - service visibility and basic availability settings;
    - blackout dates; and
-   - payment, QR, review, and business-profile settings.
+   - payment-QR display, review, and business-profile settings.
 6. A request-to-book flow. The customer asks for a service/time; the operator
    confirms it from the phone. This avoids claiming real-time availability or
    silently double-booking two calendars during the pilot.
-7. One business-owned payment destination:
-   - Cash App Business link/QR;
-   - Square payment link;
-   - Stripe Payment Link; or
-   - another reviewed business-payment link.
-8. One booking QR code and one payment/deposit QR code.
+7. One customer-supplied, customer-approved payment QR:
+   - the business's Cash App QR; or
+   - an existing QR from the payment provider the business already uses.
+8. One booking QR placement and one payment QR placement. FAMtastic displays
+   the approved QR but does not process, receive, settle, or reconcile payment.
 9. Fresh post-appointment review requests, owner moderation, and up to 12
    published reviews on the starter site.
 10. First-year site hosting and the existing Web Basics domain treatment.
@@ -123,10 +123,11 @@ scope.
 - Automatic migration or republication of Booksy reviews.
 - Automatic import of a Booksy client list without the business's authorized
   export, customer-data authority, consent mapping, and security review.
-- Card-on-file storage, marketplace payments, or FAMtastic receiving money on
-  the operator's behalf.
+- Payment processing, card storage, payment settlement, reconciliation, or
+  FAMtastic receiving money on the operator's behalf.
 - Unlimited services, locations, reminders, reviews, revisions, or support.
-- SMS reminders or marketing. SMS has ongoing provider cost and consent rules.
+- SMS reminders or marketing in the starter. Optional messaging requires
+  consent and is paid by the business directly to its chosen provider.
 - Guaranteed bookings, revenue, search placement, or savings.
 
 ## Pluggable booking strategy
@@ -136,9 +137,9 @@ can advance by evidence.
 
 ### Mode A — Platform bridge
 
-The new branded site sends booking to the operator's current Booksy, Square, or
-other booking link. This is the lowest-risk launch and keeps the old calendar
-active while the new brand experience goes live.
+The new branded site sends booking to the operator's current Booksy, Google,
+Cal.com, or other booking link. This is the lowest-risk launch and keeps the
+old calendar active while the new brand experience goes live.
 
 ### Mode B — FAMtastic request-to-book
 
@@ -154,21 +155,19 @@ availability service. This must pass conflict, timezone, cancellation,
 reminder, availability, and recovery testing before being sold as instant
 booking.
 
-## Payment boundary
+## Payment and messaging boundary
 
-The starter redirects to a payment account owned by the business. FAMtastic
-stores only the reviewed destination and related display settings—not card
-numbers or merchant credentials.
+The starter displays a customer-supplied Cash App QR or an existing QR from the
+payment provider the business already uses. The payment stays directly between
+the client, the business, and that provider.
 
-- Cash App requires a Business Account and may assess processing fees disclosed
-  by Cash App.
-- Stripe Payment Links can provide hosted checkout and downloadable QR codes;
-  standard U.S. domestic online card pricing is currently 2.9% + 30 cents.
-- Square can provide payment links, Cash App Pay, booking, and QR flows with its
-  own plan and processing terms.
-- If FAMtastic later facilitates payments for many businesses, use a governed
-  platform design such as Stripe Connect. Do not collect operator payments
-  through FAMtastic's ordinary merchant account.
+- FAMtastic does not process, receive, settle, refund, or reconcile payment.
+- FAMtastic does not collect card numbers, bank data, or merchant credentials.
+- Payment-processing fees are paid directly by the business to its provider.
+- Optional messaging fees are paid directly by the business to its provider.
+- A future processing product would require a separate governed product,
+  contract, implementation, proof, and customer authorization. It is not part
+  of Booked & Branded.
 
 ## Technical product shape
 
@@ -180,13 +179,14 @@ numbers or merchant credentials.
 - `business_blackout`
 - `appointment_request`
 - `appointment_status_event`
-- `business_payment_destination`
+- `business_payment_qr_display`
 - `customer_review_request`
 - `customer_review`
 
 Every record is organization-scoped. Customer contact data is private. Payment
-destinations are allowlisted and revalidated. No client account can read or
-change another business's calendar, contacts, services, payments, or reviews.
+QR assets and destinations are allowlisted and revalidated. No client account
+can read or change another business's calendar, contacts, services, payment QR,
+or reviews.
 
 ### React owner surface
 
@@ -196,7 +196,7 @@ Installable phone-friendly web app, not a native-app promise:
 - Requests
 - Schedule
 - Services
-- Payments & QR
+- Payment QR
 - Reviews
 - Business settings
 
@@ -209,7 +209,7 @@ can I finish in one tap?”
 - Service menu
 - Portfolio
 - Booking request
-- Payment/deposit handoff
+- Customer-approved payment QR display
 - Policies and preparation
 - Fresh approved reviews
 - Location/directions and contact
@@ -223,7 +223,7 @@ can I finish in one tap?”
 3. **Pilot request mode:** owner handles a bounded number of FAMtastic booking
    requests from the phone.
 4. **Validate:** confirm no lost requests, mobile usability, notification
-   delivery, privacy, and payment destinations.
+   delivery, privacy, and the business-approved payment QR.
 5. **Switch intentionally:** change the main booking destination only after the
    owner accepts the new workflow.
 6. **Export by authority:** obtain client/appointment data through the
@@ -238,7 +238,7 @@ Each prospect receives exactly three private directions:
 2. **Signature work:** image-led personal brand, specialty services, and
    preparation/policy flow.
 3. **Neighborhood authority:** trust, directions, returning-client shortcuts,
-   approved reviews, and QR-first booking/payment.
+   approved reviews, and the business's own booking/payment QR.
 
 Each proof includes the same real functional contract. Direction differences
 are visual and compositional, not fake features.
@@ -267,11 +267,16 @@ The $199 Booked & Branded pilot includes:
 - your own mobile-ready website;
 - a phone-friendly Booking Desk;
 - service and policy management;
-- booking and payment/QR options; and
+- booking options and your own payment QR; and
 - a small, owner-approved review showcase.
 
 You can keep Booksy while you test it. Nothing needs to switch until the new
 flow works for you.
+
+Your payment stays yours. FAMtastic can display your approved Cash App or
+existing payment QR, but FAMtastic does not process or receive the payment.
+Payment-processing and optional messaging costs are paid by you directly to
+the providers you choose.
 
 I prepared three private directions for your brand:
 
@@ -294,7 +299,8 @@ recipient dislikes Booksy, overpays, loses revenue, or has agreed to migrate.
 ### Email 2 — What you control from your phone
 
 - Send: Three business days after Email 1, only if not suppressed/replied.
-- Show: request inbox, confirm/change status, services, payment QR, reviews.
+- Show: request inbox, confirm/change status, services, the business's payment
+  QR, and reviews.
 - CTA: Open your private Booking Desk walkthrough.
 
 ### Email 3 — Keep Booksy while you test
@@ -311,7 +317,7 @@ After same-email registration, unlock a private **Booking Independence Plan**:
 
 - recommended service hierarchy;
 - request versus instant-booking recommendation;
-- payment/QR recommendation;
+- payment-QR display recommendation;
 - customer-data and review migration cautions;
 - the selected proof's extension path; and
 - first 30-day transition checklist.
@@ -326,7 +332,7 @@ After same-email registration, unlock a private **Booking Independence Plan**:
 - First live booking request submitted
 - Owner response time
 - Confirmed/completed appointment
-- Payment destination clicked
+- Payment QR viewed or opened
 - Review requested and approved
 
 Email opens are diagnostic only. A delivered email is not a conversion.
@@ -342,8 +348,9 @@ Email opens are diagnostic only. A delivered email is not a conversion.
 - Cross-account access is denied.
 - Booking requests are idempotent and cannot silently disappear.
 - Email notification failure stays visible and retryable.
-- Payment/QR links resolve to the customer's verified business-owned account.
-- No payment credential is stored by Drupal.
+- Payment QR resolves only to the customer's verified business-owned account.
+- No payment credential is stored by Drupal and no payment is processed by
+  FAMtastic.
 - Review submission, consent, moderation, deletion, and abuse handling work.
 - Booksy bridge and FAMtastic request modes cannot create an implied live sync.
 - The first five operators complete owner acceptance before cold promotion.
@@ -352,7 +359,7 @@ Email opens are diagnostic only. A delivered email is not a conversion.
 
 - Offer definition: **drafted**
 - Contract and terms: not created
-- Commerce/Stripe product: not created
+- Commerce payment-processing product: not created and not part of this offer
 - Fulfillment implementation: not built
 - Client admin surface: not built
 - Support playbook: not built
@@ -367,8 +374,6 @@ Email opens are diagnostic only. A delivered email is not a conversion.
 - [Booksy U.S. pricing](https://biz.booksy.com/pricing)
 - [Booksy feature overview](https://biz.booksy.com/en-us/lp/how-it-works)
 - [Booksy support and data export index](https://support.booksy.com/hc/en-us/categories/20662510816786-Support)
-- [Square Appointments pricing and features](https://squareup.com/us/en/appointments/pricing)
-- [Stripe pricing](https://stripe.com/pricing)
-- [Stripe Payment Links and QR codes](https://docs.stripe.com/no-code/payment-links)
-- [Stripe Connect platform boundary](https://docs.stripe.com/connect/how-connect-works)
-- [Cash App U.S. terms](https://cash.app/us/en/legal/tos)
+- [Google Calendar appointment schedules](https://support.google.com/calendar/answer/10729749?hl=en)
+- [Cal.com pricing](https://cal.com/pricing)
+- [Cal.com website embeds](https://cal.com/help/embedding/adding-embed)

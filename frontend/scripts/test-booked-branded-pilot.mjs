@@ -38,12 +38,12 @@ async function inspectCopy(relativePath, requiredPhrases = []) {
   copyEvidence.push({ relative_path: relativePath, required_phrases: requiredPhrases, forbidden_phrases_absent: forbiddenPhrases.filter(phrase => !contents.includes(phrase)) });
 }
 
-await inspectCopy('package/index.html', ['Start cheap. Upgrade from evidence.', '$9.99/month from month 13', '$149 one time', 'Use the booking tool that fits the owner now.']);
+await inspectCopy('package/index.html', ['Start cheap. Upgrade from evidence.', '$9.99/month from month 13', '$149 one time', 'Use the booking tool that fits the owner now.', 'Your QR. Your account. Your money.', 'FAMtastic does not process, receive, settle, or reconcile the payment.']);
 for (const business of data.businesses) {
-  await inspectCopy(`emails/${business.slug}/index.html`, ['Normal hosting is $9.99 a month', 'optional upgrades—not surprise requirements']);
-  await inspectCopy(`rooms/${business.slug}/index.html`, ['Start useful for $199', 'Grow when it pays']);
+  await inspectCopy(`emails/${business.slug}/index.html`, ['Normal hosting is $9.99 a month', 'optional upgrades—not surprise requirements', 'Payment-processing and optional messaging costs are paid directly by the business']);
+  await inspectCopy(`rooms/${business.slug}/index.html`, ['Start useful for $199', 'Grow when it pays', 'business’s own approved payment QR']);
   for (const direction of business.directions) {
-    await inspectCopy(`proofs/${business.slug}/${direction.id}/index.html`, ['Make the next appointment easy.', 'Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades']);
+    await inspectCopy(`proofs/${business.slug}/${direction.id}/index.html`, ['Make the next appointment easy.', 'Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades', 'FAMtastic does not process, receive, settle, or reconcile the payment.']);
   }
 }
 

@@ -22,16 +22,16 @@
         { "name": "Junior Crown", "time": "35 min", "price": "$30" }
       ],
       "hours": "Tue–Sat · 9:00 AM–6:00 PM",
-      "policy": "Requests are confirmed personally. A $15 business-owned deposit link may be sent after confirmation.",
+      "policy": "Requests are confirmed personally. The business may share its own approved payment QR after confirmation.",
       "requests": [
         { "initials": "JB", "name": "J. Brooks", "service": "Cut + Beard", "time": "Today · 2:30 PM", "status": "Needs reply" },
         { "initials": "AC", "name": "A. Cole", "service": "Crown Cut", "time": "Today · 4:00 PM", "status": "Confirmed" },
-        { "initials": "MJ", "name": "M. Jones", "service": "Junior Crown", "time": "Sat · 10:00 AM", "status": "Deposit due" }
+        { "initials": "MJ", "name": "M. Jones", "service": "Junior Crown", "time": "Sat · 10:00 AM", "status": "Reply due" }
       ],
       "directions": [
         { "id": "a", "name": "The Crown Standard", "label": "Editorial restraint", "headline": "Precision belongs in every detail.", "subhead": "A quiet, confident home for grooming that earns the second look." },
         { "id": "b", "name": "772 After Dark", "label": "High-energy culture", "headline": "Fresh cut. Clear signal.", "subhead": "A bolder street-editorial direction built for the scroll and the chair." },
-        { "id": "c", "name": "Chairside Command", "label": "Operator-first system", "headline": "Run the chair from the phone in your hand.", "subhead": "Brand, booking requests, deposits, and reviews in one focused operating view." }
+        { "id": "c", "name": "Chairside Command", "label": "Operator-first system", "headline": "Run the chair from the phone in your hand.", "subhead": "Brand, booking requests, the business’s own payment QR, and reviews in one focused operating view." }
       ]
     },
     {
@@ -58,7 +58,7 @@
       "directions": [
         { "id": "a", "name": "Soft Power", "label": "Warm beauty editorial", "headline": "Healthy texture, held with intention.", "subhead": "An intimate studio story centered on care, ritual, and visible expertise." },
         { "id": "b", "name": "Coil Culture", "label": "Expressive brand world", "headline": "Let the texture lead.", "subhead": "A richer, image-forward direction with confident type and tactile rhythm." },
-        { "id": "c", "name": "The Studio Ritual", "label": "Care-path system", "headline": "Every request arrives with the context you need.", "subhead": "A calmer way to manage consultations, services, deposits, and follow-up from one phone." }
+        { "id": "c", "name": "The Studio Ritual", "label": "Care-path system", "headline": "Every request arrives with the context you need.", "subhead": "A calmer way to manage consultations, services, QR handoff, and follow-up from one phone." }
       ]
     },
     {
@@ -80,7 +80,7 @@
       "requests": [
         { "initials": "LM", "name": "L. Morales", "service": "Fresh Fade", "time": "Today · 3:15 PM", "status": "Needs reply" },
         { "initials": "ER", "name": "E. Rivera", "service": "Fade + Beard", "time": "Today · 5:00 PM", "status": "Confirmed" },
-        { "initials": "CG", "name": "C. Garcia", "service": "Father + Son", "time": "Sat · 12:30 PM", "status": "Deposit due" }
+        { "initials": "CG", "name": "C. Garcia", "service": "Father + Son", "time": "Sat · 12:30 PM", "status": "Reply due" }
       ],
       "directions": [
         { "id": "a", "name": "Palm Line", "label": "Modern neighborhood", "headline": "Sharp work. Easy next move.", "subhead": "A bright, clear booking path with West Palm energy and no extra noise." },
@@ -103,11 +103,11 @@
         { "name": "Gloss + Style", "time": "60 min", "price": "$85" }
       ],
       "hours": "Tue–Sat · Appointment requests only",
-      "policy": "New color clients begin with a photo consultation before time and deposit are confirmed.",
+      "policy": "New color clients begin with a photo consultation before time and any business-owned payment QR are shared.",
       "requests": [
         { "initials": "ES", "name": "E. Stone", "service": "Dimensional Color", "time": "Wed · 10:00 AM", "status": "Photo review" },
         { "initials": "LB", "name": "L. Bennett", "service": "Cut + Finish", "time": "Thu · 2:00 PM", "status": "Confirmed" },
-        { "initials": "CM", "name": "C. Moore", "service": "Gloss + Style", "time": "Sat · 11:30 AM", "status": "Deposit due" }
+        { "initials": "CM", "name": "C. Moore", "service": "Gloss + Style", "time": "Sat · 11:30 AM", "status": "Reply due" }
       ],
       "directions": [
         { "id": "a", "name": "Sunwashed", "label": "Airy color editorial", "headline": "Color that looks like it belongs to you.", "subhead": "A light-filled, premium direction with space for the work to breathe." },

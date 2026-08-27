@@ -85,8 +85,11 @@ try {
       if (metrics.width > metrics.viewport + 1) routeErrors.push(`overflow=${metrics.width - metrics.viewport}`);
       if (metrics.brokenImages) routeErrors.push(`broken_images=${metrics.brokenImages}`);
       if (metrics.body.includes('$19.99')) routeErrors.push('old_renewal_copy_present');
+      if (metrics.body.includes('Square, Stripe')) routeErrors.push('payment_processor_offer_present');
       if (route === '/package/' && !metrics.body.includes('$9.99/month from month 13')) routeErrors.push('missing_renewal_ladder');
       if (route === '/package/' && !metrics.body.includes('$149 one time')) routeErrors.push('missing_scheduling_upgrade');
+      if (route === '/package/' && !metrics.body.includes('Your QR. Your account. Your money.')) routeErrors.push('missing_owner_qr_boundary');
+      if (route === '/package/' && !metrics.body.includes('Payment-processing and optional messaging costs are paid directly by the business')) routeErrors.push('missing_direct_provider_cost_boundary');
       routeErrors.push(...pageErrors.map(error => `browser=${error}`));
       if (routeErrors.length) errors.push(`${host.origin}${route}: ${routeErrors.join(' | ')}`);
       routeEvidence.push({ route, status: response?.status() || 0, h1: metrics.h1, overflow: Math.max(0, metrics.width - metrics.viewport), broken_images: metrics.brokenImages, console_or_page_errors: pageErrors.length, passed: routeErrors.length === 0 });
@@ -123,7 +126,9 @@ const report = {
     route_checks: hostEvidence.reduce((sum, host) => sum + host.route_evidence.length, 0),
     homepage_checks: hosts.length,
     old_renewal_copy_absent: true,
-    starter_renewal_and_upgrade_ladder_present: true
+    starter_renewal_and_upgrade_ladder_present: true,
+    payment_processing_offer_absent: true,
+    owner_qr_and_direct_provider_cost_boundary_present: true
   },
   asset_assertions: { hosts_checked: hosts.length, assets_per_host: imageArtifacts.length, asset_checks: assetEvidence.length, evidence: assetEvidence },
   errors,

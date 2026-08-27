@@ -14,6 +14,10 @@ Date: 2026-08-27
 - One starter-first value ladder: proposed $199 launch, one included starter
   booking path, normal $9.99 monthly hosting beginning in month 13, existing
   optional $149 Appointment Scheduling setup, and later growth choices.
+- One owner-QR payment boundary: the site can display the business's approved
+  Cash App or existing payment QR, but FAMtastic does not process, receive,
+  settle, or reconcile the payment. Payment-processing and optional messaging
+  costs are paid directly by the business to its chosen providers.
 - Public base live at
   `https://famtasticdesigns.com/showcase/booked-and-branded-pilot/`.
 
@@ -30,10 +34,11 @@ system. It does not replace the CRM-bound signed public-preview lane required
 for real recipient proofs.
 
 The booking choices are proposal paths rather than active integrations. The
-showcase does not connect a Google, Cal.com, payment, or customer account. It
-records the portable Site Studio contract and leaves provider ownership,
-commercial selection, setup, testing, and authorization for a later real
-customer workflow.
+showcase does not connect a Google, Cal.com, payment, messaging, or customer
+account. It records the portable Site Studio contract—including the explicit
+`payment.processed_by_famtastic: false` and direct-provider fee ownership—and
+leaves provider ownership, commercial selection, setup, testing, and
+authorization for a later real customer workflow.
 
 ## Image evidence
 
@@ -59,7 +64,7 @@ contract, and final artifact hashes are recorded under
 
 - Static routes tested: 22.
 - Viewport checks: 44 (1440px and 390px).
-- Copy-contract checks: 21.
+- Copy-contract checks: 21, including the owner-QR/no-processing boundary.
 - Retained screenshots: 14.
 - Broken images: 0.
 - Horizontal-overflow failures: 0.

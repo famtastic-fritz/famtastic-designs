@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — A QR display is not a payment-processing product
+
+- Observation: naming Square, Stripe, Cash App, payment links, and deposit
+  states together made the Booked & Branded starter sound like FAMtastic would
+  operate or reconcile payments. That adds perceived complexity and liability
+  to an offer whose job is to provide a branded front door and upgrade path.
+- Guidance: let the business supply its own approved Cash App or existing
+  payment-provider QR and display it on the site. Payment stays directly
+  between the client, business, and provider. FAMtastic does not process,
+  receive, settle, refund, or reconcile it. Payment-processing and optional
+  messaging costs are paid directly by the business to its chosen providers.
+  Carry the same no-processing boolean and fee-ownership fields into Site
+  Studio so a future build cannot accidentally turn display into processing.
+
 ## 2026-08-27 — A low-cost starter should reveal the upgrade path, not lead with exclusions
 
 - Observation: describing a proposed $19.99 renewal and dedicating a major

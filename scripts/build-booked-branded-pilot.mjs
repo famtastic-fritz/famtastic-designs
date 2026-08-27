@@ -151,10 +151,11 @@ function emailPage(business) {
             <li>one useful booking path—keep the current link, connect an owner-controlled Google or Cal.com page, or use request-to-book;</li>
             <li>a one-owner phone Booking Desk starter when request-to-book is selected;</li>
             <li>up to 12 services, availability windows, and policy notes;</li>
-            <li>a business-owned payment/QR handoff; and</li>
+            <li>their own Cash App or existing payment QR displayed on the site; and</li>
             <li>fresh consent-based testimonials and Shay-guided setup.</li>
           </ul>
           <p><strong>One year of hosting is included.</strong> Normal hosting is $9.99 a month beginning in month 13, and only after separate authorization.</p>
+          <p><strong>Your QR. Your account. Your money.</strong> FAMtastic displays the business’s approved Cash App or existing payment QR; we do not process or receive the payment. Payment-processing and optional messaging costs are paid directly by the business to the providers it chooses.</p>
           <p>You can keep your current booking platform while testing the new front door. If the starter does the job, keep it simple. If reminders, deeper calendar setup, multi-staff scheduling, or growth tools would save time or win more appointments, those become optional upgrades—not surprise requirements.</p>
           <a class="mail-cta" href="${roomUrl}">See the 3 worlds I prepared for ${esc(business.name)} →</a>
           <p class="shay-signoff"><span class="shay-orb">S</span><span><strong>Shay</strong><br>${esc(creative.shay.title)}<br><small>with Fritz and the FAMtastic Designs team</small></span></p>
@@ -196,12 +197,12 @@ function roomPage(business) {
           <a class="back-link" href="${publicBase}/emails/${business.slug}/">← Return to the email</a>
           <div class="eyebrow">Private concept-room simulation · 3 of 3 ready</div>
           <h1>${esc(business.name)}</h1>
-          <p>Same business truth, three materially different compositions. Every direction shows the public site, a starter booking path, phone-friendly owner controls, business-owned payment/QR handoff, and a fresh-testimonial path.</p>
+          <p>Same business truth, three materially different compositions. Every direction shows the public site, a starter booking path, phone-friendly owner controls, the business’s own payment QR, and a fresh-testimonial path.</p>
           <div class="room-meta"><span>${esc(business.location)}</span><span>${esc(business.specialty)}</span><span>Fictional demonstration</span></div>
         </header>
         <section class="direction-grid" aria-label="Three design directions">${directions}</section>
         <section class="room-offer">
-          <div><h3>Start useful for $199</h3><p>Launch the branded front door, publish up to 12 services, choose one starter booking path, connect a business-owned payment destination, and get one year of hosting.</p></div>
+          <div><h3>Start useful for $199</h3><p>Launch the branded front door, publish up to 12 services, choose one starter booking path, display the business’s own approved payment QR, and get one year of hosting.</p></div>
           <div><h3>Grow when it pays</h3><p>Keep hosting at the normal $9.99 monthly renewal beginning in month 13. Add the $149 Appointment Scheduling setup or other growth tools only when the business is ready to use them.</p></div>
         </section>
         <p class="room-package-link">${button(`${publicBase}/package/`, 'See the complete Booked & Branded package')}</p>
@@ -239,11 +240,11 @@ function packagePage() {
 
         <section class="package-section"><div class="shell package-split"><div><p class="kicker">Included from day one</p><h2>A better front door and a useful next step.</h2><p>The public website gives the business its own visual language, explains services before the client has to ask, and connects each person to a booking path the owner can actually manage.</p></div><ul class="package-checklist">${core}</ul></div></section>
 
-        <section class="package-section package-dark"><div class="shell"><div class="section-head"><div><p class="kicker">Built around the next appointment</p><h2>Look established. Answer less. Book more easily.</h2></div><p>The starter puts service details, policies, booking, payment direction, and fresh testimonials in one branded path clients can use from a phone.</p></div><div class="package-desk-grid"><article><b>01</b><h3>Explain</h3><p>Clients see services, pricing, preparation, and policies before sending another DM.</p></article><article><b>02</b><h3>Book</h3><p>Use the current provider, Google, Cal.com, or request-to-book—whichever fits today.</p></article><article><b>03</b><h3>Collect</h3><p>Send clients to the owner’s reviewed Square, Stripe, or Cash App Business destination.</p></article><article><b>04</b><h3>Grow</h3><p>Turn completed visits into fresh testimonials and use real activity to choose the next upgrade.</p></article></div></div></section>
+        <section class="package-section package-dark"><div class="shell"><div class="section-head"><div><p class="kicker">Built around the next appointment</p><h2>Look established. Answer less. Book more easily.</h2></div><p>The starter puts service details, policies, booking, the business’s own payment QR, and fresh testimonials in one branded path clients can use from a phone.</p></div><div class="package-desk-grid"><article><b>01</b><h3>Explain</h3><p>Clients see services, pricing, preparation, and policies before sending another DM.</p></article><article><b>02</b><h3>Book</h3><p>Use the current provider, Google, Cal.com, or request-to-book—whichever fits today.</p></article><article><b>03</b><h3>Get paid directly</h3><p>Display the owner’s approved Cash App or existing payment QR. The money goes directly to the business.</p></article><article><b>04</b><h3>Grow</h3><p>Turn completed visits into fresh testimonials and use real activity to choose the next upgrade.</p></article></div><p class="provider-note"><strong>Your QR. Your account. Your money.</strong> FAMtastic does not process, receive, settle, or reconcile the payment. Payment-processing and optional messaging costs are paid directly by the business to its chosen providers.</p></div></section>
 
         <section class="package-section booking-paths"><div class="shell"><div class="section-head"><div><p class="kicker">One starter, four practical paths</p><h2>Use the booking tool that fits the owner now.</h2></div><p>A personal Google appointment page, Cal.com, the current provider, or FAMtastic request-to-book can sit behind the branded experience. The owner keeps control of provider accounts and chooses the path during setup.</p></div><div class="booking-path-grid">${bookingPaths}</div><p class="provider-note">Provider availability and paid features can change. FAMtastic confirms the selected account, link or embed, privacy settings, and mobile behavior during setup.</p></div></section>
 
-        <section class="package-section"><div class="shell package-split"><div><p class="kicker">A low-risk way to grow</p><h2>No forced overnight switch.</h2><ol class="launch-path">${launch}</ol></div><div class="package-phone"><span class="package-phone-glow"></span><div class="mini-phone"><small>Booked &amp; Branded</small><h3>Today’s chair</h3><p><b>3</b> requests waiting</p><p><b>1</b> deposit due</p><span>Confirm · Suggest time · Services</span></div></div></div></section>
+        <section class="package-section"><div class="shell package-split"><div><p class="kicker">A low-risk way to grow</p><h2>No forced overnight switch.</h2><ol class="launch-path">${launch}</ol></div><div class="package-phone"><span class="package-phone-glow"></span><div class="mini-phone"><small>Booked &amp; Branded</small><h3>Today’s chair</h3><p><b>3</b> requests waiting</p><p><b>1</b> reply due</p><span>Confirm · Suggest time · Services</span></div></div></div></section>
 
         <section class="package-section package-upgrades" id="package-upgrades"><div class="shell"><div class="section-head"><div><p class="kicker">A pipeline, not a one-and-done sale</p><h2>Start cheap. Upgrade from evidence.</h2></div><p>${esc(creative.offer.value_message)}</p></div><div class="upgrade-ladder">${upgrades}</div><div class="growth-signal"><div><p class="kicker">When is it time to add more?</p><h3>Let the business tell us.</h3></div><ul>${growthSignals}</ul></div></div></section>
 
@@ -326,11 +327,11 @@ function proofPage(business, direction) {
               <div class="experience-copy">
                 <p class="kicker">The operating difference</p>
                 <h2>The site and the workday share one truth.</h2>
-                <p>Start with the useful core: show services clearly, choose a booking path that fits the owner today, see new requests when request-to-book is selected, send a business-owned deposit link, and invite a fresh testimonial after completion. Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades for the moment they can save time or unlock more appointments.</p>
+                <p>Start with the useful core: show services clearly, choose a booking path that fits the owner today, see new requests when request-to-book is selected, display the business’s own payment QR, and invite a fresh testimonial after completion. Calendar depth, reminders, multi-staff scheduling, and other automation remain optional upgrades for the moment they can save time or unlock more appointments.</p>
                 <div class="flow-list">
                   <div class="flow-item"><b>1</b><span><strong>Client requests</strong><br>Service, preferred time, and essential preparation context.</span></div>
                   <div class="flow-item"><b>2</b><span><strong>Owner decides</strong><br>Confirm, propose another time, or decline without losing the request.</span></div>
-                  <div class="flow-item"><b>3</b><span><strong>Business gets paid</strong><br>Send the operator’s Square, Stripe, or Cash App Business link—never FAMtastic’s merchant account.</span></div>
+                  <div class="flow-item"><b>3</b><span><strong>Business gets paid directly</strong><br>Show the operator’s own Cash App or existing payment QR. The payment stays between the client, business, and chosen provider.</span></div>
                 </div>
               </div>
               <div class="phone-wrap" aria-label="Static phone Booking Desk demonstration">
@@ -340,7 +341,7 @@ function proofPage(business, direction) {
                     <div class="desk-head"><small>${esc(business.name)}</small><h3>Today’s chair</h3></div>
                     <div class="desk-tabs"><span>Requests</span><span>Schedule</span><span>Services</span><span>Reviews</span></div>
                     <div class="request-list">${requestCards(business)}</div>
-                    <div class="desk-summary"><div><b>3</b><small>open requests</small></div><div><b>1</b><small>deposit due</small></div></div>
+                    <div class="desk-summary"><div><b>3</b><small>open requests</small></div><div><b>1</b><small>reply due</small></div></div>
                   </div>
                 </div>
               </div>
@@ -349,8 +350,8 @@ function proofPage(business, direction) {
 
           <section class="proof-section">
             <div class="shell">
-              <div class="section-head"><div><p class="kicker">Business-owned payments</p><h2>Scan. Pay. Keep the relationship clear.</h2></div><p>The QR is generated only after the operator connects a reviewed business payment destination. This demonstration QR cannot be scanned or paid.</p></div>
-              <div class="qr-row"><div class="demo-qr" aria-label="Decorative non-scannable demo QR"></div><div><h3>Deposit or checkout, on the owner’s terms.</h3><p>Connect Square, Stripe Payment Links, Cash App Business, or another reviewed provider. FAMtastic stores the destination—not cards, bank details, or merchant credentials.</p></div></div>
+              <div class="section-head"><div><p class="kicker">Your QR. Your account. Your money.</p><h2>Let clients scan the payment method you already use.</h2></div><p>The business supplies and approves its own Cash App or existing payment QR. This demonstration QR cannot be scanned or paid.</p></div>
+              <div class="qr-row"><div class="demo-qr" aria-label="Decorative non-scannable demo QR"></div><div><h3>FAMtastic displays it. The business gets paid directly.</h3><p>FAMtastic does not process, receive, settle, or reconcile the payment. Payment-processing and optional messaging costs are paid directly by the business to its chosen providers.</p></div></div>
             </div>
           </section>
 
@@ -481,7 +482,7 @@ const buildDna = {
   },
   recipe: {
     routine: 'website_proof.generate.v1',
-    version: 'booked-branded.v3',
+    version: 'booked-branded.v4',
     build_class: 'medium',
     offer_status: creative.offer.status,
     public_base: canonicalBase,
@@ -493,6 +494,7 @@ const buildDna = {
     directions_per_business: 3,
     email_sent: false,
     payment_enabled: false,
+    payment_processing_enabled: false,
     customer_data_used: false,
     commerce_sku_activated: false,
     booking_provider_connected: false,

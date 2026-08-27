@@ -1,5 +1,22 @@
 # Product changelog
 
+## 2026-08-27 — Booked & Branded owner-QR payment boundary
+
+- Removed payment processing from the Booked & Branded offer. The starter now
+  displays only a customer-supplied Cash App QR or an existing QR from the
+  payment provider the business already uses; the payment goes directly to the
+  business and its provider.
+- Replaced processor-specific sales copy and deposit-status language across the
+  emails, concept rooms, package, and twelve proofs with “Your QR. Your account.
+  Your money.” FAMtastic does not process, receive, settle, or reconcile these
+  payments.
+- Recorded that payment-processing and optional messaging costs are paid
+  directly by the business to its chosen providers. Added portable Site Studio
+  fields for QR display mode, owner QR asset, no-FAMtastic-processing status,
+  messaging mode, and direct-provider fee ownership.
+- No payment integration, messaging provider, charge, account, email, or image
+  generation was activated by this revision.
+
 ## 2026-08-27 — Booked & Branded starter-first value ladder
 
 - Reframed the fictional Booked & Branded showcase around the smallest useful
@@ -22,7 +39,7 @@
   business need. No new SKU, checkout, subscription, provider account, or
   recurring charge was created or activated.
 - Encoded vendor-neutral Site Studio fields for booking mode, provider,
-  owner-controlled account, validated embed URL, payment destination, and
+  owner-controlled account, validated embed URL, owner-supplied payment QR, and
   upgrade tier. The contract is portable but has not been imported into Site
   Studio or connected to a live booking provider.
 - Expanded the browser acceptance to 21 copy-contract checks in addition to

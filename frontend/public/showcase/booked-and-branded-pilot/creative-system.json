@@ -1,6 +1,6 @@
 {
   "schema": "famtastic.booked-branded-creative-system.v2",
-  "revision_id": "booked-branded-v3-20260827",
+  "revision_id": "booked-branded-v4-20260827",
   "shay": {
     "name": "Shay",
     "title": "FAMtastic Designs AI Business Concierge",
@@ -23,8 +23,8 @@
       "One reviewed starter booking path: keep the current link, connect a personal Google booking page, connect Cal.com, or use request-to-book",
       "Request-to-book with confirm, propose-another-time, or decline decisions when that mode is selected",
       "Blackout dates, availability windows, and request status",
-      "Business-owned Square, Stripe Payment Link, Cash App Business, or reviewed payment handoff",
-      "A decorative-to-live QR placement after the business connects its own approved destination",
+      "One customer-supplied Cash App or existing payment QR displayed on the site",
+      "Payment goes directly to the business through its chosen provider; FAMtastic does not process or receive it",
       "Fresh consent-based testimonials with owner moderation",
       "One year of FAMtastic-managed hosting and the existing Web Basics domain path; normal hosting is $9.99/month beginning in month 13",
       "Shay-guided setup, proof explanation, and launch handoff"
@@ -55,7 +55,7 @@
       "Choose the lightest booking path that already fits the owner’s day",
       "Launch the branded site as the public front door",
       "Watch which services, buttons, and requests turn into real appointments",
-      "Add scheduling, reminders, payments, SEO, or automation only when the business can use the extra power"
+      "Add deeper scheduling, reminders, SEO, or automation only when the business can use the extra power"
     ],
     "upgrade_packages": [
       {
@@ -63,7 +63,7 @@
         "name": "Launch",
         "price": "$199 one time",
         "status": "proposed Booked & Branded starter",
-        "outcome": "A branded public home, one starter booking path, phone-friendly owner controls, business-owned payment handoff, and one year of hosting."
+        "outcome": "A branded public home, one starter booking path, phone-friendly owner controls, the business’s own payment QR, and one year of hosting."
       },
       {
         "id": "keep-running",
@@ -89,7 +89,7 @@
     ],
     "growth_signals": [
       "Clients still ask the same service, price, preparation, or policy questions in DMs",
-      "The owner is losing time confirming appointments or chasing deposits",
+      "The owner is losing time confirming appointments or following up with clients",
       "Multiple calendars, chairs, or team members create conflict risk",
       "The site is attracting attention but the owner cannot see which actions turn into bookings",
       "Repeat clients and fresh testimonials need a more consistent follow-up path"
@@ -124,9 +124,14 @@
       "status": "portable proposal contract; not imported into Site Studio",
       "booking.mode": ["external_link", "embedded_calendar", "request_to_book", "future_two_way_sync"],
       "booking.provider": ["existing_provider", "google_appointment_schedule", "calcom", "famtastic_request_to_book", "reviewed_other"],
-      "booking.owner_account": "required for external booking and payment providers; credentials never belong in the public site",
+      "booking.owner_account": "required for external booking providers; credentials never belong in the public site",
       "booking.embed_url": "optional validated public URL",
-      "booking.payment_destination": "optional owner-controlled reviewed destination",
+      "payment.mode": ["cash_app_qr", "existing_payment_qr", "none"],
+      "payment.owner_qr_asset": "optional customer-supplied and customer-approved QR image or destination",
+      "payment.processed_by_famtastic": false,
+      "messaging.mode": ["email", "optional_owner_provider", "none"],
+      "fees.payment_processing": "paid directly by the business to its chosen provider",
+      "fees.optional_messaging": "paid directly by the business to its chosen provider",
       "booking.upgrade_tier": ["starter", "appointment_scheduling", "custom_operations"],
       "commercial_rule": "Never infer or activate an upgrade from a design proof. Record the customer’s choice and required authorization first."
     }
@@ -142,7 +147,7 @@
   "package_guardrails": {
     "customer_facing_rule": "Lead with the useful starting point and the path to more bookings. Put technical boundaries in setup and scope records, not fear-heavy sales copy.",
     "capability_rule": "A linked or embedded external booking page is not the same as a FAMtastic-operated scheduling backend. Deeper integrations require separate configuration and proof.",
-    "payments_rule": "The owner controls provider accounts and payment destinations; FAMtastic does not hold cards, bank data, or merchant credentials in this demonstration."
+    "payments_rule": "FAMtastic displays only the business’s approved Cash App or existing payment QR. FAMtastic does not process, receive, settle, or reconcile the payment. Payment-processing and optional messaging costs are paid directly by the business to its chosen providers."
   },
   "specialists": [
     {
