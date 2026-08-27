@@ -5,6 +5,17 @@ findings, and operator guidance that should survive across agents and sessions.
 Git-tracked documentation and deployment scripts remain the authoritative
 source of truth.
 
+## 2026-08-27 — Security dependency releases preserve pilot locks
+
+- Observation: the Entity API advisory required a locked Composer deployment,
+  not a Drupal admin-panel update. The production release advanced core to
+  11.4.5 and Entity API to 1.8.0 with no pending database update and a
+  zero-advisory Composer audit.
+- Guidance: validate and deploy the reviewed lock through the backend release
+  script, then verify public routes and update status. Keep an active
+  exact-dispatch pilot lock and its suspended broad scheduler state unchanged
+  during security maintenance unless an owner separately authorizes a change.
+
 ## 2026-08-27 — Deployment evidence does not authorize a commercial send
 
 - Observation: production now has the verified-cold schema, route shells,

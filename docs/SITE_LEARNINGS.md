@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Drupal security fixes are full locked-dependency releases
+
+- Observation: the active Entity API advisory applied because Entity API and
+  JSON:API were both enabled in production. A Drupal security fix was not a
+  module-only copy: the governed deployer promoted the reviewed
+  `composer.lock`, installed the exact production dependency set, retained
+  rollback archives, rebuilt caches, and then proved a zero-advisory audit.
+- Guidance: handle Drupal/Composer security work in a clean current-main
+  worktree. Validate the exact lock on the production PHP platform, use the
+  governed backend deployer, verify `composer audit --locked`, Drupal version,
+  update status, and a minimal affected public route afterward. Preserve any
+  active pilot dispatch lock and do not treat a dependency release as
+  authorization to resume schedulers or customer communication.
+
 ## 2026-08-27 — Pilot activation must be a sequence, not a feature switch
 
 - Observation: the verified-cold code could be safely deployed only after the

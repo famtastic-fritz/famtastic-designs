@@ -10,12 +10,14 @@ editorial fields and the draft demand library are promoted by the same
 deployment lane. Production is not edited or uploaded manually. Any authorized
 agent uses the same checked-in deployment script.
 
-Production currently has a mixed Drupal runtime in `~/public_html` with its
-vendor tree but no root `composer.json`. The deployment lane therefore validates
-the complete backend dependency lock in a private Git worktree and promotes the
-custom module surface. A future change that adds a runtime dependency not
-already installed on production is a separate reviewed platform migration; the
-module release must fail preflight until that dependency is present.
+Production has a mixed Drupal runtime in `~/public_html`, including the Drupal
+project's root `composer.json`, `composer.lock`, and vendor tree. The deployment
+lane treats the checked-in lock as a runtime contract: it validates the exact
+backend dependency set in a private Git worktree, backs up the live dependency
+tree, promotes the reviewed Composer files, and runs production
+`composer install --no-dev`. A runtime dependency change is therefore a
+reviewed platform release, not a manual server Composer command or an
+admin-panel update.
 
 ## Preflight
 
@@ -41,11 +43,12 @@ The script:
 1. resolves the exact current `main` SHA on both machines;
 2. checks it out outside the document root;
 3. validates `composer.json`/`composer.lock`, checks locked production platform
-   requirements, and PHP-lints the module in the private release without
-   installing a duplicate Drupal vendor tree;
+   requirements, and PHP-lints the module in the private release;
 4. backs up the current custom module, admin/customer themes, dependencies,
    configuration, and Drupal database;
-5. stages and swaps the custom module and both themes;
+5. stages and swaps the custom module and both themes, then promotes the exact
+   reviewed Composer files and runs `composer install --no-dev` in the
+   production runtime;
 6. runs `drush updatedb -y`, idempotently installs the governed demand-library
    fields through Drupal's entity API, and seeds the idempotent draft library;
 7. rebuilds caches and verifies the sitemap route and pipeline entity definitions;
@@ -62,12 +65,11 @@ Drupal's entity API. This avoids partial-import dependency failures caused by a
 form display legitimately depending on configuration outside the small import
 set.
 
-Composer validation uses the deployment-owned writable temporary directory at
-`~/deploy/famtastic-designs/tmp`; shared-host `/tmp` permissions are not part of
-the release contract. The production runtime already owns its vendor tree, so a
-module-only release does not duplicate all Drupal dependencies under every Git
-release. Adding a new runtime dependency remains a separately reviewed platform
-migration.
+Composer validation and install use the deployment-owned writable temporary
+directory at `~/deploy/famtastic-designs/tmp`; shared-host `/tmp` permissions
+are not part of the release contract. A release that changes the lock must
+finish with a production `composer audit --locked`, `drush updatedb:status`,
+and targeted route smoke before it is recorded as complete.
 
 ### Exact-ID public-preview pilot
 

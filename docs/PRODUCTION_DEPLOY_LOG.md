@@ -1,5 +1,28 @@
 # Production Deploy Log
 
+## 2026-08-27 — Drupal core and Entity API security maintenance
+
+- Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
+- Backend release: `aad97433f88e6f0a2724c556d0bdc9b4f820710b`
+- Backend release record: 2026-08-27T11:34:26Z, PHP 8.3.32
+- Scope: Drupal core 11.4.4 → 11.4.5 and Entity API 1.6.0 → 1.8.0.
+  Entity API is enabled alongside JSON:API; the latter update resolves
+  SA-CONTRIB-2026-113 / CVE-2026-81158.
+- Result: the locked production dependency install, cache rebuild, and normal
+  update-status check completed. Production Composer audit reports zero
+  advisories; no database updates remain pending.
+- Pilot safety remained intact: `pilot_exact_dispatch_only=1`, no broad
+  lifecycle/Drupal-cron/jobs-run scheduler was active, and no cohort, proof,
+  provider, customer message, or commercial message was created by this release.
+
+### Acceptance evidence
+
+- Production reports Drupal 11.4.5 and locked Entity API 1.8.0.
+- The public home page and filtered public JSON:API article collection returned
+  HTTP 200 after deployment; an anonymous `client_project` collection returned
+  a private 404 rather than a server error. This is not a substitute for a
+  separate authenticated customer-dashboard journey check.
+
 ## 2026-08-27 — Exact-ID verified-cold pilot foundation
 
 - Repository/branch: `famtastic-fritz/famtastic-designs` / `main`

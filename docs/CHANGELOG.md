@@ -1,5 +1,17 @@
 # Product changelog
 
+## 2026-08-27 — Drupal security maintenance deployed
+
+- Production now runs backend release `aad97433f88e6f0a2724c556d0bdc9b4f820710b`.
+  Drupal core moved from 11.4.4 to 11.4.5 and the enabled Entity API module
+  moved from 1.6.0 to 1.8.0, resolving SA-CONTRIB-2026-113 / CVE-2026-81158.
+- The governed dependency deployment completed with a fresh code, dependency,
+  and database backup. Production Composer audit reports zero advisories and
+  Drupal reports no pending database updates.
+- The verified-cold pilot remains protected: the durable exact-dispatch lock is
+  still `1`, no broad scheduler was re-enabled, and no proof, customer, or
+  commercial email was sent by this maintenance release.
+
 ## 2026-08-27 — Verified-cold pilot foundation deployed (no outreach sent)
 
 - Production now runs `d5435a19` for the owner-gated public-preview and
