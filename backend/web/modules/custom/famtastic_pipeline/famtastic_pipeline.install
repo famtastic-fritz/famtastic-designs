@@ -1959,6 +1959,39 @@ function famtastic_pipeline_update_8041(&$sandbox) {
         implode(', ', $unsafe_fields),
       ));
     }
+    // The three ownership/idempotency identifiers must already be usable on
+    // every legacy row before this update can add uniqueness or harden their
+    // column definitions. A nullable/blank identity would evade a MySQL
+    // unique key and turn a partial migration into an unclaimable or
+    // cross-delivery record. Never repair or invent those values here.
+    foreach (['public_id', 'delivery_key', 'prospect_id'] as $identity_field) {
+      if (!isset($definition['fields'][$identity_field]) || isset($missing_fields[$identity_field])) {
+        // A missing required identity is already covered by the no-DDL
+        // unsafe-field failure above; retain this guard for future schema
+        // changes that might make that field conditionally required.
+        throw new \Drupal\Core\Utility\UpdateException(sprintf(
+          'famtastic_preview_delivery is missing its required %s identity field. No schema changes were made.',
+          $identity_field,
+        ));
+      }
+      $invalid_identity = $database->select('famtastic_preview_delivery', 'delivery');
+      $invalid_identity->addField('delivery', 'id');
+      $invalid = $invalid_identity->orConditionGroup()
+        ->isNull('delivery.' . $identity_field);
+      if ($identity_field === 'prospect_id') {
+        $invalid->condition('delivery.' . $identity_field, 0, '<=');
+      }
+      else {
+        $invalid->condition('delivery.' . $identity_field, '');
+      }
+      $invalid_identity->condition($invalid)->range(0, 1);
+      if ($invalid_identity->execute()->fetchField() !== FALSE) {
+        throw new \Drupal\Core\Utility\UpdateException(sprintf(
+          'famtastic_preview_delivery contains a blank, NULL, or invalid %s identity. No schema changes were made. Repair the legacy record before rerunning update 8041.',
+          $identity_field,
+        ));
+      }
+    }
     foreach ($definition['unique keys'] as $name => $fields) {
       if ($schema->indexExists('famtastic_preview_delivery', $name)) {
         continue;
@@ -1984,6 +2017,20 @@ function famtastic_pipeline_update_8041(&$sandbox) {
         $field['initial'] = $safe_initial_values[$name];
       }
       $schema->addField('famtastic_preview_delivery', $name, $field);
+    }
+  }
+  // Existing partial tables may carry nullable identity columns even when
+  // their values are currently valid. Lock them to the canonical definitions
+  // before adding the unique keys, so future rows cannot recreate the same
+  // ambiguous state.
+  foreach (['public_id', 'delivery_key', 'prospect_id'] as $identity_field) {
+    if (!isset($missing_fields[$identity_field])) {
+      $schema->changeField(
+        'famtastic_preview_delivery',
+        $identity_field,
+        $identity_field,
+        $definition['fields'][$identity_field],
+      );
     }
   }
   foreach ($definition['indexes'] as $name => $fields) {

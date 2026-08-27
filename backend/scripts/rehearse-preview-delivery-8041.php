@@ -129,6 +129,24 @@ try {
   print "8041 nonempty partial: PASS\n";
   $reset();
 
+  // Present-but-nullable identity columns are just as unsafe as missing ones:
+  // a unique key permits multiple NULLs and an empty key cannot identify an
+  // owner-gated public room. The update must fail before adding any column.
+  $nullable_identity = $partial;
+  $nullable_identity['fields']['public_id']['not null'] = FALSE;
+  $nullable_identity['fields']['delivery_key']['not null'] = FALSE;
+  $nullable_identity['fields']['prospect_id']['not null'] = FALSE;
+  $schema->createTable($table, $nullable_identity);
+  $connection->insert($table)->fields([
+    'public_id' => '',
+    'delivery_key' => 'rehearsal:blank-public-id',
+    'prospect_id' => 1,
+  ])->execute();
+  rehearsal_expect_update_exception(static fn () => famtastic_pipeline_update_8041($sandbox), 'public_id');
+  rehearsal_assert(!$schema->fieldExists($table, 'text_snapshot'), 'Malformed identity table was mutated before failure.');
+  print "8041 malformed identity: PASS (fail closed)\n";
+  $reset();
+
   // Missing ownership must not be invented or partially repaired.
   unset($partial['fields']['prospect_id']);
   $schema->createTable($table, $partial);

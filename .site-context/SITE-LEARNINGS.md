@@ -15,10 +15,12 @@ restores its constraint.
 
 Guidance:
 
-- Preflight missing required identity fields and future unique-key duplicates
-  before changing a partial table. A migration may initialize an empty frozen
-  email snapshot, but it must never invent a Prospect, public ID, or delivery
-  key; stop before DDL and name the operator repair instead.
+- Preflight missing, blank, NULL, or invalid required identity fields and
+  future unique-key duplicates before changing a partial table. A migration
+  may initialize an empty frozen email snapshot, but it must never invent a
+  Prospect, public ID, or delivery key; stop before DDL and name the operator
+  repair instead. Restore valid identity columns to their canonical NOT NULL
+  definitions before adding uniqueness.
 - Rehearse update `8041` with
   `backend/scripts/rehearse-preview-delivery-8041.php` against only the named
   disposable MariaDB database. PHP lint and a hand-written SQL sketch are not
