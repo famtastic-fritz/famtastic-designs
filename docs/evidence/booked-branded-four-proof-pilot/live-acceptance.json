@@ -1,46 +1,655 @@
 {
-  "schema": "famtastic.booked-branded-live-acceptance.v1",
-  "checked_at": "2026-08-27T20:08:00Z",
+  "schema": "famtastic.booked-branded-live-acceptance.v2",
+  "checked_at": "2026-08-27T20:33:26.878Z",
   "deployment": {
-    "commit": "b91038f2db841b9375d3fdd912ba636c04088361",
-    "rollback_archive": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T200346Z-b91038f2db841b9375d3fdd912ba636c04088361.tgz"
+    "commit": "a7123cf96c9b8ff00b2fc4bb4b07715fc151c284",
+    "rollback_archive": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T202902Z-a7123cf96c9b8ff00b2fc4bb4b07715fc151c284.tgz"
   },
   "hosts": [
     {
       "origin": "https://famtasticdesigns.com",
+      "viewport": "1440x1000",
       "existing_react_homepage": "passed",
       "showcase_routes": 22,
-      "viewport": "1440x1000",
+      "route_evidence": [
+        {
+          "route": "/",
+          "status": 200,
+          "h1": "Booked &Branded.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/package/",
+          "status": 200,
+          "h1": "Own the front door. Keep the chair moving.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/emails/coastline-crown-barbers/",
+          "status": 200,
+          "h1": "What if Coastline Crown Barbers’ booking page looked like its brand?",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/rooms/coastline-crown-barbers/",
+          "status": 200,
+          "h1": "Coastline Crown Barbers",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/coastline-crown-barbers/a/",
+          "status": 200,
+          "h1": "Precision belongs in every detail.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/coastline-crown-barbers/b/",
+          "status": 200,
+          "h1": "Fresh cut. Clear signal.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/coastline-crown-barbers/c/",
+          "status": 200,
+          "h1": "Run the chair from the phone in your hand.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/emails/velvet-coil-atelier/",
+          "status": 200,
+          "h1": "What if Velvet Coil Atelier’s booking page looked like its brand?",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/rooms/velvet-coil-atelier/",
+          "status": 200,
+          "h1": "Velvet Coil Atelier",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/velvet-coil-atelier/a/",
+          "status": 200,
+          "h1": "Healthy texture, held with intention.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/velvet-coil-atelier/b/",
+          "status": 200,
+          "h1": "Let the texture lead.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/velvet-coil-atelier/c/",
+          "status": 200,
+          "h1": "Every request arrives with the context you need.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/emails/palmera-fade-society/",
+          "status": 200,
+          "h1": "What if Palmera Fade Society’s booking page looked like its brand?",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/rooms/palmera-fade-society/",
+          "status": 200,
+          "h1": "Palmera Fade Society",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/palmera-fade-society/a/",
+          "status": 200,
+          "h1": "Sharp work. Easy next move.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/palmera-fade-society/b/",
+          "status": 200,
+          "h1": "La silla está lista.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/palmera-fade-society/c/",
+          "status": 200,
+          "h1": "See the day. Confirm the chair. Keep moving.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/emails/saltline-color-house/",
+          "status": 200,
+          "h1": "What if Saltline Color House’s booking page looked like its brand?",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/rooms/saltline-color-house/",
+          "status": 200,
+          "h1": "Saltline Color House",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/saltline-color-house/a/",
+          "status": 200,
+          "h1": "Color that looks like it belongs to you.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/saltline-color-house/b/",
+          "status": 200,
+          "h1": "Turn the light up.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/saltline-color-house/c/",
+          "status": 200,
+          "h1": "The right color starts before the chair.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        }
+      ],
       "status": "passed"
     },
     {
       "origin": "https://www.famtasticdesigns.com",
+      "viewport": "390x844",
       "existing_react_homepage": "passed",
       "showcase_routes": 22,
-      "viewport": "390x844",
+      "route_evidence": [
+        {
+          "route": "/",
+          "status": 200,
+          "h1": "Booked &Branded.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/package/",
+          "status": 200,
+          "h1": "Own the front door. Keep the chair moving.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/emails/coastline-crown-barbers/",
+          "status": 200,
+          "h1": "What if Coastline Crown Barbers’ booking page looked like its brand?",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/rooms/coastline-crown-barbers/",
+          "status": 200,
+          "h1": "Coastline Crown Barbers",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/coastline-crown-barbers/a/",
+          "status": 200,
+          "h1": "Precision belongs in every detail.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/coastline-crown-barbers/b/",
+          "status": 200,
+          "h1": "Fresh cut. Clear signal.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/coastline-crown-barbers/c/",
+          "status": 200,
+          "h1": "Run the chair from the phone in your hand.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/emails/velvet-coil-atelier/",
+          "status": 200,
+          "h1": "What if Velvet Coil Atelier’s booking page looked like its brand?",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/rooms/velvet-coil-atelier/",
+          "status": 200,
+          "h1": "Velvet Coil Atelier",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/velvet-coil-atelier/a/",
+          "status": 200,
+          "h1": "Healthy texture, held with intention.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/velvet-coil-atelier/b/",
+          "status": 200,
+          "h1": "Let the texture lead.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/velvet-coil-atelier/c/",
+          "status": 200,
+          "h1": "Every request arrives with the context you need.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/emails/palmera-fade-society/",
+          "status": 200,
+          "h1": "What if Palmera Fade Society’s booking page looked like its brand?",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/rooms/palmera-fade-society/",
+          "status": 200,
+          "h1": "Palmera Fade Society",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/palmera-fade-society/a/",
+          "status": 200,
+          "h1": "Sharp work. Easy next move.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/palmera-fade-society/b/",
+          "status": 200,
+          "h1": "La silla está lista.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/palmera-fade-society/c/",
+          "status": 200,
+          "h1": "See the day. Confirm the chair. Keep moving.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/emails/saltline-color-house/",
+          "status": 200,
+          "h1": "What if Saltline Color House’s booking page looked like its brand?",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/rooms/saltline-color-house/",
+          "status": 200,
+          "h1": "Saltline Color House",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/saltline-color-house/a/",
+          "status": 200,
+          "h1": "Color that looks like it belongs to you.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/saltline-color-house/b/",
+          "status": 200,
+          "h1": "Turn the light up.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        },
+        {
+          "route": "/proofs/saltline-color-house/c/",
+          "status": 200,
+          "h1": "The right color starts before the chair.",
+          "overflow": 0,
+          "broken_images": 0,
+          "console_or_page_errors": 0,
+          "passed": true
+        }
+      ],
       "status": "passed"
     }
   ],
   "showcase_assertions": {
     "route_checks": 44,
     "homepage_checks": 2,
-    "http_200": true,
-    "h1_rendered": true,
-    "fictional_disclosure_present": true,
-    "noindex_present": true,
-    "horizontal_overflow": 0,
-    "console_or_page_errors": 0,
-    "broken_images": 0
+    "old_renewal_copy_absent": true,
+    "starter_renewal_and_upgrade_ladder_present": true
   },
   "asset_assertions": {
     "hosts_checked": 2,
     "assets_per_host": 12,
     "asset_checks": 24,
-    "status": 200,
-    "content_type": "image/jpeg",
-    "exact_committed_byte_sizes": true,
-    "exact_sha256": true
+    "evidence": [
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/coastline-crown-barbers-a.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 570085,
+        "sha256": "e4cd768663c18f5879dede64ae13b25eed3959600609a12e7bcf5c7970736fa8",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/coastline-crown-barbers-b.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 519075,
+        "sha256": "a64975f5c9d777886390882c22192f0d69e10cc067160081ee1e62e58c14d46e",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/coastline-crown-barbers-c.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 487866,
+        "sha256": "4967d31198682bde79dd4d6d50efbab9b43669f2e3f2db540a9f47bab4b67bcf",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/palmera-fade-society-a.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 533398,
+        "sha256": "9d1c9bb2d8fb5ad4f01d20290116c792b9cff5e2078808748561c3144e092b7f",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/palmera-fade-society-b.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 618294,
+        "sha256": "1beac06f1f451b788cb1b2bf75b41c21556af83c82c61aa5386ec8bd0a1ef7d7",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/palmera-fade-society-c.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 629931,
+        "sha256": "6fb52dfe1687043f50262d7fc08fa731ccd06ed58b2599e29c2978a09f205500",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/saltline-color-house-a.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 538252,
+        "sha256": "dba8f5e5859a08d9cf2f9cbfc7276c3a53c56b6ec0d5b6d669bf60b501ed566f",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/saltline-color-house-b.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 651149,
+        "sha256": "d1f39ee5f25f578aff710bbea209f46baae22ab451144c2f5e35a430608ba6c9",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/saltline-color-house-c.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 559227,
+        "sha256": "f1fa20d398ba6fe5266dd3bb62f9f80c64124bbb6d0984f1a7f389d41e227f49",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-a.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 593920,
+        "sha256": "25a93df0d758f48ec8019e24fee1470435c2591c24209bd50610a178e5f9762a",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-b.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 594784,
+        "sha256": "6aeb9bcf4596897e115b01a1d590cef8deedbd7ebcdf9f356f319403cfb0ffbb",
+        "passed": true
+      },
+      {
+        "origin": "https://famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-c.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 622751,
+        "sha256": "eb2603e6eb294c57ef29d3642fdaf22389a4436a086472d7f2f269be289b8d77",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/coastline-crown-barbers-a.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 570085,
+        "sha256": "e4cd768663c18f5879dede64ae13b25eed3959600609a12e7bcf5c7970736fa8",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/coastline-crown-barbers-b.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 519075,
+        "sha256": "a64975f5c9d777886390882c22192f0d69e10cc067160081ee1e62e58c14d46e",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/coastline-crown-barbers-c.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 487866,
+        "sha256": "4967d31198682bde79dd4d6d50efbab9b43669f2e3f2db540a9f47bab4b67bcf",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/palmera-fade-society-a.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 533398,
+        "sha256": "9d1c9bb2d8fb5ad4f01d20290116c792b9cff5e2078808748561c3144e092b7f",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/palmera-fade-society-b.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 618294,
+        "sha256": "1beac06f1f451b788cb1b2bf75b41c21556af83c82c61aa5386ec8bd0a1ef7d7",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/palmera-fade-society-c.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 629931,
+        "sha256": "6fb52dfe1687043f50262d7fc08fa731ccd06ed58b2599e29c2978a09f205500",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/saltline-color-house-a.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 538252,
+        "sha256": "dba8f5e5859a08d9cf2f9cbfc7276c3a53c56b6ec0d5b6d669bf60b501ed566f",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/saltline-color-house-b.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 651149,
+        "sha256": "d1f39ee5f25f578aff710bbea209f46baae22ab451144c2f5e35a430608ba6c9",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/saltline-color-house-c.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 559227,
+        "sha256": "f1fa20d398ba6fe5266dd3bb62f9f80c64124bbb6d0984f1a7f389d41e227f49",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-a.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 593920,
+        "sha256": "25a93df0d758f48ec8019e24fee1470435c2591c24209bd50610a178e5f9762a",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-b.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 594784,
+        "sha256": "6aeb9bcf4596897e115b01a1d590cef8deedbd7ebcdf9f356f319403cfb0ffbb",
+        "passed": true
+      },
+      {
+        "origin": "https://www.famtasticdesigns.com",
+        "path": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-c.jpg",
+        "status": 200,
+        "content_type": "image/jpeg",
+        "bytes": 622751,
+        "sha256": "eb2603e6eb294c57ef29d3642fdaf22389a4436a086472d7f2f269be289b8d77",
+        "passed": true
+      }
+    ]
   },
-  "observation": "The first www mobile overview probe checked two lazy images before staged scrolling loaded them. A repeated 180 ms staged-scroll check loaded all four overview images at natural size 1672x941 with no errors. Direct downloads of all 12 final Gemini assets on both hosts also matched committed byte counts and SHA-256; this was browser timing, not a missing production asset.",
+  "errors": [],
   "passed": true
 }

@@ -87,8 +87,8 @@ review is deliberately reserved for the owner.
 ## Production acceptance
 
 The governed frontend deployment published commit
-`b91038f2db841b9375d3fdd912ba636c04088361` and retained rollback archive
-`/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T200346Z-b91038f2db841b9375d3fdd912ba636c04088361.tgz`.
+`a7123cf96c9b8ff00b2fc4bb4b07715fc151c284` and retained rollback archive
+`/home/xrdj7j99xhzt/backups/famtastic-frontend-20260827T202902Z-a7123cf96c9b8ff00b2fc4bb4b07715fc151c284.tgz`.
 
 Real-browser acceptance covered the existing React homepage and all 22
 showcase routes on both `https://famtasticdesigns.com` and
@@ -96,4 +96,8 @@ showcase routes on both `https://famtasticdesigns.com` and
 HTTP 200, a rendered H1, the fictional disclosure, `noindex`, no horizontal
 overflow, no console/page errors, and no broken images. All 12 final Gemini
 assets returned `200 image/jpeg` with their exact committed byte sizes and
-SHA-256 on both hosts. See `live-acceptance.json`.
+SHA-256 on both hosts. This is 44 route checks, two existing-homepage checks,
+and 24 exact image checks. The former `$19.99` recommendation is absent; the
+live package instead shows the proposed `$199` launch, normal `$9.99` hosting
+from month 13, the optional `$149` scheduling setup, and later growth choices.
+See `live-acceptance.json`.
