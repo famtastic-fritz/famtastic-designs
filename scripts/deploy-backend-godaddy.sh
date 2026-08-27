@@ -7,6 +7,11 @@ SSH_TARGET="${FAMTASTIC_SSH_TARGET:-xrdj7j99xhzt@p3plzcpnl497512.prod.phx3.secur
 REMOTE_ROOT="${FAMTASTIC_REMOTE_ROOT:-public_html}"
 REMOTE_DEPLOY_BASE="${FAMTASTIC_REMOTE_DEPLOY_BASE:-deploy/famtastic-designs}"
 REPOSITORY_URL="${FAMTASTIC_REPOSITORY_URL:-https://github.com/famtastic-fritz/famtastic-designs.git}"
+# A public-preview pilot must never rely on the general lifecycle runner: that
+# runner claims every eligible automation job and notification in the shared
+# queues.  The normal deployment path retains its existing scheduler behavior;
+# an operator must explicitly opt into this narrower release mode.
+PILOT_EXACT_DISPATCH_ONLY="${FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY:-0}"
 APPLY=false
 
 usage() {
@@ -19,6 +24,11 @@ worktree, backs up the database and current custom code, promotes the module and
 admin theme, imports the demand-library field configuration, seeds the governed
 draft library, runs Drupal database updates and cache rebuild, and records the
 release.
+
+Set FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 only for an owner-gated public-preview
+pilot. In that mode the deployment refuses to proceed while an active broad
+famtastic:lifecycle-run cron entry exists, and it never installs one. Exact
+owner-approved preview delivery must use famtastic:preview-delivery-dispatch.
 USAGE
 }
 
@@ -27,6 +37,14 @@ case "${1:-}" in
   --apply) APPLY=true ;;
   -h|--help) usage; exit 0 ;;
   *) usage >&2; exit 2 ;;
+esac
+
+case "$PILOT_EXACT_DISPATCH_ONLY" in
+  0|1) ;;
+  *)
+    echo "FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY must be 0 or 1." >&2
+    exit 2
+    ;;
 esac
 
 for required_command in git ssh; do
@@ -55,12 +73,15 @@ fi
 echo "Backend deployment candidate: $COMMIT_SHA"
 echo "Private validation source:    ~/$REMOTE_DEPLOY_BASE/releases/$COMMIT_SHA/source/backend"
 echo "Drupal runtime:               ~/$REMOTE_ROOT"
+if [[ "$PILOT_EXACT_DISPATCH_ONLY" == "1" ]]; then
+  echo "Dispatch mode:                exact owner-approved preview only (broad lifecycle cron forbidden)"
+fi
 
 remote_mode="preflight"
 [[ "$APPLY" == true ]] && remote_mode="apply"
 
 ssh -T "$SSH_TARGET" bash -s -- \
-  "$remote_mode" "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" <<'REMOTE'
+  "$remote_mode" "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" "$PILOT_EXACT_DISPATCH_ONLY" <<'REMOTE'
 set -euo pipefail
 
 mode="$1"
@@ -68,6 +89,7 @@ remote_root="$2"
 deploy_base="$3"
 repository_url="$4"
 commit_sha="$5"
+pilot_exact_dispatch_only="$6"
 production_dir="$HOME/$remote_root"
 deploy_dir="$HOME/$deploy_base"
 mirror_dir="$deploy_dir/repository.git"
@@ -90,6 +112,40 @@ source_demand_seed="$backend_dir/scripts/seed-demand-content.php"
 source_package_normalizer="$backend_dir/scripts/normalize-package-ladder.php"
 production_config_dir="$production_dir/config"
 drush="$production_dir/vendor/bin/drush"
+
+case "$pilot_exact_dispatch_only" in
+  0|1) ;;
+  *)
+    echo "Remote pilot-dispatch mode is invalid." >&2
+    exit 2
+    ;;
+esac
+
+# The general lifecycle runner claims all eligible jobs and notifications. It
+# is intentionally prohibited for a controlled exact-ID preview pilot, where
+# `famtastic:preview-delivery-dispatch` is the only allowed mail entry point.
+# Read the current crontab without changing it; an unreadable non-empty
+# scheduler is also unsafe because we cannot prove it is inactive.
+assert_no_active_global_lifecycle_cron() {
+  local current_crontab
+  if ! current_crontab="$(crontab -l 2>&1)"; then
+    if ! printf '%s\n' "$current_crontab" | grep -qi 'no crontab'; then
+      echo "Pilot exact-dispatch-only deployment refused: unable to inspect the current crontab." >&2
+      return 1
+    fi
+    current_crontab=''
+  fi
+  if printf '%s\n' "$current_crontab" | awk '
+    /^[[:space:]]*#/ { next }
+    /famtastic:lifecycle-run/ { found = 1 }
+    END { exit found ? 0 : 1 }
+  '; then
+    echo "Pilot exact-dispatch-only deployment refused: an active broad famtastic:lifecycle-run cron entry exists." >&2
+    echo "It can dispatch unrelated queued jobs or notifications. Disable it through an explicitly authorized scheduler change, then rerun this deployment." >&2
+    return 1
+  fi
+  echo "Pilot exact-dispatch-only: no active broad lifecycle cron entry found."
+}
 
 for command_name in git php composer tar rsync crontab; do
   command -v "$command_name" >/dev/null || {
@@ -125,6 +181,9 @@ test "$remote_sha" = "$commit_sha" || {
 
 cd "$production_dir"
 "$drush" status --fields=bootstrap,db-status,drupal-version --format=list
+if [[ "$pilot_exact_dispatch_only" == "1" ]]; then
+  assert_no_active_global_lifecycle_cron
+fi
 # A deployment must never land on (or silently leave) a maintenance-mode site.
 # Maintenance mode lives in STATE (not config) - Drupal core key.
 maint="$("$drush" sget system.maintenance_mode --format=string 2>/dev/null || echo 0)"
@@ -379,21 +438,31 @@ echo "Sitemap generation verified."
   print "Drupal AI foundation verified.\n";
 '
 
-# Install an independent lifecycle runner. Mailbox ingestion may fail without
-# suppressing notification dispatch, proof jobs, protection, or heartbeats.
-cron_marker='# FAMTASTIC_LIFECYCLE_CRON_V1'
-cron_stage="$deploy_dir/tmp/famtastic-crontab-$timestamp"
-crontab -l > "$cron_stage" 2>/dev/null || true
-if ! grep -Fq "$cron_marker" "$cron_stage"; then
-  {
-    printf '\n%s\n' "$cron_marker"
-    printf '*/5 * * * * cd %q && %q famtastic:lifecycle-run --limit=50 >/dev/null 2>&1\n' "$production_dir" "$drush"
-  } >> "$cron_stage"
-  crontab "$cron_stage"
+if [[ "$pilot_exact_dispatch_only" == "1" ]]; then
+  # Recheck immediately before release recording: another process must not
+  # activate the global worker halfway through an exact-ID pilot deployment.
+  assert_no_active_global_lifecycle_cron
+  lifecycle_cron_record='disabled:pilot-exact-dispatch-only'
+  echo "Exact preview pilot: broad lifecycle scheduler remains disabled."
+else
+  # Ordinary deployments retain the independent lifecycle runner. Mailbox
+  # ingestion may fail without suppressing notification dispatch, proof jobs,
+  # protection, or heartbeats.
+  cron_marker='# FAMTASTIC_LIFECYCLE_CRON_V1'
+  cron_stage="$deploy_dir/tmp/famtastic-crontab-$timestamp"
+  crontab -l > "$cron_stage" 2>/dev/null || true
+  if ! grep -Fq "$cron_marker" "$cron_stage"; then
+    {
+      printf '\n%s\n' "$cron_marker"
+      printf '*/5 * * * * cd %q && %q famtastic:lifecycle-run --limit=50 >/dev/null 2>&1\n' "$production_dir" "$drush"
+    } >> "$cron_stage"
+    crontab "$cron_stage"
+  fi
+  rm -f "$cron_stage"
+  crontab -l | grep -F "$cron_marker" >/dev/null
+  lifecycle_cron_record='FAMTASTIC_LIFECYCLE_CRON_V1'
+  echo "Independent lifecycle scheduler verified."
 fi
-rm -f "$cron_stage"
-crontab -l | grep -F "$cron_marker" >/dev/null
-echo "Independent lifecycle scheduler verified."
 
 {
   printf 'commit=%s\n' "$commit_sha"
@@ -406,7 +475,7 @@ echo "Independent lifecycle scheduler verified."
   printf 'dependency_backup=%s\n' "$dependency_backup"
   printf 'commercial_config_backup=%s\n' "$commercial_config_backup"
   printf 'demand_manifest_version=2\n'
-  printf 'lifecycle_cron=FAMTASTIC_LIFECYCLE_CRON_V1\n'
+  printf 'lifecycle_cron=%s\n' "$lifecycle_cron_record"
 } > "$production_dir/.backend-release"
 
 rm -rf "$previous_module"

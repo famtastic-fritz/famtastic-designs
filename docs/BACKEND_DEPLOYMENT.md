@@ -68,6 +68,24 @@ module-only release does not duplicate all Drupal dependencies under every Git
 release. Adding a new runtime dependency remains a separately reviewed platform
 migration.
 
+### Exact-ID public-preview pilot
+
+For an owner-gated public-preview pilot, both preflight and apply must declare
+the narrow delivery mode explicitly:
+
+```bash
+FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 ./scripts/deploy-backend-godaddy.sh
+FAMTASTIC_PILOT_EXACT_DISPATCH_ONLY=1 ./scripts/deploy-backend-godaddy.sh --apply
+```
+
+In this mode the deployer refuses to proceed if an active
+`famtastic:lifecycle-run` crontab entry exists and does not install one. That
+general runner can process unrelated queued automation and notifications. The
+pilot invitation must instead be sent only by the exact-ID,
+owner-confirmed `famtastic:preview-delivery-dispatch` command. Disabling an
+existing global scheduler is a separate, explicitly authorized operations
+change; do not silently remove it during the release.
+
 If code promotion or a Drupal command fails, the script restores the prior
 module and rebuilds cache. Database updates cannot be assumed reversible, so
 the pre-update SQL dump is retained and its path is printed.
