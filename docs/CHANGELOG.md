@@ -19,6 +19,8 @@
 - Added an honest chair-side founding-offer panel and a five-minute conversion
   plan with discovery questions, a bounded $199 close, renewal/optional-cost
   disclosures, objections, follow-up, and evidence capture.
+- Added route-local icon declarations so the public and owner prototypes do not
+  inherit the mixed document root's absent `/favicon.ico` request.
 
 ## 2026-08-28 — Modular Customer Portal Architecture, My Products Hub, Guided Project Provisioning Wizard, and Site Studio Dispatch
 
