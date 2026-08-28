@@ -35,6 +35,8 @@ import FiftyFiveCentWebsitePage from './pages/FiftyFiveCentWebsitePage.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
 import ProofSharePage from './pages/ProofSharePage.jsx';
 import PublicPreviewRoomPage from './pages/PublicPreviewRoomPage.jsx';
+import IntakeHubPage from './pages/IntakeHubPage.jsx';
+import SpecializedIntakePage from './pages/SpecializedIntakePage.jsx';
 
 export default function App() {
   return (
@@ -74,6 +76,8 @@ export default function App() {
           <Route path="/buy" element={<PurchasePage />} />
           <Route path="/purchase" element={<PurchasePage />} />
           <Route path="/pricing" element={<Navigate to="/packages" replace />} />
+          <Route path="/intake" element={<IntakeHubPage />} />
+          <Route path="/intake/:serviceSlug" element={<SpecializedIntakePage />} />
           <Route path="/55-cents-a-day-website" element={<FiftyFiveCentWebsitePage />} />
 
           {/* Legacy /content/* URLs → clean routes. */}

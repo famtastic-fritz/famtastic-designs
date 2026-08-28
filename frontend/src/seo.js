@@ -69,6 +69,30 @@ export const SEO_PAGES = {
     title: 'Packages & Pricing | FAMtastic Designs',
     description: 'Transparent fixed pricing for custom websites, AI applications, and digital business solutions.',
   },
+  '/intake': {
+    title: 'Direct Project Intake Forms | FAMtastic Solutions Studio',
+    description: 'Specialized intake forms for Hosting & Domain Setup, AI Chatbots, Custom Client Portals, Website Care, and Custom Website Launches.',
+  },
+  '/intake/hosting-domain': {
+    title: 'Hosting & Domain Setup Intake | FAMtastic Solutions Studio',
+    description: 'Provide your domain and hosting preferences so our team can provision your high-speed cloud environment, SSL certificate, and DNS routing.',
+  },
+  '/intake/ai-chatbot': {
+    title: 'AI Chatbot & Automation Intake | FAMtastic Solutions Studio',
+    description: 'Define your business knowledge, customer support workflows, and escalation rules so we can train and deploy your custom AI agent.',
+  },
+  '/intake/client-portal': {
+    title: 'Client Portal & Web App Intake | FAMtastic Solutions Studio',
+    description: 'Specify your user roles, dashboard workflows, file sharing, and database requirements for your custom business portal.',
+  },
+  '/intake/maintenance': {
+    title: 'Website Care & Maintenance Intake | FAMtastic Solutions Studio',
+    description: 'Share your current site setup so we can conduct a full health audit and establish automated backups, security patching, and speed tuning.',
+  },
+  '/intake/website-launch': {
+    title: 'Custom Website Launch Intake | FAMtastic Solutions Studio',
+    description: 'Give us the blueprint of your vision. We will architect your custom layout, interactive working concepts, and complete go-live roadmap.',
+  },
 };
 
 export function normalizePath(pathname = '/') {

@@ -31,8 +31,8 @@
   # Token-scoped prospect pipeline routes (ProofHub, payment return, intake, status).
   RewriteRule ^p/[^/]+/?$ /index.html [L]
 
-  # Customer account links and checkout purchase routes.
-  RewriteRule ^(?:login|verify-email|reset-password|buy|purchase|pricing)/?$ /index.html [L]
+  # Customer account links, checkout purchase, and direct intake routes.
+  RewriteRule ^(?:login|verify-email|reset-password|buy|purchase|pricing|intake)(?:/.*)?$ /index.html [L]
 </IfModule>
 
 # The Drupal backend root (/web/) is not a landing surface - route it to the SPA.
