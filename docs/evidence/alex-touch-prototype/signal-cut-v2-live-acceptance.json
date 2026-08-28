@@ -1,0 +1,50 @@
+{
+  "schema": "famtastic.browser-acceptance.v1",
+  "recorded_at": "2026-08-28T20:02:30Z",
+  "artifact_commit": "2cb023cedcee01d641c7f18d0ccd7c76ec032814",
+  "release": {
+    "node": "v22.23.2",
+    "backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260828T200102Z-2cb023cedcee01d641c7f18d0ccd7c76ec032814.tgz"
+  },
+  "routes": {
+    "apex_v2": {
+      "url": "https://famtasticdesigns.com/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/",
+      "status": 200,
+      "title": "Touch by Alex V2 — Signal Cut Prototype",
+      "sections": 5,
+      "map": true,
+      "contact_form": true
+    },
+    "www_v2": {
+      "url": "https://www.famtasticdesigns.com/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/",
+      "status": 200,
+      "sections": 5,
+      "map": true,
+      "contact_form": true
+    },
+    "apex_v2_owner": {
+      "url": "https://famtasticdesigns.com/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/owner/",
+      "status": 200,
+      "mobile_tabs": 5
+    },
+    "v1": {
+      "url": "https://famtasticdesigns.com/showcase/booked-and-branded-pilot/alex-touch-prototype/",
+      "status": 200,
+      "preserved": true,
+      "v2_signal_ticker_count": 0
+    }
+  },
+  "browser": {
+    "desktop": {"viewport": "1440x1000", "horizontal_overflow_px": 0},
+    "mobile": {"viewport": "390x844", "horizontal_overflow_px": 0},
+    "functional_flow": {
+      "contact_saved": true,
+      "reply_storage": "masked_same_device_only",
+      "contact_visible_in_v2_owner_console": true,
+      "external_write": false
+    },
+    "page_exceptions": 0,
+    "failed_network_requests": 0,
+    "http_error_responses": 0
+  }
+}

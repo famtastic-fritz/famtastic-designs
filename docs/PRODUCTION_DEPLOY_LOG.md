@@ -1,5 +1,28 @@
 # Production Deploy Log
 
+## 2026-08-28 — Alex Signal Cut V2 alongside preserved V1
+
+- Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
+- Release: `2cb023cedcee01d641c7f18d0ccd7c76ec032814`
+- Frontend rollback archive:
+  `/home/xrdj7j99xhzt/backups/famtastic-frontend-20260828T200102Z-2cb023cedcee01d641c7f18d0ccd7c76ec032814.tgz`
+- Scope: published the separately addressable Alex Signal Cut V2 with stronger
+  texture/type/shape composition, a source-labeled map, a same-device contact
+  form, editable owner location fields, and V1/V2 lab links. V1 remained
+  unchanged. No customer record, outbound message, appointment, payment,
+  calendar event, or Drupal write occurred.
+- Result: successful.
+
+### Acceptance evidence
+
+- Apex and `www` V2 public and owner routes returned HTTP 200 with the V2 title,
+  five sections, map, contact form, five owner panels, and zero HTTP errors,
+  console errors, or horizontal overflow at 390×844.
+- A live-browser V2 contact message stored a masked reply value locally and
+  appeared in the V2 owner request desk on the same browser profile.
+- The original V1 route still rendered its original title, original quote, and
+  no V2 signal rail. The Booked & Branded lab rendered distinct V1 and V2 links.
+
 ## 2026-08-28 — Alex independent-chair prototype and conversion walkthrough
 
 - Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
