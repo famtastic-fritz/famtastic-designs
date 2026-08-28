@@ -95,6 +95,27 @@ model or cost. The browser contract proves all five lab/template routes at
 desktop and mobile with no broken media, missing local anchors, page errors, or
 horizontal overflow.
 
+## Independent-chair functional sales prototype
+
+`/showcase/booked-and-branded-pilot/alex-touch-prototype/` is the first
+subject-specific proof that carries the component doctrine into a functioning
+sales conversation. It is deliberately not a new generic template or a claim
+that the subject owns a shop. Its five public sections are hero, reputation,
+services, work, and booking/location. The paired `/owner/` prototype exposes
+today, requests, services, hours, and links/QR as phone-sized control panels.
+
+The prototype uses same-device `localStorage` so a saved public request appears
+in the owner console and service/hour/link edits persist during the
+conversation. It has no network write, SMTP, SMS, calendar, payment, or
+production booking integration. A generated QR-like panel is composition proof
+only and must be replaced with a verified scannable code at launch.
+
+Its provenance is frozen in `prototype-manifest.json`: three original generated
+concept assets, three public work references from the subject's official social
+profile, one public reputation source, explicit non-ownership language, and the
+launch facts that still require approval. This is the correct intermediate
+state between a static proof and a real customer system.
+
 ## Site Studio translation
 
 | FAMtastic concept | Site Studio concept |

@@ -1,0 +1,84 @@
+{
+  "schema_version": "famtastic.functional-sales-prototype.v1",
+  "prototype_id": "alex-touch-port-st-lucie",
+  "status": "local_functional_prototype",
+  "subject": {
+    "display_name": "Alex",
+    "public_handle": "touchdabarber4150",
+    "role": "independent_barber",
+    "location": "Port St. Lucie, Florida",
+    "ownership_claim": "not_claimed"
+  },
+  "experience": {
+    "public_sections": ["hero", "reputation", "services", "work", "book"],
+    "owner_panels": ["today", "requests", "services", "hours", "links_and_qr"],
+    "storage": "same_device_local_storage_only",
+    "storage_key": "famtastic.alex-touch-prototype.v1",
+    "external_effects": []
+  },
+  "sources": [
+    {
+      "type": "official_public_social_profile",
+      "url": "https://www.instagram.com/touchdabarber4150/",
+      "use": "public identity, social proof, and three public work references"
+    },
+    {
+      "type": "public_listing",
+      "url": "https://salondiscover.com/touch-da-barber-34983/",
+      "use": "location, service-category, and reputation research requiring Alex confirmation before launch"
+    }
+  ],
+  "creative_assets": [
+    {
+      "path": "assets/brand-leather.webp",
+      "class": "generated_concept",
+      "prompt_summary": "Black leather barber emblem with antique gold shears and straight razor, no text",
+      "identity_representation": false
+    },
+    {
+      "path": "assets/hero-studio.webp",
+      "class": "generated_concept",
+      "prompt_summary": "Premium industrial-modern single-chair barber environment in concrete, brick, black leather, and warm light",
+      "identity_representation": false
+    },
+    {
+      "path": "assets/precision-fade.webp",
+      "class": "generated_concept",
+      "prompt_summary": "Editorial close detail of precision fade technique with gold clippers and no identifiable subject emphasis",
+      "identity_representation": false
+    },
+    {
+      "path": "assets/alex-shop-work-01.jpg",
+      "class": "public_social_reference",
+      "source": "https://www.instagram.com/touchdabarber4150/reel/DU7WA92jLz_/"
+    },
+    {
+      "path": "assets/alex-shop-work-02.jpg",
+      "class": "public_social_reference",
+      "source": "https://www.instagram.com/touchdabarber4150/reel/DVKucKLjF8p/"
+    },
+    {
+      "path": "assets/alex-shop-work-03.jpg",
+      "class": "public_social_reference",
+      "source": "https://www.instagram.com/touchdabarber4150/reel/DRG8ZeCDb1n/"
+    }
+  ],
+  "generation_receipt": {
+    "provider": "openai_image_generation",
+    "image_count": 3,
+    "reported_cost_usd": null,
+    "cost_status": "provider_did_not_report",
+    "user_budget_ceiling_usd": 150,
+    "budget_ceiling_is_not_a_spend_target": true
+  },
+  "launch_requirements": [
+    "Alex approval",
+    "exact shop name and address",
+    "approved services, durations, and prices",
+    "approved hours",
+    "approved contact and booking destination",
+    "approved public image usage",
+    "verified scannable QR",
+    "production authentication and durable storage"
+  ]
+}

@@ -1,5 +1,22 @@
 # Product changelog
 
+## 2026-08-28 — Alex independent-chair functional prototype
+
+- Added a five-section, subject-specific Booked & Branded sales prototype for
+  Alex (`touchdabarber4150`) without claiming that he owns the barbershop.
+- Added a paired phone-friendly `Touch Control` owner prototype for request
+  status, service price/duration/visibility, chair hours, and owner-controlled
+  booking/payment-link placement.
+- Connected the public request form and owner console with same-device storage
+  while keeping the prototype free of email, text, calendar, payment, customer
+  database, and other external side effects.
+- Created and bundled three original image-generation concepts for the brand,
+  environment, and precision story; retained three public Instagram work
+  references and documented every asset/source in a machine-readable manifest.
+- Added a no-network contract test for the five public sections, five owner
+  panels, six local assets, non-ownership language, responsive CSS, and zero
+  external effects.
+
 ## 2026-08-28 — Modular Customer Portal Architecture, My Products Hub, Guided Project Provisioning Wizard, and Site Studio Dispatch
 
 - Added dedicated "My Products" hub (`/portal?tab=products`) giving customers a clear overview of active NVMe SSD cloud hosting (server IP `198.71.232.3`, SSL TLS 1.3), custom domain DNS records, and workspace command center status.
