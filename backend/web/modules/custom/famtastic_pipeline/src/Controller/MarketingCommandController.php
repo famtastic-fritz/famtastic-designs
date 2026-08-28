@@ -434,6 +434,10 @@ final class MarketingCommandController extends ControllerBase {
   }
 
   private function tabEmail(): array {
+    $queuedCount = (int) $this->database->select('famtastic_notification_outbox', 'n')->condition('status', 'queued')->countQuery()->execute()->fetchField();
+    $sentCount = (int) $this->database->select('famtastic_notification_outbox', 'n')->condition('status', 'sent')->countQuery()->execute()->fetchField();
+    $retryCount = (int) $this->database->select('famtastic_notification_outbox', 'n')->condition('status', ['retry', 'dead_letter', 'failed'], 'IN')->countQuery()->execute()->fetchField();
+
     $rows = [];
     foreach ($this->database->select('famtastic_notification_outbox', 'n')->extend(\Drupal\Core\Database\Query\PagerSelectExtender::class)
       ->fields('n', ['id', 'category', 'recipient', 'subject', 'status', 'attempts', 'provider_message_id', 'changed'])
@@ -447,7 +451,7 @@ final class MarketingCommandController extends ControllerBase {
         ['data' => $this->linkCell(Link::fromTextAndUrl('Inspect', Url::fromRoute('famtastic_pipeline.marketing.email_inspect', ['id' => (int) $record['id']])))],
       ];
     }
-    $page = $this->table('Email center — inspectable, triageable', 'Every queued message with its body, provider message-ID, and state. Retry is one click. The owner-test flow sends only to the configured owner address.', ['ID', 'Recipient', 'Subject', 'Status', 'Provider message-ID', ''], $rows, 'No notifications queued.');
+    $page = $this->table('Email center — inspectable, triageable', 'Every queued message with its body, provider message-ID, and state. Retry is one click. Status counts: ' . $sentCount . ' sent · ' . $queuedCount . ' queued · ' . $retryCount . ' needing attention.', ['ID', 'Recipient', 'Subject', 'Status', 'Provider message-ID', ''], $rows, 'No notifications queued.');
     $page['test'] = ['#markup' => '<p class="famtastic-ops__lede">Owner-test flow: use <code>drush php:script backend/scripts/send-owner-test-email.php</code> (memory-safe, owner address only) or retry any failed row above.</p>'];
     return $page;
   }

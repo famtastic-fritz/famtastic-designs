@@ -30,9 +30,24 @@ final class WebsiteRequestOfferForm extends FormBase {
     if (!$this->requestRow) throw new NotFoundHttpException('Website request not found.');
     $intake = json_decode((string) $this->requestRow['intake_data'], TRUE) ?: [];
     $recommended = (string) ($intake['recommendation']['recommended_sku'] ?? 'FAM-FOOT-199');
-    $prices = ['FAM-FOOT-199' => 19900, 'FAM-BUSINESS-499' => 49900];
+    $prices = [
+      'FAM-FOOT-199' => 19900,
+      'FAM-BUSINESS-499' => 49900,
+      'FAM-LANDING-1499' => 149900,
+      'FAM-CUSTOM-1999' => 199900,
+      'FAM-GROWTH-3999' => 399900,
+      'FAM-AI-6999' => 699900,
+    ];
+    $packages = [
+      'FAM-FOOT-199' => 'Web Basics Bundle — $199 list',
+      'FAM-BUSINESS-499' => 'Business Website Bundle — $499 list',
+      'FAM-LANDING-1499' => 'Campaign Landing Page System — $1,499 list',
+      'FAM-CUSTOM-1999' => 'Custom Website / E-Commerce — $1,999 list',
+      'FAM-GROWTH-3999' => 'Business Growth & Client Portal — $3,999 list',
+      'FAM-AI-6999' => 'Premium Website + AI System — $6,999 list',
+    ];
     $form['summary'] = ['#markup' => '<p><strong>' . $this->t('@name', ['@name' => $this->requestRow['project_name']]) . '</strong><br>' . $this->t('System recommendation: @path', ['@path' => $intake['recommendation']['label'] ?? 'Custom review']) . '</p>'];
-    $form['sku'] = ['#type' => 'select', '#title' => $this->t('Approved package'), '#options' => ['FAM-FOOT-199' => 'Web Basics Bundle — $199 list', 'FAM-BUSINESS-499' => 'Business Website Bundle — $499 list'], '#default_value' => isset($prices[$recommended]) ? $recommended : 'FAM-FOOT-199', '#required' => TRUE];
+    $form['sku'] = ['#type' => 'select', '#title' => $this->t('Approved package'), '#options' => $packages, '#default_value' => isset($prices[$recommended]) ? $recommended : 'FAM-FOOT-199', '#required' => TRUE];
     $form['offered_price'] = ['#type' => 'number', '#title' => $this->t('Customer price (USD)'), '#min' => 1, '#step' => '0.01', '#default_value' => isset($prices[$recommended]) ? number_format($prices[$recommended] / 100, 2, '.', '') : '199.00', '#required' => TRUE, '#description' => $this->t('The list price and special price are both preserved on the offer and order snapshot.')];
     $form['reason'] = ['#type' => 'textfield', '#title' => $this->t('Internal/customer-visible reason'), '#maxlength' => 512, '#placeholder' => $this->t('Friend launch price, community partner, approved promotion…')];
     $form['expires_days'] = ['#type' => 'number', '#title' => $this->t('Expires in days'), '#min' => 1, '#max' => 365, '#default_value' => 30, '#required' => TRUE];
@@ -42,7 +57,15 @@ final class WebsiteRequestOfferForm extends FormBase {
 
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $sku = (string) $form_state->getValue('sku');
-    $prices = ['FAM-FOOT-199' => 19900, 'FAM-BUSINESS-499' => 49900];
+    $prices = [
+      'FAM-FOOT-199' => 19900,
+      'FAM-BUSINESS-499' => 49900,
+      'FAM-LANDING-1499' => 149900,
+      'FAM-CUSTOM-1999' => 199900,
+      'FAM-GROWTH-3999' => 399900,
+      'FAM-AI-6999' => 699900,
+    ];
+    $listPrice = $prices[$sku] ?? 19900;
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_private_offer')->fields(['status' => 'revoked', 'changed' => $now])->condition('website_request_id', $this->requestRow['id'])->condition('status', 'active')->execute();
     $this->database->insert('famtastic_private_offer')->fields([

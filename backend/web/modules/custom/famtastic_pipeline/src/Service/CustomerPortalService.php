@@ -40,6 +40,7 @@ final class CustomerPortalService {
     private readonly OperationalLedger $ledger,
     private readonly AttributionService $attribution,
     private readonly PublicPreviewDeliveryService $previews,
+    private readonly ?WebformIntakeBridgeService $webformBridge = NULL,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -500,6 +501,18 @@ final class CustomerPortalService {
 
     $this->claimResource($organizationId, 'prospect', $prospectId);
     $this->activity($organizationId, 'website_request.created', 'A new website request was submitted from discovery notes.');
+
+    $this->webformBridge?->recordSubmission('solution_finder', [
+      'business_name' => $businessName,
+      'project_name' => $projectName,
+      'project_type' => $projectType,
+      'domain_choice' => $domainChoice,
+      'existing_domain' => $existingDomain,
+      'public_id' => $publicId,
+      'customer_email' => $customer['email'] ?? '',
+      'recommended_sku' => $intake['recommendation']['recommended_sku'] ?? '',
+      'intake_json' => json_encode($intake, JSON_UNESCAPED_SLASHES),
+    ]);
 
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
     $clean = [

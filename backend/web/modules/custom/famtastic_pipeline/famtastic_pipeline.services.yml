@@ -148,7 +148,7 @@ services:
 
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge']
 
   famtastic_pipeline.public_preview_deliveries:
     class: Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService
@@ -194,4 +194,8 @@ services:
   famtastic_pipeline.ai_solution_advisor:
     class: Drupal\famtastic_pipeline\Service\AiSolutionAdvisorService
     arguments: ['@database', '@logger.factory', '@?ai.provider']
+
+  famtastic_pipeline.webform_bridge:
+    class: Drupal\famtastic_pipeline\Service\WebformIntakeBridgeService
+    arguments: ['@entity_type.manager', '@logger.factory']
 

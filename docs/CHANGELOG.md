@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-08-28 — Drupal Views integration, Webform intake bridge, and expanded Private Offers
+
+- Added `famtastic_pipeline.views.inc` exposing `famtastic_notification_outbox` and `famtastic_private_offer` to native Drupal Views with full field, filter, and sort definitions.
+- Added `WebformIntakeBridgeService` to mirror decoupled website requests & Solution Finder intakes into Drupal's native `webform_submission` system for submission management and email handlers.
+- Expanded `WebsiteRequestOfferForm` to support all 6 core FAMtastic packages ($199–$6,999) for custom staff quotes and private discount activation.
+- Enhanced Marketing Command Center's Email Center tab with live status metrics for sent, queued, and retry/dead-letter notifications.
+
 ## 2026-08-27 — Booked & Branded owner-QR payment boundary
 
 - Removed payment processing from the Booked & Branded offer. The starter now
