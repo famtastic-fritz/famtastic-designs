@@ -8,6 +8,7 @@
 - Fixed Customer Portal direct checkout availability in `CustomerPortalService` to unlock 1-click purchase across all 6 packages ($199–$6,999) and active private offers.
 - Added deep linking support for `?tab=...` in `CustomerPortalDashboard.jsx` so email notifications and direct links land immediately on the intended tab (e.g. `billing`, `projects`, `messages`, `support`).
 - Rendered prominent Private Offer highlight banner with 1-click checkout directly inside the client portal project request viewer.
+- Added an Active Order Fulfillment Roadmap banner in CustomerPortalDashboard and rich status descriptions for Hosting, Domain Registration/Connection, and Website entitlements.
 - Enhanced Marketing Command Center's Email Center tab with live status metrics for sent, queued, and retry/dead-letter notifications.
 
 ## 2026-08-27 — Booked & Branded owner-QR payment boundary

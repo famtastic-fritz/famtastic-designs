@@ -107,6 +107,49 @@ function WebsiteProofReview({ request, busy, onDecision, onShare }) {
   </section>;
 }
 
+function serviceMeta(type) {
+  switch (type) {
+    case 'hosting':
+    case 'basic_hosting':
+      return {
+        title: 'Managed Cloud Hosting & SSL',
+        desc: 'High-speed NVMe cloud hosting, automated daily backups, global CDN, and auto-renewing SSL certificate.',
+        target: 'projects',
+        btn: 'View Project',
+      };
+    case 'domain_registration':
+      return {
+        title: 'Custom Domain Registration',
+        desc: '1-Year custom business domain registration (.com/.org/.net) with DNS routing and WHOIS privacy.',
+        target: 'projects',
+        btn: 'Configure Domain',
+      };
+    case 'domain_connection':
+      return {
+        title: 'Custom Domain DNS Connection',
+        desc: 'DNS routing connecting your existing registrar (GoDaddy, Namecheap, Google Domains) to FAMtastic cloud.',
+        target: 'projects',
+        btn: 'View DNS Setup',
+      };
+    case 'website':
+    case 'starter_website':
+    case 'custom_website':
+      return {
+        title: 'Custom Website System',
+        desc: 'Tailored architecture, 3 interactive concepts, mobile-responsive layout, and SEO metadata.',
+        target: 'projects',
+        btn: 'Project Hub',
+      };
+    default:
+      return {
+        title: title(type),
+        desc: 'Active business system entitlement connected to your customer workspace.',
+        target: 'messages',
+        btn: 'Manage',
+      };
+  }
+}
+
 function PortalServices({ workspace, catalog, go, compact = false }) {
   const ownedTypes = new Set(workspace.entitlements.filter((item) => item.status === 'active').map((item) => item.entitlement_type));
   const promotedSkus = ['FAM-AI-AGENT', 'FAM-LEAD-AUTOMATION', 'FAM-ANALYTICS', 'FAM-LOCAL-SEO', 'FAM-MAINTENANCE', 'FAM-SCHEDULING', 'FAM-BRAND', 'FAM-COPY'];
@@ -114,7 +157,7 @@ function PortalServices({ workspace, catalog, go, compact = false }) {
   return <section className={`portal-service-hub${compact ? ' compact' : ''}`} aria-labelledby={compact ? 'portal-services-preview-title' : 'portal-services-title'}>
     <header><div><span>Service command center</span><h2 id={compact ? 'portal-services-preview-title' : 'portal-services-title'}>{compact ? 'Manage what you own. Discover what helps next.' : 'Your services and growth systems'}</h2></div><p>Active services, work, support, billing, and relevant next steps stay connected to this account.</p></header>
     <div className="portal-service-columns">
-      <div><h3>Your services</h3>{workspace.entitlements.length ? <ul>{workspace.entitlements.map((service) => <li key={service.public_id}><i aria-hidden="true" /><div><strong>{title(service.entitlement_type)}</strong><small>{title(service.status)}{service.included_until ? ` · included through ${date(service.included_until)}` : ''}</small></div><button onClick={() => go(service.entitlement_type.includes('website') ? 'projects' : 'messages')}>Manage</button></li>)}</ul> : <Empty>No active services yet. Start with a website brief or ask us what would remove the biggest bottleneck.</Empty>}</div>
+      <div><h3>Your services</h3>{workspace.entitlements.length ? <ul>{workspace.entitlements.map((service) => { const meta = serviceMeta(service.entitlement_type); return <li key={service.public_id} style={{ alignItems: 'start', padding: '0.9rem' }}><i aria-hidden="true" style={{ marginTop: '0.4rem' }} /><div><strong>{meta.title}</strong><p style={{ margin: '0.2rem 0 0.3rem', fontSize: '0.8rem', color: '#b2bcb2', lineHeight: '1.4' }}>{meta.desc}</p><small style={{ color: '#7cfc00', fontWeight: '600' }}>{title(service.status)}{service.included_until ? ` · included through ${date(service.included_until)}` : ''}</small></div><button onClick={() => go(meta.target)} style={{ whiteSpace: 'nowrap', alignSelf: 'center' }}>{meta.btn} →</button></li>; })}</ul> : <Empty>No active services yet. Start with a website brief or ask us what would remove the biggest bottleneck.</Empty>}</div>
       <div><h3>Recommended studio modules</h3><div className="portal-market-grid">{promoted.map((item) => <article key={item.sku}><span>{item.billing?.kind === 'recurring' ? `${item.billing.interval}ly` : 'One-time setup'}</span><h4>{item.title.replace(/\s+[—-].*$/, '')}</h4><p>{item.summary}</p><footer><strong>${item.price}{item.billing?.kind === 'recurring' ? '/mo' : ''}</strong><button onClick={() => go('services')}>Learn more →</button></footer></article>)}</div></div>
     </div>
     {compact && <button className="portal-services-all" onClick={() => go('services')}>Open all services</button>}
@@ -157,6 +200,35 @@ function PortalHome({ workspace, org, order, project, nextAction, go, catalog })
       </section>
       <article className="portal-inline-tutorial" aria-label="Start-to-launch website tutorial"><video src="/portal/website-journey-clay-v2.mp4" poster="/portal/website-journey-clay-v2.png" autoPlay muted loop playsInline controls aria-label="Animated website process tutorial with readable step-by-step instructions" /></article>
     </section>
+
+    {workspace.orders.length > 0 && <section className="portal-fulfillment-banner" style={{ margin: '1rem 0', padding: '1.25rem', border: '1px solid #7cfc00', borderRadius: '16px', background: 'linear-gradient(135deg, rgba(124,252,0,0.08), rgba(0,0,0,0.6))' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <span style={{ color: '#7cfc00', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>⚡ Active Order Fulfillment</span>
+          <h3 style={{ margin: '0.35rem 0', fontSize: '1.35rem' }}>{workspace.orders[0]?.package || 'Website & Hosting Package'} · Provisioned</h3>
+          <p style={{ margin: 0, color: '#c2ccc2', fontSize: '0.9rem' }}>Hosting &amp; Domain entitlements active · Website architecture &amp; interactive concept design in progress.</p>
+        </div>
+        <button style={{ minHeight: '44px', padding: '0.6rem 1.25rem' }} onClick={() => go('projects')}>Open Project Command Center →</button>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ padding: '0.75rem', borderRadius: '10px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+          <strong style={{ display: 'block', color: '#7cfc00', fontSize: '0.82rem' }}>✓ 1. Payment &amp; Provisioning</strong>
+          <span style={{ fontSize: '0.8rem', color: '#aab2aa' }}>Order confirmed · Entitlements unlocked</span>
+        </div>
+        <div style={{ padding: '0.75rem', borderRadius: '10px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+          <strong style={{ display: 'block', color: '#7cfc00', fontSize: '0.82rem' }}>✓ 2. Cloud Hosting &amp; Domain</strong>
+          <span style={{ fontSize: '0.8rem', color: '#aab2aa' }}>1-Yr SSD Hosting &amp; Domain included</span>
+        </div>
+        <div style={{ padding: '0.75rem', borderRadius: '10px', background: 'rgba(124,252,0,0.08)', border: '1px solid #7cfc00' }}>
+          <strong style={{ display: 'block', color: '#7cfc00', fontSize: '0.82rem' }}>⚙ 3. Working Proof Concepts</strong>
+          <span style={{ fontSize: '0.8rem', color: '#fff' }}>Interactive preview designs in build</span>
+        </div>
+        <div style={{ padding: '0.75rem', borderRadius: '10px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+          <strong style={{ display: 'block', color: '#8e988e', fontSize: '0.82rem' }}>○ 4. Approval &amp; Live Launch</strong>
+          <span style={{ fontSize: '0.8rem', color: '#687268' }}>Domain connected · SSL live</span>
+        </div>
+      </div>
+    </section>}
 
     {tutorialOpen && <div className="portal-tutorial-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setTutorialOpen(false); }}><section className="portal-tutorial" role="dialog" aria-modal="true" aria-labelledby="portal-tutorial-title"><button className="portal-tutorial__close" aria-label="Close website walkthrough" onClick={() => setTutorialOpen(false)}>×</button><div className="portal-tutorial__visual" style={{ '--tutorial-position': `${tutorialStep * 16.666}%` }}><img className="portal-tutorial__poster" src="/portal/website-journey-clay-v2.png" alt="Clay artwork showing the simple journey from registration to a finished website" /><video src="/portal/website-journey-clay-v2.mp4" poster="/portal/website-journey-clay-v2.png" autoPlay muted loop playsInline aria-label="Clay animation with text showing how to register, complete a website brief, review proofs, select a design, pay, and launch" /><i aria-hidden="true" /></div><div className="portal-tutorial__copy"><span>Website launch in seven easy steps</span><h2 id="portal-tutorial-title">{tutorialSteps[tutorialStep][0]}</h2><p>{tutorialSteps[tutorialStep][1]}</p><ol aria-label="Tutorial progress">{tutorialSteps.map(([label], index) => <li key={label} className={index === tutorialStep ? 'active' : index < tutorialStep ? 'complete' : ''}><button aria-label={`Show step ${index + 1}: ${label}`} onClick={() => setTutorialStep(index)}>{index + 1}</button></li>)}</ol><div className="portal-tutorial__actions"><button onClick={() => { setTutorialOpen(false); go('projects'); }}>Start my website</button><button className="secondary" onClick={() => setTutorialOpen(false)}>Not yet</button></div></div></section></div>}
 
