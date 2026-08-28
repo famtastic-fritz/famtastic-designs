@@ -10,6 +10,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
@@ -538,7 +539,7 @@ final class MarketingCommandController extends ControllerBase {
         'items' => $dayFilters,
       ],
       'gallery' => [
-        '#markup' => $galleryHtml,
+        '#markup' => Markup::create($galleryHtml),
       ],
     ];
   }
@@ -677,6 +678,77 @@ final class MarketingCommandController extends ControllerBase {
       'invite' => '🌙',
     ];
 
+    $cardsHtml = '
+    <style>
+      .famtastic-dispatch-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .famtastic-dispatch-card {
+        border: 1px solid #2d382d;
+        border-radius: 14px;
+        background: #101510;
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      }
+      .famtastic-media-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        background: #050805;
+        border-radius: 10px;
+        padding: 0.75rem;
+        border: 1px solid #1c241c;
+        margin-bottom: 0.75rem;
+      }
+      .famtastic-media-box {
+        text-align: center;
+      }
+      .famtastic-media-box img {
+        width: 100% !important;
+        height: 180px !important;
+        object-fit: contain !important;
+        border-radius: 6px;
+        background: #000;
+        border: 1px solid #222;
+        display: block;
+      }
+      .famtastic-media-box video {
+        width: 100% !important;
+        height: 180px !important;
+        object-fit: cover !important;
+        border-radius: 6px;
+        background: #000;
+        border: 1px solid #222;
+        display: block;
+      }
+      .famtastic-channel-pill {
+        display: inline-block;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin: 0 4px 4px 0;
+      }
+      .famtastic-pill-fb { background: #1877F2; color: #fff; }
+      .famtastic-pill-ig { background: #E4405F; color: #fff; }
+      .famtastic-pill-x { background: #111; border: 1px solid #555; color: #fff; }
+      .famtastic-pill-yt { background: #FF0000; color: #fff; }
+      .famtastic-pill-tt { background: #00f2fe; color: #000; }
+    </style>
+    <div class="famtastic-dispatch-grid">';
+
+    $momentIcons = [
+      'teach' => '🌅',
+      'challenge' => '☀️',
+      'prove' => '🌆',
+      'invite' => '🌙',
+    ];
+
     foreach ($records as $rec) {
       $cid = Html::escape((string) $rec['content_id']);
       $moment = (string) $rec['moment'];
@@ -706,16 +778,18 @@ final class MarketingCommandController extends ControllerBase {
       $videoFile = $videoMap[$moment] ?? 'offer-launch-55-cents-proof.mp4';
       $videoSrc = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $videoFile])->toString();
 
+      $intakeUrl = "https://famtasticdesigns.com/intake/hosting-domain/?utm_source=facebook&utm_medium=organic_social&utm_campaign=web_basics_55_cents_17d&utm_content=" . $cid;
+
       $momentCaptions = [
-        'teach' => "Stop renting your website. Start owning your digital front door. ⚡\n\nFor less than 55 cents a day ($199/year), you get:\n✅ Fast SSD Cloud Hosting & SSL included\n✅ Custom Domain Registration (.com/.org/.net)\n✅ Client Portal & Interactive Project Hub\n✅ 100% Code Ownership — zero monthly SaaS traps.\n\nScan your local market in 20 seconds at famtasticdesigns.com.",
-        'challenge' => "The hidden cost of generic website builders: Paying $30–$70/mo forever with zero code ownership and locked-in templates.\n\nCompare that to owning your custom digital engine with 1-year hosting included for $199 flat (~55¢/day).\n\nSee what your competitors are doing at famtasticdesigns.com.",
-        'prove' => "Proof in action: How local businesses eliminate SaaS recurring taxes and get a custom, lightning-fast digital engine built to their exact workflow.\n\nExplore our interactive Solution Finder at famtasticdesigns.com.",
-        'invite' => "Ready for a website that actually works for your business?\n\nLock in our $199 Web Basics package with a 30-day price hold. Includes 1-year cloud hosting, custom domain, and dedicated client command center.\n\nStart now at famtasticdesigns.com.",
+        'teach' => "Stop renting your website. Start owning your digital front door. ⚡\n\nFor less than 55 cents a day ($199/year), you get:\n✅ Fast SSD Cloud Hosting & SSL included\n✅ Custom Domain Registration (.com/.org/.net)\n✅ Client Portal & Dedicated Project Hub\n✅ 100% Code Ownership — zero monthly SaaS traps.\n\n👉 Complete our 60-second hosting & domain setup intake: " . $intakeUrl,
+        'challenge' => "The hidden cost of generic website builders: Paying $30–$70/mo forever with zero code ownership and locked-in templates.\n\nCompare that to owning your custom digital engine with 1-year hosting included for $199 flat (~55¢/day).\n\n👉 Start your setup intake in 60 seconds: " . $intakeUrl,
+        'prove' => "Proof in action: How local businesses eliminate SaaS recurring taxes and get a custom, lightning-fast digital engine built to their exact workflow.\n\n👉 Lock in your Web Basics package: " . $intakeUrl,
+        'invite' => "Ready for a website that actually works for your business?\n\nLock in our $199 Web Basics package with a 30-day price hold. Includes 1-year cloud hosting, custom domain, and dedicated client command center.\n\n👉 Direct intake setup: " . $intakeUrl,
       ];
       $captionText = $momentCaptions[$moment] ?? (string) $rec['promise'];
 
       $cardsHtml .= '
-        <article style="border: 1px solid #2d382d; border-radius: 14px; background: #101510; padding: 1.25rem; display: flex; flex-direction: column; box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
+        <article class="famtastic-dispatch-card">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
             <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #7cfc00; font-weight: 800;">' . $icon . ' ' . $time . ' ET · ' . ucfirst($moment) . '</span>
             <span class="famtastic-ops__badge famtastic-ops__badge--' . mb_strtolower($state) . '">' . $state . '</span>
@@ -724,42 +798,40 @@ final class MarketingCommandController extends ControllerBase {
           <small style="color: #8e988e; margin-bottom: 0.75rem; display: block;">ID: <code>' . $cid . '</code> · Theme: ' . $theme . '</small>
           
           <!-- Channel Matrix Badges -->
-          <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 0.75rem;">
-            <span style="background: #1877F2; color: #fff; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">Facebook</span>
-            <span style="background: #E4405F; color: #fff; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">Instagram</span>
-            <span style="background: #222; border: 1px solid #555; color: #fff; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">X</span>
-            <span style="background: #FF0000; color: #fff; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">YouTube Shorts</span>
-            <span style="background: #00f2fe; color: #000; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">TikTok</span>
+          <div style="display: flex; flex-wrap: wrap; margin-bottom: 0.75rem;">
+            <span class="famtastic-channel-pill famtastic-pill-fb">Facebook</span>
+            <span class="famtastic-channel-pill famtastic-pill-ig">Instagram</span>
+            <span class="famtastic-channel-pill famtastic-pill-x">X</span>
+            <span class="famtastic-channel-pill famtastic-pill-yt">YouTube Shorts</span>
+            <span class="famtastic-channel-pill famtastic-pill-tt">TikTok</span>
           </div>
 
           <!-- Dual Media Preview (Feed Image + Shorts Video) -->
-          <div style="background: #050805; border-radius: 10px; padding: 0.75rem; border: 1px solid #1c241c; margin-bottom: 0.75rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; align-items: start;">
-              <!-- 4x5 Image Preview -->
-              <div style="text-align: center;">
-                <div style="font-size: 0.7rem; color: #7cfc00; font-weight: 700; margin-bottom: 4px;">📷 Feed Image (FB / IG / X)</div>
-                <img src="' . $imgSrc4x5 . '" alt="' . $cid . '" style="width: 100%; height: 160px; object-fit: contain; border-radius: 6px; background: #000; border: 1px solid #222;" onerror="this.src=\'' . $imgSrc9x16 . '\';" />
-                <div style="margin-top: 4px; font-size: 0.68rem;">
-                  <a href="' . $imgSrc4x5 . '" target="_blank" style="color: #8e988e; text-decoration: underline;">4x5 Full</a> · 
-                  <a href="' . $imgSrc9x16 . '" target="_blank" style="color: #8e988e; text-decoration: underline;">9x16 Full</a>
-                </div>
+          <div class="famtastic-media-grid">
+            <!-- 4x5 Image Preview -->
+            <div class="famtastic-media-box">
+              <div style="font-size: 0.7rem; color: #7cfc00; font-weight: 700; margin-bottom: 4px;">📷 Feed Image (FB / IG / X)</div>
+              <img src="' . $imgSrc4x5 . '" alt="' . $cid . '" onerror="this.src=\'' . $imgSrc9x16 . '\';" />
+              <div style="margin-top: 4px; font-size: 0.68rem;">
+                <a href="' . $imgSrc4x5 . '" target="_blank" style="color: #7cfc00; text-decoration: underline;">4x5 Full</a> · 
+                <a href="' . $imgSrc9x16 . '" target="_blank" style="color: #8e988e; text-decoration: underline;">9x16 Full</a>
               </div>
-              <!-- 9x16 Video Preview -->
-              <div style="text-align: center;">
-                <div style="font-size: 0.7rem; color: #ff4d4d; font-weight: 700; margin-bottom: 4px;">🎬 Video Reel (Shorts / TikTok)</div>
-                <video controls preload="metadata" playsinline style="width: 100%; height: 160px; object-fit: cover; border-radius: 6px; background: #000; border: 1px solid #222;" poster="' . $imgSrc9x16 . '">
-                  <source src="' . $videoSrc . '" type="video/mp4">
-                  Video preview available
-                </video>
-                <div style="margin-top: 4px; font-size: 0.68rem;">
-                  <a href="' . $videoSrc . '" target="_blank" style="color: #8e988e; text-decoration: underline;">Open MP4 Video ↗</a>
-                </div>
+            </div>
+            <!-- 9x16 Video Preview -->
+            <div class="famtastic-media-box">
+              <div style="font-size: 0.7rem; color: #ff4d4d; font-weight: 700; margin-bottom: 4px;">🎬 Video (Shorts / TikTok)</div>
+              <video controls preload="metadata" playsinline poster="' . $imgSrc9x16 . '">
+                <source src="' . $videoSrc . '" type="video/mp4">
+                Your browser does not support HTML5 video.
+              </video>
+              <div style="margin-top: 4px; font-size: 0.68rem;">
+                <a href="' . $videoSrc . '" target="_blank" style="color: #ff4d4d; text-decoration: underline; font-weight: 700;">▶ Open Raw MP4 ↗</a>
               </div>
             </div>
           </div>
 
           <details style="margin: 0.25rem 0 0.75rem; background: #080c08; border: 1px solid #1e261e; border-radius: 8px; padding: 0.5rem;" open>
-            <summary style="font-size: 0.78rem; font-weight: 700; color: #aab2aa; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">📝 Multi-Channel Copy &amp; Script</summary>
+            <summary style="font-size: 0.78rem; font-weight: 700; color: #aab2aa; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">📝 Multi-Channel Copy (Webform Intake CTA)</summary>
             <pre style="margin-top: 0.5rem; font-family: inherit; font-size: 0.8rem; color: #c4d0c4; white-space: pre-wrap; word-break: break-word; line-height: 1.45;">' . Html::escape($captionText) . '</pre>
           </details>
 
@@ -798,36 +870,10 @@ final class MarketingCommandController extends ControllerBase {
       </div>
     ';
 
-    $architectureGuide = '
-      <div style="margin-top: 2rem; padding: 1.5rem; border-radius: 14px; background: #0c100c; border: 1px solid #222b22;">
-        <h3 style="margin: 0 0 0.5rem; color: #7cfc00; font-size: 1.1rem;">🛠️ Social Media Build &amp; Multi-Channel Publishing Architecture</h3>
-        <p style="color: #9da79d; font-size: 0.88rem; margin: 0 0 1rem; line-height: 1.5;">How our agentic build skills, assets, and publishing channels operate together across Facebook, YouTube, TikTok, Instagram, and X:</p>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-          <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
-            <strong style="color: #fff; font-size: 0.85rem; display: block;">1. Build Skill: Creative Generation</strong>
-            <span style="color: #8e988e; font-size: 0.78rem;">4x5 &amp; 9x16 graphics rendered via local script; HeyGen avatar videos &amp; MoneyPrinterTurbo short cutdowns.</span>
-          </div>
-          <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
-            <strong style="color: #fff; font-size: 0.85rem; display: block;">2. Content &amp; UTM Structure</strong>
-            <span style="color: #8e988e; font-size: 0.78rem;">Stable content IDs (55c-d01-*) joined to GA4 &amp; UTM leads in Attribution table.</span>
-          </div>
-          <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
-            <strong style="color: #fff; font-size: 0.85rem; display: block;">3. Three-Gate Operator Review</strong>
-            <span style="color: #fff; font-size: 0.78rem;">Content (copy), Media (visuals), and Publish gates must be explicitly approved by Fritz before scheduling.</span>
-          </div>
-          <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
-            <strong style="color: #fff; font-size: 0.85rem; display: block;">4. Multi-Channel Dispatch</strong>
-            <span style="color: #8e988e; font-size: 0.78rem;">Postiz scheduler dispatches approved moments automatically to Facebook, YouTube, TikTok, Instagram &amp; X.</span>
-          </div>
-        </div>
-      </div>
-    ';
-
     return [
       'day_nav' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-dispatch__days'], 'style' => 'margin-bottom: 1.25rem;'], 'items' => $dayButtons],
-      'header' => ['#markup' => $headerHtml],
-      'cards' => ['#markup' => $cardsHtml],
-      'guide' => ['#markup' => $architectureGuide],
+      'header' => ['#markup' => Markup::create($headerHtml)],
+      'cards' => ['#markup' => Markup::create($cardsHtml)],
     ];
   }
 
