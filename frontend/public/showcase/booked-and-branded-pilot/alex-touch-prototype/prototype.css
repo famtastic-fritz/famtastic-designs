@@ -341,20 +341,44 @@ input, textarea, select { width: 100%; border: 1px solid #bbb6aa; border-radius:
   .foundation-list { grid-template-columns: 1fr 1fr; }
   footer { align-items: flex-start; flex-direction: column; }
   .form-pair { grid-template-columns: 1fr; }
-  .owner-main { width: 100vw; max-width: 100vw; padding: 30px 16px 100px; overflow: hidden; }
-  .owner-header { display: block; }
-  .owner-header .ghost-button { margin-top: 22px; }
-  .owner-stats { grid-template-columns: minmax(0, 1fr); }
-  .owner-stats article:first-child { grid-column: auto; }
+  .booking-dialog { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow-y: auto; }
+  .booking-dialog form { padding: 26px 20px 30px; }
+  .booking-dialog .eyebrow { min-height: 44px; padding-right: 48px; display: grid; align-content: center; gap: 2px; margin-bottom: 12px; }
+  .booking-dialog h2 { font-size: clamp(54px, 17vw, 64px); }
+  .booking-dialog p:not(.eyebrow) { margin: 16px 0; font-size: 14px; }
+  .booking-dialog label { margin: 12px 0; }
+  .booking-dialog input, .booking-dialog textarea, .booking-dialog select { min-height: 50px; padding: 13px; font-size: 16px; }
+  .dialog-close { width: 44px; height: 44px; right: 10px; top: 10px; display: grid; place-items: center; font-size: 34px; }
+  .owner-main { width: 100vw; max-width: 100vw; padding: 24px 16px calc(92px + env(safe-area-inset-bottom)); overflow: hidden; }
+  .owner-header { margin-bottom: 28px; display: block; }
+  .owner-header h1 { font-size: clamp(58px, 17vw, 68px); }
+  .owner-header .ghost-button { margin-top: 18px; min-height: 46px; }
+  .owner-body:not([data-owner-tab="dashboard"]) .owner-header { margin-bottom: 24px; padding-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #bbb6aa; }
+  .owner-body:not([data-owner-tab="dashboard"]) .owner-header h1 { display: none; }
+  .owner-body:not([data-owner-tab="dashboard"]) .owner-header .eyebrow { margin: 0; display: grid; gap: 3px; }
+  .owner-body:not([data-owner-tab="dashboard"]) .owner-header .ghost-button { margin: 0; min-height: 42px; padding: 9px 11px; flex: 0 0 auto; font-size: 11px; }
+  .owner-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+  .owner-stats article { min-height: 122px; padding: 13px 10px; align-content: start; border-top-width: 4px; }
+  .owner-stats small { min-height: 25px; font-size: 8px; line-height: 1.25; }
+  .owner-stats b { margin: 7px 0 4px; font-size: 44px; }
+  .owner-stats span { font-size: 9px; line-height: 1.25; }
   .owner-grid, .links-grid, .panel-title { grid-template-columns: minmax(0, 1fr); }
+  .owner-grid { gap: 10px; }
+  .owner-card { padding: 20px; }
+  .panel-title { margin-bottom: 26px; gap: 16px; }
+  .panel-title h2 { font-size: clamp(49px, 15vw, 58px); }
+  .panel-title > p { margin: 0; font-size: 15px; line-height: 1.45; }
   .founder-offer { grid-template-columns: minmax(0, 1fr); }
   .founder-price { padding: 0; border-left: 0; }
   .founder-offer ul, .founder-next { grid-column: auto; grid-row: auto; }
   .founder-offer ul { grid-template-columns: minmax(0, 1fr); }
   .owner-card.large { grid-row: auto; }
   .owner-card header { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
-  .setting-row, .hours-list .setting-row { grid-template-columns: 44px 1fr; }
+  .setting-row, .hours-list .setting-row { padding: 16px; grid-template-columns: 44px 1fr; }
   .setting-row label { grid-column: 1 / -1; }
+  .setting-row input:not(.toggle), .link-form input { min-height: 48px; font-size: 16px; }
+  .mobile-owner-nav { padding: 7px 7px max(7px, env(safe-area-inset-bottom)); }
+  .mobile-owner-nav button { min-height: 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -21,6 +21,11 @@
   disclosures, objections, follow-up, and evidence capture.
 - Added route-local icon declarations so the public and owner prototypes do not
   inherit the mixed document root's absent `/favicon.ico` request.
+- Reworked the phone layouts after visual QA at 360, 390, and 430 pixels: the
+  owner dashboard now keeps all three signals in one glance, task tabs open
+  directly on their working content, owner controls retain iPhone-safe input
+  sizing and bottom-safe-area navigation, and the public request dialog uses a
+  compact scrollable mobile composition without changing its local-only scope.
 
 ## 2026-08-28 — Modular Customer Portal Architecture, My Products Hub, Guided Project Provisioning Wizard, and Site Studio Dispatch
 

@@ -190,12 +190,15 @@
   }
 
   function activateTab(tabName) {
+    document.body.dataset.ownerTab = tabName;
     document.querySelectorAll("[data-owner-tab]").forEach(button => button.classList.toggle("active", button.dataset.ownerTab === tabName));
     document.querySelectorAll("[data-owner-panel]").forEach(panel => panel.classList.toggle("active", panel.dataset.ownerPanel === tabName));
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const compactOwnerView = window.matchMedia("(max-width: 620px)").matches;
+    window.scrollTo({ top: 0, behavior: compactOwnerView ? "auto" : "smooth" });
   }
 
   function setupOwner() {
+    document.body.dataset.ownerTab = "dashboard";
     document.querySelectorAll("[data-owner-tab]").forEach(button => button.addEventListener("click", () => activateTab(button.dataset.ownerTab)));
     document.querySelectorAll("[data-jump-tab]").forEach(button => button.addEventListener("click", () => activateTab(button.dataset.jumpTab)));
     document.querySelector("#owner-request-list")?.addEventListener("click", event => {
