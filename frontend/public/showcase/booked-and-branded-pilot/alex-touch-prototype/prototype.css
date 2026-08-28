@@ -249,6 +249,20 @@ input, textarea, select { width: 100%; border: 1px solid #bbb6aa; border-radius:
 .image-card { position: relative; min-height: 260px; overflow: hidden; padding: 0; }
 .image-card img { width: 100%; height: 100%; min-height: 260px; object-fit: cover; }
 .image-card div { position: absolute; inset: auto 16px 16px; padding: 14px; display: grid; color: white; background: rgba(0,0,0,.74); }
+.founder-offer { margin-top: 16px; padding: clamp(28px, 4vw, 54px); display: grid; grid-template-columns: minmax(280px, 1.25fr) .55fr 1fr; gap: 30px; align-items: start; color: white; background: radial-gradient(circle at 80% 10%, rgba(169,255,68,.18), transparent 28%), #090b0a; }
+.founder-offer small { color: var(--acid); text-transform: uppercase; letter-spacing: .13em; }
+.founder-offer h2 { margin: 12px 0 0; font: clamp(48px, 5vw, 78px)/.84 "Bebas Neue"; }
+.founder-offer h2 em { font-family: "Instrument Serif", serif; font-weight: 400; text-transform: none; color: var(--gold); }
+.founder-price { display: grid; padding-left: 28px; border-left: 1px solid var(--line); }
+.founder-price b { font: clamp(76px, 8vw, 120px)/.8 "Bebas Neue"; color: var(--acid); }
+.founder-price span { text-transform: uppercase; letter-spacing: .12em; font-size: 10px; }
+.founder-offer ul { grid-column: 1 / 3; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; }
+.founder-offer li { padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; }
+.founder-offer li::before { content: "✦"; margin-right: 8px; color: var(--acid); }
+.founder-next { grid-column: 3; grid-row: 1 / 3; }
+.founder-next p { margin-top: 0; line-height: 1.55; }
+.founder-next .founder-fine { color: #aab0aa; font-size: 10px; }
+.founder-next .button { margin-top: 12px; }
 .request-list { display: grid; }
 .request-row { padding: 17px 0; display: grid; grid-template-columns: 1fr auto; gap: 12px; border-top: 1px solid #d5d0c4; }
 .request-row:first-child { border-top: 0; }
@@ -333,6 +347,10 @@ input, textarea, select { width: 100%; border: 1px solid #bbb6aa; border-radius:
   .owner-stats { grid-template-columns: minmax(0, 1fr); }
   .owner-stats article:first-child { grid-column: auto; }
   .owner-grid, .links-grid, .panel-title { grid-template-columns: minmax(0, 1fr); }
+  .founder-offer { grid-template-columns: minmax(0, 1fr); }
+  .founder-price { padding: 0; border-left: 0; }
+  .founder-offer ul, .founder-next { grid-column: auto; grid-row: auto; }
+  .founder-offer ul { grid-template-columns: minmax(0, 1fr); }
   .owner-card.large { grid-row: auto; }
   .owner-card header { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .setting-row, .hours-list .setting-row { grid-template-columns: 44px 1fr; }

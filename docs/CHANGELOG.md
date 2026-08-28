@@ -16,6 +16,9 @@
 - Added a no-network contract test for the five public sections, five owner
   panels, six local assets, non-ownership language, responsive CSS, and zero
   external effects.
+- Added an honest chair-side founding-offer panel and a five-minute conversion
+  plan with discovery questions, a bounded $199 close, renewal/optional-cost
+  disclosures, objections, follow-up, and evidence capture.
 
 ## 2026-08-28 — Modular Customer Portal Architecture, My Products Hub, Guided Project Provisioning Wizard, and Site Studio Dispatch
 
