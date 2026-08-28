@@ -463,21 +463,84 @@ final class MarketingCommandController extends ControllerBase {
   }
 
   private function tabCreative(): array {
-    $rows = [];
-    foreach ($this->database->select('famtastic_social_record', 'r')->fields('r')
-      ->orderBy('r.day')->orderBy('r.id')->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
-      $variants = json_decode((string) $record['asset_variants'], TRUE) ?: [];
-      $evidence = [];
-      $rows[] = [
-        Html::escape((string) $record['content_id']),
-        (int) $record['day'],
-        Html::escape(implode(' + ', $variants) ?: '—'),
-        ['data' => ['#markup' => $this->badge((string) $record['state'])]],
-        ((int) $record['approval_content'] ? '✓' : '—') . ' / ' . ((int) $record['approval_media'] ? '✓' : '—') . ' / ' . ((int) $record['approval_publish'] ? '✓' : '—'),
-        Html::escape((string) ($record['postiz_draft_id'] ?: '—')),
+    $request = \Drupal::request();
+    $filterDay = $request->query->get('day', 'all');
+
+    $query = $this->database->select('famtastic_social_record', 'r')->fields('r');
+    if ($filterDay !== 'all' && is_numeric($filterDay)) {
+      $query->condition('r.day', (int) $filterDay);
+    }
+    $records = $query->orderBy('r.day')->orderBy('r.scheduled_time_et')->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+    // Day filter pills
+    $dayFilters = [];
+    $dayFilters[] = [
+      '#type' => 'link',
+      '#title' => 'All Days (' . count($records) . ')',
+      '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'creative'], ['query' => ['day' => 'all']]),
+      '#attributes' => [
+        'class' => ['button', $filterDay === 'all' ? 'button--primary' : 'button--secondary'],
+        'style' => 'margin-right: 6px; font-size: 0.85rem;' . ($filterDay === 'all' ? ' background: #7cfc00; color: #000; font-weight: bold;' : ''),
+      ],
+    ];
+    for ($d = 1; $d <= 17; $d++) {
+      $isCurrent = (string) $d === (string) $filterDay;
+      $dayFilters[] = [
+        '#type' => 'link',
+        '#title' => 'Day ' . $d,
+        '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'creative'], ['query' => ['day' => $d]]),
+        '#attributes' => [
+          'class' => ['button', $isCurrent ? 'button--primary' : 'button--secondary'],
+          'style' => 'margin: 0 4px 6px 0; font-size: 0.85rem;' . ($isCurrent ? ' background: #7cfc00; color: #000; font-weight: bold;' : ''),
+        ],
       ];
     }
-    return $this->table('Creative & media library', 'Each asset carries its content record, crop variants, and its own content/media/publish gates. Provider receipts and accessibility/rights metadata attach at generation time and appear in evidence entries; MuAPI fan-out requires a human-approved direction first.', ['Content ID', 'Day', 'Crops', 'State', 'Gates (c/m/p)', 'Draft ID'], $rows, 'No creative records imported.');
+
+    $galleryHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">';
+
+    foreach ($records as $rec) {
+      $cid = Html::escape((string) $rec['content_id']);
+      $day = (int) $rec['day'];
+      $moment = ucfirst(Html::escape((string) $rec['moment']));
+      $promise = Html::escape((string) $rec['promise']);
+      $state = Html::escape((string) $rec['state']);
+
+      $img4x5 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.4x5.png'])->toString();
+      $img9x16 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.9x16.png'])->toString();
+
+      $galleryHtml .= '
+        <div style="background: #101510; border: 1px solid #222c22; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 14px rgba(0,0,0,0.35);">
+          <div style="position: relative; background: #050805; height: 210px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid #1c241c;">
+            <img src="' . $img4x5 . '" alt="' . $cid . '" style="width: 100%; height: 100%; object-fit: contain; background: #000;" onerror="this.src=\'' . $img9x16 . '\';" />
+            <span style="position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.85); color: #7cfc00; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; border: 1px solid #7cfc00;">Day ' . $day . ' · ' . $moment . '</span>
+            <span style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.85); font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;" class="famtastic-ops__badge famtastic-ops__badge--' . mb_strtolower($state) . '">' . $state . '</span>
+          </div>
+          <div style="padding: 1rem; display: flex; flex-direction: column; flex-grow: 1;">
+            <strong style="color: #fff; font-size: 0.95rem; line-height: 1.3; margin-bottom: 0.35rem;">' . $promise . '</strong>
+            <code style="font-size: 0.72rem; color: #8e988e; margin-bottom: 0.85rem; display: block;">' . $cid . '</code>
+            <div style="margin-top: auto; display: flex; gap: 0.5rem; font-size: 0.75rem;">
+              <a href="' . $img4x5 . '" target="_blank" style="flex: 1; text-align: center; background: rgba(124,252,0,0.15); color: #7cfc00; padding: 6px 0; border-radius: 6px; text-decoration: none; font-weight: 700; border: 1px solid #7cfc00;">🔍 4x5 Feed</a>
+              <a href="' . $img9x16 . '" target="_blank" style="flex: 1; text-align: center; background: rgba(255,255,255,0.06); color: #c4d0c4; padding: 6px 0; border-radius: 6px; text-decoration: none; font-weight: 700; border: 1px solid #444;">📱 9x16 Story</a>
+            </div>
+          </div>
+        </div>
+      ';
+    }
+    $galleryHtml .= '</div>';
+
+    return [
+      'heading' => [
+        '#markup' => '<h2>Creative &amp; Media Visual Asset Library</h2><p class="famtastic-ops__lede">Interactive visual catalog of all 136 campaign artwork cards and short-form video reels across all 17 campaign days.</p>',
+      ],
+      'filters' => [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['famtastic-creative__filters'], 'style' => 'margin: 1rem 0;'],
+        'items' => $dayFilters,
+      ],
+      'gallery' => [
+        '#markup' => $galleryHtml,
+      ],
+    ];
   }
 
   private function tabBuildDna(): array {
