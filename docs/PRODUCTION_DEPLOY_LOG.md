@@ -1,5 +1,35 @@
 # Production Deploy Log
 
+## 2026-08-28 — Alex independent-chair prototype and conversion walkthrough
+
+- Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
+- Prototype implementation: `3d7ae9ca1496e96c209406466780469a38c760cf`
+- Chair-side offer and conversion plan: `ef646b9bca07c8c3d37db0ab262969ecefc4f895`
+- Route-icon acceptance fix: `7e389c8edd4211d8563be5f54327542c25340a98`
+- Frontend release record: 2026-08-28T19:20:53Z, Node v22.23.2
+- Frontend rollback archive:
+  `~/backups/famtastic-frontend-20260828T191915Z-7e389c8edd4211d8563be5f54327542c25340a98.tgz`
+- Scope: published the static five-section Alex sales prototype, same-device
+  functional request/owner-console walkthrough, three generated concepts,
+  three public-work references, route-local icon declarations, and the honest
+  $199 founding-chair proposal. No customer record, real appointment, message,
+  payment, calendar event, or provider account was created.
+- Result: successful.
+
+### Acceptance evidence
+
+- Apex and `www` public and owner routes returned HTTP 200; the generated hero
+  returned `image/webp`; the account-protected `/buy` destination resolved.
+- Fresh headless Chrome at desktop and true 390×844 emulation rendered all five
+  public sections and five mobile owner tabs with zero horizontal overflow.
+- A live-browser prototype request stored only a masked final-four contact on
+  that isolated browser profile and appeared in the owner console as pending.
+- The owner console rendered the $199 proposal, renewal disclosure, and secure
+  FAMtastic `/buy` destination. It did not send or persist that test request to
+  Drupal or any external service.
+- Browser monitoring recorded no page exceptions, failed network requests, or
+  HTTP error responses after the route-local icon correction.
+
 ## 2026-08-27 — Drupal core and Entity API security maintenance
 
 - Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
