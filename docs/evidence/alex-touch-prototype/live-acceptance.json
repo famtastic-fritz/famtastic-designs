@@ -1,10 +1,10 @@
 {
   "schema": "famtastic.browser-acceptance.v1",
-  "recorded_at": "2026-08-28T19:20:53Z",
-  "artifact_commit": "7e389c8edd4211d8563be5f54327542c25340a98",
+  "recorded_at": "2026-08-28T19:42:01Z",
+  "artifact_commit": "2eafbdcde1e4f1c7c9cb2f80af5d60f64f9a171c",
   "release": {
     "node": "v22.23.2",
-    "backup": "~/backups/famtastic-frontend-20260828T191915Z-7e389c8edd4211d8563be5f54327542c25340a98.tgz"
+    "backup": "~/backups/famtastic-frontend-20260828T193840Z-2eafbdcde1e4f1c7c9cb2f80af5d60f64f9a171c.tgz"
   },
   "routes": {
     "apex_public": {
@@ -46,14 +46,19 @@
       "services": 4
     },
     "mobile_public": {
-      "viewport": "390x844",
+      "viewports": ["360x844", "390x844", "430x932"],
       "horizontal_overflow_px": 0,
-      "sections": 5
+      "sections": 5,
+      "dialog_within_viewport": true,
+      "input_font_px": 16
     },
     "mobile_owner": {
-      "viewport": "390x844",
+      "viewports": ["360x844", "390x844", "430x932"],
       "horizontal_overflow_px": 0,
-      "tabs": 5
+      "tabs": 5,
+      "bottom_nav_min_target_px": 48,
+      "stats_same_row": true,
+      "service_toggle_px": "44x24"
     },
     "functional_flow": {
       "request_saved": true,

@@ -6,9 +6,10 @@
 - Prototype implementation: `3d7ae9ca1496e96c209406466780469a38c760cf`
 - Chair-side offer and conversion plan: `ef646b9bca07c8c3d37db0ab262969ecefc4f895`
 - Route-icon acceptance fix: `7e389c8edd4211d8563be5f54327542c25340a98`
-- Frontend release record: 2026-08-28T19:20:53Z, Node v22.23.2
+- Mobile visual and owner-flow polish: `2eafbdcde1e4f1c7c9cb2f80af5d60f64f9a171c`
+- Frontend release record: 2026-08-28T19:38:40Z, Node v22.23.2
 - Frontend rollback archive:
-  `~/backups/famtastic-frontend-20260828T191915Z-7e389c8edd4211d8563be5f54327542c25340a98.tgz`
+  `~/backups/famtastic-frontend-20260828T193840Z-2eafbdcde1e4f1c7c9cb2f80af5d60f64f9a171c.tgz`
 - Scope: published the static five-section Alex sales prototype, same-device
   functional request/owner-console walkthrough, three generated concepts,
   three public-work references, route-local icon declarations, and the honest
@@ -20,8 +21,10 @@
 
 - Apex and `www` public and owner routes returned HTTP 200; the generated hero
   returned `image/webp`; the account-protected `/buy` destination resolved.
-- Fresh headless Chrome at desktop and true 390×844 emulation rendered all five
-  public sections and five mobile owner tabs with zero horizontal overflow.
+- Fresh headless Chrome at true 360×844, 390×844, and 430×932 phone emulation
+  rendered all five public sections, the compact request dialog, all five owner
+  tabs, the three-signal dashboard row, 48-pixel bottom-nav targets, and the
+  corrected 44×24 service toggles with zero horizontal overflow.
 - A live-browser prototype request stored only a masked final-four contact on
   that isolated browser profile and appeared in the owner console as pending.
 - The owner console rendered the $199 proposal, renewal disclosure, and secure
