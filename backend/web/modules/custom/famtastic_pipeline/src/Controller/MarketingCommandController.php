@@ -91,8 +91,10 @@ final class MarketingCommandController extends ControllerBase {
       ['Last attempt', $this->date((int) $row['changed'])],
       ['Last error', Html::escape((string) ($row['last_error'] ?: '—'))],
     ];
-    return $this->page([
-      'back' => Link::fromTextAndUrl('← Email center', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'email']))->toRenderable(),
+    return [
+      '#title' => 'Email message #' . $id,
+      'truth' => ['#markup' => $this->executionTruth()],
+      'back' => Link::fromTextAndUrl('← Back to Email Center', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'email']))->toRenderable(),
       'facts' => ['#type' => 'table', '#header' => ['Field', 'Value'], '#rows' => $rows, '#attributes' => ['class' => ['famtastic-ops__table']]],
       'body' => [
         '#type' => 'details',
@@ -107,7 +109,7 @@ final class MarketingCommandController extends ControllerBase {
           : [],
         'back2' => ['#type' => 'link', '#title' => $this->t('Back'), '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'email']), '#attributes' => ['class' => ['button']]],
       ],
-    ], 'Email message #' . $id);
+    ];
   }
 
   public function buildDnaDetail(int $id): array {
@@ -136,12 +138,13 @@ final class MarketingCommandController extends ControllerBase {
         '#open' => $key === 'prompt_snapshot',
       ];
     }
-    return $this->page([
-      'back' => Link::fromTextAndUrl('← Build DNA', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'builddna']))->toRenderable(),
+    return [
+      '#title' => 'Build DNA #' . $id . ' — ' . $run['build_key'],
       'truth' => ['#markup' => $this->executionTruth()],
+      'back' => Link::fromTextAndUrl('← Back to Build DNA Registry', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'builddna']))->toRenderable(),
       'facts' => ['#type' => 'table', '#header' => ['Field', 'Value'], '#rows' => $rows, '#attributes' => ['class' => ['famtastic-ops__table']]],
       'snapshots' => $snapshots,
-    ], 'Build DNA #' . $id . ' — ' . $run['build_key']);
+    ];
   }
 
   private function page(string $tab): array {
