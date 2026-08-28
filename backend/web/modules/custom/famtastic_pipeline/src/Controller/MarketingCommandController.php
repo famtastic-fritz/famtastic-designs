@@ -523,7 +523,10 @@ final class MarketingCommandController extends ControllerBase {
     if (!preg_match('/^[a-zA-Z0-9._-]+\.(png|jpg|jpeg|webp|mp4)$/', $filename)) {
       throw new NotFoundHttpException('Invalid asset name.');
     }
+    $modulePath = __DIR__ . '/../../assets/campaign/' . $filename;
     $candidates = [
+      $modulePath,
+      \Drupal::root() . '/modules/custom/famtastic_pipeline/assets/campaign/' . $filename,
       \Drupal::root() . '/../marketing/campaigns/55-cents-17-day/assets/' . $filename,
       dirname(\Drupal::root(), 2) . '/marketing/campaigns/55-cents-17-day/assets/' . $filename,
       dirname(\Drupal::root()) . '/marketing/campaigns/55-cents-17-day/assets/' . $filename,
@@ -625,36 +628,50 @@ final class MarketingCommandController extends ControllerBase {
       $mLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'media', 'direction' => $mediaGate ? 'revoke' : 'approve'])->toString();
       $pLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'publish', 'direction' => $publishGate ? 'revoke' : 'approve'])->toString();
 
-      $imgSrc = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.4x5.png'])->toString();
+      $imgSrc4x5 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.4x5.png'])->toString();
+      $imgSrc9x16 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.9x16.png'])->toString();
+
+      $momentCaptions = [
+        'teach' => "Stop renting your website. Start owning your digital front door. ⚡\n\nFor less than 55 cents a day ($199/year), you get:\n✅ Fast SSD Cloud Hosting & SSL included\n✅ Custom Domain Registration (.com/.org/.net)\n✅ Client Portal & Interactive Project Hub\n✅ 100% Code Ownership — zero monthly SaaS traps.\n\nScan your local market in 20 seconds at famtasticdesigns.com.",
+        'challenge' => "The hidden cost of generic website builders: Paying $30–$70/mo forever with zero code ownership and locked-in templates.\n\nCompare that to owning your custom digital engine with 1-year hosting included for $199 flat (~55¢/day).\n\nSee what your competitors are doing at famtasticdesigns.com.",
+        'prove' => "Proof in action: How local businesses eliminate SaaS recurring taxes and get a custom, lightning-fast digital engine built to their exact workflow.\n\nExplore our interactive Solution Finder at famtasticdesigns.com.",
+        'invite' => "Ready for a website that actually works for your business?\n\nLock in our $199 Web Basics package with a 30-day price hold. Includes 1-year cloud hosting, custom domain, and dedicated client command center.\n\nStart now at famtasticdesigns.com.",
+      ];
+      $captionText = $momentCaptions[$moment] ?? (string) $rec['promise'];
 
       $cardsHtml .= '
-        <article style="border: 1px solid #2d382d; border-radius: 14px; background: #101510; padding: 1.25rem; display: flex; flex-direction: column;">
+        <article style="border: 1px solid #2d382d; border-radius: 14px; background: #101510; padding: 1.25rem; display: flex; flex-direction: column; box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
             <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #7cfc00; font-weight: 800;">' . $icon . ' ' . $time . ' ET · ' . ucfirst($moment) . '</span>
             <span class="famtastic-ops__badge famtastic-ops__badge--' . mb_strtolower($state) . '">' . $state . '</span>
           </div>
-          <h3 style="margin: 0.2rem 0 0.5rem; font-size: 1.1rem; color: #fff; line-height: 1.3;">' . $promise . '</h3>
+          <h3 style="margin: 0.2rem 0 0.5rem; font-size: 1.15rem; color: #fff; line-height: 1.3;">' . $promise . '</h3>
           <small style="color: #8e988e; margin-bottom: 0.75rem; display: block;">ID: <code>' . $cid . '</code> · Theme: ' . $theme . '</small>
           
-          <div style="margin: 0.5rem 0 0.75rem; text-align: center; background: #050805; border-radius: 10px; padding: 0.5rem; border: 1px solid #1c241c;">
-            <img src="' . $imgSrc . '" alt="' . $cid . '" style="max-width: 100%; height: 220px; object-fit: contain; border-radius: 6px; display: block; margin: 0 auto;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';" />
-            <div style="display: none; padding: 2rem 0.5rem; color: #8e988e; font-size: 0.8rem;">Asset preview: 4x5 &amp; 9x16 ready in campaign catalog</div>
-            <div style="margin-top: 0.4rem; font-size: 0.72rem; color: #7cfc00; display: flex; justify-content: space-around;">
-              <span>4x5 (Feed)</span>
-              <span>9x16 (Reels/Stories/Shorts)</span>
+          <div style="margin: 0.5rem 0 0.75rem; text-align: center; background: #050805; border-radius: 10px; padding: 0.75rem; border: 1px solid #1c241c;">
+            <img src="' . $imgSrc4x5 . '" alt="' . $cid . '" style="max-width: 100%; height: 240px; object-fit: contain; border-radius: 6px; display: block; margin: 0 auto; background: #000;" onerror="this.src=\'' . $imgSrc9x16 . '\';" />
+            <div style="margin-top: 0.6rem; font-size: 0.75rem; display: flex; justify-content: center; gap: 0.75rem;">
+              <a href="' . $imgSrc4x5 . '" target="_blank" style="color: #7cfc00; text-decoration: none; font-weight: 600; background: rgba(124,252,0,0.1); padding: 2px 8px; border-radius: 4px;">🔍 View 4x5 Feed</a>
+              <a href="' . $imgSrc9x16 . '" target="_blank" style="color: #7cfc00; text-decoration: none; font-weight: 600; background: rgba(124,252,0,0.1); padding: 2px 8px; border-radius: 4px;">📱 View 9x16 Story</a>
             </div>
           </div>
 
+          <details style="margin: 0.5rem 0 0.75rem; background: #080c08; border: 1px solid #1e261e; border-radius: 8px; padding: 0.5rem;" open>
+            <summary style="font-size: 0.78rem; font-weight: 700; color: #aab2aa; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">📝 Post Caption Copy</summary>
+            <pre style="margin-top: 0.5rem; font-family: inherit; font-size: 0.8rem; color: #c4d0c4; white-space: pre-wrap; word-break: break-word; line-height: 1.45;">' . Html::escape($captionText) . '</pre>
+          </details>
+
           <div style="margin-top: auto; padding-top: 0.75rem; border-top: 1px solid #222b22;">
-            <div style="font-size: 0.75rem; font-weight: 700; color: #aab2aa; margin-bottom: 0.5rem; text-transform: uppercase;">Operator Approvals</div>
+            <div style="font-size: 0.72rem; font-weight: 700; color: #8e988e; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">Target Channels: Facebook · Instagram · X · YouTube Shorts · TikTok</div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: #aab2aa; margin-bottom: 0.4rem; text-transform: uppercase;">Operator Approvals</div>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; text-align: center;">
-              <a href="' . $cLink . '" style="padding: 0.4rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($contentGate ? 'rgba(124,252,0,0.15); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
+              <a href="' . $cLink . '" style="padding: 0.45rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($contentGate ? 'rgba(124,252,0,0.18); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
                 ' . ($contentGate ? '✓ Copy' : '○ Copy') . '
               </a>
-              <a href="' . $mLink . '" style="padding: 0.4rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($mediaGate ? 'rgba(124,252,0,0.15); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
+              <a href="' . $mLink . '" style="padding: 0.45rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($mediaGate ? 'rgba(124,252,0,0.18); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
                 ' . ($mediaGate ? '✓ Media' : '○ Media') . '
               </a>
-              <a href="' . $pLink . '" style="padding: 0.4rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($publishGate ? 'rgba(124,252,0,0.15); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
+              <a href="' . $pLink . '" style="padding: 0.45rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($publishGate ? 'rgba(124,252,0,0.18); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
                 ' . ($publishGate ? '✓ Publish' : '○ Publish') . '
               </a>
             </div>
