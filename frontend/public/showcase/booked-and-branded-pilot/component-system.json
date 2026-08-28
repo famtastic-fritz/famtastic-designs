@@ -1,0 +1,342 @@
+{
+  "schema": "famtastic.component-system.v1",
+  "system_id": "booked-branded-one-page",
+  "status": "local-proof-of-concept",
+  "principle": "A page is an ordered recipe of section components. A section component is a versioned template made from fields, slots, repeaters, actions, visibility rules, and optional motion. Media may change without changing the component recipe.",
+  "identity_contract": {
+    "page": "data-page-template-id",
+    "section": "data-section-id",
+    "component": "data-component-id",
+    "field": "data-field-id",
+    "slot": "data-slot-id",
+    "rule": "Stable IDs come from this registry and are never inferred from CSS position."
+  },
+  "page_templates": [
+    {
+      "id": "booked-branded-one-page-v1",
+      "name": "Booked & Branded One Page",
+      "version": 1,
+      "page_type": "one-page-business-site",
+      "scroll_mode": "anchored-long-form",
+      "regions": {
+        "header": [
+          {
+            "instance_id": "primary-navigation",
+            "component_id": "navigation.site-nav.v1",
+            "variant": "inline"
+          }
+        ],
+        "main": [
+          {
+            "instance_id": "brand-hero",
+            "component_id": "hero.split-brand.v1",
+            "variant": "direction-led",
+            "anchor_id": "top"
+          },
+          {
+            "instance_id": "creative-system",
+            "component_id": "proof.creative-dna.v1",
+            "variant": "four-column",
+            "proof_only": true
+          },
+          {
+            "instance_id": "services",
+            "component_id": "services.card-grid.v1",
+            "variant": "three-up",
+            "anchor_id": "services"
+          },
+          {
+            "instance_id": "owner-desk",
+            "component_id": "operations.booking-desk.v1",
+            "variant": "phone-and-flow",
+            "anchor_id": "owner-desk"
+          },
+          {
+            "instance_id": "payment-qr",
+            "component_id": "payments.owner-qr.v1",
+            "variant": "direct-to-business"
+          },
+          {
+            "instance_id": "reviews",
+            "component_id": "trust.review-grid.v1",
+            "variant": "moderated-two-up"
+          },
+          {
+            "instance_id": "booking-request",
+            "component_id": "booking.request-form.v1",
+            "variant": "starter",
+            "anchor_id": "request"
+          }
+        ],
+        "footer": [
+          {
+            "instance_id": "site-footer",
+            "component_id": "navigation.site-footer.v1",
+            "variant": "compact"
+          }
+        ]
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "navigation.site-nav.v1",
+      "name": "Site Navigation",
+      "category": "navigation",
+      "status": "implemented",
+      "can_hide": false,
+      "can_reorder": false,
+      "fields": ["business.mark", "business.name", "navigation.items", "primary_action.label", "primary_action.href"],
+      "slots": [],
+      "repeaters": ["navigation.items"],
+      "parts": ["brand-lockup", "anchor-links", "primary-action"]
+    },
+    {
+      "id": "hero.split-brand.v1",
+      "name": "Split Brand Hero",
+      "category": "hero",
+      "status": "implemented",
+      "can_hide": false,
+      "can_reorder": false,
+      "fields": ["hero.overline", "hero.headline", "hero.subhead", "hero.hours", "hero.policy", "hero.media.alt", "primary_action", "secondary_action"],
+      "slots": ["hero-media"],
+      "repeaters": [],
+      "parts": ["copy-lockup", "action-pair", "media-frame", "status-tag"],
+      "media_contract": {
+        "slot": "hero-media",
+        "accepted": ["image/jpeg", "image/png", "image/webp"],
+        "focal_position": true,
+        "replace_without_recipe_change": true
+      }
+    },
+    {
+      "id": "proof.creative-dna.v1",
+      "name": "Creative DNA Strip",
+      "category": "proof",
+      "status": "implemented",
+      "can_hide": true,
+      "can_reorder": true,
+      "fields": ["type.system", "shape.system", "message.system", "motifs"],
+      "slots": [],
+      "repeaters": ["director-cards"],
+      "parts": ["director-label", "director-title", "director-note"]
+    },
+    {
+      "id": "services.card-grid.v1",
+      "name": "Service Card Grid",
+      "category": "services",
+      "status": "implemented",
+      "can_hide": true,
+      "can_reorder": true,
+      "fields": ["section.kicker", "section.heading", "section.intro", "service.name", "service.duration", "service.price", "service.action"],
+      "slots": [],
+      "repeaters": ["services"],
+      "parts": ["section-heading", "service-card", "price-line", "service-action"]
+    },
+    {
+      "id": "operations.booking-desk.v1",
+      "name": "Phone Booking Desk",
+      "category": "operations",
+      "status": "implemented",
+      "can_hide": true,
+      "can_reorder": true,
+      "fields": ["section.kicker", "section.heading", "section.intro", "flow.steps", "request.name", "request.service", "request.time", "request.status"],
+      "slots": ["phone-preview"],
+      "repeaters": ["flow.steps", "booking.requests", "desk.tabs", "desk.metrics"],
+      "parts": ["value-copy", "flow-step", "phone-shell", "request-card", "status-chip", "owner-actions"]
+    },
+    {
+      "id": "payments.owner-qr.v1",
+      "name": "Owner Payment QR",
+      "category": "payments",
+      "status": "implemented",
+      "can_hide": true,
+      "can_reorder": true,
+      "fields": ["section.kicker", "section.heading", "section.intro", "payment.disclosure"],
+      "slots": ["owner-approved-qr"],
+      "repeaters": [],
+      "parts": ["section-heading", "qr-display", "provider-disclosure"]
+    },
+    {
+      "id": "trust.review-grid.v1",
+      "name": "Moderated Reviews",
+      "category": "trust",
+      "status": "implemented",
+      "can_hide": true,
+      "can_reorder": true,
+      "fields": ["section.kicker", "section.heading", "section.intro", "review.rating", "review.quote", "review.attribution"],
+      "slots": [],
+      "repeaters": ["reviews"],
+      "parts": ["section-heading", "review-card", "rating", "attribution"]
+    },
+    {
+      "id": "booking.request-form.v1",
+      "name": "Starter Booking Request",
+      "category": "booking",
+      "status": "implemented",
+      "can_hide": true,
+      "can_reorder": true,
+      "fields": ["section.kicker", "section.heading", "section.intro", "form.fields", "form.action"],
+      "slots": [],
+      "repeaters": ["form.fields", "service.options"],
+      "parts": ["section-heading", "service-select", "date-field", "time-field", "contact-method", "notes-field", "submit-action"]
+    },
+    {
+      "id": "navigation.site-footer.v1",
+      "name": "Compact Site Footer",
+      "category": "navigation",
+      "status": "implemented",
+      "can_hide": false,
+      "can_reorder": false,
+      "fields": ["business.name", "business.location", "business.hours", "footer.action"],
+      "slots": [],
+      "repeaters": [],
+      "parts": ["business-summary", "footer-action"]
+    }
+  ],
+  "planned_components": [
+    "story.about-split.v1",
+    "gallery.work-grid.v1",
+    "contact.protected-form.v1",
+    "location.map-hours.v1",
+    "trust.policy-faq.v1"
+  ],
+  "image_only_proof": {
+    "id": "velvet-coil-four-media-lives",
+    "page_template_id": "booked-branded-one-page-v1",
+    "business_slug": "velvet-coil-atelier",
+    "direction_id": "a",
+    "rule": "The page recipe, component variants, fields, repeaters, actions, palette, typography, copy, links, and ordering are frozen. Only hero.split-brand.v1 slot hero-media changes.",
+    "allowed_change": "hero-media.src",
+    "variants": [
+      {
+        "id": "01-soft-power",
+        "label": "Soft Power",
+        "media_src": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-a.jpg"
+      },
+      {
+        "id": "02-coil-culture",
+        "label": "Coil Culture",
+        "media_src": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-b.jpg"
+      },
+      {
+        "id": "03-studio-ritual",
+        "label": "Studio Ritual",
+        "media_src": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-c.jpg"
+      },
+      {
+        "id": "04-coil-architecture",
+        "label": "Coil Architecture",
+        "media_src": "/showcase/booked-and-branded-pilot/wow-lab/assets/velvet-coil-architecture-hero.webp"
+      }
+    ]
+  },
+  "research_proof_lab": {
+    "status": "implemented-local-research-proof",
+    "data_source": "frontend/public/showcase/booked-and-branded-pilot/research/research-proof-data.json",
+    "decision_ledger": "frontend/public/showcase/booked-and-branded-pilot/research/component-decisions.json",
+    "source_manifest": "frontend/public/showcase/booked-and-branded-pilot/research/source-manifest.json",
+    "renderer": "scripts/build-booked-branded-research-proof.mjs",
+    "route": "/showcase/booked-and-branded-pilot/research-proof-lab/",
+    "page_template_ids": ["crown-ledger-v1", "coil-ritual-v1", "barrio-signal-v1", "salt-glass-v1"],
+    "component_definitions": [
+      {
+        "id": "navigation.research-nav.v1",
+        "fields": ["business.name", "navigation.items", "booking.action"],
+        "slots": [],
+        "repeaters": ["navigation.items"],
+        "parts": ["wordmark", "anchor-links", "booking-action"]
+      },
+      {
+        "id": "hero.research-led.v1",
+        "fields": ["hero.overline", "hero.headline", "hero.subhead", "hero.media.src", "hero.media.alt"],
+        "slots": ["hero-media", "hero-copy", "hero-actions"],
+        "repeaters": [],
+        "parts": ["copy-lockup", "parent-media", "primary-action", "secondary-action"],
+        "variants": ["hero-ledger", "hero-ritual", "hero-poster", "hero-prism"]
+      },
+      {
+        "id": "proof.market-wedge.v1",
+        "fields": ["market.thesis", "market.baseline", "market.famtastic-difference"],
+        "slots": [],
+        "repeaters": ["citations"],
+        "parts": ["thesis", "competitor-respect", "owned-layer-argument"]
+      },
+      {
+        "id": "services.research-menu.v1",
+        "fields": ["service.name", "service.duration", "service.price", "service.preparation"],
+        "slots": [],
+        "repeaters": ["services"],
+        "parts": ["section-heading", "service-item", "price", "preparation"],
+        "variants": ["service-ledger", "service-swatches", "service-ribbons", "service-editorial"]
+      },
+      {
+        "id": "gallery.reference-led-series.v1",
+        "fields": ["media.alt", "media.role", "media.provenance"],
+        "slots": ["parent-media", "candidate-media-01", "candidate-media-02", "candidate-media-03"],
+        "repeaters": ["work-media"],
+        "parts": ["parent-reference", "environment", "process", "result-detail"],
+        "variants": ["work-filmstrip", "work-atlas"]
+      },
+      {
+        "id": "booking.portable-bridge.v1",
+        "fields": ["booking.mode", "booking.provider", "booking.label", "booking.disclosure"],
+        "slots": ["booking-action"],
+        "repeaters": ["booking.paths"],
+        "parts": ["current-provider", "reviewed-widget", "owner-calendar", "request-to-book"]
+      },
+      {
+        "id": "operations.phone-console.v1",
+        "fields": ["requests.count", "reviews.pending", "hours.status", "services"],
+        "slots": ["phone-preview"],
+        "repeaters": ["owner-actions", "owner-metrics"],
+        "parts": ["phone-shell", "metric", "content-actions", "booking-actions"]
+      },
+      {
+        "id": "foundation.contact-location.v1",
+        "fields": ["identity.domain", "identity.forwarding-email", "contact", "location", "hours", "map", "payment.disclosure"],
+        "slots": ["owner-approved-map", "owner-approved-payment-qr"],
+        "repeaters": ["contact-methods"],
+        "parts": ["contact", "location", "hours", "map", "owner-payment"]
+      },
+      {
+        "id": "concierge.shay-close.v1",
+        "fields": ["shay.title", "shay.boundary", "offer.price", "offer.renewal"],
+        "slots": ["primary-action"],
+        "repeaters": [],
+        "parts": ["shay-identity", "role-boundary", "commercial-truth", "next-action"]
+      },
+      {
+        "id": "proof.component-decisions.v1",
+        "fields": ["decision.id", "decision.reason", "decision.confidence"],
+        "slots": [],
+        "repeaters": ["decisions", "sources"],
+        "parts": ["decision-id", "component-scope", "reason", "source-links", "confidence"]
+      },
+      {
+        "id": "navigation.research-footer.v1",
+        "fields": ["business.name", "business.location", "proof.label", "compare.action"],
+        "slots": [],
+        "repeaters": [],
+        "parts": ["business-summary", "proof-disclosure", "compare-action"]
+      }
+    ],
+    "site_studio_handoff": {
+      "status": "contract-ready-not-imported",
+      "page_recipe_source": "research-proof-data.json#templates[].recipe",
+      "component_source": "component-system.json#research_proof_lab.component_definitions",
+      "decision_source": "component-decisions.json",
+      "rule": "Site Studio may consume the recipe, field bindings, media bindings, and cited decision IDs as build context. No import, provider activation, publishing, or customer record is implied by this local proof."
+    }
+  },
+  "site_studio_translation": {
+    "page_template": "page_recipe",
+    "component": "component_definition",
+    "component_instance": "page_recipe.regions.*[]",
+    "part": "field_or_slot_or_repeater_or_action",
+    "hide": "component_instance.visibility",
+    "reorder": "page_recipe region ordering",
+    "media_swap": "slot binding update",
+    "future_page_split": "move an existing component instance to another page recipe without changing its component ID"
+  }
+}

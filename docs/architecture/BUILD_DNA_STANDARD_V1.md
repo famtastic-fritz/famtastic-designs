@@ -102,6 +102,16 @@ The existing v1 packet is intentionally additive-compatible. New FAMtastic
 packets must include the pointer; legacy packets can be read but are visibly
 marked `build_dna_status=legacy_missing` rather than silently upgraded.
 
+For componentized builds, the selected packet also carries the immutable page
+recipe and binding snapshot defined by
+`docs/architecture/FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1.md`. The Build DNA must
+identify the component-system contract/version, page recipe ID/version, stable
+page and component-instance IDs, selected definition/variant IDs, and the
+hash-addressed bindings that matter to the change. A slot-only experiment names
+the single permitted binding; a component or recipe change records its own
+explicit acceptance result. Site Studio appends continuation evidence and must
+not create a parallel component-history ledger.
+
 ## Drupal projection
 
 `BuildTelemetryService::recordBuildDna()` writes the complete manifest into the
@@ -134,9 +144,10 @@ All Codex, Shay, Claude, local, and provider worker roles must:
 6. update a capability only when a run's evidence changes its maturity; and
 7. mirror rights-safe run records and lessons to the designated Drive folders.
 
-The current scope is build-level DNA. Stage-, page-, and component-level DNA
-will extend this same record through stable `stage_id`, `page_id`, and
-`component_id` references; they must not introduce parallel ledgers.
+The current schema is build-led, with stage-, page-, and component-level facts
+referenced through stable `stage_id`, `page_id`, component-instance ID, and
+component-definition ID values. New detail extends this same record; it must not
+introduce parallel ledgers.
 
 ## Validation
 

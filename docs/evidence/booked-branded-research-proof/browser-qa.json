@@ -1,0 +1,229 @@
+{
+  "schema": "famtastic.browser-qa.v1",
+  "captured_at": "2026-08-28T00:18:16.092Z",
+  "base_url": "http://127.0.0.1:4180/showcase/booked-and-branded-pilot",
+  "provider": "playwright-local",
+  "pages": [
+    {
+      "page_id": "research-proof-lab",
+      "route": "/research-proof-lab/",
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 1000
+      },
+      "screenshot": "research-proof-lab-desktop.jpg",
+      "checks": {
+        "title": "Booked & Branded Research Proof Lab — FAMtastic Designs",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 0,
+        "unique_component_count": 0,
+        "template_contract_present": true,
+        "decision_count": 0
+      },
+      "errors": []
+    },
+    {
+      "page_id": "research-proof-lab",
+      "route": "/research-proof-lab/",
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "research-proof-lab-mobile.jpg",
+      "checks": {
+        "title": "Booked & Branded Research Proof Lab — FAMtastic Designs",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 0,
+        "unique_component_count": 0,
+        "template_contract_present": true,
+        "decision_count": 0
+      },
+      "errors": []
+    },
+    {
+      "page_id": "crown-ledger",
+      "route": "/research-proof-lab/templates/crown-ledger/",
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 1000
+      },
+      "screenshot": "crown-ledger-desktop.jpg",
+      "checks": {
+        "title": "Northstar Chair Club — Crown Ledger",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 11,
+        "unique_component_count": 11,
+        "template_contract_present": true,
+        "decision_count": 8
+      },
+      "errors": []
+    },
+    {
+      "page_id": "crown-ledger",
+      "route": "/research-proof-lab/templates/crown-ledger/",
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "crown-ledger-mobile.jpg",
+      "checks": {
+        "title": "Northstar Chair Club — Crown Ledger",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 11,
+        "unique_component_count": 11,
+        "template_contract_present": true,
+        "decision_count": 8
+      },
+      "errors": []
+    },
+    {
+      "page_id": "coil-ritual",
+      "route": "/research-proof-lab/templates/coil-ritual/",
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 1000
+      },
+      "screenshot": "coil-ritual-desktop.jpg",
+      "checks": {
+        "title": "Rooted Ritual Studio — Coil Ritual",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 11,
+        "unique_component_count": 11,
+        "template_contract_present": true,
+        "decision_count": 8
+      },
+      "errors": []
+    },
+    {
+      "page_id": "coil-ritual",
+      "route": "/research-proof-lab/templates/coil-ritual/",
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "coil-ritual-mobile.jpg",
+      "checks": {
+        "title": "Rooted Ritual Studio — Coil Ritual",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 11,
+        "unique_component_count": 11,
+        "template_contract_present": true,
+        "decision_count": 8
+      },
+      "errors": []
+    },
+    {
+      "page_id": "barrio-signal",
+      "route": "/research-proof-lab/templates/barrio-signal/",
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 1000
+      },
+      "screenshot": "barrio-signal-desktop.jpg",
+      "checks": {
+        "title": "Río Norte Barbería — Barrio Signal",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 11,
+        "unique_component_count": 11,
+        "template_contract_present": true,
+        "decision_count": 8
+      },
+      "errors": []
+    },
+    {
+      "page_id": "barrio-signal",
+      "route": "/research-proof-lab/templates/barrio-signal/",
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "barrio-signal-mobile.jpg",
+      "checks": {
+        "title": "Río Norte Barbería — Barrio Signal",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 11,
+        "unique_component_count": 11,
+        "template_contract_present": true,
+        "decision_count": 8
+      },
+      "errors": []
+    },
+    {
+      "page_id": "salt-glass",
+      "route": "/research-proof-lab/templates/salt-glass/",
+      "viewport": "desktop",
+      "dimensions": {
+        "width": 1440,
+        "height": 1000
+      },
+      "screenshot": "salt-glass-desktop.jpg",
+      "checks": {
+        "title": "Tide & Tone Color House — Salt Glass",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 11,
+        "unique_component_count": 11,
+        "template_contract_present": true,
+        "decision_count": 8
+      },
+      "errors": []
+    },
+    {
+      "page_id": "salt-glass",
+      "route": "/research-proof-lab/templates/salt-glass/",
+      "viewport": "mobile",
+      "dimensions": {
+        "width": 390,
+        "height": 844
+      },
+      "screenshot": "salt-glass-mobile.jpg",
+      "checks": {
+        "title": "Tide & Tone Color House — Salt Glass",
+        "h1_count": 1,
+        "bad_images": [],
+        "missing_hash_targets": [],
+        "horizontal_overflow_px": 0,
+        "component_count": 11,
+        "unique_component_count": 11,
+        "template_contract_present": true,
+        "decision_count": 8
+      },
+      "errors": []
+    }
+  ],
+  "result": "passed"
+}

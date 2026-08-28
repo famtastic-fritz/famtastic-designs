@@ -11,6 +11,86 @@
 ## 2026-08-28 — Bridge Decoupled Intakes to Native Drupal Views & Webforms Rather Than Re-Inventing Admin Surfaces
 - Observation: Building custom SQL tables and standalone controllers for decoupled APIs works for headless throughput, but bypasses Drupal's native superpowers (Views exposed filters, Webform submissions audit, and built-in email handlers).
 - Guidance: Always provide a `hook_views_data` (`.views.inc`) file for custom pipeline tables and bridge decoupled intake endpoints into Drupal's native `webform_submission` entity so operators can use standard administrative Views and Webform results.
+## 2026-08-27 — Research must stay attached to the component decision
+
+- Observation: a research-backed prompt can produce a strong page, but the
+  reasoning disappears when only the rendered HTML survives. Another builder
+  then sees styling without knowing which market fact, accessibility rule,
+  primary study, or design judgment influenced the component.
+- Guidance: freeze a source manifest and decision ledger beside the page recipe.
+  Give every decision a stable ID, component scope, reason, source trail,
+  confidence, and limitation; render the IDs on the proof and carry them into
+  Site Studio as immutable context.
+
+## 2026-08-27 — A reusable media family needs parent lineage and distinct jobs
+
+- Observation: three near-duplicate images do not create a useful component
+  library. A parent art direction becomes reusable when companion frames cover
+  different content jobs while preserving the same visual world.
+- Guidance: retain one premium parent plus separately generated environment,
+  process, and result/detail companions. Hash the parent and every output,
+  preserve exact prompts, keep readable UI native, and never invent an
+  unreported model or price.
+
+## 2026-08-27 — Reusable component evidence needs repository-wide doctrine
+
+- Observation: a strong component proof can still be lost if only its niche
+  implementation describes the rules; another builder may see the rendered
+  page but miss stable identity, upgrade continuity, and the FAMtastic/Site
+  Studio authority boundary.
+- Guidance: keep one canonical page/component doctrine and link it from every
+  agent entry point, Build DNA, and Site Studio handoff. Treat the niche registry
+  as evidence, not the only definition of the system.
+
+## 2026-08-27 — Sync is a reviewed operating step, not a background pull
+
+- Observation: the component branch and `origin/main` each had five commits the
+  other side did not contain, so continuing without a fetch would have hidden
+  current Solution Finder, checkout, and proof-access work from the build lane.
+- Guidance: fetch and inspect divergence at task start, before push, and before
+  deploy. Reconcile incoming commits deliberately and rerun acceptance. Never
+  auto-pull a dirty worktree or production document root, and never equate a
+  pushed branch with deployed production.
+
+## 2026-08-27 — One-page proof sections should be portable component instances
+
+- Observation: generating several pages through one renderer reduces code
+  duplication, but it does not by itself give the operator a component drawer,
+  hide/reorder behavior, media slots, or a safe future multi-page upgrade.
+- Guidance: give every page, section instance, component, field, and slot a
+  stable source-defined ID. Treat a media replacement as a slot-binding change,
+  not a new component, and test that every other byte remains frozen. When the
+  starter grows, move the same component instance between page recipes rather
+  than recreating it and risking a quality drop.
+
+## 2026-08-27 — Comparison grids need aligned outer geometry
+
+- Observation: a translated middle direction card looked accidentally
+  misaligned even though the offset was intentional.
+- Guidance: preserve a shared outer baseline for comparison cards and express
+  direction-specific personality inside each card. Browser QA should compare
+  the top and bottom coordinates, not only check for overflow.
+
+## 2026-08-27 — Treat booking marketplaces as an acquisition channel, not the brand
+
+- Observation: a beauty operator may reasonably keep Booksy for discovery while
+  building an owned path for repeat booking, consent, reviews, referrals, and
+  brand authority. Because Booksy's Boost fee applies to the first Boost visit
+  and not later visits, the value of a direct-booking discount changes over the
+  customer lifecycle.
+- Guidance: run the transition as an evidence-led bridge. Keep Booksy available,
+  make direct booking an honest customer choice, let the business approve any
+  loyalty incentive, and measure whether it improves retention and ownership.
+  Never scrape client data, copy platform reviews, or trade benefits for reviews.
+
+## 2026-08-27 — Premium creative needs an options-and-finishing contract
+
+- Observation: a single paid generation proves execution but not creative
+  exploration or polish.
+- Guidance: generate three materially different candidates for every premium
+  visual position, select against the page's real composition, and finish the
+  chosen asset. Preserve candidates, rationale, finished artifact, prompt,
+  provider/model/cost truth, and hashes in Build DNA; keep page text native.
 
 ## 2026-08-27 — A low-cost starter should reveal the upgrade path, not lead with exclusions
 

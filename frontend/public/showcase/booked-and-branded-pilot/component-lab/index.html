@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Booked &amp; Branded Component Lab — FAMtastic Designs</title>
+  <meta name="description" content="A proof that one reusable page recipe can produce four media lives while its section components remain frozen.">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <link rel="stylesheet" href="/showcase/booked-and-branded-pilot/styles.css?v=20260827-components-v1">
+</head>
+<body class="component-lab-page">
+<div class="demo-ribbon"><span>Fictional demonstration</span> No real business, client, review, appointment, payment, or email</div>
+      <main>
+        <section class="component-lab-hero">
+          <div class="shell component-lab-hero-grid">
+            <div>
+              <a class="back-link" href="/showcase/booked-and-branded-pilot/template-lab/">← Return to the Template Lab</a>
+              <p class="kicker">FAMtastic Component Lab · proof of concept</p>
+              <h1>One page.<br><em>Nine components.</em><br>Four media lives.</h1>
+              <p>The page is now a recipe instead of a slab of HTML. Every section has a stable identity, every component has swappable parts, and the first controlled experiment changes one image slot—nothing else.</p>
+              <div class="component-lab-actions"><a class="button" href="#image-proof">See the four image-only variants <span aria-hidden="true">→</span></a><a class="button secondary" href="#component-inventory">Inspect the component inventory <span aria-hidden="true">→</span></a></div>
+            </div>
+            <aside class="component-lab-equation" aria-label="Component system hierarchy">
+              <small>THE MODEL</small>
+              <div><b>Page</b><span>ordered recipe</span></div>
+              <i>↓</i>
+              <div><b>Section</b><span>component instance</span></div>
+              <i>↓</i>
+              <div><b>Component</b><span>versioned template</span></div>
+              <i>↓</i>
+              <div><b>Parts</b><span>fields · slots · repeaters · actions</span></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="component-proof-strip"><div class="shell"><div><b>1</b><span>page recipe</span></div><div><b>9</b><span>implemented components</span></div><div><b>4</b><span>image-only page variants</span></div><div><b>1</b><span>allowed field change</span></div></div></section>
+
+        <section class="component-recipe"><div class="shell component-recipe-grid"><div><p class="kicker">The frozen recipe</p><h2>Long page now.<br>Multi-page later.</h2><p>Hiding a section changes visibility. Moving it changes recipe order. Splitting the site later moves the same component instance into another page recipe—the component does not need to be rebuilt.</p><ol><li><b>01</b><span>brand-hero</span><code>hero.split-brand.v1</code></li><li><b>02</b><span>creative-system</span><code>proof.creative-dna.v1</code></li><li><b>03</b><span>services</span><code>services.card-grid.v1</code></li><li><b>04</b><span>owner-desk</span><code>operations.booking-desk.v1</code></li><li><b>05</b><span>payment-qr</span><code>payments.owner-qr.v1</code></li><li><b>06</b><span>reviews</span><code>trust.review-grid.v1</code></li><li><b>07</b><span>booking-request</span><code>booking.request-form.v1</code></li></ol></div><aside><small>Recipe fingerprint</small><code>13c9224435995d641dc4fd30a043646ff6164e26ea2b23118c4febcfac6fa696</code><p>All four proof pages below carry this exact recipe. The automated contract normalizes the hero image URL and requires the remaining HTML to hash identically.</p></aside></div></section>
+
+        <section class="component-swap-proof" id="image-proof"><div class="shell"><header><p class="kicker">Controlled experiment 01</p><h2>Four more visual lives.<br><em>No component swap yet.</em></h2><p>Same Velvet Coil copy. Same typography. Same palette. Same nine components. Same fields, services, links, QR disclosure, reviews, form, and footer. Only the hero-media image slot changes.</p></header><div class="swap-grid"><article class="swap-card">
+    <a href="/showcase/booked-and-branded-pilot/component-lab/image-only/01-soft-power/"><img src="/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-a.jpg" alt="Image-only component proof 1" width="1376" height="768"></a>
+    <div><span>01</span><div><small>Only hero-media.src changes</small><h3>Soft Power</h3></div><a class="button" href="/showcase/booked-and-branded-pilot/component-lab/image-only/01-soft-power/">Open identical page <span aria-hidden="true">→</span></a></div>
+  </article><article class="swap-card">
+    <a href="/showcase/booked-and-branded-pilot/component-lab/image-only/02-coil-culture/"><img src="/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-b.jpg" alt="Image-only component proof 2" width="1376" height="768"></a>
+    <div><span>02</span><div><small>Only hero-media.src changes</small><h3>Coil Culture</h3></div><a class="button" href="/showcase/booked-and-branded-pilot/component-lab/image-only/02-coil-culture/">Open identical page <span aria-hidden="true">→</span></a></div>
+  </article><article class="swap-card">
+    <a href="/showcase/booked-and-branded-pilot/component-lab/image-only/03-studio-ritual/"><img src="/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-c.jpg" alt="Image-only component proof 3" width="1376" height="768"></a>
+    <div><span>03</span><div><small>Only hero-media.src changes</small><h3>Studio Ritual</h3></div><a class="button" href="/showcase/booked-and-branded-pilot/component-lab/image-only/03-studio-ritual/">Open identical page <span aria-hidden="true">→</span></a></div>
+  </article><article class="swap-card">
+    <a href="/showcase/booked-and-branded-pilot/component-lab/image-only/04-coil-architecture/"><img src="/showcase/booked-and-branded-pilot/wow-lab/assets/velvet-coil-architecture-hero.webp" alt="Image-only component proof 4" width="1376" height="768"></a>
+    <div><span>04</span><div><small>Only hero-media.src changes</small><h3>Coil Architecture</h3></div><a class="button" href="/showcase/booked-and-branded-pilot/component-lab/image-only/04-coil-architecture/">Open identical page <span aria-hidden="true">→</span></a></div>
+  </article></div></div></section>
+
+        <section class="component-inventory" id="component-inventory"><div class="shell"><header><p class="kicker">The parts drawer</p><h2>Every section becomes<br><em>a reusable mini-template.</em></h2><p>Each card below can later have its own variants while preserving the field contract. A hero can become full-bleed or editorial split; services can become cards or a price list; the data stays portable.</p></header><div class="component-card-grid"><article class="component-card">
+    <div><span>01</span><small>navigation</small></div>
+    <h3>Site Navigation</h3>
+    <code>navigation.site-nav.v1</code>
+    <p>Required in this recipe. Position is locked for this recipe.</p>
+    <ul><li><b>5</b> fields</li><li><b>0</b> media slots</li><li><b>1</b> repeaters</li><li><b>3</b> named parts</li></ul>
+  </article><article class="component-card">
+    <div><span>02</span><small>hero</small></div>
+    <h3>Split Brand Hero</h3>
+    <code>hero.split-brand.v1</code>
+    <p>Required in this recipe. Position is locked for this recipe.</p>
+    <ul><li><b>8</b> fields</li><li><b>1</b> media slots</li><li><b>0</b> repeaters</li><li><b>4</b> named parts</li></ul>
+  </article><article class="component-card">
+    <div><span>03</span><small>proof</small></div>
+    <h3>Creative DNA Strip</h3>
+    <code>proof.creative-dna.v1</code>
+    <p>May be hidden or shown. May move within an allowed region.</p>
+    <ul><li><b>4</b> fields</li><li><b>0</b> media slots</li><li><b>1</b> repeaters</li><li><b>3</b> named parts</li></ul>
+  </article><article class="component-card">
+    <div><span>04</span><small>services</small></div>
+    <h3>Service Card Grid</h3>
+    <code>services.card-grid.v1</code>
+    <p>May be hidden or shown. May move within an allowed region.</p>
+    <ul><li><b>7</b> fields</li><li><b>0</b> media slots</li><li><b>1</b> repeaters</li><li><b>4</b> named parts</li></ul>
+  </article><article class="component-card">
+    <div><span>05</span><small>operations</small></div>
+    <h3>Phone Booking Desk</h3>
+    <code>operations.booking-desk.v1</code>
+    <p>May be hidden or shown. May move within an allowed region.</p>
+    <ul><li><b>8</b> fields</li><li><b>1</b> media slots</li><li><b>4</b> repeaters</li><li><b>6</b> named parts</li></ul>
+  </article><article class="component-card">
+    <div><span>06</span><small>payments</small></div>
+    <h3>Owner Payment QR</h3>
+    <code>payments.owner-qr.v1</code>
+    <p>May be hidden or shown. May move within an allowed region.</p>
+    <ul><li><b>4</b> fields</li><li><b>1</b> media slots</li><li><b>0</b> repeaters</li><li><b>3</b> named parts</li></ul>
+  </article><article class="component-card">
+    <div><span>07</span><small>trust</small></div>
+    <h3>Moderated Reviews</h3>
+    <code>trust.review-grid.v1</code>
+    <p>May be hidden or shown. May move within an allowed region.</p>
+    <ul><li><b>6</b> fields</li><li><b>0</b> media slots</li><li><b>1</b> repeaters</li><li><b>4</b> named parts</li></ul>
+  </article><article class="component-card">
+    <div><span>08</span><small>booking</small></div>
+    <h3>Starter Booking Request</h3>
+    <code>booking.request-form.v1</code>
+    <p>May be hidden or shown. May move within an allowed region.</p>
+    <ul><li><b>5</b> fields</li><li><b>0</b> media slots</li><li><b>2</b> repeaters</li><li><b>7</b> named parts</li></ul>
+  </article><article class="component-card">
+    <div><span>09</span><small>navigation</small></div>
+    <h3>Compact Site Footer</h3>
+    <code>navigation.site-footer.v1</code>
+    <p>Required in this recipe. Position is locked for this recipe.</p>
+    <ul><li><b>4</b> fields</li><li><b>0</b> media slots</li><li><b>0</b> repeaters</li><li><b>2</b> named parts</li></ul>
+  </article></div></div></section>
+
+        <section class="component-next"><div class="shell component-next-grid"><div><p class="kicker">Foundation components next</p><h2>No basics get lost.</h2><p>The proof preserves the current page first. The next additions complete the reusable foundation: story, work gallery, protected contact, location/map/hours, and policies/FAQ.</p></div><ul><li><code>story.about-split.v1</code></li><li><code>gallery.work-grid.v1</code></li><li><code>contact.protected-form.v1</code></li><li><code>location.map-hours.v1</code></li><li><code>trust.policy-faq.v1</code></li></ul></div></section>
+
+        <section class="component-studio-handoff"><div class="shell"><div><p class="kicker">Site Studio translation</p><h2>This becomes a builder—not another pile of pages.</h2><p>Site Studio can store the page recipe, open a component drawer, hide or reorder component instances, edit typed fields, and replace media slots. FAMtastic keeps the quality references, proof delivery, and business/customer history.</p></div><div><a class="button" href="/showcase/booked-and-branded-pilot/research-proof-lab/">Open four researched recipes <span aria-hidden="true">→</span></a><a class="button secondary" href="/showcase/booked-and-branded-pilot/template-lab/">Return to the visual families <span aria-hidden="true">→</span></a><a class="button secondary" href="/showcase/booked-and-branded-pilot/package/">Review the package foundation <span aria-hidden="true">→</span></a></div></div></section>
+      </main>
+</body>
+</html>

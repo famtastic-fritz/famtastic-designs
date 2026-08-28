@@ -11,12 +11,95 @@
 ## 2026-08-28 — Bridge Decoupled Intakes to Native Drupal Views & Webforms Rather Than Re-Inventing Admin Surfaces
 - Observation: Building custom SQL tables and standalone controllers for decoupled APIs works for headless throughput, but bypasses Drupal's native superpowers (Views exposed filters, Webform submissions audit, and built-in email handlers).
 - Guidance: Always provide a `hook_views_data` (`.views.inc`) file for custom pipeline tables and bridge decoupled intake endpoints into Drupal's native `webform_submission` entity so operators can use standard administrative Views and Webform results.
+## 2026-08-27 — Research evidence belongs in the reusable recipe
+
+- Observation: a beautiful research-backed build is not reproducible when its
+  sources and reasoning exist only in an agent conversation or image prompt.
+- Guidance: keep an official source manifest, primary design/accessibility
+  references, clean-room provenance, and a cited component decision ledger next
+  to the recipe. Carry stable decision IDs through rendered proof, Build DNA,
+  and any later Site Studio packet.
+
+## 2026-08-27 — Reference-led images should form a component-ready story
+
+- Observation: a premium hero plus three visual duplicates increases asset
+  count without increasing page value.
+- Guidance: make the premium image the parent art direction, then generate
+  separate environment, process, and result/detail companions from it. Retain
+  prompts, lineage, hashes, and provider truth; native HTML owns all legible
+  text, UI, and calls to action.
+
+## 2026-08-27 — Component architecture belongs in every agent's doctrine
+
+- Observation: the Booked & Branded Component Lab proved a useful model, but a
+  proof-specific document alone would not reliably teach Claude, Codex, Shay,
+  or Site Studio how to preserve a customer's theme during future upgrades.
+- Guidance: use one repository-wide doctrine for site → page recipe → component
+  instance → component → part. Link the same rules from agent entry points,
+  Build DNA, and the Site Studio bridge; keep individual niche registries as
+  implementations and evidence.
+
+## 2026-08-27 — Multi-agent Git work needs explicit synchronization points
+
+- Observation: this feature branch was five commits ahead of its old base while
+  `origin/main` also had five newer commits. Without reading and reconciling the
+  incoming history, either the component work or current Solution Finder,
+  checkout, and proof-access work could have been omitted from the next handoff.
+- Guidance: fetch and inspect remote divergence at task start, before push, and
+  before deploy; preserve understood changes during rebase/merge; rerun tests;
+  and report branch, pushed SHA, merged-main status, and production release
+  evidence separately. Never schedule blind pulls into dirty worktrees.
 
 ## 2026-08-27 — Solution Finder UX: Hero Entry Point & Modal Takeover Beat Embedded Forms
 
 - Observation: A permanently embedded chatbot panel on landing pages consumes excessive screen real estate—especially on mobile—and feels like a traditional form wearing a chat costume. Visitors hesitate to engage because the interface demands answers before demonstrating competence.
 - Guidance: Replace embedded chat widgets with a clean Hero Entry Point that makes a single promise ("See what your market is doing in 20 seconds") with one tap-to-start action. When triggered, open a focused full-screen overlay on mobile and a centered modal sheet on desktop. Structure the consultation to "give before extracting": deliver an instant Local Market Scan within 20 seconds, ask 3 guided scope questions via touch-friendly chips, and materialize the Scope Blueprint artifact with locked pricing directly on screen before asking for an email address.
 
+## 2026-08-27 — Reusable sites need stable component identity below the page
+
+- Observation: the Booked & Branded builder already repeated one HTML function
+  across twelve proofs, but a repeated function alone did not expose which
+  sections could be hidden, moved, split into another page, or independently
+  templated. That made the reuse real in code but invisible to Site Studio.
+- Guidance: model page → section instance → versioned component → field, slot,
+  repeater, and action. Emit stable IDs from the structured recipe, never from
+  CSS position. Prove one controlled variable at a time: the first experiment
+  freezes nine component instances and permits only the hero-media source to
+  change. Later component variants must preserve typed field contracts and
+  Build DNA lineage so a one-page starter can become a multi-page upgrade
+  without visual or content loss.
+
+## 2026-08-27 — Card personality must not break comparison alignment
+
+- Observation: translating and rotating the middle proof card added energy but
+  made the three options read as a broken grid rather than a deliberate set.
+- Guidance: keep card-level geometry aligned when the user's job is comparison.
+  Put visual personality inside the card through imagery, type, texture, shape,
+  and content composition; require desktop top and bottom edge parity in browser
+  QA. Version static stylesheet references when the release surface can retain a
+  previously cached visual defect.
+
+## 2026-08-27 — Marketplace discovery and owned retention can coexist
+
+- Observation: “leave Booksy” is too blunt. Booksy can still produce discovery
+  while an owned site gives the operator brand control, direct rebooking,
+  explicit consent, fresh reviews, referrals, and an upgrade path. Booksy's
+  current Boost model also charges 30% on the first Boost-acquired visit and 0%
+  on later visits, so a permanent direct discount is not automatically cheaper.
+- Guidance: keep the platform live during the pilot, let the operator choose a
+  time-bounded direct incentive or perk, and measure channel, repeat, consent,
+  workload, and completed-appointment outcomes. Never exchange a benefit for a
+  review or market to platform-derived contacts without applicable consent.
+
+## 2026-08-27 — Premium image execution needs three choices and a finish
+
+- Observation: one generated image can satisfy a receipt without proving that
+  the strongest creative direction was explored or selected.
+- Guidance: every premium image position gets three materially different
+  candidates, a documented selection/rejection decision, and a finishing pass
+  for crop, tonal balance, contrast, cleanup, sharpening, and artifacts. Retain
+  all candidates, the finished derivative, prompts, provider truth, cost, and
+  hashes in Build DNA. Native HTML/CSS continues to own readable text and UI.
 
 ## 2026-08-27 — A QR display is not a payment-processing product
 

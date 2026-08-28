@@ -1,6 +1,6 @@
 {
   "schema": "famtastic.booked-branded-creative-system.v2",
-  "revision_id": "booked-branded-v4-20260827",
+  "revision_id": "booked-branded-v5-20260827",
   "shay": {
     "name": "Shay",
     "title": "FAMtastic Designs AI Business Concierge",
@@ -16,8 +16,24 @@
     "price_hypothesis": "$199 one-time launch",
     "hosting_renewal": "$9.99/month beginning in month 13, only after separate recurring authorization",
     "value_message": "The starter should help the owner look better, answer fewer repetitive messages, and make the next booking easier. Optional upgrades arrive only when the extra capability can earn its place.",
+    "website_foundation": [
+      "A custom domain or connection of an owner-controlled existing domain",
+      "One branded forwarding address that delivers into the owner's current inbox",
+      "A protected contact form with a verified delivery destination",
+      "Click-to-call, click-to-text, and owner-approved social links",
+      "Location, service area, business hours, and a map when the business needs one",
+      "Services, starting prices, preparation notes, and policies",
+      "A responsive work gallery with owner-approved images",
+      "One reviewed booking path and the owner's approved payment QR",
+      "Mobile, keyboard, reduced-motion, performance, SSL, and launch checks"
+    ],
     "core": [
       "One custom mobile-first website direction selected from three working proofs",
+      "A custom domain or connection of the owner's existing domain",
+      "One branded forwarding address that delivers to the owner's current inbox",
+      "A protected contact form plus click-to-call, click-to-text, and approved social links",
+      "Location, service area, hours, and a map when needed",
+      "Service, pricing, preparation, policy, and gallery sections",
       "One-owner, one-location phone Booking Desk starter",
       "Up to 12 services with duration, price, preparation, and policy notes",
       "One reviewed starter booking path: keep the current link, connect a personal Google booking page, connect Cal.com, or use request-to-book",
@@ -130,11 +146,90 @@
       "payment.owner_qr_asset": "optional customer-supplied and customer-approved QR image or destination",
       "payment.processed_by_famtastic": false,
       "messaging.mode": ["email", "optional_owner_provider", "none"],
+      "identity.domain": ["new_first_year_domain", "connect_existing_domain"],
+      "identity.forwarding_alias": "one customer-approved alias forwarding to an existing inbox; this is not a hosted mailbox or sending-as setup",
+      "contact.form": "protected contact form with a customer-approved destination and verified delivery before launch",
+      "location.mode": ["service_area", "address_and_map", "appointment_only", "hidden_address"],
+      "foundation.modules": ["services", "pricing", "policies", "gallery", "contact", "location", "booking", "owner_payment_qr"],
       "fees.payment_processing": "paid directly by the business to its chosen provider",
       "fees.optional_messaging": "paid directly by the business to its chosen provider",
       "booking.upgrade_tier": ["starter", "appointment_scheduling", "custom_operations"],
       "commercial_rule": "Never infer or activate an upgrade from a design proof. Record the customer’s choice and required authorization first."
     }
+  },
+  "template_lab": {
+    "status": "reusable concept system; not a customer template selection or activated product",
+    "thesis": "The template is a researched visual grammar and modular business foundation, never a recolored one-page shell.",
+    "shared_modules": [
+      "brand-led multi-section public website",
+      "domain and one forwarding address",
+      "contact, call, text, social, location, hours, and optional map",
+      "services, pricing, preparation, policies, and gallery",
+      "reviewed booking path and owner-controlled payment QR",
+      "phone Booking Desk when request-to-book is selected",
+      "consent-based testimonial moderation",
+      "hosting, SSL, responsive QA, accessibility, and performance checks"
+    ],
+    "families": [
+      {
+        "id": "crown-and-craft",
+        "business_slug": "coastline-crown-barbers",
+        "name": "Crown & Craft",
+        "signal": "Precision earned, not announced.",
+        "material_asset": "crown-craft-material.webp",
+        "material_language": ["blackened steel", "debossed oxblood leather", "walnut grain", "salt-air shadow", "brass glint"],
+        "motif_language": ["crown arc", "taper line", "chair ring", "clipper calibration"],
+        "type_composition": "Large serif authority collides with compact technical labels and engraved numerals.",
+        "module_shape": "Framed slabs, low arches, precise hairlines, and circular appointment seals.",
+        "adaptation_rule": "Research the shop's real craft, neighborhood, chair count, and culture before choosing which motif survives."
+      },
+      {
+        "id": "coil-and-clay",
+        "business_slug": "velvet-coil-atelier",
+        "name": "Coil & Clay",
+        "signal": "Texture is the signature.",
+        "material_asset": "coil-clay-material.webp",
+        "material_language": ["hand-troweled clay", "raw linen", "cocoa satin", "botanical shadow", "warm cream"],
+        "motif_language": ["coil spiral", "parting grid", "braided contour", "comb rhythm"],
+        "type_composition": "Editorial serif phrases move through quiet sans-serif service facts like a consultation conversation.",
+        "module_shape": "Layered organic panels, soft folds, cropped circles, and rhythmic grids.",
+        "adaptation_rule": "The visual system must follow the stylist's actual texture specialties and care philosophy, never a generic beauty moodboard."
+      },
+      {
+        "id": "palmera-press",
+        "business_slug": "palmera-fade-society",
+        "name": "Palmera Press",
+        "signal": "Neighborhood energy, cut sharp.",
+        "material_asset": "palmera-press-material.webp",
+        "material_language": ["sun-faded stucco", "risograph ink", "torn poster edge", "chrome slash", "terrazzo"],
+        "motif_language": ["palm fan", "registration mark", "fade gradient", "service ribbon"],
+        "type_composition": "Oversized campaign type, tight utility labels, and optional bilingual content share one disciplined grid.",
+        "module_shape": "Torn fields, diagonal bands, crisp cards, offset ink, and hard-working service strips.",
+        "adaptation_rule": "Language, neighborhood, and cultural signals come from the owner and research; the system never assumes ethnicity from a template."
+      },
+      {
+        "id": "saltline-prism",
+        "business_slug": "saltline-color-house",
+        "name": "Saltline Prism",
+        "signal": "Color, calibrated by light.",
+        "material_asset": "saltline-prism-material.webp",
+        "material_language": ["pearl laminate", "sea-glass blue", "translucent swatch film", "brushed gold", "soft plaster"],
+        "motif_language": ["color ribbon", "shoreline wave", "prismatic arc", "blue glass block"],
+        "type_composition": "Airy editorial scale meets crisp consultation details and chromatic accent words.",
+        "module_shape": "Luminous planes, long curves, transparent cards, and gallery-led crop windows.",
+        "adaptation_rule": "Palette and imagery follow the colorist's real work, client goals, and studio light rather than a generic luxury salon palette."
+      }
+    ],
+    "growth_layer": [
+      "Hosted mailbox and sending as the branded address through the existing Business Email Setup add-on",
+      "Appointment Scheduling add-on for deeper calendar configuration",
+      "Extra pages, team or multi-location structures, and expanded galleries",
+      "Local SEO, analytics, lead follow-up, and conversion reporting",
+      "Owner-provider reminders or messaging with provider costs paid directly by the business",
+      "Maintenance, seasonal campaigns, retention flows, and AI customer assistance"
+    ],
+    "media_authority": "Generated materials and optional motion are supporting assets. Native HTML and CSS own all readable copy, prices, controls, forms, maps, accessibility, and responsive layout.",
+    "motion_extension": "HyperFrames may later turn the approved motif grammar into reduced-motion-safe launch loops or social explainers; it is optional and cannot publish or alter commercial truth."
   },
   "commercial_truth": {
     "starter_source": "backend/config/famtastic-products.json#FAM-FOOT-199",

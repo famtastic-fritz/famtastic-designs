@@ -1,0 +1,44 @@
+{
+  "schema": "famtastic.research-source-manifest.v1",
+  "captured_on": "2026-08-27",
+  "notebooklm": {
+    "status": "blocked_no_notebook_share_url",
+    "authenticated": true,
+    "registered_notebook_count": 0,
+    "next_action": "Register a user-supplied NotebookLM share URL, confirm its title and description, then import these exact sources and questions."
+  },
+  "market_sources": [
+    { "id": "booksy-features", "publisher": "Booksy", "url": "https://biz.booksy.com/features", "use": "Current US feature, booking, marketplace, QR, widget, calendar, client-management, and mobile-operation baseline." },
+    { "id": "booksy-boost", "publisher": "Booksy", "url": "https://biz.booksy.com/features/boost", "use": "Optional Boost marketplace exposure and current one-time 30% first-visit commission disclosure." },
+    { "id": "square-pricing", "publisher": "Square", "url": "https://squareup.com/us/en/appointments/pricing", "use": "Booking site, widget, button, QR, waitlist, wallet, deposit, and calendar integration baseline." },
+    { "id": "square-booking", "publisher": "Square", "url": "https://squareup.com/help/us/en/article/5355-set-up-online-booking-with-square-appointments", "use": "Official proof that an external booking site, button, or widget can sit behind an existing website." },
+    { "id": "fresha-pricing", "publisher": "Fresha", "url": "https://www.fresha.com/pricing", "use": "Independent-plan and marketplace-fee comparison; current new-client commission and returning-client boundary." },
+    { "id": "fresha-marketplace-fee", "publisher": "Fresha", "url": "https://www.fresha.com/help-center/knowledge-base/billing-and-fees/188-marketplace-new-client-fees", "use": "Official details on marketplace discovery, client-source tracking, and first-visit fee behavior." },
+    { "id": "glossgenius-pricing", "publisher": "GlossGenius", "url": "https://glossgenius.com/pricing", "use": "Current plan and bundled booking-site, operations, marketing, and payment feature baseline." },
+    { "id": "vagaro-pricing", "publisher": "Vagaro", "url": "https://www.vagaro.com/pro/pricing", "use": "Current marketplace, booking, calendar, reminders, client data, and monthly-plan baseline." }
+  ],
+  "design_sources": [
+    { "id": "tuch-2012", "title": "The role of visual complexity and prototypicality regarding first impression of websites", "url": "https://research.google/pubs/the-role-of-visual-complexity-and-prototypicality-regarding-first-impression-of-websites-working-towards-understanding-aesthetic-judgments/", "use": "Control visual complexity while preserving recognizable website structure." },
+    { "id": "bar-neta-2006", "title": "Humans Prefer Curved Visual Objects", "url": "https://doi.org/10.1111/j.1467-9280.2006.01759.x", "use": "Use curvature deliberately for welcome, care, and consultation contexts; do not treat it as a universal conversion law." },
+    { "id": "reber-2004", "title": "Processing Fluency and Aesthetic Pleasure", "url": "https://psy2.ucsd.edu/~pwinkiel/reber-schwarz-winkielman-beauty-PSPR-2004.pdf", "use": "Use hierarchy, contrast, symmetry, repetition, and familiar patterns to make expressive composition easier to process." },
+    { "id": "shaikh-chaparro-2005", "title": "The Effects of Line Length on Reading Performance of Online News Articles", "url": "https://journals.sagepub.com/doi/10.1177/154193120504900514", "use": "Treat reading measure as a tested variable instead of repeating a universal typography myth." },
+    { "id": "hernandez-resnick-2013", "title": "Placement of Call to Action Buttons for Higher Website Conversion and Acquisition", "url": "https://journals.sagepub.com/doi/abs/10.1177/1541931213571232", "use": "Place the primary next action in a predictable scan path and repeat it after decision-supporting content." },
+    { "id": "wcag-target-size", "title": "WCAG 2.2 Target Size Minimum", "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html", "use": "Keep mobile targets at least 24 by 24 CSS pixels or provide sufficient spacing; important actions exceed the minimum." },
+    { "id": "wcag-motion", "title": "WCAG 2.2 Animation from Interactions", "url": "https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html", "use": "Disable nonessential interaction motion when the user requests reduced motion." },
+    { "id": "wcag-pause", "title": "WCAG 2.2 Pause, Stop, Hide", "url": "https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html", "use": "Do not let auto-moving content become required reading or an unpausable distraction." }
+  ],
+  "kimi_source": {
+    "kind": "user-supplied-conversation-transcript",
+    "sha256": "0788fb3f4ef145a194c761a4ef054b78ec97fa6c66de7fff0b6dbf18d64dffd9",
+    "live_preview_url": "https://hmuzva3y6vhakee.kimi.page/",
+    "live_preview_status": "unreachable_connection_reset_on_2026-08-27",
+    "use": "Clean-room extraction of reusable patterns only; no copied implementation or visual-parity claim."
+  },
+  "notebook_questions": [
+    "Which capabilities do booking marketplaces already perform well enough that FAMtastic should integrate rather than duplicate?",
+    "Which owner-brand, direct-relationship, local-presence, and experience gaps remain after a marketplace profile is complete?",
+    "Which claims are vendor facts, which are vendor marketing claims, and which require independent customer evidence?",
+    "For each page component, what user question does it answer and which source supports its placement or behavior?",
+    "Which design heuristics are supported, which are context-dependent, and which should be tested rather than stated as truth?"
+  ]
+}

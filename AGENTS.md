@@ -37,6 +37,17 @@ updated, say so explicitly in the session report rather than skipping silently.
   locations as each stage happens. Register the Drupal projection before an
   eligible handoff and copy the same record into the Site Studio packet. Never
   guess missing model identity, duration, cost, prompt, or session information.
+- For every website template, one-page starter, component library, or
+  one-page-to-multi-page upgrade, follow
+  `docs/architecture/FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1.md`. Treat pages as
+  ordered recipes of stable component instances; treat media as slot bindings;
+  preserve visual and Build DNA continuity during upgrades. A one-page build is
+  a starting recipe, not a permanent architecture.
+- For research-backed niche recipes, also follow
+  `docs/research/BOOKED_BRANDED_RESEARCH_PROOF_V1.md`: freeze official market
+  sources, primary design/accessibility sources, clean-room provenance, and a
+  component-decision ledger. Research informs composition; it never becomes an
+  unsupported color, emotion, behavior, or conversion guarantee.
 - Route designed motion, proof walkthroughs, and reusable social cutdowns through
   HyperFrames; route fast, draft-only narrated social/video assemblies through
   MoneyPrinterTurbo. Neither tool is a publishing authority or a substitute for
@@ -105,6 +116,9 @@ updated, say so explicitly in the session report rather than skipping silently.
 - Treat `frontend/dist/` as generated output. Change `frontend/src/`, rebuild,
   commit the source change, and deploy the exact committed SHA.
 - Follow `docs/SOURCE_OF_TRUTH.md` when adding tooling or documentation.
+- Follow `docs/GIT_SYNC_AND_RELEASE_DISCIPLINE.md`: fetch and inspect incoming
+  commits at task start, before push, and before deploy. A pushed feature branch
+  is not production, and no agent may auto-pull a dirty worktree or `public_html`.
 
 ## Production Frontend
 

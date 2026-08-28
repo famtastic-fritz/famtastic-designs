@@ -1,0 +1,80 @@
+{
+  "schema": "famtastic.component-system-proof.v1",
+  "generated_at": "2026-08-28T00:17:15.545Z",
+  "page_template_id": "booked-branded-one-page-v1",
+  "component_count": 9,
+  "variant_count": 4,
+  "allowed_change": "hero-media.src",
+  "normalized_html_sha256": "b86b1d4a1751a626efbb1e527515b39210cd4c96db4bfeaf81d88169e14a8aec",
+  "passed": true,
+  "variants": [
+    {
+      "variant_id": "01-soft-power",
+      "route": "component-lab/image-only/01-soft-power/index.html",
+      "media_src": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-a.jpg",
+      "component_signature": [
+        "primary-navigation:navigation.site-nav.v1:inline",
+        "brand-hero:hero.split-brand.v1:direction-led",
+        "creative-system:proof.creative-dna.v1:four-column",
+        "services:services.card-grid.v1:three-up",
+        "owner-desk:operations.booking-desk.v1:phone-and-flow",
+        "payment-qr:payments.owner-qr.v1:direct-to-business",
+        "reviews:trust.review-grid.v1:moderated-two-up",
+        "booking-request:booking.request-form.v1:starter",
+        "site-footer:navigation.site-footer.v1:compact"
+      ],
+      "normalized_html_sha256": "b86b1d4a1751a626efbb1e527515b39210cd4c96db4bfeaf81d88169e14a8aec"
+    },
+    {
+      "variant_id": "02-coil-culture",
+      "route": "component-lab/image-only/02-coil-culture/index.html",
+      "media_src": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-b.jpg",
+      "component_signature": [
+        "primary-navigation:navigation.site-nav.v1:inline",
+        "brand-hero:hero.split-brand.v1:direction-led",
+        "creative-system:proof.creative-dna.v1:four-column",
+        "services:services.card-grid.v1:three-up",
+        "owner-desk:operations.booking-desk.v1:phone-and-flow",
+        "payment-qr:payments.owner-qr.v1:direct-to-business",
+        "reviews:trust.review-grid.v1:moderated-two-up",
+        "booking-request:booking.request-form.v1:starter",
+        "site-footer:navigation.site-footer.v1:compact"
+      ],
+      "normalized_html_sha256": "b86b1d4a1751a626efbb1e527515b39210cd4c96db4bfeaf81d88169e14a8aec"
+    },
+    {
+      "variant_id": "03-studio-ritual",
+      "route": "component-lab/image-only/03-studio-ritual/index.html",
+      "media_src": "/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-c.jpg",
+      "component_signature": [
+        "primary-navigation:navigation.site-nav.v1:inline",
+        "brand-hero:hero.split-brand.v1:direction-led",
+        "creative-system:proof.creative-dna.v1:four-column",
+        "services:services.card-grid.v1:three-up",
+        "owner-desk:operations.booking-desk.v1:phone-and-flow",
+        "payment-qr:payments.owner-qr.v1:direct-to-business",
+        "reviews:trust.review-grid.v1:moderated-two-up",
+        "booking-request:booking.request-form.v1:starter",
+        "site-footer:navigation.site-footer.v1:compact"
+      ],
+      "normalized_html_sha256": "b86b1d4a1751a626efbb1e527515b39210cd4c96db4bfeaf81d88169e14a8aec"
+    },
+    {
+      "variant_id": "04-coil-architecture",
+      "route": "component-lab/image-only/04-coil-architecture/index.html",
+      "media_src": "/showcase/booked-and-branded-pilot/wow-lab/assets/velvet-coil-architecture-hero.webp",
+      "component_signature": [
+        "primary-navigation:navigation.site-nav.v1:inline",
+        "brand-hero:hero.split-brand.v1:direction-led",
+        "creative-system:proof.creative-dna.v1:four-column",
+        "services:services.card-grid.v1:three-up",
+        "owner-desk:operations.booking-desk.v1:phone-and-flow",
+        "payment-qr:payments.owner-qr.v1:direct-to-business",
+        "reviews:trust.review-grid.v1:moderated-two-up",
+        "booking-request:booking.request-form.v1:starter",
+        "site-footer:navigation.site-footer.v1:compact"
+      ],
+      "normalized_html_sha256": "b86b1d4a1751a626efbb1e527515b39210cd4c96db4bfeaf81d88169e14a8aec"
+    }
+  ]
+}

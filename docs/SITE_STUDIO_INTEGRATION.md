@@ -12,6 +12,26 @@ than acting as one all-purpose model. The future `website_build_brief.v2`
 extends the present prospect-safe proof payload; it does not retroactively
 upgrade historical image-free pilots or unproven provider routes.
 
+## Page recipe and component handoff
+
+All new Site Studio-bound site builds follow
+`docs/architecture/FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1.md`. The selected
+handoff should carry a versioned component-system reference, the exact page
+recipe snapshot, stable component-instance IDs, component definition/variant
+IDs, and typed field, slot, repeater, and action bindings. The same snapshot is
+hash-addressed in Build DNA.
+
+Site Studio consumes the selected recipe as immutable build context. It may
+compile the components into its supported runtime and journal the real work,
+but it must not infer identity from rendered DOM position, silently change the
+selected visual system, or rerun research merely because a receipt is present.
+Moving an existing instance from a one-page recipe to a multi-page recipe must
+preserve its identity and bindings so upgrades do not lose theme or quality.
+
+The Booked & Branded Component Lab is current local evidence for this handoff
+shape; Site Studio import and returned continuation are still unproven and must
+not be reported as integrated until a real packet round-trip succeeds.
+
 ## Modes
 
 - Offline local mode: production Drupal creates a private request and a

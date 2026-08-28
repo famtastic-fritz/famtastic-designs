@@ -25,6 +25,141 @@
 - Added `Daily Dispatch` tab to Marketing Command Center (`/admin/famtastic/marketing/dispatch`) providing a unified multi-channel day-by-day command screen across Facebook, YouTube, TikTok, Instagram, and X with 4 daily moment cards, visual asset previews (4x5 & 9x16), copy hooks, and 1-click batch gate approvals.
 - Added secure campaign asset endpoint (`/admin/famtastic/marketing/asset/{filename}`) to serve visual creative artwork directly within the dispatch interface.
 - Enhanced Marketing Command Center's Email Center tab with live status metrics for sent, queued, and retry/dead-letter notifications.
+## 2026-08-27 — Booked & Branded research proof and four new recipes
+
+- Added four original one-page template recipes for distinct grooming/beauty
+  emotional jobs, each retaining the complete owned-site foundation, current-
+  provider booking bridge, phone-oriented owner concept, Shay explanation, and
+  explicit upgrade path.
+- Added an official-source competitor map, primary design/accessibility source
+  manifest, and a sixteen-record component decision ledger. Color, shape,
+  motion, and CTA research is labeled by confidence and limitation rather than
+  presented as a conversion guarantee.
+- Extracted only portable patterns from the user-supplied Kimi transcript and
+  recorded its SHA-256 and exclusions; no Kimi HTML, CSS, prompts, or image
+  bytes were copied, and the unavailable live page was not represented as
+  visually verified.
+- Generated four premium parent compositions and twelve separately generated
+  reference-led companions, retaining source PNGs, WebP deliveries, prompts,
+  parent lineage, and hashes. The provider did not report model/cost, so the
+  receipt does not falsely label companions as cheaper.
+- Added a Research Proof Lab, machine-readable component registry, repeatable
+  builder/tests, and Playwright evidence across five pages at desktop/mobile.
+  No prospect, email, provider connection, Site Studio import, production
+  deployment, or publication occurred.
+
+## 2026-08-27 — Page/component doctrine and Git sync discipline
+
+- Promoted the Booked & Branded page/component proof into a general FAMtastic
+  doctrine: every site is composed from page recipes, stable component
+  instances, versioned components, typed bindings, and named parts; a one-page
+  site is a starter recipe rather than a permanent architecture.
+- Linked the doctrine through Claude, Codex, the shared agent contract, Build
+  DNA, Site Studio integration, the Gandalf bridge, and repository source-of-
+  truth guidance so all build agents receive the same continuity rules.
+- Added an explicit Git synchronization and release contract requiring agents
+  to fetch, inspect incoming commits, reconcile deliberately, test, and push
+  reviewed work. A pushed feature branch remains distinct from an approved
+  `origin/main` SHA and a browser-proven production deployment.
+- Rebased the component proof branch onto the five newer `origin/main` commits,
+  preserving the Solution Finder, proof-access, and checkout changes alongside
+  the component work. No deployment or production mutation occurred.
+
+## 2026-08-27 — Booked & Branded page/component/part proof
+
+- Converted the twelve working proof pages from one embedded page function to
+  a versioned one-page recipe with nine stable section-component instances and
+  explicit page, section, component, field, slot, repeater, and action identity.
+- Added a Component Lab that documents page → section → component → part,
+  implemented versus planned components, hide/reorder/media rules, and the
+  additive Site Studio translation boundary.
+- Added four Velvet Coil image-only pages that freeze all copy, typography,
+  palette, sections, fields, links, controls, ordering, and component variants;
+  only the `hero-media.src` binding changes across the four existing images.
+- Added a deterministic contract test requiring all four normalized pages to
+  share one SHA-256 hash and the same nine component signatures. No provider
+  call, image generation, email, customer record, deployment, or production
+  surface changed.
+
+## 2026-08-27 — Booked & Branded room-card alignment
+
+- Removed the desktop-only vertical/rotational transform that pushed Direction
+  B below Directions A and C in every three-proof room.
+- Versioned the static showcase stylesheet reference so an already-open browser
+  does not keep rendering the removed transform from cache.
+- Added browser regression coverage across all four concept rooms requiring the
+  three desktop cards to share the same top and bottom edges.
+- No proof content, image, product, price, email, deployment, or production
+  surface changed.
+
+## 2026-08-27 — Booksy-to-Owned Growth Bridge strategy
+
+- Reframed Booked & Branded as “Booksy for discovery; your website for
+  ownership,” with a controlled Tighten Up Your Locs founding case study rather
+  than an unsupported rip-and-replace promise.
+- Added first-visit versus repeat-visit incentive economics, a consented owned-
+  client growth loop, and an existing-catalog upgrade ladder while preserving
+  the proposed $199 starter and current product prices.
+- Named Shay AI the FAMtastic Designs AI Business Growth Guide and preserved the
+  human authority boundary for price, scope, approval, payment, launch, and
+  customer communication.
+- Defined six reusable niche visual families and a premium rule requiring three
+  materially different candidates, selection rationale, a finishing pass, and
+  complete Build DNA evidence for every premium image position.
+- Updated the initial outreach email to show how the platform and owned site can
+  coexist. No live price, product, campaign, email, customer record, image run,
+  deployment, or production surface changed.
+
+## 2026-08-27 — Velvet Coil Ultra quality study
+
+- Kept the existing Booked & Branded proof rooms and four Template Lab families
+  as reusable functional baselines, then added a separate quality study rather
+  than disguising another hero swap as a new direction.
+- Reapplied the benchmark method from the FAMU Hill Brief, Strike Network, and
+  Serpent Signal work: one dominant metaphor, compositional typography, a
+  bespoke art world, and a distinct information architecture. “Every Coil Is
+  Architecture” is organized as a Texture Atlas, Consultation Blueprint, Care
+  Lab, Atelier Console, and booking ritual instead of the baseline repeated
+  service/review/QR stack.
+- Generated one reference-led 16:9 hero with the built-in image generation
+  tool. The exact prompt, owned fictional reference hash, provider-original PNG,
+  optimized WebP, and output hashes are retained. Provider model and cost were
+  not reported; no customer data, paid external-provider call, email, booking,
+  payment, deployment, or production action occurred.
+- Preserved the complete starter foundation inside the concept: custom domain,
+  branded forwarding email, contact form, service area or map, current booking
+  bridge, services, consultation, and the owner's own payment QR. FAMtastic
+  does not process or receive the payment.
+- Local acceptance passed 24 routes at 1440px and 390px, 23 copy contracts, 48
+  viewport checks, and 20 retained screenshots. The Ultra study is local-only;
+  the already-published proof rooms remain unchanged.
+
+## 2026-08-27 — Booked & Branded reusable Template Lab
+
+- Added four materially different, research-led template families around the
+  existing fictional proof businesses: Crown & Craft, Coil & Clay, Palmera
+  Press, and Saltline Prism. Each records its own texture, motif, typography,
+  shape, and adaptation rules; the current proof rooms remain intact.
+- Created four reference-led material fields with the built-in image generation
+  tool and retained a no-customer-data receipt with provider/model/cost truth.
+  Native HTML and CSS continue to own all readable text, pricing, controls,
+  forms, maps, accessibility, and responsive layout.
+- Restored the complete website foundation to the proposed $199 Booked &
+  Branded scope: domain, one branded forwarding address into the existing
+  inbox, protected contact form, call/text/social, location and map when
+  needed, services, prices, preparation, policies, gallery, booking, owner QR,
+  hosting, SSL, responsive/accessibility/performance checks, and launch QA.
+- Positioned Booksy and other existing booking providers as valid day-one
+  bridges behind the owned branded front door. Deeper scheduling, hosted
+  mailbox/sending-as, reminders, SEO, analytics, maintenance, automation, and
+  AI help remain evidence-led upgrades rather than surprise requirements.
+- Added a vendor-neutral Site Studio translation contract for identity,
+  forwarding alias, contact form, location modes, foundation modules, booking,
+  owner QR, upgrade tiers, media authority, and optional HyperFrames motion.
+- Local acceptance passed 23 routes at 1440px and 390px, 22 copy contracts, 46
+  viewport checks, and 16 retained screenshots. The Template Lab is local-only;
+  no production deploy, email, booking account, payment, or customer record was
+  created by this revision.
 
 ## 2026-08-27 — Booked & Branded owner-QR payment boundary
 

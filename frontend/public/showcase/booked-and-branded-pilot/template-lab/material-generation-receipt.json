@@ -1,0 +1,53 @@
+{
+  "schema": "famtastic.reference-led-material-generation.v1",
+  "request_id": "booked-branded-v5-20260827-template-materials",
+  "completed_at": "2026-08-27T20:59:56Z",
+  "provider": "openai-imagegen-builtin",
+  "model_status": "provider_did_not_report",
+  "cost_status": "provider_did_not_report",
+  "execution_class": "connected_image_generation_tool",
+  "asset_rule": "Generated material fields provide atmosphere and crop-ready texture only. Native HTML and CSS retain authority for typography, controls, prices, maps, accessibility, forms, and business claims.",
+  "shared_exclusions": [
+    "readable text",
+    "letters",
+    "logos",
+    "user interface",
+    "QR codes",
+    "watermarks",
+    "generic beauty or barber clip art"
+  ],
+  "artifacts": [
+    {
+      "family_id": "crown-and-craft",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/coastline-crown.webp",
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/crown-craft-material.webp",
+      "sha256": "5704006090ba513b3f9af0fc02bf0579c68496190ab2f1cdd9777bd67e784027",
+      "prompt_intent": "Blackened steel, oxblood leather, walnut, brass, crown arc, taper line, and chair-ring material system."
+    },
+    {
+      "family_id": "coil-and-clay",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/velvet-coil.webp",
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/coil-clay-material.webp",
+      "sha256": "d1c5cd15c7437a2f6ad653fdb0580f8bfca6f7677fda70b1a6ffd36bd4cd759a",
+      "prompt_intent": "Clay plaster, raw linen, cocoa satin, coil spiral, braided contour, and parting-grid material system."
+    },
+    {
+      "family_id": "palmera-press",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/palmera-fade.webp",
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/palmera-press-material.webp",
+      "sha256": "86488e3cb111b1c3ffd7718ef77001ece6c9e77ce50803124a8e445f8cf2fd36",
+      "prompt_intent": "Sun-faded stucco, risograph ink, torn poster, chrome, terrazzo, palm fan, and registration-mark material system."
+    },
+    {
+      "family_id": "saltline-prism",
+      "reference_path": "frontend/public/showcase/booked-and-branded-pilot/assets/saltline-color.webp",
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/assets/saltline-prism-material.webp",
+      "sha256": "94bdd29e7c1ba0aea8b38816266e655e9c7184d92853d14f294f39ab0194d3d9",
+      "prompt_intent": "Pearl laminate, sea glass, swatch film, brushed gold, prismatic arc, color ribbon, and blue-glass material system."
+    }
+  ],
+  "credentials_retained": false,
+  "customer_data_used": false,
+  "image_generation_budget_authorized": false,
+  "notes": "Generated through the built-in image generation tool. No paid external Gemini, OpenArt, HeyGen, HyperFrames, or other provider job was invoked for this material set."
+}
