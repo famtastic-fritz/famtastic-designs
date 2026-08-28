@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-28 — Preserve an approved direction before making a bolder fork
+
+- Observation: visual refinement was initially applied directly to an already
+  approved Alex prototype even though the original had independent value as a
+  functional, restrained direction.
+- Guidance: preserve approved routes and device state, then create a versioned
+  sibling when composition, texture, typography, or operational components
+  materially change. Keep the parent available in the lab, label the new
+  direction, and verify that the parent remains byte-for-byte unchanged.
+
 ## 2026-08-28 — Modular Customer Portal Architecture with Governed AI Assistance Beats Monolithic Dashboards
 - Observation: Housing 14+ customer lifecycle surfaces, guided multi-step brief wizards, proof review iframes, file management, and message threads inside a monolithic 500-line React component created code bloat and made individual subviews difficult to test, maintain, and evolve.
 - Guidance: Structure the customer portal into dedicated modular sub-components under `components/portal/` coordinated by a single thin dashboard orchestrator. Keep the AI boundary explicit: Shay and AI assistants may summarize briefs, answer product questions, and draft support requests, but must never autonomously mutate accounts, alter billing, send messages, or approve deployments. Always maintain strict CSS containment guards (`.portal-app{overflow-x:clip}`, `.portal-grid > * { min-width: 0; }`, `.portal-conversation { overflow: hidden; }`) to guarantee flawless mobile viewport rendering.

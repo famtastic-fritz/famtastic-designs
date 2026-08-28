@@ -1,0 +1,87 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "alex-touch-signal-cut-v2-20260828",
+  "classification": "real-subject-functional-sales-prototype",
+  "created_at": "2026-08-28T19:58:53Z",
+  "repository": {
+    "name": "FAMtastic",
+    "revision": "0d0df88b28c4f730562a1c58ad34de026e902c39",
+    "worktree_state": "source_revision_before_artifact_commit"
+  },
+  "recipe": {
+    "routine": "website_proof.generate.v1",
+    "version": "alex-touch-signal-cut.v2",
+    "build_class": "selected-direction-refinement",
+    "parent_prototype": "../alex-touch-prototype/",
+    "page_recipe": ["hero", "reputation", "services", "work", "location-contact-booking"],
+    "component_system_ref": "../component-system.json"
+  },
+  "stages": [
+    {
+      "stage_id": "visual-system-refinement",
+      "attempt": 1,
+      "capability": "shape-type-texture-color-composition",
+      "execution": {
+        "provider": {"id": "famtastic-local-builder"},
+        "model": {"status": "not_applicable"},
+        "timing": {"status": "not_metered"},
+        "cost": {"status": "not_applicable", "amount_usd": 0},
+        "input": {"parent": "alex-touch-port-st-lucie", "new_image_generation": false}
+      },
+      "result": {"status": "completed", "direction": "signal_cut_v2"}
+    },
+    {
+      "stage_id": "foundation-wiring",
+      "attempt": 1,
+      "capability": "location-contact-device-local-request-desk",
+      "execution": {
+        "provider": {"id": "famtastic-local-builder"},
+        "model": {"status": "not_applicable"},
+        "timing": {"status": "not_metered"},
+        "cost": {"status": "not_applicable", "amount_usd": 0}
+      },
+      "result": {
+        "status": "completed",
+        "durable_backend": false,
+        "external_send": false,
+        "map_source": "OpenStreetMap",
+        "location_confirmation_required": true
+      }
+    },
+    {
+      "stage_id": "browser-qa",
+      "attempt": 1,
+      "capability": "desktop-mobile-functional-proof",
+      "execution": {
+        "provider": {"id": "playwright-local-chromium"},
+        "model": {"status": "not_applicable"},
+        "timing": {"status": "completed_at", "completed_at": "2026-08-28T19:58:53Z"},
+        "cost": {"status": "not_applicable", "amount_usd": 0}
+      },
+      "result": {
+        "status": "completed",
+        "viewports": ["1440x1000", "390x844"],
+        "horizontal_overflow": 0,
+        "console_errors": 0,
+        "contact_to_owner_flow": "passed",
+        "v1_preservation": "passed"
+      }
+    }
+  ],
+  "artifacts": [
+    {"role": "public-page", "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/index.html", "sha256": "26fa5a7b5de234b2126c95a9de557efaacf0ac0456781330c4ce4295d390bf7d"},
+    {"role": "owner-page", "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/owner/index.html", "sha256": "a7def876a288002faeca43d2dc794eaab27fc58173505379d8f7b81e8f9375b4"},
+    {"role": "visual-system", "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/prototype.css", "sha256": "e863d6499dd82c68933c5f6d28a87a555a4e7928621c0a0abfa7854152decba6"},
+    {"role": "interaction-system", "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/prototype.js", "sha256": "a32ec14a864b452f6f53fd83711097b6f087b560c162abbfc650240e8acafe51"},
+    {"role": "prototype-manifest", "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/prototype-manifest.json", "sha256": "7ecaccd6603387c8b12749b631b9cd35304e702feac5cb271eae866750bef5e9"}
+  ],
+  "retrieval": {
+    "filesystem": {"status": "available", "root": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/"},
+    "database": {"status": "not_registered", "reason": "showcase prototype only"},
+    "site_studio": {"status": "not_handed_off", "reason": "lab proof precedes immutable packet"}
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256",
+    "parent_v1_modified": false
+  }
+}

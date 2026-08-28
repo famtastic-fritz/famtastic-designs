@@ -1,5 +1,23 @@
 # Product changelog
 
+## 2026-08-28 — Alex Signal Cut V2 refinement
+
+- Preserved the production-proven Alex V1 prototype byte-for-byte and created
+  `alex-touch-prototype-v2` as a separately addressable design direction.
+- Replaced the internal ownership-positioning quote with client-facing proof
+  language and pushed the V2 visual system through more explicit type
+  collision, offset geometry, tactile grain, linework, signal color, and
+  reduced-motion-safe animation.
+- Added a source-labeled Floresta Centre map and an on-page contact form; both
+  the contact form and booking dialog now feed the V2 same-device Touch Control
+  request desk without sending email, text, payment, or calendar activity.
+- Added editable V2 location fields to the owner prototype, linked both Alex
+  versions from the Booked & Branded overview and Component Lab, and recorded a
+  validated Build DNA refinement record.
+- Browser-checked V2 at 1440×1000 and 390×844 with zero horizontal overflow or
+  console errors, verified contact-to-owner flow, and separately proved V1 was
+  unchanged.
+
 ## 2026-08-28 — Alex independent-chair functional prototype
 
 - Added a five-section, subject-specific Booked & Branded sales prototype for

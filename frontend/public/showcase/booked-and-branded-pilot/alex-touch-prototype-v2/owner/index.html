@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Touch Control V2 — Alex Owner Prototype</title>
+  <meta name="description" content="A phone-friendly functional owner-console prototype for Alex.">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <link rel="icon" href="../assets/brand-leather.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../prototype.css">
+</head>
+<body data-view="owner" class="owner-body">
+  <div class="preview-ribbon"><b>Signal Cut V2 · Prototype mode</b><span>Changes save only on this device. No customer, calendar, message, or payment system is connected.</span></div>
+  <div class="owner-shell">
+    <aside class="owner-sidebar">
+      <a class="wordmark" href="../"><span>TOUCH</span><small>CONTROL</small></a>
+      <div class="owner-profile"><div class="owner-avatar">A</div><div><b>Alex</b><span>Independent barber</span></div></div>
+      <nav aria-label="Owner console">
+        <button class="owner-tab active" type="button" data-owner-tab="dashboard"><span>01</span>Today</button>
+        <button class="owner-tab" type="button" data-owner-tab="requests"><span>02</span>Requests</button>
+        <button class="owner-tab" type="button" data-owner-tab="services"><span>03</span>Services</button>
+        <button class="owner-tab" type="button" data-owner-tab="hours"><span>04</span>Hours</button>
+        <button class="owner-tab" type="button" data-owner-tab="links"><span>05</span>Links + QR</button>
+      </nav>
+      <a class="owner-public-link" href="../">Preview public site ↗</a>
+    </aside>
+
+    <main class="owner-main">
+      <header class="owner-header"><div><p class="eyebrow"><span>TOUCH CONTROL</span> Mobile owner prototype</p><h1>GOOD AFTERNOON,<br><em>ALEX.</em></h1></div><button id="reset-demo" class="ghost-button" type="button">Reset sample data</button></header>
+
+      <section class="owner-panel active" data-owner-panel="dashboard">
+        <div class="owner-stats">
+          <article><small>Open requests</small><b id="stat-open">3</b><span>waiting on you</span></article>
+          <article><small>Confirmed</small><b id="stat-confirmed">1</b><span>prototype count</span></article>
+          <article><small>Services live</small><b id="stat-services">4</b><span>on the public page</span></article>
+        </div>
+        <div class="owner-grid">
+          <article class="owner-card large"><header><div><small>Next up</small><h2>REQUEST QUEUE</h2></div><button class="text-button" type="button" data-jump-tab="requests">View all ↗</button></header><div id="dashboard-requests" class="request-list"></div></article>
+          <article class="owner-card"><small>Public front door</small><h2>YOU’RE OPEN</h2><p>Your services and request button are visible in this prototype.</p><div class="signal-meter"><span></span></div><a href="../">See what clients see ↗</a></article>
+          <article class="owner-card image-card"><img src="../assets/brand-leather.webp" alt="Gold barber identity on black leather"><div><small>Brand concept</small><b>Touch by Alex</b></div></article>
+        </div>
+        <article class="founder-offer" aria-labelledby="founder-offer-title">
+          <div>
+            <small>FAMtastic founding-chair proposal</small>
+            <h2 id="founder-offer-title">TURN THE PROTOTYPE<br><em>INTO YOUR FRONT DOOR.</em></h2>
+          </div>
+          <div class="founder-price"><b>$199</b><span>one-time<br>founding build</span></div>
+          <ul>
+            <li>Your approved one-page site</li>
+            <li>Mobile request desk for one operator</li>
+            <li>Services, hours, contact, location and work</li>
+            <li>Standard domain treatment + first 12 months of basic hosting</li>
+            <li>One proof cycle and one included revision round</li>
+          </ul>
+          <div class="founder-next">
+            <p><b>No platform ambush.</b> Keep the booking tools that earn their place. We build the owned path beside them, then Alex decides what stays.</p>
+            <p class="founder-fine">After the included first year, basic hosting is $9.99/month only with separate authorization. Domain renewal and optional scheduling, messaging, payment-provider, or integration costs are disclosed separately.</p>
+            <a class="button" href="https://famtasticdesigns.com/buy">Choose the $199 foundation <span>↗</span></a>
+          </div>
+        </article>
+      </section>
+
+      <section class="owner-panel" data-owner-panel="requests">
+        <div class="panel-title"><div><p class="eyebrow"><span>02</span> Requests</p><h2>YOUR CHAIR.<br><em>YOUR CALL.</em></h2></div><p>Approve, decline, or complete a request. The public demo form feeds this list on the same device.</p></div>
+        <div id="owner-request-list" class="request-list full"></div>
+      </section>
+
+      <section class="owner-panel" data-owner-panel="services">
+        <div class="panel-title"><div><p class="eyebrow"><span>03</span> Service menu</p><h2>CHANGE IT<br><em>IN SECONDS.</em></h2></div><p>Toggle what is available, update a price, and set the time you actually need.</p></div>
+        <form id="services-form" class="settings-list"></form>
+        <button id="save-services" class="button" type="button">Save service changes <span>↗</span></button>
+      </section>
+
+      <section class="owner-panel" data-owner-panel="hours">
+        <div class="panel-title"><div><p class="eyebrow"><span>04</span> Working hours</p><h2>WHEN CAN THEY<br><em>ASK FOR YOU?</em></h2></div><p>These are Alex’s personal chair hours, not the shop’s hours.</p></div>
+        <form id="hours-form" class="settings-list hours-list"></form>
+        <button id="save-hours" class="button" type="button">Save hours <span>↗</span></button>
+      </section>
+
+      <section class="owner-panel" data-owner-panel="links">
+        <div class="panel-title"><div><p class="eyebrow"><span>05</span> Links + QR</p><h2>HIS MONEY.<br><em>HIS ACCOUNTS.</em></h2></div><p>FAMtastic does not process the payment in this starter. Alex can point to the account or QR he already controls.</p></div>
+        <div class="links-grid">
+          <form id="links-form" class="owner-card link-form">
+            <label>Instagram URL<input name="instagram" type="url"></label>
+            <label>Existing booking or calendar link<input name="bookingLink" type="url" placeholder="https://..."></label>
+            <label>Existing tip/payment link<input name="paymentLink" type="url" placeholder="https://cash.app/... or owner link"></label>
+            <label>Shop or center label<input name="shopName" maxlength="80" placeholder="Floresta Centre"></label>
+            <label>Public address<input name="address" maxlength="160" placeholder="Street, city, state ZIP"></label>
+            <label>Directions URL<input name="mapLink" type="url" placeholder="https://maps.google.com/..."></label>
+            <label>Booking button label<input name="buttonLabel" maxlength="32"></label>
+            <button class="button" type="submit">Save links <span>↗</span></button>
+          </form>
+          <aside class="qr-card"><small>Share-card prototype</small><canvas id="qr-preview" width="216" height="216" aria-label="Decorative QR placement preview"></canvas><h3>SCAN FOR<br>THE CHAIR.</h3><p id="qr-caption">A real launch generates and verifies a scannable QR for Alex’s approved link.</p><button id="copy-demo-link" class="ghost-button" type="button">Copy prototype URL</button></aside>
+        </div>
+      </section>
+    </main>
+  </div>
+  <nav class="mobile-owner-nav" aria-label="Mobile owner console">
+    <button class="active" type="button" data-owner-tab="dashboard">Today</button><button type="button" data-owner-tab="requests">Requests</button><button type="button" data-owner-tab="services">Services</button><button type="button" data-owner-tab="hours">Hours</button><button type="button" data-owner-tab="links">Links</button>
+  </nav>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="../prototype.js"></script>
+</body>
+</html>
