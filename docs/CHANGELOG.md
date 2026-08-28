@@ -5,6 +5,9 @@
 - Added `famtastic_pipeline.views.inc` exposing `famtastic_notification_outbox` and `famtastic_private_offer` to native Drupal Views with full field, filter, and sort definitions.
 - Added `WebformIntakeBridgeService` to mirror decoupled website requests & Solution Finder intakes into Drupal's native `webform_submission` system for submission management and email handlers.
 - Expanded `WebsiteRequestOfferForm` to support all 6 core FAMtastic packages ($199–$6,999) for custom staff quotes and private discount activation.
+- Fixed Customer Portal direct checkout availability in `CustomerPortalService` to unlock 1-click purchase across all 6 packages ($199–$6,999) and active private offers.
+- Added deep linking support for `?tab=...` in `CustomerPortalDashboard.jsx` so email notifications and direct links land immediately on the intended tab (e.g. `billing`, `projects`, `messages`, `support`).
+- Rendered prominent Private Offer highlight banner with 1-click checkout directly inside the client portal project request viewer.
 - Enhanced Marketing Command Center's Email Center tab with live status metrics for sent, queued, and retry/dead-letter notifications.
 
 ## 2026-08-27 — Booked & Branded owner-QR payment boundary

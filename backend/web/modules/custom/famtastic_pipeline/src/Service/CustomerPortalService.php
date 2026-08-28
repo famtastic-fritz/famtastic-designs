@@ -657,11 +657,20 @@ final class CustomerPortalService {
     $row['proof_share'] = $this->proofSharePayload($row);
     $row['assets'] = $this->requestAssets((int) $row['id']);
     $row['recommended_sku'] = (string) ($recommendation['recommended_sku'] ?? '');
-    if ($offer) $row['recommended_sku'] = (string) $offer['sku'];
+    $supportedDirectSkus = [
+      'FAM-FOOT-199',
+      'FAM-BUSINESS-499',
+      'FAM-LANDING-1499',
+      'FAM-CUSTOM-1999',
+      'FAM-GROWTH-3999',
+      'FAM-AI-6999',
+    ];
     $row['direct_checkout_available'] = $row['status'] === 'submitted'
       && $row['proof_review_status'] === 'selected'
-      && empty($recommendation['review_required'])
-      && in_array($row['recommended_sku'], ['FAM-FOOT-199', 'FAM-BUSINESS-499'], TRUE);
+      && (
+        !empty($offer)
+        || (empty($recommendation['review_required']) && in_array($row['recommended_sku'], $supportedDirectSkus, TRUE))
+      );
     foreach (['id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id', 'intake_data', 'proof_campaign_id', 'proof_approved_by_uid', 'proof_share_enabled', 'proof_share_version', 'proof_share_changed_at', 'proof_share_changed_by_uid'] as $key) unset($row[$key]);
     return $row;
   }
