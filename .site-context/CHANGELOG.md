@@ -1,5 +1,13 @@
 # FAMtastic Designs production changelog
 
+## 2026-08-28 — Modular Customer Portal, My Products Hub & Project Provisioning Wizard
+
+- Added dedicated "My Products" hub (`/portal?tab=products`) displaying active SSD cloud hosting (IP `198.71.232.3`), custom domain DNS helper records, and client command center status.
+- Introduced 4-step guided Project Provisioning Wizard (`ProjectProvisioningWizard`) with Domain Configuration, Cloud Hosting, Design Brief & Assets, and direct "🚀 Send to Site Studio for Build" action (`/api/customer/website-requests/{website_request}/send-to-site-studio`).
+- Rebuilt the client portal into a modular architecture across 15 dedicated subview components under `frontend/src/components/portal/` coordinated by `CustomerPortalDashboard.jsx`.
+- Covered all 13+ portal lifecycle modules: Command Center, My Products, Project Briefs & Proof Review Room, Service & Marketplace Hub, Asset Library, Real Growth Telemetry, Messages, Governed Shay Solutions Advisor, Support Triage, Knowledge FAQs, Growth Ideas, Referral Rewards, Billing & Orders, Account & Team, and Settings.
+- Encoded the governed AI workforce boundary and Build DNA provenance observability into repository contracts (`FAMTASTIC_PORTAL_SERVICE_SYSTEM.md`).
+
 ## 2026-08-02 — Operations observability and clickable metric evidence
 
 Expanded the authenticated Drupal operations surface so every dashboard total

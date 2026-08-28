@@ -15,55 +15,61 @@ Every product follows one durable lifecycle, with irrelevant stages skipped:
 
 `discover -> recommend -> purchase -> entitlement -> intake -> work -> customer decision -> delivery -> measurement -> renewal/expansion`
 
-The portal must derive its modules from four durable records:
+The portal derives its modules from four durable records:
 
 1. Commerce order: what was bought, at what terms and price.
 2. Entitlement: what the customer currently owns and may access.
 3. Project or service instance: the operational status and next action.
-4. Intake and artifacts: the customer inputs, proofs, files, approvals, and
-   delivered outputs associated with that instance.
+4. Intake and artifacts: the customer inputs, proofs, files, approvals, Build DNA records, and delivered outputs associated with that instance.
 
 Marketing recommendations may use those records, but may never change them.
 
-## Portal modules
+## Rebuilt Modular Frontend Architecture
 
-| Module | Customer job | System source | Required actions |
-| --- | --- | --- | --- |
-| Home | Understand what needs attention | Projects, service instances, messages, billing | Continue the highest-priority task |
-| My services | See and operate owned capabilities | Active entitlements joined to SKU definitions | Open intake, status, docs, support, usage, billing |
-| Projects | Complete bounded delivery work | Projects, milestones, proofs, artifacts | Submit intake, review, revise, approve, download |
-| Messages | Keep human help in context | Organization/project/service threads | Start and reply to contextual conversations |
-| Billing | Understand charges and renewals | Commerce orders, payments, entitlements | Receipt, payment method, renewal, cancellation |
-| Files | Exchange and retain project artifacts | Organization-owned managed files | Upload, download, version, approve |
-| Results | See outcomes instead of vanity metrics | Analytics and service-specific telemetry | Review trends and recommended action |
-| Marketplace | Discover a relevant next capability | Published SKU registry minus owned entitlements | Learn, request recommendation, purchase when eligible |
-| Shay | Explain and route; never silently mutate | Drupal AI provider plus approved customer context | Answer, summarize, draft, then request confirmation |
+The customer portal frontend is organized into 14 dedicated components under `frontend/src/components/portal/`, orchestrated by `CustomerPortalDashboard.jsx`:
 
-## Product behavior
+| Module | Navigation Key | Customer Job | System Source & Logic |
+|---|---|---|---|
+| **Home / Command Center** | `home` | Pulse overview, Next Best Action, active order fulfillment timeline (Payment → Hosting/DNS → 3/6 Proof Concepts → Approval & Live Launch). | Orders, projects, entitlements, threads, activity feed. |
+| **Projects & Requests** | `projects` | Guided 6-step brief interview (Goals, Business, Content, Brand 0-10 Creative Scale, Domains, AI Enrichment, Store), 3/6 Proof Review Room with live sandboxed iframes, direction selection, revision submission, unlisted sharing, and Build DNA provenance inspection. | `famtastic_project_request`, `famtastic_project`, proof variants, `famtastic.build-dna.v1`. |
+| **My Services & Marketplace** | `services` | Owned capabilities with renewal dates, plus full studio SKU catalog (Web bundles, Hosting, AI Chatbots, Automation, SEO, Maintenance) and Specialized Intake Hub link. | Entitlements, SKU catalog, `/intake` routes. |
+| **Files & Assets** | `files` | Managed organization files, uploads with ownership/AI-consent validation, downloadable deliverables, brand kits, and verified Build DNA packages. | `famtastic_customer_resource`, managed files. |
+| **Growth & Analytics** | `results` | Actionable search visibility, conversion signals, Google Analytics 4 telemetry, and monthly growth recommendations (focusing on real outcomes, not vanity charts). | `customer_analytics` entitlement, performance digest. |
+| **Messages** | `messages` | Contextual threads (Website issue, Project/approval, Billing/renewal), message history, reply composer, and urgent escalation hotline. | `famtastic_portal_thread`, `famtastic_portal_message`. |
+| **Shay AI Advisor** | `shay` | Governed AI Solutions Advisor explaining package scope, proof reviews, change request drafting, and AI website agents. | Governed Drupal AI provider / client advisor. |
+| **Support** | `support` | Structured 4-choice triage: Website/service issue, Request a change, Find an answer (FAQs), and Urgent business impact email hotline. | Support routing, thread creation. |
+| **Knowledge & FAQs** | `faq` | Searchable interactive FAQ accordions with category tags. | Structured FAQ catalog. |
+| **Growth Ideas** | `grow` | Contextual recommendations based on active project stage, plus "Have FAMtastic handle it" custom outcome intake. | Contextual offers engine. |
+| **Referrals** | `referrals` | Client referral submissions with permission validation, reward status tracking, and 1-click SMS/email sharing. | `famtastic_referral`. |
+| **Billing & Orders** | `billing` | Commerce order history, receipts, formatted currency amounts, payment status badges, Month-13 hosting renewal disclosures, and Stripe payment security notes. | `commerce_order`, payment gateways. |
+| **Profile & Team** | `account` | Contact information (Name, Phone) and organization team members with role badges (Owner, Admin, Member, Billing). | `famtastic_customer`, `famtastic_membership`. |
+| **Settings & Alerts** | `settings` | Essential account notifications (Project updates, Support replies, Billing notices), education/promotions opt-ins, and topic subscriptions. | Customer preferences. |
 
-| Product family | Intake and delivery | Portal management | Expansion signal |
-| --- | --- | --- | --- |
-| Website bundles | Website discovery, three proofs, revisions, approval, launch | Project timeline, concepts, files, domain, hosting | Copy, brand, extra pages, SEO, analytics, agent |
-| Hosting and maintenance | Domain/site binding and activation | Availability, renewal date, support, cancellation | Maintenance, analytics |
-| Lead automation | Source, routing, message, escalation, test | Workflow status, test result, lead totals, support | Analytics, AI agent |
-| AI website agent | Knowledge, boundaries, escalation, QA | Knowledge status, conversations, unresolved questions, usage | Analytics, maintenance |
-| Analytics and SEO | Property/location connection and verification | Trends, conversions, monthly observations, work completed | Automation, content, maintenance |
-| Brand and copy | Brief, concepts/draft, revision, approval | Versions, comments, approval, downloadable files | Website, pages |
-| Scheduling/email/integrations | Provider access, mapping, configuration, test | Connection health, documentation, support | Automation |
-| Ecommerce discovery | Catalog, checkout, fulfillment, account and integration requirements | Workshop status, requirements file, recommendation | Private implementation offer |
+## Governed AI Workforce Boundary
 
-## Drupal AI boundary
+Drupal AI Core, AI Dashboard, AI Agents, AI Automators, AI Logging, Key, and local/cloud providers form the internal AI platform.
 
-Drupal AI Core, AI Dashboard, AI Agents, AI Automators, AI Logging, Key, and an
-AI provider form the internal AI platform. They support staff assistance,
-structured extraction, summaries, recommendations, and Shay. They do not
-replace Commerce ownership, portal authorization, lifecycle state, or customer
-confirmation.
+### What AI May Do in the Client Portal:
+- Propose, summarize, classify, draft, and explain.
+- Turn raw client intakes into structured brief summaries.
+- Draft suggested support replies for human review.
+- Generate interactive concept variants in private preview sandboxes.
+- Surface actionable SEO, citation, and conversion opportunities.
 
-Provider secrets must use Key with a server-side environment provider. Prompt
-logging is disabled by default. Customer data may only be sent to a configured
-provider for an explicit approved operation, with organization ownership and
-minimum necessary context enforced before dispatch.
+### What AI Must Never Do Autonomously:
+- Autonomously send customer messages, emails, or SMS.
+- Alter an account, change permissions, or grant discounts/credits.
+- Mutate DNS, register domains, charge credit cards, or complete checkouts.
+- Approve a creative proof or trigger production deployment.
 
-AI Search/RAG is deferred until a supported vector-store design, source access
-policy, deletion policy, and cross-organization isolation tests are approved.
+Every commercial, financial, and deployment milestone requires human confirmation at action time.
+
+## Build DNA Standard (`famtastic.build-dna.v1`) Integration
+
+Every creative proof, direction refinement, and delivery run produces one immutable `famtastic.build-dna.v1` record containing:
+1. Exact prompt artifacts and normalized inputs.
+2. Provider, model ID, and timing/cost telemetry.
+3. SHA-256 hashes of all generated assets and screenshots.
+4. Independent reviewer QA evaluation and human approval gates.
+
+Clients can inspect their project's Build DNA directly from the Project Command Center to verify model provenance and cryptographic asset integrity without exposing server secrets or API keys.

@@ -35,6 +35,7 @@ export const createWebsiteRequest = (payload) => request('/website-requests', { 
 export const updateWebsiteRequest = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}`, { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const decideWebsiteRequestProof = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}/proof-decision`, { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const updateWebsiteRequestProofShare = (id, action) => request(`/website-requests/${encodeURIComponent(id)}/proof-share`, { method: 'POST', csrf: true, body: JSON.stringify({ action }) });
+export const sendWebsiteRequestToSiteStudio = (id) => request(`/website-requests/${encodeURIComponent(id)}/send-to-site-studio`, { method: 'POST', csrf: true });
 export async function uploadWebsiteRequestAsset(id, formData) {
   const token = await fetch(`${WEB_PREFIX}/session/token`, { credentials: 'same-origin' }).then((response) => response.text());
   const response = await fetch(`${API}/website-requests/${encodeURIComponent(id)}/assets`, {

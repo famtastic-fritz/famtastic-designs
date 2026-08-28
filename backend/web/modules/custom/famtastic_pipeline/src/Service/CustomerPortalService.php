@@ -684,6 +684,17 @@ final class CustomerPortalService {
     return $this->serializeWebsiteRequest($updated ?: $row);
   }
 
+  /** Dispatches an owned website request to Site Studio for proof and concept build. */
+  public function sendWebsiteRequestToSiteStudio(int $customerId, string $publicId): array {
+    $row = $this->ownedWebsiteRequest($customerId, $publicId);
+    if (!$row) throw new \RuntimeException('Website request not found.');
+    $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], $publicId, $intake);
+    $this->activity((int) $row['organization_id'], 'website_request.site_studio_dispatched', 'Your project request was sent to Site Studio for concept & build generation.');
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
+    return $this->serializeWebsiteRequest($updated ?: $row);
+  }
+
   /** Changes an unlisted proof link from the staff proof-review screen. */
   public function manageWebsiteProofShare(int $requestId, string $action, int $uid): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();

@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "contract": "famtastic.client-portal.design-dna.v1",
+  "version": "1.0.0",
+  "description": "Machine-readable contract and governance schema for the FAMtastic Client Portal system.",
+  "tokens": {
+    "colors": {
+      "background": "#070907",
+      "panel_background": "#101310",
+      "panel_surface": "rgba(16, 19, 16, 0.92)",
+      "border": "#252b25",
+      "accent_lime": "#7cfc00",
+      "text_primary": "#f6f8f6",
+      "text_secondary": "#aeb6ae",
+      "text_muted": "#8e998e"
+    },
+    "effects": {
+      "focus_glow": "0 0 24px rgba(124, 252, 0, 0.35)",
+      "panel_radius": "18px",
+      "transition_timing": "0.2s cubic-bezier(0.16, 1, 0.3, 1)"
+    },
+    "typography": {
+      "font_family": "Inter, system-ui, -apple-system, sans-serif",
+      "eyebrow_transform": "uppercase",
+      "eyebrow_letter_spacing": "0.14em"
+    },
+    "accessibility": {
+      "min_touch_target_px": 44,
+      "max_glowing_elements_per_view": 1,
+      "overflow_x_containment": "clip"
+    }
+  },
+  "routes": {
+    "authenticated_dashboard": {
+      "path": "/portal",
+      "auth_required": true,
+      "sections": [
+        "home",
+        "projects",
+        "services",
+        "messages",
+        "support",
+        "faq",
+        "grow",
+        "referrals",
+        "billing",
+        "settings",
+        "account"
+      ]
+    },
+    "token_scoped_workspace": {
+      "path": "/portal/:token",
+      "auth_required": false,
+      "token_scoped": true,
+      "allowed_phases": [
+        "purchase",
+        "intake",
+        "build",
+        "launch"
+      ]
+    },
+    "prospect_proof_hub": {
+      "path": "/p/:token",
+      "auth_required": false,
+      "token_scoped": true
+    }
+  },
+  "security_invariants": {
+    "zero_synthetic_data_leaks": true,
+    "no_external_contact_leakage_for_authenticated_actions": true,
+    "proof_iframe_sandbox": "allow-scripts allow-same-origin",
+    "csrf_protection_on_mutations": true,
+    "file_upload_rights_consent_required": true,
+    "governed_ai_boundary": {
+      "may_draft_and_summarize": true,
+      "autonomous_billing_changes_forbidden": true,
+      "autonomous_deployment_forbidden": true,
+      "autonomous_entitlement_mutation_forbidden": true
+    }
+  }
+}

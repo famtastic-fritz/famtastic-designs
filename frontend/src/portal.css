@@ -246,3 +246,152 @@
 .portal-proof-grid a { min-height: 0; }
 
 /* Checkout completion lands here - celebrate, then orient. */
+
+/* My Products Hub */
+.portal-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.portal-product-card {
+  padding: 1.5rem;
+  border: 1px solid var(--p-line);
+  border-radius: 18px;
+  background: rgba(16, 19, 16, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.portal-product-card.highlight {
+  border-color: rgba(124, 252, 0, 0.45);
+  background: linear-gradient(145deg, rgba(124, 252, 0, 0.08), rgba(16, 19, 16, 0.98));
+}
+.portal-product-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.portal-product-card h3 {
+  margin: 0.35rem 0 0.2rem;
+  font-size: 1.25rem;
+  color: #fff;
+}
+.portal-product-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(124, 252, 0, 0.15);
+  color: var(--p-lime);
+  border: 1px solid rgba(124, 252, 0, 0.3);
+}
+.portal-product-badge.pending {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+  border-color: rgba(255, 193, 7, 0.3);
+}
+.portal-product-specs {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.9rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  font-size: 0.82rem;
+}
+.portal-product-specs div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.portal-product-specs dt {
+  color: #8e998e;
+}
+.portal-product-specs dd {
+  margin: 0;
+  font-weight: 600;
+  color: #f0f4f0;
+}
+.portal-dns-helper {
+  margin: 0.75rem 0;
+  padding: 0.85rem;
+  background: #090c09;
+  border: 1px solid rgba(124, 252, 0, 0.25);
+  border-radius: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+  color: #aeb8ae;
+}
+.portal-dns-helper code {
+  color: var(--p-lime);
+  user-select: all;
+  font-weight: 700;
+}
+
+/* Project Setup Wizard */
+.portal-wizard-container {
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(124, 252, 0, 0.35);
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(124, 252, 0, 0.06), #101310);
+  overflow: hidden;
+}
+.portal-wizard-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.4);
+}
+.portal-wizard-nav button {
+  padding: 1rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: #8e998e;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  gap: 0.2rem;
+  transition: all 0.2s ease;
+}
+.portal-wizard-nav button strong {
+  font-size: 0.88rem;
+  color: #c2ccc2;
+}
+.portal-wizard-nav button.active {
+  color: #fff;
+  border-bottom-color: var(--p-lime);
+  background: rgba(124, 252, 0, 0.08);
+}
+.portal-wizard-nav button.active strong {
+  color: var(--p-lime);
+}
+.portal-wizard-nav button.completed strong {
+  color: #7cfc00;
+}
+.portal-wizard-body {
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+.portal-studio-dispatch-banner {
+  padding: 1.5rem;
+  border: 1px solid var(--p-lime);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(124, 252, 0, 0.12), rgba(0, 0, 0, 0.7));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+

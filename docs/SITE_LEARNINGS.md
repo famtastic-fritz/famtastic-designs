@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-28 — Modular Customer Portal Architecture with Governed AI Assistance Beats Monolithic Dashboards
+- Observation: Housing 14+ customer lifecycle surfaces, guided multi-step brief wizards, proof review iframes, file management, and message threads inside a monolithic 500-line React component created code bloat and made individual subviews difficult to test, maintain, and evolve.
+- Guidance: Structure the customer portal into dedicated modular sub-components under `components/portal/` coordinated by a single thin dashboard orchestrator. Keep the AI boundary explicit: Shay and AI assistants may summarize briefs, answer product questions, and draft support requests, but must never autonomously mutate accounts, alter billing, send messages, or approve deployments. Always maintain strict CSS containment guards (`.portal-app{overflow-x:clip}`, `.portal-grid > * { min-width: 0; }`, `.portal-conversation { overflow: hidden; }`) to guarantee flawless mobile viewport rendering.
+
 ## 2026-08-28 — Multi-Channel Social Operations Require Visual Day-by-Day Dispatch Grids
 - Observation: Managing a multi-channel campaign across Facebook, YouTube, TikTok, Instagram, and X via raw SQL tables or disconnected JSON manifests leaves operators blind to what is actually going out on any given day, what visual artwork is attached, and which gates are open.
 - Guidance: Unify campaign operations in a Daily Social Dispatch dashboard organized by Day (1 to 17) and Moment (Teach @ 08:00, Challenge @ 12:30, Prove @ 17:00, Invite @ 20:30) with embedded artwork previews (4x5 & 9x16), copy hooks, and 1-click batch gate approvals.

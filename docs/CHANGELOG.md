@@ -1,5 +1,17 @@
 # Product changelog
 
+## 2026-08-28 — Modular Customer Portal Architecture, My Products Hub, Guided Project Provisioning Wizard, and Site Studio Dispatch
+
+- Added dedicated "My Products" hub (`/portal?tab=products`) giving customers a clear overview of active NVMe SSD cloud hosting (server IP `198.71.232.3`, SSL TLS 1.3), custom domain DNS records, and workspace command center status.
+- Introduced the 4-step guided Project Provisioning Wizard (`ProjectProvisioningWizard`) inside "My Projects", guiding clients through Domain Configuration (new vs existing with 1-click copyable DNS records), Cloud Hosting health indicators, Design Brief & Brand Asset uploads, and Site Studio build execution.
+- Implemented the direct "🚀 Send to Site Studio for Build" action (`/api/customer/website-requests/{website_request}/send-to-site-studio`), creating `famtastic.build-dna.v1` run records and triggering concept generation routines directly from the client portal.
+- Rebuilt the client portal into a modular architecture across 15 dedicated subview components under `frontend/src/components/portal/` coordinated by a streamlined `CustomerPortalDashboard.jsx`.
+- Implemented complete coverage for all 13+ portal modules: Command Center (Home), My Products & Infrastructure (Products), Project Provisioning & Brief Manager (Projects), My Services & SKU Marketplace (Services), Organization Asset Library (Files), Real Growth Telemetry & Performance Digest (Results), Contextual Message Threads (Messages), Governed Solutions Advisor (Shay), Structured Support Triage (Support), Searchable Knowledge Base (FAQ), Growth Recommendations (Grow), Client Referral Rewards Tracker (Referrals), Orders & Month-13 Disclosures (Billing), Contact & Team Roles (Account), and Notification Preferences (Settings).
+- Integrated the governed AI workforce boundary (Shay & AI models propose, draft, summarize, and explain; human review remains mandatory before sending, charging, mutating DNS, or deploying).
+- Added Build DNA provenance inspector (`famtastic.build-dna.v1`) to the Project Command Center, providing client-visible cryptographic verification of model stages and asset hashes without exposing backend credentials.
+- Updated `docs/architecture/FAMTASTIC_PORTAL_SERVICE_SYSTEM.md` with the full 15-section architectural mapping, AI governance boundary, and Build DNA standard.
+- Verified zero CSS horizontal overflow and full compliance with strict static CSS guards and crawler tests.
+
 ## 2026-08-28 — Drupal Views integration, Webform intake bridge, and expanded Private Offers
 
 - Added `famtastic_pipeline.views.inc` exposing `famtastic_notification_outbox` and `famtastic_private_offer` to native Drupal Views with full field, filter, and sort definitions.

@@ -436,6 +436,15 @@ final class CustomerPortalController extends ControllerBase {
     catch (\RuntimeException) { return $this->error('website_proofs_not_found', 404, 'Website proofs are not available.'); }
   }
 
+  public function sendToSiteStudio(Request $request, string $website_request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    try {
+      return new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->sendWebsiteRequestToSiteStudio((int) $customer['id'], $website_request)]);
+    }
+    catch (\RuntimeException $e) { return $this->error('site_studio_error', 422, $e->getMessage()); }
+  }
+
   public function profile(Request $request): JsonResponse {
     $customer = $this->currentCustomer();
     if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
