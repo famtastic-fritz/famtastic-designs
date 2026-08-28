@@ -1,5 +1,26 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Research must stay attached to the component decision
+
+- Observation: a research-backed prompt can produce a strong page, but the
+  reasoning disappears when only the rendered HTML survives. Another builder
+  then sees styling without knowing which market fact, accessibility rule,
+  primary study, or design judgment influenced the component.
+- Guidance: freeze a source manifest and decision ledger beside the page recipe.
+  Give every decision a stable ID, component scope, reason, source trail,
+  confidence, and limitation; render the IDs on the proof and carry them into
+  Site Studio as immutable context.
+
+## 2026-08-27 — A reusable media family needs parent lineage and distinct jobs
+
+- Observation: three near-duplicate images do not create a useful component
+  library. A parent art direction becomes reusable when companion frames cover
+  different content jobs while preserving the same visual world.
+- Guidance: retain one premium parent plus separately generated environment,
+  process, and result/detail companions. Hash the parent and every output,
+  preserve exact prompts, keep readable UI native, and never invent an
+  unreported model or price.
+
 ## 2026-08-27 — Reusable component evidence needs repository-wide doctrine
 
 - Observation: a strong component proof can still be lost if only its niche

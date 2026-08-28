@@ -49,6 +49,32 @@ visible copy, or an asset filename.
    and finishing contract. Ordinary owner-supplied or reusable slot swaps do
    not become premium work merely because the slot is replaceable.
 
+## Research-backed recipe rules
+
+When market, behavior, accessibility, or visual research shapes a niche recipe,
+keep the research attached to the reusable system instead of burying it in a
+one-time prompt. Freeze a source manifest and a component-decision ledger. Each
+decision needs a stable ID, component scope, plain-language reason, source IDs,
+confidence label, and explicit limitations. Render those decision IDs on the
+proof and carry them into the Site Studio handoff.
+
+Research informs composition; it does not turn contextual findings into
+universal conversion laws. Do not claim that a color causes an emotion, a shape
+causes trust, motion causes engagement, or a CTA guarantees conversion unless a
+relevant test proves it for that audience. Accessibility rules are acceptance
+constraints, not aesthetic preferences.
+
+Clean-room inspiration from an external builder may contribute portable
+patterns only when provenance, input hash, extracted patterns, and excluded
+materials are recorded. Never copy source code, proprietary prompts, customer
+content, or generated media into the canonical system without permission and
+rights evidence.
+
+For a reference-led premium media family, preserve one parent composition and
+each separately generated companion with its own prompt, output hash, role, and
+parent hash. Page text and controls remain native. Provider/model/cost fields
+must stay `provider_did_not_report` when the provider supplies no receipt.
+
 ## Starter foundation
 
 A low-cost one-page recipe may be deliberately lean, but it should retain the
@@ -112,6 +138,12 @@ proof of this doctrine. It demonstrates one page recipe, nine stable component
 instances, and four pages whose only permitted change is one hero-media slot.
 The machine contract proves the normalized output and component signatures are
 otherwise identical.
+
+`docs/research/BOOKED_BRANDED_RESEARCH_PROOF_V1.md` is the second local proof.
+It demonstrates four materially different page recipes, eleven reusable
+component definitions, sixteen cited decisions, and a four-parent/twelve-
+companion reference-led media system. It remains a local proof; Site Studio
+import and production delivery are unproven.
 
 That evidence is local. It does not yet prove arbitrary component swapping,
 hide/reorder controls, one-page-to-multi-page conversion, Site Studio import,

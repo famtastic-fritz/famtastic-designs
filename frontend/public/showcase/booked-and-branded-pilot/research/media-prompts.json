@@ -1,0 +1,45 @@
+{
+  "schema": "famtastic.reference-led-media-prompts.v1",
+  "provider": "openai-imagegen-builtin",
+  "model_status": "provider_did_not_report",
+  "cost_status": "provider_did_not_report",
+  "workflow": "Each template receives one independently generated parent composition and three separately generated candidates that use the saved parent PNG as their visual reference. Cheaper is a commercial goal, not a proven cost claim, because this provider did not report per-image cost.",
+  "templates": [
+    {
+      "slug": "crown-ledger",
+      "parent_prompt": "Premium editorial website hero for a fictional Black-owned Port St. Lucie barbershop: Black barber performing a precision fade, blackened steel, warm parchment, walnut, restrained oxblood, electric coral and tiny cobalt details, coastal daylight, subject right, negative space left, no text or UI.",
+      "candidate_prompts": [
+        "Same visual canon; opening-time environment with barber checking the day's bookings beside empty oxblood chairs.",
+        "Same visual canon; close process frame of gloved hands, clippers, comb, and precise fade calibration.",
+        "Same visual canon; finished client profile with immaculate fade and beard line, barber reflected behind."
+      ]
+    },
+    {
+      "slug": "coil-ritual",
+      "parent_prompt": "Premium editorial website hero for a fictional Black woman-owned Fort Pierce texture-care studio: stylist mapping and shaping a client's healthy natural coils, warm cream, cocoa, clay plaster, raw linen, deep plum, rose-copper and subtle violet, botanical shadow, negative space right, no text or UI.",
+      "candidate_prompts": [
+        "Same visual canon; consultation environment with stylist and client reviewing a simple care plan at a curved clay table.",
+        "Same visual canon; process/detail frame of gentle coil separation and healthy texture assessment.",
+        "Same visual canon; finished-care portrait with client viewing the shaped coil result in a rounded mirror."
+      ]
+    },
+    {
+      "slug": "barrio-signal",
+      "parent_prompt": "Premium campaign photograph for a fictional bilingual Latino-owned West Palm Beach barbería: barber finishing a taper, authentic multigenerational neighborhood energy, cream tile, navy, coral, sea teal, yellow registration accent, chrome and terrazzo, subject left, no text or UI.",
+      "candidate_prompts": [
+        "Same visual canon; morning environment with barber checking appointments and two generations arriving.",
+        "Same visual canon; close process view of taper detailing with comb, clippers, coral arch and teal tile behind.",
+        "Same visual canon; satisfied client checks the finished taper while barber and waiting customers share a relaxed moment."
+      ]
+    },
+    {
+      "slug": "salt-glass",
+      "parent_prompt": "Premium editorial website hero for a fictional woman-owned Miami color studio: white female colorist and client comparing translucent color swatches, pearl plaster, sea-glass aqua, oxblood, soft mint, coral, brushed gold and prismatic daylight, negative space left, no text or UI.",
+      "candidate_prompts": [
+        "Same visual canon; consultation environment with colorist and client reviewing hair history and physical swatches.",
+        "Same visual canon; close process frame of dimensional color painting with foils and brush.",
+        "Same visual canon; finished transformation and maintenance frame with client at a curved mirror and a take-home trio."
+      ]
+    }
+  ]
+}

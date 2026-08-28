@@ -43,6 +43,11 @@ updated, say so explicitly in the session report rather than skipping silently.
   ordered recipes of stable component instances; treat media as slot bindings;
   preserve visual and Build DNA continuity during upgrades. A one-page build is
   a starting recipe, not a permanent architecture.
+- For research-backed niche recipes, also follow
+  `docs/research/BOOKED_BRANDED_RESEARCH_PROOF_V1.md`: freeze official market
+  sources, primary design/accessibility sources, clean-room provenance, and a
+  component-decision ledger. Research informs composition; it never becomes an
+  unsupported color, emotion, behavior, or conversion guarantee.
 - Route designed motion, proof walkthroughs, and reusable social cutdowns through
   HyperFrames; route fast, draft-only narrated social/video assemblies through
   MoneyPrinterTurbo. Neither tool is a publishing authority or a substitute for

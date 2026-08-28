@@ -231,6 +231,104 @@
       }
     ]
   },
+  "research_proof_lab": {
+    "status": "implemented-local-research-proof",
+    "data_source": "frontend/public/showcase/booked-and-branded-pilot/research/research-proof-data.json",
+    "decision_ledger": "frontend/public/showcase/booked-and-branded-pilot/research/component-decisions.json",
+    "source_manifest": "frontend/public/showcase/booked-and-branded-pilot/research/source-manifest.json",
+    "renderer": "scripts/build-booked-branded-research-proof.mjs",
+    "route": "/showcase/booked-and-branded-pilot/research-proof-lab/",
+    "page_template_ids": ["crown-ledger-v1", "coil-ritual-v1", "barrio-signal-v1", "salt-glass-v1"],
+    "component_definitions": [
+      {
+        "id": "navigation.research-nav.v1",
+        "fields": ["business.name", "navigation.items", "booking.action"],
+        "slots": [],
+        "repeaters": ["navigation.items"],
+        "parts": ["wordmark", "anchor-links", "booking-action"]
+      },
+      {
+        "id": "hero.research-led.v1",
+        "fields": ["hero.overline", "hero.headline", "hero.subhead", "hero.media.src", "hero.media.alt"],
+        "slots": ["hero-media", "hero-copy", "hero-actions"],
+        "repeaters": [],
+        "parts": ["copy-lockup", "parent-media", "primary-action", "secondary-action"],
+        "variants": ["hero-ledger", "hero-ritual", "hero-poster", "hero-prism"]
+      },
+      {
+        "id": "proof.market-wedge.v1",
+        "fields": ["market.thesis", "market.baseline", "market.famtastic-difference"],
+        "slots": [],
+        "repeaters": ["citations"],
+        "parts": ["thesis", "competitor-respect", "owned-layer-argument"]
+      },
+      {
+        "id": "services.research-menu.v1",
+        "fields": ["service.name", "service.duration", "service.price", "service.preparation"],
+        "slots": [],
+        "repeaters": ["services"],
+        "parts": ["section-heading", "service-item", "price", "preparation"],
+        "variants": ["service-ledger", "service-swatches", "service-ribbons", "service-editorial"]
+      },
+      {
+        "id": "gallery.reference-led-series.v1",
+        "fields": ["media.alt", "media.role", "media.provenance"],
+        "slots": ["parent-media", "candidate-media-01", "candidate-media-02", "candidate-media-03"],
+        "repeaters": ["work-media"],
+        "parts": ["parent-reference", "environment", "process", "result-detail"],
+        "variants": ["work-filmstrip", "work-atlas"]
+      },
+      {
+        "id": "booking.portable-bridge.v1",
+        "fields": ["booking.mode", "booking.provider", "booking.label", "booking.disclosure"],
+        "slots": ["booking-action"],
+        "repeaters": ["booking.paths"],
+        "parts": ["current-provider", "reviewed-widget", "owner-calendar", "request-to-book"]
+      },
+      {
+        "id": "operations.phone-console.v1",
+        "fields": ["requests.count", "reviews.pending", "hours.status", "services"],
+        "slots": ["phone-preview"],
+        "repeaters": ["owner-actions", "owner-metrics"],
+        "parts": ["phone-shell", "metric", "content-actions", "booking-actions"]
+      },
+      {
+        "id": "foundation.contact-location.v1",
+        "fields": ["identity.domain", "identity.forwarding-email", "contact", "location", "hours", "map", "payment.disclosure"],
+        "slots": ["owner-approved-map", "owner-approved-payment-qr"],
+        "repeaters": ["contact-methods"],
+        "parts": ["contact", "location", "hours", "map", "owner-payment"]
+      },
+      {
+        "id": "concierge.shay-close.v1",
+        "fields": ["shay.title", "shay.boundary", "offer.price", "offer.renewal"],
+        "slots": ["primary-action"],
+        "repeaters": [],
+        "parts": ["shay-identity", "role-boundary", "commercial-truth", "next-action"]
+      },
+      {
+        "id": "proof.component-decisions.v1",
+        "fields": ["decision.id", "decision.reason", "decision.confidence"],
+        "slots": [],
+        "repeaters": ["decisions", "sources"],
+        "parts": ["decision-id", "component-scope", "reason", "source-links", "confidence"]
+      },
+      {
+        "id": "navigation.research-footer.v1",
+        "fields": ["business.name", "business.location", "proof.label", "compare.action"],
+        "slots": [],
+        "repeaters": [],
+        "parts": ["business-summary", "proof-disclosure", "compare-action"]
+      }
+    ],
+    "site_studio_handoff": {
+      "status": "contract-ready-not-imported",
+      "page_recipe_source": "research-proof-data.json#templates[].recipe",
+      "component_source": "component-system.json#research_proof_lab.component_definitions",
+      "decision_source": "component-decisions.json",
+      "rule": "Site Studio may consume the recipe, field bindings, media bindings, and cited decision IDs as build context. No import, provider activation, publishing, or customer record is implied by this local proof."
+    }
+  },
   "site_studio_translation": {
     "page_template": "page_recipe",
     "component": "component_definition",

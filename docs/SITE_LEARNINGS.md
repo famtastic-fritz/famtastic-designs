@@ -1,5 +1,23 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-27 — Research evidence belongs in the reusable recipe
+
+- Observation: a beautiful research-backed build is not reproducible when its
+  sources and reasoning exist only in an agent conversation or image prompt.
+- Guidance: keep an official source manifest, primary design/accessibility
+  references, clean-room provenance, and a cited component decision ledger next
+  to the recipe. Carry stable decision IDs through rendered proof, Build DNA,
+  and any later Site Studio packet.
+
+## 2026-08-27 — Reference-led images should form a component-ready story
+
+- Observation: a premium hero plus three visual duplicates increases asset
+  count without increasing page value.
+- Guidance: make the premium image the parent art direction, then generate
+  separate environment, process, and result/detail companions from it. Retain
+  prompts, lineage, hashes, and provider truth; native HTML owns all legible
+  text, UI, and calls to action.
+
 ## 2026-08-27 — Component architecture belongs in every agent's doctrine
 
 - Observation: the Booked & Branded Component Lab proved a useful model, but a

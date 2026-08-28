@@ -25,6 +25,8 @@ recipe and retain its component ID, content, media bindings, and Build DNA.
 - Customer-facing local proof: `/showcase/booked-and-branded-pilot/component-lab/`
 - Machine proof: `frontend/scripts/test-booked-branded-component-system.mjs`
 - Evidence: `docs/evidence/booked-branded-component-system/image-only-proof.json`
+- Research proof: `docs/research/BOOKED_BRANDED_RESEARCH_PROOF_V1.md`
+- Research lab: `/showcase/booked-and-branded-pilot/research-proof-lab/`
 
 The existing 12 proof pages now use the same component renderer. Their stable
 identity anchors are:
@@ -76,6 +78,22 @@ This proves component reuse and media-slot replacement. It does not claim that
 the four pages are four new art directions, that component variants have been
 interchanged, that Site Studio has imported the recipe, or that any production
 or customer surface changed.
+
+## Research-proof expansion
+
+The Research Proof Lab adds four original page recipes and eleven section
+components. Unlike the image-only experiment, these recipes intentionally vary
+layout grammar, type composition, color system, component variant, content
+rhythm, and media story. Every rendered section carries stable component and
+decision IDs; the decision ledger records the reason, sources, confidence, and
+limits behind each choice.
+
+Each recipe has one premium parent composition and three separately generated,
+parent-referenced companion images for environment, process, and result/detail.
+The media receipt retains prompts and hashes without inventing the provider's
+model or cost. The browser contract proves all five lab/template routes at
+desktop and mobile with no broken media, missing local anchors, page errors, or
+horizontal overflow.
 
 ## Site Studio translation
 

@@ -1,0 +1,24 @@
+{
+  "schema": "famtastic.booked-branded-research-proof-build.v1",
+  "generated_at": "2026-08-28T00:18:23.338Z",
+  "template_count": 4,
+  "template_ids": [
+    "crown-ledger-v1",
+    "coil-ritual-v1",
+    "barrio-signal-v1",
+    "salt-glass-v1"
+  ],
+  "recipe_signatures": {
+    "crown-ledger-v1": "b64c10ccf0bf0ed81df5b1d2c3a2cb8c86564603a7d7f0feec154cb920b4b780",
+    "coil-ritual-v1": "1102ee5315de7037aa2fa490d8e35340ca710ae5c5e2e8751225b2dd40465e6e",
+    "barrio-signal-v1": "e8a096ec1d89f22cd23054293a4a458f4c958cfb6698dd840b67a90d8cfdeb2d",
+    "salt-glass-v1": "27ade6b139ac3f9f17883ff30b1449347b51fb305e1b548ba1e2aedf368d7be3"
+  },
+  "decision_count": 16,
+  "source_count": 17,
+  "notebooklm_status": "blocked_no_notebook_share_url",
+  "media_contract": "one parent premium slot plus three reference-led candidate slots per template; cost must remain provider_did_not_report unless a provider receipt reports it",
+  "production_changed": false,
+  "customer_data_used": false,
+  "email_sent": false
+}

@@ -1,5 +1,28 @@
 # Product changelog
 
+## 2026-08-27 — Booked & Branded research proof and four new recipes
+
+- Added four original one-page template recipes for distinct grooming/beauty
+  emotional jobs, each retaining the complete owned-site foundation, current-
+  provider booking bridge, phone-oriented owner concept, Shay explanation, and
+  explicit upgrade path.
+- Added an official-source competitor map, primary design/accessibility source
+  manifest, and a sixteen-record component decision ledger. Color, shape,
+  motion, and CTA research is labeled by confidence and limitation rather than
+  presented as a conversion guarantee.
+- Extracted only portable patterns from the user-supplied Kimi transcript and
+  recorded its SHA-256 and exclusions; no Kimi HTML, CSS, prompts, or image
+  bytes were copied, and the unavailable live page was not represented as
+  visually verified.
+- Generated four premium parent compositions and twelve separately generated
+  reference-led companions, retaining source PNGs, WebP deliveries, prompts,
+  parent lineage, and hashes. The provider did not report model/cost, so the
+  receipt does not falsely label companions as cheaper.
+- Added a Research Proof Lab, machine-readable component registry, repeatable
+  builder/tests, and Playwright evidence across five pages at desktop/mobile.
+  No prospect, email, provider connection, Site Studio import, production
+  deployment, or publication occurred.
+
 ## 2026-08-27 — Page/component doctrine and Git sync discipline
 
 - Promoted the Booked & Branded page/component proof into a general FAMtastic

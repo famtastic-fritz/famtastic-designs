@@ -1,0 +1,131 @@
+{
+  "schema": "famtastic.booked-branded-research-proof.v1",
+  "status": "fictional-local-research-proof",
+  "offer": {
+    "name": "Booked & Branded",
+    "price": "$199 one-time launch",
+    "renewal": "$9.99/month beginning in month 13 after separate authorization",
+    "promise": "Own the branded front door, keep the booking tool that works today, and add deeper operations only when the upgrade earns its place.",
+    "payment_boundary": "FAMtastic displays an owner-approved Cash App or existing payment QR but does not process, receive, settle, or reconcile payments.",
+    "shay": "Shay is FAMtastic Designs' AI Business Concierge. She explains the proof, gathers setup choices, and brings in Fritz or the FAMtastic team for pricing, scope, approval, payment, and launch authority."
+  },
+  "kimi_clean_room": {
+    "status": "transcript-pattern-extraction-only",
+    "live_preview_status": "unreachable_connection_reset_on_2026-08-27",
+    "transcript_sha256": "0788fb3f4ef145a194c761a4ef054b78ec97fa6c66de7fff0b6dbf18d64dffd9",
+    "portable_patterns": [
+      "Optional bilingual service copy when the real owner and audience support it",
+      "Editorial dotted-leader service menus",
+      "Condensed display type paired with quieter utility text",
+      "A four-frame service story: environment, process, result, and operator",
+      "Dark charcoal, warm cream, and metallic accents as one possible barber grammar"
+    ],
+    "excluded": [
+      "No copied Kimi HTML, CSS, component names, proprietary prompt text, or generated image bytes",
+      "No visual-parity claim because the live page could not be inspected",
+      "No demographic or pricing claims carried forward without independent sources"
+    ]
+  },
+  "templates": [
+    {
+      "id": "crown-ledger-v1",
+      "slug": "crown-ledger",
+      "name": "Crown Ledger",
+      "business": "Northstar Chair Club",
+      "location": "Port St. Lucie, Florida",
+      "archetype": "precision barber with a busy repeat-client chair",
+      "thesis": "Precision should read before the first service card does.",
+      "headline": "A sharper front door for every chair.",
+      "subhead": "An editorial service ledger, confident proof of craft, and a direct path to the calendar the owner already trusts.",
+      "palette": { "ink": "#11100e", "paper": "#f1e5cf", "accent": "#ff5b35", "accent2": "#2e55ff", "soft": "#c9b48c" },
+      "shape": "calibration marks, cropped circles, hard rules, and one softened booking seal",
+      "type": "compressed uppercase impact, serif editorial interruption, and tabular service facts",
+      "motion": "one clipped entrance and a slow calibration-line sweep; fully disabled under reduced motion",
+      "booking_label": "Keep Booksy for discovery. Make the branded site the repeat-client home.",
+      "booking_note": "Current-provider link, Square widget, Google appointment page, Cal.com, or request-to-book can occupy the same booking slot after owner review.",
+      "services": [
+        { "name": "Signature Cut", "time": "45 min", "price": "from $45", "prep": "Arrive with hair free of heavy product" },
+        { "name": "Cut + Beard Architecture", "time": "60 min", "price": "from $65", "prep": "Consultation included" },
+        { "name": "Fresh Line Reset", "time": "20 min", "price": "from $25", "prep": "Returning clients" }
+      ],
+      "facts": ["Custom domain and forwarding address", "Services, preparation, policy, contact, hours, and map", "Owner-controlled booking handoff and payment QR", "Phone-friendly request and content controls"],
+      "recipe": ["nav-signal", "hero-ledger", "market-proof", "service-ledger", "work-filmstrip", "booking-bridge", "owner-console", "location-contact", "shay-close", "footer-ledger"],
+      "decision_ids": ["market-01", "shape-02", "type-01", "cta-01", "motion-01", "booking-01", "foundation-01", "media-01"]
+    },
+    {
+      "id": "coil-ritual-v1",
+      "slug": "coil-ritual",
+      "name": "Coil Ritual",
+      "business": "Rooted Ritual Studio",
+      "location": "Fort Pierce, Florida",
+      "archetype": "texture-specialist hair studio centered on consultation and care",
+      "thesis": "Care becomes premium when the process is visible.",
+      "headline": "Your texture deserves a plan, not a guess.",
+      "subhead": "A tactile consultation journey that makes care, preparation, timing, and the next appointment feel considered.",
+      "palette": { "ink": "#2a1224", "paper": "#f8eadc", "accent": "#cf4f73", "accent2": "#7c5cff", "soft": "#d9a8a2" },
+      "shape": "nested curves, strand paths, soft cutouts, and consultation cards that overlap like swatches",
+      "type": "large lyrical serif phrases held by practical sans-serif labels and restrained measures",
+      "motion": "slow strand-path tracing and a single soft image reveal; no looping essential content",
+      "booking_label": "Use the marketplace for discovery; use the studio site to teach, prepare, and welcome the return visit.",
+      "booking_note": "The starter can keep the present provider while the owner tests a clearer direct path without an overnight migration.",
+      "services": [
+        { "name": "Texture Consultation", "time": "30 min", "price": "from $35", "prep": "Bring current routine and goals" },
+        { "name": "Shape + Hydration Ritual", "time": "120 min", "price": "from $140", "prep": "Detangled unless consultation says otherwise" },
+        { "name": "Silk + Shield", "time": "150 min", "price": "from $165", "prep": "Heat history reviewed first" }
+      ],
+      "facts": ["Texture-first gallery with owner-approved work", "Preparation and care notes before booking", "Consent-based testimonials and review links", "Optional consultation intake and future care-plan upgrades"],
+      "recipe": ["nav-orbit", "hero-ritual", "care-thesis", "service-swatches", "work-atlas", "booking-bridge", "owner-console", "testimonial-ribbon", "location-contact", "shay-close", "footer-orbit"],
+      "decision_ids": ["market-01", "shape-01", "type-02", "cta-01", "motion-01", "booking-01", "foundation-01", "media-02"]
+    },
+    {
+      "id": "barrio-signal-v1",
+      "slug": "barrio-signal",
+      "name": "Barrio Signal",
+      "business": "Río Norte Barbería",
+      "location": "West Palm Beach, Florida",
+      "archetype": "bilingual neighborhood barber brand with high mobile and walk-in traffic",
+      "thesis": "The neighborhood should recognize the signal in one scroll.",
+      "headline": "Tu estilo. Your chair. One clear next move.",
+      "subhead": "A bilingual, mobile-first rhythm with service clarity, real location context, and booking that does not force a platform switch.",
+      "palette": { "ink": "#091c2a", "paper": "#fff2d8", "accent": "#ff6b42", "accent2": "#00a6a6", "soft": "#ffd33d" },
+      "shape": "tile modules, registration marks, diagonal appointment ribbons, and hard-working utility chips",
+      "type": "oversized campaign sans, condensed utility labels, and bilingual lines with equal visual dignity",
+      "motion": "short poster-slide transitions and a controlled marquee that stops on interaction and under reduced motion",
+      "booking_label": "Discovery can stay on Booksy. The owner gains a memorable home to share, measure, and grow.",
+      "booking_note": "Language, services, neighborhood references, and imagery require owner confirmation; the template never infers culture from a name or ZIP code.",
+      "services": [
+        { "name": "Corte Clásico / Classic Cut", "time": "45 min", "price": "from $40", "prep": "Walk-in window shown separately" },
+        { "name": "Fade + Barba / Beard", "time": "60 min", "price": "from $58", "prep": "Style goal at check-in" },
+        { "name": "Junior Cut", "time": "35 min", "price": "from $32", "prep": "Guardian booking details" }
+      ],
+      "facts": ["Owner-approved bilingual copy", "Click-to-call, click-to-text, social, hours, and map", "Current booking link plus future direct path", "QR-ready share card for the chair, mirror, or business card"],
+      "recipe": ["nav-signal", "hero-poster", "language-switch-proof", "service-ribbons", "work-filmstrip", "location-first", "booking-bridge", "owner-console", "shay-close", "footer-poster"],
+      "decision_ids": ["market-01", "shape-03", "type-03", "cta-01", "motion-02", "booking-01", "foundation-01", "media-03"]
+    },
+    {
+      "id": "salt-glass-v1",
+      "slug": "salt-glass",
+      "name": "Salt Glass",
+      "business": "Tide & Tone Color House",
+      "location": "Miami, Florida",
+      "archetype": "consultation-led hair color studio with transformation and maintenance services",
+      "thesis": "Luxury is a clear plan carried through beautiful light.",
+      "headline": "Color that knows what happens after the reveal.",
+      "subhead": "An airy editorial system that moves from inspiration to consultation, maintenance, and the right booking path.",
+      "palette": { "ink": "#381828", "paper": "#eff9f4", "accent": "#00a5a8", "accent2": "#d74262", "soft": "#c7ece3" },
+      "shape": "translucent planes, long shoreline curves, prismatic crops, and disciplined consultation grids",
+      "type": "high-contrast editorial serif, razor-clean sans-serif facts, and one oversized chromatic word per viewport",
+      "motion": "light refraction drift and one before-to-plan reveal; no auto-playing comparison slider",
+      "booking_label": "A branded consultation path can pre-qualify the service while the current calendar remains connected.",
+      "booking_note": "The site can route color corrections, first visits, and maintenance differently without pretending to diagnose or quote a final price online.",
+      "services": [
+        { "name": "Color Mapping Consultation", "time": "30 min", "price": "from $45", "prep": "Current photos and color history" },
+        { "name": "Dimensional Color", "time": "180+ min", "price": "from $225", "prep": "Final scope after consultation" },
+        { "name": "Gloss + Maintenance", "time": "90 min", "price": "from $110", "prep": "Returning color plan" }
+      ],
+      "facts": ["Consultation-led service routing", "Owner-approved transformation gallery", "Maintenance plan and preparation notes", "Contact, location, hours, domain, forwarding email, booking, and QR foundation"],
+      "recipe": ["nav-glass", "hero-prism", "consultation-thesis", "service-editorial", "work-atlas", "booking-bridge", "maintenance-plan", "owner-console", "location-contact", "shay-close", "footer-glass"],
+      "decision_ids": ["market-01", "shape-01", "type-02", "cta-01", "motion-01", "booking-01", "foundation-01", "media-04"]
+    }
+  ]
+}

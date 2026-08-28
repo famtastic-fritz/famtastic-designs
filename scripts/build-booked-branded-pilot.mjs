@@ -26,6 +26,9 @@ const generationReceiptPath = join(generatedImageRoot, 'generation-receipt.json'
 const generatedPromptManifestPath = join(generatedImageRoot, 'prompt-manifest.json');
 const materialReceiptPath = join(publicRoot, 'template-lab/material-generation-receipt.json');
 const wowReceiptPath = join(publicRoot, 'wow-lab/image-generation-receipt.json');
+const researchMediaReceiptPath = join(publicRoot, 'research-proof-lab/media-generation-receipt.json');
+const researchBrowserEvidenceRoot = join(repositoryRoot, 'docs/evidence/booked-branded-research-proof');
+const researchBrowserQaPath = join(researchBrowserEvidenceRoot, 'browser-qa.json');
 
 function esc(value) {
   return String(value)
@@ -121,6 +124,7 @@ function pilotIndex() {
             <p>${esc(creative.offer.promise)}</p>
             ${button(`${publicBase}/package/`, 'See the complete package')}
             ${button(`${publicBase}/template-lab/`, 'Open the Template Lab', true)}
+            ${button(`${publicBase}/research-proof-lab/`, 'Open the Research Proof Lab', true)}
           </aside>
         </div>
       </header>
@@ -492,7 +496,7 @@ function componentLabPage() {
 
         <section class="component-next"><div class="shell component-next-grid"><div><p class="kicker">Foundation components next</p><h2>No basics get lost.</h2><p>The proof preserves the current page first. The next additions complete the reusable foundation: story, work gallery, protected contact, location/map/hours, and policies/FAQ.</p></div><ul>${planned}</ul></div></section>
 
-        <section class="component-studio-handoff"><div class="shell"><div><p class="kicker">Site Studio translation</p><h2>This becomes a builder—not another pile of pages.</h2><p>Site Studio can store the page recipe, open a component drawer, hide or reorder component instances, edit typed fields, and replace media slots. FAMtastic keeps the quality references, proof delivery, and business/customer history.</p></div><div>${button(`${publicBase}/template-lab/`, 'Return to the visual families')}${button(`${publicBase}/package/`, 'Review the package foundation', true)}</div></div></section>
+        <section class="component-studio-handoff"><div class="shell"><div><p class="kicker">Site Studio translation</p><h2>This becomes a builder—not another pile of pages.</h2><p>Site Studio can store the page recipe, open a component drawer, hide or reorder component instances, edit typed fields, and replace media slots. FAMtastic keeps the quality references, proof delivery, and business/customer history.</p></div><div>${button(`${publicBase}/research-proof-lab/`, 'Open four researched recipes')}${button(`${publicBase}/template-lab/`, 'Return to the visual families', true)}${button(`${publicBase}/package/`, 'Review the package foundation', true)}</div></div></section>
       </main>`
   });
 }
@@ -572,6 +576,15 @@ for (const variant of imageOnlyProof.variants) {
   }));
 }
 
+execFileSync(process.execPath, ['scripts/build-booked-branded-research-proof.mjs'], {
+  cwd: repositoryRoot,
+  stdio: 'inherit'
+});
+execFileSync(process.execPath, ['scripts/finalize-booked-branded-research-media.mjs'], {
+  cwd: repositoryRoot,
+  stdio: 'inherit'
+});
+
 const promptManifest = existsSync(generatedPromptManifestPath)
   ? JSON.parse(await readFile(generatedPromptManifestPath, 'utf8'))
   : {
@@ -592,7 +605,10 @@ const promptManifest = existsSync(generatedPromptManifestPath)
     };
 await write('image-prompts.json', JSON.stringify(promptManifest, null, 2) + '\n');
 
-const artifactPaths = (await walk(publicRoot))
+const artifactPaths = [
+  ...await walk(publicRoot),
+  ...(existsSync(researchBrowserEvidenceRoot) ? await walk(researchBrowserEvidenceRoot) : [])
+]
   .filter(path => !path.endsWith('build-dna.json'))
   .sort();
 const artifacts = [];
@@ -603,7 +619,13 @@ for (const absolute of artifactPaths) {
     path: relative(repositoryRoot, absolute),
     bytes: info.size,
     sha256: sha256(contents),
-    role: /\.(?:avif|jpe?g|png|webp)$/i.test(absolute) ? 'generated-image-final' : absolute.endsWith('.html') ? 'customer-facing-static-proof' : 'proof-support'
+    role: absolute.startsWith(researchBrowserEvidenceRoot)
+      ? 'browser-qa-evidence'
+      : /\.(?:avif|jpe?g|png|webp)$/i.test(absolute)
+        ? 'generated-image-final'
+        : absolute.endsWith('.html')
+          ? 'customer-facing-static-proof'
+          : 'proof-support'
   });
 }
 
@@ -615,6 +637,12 @@ const materialReceipt = existsSync(materialReceiptPath)
   : null;
 const wowReceipt = existsSync(wowReceiptPath)
   ? JSON.parse(await readFile(wowReceiptPath, 'utf8'))
+  : null;
+const researchMediaReceipt = existsSync(researchMediaReceiptPath)
+  ? JSON.parse(await readFile(researchMediaReceiptPath, 'utf8'))
+  : null;
+const researchBrowserQa = existsSync(researchBrowserQaPath)
+  ? JSON.parse(await readFile(researchBrowserQaPath, 'utf8'))
   : null;
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' }).trim();
 const createdAt = new Date().toISOString();
@@ -661,7 +689,10 @@ const buildDna = {
     customer_data_used: false,
     commerce_sku_activated: false,
     booking_provider_connected: false,
-    booking_upgrade_activated: false
+    booking_upgrade_activated: false,
+    research_template_count: 4,
+    research_component_count: componentSystem.research_proof_lab?.components?.length || 0,
+    research_decision_count: 16
   },
   stages: [
     localStage('offer-and-shay', 'offer-positioning-and-concierge-boundary', ['creative-system.json', 'package/index.html']),
@@ -673,7 +704,25 @@ const buildDna = {
     localStage('shape-direction', 'shape-composition-system', Object.keys(creative.archetypes)),
     localStage('type-direction', 'typographic-composition-system', Object.keys(creative.archetypes)),
     localStage('message-direction', 'proof-message-system', Object.keys(creative.archetypes)),
-    localStage('component-system', 'page-section-part-componentization', ['component-system.json', 'component-lab/index.html', '4 image-only component proofs']),
+    localStage('component-system', 'page-section-part-componentization', ['component-system.json', 'component-lab/index.html', 'research-proof-lab/index.html', '4 image-only component proofs', '4 research-backed page recipes']),
+    localStage('market-and-design-research', 'research-backed-component-decision-ledger', ['research/source-manifest.json', 'research/component-decisions.json', 'research/research-proof-data.json']),
+    {
+      stage_id: 'research-reference-led-media', capability: 'premium-parent-to-reference-led-candidate-generation', attempt: 1,
+      execution: {
+        provider: { id: researchMediaReceipt?.provider || 'openai-imagegen-builtin' },
+        model: { status: researchMediaReceipt?.model_status || 'provider_did_not_report' },
+        timing: { status: researchMediaReceipt ? 'reported' : 'not_started', completed_at: researchMediaReceipt?.created_at },
+        cost: { status: researchMediaReceipt?.cost_status || 'provider_did_not_report' }
+      },
+      result: {
+        status: researchMediaReceipt ? 'completed' : 'planned',
+        premium_parent_count: researchMediaReceipt?.premium_parent_count || 0,
+        reference_led_candidate_count: researchMediaReceipt?.reference_led_candidate_count || 0,
+        provider_generation_count: researchMediaReceipt?.provider_generation_count || 0,
+        retained_encoding_count: researchMediaReceipt?.encoding_count || 0,
+        outputs: researchMediaReceipt ? ['research-proof-lab/media-generation-receipt.json'] : []
+      }
+    },
     {
       stage_id: 'template-material-studies', capability: 'reference-led-material-system-generation', attempt: 1,
       execution: {
@@ -706,16 +755,16 @@ const buildDna = {
       },
       result: { status: generatedReceipt ? 'completed' : 'planned', provider_generation_count: generatedReceipt?.provider_generation_count || 0, selected_image_count: generatedReceipt?.image_count || 0, outputs: generatedReceipt?.artifacts.map(item => item.filename) || [] }
     },
-    localStage('static-construction', 'static-proof-construction', ['index.html', 'package/index.html', 'template-lab/index.html', 'component-lab/index.html', 'wow-lab/velvet-coil-architecture/index.html', '4 emails', '4 rooms', '12 baseline proof pages', '4 image-only component proofs']),
+    localStage('static-construction', 'static-proof-construction', ['index.html', 'package/index.html', 'template-lab/index.html', 'component-lab/index.html', 'research-proof-lab/index.html', '4 research-backed page recipes', 'wow-lab/velvet-coil-architecture/index.html', '4 emails', '4 rooms', '12 baseline proof pages', '4 image-only component proofs']),
     {
       stage_id: 'browser-qa', capability: 'responsive-browser-qa', attempt: 1,
-      execution: { provider: { id: 'playwright-local' }, model: { status: 'not_applicable' }, timing: { status: 'pending' }, cost: { status: 'not_applicable', amount_usd: 0 } },
-      result: { status: 'pending' }
+      execution: { provider: { id: 'playwright-local' }, model: { status: 'not_applicable' }, timing: { status: researchBrowserQa ? 'reported' : 'pending', completed_at: researchBrowserQa?.captured_at }, cost: { status: 'not_applicable', amount_usd: 0 } },
+      result: { status: researchBrowserQa?.result || 'pending', capture_count: researchBrowserQa?.pages?.length || 0, outputs: researchBrowserQa ? ['docs/evidence/booked-branded-research-proof/browser-qa.json'] : [] }
     },
     {
       stage_id: 'visual-review', capability: 'primary-visual-review', attempt: 1,
-      execution: { provider: { id: 'codex-visual-review' }, model: { status: 'not_applicable' }, timing: { status: 'pending' }, cost: { status: 'not_applicable', amount_usd: 0 } },
-      result: { status: 'pending', independent_review: 'reserved_for_owner' }
+      execution: { provider: { id: 'codex-visual-review' }, model: { status: 'not_applicable' }, timing: { status: researchBrowserQa ? 'reported' : 'pending', completed_at: researchBrowserQa?.captured_at }, cost: { status: 'not_applicable', amount_usd: 0 } },
+      result: { status: researchBrowserQa ? 'completed' : 'pending', reviewed_pages: researchBrowserQa ? 5 : 0, reviewed_viewports: researchBrowserQa ? ['desktop', 'mobile'] : [], independent_review: 'reserved_for_owner' }
     }
   ],
   artifacts,
