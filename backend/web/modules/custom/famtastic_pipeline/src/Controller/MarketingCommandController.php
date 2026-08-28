@@ -625,7 +625,7 @@ final class MarketingCommandController extends ControllerBase {
       $mLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'media', 'direction' => $mediaGate ? 'revoke' : 'approve'])->toString();
       $pLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'publish', 'direction' => $publishGate ? 'revoke' : 'approve'])->toString();
 
-      $imgSrc = '/admin/famtastic/marketing/asset/' . $rec['content_id'] . '.4x5.png';
+      $imgSrc = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.4x5.png'])->toString();
 
       $cardsHtml .= '
         <article style="border: 1px solid #2d382d; border-radius: 14px; background: #101510; padding: 1.25rem; display: flex; flex-direction: column;">
