@@ -631,6 +631,15 @@ final class MarketingCommandController extends ControllerBase {
       $imgSrc4x5 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.4x5.png'])->toString();
       $imgSrc9x16 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.9x16.png'])->toString();
 
+      $videoMap = [
+        'teach' => 'offer-launch-55-cents-proof.mp4',
+        'challenge' => 'service-education-ai-agent-proof.mp4',
+        'prove' => 'customer-retention-growth-review-proof.mp4',
+        'invite' => 'famtastic-55-cents-remotion.mp4',
+      ];
+      $videoFile = $videoMap[$moment] ?? 'offer-launch-55-cents-proof.mp4';
+      $videoSrc = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $videoFile])->toString();
+
       $momentCaptions = [
         'teach' => "Stop renting your website. Start owning your digital front door. ⚡\n\nFor less than 55 cents a day ($199/year), you get:\n✅ Fast SSD Cloud Hosting & SSL included\n✅ Custom Domain Registration (.com/.org/.net)\n✅ Client Portal & Interactive Project Hub\n✅ 100% Code Ownership — zero monthly SaaS traps.\n\nScan your local market in 20 seconds at famtasticdesigns.com.",
         'challenge' => "The hidden cost of generic website builders: Paying $30–$70/mo forever with zero code ownership and locked-in templates.\n\nCompare that to owning your custom digital engine with 1-year hosting included for $199 flat (~55¢/day).\n\nSee what your competitors are doing at famtasticdesigns.com.",
@@ -648,21 +657,47 @@ final class MarketingCommandController extends ControllerBase {
           <h3 style="margin: 0.2rem 0 0.5rem; font-size: 1.15rem; color: #fff; line-height: 1.3;">' . $promise . '</h3>
           <small style="color: #8e988e; margin-bottom: 0.75rem; display: block;">ID: <code>' . $cid . '</code> · Theme: ' . $theme . '</small>
           
-          <div style="margin: 0.5rem 0 0.75rem; text-align: center; background: #050805; border-radius: 10px; padding: 0.75rem; border: 1px solid #1c241c;">
-            <img src="' . $imgSrc4x5 . '" alt="' . $cid . '" style="max-width: 100%; height: 240px; object-fit: contain; border-radius: 6px; display: block; margin: 0 auto; background: #000;" onerror="this.src=\'' . $imgSrc9x16 . '\';" />
-            <div style="margin-top: 0.6rem; font-size: 0.75rem; display: flex; justify-content: center; gap: 0.75rem;">
-              <a href="' . $imgSrc4x5 . '" target="_blank" style="color: #7cfc00; text-decoration: none; font-weight: 600; background: rgba(124,252,0,0.1); padding: 2px 8px; border-radius: 4px;">🔍 View 4x5 Feed</a>
-              <a href="' . $imgSrc9x16 . '" target="_blank" style="color: #7cfc00; text-decoration: none; font-weight: 600; background: rgba(124,252,0,0.1); padding: 2px 8px; border-radius: 4px;">📱 View 9x16 Story</a>
+          <!-- Channel Matrix Badges -->
+          <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 0.75rem;">
+            <span style="background: #1877F2; color: #fff; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">Facebook</span>
+            <span style="background: #E4405F; color: #fff; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">Instagram</span>
+            <span style="background: #222; border: 1px solid #555; color: #fff; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">X</span>
+            <span style="background: #FF0000; color: #fff; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">YouTube Shorts</span>
+            <span style="background: #00f2fe; color: #000; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">TikTok</span>
+          </div>
+
+          <!-- Dual Media Preview (Feed Image + Shorts Video) -->
+          <div style="background: #050805; border-radius: 10px; padding: 0.75rem; border: 1px solid #1c241c; margin-bottom: 0.75rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; align-items: start;">
+              <!-- 4x5 Image Preview -->
+              <div style="text-align: center;">
+                <div style="font-size: 0.7rem; color: #7cfc00; font-weight: 700; margin-bottom: 4px;">📷 Feed Image (FB / IG / X)</div>
+                <img src="' . $imgSrc4x5 . '" alt="' . $cid . '" style="width: 100%; height: 160px; object-fit: contain; border-radius: 6px; background: #000; border: 1px solid #222;" onerror="this.src=\'' . $imgSrc9x16 . '\';" />
+                <div style="margin-top: 4px; font-size: 0.68rem;">
+                  <a href="' . $imgSrc4x5 . '" target="_blank" style="color: #8e988e; text-decoration: underline;">4x5 Full</a> · 
+                  <a href="' . $imgSrc9x16 . '" target="_blank" style="color: #8e988e; text-decoration: underline;">9x16 Full</a>
+                </div>
+              </div>
+              <!-- 9x16 Video Preview -->
+              <div style="text-align: center;">
+                <div style="font-size: 0.7rem; color: #ff4d4d; font-weight: 700; margin-bottom: 4px;">🎬 Video Reel (Shorts / TikTok)</div>
+                <video controls preload="metadata" playsinline style="width: 100%; height: 160px; object-fit: cover; border-radius: 6px; background: #000; border: 1px solid #222;" poster="' . $imgSrc9x16 . '">
+                  <source src="' . $videoSrc . '" type="video/mp4">
+                  Video preview available
+                </video>
+                <div style="margin-top: 4px; font-size: 0.68rem;">
+                  <a href="' . $videoSrc . '" target="_blank" style="color: #8e988e; text-decoration: underline;">Open MP4 Video ↗</a>
+                </div>
+              </div>
             </div>
           </div>
 
-          <details style="margin: 0.5rem 0 0.75rem; background: #080c08; border: 1px solid #1e261e; border-radius: 8px; padding: 0.5rem;" open>
-            <summary style="font-size: 0.78rem; font-weight: 700; color: #aab2aa; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">📝 Post Caption Copy</summary>
+          <details style="margin: 0.25rem 0 0.75rem; background: #080c08; border: 1px solid #1e261e; border-radius: 8px; padding: 0.5rem;" open>
+            <summary style="font-size: 0.78rem; font-weight: 700; color: #aab2aa; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">📝 Multi-Channel Copy &amp; Script</summary>
             <pre style="margin-top: 0.5rem; font-family: inherit; font-size: 0.8rem; color: #c4d0c4; white-space: pre-wrap; word-break: break-word; line-height: 1.45;">' . Html::escape($captionText) . '</pre>
           </details>
 
           <div style="margin-top: auto; padding-top: 0.75rem; border-top: 1px solid #222b22;">
-            <div style="font-size: 0.72rem; font-weight: 700; color: #8e988e; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">Target Channels: Facebook · Instagram · X · YouTube Shorts · TikTok</div>
             <div style="font-size: 0.75rem; font-weight: 700; color: #aab2aa; margin-bottom: 0.4rem; text-transform: uppercase;">Operator Approvals</div>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; text-align: center;">
               <a href="' . $cLink . '" style="padding: 0.45rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($contentGate ? 'rgba(124,252,0,0.18); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
