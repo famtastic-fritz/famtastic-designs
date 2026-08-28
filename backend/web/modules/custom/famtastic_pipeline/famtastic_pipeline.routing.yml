@@ -720,7 +720,16 @@ famtastic_pipeline.marketing.tab:
     _title: 'Marketing Command Center'
   requirements:
     _permission: 'administer famtastic pipeline'
-    tab: 'command|queue|calendar|channels|attribution|email|creative|builddna'
+    tab: 'command|dispatch|queue|calendar|channels|attribution|email|creative|builddna'
+
+famtastic_pipeline.marketing.asset:
+  path: '/admin/famtastic/marketing/asset/{filename}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MarketingCommandController::campaignAsset'
+    _title: 'Campaign Asset'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    filename: '[a-zA-Z0-9._-]+'
 
 famtastic_pipeline.marketing.email_inspect:
   path: '/admin/famtastic/marketing/email/{id}'

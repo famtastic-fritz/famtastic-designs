@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\famtastic_pipeline\Service\PostizChannelsService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -35,6 +36,7 @@ final class MarketingCommandController extends ControllerBase {
 
   private const TABS = [
     'command' => 'Command',
+    'dispatch' => 'Daily Dispatch',
     'queue' => 'Content queue',
     'calendar' => 'Calendar',
     'channels' => 'Channel health',
@@ -157,6 +159,7 @@ final class MarketingCommandController extends ControllerBase {
       'tabs' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-mkt__tabs']], 'items' => $tabs],
     ] + match ($tab) {
       'command' => $this->tabCommand(),
+      'dispatch' => $this->tabDispatch(),
       'queue' => $this->tabQueue(),
       'calendar' => $this->tabCalendar(),
       'channels' => $this->tabChannels(),
@@ -511,6 +514,203 @@ final class MarketingCommandController extends ControllerBase {
 
   private function linkCell(Link $link): array {
     return ['data' => $link->toRenderable()];
+  }
+
+  /**
+   * Safely serves campaign image assets to authenticated staff.
+   */
+  public function campaignAsset(string $filename): Response {
+    if (!preg_match('/^[a-zA-Z0-9._-]+\.(png|jpg|jpeg|webp|mp4)$/', $filename)) {
+      throw new NotFoundHttpException('Invalid asset name.');
+    }
+    $candidates = [
+      \Drupal::root() . '/../marketing/campaigns/55-cents-17-day/assets/' . $filename,
+      dirname(\Drupal::root(), 2) . '/marketing/campaigns/55-cents-17-day/assets/' . $filename,
+      dirname(\Drupal::root()) . '/marketing/campaigns/55-cents-17-day/assets/' . $filename,
+      \Drupal::root() . '/sites/default/files/marketing_assets/' . $filename,
+    ];
+    $found = NULL;
+    foreach ($candidates as $path) {
+      if (file_exists($path)) {
+        $found = $path;
+        break;
+      }
+    }
+    if (!$found) {
+      throw new NotFoundHttpException('Asset file not found.');
+    }
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    $mime = match ($ext) {
+      'png' => 'image/png',
+      'webp' => 'image/webp',
+      'jpg', 'jpeg' => 'image/jpeg',
+      'mp4' => 'video/mp4',
+      default => 'application/octet-stream',
+    };
+    $content = (string) file_get_contents($found);
+    return new Response($content, 200, [
+      'Content-Type' => $mime,
+      'Cache-Control' => 'private, max-age=3600',
+    ]);
+  }
+
+  /**
+   * Daily Social Dispatch tab: One unified multi-channel day-by-day screen.
+   */
+  private function tabDispatch(): array {
+    $request = \Drupal::request();
+    $selectedDay = max(1, min(17, (int) $request->query->get('day', 1)));
+
+    $totalRecords = $this->count('famtastic_social_record');
+    if ($totalRecords === 0) {
+      return [
+        'heading' => ['#markup' => '<h2>Daily Social Dispatch</h2><p class="famtastic-ops__lede">No campaign records imported yet into database.</p>'],
+        'sync' => [
+          '#type' => 'link',
+          '#title' => $this->t('⚡ Sync 17-Day Manifest Records'),
+          '#url' => Url::fromRoute('famtastic_pipeline.social_records_sync'),
+          '#attributes' => ['class' => ['button', 'button--primary']],
+        ],
+      ];
+    }
+
+    // Day navigation pills (Days 1 to 17)
+    $dayButtons = [];
+    for ($d = 1; $d <= 17; $d++) {
+      $dayPublishApproved = (int) $this->database->select('famtastic_social_record', 'r')
+        ->condition('day', $d)
+        ->condition('approval_publish', 1)
+        ->countQuery()->execute()->fetchField();
+      $isCurrent = $d === $selectedDay;
+      $dayButtons[] = [
+        '#type' => 'link',
+        '#title' => 'Day ' . $d . ($dayPublishApproved === 4 ? ' ✓' : ($dayPublishApproved > 0 ? ' (' . $dayPublishApproved . '/4)' : '')),
+        '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'dispatch'], ['query' => ['day' => $d]]),
+        '#attributes' => [
+          'class' => ['button', $isCurrent ? 'button--primary' : 'button--secondary'],
+          'style' => 'margin: 0 4px 6px 0; font-size: 0.85rem;' . ($isCurrent ? ' background: #7cfc00; color: #000; font-weight: bold;' : ''),
+        ],
+      ];
+    }
+
+    $records = $this->database->select('famtastic_social_record', 'r')
+      ->fields('r')
+      ->condition('day', $selectedDay)
+      ->orderBy('scheduled_time_et', 'ASC')
+      ->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+    $cardsHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">';
+
+    $momentIcons = [
+      'teach' => '🌅',
+      'challenge' => '☀️',
+      'prove' => '🌆',
+      'invite' => '🌙',
+    ];
+
+    foreach ($records as $rec) {
+      $cid = Html::escape((string) $rec['content_id']);
+      $moment = (string) $rec['moment'];
+      $icon = $momentIcons[$moment] ?? '📌';
+      $time = (string) $rec['scheduled_time_et'];
+      $promise = Html::escape((string) $rec['promise']);
+      $theme = ucfirst(Html::escape((string) $rec['theme']));
+      $state = Html::escape((string) $rec['state']);
+
+      $contentGate = (int) $rec['approval_content'] === 1;
+      $mediaGate = (int) $rec['approval_media'] === 1;
+      $publishGate = (int) $rec['approval_publish'] === 1;
+
+      $cLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'content', 'direction' => $contentGate ? 'revoke' : 'approve'])->toString();
+      $mLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'media', 'direction' => $mediaGate ? 'revoke' : 'approve'])->toString();
+      $pLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'publish', 'direction' => $publishGate ? 'revoke' : 'approve'])->toString();
+
+      $imgSrc = '/admin/famtastic/marketing/asset/' . $rec['content_id'] . '.4x5.png';
+
+      $cardsHtml .= '
+        <article style="border: 1px solid #2d382d; border-radius: 14px; background: #101510; padding: 1.25rem; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #7cfc00; font-weight: 800;">' . $icon . ' ' . $time . ' ET · ' . ucfirst($moment) . '</span>
+            <span class="famtastic-ops__badge famtastic-ops__badge--' . mb_strtolower($state) . '">' . $state . '</span>
+          </div>
+          <h3 style="margin: 0.2rem 0 0.5rem; font-size: 1.1rem; color: #fff; line-height: 1.3;">' . $promise . '</h3>
+          <small style="color: #8e988e; margin-bottom: 0.75rem; display: block;">ID: <code>' . $cid . '</code> · Theme: ' . $theme . '</small>
+          
+          <div style="margin: 0.5rem 0 0.75rem; text-align: center; background: #050805; border-radius: 10px; padding: 0.5rem; border: 1px solid #1c241c;">
+            <img src="' . $imgSrc . '" alt="' . $cid . '" style="max-width: 100%; height: 220px; object-fit: contain; border-radius: 6px; display: block; margin: 0 auto;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';" />
+            <div style="display: none; padding: 2rem 0.5rem; color: #8e988e; font-size: 0.8rem;">Asset preview: 4x5 &amp; 9x16 ready in campaign catalog</div>
+            <div style="margin-top: 0.4rem; font-size: 0.72rem; color: #7cfc00; display: flex; justify-content: space-around;">
+              <span>4x5 (Feed)</span>
+              <span>9x16 (Reels/Stories/Shorts)</span>
+            </div>
+          </div>
+
+          <div style="margin-top: auto; padding-top: 0.75rem; border-top: 1px solid #222b22;">
+            <div style="font-size: 0.75rem; font-weight: 700; color: #aab2aa; margin-bottom: 0.5rem; text-transform: uppercase;">Operator Approvals</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; text-align: center;">
+              <a href="' . $cLink . '" style="padding: 0.4rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($contentGate ? 'rgba(124,252,0,0.15); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
+                ' . ($contentGate ? '✓ Copy' : '○ Copy') . '
+              </a>
+              <a href="' . $mLink . '" style="padding: 0.4rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($mediaGate ? 'rgba(124,252,0,0.15); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
+                ' . ($mediaGate ? '✓ Media' : '○ Media') . '
+              </a>
+              <a href="' . $pLink . '" style="padding: 0.4rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($publishGate ? 'rgba(124,252,0,0.15); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
+                ' . ($publishGate ? '✓ Publish' : '○ Publish') . '
+              </a>
+            </div>
+          </div>
+        </article>
+      ';
+    }
+    $cardsHtml .= '</div>';
+
+    $batchApproveUrl = Url::fromRoute('famtastic_pipeline.social_record_batch_gate', ['day' => $selectedDay, 'gate' => 'all', 'direction' => 'approve'])->toString();
+    $batchRevokeUrl = Url::fromRoute('famtastic_pipeline.social_record_batch_gate', ['day' => $selectedDay, 'gate' => 'all', 'direction' => 'revoke'])->toString();
+
+    $headerHtml = '
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+          <h2 style="margin: 0; font-size: 1.5rem;">Daily Social Dispatch — Day ' . $selectedDay . ' of 17</h2>
+          <p class="famtastic-ops__lede" style="margin: 0.25rem 0 0;">All scheduled multi-channel content moments, creative visual assets, and gate decisions for Day ' . $selectedDay . '.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <a href="' . $batchApproveUrl . '" class="button button--primary" style="background: #7cfc00; color: #000; font-weight: 800;">⚡ Approve Entire Day ' . $selectedDay . '</a>
+          <a href="' . $batchRevokeUrl . '" class="button">Revoke Day ' . $selectedDay . '</a>
+        </div>
+      </div>
+    ';
+
+    $architectureGuide = '
+      <div style="margin-top: 2rem; padding: 1.5rem; border-radius: 14px; background: #0c100c; border: 1px solid #222b22;">
+        <h3 style="margin: 0 0 0.5rem; color: #7cfc00; font-size: 1.1rem;">🛠️ Social Media Build &amp; Multi-Channel Publishing Architecture</h3>
+        <p style="color: #9da79d; font-size: 0.88rem; margin: 0 0 1rem; line-height: 1.5;">How our agentic build skills, assets, and publishing channels operate together across Facebook, YouTube, TikTok, Instagram, and X:</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+          <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
+            <strong style="color: #fff; font-size: 0.85rem; display: block;">1. Build Skill: Creative Generation</strong>
+            <span style="color: #8e988e; font-size: 0.78rem;">4x5 &amp; 9x16 graphics rendered via local script; HeyGen avatar videos &amp; MoneyPrinterTurbo short cutdowns.</span>
+          </div>
+          <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
+            <strong style="color: #fff; font-size: 0.85rem; display: block;">2. Content &amp; UTM Structure</strong>
+            <span style="color: #8e988e; font-size: 0.78rem;">Stable content IDs (55c-d01-*) joined to GA4 &amp; UTM leads in Attribution table.</span>
+          </div>
+          <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
+            <strong style="color: #fff; font-size: 0.85rem; display: block;">3. Three-Gate Operator Review</strong>
+            <span style="color: #fff; font-size: 0.78rem;">Content (copy), Media (visuals), and Publish gates must be explicitly approved by Fritz before scheduling.</span>
+          </div>
+          <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);">
+            <strong style="color: #fff; font-size: 0.85rem; display: block;">4. Multi-Channel Dispatch</strong>
+            <span style="color: #8e988e; font-size: 0.78rem;">Postiz scheduler dispatches approved moments automatically to Facebook, YouTube, TikTok, Instagram &amp; X.</span>
+          </div>
+        </div>
+      </div>
+    ';
+
+    return [
+      'day_nav' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-dispatch__days'], 'style' => 'margin-bottom: 1.25rem;'], 'items' => $dayButtons],
+      'header' => ['#markup' => $headerHtml],
+      'cards' => ['#markup' => $cardsHtml],
+      'guide' => ['#markup' => $architectureGuide],
+    ];
   }
 
   private function date(int $stamp): string {

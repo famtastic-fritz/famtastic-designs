@@ -10,6 +10,8 @@
 - Rendered prominent Private Offer highlight banner with 1-click checkout directly inside the client portal project request viewer.
 - Added an Active Order Fulfillment Roadmap banner in CustomerPortalDashboard and rich status descriptions for Hosting, Domain Registration/Connection, and Website entitlements.
 - Launched the Service-Specific Direct Intake System (`/intake`) with dedicated shareable forms for Hosting & Domain Setup, AI Chatbots, Custom Client Portals, Website Care & Maintenance, and Custom Website Launches with 1-click link copying and Drupal intake synchronization.
+- Added `Daily Dispatch` tab to Marketing Command Center (`/admin/famtastic/marketing/dispatch`) providing a unified multi-channel day-by-day command screen across Facebook, YouTube, TikTok, Instagram, and X with 4 daily moment cards, visual asset previews (4x5 & 9x16), copy hooks, and 1-click batch gate approvals.
+- Added secure campaign asset endpoint (`/admin/famtastic/marketing/asset/{filename}`) to serve visual creative artwork directly within the dispatch interface.
 - Enhanced Marketing Command Center's Email Center tab with live status metrics for sent, queued, and retry/dead-letter notifications.
 
 ## 2026-08-27 — Booked & Branded owner-QR payment boundary
