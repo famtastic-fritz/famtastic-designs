@@ -580,12 +580,12 @@ export default function SolutionFinder({ initialBranch = null }) {
     <div className="sf" id="solution-finder">
       {/* ============ HERO ENTRY POINT ============ */}
       <section className="sf__hero-entry">
-        <span className="sf__ai-badge">⚡ FAMtastic Solution Finder · Dynamic Project Intake</span>
+        <span className="sf__ai-badge">⚡ FAMtastic Solutions Studio · Interactive Project Architecture</span>
         <h2 className="sf__hero-title">
-          Scope your custom system <span className="sf__accent-green">in 60 seconds.</span>
+          We engineer solutions <span className="sf__accent-green">where they don't exist.</span>
         </h2>
         <p className="sf__hero-sub">
-          Dynamic, one-question-at-a-time guided intake. Tailored specifications, custom sitemaps, and exact locked pricing across all 6 core services—before you spend a dime.
+          Dynamic, one-question-at-a-time intake. Tailored specifications, custom architecture blueprints, and transparent locked pricing designed around your exact business workflow.
         </p>
 
         <div className="sf__entry-box">
@@ -595,7 +595,7 @@ export default function SolutionFinder({ initialBranch = null }) {
             onClick={openChat}
             aria-haspopup="dialog"
           >
-            <span className="sf__entry-btn-text">What do you want to build? (e.g. $199 Special, AI Chatbot, E-Commerce...)</span>
+            <span className="sf__entry-btn-text">What solution does your business need? (e.g. $199 Launch, AI Automation, Custom Web App...)</span>
             <span className="sf__entry-btn-go">Start scoping →</span>
           </button>
 
