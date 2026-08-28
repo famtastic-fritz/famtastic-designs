@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-28 — Bridge Decoupled Intakes to Native Drupal Views & Webforms Rather Than Re-Inventing Admin Surfaces
+
+- Observation: Building custom SQL tables and standalone controllers for decoupled APIs works for headless throughput, but bypasses Drupal's native superpowers (Views exposed filters, Webform submissions audit, and built-in email handlers).
+- Guidance: Always provide a `hook_views_data` (`.views.inc`) file for custom pipeline tables and bridge decoupled intake endpoints into Drupal's native `webform_submission` entity so operators can use standard administrative Views and Webform results.
+
 ## 2026-08-27 — A low-cost starter should reveal the upgrade path, not lead with exclusions
 
 - Observation: describing a proposed $19.99 renewal and dedicating a major

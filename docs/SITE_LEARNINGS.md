@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-28 — Bridge Decoupled Intakes to Native Drupal Views & Webforms Rather Than Re-Inventing Admin Surfaces
+
+- Observation: Building custom SQL tables and standalone controllers for decoupled APIs works for headless throughput, but bypasses Drupal's native superpowers (Views exposed filters, Webform submissions audit, and built-in email handlers).
+- Guidance: Always provide a `hook_views_data` (`.views.inc`) file for custom pipeline tables and bridge decoupled intake endpoints into Drupal's native `webform_submission` entity so operators can use standard administrative Views and Webform results.
+
 ## 2026-08-27 — Solution Finder UX: Hero Entry Point & Modal Takeover Beat Embedded Forms
 
 - Observation: A permanently embedded chatbot panel on landing pages consumes excessive screen real estate—especially on mobile—and feels like a traditional form wearing a chat costume. Visitors hesitate to engage because the interface demands answers before demonstrating competence.
