@@ -5,8 +5,8 @@
   "created_at": "2026-08-29T22:00:00Z",
   "repository": {
     "name": "famtastic-designs",
-    "revision": "2ff49407705ca9d27603223154b79903890bd75f",
-    "worktree_state": "feature worktree; V2 implementation and local evidence complete before feature commit"
+    "revision": "612354e60e742f08342a227915b954f8e9440e60",
+    "worktree_state": "feature implementation committed; production acceptance pending"
   },
   "recipe": {
     "routine": "famtastic-subject-specific-showcase-refinement",
