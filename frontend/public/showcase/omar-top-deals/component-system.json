@@ -1,7 +1,7 @@
 {
   "schema": "famtastic.page-component-system.v1",
   "system_id": "omar-top-deals-components-v1",
-  "system_version": "1.0.0",
+  "system_version": "1.1.0",
   "page_recipe": {
     "recipe_id": "market-front-door-v1",
     "recipe_version": "1.0.0",
@@ -10,6 +10,7 @@
       "omar-hero-01",
       "omar-deals-01",
       "omar-how-01",
+      "omar-social-01",
       "omar-story-01",
       "omar-control-01",
       "omar-contact-01"
@@ -36,6 +37,13 @@
       "variant_id": "three-step-route",
       "slots": ["context_image", "section_heading", "before_step", "during_step", "after_step", "hold_action"],
       "swappable_without_recipe_change": ["image", "step_copy", "action_label"]
+    },
+    {
+      "instance_id": "omar-social-01",
+      "definition_id": "marketing.flyer-to-follow.v1",
+      "variant_id": "three-format-launch",
+      "slots": ["source_flyer", "transformation_message", "scan_step", "event_step", "permission_step", "feed_creative", "story_creative", "follow_up_creative", "owner_caption_drafts"],
+      "swappable_without_recipe_change": ["safe_flyer_crop", "generated_creatives", "native_overlay_copy", "caption_drafts", "content_pillars"]
     },
     {
       "instance_id": "omar-story-01",

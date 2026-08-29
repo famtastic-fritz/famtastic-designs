@@ -19,12 +19,19 @@ assert.match(publicHtml, /Nothing here charges, emails, reserves inventory, or c
 assert.match(publicHtml, /id="event-map-link"/);
 assert.match(publicHtml, /id="contact-form"/);
 assert.match(publicHtml, /id="hold-form"/);
+assert.match(publicHtml, /id="flywheel"/);
+assert.match(publicHtml, /ONE HANDOUT\.<br><em>A WHOLE DIGITAL RUNWAY\.<\/em>/);
+assert.match(publicHtml, /THE UPGRADE IS NOT “STOP PRINTING\.”/);
+assert.match(publicHtml, /marketing\.flyer-to-follow\.v1/);
 assert.match(ownerHtml, /Top Deals Control/);
 assert.match(ownerHtml, /data-owner-panel="table"/);
 assert.match(ownerHtml, /data-owner-panel="holds"/);
 assert.match(ownerHtml, /data-owner-panel="events"/);
 assert.match(ownerHtml, /data-owner-panel="front-door"/);
+assert.match(ownerHtml, /data-owner-panel="social"/);
 assert.match(ownerHtml, /data-owner-panel="launch"/);
+assert.match(ownerHtml, /Recommended handle · availability not checked/);
+assert.match(ownerHtml, /Copy draft caption/);
 assert.match(ownerHtml, /availability not checked/i);
 assert.match(ownerHtml, /not activated/i);
 assert.match(ownerHtml, /FAMtastic does not become the payment processor/i);
@@ -41,10 +48,14 @@ for (const relative of [
   'assets/hero-marketday.webp',
   'assets/omar-and-fritz.webp',
   'assets/field-market.webp',
+  'assets/current-flyer-safe.webp',
+  'assets/social-feed-finds.webp',
+  'assets/social-story-pop-up.webp',
+  'assets/social-follow-up.webp',
   'assets/omar-top-deals-qr.png'
 ]) {
   const file = await stat(path.join(root, relative));
   assert.ok(file.size > 3_000, `${relative} should be a substantive local asset`);
 }
 
-console.log('PASS Omar Top Deals: public front door, 6 owner panels, local shared state, real QR, 6 local assets, zero application API effects.');
+console.log('PASS Omar Top Deals: public front door, flyer-to-follow system, 7 owner panels, local shared state, real QR, 10 local assets, zero application API effects.');

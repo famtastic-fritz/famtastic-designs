@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-08-29 — Omar Top Deals flyer-to-follow social expansion
+
+- Extended the public Omar Top Deals showcase with a source-respecting
+  flyer-to-digital transformation: safe-cropped current flyer, permanent-link
+  bridge, and before/during/after/over-time customer loop.
+- Added three separate reference-led, text-free campaign visuals for Fresh
+  Finds feed posts, Where Omar Pops Up Story/Reel covers, and the invited
+  return loop; native HTML owns every readable headline and disclosure.
+- Added a seventh owner-console panel with three local copyable caption drafts,
+  four content pillars, and explicit unverified-handle/no-posting boundaries.
+- Preserved the existing hold, question, event, QR, payment-boundary, and
+  device-local state flows; no social account, scheduler, message, API, event,
+  product, or publishing side effect was added.
+- Added the versioned component decision, exact prompt receipt, Build DNA,
+  desktop/mobile screenshots, deterministic checks, and mobile browser proof.
+
 ## 2026-08-29 — Omar Top Deals market-front-door prototype
 
 - Added a subject-specific public concept for Omar, a pop-up merchandise

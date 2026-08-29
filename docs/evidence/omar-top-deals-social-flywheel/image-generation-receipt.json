@@ -1,0 +1,51 @@
+{
+  "schema": "famtastic.media-generation-receipt.v1",
+  "created_at": "2026-08-29T21:19:42Z",
+  "provider": "openai-imagegen-tool",
+  "model": {
+    "id": null,
+    "status": "not_disclosed_by_runtime"
+  },
+  "execution_class": "cloud_tool",
+  "inputs": {
+    "reference_count": 4,
+    "rights": "owner-supplied for Omar Top Deals working concept",
+    "references": [
+      "owner-supplied current flyer photograph",
+      "owner-supplied merchandise table and truck photographs"
+    ]
+  },
+  "generations": [
+    {
+      "role": "social_feed_fresh_finds",
+      "prompt": "Use case: ads-marketing\nAsset type: premium Instagram/Facebook 4:5 feed creative background for Omar Top Deals\nInput images: Image 1 is Omar's current printed event-flyer reference for palette, layered energy, print texture, and cultural warmth only; Images 2-4 are owner-supplied real pop-up merchandise/table references for product mix and authentic environment.\nPrimary request: create a wholly new premium editorial still life of a traveling pop-up merchant's colorful merchandise table, centered on a curated arrangement of original unbranded bucket hats, woven hats, African-inspired artisan gifts, and tactile textiles. Translate the flyer's rich sunset orange, gold, deep ink, red, green, and paper-grain energy into a sophisticated modern campaign photograph.\nComposition/framing: portrait 4:5 social feed composition; merchandise occupies the lower two-thirds; generous calm negative space in the upper-left for native HTML copy; a subtle diagonal ticket-edge rhythm inspired by handbills without copying the flyer.\nStyle/medium: photorealistic premium campaign photography with restrained screen-print texture and natural imperfections, not a poster or UI mockup.\nLighting/mood: warm late-afternoon market light, confident, community-driven, valuable, celebratory.\nConstraints: no people required; no exact event artwork; no flags used as brand marks; no team, fraternity, sorority, league, sports, product, vendor, or event logos; no trademarks; no words, letters, numbers, prices, signs, QR codes, contact information, labels, pseudo-text, interface graphics, or watermarks. Native HTML will provide all text. Keep hats and hands physically plausible and merchandise commercially credible.",
+      "output": "docs/evidence/omar-top-deals-social-flywheel/media/social-feed-finds.png",
+      "sha256": "531d9515d6c9bf634da01aa32859ef271934888fda9c85e04717f0a58295d38b"
+    },
+    {
+      "role": "social_story_where_omar_pops_up",
+      "prompt": "Use case: ads-marketing\nAsset type: premium vertical 9:16 Instagram Story and Reel cover background for Omar Top Deals\nInput images: use the four most recent owner-supplied Omar photos as reference for authentic pop-up scale, merchandise density, folding tables, canopy, box-truck mobility, warm community atmosphere, and the current flyer's rich sunset-orange/gold/deep-ink energy. Do not copy any exact flyer artwork or visible brands.\nPrimary request: create a wholly new cinematic dusk scene of a mobile pop-up merchandise experience being prepared under a clean white canopy beside a simple delivery truck. Curated original unbranded bucket hats, woven hats, African-inspired artisan gifts, tactile textiles, and warm practical lights create a striking destination rather than a flea-market snapshot.\nComposition/framing: vertical 9:16; low three-quarter view leading from merchandise in the foreground toward the glowing canopy; generous calm negative space in the upper quarter for native HTML headline and a quiet lower-right pocket for a CTA; strong depth and one unmistakable focal path.\nStyle/medium: photorealistic premium lifestyle campaign photography with subtle film grain and restrained handbill-inspired edge texture, not a poster, illustration, flyer, collage, or UI.\nLighting/mood: blue-hour sky, warm amber bulbs, confident, magnetic, community-minded, entrepreneurial, unexpectedly premium.\nConstraints: no identifiable people or faces; no exact event artwork; no flags used as brand marks; no team, fraternity, sorority, league, sports, product, vendor, or event logos; no trademarks; no words, letters, numbers, prices, signs, QR codes, contact information, labels, pseudo-text, interface graphics, or watermarks. Native HTML will provide all text. Physically plausible hats, tables, canopy, truck, lighting, and shadows.",
+      "output": "docs/evidence/omar-top-deals-social-flywheel/media/social-story-pop-up.png",
+      "sha256": "c63ea931bcbb6909cb4aada15e3bb4a213d7da067bef3d1fcd917c4470892b2f"
+    },
+    {
+      "role": "social_follow_up_return_loop",
+      "prompt": "Use case: ads-marketing\nAsset type: premium 4:5 social campaign background illustrating Omar Top Deals moving from paper flyer to a lasting customer relationship\nInput images: use the four most recent owner-supplied Omar photos as reference for authentic hand-to-hand selling, colorful pop-up goods, handbill culture, and warm community energy. Do not copy any exact flyer design, logos, contact data, or identifiable faces.\nPrimary request: create a wholly new close editorial photograph at a lively pop-up table: one mature Black merchant's hand presents a richly patterned, original unbranded bucket hat to a customer's hand while a modern smartphone with a clean dark blank screen is held nearby, suggesting a follow/favorite moment without displaying an interface. A small stack of abstract blank textured handbills sits softly out of focus, bridging old-school hustle to a durable digital storefront.\nComposition/framing: portrait 4:5; expressive hands and hat are the sharp focal point in lower center; phone is secondary and physically plausible; generous negative space in upper-left and upper-center for native HTML copy; merchandise color creates a diagonal visual rhythm.\nStyle/medium: photorealistic premium editorial campaign photography, tactile fabric detail, restrained paper grain, sophisticated-not a flyer, poster, collage, UI mockup, stock-photo handshake, or illustration.\nLighting/mood: warm natural market light, gratitude, trust earned over decades, forward motion, human connection, dignity, optimistic momentum.\nConstraints: crop people below shoulders; no identifiable faces; no exact event artwork; no flags used as brand marks; no team, fraternity, sorority, league, sports, product, vendor, or event logos; no trademarks; no words, letters, numbers, prices, QR codes, contact information, signs, labels, pseudo-text, interface graphics, app icons, or watermarks. Phone screen must remain blank and inactive. Native HTML will provide all readable text. Hands, phone, textiles, hats, shadows, and merchandise must be anatomically and physically plausible.",
+      "output": "docs/evidence/omar-top-deals-social-flywheel/media/social-follow-up.png",
+      "sha256": "ba730822f9ffddb1c5b3ab8aca3f277f06deb007a2eb55856f803dbabc2d56e9"
+    }
+  ],
+  "cost": {
+    "status": "provider_did_not_report",
+    "currency": "USD",
+    "amount": null
+  },
+  "timing": {
+    "status": "partial",
+    "duration_ms": null
+  },
+  "review": {
+    "status": "selected_as_distinct_family",
+    "basis": "Three different customer moments, clear native-type space, no readable generated text, no identifiable faces, no visible source-flyer contacts, and materially different feed, Story/Reel, and follow-up compositions."
+  }
+}

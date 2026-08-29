@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-29 — A flyer becomes more valuable when it opens a durable loop
+
+- Observation: a strong handbill can still stop people while failing to give a
+  traveling merchant a lasting identity, an updateable next stop, or a
+  permission-based route back after the event.
+- Guidance: treat the flyer as the first touch, not obsolete media. Pair it
+  with one permanent link and QR; model feed, Story/Reel, and return content as
+  separate reusable media slots; render readable messaging natively; and keep
+  caption drafts local until the merchant approves the account, handle, facts,
+  inventory, links, permissions, and publishing action.
+
 ## 2026-08-29 — A temporary table benefits from a permanent front door
 
 - Observation: a pop-up merchant may change products, prices, and locations

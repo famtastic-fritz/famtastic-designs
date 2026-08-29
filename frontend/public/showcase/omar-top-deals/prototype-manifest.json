@@ -15,6 +15,7 @@
     "hero.market-front-door.v1",
     "catalog.pop-up-grid.v1",
     "process.reserve-path.v1",
+    "marketing.flyer-to-follow.v1",
     "story.mentor-market.v1",
     "operations.market-day-console.v1",
     "contact.next-pop-up.v1"
@@ -25,12 +26,18 @@
     { "path": "assets/hero-marketday.webp", "role": "owner_console_media", "rights": "owner_reference_derived_generated" },
     { "path": "assets/omar-and-fritz.webp", "role": "owner_supplied_story_photo", "rights": "owner_supplied" },
     { "path": "assets/field-market.webp", "role": "owner_supplied_safe_crop", "rights": "owner_supplied_contact_details_removed" },
+    { "path": "assets/current-flyer-safe.webp", "role": "owner_supplied_current_flyer_safe_crop", "rights": "owner_supplied_contact_strip_removed" },
+    { "path": "assets/social-feed-finds.webp", "role": "social_feed_creative", "rights": "owner_reference_derived_generated" },
+    { "path": "assets/social-story-pop-up.webp", "role": "social_story_reel_creative", "rights": "owner_reference_derived_generated" },
+    { "path": "assets/social-follow-up.webp", "role": "social_follow_up_creative", "rights": "owner_reference_derived_generated" },
     { "path": "assets/omar-top-deals-qr.png", "role": "public_showcase_qr", "rights": "generated_locally" }
   ],
   "truth_boundaries": [
     "All inventory, prices, events, contact details, domain availability, email configuration, payment routes, and launch claims require Omar's approval.",
     "Forms and owner changes remain in the current browser's localStorage.",
     "The QR opens the showcase only and does not initiate payment.",
+    "The social handle is a recommendation with availability unverified; no social account, post, schedule, campaign, or message was created.",
+    "Social captions are drafts and require Omar's approval of every product, event fact, link, permission, and publishing action.",
     "No business profile, domain, custom email, messaging provider, payment provider, database, authentication, or analytics account was created or connected."
   ]
 }

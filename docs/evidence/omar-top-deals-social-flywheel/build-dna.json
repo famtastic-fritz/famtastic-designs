@@ -1,0 +1,117 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "omar-top-deals-social-flywheel-20260829",
+  "classification": "owner-supplied real-subject public showcase refinement",
+  "created_at": "2026-08-29T21:19:42Z",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "60be5d9b491c6363d010e8fb92d3961ca51122ea",
+    "worktree_state": "feature worktree; social-flywheel refinement and evidence not committed at record creation"
+  },
+  "recipe": {
+    "routine": "famtastic-subject-specific-demand-proof-refinement",
+    "version": "1.0.0",
+    "build_class": "public-showcase-plus-device-local-owner-social-kit",
+    "page_recipe_id": "market-front-door-v1",
+    "page_recipe_version": "1.0.0",
+    "component_system_id": "omar-top-deals-components-v1",
+    "component_system_version": "1.1.0",
+    "changed_component_instance": "omar-social-01",
+    "changed_component_definition": "marketing.flyer-to-follow.v1",
+    "intensity": "famtastic-bold",
+    "typography": ["Archivo Black", "Fraunces", "DM Sans"],
+    "texture_depth": "paper grid, cropped handbill, tactile tape, ink grain, editorial imagery, offset shadows",
+    "motion": "existing controllable ticker only; reduced-motion fallback retained",
+    "original_asset_strategy": "one owner-supplied safe flyer crop plus three separately generated text-free social scenes",
+    "success_gates": ["truthful source-to-strategy bridge", "no invented inventory or social presence", "native readable copy", "three distinct social formats", "390px no-overflow", "existing public-owner state continuity", "zero application API effects", "production build"]
+  },
+  "stages": [
+    {
+      "stage_id": "social-strategy-and-component-decision",
+      "attempt": 1,
+      "capability": "evidence-led marketing strategy and component definition",
+      "execution": {
+        "provider": { "id": "owner-brief-plus-famtastic-demand-doctrine" },
+        "model": { "id": null, "status": "not_disclosed_by_runtime" },
+        "timing": { "status": "partial", "duration_ms": null },
+        "cost": { "status": "no_separate_provider_cost_reported", "amount": 0, "currency": "USD" },
+        "input": { "owner_brief": "Respect Omar's current flyer, add wow and social value, and explain the move into a durable modern system as a personal return of decades-old business mentorship." },
+        "output": { "plan": "docs/plans/OMAR_TOP_DEALS_SOCIAL_FLYWHEEL_2026-08-29.md", "decision_record": "docs/evidence/omar-top-deals-social-flywheel/component-decisions.json" }
+      },
+      "result": { "status": "passed", "limitations": "No social handle availability, account ownership, inventory, event, engagement, reach, or conversion outcome was established." }
+    },
+    {
+      "stage_id": "social-image-family",
+      "attempt": 1,
+      "capability": "owner-reference-led image generation",
+      "execution": {
+        "provider": { "id": "openai-imagegen-tool" },
+        "model": { "id": null, "status": "not_disclosed_by_runtime" },
+        "timing": { "status": "partial", "duration_ms": null },
+        "cost": { "status": "provider_did_not_report", "amount": null, "currency": "USD" },
+        "prompt": { "status": "exact", "evidence_ref": "docs/evidence/omar-top-deals-social-flywheel/image-generation-receipt.json" },
+        "input": { "reference_count": 4, "rights": "owner-supplied for demo" },
+        "output": { "candidate_count": 3, "selected_count": 3, "roles": ["feed", "story-reel", "follow-up"] }
+      },
+      "result": { "status": "partial", "reason": "All three outputs passed visual selection; runtime did not disclose model identity, invoice cost, or complete timing." }
+    },
+    {
+      "stage_id": "flywheel-and-owner-social-kit",
+      "attempt": 1,
+      "capability": "componentized static web refinement",
+      "execution": {
+        "provider": { "id": "openai-codex" },
+        "model": { "id": null, "status": "not_disclosed_by_runtime" },
+        "timing": { "status": "partial", "duration_ms": null },
+        "cost": { "status": "subscription_or_runtime_did_not_report", "amount": null, "currency": "USD" },
+        "input": { "component_system": "frontend/public/showcase/omar-top-deals/component-system.json", "decision_ids": ["OTD-D13", "OTD-D14", "OTD-D15"] },
+        "output": { "public_component": "marketing.flyer-to-follow.v1", "owner_panel": "social", "draft_caption_count": 3, "content_pillar_count": 4, "network_calls": 0 }
+      },
+      "result": { "status": "passed", "external_effects": [] }
+    },
+    {
+      "stage_id": "local-acceptance",
+      "attempt": 1,
+      "capability": "deterministic and browser QA",
+      "execution": {
+        "provider": { "id": "local-node-playwright" },
+        "model": { "id": null, "status": "not_applicable" },
+        "timing": { "status": "partial", "duration_ms": null },
+        "cost": { "status": "not_applicable", "amount": 0, "currency": "USD" },
+        "input": { "viewports": ["1440x1100", "390x844"], "tests": ["frontend/scripts/test-omar-top-deals.mjs", "frontend/scripts/e2e-omar-top-deals.mjs", "npm run build"] },
+        "output": { "horizontal_overflow": 0, "console_errors": 0, "social_creatives": 3, "owner_social_cards": 3, "existing_public_owner_flows": "passed", "vite_build": "passed_with_existing_chunk_size_warning" }
+      },
+      "result": { "status": "passed" }
+    }
+  ],
+  "artifacts": [
+    { "role": "strategy_plan", "path": "docs/plans/OMAR_TOP_DEALS_SOCIAL_FLYWHEEL_2026-08-29.md", "sha256": "ca44e43fb339aa263134397c945ee585ebb99122395cbc01da23c968c6f50938", "rights": "famtastic-owned implementation plan" },
+    { "role": "component_decisions", "path": "docs/evidence/omar-top-deals-social-flywheel/component-decisions.json", "sha256": "8b19ceaa165a703b865d19ee1ae6aa3c3e482829a0eb124f80994f6d71e54c96", "rights": "famtastic-owned evidence" },
+    { "role": "image_generation_receipt", "path": "docs/evidence/omar-top-deals-social-flywheel/image-generation-receipt.json", "sha256": "be236ec097f2e0fbe594a0788e9ffb3043fe47d6ae00b9e4a954d4466062f507", "rights": "famtastic-owned evidence" },
+    { "role": "public_page", "path": "frontend/public/showcase/omar-top-deals/index.html", "sha256": "eb0b89793ddec95a32219c23046b148a518d18075f034954784df00bc4c3756b", "rights": "famtastic-owned implementation" },
+    { "role": "owner_console", "path": "frontend/public/showcase/omar-top-deals/owner/index.html", "sha256": "3927245acf29334f18b64c4ca06ceeec90d15c407ae025719bd7c08f0d9ee6d3", "rights": "famtastic-owned implementation" },
+    { "role": "styles", "path": "frontend/public/showcase/omar-top-deals/top-deals.css", "sha256": "6f63aa47b10a3b9b9173f015e33b3f0ff44002e72069c80ef110fa339bd5bb85", "rights": "famtastic-owned implementation" },
+    { "role": "prototype_runtime", "path": "frontend/public/showcase/omar-top-deals/top-deals.js", "sha256": "7491d73f28a28571b293eff3e606f35d71eaf49ffab81c7fe4257d1507713968", "rights": "famtastic-owned implementation" },
+    { "role": "prototype_manifest", "path": "frontend/public/showcase/omar-top-deals/prototype-manifest.json", "sha256": "530b9333d2163f8e7aa36492f0054c66f95f6947739dc1d3427fe5679e40f063", "rights": "famtastic-owned evidence" },
+    { "role": "component_system", "path": "frontend/public/showcase/omar-top-deals/component-system.json", "sha256": "f79515bfa6748a31f64ee239e34a6abda6175f5d1c93bbf3d535a4018beba2e8", "rights": "famtastic-owned evidence" },
+    { "role": "source_flyer_safe_crop", "path": "frontend/public/showcase/omar-top-deals/assets/current-flyer-safe.webp", "sha256": "8dbbafc150fbec4cc3e54138ef5511927b23fa7e9518ac5ada3fcc2f75e06a02", "rights": "owner-supplied; visible contact strip removed" },
+    { "role": "social_feed_creative", "path": "frontend/public/showcase/omar-top-deals/assets/social-feed-finds.webp", "sha256": "3c464a54cc74231d7559b7b8d06a0b5edce2082551723a50d70c44525927c415", "rights": "owner-reference-derived generated demo media" },
+    { "role": "social_story_creative", "path": "frontend/public/showcase/omar-top-deals/assets/social-story-pop-up.webp", "sha256": "d1d2f89223a3b9bc8140f51ab10cf95410e14c1cbf776d0a20ab9214e918c369", "rights": "owner-reference-derived generated demo media" },
+    { "role": "social_follow_up_creative", "path": "frontend/public/showcase/omar-top-deals/assets/social-follow-up.webp", "sha256": "35942801b7256c1039ed4e4101a8e93227571c0866a16c8188ccd20706209e8c", "rights": "owner-reference-derived generated demo media" },
+    { "role": "public_desktop_screenshot", "path": "docs/evidence/omar-top-deals-social-flywheel/screenshots/public-flywheel-desktop.png", "sha256": "f19b90ee99ebdfdfa6dcd0d2709bc0c13fc0b184e735ea1d68e17f3a153ec4a0", "rights": "famtastic-owned QA evidence" },
+    { "role": "public_mobile_screenshot", "path": "docs/evidence/omar-top-deals-social-flywheel/screenshots/public-flywheel-mobile.png", "sha256": "745ef3934d7c10a1d0990663f497f080ca51d4d24b6b0a2baec3b4443257377f", "rights": "famtastic-owned QA evidence" },
+    { "role": "owner_mobile_screenshot", "path": "docs/evidence/omar-top-deals-social-flywheel/screenshots/owner-social-mobile.png", "sha256": "e3c7530b3a2e531f47615165de90970b55ef32b4c306ddfc57c5fb8027a944b5", "rights": "famtastic-owned QA evidence" },
+    { "role": "public_full_component_screenshot", "path": "docs/evidence/omar-top-deals-social-flywheel/screenshots/public-flywheel-full.png", "sha256": "a143d7b5fc25fcf4de77f47f8e481a1f37b310b0b5e60ce728659ab6e80ac555", "rights": "famtastic-owned QA evidence" },
+    { "role": "public_mobile_full_component_screenshot", "path": "docs/evidence/omar-top-deals-social-flywheel/screenshots/public-flywheel-mobile-full.png", "sha256": "29e70b5c4910cb198ddd38593a7246cf3944176d1097d4ed6e218fd1a0c64cdb", "rights": "famtastic-owned QA evidence" },
+    { "role": "owner_desktop_screenshot", "path": "docs/evidence/omar-top-deals-social-flywheel/screenshots/owner-social-desktop.png", "sha256": "121be3eb0f1451d091e24061dbd79bf6f034167f91a12362f3c68fbbf293bcb3", "rights": "famtastic-owned QA evidence" }
+  ],
+  "retrieval": {
+    "filesystem": { "status": "available", "path": "docs/evidence/omar-top-deals-social-flywheel/build-dna.json" },
+    "database": { "status": "not_registered", "reason": "Showcase refinement is not a customer request or proof-campaign record." },
+    "site_studio": { "status": "not_dispatched", "reason": "Direct public showcase refinement; Site Studio did not execute this run." }
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256",
+    "validation_status": "schema_and_artifact_hashes_passed"
+  }
+}

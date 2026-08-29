@@ -1,0 +1,30 @@
+{
+  "schema": "famtastic.component-decision-ledger.v1",
+  "build_id": "omar-top-deals-social-flywheel-20260829",
+  "decisions": [
+    {
+      "decision_id": "OTD-D13",
+      "component_scope": "marketing.flyer-to-follow.v1/source-and-bridge",
+      "decision": "Keep Omar's real flyer visible as the respected starting point, crop its contact strip, and explain that print opens the permanent digital door rather than being replaced.",
+      "evidence": ["owner-supplied current flyer", "owner instruction to add social media and bring Omar into today"],
+      "confidence": "owner-grounded",
+      "limitations": "The flyer is evidence of Omar's current marketing method, not permission to publish its contacts, sponsor marks, event facts, or artwork as a new campaign."
+    },
+    {
+      "decision_id": "OTD-D14",
+      "component_scope": "marketing.flyer-to-follow.v1/social-creative-family",
+      "decision": "Use three distinct text-free premium scenes for feed discovery, Story/Reel event energy, and consent-led return, with all readable messaging rendered in native HTML.",
+      "evidence": ["owner-supplied flyer palette and texture", "owner-supplied pop-up table and truck photographs", "FAMtastic page-component doctrine"],
+      "confidence": "high",
+      "limitations": "The generated merchandise is illustrative and cannot be presented as Omar's confirmed inventory."
+    },
+    {
+      "decision_id": "OTD-D15",
+      "component_scope": "operations.market-day-console.v1/social-kit",
+      "decision": "Give Omar local caption-copy utility and content pillars while keeping account creation, scheduling, posting, messaging, and analytics explicitly disconnected.",
+      "evidence": ["FAMtastic demand-engine draft-first rule", "FAMtastic owner-authority contract"],
+      "confidence": "high",
+      "limitations": "Recommended handle availability is not checked, and every fact, link, image, permission, and publishing action still requires Omar's approval."
+    }
+  ]
+}

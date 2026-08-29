@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-29 — Modernize the handbill by giving it somewhere permanent to lead
+
+- Observation: Omar's existing flyer is not a weak starting point; its density,
+  color, and hand-to-hand context already earn attention. The missing value is
+  continuity after the paper changes hands, not a cleaner flyer by itself.
+- Guidance: preserve the recognizable print energy, remove unsafe contact data
+  from public proof, and make one stable owner-controlled link the destination
+  for flyers, QR signs, social posts, event updates, and optional follow-up.
+  Build native-copy social formats around real customer moments, keep generated
+  products illustrative, and do not imply a handle, account, inventory, event,
+  engagement result, post, schedule, or campaign exists before owner approval.
+
 ## 2026-08-29 — Pop-up commerce starts with continuity, not a fake catalog
 
 - Observation: the strongest first proof for a traveling merchant is not a

@@ -286,6 +286,17 @@
       }
     });
 
+    document.querySelectorAll('[data-copy-caption]').forEach((button) => button.addEventListener('click', async () => {
+      const draft = document.getElementById(button.dataset.copyCaption)?.textContent?.trim() || '';
+      if (!draft) return;
+      try {
+        await navigator.clipboard.writeText(draft);
+        toast('Draft caption copied. Review every fact and link before posting.');
+      } catch {
+        toast('Copy was blocked by this browser. The draft remains visible above.');
+      }
+    }));
+
     document.getElementById('reset-demo')?.addEventListener('click', () => {
       state = cloneDefaults();
       saveState('Sample data restored. No external system changed.');

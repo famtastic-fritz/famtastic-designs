@@ -15,6 +15,9 @@ try {
   await page.goto(`${base}/`, { waitUntil: 'networkidle' });
   assert.equal(await page.title(), 'Omar Top Deals — The Pop-Up, Before and After the Pop-Up');
   assert.equal(await page.locator('body').evaluate((body) => body.scrollWidth === body.clientWidth), true, 'public mobile view must not overflow');
+  await page.locator('#flywheel').scrollIntoViewIfNeeded();
+  assert.match(await page.locator('#flywheel').textContent(), /ONE HANDOUT\.\s*A WHOLE DIGITAL RUNWAY/);
+  assert.equal(await page.locator('#flywheel .social-card').count(), 3);
   await page.locator('[data-open-hold]:visible').first().click();
   await page.locator('#hold-form [name="name"]').fill('Demo Guest');
   await page.locator('#hold-form [name="reply"]').fill('local-only@example.test');
@@ -26,6 +29,9 @@ try {
   await page.goto(`${base}/owner/`, { waitUntil: 'networkidle' });
   assert.equal(await page.locator('body').evaluate((body) => body.scrollWidth === body.clientWidth), true, 'owner mobile view must not overflow');
   assert.match(await page.locator('#today-holds').textContent(), /Demo Guest/);
+  await page.locator('[data-owner-tab="social"]').last().click();
+  assert.equal(await page.locator('[data-owner-panel="social"] .social-kit-card').count(), 3);
+  assert.match(await page.locator('[data-owner-panel="social"]').textContent(), /nothing is connected, scheduled, posted/i);
   await page.locator('[data-owner-tab="events"]').last().click();
   await page.locator('#event-form [name="title"]').fill('Saturday Market Test');
   await page.locator('#event-form [name="location"]').fill('Demo location — not public');
