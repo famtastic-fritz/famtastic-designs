@@ -1,0 +1,39 @@
+{
+  "schema": "famtastic.production-acceptance.v1",
+  "accepted_at": "2026-08-29T21:31:00Z",
+  "production_commit": "10c40f535f04247ab6ee34d9b8cc3442b736369b",
+  "deployed_at": "2026-08-29T21:29:08Z",
+  "node": "v22.23.2",
+  "backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260829T212837Z-10c40f535f04247ab6ee34d9b8cc3442b736369b.tgz",
+  "routes": [
+    "https://famtasticdesigns.com/showcase/omar-top-deals/",
+    "https://famtasticdesigns.com/showcase/omar-top-deals/owner/",
+    "https://www.famtasticdesigns.com/showcase/omar-top-deals/",
+    "https://www.famtasticdesigns.com/showcase/omar-top-deals/owner/"
+  ],
+  "viewports": ["1440x1000", "390x844"],
+  "checks": {
+    "http_status": 200,
+    "public_flywheel_present": true,
+    "public_social_creative_count": 3,
+    "public_social_images_loaded": true,
+    "owner_social_card_count": 3,
+    "horizontal_overflow": 0,
+    "console_errors": 0,
+    "apex_and_www": "passed"
+  },
+  "deployment_incident": {
+    "first_attempt": "stopped before production promotion",
+    "cause": "hosting user quota exhausted while npm extracted dependencies in the private release worktree",
+    "recovery": "removed 12 stale Git-reconstructable directories under the script-owned deploy/famtastic-designs/releases cache; retained the active production release and target; reran the governed deploy",
+    "public_html_manual_edit": false,
+    "old_release_during_failure": "60be5d9b491c6363d010e8fb92d3961ca51122ea"
+  },
+  "external_effects": {
+    "social_account_created": false,
+    "social_posted": false,
+    "message_sent": false,
+    "payment_changed": false,
+    "inventory_changed": false
+  }
+}

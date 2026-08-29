@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-29 — Release-cache retention is part of deployment correctness
+
+- Observation: the host had ample filesystem capacity and inode headroom while
+  the account still rejected dependency extraction at its user quota. Old
+  private Git worktrees—not production assets—were the dominant footprint.
+- Guidance: deployment preflight must consider account usage and per-release
+  cache size, preserve the active and target releases, and remove only exact
+  script-owned Git-reconstructable cache directories. A failed private build
+  is not authority to bypass the release script or hand-edit production.
+
 ## 2026-08-29 — A flyer becomes more valuable when it opens a durable loop
 
 - Observation: a strong handbill can still stop people while failing to give a

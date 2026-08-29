@@ -15,6 +15,10 @@
   product, or publishing side effect was added.
 - Added the versioned component decision, exact prompt receipt, Build DNA,
   desktop/mobile screenshots, deterministic checks, and mobile browser proof.
+- Deployed commit `10c40f535f04247ab6ee34d9b8cc3442b736369b` and browser-proved the public and owner routes on apex and `www` at desktop and 390px mobile.
+- Recovered a pre-promotion hosting-quota failure by removing twelve stale,
+  Git-reconstructable private build releases; the active public release stayed
+  intact until the governed retry completed with a fresh rollback backup.
 
 ## 2026-08-29 — Omar Top Deals market-front-door prototype
 

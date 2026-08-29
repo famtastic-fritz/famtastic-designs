@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-29 — Free filesystem space does not prove cPanel user-quota headroom
+
+- Observation: frontend preflight reported hundreds of gigabytes free on the
+  filesystem, but npm extraction still failed with system error `-122` because
+  fourteen private release worktrees consumed roughly 11 GB inside the hosting
+  user's quota. Production was safe because failure occurred before promotion.
+- Guidance: before a server-side frontend build, inspect both filesystem space
+  and the user-owned release-cache footprint. Retain the active release and
+  current target, but age out stale Git-reconstructable build directories using
+  exact validated paths. Never treat `df` alone as quota proof, and never edit
+  `public_html` manually to work around a private-build failure.
+
 ## 2026-08-29 — Modernize the handbill by giving it somewhere permanent to lead
 
 - Observation: Omar's existing flyer is not a weak starting point; its density,
