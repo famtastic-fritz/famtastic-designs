@@ -1,0 +1,34 @@
+{
+  "schema": "famtastic.production-acceptance.v1",
+  "build_id": "omar-top-deals-flyer-storefront-v2-20260829",
+  "status": "passed",
+  "deployed_commit": "060f7c5b891317a03f0b6689affc22da888eaef8",
+  "deployed_at": "2026-08-29T22:00:23Z",
+  "deployment": {
+    "script": "scripts/deploy-frontend-godaddy.sh --apply",
+    "method": "private Git worktree, pinned Node build, backup, assets and route shells before root index",
+    "node": "v22.23.2",
+    "rollback_backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260829T220023Z-060f7c5b891317a03f0b6689affc22da888eaef8.tgz"
+  },
+  "http": [
+    { "url": "https://famtasticdesigns.com/showcase/omar-top-deals/v2/", "status": 200, "content_type": "text/html" },
+    { "url": "https://www.famtasticdesigns.com/showcase/omar-top-deals/v2/", "status": 200, "content_type": "text/html" },
+    { "url": "https://famtasticdesigns.com/showcase/omar-top-deals/", "status": 200, "content_type": "text/html" },
+    { "url": "https://www.famtasticdesigns.com/showcase/omar-top-deals/", "status": 200, "content_type": "text/html" },
+    { "url": "https://famtasticdesigns.com/showcase/omar-top-deals/owner/", "status": 200, "content_type": "text/html" },
+    { "url": "https://famtasticdesigns.com/showcase/omar-top-deals/assets/v2-social-card.webp", "status": 200, "content_type": "image/webp" }
+  ],
+  "browser": {
+    "origins": ["https://famtasticdesigns.com", "https://www.famtasticdesigns.com"],
+    "viewports": ["1440x1100", "390x844"],
+    "v2_product_family_count": 4,
+    "demo_value_disclosure": "present",
+    "horizontal_overflow": 0,
+    "console_errors": 0,
+    "v2_hold_to_existing_owner_desk": "passed",
+    "owner_value_edit_to_v2": "passed",
+    "v1_regression": "passed",
+    "external_effects": []
+  },
+  "limitations": "Public static showcase and same-device owner prototype only. No real price, stock, hold, customer message, payment, fulfillment, social publishing, or analytics result was activated."
+}

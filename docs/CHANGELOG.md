@@ -16,6 +16,9 @@
   without adding any email, payment, inventory, or external communication.
 - Added a V2 page recipe, component contracts, decision ledger, image receipt,
   deterministic checks, desktop/mobile browser proof, and Build DNA evidence.
+- Deployed commit `060f7c5b891317a03f0b6689affc22da888eaef8` and browser-proved
+  V1, V2, the owner desk, the generated sharing asset, and the V2 value-edit
+  round trip on apex and `www` at desktop and 390px mobile.
 
 ## 2026-08-29 — Omar Top Deals flyer-to-follow social expansion
 

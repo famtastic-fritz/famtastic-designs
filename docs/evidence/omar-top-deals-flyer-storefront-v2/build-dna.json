@@ -6,7 +6,7 @@
   "repository": {
     "name": "famtastic-designs",
     "revision": "612354e60e742f08342a227915b954f8e9440e60",
-    "worktree_state": "feature implementation committed; production acceptance pending"
+    "worktree_state": "feature implementation committed and production-proven; final acceptance record pending commit"
   },
   "recipe": {
     "routine": "famtastic-subject-specific-showcase-refinement",
@@ -98,6 +98,23 @@
         "output": { "horizontal_overflow": 0, "console_errors": 0, "product_values": 4, "v2_hold_to_owner": "passed", "owner_value_to_v2": "passed", "v1_regression": "passed", "external_effects": [] }
       },
       "result": { "status": "passed", "evidence_ref": "docs/evidence/omar-top-deals-flyer-storefront-v2/local-acceptance.json" }
+    },
+    {
+      "stage_id": "production-acceptance",
+      "attempt": 1,
+      "capability": "governed frontend deployment and live browser proof",
+      "execution": {
+        "provider": { "id": "godaddy-cpanel-plus-local-playwright" },
+        "model": { "id": null, "status": "not_applicable" },
+        "timing": { "status": "partial", "duration_ms": null },
+        "cost": { "status": "not_applicable", "amount": 0, "currency": "USD" },
+        "input": { "commit": "060f7c5b891317a03f0b6689affc22da888eaef8", "deployment_script": "scripts/deploy-frontend-godaddy.sh" },
+        "output": { "deployed_at": "2026-08-29T22:00:23Z", "apex_and_www": "passed", "desktop_and_mobile": "passed", "v1_regression": "passed", "production_acceptance": "docs/evidence/omar-top-deals-flyer-storefront-v2/production-acceptance.json" }
+      },
+      "result": {
+        "status": "passed",
+        "limitations": "Live static showcase and same-device owner prototype only; no real price, stock, hold, customer message, payment, fulfillment, social publishing, or analytics result was activated."
+      }
     }
   ],
   "artifacts": [
@@ -115,13 +132,14 @@
     { "role": "owner_market_table_photo", "path": "frontend/public/showcase/omar-top-deals/assets/v2-market-table.jpg", "sha256": "6e1879d0a35c3f52ba71398b297cb03dcca24dc900b62720bba2a6b6d582760e", "rights": "owner-supplied for public demo" },
     { "role": "owner_mobile_market_photo", "path": "frontend/public/showcase/omar-top-deals/assets/v2-mobile-market.jpg", "sha256": "852215ca508495c34bdfde454899db5dbaa6504325bef9a04f6ddff500d770f3", "rights": "owner-supplied for public demo" },
     { "role": "public_social_preview", "path": "frontend/public/showcase/omar-top-deals/assets/v2-social-card.webp", "sha256": "b23cb0ddf37690c07e83f134f412277ba5a696f53ee15a1b98e2e12928023a6b", "rights": "owner-reference-derived generated demo media" },
-    { "role": "public_desktop_screenshot", "path": "docs/evidence/omar-top-deals-flyer-storefront-v2/screenshots/public-v2-desktop.png", "sha256": "db56ff360aac07ffe0997f8dc4556772b4b8e024a537dda13bd11e74cb6244f3", "rights": "famtastic-owned QA evidence" },
-    { "role": "public_mobile_screenshot", "path": "docs/evidence/omar-top-deals-flyer-storefront-v2/screenshots/public-v2-mobile.png", "sha256": "4c784243a66beb2ddf20195b307522db76f0e84e6059459823f654d2fe402b06", "rights": "famtastic-owned QA evidence" },
+    { "role": "public_desktop_screenshot", "path": "docs/evidence/omar-top-deals-flyer-storefront-v2/screenshots/public-v2-desktop.png", "sha256": "7f79303dab4cc5cb2a80b701bbb7cf0e325e55cd36d6ab236b64df32f59c3793", "rights": "famtastic-owned production QA evidence" },
+    { "role": "public_mobile_screenshot", "path": "docs/evidence/omar-top-deals-flyer-storefront-v2/screenshots/public-v2-mobile.png", "sha256": "b489ebf69ebacb09037b5ef07638901e910681bbbcbde9e2b9d5f312cc0e6b85", "rights": "famtastic-owned production QA evidence" },
     { "role": "public_mobile_fold_screenshot", "path": "docs/evidence/omar-top-deals-flyer-storefront-v2/screenshots/public-v2-mobile-fold.png", "sha256": "ef034ce87888766efe4191ebfabab64dc502ed67d884f688669deb39140821cc", "rights": "famtastic-owned QA evidence" },
     { "role": "public_mobile_product_screenshot", "path": "docs/evidence/omar-top-deals-flyer-storefront-v2/screenshots/public-v2-mobile-product.png", "sha256": "dc7911dc0235df47d25ba7d77ab3723aea1a9af9ca729ddbf4060f9c0da5989c", "rights": "famtastic-owned QA evidence" },
     { "role": "local_acceptance", "path": "docs/evidence/omar-top-deals-flyer-storefront-v2/local-acceptance.json", "sha256": "4e5193233eb3f865bd8ec01d08bdd605bbb2302f395e79370d6dc4373c01f0bd", "rights": "famtastic-owned QA evidence" },
     { "role": "static_contract_test", "path": "frontend/scripts/test-omar-top-deals.mjs", "sha256": "3ce444762fa962e6bdf3d90d6aec155e08da0ea9d0814e68186b25f11b6eed29", "rights": "famtastic-owned test" },
-    { "role": "v2_browser_test", "path": "frontend/scripts/e2e-omar-top-deals-v2.mjs", "sha256": "f35e7075b937f41c9bb33e8a190c6d61b5b58f87e055e529f90a767192ef70d3", "rights": "famtastic-owned test" }
+    { "role": "v2_browser_test", "path": "frontend/scripts/e2e-omar-top-deals-v2.mjs", "sha256": "f35e7075b937f41c9bb33e8a190c6d61b5b58f87e055e529f90a767192ef70d3", "rights": "famtastic-owned test" },
+    { "role": "production_acceptance", "path": "docs/evidence/omar-top-deals-flyer-storefront-v2/production-acceptance.json", "sha256": "432fc3a0114262f554a06f6254c1894563beadd1242fd61e821ad12fe7ffc1f9", "rights": "famtastic-owned production evidence" }
   ],
   "retrieval": {
     "filesystem": { "status": "available", "path": "docs/evidence/omar-top-deals-flyer-storefront-v2/build-dna.json" },
