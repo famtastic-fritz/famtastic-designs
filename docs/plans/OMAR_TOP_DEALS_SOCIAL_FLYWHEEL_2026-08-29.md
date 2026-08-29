@@ -1,6 +1,6 @@
 # Omar Top Deals social flywheel
 
-Date: 2026-08-29  
+Date: 2026-08-29
 Status: working showcase refinement; no social account, post, schedule, message, event, or campaign activated
 
 ## Goal

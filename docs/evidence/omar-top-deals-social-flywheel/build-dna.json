@@ -85,7 +85,7 @@
     }
   ],
   "artifacts": [
-    { "role": "strategy_plan", "path": "docs/plans/OMAR_TOP_DEALS_SOCIAL_FLYWHEEL_2026-08-29.md", "sha256": "ca44e43fb339aa263134397c945ee585ebb99122395cbc01da23c968c6f50938", "rights": "famtastic-owned implementation plan" },
+    { "role": "strategy_plan", "path": "docs/plans/OMAR_TOP_DEALS_SOCIAL_FLYWHEEL_2026-08-29.md", "sha256": "413393a814b954ba0e2b928274b9fb6d0a1e1213880df584f60b58a8019f8d34", "rights": "famtastic-owned implementation plan" },
     { "role": "component_decisions", "path": "docs/evidence/omar-top-deals-social-flywheel/component-decisions.json", "sha256": "8b19ceaa165a703b865d19ee1ae6aa3c3e482829a0eb124f80994f6d71e54c96", "rights": "famtastic-owned evidence" },
     { "role": "image_generation_receipt", "path": "docs/evidence/omar-top-deals-social-flywheel/image-generation-receipt.json", "sha256": "be236ec097f2e0fbe594a0788e9ffb3043fe47d6ae00b9e4a954d4466062f507", "rights": "famtastic-owned evidence" },
     { "role": "public_page", "path": "frontend/public/showcase/omar-top-deals/index.html", "sha256": "eb0b89793ddec95a32219c23046b148a518d18075f034954784df00bc4c3756b", "rights": "famtastic-owned implementation" },
