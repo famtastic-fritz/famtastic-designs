@@ -5,9 +5,10 @@
   "subject_status": "real_owner_supplied_subject",
   "experience": {
     "public_path": "/showcase/omar-top-deals/",
+    "alternate_public_path": "/showcase/omar-top-deals/v2/",
     "owner_path": "/showcase/omar-top-deals/owner/",
     "page_recipe": "market-front-door-v1",
-    "component_system": "omar-top-deals-components-v1",
+    "component_system": "omar-top-deals-components-v1.2",
     "storage": "device_local_browser_only",
     "external_effects": []
   },
@@ -19,6 +20,11 @@
     "story.mentor-market.v1",
     "operations.market-day-console.v1",
     "contact.next-pop-up.v1"
+    ,"hero.flyer-collage.v2"
+    ,"catalog.value-wall.v2"
+    ,"value.merchant-eye.v2"
+    ,"process.pop-up-to-owned-audience.v2"
+    ,"story.mentor-payback.v2"
   ],
   "creative_assets": [
     { "path": "assets/hero-selected.webp", "role": "public_hero", "rights": "owner_reference_derived_generated" },
@@ -31,6 +37,9 @@
     { "path": "assets/social-story-pop-up.webp", "role": "social_story_reel_creative", "rights": "owner_reference_derived_generated" },
     { "path": "assets/social-follow-up.webp", "role": "social_follow_up_creative", "rights": "owner_reference_derived_generated" },
     { "path": "assets/omar-top-deals-qr.png", "role": "public_showcase_qr", "rights": "generated_locally" }
+    ,{ "path": "assets/v2-market-table.jpg", "role": "v2_owner_supplied_merchandise", "rights": "owner_supplied_for_demo" }
+    ,{ "path": "assets/v2-mobile-market.jpg", "role": "v2_owner_supplied_mobile_market", "rights": "owner_supplied_for_demo" }
+    ,{ "path": "assets/v2-social-card.webp", "role": "v2_social_preview", "rights": "owner_reference_derived_generated" }
   ],
   "truth_boundaries": [
     "All inventory, prices, events, contact details, domain availability, email configuration, payment routes, and launch claims require Omar's approval.",
@@ -38,6 +47,7 @@
     "The QR opens the showcase only and does not initiate payment.",
     "The social handle is a recommendation with availability unverified; no social account, post, schedule, campaign, or message was created.",
     "Social captions are drafts and require Omar's approval of every product, event fact, link, permission, and publishing action.",
+    "Version 2 product names and values are recommendations only; Omar must confirm exact merchandise, rights, inventory, sizes, values, bundles, and availability.",
     "No business profile, domain, custom email, messaging provider, payment provider, database, authentication, or analytics account was created or connected."
   ]
 }

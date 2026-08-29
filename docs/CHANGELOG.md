@@ -1,5 +1,22 @@
 # Product changelog
 
+## 2026-08-29 — Omar Top Deals flyer storefront V2
+
+- Preserved the production Omar showcase as Version 1 and added a separately
+  addressable flyer-inspired Version 2 with a materially different page recipe.
+- Translated Omar's current handbill into a digital market-front composition
+  using sunset color, screen-print texture, kente-inspired bands, display-type
+  collisions, owner-supplied market photography, and one generated social card.
+- Added four product-family cards with large owner-review values: statement
+  bucket hats, fraternity/team finds, United States of Africa tees, and
+  culture/home finds. Every amount is explicitly labeled as a demo
+  recommendation rather than live inventory or pricing.
+- Connected each V2 ask-to-hold control to the existing same-device owner desk,
+  and extended that desk so Omar can revise the displayed value and value note
+  without adding any email, payment, inventory, or external communication.
+- Added a V2 page recipe, component contracts, decision ledger, image receipt,
+  deterministic checks, desktop/mobile browser proof, and Build DNA evidence.
+
 ## 2026-08-29 — Omar Top Deals flyer-to-follow social expansion
 
 - Extended the public Omar Top Deals showcase with a source-respecting

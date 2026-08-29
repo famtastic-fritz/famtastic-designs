@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-29 — Recommended values can make a proof concrete without becoming fake commerce
+
+- Observation: a merchandise proof feels generic when it names categories but
+  never helps the owner picture an offer. It becomes misleading when
+  unconfirmed amounts are styled like live prices, sales, or inventory.
+- Guidance: show owner-review values boldly enough to support a real sales
+  conversation, repeat a plain demo-value disclosure at the hero and catalog,
+  keep the amount editable in the owner prototype, and preserve the no-payment,
+  no-inventory boundary until the merchant confirms price, stock, rights, and
+  fulfillment. Use real owner photographs for product proof and generated art
+  for atmosphere or campaign framing—not as evidence of inventory.
+
 ## 2026-08-29 — Release-cache retention is part of deployment correctness
 
 - Observation: the host had ample filesystem capacity and inode headroom while

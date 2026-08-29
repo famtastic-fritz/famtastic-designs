@@ -1,0 +1,38 @@
+{
+  "schema": "famtastic.component-decision-ledger.v1",
+  "build_id": "omar-top-deals-flyer-storefront-v2-20260829",
+  "decisions": [
+    {
+      "decision_id": "OTD2-D01",
+      "scope": "hero.flyer-collage.v2",
+      "decision": "Translate the flyer into a layered digital handbill with native typography, owner-supplied merchandise, sunset color, and schedule-like fact strips.",
+      "reason": "The current flyer is Omar's existing visual proof and the requested Version 2 reference; preserving its energy makes the upgrade recognizable instead of replacing his identity.",
+      "confidence": "high",
+      "limitations": "The flyer is inspiration and owner-supplied evidence, not proof of current event details, affiliation, inventory, or rights beyond this demo."
+    },
+    {
+      "decision_id": "OTD2-D02",
+      "scope": "catalog.value-wall.v2",
+      "decision": "Show four concrete product families with large demo-value badges and ask-to-hold actions.",
+      "reason": "A pop-up storefront becomes useful when visitors can understand the assortment and decide what is worth asking Omar about before the next table opens.",
+      "confidence": "high",
+      "limitations": "Product names and values are recommendations until Omar confirms exact merchandise, rights, sizes, inventory, and pricing."
+    },
+    {
+      "decision_id": "OTD2-D03",
+      "scope": "conversion.market-day-path.v2",
+      "decision": "Keep conversion centered on a browser-local ask-to-hold action, the next approved pop-up, and Omar's existing owner prototype.",
+      "reason": "This demonstrates a practical path without pretending FAMtastic processes payment, reserves inventory, or sends a customer message.",
+      "confidence": "high",
+      "limitations": "A real launch requires durable storage, authentication, an approved inbox, inventory rules, and Omar's payment choice."
+    },
+    {
+      "decision_id": "OTD2-D04",
+      "scope": "story.mentor-payback.v2",
+      "decision": "Make Fritz's reason for building the concept a visible closing note rather than generic agency copy.",
+      "reason": "The personal return-of-favor story is the most truthful and differentiating reason this prototype exists.",
+      "confidence": "high",
+      "limitations": "No testimonial, business result, or endorsement is inferred."
+    }
+  ]
+}

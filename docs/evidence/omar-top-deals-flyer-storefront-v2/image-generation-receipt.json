@@ -1,0 +1,48 @@
+{
+  "schema": "famtastic.image-generation-receipt.v1",
+  "build_id": "omar-top-deals-flyer-storefront-v2-20260829",
+  "role": "site-wide social preview card",
+  "provider": "openai-imagegen-tool",
+  "model": {
+    "id": null,
+    "status": "not_disclosed_by_runtime"
+  },
+  "timing": {
+    "status": "partial",
+    "duration_ms": null
+  },
+  "cost": {
+    "status": "provider_did_not_report",
+    "amount": null,
+    "currency": "USD"
+  },
+  "prompt": "Use case: ads-marketing\nAsset type: landscape social sharing card for the finished Omar Top Deals flyer-inspired storefront, 1200x630 style\nPrimary request: Create one polished digital handbill that feels like Omar's current colorful African and Caribbean event flyer evolved into a premium modern storefront announcement.\nInput images: Image 1 is the visual-language reference only; Images 2 and 3 are owner-supplied merchandise and pop-up context references.\nScene/backdrop: deep charcoal night market, glowing African sunset disc, layered warm paper, subtle kente-inspired geometric borders, market canopy silhouettes.\nSubject: an abundant, carefully composed table of colorful bucket hats, cultural apparel, woven décor and pop-up finds; no identifiable individual is the main subject.\nStyle/medium: premium editorial collage mixed with screen-print poster texture and sophisticated retail campaign art.\nComposition/framing: landscape; merchandise fills lower half, sunset and headline occupy upper half; bold clear hierarchy with safe margins for social unfurls.\nLighting/mood: golden-hour orange, ember red, rich teal, warm gold, celebratory and confident.\nText (verbatim): \"OMAR TOP DEALS\" and \"GOOD FINDS. RIGHT ON TIME.\"\nConstraints: both text lines must be exactly spelled and fully legible; no prices; no event dates; no phone numbers; no email addresses; no QR codes; no social handles; no fake logos; do not copy tiny text from the reference flyer; do not reproduce sports-team or fraternity trademarks; make merchandise generic but richly patterned.\nAvoid: gibberish, extra words, floating objects, warped hats, duplicated products, corporate stock-photo look, flat minimal design, watermark.",
+  "inputs": [
+    {
+      "role": "visual-language reference",
+      "source": "owner-supplied current flyer photograph",
+      "sha256": "7eacf0732e1c1d431d67b00f43d29f5aa59fc121e15005e1f413ffafc08bb94d"
+    },
+    {
+      "role": "merchandise reference",
+      "source": "owner-supplied market-table photograph",
+      "sha256": "6e1879d0a35c3f52ba71398b297cb03dcca24dc900b62720bba2a6b6d582760e"
+    },
+    {
+      "role": "mobile-market reference",
+      "source": "owner-supplied truck-and-table photograph",
+      "sha256": "852215ca508495c34bdfde454899db5dbaa6504325bef9a04f6ddff500d770f3"
+    }
+  ],
+  "output": {
+    "raw_path": "docs/evidence/omar-top-deals-flyer-storefront-v2/v2-social-card-raw.png",
+    "raw_sha256": "92f352d410fc18962680e004c93ec1a67b43a6b602dde6100c1e886b7bf355b9",
+    "public_path": "frontend/public/showcase/omar-top-deals/assets/v2-social-card.webp",
+    "public_sha256": "b23cb0ddf37690c07e83f134f412277ba5a696f53ee15a1b98e2e12928023a6b",
+    "dimensions": "1731x909",
+    "text_review": "passed: OMAR TOP DEALS and GOOD FINDS. RIGHT ON TIME. are exact and legible",
+    "visual_review": "passed for social-preview use; no prices, dates, contact data, QR, social handle, or copied tiny flyer text"
+  },
+  "rights": "owner-reference-derived generated demo media; retain with FAMtastic build evidence",
+  "limitations": "The generated merchandise is illustrative and not Omar's inventory. Provider did not report model identity, invoice cost, or complete timing."
+}

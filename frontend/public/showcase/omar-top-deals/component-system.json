@@ -1,7 +1,7 @@
 {
   "schema": "famtastic.page-component-system.v1",
   "system_id": "omar-top-deals-components-v1",
-  "system_version": "1.1.0",
+  "system_version": "1.2.0",
   "page_recipe": {
     "recipe_id": "market-front-door-v1",
     "recipe_version": "1.0.0",
@@ -16,6 +16,27 @@
       "omar-contact-01"
     ]
   },
+  "additional_page_recipes": [
+    {
+      "recipe_id": "flyer-storefront-v2",
+      "recipe_version": "1.0.0",
+      "public_path": "/showcase/omar-top-deals/v2/",
+      "ordered_instances": [
+        "omar-v2-nav-01",
+        "omar-v2-hero-01",
+        "omar-v2-catalog-01",
+        "omar-v2-value-01",
+        "omar-v2-system-01",
+        "omar-v2-mentor-01",
+        "omar-v2-next-01"
+      ],
+      "continuation": {
+        "owner_path": "/showcase/omar-top-deals/owner/",
+        "storage_key": "famtastic.omar-top-deals.v1",
+        "external_effects": []
+      }
+    }
+  ],
   "components": [
     {
       "instance_id": "omar-hero-01",
@@ -65,6 +86,41 @@
       "variant_id": "event-and-inquiry",
       "slots": ["event_status", "event_name", "event_location", "event_date", "map_action", "inquiry_form", "optional_marketing_consent"],
       "swappable_without_recipe_change": ["event_fields", "map_url", "form_labels", "consent_copy"]
+    },
+    {
+      "instance_id": "omar-v2-hero-01",
+      "definition_id": "hero.flyer-collage.v2",
+      "variant_id": "festival-handbill",
+      "slots": ["kicker", "headline", "value_line", "introduction", "market_photo", "safe_flyer_crop", "demo_value_badge", "actions", "facts"],
+      "swappable_without_recipe_change": ["native_copy", "market_photo", "safe_flyer_crop", "demo_value", "action_labels"]
+    },
+    {
+      "instance_id": "omar-v2-catalog-01",
+      "definition_id": "catalog.value-wall.v2",
+      "variant_id": "four-deal-handbill",
+      "slots": ["section_heading", "product_cards", "product_media", "demo_values", "hold_actions", "commercial_disclosure"],
+      "swappable_without_recipe_change": ["product_names", "product_media", "descriptions", "demo_values", "disclosures", "visibility"]
+    },
+    {
+      "instance_id": "omar-v2-value-01",
+      "definition_id": "value.merchant-eye.v2",
+      "variant_id": "market-collage",
+      "slots": ["owner_market_photo", "merchant_positioning", "before", "during", "after", "over_time"],
+      "swappable_without_recipe_change": ["photo", "copy", "stage_labels"]
+    },
+    {
+      "instance_id": "omar-v2-system-01",
+      "definition_id": "process.pop-up-to-owned-audience.v2",
+      "variant_id": "four-step-poster",
+      "slots": ["print_step", "value_step", "hold_step", "event_step", "demo_action", "owner_action"],
+      "swappable_without_recipe_change": ["step_copy", "action_labels"]
+    },
+    {
+      "instance_id": "omar-v2-mentor-01",
+      "definition_id": "story.mentor-payback.v2",
+      "variant_id": "open-letter",
+      "slots": ["story_image", "headline", "quote", "attribution", "closing_rule"],
+      "swappable_without_recipe_change": ["story_image", "quote", "attribution"]
     }
   ],
   "runtime_contract": {

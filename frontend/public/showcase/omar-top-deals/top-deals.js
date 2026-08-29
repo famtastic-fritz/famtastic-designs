@@ -5,10 +5,10 @@
   const PUBLIC_URL = 'https://famtasticdesigns.com/showcase/omar-top-deals/';
   const defaults = Object.freeze({
     items: [
-      { id: 'headwear', category: 'headwear', title: 'Statement Headwear', description: 'Color, pattern, and personality customers can see before they reach the table.', status: 'Fresh finds', visible: true },
-      { id: 'culture', category: 'culture', title: 'Culture + Gift Finds', description: 'Conversation-starting pieces selected for events, gifting, and the people who want something different.', status: 'Ask Omar', visible: true },
-      { id: 'event', category: 'event', title: 'Event-Day Specials', description: 'A rotating category for limited offers Omar chooses for a specific market or festival.', status: 'Pop-up only', visible: true },
-      { id: 'surprise', category: 'culture', title: 'The Surprise Table', description: 'The unexpected deal that rewards people who stop, look, and talk with Omar.', status: 'Changes often', visible: true }
+      { id: 'headwear', category: 'headwear', title: 'Statement Headwear', description: 'Color, pattern, and personality customers can see before they reach the table.', status: 'Fresh finds', value: '$25', valueNote: 'each · 2 for $40', visible: true },
+      { id: 'culture', category: 'culture', title: 'Culture + Gift Finds', description: 'Conversation-starting pieces selected for events, gifting, and the people who want something different.', status: 'Ask Omar', value: '$20+', valueNote: 'assortment changes', visible: true },
+      { id: 'event', category: 'event', title: 'Event-Day Specials', description: 'A rotating category for limited offers Omar chooses for a specific market or festival.', status: 'Pop-up only', value: '$25+', valueNote: 'Omar confirms the piece', visible: true },
+      { id: 'surprise', category: 'culture', title: 'The Surprise Table', description: 'The unexpected deal that rewards people who stop, look, and talk with Omar.', status: 'Changes often', value: '$30', valueNote: 'size and stock unconfirmed', visible: true }
     ],
     event: { title: 'THE NEXT\nPOP-UP', location: 'Location announced by Omar', date: 'Coming soon', status: 'planning', mapLink: '', note: '' },
     links: { socialLink: '', paymentLink: '', paymentLabel: "Use Omar's approved payment", replyEmail: '' },
@@ -43,7 +43,8 @@
     try {
       const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
       if (!parsed || !Array.isArray(parsed.items) || !Array.isArray(parsed.holds)) return cloneDefaults();
-      return { ...cloneDefaults(), ...parsed, event: { ...defaults.event, ...(parsed.event || {}) }, links: { ...defaults.links, ...(parsed.links || {}) } };
+      const normalizedItems = parsed.items.map((item) => ({ ...(defaults.items.find((candidate) => candidate.id === item.id) || {}), ...item }));
+      return { ...cloneDefaults(), ...parsed, items: normalizedItems, event: { ...defaults.event, ...(parsed.event || {}) }, links: { ...defaults.links, ...(parsed.links || {}) } };
     } catch {
       return cloneDefaults();
     }
@@ -195,6 +196,8 @@
         <b>0${index + 1}</b>
         <label>Category title<input name="title" maxlength="50" value="${escapeHtml(item.title)}"></label>
         <label>Public description<input name="description" maxlength="150" value="${escapeHtml(item.description)}"></label>
+        <label>Demo value<input name="value" maxlength="16" value="${escapeHtml(item.value || '')}" placeholder="$25"></label>
+        <label>Value note<input name="valueNote" maxlength="42" value="${escapeHtml(item.valueNote || '')}" placeholder="each · 2 for $40"></label>
         <label>Status<select name="status">${['Fresh finds','Ask Omar','Pop-up only','Changes often','Limited','Sold / paused'].map((status) => `<option ${status === item.status ? 'selected' : ''}>${status}</option>`).join('')}</select></label>
         <label class="visible-toggle"><input name="visible" type="checkbox" ${item.visible ? 'checked' : ''}> Visible</label>
       </div>`).join('');
@@ -243,6 +246,8 @@
         item.title = safeText(row.querySelector('[name="title"]').value).slice(0, 50) || item.title;
         item.description = safeText(row.querySelector('[name="description"]').value).slice(0, 150) || item.description;
         item.status = safeText(row.querySelector('[name="status"]').value).slice(0, 32);
+        item.value = safeText(row.querySelector('[name="value"]').value).slice(0, 16);
+        item.valueNote = safeText(row.querySelector('[name="valueNote"]').value).slice(0, 42);
         item.visible = row.querySelector('[name="visible"]').checked;
       });
       saveState('Table changes saved on this device. Open the public view to see them.');

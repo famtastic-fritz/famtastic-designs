@@ -4,6 +4,9 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const base = process.env.OMAR_TOP_DEALS_BASE_URL || 'http://127.0.0.1:4197/showcase/omar-top-deals';
+const localStatic = base.includes('127.0.0.1') || base.includes('localhost');
+const publicUrl = localStatic ? `${base}/index.html` : `${base}/`;
+const ownerUrl = localStatic ? `${base}/owner/index.html` : `${base}/owner/`;
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const page = await context.newPage();
@@ -12,7 +15,7 @@ page.on('console', (message) => { if (message.type() === 'error') consoleErrors.
 page.on('pageerror', (error) => consoleErrors.push(error.message));
 
 try {
-  await page.goto(`${base}/`, { waitUntil: 'networkidle' });
+  await page.goto(publicUrl, { waitUntil: 'networkidle' });
   assert.equal(await page.title(), 'Omar Top Deals — The Pop-Up, Before and After the Pop-Up');
   assert.equal(await page.locator('body').evaluate((body) => body.scrollWidth === body.clientWidth), true, 'public mobile view must not overflow');
   await page.locator('#flywheel').scrollIntoViewIfNeeded();
@@ -26,7 +29,7 @@ try {
   await page.waitForTimeout(150);
   assert.match(await page.locator('#toast').textContent(), /Nothing was sent/i);
 
-  await page.goto(`${base}/owner/`, { waitUntil: 'networkidle' });
+  await page.goto(ownerUrl, { waitUntil: 'networkidle' });
   assert.equal(await page.locator('body').evaluate((body) => body.scrollWidth === body.clientWidth), true, 'owner mobile view must not overflow');
   assert.match(await page.locator('#today-holds').textContent(), /Demo Guest/);
   await page.locator('[data-owner-tab="social"]').last().click();
@@ -39,7 +42,7 @@ try {
   await page.locator('#event-form [name="status"]').selectOption('confirmed');
   await page.locator('#event-form button[type="submit"]').click();
 
-  await page.goto(`${base}/`, { waitUntil: 'networkidle' });
+  await page.goto(publicUrl, { waitUntil: 'networkidle' });
   assert.match(await page.locator('#event-title').textContent(), /Saturday Market Test/);
   assert.match(await page.locator('#event-status-label').textContent(), /confirmed by Omar/i);
   assert.equal(consoleErrors.length, 0, `unexpected console errors: ${consoleErrors.join('; ')}`);

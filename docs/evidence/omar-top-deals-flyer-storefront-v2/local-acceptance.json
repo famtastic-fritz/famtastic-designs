@@ -1,0 +1,38 @@
+{
+  "schema": "famtastic.local-acceptance.v1",
+  "build_id": "omar-top-deals-flyer-storefront-v2-20260829",
+  "status": "passed",
+  "tested_at": "2026-08-29T22:44:00Z",
+  "checks": {
+    "static_contract": {
+      "status": "passed",
+      "detail": "V1 plus distinct flyer-inspired V2, four demo-value product families, seven owner panels, shared local state, thirteen local assets, and zero application API effects."
+    },
+    "v2_browser": {
+      "status": "passed",
+      "viewports": ["1440x1100", "390x844"],
+      "horizontal_overflow": 0,
+      "console_errors": 0,
+      "detail": "V2 ask-to-hold appeared in the existing owner desk; owner value edit from $25 to $27 appeared in V2; no external effect occurred."
+    },
+    "v1_regression": {
+      "status": "passed",
+      "detail": "Existing public hold-to-owner and owner-event-to-public flows remained functional with zero overflow, console errors, or external effects."
+    },
+    "demand_checks": {
+      "status": "passed",
+      "detail": "Repository demand content validation passed."
+    },
+    "production_build": {
+      "status": "passed_with_existing_warning",
+      "detail": "Vite production build passed; the existing main application chunk-size warning remains."
+    }
+  },
+  "screenshots": [
+    "screenshots/public-v2-desktop.png",
+    "screenshots/public-v2-mobile.png",
+    "screenshots/public-v2-mobile-fold.png",
+    "screenshots/public-v2-mobile-product.png"
+  ],
+  "external_effects": []
+}
