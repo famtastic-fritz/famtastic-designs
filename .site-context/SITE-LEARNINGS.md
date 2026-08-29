@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-29 — A temporary table benefits from a permanent front door
+
+- Observation: a pop-up merchant may change products, prices, and locations
+  too quickly for a conventional fixed catalog, while the merchant's personal
+  trust and sales experience remain durable.
+- Guidance: make the first site a stable identity and event/interest layer:
+  reusable category slots, a permanent QR, next-location fields, direct
+  questions, optional marketing permission, and a phone-oriented owner view.
+  Do not fabricate SKUs, inventory, prices, checkout, or confirmed events. Let
+  the $199 foundation prove interest; add durable holds, inventory, messages,
+  authentication, and analytics only as an explicitly scoped upgrade.
+
 ## 2026-08-28 — Preserve an approved direction before making a bolder fork
 
 - Observation: an approved functional prototype can be valuable precisely

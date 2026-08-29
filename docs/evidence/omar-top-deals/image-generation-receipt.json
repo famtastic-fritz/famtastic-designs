@@ -1,0 +1,70 @@
+{
+  "schema": "famtastic.media-generation-receipt.v1",
+  "created_at": "2026-08-29T20:12:45Z",
+  "provider": "openai-imagegen-tool",
+  "model": {
+    "id": null,
+    "status": "not_disclosed_by_runtime"
+  },
+  "execution_class": "cloud_tool",
+  "inputs": {
+    "references": [
+      {
+        "role": "identity_reference",
+        "source": "owner-supplied Photo 2",
+        "rights": "supplied_by_owner_for_demo"
+      },
+      {
+        "role": "market_context_reference",
+        "source": "owner-supplied Photo 5",
+        "rights": "supplied_by_owner_for_demo"
+      }
+    ],
+    "prompt_capture": {
+      "status": "partial",
+      "reason": "The generation runtime returned images but did not export a provider prompt receipt. The design constraints below are a normalized post-run record and are not represented as a verbatim provider transcript.",
+      "normalized_constraints": [
+        "Create a premium realistic editorial image for Omar Top Deals using Omar's likeness from the owner-supplied identity reference and the outdoor pop-up merchandise context.",
+        "Preserve Omar's age and identity; do not use Fritz's likeness.",
+        "Show a portable, colorful, credible pop-up market scene with hats and cultural gift merchandise.",
+        "Reserve negative space for native HTML typography.",
+        "No words, logos, prices, contact information, QR codes, watermarks, pseudo-text, readable signs, or interface graphics."
+      ]
+    }
+  },
+  "outputs": [
+    {
+      "candidate": 1,
+      "role": "selected_daytime_hero",
+      "path": "docs/evidence/omar-top-deals/media/hero-candidate-01.png",
+      "sha256": "69563e6622959e7cee9f17a3f1ff758248c170a0a77bbc70bc30d8bf31d1ea0d"
+    },
+    {
+      "candidate": 2,
+      "role": "evening_market_alternate",
+      "path": "docs/evidence/omar-top-deals/media/hero-candidate-02.png",
+      "sha256": "c137f1ea10b9bfa86e227fe6f39d42902ca6575da760db9a39a8a46ec576f7b7"
+    },
+    {
+      "candidate": 3,
+      "role": "market_day_alternate",
+      "path": "docs/evidence/omar-top-deals/media/hero-candidate-03.png",
+      "sha256": "9f211a608de93e956bfbdb38212e5d1727c9f29d7c34aec52d33472faed42ebd"
+    }
+  ],
+  "cost": {
+    "status": "provider_did_not_report",
+    "currency": "USD",
+    "amount": null,
+    "authorized_ceiling": "User authorized reasonable creative costs; no provider invoice or unit-cost receipt was returned by the runtime."
+  },
+  "timing": {
+    "status": "partial",
+    "duration_ms": null
+  },
+  "review": {
+    "status": "selected",
+    "selected_candidate": 1,
+    "basis": "Strongest identity preservation, cleanest merchandise story, most usable desktop/mobile crop, and sufficient native-type negative space."
+  }
+}

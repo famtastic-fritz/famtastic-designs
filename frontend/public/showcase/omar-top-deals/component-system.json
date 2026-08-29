@@ -1,0 +1,68 @@
+{
+  "schema": "famtastic.page-component-system.v1",
+  "system_id": "omar-top-deals-components-v1",
+  "system_version": "1.0.0",
+  "page_recipe": {
+    "recipe_id": "market-front-door-v1",
+    "recipe_version": "1.0.0",
+    "ordered_instances": [
+      "omar-nav-01",
+      "omar-hero-01",
+      "omar-deals-01",
+      "omar-how-01",
+      "omar-story-01",
+      "omar-control-01",
+      "omar-contact-01"
+    ]
+  },
+  "components": [
+    {
+      "instance_id": "omar-hero-01",
+      "definition_id": "hero.market-front-door.v1",
+      "variant_id": "editorial-market",
+      "slots": ["eyebrow", "headline", "introduction", "primary_action", "secondary_action", "hero_image", "personal_note"],
+      "swappable_without_recipe_change": ["copy", "hero_image", "action_labels", "personal_note"]
+    },
+    {
+      "instance_id": "omar-deals-01",
+      "definition_id": "catalog.pop-up-grid.v1",
+      "variant_id": "ticket-grid",
+      "slots": ["section_heading", "introduction", "category_filters", "category_cards", "commercial_disclosure"],
+      "swappable_without_recipe_change": ["category_titles", "category_descriptions", "category_status", "visibility"]
+    },
+    {
+      "instance_id": "omar-how-01",
+      "definition_id": "process.reserve-path.v1",
+      "variant_id": "three-step-route",
+      "slots": ["context_image", "section_heading", "before_step", "during_step", "after_step", "hold_action"],
+      "swappable_without_recipe_change": ["image", "step_copy", "action_label"]
+    },
+    {
+      "instance_id": "omar-story-01",
+      "definition_id": "story.mentor-market.v1",
+      "variant_id": "memory-ledger",
+      "slots": ["section_heading", "quote", "attribution", "story_image", "caption"],
+      "swappable_without_recipe_change": ["quote", "attribution", "story_image", "caption"]
+    },
+    {
+      "instance_id": "omar-control-01",
+      "definition_id": "operations.market-day-console.v1",
+      "variant_id": "phone-first",
+      "slots": ["value_statement", "capability_list", "phone_preview", "owner_action"],
+      "swappable_without_recipe_change": ["capability_labels", "prototype_metrics", "action_label"]
+    },
+    {
+      "instance_id": "omar-contact-01",
+      "definition_id": "contact.next-pop-up.v1",
+      "variant_id": "event-and-inquiry",
+      "slots": ["event_status", "event_name", "event_location", "event_date", "map_action", "inquiry_form", "optional_marketing_consent"],
+      "swappable_without_recipe_change": ["event_fields", "map_url", "form_labels", "consent_copy"]
+    }
+  ],
+  "runtime_contract": {
+    "public_and_owner_share_storage_key": "famtastic.omar-top-deals.v1",
+    "prototype_storage": "browser_localStorage",
+    "network_calls": "none",
+    "external_effects": []
+  }
+}

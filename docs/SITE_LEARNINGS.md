@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-29 — Pop-up commerce starts with continuity, not a fake catalog
+
+- Observation: the strongest first proof for a traveling merchant is not a
+  fabricated ecommerce store; it is a permanent, memorable front door around
+  a real person whose table, categories, and locations change.
+- Guidance: use a stable public URL and QR, swappable category components,
+  editable event/directions fields, local prototype requests, and distinct
+  consent. Keep money in the owner's approved account. Represent device-local
+  controls as a functional prototype until authentication, persistence,
+  notification, inventory, and payment ownership are separately approved.
+
 ## 2026-08-28 — Preserve an approved direction before making a bolder fork
 
 - Observation: visual refinement was initially applied directly to an already

@@ -1,0 +1,36 @@
+{
+  "schema": "famtastic.showcase-prototype.v1",
+  "prototype_id": "omar-top-deals-market-front-door",
+  "business_name": "Omar Top Deals",
+  "subject_status": "real_owner_supplied_subject",
+  "experience": {
+    "public_path": "/showcase/omar-top-deals/",
+    "owner_path": "/showcase/omar-top-deals/owner/",
+    "page_recipe": "market-front-door-v1",
+    "component_system": "omar-top-deals-components-v1",
+    "storage": "device_local_browser_only",
+    "external_effects": []
+  },
+  "sections": [
+    "hero.market-front-door.v1",
+    "catalog.pop-up-grid.v1",
+    "process.reserve-path.v1",
+    "story.mentor-market.v1",
+    "operations.market-day-console.v1",
+    "contact.next-pop-up.v1"
+  ],
+  "creative_assets": [
+    { "path": "assets/hero-selected.webp", "role": "public_hero", "rights": "owner_reference_derived_generated" },
+    { "path": "assets/hero-evening.webp", "role": "alternate_media_family", "rights": "owner_reference_derived_generated" },
+    { "path": "assets/hero-marketday.webp", "role": "owner_console_media", "rights": "owner_reference_derived_generated" },
+    { "path": "assets/omar-and-fritz.webp", "role": "owner_supplied_story_photo", "rights": "owner_supplied" },
+    { "path": "assets/field-market.webp", "role": "owner_supplied_safe_crop", "rights": "owner_supplied_contact_details_removed" },
+    { "path": "assets/omar-top-deals-qr.png", "role": "public_showcase_qr", "rights": "generated_locally" }
+  ],
+  "truth_boundaries": [
+    "All inventory, prices, events, contact details, domain availability, email configuration, payment routes, and launch claims require Omar's approval.",
+    "Forms and owner changes remain in the current browser's localStorage.",
+    "The QR opens the showcase only and does not initiate payment.",
+    "No business profile, domain, custom email, messaging provider, payment provider, database, authentication, or analytics account was created or connected."
+  ]
+}

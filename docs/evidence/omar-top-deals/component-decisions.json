@@ -1,0 +1,82 @@
+{
+  "schema": "famtastic.component-decision-record.v1",
+  "page_recipe": {
+    "id": "market-front-door-v1",
+    "version": "1.0.0",
+    "component_system": "omar-top-deals-components-v1"
+  },
+  "decisions": [
+    {
+      "decision_id": "OTD-D01",
+      "component": "hero.market-front-door.v1",
+      "choice": "Lead with Omar as a trusted merchant in a real market context, not with a generic product grid.",
+      "reason": "The business advantage is Omar's decades of human sales experience; the site should extend that trust instead of pretending to replace it."
+    },
+    {
+      "decision_id": "OTD-D02",
+      "component": "hero.market-front-door.v1",
+      "choice": "Use a large condensed sans with a soft editorial serif collision, orange, gold, ink, paper grain, and ticket shapes.",
+      "reason": "The visual system translates the temporary, tactile energy of flyers, deal tags, tents, and hand-to-hand selling into a premium digital identity."
+    },
+    {
+      "decision_id": "OTD-D03",
+      "component": "hero.market-front-door.v1",
+      "choice": "Keep the primary action exploratory and the hold action secondary.",
+      "reason": "Product, price, and inventory are unconfirmed; the page can invite interest without creating a false commercial promise."
+    },
+    {
+      "decision_id": "OTD-D04",
+      "component": "catalog.pop-up-grid.v1",
+      "choice": "Represent categories rather than fixed SKUs or prices.",
+      "reason": "A rotating pop-up table changes quickly; a small category layer is maintainable and honest at prototype stage."
+    },
+    {
+      "decision_id": "OTD-D05",
+      "component": "catalog.pop-up-grid.v1",
+      "choice": "Allow Omar to hide, rename, describe, and mark category status from the owner prototype.",
+      "reason": "Phone control is the strongest operational proof while durable inventory remains a separately scoped upgrade."
+    },
+    {
+      "decision_id": "OTD-D06",
+      "component": "process.reserve-path.v1",
+      "choice": "Organize value around before, at, and after the pop-up.",
+      "reason": "The same permanent link makes a temporary sales moment easier to discover, navigate, and remember."
+    },
+    {
+      "decision_id": "OTD-D07",
+      "component": "process.reserve-path.v1",
+      "choice": "Separate a service question or hold from optional future-event consent.",
+      "reason": "A useful reply path does not automatically grant marketing permission."
+    },
+    {
+      "decision_id": "OTD-D08",
+      "component": "story.mentor-market.v1",
+      "choice": "Make Fritz's twenty-year mentor story an editorial proof section.",
+      "reason": "It explains why this concept exists and gives the demo emotional specificity without inventing customer testimonials."
+    },
+    {
+      "decision_id": "OTD-D09",
+      "component": "operations.market-day-console.v1",
+      "choice": "Build a functioning device-local control desk before promising a backend.",
+      "reason": "Omar can experience the work surface now; a real account, database, alerts, and authentication remain explicit launch work."
+    },
+    {
+      "decision_id": "OTD-D10",
+      "component": "operations.market-day-console.v1",
+      "choice": "Keep payment in Omar's approved external account or QR.",
+      "reason": "FAMtastic does not process, receive, settle, or reconcile Omar's money."
+    },
+    {
+      "decision_id": "OTD-D11",
+      "component": "contact.next-pop-up.v1",
+      "choice": "Keep one permanent public URL while allowing the event name, time, place, status, note, and directions to change.",
+      "reason": "A stable QR is more useful than printing a new address for every pop-up."
+    },
+    {
+      "decision_id": "OTD-D12",
+      "component": "contact.next-pop-up.v1",
+      "choice": "Use a $199 Web Basics front door and identify Market Day Control as a separately scoped upgrade.",
+      "reason": "The starter proves demand cheaply; durable operations should follow evidence and informed approval."
+    }
+  ]
+}

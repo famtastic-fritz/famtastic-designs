@@ -1,0 +1,115 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "omar-top-deals-market-front-door-20260829",
+  "classification": "owner-supplied real-subject public showcase prototype",
+  "created_at": "2026-08-29T20:12:45Z",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "dbd9d9b00a3dcee00c23559d407c6cc04f7d625a",
+    "worktree_state": "feature worktree; new prototype and evidence not committed at record creation"
+  },
+  "recipe": {
+    "routine": "famtastic-subject-specific-demand-proof",
+    "version": "1.0.0",
+    "build_class": "public-showcase-plus-device-local-owner-console",
+    "page_recipe_id": "market-front-door-v1",
+    "page_recipe_version": "1.0.0",
+    "component_system_id": "omar-top-deals-components-v1",
+    "intensity": "famtastic-bold",
+    "research_depth": "official-source bounded",
+    "typography": ["Archivo Black", "Fraunces", "DM Sans"],
+    "texture_depth": "paper grain, market tickets, tactile borders, cut shapes",
+    "motion": "single controllable ticker with reduced-motion fallback",
+    "original_asset_strategy": "three generated editorial candidates plus rights-bounded owner-supplied photo crops",
+    "success_gates": ["truthful claims", "device-local external-effect boundary", "390px no-overflow", "public-owner state continuity", "production build", "live route verification"]
+  },
+  "stages": [
+    {
+      "stage_id": "research-and-offer",
+      "attempt": 1,
+      "capability": "market and operations research",
+      "execution": {
+        "provider": { "id": "official-web-sources-plus-owner-brief" },
+        "model": { "id": null, "status": "not_disclosed_by_runtime" },
+        "timing": { "status": "partial", "duration_ms": null },
+        "cost": { "status": "no_separate_provider_cost_reported", "amount": 0, "currency": "USD" },
+        "input": { "owner_brief": "Omar Top Deals, pop-up merchandise salesman, mentor relationship, owner-supplied photographs" },
+        "output": { "source_manifest": "docs/evidence/omar-top-deals/research-sources.json", "decision_record": "docs/evidence/omar-top-deals/component-decisions.json" }
+      },
+      "result": { "status": "passed", "limitations": "No official Omar business domain, social account, contact, product, event, price, payment, or location fact was established." }
+    },
+    {
+      "stage_id": "premium-image-family",
+      "attempt": 1,
+      "capability": "reference-led image generation",
+      "execution": {
+        "provider": { "id": "openai-imagegen-tool" },
+        "model": { "id": null, "status": "not_disclosed_by_runtime" },
+        "timing": { "status": "partial", "duration_ms": null },
+        "cost": { "status": "provider_did_not_report", "amount": null, "currency": "USD" },
+        "prompt": { "status": "partial", "evidence_ref": "docs/evidence/omar-top-deals/image-generation-receipt.json" },
+        "input": { "reference_count": 2, "rights": "owner-supplied for demo" },
+        "output": { "candidate_count": 3, "selected_candidate": 1 }
+      },
+      "result": { "status": "partial", "reason": "Three usable candidates and hashes retained; runtime did not disclose model, cost, timing, or a verbatim provider prompt receipt." }
+    },
+    {
+      "stage_id": "page-and-owner-console",
+      "attempt": 1,
+      "capability": "componentized static web implementation",
+      "execution": {
+        "provider": { "id": "openai-codex" },
+        "model": { "id": null, "status": "not_disclosed_by_runtime" },
+        "timing": { "status": "partial", "duration_ms": null },
+        "cost": { "status": "subscription_or_runtime_did_not_report", "amount": null, "currency": "USD" },
+        "input": { "component_system": "frontend/public/showcase/omar-top-deals/component-system.json", "decision_count": 12 },
+        "output": { "public_page": "frontend/public/showcase/omar-top-deals/index.html", "owner_console": "frontend/public/showcase/omar-top-deals/owner/index.html", "network_calls": 0 }
+      },
+      "result": { "status": "passed", "external_effects": [] }
+    },
+    {
+      "stage_id": "local-acceptance",
+      "attempt": 1,
+      "capability": "deterministic and browser QA",
+      "execution": {
+        "provider": { "id": "local-node-playwright" },
+        "model": { "id": null, "status": "not_applicable" },
+        "timing": { "status": "partial", "duration_ms": null },
+        "cost": { "status": "not_applicable", "amount": 0, "currency": "USD" },
+        "input": { "viewports": ["1440x1100", "1440x1000", "390x844"], "tests": ["frontend/scripts/test-omar-top-deals.mjs", "frontend/scripts/e2e-omar-top-deals.mjs", "npm run build"] },
+        "output": { "horizontal_overflow": 0, "console_errors": 0, "public_to_owner_flow": "passed", "owner_to_public_flow": "passed", "vite_build": "passed_with_existing_chunk_size_warning" }
+      },
+      "result": { "status": "passed" }
+    }
+  ],
+  "artifacts": [
+    { "role": "public_page", "path": "frontend/public/showcase/omar-top-deals/index.html", "sha256": "cc3be928e9219f1a58e6bbc93b1f60821aca01bea50884abef4c92f7ceb3ee67", "rights": "famtastic-owned implementation" },
+    { "role": "owner_console", "path": "frontend/public/showcase/omar-top-deals/owner/index.html", "sha256": "2d98020f5121f9b62f2374ef3d2a733ad041341e8b1fb662e29c3a7235cfb1b0", "rights": "famtastic-owned implementation" },
+    { "role": "styles", "path": "frontend/public/showcase/omar-top-deals/top-deals.css", "sha256": "39cf1a3ac56e70273001ea982b904b2158b88424971c42986cc4355da0ef32c3", "rights": "famtastic-owned implementation" },
+    { "role": "prototype_runtime", "path": "frontend/public/showcase/omar-top-deals/top-deals.js", "sha256": "2ca707b263baab6ccbff127455be4e59eebfd7c7bc1b0965f60387fc1d24b56d", "rights": "famtastic-owned implementation" },
+    { "role": "prototype_manifest", "path": "frontend/public/showcase/omar-top-deals/prototype-manifest.json", "sha256": "4fa6815d9d11c3e64e8402f8fced8d41e47add820e032a3b1130fe250245ae6e", "rights": "famtastic-owned evidence" },
+    { "role": "component_system", "path": "frontend/public/showcase/omar-top-deals/component-system.json", "sha256": "86ac8df7c3e986b1582aa272038b26c223bdef12fbe8658cfc757b919b6fbace", "rights": "famtastic-owned evidence" },
+    { "role": "research_sources", "path": "docs/evidence/omar-top-deals/research-sources.json", "sha256": "87fe4443490f672c7dfab5c42b9e165a59c819b832ffd951a9b45c062f14192a", "rights": "citation metadata" },
+    { "role": "component_decisions", "path": "docs/evidence/omar-top-deals/component-decisions.json", "sha256": "9bdad3afba7195b644a00b158a249c537966868adf2110f8d6b245b43e10a0ca", "rights": "famtastic-owned evidence" },
+    { "role": "image_generation_receipt", "path": "docs/evidence/omar-top-deals/image-generation-receipt.json", "sha256": "169e1605eeb7cc25f35f0edde9df82522505a4a86c8b36f188a84bb65823e995", "rights": "famtastic-owned evidence" },
+    { "role": "selected_hero", "path": "frontend/public/showcase/omar-top-deals/assets/hero-selected.webp", "sha256": "cd0c39ad9587c182e14da847cf39f980f370234f322acda5da800779be736b10", "rights": "owner-reference-derived generated demo media" },
+    { "role": "alternate_hero", "path": "frontend/public/showcase/omar-top-deals/assets/hero-evening.webp", "sha256": "d82ba3f9cc0a4cceeaaf54015cfaddf09659d737e89db451b53a31458d92605b", "rights": "owner-reference-derived generated demo media" },
+    { "role": "owner_console_media", "path": "frontend/public/showcase/omar-top-deals/assets/hero-marketday.webp", "sha256": "0c70a88e41f8b5db4ef76e804e6a670d9852d45182021d0f2015d7e2b5f932ab", "rights": "owner-reference-derived generated demo media" },
+    { "role": "owner_story_photo", "path": "frontend/public/showcase/omar-top-deals/assets/omar-and-fritz.webp", "sha256": "6e14dddc964ddd8a0e6a24a4555054efd10601409ac0f98ba82305e8d5d55934", "rights": "owner-supplied" },
+    { "role": "market_context_safe_crop", "path": "frontend/public/showcase/omar-top-deals/assets/field-market.webp", "sha256": "9ddc9631722595b1f12b9f7f7816c9c15a411ef88af9b9889ee848792ce6346f", "rights": "owner-supplied; visible contact sign removed" },
+    { "role": "public_showcase_qr", "path": "frontend/public/showcase/omar-top-deals/assets/omar-top-deals-qr.png", "sha256": "02448dd31745d6999232d60db563bfa1dc2a44b2fa120648190feb94930429c2", "rights": "locally generated" },
+    { "role": "public_desktop_screenshot", "path": "docs/evidence/omar-top-deals/screenshots/public-desktop.png", "sha256": "2ca7d06adc30b2addc2d6e581c65a96f78cfe13a1db7e1b90403a5edc2eb3f26", "rights": "famtastic-owned QA evidence" },
+    { "role": "public_mobile_screenshot", "path": "docs/evidence/omar-top-deals/screenshots/public-mobile.png", "sha256": "cc1b0fa463e3350b839d267a70443504c3a1ee345363c77e8529c69c1ec171f4", "rights": "famtastic-owned QA evidence" },
+    { "role": "owner_desktop_screenshot", "path": "docs/evidence/omar-top-deals/screenshots/owner-desktop.png", "sha256": "002a5aa88842a2d2291459c7701f818e3eac5a4f6b6d3d91cf3174aaaf069d25", "rights": "famtastic-owned QA evidence" },
+    { "role": "owner_mobile_screenshot", "path": "docs/evidence/omar-top-deals/screenshots/owner-mobile.png", "sha256": "06a236a059b69b635e2ff1ae319025e7fd105b28f63f207acde9851b605041ac", "rights": "famtastic-owned QA evidence" }
+  ],
+  "retrieval": {
+    "filesystem": { "status": "available", "path": "docs/evidence/omar-top-deals/build-dna.json" },
+    "database": { "status": "not_registered", "reason": "Showcase prototype is not a customer request or proof-campaign record." },
+    "site_studio": { "status": "not_dispatched", "reason": "Direct public showcase prototype; Site Studio did not execute this run." }
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256",
+    "validation_status": "schema_and_artifact_hashes_passed"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "schema": "famtastic.research-source-manifest.v1",
+  "subject": "Omar Top Deals portable pop-up merchandise business concept",
+  "captured_at": "2026-08-29T20:12:45Z",
+  "subject_facts": {
+    "status": "owner_supplied",
+    "facts": [
+      "The working business name is Omar Top Deals.",
+      "Omar is a pop-up merchandise salesman with decades of sales and business experience.",
+      "Fritz described Omar as an old friend and mentor and supplied the photographs used in the concept.",
+      "No official domain, public email, social account, event schedule, product inventory, prices, payment account, or service area was confirmed for this build."
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "google-business-profile-get-started",
+      "url": "https://support.google.com/business/answer/7039811?hl=en",
+      "publisher": "Google Business Profile Help",
+      "design_use": "Supports a future verified public business presence; not represented as configured in this prototype."
+    },
+    {
+      "source_id": "google-business-profile-service-area",
+      "url": "https://support.google.com/business/answer/9157481?hl=en",
+      "publisher": "Google Business Profile Help",
+      "design_use": "Supports future service-area treatment for a mobile pop-up merchant; no area is claimed today."
+    },
+    {
+      "source_id": "google-business-profile-posts",
+      "url": "https://support.google.com/business/answer/7342169?hl=en",
+      "publisher": "Google Business Profile Help",
+      "design_use": "Supports a repeatable event and offer publishing workflow after account approval."
+    },
+    {
+      "source_id": "square-qr-codes",
+      "url": "https://squareup.com/us/en/online-store/qr-code",
+      "publisher": "Square",
+      "design_use": "Supports the QR-at-the-table pattern; the prototype QR opens only the public showcase and does not collect payment."
+    },
+    {
+      "source_id": "square-retail-capabilities",
+      "url": "https://squareup.com/us/en/retail/capabilities",
+      "publisher": "Square",
+      "design_use": "Supports separately scoped inventory and selling-system options; no Square integration is represented as active."
+    },
+    {
+      "source_id": "cash-app-pay",
+      "url": "https://cash.app/cash-app-pay",
+      "publisher": "Cash App",
+      "design_use": "Supports the owner-controlled payment-link principle; the prototype stores no payment link and processes no payment."
+    },
+    {
+      "source_id": "mailchimp-permission",
+      "url": "https://mailchimp.com/help/the-importance-of-permission/",
+      "publisher": "Mailchimp",
+      "design_use": "Supports keeping event/drop marketing consent optional and separate from a customer question or hold request."
+    },
+    {
+      "source_id": "wcag-target-size",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html",
+      "publisher": "W3C Web Accessibility Initiative",
+      "design_use": "Supports phone-friendly controls and forgiving tap targets."
+    },
+    {
+      "source_id": "wcag-reduced-motion",
+      "url": "https://www.w3.org/WAI/WCAG22/Techniques/css/C39.html",
+      "publisher": "W3C Web Accessibility Initiative",
+      "design_use": "Supports the visible motion control and reduced-motion fallback."
+    }
+  ],
+  "limitations": [
+    "No external search result was treated as Omar's official business identity.",
+    "Provider pages describe possible capabilities, not a recommendation that Omar must buy or use those providers.",
+    "The business and operating facts require Omar's approval before a real launch."
+  ]
+}

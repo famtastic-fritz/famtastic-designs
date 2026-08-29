@@ -1,5 +1,26 @@
 # Product changelog
 
+## 2026-08-29 — Omar Top Deals market-front-door prototype
+
+- Added a subject-specific public concept for Omar, a pop-up merchandise
+  salesman and long-time mentor to Fritz, using owner-supplied photography and
+  three new reference-led editorial image candidates.
+- Built a reusable six-component one-page recipe around featured categories,
+  a before/during/after pop-up loop, the mentor story, a stable event/QR front
+  door, and optional-consent customer inquiries rather than an unverified
+  full-commerce claim.
+- Added a functional phone-first owner prototype for category visibility and
+  status, hold/question handling, event details and directions, public/payment
+  link planning, QR sharing, and a bounded $199 foundation with a separately
+  scoped Market Day Control growth path.
+- Connected the public and owner prototypes with device-local storage while
+  keeping email, SMS, payment, inventory, authentication, domain, and database
+  effects disconnected and visibly disclosed.
+- Added official-source research, a twelve-decision component ledger, a public
+  component-system contract, image-generation provenance, deterministic source
+  checks, and mobile end-to-end proof of public-to-owner and owner-to-public
+  state continuity.
+
 ## 2026-08-28 — Alex Signal Cut V2 refinement
 
 - Preserved the production-proven Alex V1 prototype byte-for-byte and created
