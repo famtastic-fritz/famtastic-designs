@@ -1,0 +1,34 @@
+{
+  "schema": "famtastic.production-acceptance.v1",
+  "accepted_at": "2026-08-29T20:22:00Z",
+  "release": {
+    "commit": "354ab68be8160a3ed29583858288ba3449333554",
+    "deployed_at": "2026-08-29T20:20:57Z",
+    "node": "v22.23.2",
+    "backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260829T201833Z-354ab68be8160a3ed29583858288ba3449333554.tgz"
+  },
+  "http": [
+    { "url": "https://famtasticdesigns.com/showcase/omar-top-deals/", "status": 200, "content_type": "text/html", "bytes": 14365 },
+    { "url": "https://www.famtasticdesigns.com/showcase/omar-top-deals/", "status": 200, "content_type": "text/html", "bytes": 14365 },
+    { "url": "https://famtasticdesigns.com/showcase/omar-top-deals/owner/", "status": 200, "content_type": "text/html", "bytes": 11373 },
+    { "url": "https://www.famtasticdesigns.com/showcase/omar-top-deals/owner/", "status": 200, "content_type": "text/html", "bytes": 11373 },
+    { "url": "https://famtasticdesigns.com/showcase/omar-top-deals/assets/hero-selected.webp", "status": 200, "content_type": "image/webp", "bytes": 177780 },
+    { "url": "https://famtasticdesigns.com/showcase/omar-top-deals/assets/omar-top-deals-qr.png", "status": 200, "content_type": "image/png", "bytes": 4727 }
+  ],
+  "browser": {
+    "viewport": "390x844",
+    "apex_public": { "status": 200, "title_correct": true, "horizontal_overflow_px": 0, "console_errors": [] },
+    "apex_owner": { "status": 200, "title_correct": true, "horizontal_overflow_px": 0, "console_errors": [] },
+    "www_public": { "status": 200, "title_correct": true, "horizontal_overflow_px": 0, "console_errors": [] },
+    "www_owner": { "status": 200, "title_correct": true, "horizontal_overflow_px": 0, "console_errors": [] },
+    "functional_flow": {
+      "public_demo_hold_to_owner_control": "passed",
+      "owner_event_update_to_public_page": "passed",
+      "external_application_effects": 0
+    }
+  },
+  "notification": {
+    "status": "blocked_no_configured_phone_route",
+    "reason": "No repository-backed SMS, phone, iMessage, or other exact authorized phone-notification transport and recipient target was found. No number or credential was guessed and no message was sent."
+  }
+}

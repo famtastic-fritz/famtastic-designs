@@ -21,13 +21,14 @@ contracts, Build DNA, and live desktop/mobile acceptance proof.
 - [x] Create and select original premium visual material using the three-candidate rule.
 - [x] Build the public page and phone-first owner console without creating a real payment or mail authority.
 - [x] Validate the component contract, Build DNA, local functionality, accessibility, and mobile layout.
-- [ ] Re-sync with GitHub, commit, push, integrate through `main`, deploy the exact SHA, and verify apex plus `www`.
-- [ ] Record changelog, lessons, Drive mirror, production evidence, and the notification outcome.
+- [x] Re-sync with GitHub, commit, push, integrate through `main`, deploy the exact SHA, and verify apex plus `www`.
+- [x] Record changelog, lessons, Drive mirror, production evidence, and the notification outcome.
 
 ## Status
 
-Release candidate validated locally; GitHub integration and production release
-remain in progress.
+Complete and live. The only unfulfilled optional action is the phone alert:
+there is no configured, attributable phone-notification transport/recipient in
+this repository, so no number or credential was guessed.
 
 ## Started
 
@@ -35,7 +36,7 @@ remain in progress.
 
 ## Ended
 
-Open.
+2026-08-29.
 
 ## Execution
 
@@ -65,10 +66,9 @@ principles, and built-in image generation.
 
 ## Blocked By
 
-Phone notification channel is not yet evidenced. Finish the build and report in
-the active Codex task; use a phone channel only if an already-configured,
-authorized, testable FAMtastic notification route can be verified without
-guessing a recipient or credential.
+Phone notification remains explicitly blocked: the repository exposes no
+configured SMS, iMessage, phone, or equivalent transport with an attributable
+recipient. Completion is reported in the active Codex task instead.
 
 ## Proof
 
@@ -78,5 +78,10 @@ deterministic source test, Playwright public/owner continuity test, Vite build,
 desktop/mobile screenshots, zero horizontal overflow, zero console errors, and
 zero external application effects.
 
-Pending: GitHub SHA, production release marker, live apex/`www` acceptance,
-Drive mirror, and notification receipt or an explicit blocked record.
+Production: exact commit `354ab68be8160a3ed29583858288ba3449333554`,
+deployed `2026-08-29T20:20:57Z` with server backup
+`/home/xrdj7j99xhzt/backups/famtastic-frontend-20260829T201833Z-354ab68be8160a3ed29583858288ba3449333554.tgz`.
+Apex and `www` public/owner routes, hero, QR, 390px rendering, and functional
+state continuity passed live. See
+`docs/evidence/omar-top-deals/production-acceptance.json`. The notification
+record truthfully states `blocked_no_configured_phone_route`.
