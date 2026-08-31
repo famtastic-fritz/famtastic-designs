@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — Preserve a pop-up's recognition system while quarantining unsafe field details
+
+- Observation: a real booth photograph can prove palette, material, category,
+  and social identity while also showing children, bystanders, and contact text
+  that conflicts with the owner's latest statement.
+- Guidance: treat those facts as separate bindings. Preserve the recognizable
+  physical cues in a reference-led visual system, but do not publish the raw
+  image or choose between disputed email addresses. Use verified social
+  destinations for the first conversion path, native/editable social graphics,
+  and a local message builder that cannot send until the business approves an
+  official contact and operating workflow.
+
 ## 2026-08-29 — Recommended values can make a proof concrete without becoming fake commerce
 
 - Observation: a merchandise proof feels generic when it names categories but

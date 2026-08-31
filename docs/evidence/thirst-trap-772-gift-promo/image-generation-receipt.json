@@ -1,0 +1,12 @@
+{
+  "schema": "famtastic.image-generation-receipt.v1",
+  "stage_id": "reference-led-hero-generation",
+  "provider": "openai-imagegen-tool",
+  "model": {"id": null, "status": "not_disclosed_by_runtime"},
+  "prompt": {"status":"exact","path":"docs/evidence/thirst-trap-772-gift-promo/image-prompt.txt","sha256":"a3e99677f0b065185688d83e521f7c2cf7601d4dbda87547b624bdce068dda98"},
+  "inputs": {"reference_count":5,"rights":"owner supplied as creative references; originals withheld from public output"},
+  "output": {"candidate_count":1,"selected_count":1,"raw_path":"docs/evidence/thirst-trap-772-gift-promo/raw/hero-social-source.png","raw_sha256":"1f85954a45e0c664ee76b746475230552f37975d0f7df74fd2f065710c93d62a","public_path":"frontend/public/showcase/thirst-trap-772/assets/thirst-trap-hero.webp","public_sha256":"f9981b1f1f1fd3eaf0f6920b28948fd0ff8312eb9346a56f9d7232f4d1cd02e0","dimensions":"1672x941"},
+  "timing": {"status":"partial","duration_ms":null},
+  "cost": {"status":"provider_did_not_report","amount":null,"currency":"USD"},
+  "review": {"status":"selected","criteria":["no people or children","no readable contact details","no generated words","recognizable hot-pink canopy","clear pouches and ice","responsive landscape composition"],"limitations":"Provider did not disclose model identity, invoice cost, or complete timing."}
+}

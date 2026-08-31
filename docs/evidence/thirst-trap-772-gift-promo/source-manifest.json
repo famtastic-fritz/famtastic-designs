@@ -1,0 +1,42 @@
+{
+  "schema": "famtastic.public-source-manifest.v1",
+  "captured_at": "2026-08-31T00:00:00Z",
+  "subject": "Thirst Trap 772",
+  "sources": [
+    {
+      "source_id": "TT772-S01",
+      "type": "owner_supplied_field_photos",
+      "observation": "Neon-pink Thirst Trap canopy and backdrop, electric-green accents, drink pouches on ice, CRAVE DRINK REPEAT line, and public Instagram handle @thirst_trap772.",
+      "rights": "owner supplied as creative references",
+      "public_use": "reference only; originals withheld because people and conflicting contact details are visible"
+    },
+    {
+      "source_id": "TT772-S02",
+      "type": "official_social_page",
+      "url": "https://www.facebook.com/ThirstTrap772/",
+      "http_status_observed": 200,
+      "observation": "Current public search surface identifies THIRST TRAP in Vero Beach, Florida and describes lemonade, frozen drinks, tropical fruit, desserts, snacks, seafood, and event booking.",
+      "limitations": "Menu, availability, prices, event dates, and current operating details were not independently confirmed."
+    },
+    {
+      "source_id": "TT772-S03",
+      "type": "official_social_profile",
+      "url": "https://www.instagram.com/thirst_trap772/",
+      "http_status_observed": 200,
+      "observation": "Handle matches the owner-supplied branded canopy and public web references.",
+      "limitations": "Profile contents were not relied upon for product, schedule, price, or contact claims."
+    }
+  ],
+  "excluded_claims": [
+    "exact email address",
+    "phone number",
+    "TikTok account",
+    "current menu or flavor list",
+    "prices",
+    "availability",
+    "delivery area",
+    "event schedule",
+    "testimonials",
+    "performance or sales results"
+  ]
+}

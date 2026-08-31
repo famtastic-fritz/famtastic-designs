@@ -1,5 +1,28 @@
 # Product changelog
 
+## 2026-08-31 — Thirst Trap 772 promotional gift concept
+
+- Added a subject-specific, no-index gift showcase for the real Vero Beach
+  Thirst Trap 772 pop-up using its owner-supplied pink-tent visual identity and
+  `Crave. Drink. Repeat.` brand line.
+- Verified the public Instagram and Facebook destinations, then withheld the
+  conflicting email evidence, phone details, raw bystander/child photographs,
+  unverified TikTok, and all unconfirmed menu, price, event, availability, and
+  performance claims.
+- Created one reference-led premium hero visual with no people or contact data,
+  plus editable 4:5 feed and 9:16 Story/Reel SVG graphics whose readable copy
+  remains native rather than baked into an AI image.
+- Built seven reusable component instances: social navigation, ice-market hero,
+  category-level offer, event inquiry, pop-up-to-owned-door story, social promo
+  kit, and a transparent FAMtastic gift note.
+- Added a phone-friendly event-message builder that copies no data to FAMtastic,
+  sends nothing automatically, and leaves final communication under the
+  visitor's control.
+- Added source provenance, seven cited component decisions, exact image prompt
+  and provider receipt, prototype/component contracts, deterministic tests,
+  local mobile-browser evidence, and Build DNA. Production deployment and
+  social publication remain separate evidence gates.
+
 ## 2026-08-29 — Omar Top Deals flyer storefront V2
 
 - Preserved the production Omar showcase as Version 1 and added a separately

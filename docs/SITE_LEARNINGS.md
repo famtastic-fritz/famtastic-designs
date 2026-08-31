@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — A surprise gift site should amplify a public signal without exposing the field photo
+
+- Observation: the strongest source material for a neighborhood pop-up may
+  simultaneously contain its most recognizable brand cues, bystanders or
+  children, and outdated or conflicting contact details.
+- Guidance: separate recognition from disclosure. Use the booth palette,
+  material, product category, and verified public social handle as reusable
+  bindings; withhold the raw photograph when people or disputed contact data
+  remain visible; create new reference-led atmosphere art; keep all readable
+  social copy native and editable; and make the public concept no-index until
+  the business accepts its menu, contact, event, and official-site details.
+
 ## 2026-08-29 — Recommended values can make a proof concrete without becoming fake commerce
 
 - Observation: a merchandise proof feels generic when it names categories but
