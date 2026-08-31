@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — A reusable follow-up template needs both customization and a bearer boundary
+
+- Observation: a client-facing planning email needs business-specific wording,
+  but preserving the literal private link in a stored template would defeat the
+  deep-dive interview's no-raw-secret storage rule.
+- Guidance: customize only explicit copy blocks with documented merge fields;
+  render the bearer URL at send time, store `{{interview_url}}` in the audit
+  snapshot, and keep each reminder as an owner-reviewed draft rather than an
+  automatic outbound sequence.
+
 ## 2026-08-31 — Commerce provisioning is not the same as customer fulfillment
 
 - Observation: a completed $1 Commerce order correctly created its payment,

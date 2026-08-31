@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-08-31 — Customizable owner-invited deep-dive templates
+
+- Converted the fixed private-interview invitation into reusable plain-text
+  copy blocks with documented client/business/duration/link merge fields and
+  per-invitation subject, intro, CTA, next-step, signature, and duration
+  overrides.
+- Added a review-only follow-up cadence (not-started, in-progress, and
+  human-help drafts). Reminder delivery remains a deliberate owner action; no
+  template can automatically send mail or change payment, booking, or project
+  status.
+- Template snapshots retain the private-link placeholder rather than the bearer
+  URL, preserving the original no-raw-secret storage boundary.
+
 ## 2026-08-31 — Completed Commerce fulfillment queue
 
 - Added an Operations Home Fulfillment Queue for completed Drupal Commerce

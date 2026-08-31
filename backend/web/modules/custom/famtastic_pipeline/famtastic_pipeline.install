@@ -2394,6 +2394,26 @@ function famtastic_pipeline_update_8045(&$sandbox) {
   return t('Extended private deep-dive invitation records.');
 }
 
+/** Adds safe, auditable deep-dive email template snapshots. */
+function famtastic_pipeline_update_8047(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $table = 'famtastic_deep_dive_invitation';
+  if (!$schema->tableExists($table)) {
+    return t('Deep-dive invitation table is not installed yet.');
+  }
+  $fields = [
+    'email_subject_template' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE, 'default' => ''],
+    // This deliberately retains {{interview_url}}, not the bearer URL itself.
+    'email_body_template' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+  ];
+  foreach ($fields as $field => $definition) {
+    if (!$schema->fieldExists($table, $field)) {
+      $schema->addField($table, $field, $definition);
+    }
+  }
+  return t('Added deep-dive email template snapshots without storing bearer links.');
+}
+
 /** Defines secure, private discovery interviews that can later be account-claimed. */
 function _famtastic_pipeline_deep_dive_invitation_schema(): array {
   $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
@@ -2411,6 +2431,8 @@ function _famtastic_pipeline_deep_dive_invitation_schema(): array {
       'secret_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
       'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'draft'],
       'answers' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'email_subject_template' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE, 'default' => ''],
+      'email_body_template' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
       'provider_message_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
       'activated_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'sent_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],

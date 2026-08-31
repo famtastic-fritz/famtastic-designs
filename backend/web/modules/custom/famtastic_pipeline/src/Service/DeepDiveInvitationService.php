@@ -19,6 +19,21 @@ use Drupal\famtastic_pipeline\Entity\Prospect;
  */
 final class DeepDiveInvitationService {
 
+  /**
+   * Safe, reusable copy blocks for owner-invited discovery emails.
+   *
+   * These fields accept only the documented merge fields. The delivery URL is
+   * rendered at send time and is never stored with the invitation record.
+   */
+  private const EMAIL_TEMPLATE_DEFAULTS = [
+    'subject' => 'A few questions to shape {{business_name}}\'s website',
+    'intro' => 'We want to understand {{business_name}} before we design anything. This private interview asks one question at a time about your services, booking, brand, location, photos, payments, and growth goals. It takes about {{duration}}, saves your progress, and does not ask for payment details.',
+    'cta' => 'Start your private planning interview:',
+    'next_steps' => 'After you finish and verify your free FAMtastic account with this same email address, your answers will be saved in your private workspace. We will then prepare a six-direction creative plan for owner review; no site, payment flow, or booking change goes live without your approval.',
+    'signature' => '— FAMtastic Designs',
+    'duration' => '10 minutes',
+  ];
+
   public function __construct(
     private readonly Connection $database,
     private readonly EntityTypeManagerInterface $entities,
@@ -217,14 +232,80 @@ final class DeepDiveInvitationService {
     return rtrim($origin, '/') . '/deep-dive/' . rawurlencode((string) $record['public_id']) . '#' . $secret;
   }
 
-  /** Draft-only transactional copy; no commercial promise is made. */
-  public function emailDraft(array $record, string $url): array {
-    $name = trim((string) $record['contact_name']) ?: 'there';
-    $business = trim((string) $record['business_name']) ?: 'your business';
-    return [
-      'subject' => 'A few questions to shape ' . $business . "'s website",
-      'body' => "Hi {$name},\n\nWe want to understand {$business} before we design anything. This private interview asks one question at a time about your services, booking, brand, location, photos, payments, and growth goals. It takes about 10 minutes, saves your progress, and does not ask for payment details.\n\nStart your private planning interview:\n{$url}\n\nAfter you finish and verify your free FAMtastic account with this same email address, your answers will be saved in your private workspace. We will then prepare a six-direction creative plan for owner review; no site, payment flow, or booking change goes live without your approval.\n\n— FAMtastic Designs",
+  /**
+   * Builds customizable draft-only transactional copy; no commercial promise
+   * or send is made here.
+   *
+   * Supported merge fields: {{contact_name}}, {{business_name}},
+   * {{interview_url}}, and {{duration}}.
+   *
+   * @return array{subject:string,body:string,subject_template:string,body_template:string,template:array<string,string>}
+   */
+  public function emailDraft(array $record, string $url, array $overrides = []): array {
+    $template = $this->emailTemplate($overrides);
+    $values = [
+      '{{contact_name}}' => trim((string) $record['contact_name']) ?: 'there',
+      '{{business_name}}' => trim((string) $record['business_name']) ?: 'your business',
+      '{{interview_url}}' => $url,
+      '{{duration}}' => $template['duration'],
     ];
+    $bodyTemplate = "Hi {{contact_name}},\n\n{$template['intro']}\n\n{$template['cta']}\n{{interview_url}}\n\n{$template['next_steps']}\n\n{$template['signature']}";
+    return [
+      'subject' => $this->mergeTemplate($template['subject'], $values),
+      'body' => $this->mergeTemplate($bodyTemplate, $values),
+      'subject_template' => $template['subject'],
+      // Preserve the URL token instead of the bearer secret for audit/review.
+      'body_template' => $bodyTemplate,
+      'template' => $template,
+    ];
+  }
+
+  /** Persists only the safe template snapshot, never the bearer interview URL. */
+  public function recordEmailTemplate(string $publicId, array $draft): void {
+    $record = $this->record($publicId);
+    if (!$record) {
+      throw new \InvalidArgumentException('Invitation not found.');
+    }
+    $this->database->update('famtastic_deep_dive_invitation')->fields([
+      'email_subject_template' => mb_substr((string) ($draft['subject_template'] ?? ''), 0, 512),
+      'email_body_template' => (string) ($draft['body_template'] ?? ''),
+      'changed' => $this->time->getRequestTime(),
+    ])->condition('id', (int) $record['id'])->execute();
+  }
+
+  /** Exposes default copy blocks for a staff form, CLI, or future UI. */
+  public static function emailTemplateDefaults(): array {
+    return self::EMAIL_TEMPLATE_DEFAULTS;
+  }
+
+  /** Applies plain-text overrides without allowing arbitrary merge fields. */
+  private function emailTemplate(array $overrides): array {
+    $template = self::EMAIL_TEMPLATE_DEFAULTS;
+    foreach (array_keys($template) as $key) {
+      if (!isset($overrides[$key]) || !is_string($overrides[$key])) {
+        continue;
+      }
+      $value = trim(str_replace(["\r\n", "\r"], "\n", $overrides[$key]));
+      if ($value !== '') {
+        $template[$key] = $value;
+      }
+    }
+    foreach (['subject', 'intro', 'cta', 'next_steps', 'signature'] as $key) {
+      $template[$key] = $this->allowMergeFields($template[$key]);
+    }
+    return $template;
+  }
+
+  /** Leaves only documented merge fields intact so template behavior is predictable. */
+  private function allowMergeFields(string $value): string {
+    return preg_replace_callback('/{{[^}]+}}/', static function (array $match): string {
+      return in_array($match[0], ['{{contact_name}}', '{{business_name}}', '{{interview_url}}', '{{duration}}'], TRUE) ? $match[0] : '';
+    }, $value) ?? $value;
+  }
+
+  /** Performs deterministic plain-text merge-field replacement. */
+  private function mergeTemplate(string $template, array $values): string {
+    return strtr($template, $values);
   }
 
   /** @return array<int,array<string,mixed>> */

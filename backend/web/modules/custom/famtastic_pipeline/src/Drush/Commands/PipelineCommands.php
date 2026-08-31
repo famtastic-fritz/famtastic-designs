@@ -24,12 +24,18 @@ class PipelineCommands extends DrushCommands {
   #[CLI\Option(name: 'business', description: 'Customer-facing business name.')]
   #[CLI\Option(name: 'contact', description: 'Recipient first/full name for the draft.')]
   #[CLI\Option(name: 'origin', description: 'Public site origin used for the secure link.')]
+  #[CLI\Option(name: 'subject', description: 'Optional subject override. Merge fields: {{contact_name}}, {{business_name}}, {{duration}}.')]
+  #[CLI\Option(name: 'intro', description: 'Optional first-paragraph override. Supports documented merge fields.')]
+  #[CLI\Option(name: 'cta', description: 'Optional CTA label override before the private link.')]
+  #[CLI\Option(name: 'next-steps', description: 'Optional post-interview explanation override. Supports documented merge fields.')]
+  #[CLI\Option(name: 'signature', description: 'Optional sign-off override. Supports documented merge fields.')]
+  #[CLI\Option(name: 'duration', description: 'Optional completion-time label, for example "8 minutes".')]
   #[CLI\Option(name: 'send', description: 'Send the drafted transactional invitation after exact confirmation.')]
   #[CLI\Option(name: 'confirm', description: 'Must exactly repeat --email to create or send this record.')]
   #[CLI\Usage(name: 'drush fddi --email=owner@example.com --business="Example Studio" --contact="Shay" --confirm=owner@example.com', description: 'Creates an unsent invitation and prints the reviewed draft.')]
   #[CLI\Usage(name: 'drush fddi --email=owner@example.com --business="Example Studio" --contact="Shay" --send --confirm=owner@example.com', description: 'Creates and sends one exact recipient invitation.')]
   public function deepDiveInvite(array $options = [
-    'email' => '', 'business' => '', 'contact' => '', 'origin' => 'https://famtasticdesigns.com', 'send' => FALSE, 'confirm' => '',
+    'email' => '', 'business' => '', 'contact' => '', 'origin' => 'https://famtasticdesigns.com', 'subject' => '', 'intro' => '', 'cta' => '', 'next-steps' => '', 'signature' => '', 'duration' => '', 'send' => FALSE, 'confirm' => '',
   ]): int {
     $email = mb_strtolower(trim((string) $options['email']));
     if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !hash_equals($email, mb_strtolower(trim((string) $options['confirm'])))) {
@@ -42,7 +48,16 @@ class PipelineCommands extends DrushCommands {
       $created = $deepDives->create($email, (string) $options['business'], (string) $options['contact']);
       $record = $deepDives->activate((string) $created['record']['public_id']);
       $url = $deepDives->publicUrl($record, $created['secret'], (string) $options['origin']);
-      $draft = $deepDives->emailDraft($record, $url);
+      $template = [
+        'subject' => (string) $options['subject'],
+        'intro' => (string) $options['intro'],
+        'cta' => (string) $options['cta'],
+        'next_steps' => (string) $options['next-steps'],
+        'signature' => (string) $options['signature'],
+        'duration' => (string) $options['duration'],
+      ];
+      $draft = $deepDives->emailDraft($record, $url, $template);
+      $deepDives->recordEmailTemplate((string) $record['public_id'], $draft);
       $result = [
         'invitation_id' => $record['public_id'],
         'recipient' => $email,
