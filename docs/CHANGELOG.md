@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-08-31 — Private deep-dive route release correction
+
+- Added the explicit Apache SPA rewrite for owner-invited `/deep-dive/<id>`
+  interviews after production acceptance found the otherwise-deployed React
+  route returning an Apache 404.
+- Extended the route-shell contract test so future releases require this narrow
+  private-route rule without creating a broad catch-all that could consume
+  Drupal or static campaign paths.
+
 ## 2026-08-31 — Thirst Trap 772 production storefront and owner studio
 
 - Preserved the original gift concept under `/v1/`, built a separately

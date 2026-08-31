@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — Private React routes need an explicit shared-host rewrite
+
+- Observation: a deployed deep-discovery page returned Apache 404 before the
+  React application loaded because the shared GoDaddy document root admitted
+  only pre-existing token route families.
+- Guidance: add a narrow `/deep-dive/<id>` rewrite and route-contract test;
+  do not create or mail a client invitation until the public path renders.
+
 ## 2026-08-31 — A production pop-up site needs a durable loop, not only more art
 
 - Observation: a dramatic visual upgrade can win attention while leaving the

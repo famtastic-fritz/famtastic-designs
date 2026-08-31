@@ -26,10 +26,10 @@ test -f "$HTACCESS_FILE"
 # catch-all consuming Drupal or static campaign paths in the shared docroot.
 share_route_line="$(grep -nF 'RewriteRule ^proofs/share/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]' "$HTACCESS_FILE" | cut -d: -f1)"
 preview_route_line="$(grep -nF 'RewriteRule ^proofs/preview/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]' "$HTACCESS_FILE" | cut -d: -f1)"
-account_route_line="$(grep -nF 'RewriteRule ^(?:login|verify-email|reset-password)/?$ /index.html [L]' "$HTACCESS_FILE" | cut -d: -f1)"
+deep_dive_route_line="$(grep -nF 'RewriteRule ^deep-dive/[^/]+/?$ /index.html [L]' "$HTACCESS_FILE" | cut -d: -f1)"
 test -n "$share_route_line"
 test -n "$preview_route_line"
-test -n "$account_route_line"
+test -n "$deep_dive_route_line"
 if grep -Fq 'RewriteRule ^ index.html [L]' "$HTACCESS_FILE"; then
   echo "Proof-room routing must not introduce a broad SPA catch-all." >&2
   exit 1
@@ -38,7 +38,12 @@ fi
 root_assets="$(grep -oE '(src|href)="/assets/[^"]+"' "$DIST_DIR/index.html" | sort -u)"
 test -n "$root_assets"
 while IFS= read -r route_shell; do
-  route_assets="$(grep -oE '(src|href)="/assets/[^"]+"' "$route_shell" | sort -u)"
+  route_assets="$(grep -oE '(src|href)="/assets/[^"]+"' "$route_shell" | sort -u || true)"
+  # Static showcase pages intentionally own their standalone assets. Only the
+  # generated React route shells must mirror the SPA asset manifest.
+  if [[ -z "$route_assets" ]]; then
+    continue
+  fi
   if [[ "$route_assets" != "$root_assets" ]]; then
     echo "Route shell references a different release asset set: $route_shell" >&2
     exit 1

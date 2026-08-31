@@ -36,6 +36,11 @@
   # Token-scoped prospect pipeline routes (ProofHub, payment return, intake, status).
   RewriteRule ^p/[^/]+/?$ /index.html [L]
 
+  # Owner-invited private planning interviews. The bearer secret is kept in the
+  # browser-only URL fragment; this rule only admits the opaque public id to
+  # the React shell and does not broaden the shared Drupal document root.
+  RewriteRule ^deep-dive/[^/]+/?$ /index.html [L]
+
   # Customer account links, checkout purchase, and direct intake routes.
   RewriteRule ^(?:login|verify-email|reset-password|buy|purchase|pricing|intake)(?:/.*)?$ /index.html [L]
 </IfModule>

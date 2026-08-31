@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — A React route is not live until the shared Apache boundary admits it
+
+- Observation: the deep-discovery component, its frontend bundle, and its
+  backend endpoint can all deploy successfully while Apache returns a plain
+  404 before the SPA starts if the shared document-root rewrite list omits the
+  route family.
+- Guidance: for every token-scoped React route, add one deliberately narrow
+  rewrite rule and a deterministic route-shell assertion. Verify the actual
+  public route in a browser before creating or sending an invitation.
+
 ## 2026-08-31 — Production quality joins visual identity to owner-controlled truth
 
 - Observation: generated atmosphere, layered texture, expressive type, and
