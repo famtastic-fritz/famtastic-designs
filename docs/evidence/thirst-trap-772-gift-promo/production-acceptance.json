@@ -1,0 +1,41 @@
+{
+  "schema": "famtastic.production-acceptance.v1",
+  "accepted_at": "2026-08-31T16:28:14Z",
+  "release_commit": "2d33a568dfdee78538a35754e12d229e42b22ee6",
+  "release_backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260831T162238Z-2d33a568dfdee78538a35754e12d229e42b22ee6.tgz",
+  "public_url": "https://famtasticdesigns.com/showcase/thirst-trap-772/",
+  "classification": "unlisted no-index owner-reference-led gift concept",
+  "http_acceptance": {
+    "apex_page": { "status": 200, "content_type": "text/html" },
+    "www_page": { "status": 200, "content_type": "text/html" },
+    "hero": { "status": 200, "content_type": "image/webp" },
+    "feed_graphic": { "status": 200, "content_type": "image/svg+xml" },
+    "story_graphic": { "status": 200, "content_type": "image/svg+xml" },
+    "omar_v2_regression": { "status": 200, "content_type": "text/html" }
+  },
+  "mobile_browser_acceptance": {
+    "viewport": "390x844",
+    "document_client_width": 375,
+    "document_scroll_width": 375,
+    "horizontal_overflow_px": 0,
+    "hero_background_loaded": true,
+    "feed_graphic_loaded": true,
+    "story_graphic_loaded": true,
+    "verified_instagram_links": 5,
+    "verified_facebook_links": 3,
+    "event_message_dialog_opened": true,
+    "event_message_generated": true,
+    "console_warnings_or_errors": 0
+  },
+  "privacy_and_authority": {
+    "robots": "noindex,noarchive,noimageindex",
+    "public_email_or_phone": false,
+    "owner_reference_people_published": false,
+    "menu_prices_or_event_dates_invented": false,
+    "email_sent": false,
+    "social_post_published": false,
+    "customer_account_created": false,
+    "payment_or_order_created": false
+  },
+  "result": "passed"
+}

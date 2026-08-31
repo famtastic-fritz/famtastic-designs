@@ -1,5 +1,34 @@
 # Production Deploy Log
 
+## 2026-08-31 — Thirst Trap 772 free social promo gift
+
+- Repository/branch: `famtastic-fritz/famtastic-designs` / `main`
+- Frontend release: `2d33a568dfdee78538a35754e12d229e42b22ee6`
+- Frontend rollback archive:
+  `/home/xrdj7j99xhzt/backups/famtastic-frontend-20260831T162238Z-2d33a568dfdee78538a35754e12d229e42b22ee6.tgz`
+- Scope: published an unlisted, no-index, mobile-first promotional gift concept
+  for Thirst Trap 772 with verified Instagram and Facebook exits, one
+  owner-reference-led generated hero, two editable native-text social graphics,
+  seven reusable page components, and a local event-message builder.
+- Authority boundary: no email address or phone number was published because
+  the owner-supplied reference and the requested Yahoo address conflict. No
+  email, social post, order, payment, account, event, or customer record was
+  created.
+- Result: successful.
+
+### Acceptance evidence
+
+- Apex and `www` returned HTTP 200; the hero returned `image/webp`; both social
+  graphics returned `image/svg+xml`; Omar Top Deals V2 remained HTTP 200.
+- A real browser at 390×844 rendered with zero horizontal overflow, loaded the
+  hero and both graphics, exposed the verified social destinations, and opened
+  the event-message builder with a generated message.
+- Browser monitoring recorded zero warnings or errors. The page advertises
+  `noindex,noarchive,noimageindex` and states that the business must approve
+  every real menu, price, event, contact, payment, and launch detail.
+- Machine-readable receipt:
+  `docs/evidence/thirst-trap-772-gift-promo/production-acceptance.json`.
+
 ## 2026-08-28 — Alex Signal Cut V2 alongside preserved V1
 
 - Repository/branch: `famtastic-fritz/famtastic-designs` / `main`

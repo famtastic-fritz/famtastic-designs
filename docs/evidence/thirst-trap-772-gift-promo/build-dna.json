@@ -5,8 +5,8 @@
   "created_at": "2026-08-31T00:00:00Z",
   "repository": {
     "name": "famtastic-designs",
-    "revision": "c3472368e4d3dec8c363495b535ec65ab1a9e79a",
-    "worktree_state": "feature implementation locally accepted; feature commit and production release pending"
+    "revision": "2d33a568dfdee78538a35754e12d229e42b22ee6",
+    "worktree_state": "feature implementation accepted and production-proven; production evidence follow-up commit pending"
   },
   "recipe": {
     "routine": "famtastic-subject-specific-gift-showcase",
@@ -89,6 +89,20 @@
         "output": { "horizontal_overflow": 0, "console_warnings_or_errors": 0, "event_message_dialog": "passed", "dist_route": "passed", "external_effects": [] }
       },
       "result": { "status": "passed", "evidence_ref": "docs/evidence/thirst-trap-772-gift-promo/local-acceptance.json", "limitations": "Local acceptance does not prove production deployment or business-owner approval." }
+    },
+    {
+      "stage_id": "production-release-and-acceptance",
+      "attempt": 1,
+      "capability": "governed frontend release plus apex, www, asset, regression, and mobile-browser acceptance",
+      "execution": {
+        "provider": { "id": "godaddy-cpanel-plus-codex-browser" },
+        "model": { "id": null, "status": "not_applicable" },
+        "timing": { "status": "partial", "completed_at": "2026-08-31T16:28:14Z", "duration_ms": null },
+        "cost": { "status": "not_applicable", "amount": 0, "currency": "USD" },
+        "input": { "release_commit": "2d33a568dfdee78538a35754e12d229e42b22ee6", "viewport": "390x844" },
+        "output": { "public_url": "https://famtasticdesigns.com/showcase/thirst-trap-772/", "horizontal_overflow": 0, "console_warnings_or_errors": 0, "external_messages_or_posts": 0 }
+      },
+      "result": { "status": "passed", "evidence_ref": "docs/evidence/thirst-trap-772-gift-promo/production-acceptance.json", "limitations": "Production acceptance proves the published gift concept, not business-owner approval or verified contact ownership." }
     }
   ],
   "artifacts": [
@@ -107,7 +121,8 @@
     {"role":"editable_feed_graphic","path":"frontend/public/showcase/thirst-trap-772/assets/thirst-trap-feed.svg","sha256":"7036386dc262a0fa6da86c5bf142cd03787a56d22399ff6d5cff78d855eb74a0","rights":"famtastic-owned native graphic"},
     {"role":"editable_story_graphic","path":"frontend/public/showcase/thirst-trap-772/assets/thirst-trap-story.svg","sha256":"f010f6847f0a306a8311d84e26b6653765a6f47b2f4aec6be8e051cc0c1cf73e","rights":"famtastic-owned native graphic"},
     {"role":"static_contract_test","path":"frontend/scripts/test-thirst-trap-772.mjs","sha256":"904058e7eab3773081d62bbf313983a5519f2d0e307a252f848dece99180af11","rights":"famtastic-owned test"},
-    {"role":"local_acceptance","path":"docs/evidence/thirst-trap-772-gift-promo/local-acceptance.json","sha256":"f2eac8484ee6cc50efd070e88788396802354a7b75bc6d437e7d13af148964b0","rights":"famtastic-owned QA evidence"}
+    {"role":"local_acceptance","path":"docs/evidence/thirst-trap-772-gift-promo/local-acceptance.json","sha256":"f2eac8484ee6cc50efd070e88788396802354a7b75bc6d437e7d13af148964b0","rights":"famtastic-owned QA evidence"},
+    {"role":"production_acceptance","path":"docs/evidence/thirst-trap-772-gift-promo/production-acceptance.json","sha256":"2c0917018af36b9c8039cbc5cc1028645ea4000f99f1a7f08101610a91b9f4d4","rights":"famtastic-owned production QA evidence"}
   ],
   "retrieval": {
     "filesystem": { "status": "available", "path": "docs/evidence/thirst-trap-772-gift-promo/build-dna.json" },
@@ -116,6 +131,6 @@
   },
   "integrity": {
     "artifact_hash_algorithm": "sha256",
-    "validation_status": "schema_and_artifact_hashes_passed_locally; production_pending"
+    "validation_status": "schema_and_artifact_hashes_passed; production_acceptance_passed"
   }
 }
