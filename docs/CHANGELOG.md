@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-08-31 — Completed Commerce fulfillment queue
+
+- Added an Operations Home Fulfillment Queue for completed Drupal Commerce
+  orders. Each row now joins the paid order to its provisioning record and
+  project delivery state, making the next owner action explicit instead of
+  treating system provisioning as customer delivery.
+- The queue calls out missing provisioning/project records for review and
+  distinguishes client-intake, proof-review, revision, approval, and launch
+  next steps. It does not change payment, project, or delivery state.
+
 ## 2026-08-31 — Shay deep-dive production release and invitation
 
 - Deployed the owner-invited deep-discovery backend, schema migration, private

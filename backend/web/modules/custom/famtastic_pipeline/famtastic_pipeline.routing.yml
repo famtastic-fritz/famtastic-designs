@@ -695,7 +695,7 @@ famtastic_pipeline.operations_metric:
     _title: 'Operations Records'
   requirements:
     _permission: 'administer famtastic pipeline'
-    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes|replies|support-drafts|social-records'
+    metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|fulfillment|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes|replies|support-drafts|social-records'
 
 famtastic_pipeline.support_draft_decision:
   path: '/admin/famtastic/support-draft/{id}/decide'

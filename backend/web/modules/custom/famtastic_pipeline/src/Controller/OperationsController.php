@@ -56,11 +56,12 @@ final class OperationsController extends ControllerBase {
     $published = (int) $this->database->select('node_field_data', 'n')
       ->condition('status', 1)->countQuery()->execute()->fetchField();
     $openSupport = $this->count('famtastic_portal_thread', ['status' => 'open']);
+    $fulfillmentQueue = $this->fulfillmentQueueCount();
     $cards = [
       ['Website Analytics', !empty($analytics['available']) ? 'Connected · 30-day reporting ready' : 'Connection needs attention', 'Traffic, engagement, top pages, and acquisition channels.', Url::fromRoute('famtastic_pipeline.analytics'), 'analytics'],
       ['Customers', $this->count('famtastic_customer') . ' customer accounts', 'Customer identity, contact details, consent, and business workspaces.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'customers']), 'customers'],
       ['Website Requests', $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started']) . ' active requests', 'Pre-purchase interviews, recommendations, private-offer candidates, and Commerce conversion.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), 'prospects'],
-      ['Commerce', $this->count('famtastic_order', ['payment_status' => 'paid']) . ' paid orders', 'Products, orders, payment status, subscriptions, and fulfillment.', Url::fromRoute('commerce.admin_commerce'), 'commerce'],
+      ['Fulfillment Queue', $fulfillmentQueue . ' paid project' . ($fulfillmentQueue === 1 ? '' : 's') . ' need a next step', 'Completed Commerce orders, provisioning, project stage, and the next owner action.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'fulfillment']), 'commerce'],
       ['Support', $openSupport . ' open conversations', 'Customer requests, project questions, replies, and service issues.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support']), 'support'],
       ['Notifications', $this->countIn('famtastic_notification_outbox', 'status', ['queued', 'retry', 'dead_letter']) . ' need attention', 'Receipts, acknowledgments, reminders, delivery attempts, and failures.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'notifications']), 'emails-sent'],
       ['Automation', $this->count('famtastic_worker_heartbeat') . ' monitored workers', 'Scheduled protection, last runs, retries, and worker health.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'workers']), 'open-jobs'],
@@ -528,6 +529,7 @@ final class OperationsController extends ControllerBase {
       'emails-sent' => $this->eventMetric('email.sent', 'Emails Sent', 'Every recorded campaign send event.'),
       'clicks' => $this->eventMetric('email.clicked', 'Proof-Link Clicks', 'Every recorded proof-link click event.'),
       'paid-orders' => $this->paidOrderMetric(),
+      'fulfillment' => $this->fulfillmentMetric(),
       'open-jobs' => $this->jobMetric(),
       'open-exceptions' => $this->exceptionMetric(),
       'support' => $this->supportMetric(),
@@ -1273,6 +1275,107 @@ final class OperationsController extends ControllerBase {
       $rows,
       'No paid orders have been recorded.',
     );
+  }
+
+  /**
+   * Renders completed Commerce orders as an operator fulfillment queue.
+   *
+   * Commerce fulfillment only means that the paid order was provisioned into
+   * FAMtastic records. It must not be presented as client delivery complete:
+   * the linked Project is the source of truth for the remaining delivery work.
+   */
+  private function fulfillmentMetric(): array {
+    $orderStorage = $this->pipelineEntityTypeManager->getStorage('commerce_order');
+    $projectStorage = $this->pipelineEntityTypeManager->getStorage('famtastic_project');
+    $ids = $orderStorage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('state', 'completed')
+      ->sort('completed', 'DESC')
+      ->range(0, 100)
+      ->execute();
+    $rows = [];
+    foreach ($orderStorage->loadMultiple($ids) as $order) {
+      $fulfillment = $this->database->select('famtastic_commerce_fulfillment', 'f')
+        ->fields('f', ['status', 'sku_snapshot', 'amount_minor', 'currency', 'project_id', 'fulfilled_at'])
+        ->condition('commerce_order_id', (int) $order->id())
+        ->execute()
+        ->fetchAssoc() ?: [];
+      $project = !empty($fulfillment['project_id']) ? $projectStorage->load((int) $fulfillment['project_id']) : NULL;
+      $delivery = $project ? (string) $project->get('delivery_status')->value : '';
+      $provisioning = (string) ($fulfillment['status'] ?? 'needs_attention');
+      $amount = isset($fulfillment['amount_minor'])
+        ? $this->formatCurrency((int) $fulfillment['amount_minor'], (string) ($fulfillment['currency'] ?? 'usd'))
+        : ($order->getTotalPrice() ? $order->getTotalPrice()->getCurrencyCode() . ' ' . $order->getTotalPrice()->getNumber() : '—');
+      $items = [];
+      foreach ($order->getItems() as $item) {
+        $purchased = $item->getPurchasedEntity();
+        $items[] = $purchased ? $purchased->label() : 'Order item';
+      }
+      $rows[] = [
+        'order' => $this->linkCell($order->toLink((string) $order->getOrderNumber())),
+        'purchase' => $items ? implode(', ', $items) : (string) ($fulfillment['sku_snapshot'] ?? '—'),
+        'amount' => $amount,
+        'provisioning' => ['data' => ['#markup' => $this->badge($provisioning)]],
+        'project' => $project ? $this->linkCell($project->toLink($project->label())) : 'Not created',
+        'stage' => $project ? ['data' => ['#markup' => $this->badge($delivery)]] : '—',
+        'next_action' => $this->fulfillmentNextAction($provisioning, $delivery),
+        'paid' => $this->date((int) ($order->getCompletedTime() ?: $order->getPlacedTime())),
+      ];
+    }
+    return $this->recordsPage(
+      'Fulfillment Queue',
+      'Every completed Commerce order is shown with its provisioning record and the linked project delivery stage. “Fulfilled” means the system created the customer records; it does not mean a website has been delivered.',
+      ['Order', 'Purchase', 'Amount', 'Provisioning', 'Project', 'Delivery stage', 'Next owner action', 'Paid'],
+      $rows,
+      'No completed Commerce orders are waiting for a fulfillment next step.',
+    );
+  }
+
+  /** Counts paid Commerce projects that are not at a terminal delivery state. */
+  private function fulfillmentQueueCount(): int {
+    $orderStorage = $this->pipelineEntityTypeManager->getStorage('commerce_order');
+    $projectStorage = $this->pipelineEntityTypeManager->getStorage('famtastic_project');
+    $ids = $orderStorage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('state', 'completed')
+      ->range(0, 200)
+      ->execute();
+    $count = 0;
+    foreach ($ids as $orderId) {
+      $fulfillment = $this->database->select('famtastic_commerce_fulfillment', 'f')
+        ->fields('f', ['status', 'project_id'])
+        ->condition('commerce_order_id', (int) $orderId)
+        ->execute()
+        ->fetchAssoc();
+      if (!$fulfillment || !in_array((string) $fulfillment['status'], ['fulfilled', 'cancelled'], TRUE)) {
+        $count++;
+        continue;
+      }
+      $project = !empty($fulfillment['project_id']) ? $projectStorage->load((int) $fulfillment['project_id']) : NULL;
+      if (!$project || !in_array((string) $project->get('delivery_status')->value, ['launched', 'deployed'], TRUE)) {
+        $count++;
+      }
+    }
+    return $count;
+  }
+
+  /** Returns a plain-language, non-terminal delivery next action. */
+  private function fulfillmentNextAction(string $provisioning, string $delivery): string {
+    if (!in_array($provisioning, ['fulfilled', 'cancelled'], TRUE)) {
+      return 'Review provisioning or payment attention.';
+    }
+    if ($provisioning === 'cancelled') {
+      return 'No delivery action; review the cancellation record.';
+    }
+    return match ($delivery) {
+      'intake_pending' => 'Await client intake before starting the website work.',
+      'proof_ready', 'proof_delivered' => 'Review the proof and request the client decision.',
+      'revision' => 'Complete the requested revision.',
+      'approved' => 'Prepare the approved site for launch.',
+      'launched', 'deployed' => 'Delivery complete.',
+      '' => 'Review the missing project record.',
+      default => 'Advance the project delivery stage.',
+    };
   }
 
   /**

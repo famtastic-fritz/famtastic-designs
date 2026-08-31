@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — Commerce provisioning is not the same as customer fulfillment
+
+- Observation: a completed $1 Commerce order correctly created its payment,
+  fulfillment record, intake, and project, but Operations Home counted only a
+  legacy order table and gave the owner no visible next delivery step.
+- Guidance: join completed Commerce orders to `famtastic_commerce_fulfillment`
+  and the linked Project before reporting fulfillment. Show the provisioning
+  state separately from the project delivery stage, and use plain owner actions
+  such as “await client intake” rather than claiming delivery is complete.
+
 ## 2026-08-31 — Provider acceptance is a delivery checkpoint, not client completion
 
 - Observation: the exact-recipient invitation command recorded an accepted
