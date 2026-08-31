@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\famtastic_pipeline\Service;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Uuid\Php as UuidGenerator;
 use Drupal\Core\Database\Connection;
 
 /** Durable content and inbound-capture boundary for small client sites. */
@@ -13,6 +14,8 @@ final class MicrositeService {
   private const SUPPORTED_SITES = ['thirst-trap-772'];
   private const MESSAGE_STATUSES = ['new', 'read', 'resolved', 'unsubscribed'];
   private const PRODUCT_STATUSES = ['active', 'hidden', 'sold_out'];
+  private const ORDER_STATUSES = ['requested', 'confirmed', 'ready', 'completed', 'cancelled'];
+  private const PAYMENT_STATUSES = ['unverified', 'confirmed', 'refunded', 'not_required'];
   private const VISUALS = ['citrus', 'berry', 'tropical', 'pink', 'lime', 'orange'];
 
   public function __construct(
@@ -31,9 +34,144 @@ final class MicrositeService {
       (array) ($content['products'] ?? []),
       static fn(array $product): bool => ($product['status'] ?? '') !== 'hidden',
     ));
+    $payments = is_array($content['payments'] ?? NULL) ? $content['payments'] : [];
+    $content['payments'] = [
+      'preorders_enabled' => !empty($payments['preorders_enabled']),
+      'cash_app_available' => $this->cashAppUrl((string) ($payments['cash_app_url'] ?? '')) !== '',
+      'pickup_note' => $this->text((string) ($payments['pickup_note'] ?? ''), 240, TRUE),
+    ];
     return [
       'site' => $content,
       'changed' => (int) $site['changed'],
+    ];
+  }
+
+  /** Stores a preorder before offering any owner-managed external payment link. */
+  public function preorder(string $siteKey, array $input, string $source): array {
+    $site = $this->loadSite($siteKey);
+    if (!$site || (string) $site['status'] !== 'active') {
+      throw new \RuntimeException('microsite_not_found');
+    }
+    $content = $this->decodeContent((string) $site['content_json']);
+    $payments = is_array($content['payments'] ?? NULL) ? $content['payments'] : [];
+    if (empty($payments['preorders_enabled'])) {
+      throw new \RuntimeException('preorders_unavailable');
+    }
+
+    $name = $this->text((string) ($input['name'] ?? ''), 120);
+    $email = mb_strtolower(trim((string) ($input['email'] ?? '')));
+    $phone = $this->text((string) ($input['phone'] ?? ''), 40);
+    $notes = $this->text((string) ($input['notes'] ?? ''), 1000, TRUE);
+    if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 254) {
+      throw new \InvalidArgumentException('preorder_contact_invalid');
+    }
+
+    $available = [];
+    foreach ((array) ($content['products'] ?? []) as $product) {
+      if (is_array($product) && ($product['status'] ?? '') === 'active' && !empty($product['id'])) {
+        $available[(string) $product['id']] = $product;
+      }
+    }
+    $items = [];
+    $itemCount = 0;
+    $totalCents = 0;
+    $totalKnown = TRUE;
+    $seen = [];
+    foreach (array_slice((array) ($input['items'] ?? []), 0, 12) as $selection) {
+      if (!is_array($selection)) {
+        continue;
+      }
+      $productId = $this->slug((string) ($selection['product_id'] ?? ''));
+      $quantityRaw = $selection['quantity'] ?? 0;
+      $quantity = is_int($quantityRaw) ? $quantityRaw : (is_string($quantityRaw) && ctype_digit($quantityRaw) ? (int) $quantityRaw : 0);
+      if ($quantity < 1 || $quantity > 20 || isset($seen[$productId]) || !isset($available[$productId])) {
+        throw new \InvalidArgumentException('preorder_items_invalid');
+      }
+      $seen[$productId] = TRUE;
+      $itemCount += $quantity;
+      if ($itemCount > 20) {
+        throw new \InvalidArgumentException('preorder_items_invalid');
+      }
+      $product = $available[$productId];
+      $priceCents = isset($product['price_cents']) && is_int($product['price_cents']) ? $product['price_cents'] : NULL;
+      if ($priceCents === NULL) {
+        $totalKnown = FALSE;
+      }
+      else {
+        $totalCents += $priceCents * $quantity;
+      }
+      $items[] = [
+        'product_id' => $productId,
+        'name' => $this->text((string) ($product['name'] ?? ''), 80),
+        'quantity' => $quantity,
+        'unit_price_cents' => $priceCents,
+      ];
+    }
+    if ($items === []) {
+      throw new \InvalidArgumentException('preorder_items_required');
+    }
+
+    $pickupEventId = $this->slug((string) ($input['pickup_event_id'] ?? 'coordinate'));
+    $pickupLabel = 'Coordinate pickup directly';
+    if ($pickupEventId !== 'coordinate') {
+      $matched = FALSE;
+      foreach ((array) ($content['events'] ?? []) as $event) {
+        if (is_array($event) && ($event['status'] ?? '') === 'scheduled' && ($event['id'] ?? '') === $pickupEventId) {
+          $pickupLabel = $this->text(implode(' · ', array_filter([(string) ($event['title'] ?? ''), (string) ($event['date_label'] ?? ''), (string) ($event['location'] ?? '')])), 160);
+          $matched = TRUE;
+          break;
+        }
+      }
+      if (!$matched) {
+        throw new \InvalidArgumentException('preorder_pickup_invalid');
+      }
+    }
+
+    $cashAppUrl = $this->cashAppUrl((string) ($payments['cash_app_url'] ?? ''));
+    $paymentAvailable = $cashAppUrl !== '' && $totalKnown && $totalCents >= 100;
+    $now = $this->time->getRequestTime();
+    $publicId = (new UuidGenerator())->generate();
+    $orderNumber = $this->newOrderNumber();
+    $this->database->insert('famtastic_microsite_order')->fields([
+      'public_id' => $publicId,
+      'order_number' => $orderNumber,
+      'site_key' => $siteKey,
+      'customer_name' => $name,
+      'email' => $email,
+      'email_hash' => hash('sha256', $email),
+      'phone' => $phone,
+      'items_json' => json_encode($items, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+      'item_count' => $itemCount,
+      'total_cents' => $totalKnown ? $totalCents : NULL,
+      'currency' => 'USD',
+      'pickup_event_id' => $pickupEventId,
+      'pickup_label' => $pickupLabel,
+      'notes' => $notes,
+      'payment_method' => $paymentAvailable ? 'cash_app' : 'coordinate',
+      'payment_destination' => $paymentAvailable ? $cashAppUrl : '',
+      'payment_status' => 'unverified',
+      'order_status' => 'requested',
+      'source' => $this->text($source, 120),
+      'created' => $now,
+      'changed' => $now,
+    ])->execute();
+
+    return [
+      'status' => 'requested',
+      'order' => [
+        'reference' => $orderNumber,
+        'item_count' => $itemCount,
+        'total_cents' => $totalKnown ? $totalCents : NULL,
+        'currency' => 'USD',
+        'pickup_label' => $pickupLabel,
+        'payment_status' => 'unverified',
+      ],
+      'payment' => [
+        'available' => $paymentAvailable,
+        'url' => $paymentAvailable ? $cashAppUrl : '',
+        'label' => $paymentAvailable ? $this->text((string) ($payments['cash_app_label'] ?? ''), 80) : '',
+        'instructions' => $this->text((string) ($payments['payment_note'] ?? ''), 240, TRUE),
+      ],
     ];
   }
 
@@ -127,6 +265,13 @@ final class MicrositeService {
       ->range(0, 100)
       ->execute()
       ->fetchAll(\PDO::FETCH_ASSOC);
+    $orders = $this->database->select('famtastic_microsite_order', 'orders')
+      ->fields('orders', ['id', 'order_number', 'customer_name', 'email', 'phone', 'items_json', 'item_count', 'total_cents', 'currency', 'pickup_label', 'notes', 'payment_method', 'payment_status', 'order_status', 'created', 'changed'])
+      ->condition('site_key', $siteKey)
+      ->orderBy('created', 'DESC')
+      ->range(0, 100)
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
     return [
       'site' => $this->decodeContent((string) $site['content_json']),
       'owner_uid' => isset($site['owner_uid']) ? (int) $site['owner_uid'] : NULL,
@@ -136,8 +281,46 @@ final class MicrositeService {
         }
         return $row;
       }, $messages),
+      'orders' => array_map(static function (array $row): array {
+        foreach (['id', 'item_count', 'created', 'changed'] as $field) {
+          $row[$field] = (int) $row[$field];
+        }
+        $row['total_cents'] = $row['total_cents'] === NULL ? NULL : (int) $row['total_cents'];
+        $items = json_decode((string) $row['items_json'], TRUE);
+        $row['items'] = is_array($items) ? $items : [];
+        unset($row['items_json']);
+        return $row;
+      }, $orders),
       'changed' => (int) $site['changed'],
     ];
+  }
+
+  /** Lets the authorized owner record fulfillment and independently verified payment state. */
+  public function updateOrderStatus(string $siteKey, int $uid, bool $admin, int $orderId, string $orderStatus, string $paymentStatus): void {
+    $this->assertManageAccess($siteKey, $uid, $admin);
+    if ($orderId <= 0 || !in_array($orderStatus, self::ORDER_STATUSES, TRUE) || !in_array($paymentStatus, self::PAYMENT_STATUSES, TRUE)) {
+      throw new \InvalidArgumentException('order_status_invalid');
+    }
+    $updated = $this->database->update('famtastic_microsite_order')
+      ->fields([
+        'order_status' => $orderStatus,
+        'payment_status' => $paymentStatus,
+        'changed' => $this->time->getRequestTime(),
+      ])
+      ->condition('id', $orderId)
+      ->condition('site_key', $siteKey)
+      ->execute();
+    if ($updated === 0) {
+      $exists = $this->database->select('famtastic_microsite_order', 'orders')
+        ->fields('orders', ['id'])
+        ->condition('id', $orderId)
+        ->condition('site_key', $siteKey)
+        ->execute()
+        ->fetchField();
+      if ($exists === FALSE) {
+        throw new \RuntimeException('order_not_found');
+      }
+    }
   }
 
   /** Replaces the validated content snapshot for an authorized owner. */
@@ -203,6 +386,12 @@ final class MicrositeService {
       throw new \InvalidArgumentException('brand_fields_required');
     }
 
+    $currentProducts = [];
+    foreach ((array) ($current['products'] ?? []) as $currentProduct) {
+      if (is_array($currentProduct) && !empty($currentProduct['id'])) {
+        $currentProducts[(string) $currentProduct['id']] = $currentProduct;
+      }
+    }
     $products = [];
     foreach (array_slice((array) ($input['products'] ?? []), 0, 24) as $index => $item) {
       if (!is_array($item)) {
@@ -214,16 +403,29 @@ final class MicrositeService {
       }
       $status = (string) ($item['status'] ?? 'active');
       $visual = (string) ($item['visual'] ?? 'pink');
+      $id = $this->slug((string) ($item['id'] ?? $name . '-' . $index));
+      $prior = $currentProducts[$id] ?? [];
       $products[] = [
-        'id' => $this->slug((string) ($item['id'] ?? $name . '-' . $index)),
+        'id' => $id,
         'name' => $name,
         'kicker' => $this->text((string) ($item['kicker'] ?? ''), 40),
         'description' => $this->text((string) ($item['description'] ?? ''), 240, TRUE),
         'price_label' => $this->text((string) ($item['price_label'] ?? ''), 40),
+        'price_cents' => $this->priceCents(array_key_exists('price_cents', $item) ? $item['price_cents'] : ($prior['price_cents'] ?? NULL)),
         'status' => in_array($status, self::PRODUCT_STATUSES, TRUE) ? $status : 'active',
         'visual' => in_array($visual, self::VISUALS, TRUE) ? $visual : 'pink',
       ];
     }
+
+    $paymentInput = is_array($input['payments'] ?? NULL) ? $input['payments'] : [];
+    $currentPayments = is_array($current['payments'] ?? NULL) ? $current['payments'] : [];
+    $payments = [
+      'preorders_enabled' => array_key_exists('preorders_enabled', $paymentInput) ? !empty($paymentInput['preorders_enabled']) : !empty($currentPayments['preorders_enabled']),
+      'cash_app_url' => $this->cashAppUrl((string) ($paymentInput['cash_app_url'] ?? $currentPayments['cash_app_url'] ?? '')),
+      'cash_app_label' => $this->text((string) ($paymentInput['cash_app_label'] ?? $currentPayments['cash_app_label'] ?? ''), 80),
+      'payment_note' => $this->text((string) ($paymentInput['payment_note'] ?? $currentPayments['payment_note'] ?? ''), 240, TRUE),
+      'pickup_note' => $this->text((string) ($paymentInput['pickup_note'] ?? $currentPayments['pickup_note'] ?? ''), 240, TRUE),
+    ];
 
     $events = [];
     foreach (array_slice((array) ($input['events'] ?? []), 0, 20) as $index => $item) {
@@ -260,6 +462,7 @@ final class MicrositeService {
       'brand' => $brand,
       'products' => $products,
       'events' => $events,
+      'payments' => $payments,
       'socials' => $socials,
     ];
   }
@@ -311,6 +514,55 @@ final class MicrositeService {
     $value = preg_replace('/[^a-z0-9]+/', '-', $value) ?? '';
     $value = trim($value, '-');
     return mb_substr($value !== '' ? $value : 'item', 0, 64);
+  }
+
+  private function priceCents(mixed $value): ?int {
+    if ($value === NULL || $value === '') {
+      return NULL;
+    }
+    if (is_int($value)) {
+      $price = $value;
+    }
+    elseif (is_string($value) && preg_match('/^(0|[1-9][0-9]{0,7})$/', $value)) {
+      $price = (int) $value;
+    }
+    else {
+      throw new \InvalidArgumentException('product_price_invalid');
+    }
+    if ($price < 0 || $price > 10000000) {
+      throw new \InvalidArgumentException('product_price_invalid');
+    }
+    return $price;
+  }
+
+  private function cashAppUrl(string $value): string {
+    $value = trim($value);
+    if ($value === '') {
+      return '';
+    }
+    if (!filter_var($value, FILTER_VALIDATE_URL)) {
+      throw new \InvalidArgumentException('cash_app_url_invalid');
+    }
+    $parts = parse_url($value);
+    if (($parts['scheme'] ?? '') !== 'https' || mb_strtolower((string) ($parts['host'] ?? '')) !== 'cash.app' || isset($parts['user']) || isset($parts['pass'])) {
+      throw new \InvalidArgumentException('cash_app_url_invalid');
+    }
+    return mb_substr($value, 0, 500);
+  }
+
+  private function newOrderNumber(): string {
+    for ($attempt = 0; $attempt < 5; $attempt++) {
+      $number = 'TT772-' . mb_strtoupper(bin2hex(random_bytes(4)));
+      $exists = $this->database->select('famtastic_microsite_order', 'orders')
+        ->fields('orders', ['id'])
+        ->condition('order_number', $number)
+        ->execute()
+        ->fetchField();
+      if ($exists === FALSE) {
+        return $number;
+      }
+    }
+    throw new \RuntimeException('order_reference_unavailable');
   }
 
 }

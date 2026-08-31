@@ -10,20 +10,23 @@
     "page_recipe": "thirst-trap-storefront-v2",
     "component_system": "thirst-trap-production-components-v2",
     "storage": "Drupal database via /web/api/microsite/thirst-trap-772",
-    "external_effects": ["contact record creation", "consented subscriber record creation"]
+    "external_effects": ["contact record creation", "consented subscriber record creation", "preorder request creation", "owner-recorded order and payment status changes"]
   },
   "public_capabilities": [
     "owner-managed product names, descriptions, price labels, visibility, and visual families",
     "owner-managed confirmed pop-up dates and locations",
     "durable event and general contact form",
     "consent-required mailing-list capture",
+    "owner-enabled preorder capture with calculated totals when numeric prices are available",
+    "owner-supplied Cash App payment-link QR shown only after a preorder is stored",
     "owner-managed Instagram and Facebook destinations",
     "custom themed social icon treatments",
     "responsive and reduced-motion behavior"
   ],
   "owner_capabilities": [
     "verified FAMtastic account access",
-    "phone-friendly brand, product, price, event, and social editing",
+    "phone-friendly brand, product, numeric price, event, payment-link, and social editing",
+    "preorder desk with manual fulfillment and external-payment confirmation status",
     "contact and mailing-list inbox",
     "message status management",
     "explicit save before public content changes"
@@ -43,7 +46,10 @@
     "No event is published until the owner records a confirmed date and location.",
     "Contact and subscriber submissions are stored but never auto-sent or auto-published.",
     "Mailing-list consent is required and stored with each subscriber.",
-    "No payment, checkout, delivery, inventory reservation, or social publishing is activated.",
+    "FAMtastic never processes, receives, or verifies Cash App funds; the QR encodes only the owner-supplied cash.app link.",
+    "Every preorder starts requested with payment unverified; the owner confirms availability, pickup, and payment manually.",
+    "Preorders remain disabled until the owner explicitly enables them after confirming products, numeric prices, and payment destination.",
+    "No card checkout, automatic inventory reservation, delivery, or social publishing is activated.",
     "Original field photographs remain private because they include people and contact details."
   ]
 }

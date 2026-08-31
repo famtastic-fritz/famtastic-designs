@@ -16,10 +16,13 @@ const [html, css, js, ownerHtml, ownerJs] = await Promise.all([
 ]);
 
 const sectionIds = [...html.matchAll(/data-component-instance-id="([^"]+)"/g)].map((match) => match[1]);
-assert.equal(sectionIds.length, 7, 'the production page keeps seven explicit component instances');
+assert.equal(sectionIds.length, 8, 'the production page keeps eight explicit component instances');
 assert.equal(new Set(sectionIds).size, sectionIds.length, 'component instance IDs are unique');
 assert.match(html, /id="contact-form"/);
 assert.match(html, /id="subscribe-form"/);
+assert.match(html, /id="preorder-form"/);
+assert.match(html, /id="cash-app-qr"/);
+assert.match(html, /qrcode-generator-1\.4\.4\.js/);
 assert.match(html, /data-social="instagram"/);
 assert.match(html, /data-social="facebook"/);
 assert.match(html, /<svg[^>]+viewBox="0 0 24 24"/);
@@ -36,16 +39,24 @@ assert.match(css, /thirst-trap-v2-pop-up\.webp/);
 assert.match(js, /\/web\/api\/microsite\/\$\{SITE_KEY\}/);
 assert.match(js, /submitCapture\(contact, 'contact'/);
 assert.match(js, /submitCapture\(subscribe, 'subscriber'/);
+assert.match(js, /submitPreorder/);
+assert.match(js, /\/preorder/);
+assert.match(js, /payment\.available/);
 assert.match(js, /credentials: 'omit'/);
 
 assert.match(ownerHtml, /noindex,nofollow,noarchive/);
 assert.match(ownerHtml, /id="product-editor"/);
 assert.match(ownerHtml, /id="event-editor"/);
 assert.match(ownerHtml, /id="message-list"/);
+assert.match(ownerHtml, /id="order-list"/);
+assert.match(ownerHtml, /id="preorders-enabled"/);
+assert.match(ownerHtml, /id="cash-app-url"/);
 assert.match(ownerHtml, /id="social-instagram"/);
 assert.match(ownerJs, /\/web\/session\/token/);
 assert.match(ownerJs, /method: 'PUT'/);
 assert.match(ownerJs, /method:'PATCH'/);
+assert.match(ownerJs, /updateOrder/);
+assert.match(ownerJs, /price_cents/);
 
 for (const asset of [
   'assets/thirst-trap-v2-hero.webp',
@@ -58,4 +69,4 @@ for (const asset of [
   assert.ok(info.size < 900_000, `${asset} remains web-delivery sized`);
 }
 
-console.log('PASS: Thirst Trap v2 has seven reusable components, four optimized art assets, production forms, themed social links, owner controls, and mobile/reduced-motion contracts.');
+console.log('PASS: Thirst Trap v2 has eight reusable components, four optimized art assets, durable preorder/direct-pay UI, production forms, themed social links, owner controls, and mobile/reduced-motion contracts.');

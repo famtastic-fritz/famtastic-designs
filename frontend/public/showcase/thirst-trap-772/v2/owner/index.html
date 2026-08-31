@@ -7,7 +7,8 @@
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#180415">
   <title>Thirst Trap 772 — Owner Studio</title>
-  <link rel="stylesheet" href="./owner.css?v=20260831-1">
+  <link rel="stylesheet" href="./owner.css?v=20260831-2">
+  <link rel="stylesheet" href="./owner-commerce.css?v=20260831-1">
 </head>
 <body>
   <header><a class="brand" href="../"><span>TT</span><div><b>THIRST TRAP 772</b><small>OWNER STUDIO</small></div></a><div><a class="view-site" href="../" target="_blank">View site ↗</a><button id="save-top" type="button" hidden>Save changes</button></div></header>
@@ -16,19 +17,23 @@
 
     <div id="studio" hidden>
       <section class="studio-hero"><div><small>PHONE-FRIENDLY CONTROL ROOM</small><h1>KEEP THE<br><em>PINK TENT</em><br>CURRENT.</h1></div><p>Update the public menu, publish the next pop-up, and follow up with messages from one protected place.</p></section>
-      <nav class="tabs" aria-label="Owner studio sections"><a href="#brand">Brand</a><a href="#products">Products</a><a href="#events">Next stops</a><a href="#inbox">Inbox</a></nav>
+      <nav class="tabs" aria-label="Owner studio sections"><a href="#brand">Brand</a><a href="#products">Products</a><a href="#payments">Preorders</a><a href="#events">Next stops</a><a href="#orders">Orders</a><a href="#inbox">Inbox</a></nav>
 
       <section id="brand" class="panel"><div class="panel-head"><span>01</span><div><small>PUBLIC BASICS</small><h2>Brand + service area</h2></div></div><div class="field-grid"><label>Business name<input id="brand-name" maxlength="80"></label><label>Tagline<input id="brand-tagline" maxlength="120"></label><label class="wide">Service area<input id="brand-area" maxlength="160"></label><label class="wide">Site intro<textarea id="brand-intro" rows="4" maxlength="280"></textarea></label><label>Instagram URL<input id="social-instagram" type="url" maxlength="500" inputmode="url"></label><label>Facebook URL<input id="social-facebook" type="url" maxlength="500" inputmode="url"></label></div></section>
 
       <section id="products" class="panel"><div class="panel-head"><span>02</span><div><small>PUBLIC MENU</small><h2>Products + price labels</h2><p>Add up to 24 items. Hide anything that is not ready to show.</p></div><button class="add-button" id="add-product" type="button">+ Add product</button></div><div id="product-editor" class="item-editor"></div></section>
 
-      <section id="events" class="panel"><div class="panel-head"><span>03</span><div><small>WHERE TO FIND US</small><h2>Next pop-up dates</h2><p>Only confirmed dates should be marked scheduled.</p></div><button class="add-button" id="add-event" type="button">+ Add event</button></div><div id="event-editor" class="item-editor"></div></section>
+      <section id="payments" class="panel"><div class="panel-head"><span>03</span><div><small>PREORDER + DIRECT PAY</small><h2>Cash App + pickup</h2><p>Turn preorders on only after products, prices, and your own Cash App link are confirmed.</p></div></div><div class="field-grid"><label class="wide toggle-field"><input id="preorders-enabled" type="checkbox"> Accept preorder requests on the public site</label><label class="wide">Verified Cash App payment link<input id="cash-app-url" type="url" maxlength="500" inputmode="url" placeholder="https://cash.app/…"><small>Paste the payment link generated inside your Cash App profile. The QR is created from this exact link.</small></label><label>Public Cash App label<input id="cash-app-label" maxlength="80" placeholder="$YourCashtag"></label><label>Pickup note<input id="pickup-note" maxlength="240" placeholder="How pickup will be confirmed"></label><label class="wide">Payment instructions<textarea id="payment-note" rows="3" maxlength="240" placeholder="Ask customers to include their order reference"></textarea></label><p class="boundary-note wide"><b>PAYMENT BOUNDARY</b> Cash App sends money directly to the business. This owner desk records requests and your manual payment confirmation; it never reads a Cash App balance or auto-marks an order paid.</p></div></section>
 
-      <section id="inbox" class="panel"><div class="panel-head"><span>04</span><div><small>CONTACT + MAILING LIST</small><h2>Inbox</h2><p>Website messages and consented subscribers appear here. Nothing is auto-sent.</p></div></div><div id="message-list" class="message-list"></div></section>
+      <section id="events" class="panel"><div class="panel-head"><span>04</span><div><small>WHERE TO FIND US</small><h2>Next pop-up dates</h2><p>Only confirmed dates should be marked scheduled.</p></div><button class="add-button" id="add-event" type="button">+ Add event</button></div><div id="event-editor" class="item-editor"></div></section>
+
+      <section id="orders" class="panel"><div class="panel-head"><span>05</span><div><small>PREORDER DESK</small><h2>Requests + payment checks</h2><p>Payment always starts unverified. Confirm it here only after checking your own Cash App activity.</p></div></div><div id="order-list" class="message-list order-list"></div></section>
+
+      <section id="inbox" class="panel"><div class="panel-head"><span>06</span><div><small>CONTACT + MAILING LIST</small><h2>Inbox</h2><p>Website messages and consented subscribers appear here. Nothing is auto-sent.</p></div></div><div id="message-list" class="message-list"></div></section>
 
       <div class="save-dock"><p id="save-status" role="status" aria-live="polite">Changes stay private until Save is pressed.</p><button id="save-bottom" type="button">Save public site</button></div>
     </div>
   </main>
-  <script src="./owner.js?v=20260831-1"></script>
+  <script src="./owner.js?v=20260831-2"></script>
 </body>
 </html>

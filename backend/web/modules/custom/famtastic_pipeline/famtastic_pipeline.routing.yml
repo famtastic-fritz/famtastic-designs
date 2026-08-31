@@ -39,6 +39,17 @@ famtastic_pipeline.microsite_capture:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.microsite_preorder:
+  path: '/api/microsite/{site_key}/preorder'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MicrositeController::preorder'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.microsite_owner:
   path: '/api/microsite/{site_key}/owner'
   defaults:
@@ -72,6 +83,19 @@ famtastic_pipeline.microsite_message_update:
     _csrf_request_header_token: 'TRUE'
     site_key: '[a-z0-9-]{3,64}'
     message_id: '\d+'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.microsite_order_update:
+  path: '/api/microsite/{site_key}/owner/orders/{order_id}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MicrositeController::updateOrder'
+  methods: [PATCH]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+    order_id: '\d+'
   options:
     no_cache: 'TRUE'
 

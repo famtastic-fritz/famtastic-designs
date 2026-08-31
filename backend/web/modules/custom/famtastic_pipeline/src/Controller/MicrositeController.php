@@ -75,6 +75,43 @@ final class MicrositeController implements ContainerInjectionInterface {
     }
   }
 
+  public function preorder(Request $request, string $site_key): JsonResponse {
+    if (strlen($request->getContent()) > 65536) {
+      return $this->error('request_too_large', 413);
+    }
+    $input = $this->json($request);
+    if (trim((string) ($input['website'] ?? '')) !== '') {
+      return $this->response(['ok' => TRUE, 'status' => 'requested']);
+    }
+    $email = mb_strtolower(trim((string) ($input['email'] ?? '')));
+    $ipKey = 'microsite:' . $site_key . ':preorder:ip:' . ($request->getClientIp() ?: 'unknown');
+    $emailKey = 'microsite:' . $site_key . ':preorder:email:' . hash('sha256', $email);
+    if (
+      !$this->flood->isAllowed('famtastic_microsite_preorder', 6, 3600, $ipKey)
+      || !$this->flood->isAllowed('famtastic_microsite_preorder', 3, 3600, $emailKey)
+    ) {
+      return $this->error('rate_limited', 429);
+    }
+    try {
+      $result = $this->microsites->preorder(
+        $site_key,
+        $input,
+        (string) ($input['source'] ?? 'thirst-trap-v2'),
+      );
+      $this->flood->register('famtastic_microsite_preorder', 3600, $ipKey);
+      $this->flood->register('famtastic_microsite_preorder', 3600, $emailKey);
+      return $this->response(['ok' => TRUE] + $result);
+    }
+    catch (\InvalidArgumentException $error) {
+      return $this->error($error->getMessage(), 422);
+    }
+    catch (\RuntimeException $error) {
+      return $error->getMessage() === 'preorders_unavailable'
+        ? $this->error('preorders_unavailable', 409)
+        : $this->error('preorder_unavailable', 503);
+    }
+  }
+
   public function owner(string $site_key): JsonResponse {
     if ($this->currentUser->isAnonymous()) {
       return $this->error('authentication_required', 401);
@@ -138,6 +175,34 @@ final class MicrositeController implements ContainerInjectionInterface {
     }
   }
 
+  public function updateOrder(Request $request, string $site_key, int $order_id): JsonResponse {
+    if ($this->currentUser->isAnonymous()) {
+      return $this->error('authentication_required', 401);
+    }
+    try {
+      $input = $this->json($request);
+      $this->microsites->updateOrderStatus(
+        $site_key,
+        (int) $this->currentUser->id(),
+        $this->currentUser->hasPermission('administer famtastic pipeline'),
+        $order_id,
+        (string) ($input['order_status'] ?? ''),
+        (string) ($input['payment_status'] ?? ''),
+      );
+      return $this->response([
+        'ok' => TRUE,
+        'order_status' => (string) $input['order_status'],
+        'payment_status' => (string) $input['payment_status'],
+      ]);
+    }
+    catch (\InvalidArgumentException $error) {
+      return $this->error($error->getMessage(), 422);
+    }
+    catch (\Throwable $error) {
+      return $this->ownerError($error);
+    }
+  }
+
   private function json(Request $request): array {
     $input = json_decode($request->getContent(), TRUE);
     return is_array($input) ? $input : [];
@@ -148,6 +213,7 @@ final class MicrositeController implements ContainerInjectionInterface {
       'microsite_not_found' => $this->error('microsite_not_found', 404),
       'microsite_access_denied' => $this->error('microsite_access_denied', 403),
       'message_not_found' => $this->error('message_not_found', 404),
+      'order_not_found' => $this->error('order_not_found', 404),
       default => $this->error('microsite_operation_failed', 500),
     };
   }

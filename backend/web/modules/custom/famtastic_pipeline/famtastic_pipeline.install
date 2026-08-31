@@ -1142,7 +1142,7 @@ function _famtastic_pipeline_automation_schema(): array {
   foreach (_famtastic_pipeline_portal_engagement_schema() as $table => $definition) {
     $tables[$table] = $definition;
   }
-  $tables += _famtastic_pipeline_deep_dive_invitation_schema();
+  $tables['famtastic_deep_dive_invitation'] = _famtastic_pipeline_deep_dive_invitation_schema();
   foreach (_famtastic_pipeline_lifecycle_schema() as $table => $definition) {
     $tables[$table] = $definition;
   }
@@ -1194,6 +1194,40 @@ function _famtastic_pipeline_microsite_schema(): array {
       'primary key' => ['id'],
       'indexes' => [
         'site_kind_status' => ['site_key', 'kind', 'status'],
+        'site_email' => ['site_key', 'email_hash'],
+        'created' => ['created'],
+      ],
+    ],
+    'famtastic_microsite_order' => [
+      'description' => 'Durable preorder requests and owner-confirmed external payment status for a microsite.',
+      'fields' => [
+        'id' => ['type' => 'serial', 'not null' => TRUE],
+        'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+        'order_number' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE],
+        'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'customer_name' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE],
+        'email' => ['type' => 'varchar', 'length' => 254, 'not null' => TRUE],
+        'email_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'phone' => ['type' => 'varchar', 'length' => 40, 'not null' => TRUE, 'default' => ''],
+        'items_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'item_count' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'total_cents' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+        'currency' => ['type' => 'varchar', 'length' => 3, 'not null' => TRUE, 'default' => 'USD'],
+        'pickup_event_id' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'pickup_label' => ['type' => 'varchar', 'length' => 160, 'not null' => TRUE, 'default' => ''],
+        'notes' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+        'payment_method' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'coordinate'],
+        'payment_destination' => ['type' => 'varchar', 'length' => 500, 'not null' => TRUE, 'default' => ''],
+        'payment_status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'unverified'],
+        'order_status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'requested'],
+        'source' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE, 'default' => 'site'],
+        'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      ],
+      'primary key' => ['id'],
+      'unique keys' => ['public_id' => ['public_id'], 'order_number' => ['order_number']],
+      'indexes' => [
+        'site_status' => ['site_key', 'order_status', 'created'],
         'site_email' => ['site_key', 'email_hash'],
         'created' => ['created'],
       ],
@@ -2439,6 +2473,17 @@ function famtastic_pipeline_update_8044(&$sandbox) {
   ]);
 }
 
+/** Adds durable preorder and external-payment confirmation records. */
+function famtastic_pipeline_update_8046(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_microsite_schema()['famtastic_microsite_order'];
+  if (!$schema->tableExists('famtastic_microsite_order')) {
+    $schema->createTable('famtastic_microsite_order', $definition);
+    return t('Added durable microsite preorder and external-payment confirmation records.');
+  }
+  return t('Preserved the existing microsite preorder records.');
+}
+
 /** Seeds truthful, owner-editable content without inventing products or dates. */
 function _famtastic_pipeline_seed_microsite_defaults(): void {
   $database = \Drupal::database();
@@ -2470,6 +2515,13 @@ function _famtastic_pipeline_seed_microsite_defaults(): void {
       ['id' => 'pop-up-extras', 'name' => 'Pop-Up Extras', 'kicker' => 'Sweet + social', 'description' => 'Tropical fruit, desserts, snacks, and rotating table surprises.', 'price_label' => '', 'status' => 'active', 'visual' => 'tropical'],
     ],
     'events' => [],
+    'payments' => [
+      'preorders_enabled' => FALSE,
+      'cash_app_url' => '',
+      'cash_app_label' => '',
+      'payment_note' => 'Include the order reference in the payment note. Payment is confirmed manually by Thirst Trap 772.',
+      'pickup_note' => 'Pickup details are confirmed directly after the preorder request is reviewed.',
+    ],
     'socials' => [
       'instagram' => 'https://www.instagram.com/thirst_trap772/',
       'facebook' => 'https://www.facebook.com/ThirstTrap772/',
