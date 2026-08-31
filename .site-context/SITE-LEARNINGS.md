@@ -8,6 +8,13 @@
 - Guidance: add a narrow `/deep-dive/<id>` rewrite and route-contract test;
   do not create or mail a client invitation until the public path renders.
 
+## 2026-08-31 — Container-injected services need a real container check
+
+- Observation: PHP lint did not catch a mismatched Drupal time interface in the
+  invitation service; production failed safely before creating an invitation.
+- Guidance: type new services against the adjacent `@datetime.time` component
+  interface and retrieve the service from Drupal before any customer command.
+
 ## 2026-08-31 — A production pop-up site needs a durable loop, not only more art
 
 - Observation: a dramatic visual upgrade can win attention while leaving the

@@ -10,6 +10,14 @@
   rewrite rule and a deterministic route-shell assertion. Verify the actual
   public route in a browser before creating or sending an invitation.
 
+## 2026-08-31 — PHP syntax is not a dependency-injection compatibility check
+
+- Observation: the deep-dive service passed PHP lint but typed `@datetime.time`
+  as the Core interface while the live container injects the Component time
+  implementation, so construction failed before any invite or mail side effect.
+- Guidance: mirror the interface used by adjacent services and retrieve new
+  services from the real Drupal container before performing a customer action.
+
 ## 2026-08-31 — Production quality joins visual identity to owner-controlled truth
 
 - Observation: generated atmosphere, layered texture, expressive type, and
