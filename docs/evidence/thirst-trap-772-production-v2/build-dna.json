@@ -6,7 +6,7 @@
   "repository": {
     "name": "famtastic-designs",
     "implementation_revision": "0d843d41edd2997d76d6803e8a21b22188eec503",
-    "production_status": "pending_governed_backend_and_frontend_deployment"
+    "production_status": "deployed_and_live_accepted"
   },
   "recipe": {
     "routine": "famtastic-production-microsite",
@@ -25,7 +25,8 @@
     {"stage_id":"four-part-media-system","execution":{"provider":{"id":"openai-imagegen-tool"},"model":{"id":null,"status":"not_disclosed_by_runtime"},"cost":{"status":"provider_did_not_report","amount":null,"currency":"USD"}},"result":{"status":"passed_for_campaign_atmosphere","evidence_ref":"image-generation-receipt.json"}},
     {"stage_id":"componentized-production-build","execution":{"provider":{"id":"openai-codex"},"model":{"id":null,"status":"not_disclosed_by_runtime"},"cost":{"status":"subscription_or_runtime_did_not_report","amount":null,"currency":"USD"}},"result":{"status":"passed","public_path":"frontend/public/showcase/thirst-trap-772/v2/","owner_path":"frontend/public/showcase/thirst-trap-772/v2/owner/"}},
     {"stage_id":"durable-drupal-control-plane","execution":{"provider":{"id":"local-drupal-sqlite-fixture"},"model":{"id":null,"status":"not_applicable"},"cost":{"status":"not_applicable","amount":0,"currency":"USD"}},"result":{"status":"passed","evidence_ref":"local-acceptance.json"}},
-    {"stage_id":"local-browser-and-build-acceptance","execution":{"provider":{"id":"local-chrome-playwright-vite"},"model":{"id":null,"status":"not_applicable"},"cost":{"status":"not_applicable","amount":0,"currency":"USD"}},"result":{"status":"passed","evidence_ref":"local-acceptance.json"}}
+    {"stage_id":"local-browser-and-build-acceptance","execution":{"provider":{"id":"local-chrome-playwright-vite"},"model":{"id":null,"status":"not_applicable"},"cost":{"status":"not_applicable","amount":0,"currency":"USD"}},"result":{"status":"passed","evidence_ref":"local-acceptance.json"}},
+    {"stage_id":"governed-production-release","execution":{"provider":{"id":"famtastic-godaddy-deployment-lanes"},"model":{"id":null,"status":"not_applicable"},"cost":{"status":"not_applicable","amount":0,"currency":"USD"}},"result":{"status":"passed","deployed_revision":"2ab924ec3f20e795f3d5a1ee92659fab2c163ab0","evidence_ref":"production-acceptance.json"}}
   ],
   "artifacts": [
     {"role":"public_page","path":"frontend/public/showcase/thirst-trap-772/v2/index.html","sha256":"ed12ccd0543b00ba157fa3852ab2f0246fb3ee67d0fc9426b7d0c6ff7fb30bed"},
@@ -42,5 +43,5 @@
     "activated": ["public page", "owner-managed content model", "durable contact capture", "consented subscriber capture"],
     "not_activated": ["payment", "checkout", "inventory", "delivery", "automated email", "social publishing", "external calendar", "custom domain", "custom mailbox"]
   },
-  "integrity": {"artifact_hash_algorithm":"sha256","validation_status":"local_artifact_hashes_and_acceptance_passed"}
+  "integrity": {"artifact_hash_algorithm":"sha256","validation_status":"local_and_production_acceptance_passed"}
 }

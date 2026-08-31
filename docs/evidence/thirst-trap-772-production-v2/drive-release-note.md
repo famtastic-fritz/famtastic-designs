@@ -51,8 +51,16 @@ The repository Build DNA, component decisions, generation receipt, screenshots,
 and local acceptance record live under
 `docs/evidence/thirst-trap-772-production-v2/`.
 
-## Release boundary
+## Production acceptance
 
-This document records the built and locally accepted candidate. A separate
-production acceptance receipt must record the governed backend/frontend
-deployments and live browser/API checks before the release is called live.
+The governed backend and frontend lanes deployed revision
+`2ab924ec3f20e795f3d5a1ee92659fab2c163ab0` on 2026-08-31. Apex and www,
+the public content API, anonymous owner denial, original media, desktop and
+mobile layout, correct social destinations, live contact capture, and live
+consented subscriber capture passed. The two exact synthetic persistence rows
+were removed immediately after verification, leaving zero test rows and
+triggering no outbound message.
+
+Production is running Drupal 11.4.5 and Entity API 1.8.0 with zero locked
+Composer advisories and no pending database updates. Owner-studio handoff still
+requires binding this microsite to the owner's verified FAMtastic account.

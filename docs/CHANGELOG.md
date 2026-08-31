@@ -21,7 +21,13 @@
   access fails closed.
 - Added update 8044, a disposable fresh-Drupal acceptance harness, a frontend
   contract test, seven component decisions, image provenance, desktop/mobile
-  evidence, and Build DNA. Production deployment remains a separate receipt.
+  evidence, and Build DNA.
+- Deployed the governed backend and frontend release at
+  `2ab924ec3f20e795f3d5a1ee92659fab2c163ab0`; live apex/www, Drupal public and
+  anonymous-owner APIs, desktop/mobile layout, social destinations, contact
+  capture, consented subscription capture, Drupal 11.4.5, Entity API 1.8.0,
+  and a clean Composer audit were verified. The two exact synthetic acceptance
+  rows were removed after the persistence check and no outbound message ran.
 
 ## 2026-08-31 — Omar mentor-story photograph refinement
 

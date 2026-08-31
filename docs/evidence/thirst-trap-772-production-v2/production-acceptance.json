@@ -1,0 +1,102 @@
+{
+  "schema": "famtastic.production-acceptance.v1",
+  "build_id": "thirst-trap-772-production-v2-20260831",
+  "status": "passed",
+  "accepted_at": "2026-08-31T18:17:46Z",
+  "deployed_revision": "2ab924ec3f20e795f3d5a1ee92659fab2c163ab0",
+  "release_receipts": {
+    "backend": {
+      "deployed_at": "2026-08-31T18:10:03Z",
+      "php": "8.3.32",
+      "database_update": "famtastic_pipeline_update_8044",
+      "pending_updates": 0
+    },
+    "frontend": {
+      "deployed_at": "2026-08-31T18:10:54Z",
+      "node": "v22.23.2",
+      "verified_route_shells": 157
+    }
+  },
+  "public_checks": {
+    "stable_route": {
+      "url": "https://famtasticdesigns.com/showcase/thirst-trap-772/",
+      "status": 302,
+      "location": "https://famtasticdesigns.com/showcase/thirst-trap-772/v2/"
+    },
+    "versioned_apex": {
+      "url": "https://famtasticdesigns.com/showcase/thirst-trap-772/v2/",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "versioned_www": {
+      "url": "https://www.famtasticdesigns.com/showcase/thirst-trap-772/v2/",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "hero_asset": {
+      "url": "https://famtasticdesigns.com/showcase/thirst-trap-772/v2/assets/thirst-trap-v2-hero.webp",
+      "status": 200,
+      "content_type": "image/webp",
+      "bytes": 208052
+    },
+    "public_api": {
+      "url": "https://famtasticdesigns.com/web/api/microsite/thirst-trap-772",
+      "status": 200,
+      "product_count": 3,
+      "social_destinations": 2
+    },
+    "owner_api_anonymous": {
+      "url": "https://famtasticdesigns.com/web/api/microsite/thirst-trap-772/owner",
+      "status": 401
+    },
+    "owner_page": {
+      "url": "https://famtasticdesigns.com/showcase/thirst-trap-772/v2/owner/",
+      "status": 200,
+      "anonymous_result": "verified_account_sign_in_required"
+    }
+  },
+  "browser_checks": {
+    "desktop": {
+      "viewport": "1440x1000",
+      "horizontal_overflow": 0,
+      "console_warnings_or_errors": 0,
+      "business_voice_only": true,
+      "live_api_fallback_visible": false
+    },
+    "mobile": {
+      "viewport": "390x844",
+      "horizontal_overflow": 0,
+      "console_warnings_or_errors": 0,
+      "contact_form_width": 343,
+      "contact_form_visible": true,
+      "subscriber_form_visible": true
+    }
+  },
+  "capture_checks": {
+    "contact": "live_post_stored_as_new",
+    "subscriber": "live_post_stored_as_new_with_explicit_consent",
+    "cleanup": {
+      "deleted_synthetic_rows": 2,
+      "remaining_synthetic_rows": 0,
+      "scope": "exact synthetic email and source only"
+    },
+    "outbound_mail_triggered": false
+  },
+  "platform_checks": {
+    "drupal": "11.4.5",
+    "entity_api": "1.8.0",
+    "composer_advisories": 0,
+    "abandoned_packages": 0,
+    "database_updates_pending": 0
+  },
+  "remaining_owner_action": "Bind the microsite to the owner's verified FAMtastic account before handing over owner-studio access.",
+  "not_activated": [
+    "outbound email",
+    "payment processing",
+    "checkout",
+    "inventory",
+    "delivery",
+    "calendar synchronization",
+    "social publishing"
+  ]
+}
