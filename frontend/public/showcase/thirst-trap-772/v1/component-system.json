@@ -1,0 +1,31 @@
+{
+  "schema": "famtastic.page-component-system.v1",
+  "system_id": "thirst-trap-772-components-v1",
+  "system_version": "1.0.0",
+  "site_id": "thirst-trap-772-gift-concept",
+  "page_recipe": {
+    "recipe_id": "thirst-trap-social-front-door-v1",
+    "recipe_version": "1.0.0",
+    "public_path": "/showcase/thirst-trap-772/v1/",
+    "ordered_instances": ["thirst-nav-01", "thirst-hero-01", "thirst-menu-01", "thirst-event-01", "thirst-origin-01", "thirst-social-01", "thirst-gift-01"]
+  },
+  "components": [
+    {"instance_id":"thirst-nav-01","definition_id":"navigation.social-pop-up.v1","variant_id":"compact-social","slots":["brand","nav_links","instagram_action","event_action"],"swappable_without_recipe_change":["labels","destinations"]},
+    {"instance_id":"thirst-hero-01","definition_id":"hero.ice-market-signal.v1","variant_id":"pink-tent-editorial","slots":["eyebrow","headline","tagline","introduction","hero_media","primary_action","secondary_action","proof_facts"],"swappable_without_recipe_change":["native_copy","hero_media","action_labels"]},
+    {"instance_id":"thirst-menu-01","definition_id":"offer.category-pouches.v1","variant_id":"three-category-poster","slots":["heading","research_boundary","category_cards","truth_note"],"swappable_without_recipe_change":["category_copy","category_count","disclosure"]},
+    {"instance_id":"thirst-event-01","definition_id":"conversion.event-inquiry.v1","variant_id":"pink-tent-booking","slots":["positioning","event_message_builder","facebook_action","truth_list"],"swappable_without_recipe_change":["copy","event_types","social_destination"]},
+    {"instance_id":"thirst-origin-01","definition_id":"story.pop-up-to-owned-door.v1","variant_id":"booth-to-brand","slots":["heading","story","four_step_path"],"swappable_without_recipe_change":["copy","step_labels"]},
+    {"instance_id":"thirst-social-01","definition_id":"marketing.social-promo-kit.v1","variant_id":"feed-and-story","slots":["feed_graphic","story_graphic","instagram_action","facebook_action","approval_note"],"swappable_without_recipe_change":["graphics","native_copy","destinations"]},
+    {"instance_id":"thirst-gift-01","definition_id":"story.famtastic-gift-note.v1","variant_id":"public-open-letter","slots":["gift_headline","gift_note","included_list","famtastic_action"],"swappable_without_recipe_change":["copy","included_items","action"]}
+  ],
+  "business_bindings": {
+    "instagram": "https://www.instagram.com/thirst_trap772/",
+    "facebook": "https://www.facebook.com/ThirstTrap772/",
+    "email": null,
+    "phone": null,
+    "menu": null,
+    "prices": null,
+    "events": null
+  },
+  "runtime_contract": {"storage":"none","network_calls":"social destination links only after user activation","external_effects":[]}
+}

@@ -15,6 +15,75 @@ famtastic_pipeline.public_contact:
   requirements:
     _access: 'TRUE'
 
+# --- Durable, owner-linked small-business microsites. ---
+famtastic_pipeline.microsite_content:
+  path: '/api/microsite/{site_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MicrositeController::content'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.microsite_capture:
+  path: '/api/microsite/{site_key}/{kind}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MicrositeController::capture'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+    kind: 'contact|subscriber|unsubscribe'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.microsite_owner:
+  path: '/api/microsite/{site_key}/owner'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MicrositeController::owner'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.microsite_update:
+  path: '/api/microsite/{site_key}/owner'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MicrositeController::update'
+  methods: [PUT]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.microsite_message_update:
+  path: '/api/microsite/{site_key}/owner/messages/{message_id}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MicrositeController::updateMessage'
+  methods: [PATCH]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+    message_id: '\d+'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.microsite_owner_admin:
+  path: '/admin/famtastic/microsite/{site_key}/owner'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\MicrositeOwnerForm'
+    _title: 'Microsite owner access'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    site_key: '[a-z0-9-]{3,64}'
+
 # --- Public, signed, read-only concept rooms for owner-approved leads. ---
 famtastic_pipeline.public_preview_share:
   path: '/api/public-preview/{preview_delivery}/{signature}'
@@ -845,4 +914,3 @@ famtastic_pipeline.ai_brief_synthesizer:
   methods: [POST]
   requirements:
     _access: 'TRUE'
-

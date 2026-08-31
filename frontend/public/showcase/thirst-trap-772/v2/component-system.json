@@ -1,0 +1,33 @@
+{
+  "schema": "famtastic.page-component-system.v1",
+  "system_id": "thirst-trap-production-components-v2",
+  "system_version": "2.0.0",
+  "site_id": "thirst-trap-772",
+  "page_recipe": {
+    "recipe_id": "thirst-trap-storefront-v2",
+    "recipe_version": "2.0.0",
+    "public_path": "/showcase/thirst-trap-772/v2/",
+    "ordered_instances": ["tt-v2-hero-01", "tt-v2-menu-01", "tt-v2-texture-01", "tt-v2-events-01", "tt-v2-contact-01", "tt-v2-social-01", "tt-v2-mail-01"]
+  },
+  "components": [
+    {"instance_id":"tt-v2-hero-01","definition_id":"hero.liquid-pop-market.v2","slots":["headline","tagline","intro","premium_media","primary_action","secondary_action","campaign_badge","ticker"],"swappable":["copy","media","actions","badge_text"]},
+    {"instance_id":"tt-v2-menu-01","definition_id":"catalog.flavor-pouches.v2","slots":["heading","menu_media","product_cards","price_labels","availability_note"],"swappable":["heading","media","products","visual_family"]},
+    {"instance_id":"tt-v2-texture-01","definition_id":"media.ice-transition.v1","slots":["texture_media","display_phrase","signal_strip"],"swappable":["media","copy","palette"]},
+    {"instance_id":"tt-v2-events-01","definition_id":"events.next-pop-up.v2","slots":["event_media","event_list","social_action","booking_action"],"swappable":["media","events","actions"]},
+    {"instance_id":"tt-v2-contact-01","definition_id":"form.event-and-contact.v2","slots":["positioning","booking_steps","contact_fields","status"],"swappable":["copy","subject_options","fields"]},
+    {"instance_id":"tt-v2-social-01","definition_id":"social.liquid-follow-system.v2","slots":["social_destinations","themed_icons","poster_directions"],"swappable":["destinations","icons","campaign_copy","poster_media"]},
+    {"instance_id":"tt-v2-mail-01","definition_id":"form.consent-mailing-list.v1","slots":["brand_art","value_copy","email","consent","status"],"swappable":["brand_art","copy","consent_text"]}
+  ],
+  "runtime_bindings": {
+    "public_content": "/web/api/microsite/thirst-trap-772",
+    "contact": "/web/api/microsite/thirst-trap-772/contact",
+    "subscriber": "/web/api/microsite/thirst-trap-772/subscriber",
+    "owner": "/web/api/microsite/thirst-trap-772/owner"
+  },
+  "media_slots": {
+    "hero-premium": "assets/thirst-trap-v2-hero.webp",
+    "menu-premium": "assets/thirst-trap-v2-menu.webp",
+    "texture-premium": "assets/thirst-trap-v2-ice.webp",
+    "event-premium": "assets/thirst-trap-v2-pop-up.webp"
+  }
+}

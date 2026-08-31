@@ -1,0 +1,49 @@
+{
+  "schema": "famtastic.production-microsite.v1",
+  "site_key": "thirst-trap-772",
+  "business_name": "Thirst Trap 772",
+  "experience": {
+    "public_path": "/showcase/thirst-trap-772/v2/",
+    "stable_entry_path": "/showcase/thirst-trap-772/",
+    "owner_path": "/showcase/thirst-trap-772/v2/owner/",
+    "archived_concept_path": "/showcase/thirst-trap-772/v1/",
+    "page_recipe": "thirst-trap-storefront-v2",
+    "component_system": "thirst-trap-production-components-v2",
+    "storage": "Drupal database via /web/api/microsite/thirst-trap-772",
+    "external_effects": ["contact record creation", "consented subscriber record creation"]
+  },
+  "public_capabilities": [
+    "owner-managed product names, descriptions, price labels, visibility, and visual families",
+    "owner-managed confirmed pop-up dates and locations",
+    "durable event and general contact form",
+    "consent-required mailing-list capture",
+    "owner-managed Instagram and Facebook destinations",
+    "custom themed social icon treatments",
+    "responsive and reduced-motion behavior"
+  ],
+  "owner_capabilities": [
+    "verified FAMtastic account access",
+    "phone-friendly brand, product, price, event, and social editing",
+    "contact and mailing-list inbox",
+    "message status management",
+    "explicit save before public content changes"
+  ],
+  "creative_assets": [
+    {"path":"assets/thirst-trap-v2-hero.webp","role":"hero_and_open_graph","sha256":"e6152a4c4ac0466bffc6a8188691e41d76f52dfafbafb685daa91d124c5014dc","rights":"owner-reference-derived generated campaign media"},
+    {"path":"assets/thirst-trap-v2-menu.webp","role":"menu_collage_and_product_crops","sha256":"ba8246ec61f073bc1cf5a207dfedfd8e942d4365ee381f2257e286af6a6708ab","rights":"owner-reference-derived generated campaign media"},
+    {"path":"assets/thirst-trap-v2-ice.webp","role":"brand_texture_transition","sha256":"ea79096faf37ba63d11c617a5f3b5d903ab544b7d664263d4b1490e05f09d7db","rights":"owner-reference-derived generated campaign media"},
+    {"path":"assets/thirst-trap-v2-pop-up.webp","role":"event_and_social_campaign_media","sha256":"ef7c5830aa7107e51c1c2012400a7671fb142be5529e1a4af6fd4014d6ffeff6","rights":"owner-reference-derived generated campaign media"}
+  ],
+  "verified_public_destinations": [
+    "https://www.instagram.com/thirst_trap772/",
+    "https://www.facebook.com/ThirstTrap772/"
+  ],
+  "truth_boundaries": [
+    "Seed products are category-level starting content and contain no invented price.",
+    "No event is published until the owner records a confirmed date and location.",
+    "Contact and subscriber submissions are stored but never auto-sent or auto-published.",
+    "Mailing-list consent is required and stored with each subscriber.",
+    "No payment, checkout, delivery, inventory reservation, or social publishing is activated.",
+    "Original field photographs remain private because they include people and contact details."
+  ]
+}

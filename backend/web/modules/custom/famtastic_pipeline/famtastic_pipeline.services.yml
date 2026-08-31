@@ -146,6 +146,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\AttributionService
     arguments: ['@database', '@datetime.time']
 
+  famtastic_pipeline.microsites:
+    class: Drupal\famtastic_pipeline\Service\MicrositeService
+    arguments: ['@database', '@datetime.time']
+
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge']
@@ -198,4 +202,3 @@ services:
   famtastic_pipeline.webform_bridge:
     class: Drupal\famtastic_pipeline\Service\WebformIntakeBridgeService
     arguments: ['@entity_type.manager', '@logger.factory']
-

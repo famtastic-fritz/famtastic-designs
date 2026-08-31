@@ -1,0 +1,26 @@
+{
+  "schema": "famtastic.showcase-prototype.v1",
+  "prototype_id": "thirst-trap-772-gift-promo",
+  "business_name": "Thirst Trap 772",
+  "subject_status": "real owner-supplied subject; business approval pending",
+  "experience": {
+    "public_path": "/showcase/thirst-trap-772/v1/",
+    "page_recipe": "thirst-trap-social-front-door-v1",
+    "component_system": "thirst-trap-772-components-v1",
+    "storage": "none",
+    "external_effects": []
+  },
+  "creative_assets": [
+    {"path":"assets/thirst-trap-hero.webp","role":"hero_and_open_graph","rights":"owner-reference-derived generated gift media"},
+    {"path":"assets/thirst-trap-feed.svg","role":"editable_feed_graphic","rights":"famtastic-owned native graphic"},
+    {"path":"assets/thirst-trap-story.svg","role":"editable_story_graphic","rights":"famtastic-owned native graphic"}
+  ],
+  "verified_public_destinations": ["https://www.instagram.com/thirst_trap772/", "https://www.facebook.com/ThirstTrap772/"],
+  "truth_boundaries": [
+    "No email or phone is published because the supplied evidence conflicts and the owner has not confirmed the exact contact.",
+    "No menu item, flavor, price, inventory, event, availability, delivery, payment, or performance result is active.",
+    "Original field photographs are withheld because people and contact details are visible.",
+    "The event message builder only copies text locally; it does not send or store a message.",
+    "No social account, post, schedule, campaign, customer record, order, checkout, or payment was created."
+  ]
+}

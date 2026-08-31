@@ -39,6 +39,7 @@ function famtastic_pipeline_schema(): array {
 function famtastic_pipeline_install(): void {
   _famtastic_pipeline_seed_commercial_versions();
   _famtastic_pipeline_seed_customer_terms_v4();
+  _famtastic_pipeline_seed_microsite_defaults();
 }
 
 /**
@@ -1144,8 +1145,59 @@ function _famtastic_pipeline_automation_schema(): array {
   foreach (_famtastic_pipeline_lifecycle_schema() as $table => $definition) {
     $tables[$table] = $definition;
   }
+  foreach (_famtastic_pipeline_microsite_schema() as $table => $definition) {
+    $tables[$table] = $definition;
+  }
 
   return $tables;
+}
+
+/**
+ * Durable, owner-linked content and inbound capture for small client sites.
+ */
+function _famtastic_pipeline_microsite_schema(): array {
+  return [
+    'famtastic_microsite' => [
+      'description' => 'Small-business microsite content and ownership binding.',
+      'fields' => [
+        'id' => ['type' => 'serial', 'not null' => TRUE],
+        'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'owner_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+        'content_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'active'],
+        'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      ],
+      'primary key' => ['id'],
+      'unique keys' => ['site_key' => ['site_key']],
+      'indexes' => ['owner_uid' => ['owner_uid'], 'status' => ['status']],
+    ],
+    'famtastic_microsite_message' => [
+      'description' => 'Contact and consented subscriber records captured by a microsite.',
+      'fields' => [
+        'id' => ['type' => 'serial', 'not null' => TRUE],
+        'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'kind' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE],
+        'name' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE, 'default' => ''],
+        'email' => ['type' => 'varchar', 'length' => 254, 'not null' => TRUE],
+        'email_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'phone' => ['type' => 'varchar', 'length' => 40, 'not null' => TRUE, 'default' => ''],
+        'subject' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE, 'default' => ''],
+        'message' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'consent' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+        'status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'new'],
+        'source' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE, 'default' => 'site'],
+        'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      ],
+      'primary key' => ['id'],
+      'indexes' => [
+        'site_kind_status' => ['site_key', 'kind', 'status'],
+        'site_email' => ['site_key', 'email_hash'],
+        'created' => ['created'],
+      ],
+    ],
+  ];
 }
 
 /** Schema for an owner-gated public concept-room delivery. */
@@ -2306,4 +2358,66 @@ function _famtastic_pipeline_seed_default_proof_cohort_config(): bool {
   }
   $config->setData($data)->save(TRUE);
   return TRUE;
+}
+
+/** Adds the dedicated small-business microsite content and capture store. */
+function famtastic_pipeline_update_8044(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $created = [];
+  foreach (_famtastic_pipeline_microsite_schema() as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+      $created[] = $table;
+    }
+  }
+  _famtastic_pipeline_seed_microsite_defaults();
+  return t('Added durable microsite content and inbound capture tables: @tables.', [
+    '@tables' => $created ? implode(', ', $created) : 'none (already present)',
+  ]);
+}
+
+/** Seeds truthful, owner-editable content without inventing products or dates. */
+function _famtastic_pipeline_seed_microsite_defaults(): void {
+  $database = \Drupal::database();
+  if (!$database->schema()->tableExists('famtastic_microsite')) {
+    return;
+  }
+  $siteKey = 'thirst-trap-772';
+  $existing = $database->select('famtastic_microsite', 'site')
+    ->fields('site', ['id'])
+    ->condition('site_key', $siteKey)
+    ->execute()
+    ->fetchField();
+  if ($existing !== FALSE) {
+    return;
+  }
+  $now = \Drupal::time()->getRequestTime();
+  $content = [
+    'schema_version' => 1,
+    'site_key' => $siteKey,
+    'brand' => [
+      'name' => 'Thirst Trap 772',
+      'tagline' => 'Crave. Drink. Repeat.',
+      'service_area' => 'Vero Beach and the Treasure Coast',
+      'intro' => 'Cold color, frozen flavor, and a hot-pink pop-up made for the moment.',
+    ],
+    'products' => [
+      ['id' => 'lemonade-energy', 'name' => 'Lemonade Energy', 'kicker' => 'Cold + bright', 'description' => 'Citrus-forward refreshers from the rotating pop-up lineup.', 'price_label' => '', 'status' => 'active', 'visual' => 'citrus'],
+      ['id' => 'icy-favorites', 'name' => 'Icy Favorites', 'kicker' => 'Frozen + bold', 'description' => 'Color-packed frozen drinks served ready to carry through the event.', 'price_label' => '', 'status' => 'active', 'visual' => 'berry'],
+      ['id' => 'pop-up-extras', 'name' => 'Pop-Up Extras', 'kicker' => 'Sweet + social', 'description' => 'Tropical fruit, desserts, snacks, and rotating table surprises.', 'price_label' => '', 'status' => 'active', 'visual' => 'tropical'],
+    ],
+    'events' => [],
+    'socials' => [
+      'instagram' => 'https://www.instagram.com/thirst_trap772/',
+      'facebook' => 'https://www.facebook.com/ThirstTrap772/',
+    ],
+  ];
+  $database->insert('famtastic_microsite')->fields([
+    'site_key' => $siteKey,
+    'owner_uid' => NULL,
+    'content_json' => json_encode($content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+    'status' => 'active',
+    'created' => $now,
+    'changed' => $now,
+  ])->execute();
 }

@@ -22,6 +22,11 @@
   # Match requires the slash so the rewritten slashless URL exits the loop.
   RewriteRule ^(tiktok[A-Za-z0-9]+\.txt)/$ /$1 [L]
 
+  # The original Thirst Trap gift concept is archived under /v1/. The stable
+  # showcase entry now opens the production storefront without duplicating
+  # editable content or runtime state across two public pages.
+  RewriteRule ^showcase/thirst-trap-772/?$ /showcase/thirst-trap-772/v2/ [R=302,L]
+
   # Signed proof rooms are dynamic React routes. Keep this deliberately narrow:
   # the same document root also serves Drupal and static campaign experiences.
   # React will validate the token; Apache must not 404 before it can load.
