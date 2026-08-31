@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — Provider acceptance is a delivery checkpoint, not client completion
+
+- Observation: the exact-recipient invitation command recorded an accepted
+  provider message and a sent timestamp, while the linked customer and project
+  fields correctly remained empty.
+- Guidance: report provider acceptance as transport evidence only. Wait for
+  the client to complete the interview and verify the same email before
+  claiming their workspace or beginning any proof, booking, payment, or launch
+  action.
+
 ## 2026-08-31 — A React route is not live until the shared Apache boundary admits it
 
 - Observation: the deep-discovery component, its frontend bundle, and its

@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — A provider receipt is not an account or project claim
+
+- Observation: the Shay invitation has provider acceptance and a sent receipt,
+  but its customer and website-request links remain empty by design.
+- Guidance: do not treat a delivery receipt as an account, completed interview,
+  or work authorization. Claim only after same-email verification.
+
 ## 2026-08-31 — Private React routes need an explicit shared-host rewrite
 
 - Observation: a deployed deep-discovery page returned Apache 404 before the

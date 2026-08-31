@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-08-31 — Shay deep-dive production release and invitation
+
+- Deployed the owner-invited deep-discovery backend, schema migration, private
+  frontend route, and Apache route correction through the governed GoDaddy
+  release scripts with rollback backups and real-browser apex/`www` acceptance.
+- Created one exact-recipient invitation for Tighten Up Your Locs and received
+  transactional-provider acceptance. No account, payment, Booksy change,
+  proof, publication, or launch action was created by the send.
+
 ## 2026-08-31 — Private deep-dive route release correction
 
 - Added the explicit Apache SPA rewrite for owner-invited `/deep-dive/<id>`
