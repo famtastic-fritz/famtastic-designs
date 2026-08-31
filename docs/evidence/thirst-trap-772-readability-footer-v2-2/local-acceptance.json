@@ -33,5 +33,5 @@
     }
   ],
   "external_effects": [],
-  "production_status": "pending"
+  "production_status": "passed; see production-acceptance.json"
 }

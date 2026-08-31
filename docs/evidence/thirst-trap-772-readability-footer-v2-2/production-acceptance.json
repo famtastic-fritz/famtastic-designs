@@ -1,0 +1,47 @@
+{
+  "schema": "famtastic.production-acceptance.v1",
+  "build_id": "thirst-trap-772-readability-footer-v2-2-20260831",
+  "application_revision": "54c1e953bb6bd79cfe8810c7db038c428136f87b",
+  "deployed_at": "2026-08-31T20:07:19Z",
+  "accepted_at": "2026-08-31T20:08:52Z",
+  "deployment": {
+    "status": "passed",
+    "node": "v22.23.2",
+    "backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260831T200451Z-54c1e953bb6bd79cfe8810c7db038c428136f87b.tgz"
+  },
+  "browser_checks": [
+    {
+      "origin": "https://famtasticdesigns.com",
+      "viewport": "390x844",
+      "public_status": 200,
+      "admin_demo_status": 200,
+      "page_errors": 0,
+      "failed_requests": 0,
+      "protected_owner_api_requests_from_demo": 0,
+      "cta_font_size_px": 13.76,
+      "kicker_font_size_px": 11.52,
+      "cta_text_transform": "none",
+      "footer_links": ["public website", "admin demo", "client portal", "FAMtastic Designs"]
+    },
+    {
+      "origin": "https://www.famtasticdesigns.com",
+      "viewport": "390x844",
+      "public_status": 200,
+      "admin_demo_status": 200,
+      "page_errors": 0,
+      "failed_requests": 0,
+      "protected_owner_api_requests_from_demo": 0,
+      "cta_font_size_px": 13.76,
+      "kicker_font_size_px": 11.52,
+      "cta_text_transform": "none",
+      "footer_links": ["public website", "admin demo", "client portal", "FAMtastic Designs"]
+    }
+  ],
+  "truth_boundaries": {
+    "admin_demo": "public, fictional, and no-save",
+    "owner_studio": "still protected by verified account access",
+    "client_portal": "secure account destination",
+    "outbound_messages_or_payments": "none"
+  },
+  "status": "passed"
+}

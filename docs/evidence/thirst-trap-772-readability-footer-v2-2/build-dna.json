@@ -6,7 +6,7 @@
   "repository": {
     "name": "famtastic-designs",
     "revision": "7605e9e28f798477aa54ea466292793ce02a85d2",
-    "worktree_state": "implementation_committed; evidence_follow_up_in_progress",
+    "worktree_state": "implementation_committed_and_production_browser_accepted",
     "parent_build_id": "thirst-trap-772-preorders-v2-1-20260831"
   },
   "recipe": {
@@ -40,6 +40,18 @@
         "cost": {"status": "not_applicable", "amount": 0, "currency": "USD"}
       },
       "result": {"status": "passed", "evidence_ref": "local-acceptance.json", "external_effects": []}
+    },
+    {
+      "stage_id": "production-browser-acceptance",
+      "attempt": 1,
+      "capability": "apex-and-www-mobile-runtime-verification",
+      "execution": {
+        "provider": {"id": "governed-godaddy-frontend-release-plus-playwright"},
+        "model": {"id": null, "status": "not_applicable"},
+        "timing": {"completed_at": "2026-08-31T20:08:52Z"},
+        "cost": {"status": "not_applicable", "amount": 0, "currency": "USD"}
+      },
+      "result": {"status": "passed", "evidence_ref": "production-acceptance.json", "external_effects": ["frontend release"]}
     }
   ],
   "artifacts": [
@@ -58,5 +70,5 @@
     "secure_owner_studio": ["verified FAMtastic account required", "protected owner data", "authorized writes only"],
     "client_portal": ["secure account access", "not represented as a public demo"]
   },
-  "integrity": {"artifact_hash_algorithm": "sha256", "validation_status": "local_browser_acceptance_passed; production_pending"}
+  "integrity": {"artifact_hash_algorithm": "sha256", "validation_status": "local_and_production_browser_acceptance_passed"}
 }

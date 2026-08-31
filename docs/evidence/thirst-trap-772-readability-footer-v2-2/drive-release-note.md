@@ -11,5 +11,7 @@ does not request the protected owner API and does not save changes. The real
 owner studio remains account-protected.
 
 Local browser evidence passed at 390x844 and 666x844 with no horizontal
-overflow. Production deployment and live-browser evidence remain pending until
-the exact committed release is promoted.
+overflow. The governed frontend release completed on both the apex and `www`
+hosts. Live mobile browser checks returned 200 for the public site and admin
+demo with no page errors, failed requests, or protected owner API calls from
+the demo.
