@@ -38,6 +38,20 @@
 - Guidance: mirror the interfaces used by adjacent services and retrieve new
   services from the real Drupal container before performing a customer action.
 
+## 2026-08-31 — Direct-payment convenience still needs a durable order and a human verification boundary
+
+- Observation: a Cash App QR can remove friction for a pop-up business, but a
+  QR alone creates an orphaned payment with no durable product, quantity,
+  pickup, or customer context. Treating link completion as payment proof would
+  also be false because the transfer occurs outside FAMtastic.
+- Guidance: save the preorder and exact price snapshot first, issue a visible
+  order reference, then reveal only an owner-supplied payment link. Initialize
+  payment as unverified, require the owner to compare the reference against the
+  business's own account, and keep inventory, refunds, reconciliation, and
+  payment processing outside the product until separately implemented and
+  proven. Ship owner-dependent commerce disabled rather than inventing a live
+  payee, price, or product promise.
+
 ## 2026-08-31 — Production quality joins visual identity to owner-controlled truth
 
 - Observation: generated atmosphere, layered texture, expressive type, and

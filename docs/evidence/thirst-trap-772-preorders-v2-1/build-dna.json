@@ -1,0 +1,98 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "thirst-trap-772-preorders-v2-1-20260831",
+  "classification": "owner-managed preorder and direct external-payment extension",
+  "created_at": "2026-08-31T19:23:15Z",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "447e570c088fe6fe7ab016ab1a6c2e789ef48507",
+    "worktree_state": "implementation_committed; evidence follow-up in progress",
+    "parent_build_id": "thirst-trap-772-production-v2-20260831"
+  },
+  "recipe": {
+    "routine": "famtastic-production-microsite-commerce-extension",
+    "version": "1.0.0",
+    "build_class": "durable preorder plus owner-managed direct payment handoff",
+    "page_recipe_id": "thirst-trap-storefront-v2",
+    "new_component_definition_id": "commerce.preorder-direct-pay.v1",
+    "component_count": 8
+  },
+  "stages": [
+    {
+      "stage_id": "preorder-payment-boundary",
+      "attempt": 1,
+      "capability": "external-payment-safe-commerce-design",
+      "execution": {
+        "provider": {"id":"owner-brief-plus-official-cash-app-guidance"},
+        "model": {"id":null,"status":"not_disclosed_by_runtime"},
+        "timing": {"status":"completed_in_current_session"},
+        "cost": {"status":"not_applicable","amount":0,"currency":"USD"}
+      },
+      "result": {"status":"passed","evidence_ref":"component-decisions.json"}
+    },
+    {
+      "stage_id": "durable-order-control-plane",
+      "attempt": 1,
+      "capability": "microsite-preorder-ledger-and-owner-status",
+      "execution": {
+        "provider": {"id":"openai-codex"},
+        "model": {"id":null,"status":"not_disclosed_by_runtime"},
+        "timing": {"status":"completed_in_current_session"},
+        "cost": {"status":"subscription_or_runtime_did_not_report","amount":null,"currency":"USD"}
+      },
+      "result": {"status":"passed","evidence_ref":"local-acceptance.json"}
+    },
+    {
+      "stage_id": "public-qr-and-phone-owner-experience",
+      "attempt": 1,
+      "capability": "responsive-preorder-and-local-qr-rendering",
+      "execution": {
+        "provider": {"id":"openai-codex-plus-vendored-qrcode-generator"},
+        "model": {"id":null,"status":"not_disclosed_by_runtime"},
+        "timing": {"status":"completed_in_current_session"},
+        "cost": {"status":"not_applicable","amount":0,"currency":"USD"}
+      },
+      "result": {"status":"passed","evidence_ref":"local-acceptance.json"}
+    },
+    {
+      "stage_id": "local-browser-and-drupal-acceptance",
+      "attempt": 1,
+      "capability": "no-external-effect-commerce-proof",
+      "execution": {
+        "provider": {"id":"local-playwright-plus-disposable-drupal-sqlite"},
+        "model": {"id":null,"status":"not_applicable"},
+        "timing": {"status":"completed_in_current_session"},
+        "cost": {"status":"not_applicable","amount":0,"currency":"USD"}
+      },
+      "result": {"status":"passed","evidence_ref":"local-acceptance.json","external_effects":[]}
+    }
+  ],
+  "artifacts": [
+    {"role":"drupal_schema","path":"backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.install","sha256":"a854110802e7ab46e144fde4ba7a8f3802f7e62992556ea4145ebf8f599bd273"},
+    {"role":"drupal_routes","path":"backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.routing.yml","sha256":"fe8dc9516ae04e5a67416f8aaa0818d41f724bb8fa292ce00cbb7196cdd0afd1"},
+    {"role":"drupal_controller","path":"backend/web/modules/custom/famtastic_pipeline/src/Controller/MicrositeController.php","sha256":"21ffbd2fe98e36e160c97a43c3253e078d97f047bead22a8d324d24975a02851"},
+    {"role":"drupal_service","path":"backend/web/modules/custom/famtastic_pipeline/src/Service/MicrositeService.php","sha256":"ba65e43e7efcd641ddd8e339cd448c25352724644bf84ced3ebfd8162685a674"},
+    {"role":"public_page","path":"frontend/public/showcase/thirst-trap-772/v2/index.html","sha256":"826dae51fe9926e93fb29bdf7dd1bb7d10f78b8d561685eea67982f9223ebd78"},
+    {"role":"public_styles","path":"frontend/public/showcase/thirst-trap-772/v2/thirst-trap-v2.css","sha256":"657833629cf26e135f0ee6fc41512c6891bb13239dbe7764baf16c2e5521597e"},
+    {"role":"public_runtime","path":"frontend/public/showcase/thirst-trap-772/v2/thirst-trap-v2.js","sha256":"638fcf3bb3f193583172aa21c6d260cc7598f3053ed432651b2f5954da40fd1e"},
+    {"role":"owner_page","path":"frontend/public/showcase/thirst-trap-772/v2/owner/index.html","sha256":"dfe687e62c0e08983ae842e89ffbf84faca9393912851288c0b09bb4efc1718c"},
+    {"role":"owner_styles","path":"frontend/public/showcase/thirst-trap-772/v2/owner/owner-commerce.css","sha256":"35f4ce471453f8f502268ac70935d03ab33861f654488dd75062ee0ccb8f11e4"},
+    {"role":"owner_runtime","path":"frontend/public/showcase/thirst-trap-772/v2/owner/owner.js","sha256":"f36ec4d81af792f3be5cd377de8274f95a38aa182d166632972d8ecea2d06e8d"},
+    {"role":"qr_runtime","path":"frontend/public/showcase/thirst-trap-772/v2/vendor/qrcode-generator-1.4.4.js","sha256":"18ae399f81182bc9de916e9c77b195df20cc58d6f2d55a62b085a299f1bf1780"},
+    {"role":"browser_proof","path":"frontend/scripts/prove-thirst-trap-preorder.mjs","sha256":"f79b6c85d3955c274a03859eb4b027ee52f602bebd1d46581b14d72ab65b4766"},
+    {"role":"fresh_drupal_acceptance","path":"scripts/e2e-thirst-trap-microsite.sh","sha256":"172d3d2bf0f7aaeec7ef198c4837ef1db610890e12129030210c43d219f0a0bb"},
+    {"role":"desktop_screenshot","path":"docs/evidence/thirst-trap-772-production-v2/screenshots/preorder-desktop.jpg","sha256":"70c5f09c409bb263aaa16df82a07defca225c4f172a62f43cdb7e87c1ebbb411"},
+    {"role":"mobile_screenshot","path":"docs/evidence/thirst-trap-772-production-v2/screenshots/preorder-mobile.jpg","sha256":"665be94673439b036e2ced13c58bd99f39fde812631f61241212ba826145b31f"},
+    {"role":"owner_mobile_screenshot","path":"docs/evidence/thirst-trap-772-production-v2/screenshots/preorder-owner-mobile.jpg","sha256":"f8b03b4bfda74ac2cc930ff847381560ef6bf88eb9b2a963484515bd95da9136"}
+  ],
+  "retrieval": {
+    "filesystem": {"status":"available","path":"docs/evidence/thirst-trap-772-preorders-v2-1/build-dna.json"},
+    "database": {"status":"registration_not_required_for_microsite_extension"},
+    "site_studio": {"status":"component_contract_available_not_imported","component_definition_id":"commerce.preorder-direct-pay.v1"}
+  },
+  "truth_boundaries": {
+    "activated_after_owner_configuration": ["durable preorder request", "owner-managed numeric prices", "owner-supplied Cash App payment link and local QR", "manual owner payment and fulfillment status"],
+    "not_activated": ["FAMtastic payment processing", "automatic payment verification", "inventory reservation", "refund automation", "delivery", "outbound order email", "Cash App API or webhook"]
+  },
+  "integrity": {"artifact_hash_algorithm":"sha256","validation_status":"local_acceptance_passed; production_pending"}
+}

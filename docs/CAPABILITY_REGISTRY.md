@@ -7,6 +7,7 @@ capability is not “proven” merely because code exists.
 |---|---|---|
 | Drupal + React customer portals | Production smoke-tested | Branded account, service, support, learning, referral, and retention hubs |
 | Drupal Commerce product lifecycle | Test-provider proven | Catalog-to-order-to-intake-to-entitlement delivery |
+| Owner-managed microsite preorders with direct payment handoff | Locally proven; production activation pending owner configuration | Durable product/quantity/pickup requests, exact price snapshots, owner-generated Cash App link/QR, and phone-first manual payment/fulfillment status without FAMtastic processing or auto-verifying funds |
 | Product onboarding contracts | Locally proven | Repeatable product, terms, intake, fulfillment, communication, reporting, and acceptance setup |
 | Website discovery and package recommendation | Locally proven | Needs-led intake that distinguishes packaged and custom work |
 | Owner-invited deep website discovery | Production deployed; one exact-recipient provider acceptance verified | Private, answer-at-a-time discovery linked to a verified same-email workspace, with Booksy bridge, brand, content, local-growth, payment-display, asset-consent, and six-direction owner-review inputs; one owner-confirmed invitation was accepted by the mail provider, while inbox receipt, interview completion, account claim, proof, payment, booking, and launch remain separate gates |

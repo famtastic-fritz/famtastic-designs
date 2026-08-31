@@ -1,0 +1,47 @@
+{
+  "schema": "famtastic.component-decision-ledger.v1",
+  "build_id": "thirst-trap-772-preorders-v2-1-20260831",
+  "parent_build_id": "thirst-trap-772-production-v2-20260831",
+  "decisions": [
+    {
+      "decision_id": "TTP-D01",
+      "scope": "commerce.preorder-request",
+      "decision": "Store the preorder request and exact product snapshot before revealing an owner-managed payment link.",
+      "reason": "A durable request gives the owner a real order desk and prevents a Cash App payment from becoming an untracked message or screenshot.",
+      "confidence": "high",
+      "limitations": "This is a preorder request, not inventory allocation or automatic acceptance."
+    },
+    {
+      "decision_id": "TTP-D02",
+      "scope": "payment.external-direct",
+      "decision": "Accept only an owner-supplied HTTPS cash.app payment link and generate its QR locally after the preorder is saved.",
+      "reason": "Money remains between the customer and Thirst Trap 772 while the site supplies a lower-friction handoff without storing payment credentials or processing funds.",
+      "confidence": "high",
+      "limitations": "FAMtastic cannot prove payment from the QR or link and never marks it paid automatically."
+    },
+    {
+      "decision_id": "TTP-D03",
+      "scope": "payment.manual-verification",
+      "decision": "Initialize every order as requested and every payment as unverified; only an authorized owner can record later fulfillment and payment states.",
+      "reason": "Cash App is outside the FAMtastic system, so the owner must compare the order reference against her own account before confirming payment.",
+      "confidence": "high",
+      "limitations": "There is no Cash App webhook, refund automation, chargeback handling, or reconciliation feed."
+    },
+    {
+      "decision_id": "TTP-D04",
+      "scope": "owner.phone-console",
+      "decision": "Extend the existing phone-first owner studio with numeric preorder prices, Cash App configuration, preorder activation, and an order-status desk.",
+      "reason": "The business needs to change the offer and work orders from a phone without exposing settings or customer details on the public page.",
+      "confidence": "high",
+      "limitations": "The verified owner account still must be created and explicitly bound before handoff."
+    },
+    {
+      "decision_id": "TTP-D05",
+      "scope": "release.fail-closed",
+      "decision": "Ship preorders disabled by default and withhold the private Cash App destination from the public content response.",
+      "reason": "No invented price or payment destination may appear before the owner supplies and approves it; a disabled production feature is safer than simulated commerce.",
+      "confidence": "high",
+      "limitations": "The public production page will show the truthful setup state until real prices and the exact owner-generated payment link are entered."
+    }
+  ]
+}

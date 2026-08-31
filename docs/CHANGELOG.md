@@ -34,6 +34,27 @@
   and UUID component interfaces, which production exposed during container
   checks before an invitation record or email was created.
 
+## 2026-08-31 — Thirst Trap 772 preorders and direct Cash App handoff
+
+- Added an eighth reusable storefront component that saves a real preorder
+  request before offering any owner-managed external payment destination.
+- Added product quantities, numeric owner-managed prices, pickup selection,
+  exact total calculation, durable order references, and a mobile confirmation
+  experience with a locally rendered SVG QR.
+- Restricted payment configuration to an exact owner-supplied HTTPS
+  `cash.app` link. The public content response exposes only availability; the
+  destination is returned only after the order is durably stored.
+- Added a protected phone-first order desk where the bound owner can review
+  products and customer pickup details, then manually record fulfillment and
+  payment status after checking her own Cash App account.
+- Kept preorders disabled by default. Every order starts `requested`; every
+  payment starts `unverified`; FAMtastic does not receive, process, hold, or
+  verify funds and does not claim inventory reservation, refund automation,
+  outbound order email, or Cash App API integration.
+- Added Drupal update 8046, request bounds, flood control, owner isolation,
+  exact price snapshots, mobile browser proof, component decisions, local
+  acceptance evidence, and immutable Build DNA.
+
 ## 2026-08-31 — Thirst Trap 772 production storefront and owner studio
 
 - Preserved the original gift concept under `/v1/`, built a separately

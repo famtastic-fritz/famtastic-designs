@@ -1,0 +1,45 @@
+{
+  "schema": "famtastic.local-acceptance.v1",
+  "build_id": "thirst-trap-772-preorders-v2-1-20260831",
+  "status": "passed",
+  "tested_at": "2026-08-31T19:23:15Z",
+  "implementation_commit": "447e570c088fe6fe7ab016ab1a6c2e789ef48507",
+  "checks": {
+    "static_contract": {
+      "status": "passed",
+      "command": "node frontend/scripts/test-thirst-trap-production-v2.mjs",
+      "detail": "Eight component instances, preorder form, exact owner payment handoff, QR library, numeric prices, order desk, responsive styling, and truth-boundary copy are present."
+    },
+    "fresh_drupal_acceptance": {
+      "status": "passed",
+      "command": "FAMTASTIC_THIRST_TRAP_MICROSITE_CONFIRM=LOCAL_ONLY ./scripts/e2e-thirst-trap-microsite.sh",
+      "detail": "Rehearsed update 8046 on disposable SQLite; preorders fail closed before activation; a synthetic order, exact totals, private Cash App destination, owner isolation, and manual payment/fulfillment status persisted."
+    },
+    "module_unit_suite": {
+      "status": "passed_with_framework_deprecations",
+      "detail": "82 tests and 417 assertions passed; PHPUnit reported 50 existing framework deprecations."
+    },
+    "browser": {
+      "status": "passed",
+      "command": "FAMTASTIC_PREVIEW_BASE=http://127.0.0.1:4197 node frontend/scripts/prove-thirst-trap-preorder.mjs",
+      "viewports": ["1440x1000", "390x844"],
+      "horizontal_overflow": 0,
+      "detail": "Synthetic browser flow selected products, calculated the total, saved the preorder, rendered the exact Cash App link as an SVG QR, and displayed the phone-sized owner order desk without any external write."
+    },
+    "production_build": {
+      "status": "passed_with_existing_warning",
+      "command": "npm --prefix frontend run build",
+      "detail": "Vite production build and SEO shell generation passed; the existing application chunk-size warning remains."
+    },
+    "php_and_composer": {
+      "status": "passed",
+      "detail": "Full custom-module PHP lint, JavaScript syntax, Composer strict validation, JSON validation, and git diff checks passed."
+    }
+  },
+  "screenshots": [
+    {"path":"docs/evidence/thirst-trap-772-production-v2/screenshots/preorder-desktop.jpg","sha256":"70c5f09c409bb263aaa16df82a07defca225c4f172a62f43cdb7e87c1ebbb411"},
+    {"path":"docs/evidence/thirst-trap-772-production-v2/screenshots/preorder-mobile.jpg","sha256":"665be94673439b036e2ced13c58bd99f39fde812631f61241212ba826145b31f"},
+    {"path":"docs/evidence/thirst-trap-772-production-v2/screenshots/preorder-owner-mobile.jpg","sha256":"f8b03b4bfda74ac2cc930ff847381560ef6bf88eb9b2a963484515bd95da9136"}
+  ],
+  "external_effects": []
+}
