@@ -7,11 +7,12 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDir, '../public/showcase/thirst-trap-772/v2');
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
 
-const [html, css, js, ownerHtml, ownerJs] = await Promise.all([
+const [html, css, js, ownerHtml, ownerCss, ownerJs] = await Promise.all([
   read('index.html'),
   read('thirst-trap-v2.css'),
   read('thirst-trap-v2.js'),
   read('owner/index.html'),
+  read('owner/owner-demo.css'),
   read('owner/owner.js'),
 ]);
 
@@ -26,7 +27,12 @@ assert.match(html, /qrcode-generator-1\.4\.4\.js/);
 assert.match(html, /data-social="instagram"/);
 assert.match(html, /data-social="facebook"/);
 assert.match(html, /<svg[^>]+viewBox="0 0 24 24"/);
-assert.match(html, /Website experience by/);
+assert.match(html, /A BUSINESS EXPERIENCE BY/);
+assert.match(html, /Admin demo/);
+assert.match(html, /Public preview · no sign-in/);
+assert.match(html, /href="\/portal"/);
+assert.match(html, /A BUSINESS EXPERIENCE BY/);
+assert.match(html, /FAM<span>tastic<\/span>/);
 assert.doesNotMatch(html, /\b(?:Fritz|Shay|gift|concept|mockup|I built|we built)\b/i, 'public copy is the business voice, not a pitch to the owner');
 
 assert.match(css, /@media \(max-width: 680px\)/);
@@ -35,6 +41,10 @@ assert.match(css, /thirst-trap-v2-hero\.webp/);
 assert.match(css, /thirst-trap-v2-ice\.webp/);
 assert.match(css, /thirst-trap-v2-menu\.webp/);
 assert.match(css, /thirst-trap-v2-pop-up\.webp/);
+assert.match(css, /\.button \{[^}]*font-family: var\(--utility\)[^}]*font-size: \.84rem[^}]*letter-spacing: \.01em/s);
+assert.match(css, /\.kicker \{[^}]*font-size: \.75rem[^}]*letter-spacing: \.09em/s);
+assert.match(css, /\.system-links/);
+assert.match(css, /\.famtastic-credit/);
 
 assert.match(js, /\/web\/api\/microsite\/\$\{SITE_KEY\}/);
 assert.match(js, /submitCapture\(contact, 'contact'/);
@@ -57,6 +67,11 @@ assert.match(ownerJs, /method: 'PUT'/);
 assert.match(ownerJs, /method:'PATCH'/);
 assert.match(ownerJs, /updateOrder/);
 assert.match(ownerJs, /price_cents/);
+assert.match(ownerJs, /IS_DEMO/);
+assert.match(ownerJs, /demoState/);
+assert.match(ownerJs, /No account, customer, or live website was changed/);
+assert.match(ownerHtml, /PUBLIC ADMIN DEMO/);
+assert.match(ownerCss, /\.demo-notice/);
 
 for (const asset of [
   'assets/thirst-trap-v2-hero.webp',

@@ -2,6 +2,7 @@
   'use strict';
 
   const API = '/web/api/microsite/thirst-trap-772/owner';
+  const IS_DEMO = new URLSearchParams(location.search).get('demo') === '1';
   let state = null;
   const qs = (selector, scope = document) => scope.querySelector(selector);
   const value = (input) => String(input == null ? '' : input);
@@ -11,6 +12,31 @@
     if (text !== undefined) node.textContent = text;
     return node;
   };
+
+  function demoState() {
+    const now = Math.floor(Date.now() / 1000);
+    return {
+      ok: true,
+      site: {
+        schema_version: 1,
+        site_key: 'thirst-trap-772',
+        brand: { name: 'Thirst Trap 772', tagline: 'Crave. Drink. Repeat.', service_area: 'Vero Beach · Treasure Coast', intro: 'Cold color, frozen flavor, and the hot-pink tent that turns every stop into a whole mood.' },
+        products: [
+          { id: 'demo-pink', name: 'Pink Lemonade Pouch', kicker: 'Cold + bright', description: 'A frozen pink favorite from the rotating pop-up lineup.', price_label: '$5', price_cents: 500, status: 'active', visual: 'pink' },
+          { id: 'demo-tropical', name: 'Tropical Punch Pouch', kicker: 'Sweet + social', description: 'Tropical fruit color packed and ready for the next stop.', price_label: '$7', price_cents: 700, status: 'active', visual: 'tropical' },
+          { id: 'demo-snack', name: 'Pop-Up Snack Pack', kicker: 'Tent extra', description: 'A rotating event-day add-on.', price_label: '$4', price_cents: 400, status: 'active', visual: 'lime' },
+        ],
+        events: [{ id: 'demo-market', title: 'Saturday Community Market', date_label: 'Saturday · 2–6 PM', location: 'Vero Beach, Florida', details: 'Sample event for the public admin demo.', status: 'scheduled' }],
+        payments: { preorders_enabled: true, cash_app_url: '', cash_app_label: '$BusinessCashApp', payment_note: 'Include the order reference in the payment note.', pickup_note: 'Pickup time is confirmed directly.' },
+        socials: { instagram: 'https://www.instagram.com/thirst_trap772/', facebook: 'https://www.facebook.com/ThirstTrap772/' },
+      },
+      messages: [
+        { id: 'demo-message', kind: 'contact', name: 'Demo Event Planner', email: 'planner@example.test', phone: '', message: 'Can the pink tent join our community event next month?', status: 'new', created: now - 3600 },
+        { id: 'demo-subscriber', kind: 'subscriber', name: '', email: 'subscriber@example.test', phone: '', message: '', status: 'subscribed', created: now - 7200 },
+      ],
+      orders: [{ id: 'demo-order', order_number: 'TT772-DEMO', customer_name: 'Demo Customer', email: 'customer@example.test', phone: '', items: [{ product_id: 'demo-pink', name: 'Pink Lemonade Pouch', quantity: 2, unit_price_cents: 500 }, { product_id: 'demo-tropical', name: 'Tropical Punch Pouch', quantity: 1, unit_price_cents: 700 }], item_count: 3, total_cents: 1700, currency: 'USD', pickup_label: 'Saturday Community Market', notes: 'Sample order only.', payment_method: 'cash_app', payment_status: 'unverified', order_status: 'requested', created: now - 1800, changed: now - 1800 }],
+    };
+  }
 
   function field(label, name, current, type = 'text', className = '') {
     const wrap = make('label', className, label);
@@ -133,6 +159,14 @@
     qs('#pickup-note').value = payments.pickup_note || '';
     renderProducts(); renderEvents(); renderOrders(); renderMessages();
     qs('#access-panel').hidden = true; qs('#studio').hidden = false; qs('#save-top').hidden = false;
+    if (IS_DEMO) {
+      document.body.classList.add('demo-mode');
+      qs('#demo-notice').hidden = false;
+      qs('#save-top').textContent = 'View-only demo';
+      qs('#save-top').disabled = true;
+      qs('#save-bottom').textContent = 'Try changes on this screen';
+      qs('#save-status').textContent = 'Public demo: explore the controls. Changes remain on this screen only.';
+    }
   }
 
   function centsFromInput(input) {
@@ -169,6 +203,13 @@
 
   async function save() {
     const status = qs('#save-status'); status.className = ''; status.textContent = 'Saving…';
+    if (IS_DEMO) {
+      collect();
+      status.className = 'status-success';
+      status.textContent = 'Demo updated on this screen only. No account, customer, or live website was changed.';
+      renderProducts(); renderEvents();
+      return;
+    }
     try {
       const content = collect();
       const token = await csrf();
@@ -183,6 +224,12 @@
 
   async function updateMessage(id, status, button) {
     button.disabled = true;
+    if (IS_DEMO) {
+      const item = state.messages.find((message) => message.id === id);
+      if (item) item.status = status;
+      renderMessages();
+      return;
+    }
     try {
       const token = await csrf();
       const response = await fetch(`${API}/messages/${id}`, { method:'PATCH', credentials:'same-origin', headers:{'Content-Type':'application/json','X-CSRF-Token':token}, body:JSON.stringify({status}) });
@@ -193,6 +240,12 @@
 
   async function updateOrder(id, orderStatus, paymentStatus, button) {
     button.disabled = true; button.textContent = 'Saving…';
+    if (IS_DEMO) {
+      const order = state.orders.find((item) => item.id === id);
+      if (order) { order.order_status = orderStatus; order.payment_status = paymentStatus; }
+      renderOrders();
+      return;
+    }
     try {
       const token = await csrf();
       const response = await fetch(`${API}/orders/${id}`, { method:'PATCH', credentials:'same-origin', headers:{'Content-Type':'application/json','X-CSRF-Token':token}, body:JSON.stringify({order_status:orderStatus,payment_status:paymentStatus}) });
@@ -208,6 +261,11 @@
 
   async function boot() {
     const login = qs('#login-link'); login.href = `/login?redirect=${encodeURIComponent(location.pathname)}`;
+    if (IS_DEMO) {
+      state = demoState();
+      renderStudio();
+      return;
+    }
     try {
       const response = await fetch(API, { credentials:'same-origin', headers:{Accept:'application/json'} });
       const payload = await response.json().catch(() => ({}));
