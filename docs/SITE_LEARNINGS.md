@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — A secure owner control plane needs a separate public demo lane
+
+- Observation: sharing the real Thirst Trap owner URL with a tester correctly
+  reached the account gate, but the tester could not evaluate the experience
+  without becoming an authorized owner. Small decorative type also made the
+  public hero's directions and actions harder to scan than its headline.
+- Guidance: keep live owner data and mutations behind verified account access;
+  provide a visibly labeled, fictional, no-write demo for public evaluation.
+  Reserve expressive display faces for large brand moments and use a clear
+  utility face, readable sizing, and restrained tracking for instructions and
+  actions. Label public demo, secure portal, and agency destinations explicitly.
+
 ## 2026-08-31 — A reusable follow-up template needs both customization and a bearer boundary
 
 - Observation: a client-facing planning email needs business-specific wording,

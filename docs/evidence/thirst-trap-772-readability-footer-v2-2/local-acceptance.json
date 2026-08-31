@@ -1,0 +1,37 @@
+{
+  "schema": "famtastic.local-acceptance.v1",
+  "build_id": "thirst-trap-772-readability-footer-v2-2-20260831",
+  "recorded_at": "2026-08-31T20:02:00Z",
+  "status": "passed",
+  "base_url": "http://127.0.0.1:4192",
+  "checks": [
+    {
+      "name": "static storefront and owner contracts",
+      "command": "node frontend/scripts/test-thirst-trap-production-v2.mjs",
+      "result": "passed"
+    },
+    {
+      "name": "readability, footer navigation, and no-sign-in admin demo",
+      "command": "node frontend/scripts/prove-thirst-trap-readability-and-links.mjs",
+      "result": "passed",
+      "viewports": ["390x844", "666x844"],
+      "assertions": [
+        "hero action text uses a clear utility font at 13.4px or larger",
+        "hero kicker is 11.4px or larger with restrained tracking",
+        "hero body copy is 16px or larger",
+        "public website, admin demo, client portal, and FAMtastic links are labeled",
+        "admin demo requests no protected owner API data",
+        "admin demo contains fictional records and no-save disclosure",
+        "public and demo mobile views have no horizontal overflow"
+      ]
+    },
+    {
+      "name": "frontend production build",
+      "command": "npm --prefix frontend run build",
+      "result": "passed",
+      "note": "Vite reported its existing non-blocking large-chunk advisory."
+    }
+  ],
+  "external_effects": [],
+  "production_status": "pending"
+}

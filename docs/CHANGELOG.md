@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-08-31 — Thirst Trap readability and public business-system tour
+
+- Kept the expressive display and script typography while moving hero utility
+  copy, supporting text, and calls to action to a clear system typeface with
+  larger sizing, tighter tracking, and natural capitalization.
+- Rebuilt the footer as a labeled tour of the public website, a no-sign-in
+  admin demo, the secure client portal, and FAMtastic Designs.
+- Added a fictional, view-only owner-studio mode that makes the phone-friendly
+  products, events, preorders, orders, and inbox experience testable without
+  exposing protected owner data or writing to production.
+
 ## 2026-08-31 — Customizable owner-invited deep-dive templates
 
 - Converted the fixed private-interview invitation into reusable plain-text

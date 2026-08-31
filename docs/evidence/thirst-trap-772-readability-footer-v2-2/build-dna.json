@@ -1,0 +1,62 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "thirst-trap-772-readability-footer-v2-2-20260831",
+  "classification": "public readability, FAMtastic attribution, and no-write owner demo refinement",
+  "created_at": "2026-08-31T20:02:00Z",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "7605e9e28f798477aa54ea466292793ce02a85d2",
+    "worktree_state": "implementation_committed; evidence_follow_up_in_progress",
+    "parent_build_id": "thirst-trap-772-preorders-v2-1-20260831"
+  },
+  "recipe": {
+    "routine": "famtastic-production-microsite-refinement",
+    "version": "1.0.0",
+    "page_recipe_id": "thirst-trap-storefront-v2",
+    "component_count": 8,
+    "refined_components": ["hero.liquid-pop-market.v2", "site-footer.business-system-tour.v1", "owner-studio.public-demo.v1"]
+  },
+  "stages": [
+    {
+      "stage_id": "readability-refinement",
+      "attempt": 1,
+      "capability": "responsive-typography-hierarchy",
+      "execution": {
+        "provider": {"id": "openai-codex"},
+        "model": {"id": null, "status": "not_disclosed_by_runtime"},
+        "timing": {"status": "completed_in_current_session"},
+        "cost": {"status": "subscription_or_runtime_did_not_report", "amount": null, "currency": "USD"}
+      },
+      "result": {"status": "passed", "evidence_ref": "local-acceptance.json"}
+    },
+    {
+      "stage_id": "public-admin-demo-boundary",
+      "attempt": 1,
+      "capability": "fictional-no-write-owner-experience",
+      "execution": {
+        "provider": {"id": "openai-codex-plus-local-playwright"},
+        "model": {"id": null, "status": "not_applicable_to_browser_validation"},
+        "timing": {"status": "completed_in_current_session"},
+        "cost": {"status": "not_applicable", "amount": 0, "currency": "USD"}
+      },
+      "result": {"status": "passed", "evidence_ref": "local-acceptance.json", "external_effects": []}
+    }
+  ],
+  "artifacts": [
+    {"role": "public_page", "path": "frontend/public/showcase/thirst-trap-772/v2/index.html", "sha256": "808907320f117f8d96767b73336d4da4cb170ae4fd578fe25efef99f3dd73f20"},
+    {"role": "public_styles", "path": "frontend/public/showcase/thirst-trap-772/v2/thirst-trap-v2.css", "sha256": "4fb01c760e1b8f82cf3f00ac0e4ff84d278abbd49a3eec93e27699628f0b0f20"},
+    {"role": "owner_page", "path": "frontend/public/showcase/thirst-trap-772/v2/owner/index.html", "sha256": "f8fbe795a04237d65e7d966556b9260f8f54ec5795c45eb4ba12305e966fdf8a"},
+    {"role": "owner_runtime", "path": "frontend/public/showcase/thirst-trap-772/v2/owner/owner.js", "sha256": "54b5b998fbf291c73492f82edce8d67f2978ffb3a3e467c58b2993775d19acdd"},
+    {"role": "owner_demo_styles", "path": "frontend/public/showcase/thirst-trap-772/v2/owner/owner-demo.css", "sha256": "b8551a03c2737312a468d4b653b56e5e93d404db5d467dc300055c25980b6f07"},
+    {"role": "browser_proof", "path": "frontend/scripts/prove-thirst-trap-readability-and-links.mjs", "sha256": "4d2ee88de39bbfbb0662a2ded0f379c276cf2828feaec4cdf050c3a36af4ea4e"},
+    {"role": "mobile_hero_screenshot", "path": "docs/evidence/thirst-trap-772-readability-footer-v2-2/screenshots/hero-mobile.jpg", "sha256": "13dbfc27189dd53aa345af1099fd45d6fc894bcebe605c9de12a752575727009"},
+    {"role": "mobile_footer_screenshot", "path": "docs/evidence/thirst-trap-772-readability-footer-v2-2/screenshots/footer-mobile.jpg", "sha256": "bf41ffe8fd4eae8b8ece82745fb5e05a869ced100398a88fb89b2142fcca22b5"},
+    {"role": "mobile_admin_demo_screenshot", "path": "docs/evidence/thirst-trap-772-readability-footer-v2-2/screenshots/admin-demo-mobile.jpg", "sha256": "f8c853761f7886406b1ef47738cbc5c8d848cde4bc23d3bc7578a46ec0de75f0"}
+  ],
+  "truth_boundaries": {
+    "public_admin_demo": ["fictional data only", "no protected owner API request", "no persistence", "no customer communication", "no payment or publishing action"],
+    "secure_owner_studio": ["verified FAMtastic account required", "protected owner data", "authorized writes only"],
+    "client_portal": ["secure account access", "not represented as a public demo"]
+  },
+  "integrity": {"artifact_hash_algorithm": "sha256", "validation_status": "local_browser_acceptance_passed; production_pending"}
+}
