@@ -1,7 +1,7 @@
 # Thirst Trap 772 — preorder + direct payment extension
 
 Date: 2026-08-31
-Implementation commit: `447e570c088fe6fe7ab016ab1a6c2e789ef48507`
+Implementation commit: `ef4ce828410efbf1a86f32b9398b1f26623523b0`
 
 ## Outcome
 

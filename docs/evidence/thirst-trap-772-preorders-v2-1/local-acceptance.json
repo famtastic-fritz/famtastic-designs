@@ -3,7 +3,7 @@
   "build_id": "thirst-trap-772-preorders-v2-1-20260831",
   "status": "passed",
   "tested_at": "2026-08-31T19:23:15Z",
-  "implementation_commit": "447e570c088fe6fe7ab016ab1a6c2e789ef48507",
+  "implementation_commit": "ef4ce828410efbf1a86f32b9398b1f26623523b0",
   "checks": {
     "static_contract": {
       "status": "passed",

@@ -5,7 +5,7 @@
   "created_at": "2026-08-31T19:23:15Z",
   "repository": {
     "name": "famtastic-designs",
-    "revision": "447e570c088fe6fe7ab016ab1a6c2e789ef48507",
+    "revision": "ef4ce828410efbf1a86f32b9398b1f26623523b0",
     "worktree_state": "implementation_committed; evidence follow-up in progress",
     "parent_build_id": "thirst-trap-772-production-v2-20260831"
   },
@@ -69,7 +69,7 @@
   ],
   "artifacts": [
     {"role":"drupal_schema","path":"backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.install","sha256":"a854110802e7ab46e144fde4ba7a8f3802f7e62992556ea4145ebf8f599bd273"},
-    {"role":"drupal_routes","path":"backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.routing.yml","sha256":"fe8dc9516ae04e5a67416f8aaa0818d41f724bb8fa292ce00cbb7196cdd0afd1"},
+    {"role":"drupal_routes","path":"backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.routing.yml","sha256":"afeba1af6ccaa083205df4a1eafe191e9edb799e3fd0c48be30e604b53e6bf25"},
     {"role":"drupal_controller","path":"backend/web/modules/custom/famtastic_pipeline/src/Controller/MicrositeController.php","sha256":"21ffbd2fe98e36e160c97a43c3253e078d97f047bead22a8d324d24975a02851"},
     {"role":"drupal_service","path":"backend/web/modules/custom/famtastic_pipeline/src/Service/MicrositeService.php","sha256":"ba65e43e7efcd641ddd8e339cd448c25352724644bf84ced3ebfd8162685a674"},
     {"role":"public_page","path":"frontend/public/showcase/thirst-trap-772/v2/index.html","sha256":"826dae51fe9926e93fb29bdf7dd1bb7d10f78b8d561685eea67982f9223ebd78"},
