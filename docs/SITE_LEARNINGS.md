@@ -82,6 +82,24 @@
   sibling when composition, texture, typography, or operational components
   materially change. Keep the parent available in the lab, label the new
   direction, and verify that the parent remains byte-for-byte unchanged.
+## 2026-08-31 — A deeper discovery link must be private, resumable, and separate from commercial action
+- Observation: A generic public intake can collect a few requirements, but it
+  does not establish a safe, durable path from a client’s booking/brand choices
+  to their eventual workspace and proof review. Putting a private bearer token
+  in a query string also risks disclosure through referrers and logs.
+- Guidance: Use an owner-created, exact-recipient invitation with its secret in
+  the URL fragment and only a persisted hash. Save one validated answer at a
+  time, require verification of the same email before account claim, and create
+  only a portal draft. Keep Booksy bridge, payment display, proof generation,
+  proof delivery, prices, and launch behind their independent owner gates.
+
+## 2026-08-31 — Local Commerce validation needs the same PHP extensions as production
+- Observation: The local backend container installed Composer dependencies from
+  the locked Drupal Commerce set without PHP `bcmath`, causing the image build
+  to fail before Drupal could run migrations or API checks.
+- Guidance: Keep `bcmath` in both the Composer and PHP-FPM Docker stages.
+  Treat a successful frontend build and PHP syntax check as source validation,
+  not a replacement for the pending Drupal/MariaDB runtime check.
 
 ## 2026-08-28 — Modular Customer Portal Architecture with Governed AI Assistance Beats Monolithic Dashboards
 - Observation: Housing 14+ customer lifecycle surfaces, guided multi-step brief wizards, proof review iframes, file management, and message threads inside a monolithic 500-line React component created code bloat and made individual subviews difficult to test, maintain, and evolve.

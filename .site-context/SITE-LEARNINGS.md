@@ -82,6 +82,21 @@
   the unchanged parent. A map or contact component must be visible and
   functional—not merely named in a feature list—and uncertain location details
   must stay labeled for confirmation.
+## 2026-08-31 — Private discovery is a continuation, not an unverified account claim
+- Observation: A client can answer a deep discovery interview before creating a
+  portal account, but treating that address as a verified customer would create
+  false ownership and unsafe automation.
+- Guidance: Bind the invitation to the exact recipient email, keep its bearer
+  secret out of URLs sent to servers, and wait for a same-email verification to
+  create the account-owned draft. The draft asks for owner review before any
+  Booksy change, payment display, proof work, customer mail, or deployment.
+
+## 2026-08-31 — A local image dependency failure blocks runtime proof, not source proof
+- Observation: Drupal Commerce requires PHP `bcmath`, but the local Docker
+  image did not install it, so Composer stopped before the backend began.
+- Guidance: Install required PHP extensions in both image stages, then repeat
+  migration and token-scoped API checks. Do not label a syntax/build pass as a
+  completed customer-account or email-delivery proof.
 
 ## 2026-08-28 — Modular Customer Portal Architecture with Governed AI Assistance Beats Monolithic Dashboards
 - Observation: Housing 14+ customer lifecycle surfaces, guided multi-step brief wizards, proof review iframes, file management, and message threads inside a monolithic 500-line React component created code bloat and made individual subviews difficult to test, maintain, and evolve.

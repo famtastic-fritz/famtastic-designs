@@ -134,6 +134,28 @@ famtastic_pipeline.public_preview_delivery_review:
     preview_delivery: '\d+'
 
 # --- Branded customer account API (Drupal session cookie; never exposes CMS UI) ---
+famtastic_pipeline.deep_dive_view:
+  path: '/api/deep-dive/{invitation}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\DeepDiveController::view'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    invitation: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.deep_dive_answer:
+  path: '/api/deep-dive/{invitation}/answer'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\DeepDiveController::answer'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    invitation: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_register:
   path: '/api/customer/register'
   defaults:

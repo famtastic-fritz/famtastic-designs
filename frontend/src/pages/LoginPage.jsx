@@ -9,13 +9,14 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
+  const [deepDiveContinuation] = useState(() => sessionStorage.getItem('famtastic.deep_dive_continuation') || '');
   async function submit(event) {
     event.preventDefault(); setError(''); setNotice(''); setBusy(true);
     const data = Object.fromEntries(new FormData(event.currentTarget));
     try {
       if (mode === 'login') { await customerLogin(data.email, data.password); navigate(searchParams.get('redirect') || '/portal'); }
       else if (mode === 'recover') { const result = await forgotCustomerPassword(data.email); setNotice(result.message); }
-      else { await customerRegister(data); setNotice('Check your email to verify your free account. Your saved request will be waiting in the portal after you sign in.'); setMode('login'); }
+      else { await customerRegister(data); sessionStorage.removeItem('famtastic.deep_dive_continuation'); setNotice('Check your email to verify your free account. Your saved request will be waiting in the portal after you sign in.'); setMode('login'); }
     } catch (e) { setError(e.message); } finally { setBusy(false); }
   }
   return <section className="login-card" aria-labelledby="portal-heading">
@@ -28,6 +29,7 @@ export default function LoginPage() {
     <form className="form" onSubmit={submit}>
       {mode === 'register' && <input type="hidden" name="source" value={searchParams.get('source') || (searchParams.has('continuation') ? 'public_preview' : 'direct')} />}
       {mode === 'register' && searchParams.has('continuation') && <input type="hidden" name="preview_continuation" value={searchParams.get('continuation') || ''} />}
+      {mode === 'register' && deepDiveContinuation && <input type="hidden" name="deep_dive_continuation" value={deepDiveContinuation} />}
       {mode === 'register' && <><div className="form__field"><label className="form__label" htmlFor="portal-name">Your name</label><input id="portal-name" className="form__input" name="name" required autoComplete="name" /></div><div className="form__field"><label className="form__label" htmlFor="portal-business">Business name <small>(optional)</small></label><input id="portal-business" className="form__input" name="business_name" defaultValue={searchParams.get('business') || ''} autoComplete="organization" /></div></>}
       <div className="form__field"><label className="form__label" htmlFor="portal-email">Email</label><input id="portal-email" className="form__input" name="email" type="email" inputMode="email" defaultValue={searchParams.get('email') || ''} required autoComplete="email" /></div>
       {mode !== 'recover' && <div className="form__field"><label className="form__label" htmlFor="portal-password">Password</label><input id="portal-password" className="form__input" name="password" type="password" minLength="12" required autoComplete={mode === 'login' ? 'current-password' : 'new-password'} /></div>}

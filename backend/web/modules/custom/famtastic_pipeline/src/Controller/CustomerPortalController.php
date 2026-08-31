@@ -15,6 +15,7 @@ use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Drupal\famtastic_pipeline\Service\CommerceLifecycleService;
+use Drupal\famtastic_pipeline\Service\DeepDiveInvitationService;
 use Drupal\famtastic_pipeline\Service\GrantCodeService;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
 use Drupal\user\UserAuthInterface;
@@ -40,6 +41,7 @@ final class CustomerPortalController extends ControllerBase {
     private readonly Connection $database,
     private readonly GrantCodeService $grantCodes,
     private readonly CommerceLifecycleService $commerceLifecycle,
+    private readonly DeepDiveInvitationService $deepDives,
   ) {}
 
   public static function create(ContainerInterface $container): self {
@@ -54,6 +56,7 @@ final class CustomerPortalController extends ControllerBase {
       $container->get('database'),
       $container->get('famtastic_pipeline.grant_codes'),
       $container->get('famtastic_pipeline.commerce_lifecycle'),
+      $container->get('famtastic_pipeline.deep_dive_invitations'),
     );
   }
 
@@ -73,6 +76,12 @@ final class CustomerPortalController extends ControllerBase {
     // hook_user_insert(). An invalid or unrelated value is intentionally a
     // no-op so ordinary registration retains its existing behavior.
     $previewDelivery = $this->portal->beginPublicPreviewRegistration($email, (string) ($data['preview_continuation'] ?? ''));
+    try {
+      $deepDive = $this->deepDives->beginRegistration($email, (string) ($data['deep_dive_continuation'] ?? ''));
+    }
+    catch (\InvalidArgumentException $error) {
+      return $this->error('deep_dive_continuation_invalid', 422, $error->getMessage());
+    }
     $storage = $this->entityTypeManager()->getStorage('user');
     try {
       if ($existingUsers = $storage->loadByProperties(['mail' => $email])) {
@@ -80,10 +89,12 @@ final class CustomerPortalController extends ControllerBase {
         $existingUser = reset($existingUsers);
         $existingCustomer = $this->portal->customerForUid((int) $existingUser->id());
         if ($existingCustomer && empty($existingCustomer['verified_at'])) {
+          if ($deepDive) $this->deepDives->attachPendingCustomer((string) $deepDive['public_id'], (int) $existingCustomer['id']);
           $this->sendVerification($request, $existingCustomer, $previewDelivery);
         }
         elseif ($existingCustomer) {
           $this->portal->claimPreviewsForVerifiedCustomer((int) $existingCustomer['id']);
+          if ($deepDive) $this->claimDeepDive((int) $existingCustomer['id'], $email);
         }
         return new JsonResponse(['ok' => TRUE, 'verification_required' => TRUE], 202);
       }
@@ -94,6 +105,7 @@ final class CustomerPortalController extends ControllerBase {
       ]);
       $user->save();
       $customer = $this->portal->createCustomer($user, $data);
+      if ($deepDive) $this->deepDives->attachPendingCustomer((string) $deepDive['public_id'], (int) $customer['id']);
       // The preview path receives only its verification email at this point.
       // Its owner alert is queued after the one-time verification token is
       // consumed; it never inherits generic request notifications or jobs.
@@ -113,6 +125,7 @@ final class CustomerPortalController extends ControllerBase {
     $record = $this->portal->consumeToken((string) ($data['token'] ?? ''), 'verify');
     if (!$record) return $this->error('invalid_or_expired_token', 422, 'This verification link is invalid or expired.');
     $this->portal->markVerified((int) $record['customer_id']);
+    $this->claimDeepDive((int) $record['customer_id'], (string) $record['email']);
     $payload = json_decode((string) ($record['payload'] ?? ''), TRUE);
     if (is_array($payload) && ($payload['registration_flow'] ?? '') === 'public_preview_v1') {
       $this->portal->queueVerifiedPreviewRegistrationNotification((int) $record['customer_id']);
@@ -139,9 +152,23 @@ final class CustomerPortalController extends ControllerBase {
       return $this->error('verification_required', 403, 'Verify your email before opening the portal.');
     }
     $this->portal->claimPreviewsForVerifiedCustomer((int) $customer['id']);
+    $this->claimDeepDive((int) $customer['id'], (string) $customer['email']);
     user_login_finalize($user);
     $this->flood->clear('famtastic_portal_login', $identifier);
     return $this->sessionPayload($customer);
+  }
+
+  /** Creates the account-owned draft only after exact-email verification. */
+  private function claimDeepDive(int $customerId, string $email): void {
+    foreach ($this->deepDives->claimForVerifiedCustomer($customerId, $email) as $deepDive) {
+      if (!empty($deepDive['website_request_id'])) {
+        continue;
+      }
+      $requestId = $this->portal->createWebsiteRequestFromDeepDive($customerId, $deepDive);
+      if ($requestId) {
+        $this->deepDives->attachWebsiteRequest((int) $deepDive['id'], $requestId);
+      }
+    }
   }
 
   public function forgotPassword(Request $request): JsonResponse {

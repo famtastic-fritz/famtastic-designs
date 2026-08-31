@@ -51,3 +51,24 @@ export const createCustomerReferral = (payload) => request('/referrals', { metho
 export const createCustomerThread = (payload) => request('/threads', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const getCustomerThread = (id) => request(`/threads/${encodeURIComponent(id)}`);
 export const replyCustomerThread = (id, body) => request(`/threads/${encodeURIComponent(id)}`, { method: 'POST', csrf: true, body: JSON.stringify({ body }) });
+
+async function deepDiveRequest(invitation, secret, path = '', options = {}) {
+  const response = await fetch(`${WEB_PREFIX}/api/deep-dive/${encodeURIComponent(invitation)}${path}`, {
+    credentials: 'omit',
+    ...options,
+    headers: {
+      Accept: 'application/json',
+      'X-Deep-Dive-Token': secret,
+      ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+      ...options.headers,
+    },
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new CustomerApiError(payload.message || 'This private interview is unavailable.', response.status, payload.error);
+  return payload.deep_dive;
+}
+
+export const getDeepDive = (invitation, secret) => deepDiveRequest(invitation, secret);
+export const answerDeepDive = (invitation, secret, key, answer) => deepDiveRequest(invitation, secret, '/answer', {
+  method: 'POST', body: JSON.stringify({ key, answer }),
+});

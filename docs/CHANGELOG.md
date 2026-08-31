@@ -168,6 +168,26 @@
   directly on their working content, owner controls retain iPhone-safe input
   sizing and bottom-safe-area navigation, and the public request dialog uses a
   compact scrollable mobile composition without changing its local-only scope.
+## 2026-08-31 — Owner-invited deep website discovery and verified account claim
+
+- Added a private, token-scoped, one-question-at-a-time discovery journey for
+  owner-invited website clients. The bearer secret lives in the link fragment
+  and only its SHA-256 hash is persisted; responses are no-store, no-referrer,
+  and no-index.
+- Added a durable deep-dive invitation record plus explicit, exact-recipient
+  Drush drafting/sending command. An invitation can create a prospect record
+  and email draft, but cannot create a payment, booking integration, domain,
+  deployment, proof run, or customer-visible proof by itself.
+- Connected a completed interview to a customer workspace only after that same
+  email verifies an account. It becomes an account-owned website-request draft
+  with a six-direction request held at owner review; no proof is generated or
+  delivered automatically.
+- Captured Booksy bridge, request-to-book, owner payment-QR display, service,
+  policy, local-search, review, content, brand, reference, consent, and growth
+  inputs needed to scope a real appointment-business build without collecting
+  credentials or payment data.
+- Fixed the local Drupal image to install PHP `bcmath`, required by the locked
+  Drupal Commerce dependency set before a local backend runtime can boot.
 
 ## 2026-08-28 — Modular Customer Portal Architecture, My Products Hub, Guided Project Provisioning Wizard, and Site Studio Dispatch
 

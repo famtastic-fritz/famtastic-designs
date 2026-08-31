@@ -25,7 +25,7 @@ RUN apk add --no-cache git unzip libpng libjpeg-turbo freetype libzip oniguruma 
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
        libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev oniguruma-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" gd mbstring zip \
+    && docker-php-ext-install -j"$(nproc)" bcmath gd mbstring zip \
     && apk del .build-deps
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -63,7 +63,7 @@ RUN apk add --no-cache nginx libcap libpng libjpeg-turbo freetype libzip oniguru
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
        libpng-dev libjpeg-turbo-dev freetype-dev libzip-dev oniguruma-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j"$(nproc)" pdo_mysql gd mbstring zip opcache \
+    && docker-php-ext-install -j"$(nproc)" bcmath pdo_mysql gd mbstring zip opcache \
     && apk del .build-deps \
     && setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx \
     && mkdir -p /run/php-fpm \

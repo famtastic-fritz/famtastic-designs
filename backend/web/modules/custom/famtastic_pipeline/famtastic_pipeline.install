@@ -1142,6 +1142,7 @@ function _famtastic_pipeline_automation_schema(): array {
   foreach (_famtastic_pipeline_portal_engagement_schema() as $table => $definition) {
     $tables[$table] = $definition;
   }
+  $tables += _famtastic_pipeline_deep_dive_invitation_schema();
   foreach (_famtastic_pipeline_lifecycle_schema() as $table => $definition) {
     $tables[$table] = $definition;
   }
@@ -2331,6 +2332,68 @@ function famtastic_pipeline_update_8043(&$sandbox) {
     return t('Restored the default anonymous public proof cohort profile for this upgraded installation.');
   }
   return t('Preserved the existing anonymous public proof cohort configuration.');
+}
+
+/** Adds owner-invited, token-scoped deep discovery records. */
+function famtastic_pipeline_update_8045(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_deep_dive_invitation_schema();
+  if (!$schema->tableExists('famtastic_deep_dive_invitation')) {
+    $schema->createTable('famtastic_deep_dive_invitation', $definition);
+    return t('Created private deep-dive invitation records.');
+  }
+  foreach ($definition['fields'] as $field => $specification) {
+    if (!$schema->fieldExists('famtastic_deep_dive_invitation', $field)) {
+      $schema->addField('famtastic_deep_dive_invitation', $field, $specification);
+    }
+  }
+  foreach ($definition['indexes'] as $name => $fields) {
+    if (!$schema->indexExists('famtastic_deep_dive_invitation', $name)) {
+      $schema->addIndex('famtastic_deep_dive_invitation', $name, $fields, $definition);
+    }
+  }
+  foreach ($definition['unique keys'] as $name => $fields) {
+    if (!$schema->indexExists('famtastic_deep_dive_invitation', $name)) {
+      $schema->addUniqueKey('famtastic_deep_dive_invitation', $name, $fields);
+    }
+  }
+  return t('Extended private deep-dive invitation records.');
+}
+
+/** Defines secure, private discovery interviews that can later be account-claimed. */
+function _famtastic_pipeline_deep_dive_invitation_schema(): array {
+  $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
+  return [
+    'description' => 'Owner-invited, token-scoped deep website discovery interviews. No raw bearer secret is stored.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+      'prospect_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'website_request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'email' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE],
+      'business_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+      'contact_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'secret_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'draft'],
+      'answers' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'provider_message_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'activated_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'sent_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'completed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'claimed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time,
+      'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id'], 'secret_hash' => ['secret_hash']],
+    'indexes' => [
+      'email_status' => ['email', 'status'],
+      'prospect' => ['prospect_id'],
+      'customer' => ['customer_id'],
+      'website_request' => ['website_request_id'],
+    ],
+  ];
 }
 
 /**

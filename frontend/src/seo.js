@@ -101,6 +101,22 @@ export function normalizePath(pathname = '/') {
 }
 
 export function seoForPath(pathname = '/') {
+  if (pathname.startsWith('/deep-dive/')) {
+    const description = 'Private, token-scoped website planning interview.';
+    return {
+      siteName: SITE_NAME,
+      title: 'Private website planning interview | FAMtastic Designs',
+      description,
+      ogDescription: description,
+      twitterDescription: description,
+      keywords: DEFAULT_KEYWORDS,
+      canonical: `${SITE_URL}/deep-dive/`,
+      image: DEFAULT_IMAGE,
+      path: '/deep-dive',
+      robots: 'noindex, nofollow, noarchive',
+      referrer: 'no-referrer',
+    };
+  }
   if (pathname.startsWith('/proofs/share/') || pathname.startsWith('/proofs/preview/')) {
     const description = 'An unlisted website concept review shared through FAMtastic Designs.';
     return {

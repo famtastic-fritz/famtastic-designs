@@ -37,6 +37,7 @@ import ProofSharePage from './pages/ProofSharePage.jsx';
 import PublicPreviewRoomPage from './pages/PublicPreviewRoomPage.jsx';
 import IntakeHubPage from './pages/IntakeHubPage.jsx';
 import SpecializedIntakePage from './pages/SpecializedIntakePage.jsx';
+import DeepDivePage from './pages/DeepDivePage.jsx';
 
 export default function App() {
   return (
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="/portal" element={<CustomerPortalDashboard />} />
         <Route path="/proofs/share/:requestId/:signature" element={<ProofSharePage />} />
         <Route path="/proofs/preview/:previewDelivery/:signature" element={<PublicPreviewRoomPage />} />
+        <Route path="/deep-dive/:invitation" element={<DeepDivePage />} />
 
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />

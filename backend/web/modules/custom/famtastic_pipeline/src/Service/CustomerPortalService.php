@@ -364,6 +364,98 @@ final class CustomerPortalService {
     return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
   }
 
+  /**
+   * Turns a verified exact-email deep-dive into a saved portal draft.
+   *
+   * The request intentionally remains a draft and forces owner review before
+   * any proof, offer, payment, Booksy change, or customer notification.
+   */
+  public function createWebsiteRequestFromDeepDive(int $customerId, array $deepDive): ?int {
+    $customer = $this->database->select('famtastic_customer', 'c')->fields('c')
+      ->condition('id', $customerId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$customer || empty($customer['verified_at'])) {
+      return NULL;
+    }
+    $organization = $this->organizations($customerId)[0] ?? NULL;
+    if (!$organization) {
+      return NULL;
+    }
+    if (!empty($deepDive['website_request_id'])) {
+      return (int) $deepDive['website_request_id'];
+    }
+    $prospectId = (int) ($deepDive['prospect_id'] ?? 0);
+    if ($prospectId) {
+      $existing = $this->database->select('famtastic_project_request', 'r')->fields('r', ['id'])
+        ->condition('organization_id', (int) $organization['id'])
+        ->condition('prospect_id', $prospectId)->range(0, 1)->execute()->fetchField();
+      if ($existing) {
+        return (int) $existing;
+      }
+    }
+    $answers = json_decode((string) ($deepDive['answers'] ?? ''), TRUE);
+    if (!is_array($answers)) {
+      return NULL;
+    }
+    $businessName = trim((string) ($answers['business_name'] ?? $deepDive['business_name'] ?? '')) ?: 'My Business';
+    $now = $this->time->getRequestTime();
+    $intake = [
+      'schema_version' => 'website_discovery_v3',
+      'source' => 'owner_invited_deep_dive',
+      'deep_dive_invitation_id' => (string) ($deepDive['public_id'] ?? ''),
+      'primary_goal' => (string) ($answers['primary_sales_goal'] ?? ''),
+      'secondary_goals' => (string) ($answers['sales_baseline'] ?? ''),
+      'ideal_customer' => (string) ($answers['ideal_clients'] ?? ''),
+      'products_services' => (string) ($answers['service_specialties'] ?? ''),
+      'service_locations' => (string) ($answers['service_area'] ?? ''),
+      'contact_details' => (string) ($answers['hours_and_availability'] ?? ''),
+      'booking_details' => trim((string) ($answers['booking_path'] ?? '') . "\n" . (string) ($answers['booksy_url'] ?? '') . "\n" . (string) ($answers['booking_friction'] ?? '')),
+      'ecommerce_details' => trim((string) ($answers['payment_display'] ?? '') . "\n" . (string) ($answers['payment_notes'] ?? '')),
+      'preferred_colors' => (string) ($answers['brand_colors'] ?? ''),
+      'colors_to_avoid' => (string) ($answers['colors_to_avoid'] ?? ''),
+      'desired_feeling' => (string) ($answers['brand_start'] ?? ''),
+      'reference_sites' => (string) ($answers['reference_links'] ?? ''),
+      'famtastic_level' => (int) ($answers['creative_intensity'] ?? 5),
+      'required_features' => 'Booksy bridge or request-to-book only; payment display remains customer-owned and approval-gated.',
+      'notes' => trim('Portfolio: ' . (string) ($answers['portfolio_story'] ?? '') . "\nPolicies: " . (string) ($answers['policies'] ?? '') . "\nReviews: " . (string) ($answers['reviews_and_proof'] ?? '') . "\nGrowth questions: " . (string) ($answers['content_growth'] ?? '')),
+      'ai_enrichment_mode' => ($answers['asset_and_ai_consent'] ?? '') === 'yes' ? 'FAMtastic-managed' : 'none',
+      'research_consent' => (string) ($answers['research_consent'] ?? 'no'),
+      'local_competitors' => (string) ($answers['local_competitors'] ?? ''),
+      'google_business_status' => (string) ($answers['google_business_status'] ?? ''),
+      'proof_request' => [
+        'requested_count' => 6,
+        'status' => 'awaiting_owner_review',
+        'rule' => 'Six directions require an explicit owner-approved showcase expansion after a complete core set; this saved request does not generate or deliver proofs automatically.',
+      ],
+      'recommendation' => [
+        'review_required' => TRUE,
+        'reason' => 'Appointment, payment-display, brand, and local-growth requirements need FAMtastic owner review before scope or proof work.',
+      ],
+      'deep_dive_answers' => $answers,
+    ];
+    $id = (int) $this->database->insert('famtastic_project_request')->fields([
+      'public_id' => $this->uuid->generate(),
+      'organization_id' => (int) $organization['id'],
+      'customer_id' => $customerId,
+      'prospect_id' => $prospectId ?: NULL,
+      'status' => 'draft',
+      'project_name' => $businessName . ' website',
+      'business_name' => $businessName,
+      'project_type' => 'appointment_business',
+      'domain_choice' => 'undecided',
+      'existing_domain' => '',
+      'recommendation_requested' => 1,
+      'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+      'submitted_at' => NULL,
+      'created' => $now,
+      'changed' => $now,
+    ])->execute();
+    if ($prospectId) {
+      $this->claimResource((int) $organization['id'], 'prospect', $prospectId);
+    }
+    $this->activity((int) $organization['id'], 'website_request.deep_dive_claimed', 'Your deeper website interview is saved. FAMtastic will review the next creative and booking decisions with you.');
+    return $id;
+  }
+
   /** Saves or submits an existing request, enforcing customer and organization ownership. */
   public function updateWebsiteRequest(int $customerId, string $publicId, array $input): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();

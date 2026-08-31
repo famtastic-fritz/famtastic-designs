@@ -154,6 +154,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge']
 
+  famtastic_pipeline.deep_dive_invitations:
+    class: Drupal\famtastic_pipeline\Service\DeepDiveInvitationService
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid']
+
   famtastic_pipeline.public_preview_deliveries:
     class: Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.mailer', '@famtastic_pipeline.proof_cohort_profiles', '@famtastic_pipeline.cold_proof_commercial_messages', '@famtastic_pipeline.verified_cold_outreach_gate', '@famtastic_pipeline.public_preview_content_guard']

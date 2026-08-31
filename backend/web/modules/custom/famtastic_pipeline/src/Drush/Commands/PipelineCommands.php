@@ -14,6 +14,60 @@ use Drush\Commands\DrushCommands;
 class PipelineCommands extends DrushCommands {
 
   /**
+   * Creates one owner-confirmed private deep-dive invitation, optionally sends it.
+   *
+   * The send is exact-recipient only and does not start proof, payment, booking,
+   * domain, or deployment work.
+   */
+  #[CLI\Command(name: 'famtastic:deep-dive-invite', aliases: ['fddi'])]
+  #[CLI\Option(name: 'email', description: 'Exact recipient email address.')]
+  #[CLI\Option(name: 'business', description: 'Customer-facing business name.')]
+  #[CLI\Option(name: 'contact', description: 'Recipient first/full name for the draft.')]
+  #[CLI\Option(name: 'origin', description: 'Public site origin used for the secure link.')]
+  #[CLI\Option(name: 'send', description: 'Send the drafted transactional invitation after exact confirmation.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat --email to create or send this record.')]
+  #[CLI\Usage(name: 'drush fddi --email=owner@example.com --business="Example Studio" --contact="Shay" --confirm=owner@example.com', description: 'Creates an unsent invitation and prints the reviewed draft.')]
+  #[CLI\Usage(name: 'drush fddi --email=owner@example.com --business="Example Studio" --contact="Shay" --send --confirm=owner@example.com', description: 'Creates and sends one exact recipient invitation.')]
+  public function deepDiveInvite(array $options = [
+    'email' => '', 'business' => '', 'contact' => '', 'origin' => 'https://famtasticdesigns.com', 'send' => FALSE, 'confirm' => '',
+  ]): int {
+    $email = mb_strtolower(trim((string) $options['email']));
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !hash_equals($email, mb_strtolower(trim((string) $options['confirm'])))) {
+      $this->logger()->error('Deep-dive invitation requires --email and --confirm=<exact-email>.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\DeepDiveInvitationService $deepDives */
+      $deepDives = \Drupal::service('famtastic_pipeline.deep_dive_invitations');
+      $created = $deepDives->create($email, (string) $options['business'], (string) $options['contact']);
+      $record = $deepDives->activate((string) $created['record']['public_id']);
+      $url = $deepDives->publicUrl($record, $created['secret'], (string) $options['origin']);
+      $draft = $deepDives->emailDraft($record, $url);
+      $result = [
+        'invitation_id' => $record['public_id'],
+        'recipient' => $email,
+        'status' => 'drafted',
+        'url' => $url,
+        'email_draft' => $draft,
+      ];
+      if (!empty($options['send'])) {
+        /** @var \Drupal\famtastic_pipeline\Service\OutreachMailer $mailer */
+        $mailer = \Drupal::service('famtastic_pipeline.mailer');
+        $providerMessageId = $mailer->send($email, $draft['subject'], $draft['body']);
+        $deepDives->markSent((string) $record['public_id'], $providerMessageId);
+        $result['status'] = 'accepted_by_provider';
+        $result['provider_message_id'] = $providerMessageId;
+      }
+      $this->io()->writeln(json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
+  /**
    * Prints campaign, source, funnel, revenue, launch, and renewal metrics.
    */
   #[CLI\Command(name: 'famtastic:analytics-report', aliases: ['far'])]

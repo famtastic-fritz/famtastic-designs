@@ -9,6 +9,7 @@ capability is not “proven” merely because code exists.
 | Drupal Commerce product lifecycle | Test-provider proven | Catalog-to-order-to-intake-to-entitlement delivery |
 | Product onboarding contracts | Locally proven | Repeatable product, terms, intake, fulfillment, communication, reporting, and acceptance setup |
 | Website discovery and package recommendation | Locally proven | Needs-led intake that distinguishes packaged and custom work |
+| Owner-invited deep website discovery | Source and frontend-build validated; runtime/provider delivery unproven | Private, answer-at-a-time discovery linked to a verified same-email workspace, with Booksy bridge, brand, content, local-growth, payment-display, asset-consent, and six-direction owner-review inputs; no live send, account claim, proof, payment, booking, or deployment is claimed until separately verified |
 | Website-delivery specialist swarm | Locally proven | Versioned brief, package/add-on reasoning, three-direction proof, agent trace, independent QA, and Playwright evidence across guest and member lanes |
 | Synthetic human-experience testing | Locally proven | Reusable control persona plus disclosed, opt-in creative lenses that cannot affect commercial, legal, safety, accessibility, or approval decisions |
 | Account-scoped private pricing | Locally proven | Auditable relationship, partner, and promotional pricing without public coupons |

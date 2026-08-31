@@ -58,6 +58,9 @@ const dashboardPath = path.join(REPO_ROOT, 'frontend/src/pages/CustomerPortalDas
 assert(fs.existsSync(dashboardPath), 'frontend/src/pages/CustomerPortalDashboard.jsx exists');
 if (fs.existsSync(dashboardPath) && contractJson) {
   const dashboardCode = fs.readFileSync(dashboardPath, 'utf8');
+  const projectsViewPath = path.join(REPO_ROOT, 'frontend/src/components/portal/PortalProjectsView.jsx');
+  const projectsViewCode = fs.existsSync(projectsViewPath) ? fs.readFileSync(projectsViewPath, 'utf8') : '';
+  const portalCode = dashboardCode + projectsViewCode;
   
   // Check all expected sections are handled
   const expectedSections = contractJson.routes.authenticated_dashboard.sections;
@@ -74,13 +77,13 @@ if (fs.existsSync(dashboardPath) && contractJson) {
 
   // Check proof review iframe sandbox
   assert(
-    dashboardCode.includes('sandbox="allow-scripts allow-same-origin"'),
+    portalCode.includes('sandbox="allow-scripts allow-same-origin"'),
     'Proof review iframes maintain secure sandbox="allow-scripts allow-same-origin"'
   );
 
   // Check file upload rights & AI consent confirmation
   assert(
-    dashboardCode.includes('ownership_confirmed') && dashboardCode.includes('ai_use_consent'),
+    portalCode.includes('ownership_confirmed') && portalCode.includes('ai_use_consent'),
     'File upload includes explicit asset ownership and AI-use consent checks'
   );
 }
