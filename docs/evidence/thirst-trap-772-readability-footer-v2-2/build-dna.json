@@ -48,9 +48,9 @@
     {"role": "owner_page", "path": "frontend/public/showcase/thirst-trap-772/v2/owner/index.html", "sha256": "f8fbe795a04237d65e7d966556b9260f8f54ec5795c45eb4ba12305e966fdf8a"},
     {"role": "owner_runtime", "path": "frontend/public/showcase/thirst-trap-772/v2/owner/owner.js", "sha256": "54b5b998fbf291c73492f82edce8d67f2978ffb3a3e467c58b2993775d19acdd"},
     {"role": "owner_demo_styles", "path": "frontend/public/showcase/thirst-trap-772/v2/owner/owner-demo.css", "sha256": "b8551a03c2737312a468d4b653b56e5e93d404db5d467dc300055c25980b6f07"},
-    {"role": "browser_proof", "path": "frontend/scripts/prove-thirst-trap-readability-and-links.mjs", "sha256": "4d2ee88de39bbfbb0662a2ded0f379c276cf2828feaec4cdf050c3a36af4ea4e"},
-    {"role": "mobile_hero_screenshot", "path": "docs/evidence/thirst-trap-772-readability-footer-v2-2/screenshots/hero-mobile.jpg", "sha256": "13dbfc27189dd53aa345af1099fd45d6fc894bcebe605c9de12a752575727009"},
-    {"role": "mobile_footer_screenshot", "path": "docs/evidence/thirst-trap-772-readability-footer-v2-2/screenshots/footer-mobile.jpg", "sha256": "bf41ffe8fd4eae8b8ece82745fb5e05a869ced100398a88fb89b2142fcca22b5"},
+    {"role": "browser_proof", "path": "frontend/scripts/prove-thirst-trap-readability-and-links.mjs", "sha256": "8dc8ab827d3adf2f9c28e5987fd5e8dc1da30cc7eb725712c6edf4e734aa02db"},
+    {"role": "mobile_hero_screenshot", "path": "docs/evidence/thirst-trap-772-readability-footer-v2-2/screenshots/hero-mobile.jpg", "sha256": "b66a51f74cfcda6921cb114f3e61991ea4e2a5ccfe9778e418081654908d8693"},
+    {"role": "mobile_footer_screenshot", "path": "docs/evidence/thirst-trap-772-readability-footer-v2-2/screenshots/footer-mobile.jpg", "sha256": "f5af90597bedeb7e861746665288a51c3b1d65f965ab1aafd13bc72fc50e94ab"},
     {"role": "mobile_admin_demo_screenshot", "path": "docs/evidence/thirst-trap-772-readability-footer-v2-2/screenshots/admin-demo-mobile.jpg", "sha256": "f8c853761f7886406b1ef47738cbc5c8d848cde4bc23d3bc7578a46ec0de75f0"}
   ],
   "truth_boundaries": {

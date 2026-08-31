@@ -20,6 +20,12 @@ for (const profile of [
   const page = await context.newPage();
   await page.goto(`${base}/showcase/thirst-trap-772/v2/`, { waitUntil: 'networkidle' });
   await page.locator('.hero-copy').waitFor({ state: 'visible' });
+  await page.evaluate(() => {
+    const freeze = document.createElement('style');
+    freeze.textContent = '*,*::before,*::after{animation:none!important;transition:none!important}';
+    document.head.append(freeze);
+    document.querySelectorAll('.reveal').forEach((element) => element.classList.add('in-view'));
+  });
 
   const typography = await page.evaluate(() => {
     const metrics = (selector) => {
