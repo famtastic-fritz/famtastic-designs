@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-08-31 — Omar mentor-story photograph refinement
+
+- Replaced the Omar-and-Fritz story photograph in both public Omar showcase
+  directions with the owner-selected handshake portrait.
+- Preserved the site composition and mentor copy; added a cache-busted asset
+  reference so returning mobile browsers receive the new photograph promptly.
+- Converted the supplied 960×1280 photograph to a web-sized WebP without AI
+  generation, face editing, person removal, or any outbound communication.
+- Recorded the exact input/output hashes and retained the existing owner-photo
+  rights classification and zero-email/zero-social-post boundary.
+
 ## 2026-08-31 — Thirst Trap 772 promotional gift concept
 
 - Added a subject-specific, no-index gift showcase for the real Vero Beach

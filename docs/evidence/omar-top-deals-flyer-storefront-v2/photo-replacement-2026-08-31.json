@@ -1,0 +1,29 @@
+{
+  "schema": "famtastic.owner-photo-replacement.v1",
+  "recorded_at": "2026-08-31T16:42:00Z",
+  "subject": "Omar Top Deals mentor story",
+  "selection": {
+    "source": "user attachment Photo 1",
+    "source_sha256": "32f0def28eded794a947ce3e0e315d6c47ca63df5312c818c98b2bc1ba77229e",
+    "source_dimensions": "960x1280",
+    "reason": "The handshake better supports the decades-later mentor and pay-it-forward story than the previous photograph."
+  },
+  "processing": {
+    "operation": "lossy WebP conversion for public web delivery",
+    "command_profile": "cwebp quality 88 with sharp YUV",
+    "ai_generation_or_face_edit": false,
+    "people_added_or_removed": false
+  },
+  "output": {
+    "path": "frontend/public/showcase/omar-top-deals/assets/omar-and-fritz.webp",
+    "sha256": "f02dbc335703db8168ab37ae38e4cfff41e36eceea607bc1098fc3468e5bf112",
+    "dimensions": "960x1280",
+    "rights": "owner-supplied for the Omar Top Deals public showcase"
+  },
+  "authority": {
+    "public_site_only": true,
+    "email_sent": false,
+    "social_post_published": false,
+    "customer_or_payment_effect": false
+  }
+}
