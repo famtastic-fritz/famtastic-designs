@@ -1,5 +1,28 @@
 # Product changelog
 
+## 2026-08-31 — Thirst Trap 772 production storefront and owner studio
+
+- Preserved the original gift concept under `/v1/`, built a separately
+  addressable production V2, and routed the stable showcase entry to V2 so old
+  links no longer lead with internal gift/pitch language.
+- Rebuilt the public experience in the business voice around seven reusable
+  sections, four original owner-reference-led media jobs, native social-poster
+  graphics, custom liquid Instagram/Facebook icons, textured surfaces,
+  expressive typography, motion, and reduced-motion/mobile fallbacks.
+- Added a durable Drupal content model and protected, phone-first owner studio
+  for brand copy, social destinations, products, price labels, visibility,
+  confirmed pop-up dates, contact messages, and consented subscribers.
+- Added real contact and mailing-list capture with bounded validation,
+  honeypots, flood control, separate consent, no automatic outbound message,
+  and no payment, checkout, inventory, delivery, calendar, or social-publish
+  claim.
+- Added staff-only binding from an existing verified Drupal account to the
+  owner studio; owner saves require the session CSRF token and cross-owner
+  access fails closed.
+- Added update 8044, a disposable fresh-Drupal acceptance harness, a frontend
+  contract test, seven component decisions, image provenance, desktop/mobile
+  evidence, and Build DNA. Production deployment remains a separate receipt.
+
 ## 2026-08-31 — Omar mentor-story photograph refinement
 
 - Replaced the Omar-and-Fritz story photograph in both public Omar showcase

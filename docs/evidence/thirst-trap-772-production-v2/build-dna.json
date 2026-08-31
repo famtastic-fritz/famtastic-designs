@@ -1,0 +1,46 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "thirst-trap-772-production-v2-20260831",
+  "classification": "owner-reference-led production microsite release candidate",
+  "created_at": "2026-08-31T17:49:35Z",
+  "repository": {
+    "name": "famtastic-designs",
+    "implementation_revision": "0d843d41edd2997d76d6803e8a21b22188eec503",
+    "production_status": "pending_governed_backend_and_frontend_deployment"
+  },
+  "recipe": {
+    "routine": "famtastic-production-microsite",
+    "version": "1.0.0",
+    "page_recipe_id": "thirst-trap-storefront-v2",
+    "component_system_id": "thirst-trap-production-components-v2",
+    "component_count": 7,
+    "media_asset_count": 4,
+    "typography": ["Bowlby One SC", "Fugaz One", "Caveat Brush", "Syne"],
+    "texture_depth": "ice macro, paper grid, liquid bubbles, pink canopy, tilted stamps, offset shadows, poster grain",
+    "motion": "ticker, reveal, parallax, liquid hover morphs, reduced-motion fallback",
+    "runtime": "Drupal-backed content, product, event, contact, subscriber, owner, and inbox controls"
+  },
+  "stages": [
+    {"stage_id":"owner-reference-translation","execution":{"provider":{"id":"owner-brief-plus-famtastic-design-doctrine"},"model":{"id":null,"status":"not_disclosed_by_runtime"},"cost":{"status":"subscription_or_runtime_did_not_report","amount":null,"currency":"USD"}},"result":{"status":"passed","evidence_ref":"component-decisions.json"}},
+    {"stage_id":"four-part-media-system","execution":{"provider":{"id":"openai-imagegen-tool"},"model":{"id":null,"status":"not_disclosed_by_runtime"},"cost":{"status":"provider_did_not_report","amount":null,"currency":"USD"}},"result":{"status":"passed_for_campaign_atmosphere","evidence_ref":"image-generation-receipt.json"}},
+    {"stage_id":"componentized-production-build","execution":{"provider":{"id":"openai-codex"},"model":{"id":null,"status":"not_disclosed_by_runtime"},"cost":{"status":"subscription_or_runtime_did_not_report","amount":null,"currency":"USD"}},"result":{"status":"passed","public_path":"frontend/public/showcase/thirst-trap-772/v2/","owner_path":"frontend/public/showcase/thirst-trap-772/v2/owner/"}},
+    {"stage_id":"durable-drupal-control-plane","execution":{"provider":{"id":"local-drupal-sqlite-fixture"},"model":{"id":null,"status":"not_applicable"},"cost":{"status":"not_applicable","amount":0,"currency":"USD"}},"result":{"status":"passed","evidence_ref":"local-acceptance.json"}},
+    {"stage_id":"local-browser-and-build-acceptance","execution":{"provider":{"id":"local-chrome-playwright-vite"},"model":{"id":null,"status":"not_applicable"},"cost":{"status":"not_applicable","amount":0,"currency":"USD"}},"result":{"status":"passed","evidence_ref":"local-acceptance.json"}}
+  ],
+  "artifacts": [
+    {"role":"public_page","path":"frontend/public/showcase/thirst-trap-772/v2/index.html","sha256":"ed12ccd0543b00ba157fa3852ab2f0246fb3ee67d0fc9426b7d0c6ff7fb30bed"},
+    {"role":"public_styles","path":"frontend/public/showcase/thirst-trap-772/v2/thirst-trap-v2.css","sha256":"d2ccab78d666e194b7dc7b7e9d6efd3d1f21b8935b3724085195b5b824449ed1"},
+    {"role":"public_runtime","path":"frontend/public/showcase/thirst-trap-772/v2/thirst-trap-v2.js","sha256":"7a44e2d370a977c7e08e81169980a96be089f7698dbf2ac35f25d9796ffd6469"},
+    {"role":"owner_page","path":"frontend/public/showcase/thirst-trap-772/v2/owner/index.html","sha256":"c39ec0481acdaa0d6feecc0f8854f3e94a0135a99f73db600cacb98990441cf4"},
+    {"role":"owner_runtime","path":"frontend/public/showcase/thirst-trap-772/v2/owner/owner.js","sha256":"c89d1c3dc7b3f053af6a04d7cece0f447e03495cbc5e7955a55a864ae916e3a5"},
+    {"role":"drupal_service","path":"backend/web/modules/custom/famtastic_pipeline/src/Service/MicrositeService.php","sha256":"1df0b9e4d2d8c6063dfd00ce263902f0f4178d539fc362b2c4327ea096de87d4"},
+    {"role":"drupal_controller","path":"backend/web/modules/custom/famtastic_pipeline/src/Controller/MicrositeController.php","sha256":"299b6876ce5a65c80f5272469dcbac8f137737fd0db2e10605dc558ac7d69818"},
+    {"role":"fresh_drupal_acceptance","path":"scripts/e2e-thirst-trap-microsite.sh","sha256":"8f0fb56857cf08a7ce7010632ac064b459114e6eb19c7d79d966c3693a2b0b05"},
+    {"role":"frontend_contract_test","path":"frontend/scripts/test-thirst-trap-production-v2.mjs","sha256":"70d5ef9be66a0acf480f938a18a66772b967f62a9e17aea98ee146f91adf7b7b"}
+  ],
+  "truth_boundaries": {
+    "activated": ["public page", "owner-managed content model", "durable contact capture", "consented subscriber capture"],
+    "not_activated": ["payment", "checkout", "inventory", "delivery", "automated email", "social publishing", "external calendar", "custom domain", "custom mailbox"]
+  },
+  "integrity": {"artifact_hash_algorithm":"sha256","validation_status":"local_artifact_hashes_and_acceptance_passed"}
+}

@@ -1,0 +1,62 @@
+{
+  "schema": "famtastic.component-decision-ledger.v1",
+  "build_id": "thirst-trap-772-production-v2-20260831",
+  "decisions": [
+    {
+      "decision_id": "TT2-D01",
+      "scope": "voice.production-storefront",
+      "decision": "Write entirely in Thirst Trap 772's public business voice and confine FAMtastic attribution to the footer.",
+      "reason": "A production site must sell the business, not narrate an agency pitch or a private conversation with the owner.",
+      "confidence": "high",
+      "limitations": "The owner still needs to approve future menu, price, event, and contact updates."
+    },
+    {
+      "decision_id": "TT2-D02",
+      "scope": "visual-system.liquid-pop-market",
+      "decision": "Translate the observed pink tent, lime skirting, bright drink pouches, and icy product energy into four original media jobs plus native poster graphics, textured surfaces, type collisions, and reduced-motion-safe animation.",
+      "reason": "The real booth already has a memorable recognition system; separating hero, menu, texture, and evening-event media makes that system reusable instead of repeating one image.",
+      "confidence": "high",
+      "limitations": "Generated drinks are campaign atmosphere, not evidence of exact flavors, portions, price, or inventory."
+    },
+    {
+      "decision_id": "TT2-D03",
+      "scope": "catalog.owner-managed",
+      "decision": "Store product names, descriptions, price labels, status, and color family in Drupal while shipping only category-level seed content with blank prices.",
+      "reason": "The owner needs a real phone-managed menu without FAMtastic inventing SKUs or locking a fast-changing pop-up into a fixed catalog.",
+      "confidence": "high",
+      "limitations": "There is no inventory, checkout, reservation, delivery, or payment processing."
+    },
+    {
+      "decision_id": "TT2-D04",
+      "scope": "events.next-stop",
+      "decision": "Show a social-first empty state until the owner publishes a confirmed pop-up, then render owner-managed date, location, details, and status from Drupal.",
+      "reason": "A traveling vendor needs a permanent link, but an old or invented event is worse than an honest next-stop placeholder.",
+      "confidence": "high",
+      "limitations": "The site does not synchronize with an external calendar."
+    },
+    {
+      "decision_id": "TT2-D05",
+      "scope": "forms.contact-and-consent",
+      "decision": "Persist contact inquiries and separately consented mailing-list records with rate limiting, a honeypot, bounded input, and no automatic outbound message.",
+      "reason": "The production page needs durable demand capture while the business retains authority over replies and any future campaign.",
+      "confidence": "high",
+      "limitations": "The owner inbox is the first operational surface; automated email campaigns and transactional alerts are not activated."
+    },
+    {
+      "decision_id": "TT2-D06",
+      "scope": "owner.phone-console",
+      "decision": "Authorize the owner console through an existing verified Drupal account explicitly bound by FAMtastic staff; keep owner saves CSRF-protected and deny cross-owner access.",
+      "reason": "A production control surface needs durable identity and explicit handoff rather than browser-local storage or a shared password.",
+      "confidence": "high",
+      "limitations": "The owner account must be created, verified, and bound before handoff."
+    },
+    {
+      "decision_id": "TT2-D07",
+      "scope": "release.stable-entry",
+      "decision": "Archive the original gift concept under /v1/, keep the production build under /v2/, and route the stable showcase entry to V2.",
+      "reason": "Existing links should open the production experience without erasing the approved historical direction.",
+      "confidence": "high",
+      "limitations": "The redirect remains temporary while the production site is still hosted on the FAMtastic showcase path."
+    }
+  ]
+}

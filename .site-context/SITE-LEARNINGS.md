@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — A production pop-up site needs a durable loop, not only more art
+
+- Observation: a dramatic visual upgrade can win attention while leaving the
+  merchant unable to change prices, publish the next stop, receive an inquiry,
+  or retain a consented audience. Conversely, a generic CRUD console can make
+  the experience operational while erasing the physical booth's recognition.
+- Guidance: translate the booth into distinct reusable media jobs and native
+  design components, then bind the changing facts to one owner-authenticated
+  content model. Keep price text and events owner-authored, separate contact
+  from marketing consent, store both durably, and leave mail, payment,
+  inventory, delivery, calendar, and social publishing off until separately
+  approved and proven.
+
 ## 2026-08-31 — Preserve a pop-up's recognition system while quarantining unsafe field details
 
 - Observation: a real booth photograph can prove palette, material, category,

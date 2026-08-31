@@ -1,0 +1,20 @@
+{
+  "schema": "famtastic.local-acceptance.v1",
+  "build_id": "thirst-trap-772-production-v2-20260831",
+  "status": "passed",
+  "tested_at": "2026-08-31T17:49:35Z",
+  "implementation_commit": "0d843d41edd2997d76d6803e8a21b22188eec503",
+  "checks": {
+    "static_contract": {"status":"passed","command":"node frontend/scripts/test-thirst-trap-production-v2.mjs","detail":"Seven component instances, four optimized visual assets, production forms, owner controls, themed social links, and responsive/reduced-motion contracts."},
+    "fresh_drupal_acceptance": {"status":"passed","command":"./scripts/e2e-thirst-trap-microsite.sh","detail":"Rehearsed update 8044 on disposable SQLite, content/product/event writes, public filtering, contact and consented subscriber persistence, idempotence, owner isolation, anonymous owner denial, and public API reads."},
+    "module_unit_suite": {"status":"passed_with_framework_deprecations","detail":"82 tests and 417 assertions passed; PHPUnit reported 50 existing deprecations."},
+    "php_and_yaml": {"status":"passed","detail":"Changed PHP lint, Bash syntax, routing YAML, services YAML, Composer strict validation, and git diff checks passed."},
+    "production_build": {"status":"passed_with_existing_warning","command":"npm --prefix frontend run build","detail":"Vite production build and SEO shell generation passed; the existing application chunk-size warning remains."},
+    "browser": {"status":"passed","viewports":["1440x1000","390x844"],"horizontal_overflow":0,"page_errors":0,"detail":"Every reveal component was scrolled into view before full-page capture. Local static hosting produced only the expected unavailable-backend API 404 before Drupal deployment."}
+  },
+  "screenshots": [
+    {"path":"screenshots/public-desktop.jpg","sha256":"c87b300c1bb94de0db278b68398babc9cef7e1edf609c60cebfde8c1cce906e2"},
+    {"path":"screenshots/public-mobile.jpg","sha256":"d3cfa7a15170937d230a728e61940202635f7fa22b3c95f1f0e667771531478e"}
+  ],
+  "external_effects": []
+}

@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-08-31 — Production quality joins visual identity to owner-controlled truth
+
+- Observation: generated atmosphere, layered texture, expressive type, and
+  motion can make a pop-up brand memorable, but they become stale marketing if
+  every price and event requires a developer. A phone editor without a strong
+  public visual system has the opposite problem: utility without demand.
+- Guidance: treat hero, menu, texture, event, social, contact, and consent as
+  stable component contracts. Give each visual its own job; keep readable
+  labels native; load changeable business facts from an authenticated durable
+  store; preserve a truthful static fallback; and require explicit owner saves.
+  Capture inquiries and marketing consent separately, and never infer outbound
+  email, payment, inventory, or publishing authority from the presence of an
+  admin screen.
+
 ## 2026-08-31 — A surprise gift site should amplify a public signal without exposing the field photo
 
 - Observation: the strongest source material for a neighborhood pop-up may

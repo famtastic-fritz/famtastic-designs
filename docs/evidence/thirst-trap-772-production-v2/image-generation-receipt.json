@@ -1,0 +1,38 @@
+{
+  "schema": "famtastic.image-generation-receipt.v1",
+  "build_id": "thirst-trap-772-production-v2-20260831",
+  "provider": "openai-imagegen-tool",
+  "model": {"id": null, "status": "not_disclosed_by_runtime"},
+  "timing": {"status": "partial", "duration_ms": null},
+  "cost": {"status": "provider_did_not_report", "amount": null, "currency": "USD"},
+  "prompt_recording": {
+    "status": "reconstructed_summary",
+    "reason": "The image tool returned images but did not export a durable exact raw-prompt receipt. These summaries preserve the executed creative intent without falsely claiming byte-exact prompts."
+  },
+  "shared_direction": {
+    "use_case": "production small-business storefront and owned social campaign system",
+    "visual_language": "hot-pink pop-up tent, lime skirting, transparent colorful drink pouches, crushed ice, condensation, citrus, deep plum shadows, playful premium editorial lighting",
+    "constraints": "no people, no logos, no readable words, no prices, no contact data, no QR codes, no invented event facts, no watermarks",
+    "reference_count": 5,
+    "reference_rights": "owner-supplied field photography used for the commissioned promotional build; raw photographs are not published"
+  },
+  "inputs": [
+    {"role":"pink-tent and booth reference","sha256":"a04269f9b29b60aee7c1ff432382a9c27b286d1c655f42a48ad950230094bee2"},
+    {"role":"social-canopy reference","sha256":"1c28a13d55d2de832fcfa0cf2259a06c1c9f908deae2e61bfebf608b57d6d440"},
+    {"role":"table-brand reference","sha256":"4ede9a04dedbef7c3f95a479390b607e2e3e62090506b694b5f895d12d8a1b79"},
+    {"role":"contact-canopy reference","sha256":"71bd86d7db7cefa93510423a0d1e72a8cb62c3e42b3f184812dc3b1760cb6204"},
+    {"role":"drink-pouch and service-table reference","sha256":"82ce99ec890c08516c1f35a3cbdcbd21a39678a0bd338f93b0cd477d8e67238f"}
+  ],
+  "outputs": [
+    {"role":"hero","prompt_summary":"Wide premium campaign scene with jewel-toned transparent drink pouches in crushed ice beneath a hot-pink market canopy, editorial lighting and negative space for native headline.","path":"frontend/public/showcase/thirst-trap-772/v2/assets/thirst-trap-v2-hero.webp","dimensions":"1586x992","sha256":"e6152a4c4ac0466bffc6a8188691e41d76f52dfafbafb685daa91d124c5014dc"},
+    {"role":"menu_and_product_crops","prompt_summary":"Square overhead flat lay of red, orange, lime, and berry drink pouches on ice with citrus and condensation, dense commercial composition for multiple component crops.","path":"frontend/public/showcase/thirst-trap-772/v2/assets/thirst-trap-v2-menu.webp","dimensions":"1254x1254","sha256":"ba8246ec61f073bc1cf5a207dfedfd8e942d4365ee381f2257e286af6a6708ab"},
+    {"role":"ice_texture","prompt_summary":"Extreme macro of neon lime, berry, and clear ice with water droplets and a pink straw, abstract high-detail brand texture.","path":"frontend/public/showcase/thirst-trap-772/v2/assets/thirst-trap-v2-ice.webp","dimensions":"1672x941","sha256":"ea79096faf37ba63d11c617a5f3b5d903ab544b7d664263d4b1490e05f09d7db"},
+    {"role":"evening_pop_up","prompt_summary":"Hot-pink beverage tent glowing at a polished outdoor night market, long line of colorful pouches, lime table skirt, atmospheric string lights and no people.","path":"frontend/public/showcase/thirst-trap-772/v2/assets/thirst-trap-v2-pop-up.webp","dimensions":"1536x1024","sha256":"ef7c5830aa7107e51c1c2012400a7671fb142be5529e1a4af6fd4014d6ffeff6"}
+  ],
+  "review": {
+    "status": "passed_for_campaign_atmosphere",
+    "native_text_only": true,
+    "people_and_contact_data": "none in generated outputs",
+    "limitations": "Outputs are illustrative campaign media and do not prove the real menu, stock, event setup, or customer experience."
+  }
+}
