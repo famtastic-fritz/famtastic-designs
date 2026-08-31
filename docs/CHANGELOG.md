@@ -12,8 +12,8 @@
 ## 2026-08-31 — Deep-dive invitation service compatibility correction
 
 - Corrected the invitation service to accept Drupal's actual `@datetime.time`
-  component interface, which production exposed during the first safe send
-  attempt before an invitation record or email was created.
+  and UUID component interfaces, which production exposed during container
+  checks before an invitation record or email was created.
 
 ## 2026-08-31 — Thirst Trap 772 production storefront and owner studio
 

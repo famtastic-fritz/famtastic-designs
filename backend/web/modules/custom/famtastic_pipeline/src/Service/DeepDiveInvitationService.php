@@ -7,7 +7,7 @@ namespace Drupal\famtastic_pipeline\Service;
 use Drupal\Core\Database\Connection;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Uuid\UuidInterface;
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\famtastic_pipeline\Entity\Prospect;
 
 /**

@@ -10,10 +10,10 @@
 
 ## 2026-08-31 — Container-injected services need a real container check
 
-- Observation: PHP lint did not catch a mismatched Drupal time interface in the
-  invitation service; production failed safely before creating an invitation.
-- Guidance: type new services against the adjacent `@datetime.time` component
-  interface and retrieve the service from Drupal before any customer command.
+- Observation: PHP lint did not catch mismatched Drupal time and UUID interfaces
+  in the invitation service; production failed safely before creating an invite.
+- Guidance: type new services against the adjacent `@datetime.time` and `@uuid`
+  component interfaces and retrieve the service before any customer command.
 
 ## 2026-08-31 — A production pop-up site needs a durable loop, not only more art
 
