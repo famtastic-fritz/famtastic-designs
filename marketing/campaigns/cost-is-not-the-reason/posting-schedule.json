@@ -48,8 +48,26 @@
         "media": true,
         "publish": true
       },
-      "provider_ids": {},
-      "state": "media_ready"
+      "provider_ids": {
+        "postiz_draft_id": "cmtlgm87m0003rtdmc825f7yt",
+        "postiz_scheduled_id": "cmtlgm87m0003rtdmc825f7yt"
+      },
+      "state": "media_ready",
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-03T11:46:41Z",
+          "postiz_post_id": "cmtlgm87m0003rtdmc825f7yt",
+          "date_utc": "2026-09-03T12:00:00.000Z",
+          "integrations": [
+            "tiktok",
+            "instagram-standalone",
+            "youtube",
+            "facebook",
+            "x"
+          ]
+        }
+      ]
     },
     {
       "drop_number": 2,
@@ -95,8 +113,24 @@
         "media": true,
         "publish": true
       },
-      "provider_ids": {},
-      "state": "media_ready"
+      "provider_ids": {
+        "postiz_draft_id": "cmtlg9k4u0000rtdmzy15bo5u",
+        "postiz_scheduled_id": "cmtlg9k4u0000rtdmzy15bo5u"
+      },
+      "state": "media_ready",
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-03T11:36:49Z",
+          "postiz_post_id": "cmtlg9k4u0000rtdmzy15bo5u",
+          "date_utc": "2026-09-03T14:30:00.000Z",
+          "integrations": [
+            "instagram-standalone",
+            "facebook",
+            "x"
+          ]
+        }
+      ]
     },
     {
       "drop_number": 3,
@@ -137,8 +171,25 @@
         "media": true,
         "publish": true
       },
-      "provider_ids": {},
-      "state": "media_ready"
+      "provider_ids": {
+        "postiz_draft_id": "cmtlgme3z0008rtdmp0wqc63l",
+        "postiz_scheduled_id": "cmtlgme3z0008rtdmp0wqc63l"
+      },
+      "state": "media_ready",
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-03T11:46:49Z",
+          "postiz_post_id": "cmtlgme3z0008rtdmp0wqc63l",
+          "date_utc": "2026-09-03T17:00:00.000Z",
+          "integrations": [
+            "tiktok",
+            "instagram-standalone",
+            "youtube",
+            "x"
+          ]
+        }
+      ]
     },
     {
       "drop_number": 4,
@@ -180,8 +231,25 @@
         "media": true,
         "publish": true
       },
-      "provider_ids": {},
-      "state": "media_ready"
+      "provider_ids": {
+        "postiz_draft_id": "cmtlgmink000crtdmdbntwgm5",
+        "postiz_scheduled_id": "cmtlgmink000crtdmdbntwgm5"
+      },
+      "state": "media_ready",
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-03T11:46:54Z",
+          "postiz_post_id": "cmtlgmink000crtdmdbntwgm5",
+          "date_utc": "2026-09-03T19:30:00.000Z",
+          "integrations": [
+            "instagram-standalone",
+            "tiktok",
+            "youtube",
+            "x"
+          ]
+        }
+      ]
     }
   ],
   "cadence": {
