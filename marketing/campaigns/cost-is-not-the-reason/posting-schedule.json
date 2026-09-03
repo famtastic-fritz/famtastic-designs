@@ -263,13 +263,13 @@
         "publish": true
       },
       "provider_ids": {
-        "postiz_draft_id": "cmtlgmink000crtdmdbntwgm5",
-        "postiz_scheduled_id": "cmtlgmink000crtdmdbntwgm5",
+        "postiz_draft_id": "cmtltve890006rt7k5szcm4lh",
+        "postiz_scheduled_id": "cmtltve890006rt7k5szcm4lh",
         "postiz_scheduled_group": [
-          "cmtlgmink000crtdmdbntwgm5",
-          "cmtlgmips000drtdmmqw1d9ug",
-          "cmtlgmisc000frtdmjlr3axzr",
-          "cmtlgmiqx000ertdmzol4xf91"
+          "cmtltve890006rt7k5szcm4lh",
+          "cmtltve9k0007rt7kw8nb7cyo",
+          "cmtltveak0008rt7k3e4n1vvo",
+          "cmtluew94000brt7k2sn7vslz"
         ]
       },
       "state": "media_ready",
@@ -285,6 +285,27 @@
             "youtube",
             "x"
           ]
+        },
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-03T17:57:43Z",
+          "postiz_post_id": "cmtltve890006rt7k5szcm4lh",
+          "date_utc": "2026-09-03T19:30:00.000Z",
+          "integrations": [
+            "instagram-standalone",
+            "tiktok",
+            "youtube",
+            "x"
+          ]
+        },
+        {
+          "kind": "x_video_swapped_for_still",
+          "at": "2026-09-03T18:11:00Z",
+          "postiz_post_id": "cmtluew94000brt7k2sn7vslz",
+          "replaced_postiz_post_id": "cmtltvebt0009rt7kj8kzy58i",
+          "date_utc": "2026-09-03T19:30:00.000Z",
+          "integration": "x",
+          "reason": "Isolation testing earlier in this session (throwaway text-only post, drop-01, drop-02) confirmed X uploads via this Postiz instance fail video with a generic bad_body/Unknown Error even with valid credits and a spec-compliant file, while images succeed. drop-04's X post was carrying the same primary video as the other channels and would almost certainly have failed the same way at 19:30 UTC. Swapped to the drop's existing supporting_media still image (04-openart-wow-holographic-craft-1x1.png) with identical copy and tracked link; verified QUEUE with no error before 15:30 ET fire time."
         }
       ]
     }
