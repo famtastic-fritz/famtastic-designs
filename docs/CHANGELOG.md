@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-03 — First Campaign Drops Ever Scheduled (4/4 verified QUEUE)
+
+- **First drafts and first schedule in the history of this pipeline.** All four `cost-is-not-the-reason` drops created as Postiz drafts and converted to a live schedule, each verified by read-back as `QUEUE` (`scheduled_verified=4`, `failures=0`): drop-01 08:00 ET (FB/IG/X/TikTok/YouTube), drop-02 10:30 ET (FB/IG/X), drop-03 13:00 ET (IG/X/TikTok/YouTube), drop-04 15:30 ET (IG/X/TikTok/YouTube).
+- Root cause of the long-standing `draft creation returned no post id`: Postiz validates a per-platform `settings` object on every entry in `posts`, and one missing required field rejects the entire request. TikTok needed `privacy_level`, `duet`, `stitch`, `comment`, `brand_content_toggle`, `brand_organic_toggle`, `content_posting_method` and `autoAddMusic` (a string enum, not a boolean); Instagram needed `post_type`; X needed `who_can_reply_post`; Facebook needs none. Facebook requiring nothing is precisely why the only historically working script (facebook-only) worked and every multi-channel attempt — including `queue-days-4-17.py`, whose records still have no draft IDs — silently failed.
+- Fixed a second, worse defect found during that work: every X post was 434–685 characters against a 280 limit, which passes draft validation and fails at **publish**, so X would silently have received nothing. Character-limited platforms now get a compact tracked link (retaining `utm_content`, the rerun idempotency marker) and no hashtag block; each drop gained a fitting `x_post` variant preserving offer, price and claims (now 260–273 chars); any channel still over its limit is excluded loudly and the drop ships to the rest, never silently truncated.
+- Idempotency proven in practice: a rerun adopted the already-created drop-02 draft rather than duplicating a live post.
+- Provider validation messages are no longer truncated at 300 characters — they name the exact field and allowed values, and cutting them mid-sentence cost a diagnosis cycle.
+- **Not yet proven: publication.** No post has been confirmed live on any platform. TikTok remains sandboxed and is likely restricted from public posting until its app audit clears; that would surface at publish time and affects TikTok only.
+
 ## 2026-09-03 — Postiz Server Migration Kit (host decision still open)
 
 - Verified, per the repository's reuse-before-paying provider rule, that **nothing existing can host Postiz**: production is GoDaddy cPanel shared hosting (`132.148.233.159`), which cannot run Docker or long-lived containers, and `marketing/providers.json` contains no compute host. Moving the send path off the operator workstation therefore requires one new paid service — recorded as the owner's decision, not taken.
