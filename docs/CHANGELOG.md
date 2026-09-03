@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-03 — Postiz Server Migration Kit (host decision still open)
+
+- Verified, per the repository's reuse-before-paying provider rule, that **nothing existing can host Postiz**: production is GoDaddy cPanel shared hosting (`132.148.233.159`), which cannot run Docker or long-lived containers, and `marketing/providers.json` contains no compute host. Moving the send path off the operator workstation therefore requires one new paid service — recorded as the owner's decision, not taken.
+- Built the self-host migration kit, dry-run verified end to end: `marketing/engine/postiz/compose.server.yaml` (self-contained Postiz + Postgres + Redis + Caddy stack), `marketing/engine/postiz/Caddyfile`, and `scripts/deploy-postiz-server.sh` (dry by default; `--apply`, `--status`, `--backup`).
+- Server stack hardens what the workstation stack cannot: Caddy terminates real TLS on a controlled hostname and renews automatically (replacing the ngrok free tunnel that is up only while the Mac runs ngrok), `NOT_SECURED` is absent, registration is closed by default, and Postiz publishes no host port so Caddy is the only public listener.
+- Deploy preflight refuses to proceed on a missing or non-0600 env file, unset required secrets, invalid compose, or unresolvable DNS, and never prints a secret value. It backs up automatically before mutating an existing stack.
+- Documented the full procedure in `docs/marketing/POSTIZ_SERVER_MIGRATION.md`, including per-channel re-authorization constraints carried forward (Instagram @famtasticdesigns only, TikTok sandbox daily re-auth, YouTube testing mode, X OAuth 1.0a), the fresh-start vs. migrate decision, rollback to the workstation stack, and the cPanel cron quirks that previously cost weeks (`/usr/bin/php` CGI wrapper, drush exit 255 on success).
+- Corrected `docs/marketing/CAMPAIGN_POSTING_ARCHITECTURE.md`, which had left open whether the existing host could run Docker. It cannot.
+- No infrastructure provisioned and nothing paid for. Server-side scheduling (Drupal `QueueWorker` + cron) remains deliberately unbuilt until the host exists, since building it against the laptop instance would bake in the flaw.
+
 ## 2026-09-03 — Social Posting Unblocked: Single Arming Switch, Campaign-Agnostic Runner & Stale-Date Guard
 
 - Diagnosed why no campaign post has ever gone out. Five independent blockers, all still engaged: every one of the 68 records unapproved (`publish-executor.php` selects on `approval_publish = 1`, so it found zero candidates); only 12 of 68 records ever became Postiz drafts and none were ever scheduled; the double CLI gate; the Cost Is Not The Reason campaign having **no execution path at all** (its schedule JSON was referenced by zero code in the repository); and its video media existing only on the operator workstation. Removing the gates alone would still have posted nothing.

@@ -1,0 +1,129 @@
+# Self-contained Postiz stack for a SERVER host, with automatic HTTPS.
+#
+# This is deliberately NOT an override of the upstream local compose file. The
+# workstation setup (scripts/postiz-local.sh) layers compose.override.yaml on a
+# checkout that exists only on the operator Mac; a server has no such checkout,
+# so everything it needs is declared here.
+#
+# Differences from the workstation stack, each of which matters:
+#   - Caddy terminates TLS on a real hostname and obtains its own certificate.
+#     This replaces the ngrok free tunnel, which only stays up while the Mac
+#     runs ngrok and is the single largest reason a scheduled drop can vanish.
+#   - NOT_SECURED is absent. It is set on the workstation because plain-HTTP
+#     loopback cannot carry secure cookies; setting it behind real HTTPS would
+#     needlessly downgrade session security.
+#   - DISABLE_REGISTRATION defaults to true. A publicly reachable Postiz with
+#     open registration lets a stranger create an org on your instance.
+#   - Postiz binds to the internal network only. Caddy is the sole public port,
+#     so the API is never exposed unauthenticated on the host's public IP.
+#
+# Secrets come from an env file that lives outside every repository, 0600,
+# never committed. See docs/marketing/POSTIZ_SERVER_MIGRATION.md.
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    environment:
+      POSTIZ_DOMAIN: "${POSTIZ_DOMAIN:?POSTIZ_DOMAIN must be set to the public hostname}"
+      POSTIZ_ACME_EMAIL: "${POSTIZ_ACME_EMAIL:?POSTIZ_ACME_EMAIL must be set for certificate notices}"
+    depends_on:
+      - postiz
+    networks:
+      - postiz-network
+
+  postiz:
+    image: ghcr.io/gitroomhq/postiz-app:v2.22.1
+    restart: unless-stopped
+    # No host port publication: Caddy reaches this over the internal network.
+    expose:
+      - "5000"
+    environment:
+      MAIN_URL: "https://${POSTIZ_DOMAIN}"
+      FRONTEND_URL: "https://${POSTIZ_DOMAIN}"
+      NEXT_PUBLIC_BACKEND_URL: "https://${POSTIZ_DOMAIN}/api"
+      BACKEND_INTERNAL_URL: "http://localhost:3000"
+      JWT_SECRET: "${POSTIZ_JWT_SECRET:?POSTIZ_JWT_SECRET must be set}"
+      DATABASE_URL: "postgresql://postiz-user:${POSTIZ_DB_PASSWORD:?POSTIZ_DB_PASSWORD must be set}@postiz-postgres:5432/postiz-db-local"
+      REDIS_URL: "redis://postiz-redis:6379"
+      # Closed by default. Open it only for the minutes it takes to create the
+      # single owner account, then close it and recreate the container.
+      DISABLE_REGISTRATION: "${POSTIZ_DISABLE_REGISTRATION:-true}"
+      STORAGE_PROVIDER: "local"
+      UPLOAD_DIRECTORY: "/uploads"
+      NEXT_PUBLIC_UPLOAD_DIRECTORY: "/uploads"
+      FACEBOOK_APP_ID: "${FACEBOOK_APP_ID:-}"
+      FACEBOOK_APP_SECRET: "${FACEBOOK_APP_SECRET:-}"
+      INSTAGRAM_APP_ID: "${INSTAGRAM_APP_ID:-}"
+      INSTAGRAM_APP_SECRET: "${INSTAGRAM_APP_SECRET:-}"
+      THREADS_APP_ID: "${THREADS_APP_ID:-}"
+      THREADS_APP_SECRET: "${THREADS_APP_SECRET:-}"
+      TIKTOK_CLIENT_ID: "${TIKTOK_CLIENT_ID:-}"
+      TIKTOK_CLIENT_SECRET: "${TIKTOK_CLIENT_SECRET:-}"
+      YOUTUBE_CLIENT_ID: "${YOUTUBE_CLIENT_ID:-}"
+      YOUTUBE_CLIENT_SECRET: "${YOUTUBE_CLIENT_SECRET:-}"
+      LINKEDIN_CLIENT_ID: "${LINKEDIN_CLIENT_ID:-}"
+      LINKEDIN_CLIENT_SECRET: "${LINKEDIN_CLIENT_SECRET:-}"
+      PINTEREST_CLIENT_ID: "${PINTEREST_CLIENT_ID:-}"
+      PINTEREST_CLIENT_SECRET: "${PINTEREST_CLIENT_SECRET:-}"
+      X_API_KEY: "${X_API_KEY:-}"
+      X_API_SECRET: "${X_API_SECRET:-}"
+    volumes:
+      - postiz-config:/config/
+      - postiz-uploads:/uploads/
+    depends_on:
+      postiz-postgres:
+        condition: service_healthy
+      postiz-redis:
+        condition: service_healthy
+    networks:
+      - postiz-network
+
+  postiz-postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: "${POSTIZ_DB_PASSWORD:?POSTIZ_DB_PASSWORD must be set}"
+      POSTGRES_USER: "postiz-user"
+      POSTGRES_DB: "postiz-db-local"
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postiz-user -d postiz-db-local"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - postiz-network
+
+  postiz-redis:
+    image: redis:7.2
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - postiz-redis-data:/data
+    networks:
+      - postiz-network
+
+volumes:
+  postgres-volume:
+  postiz-redis-data:
+  postiz-config:
+  postiz-uploads:
+  caddy-data:
+  caddy-config:
+
+networks:
+  postiz-network:
+    external: false

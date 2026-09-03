@@ -69,16 +69,30 @@ chosen below, the ordering is: relocate Postiz first, then move the trigger.
 
 ## 3. Options for the send path
 
+**Checked 2026-09-03: nothing existing can host it.** The production host is
+GoDaddy **cPanel shared hosting** (`132.148.233.159`), which cannot run Docker or
+long-lived containers — it runs Drupal and cron only. `marketing/providers.json`
+holds creative, model, storage, payment and analytics providers; there is no
+compute host among them. Per the repository's provider rule, reuse was checked
+first and there is nothing to reuse, so options A and B both mean one new paid
+service.
+
 | | Option | What moves | Trade-off |
 |---|---|---|---|
-| **A** | **Host Postiz on a server** (small VPS or the existing host if it can run Docker), then drive it from Drupal cron | Postiz + trigger | Unattended sending finally works. Costs a small monthly VPS and one migration of the five OAuth connections. Keeps every script in this repo working unchanged — only `FAMTASTIC_POSTIZ_BASE_URL` changes. **Recommended.** |
-| **B** | **Postiz Cloud** (hosted by the vendor) driven by Drupal cron | Postiz + trigger | No infrastructure to run or patch. Monthly subscription; re-auth all five channels; check `marketing/providers.json` before adding a paid provider per the repo's provider rule. |
+| **A** | **Self-host Postiz on a small VPS**, then drive it from Drupal cron | Postiz + trigger | Unattended sending finally works. ~$6–12/month; 2 GB is the floor (the workstation instance has already been OOM-killed at 3 GB). Keeps every script in this repo working unchanged — only `FAMTASTIC_POSTIZ_BASE_URL` and the API key change. **Recommended.** Built and dry-run verified: `docs/marketing/POSTIZ_SERVER_MIGRATION.md`. |
+| **B** | **Postiz Cloud** (hosted by the vendor) driven by Drupal cron | Postiz + trigger | No infrastructure to run or patch. Vendor subscription; re-auth all five channels; you give up control of the data and upgrade cadence. Same API, so the scripts still work. |
 | **C** | **Drupal posts directly to platform APIs**, dropping Postiz | Everything | No middleman and no tunnel. But it means owning Meta/X/TikTok/YouTube/LinkedIn OAuth, token refresh, rate limits, and per-platform media rules — months of work that Postiz already does. Not recommended. |
 | **D** | **Keep it on the Mac**, add a launchd job | Trigger only | Free and immediate. Still fails whenever the Mac sleeps, colima stops, or ngrok drops. Acceptable as a stopgap for tonight's evaluation drops; not an answer. |
 
 Recommendation: **A**, with **D** as tonight's stopgap. A is the smallest change
 that makes the failure mode disappear rather than move, and it leaves the entire
 scripted pipeline in this repository intact.
+
+The A migration kit is built and dry-run verified — server compose with real TLS
+(`marketing/engine/postiz/compose.server.yaml`), a Caddy front door, and a
+dry-by-default deploy primitive (`scripts/deploy-postiz-server.sh`). Procedure:
+`docs/marketing/POSTIZ_SERVER_MIGRATION.md`. Nothing has been provisioned or
+paid for; picking the host is the only remaining step.
 
 ### What a server-side send lane needs once Postiz has moved
 

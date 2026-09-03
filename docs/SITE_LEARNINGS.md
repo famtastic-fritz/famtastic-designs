@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-03 — Check what the existing host can actually run before proposing a new one
+
+- Observation: the obvious fix for a laptop-dependent send path was "run it on
+  the server we already pay for." The production host is GoDaddy cPanel shared
+  hosting, which cannot run Docker or long-lived containers — it runs Drupal and
+  cron only. `marketing/providers.json` likewise contains creative, model,
+  storage, payment and analytics providers but no compute host.
+- Guidance: the reuse-before-paying rule requires checking *capability*, not
+  just the existence of a subscription. Name the specific technical reason an
+  existing resource cannot serve, and record it, so the same proposal is not
+  re-litigated next quarter. Having a server is not the same as having a server
+  that can run what you need.
+
 ## 2026-09-03 — A campaign with no executor is not "gated", it is unbuilt
 
 - Observation: three sessions and two campaigns produced creative, copy, and a
