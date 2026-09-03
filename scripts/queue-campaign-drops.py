@@ -94,6 +94,40 @@ COPY_PREFERENCE = {
     "linkedin": ["linkedin_facebook", "facebook_instagram", "all_channels"],
 }
 
+# Postiz validates a per-platform `settings` object on EVERY entry in `posts`,
+# and a single missing required field rejects the WHOLE request — not just the
+# offending channel. Facebook requires none, which is why the only script that
+# ever created drafts here (facebook-only) worked while every multi-channel
+# attempt failed with "draft creation returned no post id".
+#
+# Values below are the defaults Postiz's own validators accept; the enums come
+# verbatim from its rejection messages. Override per campaign with a
+# `platform_settings` block in posting-schedule.json.
+PLATFORM_SETTINGS = {
+    "tiktok": {
+        # PUBLIC_TO_EVERYONE | MUTUAL_FOLLOW_FRIENDS | FOLLOWER_OF_CREATOR | SELF_ONLY
+        "privacy_level": "PUBLIC_TO_EVERYONE",
+        "duet": False,
+        "stitch": False,
+        "comment": False,
+        "brand_content_toggle": False,
+        "brand_organic_toggle": False,
+    },
+    # post | story
+    "instagram-standalone": {"post_type": "post"},
+    "instagram": {"post_type": "post"},
+    # everyone | following | mentionedUsers | subscribers | verified
+    "x": {"who_can_reply_post": "everyone"},
+    # `title` is filled per drop from its headline.
+    "youtube": {"type": "public"},
+    "facebook": {},
+    "linkedin": {},
+}
+
+# Hard per-platform content limits. Exceeding one fails at publish time rather
+# than draft time, so it is warned about loudly here instead of silently cut.
+CONTENT_LIMITS = {"x": 280, "youtube": 5000, "tiktok": 2200, "instagram-standalone": 2200}
+
 ARGS = sys.argv[1:]
 DO_SCHEDULE = "--schedule" in ARGS
 DRY_RUN = "--dry-run" in ARGS
@@ -267,12 +301,37 @@ def media_for(drop: dict) -> tuple[list[pathlib.Path], list[str]]:
     return resolved, missing
 
 
-def tracked_link(drop: dict) -> str:
+def tracked_link(drop: dict, compact: bool = False) -> str:
+    """Full UTM link, or a compact one for character-limited platforms.
+
+    The compact form keeps utm_campaign and utm_content — utm_content is the
+    idempotency marker reruns adopt drafts by, so it is never dropped — while
+    shedding the parameters that can be inferred, saving ~70 characters.
+    """
     utm = drop["utm"]
+    if compact:
+        base = schedule.get("short_landing_url", LANDING).split("?")[0]
+        sep = "&" if "?" in base else "?"
+        return f"{base}{sep}utm_campaign={utm['campaign']}&utm_content={utm['content']}"
     return (
         f"{LANDING}&utm_source={utm['source']}&utm_medium={utm['medium']}"
         f"&utm_campaign={utm['campaign']}&utm_content={utm['content']}"
     )
+
+
+def settings_for(integration_ident: str, drop: dict) -> dict:
+    """Per-platform settings Postiz requires on this post entry.
+
+    Campaign-level `platform_settings` in posting-schedule.json overrides the
+    shared defaults; a drop may override again via its own `platform_settings`.
+    """
+    settings = dict(PLATFORM_SETTINGS.get(integration_ident, {}))
+    settings.update(schedule.get("platform_settings", {}).get(integration_ident, {}))
+    settings.update(drop.get("platform_settings", {}).get(integration_ident, {}))
+    if integration_ident == "youtube" and not settings.get("title"):
+        # YouTube requires a title; its cap is 100 characters.
+        settings["title"] = (drop.get("headline") or drop.get("label", "FAMtastic"))[:100]
+    return settings
 
 
 def copy_for(integration_ident: str, drop: dict) -> str:
@@ -283,9 +342,18 @@ def copy_for(integration_ident: str, drop: dict) -> str:
             break
     else:
         body = next(iter(copy.values()), drop.get("headline", ""))
-    tags = " ".join(drop.get("tags", []))
     # The tracked link carries utm_content, which is also the idempotency
     # marker this script and publish-executor.php adopt drafts by.
+    tags = " ".join(drop.get("tags", []))
+    limit = CONTENT_LIMITS.get(integration_ident)
+    if limit and limit <= 300:
+        # Tight-limit platforms (X): a second URL and a hashtag block are the
+        # difference between fitting and being rejected. Use the compact link,
+        # and only if the approved copy does not already carry one.
+        parts = [body]
+        if "http" not in body:
+            parts.append(tracked_link(drop, compact=True))
+        return "\n\n".join(parts).strip()
     return f"{body}\n\n{tracked_link(drop)}\n\n{tags}".strip()
 
 
@@ -386,13 +454,42 @@ for drop in drops:
         print(f"FAIL: {cid} — media upload failed")
         continue
 
+    posts_array = []
+    posted_idents = []
+    for ident in idents:
+        body = copy_for(ident, drop)
+        limit = CONTENT_LIMITS.get(ident)
+        if limit and len(body) > limit:
+            # Over-limit copy is accepted at draft time and then fails at
+            # PUBLISH time, so the post silently never appears. Exclude the
+            # channel loudly instead — the drop still ships to the others,
+            # exactly as an unconnected channel is handled. Approved copy is
+            # never silently truncated; shorten it in the schedule and re-queue.
+            entry.setdefault("channels_over_limit", []).append(
+                {"channel": ident, "chars": len(body), "limit": limit})
+            print(f"  NOTE {cid}: excluding {ident} — copy is {len(body)} chars "
+                  f"vs its {limit} limit; it would fail at publish, not now")
+            continue
+        posted_idents.append(ident)
+        posts_array.append({
+            "integration": {"id": ENABLED[ident]},
+            "value": [{"content": body, "image": uploaded}],
+            "settings": settings_for(ident, drop),
+        })
+
+    if not posts_array:
+        entry["action"] = "blocked_all_channels_over_limit"
+        blocked.append({"content_id": cid, "reason": "every channel's copy exceeds its limit",
+                        "detail": entry.get("channels_over_limit")})
+        results.append(entry)
+        print(f"BLOCKED: {cid} — no channel's copy fits its platform limit")
+        continue
+    idents = posted_idents
+    entry["channels_posted"] = idents
+
     created = api("/posts", method="POST", data={
         "type": "draft", "shortLink": False, "date": iso_utc, "tags": [],
-        "posts": [
-            {"integration": {"id": ENABLED[ident]},
-             "value": [{"content": copy_for(ident, drop), "image": uploaded}]}
-            for ident in idents
-        ],
+        "posts": posts_array,
     })
     time.sleep(2)
 
@@ -404,10 +501,21 @@ for drop in drops:
         if not pid and isinstance(created.get("posts"), list) and created["posts"]:
             pid = created["posts"][0].get("postId") or created["posts"][0].get("id")
     if not pid:
-        failures.append({"content_id": cid, "stage": "create-no-id", "raw": str(created)[:300]})
+        # Keep the provider's validation messages whole. Truncating these once
+        # cost a diagnosis cycle: Postiz names the exact field and the exact
+        # allowed values, and that text is the fix.
+        detail = created.get("message") if isinstance(created, dict) else None
+        failures.append({
+            "content_id": cid, "stage": "create-no-id",
+            "channels": idents,
+            "provider_message": detail,
+            "raw": str(created)[:2000],
+        })
         entry["action"] = "create_failed"
         results.append(entry)
         print(f"FAIL: {cid} — draft creation returned no post id")
+        for line in (detail if isinstance(detail, list) else [detail] if detail else []):
+            print(f"         {line}")
         continue
 
     drop.setdefault("provider_ids", {})["postiz_draft_id"] = pid

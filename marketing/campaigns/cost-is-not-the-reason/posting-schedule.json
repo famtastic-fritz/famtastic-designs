@@ -26,7 +26,7 @@
       "headline": "Of all the reasons you don't have a website yet... Cost is NOT one of them.",
       "copy": {
         "tiktok_reels_shorts": "Stop putting your business on hold because agency prices are insane \ud83d\uded1 We build your custom business site with 1 full year of fast cloud hosting, custom domain, and email for $199 total (~55\u00a2/day). 3 custom design proofs delivered in 48 hours \ud83d\ude80 Tap the link in bio to see the proof!",
-        "x_post": "Of all the reasons or fears you have for not launching your professional website... Cost is NOT one of them. \ud83d\udeab\n\n$199 total for your entire first year (Hosting + Domain + Email + 3 Custom Concepts in 48h = ~55\u00a2/day).\n\nStop renting land. Start owning your business:\n\ud83d\udc49 https://famtasticdesigns.com/55-cents-a-day-website",
+        "x_post": "Of all the reasons you don't have a website yet \u2014 cost is NOT one of them.\n\n$199 for your first full year: hosting, domain, email, 3 concepts in 48h. ~55\u00a2/day.",
         "facebook_instagram": "Of all the reasons or fears you have for not launching your own professional website... Cost is NOT one of them. \ud83d\udeab\n\nAt FAMtastic Designs, we believe in your business idea so much that we are boldly deviating from standard agency retainers.\n\nFor 55 cents a day\u2014that's $199 for your entire first year\u2014you get:\n\ud83d\udfe2 1 Full Year of fast managed cloud hosting\n\ud83d\udfe2 Custom domain name connection\n\ud83d\udfe2 Branded business email address\n\ud83d\udfe2 3 Custom interactive design directions (Safe, Wild, OMG) delivered in 48 hours\n\nBefore you spend thousands on retainers, see what 55\u00a2 a day looks like for your brand.\n\n\ud83d\udc49 Learn more at famtasticdesigns.com"
       },
       "tags": [
@@ -73,7 +73,8 @@
       "headline": "Why running your business on Linktree and DMs costs you thousands.",
       "copy": {
         "linkedin_facebook": "If you're still booking appointments in the DMs or sending customers to a Linktree with a @gmail address, you are paying rent on land you don't own.\n\nHere is what happens when you switch to an owned hub:\n1. Zero 20% middleman booking fees.\n2. Instant customer credibility with your own domain.\n3. Automatic quote estimates and customer intake.\n\nAll for ~$0.55/day ($199/yr).\n\nRead the breakdown: https://famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue",
-        "x_thread_opener": "Why running your business in the DMs costs you thousands in lost revenue: \ud83e\uddf5\ud83d\udc47\n\nWhen a customer has to message you 'how much?', 40% bounce before booking.\n\nHere's how to fix it for 55 cents a day:"
+        "x_thread_opener": "Why running your business in the DMs costs you thousands in lost revenue: \ud83e\uddf5\ud83d\udc47\n\nWhen a customer has to message you 'how much?', 40% bounce before booking.\n\nHere's how to fix it for 55 cents a day:",
+        "x_post": "Booking clients in the DMs with a @gmail address? You're paying rent on land you don't own.\n\n0% middleman fees. Your own domain. ~55\u00a2/day ($199/yr)."
       },
       "tags": [
         "#entrepreneurship",
@@ -115,7 +116,7 @@
       "headline": "Stop answering 'how much?' in the DMs at 11 PM.",
       "copy": {
         "tiktok_reels_shorts": "You didn't start a business to spend your lunch break answering price questions in Instagram DMs \ud83d\udcf1 Here is how top service businesses automate bookings on their own custom website for 55 cents a day ($199/yr) with 0 middleman cuts \ud83d\ude80 Link in bio to check it out!",
-        "x_post": "Third-party booking apps take up to 20% on new clients and hold your customer list hostage.\n\nYour own custom business site with FAMtastic = $199 total for the whole year (~55\u00a2/day), 0% fees, 100% data ownership.\n\nSee the math in action: https://famtasticdesigns.com/55-cents-a-day-website"
+        "x_post": "Booking apps take up to 20% on new clients and hold your list hostage.\n\nYour own site: $199 for the year (~55\u00a2/day), 0% fees, 100% data ownership."
       },
       "tags": [
         "#barberlife",
@@ -157,7 +158,8 @@
       "supporting_media": "marketing/campaigns/cost-is-not-the-reason/images/04-openart-wow-holographic-craft-1x1.png",
       "headline": "Demonstration, not declaration. 3 Working concepts in 48 hours.",
       "copy": {
-        "all_channels": "Most agencies ask for thousands upfront based on promises. We believe the results are the proof.\n\nWithin 48 hours of starting, we deliver 3 custom interactive design directions for your brand:\n1. \ud83d\udee1\ufe0f SAFE \u2014 Clean, polished, and immediately familiar.\n2. \u26a1 WILD \u2014 Bold, high-energy, and distinct.\n3. \u2728 OMG \u2014 Cutting-edge, unforgettable, and premium.\n\nPick the one you love. We launch it on your domain.\n\n\ud83d\udc49 Experience the craft at famtasticdesigns.com"
+        "all_channels": "Most agencies ask for thousands upfront based on promises. We believe the results are the proof.\n\nWithin 48 hours of starting, we deliver 3 custom interactive design directions for your brand:\n1. \ud83d\udee1\ufe0f SAFE \u2014 Clean, polished, and immediately familiar.\n2. \u26a1 WILD \u2014 Bold, high-energy, and distinct.\n3. \u2728 OMG \u2014 Cutting-edge, unforgettable, and premium.\n\nPick the one you love. We launch it on your domain.\n\n\ud83d\udc49 Experience the craft at famtasticdesigns.com",
+        "x_post": "Agencies want thousands upfront on a promise.\n\nWe deliver 3 custom design directions in 48h \u2014 Safe, Wild, OMG. Pick one, we launch it. $199/yr (~55\u00a2/day)."
       },
       "tags": [
         "#creativeagency",
@@ -195,5 +197,6 @@
   "media_resolution": {
     "policy": "resolve_at_runtime_fail_loud",
     "note": "Video assets are gitignored (.gitignore: *.mp4) and exist only on the operator workstation. A drop whose primary media is missing is reported BLOCKED with the expected path; it is never posted image-only by fallback and never skipped silently."
-  }
+  },
+  "short_landing_url": "https://famtasticdesigns.com/onboarding?sku=FAM-FOOT-199"
 }
