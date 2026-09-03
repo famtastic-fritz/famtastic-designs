@@ -543,6 +543,19 @@ for drop in drops:
 # ---------------------------------------------------------------------------
 if DO_SCHEDULE:
     now = datetime.now(timezone.utc)
+
+    # Postiz creates ONE post record PER INTEGRATION and returns them as a
+    # group; POST /posts hands back only the first id. Converting just that id
+    # schedules a single channel and silently leaves the siblings as DRAFT, so
+    # a five-channel drop would publish to one. Siblings share the drop's exact
+    # publishDate, which is unique per drop, so re-list and group by it.
+    siblings: dict[str, list[str]] = {}
+    listing = api(f"/posts{WINDOW}")
+    for post in (listing.get("posts", []) if isinstance(listing, dict) else []):
+        stamp = str(post.get("publishDate") or post.get("date") or "")
+        if stamp and post.get("state") in {"DRAFT", "QUEUE"}:
+            siblings.setdefault(stamp[:19], []).append(str(post.get("id")))
+
     for entry in results:
         pid = entry.get("postiz_draft_id")
         if not pid:
@@ -556,12 +569,17 @@ if DO_SCHEDULE:
                             "scheduled_time": entry["scheduled_time"]})
             print(f"BLOCKED: {entry['content_id']} — {entry['scheduled_time']} is in the past; would fire immediately")
             continue
-        res = api(f"/posts/{pid}/status", method="PUT", data={"status": "schedule"})
+        group = siblings.get(when.strftime("%Y-%m-%dT%H:%M:%S"), [])
+        ids = [pid] + [i for i in group if i != pid]
+        for one in ids:
+            api(f"/posts/{one}/status", method="PUT", data={"status": "schedule"})
         entry["schedule_action"] = "converted"
-        entry["schedule_response_state"] = res.get("state") if isinstance(res, dict) else None
+        entry["scheduled_ids"] = ids
         drop = next(d for d in drops if d["content_id"] == entry["content_id"])
         drop["provider_ids"]["postiz_scheduled_id"] = pid
-        print(f"SCHEDULED: {entry['content_id']} -> {pid}")
+        drop["provider_ids"]["postiz_scheduled_group"] = ids
+        print(f"SCHEDULED: {entry['content_id']} -> {len(ids)} post record(s) "
+              f"({', '.join(i[:12] for i in ids)})")
 
     # Read-back verification: assert QUEUE for everything we converted.
     time.sleep(3)
@@ -573,13 +591,20 @@ if DO_SCHEDULE:
     for entry in results:
         if entry.get("schedule_action") != "converted":
             continue
-        state = states.get(str(entry["postiz_draft_id"]), "NOT_FOUND")
-        entry["read_back_state"] = state
-        entry["verified"] = state == "QUEUE"
-        if not entry["verified"]:
+        # Verify EVERY post record in the group. Checking only the id returned
+        # by POST /posts once reported 4/4 verified while most channels were
+        # still DRAFT and would never have fired.
+        seen = {i: states.get(i, "NOT_FOUND") for i in entry.get("scheduled_ids", [])}
+        entry["read_back_states"] = seen
+        bad = {i: s for i, s in seen.items() if s != "QUEUE"}
+        entry["verified"] = bool(seen) and not bad
+        if entry["verified"]:
+            print(f"VERIFIED: {entry['content_id']} — {len(seen)}/{len(seen)} records in QUEUE")
+        else:
             failures.append({"content_id": entry["content_id"], "stage": "read-back",
-                             "state": state})
-            print(f"FAIL: {entry['content_id']} — read-back state {state}, expected QUEUE")
+                             "not_queued": bad, "all_states": seen})
+            print(f"FAIL: {entry['content_id']} — {len(bad)}/{len(seen)} record(s) not QUEUE: "
+                  f"{', '.join(f'{i[:12]}={s}' for i, s in bad.items())}")
 
 if not DRY_RUN:
     SCHEDULE_PATH.write_text(json.dumps(schedule, indent=2) + "\n")
