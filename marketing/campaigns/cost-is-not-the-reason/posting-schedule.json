@@ -9,9 +9,9 @@
   "drops": [
     {
       "drop_number": 1,
-      "drop_id": "drop-01-tonight-10pm",
-      "scheduled_time": "2026-09-03T23:50:00-04:00",
-      "label": "Drop 1 \u2014 11:50 PM ET kickoff: Declaration & master video",
+      "drop_id": "drop-01",
+      "scheduled_time": "2026-09-03T08:00:00-04:00",
+      "label": "Drop 1 \u2014 8:00 AM ET kickoff: Declaration & master video",
       "theme": "The Declaration: Fearless Deviation & 55\u00a2 Reality",
       "channels": [
         "tiktok",
@@ -36,12 +36,12 @@
         "#famtasticdesigns",
         "#businessgrowth"
       ],
-      "content_id": "drop-01-tonight-10pm",
+      "content_id": "drop-01",
       "utm": {
         "source": "famtastic",
         "medium": "organic_social",
         "campaign": "cost_is_not_the_reason",
-        "content": "drop-01-tonight-10pm"
+        "content": "drop-01"
       },
       "approval": {
         "content": true,
@@ -53,9 +53,9 @@
     },
     {
       "drop_number": 2,
-      "drop_id": "drop-02-morning-8am",
-      "scheduled_time": "2026-09-04T02:20:00-04:00",
-      "label": "Drop 2 \u2014 2:20 AM ET: Rented land vs owned hub",
+      "drop_id": "drop-02",
+      "scheduled_time": "2026-09-03T10:30:00-04:00",
+      "label": "Drop 2 \u2014 10:30 AM ET: Rented land vs owned hub",
       "theme": "Rented Land vs Owned Hub (Linktree & DM Escape)",
       "channels": [
         "instagram_carousel",
@@ -82,12 +82,12 @@
         "#localbusiness",
         "#famtasticdesigns"
       ],
-      "content_id": "drop-02-morning-8am",
+      "content_id": "drop-02",
       "utm": {
         "source": "famtastic",
         "medium": "organic_social",
         "campaign": "cost_is_not_the_reason",
-        "content": "drop-02-morning-8am"
+        "content": "drop-02"
       },
       "approval": {
         "content": true,
@@ -99,9 +99,9 @@
     },
     {
       "drop_number": 3,
-      "drop_id": "drop-03-noon-12pm",
-      "scheduled_time": "2026-09-04T04:50:00-04:00",
-      "label": "Drop 3 \u2014 4:50 AM ET: The 55\u00a2 math & DM chaos",
+      "drop_id": "drop-03",
+      "scheduled_time": "2026-09-03T13:00:00-04:00",
+      "label": "Drop 3 \u2014 1:00 PM ET: The 55\u00a2 math & DM chaos",
       "theme": "The Math Breakdown & Stop DM Chaos",
       "channels": [
         "tiktok",
@@ -124,12 +124,12 @@
         "#smallbiztips",
         "#famtasticdesigns"
       ],
-      "content_id": "drop-03-noon-12pm",
+      "content_id": "drop-03",
       "utm": {
         "source": "famtastic",
         "medium": "organic_social",
         "campaign": "cost_is_not_the_reason",
-        "content": "drop-03-noon-12pm"
+        "content": "drop-03"
       },
       "approval": {
         "content": true,
@@ -141,9 +141,9 @@
     },
     {
       "drop_number": 4,
-      "drop_id": "drop-04-afternoon-2pm",
-      "scheduled_time": "2026-09-04T07:20:00-04:00",
-      "label": "Drop 4 \u2014 7:20 AM ET: Three-direction proof",
+      "drop_id": "drop-04",
+      "scheduled_time": "2026-09-03T15:30:00-04:00",
+      "label": "Drop 4 \u2014 3:30 PM ET: Three-direction proof",
       "theme": "Applying Mastery: The 3-Direction Proof (Safe, Wild, OMG)",
       "channels": [
         "instagram",
@@ -166,12 +166,12 @@
         "#visualidentity",
         "#famtasticdesigns"
       ],
-      "content_id": "drop-04-afternoon-2pm",
+      "content_id": "drop-04",
       "utm": {
         "source": "famtastic",
         "medium": "organic_social",
         "campaign": "cost_is_not_the_reason",
-        "content": "drop-04-afternoon-2pm"
+        "content": "drop-04"
       },
       "approval": {
         "content": true,
@@ -183,9 +183,9 @@
     }
   ],
   "cadence": {
-    "anchor_et": "2026-09-03T23:50:00-04:00",
+    "anchor_et": "2026-09-03T08:00:00-04:00",
     "interval_minutes": 150,
-    "set_by": "owner directive 2026-09-03"
+    "set_by": "owner directive 2026-09-03 (08:00 ET start, daytime cadence)"
   },
   "publish_arming": {
     "mode": "single_env_switch",
