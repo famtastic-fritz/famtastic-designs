@@ -1,5 +1,32 @@
 # Product changelog
 
+## 2026-09-02 — Full Campaign Prelaunch Buildout, Muxed Audio Sync & Universal Prompt Architect Plugin
+
+- Muxed full high-fidelity voice track into `00-hyperframes-branded-recut-commercial-9x16.mp4` via FFmpeg, synchronizing Shay's speech with the kinetic HUD calculation graphics and `#7CFC00` single-glow token.
+- Synthesized OpenAI's GPT Image Generation prompting guide into universal plugin `gpt-image-architect` (`~/.gemini/config/plugins/gpt-image-architect/`) and dual skills `gpt-image-prompt-architect` and `creative-director-architecture` (non-visual edition) synced universally across `.agents/skills/`, `~/.agents/skills/`, and `~/.gemini/config/plugins/`.
+- Reconciled the 68-moment 17-day campaign manifest (`marketing/campaigns/55-cents-17-day/manifest.json`) and verified 100% readiness pass across schema invariants, UTM attribution parameters, and the 3-approval release gates (`python3 scripts/campaign-readiness.py`).
+- Validated clean production build of the frontend (`npm --prefix frontend run build` in 1.29s with 0 errors).
+- Synchronized all 50 production assets, videos, 4K stills, articles, and documentation to Google Drive (`FAMtastic-2026/Sites/FAMtastic Designs.com/Marketing & Revenue Strategy/2026-09-02-cost-is-not-the-reason-campaign/`).
+
+## 2026-09-02 — Multi-Tier AI Creative Swarm, HyperFrames Local Video Recut & OpenArt 4K Pipeline
+
+- Executed parallel multi-tier stress-test across Tier 1 (OpenArt GPT-Image-2 4K, Kling 3 Omni action video, HeyGen Shay v3 avatar video), Tier 2 (Google Gemini Flash Lite batch multiplier at $0.0336/ea), and Tier 3 (HyperFrames deterministic 60fps HTML-to-Video local renderer and MoneyPrinterTurbo).
+- Installed HeyGen HyperFrames `v0.8.26` and its 20+ specialized agent skills universally across `~/.agents/skills/`, `~/.claude/skills/`, and `.agents/skills/` for agent-agnostic HTML video authoring.
+- Rendered 31.3s branded commercial recut (`00-hyperframes-branded-recut-commercial-9x16.mp4`) locally in 57.7s ($0 compute fee) with kinetic HUD badges, 55¢ / $199 calculation cards, and signature `#7CFC00` single-glow token.
+- Rendered 4K tactile craft stills (`02-openart-master-stylist-craft-1x1.png`, `03-openart-master-mechanic-authority-1x1.png`) and 5.04s Kling 3 Omni 4K action whip-pan video (`00-kling-master-action-whip-pan-9x16.mp4`).
+- Shipped interactive comparison showcase matrix at `frontend/public/showcase/creative-matrix.html` and mirrored all high-res video and image outputs to Google Drive (`FAMtastic-2026/Sites/FAMtastic Designs.com/Marketing & Revenue Strategy/`).
+
+## 2026-09-02 — Full-Gamut "Cost Is Not The Reason" 33-Asset Campaign, F-A-M Core Doctrine & Campaign Engineer Skill Shipped
+
+- Codified the authentic **FAMtastic (adj.)** definition and complete F-A-M letter breakdown across master brand schemas, architecture standards, and product pipelines:
+  * **F — Fearless**: Fearless deviation from established norms with a bold and unapologetic commitment to stand apart on purpose (*Boldly different, on purpose*).
+  * **A — Applying Mastery**: Applying mastery of craft to the point that the results are the proof (*Demonstration, not declaration*).
+  * **M — Manifesting**: Manifesting the extraordinary from the ordinary (*Turning the common into the remarkable*).
+- Established the **FAMtastic Designs Studio Positioning & Enterprise Scope** (`docs/architecture/FAMTASTIC_STUDIO_POSITIONING_AND_SCOPE_V1.md`), codifying our ability to engineer Business Solutions at ANY level—from $199 Web Basics to creator hubs, Estée Lauder-scale ecommerce, and multi-million-dollar government platforms.
+- Created the reusable `.agents/skills/famtastic-campaign-engineer/SKILL.md` skill and `docs/research/2026-09-02-campaign-prompt-engineering-techniques.md` for researching, deconstructing, and modularizing any campaign thesis into prompt cookbooks.
+- Delivered complete 33-asset campaign package (`marketing/campaigns/cost-is-not-the-reason/`) covering 4 business niches with 4 rendered MP4 videos, 15 safe-zone cropped images, 3 blog articles, and live 5-channel distribution copy.
+- Synchronized all artifacts to Google Drive (`FAMtastic-2026/Sites/FAMtastic Designs.com/Marketing & Revenue Strategy/`).
+
 ## 2026-08-31 — Thirst Trap readability and public business-system tour
 
 - Kept the expressive display and script typography while moving hero utility
@@ -267,6 +294,50 @@
   credentials or payment data.
 - Fixed the local Drupal image to install PHP `bcmath`, required by the locked
   Drupal Commerce dependency set before a local backend runtime can boot.
+=======
+## 2026-09-02 — Full Campaign Prelaunch Buildout, Muxed Audio Sync & Universal Prompt Architect Plugin
+
+- Muxed full high-fidelity voice track into `00-hyperframes-branded-recut-commercial-9x16.mp4` via FFmpeg, synchronizing Shay's speech with the kinetic HUD calculation graphics and `#7CFC00` single-glow token.
+- Synthesized OpenAI's GPT Image Generation prompting guide into universal plugin `gpt-image-architect` (`~/.gemini/config/plugins/gpt-image-architect/`) and dual skills `gpt-image-prompt-architect` and `creative-director-architecture` (non-visual edition) synced universally across `.agents/skills/`, `~/.agents/skills/`, and `~/.gemini/config/plugins/`.
+- Reconciled the 68-moment 17-day campaign manifest (`marketing/campaigns/55-cents-17-day/manifest.json`) and verified 100% readiness pass across schema invariants, UTM attribution parameters, and the 3-approval release gates (`python3 scripts/campaign-readiness.py`).
+- Validated clean production build of the frontend (`npm --prefix frontend run build` in 1.29s with 0 errors).
+- Synchronized all 50 production assets, videos, 4K stills, articles, and documentation to Google Drive (`FAMtastic-2026/Sites/FAMtastic Designs.com/Marketing & Revenue Strategy/2026-09-02-cost-is-not-the-reason-campaign/`).
+
+## 2026-09-02 — Multi-Tier AI Creative Swarm, HyperFrames Local Video Recut & OpenArt 4K Pipeline
+
+- Executed parallel multi-tier stress-test across Tier 1 (OpenArt GPT-Image-2 4K, Kling 3 Omni action video, HeyGen Shay v3 avatar video), Tier 2 (Google Gemini Flash Lite batch multiplier at $0.0336/ea), and Tier 3 (HyperFrames deterministic 60fps HTML-to-Video local renderer and MoneyPrinterTurbo).
+- Installed HeyGen HyperFrames `v0.8.26` and its 20+ specialized agent skills universally across `~/.agents/skills/`, `~/.claude/skills/`, and `.agents/skills/` for agent-agnostic HTML video authoring.
+- Rendered 31.3s branded commercial recut (`00-hyperframes-branded-recut-commercial-9x16.mp4`) locally in 57.7s ($0 compute fee) with kinetic HUD badges, 55¢ / $199 calculation cards, and signature `#7CFC00` single-glow token.
+- Rendered 4K tactile craft stills (`02-openart-master-stylist-craft-1x1.png`, `03-openart-master-mechanic-authority-1x1.png`) and 5.04s Kling 3 Omni 4K action whip-pan video (`00-kling-master-action-whip-pan-9x16.mp4`).
+- Shipped interactive comparison showcase matrix at `frontend/public/showcase/creative-matrix.html` and mirrored all high-res video and image outputs to Google Drive (`FAMtastic-2026/Sites/FAMtastic Designs.com/Marketing & Revenue Strategy/`).
+
+## 2026-09-02 — Full-Gamut "Cost Is Not The Reason" 33-Asset Campaign, F-A-M Core Doctrine & Campaign Engineer Skill Shipped
+
+- Codified the authentic **FAMtastic (adj.)** definition and complete F-A-M letter breakdown across master brand schemas, architecture standards, and product pipelines:
+  * **F — Fearless**: Fearless deviation from established norms with a bold and unapologetic commitment to stand apart on purpose (*Boldly different, on purpose*).
+  * **A — Applying Mastery**: Applying mastery of craft to the point that the results are the proof (*Demonstration, not declaration*).
+  * **M — Manifesting**: Manifesting the extraordinary from the ordinary (*Turning the common into the remarkable*).
+- Established the **FAMtastic Designs Studio Positioning & Enterprise Scope** (`docs/architecture/FAMTASTIC_STUDIO_POSITIONING_AND_SCOPE_V1.md`), codifying our ability to engineer Business Solutions at ANY level—from $199 Web Basics to creator hubs, Estée Lauder-scale ecommerce, and multi-million-dollar government platforms.
+- Created the reusable `.agents/skills/famtastic-campaign-engineer/SKILL.md` skill and `docs/research/2026-09-02-campaign-prompt-engineering-techniques.md` for researching, deconstructing, and modularizing any campaign thesis into prompt cookbooks.
+- Delivered complete 33-asset campaign package (`marketing/campaigns/cost-is-not-the-reason/`) covering 4 business niches with 4 rendered MP4 videos, 15 safe-zone cropped images, 3 blog articles, and live 5-channel distribution copy.
+- Synchronized all artifacts to Google Drive (`FAMtastic-2026/Sites/FAMtastic Designs.com/Marketing & Revenue Strategy/`).
+
+## 2026-08-28 — Streamlined Website Bundle & Domain Request Flow in Client Portal
+
+- Replaced the redundant "My Products" tab with a unified **Website Bundle & Project Hub** in "My Projects" (`/portal?tab=projects`), explicitly presenting 1-Year Fast SSD Cloud Hosting & SSL, Custom Domain, and 3 Working Concepts as a single packaged bundle.
+- Rebuilt domain management into `ProjectDomainHostingManager`, allowing clients to add or change their domain request (new .com/.org/.net registration vs existing domain DNS connection with 1-click copyable A-Record `198.71.232.3` and CNAME `@`) directly in their project card without entering a 4-step wizard.
+- Hardened `saveWebsiteRequest` in `CustomerPortalDashboard.jsx` to automatically preserve project defaults (`project_name`, `project_type`, `business_name`) and accept explicit target request IDs, ensuring domain and partial brief updates save reliably without validation errors.
+- Streamlined portal navigation into 10 cohesive sections across Workspace, Communications & AI, Knowledge & Growth, and Account & Billing.
+
+## 2026-08-28 — Client Portal Design DNA v1 Standard, Automated Governance Guard, and Token Context Preservation
+
+- Established the canonical **Client Portal Design DNA v1** architectural standard in `docs/architecture/FAMTASTIC_CLIENT_PORTAL_DESIGN_DNA_V1.md` and its machine-readable contract `docs/architecture/FAMTASTIC_CLIENT_PORTAL_DESIGN_DNA_V1.json`.
+- Shipped the automated validation guard `scripts/validate-client-portal-design-dna.mjs` to enforce schema invariants, routing integrity, CSS containment, single-glow constraints, and zero synthetic data leaks.
+- Fixed token-scoped prospect workspace (`/portal/:token`) brand navigation in `ClientPortalPage.jsx` to preserve token workspace state.
+- Enforced zero external link leakage across authenticated portal modules: recommended services and growth offers route directly to in-portal actions or `/buy?sku=...` checkout.
+- Enforced strict brand tokens across all portal surfaces: charcoal `#070907` background, glassmorphism `#101310`–`#141814` panels with 1px `#252b25` borders, signature lime `#7cfc00`, single glowing action card (`box-shadow: 0 0 24px rgba(124,252,0,.35)`), and 44px minimum touch targets.
+- Embedded Client Portal Design DNA v1 compliance into `AGENTS.md` and `docs/AGENT_OPERATING_CONTRACT.md` as mandatory rules for all agent sessions.
+>>>>>>> 63be81d7 (feat(campaign): ship Cost Is Not The Reason multi-tier social campaign and 4-drop evaluation sequence)
 
 ## 2026-08-28 — Modular Customer Portal Architecture, My Products Hub, Guided Project Provisioning Wizard, and Site Studio Dispatch
 

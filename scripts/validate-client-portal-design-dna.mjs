@@ -55,35 +55,53 @@ if (fs.existsSync(appJsxPath)) {
 
 // 3. Customer Portal Dashboard Module & Link Integrity
 const dashboardPath = path.join(REPO_ROOT, 'frontend/src/pages/CustomerPortalDashboard.jsx');
+const portalComponentsDir = path.join(REPO_ROOT, 'frontend/src/components/portal');
+
 assert(fs.existsSync(dashboardPath), 'frontend/src/pages/CustomerPortalDashboard.jsx exists');
+assert(fs.existsSync(portalComponentsDir), 'frontend/src/components/portal directory exists');
+
 if (fs.existsSync(dashboardPath) && contractJson) {
   const dashboardCode = fs.readFileSync(dashboardPath, 'utf8');
   const projectsViewPath = path.join(REPO_ROOT, 'frontend/src/components/portal/PortalProjectsView.jsx');
   const projectsViewCode = fs.existsSync(projectsViewPath) ? fs.readFileSync(projectsViewPath, 'utf8') : '';
   const portalCode = dashboardCode + projectsViewCode;
   
+  // Read all portal component files
+  let allPortalCode = dashboardCode;
+  if (fs.existsSync(portalComponentsDir)) {
+    const files = fs.readdirSync(portalComponentsDir);
+    for (const file of files) {
+      if (file.endsWith('.jsx') || file.endsWith('.js')) {
+        allPortalCode += '\n' + fs.readFileSync(path.join(portalComponentsDir, file), 'utf8');
+      }
+    }
+  }
+
   // Check all expected sections are handled
   const expectedSections = contractJson.routes.authenticated_dashboard.sections;
   for (const sec of expectedSections) {
     assert(
-      dashboardCode.includes(`section === '${sec}'`) || dashboardCode.includes(`['${sec}'`),
+      allPortalCode.includes(`section === '${sec}'`) ||
+      allPortalCode.includes(`['${sec}'`) ||
+      allPortalCode.includes(`case '${sec}':`) ||
+      allPortalCode.includes(`id: '${sec}'`),
       `Dashboard implements section '${sec}'`
     );
   }
 
   // Check no external contact leakage for recommended services
-  const hasContactLeakage = /href=\{`\/contact\?service=/i.test(dashboardCode) || /to=\{`\/contact\?service=/i.test(dashboardCode);
+  const hasContactLeakage = /href=\{`\/contact\?service=/i.test(allPortalCode) || /to=\{`\/contact\?service=/i.test(allPortalCode);
   assert(!hasContactLeakage, 'Dashboard does not leak authenticated catalog/offer clicks to /contact form');
 
   // Check proof review iframe sandbox
   assert(
-    portalCode.includes('sandbox="allow-scripts allow-same-origin"'),
+    allPortalCode.includes('sandbox="allow-scripts allow-same-origin"'),
     'Proof review iframes maintain secure sandbox="allow-scripts allow-same-origin"'
   );
 
   // Check file upload rights & AI consent confirmation
   assert(
-    portalCode.includes('ownership_confirmed') && portalCode.includes('ai_use_consent'),
+    allPortalCode.includes('ownership_confirmed') && allPortalCode.includes('ai_use_consent'),
     'File upload includes explicit asset ownership and AI-use consent checks'
   );
 }
@@ -97,6 +115,10 @@ if (fs.existsSync(tokenPagePath)) {
     tokenPageCode.includes('useParams') && tokenPageCode.includes('getSession'),
     'Token portal uses parameterized session loading'
   );
+  assert(
+    tokenPageCode.includes('to={`/portal/${token}`}') || tokenPageCode.includes('to={`/portal/${token}'),
+    'Token portal preserves token workspace in brand navigation'
+  );
 }
 
 // 5. CSS Brand Tokens & Strict Containment
@@ -104,7 +126,7 @@ const portalCssPath = path.join(REPO_ROOT, 'frontend/src/portal.css');
 assert(fs.existsSync(portalCssPath), 'frontend/src/portal.css exists');
 if (fs.existsSync(portalCssPath)) {
   const portalCss = fs.readFileSync(portalCssPath, 'utf8');
-  assert(portalCss.includes('overflow-x:clip'), 'CSS contains strict overflow-x:clip containment');
+  assert(portalCss.includes('overflow-x:clip') || portalCss.includes('overflow-x: clip'), 'CSS contains strict overflow-x:clip containment');
   assert(portalCss.includes('#7cfc00') || portalCss.includes('var(--p-lime)'), 'CSS incorporates signature lime token (#7cfc00)');
   assert(portalCss.includes('min-height:44px') || portalCss.includes('min-height: 44px'), 'CSS enforces min 44px touch targets');
 }

@@ -38,6 +38,10 @@ marketing/runtime/
 # Pilot proofs are reproducible/generated evidence, not application source.
 # Keep their normalized intakes, prompts, direction contracts, builders, and
 # verifiers under version control; retain rendered sites, images, screenshots,
+# videos, and zip files outside Git.
+*.mp4
+*.zip
+
 # nested app checkouts, and dependency output in the artifact/Drive evidence
 # lanes described by the Build DNA record.
 website-delivery-swarm/pilots/**/assets/

@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FAMtastic Marketing DNA Standard v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "brand_tokens",
+    "safe_zones",
+    "video_beats",
+    "channels",
+    "approval_gates"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["famtastic.marketing-dna.v1"] },
+    "brand_tokens": {
+      "type": "object",
+      "properties": {
+        "obsidian_bg": { "type": "string", "default": "#070907" },
+        "surface_glass": { "type": "string", "default": "#141814" },
+        "border_color": { "type": "string", "default": "#252B25" },
+        "electric_lime": { "type": "string", "default": "#7CFC00" },
+        "glow_halo": { "type": "string", "default": "0 0 24px rgba(124, 252, 0, 0.35)" },
+        "min_touch_target_px": { "type": "integer", "default": 44 }
+      }
+    },
+    "safe_zones": {
+      "type": "object",
+      "properties": {
+        "vertical_9x16": {
+          "width": 1080,
+          "height": 1920,
+          "top_padding_px": 240,
+          "bottom_padding_px": 380,
+          "side_padding_px": 80
+        },
+        "square_1x1": {
+          "width": 1080,
+          "height": 1080,
+          "padding_px": 60
+        },
+        "landscape_16x9": {
+          "width": 1920,
+          "height": 1080,
+          "padding_px": 80
+        }
+      }
+    },
+    "video_beats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["beat", "timing_percent", "purpose"],
+        "properties": {
+          "beat": { "type": "string" },
+          "timing_percent": { "type": "string" },
+          "purpose": { "type": "string" }
+        }
+      }
+    },
+    "channels": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "approval_gates": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

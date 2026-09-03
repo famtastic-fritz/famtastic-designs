@@ -3,7 +3,25 @@
   "brand_key": "famtastic_designs",
   "display_name": "FAMtastic Designs",
   "canonical_url": "https://famtasticdesigns.com",
-  "position": "Connected digital business systems that help small and growing businesses get found, get customers, get paid, serve customers, and grow.",
+  "definition": "Fearless deviation from established norms with a bold and unapologetic commitment to stand apart on purpose, applying mastery of craft to the point that the results are the proof, and manifesting the extraordinary from the ordinary.",
+  "fam_breakdown": {
+    "F": {
+      "word": "Fearless",
+      "principle": "Fearless deviation from established norms with a bold and unapologetic commitment to stand apart on purpose.",
+      "motto": "Boldly different, on purpose."
+    },
+    "A": {
+      "word": "Applying Mastery",
+      "principle": "Applying mastery of craft to the point that the results are the proof.",
+      "motto": "Demonstration, not declaration."
+    },
+    "M": {
+      "word": "Manifesting",
+      "principle": "Manifesting the extraordinary from the ordinary.",
+      "motto": "Turning the common into the remarkable."
+    }
+  },
+  "position": "Connected digital business systems that help ambitious businesses stand apart on purpose, own their revenue, and manifest the extraordinary from the ordinary.",
   "voice": ["clear", "direct", "confident", "practical", "human"],
   "visual": {
     "primary_background": "#080808",

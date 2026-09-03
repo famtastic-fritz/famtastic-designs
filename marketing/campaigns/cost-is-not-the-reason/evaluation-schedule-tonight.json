@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "campaign_id": "cost_is_not_the_reason_eval",
+  "campaign_name": "Cost Is Not The Reason — Brand New Launch",
+  "created_at": "2026-09-02T21:26:00-04:00",
+  "status": "ready_for_evaluation",
+  "schedule_type": "rapid_evaluation_sequence",
+  "time_zone": "America/New_York",
+  "drops": [
+    {
+      "drop_number": 1,
+      "drop_id": "drop-01-tonight-10pm",
+      "scheduled_time": "2026-09-02T22:00:00-04:00",
+      "label": "Tonight 10:00 PM — The Kickoff Declaration & Master Video",
+      "theme": "The Declaration: Fearless Deviation & 55¢ Reality",
+      "channels": ["tiktok", "instagram_reels", "youtube_shorts", "facebook_video", "x"],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/00-hyperframes-branded-recut-commercial-9x16.mp4",
+      "backup_media": "marketing/campaigns/cost-is-not-the-reason/videos/00-heygen-master-presenter-commercial-9x16.mp4",
+      "headline": "Of all the reasons you don't have a website yet... Cost is NOT one of them.",
+      "copy": {
+        "tiktok_reels_shorts": "Stop putting your business on hold because agency prices are insane 🛑 We build your custom business site with 1 full year of fast cloud hosting, custom domain, and email for $199 total (~55¢/day). 3 custom design proofs delivered in 48 hours 🚀 Tap the link in bio to see the proof!",
+        "x_post": "Of all the reasons or fears you have for not launching your professional website... Cost is NOT one of them. 🚫\n\n$199 total for your entire first year (Hosting + Domain + Email + 3 Custom Concepts in 48h = ~55¢/day).\n\nStop renting land. Start owning your business:\n👉 https://famtasticdesigns.com/55-cents-a-day-website",
+        "facebook_instagram": "Of all the reasons or fears you have for not launching your own professional website... Cost is NOT one of them. 🚫\n\nAt FAMtastic Designs, we believe in your business idea so much that we are boldly deviating from standard agency retainers.\n\nFor 55 cents a day—that's $199 for your entire first year—you get:\n🟢 1 Full Year of fast managed cloud hosting\n🟢 Custom domain name connection\n🟢 Branded business email address\n🟢 3 Custom interactive design directions (Safe, Wild, OMG) delivered in 48 hours\n\nBefore you spend thousands on retainers, see what 55¢ a day looks like for your brand.\n\n👉 Learn more at famtasticdesigns.com"
+      },
+      "tags": ["#smallbusinessowner", "#websitedesign", "#sidehustle", "#famtasticdesigns", "#businessgrowth"]
+    },
+    {
+      "drop_number": 2,
+      "drop_id": "drop-02-morning-8am",
+      "scheduled_time": "2026-09-03T08:00:00-04:00",
+      "label": "Tomorrow 8:00 AM — The Morning Educational & Rented Land Breakdown",
+      "theme": "Rented Land vs Owned Hub (Linktree & DM Escape)",
+      "channels": ["instagram_carousel", "linkedin", "facebook", "x_thread"],
+      "media_type": "carousel_1x1",
+      "primary_media": "marketing/campaigns/cost-is-not-the-reason/images/05-openart-vibrant-artisan-bakery-1x1.png",
+      "carousel_slides": [
+        "marketing/campaigns/cost-is-not-the-reason/images/exports/01-hair-beauty-booksy-escape-ad_1x1_Square_1080x1080.jpg",
+        "marketing/campaigns/cost-is-not-the-reason/images/exports/03-fifty-five-cents-cost-objection-ad_1x1_Square_1080x1080.jpg",
+        "marketing/campaigns/cost-is-not-the-reason/images/exports/05-popup-vendor-mobile-checkout-ad_1x1_Square_1080x1080.jpg"
+      ],
+      "headline": "Why running your business on Linktree and DMs costs you thousands.",
+      "copy": {
+        "linkedin_facebook": "If you're still booking appointments in the DMs or sending customers to a Linktree with a @gmail address, you are paying rent on land you don't own.\n\nHere is what happens when you switch to an owned hub:\n1. Zero 20% middleman booking fees.\n2. Instant customer credibility with your own domain.\n3. Automatic quote estimates and customer intake.\n\nAll for ~$0.55/day ($199/yr).\n\nRead the breakdown: https://famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue",
+        "x_thread_opener": "Why running your business in the DMs costs you thousands in lost revenue: 🧵👇\n\nWhen a customer has to message you 'how much?', 40% bounce before booking.\n\nHere's how to fix it for 55 cents a day:"
+      },
+      "tags": ["#entrepreneurship", "#branding", "#digitalstrategy", "#localbusiness", "#famtasticdesigns"]
+    },
+    {
+      "drop_number": 3,
+      "drop_id": "drop-03-noon-12pm",
+      "scheduled_time": "2026-09-03T12:00:00-04:00",
+      "label": "Tomorrow 12:00 PM — The Lunchtime Objection & 55¢ Math Video",
+      "theme": "The Math Breakdown & Stop DM Chaos",
+      "channels": ["tiktok", "instagram_reels", "youtube_shorts", "x"],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/02-stop-dm-chaos-tiktok-shorts-9x16.mp4",
+      "backup_media": "marketing/campaigns/cost-is-not-the-reason/videos/01-55-cent-myth-commercial-9x16.mp4",
+      "headline": "Stop answering 'how much?' in the DMs at 11 PM.",
+      "copy": {
+        "tiktok_reels_shorts": "You didn't start a business to spend your lunch break answering price questions in Instagram DMs 📱 Here is how top service businesses automate bookings on their own custom website for 55 cents a day ($199/yr) with 0 middleman cuts 🚀 Link in bio to check it out!",
+        "x_post": "Third-party booking apps take up to 20% on new clients and hold your customer list hostage.\n\nYour own custom business site with FAMtastic = $199 total for the whole year (~55¢/day), 0% fees, 100% data ownership.\n\nSee the math in action: https://famtasticdesigns.com/55-cents-a-day-website"
+      },
+      "tags": ["#barberlife", "#hairstylist", "#autodetailing", "#smallbiztips", "#famtasticdesigns"]
+    },
+    {
+      "drop_number": 4,
+      "drop_id": "drop-04-afternoon-2pm",
+      "scheduled_time": "2026-09-03T14:00:00-04:00",
+      "label": "Tomorrow 2:00 PM — The Afternoon High-Craft 4K Visual & Action Clip",
+      "theme": "Applying Mastery: The 3-Direction Proof (Safe, Wild, OMG)",
+      "channels": ["instagram", "tiktok", "youtube_shorts", "x", "linkedin"],
+      "media_type": "video_and_4k_still",
+      "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/00-kling-master-action-whip-pan-9x16.mp4",
+      "supporting_media": "marketing/campaigns/cost-is-not-the-reason/images/04-openart-wow-holographic-craft-1x1.png",
+      "headline": "Demonstration, not declaration. 3 Working concepts in 48 hours.",
+      "copy": {
+        "all_channels": "Most agencies ask for thousands upfront based on promises. We believe the results are the proof.\n\nWithin 48 hours of starting, we deliver 3 custom interactive design directions for your brand:\n1. 🛡️ SAFE — Clean, polished, and immediately familiar.\n2. ⚡ WILD — Bold, high-energy, and distinct.\n3. ✨ OMG — Cutting-edge, unforgettable, and premium.\n\nPick the one you love. We launch it on your domain.\n\n👉 Experience the craft at famtasticdesigns.com"
+      },
+      "tags": ["#creativeagency", "#webdesign", "#craftsmanship", "#visualidentity", "#famtasticdesigns"]
+    }
+  ]
+}

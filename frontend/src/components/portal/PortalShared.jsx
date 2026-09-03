@@ -1,9 +1,8 @@
 export const GROUPS = [
   ['Workspace', [
     ['home', 'Home'],
-    ['products', 'My Products'],
     ['projects', 'My Projects'],
-    ['services', 'Services'],
+    ['services', 'Services & Add-ons'],
     ['files', 'Files & Assets'],
     ['results', 'Growth & Analytics'],
   ]],

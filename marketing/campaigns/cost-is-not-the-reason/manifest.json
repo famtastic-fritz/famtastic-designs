@@ -1,0 +1,107 @@
+{
+  "campaign_id": "cost-is-not-the-reason",
+  "name": "Cost Is Not The Reason — $199 Web Basics Launch",
+  "version": "1.0.0",
+  "created_at": "2026-09-02",
+  "owner": "fritz",
+  "business_goal": "Acquire small business owners with no website, @gmail/@yahoo users, and Booksy/marketplace-captive beauty/service professionals via the $199 Web Basics launch offer (~55¢/day).",
+  "primary_offer": {
+    "sku": "FAM-FOOT-199",
+    "price_usd": "199.00",
+    "billing": "one_time_first_year_included",
+    "renewal_usd": "9.99_per_month_after_year_1",
+    "daily_rate_equivalent": "0.55"
+  },
+  "audiences": [
+    {
+      "id": "booksy_beauty_captive",
+      "label": "Hair Stylists, Barbers, Nail Techs, Estheticians",
+      "pain": "Paying $30+/mo app fees + 20% commission cuts without owning client data"
+    },
+    {
+      "id": "gmail_authority_gap",
+      "label": "Businesses using @gmail.com or @yahoo.com",
+      "pain": "Missing credibility on high-ticket quotes and lost customer trust"
+    },
+    {
+      "id": "local_service_lost_calls",
+      "label": "Auto Repair, Mobile Detailing, Pop-ups",
+      "pain": "Losing high-ticket local Google searches to competitors"
+    }
+  ],
+  "creative_assets": [
+    {
+      "id": "CREATIVE-01-HAIR-BOOKSY",
+      "type": "image",
+      "file": "images/01-hair-beauty-booksy-escape-ad.jpg",
+      "aspect_ratio": "1:1",
+      "channels": ["instagram_feed", "facebook_feed"]
+    },
+    {
+      "id": "CREATIVE-02-AUTO-REPAIR",
+      "type": "image",
+      "file": "images/02-auto-repair-local-authority-ad.jpg",
+      "aspect_ratio": "1:1",
+      "channels": ["instagram_feed", "facebook_feed"]
+    },
+    {
+      "id": "CREATIVE-03-55-CENTS-OBJECTION",
+      "type": "image",
+      "file": "images/03-fifty-five-cents-cost-objection-ad.jpg",
+      "aspect_ratio": "1:1",
+      "channels": ["instagram_feed", "facebook_feed", "x_feed"]
+    }
+  ],
+  "video_scripts": [
+    {
+      "id": "VIDEO-15S-55-CENT-MYTH",
+      "duration": "15s",
+      "format": "9:16",
+      "target": "General small business owners & side hustles",
+      "file": "video-scripts/commercial-scripts.md#commercial-1"
+    },
+    {
+      "id": "VIDEO-30S-BOOKSY-TRAP",
+      "duration": "30s",
+      "format": "9:16",
+      "target": "Hair, nails & beauty professionals",
+      "file": "video-scripts/commercial-scripts.md#commercial-2"
+    },
+    {
+      "id": "VIDEO-30S-GMAIL-CREDIBILITY",
+      "duration": "30s",
+      "format": "9:16_and_16:9",
+      "target": "Local auto & service contractors",
+      "file": "video-scripts/commercial-scripts.md#commercial-3"
+    }
+  ],
+  "articles": [
+    {
+      "id": "ARTICLE-PILLAR-GMAIL-LINKTREE",
+      "title": "Why Running Your Business on @gmail.com and Linktree Is Costing You 30% of Your Revenue",
+      "file": "articles/why-running-business-on-gmail-and-linktree-costs-revenue.md",
+      "slug": "why-running-business-on-gmail-and-linktree-costs-revenue"
+    },
+    {
+      "id": "ARTICLE-SPOKE-BEAUTY-BOOKSY",
+      "title": "The Independent Stylist’s Guide to Breaking Free from Marketplace Booking Fees",
+      "file": "articles/beauty-stylist-guide-escape-booksy-fees.md",
+      "slug": "beauty-stylist-guide-escape-booksy-fees"
+    },
+    {
+      "id": "ARTICLE-SPOKE-AUTO-LOCAL",
+      "title": "How Local Auto & Service Shops Win High-Ticket Jobs with a 55¢-a-Day Digital Hub",
+      "file": "articles/how-local-service-shops-win-high-ticket-jobs-55-cents.md",
+      "slug": "how-local-service-shops-win-high-ticket-jobs-55-cents"
+    }
+  ],
+  "outreach": {
+    "dm_and_cold_email": "outreach/dm-cold-outreach-playbook.md",
+    "lead_nurture": "outreach/lead-nurture-cadence.md"
+  },
+  "utm_parameters": {
+    "utm_campaign": "cost_is_not_the_reason",
+    "utm_source_options": ["instagram", "facebook", "tiktok", "youtube", "direct_dm", "cold_email"],
+    "utm_medium_options": ["social_feed", "short_form_video", "dm_outreach", "email_nurture", "blog_share"]
+  }
+}

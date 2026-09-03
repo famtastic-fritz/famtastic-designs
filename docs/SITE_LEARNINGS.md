@@ -1,5 +1,6 @@
 # FAMtastic Designs site learnings
 
+<<<<<<< HEAD
 ## 2026-08-31 — A secure owner control plane needs a separate public demo lane
 
 - Observation: sharing the real Thirst Trap owner URL with a tester correctly
@@ -159,13 +160,38 @@
 ## 2026-08-31 — A deeper discovery link must be private, resumable, and separate from commercial action
 - Observation: A generic public intake can collect a few requirements, but it
   does not establish a safe, durable path from a client’s booking/brand choices
-  to their eventual workspace and proof review. Putting a private bearer token
-  in a query string also risks disclosure through referrers and logs.
-- Guidance: Use an owner-created, exact-recipient invitation with its secret in
-  the URL fragment and only a persisted hash. Save one validated answer at a
-  time, require verification of the same email before account claim, and create
-  only a portal draft. Keep Booksy bridge, payment display, proof generation,
-  proof delivery, prices, and launch behind their independent owner gates.
+- Guidance: do not treat delivery or provider receipts as customer accounts,
+  interviews, approvals, or deployments. An invitation moves to a customer
+  workspace only after that same recipient verifies an account.
+
+## 2026-08-31 — Deployed public routes must be tested against the live server rewrite
+
+- Observation: the deep-dive interview route rendered cleanly in local Vite,
+  but the GoDaddy production document root lacked an Apache rewrite rule for
+  `/deep-dive/<id>`, returning a server 404 until Apache configuration was
+  deployed.
+- Guidance: verify custom React routes against the apex and `www` hostnames with
+  real HTTP requests before sending client invitations or claiming route
+  availability.
+
+## 2026-08-31 — Containerized service interfaces must match production Drupal core
+
+- Observation: the invitation service failed during container startup because
+  it referenced Drupal 10.1 time and UUID signatures instead of the locked
+  `@datetime.time` and `@uuid` core service definitions.
+- Guidance: validate custom services in the containerized Drupal runtime with
+  `drush status` and smoke-test service instantiation before wiring customer
+  actions.
+
+## 2026-08-31 — Pop-up commerce requires durable operational boundaries, not static mockups
+
+- Observation: a pop-up storefront needs preorders, inventory tracking, and
+  owner fulfillment status, but building custom payment processors or saving
+  unverified orders creates legal and financial risk.
+- Guidance: pair public reservation flows with owner-managed Cash App/Apple Pay
+  links, record transactions as `requested` and `unverified` until manually
+  confirmed by the owner, and never claim automated payment reconciliation
+  without verified API integration.
 
 ## 2026-08-31 — Local Commerce validation needs the same PHP extensions as production
 - Observation: The local backend container installed Composer dependencies from
@@ -174,6 +200,14 @@
 - Guidance: Keep `bcmath` in both the Composer and PHP-FPM Docker stages.
   Treat a successful frontend build and PHP syntax check as source validation,
   not a replacement for the pending Drupal/MariaDB runtime check.
+
+## 2026-08-28 — Website Bundles Require Unified Project Fulfillment, Not Disconnected Infrastructure Wizards
+- Observation: Exposing managed cloud hosting and domain setup as a separate "My Products" infrastructure tab or multi-step wizard confused customers. Because hosting is provisioned automatically with the domain as part of the website package, fragmenting the mental model into unmanaged server panels led to confusion, and partial domain saves failed when stripped of their request context.
+- Guidance: Unify website provisioning inside the project workspace (`/portal?tab=projects`). Model hosting and custom domain as an inclusive bundle benefit, provide inline domain selection (`new_domain` registration vs `existing_domain` DNS routing with 1-click copyable records), and ensure all partial request updates automatically merge default project metadata so domain saves never fail validation.
+
+## 2026-08-28 — Client Portal Design DNA v1: Enforcing In-Portal Action Routing, Single Focus Glow, and Token Workspace Isolation
+- Observation: When authenticated clients explore recommended studio add-ons or growth offers, linking to generic public `/contact` forms creates conversion drop-off and context fragmentation. Similarly, in token-scoped workspaces (`/portal/:token`), unconstrained brand links that route to `/` exit the private workspace and strand the user.
+- Guidance: Establish an enforceable Client Portal Design DNA standard (`FAMTASTIC_CLIENT_PORTAL_DESIGN_DNA_V1`). Keep all product upgrade actions within the authenticated portal boundary routing directly to `/buy?sku=...` checkout or interactive modal workflows. Preserve token workspace URLs in brand navigation headers. Apply the strict "One Glow" rule (`box-shadow: 0 0 24px rgba(124,252,0,.35)`) to direct customer gaze to the single next best action, and validate all portal surfaces with automated guards (`validate-client-portal-design-dna.mjs`).
 
 ## 2026-08-28 — Modular Customer Portal Architecture with Governed AI Assistance Beats Monolithic Dashboards
 - Observation: Housing 14+ customer lifecycle surfaces, guided multi-step brief wizards, proof review iframes, file management, and message threads inside a monolithic 500-line React component created code bloat and made individual subviews difficult to test, maintain, and evolve.

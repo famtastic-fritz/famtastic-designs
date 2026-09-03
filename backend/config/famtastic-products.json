@@ -1,5 +1,7 @@
 {
   "schema": "famtastic.product-pipeline.v1",
+  "governing_doctrine": "famtastic.product-doctrine.v1",
+  "doctrine_definition": "Fearless deviation from established norms with a bold and unapologetic commitment to stand apart on purpose, applying mastery of craft to the point that the results are the proof, and manifesting the extraordinary from the ordinary.",
   "defaults": {
     "currency": "USD",
     "owner": "fritz",

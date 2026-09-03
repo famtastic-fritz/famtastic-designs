@@ -254,25 +254,21 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
   );
 }
 
-export function ProjectProvisioningWizard({
-  request,
-  workspace,
-  project,
-  busy,
-  onSave,
-  onUploadAsset,
-  onSendToSiteStudio,
-  onDecision,
-  onShare,
-  navigate,
-}) {
-  const [wizardStep, setWizardStep] = useState(1);
+export function ProjectDomainHostingManager({ request, busy, onSave }) {
+  const [isEditing, setIsEditing] = useState(false);
   const [domainMode, setDomainMode] = useState(
     request?.domain_choice === 'existing_domain' ? 'existing' : 'new'
   );
   const [copiedDns, setCopiedDns] = useState(false);
 
-  const copyDnsRecord = async (text) => {
+  const desiredDomain = request?.intake?.desired_domains || '';
+  const existingDomain = request?.existing_domain || '';
+  const hasDomain = (request?.domain_choice === 'new_domain' && desiredDomain) ||
+    (request?.domain_choice === 'existing_domain' && existingDomain) ||
+    desiredDomain ||
+    existingDomain;
+
+  const copyText = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedDns(true);
@@ -280,384 +276,537 @@ export function ProjectProvisioningWizard({
     } catch {}
   };
 
-  const variants = request?.proofs?.variants || [];
-  const hasProofs = [3, 6].includes(variants.length);
-  const isSiteStudioPending = request?.status === 'submitted' && !hasProofs;
+  const handleDomainSubmit = async (e) => {
+    await onSave(e, request.public_id);
+    setIsEditing(false);
+  };
 
   return (
-    <div className="portal-wizard-container" id={`website-request-${request?.public_id || 'wizard'}`}>
-      <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', background: 'rgba(0,0,0,0.5)' }}>
+    <article className="portal-domain-card" aria-label="Domain and Cloud Hosting Bundle">
+      <div className="portal-domain-card__header">
         <div>
-          <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.12em' }}>⚡ Project Fulfillment Wizard</span>
-          <h3 style={{ margin: '0.2rem 0', fontSize: '1.35rem', color: '#fff' }}>{request?.project_name || 'My Business Website'} · Setup &amp; Provisioning</h3>
+          <span className="portal-product-badge">
+            ✓ 1-Yr Cloud Hosting &amp; Domain Included
+          </span>
+          <h3 style={{ margin: '0.4rem 0 0.2rem', fontSize: '1.2rem', color: '#fff' }}>
+            Domain &amp; Cloud Infrastructure
+          </h3>
+          <p style={{ margin: 0, color: '#aeb8ae', fontSize: '0.86rem' }}>
+            Fast SSD cloud hosting and SSL security are automatically provisioned and mapped to your domain as part of your website bundle.
+          </p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          <span className="portal-product-badge">Status: {title(request?.status || 'Draft')}</span>
-          {request?.public_id && onSendToSiteStudio && !hasProofs && (
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => onSendToSiteStudio(request.public_id)}
-              style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
-            >
-              {busy ? 'Sending…' : '🚀 Send to Site Studio'}
-            </button>
-          )}
-        </div>
+        {!isEditing && (
+          <button
+            type="button"
+            className="secondary"
+            style={{ fontSize: '0.82rem', padding: '0.45rem 0.85rem' }}
+            onClick={() => setIsEditing(true)}
+          >
+            {hasDomain ? 'Edit Domain Setup ✏️' : 'Add Domain Request 🌐'}
+          </button>
+        )}
       </div>
 
-      <nav className="portal-wizard-nav" aria-label="Project Setup Steps">
-        <button
-          type="button"
-          className={wizardStep === 1 ? 'active' : (request?.existing_domain || request?.intake?.desired_domains ? 'completed' : '')}
-          onClick={() => setWizardStep(1)}
-        >
-          <small>Step 1</small>
-          <strong>🌐 1. Domain Setup</strong>
-        </button>
-        <button
-          type="button"
-          className={wizardStep === 2 ? 'active' : 'completed'}
-          onClick={() => setWizardStep(2)}
-        >
-          <small>Step 2</small>
-          <strong>⚡ 2. Cloud Hosting</strong>
-        </button>
-        <button
-          type="button"
-          className={wizardStep === 3 ? 'active' : (request?.intake?.primary_goal ? 'completed' : '')}
-          onClick={() => setWizardStep(3)}
-        >
-          <small>Step 3</small>
-          <strong>🎨 3. Design &amp; Assets</strong>
-        </button>
-        <button
-          type="button"
-          className={wizardStep === 4 ? 'active' : (hasProofs ? 'completed' : '')}
-          onClick={() => setWizardStep(4)}
-        >
-          <small>Step 4</small>
-          <strong>🚀 4. Site Studio Build</strong>
-        </button>
-      </nav>
+      {!isEditing ? (
+        <div className="portal-domain-summary">
+          <div className="portal-domain-summary__row">
+            <div>
+              <dt>Domain Routing</dt>
+              <dd>
+                {request?.domain_choice === 'existing_domain' && existingDomain ? (
+                  <strong style={{ color: 'var(--p-lime)' }}>
+                    {existingDomain} <small style={{ color: '#8e998e', fontWeight: 'normal' }}>(Connecting Existing Domain)</small>
+                  </strong>
+                ) : desiredDomain ? (
+                  <strong style={{ color: 'var(--p-lime)' }}>
+                    {desiredDomain} <small style={{ color: '#8e998e', fontWeight: 'normal' }}>(Included New Registration)</small>
+                  </strong>
+                ) : (
+                  <span style={{ color: '#ffc107' }}>Pending Domain Selection</span>
+                )}
+              </dd>
+            </div>
+            <div>
+              <dt>SSD Cloud Server</dt>
+              <dd style={{ color: '#d0d8d0' }}>
+                <code>198.71.232.3</code> (US Tier-4 / Auto-SSL)
+              </dd>
+            </div>
+          </div>
 
-      <div className="portal-wizard-body">
-        {/* STEP 1: DOMAIN SETUP */}
-        {wizardStep === 1 && (
-          <section className="portal-wizard-step" aria-labelledby="step-domain-title">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+          {request?.domain_choice === 'existing_domain' && existingDomain && (
+            <div className="portal-dns-helper" style={{ marginTop: '0.75rem' }}>
+              <span style={{ display: 'block', color: '#fff', fontWeight: '700', marginBottom: '0.35rem' }}>
+                ⚙ DNS Pointing Records for {existingDomain}:
+              </span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <span>A-Record: <code>@ → 198.71.232.3</code> | CNAME: <code>www → @</code></span>
+                <button type="button" className="quiet" style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }} onClick={() => copyText('198.71.232.3')}>
+                  {copiedDns ? 'Copied ✓' : 'Copy Server IP'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <form onSubmit={handleDomainSubmit} className="portal-domain-form">
+          <input type="hidden" name="request_id" value={request.public_id} />
+          <input type="hidden" name="project_name" value={request.project_name || 'My Business Website'} />
+          <input type="hidden" name="project_type" value={request.project_type || 'new_website'} />
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem', margin: '0.75rem 0' }}>
+            <label
+              style={{
+                padding: '0.85rem',
+                borderRadius: '12px',
+                border: `1px solid ${domainMode === 'new' ? 'var(--p-lime)' : 'var(--p-line)'}`,
+                background: domainMode === 'new' ? 'rgba(124,252,0,0.06)' : 'rgba(0,0,0,0.3)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '0.65rem',
+              }}
+            >
+              <input
+                type="radio"
+                name="domain_choice"
+                value="new_domain"
+                checked={domainMode === 'new'}
+                onChange={() => setDomainMode('new')}
+                style={{ marginTop: '0.2rem' }}
+              />
               <div>
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Step 1 of 4 · Domain Configuration</span>
-                <h4 id="step-domain-title" style={{ margin: '0.25rem 0', fontSize: '1.35rem', color: '#fff' }}>Configure Your Custom Domain Name</h4>
-                <p style={{ color: '#aeb8ae', margin: 0, fontSize: '0.88rem' }}>
-                  Choose whether you want FAMtastic to register a new domain name (.com/.org/.net included in your package) or connect an existing domain you already own.
-                </p>
+                <strong style={{ display: 'block', color: '#fff', fontSize: '0.9rem' }}>I need a new domain</strong>
+                <small style={{ color: '#8e998e', fontSize: '0.78rem' }}>Included .com, .org, or .net registered &amp; mapped to your server.</small>
               </div>
-              <span className="portal-product-badge">✓ 1-Yr Domain Included</span>
-            </div>
+            </label>
 
-            <form onSubmit={onSave} style={{ display: 'grid', gap: '1.25rem' }}>
-              <input type="hidden" name="project_name" value={request?.project_name || 'My Business Website'} />
-              <input type="hidden" name="project_type" value={request?.project_type || 'new_website'} />
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
-                <label
-                  style={{
-                    padding: '1rem',
-                    borderRadius: '12px',
-                    border: `1px solid ${domainMode === 'new' ? 'var(--p-lime)' : 'var(--p-line)'}`,
-                    background: domainMode === 'new' ? 'rgba(124,252,0,0.06)' : 'rgba(0,0,0,0.3)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '0.75rem',
-                  }}
-                >
-                  <input
-                    type="radio"
-                    name="domain_choice"
-                    value="new_domain"
-                    checked={domainMode === 'new'}
-                    onChange={() => setDomainMode('new')}
-                    style={{ marginTop: '0.25rem' }}
-                  />
-                  <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>I need a new domain</strong>
-                    <small style={{ color: '#8e998e', lineHeight: '1.4' }}>FAMtastic will register your preferred .com, .org, or .net and link it to your server automatically.</small>
-                  </div>
-                </label>
-
-                <label
-                  style={{
-                    padding: '1rem',
-                    borderRadius: '12px',
-                    border: `1px solid ${domainMode === 'existing' ? 'var(--p-lime)' : 'var(--p-line)'}`,
-                    background: domainMode === 'existing' ? 'rgba(124,252,0,0.06)' : 'rgba(0,0,0,0.3)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '0.75rem',
-                  }}
-                >
-                  <input
-                    type="radio"
-                    name="domain_choice"
-                    value="existing_domain"
-                    checked={domainMode === 'existing'}
-                    onChange={() => setDomainMode('existing')}
-                    style={{ marginTop: '0.25rem' }}
-                  />
-                  <div>
-                    <strong style={{ display: 'block', color: '#fff', fontSize: '0.95rem' }}>I already own a domain</strong>
-                    <small style={{ color: '#8e998e', lineHeight: '1.4' }}>Keep your current registrar (GoDaddy, Namecheap, Google, etc.) and point DNS to your new cloud server.</small>
-                  </div>
-                </label>
-              </div>
-
-              {domainMode === 'new' ? (
-                <div style={{ display: 'grid', gap: '0.75rem' }}>
-                  <label>
-                    <span>Desired Domain Name(s)</span>
-                    <input
-                      name="desired_domains"
-                      defaultValue={request?.intake?.desired_domains || ''}
-                      placeholder="e.g. mybakery.com, mybakeryla.com"
-                      required
-                    />
-                  </label>
-                  <small style={{ color: '#8e998e' }}>We will verify availability before registration and lock in your chosen name.</small>
-                </div>
-              ) : (
-                <div style={{ display: 'grid', gap: '0.75rem' }}>
-                  <label>
-                    <span>Existing Domain Name</span>
-                    <input
-                      name="existing_domain"
-                      defaultValue={request?.existing_domain || ''}
-                      placeholder="e.g. mybusiness.com"
-                      required
-                    />
-                  </label>
-                  <div className="portal-dns-helper">
-                    <strong style={{ display: 'block', color: '#fff', marginBottom: '0.4rem' }}>⚙ Quick DNS Pointing Instructions:</strong>
-                    <span>Log into your domain registrar DNS settings and add/update these 2 records:</span>
-                    <div style={{ display: 'grid', gap: '0.35rem', marginTop: '0.5rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span>Type: <b>A Record</b> · Host: <b>@</b> · Value: <code>198.71.232.3</code></span>
-                        <button type="button" className="quiet" style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }} onClick={() => copyDnsRecord('198.71.232.3')}>Copy IP</button>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span>Type: <b>CNAME</b> · Host: <b>www</b> · Value: <code>@ (or famtasticdesigns.com)</code></span>
-                        <button type="button" className="quiet" style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }} onClick={() => copyDnsRecord('@')}>Copy Host</button>
-                      </div>
-                    </div>
-                    {copiedDns && <small style={{ color: 'var(--p-lime)', display: 'block', marginTop: '0.4rem' }}>✓ Copied to clipboard!</small>}
-                  </div>
-                </div>
-              )}
-
-              <div className="portal-form-actions" style={{ marginTop: '0.5rem' }}>
-                <button type="submit" name="action" value="save" disabled={busy}>Save Domain &amp; Continue →</button>
-                <button type="button" className="quiet" onClick={() => setWizardStep(2)}>Skip to Hosting &rarr;</button>
-              </div>
-            </form>
-          </section>
-        )}
-
-        {/* STEP 2: CLOUD HOSTING PROVISIONING */}
-        {wizardStep === 2 && (
-          <section className="portal-wizard-step" aria-labelledby="step-hosting-title">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+            <label
+              style={{
+                padding: '0.85rem',
+                borderRadius: '12px',
+                border: `1px solid ${domainMode === 'existing' ? 'var(--p-lime)' : 'var(--p-line)'}`,
+                background: domainMode === 'existing' ? 'rgba(124,252,0,0.06)' : 'rgba(0,0,0,0.3)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '0.65rem',
+              }}
+            >
+              <input
+                type="radio"
+                name="domain_choice"
+                value="existing_domain"
+                checked={domainMode === 'existing'}
+                onChange={() => setDomainMode('existing')}
+                style={{ marginTop: '0.2rem' }}
+              />
               <div>
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Step 2 of 4 · Infrastructure Health</span>
-                <h4 id="step-hosting-title" style={{ margin: '0.25rem 0', fontSize: '1.35rem', color: '#fff' }}>Cloud Hosting &amp; Server Health</h4>
-                <p style={{ color: '#aeb8ae', margin: 0, fontSize: '0.88rem' }}>
-                  Your dedicated SSD cloud environment is provisioned, secured with TLS 1.3 encryption, and ready to host your website build.
-                </p>
+                <strong style={{ display: 'block', color: '#fff', fontSize: '0.9rem' }}>I already own a domain</strong>
+                <small style={{ color: '#8e998e', fontSize: '0.78rem' }}>Keep your current registrar and point DNS to your new cloud server.</small>
               </div>
-              <span className="portal-product-badge">● Server Active</span>
-            </div>
+            </label>
+          </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <strong style={{ color: 'var(--p-lime)', display: 'block', fontSize: '0.85rem' }}>✓ Cloud Server</strong>
-                <span style={{ fontSize: '0.82rem', color: '#cdd4cd' }}>Dedicated NVMe SSD · 198.71.232.3</span>
-              </div>
-              <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <strong style={{ color: 'var(--p-lime)', display: 'block', fontSize: '0.85rem' }}>✓ SSL Certificate</strong>
-                <span style={{ fontSize: '0.82rem', color: '#cdd4cd' }}>Let's Encrypt 256-bit · Auto Renewing</span>
-              </div>
-              <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <strong style={{ color: 'var(--p-lime)', display: 'block', fontSize: '0.85rem' }}>✓ Automated Daily Backups</strong>
-                <span style={{ fontSize: '0.82rem', color: '#cdd4cd' }}>Daily 03:00 UTC Snapshot Active</span>
-              </div>
-              <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <strong style={{ color: 'var(--p-lime)', display: 'block', fontSize: '0.85rem' }}>✓ Global HTTP/3 CDN</strong>
-                <span style={{ fontSize: '0.82rem', color: '#cdd4cd' }}>Sub-second asset caching enabled</span>
-              </div>
-            </div>
-
-            <div className="portal-form-actions">
-              <button type="button" onClick={() => setWizardStep(3)}>Continue to Design Brief &rarr;</button>
-              <button type="button" className="quiet" onClick={() => setWizardStep(1)}>&larr; Back to Domain</button>
-            </div>
-          </section>
-        )}
-
-        {/* STEP 3: DESIGN BRIEF & ASSETS */}
-        {wizardStep === 3 && (
-          <section className="portal-wizard-step" aria-labelledby="step-brief-title">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-              <div>
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Step 3 of 4 · Creative Specifications</span>
-                <h4 id="step-brief-title" style={{ margin: '0.25rem 0', fontSize: '1.35rem', color: '#fff' }}>Design Brief, Goals &amp; Brand Assets</h4>
-                <p style={{ color: '#aeb8ae', margin: 0, fontSize: '0.88rem' }}>
-                  Give Site Studio the essentials about your business, audience, desired colors, and upload your logo or reference files.
-                </p>
-              </div>
-              <span className="portal-product-badge">🎨 Creative Studio</span>
-            </div>
-
-            <form onSubmit={onSave} style={{ display: 'grid', gap: '1rem' }}>
-              <input type="hidden" name="domain_choice" value={request?.domain_choice || 'undecided'} />
-              <input type="hidden" name="existing_domain" value={request?.existing_domain || ''} />
-
-              <div className="portal-form-grid">
-                <label>
-                  <span>Business Name</span>
-                  <input name="business_name" defaultValue={request?.business_name || ''} placeholder="e.g. Sweet Crumbs Bakery" required />
-                </label>
-                <label>
-                  <span>Project Name / Site Title</span>
-                  <input name="project_name" defaultValue={request?.project_name || 'My Business Website'} required />
-                </label>
-              </div>
-
+          {domainMode === 'new' ? (
+            <label style={{ margin: '0.5rem 0' }}>
+              <span style={{ fontSize: '0.85rem', color: '#cdd4cd' }}>Desired Domain Name(s)</span>
+              <input
+                name="desired_domains"
+                defaultValue={desiredDomain}
+                placeholder="e.g. mybakery.com, mybakeryla.com"
+                required
+              />
+            </label>
+          ) : (
+            <div style={{ margin: '0.5rem 0' }}>
               <label>
-                <span>What is the primary goal of this website?</span>
-                <textarea
-                  name="primary_goal"
-                  defaultValue={request?.intake?.primary_goal || ''}
-                  placeholder="e.g. Take online orders, showcase our portfolio, and capture new customer inquiries."
+                <span style={{ fontSize: '0.85rem', color: '#cdd4cd' }}>Existing Domain Name</span>
+                <input
+                  name="existing_domain"
+                  defaultValue={existingDomain}
+                  placeholder="e.g. mybusiness.com"
                   required
                 />
               </label>
+              <div className="portal-dns-helper" style={{ marginTop: '0.5rem' }}>
+                <span>Add these 2 DNS records in your domain registrar:</span>
+                <div style={{ marginTop: '0.35rem' }}>
+                  <code>A Record: @ → 198.71.232.3</code> | <code>CNAME: www → @</code>
+                </div>
+              </div>
+            </div>
+          )}
 
+          <div style={{ display: 'flex', gap: '0.6rem', marginTop: '0.75rem' }}>
+            <button type="submit" disabled={busy} style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}>
+              {busy ? 'Saving…' : 'Save Domain Choice ✓'}
+            </button>
+            <button type="button" className="quiet" style={{ fontSize: '0.85rem', padding: '0.5rem 0.85rem' }} onClick={() => setIsEditing(false)}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+    </article>
+  );
+}
+
+export function WebsiteRequestIntakeEditor({
+  editingRequest,
+  setEditingRequest,
+  onSave,
+  onUploadAsset,
+  busy,
+}) {
+  return (
+    <Panel
+      key={editingRequest.public_id || 'new-request'}
+      id="website-request-editor"
+      eyebrow={editingRequest.public_id ? 'Continue request' : 'New website request'}
+      title={editingRequest.project_name || 'Tell us what you want to build'}
+      className="portal-request-form"
+    >
+      <form onSubmit={onSave}>
+        {editingRequest.public_id && (
+          <input type="hidden" name="request_id" value={editingRequest.public_id} />
+        )}
+        {!editingRequest.public_id && (
+          <p className="portal-form-stepnote">
+            <strong>Step 1 of 2.</strong> Answer three quick things to save your draft — the full
+            brief opens right after, and everything saves as you go.
+          </p>
+        )}
+        <div className="portal-form-grid">
+          <label>
+            Request name
+            <input
+              name="project_name"
+              defaultValue={editingRequest.project_name || ''}
+              placeholder="Example: Sweet Crumbs Bakery website"
+              required
+            />
+          </label>
+          <label>
+            What are we building?
+            <select name="project_type" defaultValue={editingRequest.project_type || 'new_website'}>
+              <option value="new_website">New website (Includes Hosting + Domain + 3 Concepts)</option>
+              <option value="landing_page">High-converting landing page</option>
+              <option value="redesign">Website redesign &amp; modernisation</option>
+              <option value="online_store">Online store / ecommerce shopping cart</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          What should this website accomplish?
+          <textarea
+            name="primary_goal"
+            defaultValue={editingRequest.intake?.primary_goal || ''}
+            placeholder="Example: Take custom cake orders, showcase our portfolio, and explain delivery/pickup options."
+          />
+        </label>
+
+        {editingRequest.public_id && (
+          <>
+            {/* DOMAINS & CLOUD HOSTING BUNDLE */}
+            <fieldset className="portal-form-group">
+              <legend>🌐 Domain &amp; Cloud Infrastructure (Included in Package)</legend>
+              <label>
+                Domain preference
+                <select
+                  name="domain_choice"
+                  defaultValue={editingRequest.domain_choice || 'new_domain'}
+                >
+                  <option value="new_domain">I need a new domain (Free .com/.org/.net registration included)</option>
+                  <option value="existing_domain">I already own a domain (I will point DNS to FAMtastic cloud)</option>
+                  <option value="undecided">Undecided / help me decide later</option>
+                </select>
+              </label>
               <div className="portal-form-grid">
                 <label>
-                  <span>Target Audience / Ideal Customer</span>
-                  <textarea
-                    name="ideal_customer"
-                    defaultValue={request?.intake?.ideal_customer || ''}
-                    placeholder="e.g. Local homeowners, busy parents looking for custom birthday cakes."
+                  Desired new domain(s)
+                  <input
+                    name="desired_domains"
+                    defaultValue={editingRequest.intake?.desired_domains || ''}
+                    placeholder="e.g. sweetcrumbs.com, sweetcrumbsla.com"
                   />
                 </label>
                 <label>
-                  <span>Preferred Brand Colors &amp; Style</span>
-                  <textarea
-                    name="preferred_colors"
-                    defaultValue={request?.intake?.preferred_colors || ''}
-                    placeholder="e.g. Warm pastel tones, royal blue with gold accents, minimalist modern."
+                  Existing domain (if any)
+                  <input
+                    name="existing_domain"
+                    defaultValue={editingRequest.existing_domain || ''}
+                    placeholder="e.g. sweetcrumbs.com"
                   />
                 </label>
               </div>
+              <label>
+                Business email requirements
+                <input
+                  name="business_email_needs"
+                  defaultValue={editingRequest.intake?.business_email_needs || ''}
+                  placeholder="e.g. hello@sweetcrumbs.com, Google Workspace or Microsoft 365"
+                />
+              </label>
+            </fieldset>
 
-              <div className="portal-form-actions">
-                <button type="submit" name="action" value="save" disabled={busy}>Save Brief &amp; Continue to Site Studio &rarr;</button>
-                <button type="button" className="quiet" onClick={() => setWizardStep(2)}>&larr; Back to Hosting</button>
+            {/* GOALS & CUSTOMERS */}
+            <fieldset className="portal-form-group">
+              <legend>Goals and target customers</legend>
+              <label>
+                Secondary goals and how you will measure success
+                <textarea
+                  name="secondary_goals"
+                  defaultValue={editingRequest.intake?.secondary_goals || ''}
+                  placeholder="Calls, quote requests, online bookings, email list signups…"
+                />
+              </label>
+              <label>
+                Who is your ideal customer, and what problem are they trying to solve?
+                <textarea
+                  name="ideal_customer"
+                  defaultValue={editingRequest.intake?.ideal_customer || ''}
+                  placeholder="Local families planning birthday parties and corporate event planners looking for custom catering."
+                />
+              </label>
+              <label>
+                What should visitors do first when they land on the site?
+                <textarea
+                  name="desired_actions"
+                  defaultValue={editingRequest.intake?.desired_actions || ''}
+                  placeholder="Call immediately, submit an inquiry form, browse the gallery, or book online."
+                />
+              </label>
+              <div className="portal-form-grid">
+                <label>
+                  Estimated number of pages
+                  <input
+                    name="page_count"
+                    type="number"
+                    min="1"
+                    max="100"
+                    defaultValue={editingRequest.intake?.page_count || 1}
+                  />
+                </label>
+                <label>
+                  Who makes the final launch decision?
+                  <input
+                    name="decision_makers"
+                    defaultValue={editingRequest.intake?.decision_makers || ''}
+                    placeholder="e.g. Owner, Founder, Marketing Director"
+                  />
+                </label>
               </div>
-            </form>
+            </fieldset>
 
-            <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-              <form className="portal-asset-upload" onSubmit={onUploadAsset}>
-                <h4 style={{ margin: '0 0 0.4rem', fontSize: '1.05rem', color: '#fff' }}>Upload Brand Logo, Photos, or Reference Files</h4>
-                <p style={{ margin: '0 0 0.85rem', color: '#8e998e', fontSize: '0.84rem' }}>PNG, JPEG, SVG, WebP, or PDF up to 10 MB. Files are attached directly to your Site Studio build packet.</p>
-                <input name="asset" type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp,application/pdf" required />
-                <label className="portal-check"><input name="ownership_confirmed" type="checkbox" value="1" required />I own this file or have permission to use it for this project.</label>
-                <button disabled={busy} style={{ marginTop: '0.5rem' }}>{busy ? 'Uploading…' : 'Upload Asset to Build Packet'}</button>
-                {request?.assets?.length > 0 && (
-                  <ul style={{ marginTop: '0.85rem' }}>
-                    {request.assets.map((asset) => (
-                      <li key={asset.public_id}>✓ {asset.name} · {Math.ceil(asset.size_bytes / 1024)} KB</li>
-                    ))}
-                  </ul>
-                )}
-              </form>
-            </div>
-          </section>
+            {/* YOUR BUSINESS */}
+            <fieldset className="portal-form-group">
+              <legend>Your business details</legend>
+              <div className="portal-form-grid">
+                <label>
+                  Business name
+                  <input
+                    name="business_name"
+                    defaultValue={editingRequest.business_name || ''}
+                    autoComplete="organization"
+                  />
+                </label>
+                <label>
+                  Industry / Category
+                  <input
+                    name="industry"
+                    defaultValue={editingRequest.intake?.industry || ''}
+                    placeholder="e.g. Food &amp; Beverage, Healthcare, Construction, Legal"
+                  />
+                </label>
+              </div>
+              <label>
+                What does your business sell or provide?
+                <textarea
+                  name="products_services"
+                  defaultValue={editingRequest.intake?.products_services || ''}
+                  placeholder="List your core products, services, packages, and pricing structure."
+                />
+              </label>
+              <div className="portal-form-grid">
+                <label>
+                  Service locations / Service area
+                  <input
+                    name="service_locations"
+                    defaultValue={editingRequest.intake?.service_locations || ''}
+                    placeholder="e.g. Greater Los Angeles, Nationwide, Tri-State area"
+                  />
+                </label>
+                <label>
+                  Business hours &amp; contact info
+                  <input
+                    name="contact_details"
+                    defaultValue={editingRequest.intake?.contact_details || ''}
+                    placeholder="Phone, public email, address, operating hours"
+                  />
+                </label>
+              </div>
+            </fieldset>
+
+            {/* CREATIVE DIRECTION & STYLING */}
+            <fieldset className="portal-form-group">
+              <legend>Creative direction &amp; visual style</legend>
+              <div className="portal-form-grid">
+                <label>
+                  Preferred colors
+                  <input
+                    name="preferred_colors"
+                    defaultValue={editingRequest.intake?.preferred_colors || ''}
+                    placeholder="e.g. Warm terracotta, cream, sage green, gold"
+                  />
+                </label>
+                <label>
+                  Colors to avoid
+                  <input
+                    name="colors_to_avoid"
+                    defaultValue={editingRequest.intake?.colors_to_avoid || ''}
+                    placeholder="e.g. Neon yellow, harsh black, hot pink"
+                  />
+                </label>
+              </div>
+              <label>
+                Desired vibe &amp; aesthetic feeling
+                <textarea
+                  name="desired_feeling"
+                  defaultValue={editingRequest.intake?.desired_feeling || ''}
+                  placeholder="e.g. Warm, artisanal, high-end yet welcoming, trustworthy and modern."
+                />
+              </label>
+              <label>
+                Reference websites you love (and why)
+                <textarea
+                  name="reference_sites"
+                  defaultValue={editingRequest.intake?.reference_sites || ''}
+                  placeholder="e.g. https://examplebakery.com - Love the typography and clean photo gallery."
+                />
+              </label>
+              <label>
+                FAMtastic Creative Intensity ({editingRequest.intake?.famtastic_level ?? 5} / 10)
+                <input
+                  name="famtastic_level"
+                  type="range"
+                  min="0"
+                  max="10"
+                  defaultValue={editingRequest.intake?.famtastic_level ?? 5}
+                />
+                <small style={{ color: '#8e998e' }}>
+                  0 = Strictly conservative &amp; minimalist | 10 = Bold, avant-garde, signature motion
+                </small>
+              </label>
+            </fieldset>
+
+            {/* TECHNICAL, COMMERCE & ACCESS */}
+            <fieldset className="portal-form-group">
+              <legend>Technical features &amp; integrations</legend>
+              <label>
+                Required features &amp; functionality
+                <textarea
+                  name="required_features"
+                  defaultValue={editingRequest.intake?.required_features || ''}
+                  placeholder="e.g. Appointment booking calendar, Instagram feed, customer reviews, dynamic quote calculator."
+                />
+              </label>
+              <div className="portal-form-grid">
+                <label>
+                  Online booking details (if any)
+                  <input
+                    name="booking_details"
+                    defaultValue={editingRequest.intake?.booking_details || ''}
+                    placeholder="e.g. Calendly, Acuity, Booksy, or custom request form"
+                  />
+                </label>
+                <label>
+                  Ecommerce / Cart details (if any)
+                  <input
+                    name="ecommerce_details"
+                    defaultValue={editingRequest.intake?.ecommerce_details || ''}
+                    placeholder="e.g. Shopify Buy Button, Stripe Checkout, or catalog only"
+                  />
+                </label>
+              </div>
+              <label>
+                Launch timing &amp; deadlines
+                <input
+                  name="launch_timing"
+                  defaultValue={editingRequest.intake?.launch_timing || ''}
+                  placeholder="e.g. In 2 weeks for grand opening, or flexible"
+                />
+              </label>
+              <label>
+                Additional notes for Fritz &amp; the design team
+                <textarea
+                  name="notes"
+                  defaultValue={editingRequest.intake?.notes || ''}
+                  placeholder="Any specific constraints, competitor URLs, or must-have layout requests."
+                />
+              </label>
+              <label className="portal-check">
+                <input
+                  name="recommendation_requested"
+                  type="checkbox"
+                  defaultChecked={editingRequest.recommendation_requested !== 0}
+                />
+                Recommend the smallest useful package and optimal add-ons for my goals.
+              </label>
+            </fieldset>
+          </>
         )}
 
-        {/* STEP 4: SITE STUDIO BUILD HANDOFF */}
-        {wizardStep === 4 && (
-          <section className="portal-wizard-step" aria-labelledby="step-sitestudio-title">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-              <div>
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Step 4 of 4 · Build Execution</span>
-                <h4 id="step-sitestudio-title" style={{ margin: '0.25rem 0', fontSize: '1.35rem', color: '#fff' }}>Site Studio Build &amp; Proof Concepts</h4>
-                <p style={{ color: '#aeb8ae', margin: 0, fontSize: '0.88rem' }}>
-                  Hand off your project brief, hosting configuration, and brand assets to Site Studio to generate your working concepts.
-                </p>
-              </div>
-              <span className="portal-product-badge">🚀 Site Studio Bridge</span>
-            </div>
+        <div className="portal-form-actions portal-sticky-actions">
+          <button name="action" value="save" disabled={busy}>
+            {busy
+              ? 'Saving…'
+              : editingRequest.public_id
+              ? 'Save draft'
+              : 'Save draft & open full brief'}
+          </button>
+          {editingRequest.public_id && (
+            <button className="secondary" name="action" value="submit" disabled={busy}>
+              Submit brief for concepts →
+            </button>
+          )}
+          <button className="quiet" type="button" onClick={() => setEditingRequest(null)}>
+            Close
+          </button>
+        </div>
+      </form>
 
-            {/* Readiness Summary */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
-              <div style={{ padding: '0.85rem', borderRadius: '10px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <strong style={{ color: 'var(--p-lime)', fontSize: '0.82rem', display: 'block' }}>1. Custom Domain</strong>
-                <span style={{ fontSize: '0.8rem', color: '#cdd4cd' }}>{request?.existing_domain || request?.intake?.desired_domains || 'Configured'}</span>
-              </div>
-              <div style={{ padding: '0.85rem', borderRadius: '10px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <strong style={{ color: 'var(--p-lime)', fontSize: '0.82rem', display: 'block' }}>2. Cloud Server</strong>
-                <span style={{ fontSize: '0.8rem', color: '#cdd4cd' }}>198.71.232.3 (SSD Active)</span>
-              </div>
-              <div style={{ padding: '0.85rem', borderRadius: '10px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <strong style={{ color: 'var(--p-lime)', fontSize: '0.82rem', display: 'block' }}>3. Creative Assets</strong>
-                <span style={{ fontSize: '0.8rem', color: '#cdd4cd' }}>{request?.assets?.length || 0} file(s) attached</span>
-              </div>
-            </div>
-
-            {/* Dispatch Action or In-Progress Banner */}
-            {!hasProofs && !isSiteStudioPending && (
-              <div className="portal-studio-dispatch-banner">
-                <div>
-                  <h4 style={{ margin: '0 0 0.25rem', fontSize: '1.2rem', color: '#fff' }}>Ready to generate your working concepts?</h4>
-                  <p style={{ margin: 0, color: '#c2ccc2', fontSize: '0.88rem' }}>
-                    Click below to dispatch your build packet directly to Site Studio. We will construct 3 genuinely different visual directions.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  style={{ minHeight: '48px', padding: '0.75rem 1.5rem', fontSize: '1rem' }}
-                  disabled={busy || !request?.public_id}
-                  onClick={() => request?.public_id && onSendToSiteStudio && onSendToSiteStudio(request.public_id)}
-                >
-                  {busy ? 'Sending to Site Studio…' : '🚀 Send to Site Studio for Build →'}
-                </button>
-              </div>
-            )}
-
-            {isSiteStudioPending && (
-              <div style={{ padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--p-lime)', background: 'linear-gradient(135deg, rgba(124,252,0,0.08), #090c09)', display: 'grid', gap: '0.6rem' }}>
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>⚡ Build In Progress</span>
-                <h4 style={{ margin: 0, fontSize: '1.25rem', color: '#fff' }}>Site Studio is crafting your 3 visual proof directions</h4>
-                <p style={{ margin: 0, color: '#b2bcb2', fontSize: '0.88rem', lineHeight: '1.5' }}>
-                  Your brief and assets are actively being assembled into working concepts. We will notify you by email as soon as they are ready for your interactive review!
-                </p>
-              </div>
-            )}
-
-            {/* If proofs are ready, show the full review grid */}
-            {hasProofs && (
-              <div style={{ marginTop: '1.5rem' }}>
-                <h4 style={{ margin: '0 0 0.75rem', fontSize: '1.2rem', color: '#fff' }}>Review Your Working Concepts</h4>
-                <WebsiteProofReview request={request} busy={busy} onDecision={onDecision} onShare={onShare} />
-              </div>
-            )}
-          </section>
-        )}
-      </div>
-    </div>
+      {editingRequest.public_id && (
+        <form className="portal-asset-upload" onSubmit={onUploadAsset} style={{ marginTop: '1.5rem' }}>
+          <h3>Add logo, brand guide, flyer, or photo references</h3>
+          <p>PNG, JPEG, WebP, SVG, or PDF up to 10 MB. Attached files stay private to this project.</p>
+          <input
+            name="asset"
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/svg+xml,application/pdf"
+            required
+          />
+          <label className="portal-check">
+            <input name="ownership_confirmed" type="checkbox" value="1" required />
+            I own this file or have permission to share it for this website project.
+          </label>
+          <label className="portal-check">
+            <input name="ai_use_consent" type="checkbox" value="1" />
+            FAMtastic may use this file as reference for approved AI-assisted concept generation.
+          </label>
+          <button disabled={busy}>{busy ? 'Uploading…' : 'Upload reference securely'}</button>
+          {editingRequest.assets?.length > 0 && (
+            <ul style={{ marginTop: '0.75rem' }}>
+              {editingRequest.assets.map((asset) => (
+                <li key={asset.public_id}>
+                  📄 {asset.name} · {Math.ceil(asset.size_bytes / 1024)} KB
+                </li>
+              ))}
+            </ul>
+          )}
+        </form>
+      )}
+    </Panel>
   );
 }
 
@@ -712,661 +861,116 @@ export default function PortalProjectsView({
       <section className="portal-project-hero">
         <div>
           <span>One account. Every website.</span>
-          <h2>Start, save, and return when you’re ready.</h2>
+          <h2>Your Website Project Command Center</h2>
           <p>
-            Tell us about a new site, landing page, redesign, or online store. Each request keeps its own
-            intake, purchase, files, messages, and delivery history.
+            Manage your project brief, custom domain name, cloud hosting instance, reference files, and interactive visual concept proofs in one place.
           </p>
         </div>
         <button onClick={() => setEditingRequest({})}>+ Start a new website</button>
       </section>
 
-      {/* Guided Provisioning & Site Studio Wizard */}
-      {activeRequest && !editingRequest && (
-        <ProjectProvisioningWizard
-          request={activeRequest}
-          workspace={workspace}
-          project={workspace.projects?.[0]}
-          busy={busy}
+      {/* When editing a brief */}
+      {editingRequest && (
+        <WebsiteRequestIntakeEditor
+          editingRequest={editingRequest}
+          setEditingRequest={setEditingRequest}
           onSave={onSaveWebsiteRequest}
           onUploadAsset={onUploadAsset}
-          onSendToSiteStudio={onSendToSiteStudio}
-          onDecision={onDecideProof}
-          onShare={onShareProof}
-          navigate={navigate}
+          busy={busy}
         />
       )}
 
-      {editingRequest && (
-        <Panel
-          key={editingRequest.public_id || 'new-request'}
-          id="website-request-editor"
-          eyebrow={editingRequest.public_id ? 'Continue request' : 'New website request'}
-          title={editingRequest.project_name || 'Tell us what you want to build'}
-          className="portal-request-form"
-        >
-          <form onSubmit={onSaveWebsiteRequest}>
-            {!editingRequest.public_id && (
-              <p className="portal-form-stepnote">
-                <strong>Step 1 of 2.</strong> Answer three quick things and save your draft — the full
-                interview opens right after, and everything saves as you go.
-              </p>
-            )}
-            <div className="portal-form-grid">
-              <label>
-                Request name
-                <input
-                  name="project_name"
-                  defaultValue={editingRequest.project_name || ''}
-                  placeholder="Example: Sweet Crumbs Bakery website"
-                  required
-                />
-              </label>
-              <label>
-                What are we building?
-                <select name="project_type" defaultValue={editingRequest.project_type || 'new_website'}>
-                  <option value="new_website">New website</option>
-                  <option value="landing_page">Landing page</option>
-                  <option value="redesign">Website redesign</option>
-                  <option value="online_store">Online store / shopping cart</option>
-                </select>
-              </label>
-            </div>
-            <label>
-              What should this website accomplish?
-              <textarea
-                name="primary_goal"
-                defaultValue={editingRequest.intake?.primary_goal || ''}
-                placeholder="Example: take cake orders and explain pickup options"
-              />
-            </label>
+      {/* Main Active Project Overview */}
+      {!editingRequest && activeRequest && (
+        <section className="portal-request-list">
+          {requestChips}
 
-            {editingRequest.public_id && (
-              <>
-                <fieldset className="portal-form-group">
-                  <legend>Goals and customers</legend>
-                  <label>
-                    Other goals and how you will measure success
-                    <textarea
-                      name="secondary_goals"
-                      defaultValue={editingRequest.intake?.secondary_goals || ''}
-                    />
-                    <textarea
-                      name="success_metrics"
-                      defaultValue={editingRequest.intake?.success_metrics || ''}
-                      placeholder="Calls, quote requests, bookings, sales…"
-                    />
-                  </label>
-                  <label>
-                    Who should the website reach, and what problem are they trying to solve?
-                    <textarea
-                      name="ideal_customer"
-                      defaultValue={editingRequest.intake?.ideal_customer || ''}
-                    />
-                    <textarea
-                      name="customer_pain_points"
-                      defaultValue={editingRequest.intake?.customer_pain_points || ''}
-                    />
-                  </label>
-                  <label>
-                    What should visitors do next?
-                    <textarea
-                      name="desired_actions"
-                      defaultValue={editingRequest.intake?.desired_actions || ''}
-                      placeholder="Call, submit a quote, book, visit, buy…"
-                    />
-                  </label>
-                  <div className="portal-form-grid">
-                    <label>
-                      Estimated number of pages
-                      <input
-                        name="page_count"
-                        type="number"
-                        min="1"
-                        max="100"
-                        defaultValue={editingRequest.intake?.page_count || 1}
-                      />
-                    </label>
-                    <label>
-                      Who makes the final decision?
-                      <input
-                        name="decision_makers"
-                        defaultValue={editingRequest.intake?.decision_makers || ''}
-                      />
-                    </label>
-                  </div>
-                </fieldset>
-
-                <fieldset className="portal-form-group">
-                  <legend>Your business</legend>
-                  <label>
-                    Business name
-                    <input
-                      name="business_name"
-                      defaultValue={editingRequest.business_name || ''}
-                      autoComplete="organization"
-                    />
-                  </label>
-                  <label>
-                    What does the business sell or provide?
-                    <textarea
-                      name="products_services"
-                      defaultValue={editingRequest.intake?.products_services || ''}
-                    />
-                  </label>
-                  <label>
-                    How does the business operate and make money today?
-                    <textarea
-                      name="business_model"
-                      defaultValue={editingRequest.intake?.business_model || ''}
-                      placeholder="How customers find you, buy, book, pay, and receive the product or service."
-                    />
-                  </label>
-                  <label>
-                    Industry and research context
-                    <textarea
-                      name="industry"
-                      defaultValue={editingRequest.intake?.industry || ''}
-                      placeholder="Use your own words—even if the industry is not listed anywhere."
-                    />
-                    <textarea
-                      name="research_context"
-                      defaultValue={editingRequest.intake?.research_context || ''}
-                      placeholder="Competitors, trade associations, regulations, customer behavior, or questions FAMtastic should research."
-                    />
-                  </label>
-                  <div className="portal-form-grid">
-                    <label>
-                      Search phrases customers use
-                      <textarea
-                        name="seo_keywords"
-                        defaultValue={editingRequest.intake?.seo_keywords || ''}
-                      />
-                    </label>
-                    <label>
-                      Locations you serve
-                      <textarea
-                        name="service_locations"
-                        defaultValue={editingRequest.intake?.service_locations || ''}
-                      />
-                    </label>
-                  </div>
-                  <div className="portal-form-grid">
-                    <label>
-                      Business hours
-                      <textarea
-                        name="business_hours"
-                        defaultValue={editingRequest.intake?.business_hours || ''}
-                      />
-                    </label>
-                    <label>
-                      Public contact details
-                      <textarea
-                        name="contact_details"
-                        defaultValue={editingRequest.intake?.contact_details || ''}
-                      />
-                    </label>
-                  </div>
-                  <label>
-                    Social profiles
-                    <textarea
-                      name="social_profiles"
-                      defaultValue={editingRequest.intake?.social_profiles || ''}
-                    />
-                  </label>
-                </fieldset>
-
-                <fieldset className="portal-form-group">
-                  <legend>Pages, content, and features</legend>
-                  <label>
-                    Pages or sections you expect
-                    <textarea
-                      name="page_list"
-                      defaultValue={editingRequest.intake?.page_list || ''}
-                      placeholder="Home, About, Services, Gallery, Contact…"
-                    />
-                  </label>
-                  <label>
-                    Features you think you need
-                    <textarea
-                      name="required_features"
-                      defaultValue={editingRequest.intake?.required_features || ''}
-                      placeholder="Online ordering, booking, quote form, gallery…"
-                    />
-                  </label>
-                  <label>
-                    Tools or integrations you already use
-                    <textarea
-                      name="integrations"
-                      defaultValue={editingRequest.intake?.integrations || ''}
-                      placeholder="Square, Stripe, Calendly, Mailchimp, CRM…"
-                    />
-                  </label>
-                  <div className="portal-form-grid">
-                    <label>
-                      Content readiness
-                      <select
-                        name="content_status"
-                        defaultValue={editingRequest.intake?.content_status || ''}
-                      >
-                        <option value="">Choose one</option>
-                        <option value="ready">Copy and photos are ready</option>
-                        <option value="partial">Some content is ready</option>
-                        <option value="help_needed">I need help creating content</option>
-                      </select>
-                    </label>
-                    <label>
-                      Desired timing
-                      <input
-                        name="launch_timing"
-                        defaultValue={editingRequest.intake?.launch_timing || ''}
-                        placeholder="A date or flexible"
-                      />
-                    </label>
-                  </div>
-                  <div className="portal-form-grid">
-                    <label>
-                      Copywriting help
-                      <textarea
-                        name="copywriting_needs"
-                        defaultValue={editingRequest.intake?.copywriting_needs || ''}
-                      />
-                    </label>
-                    <label>
-                      Photos and assets
-                      <textarea
-                        name="photo_asset_status"
-                        defaultValue={editingRequest.intake?.photo_asset_status || ''}
-                      />
-                    </label>
-                  </div>
-                  <label>
-                    Products, services, or requests not listed above
-                    <textarea
-                      name="custom_needs"
-                      defaultValue={editingRequest.intake?.custom_needs || ''}
-                      placeholder="Describe anything unusual. Unlisted requests go to human scope review instead of being discarded."
-                    />
-                  </label>
-                  <label>
-                    Ongoing maintenance needs
-                    <textarea
-                      name="maintenance_needs"
-                      defaultValue={editingRequest.intake?.maintenance_needs || ''}
-                    />
-                  </label>
-                </fieldset>
-
-                <fieldset className="portal-form-group">
-                  <legend>Brand and design direction</legend>
-                  <label>
-                    Brand/logo status
-                    <select
-                      name="brand_status"
-                      defaultValue={editingRequest.intake?.brand_status || ''}
-                    >
-                      <option value="">Choose one</option>
-                      <option value="ready">Brand and logo ready</option>
-                      <option value="partial">Some brand pieces exist</option>
-                      <option value="help_needed">I need brand help</option>
-                    </select>
-                  </label>
-                  <fieldset className="portal-creative-scale">
-                    <legend>How FAMtastic should your website feel?</legend>
-                    <p>
-                      This controls creative intensity, not quality. 0 is safest and most familiar; 5 is
-                      balanced and distinct; 10 is cinematic, immersive, and maximum FAMtastic.
-                    </p>
-                    <input
-                      name="famtastic_level"
-                      type="range"
-                      min="0"
-                      max="10"
-                      step="1"
-                      defaultValue={editingRequest.intake?.famtastic_level ?? 5}
-                      onInput={(event) => {
-                        event.currentTarget.nextElementSibling.textContent = event.currentTarget.value;
-                      }}
-                    />
-                    <output>{editingRequest.intake?.famtastic_level ?? 5}</output>
-                    <label className="portal-check">
-                      <input
-                        name="allow_bolder_direction"
-                        type="checkbox"
-                        defaultChecked={editingRequest.intake?.allow_bolder_direction}
-                      />
-                      Let one concept intentionally push beyond my selected level.
-                    </label>
-                  </fieldset>
-                  <label>
-                    Overall style notes
-                    <textarea
-                      name="style_preferences"
-                      defaultValue={editingRequest.intake?.style_preferences || ''}
-                    />
-                  </label>
-                  <div className="portal-form-grid">
-                    <label>
-                      Preferred colors
-                      <textarea
-                        name="preferred_colors"
-                        defaultValue={editingRequest.intake?.preferred_colors || ''}
-                        placeholder="Names, hex codes, or describe a palette"
-                      />
-                    </label>
-                    <label>
-                      Colors or styles to avoid
-                      <textarea
-                        name="colors_to_avoid"
-                        defaultValue={editingRequest.intake?.colors_to_avoid || ''}
-                      />
-                      <textarea
-                        name="styles_to_avoid"
-                        defaultValue={editingRequest.intake?.styles_to_avoid || ''}
-                      />
-                    </label>
-                  </div>
-                  <label>
-                    How should visitors feel?
-                    <textarea
-                      name="desired_feeling"
-                      defaultValue={editingRequest.intake?.desired_feeling || ''}
-                      placeholder="Safe, energized, luxurious, playful, confident…"
-                    />
-                  </label>
-                  <label>
-                    Websites you like and competitors
-                    <textarea
-                      name="reference_sites"
-                      defaultValue={editingRequest.intake?.reference_sites || ''}
-                      placeholder="One URL per line, plus what you like"
-                    />
-                    <textarea
-                      name="reference_site_reasons"
-                      defaultValue={editingRequest.intake?.reference_site_reasons || ''}
-                      placeholder="What specifically works or does not work for you?"
-                    />
-                    <textarea
-                      name="competitors"
-                      defaultValue={editingRequest.intake?.competitors || ''}
-                    />
-                  </label>
-                  <label>
-                    Notes about flyers, images, or other visual references
-                    <textarea
-                      name="visual_reference_notes"
-                      defaultValue={editingRequest.intake?.visual_reference_notes || ''}
-                    />
-                  </label>
-                </fieldset>
-
-                <fieldset className="portal-form-group">
-                  <legend>Domains, email, and access</legend>
-                  <label>
-                    Domain plan
-                    <select
-                      name="domain_choice"
-                      defaultValue={editingRequest.domain_choice || 'undecided'}
-                    >
-                      <option value="undecided">I’m not sure yet</option>
-                      <option value="new_domain">I need a new domain</option>
-                      <option value="existing_domain">I already own a domain</option>
-                    </select>
-                  </label>
-                  <label>
-                    Existing domain, if any
-                    <input
-                      name="existing_domain"
-                      defaultValue={editingRequest.existing_domain || ''}
-                      inputMode="url"
-                      placeholder="example.com"
-                    />
-                  </label>
-                  <div className="portal-form-grid">
-                    <label>
-                      Desired domain names
-                      <textarea
-                        name="desired_domains"
-                        defaultValue={editingRequest.intake?.desired_domains || ''}
-                        placeholder="List first choice and acceptable alternatives. Availability is verified before purchase."
-                      />
-                    </label>
-                    <label>
-                      If the first-choice domain is unavailable
-                      <textarea
-                        name="domain_fallback"
-                        defaultValue={editingRequest.intake?.domain_fallback || ''}
-                        placeholder="Alternatives, words we may adjust, or request a conversation before choosing."
-                      />
-                    </label>
-                  </div>
-                  <label>
-                    Business email needs
-                    <textarea
-                      name="business_email_needs"
-                      defaultValue={editingRequest.intake?.business_email_needs || ''}
-                      placeholder="Mailboxes such as info@ or sales@, number of users, full inboxes versus forwarding, and current provider."
-                    />
-                  </label>
-                  <label>
-                    Current digital ownership and access
-                    <textarea
-                      name="existing_technology"
-                      defaultValue={editingRequest.intake?.existing_technology || ''}
-                      placeholder="Registrar, hosting company, email provider, website/CMS, analytics, repositories, agencies, or logins you control. Do not paste passwords."
-                    />
-                  </label>
-                  <div className="portal-form-grid">
-                    <label>
-                      Accessibility needs
-                      <textarea
-                        name="accessibility_needs"
-                        defaultValue={editingRequest.intake?.accessibility_needs || ''}
-                      />
-                    </label>
-                    <label>
-                      Privacy or legal requirements
-                      <textarea
-                        name="privacy_legal_needs"
-                        defaultValue={editingRequest.intake?.privacy_legal_needs || ''}
-                      />
-                    </label>
-                  </div>
-                </fieldset>
-
-                <fieldset className="portal-form-group">
-                  <legend>Store, booking, AI, and wrap-up</legend>
-                  <label>
-                    Online store details
-                    <textarea
-                      name="ecommerce_details"
-                      defaultValue={editingRequest.intake?.ecommerce_details || ''}
-                      placeholder="Products, variants, taxes, inventory, payments…"
-                    />
-                  </label>
-                  <div className="portal-form-grid">
-                    <label>
-                      Approximate product count
-                      <input
-                        name="product_count"
-                        defaultValue={editingRequest.intake?.product_count || ''}
-                      />
-                    </label>
-                    <label>
-                      Shipping, delivery, or pickup
-                      <textarea
-                        name="shipping_pickup"
-                        defaultValue={editingRequest.intake?.shipping_pickup || ''}
-                      />
-                    </label>
-                  </div>
-                  <label>
-                    Booking or appointment details
-                    <textarea
-                      name="booking_details"
-                      defaultValue={editingRequest.intake?.booking_details || ''}
-                    />
-                  </label>
-                  <label>
-                    AI agent goals
-                    <textarea
-                      name="ai_agent_goals"
-                      defaultValue={editingRequest.intake?.ai_agent_goals || ''}
-                    />
-                  </label>
-                  <fieldset>
-                    <legend>Optional AI brief enrichment</legend>
-                    <label>
-                      Connection mode
-                      <select
-                        name="ai_enrichment_mode"
-                        defaultValue={editingRequest.intake?.ai_enrichment_mode || 'none'}
-                      >
-                        <option value="none">No AI enrichment</option>
-                        <option value="famtastic_managed">Use FAMtastic-managed models</option>
-                        <option value="customer_managed">
-                          I want to connect my own provider later
-                        </option>
-                      </select>
-                    </label>
-                    <label>
-                      Context for the AI reviewer
-                      <textarea
-                        name="ai_context_notes"
-                        defaultValue={editingRequest.intake?.ai_context_notes || ''}
-                        placeholder="Do not paste API keys or passwords."
-                      />
-                    </label>
-                    <label className="portal-check">
-                      <input
-                        name="life_path_opt_in"
-                        type="checkbox"
-                        defaultChecked={editingRequest.intake?.life_path_opt_in}
-                      />
-                      Use optional life-path guidance only for voice and creative suggestions.
-                    </label>
-                  </fieldset>
-                  <div className="portal-form-grid">
-                    <label>
-                      Budget context (optional)
-                      <textarea
-                        name="budget_context"
-                        defaultValue={editingRequest.intake?.budget_context || ''}
-                        placeholder="This does not lock you into a package; it helps us recommend the smallest useful solution."
-                      />
-                    </label>
-                    <label>
-                      Anything else Fritz should know
-                      <textarea
-                        name="notes"
-                        defaultValue={editingRequest.intake?.notes || ''}
-                      />
-                    </label>
-                  </div>
-                  <label className="portal-check">
-                    <input
-                      name="recommendation_requested"
-                      type="checkbox"
-                      defaultChecked={editingRequest.recommendation_requested !== 0}
-                    />
-                    Recommend the smallest useful package and add-ons for me.
-                  </label>
-                </fieldset>
-              </>
-            )}
-
-            <div className="portal-form-actions portal-sticky-actions">
-              <button name="action" value="save" disabled={busy}>
-                {busy
-                  ? 'Saving…'
-                  : editingRequest.public_id
-                  ? 'Save draft'
-                  : 'Save draft & open the full brief'}
-              </button>
-              {editingRequest.public_id && (
-                <button className="secondary" name="action" value="submit" disabled={busy}>
-                  Submit for review
-                </button>
-              )}
-              <button className="quiet" type="button" onClick={() => setEditingRequest(null)}>
-                Close
-              </button>
-            </div>
-          </form>
-
-          {editingRequest.public_id && (
-            <form className="portal-asset-upload" onSubmit={onUploadAsset}>
-              <h3>Add a flyer, logo, photo, or visual reference</h3>
-              <p>PNG, JPEG, WebP, or PDF up to 10 MB. Files stay private and attached to this request.</p>
-              <input
-                name="asset"
-                type="file"
-                accept="image/png,image/jpeg,image/webp,application/pdf"
-                required
-              />
-              <label className="portal-check">
-                <input name="ownership_confirmed" type="checkbox" value="1" required />
-                I own this file or have permission to share it for this project.
-              </label>
-              <label className="portal-check">
-                <input name="ai_use_consent" type="checkbox" value="1" />
-                FAMtastic may use this file as reference for approved AI-assisted concept generation.
-              </label>
-              <button disabled={busy}>{busy ? 'Uploading…' : 'Upload reference securely'}</button>
-              {editingRequest.assets?.length > 0 && (
-                <ul>
-                  {editingRequest.assets.map((asset) => (
-                    <li key={asset.public_id}>
-                      {asset.name} · {Math.ceil(asset.size_bytes / 1024)} KB
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </form>
-          )}
-        </Panel>
-      )}
-
-      <section className="portal-request-list">
-        {requestChips}
-        {!activeRequest && (
-          <Panel eyebrow="Projects" title="No website requests yet">
-            <p>Start with a short brief — your concepts, proofs, and purchase live here.</p>
-          </Panel>
-        )}
-        {activeRequest ? (
           <Panel
             key={activeRequest.public_id}
             id={`website-request-${activeRequest.public_id}`}
             tabIndex={activeRequest.public_id === targetRequest ? -1 : undefined}
             className={activeRequest.public_id === targetRequest ? 'portal-request-target' : ''}
-            eyebrow={
-              activeRequest.status === 'converted'
-                ? 'Purchased Project Request'
-                : 'Website Request'
-            }
+            eyebrow={activeRequest.status === 'converted' ? 'Purchased Project' : 'Active Website Request'}
             title={activeRequest.project_name}
           >
+            {/* High-level status row */}
             <dl>
               <div>
-                <dt>Status</dt>
-                <dd>{title(activeRequest.status)}</dd>
+                <dt>Project Status</dt>
+                <dd>
+                  <strong style={{ color: 'var(--p-lime)' }}>{title(activeRequest.status)}</strong>
+                </dd>
               </div>
               <div>
-                <dt>Proofs</dt>
+                <dt>Concept Proofs</dt>
                 <dd>{title(activeRequest.proof_review_status)}</dd>
               </div>
               <div>
-                <dt>Updated</dt>
+                <dt>Last Updated</dt>
                 <dd>{date(activeRequest.changed)}</dd>
               </div>
             </dl>
 
+            {/* Inclusions Banner */}
+            <div
+              style={{
+                margin: '1.25rem 0',
+                padding: '1rem',
+                borderRadius: '14px',
+                background: 'rgba(124,252,0,0.05)',
+                border: '1px solid rgba(124,252,0,0.2)',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '0.75rem',
+              }}
+            >
+              <div>
+                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase' }}>
+                  ⚡ Cloud Hosting
+                </span>
+                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', marginTop: '0.2rem' }}>
+                  1-Yr Fast SSD Hosting &amp; SSL
+                </strong>
+              </div>
+              <div>
+                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase' }}>
+                  🌐 Custom Domain
+                </span>
+                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', marginTop: '0.2rem' }}>
+                  .com/.org/.net Included
+                </strong>
+              </div>
+              <div>
+                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase' }}>
+                  🎨 Creative Concepts
+                </span>
+                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', marginTop: '0.2rem' }}>
+                  3 Working Directions
+                </strong>
+              </div>
+              <div>
+                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase' }}>
+                  📱 Responsive Architecture
+                </span>
+                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', marginTop: '0.2rem' }}>
+                  Mobile + Tablet + Desktop
+                </strong>
+              </div>
+            </div>
+
+            {/* DOMAIN & CLOUD PROVISIONING MANAGER */}
+            <ProjectDomainHostingManager
+              request={activeRequest}
+              busy={busy}
+              onSave={onSaveWebsiteRequest}
+            />
+
+            {/* PRIVATE SPECIAL OFFER IF ACTIVE */}
             {activeRequest.private_offer && (
               <div
                 className="portal-private-offer-card"
                 style={{
-                  margin: '1rem 0',
+                  margin: '1.25rem 0',
                   padding: '1.15rem',
                   border: '1px solid #7cfc00',
                   borderRadius: '14px',
@@ -1384,7 +988,7 @@ export default function PortalProjectsView({
                 >
                   ⚡ Exclusive Private Offer Active
                 </span>
-                <h3 style={{ margin: '0.4rem 0 0.2rem', fontSize: '1.25rem' }}>
+                <h3 style={{ margin: '0.4rem 0 0.2rem', fontSize: '1.25rem', color: '#fff' }}>
                   {activeRequest.private_offer.reason || 'Special Approved Package Price'}
                 </h3>
                 <p style={{ margin: '0.25rem 0 0.85rem', color: '#c2ccc2' }}>
@@ -1416,48 +1020,136 @@ export default function PortalProjectsView({
               </div>
             )}
 
-            {activeRequest.intake?.recommendation && (
-              <p>
-                <strong>Recommended path: {activeRequest.intake.recommendation.label}</strong>
-                <br />
-                <small>{activeRequest.intake.recommendation.reasons?.join(' ')}</small>
-              </p>
-            )}
-
-            {proofReady(activeRequest) && (
-              <WebsiteProofReview
-                request={activeRequest}
-                busy={busy}
-                onDecision={onDecideProof}
-                onShare={onShareProof}
-              />
-            )}
-
-            {!activeRequest.proofs && activeRequest.status === 'submitted' && (
-              <p>
-                {activeRequest.proof_review_status === 'owner_review'
-                  ? 'Your concepts are complete and in FAMtastic quality review. We’ll notify you when the complete set is approved.'
-                  : 'Your brief is in the studio queue. We’ll notify you when your working concepts are ready.'}
-              </p>
-            )}
-
-            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-              {!['converted', 'cancelled'].includes(activeRequest.status) && (
-                <>
-                  <button onClick={() => setEditingRequest(activeRequest)}>
-                    Continue request
+            {/* CONCEPT PROOFS OR DISPATCH BANNER */}
+            {proofReady(activeRequest) ? (
+              <div style={{ marginTop: '1.5rem' }}>
+                <h3 style={{ margin: '0 0 0.75rem', fontSize: '1.3rem', color: '#fff' }}>
+                  Review Your Interactive Concepts
+                </h3>
+                <WebsiteProofReview
+                  request={activeRequest}
+                  busy={busy}
+                  onDecision={onDecideProof}
+                  onShare={onShareProof}
+                />
+              </div>
+            ) : activeRequest.status === 'submitted' ? (
+              <div
+                style={{
+                  margin: '1.5rem 0',
+                  padding: '1.4rem',
+                  borderRadius: '16px',
+                  border: '1px solid var(--p-lime)',
+                  background: 'linear-gradient(135deg, rgba(124,252,0,0.08), #090c09)',
+                  display: 'grid',
+                  gap: '0.5rem',
+                }}
+              >
+                <span style={{ color: 'var(--p-lime)', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  ⚡ Build In Progress
+                </span>
+                <h4 style={{ margin: 0, fontSize: '1.2rem', color: '#fff' }}>
+                  Site Studio is assembling your 3 working concepts
+                </h4>
+                <p style={{ margin: 0, color: '#b2bcb2', fontSize: '0.88rem', lineHeight: '1.5' }}>
+                  {activeRequest.proof_review_status === 'owner_review'
+                    ? 'Your concepts are in FAMtastic quality assurance review. We’ll notify you the moment review opens.'
+                    : 'Your brief and domain details have been dispatched. We will notify you by email as soon as your 3 interactive proof directions are ready to review!'}
+                </p>
+              </div>
+            ) : (
+              <div
+                style={{
+                  margin: '1.5rem 0',
+                  padding: '1.25rem',
+                  borderRadius: '14px',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(0,0,0,0.4)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '1rem',
+                }}
+              >
+                <div>
+                  <h4 style={{ margin: '0 0 0.25rem', fontSize: '1.15rem', color: '#fff' }}>
+                    Ready to generate your working concepts?
+                  </h4>
+                  <p style={{ margin: 0, color: '#aeb8ae', fontSize: '0.86rem' }}>
+                    Submit your brief or send directly to Site Studio to construct your 3 design directions.
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={() => setEditingRequest(activeRequest)}
+                  >
+                    Edit Full Brief ✏️
                   </button>
-                  {activeRequest.direct_checkout_available && (
+                  {onSendToSiteStudio && (
                     <button
+                      type="button"
                       className="secondary"
-                      onClick={() =>
-                        navigate(`/buy?request=${encodeURIComponent(activeRequest.public_id)}`)
-                      }
+                      disabled={busy}
+                      onClick={() => onSendToSiteStudio(activeRequest.public_id)}
                     >
-                      Purchase {activeRequest.intake?.recommendation?.label}
+                      {busy ? 'Sending…' : '🚀 Send to Site Studio'}
                     </button>
                   )}
-                </>
+                </div>
+              </div>
+            )}
+
+            {/* ASSETS SECTION */}
+            <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--p-line)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#fff' }}>Project Assets &amp; Files</h4>
+                <small style={{ color: '#8e998e' }}>{activeRequest.assets?.length || 0} attached</small>
+              </div>
+              {activeRequest.assets?.length > 0 ? (
+                <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: '0.5rem' }}>
+                  {activeRequest.assets.map((asset) => (
+                    <li
+                      key={asset.public_id}
+                      style={{
+                        padding: '0.6rem 0.8rem',
+                        borderRadius: '8px',
+                        background: '#0a0d0a',
+                        border: '1px solid var(--p-line)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        fontSize: '0.85rem',
+                      }}
+                    >
+                      <span>📄 {asset.name}</span>
+                      <small style={{ color: '#8e998e' }}>{Math.ceil(asset.size_bytes / 1024)} KB</small>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p style={{ color: '#8e998e', fontSize: '0.85rem', margin: '0 0 0.75rem' }}>
+                  No logos or reference files attached yet. Add files via the brief editor anytime.
+                </p>
+              )}
+            </div>
+
+            {/* ACTION TOOLBAR */}
+            <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+              <button type="button" onClick={() => setEditingRequest(activeRequest)}>
+                Edit Full Brief 📝
+              </button>
+              {activeRequest.direct_checkout_available && (
+                <button
+                  type="button"
+                  className="secondary"
+                  onClick={() =>
+                    navigate(`/buy?request=${encodeURIComponent(activeRequest.public_id)}`)
+                  }
+                >
+                  Purchase Package →
+                </button>
               )}
               <button
                 type="button"
@@ -1468,14 +1160,15 @@ export default function PortalProjectsView({
               </button>
             </div>
 
+            {/* BUILD DNA VIEWER */}
             {dnaOpen && (
               <div
                 className="portal-dna-viewer"
                 style={{
-                  marginTop: '1rem',
-                  padding: '1rem',
+                  marginTop: '1.25rem',
+                  padding: '1.15rem',
                   border: '1px solid rgba(124,252,0,0.3)',
-                  borderRadius: '12px',
+                  borderRadius: '14px',
                   background: '#090d09',
                 }}
               >
@@ -1489,41 +1182,50 @@ export default function PortalProjectsView({
                 >
                   🧬 Build DNA Provenance &amp; Verification
                 </span>
-                <p style={{ fontSize: '0.85rem', color: '#aab2aa', margin: '0.4rem 0' }}>
+                <p style={{ fontSize: '0.85rem', color: '#aab2aa', margin: '0.4rem 0 0.85rem' }}>
                   Standard `famtastic.build-dna.v1`. Every stage, research packet, and concept variant is
                   journaled with exact hashes and QA gates.
                 </p>
-                <dl style={{ fontSize: '0.82rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.3rem 0' }}>
+                <dl style={{ fontSize: '0.82rem', margin: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                     <dt style={{ color: '#8e998e' }}>Request ID</dt>
                     <dd>{activeRequest.public_id}</dd>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.3rem 0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                     <dt style={{ color: '#8e998e' }}>Creative Intensity</dt>
                     <dd>{activeRequest.intake?.famtastic_level ?? 5} / 10</dd>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.3rem 0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                     <dt style={{ color: '#8e998e' }}>AI Research Mode</dt>
                     <dd>{activeRequest.intake?.ai_enrichment_mode || 'Managed'}</dd>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.3rem 0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0' }}>
                     <dt style={{ color: '#8e998e' }}>Verification Gate</dt>
                     <dd style={{ color: '#7cfc00' }}>✓ Schema &amp; Security Verified</dd>
                   </div>
                 </dl>
               </div>
             )}
-
-            {activeRequest.status === 'converted' && (
-              <p style={{ marginTop: '0.8rem' }}>This request is connected to its paid project below.</p>
-            )}
           </Panel>
-        ) : null}
-      </section>
+        </section>
+      )}
 
-      <section className="portal-grid">
-        {workspace.projects.length ? (
-          workspace.projects.map((p) => (
+      {/* If no requests exist */}
+      {!editingRequest && !activeRequest && (
+        <Panel eyebrow="Projects" title="No website requests yet">
+          <p>
+            Start with a short, reusable brief. Your domain name, 1-year fast cloud hosting instance, reference files, and 3 working concepts will live here.
+          </p>
+          <button type="button" onClick={() => setEditingRequest({})}>
+            + Start your first website request
+          </button>
+        </Panel>
+      )}
+
+      {/* Active purchased projects if any */}
+      {!editingRequest && workspace.projects?.length > 0 && (
+        <section className="portal-grid" style={{ marginTop: '1.5rem' }}>
+          {workspace.projects.map((p) => (
             <Panel
               key={p.uuid}
               eyebrow="Project Command Center"
@@ -1551,43 +1253,15 @@ export default function PortalProjectsView({
                   </dd>
                 </div>
               </dl>
-              {[3, 6].includes(p.proofs?.variants?.length) && (
-                <div className="portal-proof-grid">
-                  {p.proofs.variants.map((proof) => (
-                    <a
-                      key={proof.direction_id}
-                      href={proof.preview_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={
-                        p.proofs.selected_variant === proof.direction_id ? 'selected' : ''
-                      }
-                    >
-                      <b>{proof.direction_id.toUpperCase()}</b>
-                      <strong>{proof.direction_name}</strong>
-                      <span>Open concept ↗</span>
-                    </a>
-                  ))}
-                </div>
-              )}
-              {p.proofs?.generation_status === 'waiting_callback' && (
-                <p>Your concepts are being created now. We’ll email you when review opens.</p>
-              )}
               {p.live_url && (
                 <a href={p.live_url} target="_blank" rel="noreferrer">
                   Visit live site ↗
                 </a>
               )}
             </Panel>
-          ))
-        ) : !workspace.website_requests?.length ? (
-          <Panel eyebrow="Projects" title="No website requests yet">
-            <p>
-              Start with a short, reusable brief. Your detailed onboarding continues here after purchase.
-            </p>
-          </Panel>
-        ) : null}
-      </section>
+          ))}
+        </section>
+      )}
     </>
   );
 }

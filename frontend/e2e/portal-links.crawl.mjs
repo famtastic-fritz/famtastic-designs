@@ -18,12 +18,34 @@ const OUT = process.argv[5];
 
 const SYNTHETIC = /mailbox proof|controlled customer reply|synthetic|example\.test|e2e|FAM-2608/i;
 
-// Reachable sections come from GROUPS in CustomerPortalDashboard.jsx. The rest
-// are rendered code paths with no affordance pointing at them today; we still
-// probe them via ?section= and report UNREACHABLE instead of failing silently.
-const NAV_SECTIONS = ['home', 'services', 'projects', 'messages', 'billing', 'account'];
+const GROUPS = [
+  ['Workspace', [
+    ['home', 'Home'],
+    ['projects', 'My Projects'],
+    ['services', 'Services & Add-ons'],
+    ['files', 'Files & Assets'],
+    ['results', 'Growth & Analytics'],
+  ]],
+  ['Communications & AI', [
+    ['messages', 'Messages'],
+    ['shay', 'Shay AI Advisor'],
+    ['support', 'Support'],
+  ]],
+  ['Knowledge & Growth', [
+    ['faq', 'Knowledge & FAQs'],
+    ['grow', 'Growth Ideas'],
+    ['referrals', 'Referrals'],
+  ]],
+  ['Account & Billing', [
+    ['billing', 'Billing & Orders'],
+    ['settings', 'Settings & Alerts'],
+    ['account', 'Profile & Team'],
+  ]],
+];
+
+const LABELS = Object.fromEntries(GROUPS.flatMap(([, items]) => items));
+const NAV_SECTIONS = GROUPS.flatMap(([, items]) => items.map(([id]) => id));
 const DEAD_SECTIONS = [];
-const LABELS = { home: 'Home', services: 'Services', projects: 'Projects', messages: 'Messages', billing: 'Billing', account: 'Account', activity: 'Activity', performance: 'Performance', support: 'Support', learn: 'Learn', faq: 'FAQ', grow: 'Grow', referrals: 'Referrals', settings: 'Settings' };
 
 const results = [];
 
@@ -120,8 +142,8 @@ async function scanPage(page, name, { expectedHeading } = {}) {
 }
 
 async function goSection(page, id) {
-  // Nav labels may carry an unread-count badge ("Messages 3"), so match by prefix.
-  await page.getByRole('button', { name: new RegExp(`^${LABELS[id]}\\b`) }).first().click();
+  const label = LABELS[id];
+  await page.locator('.portal-nav nav button', { hasText: label }).first().click();
   await page.waitForTimeout(150);
   await page.waitForFunction(() => !document.querySelector('.portal-state'), null, { timeout: 5000 }).catch(() => {});
 }

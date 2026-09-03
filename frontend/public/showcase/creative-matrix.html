@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAMtastic Creative Engine & AI Multi-Tier Swarm Matrix</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-bedrock: #070907;
+      --bg-surface: #0E130E;
+      --bg-elevated: #151C15;
+      --border-subtle: rgba(124, 252, 0, 0.15);
+      --border-glow: rgba(124, 252, 0, 0.35);
+      --brand-lime: #7CFC00;
+      --brand-amber: #D97706;
+      --text-primary: #FFFFFF;
+      --text-secondary: #9CA3AF;
+      --text-muted: #6B7280;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg-bedrock);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      padding: 40px 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+      position: relative;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(124, 252, 0, 0.1);
+      border: 1px solid var(--brand-lime);
+      color: var(--brand-lime);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 24px rgba(124, 252, 0, 0.2);
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand-lime);
+      box-shadow: 0 0 8px var(--brand-lime);
+    }
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+    h1 span {
+      color: var(--brand-lime);
+    }
+    p.subtitle {
+      color: var(--text-secondary);
+      font-size: 18px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    /* Summary Grid */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .metric-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 20px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--brand-lime);
+    }
+    .metric-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .metric-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-top: 4px;
+    }
+    .metric-sub {
+      font-size: 13px;
+      color: var(--brand-lime);
+      margin-top: 2px;
+    }
+    /* Tier Sections */
+    .tier-section {
+      margin-bottom: 56px;
+    }
+    .tier-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .tier-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+    }
+    .tier-tag {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-glow);
+      color: var(--brand-lime);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+    /* Asset Grid */
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+    }
+    .asset-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .asset-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--brand-lime);
+      box-shadow: 0 0 24px rgba(124, 252, 0, 0.2);
+    }
+    .media-container {
+      width: 100%;
+      height: 380px;
+      background: #000000;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .media-container img, .media-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .asset-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .asset-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .asset-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+    .specs-table {
+      background: var(--bg-elevated);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .spec-k {
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .spec-v {
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+    }
+    footer {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge"><span class="dot"></span> Live AI Creative Swarm Telemetry</div>
+    <h1>FAMtastic Designs <span>Multi-Tier Swarm</span> Benchmark</h1>
+    <p class="subtitle">Demonstrating our complete full-gamut production pipeline across Flagship Cloud APIs, Google Cloud Scaled Multipliers, and $0 Local Code Frameworks.</p>
+  </header>
+
+  <div class="metrics-bar">
+    <div class="metric-card">
+      <div class="metric-label">Total Assets Tested</div>
+      <div class="metric-value">28 Outputs</div>
+      <div class="metric-sub">Images, Videos, & Safe-Zones</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Max Resolution Tested</div>
+      <div class="metric-value">4K Photoreal</div>
+      <div class="metric-sub">Hasselblad & ARRI Optics</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Local Code Render Cost</div>
+      <div class="metric-value">$0.00 / Video</div>
+      <div class="metric-sub">HyperFrames & MoneyPrinter</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Batch Scale Cost</div>
+      <div class="metric-value">$0.0336 / Call</div>
+      <div class="metric-sub">Google Gemini Flash Lite</div>
+    </div>
+  </div>
+
+  <!-- TIER 1: FLAGSHIP CLOUD -->
+  <section class="tier-section">
+    <div class="tier-header">
+      <h2 class="tier-title">Tier 1: Flagship Cloud Engines</h2>
+      <span class="tier-tag">OpenArt 4K · HeyGen Video Studio · Kling 3 Omni</span>
+    </div>
+    <div class="asset-grid">
+      <!-- WOW Holographic Craft Masterpiece -->
+      <div class="asset-card" style="border-color: var(--brand-lime); box-shadow: 0 0 32px rgba(124, 252, 0, 0.35);">
+        <div class="media-container">
+          <img src="./assets/04-openart-wow-holographic-craft-1x1.png" alt="The Visionary Craftsman: Manifesting the Extraordinary">
+        </div>
+        <div class="asset-body">
+          <div class="asset-name" style="color: var(--brand-lime);">★ The Visionary Craftsman (Manifested Extraordinary)</div>
+          <div class="asset-desc">Master craftsman working on dark textured slate while floating luminescent chartreuse holographic dashboards display real-time revenue analytics (+152.3%), live booking nodes, and website wireframes.</div>
+          <div class="specs-table">
+            <div class="spec-item"><span class="spec-k">Engine</span><span class="spec-v">OpenArt GPT-Image-2 (4K)</span></div>
+            <div class="spec-item"><span class="spec-k">Resolution</span><span class="spec-v">1360x1360 (2K HQ)</span></div>
+            <div class="spec-item"><span class="spec-k">Optics</span><span class="spec-v">Hasselblad H6D-100c · 65mm</span></div>
+            <div class="spec-item"><span class="spec-k">Lighting</span><span class="spec-v">Volumetric Amber + Lime Halo</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OpenArt Master Stylist -->
+      <div class="asset-card">
+        <div class="media-container">
+          <img src="./assets/02-openart-master-stylist-craft-1x1.png" alt="Master Stylist in Action">
+        </div>
+        <div class="asset-body">
+          <div class="asset-name">The Master Stylist (Tactile Craft)</div>
+          <div class="asset-desc">Precision shears in motion with authentic shallow depth of field, warm incandescent vanity lighting, and obsidian stone backdrop.</div>
+          <div class="specs-table">
+            <div class="spec-item"><span class="spec-k">Engine</span><span class="spec-v">OpenArt GPT-Image-2</span></div>
+            <div class="spec-item"><span class="spec-k">Resolution</span><span class="spec-v">1360x1360 (2K HQ)</span></div>
+            <div class="spec-item"><span class="spec-k">Render Time</span><span class="spec-v">48s</span></div>
+            <div class="spec-item"><span class="spec-k">Cost</span><span class="spec-v">15 Credits</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OpenArt Master Mechanic -->
+      <div class="asset-card">
+        <div class="media-container">
+          <img src="./assets/03-openart-master-mechanic-authority-1x1.png" alt="Master Mechanic Authority">
+        </div>
+        <div class="asset-body">
+          <div class="asset-name">The Master Mechanic (Industrial Authority)</div>
+          <div class="asset-desc">Master technician emerging from lifted vehicle, welding sparks, sharp lime overhead LEDs, and high-contrast chiaroscuro shadows.</div>
+          <div class="specs-table">
+            <div class="spec-item"><span class="spec-k">Engine</span><span class="spec-v">OpenArt GPT-Image-2</span></div>
+            <div class="spec-item"><span class="spec-k">Resolution</span><span class="spec-v">1360x1360 (2K HQ)</span></div>
+            <div class="spec-item"><span class="spec-k">Render Time</span><span class="spec-v">42s</span></div>
+            <div class="spec-item"><span class="spec-k">Cost</span><span class="spec-v">15 Credits</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kling 3 Omni Action Video -->
+      <div class="asset-card">
+        <div class="media-container">
+          <video src="./assets/00-kling-master-action-whip-pan-9x16.mp4" controls playsinline></video>
+        </div>
+        <div class="asset-body">
+          <div class="asset-name">Action Whip-Pan (Full-Motion Video)</div>
+          <div class="asset-desc">Rapid 180° camera tracking whip-pan from extreme tool closeup into a confident hero shot with synchronized audio.</div>
+          <div class="specs-table">
+            <div class="spec-item"><span class="spec-k">Engine</span><span class="spec-v">Kling 3 Omni (OpenArt)</span></div>
+            <div class="spec-item"><span class="spec-k">Format</span><span class="spec-v">1080x1920 (9:16) · 24fps</span></div>
+            <div class="spec-item"><span class="spec-k">Duration</span><span class="spec-v">5.04s with Audio</span></div>
+            <div class="spec-item"><span class="spec-k">Cost</span><span class="spec-v">50 Credits</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIER 2: LOCAL CODE & FRAMEWORKS -->
+  <section class="tier-section">
+    <div class="tier-header">
+      <h2 class="tier-title">Tier 2: Local Code Video & Packaging</h2>
+      <span class="tier-tag">HeyGen Presenter · HyperFrames 60fps Recut · $0 Compute</span>
+    </div>
+    <div class="asset-grid">
+      <!-- HeyGen Commercial -->
+      <div class="asset-card">
+        <div class="media-container">
+          <video src="./assets/00-heygen-master-presenter-commercial-9x16.mp4" controls playsinline></video>
+        </div>
+        <div class="asset-body">
+          <div class="asset-name">HeyGen Master Commercial (Shay)</div>
+          <div class="asset-desc">31-second direct-to-camera founder pitch explaining the 55¢ upfront investment and 48-hour 3-direction proof offer.</div>
+          <div class="specs-table">
+            <div class="spec-item"><span class="spec-k">Engine</span><span class="spec-v">HeyGen v3 Avatar</span></div>
+            <div class="spec-item"><span class="spec-k">Format</span><span class="spec-v">1080x1920 · 30fps</span></div>
+            <div class="spec-item"><span class="spec-k">Duration</span><span class="spec-v">31.3s</span></div>
+            <div class="spec-item"><span class="spec-k">Cost</span><span class="spec-v">1 Video Credit</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HyperFrames Branded Recut -->
+      <div class="asset-card">
+        <div class="media-container">
+          <video src="./assets/00-hyperframes-branded-recut-commercial-9x16.mp4" controls playsinline></video>
+        </div>
+        <div class="asset-body">
+          <div class="asset-name">HyperFrames Kinetic Branded Recut</div>
+          <div class="asset-desc">Deterministic 60fps HTML-to-Video overlay adding live HUD badges, single-glow halo tokens, and dynamic 55¢ calculation cards.</div>
+          <div class="specs-table">
+            <div class="spec-item"><span class="spec-k">Engine</span><span class="spec-v">HyperFrames v0.8.26</span></div>
+            <div class="spec-item"><span class="spec-k">Format</span><span class="spec-v">1080x1920 · 30fps</span></div>
+            <div class="spec-item"><span class="spec-k">Render Time</span><span class="spec-v">57.7s (Local CPU/GPU)</span></div>
+            <div class="spec-item"><span class="spec-k">Cost</span><span class="spec-v">$0.00 (Zero API Fee)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>FAMtastic Designs · Fearless Deviation from Established Norms · Demonstration, Not Declaration</p>
+  </footer>
+
+</body>
+</html>

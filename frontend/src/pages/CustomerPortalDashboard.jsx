@@ -25,7 +25,6 @@ import { LABELS } from '../components/portal/PortalShared.jsx';
 import PortalNav from '../components/portal/PortalNav.jsx';
 import PortalHeader from '../components/portal/PortalHeader.jsx';
 import PortalHomeView from '../components/portal/PortalHomeView.jsx';
-import PortalProductsView from '../components/portal/PortalProductsView.jsx';
 import PortalProjectsView from '../components/portal/PortalProjectsView.jsx';
 import PortalServicesView from '../components/portal/PortalServicesView.jsx';
 import PortalFilesView from '../components/portal/PortalFilesView.jsx';
@@ -44,7 +43,8 @@ export default function CustomerPortalDashboard() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const continuingWebsiteLead = searchParams.get('start') === 'website';
-  const requestedTab = searchParams.get('tab') || searchParams.get('section');
+  const rawTab = searchParams.get('tab') || searchParams.get('section');
+  const requestedTab = rawTab === 'products' ? 'projects' : rawTab;
   const initialSection =
     requestedTab && Object.hasOwn(LABELS, requestedTab)
       ? requestedTab
@@ -269,29 +269,51 @@ export default function CustomerPortalDashboard() {
     }, 'Referral recorded. Thank you for sharing FAMtastic.');
   };
 
-  const saveWebsiteRequest = (event) => {
+  const saveWebsiteRequest = (event, explicitRequestId = null) => {
     event.preventDefault();
     const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form));
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
     data.organization = org.public_id;
-    data.recommendation_requested = new FormData(form).has('recommendation_requested');
+    data.recommendation_requested = formData.has('recommendation_requested');
     data.utm = collectUtmParams();
-    data.action = event.nativeEvent.submitter?.value || 'save';
+    data.action = event.nativeEvent?.submitter?.value || data.action || 'save';
+
+    const targetId = explicitRequestId || data.request_id || editingRequest?.public_id || activeRequestId;
 
     act(async () => {
-      const result = editingRequest?.public_id
-        ? await updateWebsiteRequest(editingRequest.public_id, data)
-        : await createWebsiteRequest(data);
+      let result;
+      if (targetId) {
+        const existingReq = (workspace?.website_requests || []).find((r) => r.public_id === targetId);
+        if (!data.project_name && existingReq?.project_name) {
+          data.project_name = existingReq.project_name;
+        }
+        if (!data.project_type && existingReq?.project_type) {
+          data.project_type = existingReq.project_type;
+        }
+        if (!data.business_name && existingReq?.business_name) {
+          data.business_name = existingReq.business_name;
+        }
+        result = await updateWebsiteRequest(targetId, data);
+      } else {
+        if (!data.project_name) {
+          data.project_name = `${org?.name || 'My'} Business Website`;
+        }
+        result = await createWebsiteRequest(data);
+      }
       await refresh();
-      setEditingRequest(result.website_request);
-      window.setTimeout(
-        () =>
-          document
-            .getElementById('website-request-editor')
-            ?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
-        80
-      );
-    }, data.action === 'submit' ? 'Website request submitted. Your receipt, owner alert, and proof routine are queued.' : 'Draft saved. Your full brief is open below — return anytime.');
+      if (editingRequest) {
+        setEditingRequest(result.website_request);
+        window.setTimeout(
+          () =>
+            document
+              .getElementById('website-request-editor')
+              ?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+          80
+        );
+      }
+      return result;
+    }, data.action === 'submit' ? 'Website request submitted. Your receipt, owner alert, and proof routine are queued.' : 'Website request & domain saved.');
   };
 
   const uploadReference = (event) => {
@@ -389,12 +411,6 @@ export default function CustomerPortalDashboard() {
           />
         )}
 
-        {section === 'products' && (
-          <PortalProductsView
-            workspace={workspace}
-            go={go}
-          />
-        )}
 
         {section === 'projects' && (
           <PortalProjectsView

@@ -1,5 +1,6 @@
 # FAMtastic Designs site learnings
 
+<<<<<<< HEAD
 ## 2026-08-31 — A provider receipt is not an account or project claim
 
 - Observation: the Shay invitation has provider acceptance and a sent receipt,
@@ -99,13 +100,14 @@
   request for more texture, typography, color, and operational detail removes
   the customer's ability to compare or return to the approved baseline.
 - Guidance: freeze the approved route, storage key, and evidence; create a
-  separately named version for the stronger art direction; share assets only
-  when their lineage remains explicit; and prove both the new direction and
-  the unchanged parent. A map or contact component must be visible and
-  functional—not merely named in a feature list—and uncertain location details
-  must stay labeled for confirmation.
-## 2026-08-31 — Private discovery is a continuation, not an unverified account claim
-- Observation: A client can answer a deep discovery interview before creating a
+  a creative brand look like an unformatted database table.
+- Guidance: pair each expressive surface with durable operational control:
+  an unauthenticated public view, an authenticated phone-friendly editor,
+  consent capture, price bounds, flood protection, and clear scope.
+
+## 2026-08-31 — An anonymous invitation must not bypass identity gates
+
+- Observation: a raw deep-discovery link could easily be mistaken for a full
   portal account, but treating that address as a verified customer would create
   false ownership and unsafe automation.
 - Guidance: Bind the invitation to the exact recipient email, keep its bearer
@@ -119,6 +121,14 @@
 - Guidance: Install required PHP extensions in both image stages, then repeat
   migration and token-scoped API checks. Do not label a syntax/build pass as a
   completed customer-account or email-delivery proof.
+
+## 2026-08-28 — Website Bundles Require Unified Project Fulfillment, Not Disconnected Infrastructure Wizards
+- Observation: Exposing managed cloud hosting and domain setup as a separate "My Products" infrastructure tab or multi-step wizard confused customers. Because hosting is provisioned automatically with the domain as part of the website package, fragmenting the mental model into unmanaged server panels led to confusion, and partial domain saves failed when stripped of their request context.
+- Guidance: Unify website provisioning inside the project workspace (`/portal?tab=projects`). Model hosting and custom domain as an inclusive bundle benefit, provide inline domain selection (`new_domain` registration vs `existing_domain` DNS routing with 1-click copyable records), and ensure all partial request updates automatically merge default project metadata so domain saves never fail validation.
+
+## 2026-08-28 — Client Portal Design DNA v1: Enforcing In-Portal Action Routing, Single Focus Glow, and Token Workspace Isolation
+- Observation: When authenticated clients explore recommended studio add-ons or growth offers, linking to generic public `/contact` forms creates conversion drop-off and context fragmentation. Similarly, in token-scoped workspaces (`/portal/:token`), unconstrained brand links that route to `/` exit the private workspace and strand the user.
+- Guidance: Establish an enforceable Client Portal Design DNA standard (`FAMTASTIC_CLIENT_PORTAL_DESIGN_DNA_V1`). Keep all product upgrade actions within the authenticated portal boundary routing directly to `/buy?sku=...` checkout or interactive modal workflows. Preserve token workspace URLs in brand navigation headers. Apply the strict "One Glow" rule (`box-shadow: 0 0 24px rgba(124,252,0,.35)`) to direct customer gaze to the single next best action, and validate all portal surfaces with automated guards (`validate-client-portal-design-dna.mjs`).
 
 ## 2026-08-28 — Modular Customer Portal Architecture with Governed AI Assistance Beats Monolithic Dashboards
 - Observation: Housing 14+ customer lifecycle surfaces, guided multi-step brief wizards, proof review iframes, file management, and message threads inside a monolithic 500-line React component created code bloat and made individual subviews difficult to test, maintain, and evolve.

@@ -110,7 +110,27 @@ export default function PortalServicesView({ workspace, catalog, go, compact = f
                     ${item.price}
                     {item.billing?.kind === 'recurring' ? '/mo' : ''}
                   </strong>
-                  <button onClick={() => go('services')}>Learn more →</button>
+                  {compact ? (
+                    <button type="button" onClick={() => go('services')}>
+                      Learn more →
+                    </button>
+                  ) : (
+                    <Link
+                      to={`/buy?sku=${encodeURIComponent(item.sku)}`}
+                      style={{
+                        padding: '0.45rem 0.85rem',
+                        fontSize: '0.82rem',
+                        borderRadius: '8px',
+                        background: '#7cfc00',
+                        color: '#000',
+                        fontWeight: '700',
+                        textDecoration: 'none',
+                        display: 'inline-block',
+                      }}
+                    >
+                      Order module →
+                    </Link>
+                  )}
                 </footer>
               </article>
             ))}

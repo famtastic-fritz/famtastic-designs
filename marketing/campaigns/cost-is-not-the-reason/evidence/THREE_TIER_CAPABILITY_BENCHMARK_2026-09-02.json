@@ -1,0 +1,88 @@
+{
+  "schema": "famtastic.three-tier-capability-benchmark.v1",
+  "benchmark_id": "bench-cost-is-not-the-reason-2026-09-02",
+  "executed_at": "2026-09-02T18:14:00.678Z",
+  "tiers": {
+    "tier_1_premium_flagship": {
+      "provider": "OpenArt / HeyGen / Firefly",
+      "status": "master_seed_anchor_defined",
+      "benchmark_cost_usd": 15,
+      "asset_count": 3
+    },
+    "tier_2_google_cloud_multiplier": {
+      "provider": "Google Gemini Flash Lite Developer API",
+      "model": "gemini-3.1-flash-lite-image",
+      "status": "pipeline_active_and_authenticated",
+      "unit_cost_usd": 0.0336,
+      "total_estimated_cost_usd": 0.1344,
+      "records": [
+        {
+          "niche_id": "hair-beauty-stylist",
+          "title": "Hair & Beauty Stylist Booksy Escape",
+          "tier": "tier_2_google_cloud_multiplier",
+          "model": "gemini-3.1-flash-lite-image",
+          "prompt": "Cinematic photograph of a modern luxury hair styling salon studio with obsidian dark surfaces, sleek vanity mirror, brass scissors, and soft emerald green lighting. Generous negative space on the left for HTML text overlays. Zero letters, zero words, zero logos.",
+          "prompt_sha256": "94d88fa88247aee7d2880481a459636690d57484cd9512fe460416c91dc72d47",
+          "seed_asset": "marketing/campaigns/cost-is-not-the-reason/images/01-hair-beauty-booksy-escape-ad.jpg",
+          "seed_sha256": "b1a72a02041ebed25e6b6681fbf12c21f5d5acd135679ab3610413c46369f527",
+          "duration_ms": 1166,
+          "estimated_cost_usd": 0.0336,
+          "status": "verified_active_pipeline"
+        },
+        {
+          "niche_id": "auto-repair-contractor",
+          "title": "Auto Repair & Detailer Authority",
+          "tier": "tier_2_google_cloud_multiplier",
+          "model": "gemini-3.1-flash-lite-image",
+          "prompt": "Cinematic commercial photograph of a clean, high-end automotive repair workshop with polished dark concrete floor, vehicle diagnostic equipment, and warm amber ambient lighting. Generous empty space for HTML text placement. Zero text, zero signs, zero logos.",
+          "prompt_sha256": "cc7a6b128ed018dd116419040afa55eefcb3850a2c7c482c859de6f26c1ad802",
+          "seed_asset": "marketing/campaigns/cost-is-not-the-reason/images/02-auto-repair-local-authority-ad.jpg",
+          "seed_sha256": "d456c48e223c173c2da1a3d7af63d5fe168eb351cef54abe2a3a2635132857dc",
+          "duration_ms": 1126,
+          "estimated_cost_usd": 0.0336,
+          "status": "verified_active_pipeline"
+        },
+        {
+          "niche_id": "nail-salon-boutique",
+          "title": "Nail Salon & Artist Studio",
+          "tier": "tier_2_google_cloud_multiplier",
+          "model": "gemini-3.1-flash-lite-image",
+          "prompt": "Cinematic photograph of a chic nail salon manicure station with dark slate countertop, soft velvet seating, display bottles, and soft chartreuse green accent light. Generous negative space for typography. Zero readable words, zero logos.",
+          "prompt_sha256": "0ad73c9387c78543f8e695782c651c0ef5ad7c2a5111840a7842da26c6014c0f",
+          "seed_asset": "marketing/campaigns/cost-is-not-the-reason/images/04-nail-salon-booksy-escape-ad.jpg",
+          "seed_sha256": "1a2069153215996bd70db4b867ea0f77a377a610030fd2d0eccbb54a8ea177f1",
+          "duration_ms": 1042,
+          "estimated_cost_usd": 0.0336,
+          "status": "verified_active_pipeline"
+        },
+        {
+          "niche_id": "popup-mobile-vendor",
+          "title": "Pop-Up Market & Mobile Boutique",
+          "tier": "tier_2_google_cloud_multiplier",
+          "model": "gemini-3.1-flash-lite-image",
+          "prompt": "Cinematic evening photograph of an artisanal outdoor pop-up retail market boutique with warm festoon string lighting, wooden display shelves, and clean layout. Generous negative space for copy. Zero readable text, zero brand logos.",
+          "prompt_sha256": "beca3f4701c2342b152a6a854cb900960ed52abe4d88304a0f34bf62b8684b3c",
+          "seed_asset": "marketing/campaigns/cost-is-not-the-reason/images/05-popup-vendor-mobile-checkout-ad.jpg",
+          "seed_sha256": "48e5e98185192b49689f2eefa6f86a7726a693bcdf7f7efaad730012871e042e",
+          "duration_ms": 944,
+          "estimated_cost_usd": 0.0336,
+          "status": "verified_active_pipeline"
+        }
+      ]
+    },
+    "tier_3_local_free_engine": {
+      "providers": [
+        "MoneyPrinterTurbo",
+        "Remotion",
+        "Adobe Photoshop JSX Exporter"
+      ],
+      "status": "deterministic_local_execution_proven",
+      "cost_usd": 0,
+      "generated_videos": [
+        "marketing/campaigns/cost-is-not-the-reason/videos/01-55-cent-myth-commercial-9x16.mp4",
+        "marketing/campaigns/cost-is-not-the-reason/videos/02-stop-dm-chaos-tiktok-shorts-9x16.mp4"
+      ],
+      "generated_images_multiformat_count": 15
+    }
+  }
+}

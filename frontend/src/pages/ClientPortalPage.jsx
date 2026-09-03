@@ -82,7 +82,7 @@ export default function ClientPortalPage() {
   return (
     <div className="cp-page">
       <header className="cp-header">
-        <Link className="cp-brand" to="/">FAM<span>tastic</span> Designs</Link>
+        <Link className="cp-brand" to={`/portal/${token}`}>FAM<span>tastic</span> Designs</Link>
         <div className="cp-secure"><i /> Private project workspace</div>
       </header>
 

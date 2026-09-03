@@ -26,7 +26,7 @@ const money = (value) => new Intl.NumberFormat('en-US', { style: 'currency', cur
 export default function PurchasePage() {
   const [searchParams] = useSearchParams();
   const websiteRequest = searchParams.get('request') || '';
-  const bundleParam = searchParams.get('bundle') || '';
+  const bundleParam = searchParams.get('sku') || searchParams.get('package') || searchParams.get('bundle') || '';
   const [state, setState] = useState({ loading: true, session: null, workspace: null, products: [], terms: null, error: '' });
   const [baseSku, setBaseSku] = useState('');
   const [selected, setSelected] = useState([]);

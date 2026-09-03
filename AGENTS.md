@@ -23,6 +23,13 @@ updated, say so explicitly in the session report rather than skipping silently.
   Shay, and every other CLI agent.
 - Use `docs/CAPABILITY_REGISTRY.md` to distinguish implemented, provider-proven,
   and production-proven capabilities.
+- For all customer portal, prospect workspace, and client control-plane work,
+  follow `docs/architecture/FAMTASTIC_CLIENT_PORTAL_DESIGN_DNA_V1.md` and its
+  machine-readable contract `docs/architecture/FAMTASTIC_CLIENT_PORTAL_DESIGN_DNA_V1.json`.
+  Run `node scripts/validate-client-portal-design-dna.mjs` before closing any portal task.
+  Never leak authenticated portal actions to public contact forms, never render
+  invented numbers or synthetic test data in customer views, enforce the single-glow
+  rule (`box-shadow: 0 0 24px rgba(124,252,0,.35)`), and maintain 44px touch targets.
 - FAMtastic Concierge is the customer-facing communications identity; FAMtastic
   Connections is the durable lead/status projection. Read
   `docs/architecture/FAMTASTIC_CONNECTIONS_CONCIERGE_CONTRACT_V1.md` before

@@ -5,7 +5,7 @@ capability is not “proven” merely because code exists.
 
 | Capability | Current evidence level | Reusable service value |
 |---|---|---|
-| Drupal + React customer portals | Production smoke-tested | Branded account, service, support, learning, referral, and retention hubs |
+| Drupal + React customer portals | Production smoke-tested & Design DNA v1 compliant | Branded account, service, support, learning, referral, retention, and token-scoped workspace control hubs governed by FAMTASTIC_CLIENT_PORTAL_DESIGN_DNA_V1 with automated structural and zero-leakage validation |
 | Drupal Commerce product lifecycle | Test-provider proven | Catalog-to-order-to-intake-to-entitlement delivery |
 | Owner-managed microsite preorders with direct payment handoff | Locally proven; production activation pending owner configuration | Durable product/quantity/pickup requests, exact price snapshots, owner-generated Cash App link/QR, and phone-first manual payment/fulfillment status without FAMtastic processing or auto-verifying funds |
 | Product onboarding contracts | Locally proven | Repeatable product, terms, intake, fulfillment, communication, reporting, and acceptance setup |
@@ -42,9 +42,9 @@ capability is not “proven” merely because code exists.
 | Gemini Flash Lite reference-led image series | Provider route proven across two unrelated builds; build-level evidence locally proven | The FAMU-adjacent sequence and the unrelated 12-direction Booked & Branded series both completed at 1K with interaction IDs, usage, timings, exact prompt/reference/output hashes, and Build DNA. The latter also proves the quality-repair loop: generated text/UI artifacts were rejected, a photo-only prompt and targeted replacement produced the final set, and all 25 generations remain in the USD 0.8400 cumulative estimate. Owner review and real recipient delivery remain separate gates. |
 | Gemini Developer Interactions API image chain | Provider route proven; Build DNA locally proven | A FAMU-adjacent reference-led Lite image and a stateful `previous_interaction_id` companion revision completed through the Developer API with real interaction IDs, usage, timings, image hashes, and no customer or production mutation |
 | Gemini Antigravity desktop bridge | Desktop sign-in and bridge discovery reported; provider execution unproven | Candidate local-attended reasoning, research, direction, copy, and prototype-construction route; it must pass a structured call, clean-session retry, failure fallback, and Build DNA receipt before autonomous use |
-| HyperFrames designed-motion lane | Installed; no FAMtastic render proof yet | Controlled proof walkthroughs, UI/text motion, and social cutdowns from approved stills, screenshots, and motion compositions |
-| MoneyPrinterTurbo narrative-video lane | Evaluated integration candidate; no FAMtastic run yet | Draft-only short-form explainers and campaign assemblies with script, footage, captions, music, and a separate approval/publishing boundary |
-| ACI AI image plan | Candidate only; price, API, rights, and quota unverified | Possible lower-cost image-volume route after an exact provider benchmark and Build DNA receipt |
+| HyperFrames designed-motion lane | Locally proven with FAMtastic render proof | Rendered 31.3s branded 9:16 vertical commercial (1080x1920 30fps) in 57.7s locally ($0 compute fee) with kinetic HUD badges, 55¢ / $199 calculation cards, single-glow #7CFC00 tokens, and synced AAC audio |
+| MoneyPrinterTurbo narrative-video lane | Locally proven with FAMtastic runs | Draft-only short-form explainers and campaign assemblies with script, footage, captions, and music (rendered 4 multi-channel niche cuts) |
+| OpenArt & Kling 3 Omni 4K media lane | Provider route proven | Rendered 4K tactile craft stills (GPT-Image-2) and 5.04s full-motion action video (Kling 3 Omni) with synchronized audio |
 
 The packet bridge's current evidence is contract-autonomous golden replay. A real
 Site Studio success return, fresh provider-generated creative run, production

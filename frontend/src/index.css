@@ -1705,6 +1705,79 @@ a:hover {
   border-bottom: 1px solid var(--v1-border);
 }
 
+/* ------------------------------------------------------------------ */
+/* Social Share Widget (Design DNA v1 compliant)                      */
+/* ------------------------------------------------------------------ */
+
+.social-share-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin: 1.5rem 0;
+  padding: 1.1rem 1.25rem;
+  background: var(--v1-surface-soft);
+  border: 1px solid var(--v1-border);
+  border-radius: var(--v1-radius-card);
+}
+
+.social-share-widget__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--v1-text-65);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.social-share-widget__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.social-share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--v1-border);
+  background: rgba(26, 26, 26, 0.85);
+  color: var(--v1-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.social-share-btn:hover {
+  border-color: var(--v1-lime);
+  background: rgba(35, 35, 35, 0.95);
+  color: var(--v1-lime);
+  box-shadow: 0 0 24px rgba(124, 252, 0, 0.35);
+}
+
+.social-share-btn.is-copied {
+  border-color: var(--v1-lime);
+  background: rgba(124, 252, 0, 0.15);
+  color: var(--v1-lime);
+}
+
+@media (min-width: 640px) {
+  .social-share-widget {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
 .blog-series-nav {
   display: grid;
   gap: 1rem;

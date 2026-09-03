@@ -2,7 +2,11 @@
 
 ## Purpose
 
-FAMtastic Designs creates demand by teaching businesses what a connected digital system can do, proving the capability through its own operations, and offering the smallest useful next step. Content must help first and sell second.
+FAMtastic Designs is a **Business Solutions Engineering Studio** that builds digital business systems at **any level**—from $199 Web Basics launches for emerging entrepreneurs, to creator hubs, Estée Lauder-scale ecommerce shopping engines, and multi-million-dollar corporate and government systems.
+
+We create demand by teaching businesses what a connected digital system can do, proving the capability through our own operations, and offering the smallest useful next step. 
+
+For the 55¢-a-day ($199/yr) campaign: We invest upfront because we believe in the client's business idea. Before they spend thousands of dollars on unproven agency promises, they get 1 year of hosting, domain, business email, analytics, AI-backed data tools, and 3 interactive design proofs in 48 hours. At worst, they are out 55¢ a day; we are out a promise made. We prove the process works first.
 
 ## Governing model
 

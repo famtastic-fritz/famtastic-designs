@@ -6,6 +6,7 @@ import { transformBlogNode } from '../lib/drupalAdapter.js';
 import { applySeo } from '../components/SEO.jsx';
 import { blogSeo } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp, FAQAccordion } from '../components/v1/index.js';
+import SocialShareButtons from '../components/SocialShareButtons.jsx';
 
 const CAMPAIGN_ARTICLES = [
   'professional-website-55-cents-a-day', 'what-is-a-domain-name', 'what-is-website-hosting',
@@ -163,6 +164,11 @@ export default function BlogPostPage() {
         ) : (
           <div className="v1-empty">This post is being published — check back soon.</div>
         )}
+        <SocialShareButtons
+          title={post.title}
+          summary={post.summary}
+          url={`https://famtasticdesigns.com/blog/${post.slug}/`}
+        />
         {post.tags.length > 0 && (
           <div className="blog-tags blog-tags--article" aria-label="Article topics">
             {post.tags.map((tag) => <span key={tag}>{tag}</span>)}

@@ -67,6 +67,20 @@ bindings, and Build DNA. FAMtastic owns the approved recipe and customer truth;
 Site Studio consumes that immutable context and returns truthful continuation
 evidence rather than silently redesigning or rerunning it.
 
+## Client portal design doctrine
+
+All customer portal (`/portal`), token-scoped workspace (`/portal/:token`), and
+prospect workspace surfaces must adhere to `docs/architecture/FAMTASTIC_CLIENT_PORTAL_DESIGN_DNA_V1.md`
+and its JSON contract `docs/architecture/FAMTASTIC_CLIENT_PORTAL_DESIGN_DNA_V1.json`.
+Validate changes with `node scripts/validate-client-portal-design-dna.mjs`.
+
+- Derive all modules from durable records: orders, entitlements, project instances, and intakes.
+- No synthetic numbers, fake affordances, or test data strings in customer-facing views.
+- No external leakage: recommended services and offers route to in-portal actions or `/buy?sku=...`.
+- One-glow rule: maximum one glowing pulse element per screen (`box-shadow: 0 0 24px rgba(124,252,0,.35)`).
+- Strict mobile usability (min 44px touch targets, `overflow-x: clip`, fluid layout).
+- Governed Shay boundary: explains, summarizes, and routes; never mutates billing or state without human confirmation.
+
 ## Preview-provider doctrine
 
 `website_proof.generate.v1` is the only supported creative-preview routine.
