@@ -1,5 +1,31 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-03 — Two scripts writing two different env files means "which URL works" changes at random
+
+- Observation: Postiz's login page spun forever at `http://127.0.0.1:4007`
+  after this morning's `restart-postiz-tunnel.sh` run, with no visible error —
+  a CORS preflight confirmed `Access-Control-Allow-Origin` was present for the
+  ngrok origin and absent for `127.0.0.1`, so the browser silently dropped the
+  login response. The container's `MAIN_URL`/`FRONTEND_URL`/
+  `NEXT_PUBLIC_BACKEND_URL` only trust whichever origin was last written.
+- Root cause is structural, not incidental: `scripts/postiz-local.sh` reads
+  and writes `~/.config/famtastic-marketing/postiz.env`, while
+  `scripts/restart-postiz-tunnel.sh` reads and writes a *different* file,
+  `~/.config/famtastic/postiz.env`. The two disagree on `POSTIZ_PUBLIC_URL`.
+  Whichever script ran most recently silently decides which origin the running
+  container will accept, and the other origin fails with a symptom (an
+  indefinite spinner, no console error) that gives no hint the cause is a
+  stale config file rather than the browser, the network, or Postiz itself.
+- Guidance: a hung UI with zero error is a strong CORS/origin-mismatch signal
+  worth checking before anything else — `curl -X OPTIONS` with an explicit
+  `Origin` header and inspecting for `Access-Control-Allow-Origin` finds this
+  in seconds, no browser dev tools required.
+- Guidance: two scripts that both claim ownership of "the current public URL"
+  but write to different files is a landmine that will keep detonating until
+  they're reconciled to one source of truth. Not fixed yet — deferred past
+  today's live campaign window so as not to touch Postiz config mid-drop.
+  Tracked as follow-up work, not closed.
+
 ## 2026-09-03 — A provider's generic error can be hiding a specific one; isolate, don't infer
 
 - Observation: X rejected every post in this campaign with `bad_body`/"Unknown
