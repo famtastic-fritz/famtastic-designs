@@ -49,6 +49,7 @@ final class SocialRecordSyncForm extends ConfirmFormBase {
 
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $candidates = [
+      __DIR__ . '/../../data/manifest.json',
       dirname(\Drupal::root(), 2) . '/marketing/campaigns/55-cents-17-day/manifest.json',
       dirname(\Drupal::root()) . '/marketing/campaigns/55-cents-17-day/manifest.json',
       \Drupal::root() . '/../marketing/campaigns/55-cents-17-day/manifest.json',
