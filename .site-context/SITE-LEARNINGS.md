@@ -1,17 +1,63 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-03 — Check the worker is alive before debugging why the work did not happen
+
+- Observation: nine days of total publishing failure. Four real defects were
+  found and fixed above it (closed approval gates, missing per-platform Postiz
+  `settings`, X copy at 2x its 280 limit, backdated drafts). None was the cause.
+  The Postiz `orchestrator` — its Temporal-backed publishing worker — had been
+  OOM-killed (`exit code 137`) inside a 3GiB colima VM since 2026-08-25: 13
+  restarts, no log output, last healthy boot predating the campaign. Posts
+  scheduled perfectly and sat in QUEUE forever. Every layer above reported
+  success throughout.
+- Operator checks, in this order, when scheduled work does not happen:
+  1. `docker exec postiz pm2 list` — a high `↺` restart count with `online`
+     status is a crash loop, not health.
+  2. `docker inspect postiz --format '{{.State.OOMKilled}}'`
+  3. `colima list` — the VM must have ≥8GiB. WordPress and Temporal share it,
+     and Temporal is Postiz's own workflow engine, never something to stop to
+     free memory.
+  4. Age of the newest orchestrator log line. Stale by days = dead.
+  5. Oldest QUEUE post past its publish time. Anything hours old = not draining.
+- Guidance: `colima start` does not resize a running VM. Use
+  `colima stop && colima start --cpu 4 --memory 8`. Everything restarts, so
+  re-run `./scripts/restart-postiz-tunnel.sh` afterwards for the OAuth callback
+  URL.
+- Guidance: this exact failure was recorded as an OPEN RISK on 2026-08-25 with a
+  resize "queued next session" that never happened and was never re-checked. An
+  open risk with no owner and no verification date is a prediction, not a
+  mitigation. Close it or schedule it.
+
+## 2026-09-03 — Clear stale provider state BEFORE reviving a dead worker
+
+- Observation: 20 duplicate posts from an earlier attempt sat in QUEUE, ten of
+  them already past their publish time. Restarting the worker first would have
+  fired all twenty immediately — the same campaign, at wrong times, to live
+  accounts.
+- Guidance: a dead queue accumulates a backlog. Audit and clear it before
+  restoring the consumer, not after. Soft-delete (`deletedAt`) rather than hard
+  delete, so a wrong call is reversible.
+
 ## 2026-09-03 — Trace the path to the provider before accepting "it is gated"
+
+> **AMENDED same day**: the operative cause was the OOM-dead worker above, not
+> anything in this entry. One inference below was also plain wrong.
 
 - Observation: no campaign post has ever gone out, and the cause was assumed to
   be the publish gates. The gates were the last blocker, not the operative one:
-  all 68 records were unapproved so the executor selected zero candidates, only
-  12 had ever reached Postiz, and the newer campaign's schedule file was read by
-  no code at all. The media it referenced was gitignored and existed only on the
-  operator workstation.
+  all 68 records of the 17-day campaign were unapproved so the executor selected
+  zero candidates, and only 12 had ever reached Postiz. The media the newer
+  campaign referenced was gitignored and existed only on the operator
+  workstation.
+- **CORRECTION**: "the newer campaign's schedule file was read by no code at
+  all, therefore it never reached Postiz" — the first half was true, the
+  conclusion was false. Twenty records for that campaign were already in the
+  provider, created outside the repository. What the repo contains does not tell
+  you what the provider holds.
 - Guidance: name the first missing step between artifact and provider before
-  changing a gate. Grep for who *reads* a schedule file. A plan nothing executes
-  is unbuilt, not blocked — and an agent session that leaves its outputs on one
-  machine has not shipped them.
+  changing a gate — then confirm it by querying the provider, not by reading the
+  repository. An agent session that leaves its outputs on one machine has not
+  shipped them; an audit that never asks the provider has not finished.
 
 ## 2026-09-03 — Open a gate and add the guard in the same change
 

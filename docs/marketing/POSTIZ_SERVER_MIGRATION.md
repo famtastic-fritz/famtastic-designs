@@ -9,6 +9,14 @@ currently requires the operator Mac awake, colima running, the Postiz container
 healthy, an ngrok tunnel up, and a human at a terminal — all at once, at the
 scheduled minute.
 
+**2026-09-03 supplied the proof.** Postiz's publishing worker was OOM-killed
+inside the 3GiB colima VM continuously from 2026-08-25, because that VM also
+hosts WordPress and a full Temporal stack. Nine days of campaign posts were
+destroyed by memory contention from unrelated software on a laptop, and nothing
+in the pipeline reported a problem — every layer above the worker returned
+success. Sizing this host correctly (§3.1: 4 GB floor, and never share it) is
+therefore not a nice-to-have; it is the failure that already happened.
+
 ---
 
 ## 1. Why a new host is required

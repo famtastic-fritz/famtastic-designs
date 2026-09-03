@@ -13,8 +13,31 @@ Both instincts are correct. This document records why, what changed on
 
 ## 1. Why nothing has ever posted
 
-Not a regression. The pipeline was built to stop, and every stop was still
-engaged. Five independent blockers, in the order they bite:
+> **REVISED 2026-09-03, later the same day.** The table below was written before
+> the real cause was found. Every row in it is a genuine defect, and all were
+> fixed — but none of them is why nothing posted.
+>
+> **The Postiz `orchestrator` — its Temporal-backed publishing worker — had been
+> OOM-killed (`exit code 137`) inside a 3GiB colima VM since 2026-08-25.** 13
+> restarts, no log output, last healthy boot predating the campaign. Posts
+> scheduled correctly and sat in QUEUE indefinitely; records dated `03:05Z` were
+> still unpublished nine hours later. Confirmed by `colima list` (3GiB),
+> `docker inspect` (`OOMKilled=true`), and orchestrator logs full of
+> `ELIFECYCLE Command failed with exit code 137`. Resizing the VM to 8GiB
+> (host RAM 91.5% → 47.8%) brought the worker back on the first attempt.
+>
+> Row 4 below is also **factually wrong** and is retained rather than deleted so
+> the error stays visible: the campaign's schedule file was indeed referenced by
+> no code, but 20 records for it already existed in Postiz, created outside the
+> repository. What the repository contains does not tell you what the provider
+> holds — a lesson recorded in `docs/SITE_LEARNINGS.md`.
+>
+> The ordering lesson: **verify the component that performs the action is alive
+> before debugging anything layered above it.** `pm2 list` would have shown 13
+> restarts in under a minute on any of the preceding nine days.
+
+Not a regression. The pipeline was also built to stop, and every stop was still
+engaged. Five blockers found before the root cause, in the order they bite:
 
 | # | Blocker | Evidence |
 |---|---|---|
@@ -50,6 +73,15 @@ operator Mac awake  →  colima VM running  →  Postiz container healthy
 Any one of those being false at 23:50 means the post silently does not exist.
 That chain has never held unattended, which is the physical reason the campaign
 did not go out.
+
+**2026-09-03 made this concrete rather than theoretical.** The workstation VM
+also hosts WordPress (3 containers) and Temporal (5, including Elasticsearch).
+Memory contention from those neighbours is what OOM-killed Postiz's publishing
+worker for nine days — a campaign silently destroyed by unrelated software
+sharing a laptop. Note that Temporal is *not* a neighbour to be stopped: it is
+Postiz's own workflow engine, and killing it to reclaim memory would break
+publishing outright. The only fix on this machine is a larger VM. A server host
+removes the contention entirely.
 
 ### Moving the trigger to Drupal cron is necessary but not sufficient
 

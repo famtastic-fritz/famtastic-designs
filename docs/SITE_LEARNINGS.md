@@ -46,17 +46,31 @@
 
 ## 2026-09-03 — A campaign with no executor is not "gated", it is unbuilt
 
+> **AMENDED same day.** Two claims below were wrong and are corrected inline.
+> The real cause of nine days of silence was the OOM-dead publishing worker
+> (see the entry at the top of this file), not anything recorded here.
+
 - Observation: three sessions and two campaigns produced creative, copy, and a
   drop schedule, and nothing ever posted. The failure was attributed to the
   publish gates. The gates were real but were the *last* blocker, not the
   operative one: every record was unapproved so the executor selected zero
-  candidates, only 12 of 68 records had ever reached the provider, and the newer
-  campaign's schedule JSON was referenced by **zero code in the repository**.
-  Opening the gates alone would have posted nothing.
+  candidates, and only 12 of 68 records of the 17-day campaign had ever reached
+  the provider.
+- **CORRECTION 1**: the newer campaign's schedule JSON being referenced by zero
+  code was true, but the inference drawn from it — that the campaign had
+  therefore never reached Postiz — was false. Twenty records for it existed in
+  the provider at its original slots, created by some path outside the
+  repository (most likely the Postiz UI). *No code reads this file* is a fact
+  about the repository; it is not a fact about the provider. Only the provider
+  can answer what the provider holds.
+- **CORRECTION 2**: "opening the gates alone would have posted nothing" was
+  right for the wrong reason. Nothing would have posted because the worker was
+  dead, not because of gates or wiring.
 - Guidance: before accepting "it is gated" as a diagnosis, follow the path from
-  artifact to provider and name the first step that does not exist. Grep for who
-  reads a schedule file; a plan nothing executes is not a blocked plan, it is an
-  absent one. Report the whole chain, not the most visible link.
+  artifact to provider and name the first step that does not exist. But finish
+  the path — query the provider for its actual state instead of inferring that
+  state from what the repository contains. A repository-side audit answers
+  "could this work"; only the provider answers "what is really there".
 
 ## 2026-09-03 — One bespoke queue script per campaign guarantees the next campaign fails
 

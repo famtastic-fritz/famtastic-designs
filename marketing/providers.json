@@ -148,13 +148,13 @@
         "scheduling",
         "social publishing"
       ],
-      "status": "connected_local_facebook",
+      "status": "connected_local_five_channels_publish_unproven",
       "automation": "api",
       "secret_env": [
         "POSTIZ_API_KEY",
         "POSTIZ_URL"
       ],
-      "notes": "DB-verified 2026-08-23: Integration row FAMTastic Designs (facebook), enabled, token valid to 2026-10-10. Other platform creds present in runtime env; OAuth per-platform still pending."
+      "notes": "Five channels connection-proven 2026-08-25 (facebook, instagram-standalone, x, tiktok [SANDBOX, ~daily re-auth until app audit], youtube [testing mode]); LinkedIn NOT connected. 2026-09-03: scheduling proven end to end (16 provider records verified QUEUE) but NO post confirmed live on any platform yet. Publishing worker (orchestrator, Temporal-backed) was OOM-dead 2026-08-25..2026-09-03 in a 3GiB colima VM; requires >=8GiB and depends on the temporal + postiz-redis + postiz-postgres containers. Runs only on the operator workstation; see docs/marketing/CAMPAIGN_POSTING_ARCHITECTURE.md."
     },
     {
       "id": "google_drive",
