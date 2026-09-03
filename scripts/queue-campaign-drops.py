@@ -404,12 +404,36 @@ if REQUEUE:
 
     old_stamp = datetime.fromisoformat(target["scheduled_time"]).astimezone(
         timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+    # Ownership must be PROVEN before deleting, never inferred from timing.
+    # Matching siblings by publishDate alone once destroyed seven unrelated
+    # posts that merely shared a slot. A record is ours only if it carries this
+    # drop's utm_content marker or its id is one we recorded.
+    known = set(target.get("provider_ids", {}).get("postiz_scheduled_group", []))
+    for key in ("postiz_draft_id", "postiz_scheduled_id"):
+        if target.get("provider_ids", {}).get(key):
+            known.add(target["provider_ids"][key])
+    marker = f"utm_content={target['content_id']}"
+
     current = api(f"/posts{WINDOW}") if not DRY_RUN else {}
-    doomed = []
+    doomed, foreign = [], []
     for post in (current.get("posts", []) if isinstance(current, dict) else []):
         stamp = str(post.get("publishDate") or post.get("date") or "")[:19]
-        if stamp == old_stamp:
-            doomed.append((str(post.get("id")), post.get("state")))
+        if stamp != old_stamp:
+            continue
+        pid = str(post.get("id"))
+        if pid in known or marker in str(post.get("content", "")):
+            doomed.append((pid, post.get("state")))
+        else:
+            foreign.append(pid)
+    if foreign:
+        print(f"  keeping {len(foreign)} record(s) in this slot that are not "
+              f"{REQUEUE}'s: {', '.join(i[:12] for i in foreign)}")
+    if not doomed:
+        sys.stderr.write(
+            f"FAIL: found no records provably belonging to {REQUEUE}.\n"
+            "Refusing to delete by timestamp alone. If its ids were lost, remove\n"
+            "them in the Postiz UI and rerun the plain queue command.\n")
+        sys.exit(3)
 
     live = [(i, s) for i, s in doomed if s not in {"DRAFT", "QUEUE"}]
     if live:
