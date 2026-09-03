@@ -140,6 +140,20 @@ DO_SCHEDULE = "--schedule" in ARGS
 DRY_RUN = "--dry-run" in ARGS
 ARMED = os.environ.get("FAMTASTIC_MARKETING_PUBLISH") == "true"
 
+# --requeue <drop_id> --at <ISO8601 with offset>
+# Moves a drop to a new time. A stored post keeps its date through every status
+# change, so re-pointing the schedule file alone would leave the provider still
+# firing at the old moment. This deletes the drop's existing records and clears
+# its ids so the normal queue path recreates them at the new time. It refuses
+# to touch anything already PUBLISHED — a sent post cannot be unsent.
+REQUEUE = ""
+REQUEUE_AT = ""
+for i, arg in enumerate(ARGS):
+    if arg == "--requeue" and i + 1 < len(ARGS):
+        REQUEUE = ARGS[i + 1]
+    elif arg == "--at" and i + 1 < len(ARGS):
+        REQUEUE_AT = ARGS[i + 1]
+
 CAMPAIGN = ""
 for i, arg in enumerate(ARGS):
     if arg == "--campaign" and i + 1 < len(ARGS):
@@ -371,6 +385,61 @@ WINDOW = (
     f"?startDate={min(_times).strftime('%Y-%m-%dT00:00:00.000Z')}"
     f"&endDate={max(_times).strftime('%Y-%m-%dT23:59:59.000Z')}"
 )
+
+# ---------------------------------------------------------------------------
+# Optional: move one drop to a new time by discarding its provider records.
+# ---------------------------------------------------------------------------
+if REQUEUE:
+    target = next((d for d in drops if d["drop_id"] == REQUEUE), None)
+    if target is None:
+        sys.stderr.write(f"FAIL: no drop '{REQUEUE}' in {CAMPAIGN}\n")
+        sys.exit(66)
+    if REQUEUE_AT:
+        if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:[+-]\d{2}:\d{2}|Z)$", REQUEUE_AT):
+            sys.stderr.write("FAIL: --at needs ISO 8601 with an offset, e.g. 2026-09-03T09:00:00-04:00\n")
+            sys.exit(64)
+        if datetime.fromisoformat(REQUEUE_AT) <= datetime.now(timezone.utc):
+            sys.stderr.write(f"FAIL: --at {REQUEUE_AT} is in the past\n")
+            sys.exit(64)
+
+    old_stamp = datetime.fromisoformat(target["scheduled_time"]).astimezone(
+        timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+    current = api(f"/posts{WINDOW}") if not DRY_RUN else {}
+    doomed = []
+    for post in (current.get("posts", []) if isinstance(current, dict) else []):
+        stamp = str(post.get("publishDate") or post.get("date") or "")[:19]
+        if stamp == old_stamp:
+            doomed.append((str(post.get("id")), post.get("state")))
+
+    live = [(i, s) for i, s in doomed if s not in {"DRAFT", "QUEUE"}]
+    if live:
+        sys.stderr.write(
+            f"REFUSED: {REQUEUE} has record(s) already past draft state: "
+            + ", ".join(f"{i[:12]}={s}" for i, s in live)
+            + "\nA post that has been sent cannot be unsent. Handle it on the platform.\n")
+        sys.exit(3)
+
+    for pid, state in doomed:
+        if state == "QUEUE":
+            # Back to DRAFT first: that terminates the publishing workflow, so
+            # the record cannot fire in the window between here and deletion.
+            api(f"/posts/{pid}/status", method="PUT", data={"status": "draft"})
+        api(f"/posts/{pid}", method="DELETE")
+        print(f"  removed {pid[:12]} ({state})")
+
+    target["provider_ids"] = {}
+    if REQUEUE_AT:
+        target["scheduled_time"] = REQUEUE_AT
+        when = datetime.fromisoformat(REQUEUE_AT)
+        target["label"] = re.sub(r"^Drop (\d+) — [^:]+:", rf"Drop \1 — {when:%-I:%M %p} ET:",
+                                 target.get("label", ""))
+    SCHEDULE_PATH.write_text(json.dumps(schedule, indent=2) + "\n")
+    print(f"REQUEUED: {REQUEUE} cleared ({len(doomed)} record(s)) "
+          f"-> {target['scheduled_time']}; it will be recreated below\n")
+    # Recompute the listing window so the new time is inside it.
+    _times = [datetime.fromisoformat(d["scheduled_time"]).astimezone(timezone.utc) for d in drops]
+    WINDOW = (f"?startDate={min(_times).strftime('%Y-%m-%dT00:00:00.000Z')}"
+              f"&endDate={max(_times).strftime('%Y-%m-%dT23:59:59.000Z')}")
 
 # Adopt anything a previous partial run already created, so reruns never
 # duplicate a live post.
