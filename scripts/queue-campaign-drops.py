@@ -112,6 +112,13 @@ PLATFORM_SETTINGS = {
         "comment": False,
         "brand_content_toggle": False,
         "brand_organic_toggle": False,
+        # DIRECT_POST publishes to the feed; UPLOAD only drops it in the
+        # account's TikTok inbox for someone to finish by hand, which would
+        # quietly turn a scheduled drop into a manual chore.
+        "content_posting_method": "DIRECT_POST",
+        # A string enum, not a boolean. "no" because these videos carry their
+        # own voice track — auto-added music would layer over it.
+        "autoAddMusic": "no",
     },
     # post | story
     "instagram-standalone": {"post_type": "post"},
