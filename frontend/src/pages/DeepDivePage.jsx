@@ -5,6 +5,11 @@ import '../portal.css';
 
 const continuationKey = 'famtastic.deep_dive_continuation';
 
+function normalizePublicUrl(value) {
+  const trimmed = value.trim();
+  return trimmed && !/^[a-z][a-z\d+.-]*:\/\//i.test(trimmed) ? `https://${trimmed}` : trimmed;
+}
+
 export default function DeepDivePage() {
   const { invitation = '' } = useParams();
   const navigate = useNavigate();
@@ -81,7 +86,7 @@ export default function DeepDivePage() {
             ) : question.type === 'textarea' ? (
               <textarea id="deep-dive-answer" aria-describedby={question.help ? 'deep-dive-help' : undefined} value={answer} onChange={(event) => setAnswer(event.target.value)} required rows="6" maxLength="3000" style={{ width: '100%', boxSizing: 'border-box', marginTop: '1rem', borderRadius: 12, border: '1px solid #303930', background: '#0a0d0a', color: '#fff', padding: '.9rem 1rem', font: 'inherit', lineHeight: 1.5 }} />
             ) : (
-              <input id="deep-dive-answer" aria-describedby={question.help ? 'deep-dive-help' : undefined} type={question.type === 'url' ? 'url' : 'text'} value={answer} onChange={(event) => setAnswer(event.target.value)} required maxLength="3000" style={{ width: '100%', boxSizing: 'border-box', minHeight: 52, marginTop: '1rem', borderRadius: 12, border: '1px solid #303930', background: '#0a0d0a', color: '#fff', padding: '.75rem 1rem', font: 'inherit' }} />
+              <input id="deep-dive-answer" aria-describedby={question.help ? 'deep-dive-help' : undefined} type="text" inputMode={question.type === 'url' ? 'url' : 'text'} autoCapitalize="none" autoCorrect="off" value={answer} onChange={(event) => setAnswer(event.target.value)} onBlur={() => { if (question.type === 'url') setAnswer((current) => normalizePublicUrl(current)); }} required maxLength="3000" style={{ width: '100%', boxSizing: 'border-box', minHeight: 52, marginTop: '1rem', borderRadius: 12, border: '1px solid #303930', background: '#0a0d0a', color: '#fff', padding: '.75rem 1rem', font: 'inherit' }} />
             )}
             <button className="btn btn--lime" type="submit" disabled={busy || !answer.trim()} style={{ marginTop: '1.25rem', minHeight: 50 }}>{busy ? 'Saving…' : 'Save and continue →'}</button>
           </form>

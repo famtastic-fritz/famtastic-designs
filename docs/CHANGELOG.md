@@ -111,6 +111,14 @@ packet). Continuation of the campaign-system-v2 work below.
 - All 16 provider records for `cost-is-not-the-reason` verified QUEUE (13:00Z×5, 14:30Z×3, 17:00Z×4, 19:30Z×4). Drops at 09:00 / 10:30 / 13:00 / 15:30 ET.
 - **Publication remains unproven.** No post has been confirmed live on any platform; first genuine attempt 2026-09-03 09:00 ET.
 - Corrected an earlier finding from this same session: the campaign **had** been queued into Postiz (20 records at its original slots). "No code references its schedule file" was true; concluding it never reached the provider was not.
+## 2026-09-03 — Intake proof-handoff truthfulness and Booksy URL repair
+
+- Allowed a customer to paste a normal public booking address such as `booksy.com/business` without manually adding `https://`; server validation now normalizes only safe HTTP(S) addresses and rejects unsafe schemes or credential-bearing URLs.
+- Confirmed by read-only production audit that the Tighten Up Your Locs deep-dive is already tied to its verified same-email customer and website request. The request remains a draft, so no proof campaign, owner review, customer proof, or Site Studio success is claimed.
+- Removed the misleading customer-side “Send to Site Studio” action. Draft briefs now say to finish and submit; submitted briefs show the durable proof-run state instead of a decorative generation claim.
+- Prevented draft briefs from queuing a job that the worker will reject, surfaced only safe proof-handoff state in the workspace payload, and retained owner-review and notification gates.
+- Added focused PHP and browser regressions for scheme-less Booksy URLs and for a linked draft brief. Local validation passed: PHP lint, 85 PHPUnit tests / 422 assertions, frontend build, Portal Design DNA (30/30), and focused Playwright (2/2).
+- No production deployment, Site Studio run, customer notification, payment, booking, or account mutation occurred in this change.
 
 ## 2026-09-02 — Full Campaign Prelaunch Buildout, Muxed Audio Sync & Universal Prompt Architect Plugin
 

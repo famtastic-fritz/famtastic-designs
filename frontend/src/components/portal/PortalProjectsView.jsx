@@ -822,7 +822,6 @@ export default function PortalProjectsView({
   onUploadAsset,
   onDecideProof,
   onShareProof,
-  onSendToSiteStudio,
   navigate,
 }) {
   const [dnaOpen, setDnaOpen] = useState(false);
@@ -834,6 +833,13 @@ export default function PortalProjectsView({
     requests.find((req) => ['customer_ready', 'notified'].includes(req.proof_review_status) && proofReady(req)) ||
     requests[0] ||
     null;
+  const proofHandoff = activeRequest?.proof_handoff || {
+    state: activeRequest?.status === 'draft' ? 'draft' : 'queued',
+    label: activeRequest?.status === 'draft' ? 'Finish and submit your brief' : 'Proof request queued',
+    detail: activeRequest?.status === 'draft'
+      ? 'Finish the brief before FAMtastic can queue a proof run.'
+      : 'FAMtastic is confirming the current proof status.',
+  };
 
   const requestChips =
     requests.length > 1 ? (
@@ -863,7 +869,7 @@ export default function PortalProjectsView({
           <span>One account. Every website.</span>
           <h2>Your Website Project Command Center</h2>
           <p>
-            Manage your project brief, custom domain name, cloud hosting instance, reference files, and interactive visual concept proofs in one place.
+            Save a private brief, submit it for FAMtastic review, and compare working concepts only after the complete proof set is ready.
           </p>
         </div>
         <button onClick={() => setEditingRequest({})}>+ Start a new website</button>
@@ -910,53 +916,6 @@ export default function PortalProjectsView({
                 <dd>{date(activeRequest.changed)}</dd>
               </div>
             </dl>
-
-            {/* Inclusions Banner */}
-            <div
-              style={{
-                margin: '1.25rem 0',
-                padding: '1rem',
-                borderRadius: '14px',
-                background: 'rgba(124,252,0,0.05)',
-                border: '1px solid rgba(124,252,0,0.2)',
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '0.75rem',
-              }}
-            >
-              <div>
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase' }}>
-                  ⚡ Cloud Hosting
-                </span>
-                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', marginTop: '0.2rem' }}>
-                  1-Yr Fast SSD Hosting &amp; SSL
-                </strong>
-              </div>
-              <div>
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase' }}>
-                  🌐 Custom Domain
-                </span>
-                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', marginTop: '0.2rem' }}>
-                  .com/.org/.net Included
-                </strong>
-              </div>
-              <div>
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase' }}>
-                  🎨 Creative Concepts
-                </span>
-                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', marginTop: '0.2rem' }}>
-                  3 Working Directions
-                </strong>
-              </div>
-              <div>
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase' }}>
-                  📱 Responsive Architecture
-                </span>
-                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#fff', marginTop: '0.2rem' }}>
-                  Mobile + Tablet + Desktop
-                </strong>
-              </div>
-            </div>
 
             {/* DOMAIN & CLOUD PROVISIONING MANAGER */}
             <ProjectDomainHostingManager
@@ -1020,7 +979,7 @@ export default function PortalProjectsView({
               </div>
             )}
 
-            {/* CONCEPT PROOFS OR DISPATCH BANNER */}
+            {/* CONCEPT PROOFS OR DURABLE HANDOFF STATUS */}
             {proofReady(activeRequest) ? (
               <div style={{ marginTop: '1.5rem' }}>
                 <h3 style={{ margin: '0 0 0.75rem', fontSize: '1.3rem', color: '#fff' }}>
@@ -1033,71 +992,37 @@ export default function PortalProjectsView({
                   onShare={onShareProof}
                 />
               </div>
-            ) : activeRequest.status === 'submitted' ? (
+            ) : (
               <div
                 style={{
                   margin: '1.5rem 0',
                   padding: '1.4rem',
                   borderRadius: '16px',
-                  border: '1px solid var(--p-lime)',
-                  background: 'linear-gradient(135deg, rgba(124,252,0,0.08), #090c09)',
+                  border: proofHandoff.state === 'needs_attention' ? '1px solid #e2ac5f' : '1px solid var(--p-lime)',
+                  background: proofHandoff.state === 'needs_attention' ? 'linear-gradient(135deg, rgba(226,172,95,0.10), #090c09)' : 'linear-gradient(135deg, rgba(124,252,0,0.08), #090c09)',
                   display: 'grid',
                   gap: '0.5rem',
                 }}
               >
-                <span style={{ color: 'var(--p-lime)', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                  ⚡ Build In Progress
+                <span style={{ color: proofHandoff.state === 'needs_attention' ? '#e2ac5f' : 'var(--p-lime)', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  Proof status
                 </span>
                 <h4 style={{ margin: 0, fontSize: '1.2rem', color: '#fff' }}>
-                  Site Studio is assembling your 3 working concepts
+                  {proofHandoff.label}
                 </h4>
                 <p style={{ margin: 0, color: '#b2bcb2', fontSize: '0.88rem', lineHeight: '1.5' }}>
-                  {activeRequest.proof_review_status === 'owner_review'
-                    ? 'Your concepts are in FAMtastic quality assurance review. We’ll notify you the moment review opens.'
-                    : 'Your brief and domain details have been dispatched. We will notify you by email as soon as your 3 interactive proof directions are ready to review!'}
+                  {proofHandoff.detail}
                 </p>
-              </div>
-            ) : (
-              <div
-                style={{
-                  margin: '1.5rem 0',
-                  padding: '1.25rem',
-                  borderRadius: '14px',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  background: 'rgba(0,0,0,0.4)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: '1rem',
-                }}
-              >
-                <div>
-                  <h4 style={{ margin: '0 0 0.25rem', fontSize: '1.15rem', color: '#fff' }}>
-                    Ready to generate your working concepts?
-                  </h4>
-                  <p style={{ margin: 0, color: '#aeb8ae', fontSize: '0.86rem' }}>
-                    Submit your brief or send directly to Site Studio to construct your 3 design directions.
-                  </p>
-                </div>
-                <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-                  <button
-                    type="button"
-                    onClick={() => setEditingRequest(activeRequest)}
-                  >
-                    Edit Full Brief ✏️
-                  </button>
-                  {onSendToSiteStudio && (
+                {proofHandoff.state === 'draft' && (
+                  <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginTop: '0.6rem' }}>
                     <button
                       type="button"
-                      className="secondary"
-                      disabled={busy}
-                      onClick={() => onSendToSiteStudio(activeRequest.public_id)}
+                      onClick={() => setEditingRequest(activeRequest)}
                     >
-                      {busy ? 'Sending…' : '🚀 Send to Site Studio'}
+                      Finish and submit brief →
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             )}
 

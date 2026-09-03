@@ -179,6 +179,16 @@
   moves off the laptop — server cron alone cannot reach `127.0.0.1` on another
   machine. See `docs/marketing/CAMPAIGN_POSTING_ARCHITECTURE.md`.
 
+## 2026-09-03 — A queued job is not a Site Studio handoff
+
+- Observation: the former portal action queued a proof job and immediately told the customer that Site Studio was generating proofs, while the worker correctly rejects draft requests. The resulting record was neither a valid submitted brief nor a verified Studio packet, run, or callback.
+- Guidance: gate proof work at the submitted brief boundary, expose the durable request/job/campaign state rather than naming an unverified provider action, and preserve owner review before customer proof visibility or notification.
+
+## 2026-09-03 — Booking URLs should accept how customers actually paste them
+
+- Observation: browser URL controls and direct server URL validation rejected a common pasted Booksy address without `https://`.
+- Guidance: normalize a scheme-less public host to HTTPS on the client and server, but reject non-HTTP(S) schemes, credentials, malformed values, or implied account access. Help text must say that login, scraping, and booking-account changes are out of scope.
+
 ## 2026-08-31 — A provider receipt is not an account or project claim
 
 - Observation: the Shay invitation has provider acceptance and a sent receipt,

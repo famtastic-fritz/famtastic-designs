@@ -747,6 +747,7 @@ final class CustomerPortalService {
     $row['private_offer'] = $offer ?: NULL;
     $row['proofs'] = $this->serializeRequestProof($row);
     $row['proof_share'] = $this->proofSharePayload($row);
+    $row['proof_handoff'] = $this->proofHandoff($row);
     $row['assets'] = $this->requestAssets((int) $row['id']);
     $row['recommended_sku'] = (string) ($recommendation['recommended_sku'] ?? '');
     $supportedDirectSkus = [
@@ -767,6 +768,90 @@ final class CustomerPortalService {
     return $row;
   }
 
+  /** Returns customer-safe evidence of the request-to-proof lifecycle. */
+  private function proofHandoff(array $row): array {
+    if ((string) ($row['status'] ?? '') === 'draft') {
+      return [
+        'state' => 'draft',
+        'label' => 'Finish and submit your brief',
+        'detail' => 'Your saved brief is connected to this account. Submit it when you are ready for FAMtastic to queue the proof routine.',
+      ];
+    }
+
+    $requestId = (int) ($row['id'] ?? 0);
+    $job = $this->database->select('famtastic_job', 'j')->fields('j', ['id', 'status', 'attempts', 'max_attempts'])
+      ->condition('job_key', 'website_proof.generate.v1:request:' . $requestId)
+      ->range(0, 1)->execute()->fetchAssoc();
+    $base = [
+      'job_id' => $job ? (int) $job['id'] : NULL,
+      'job_status' => $job ? (string) $job['status'] : 'not_queued',
+      'attempts' => $job ? (int) $job['attempts'] : 0,
+      'max_attempts' => $job ? (int) $job['max_attempts'] : 0,
+    ];
+    if (!$job) {
+      return $base + [
+        'state' => 'needs_attention',
+        'label' => 'Proof run needs FAMtastic attention',
+        'detail' => 'Your submitted brief is saved, but no proof job is recorded yet. You do not need to submit it again.',
+      ];
+    }
+    if ($job['status'] === 'failed') {
+      return $base + [
+        'state' => 'needs_attention',
+        'label' => 'Proof run needs FAMtastic attention',
+        'detail' => 'The proof routine needs a team review before concepts can be prepared. Your saved brief is unchanged.',
+      ];
+    }
+
+    $campaign = !empty($row['proof_campaign_id'])
+      ? $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id'])
+      : NULL;
+    if ($campaign) {
+      $generation = (string) $campaign->get('generation_status')->value;
+      $studioJob = (string) $campaign->get('studio_job_id')->value;
+      if ($generation === 'waiting_callback') {
+        if (str_starts_with($studioJob, 'local-')) {
+          return $base + [
+            'state' => 'waiting_for_provider',
+            'label' => 'Proof generation is waiting for a creative provider',
+            'detail' => 'Your brief and proof record are saved. FAMtastic must restore the configured creative-provider route before working concepts can be generated.',
+          ];
+        }
+        if ($studioJob !== '') {
+          return $base + [
+            'state' => 'waiting_for_site_studio',
+            'label' => 'Site Studio request accepted',
+            'detail' => 'Site Studio has a recorded proof job and is expected to return working concepts for FAMtastic review.',
+          ];
+        }
+        return $base + [
+          'state' => 'needs_attention',
+          'label' => 'Proof handoff needs FAMtastic attention',
+          'detail' => 'Your proof record is waiting without a recorded provider job. Your saved brief is unchanged.',
+        ];
+      }
+      if ($generation === 'ready' && (string) ($row['proof_review_status'] ?? '') === 'owner_review') {
+        return $base + [
+          'state' => 'owner_review',
+          'label' => 'Concepts are in FAMtastic review',
+          'detail' => 'The complete proof set is ready for owner review. It is not visible to your account until that review is approved.',
+        ];
+      }
+    }
+    if ($job['status'] === 'running') {
+      return $base + [
+        'state' => 'preparing',
+        'label' => 'Preparing your proof request',
+        'detail' => 'FAMtastic is validating your submitted brief before a Site Studio handoff can be recorded.',
+      ];
+    }
+    return $base + [
+      'state' => 'queued',
+      'label' => 'Proof request queued',
+      'detail' => 'Your submitted brief is in the durable proof queue. Concepts are not generated until the proof routine records a provider or Site Studio handoff.',
+    ];
+  }
+
   /** Changes the unlisted proof link for one account-owned request. */
   public function updateWebsiteProofShare(int $customerId, string $publicId, string $action, int $uid): array {
     $row = $this->ownedWebsiteRequest($customerId, $publicId);
@@ -780,9 +865,12 @@ final class CustomerPortalService {
   public function sendWebsiteRequestToSiteStudio(int $customerId, string $publicId): array {
     $row = $this->ownedWebsiteRequest($customerId, $publicId);
     if (!$row) throw new \RuntimeException('Website request not found.');
+    if ((string) $row['status'] !== 'submitted') {
+      throw new \InvalidArgumentException('Finish and submit your brief before FAMtastic can queue a proof run.');
+    }
     $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
     $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], $publicId, $intake);
-    $this->activity((int) $row['organization_id'], 'website_request.site_studio_dispatched', 'Your project request was sent to Site Studio for concept & build generation.');
+    $this->activity((int) $row['organization_id'], 'website_request.proof_run_queued', 'Your submitted website brief is queued for the proof routine.');
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
     return $this->serializeWebsiteRequest($updated ?: $row);
   }
@@ -941,8 +1029,8 @@ final class CustomerPortalService {
   }
 
   /** Enqueues the canonical pre-purchase proof routine exactly once. */
-  private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake): void {
-    $this->ledger->enqueue(
+  private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake): int {
+    return $this->ledger->enqueue(
       'website_proof.generate.v1:request:' . $requestId,
       'proof.generate',
       [

@@ -319,7 +319,7 @@ final class DeepDiveInvitationService {
       ['key' => 'service_area', 'title' => 'Where do you serve clients?', 'help' => 'Share your city, neighborhood, travel radius, or salon name. Do not include a home address unless you intend to publish it.', 'type' => 'text', 'required' => TRUE],
       ['key' => 'hours_and_availability', 'title' => 'What are your normal hours and booking boundaries?', 'help' => 'Include days off, lead time, late policies, or dates you do not accept clients.', 'type' => 'textarea', 'required' => TRUE],
       ['key' => 'booking_path', 'title' => 'How should clients book while we build?', 'type' => 'choice', 'options' => ['booksy_bridge' => 'Keep Booksy as the booking link', 'request_to_book' => 'Let clients request a time for you to confirm', 'compare_first' => 'Help me compare both options first'], 'required' => TRUE],
-      ['key' => 'booksy_url', 'title' => 'What is your current Booksy or booking link?', 'help' => 'Paste the public link only. We will not attempt to sign in, scrape clients, or change your Booksy account.', 'type' => 'url', 'required' => TRUE],
+      ['key' => 'booksy_url', 'title' => 'What is your current Booksy or booking link?', 'help' => 'Paste the public link only. You can paste booksy.com/... — we add https:// when it is missing. We will not attempt to sign in, scrape clients, or change your Booksy account.', 'type' => 'url', 'required' => TRUE],
       ['key' => 'booking_friction', 'title' => 'Where do booking questions or missed opportunities happen today?', 'help' => 'Tell us about service selection, availability, preparation, cancellations, deposits, or double-booking concerns.', 'type' => 'textarea', 'required' => TRUE],
       ['key' => 'payment_display', 'title' => 'What payment path should the site explain?', 'type' => 'choice', 'options' => ['booksy_only' => 'Keep payment inside Booksy', 'existing_payment_qr' => 'Display my existing payment-provider QR', 'deposits_need_review' => 'I need a deposit/payment recommendation first', 'no_public_payment' => 'Do not show a payment path yet'], 'required' => TRUE],
       ['key' => 'payment_notes', 'title' => 'What should clients know before they pay or book?', 'help' => 'Share public policy wording or a future QR destination. Never enter card, bank, Booksy, or merchant-login details.', 'type' => 'textarea', 'required' => TRUE],
@@ -368,11 +368,26 @@ final class DeepDiveInvitationService {
         throw new \InvalidArgumentException('Choose one of the available answers.');
       }
     }
-    if (($question['type'] ?? '') === 'url' && !filter_var($value, FILTER_VALIDATE_URL)) {
-      throw new \InvalidArgumentException('Enter a complete public web address, including https://.');
+    if (($question['type'] ?? '') === 'url') {
+      $value = $this->normalizePublicUrl($value);
     }
     if (mb_strlen($value) > 3000) {
       throw new \InvalidArgumentException('Please keep this answer under 3,000 characters.');
+    }
+    return $value;
+  }
+
+  /** Accepts normal pasted public URLs while rejecting non-web and unsafe schemes. */
+  private function normalizePublicUrl(string $value): string {
+    $value = trim($value);
+    if ($value !== '' && !preg_match('#^[a-z][a-z0-9+.-]*://#i', $value)) {
+      $value = 'https://' . $value;
+    }
+    $parts = $value !== '' ? parse_url($value) : FALSE;
+    $scheme = is_array($parts) ? strtolower((string) ($parts['scheme'] ?? '')) : '';
+    $host = is_array($parts) ? (string) ($parts['host'] ?? '') : '';
+    if (!in_array($scheme, ['http', 'https'], TRUE) || $host === '' || isset($parts['user']) || isset($parts['pass']) || !filter_var($value, FILTER_VALIDATE_URL)) {
+      throw new \InvalidArgumentException('Paste a public website address, such as booksy.com/your-business.');
     }
     return $value;
   }

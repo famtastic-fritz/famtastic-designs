@@ -469,7 +469,7 @@ final class CustomerPortalController extends ControllerBase {
     try {
       return new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->sendWebsiteRequestToSiteStudio((int) $customer['id'], $website_request)]);
     }
-    catch (\RuntimeException $e) { return $this->error('site_studio_error', 422, $e->getMessage()); }
+    catch (\InvalidArgumentException|\RuntimeException $e) { return $this->error('site_studio_error', 422, $e->getMessage()); }
   }
 
   public function profile(Request $request): JsonResponse {

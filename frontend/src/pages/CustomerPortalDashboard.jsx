@@ -16,7 +16,6 @@ import {
   updateWebsiteRequest,
   updateWebsiteRequestProofShare,
   uploadWebsiteRequestAsset,
-  sendWebsiteRequestToSiteStudio,
 } from '../api/customer.js';
 import { collectUtmParams } from '../api/pipeline.js';
 import '../portal.css';
@@ -353,14 +352,6 @@ export default function CustomerPortalDashboard() {
     return result.ok;
   };
 
-  const sendToSiteStudio = async (requestId) => {
-    const result = await act(async () => {
-      await sendWebsiteRequestToSiteStudio(requestId);
-      await refresh();
-    }, 'Website request dispatched to Site Studio! Your 3 visual proof concepts are generating.');
-    return result.ok;
-  };
-
   return (
     <div className={`portal-app ${menu ? 'menu-open' : ''}`}>
       <PortalNav
@@ -425,7 +416,6 @@ export default function CustomerPortalDashboard() {
             onUploadAsset={uploadReference}
             onDecideProof={decideProof}
             onShareProof={shareProof}
-            onSendToSiteStudio={sendToSiteStudio}
             navigate={navigate}
           />
         )}
