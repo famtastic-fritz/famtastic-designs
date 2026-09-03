@@ -7,10 +7,22 @@ declare(strict_types=1);
  * converts owner-approved Postiz DRAFT posts into SCHEDULED posts and
  * verifies every conversion by read-back.
  *
- * HARD GATES — the script refuses to run unless BOTH are present:
- *   1. environment FAMTASTIC_MARKETING_PUBLISH === 'true'
- *   2. CLI flag --i-have-owner-publish-approval
- * Publishing without the owner's bounded-batch approval is forbidden.
+ * ARMING SWITCH — the script refuses to run unless:
+ *   environment FAMTASTIC_MARKETING_PUBLISH === 'true'
+ * Owner directive 2026-09-03: the second gate (CLI flag
+ * --i-have-owner-publish-approval) is removed so an unattended scheduler
+ * (launchd/cron on the operator host) can run this without a human typing a
+ * flag. FAMTASTIC_MARKETING_PUBLISH remains the single arming switch and is
+ * deliberately NOT defaulted on anywhere in the repo: an agent session that has
+ * not been armed still cannot send. The flag is accepted but ignored so older
+ * runbooks and scripts keep working.
+ *
+ * STALE-DATE GUARD — a draft whose stored date is already in the past is never
+ * converted. Postiz keeps the stored date when a draft becomes scheduled, so
+ * converting a backdated draft fires it immediately; a whole campaign's backlog
+ * would blast at once. Such records are reported BLOCKED (provider_state=
+ * stale_date) and must be re-dated first (scripts/retime-campaign-drafts.py).
+ * Override for a deliberate immediate send with --allow-stale-dates.
  *
  * Conversion is IN PLACE: PUT /posts/{id}/status {"status":"schedule"} keeps
  * the stored post id, content, media, and date and restarts the publishing
@@ -32,8 +44,9 @@ declare(strict_types=1);
  *   logged, or committed.
  *
  * Run:
- *   drush -r backend/web php:script backend/scripts/publish-executor.php -- --limit=12
- * Gated runs additionally require the two gates above. --selftest performs
+ *   FAMTASTIC_MARKETING_PUBLISH=true \
+ *     drush -r backend/web php:script backend/scripts/publish-executor.php -- --limit=12
+ * --selftest performs
  * a full synthetic create->schedule->verify->revert->delete loop against the
  * configured instance (still gate-protected, far-future dated, fully cleaned).
  */
@@ -43,25 +56,20 @@ $runId = gmdate('Ymd\THis') . 'Z-' . getmypid();
 $repoRoot = dirname(\Drupal::root(), 2);
 
 // ---------------------------------------------------------------------------
-// Hard gates.
+// Arming switch (single gate as of 2026-09-03).
 // ---------------------------------------------------------------------------
 $envGate = getenv('FAMTASTIC_MARKETING_PUBLISH') === 'true';
 $argvRaw = implode(' ', $_SERVER['argv'] ?? []) . ' ' . implode(' ', $extra ?? []);
+// Accepted for backwards compatibility with existing runbooks; no longer required.
 $flagGate = str_contains($argvRaw, '--i-have-owner-publish-approval');
 $selftest = str_contains($argvRaw, '--selftest');
-$missing = [];
+$allowStaleDates = str_contains($argvRaw, '--allow-stale-dates');
 if (!$envGate) {
-  $missing[] = 'env FAMTASTIC_MARKETING_PUBLISH=true';
-}
-if (!$flagGate) {
-  $missing[] = 'flag --i-have-owner-publish-approval';
-}
-if ($missing) {
   fwrite(STDERR, "REFUSED: publish executor did not run.\n");
-  fwrite(STDERR, "Missing gates: " . implode('; ', $missing) . "\n");
-  fwrite(STDERR, "Publishing requires BOTH the environment gate AND the explicit\n");
-  fwrite(STDERR, "--i-have-owner-publish-approval flag backed by the owner's bounded-batch\n");
-  fwrite(STDERR, "approval. Nothing was read, sent, or changed.\n");
+  fwrite(STDERR, "Missing: env FAMTASTIC_MARKETING_PUBLISH=true\n");
+  fwrite(STDERR, "This is the single arming switch for real sends. Set it in the operator\n");
+  fwrite(STDERR, "host environment (or the scheduled job) to publish. Nothing was read,\n");
+  fwrite(STDERR, "sent, or changed.\n");
   exit(2);
 }
 
@@ -289,8 +297,8 @@ else {
 $rows = $candidateQuery->orderBy('day')->orderBy('id')->range(0, $limit)->execute()->fetchAll(\PDO::FETCH_ASSOC);
 
 echo sprintf(
-  "GATES: env=%s flag=%s | provider=%s (key: %s) | candidates=%d limit=%d mode=%s\n",
-  $envGate ? 'ok' : 'MISSING', $flagGate ? 'ok' : 'MISSING', $baseUrl, $keySource, count($rows), $limit, $selftest ? 'SELFTEST' : 'CAMPAIGN'
+  "ARMED: FAMTASTIC_MARKETING_PUBLISH=true | stale_dates=%s | provider=%s (key: %s) | candidates=%d limit=%d mode=%s\n",
+  $allowStaleDates ? 'ALLOWED' : 'blocked', $baseUrl, $keySource, count($rows), $limit, $selftest ? 'SELFTEST' : 'CAMPAIGN'
 );
 
 // ---------------------------------------------------------------------------
@@ -348,6 +356,38 @@ foreach ($rows as $record) {
     $results[] = $entry;
     echo "BLOCKED: {$cid} — draft {$record['postiz_draft_id']} not found in provider window; marked missing_draft\n";
     continue;
+  }
+
+  // Stale-date guard. Postiz preserves the stored date across the status
+  // change, so converting a backdated draft publishes it on the spot — an
+  // entire queued backlog would fire at once the moment publishing is armed.
+  // Re-date first (scripts/retime-campaign-drafts.py), never convert blind.
+  $postDate = (string) ($post['publishDate'] ?? ($post['date'] ?? ''));
+  $postTs = $postDate !== '' ? strtotime($postDate) : FALSE;
+  $entry['provider_date'] = $postDate;
+  if (!$allowStaleDates && ($post['state'] ?? '') === 'DRAFT') {
+    if ($postTs === FALSE) {
+      $entry['action'] = 'undated_draft_blocked';
+      $db->update('famtastic_social_record')
+        ->fields(['provider_state' => 'undated', 'changed' => $time])
+        ->condition('id', (int) $record['id'])->execute();
+      $results[] = $entry;
+      echo "BLOCKED: {$cid} — draft has no readable date; refusing to convert\n";
+      continue;
+    }
+    if ($postTs <= $time) {
+      $entry['action'] = 'stale_date_blocked';
+      $db->update('famtastic_social_record')
+        ->fields(['provider_state' => 'stale_date', 'changed' => $time])
+        ->condition('id', (int) $record['id'])->execute();
+      $results[] = $entry;
+      printf(
+        "BLOCKED: %s — draft dated %s is in the past; would publish immediately. Re-date it first.\n",
+        $cid,
+        gmdate(DATE_ATOM, $postTs)
+      );
+      continue;
+    }
   }
 
   $state = (string) ($post['state'] ?? '');
@@ -415,6 +455,10 @@ unset($entry);
 
 $scheduledCount = count(array_filter($results, static fn(array $e): bool => $e['verified']));
 $blockedCount = count(array_filter($results, static fn(array $e): bool => $e['action'] === 'missing_draft_blocked'));
+$staleCount = count(array_filter(
+  $results,
+  static fn(array $e): bool => in_array($e['action'], ['stale_date_blocked', 'undated_draft_blocked'], TRUE)
+));
 
 // ---------------------------------------------------------------------------
 // Manifest sync (best-effort, mirrors queue-script conventions).
@@ -507,12 +551,18 @@ $evidence = [
   'status' => $status,
   'run_id' => $runId,
   'mode' => $selftest ? 'selftest' : 'campaign',
-  'gates' => ['env_gate' => $envGate, 'owner_flag_gate' => $flagGate],
+  'gates' => [
+    'env_gate' => $envGate,
+    'owner_flag_gate_present' => $flagGate,
+    'owner_flag_gate_required' => FALSE,
+    'stale_dates_allowed' => $allowStaleDates,
+  ],
   'provider' => ['base_url_host' => $host, 'key_source' => $keySource],
   'batch_limit' => $limit,
   'candidates' => count($rows),
   'scheduled_verified' => $scheduledCount,
   'blocked_missing_draft' => $blockedCount,
+  'blocked_stale_or_undated' => $staleCount,
   'read_back_window' => $listWindow,
   'manifest_synced' => $manifestSynced,
   'checks' => $checks,
@@ -523,8 +573,8 @@ $evidence = [
 $evidencePath = $writeEvidence($evidence);
 
 printf(
-  "%s — scheduled+verified=%d blocked=%d candidates=%d checks=%s\nEvidence: %s\n",
-  $status ? 'PASS' : 'FAIL', $scheduledCount, $blockedCount, count($rows),
+  "%s — scheduled+verified=%d blocked_missing=%d blocked_stale=%d candidates=%d checks=%s\nEvidence: %s\n",
+  $status ? 'PASS' : 'FAIL', $scheduledCount, $blockedCount, $staleCount, count($rows),
   json_encode($checks), $evidencePath
 );
 exit($status ? 0 : 1);

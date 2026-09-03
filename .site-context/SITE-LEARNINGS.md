@@ -1,6 +1,38 @@
 # FAMtastic Designs site learnings
 
-<<<<<<< HEAD
+## 2026-09-03 — Trace the path to the provider before accepting "it is gated"
+
+- Observation: no campaign post has ever gone out, and the cause was assumed to
+  be the publish gates. The gates were the last blocker, not the operative one:
+  all 68 records were unapproved so the executor selected zero candidates, only
+  12 had ever reached Postiz, and the newer campaign's schedule file was read by
+  no code at all. The media it referenced was gitignored and existed only on the
+  operator workstation.
+- Guidance: name the first missing step between artifact and provider before
+  changing a gate. Grep for who *reads* a schedule file. A plan nothing executes
+  is unbuilt, not blocked — and an agent session that leaves its outputs on one
+  machine has not shipped them.
+
+## 2026-09-03 — Open a gate and add the guard in the same change
+
+- Observation: Postiz preserves a post's stored date across a draft-to-schedule
+  conversion. Days 1–3 drafts still carried 2026-08-23 dates, so arming
+  publishing would have blasted twelve backdated posts at once.
+- Guidance: when removing a safety gate, identify what that gate was
+  incidentally protecting against and replace it with a precise guard. Here:
+  refuse to convert any draft whose stored date is in the past, and verify
+  re-dating by read-back rather than trusting the provider's response.
+
+## 2026-09-03 — Campaign variation belongs in validated data, not in new scripts
+
+- Observation: every campaign had a bespoke queue script, so a campaign without
+  one had no execution path. That is how a fully produced 4-drop launch reached
+  delivery day with nothing queued.
+- Guidance: one runner, one schema (`posting-schedule.json`), per-campaign
+  overrides as data. Sending remains workstation-dependent until Postiz itself
+  moves off the laptop — server cron alone cannot reach `127.0.0.1` on another
+  machine. See `docs/marketing/CAMPAIGN_POSTING_ARCHITECTURE.md`.
+
 ## 2026-08-31 — A provider receipt is not an account or project claim
 
 - Observation: the Shay invitation has provider acceptance and a sent receipt,

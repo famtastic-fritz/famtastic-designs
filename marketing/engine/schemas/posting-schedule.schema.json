@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://famtasticdesigns.com/schemas/posting-schedule.v2.json",
+  "title": "FAMtastic campaign posting schedule",
+  "description": "The one file that makes a campaign postable. scripts/queue-campaign-drops.py reads this and needs no per-campaign code. Every campaign differs in cadence, channels, media, and copy, so all of that lives here as data rather than in a bespoke script. Scaffold with scripts/new-campaign.py.",
+  "type": "object",
+  "required": ["schema_version", "campaign_id", "time_zone", "drops"],
+  "properties": {
+    "schema_version": { "const": 2 },
+    "campaign_id": {
+      "type": "string",
+      "description": "Stable snake_case campaign identifier used in UTM attribution."
+    },
+    "campaign_name": { "type": "string" },
+    "created_at": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "ready_for_evaluation", "armed_for_scheduling", "completed", "archived"]
+    },
+    "schedule_type": { "type": "string" },
+    "time_zone": {
+      "type": "string",
+      "description": "IANA zone the human-facing times are reasoned in, e.g. America/New_York. Drop times still carry their own explicit offset."
+    },
+    "landing_url": {
+      "type": "string",
+      "description": "Base CTA URL. UTM parameters are appended per drop. Defaults to the $199 Web Basics onboarding URL when omitted."
+    },
+    "cadence": {
+      "type": "object",
+      "description": "Human-readable record of how the drop times were derived. Documentation only; scheduled_time on each drop is authoritative.",
+      "properties": {
+        "anchor_et": { "type": "string" },
+        "interval_minutes": { "type": "integer", "minimum": 1 },
+        "set_by": { "type": "string" }
+      }
+    },
+    "publish_arming": {
+      "type": "object",
+      "description": "Records which switch arms real sends. Informational: the runner reads the environment, never this block.",
+      "properties": {
+        "mode": { "type": "string" },
+        "env": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "media_resolution": {
+      "type": "object",
+      "properties": {
+        "policy": { "const": "resolve_at_runtime_fail_loud" },
+        "note": { "type": "string" }
+      }
+    },
+    "channel_map": {
+      "type": "object",
+      "description": "Optional per-campaign additions to the shared channel-label -> Postiz-integration map. Use when a campaign names a surface the shared map does not know.",
+      "additionalProperties": { "type": "string" }
+    },
+    "copy_preference": {
+      "type": "object",
+      "description": "Optional per-campaign override of which copy key each Postiz integration prefers, most specific first.",
+      "additionalProperties": { "type": "array", "items": { "type": "string" } }
+    },
+    "drops": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["drop_id", "content_id", "scheduled_time", "channels", "copy"],
+        "properties": {
+          "drop_number": { "type": "integer", "minimum": 1 },
+          "drop_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Slug unique within the campaign."
+          },
+          "content_id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "description": "Idempotency key. Emitted as utm_content in the tracked link, which is how a rerun adopts an existing draft instead of duplicating a live post. Normally equal to drop_id."
+          },
+          "scheduled_time": {
+            "type": "string",
+            "description": "ISO 8601 WITH an explicit UTC offset, e.g. 2026-09-03T23:50:00-04:00. Absolute by design: a bare HH:MM cannot express a drop that crosses midnight, which is exactly how a late-night cadence gets mis-ordered.",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:[+-]\\d{2}:\\d{2}|Z)$"
+          },
+          "label": { "type": "string" },
+          "theme": { "type": "string" },
+          "headline": { "type": "string" },
+          "state": {
+            "type": "string",
+            "enum": ["idea", "copy_ready", "media_ready", "queued", "scheduled", "published"]
+          },
+          "channels": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "description": "Channel labels resolved through the shared map plus any channel_map override. A requested channel that is not connected in Postiz is reported, never silently dropped."
+          },
+          "media_type": { "type": "string" },
+          "primary_media": {
+            "type": "string",
+            "description": "Repository-relative path. Resolved at run time on the host that runs the queue; a missing file blocks the drop by name rather than substituting or skipping."
+          },
+          "backup_media": {
+            "type": "string",
+            "description": "Stands in for a missing primary_media only. Never rescues a missing carousel slide."
+          },
+          "carousel_slides": { "type": "array", "items": { "type": "string" } },
+          "supporting_media": { "type": "string" },
+          "copy": {
+            "type": "object",
+            "minProperties": 1,
+            "description": "Channel-shaped copy variants keyed by audience surface (tiktok_reels_shorts, x_post, facebook_instagram, linkedin_facebook, x_thread_opener, all_channels). The runner picks the most specific key each integration prefers and appends the tracked link and tags.",
+            "additionalProperties": { "type": "string" }
+          },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "utm": {
+            "type": "object",
+            "required": ["source", "medium", "campaign", "content"],
+            "properties": {
+              "source": { "type": "string" },
+              "medium": { "type": "string" },
+              "campaign": { "type": "string" },
+              "content": { "type": "string" }
+            }
+          },
+          "approval": {
+            "type": "object",
+            "required": ["content", "media", "publish"],
+            "properties": {
+              "content": { "type": "boolean" },
+              "media": { "type": "boolean" },
+              "publish": { "type": "boolean" }
+            }
+          },
+          "provider_ids": {
+            "type": "object",
+            "description": "Written back by the runner. Presence of postiz_draft_id makes a rerun idempotent.",
+            "properties": {
+              "postiz_draft_id": { "type": "string" },
+              "postiz_scheduled_id": { "type": "string" }
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "at"],
+              "properties": {
+                "kind": { "type": "string" },
+                "at": { "type": "string" },
+                "postiz_post_id": { "type": "string" },
+                "date_utc": { "type": "string" },
+                "integrations": { "type": "array", "items": { "type": "string" } },
+                "note": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

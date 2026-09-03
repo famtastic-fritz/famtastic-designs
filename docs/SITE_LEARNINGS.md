@@ -1,6 +1,57 @@
 # FAMtastic Designs site learnings
 
-<<<<<<< HEAD
+## 2026-09-03 — A campaign with no executor is not "gated", it is unbuilt
+
+- Observation: three sessions and two campaigns produced creative, copy, and a
+  drop schedule, and nothing ever posted. The failure was attributed to the
+  publish gates. The gates were real but were the *last* blocker, not the
+  operative one: every record was unapproved so the executor selected zero
+  candidates, only 12 of 68 records had ever reached the provider, and the newer
+  campaign's schedule JSON was referenced by **zero code in the repository**.
+  Opening the gates alone would have posted nothing.
+- Guidance: before accepting "it is gated" as a diagnosis, follow the path from
+  artifact to provider and name the first step that does not exist. Grep for who
+  reads a schedule file; a plan nothing executes is not a blocked plan, it is an
+  absent one. Report the whole chain, not the most visible link.
+
+## 2026-09-03 — One bespoke queue script per campaign guarantees the next campaign fails
+
+- Observation: each campaign had its own hand-written queue script
+  (`queue-55-cent-days-1-3-drafts.sh`, `queue-days-4-17.py`, ...). A campaign
+  nobody wrote a script for therefore had no path to the provider at all, which
+  is precisely how a fully produced 4-drop launch reached delivery day with
+  nothing queued.
+- Guidance: campaign *differences* (cadence, channels, media mix, copy shape)
+  belong in validated data, not in new code. One runner reads
+  `posting-schedule.json`; a new campaign ships a data file and a validator run,
+  never a new script. When a per-instance script appears, treat it as a design
+  smell rather than throughput.
+
+## 2026-09-03 — A provider that preserves a stored date turns "schedule" into "publish now"
+
+- Observation: Postiz keeps a post's stored date when a draft is converted to a
+  schedule. The days 1–3 drafts still carried their 2026-08-23 creation dates,
+  so arming publishing would have fired twelve backdated posts simultaneously
+  instead of scheduling them — the opposite of the intended outcome, and
+  irreversible once sent.
+- Guidance: never convert a draft to a live schedule without asserting its
+  stored date is in the future. Re-date deliberately and verify by read-back;
+  a provider that accepts and ignores a field looks exactly like success.
+  Opening a gate is the moment to add the guard, not to skip it.
+
+## 2026-09-03 — Generating locally is fine; sending from a laptop is not an architecture
+
+- Observation: the send path required the operator Mac awake, a colima VM up, a
+  Postiz container healthy, an ngrok tunnel live, and a human running a CLI —
+  all simultaneously, at 23:50. That chain has never held unattended, which is
+  the physical reason the drops did not go out.
+- Guidance: separate bursty supervised work (asset generation) from
+  time-critical unattended work (sending). Moving the trigger to server cron is
+  necessary but not sufficient while the provider itself runs on the laptop:
+  server cron would fire on time and then fail to reach `127.0.0.1`. Relocate
+  the executor first, then the trigger. See
+  `docs/marketing/CAMPAIGN_POSTING_ARCHITECTURE.md`.
+
 ## 2026-08-31 — A secure owner control plane needs a separate public demo lane
 
 - Observation: sharing the real Thirst Trap owner URL with a tester correctly
