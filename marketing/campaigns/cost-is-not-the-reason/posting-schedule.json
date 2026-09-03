@@ -10,8 +10,8 @@
     {
       "drop_number": 1,
       "drop_id": "drop-01",
-      "scheduled_time": "2026-09-03T08:00:00-04:00",
-      "label": "Drop 1 \u2014 8:00 AM ET kickoff: Declaration & master video",
+      "scheduled_time": "2026-09-03T09:00:00-04:00",
+      "label": "Drop 1 \u2014 9:00 AM ET:00 AM ET kickoff: Declaration & master video",
       "theme": "The Declaration: Fearless Deviation & 55\u00a2 Reality",
       "channels": [
         "tiktok",
@@ -49,8 +49,15 @@
         "publish": true
       },
       "provider_ids": {
-        "postiz_draft_id": "cmtlgm87m0003rtdmc825f7yt",
-        "postiz_scheduled_id": "cmtlgm87m0003rtdmc825f7yt"
+        "postiz_draft_id": "cmtlhfb2s000grtdmo8io3oi1",
+        "postiz_scheduled_id": "cmtlhfb2s000grtdmo8io3oi1",
+        "postiz_scheduled_group": [
+          "cmtlhfb2s000grtdmo8io3oi1",
+          "cmtlhfb64000hrtdm07mfnj8n",
+          "cmtlhfb7f000irtdm9q3nwvkf",
+          "cmtlhfb8w000jrtdm9a027bkn",
+          "cmtlhfbb8000krtdmp5lnozzw"
+        ]
       },
       "state": "media_ready",
       "evidence": [
@@ -59,6 +66,19 @@
           "at": "2026-09-03T11:46:41Z",
           "postiz_post_id": "cmtlgm87m0003rtdmc825f7yt",
           "date_utc": "2026-09-03T12:00:00.000Z",
+          "integrations": [
+            "tiktok",
+            "instagram-standalone",
+            "youtube",
+            "facebook",
+            "x"
+          ]
+        },
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-03T12:09:17Z",
+          "postiz_post_id": "cmtlhfb2s000grtdmo8io3oi1",
+          "date_utc": "2026-09-03T13:00:00.000Z",
           "integrations": [
             "tiktok",
             "instagram-standalone",
@@ -115,7 +135,12 @@
       },
       "provider_ids": {
         "postiz_draft_id": "cmtlg9k4u0000rtdmzy15bo5u",
-        "postiz_scheduled_id": "cmtlg9k4u0000rtdmzy15bo5u"
+        "postiz_scheduled_id": "cmtlg9k4u0000rtdmzy15bo5u",
+        "postiz_scheduled_group": [
+          "cmtlg9k4u0000rtdmzy15bo5u",
+          "cmtlg9k6w0001rtdmq72z3sgj",
+          "cmtlg9k7c0002rtdmzeuh7i4j"
+        ]
       },
       "state": "media_ready",
       "evidence": [
@@ -173,7 +198,13 @@
       },
       "provider_ids": {
         "postiz_draft_id": "cmtlgme3z0008rtdmp0wqc63l",
-        "postiz_scheduled_id": "cmtlgme3z0008rtdmp0wqc63l"
+        "postiz_scheduled_id": "cmtlgme3z0008rtdmp0wqc63l",
+        "postiz_scheduled_group": [
+          "cmtlgme3z0008rtdmp0wqc63l",
+          "cmtlgmeak0009rtdm1wnne9cv",
+          "cmtlgmegu000artdm4q4yyu6r",
+          "cmtlgmepb000brtdmqqoh5tev"
+        ]
       },
       "state": "media_ready",
       "evidence": [
@@ -233,7 +264,13 @@
       },
       "provider_ids": {
         "postiz_draft_id": "cmtlgmink000crtdmdbntwgm5",
-        "postiz_scheduled_id": "cmtlgmink000crtdmdbntwgm5"
+        "postiz_scheduled_id": "cmtlgmink000crtdmdbntwgm5",
+        "postiz_scheduled_group": [
+          "cmtlgmink000crtdmdbntwgm5",
+          "cmtlgmips000drtdmmqw1d9ug",
+          "cmtlgmisc000frtdmjlr3axzr",
+          "cmtlgmiqx000ertdmzol4xf91"
+        ]
       },
       "state": "media_ready",
       "evidence": [
