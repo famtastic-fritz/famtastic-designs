@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-03 — Root Cause: Postiz Publishing Worker OOM-Dead Since 2026-08-25
+
+- **Found the actual reason no campaign post has ever gone out.** The Postiz `orchestrator` — its Temporal-backed publishing worker — had been killed with `exit code 137` (SIGKILL/OOM) inside a 3GiB colima VM since **2026-08-25**, with 13 restarts and no log output. Posts scheduled correctly and remained in QUEUE indefinitely; records dated `03:05Z` were still unpublished nine hours later. Confirmed by `colima list` (3GiB), `docker inspect` (`OOMKilled=true`), and an orchestrator boot log predating the campaign.
+- Fixed with `colima stop && colima start --cpu 4 --memory 8`. Host RAM fell from 91.5% to 47.8%; the orchestrator booted clean with 0 restarts and every Temporal task queue `RUNNING`.
+- **This was predicted and recorded on 2026-08-25** in `RECIPES/SOCIAL_POSTING.md` as an open risk ("orchestrator OOM-killed … scheduled-publishing worker may be affected"), with a memory resize queued that never happened. That entry is now closed with its outcome.
+- Every earlier fix in this session — opened approval gates, per-platform Postiz `settings`, X copy over its 280 limit, the stale-date guard, per-integration sibling scheduling — was a real defect above a worker that could not publish regardless.
+- Corrected an earlier finding: the Cost Is Not The Reason campaign **had** been queued into Postiz (records existed at the original 8am/12pm/2pm ET slots). The claim that its schedule file was referenced by zero code was accurate; the conclusion that it therefore never reached the provider was not. Those 20 stale duplicates were soft-deleted before restarting the worker, since a recovered worker would have fired them alongside the live drops.
+- Cleared and re-verified: 16 records in QUEUE across four drops (13:00Z×5, 14:30Z×3, 17:00Z×4, 19:30Z×4) and nothing else.
+
 ## 2026-09-03 — First Campaign Drops Ever Scheduled (4/4 verified QUEUE)
 
 - **First drafts and first schedule in the history of this pipeline.** All four `cost-is-not-the-reason` drops created as Postiz drafts and converted to a live schedule, each verified by read-back as `QUEUE` (`scheduled_verified=4`, `failures=0`): drop-01 08:00 ET (FB/IG/X/TikTok/YouTube), drop-02 10:30 ET (FB/IG/X), drop-03 13:00 ET (IG/X/TikTok/YouTube), drop-04 15:30 ET (IG/X/TikTok/YouTube).

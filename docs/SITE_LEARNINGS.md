@@ -1,5 +1,36 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-03 — The campaign never posted because the publishing worker was OOM-dead for nine days
+
+- Observation: no campaign post had ever gone out. Four causes were found and
+  fixed in sequence — closed approval gates, missing per-platform Postiz
+  `settings`, X copy 2x over its limit, backdated drafts — and each was real.
+  None was the reason. The Postiz `orchestrator` (its Temporal-backed publishing
+  worker) had been killed with `exit code 137` inside a **3GiB colima VM** since
+  **2026-08-25**, restarting 13 times and logging nothing. Posts scheduled
+  perfectly and sat in QUEUE forever; records dated `03:05Z` were still QUEUE
+  nine hours later. `colima list` showed 3GiB, `docker inspect` showed
+  `OOMKilled=true`, and the last healthy orchestrator boot log predated the
+  campaign itself. Raising the VM to 8GiB brought host RAM from 91.5% to 47.8%
+  and the worker back on the first try.
+- Guidance: **this exact failure was written down on 2026-08-25** in
+  `RECIPES/SOCIAL_POSTING.md` as "OPEN RISK … orchestrator OOM-killed (exit 137)
+  inside 3GB colima VM … scheduled-publishing worker may be affected", with a
+  memory resize "queued next session". The resize never happened and the risk
+  was never re-checked. A recorded open risk with no owner and no verification
+  date is not a mitigation — it is a prediction nobody read. When a runbook
+  names a component as possibly broken, verify that component **first**, before
+  debugging anything layered on top of it.
+- Guidance: check that the thing which performs the action is alive before
+  debugging why the action did not happen. Cheap liveness probes —
+  `pm2 list` restart counts, `OOMKilled`, the age of the newest log line — would
+  have found this in one minute at any point in the preceding nine days. A
+  process reporting `online` while crash-looping is not evidence of health;
+  restart count and log recency are.
+- Guidance: a queue that only fills is a broken queue. Alert on the age of the
+  oldest unpublished item past its scheduled time, not on whether scheduling
+  succeeded. Every layer above the worker reported success throughout.
+
 ## 2026-09-03 — Check what the existing host can actually run before proposing a new one
 
 - Observation: the obvious fix for a laptop-dependent send path was "run it on
