@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-03 — A live OAuth credential was committed and pushed to the shared repo
+
+- Observation: `scripts/openart-client.mjs`, added in `ac212d4`, hardcoded a
+  live OpenArt `client_id` and `refresh_token` in source. It was committed and
+  pushed to the shared branch. Found while answering an unrelated question
+  ("what method in the repo produces these images") — not by a security review.
+- Guidance: rotating the credential is the actual fix; editing the file only
+  stops the practice going forward; the value remains in git history and was
+  already on GitHub regardless. Never hardcode a credential "temporarily" to
+  get a script running — the sibling script in the same commit
+  (`run-three-tier-benchmark.mjs`) shows the correct pattern already in use one
+  file over: pull the key from macOS Keychain (`security find-generic-password`)
+  at runtime, never from source. When two adjacent files in one commit handle
+  secrets differently, that inconsistency is itself worth a second look.
+
 ## 2026-09-03 — The campaign never posted because the publishing worker was OOM-dead for nine days
 
 - Observation: no campaign post had ever gone out. Four causes were found and
