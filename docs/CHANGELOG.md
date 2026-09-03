@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-03 (later) — First Confirmed Live Posts; Every Remaining Channel's Blocker Now Named
+
+- **Facebook and Instagram are publish-proven for the first time in this pipeline's history.** drop-01 (09:00 ET) and drop-02 (10:30 ET) of `cost-is-not-the-reason` both show provider state `PUBLISHED` on read-back for both channels — not scheduled, not QUEUE, confirmed live.
+- **X: root cause found — HTTP 402 "credits depleted."** A minimal, single-variable isolation test (plain text, one integration, no image, no link, no hashtags) reproduced the exact failure drop-01 and drop-02 hit on X, and this time captured X's raw response: `{"detail":"credits depleted","status":402,"title":"Payment Required","type":"https://api.x.com/2/problems/credits-depleted"}`. Postiz's `XProvider` discards this and rethrows a generic `bad_body`/"Unknown Error" for every X failure, which is why drop-01's DB row looked uninformative — the real detail was never content-, video-, or code-related. Test post confirmed deleted afterward; no real campaign records touched. **Every X post fails identically until X developer billing is resolved.** Blocks drop-03 (13:00 ET) and drop-04 (15:30 ET) on X specifically.
+- **TikTok: token reconnected successfully, but a separate blocker remains.** `refreshNeeded` is now `false` and the token is valid to 2026-09-04, yet TikTok's API still returns "App not approved for public posting, contact support" — a developer-app audit status, unaffected by the token fix. Reconnecting fixed one of TikTok's two independent failure modes, not both.
+- **YouTube: OAuth token expired 2026-08-25, not yet reconnected.** Confirmed via `refreshNeeded=true` in the integrations table; simple UI reconnect pending.
+- Diagnostic method worth keeping: when a provider's own error field is generic, isolate with the smallest possible reproduction (one integration, minimum content) rather than continuing to vary the real campaign's content — it surfaces the provider's actual response where the full campaign post's error had been swallowed.
+
 ## 2026-09-03 — Social Publishing: Root Cause Found After Nine Days, Pipeline Rebuilt
 
 ### The actual cause

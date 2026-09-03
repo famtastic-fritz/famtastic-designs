@@ -1,5 +1,25 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-03 — A provider's generic error can be hiding a specific one; isolate, don't infer
+
+- Observation: X rejected every post in this campaign with `bad_body`/"Unknown
+  Error" — no HTTP status, no message, nothing actionable. Two real drops
+  failed this way, and the temptation was to keep varying the real campaign's
+  content (guess it's the video, guess it's the link, guess it's the length)
+  to triangulate a cause from a black box.
+- Guidance: when a provider's own error is generic, stop varying the real
+  artifact and build the smallest possible reproduction instead — one
+  integration, minimum content, no media, no link. Here that single test
+  surfaced what two real failures hadn't: X's actual response,
+  `HTTP 402 credits depleted`. The failure had nothing to do with content at
+  all; every larger test was destined to fail for the same hidden reason no
+  amount of content-tuning could reach.
+- Guidance: Postiz's `XProvider` swallows X's raw API response and rethrows a
+  generic error for every X failure, regardless of cause. Any future X
+  debugging in this stack should expect the DB's `error` field to be
+  uninformative and go straight to a minimal isolation test rather than
+  trusting it.
+
 ## 2026-09-03 — A live OAuth credential was committed and pushed to the shared repo
 
 - Observation: `scripts/openart-client.mjs`, added in `ac212d4`, hardcoded a
