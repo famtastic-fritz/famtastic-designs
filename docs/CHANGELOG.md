@@ -1,5 +1,33 @@
 # Product changelog
 
+## 2026-09-04 (later session 3) — Generated SVG body art for blog posts (test, not deployed)
+
+- Added `frontend/src/lib/blogArt.js`: a content-aware art engine that injects
+  generated SVG/HTML figures into blog bodies, plus a category-derived SVG hero
+  for posts with no `field_seo_brief.visual` (3 of 83 — the newest posts).
+  No image-generation provider is configured for this project, so every block is
+  inline SVG and CSS: crisp at any density, ~2KB, theme-aware, and derived from
+  the post's own content rather than commissioned.
+- Six reusable blocks: textured section divider, `$199 ÷ 365 ≈ 55¢` day-cost
+  grid, rented-vs-owned contrast, ordered flow spine, scope boundary, and a
+  pull quote. Diagrams that must carry sentences (scope, pull quote) are
+  HTML-over-SVG-texture rather than SVG `<text>`, which cannot wrap.
+- Placement is anchored to `<h2>` structure and scored against content signals,
+  not to fixed paragraph numbers. A post needs >= 3 sections, >= 8 blocks and
+  >= 250 words to receive anything; the cap is two inline blocks; art never
+  lands against the closing CTA, and never between a lead-in ending in a colon
+  and the list it introduces.
+- The '55 Cents a Day' campaign series is routed around the new engine entirely.
+  Verified: `.v1-prose` innerHTML is byte-identical to production on three
+  campaign posts.
+- Verified at 390px / 768px / 1280px: zero horizontal overflow, hero locked to
+  16:9, zero lime glows added (the one-glow budget is untouched).
+- NOT deployed. Test only, on nids 156/157/158. 72 of 83 posts currently
+  receive no inline art because the recipe library covers pricing/proof/
+  ownership topics and not the corpus's lead-capture, forms, analytics or
+  automation topics — that gap is the rollout blocker, recorded here rather
+  than papered over with generic decoration.
+
 ## 2026-09-04 (later session 2) — Fixed systemic `/web/` canonical-URL bug on every blog post
 
 - Confirmed live via JSON:API that every published `blog_post` node's canonical

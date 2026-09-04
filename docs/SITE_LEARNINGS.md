@@ -1,5 +1,28 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — Measure art after it settles, and never freeze `transform` on `*`
+
+While building the generated blog-art system, two "defects" were reported that
+were not defects, both from measuring before or around the thing under test.
+
+1. A screenshot harness froze animation with
+   `*,*::before,*::after{...transform:none!important}` so framer-motion would
+   settle. On an SVG element the `transform` **presentation attribute** maps to
+   the CSS `transform` property, so `transform:none` silently relocated every
+   `<g>` in the artwork. Correct art rendered as visibly broken art. The DOM
+   measurement (`getBoundingClientRect` on the accent node: 87.5% of width,
+   exactly where the viewBox puts it) disagreed with the screenshot, and the
+   DOM was right. Scope any animation freeze to `*:not(svg):not(svg *)`.
+2. A lime accent in the section divider looked dark olive in a screenshot and
+   was reported as a color bug. Computed style said `rgb(124, 252, 0)` — full
+   lime. The element was 27px inside a 1150px capture that was then downsampled
+   twice for viewing. A tight high-DPI crop showed it correct.
+
+Rule: when a visual and a computed measurement disagree, the measurement wins
+until proven otherwise, and small elements get a tight crop before any colour
+or position claim is made. Ask what would have to be true for this to be a
+measurement artifact, and check that first.
+
 ## 2026-09-04 — "It's just a link" is a production claim — verify it like one
 
 Full detail in `.site-context/SITE-LEARNINGS.md` (2026-09-04 entry). Summary

@@ -7,6 +7,7 @@ import { applySeo } from '../components/SEO.jsx';
 import { blogSeo } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp, FAQAccordion } from '../components/v1/index.js';
 import SocialShareButtons from '../components/SocialShareButtons.jsx';
+import { heroArtFor, injectBodyArt } from '../lib/blogArt.js';
 
 const CAMPAIGN_ARTICLES = [
   'professional-website-55-cents-a-day', 'what-is-a-domain-name', 'what-is-website-hosting',
@@ -20,6 +21,12 @@ const CAMPAIGN_VISUALS = [
   ['campaign-55-cent-equation.webp', 'A graphic showing 199 dollars divided by 365 equals about 55 cents a day', '$199 divided across 365 days is approximately 55 cents per day; checkout still charges one $199 payment.'],
 ];
 
+/**
+ * The '55 Cents a Day' campaign series ships hand-picked raster visuals at
+ * fixed paragraph offsets. That behavior is deliberately untouched: these eight
+ * posts are commissioned artwork with approved captions, and the generalized
+ * art engine must not second-guess them.
+ */
 function campaignBodyHtml(post) {
   if (!post?.bodyHtml || !post.series?.includes('55 Cents a Day')) return post?.bodyHtml || '';
   const articleIndex = Math.max(0, CAMPAIGN_ARTICLES.indexOf(post.slug));
@@ -32,6 +39,20 @@ function campaignBodyHtml(post) {
     if (paragraph === 9) return closing + figures[1];
     return closing;
   });
+}
+
+/**
+ * Body art router.
+ *
+ * A campaign post keeps its curated raster figures and never reaches the
+ * generated-art engine — the early return guarantees byte-identical output for
+ * that series. Every other post goes through the content-aware SVG placement in
+ * lib/blogArt.js, which itself no-ops on posts too short to carry art.
+ */
+function articleBodyHtml(post) {
+  if (!post?.bodyHtml) return '';
+  if (post.series?.includes('55 Cents a Day')) return campaignBodyHtml(post);
+  return injectBodyArt(post.bodyHtml, post);
 }
 
 /**
@@ -138,7 +159,12 @@ export default function BlogPostPage() {
   const seriesIndex = state.seriesPosts.findIndex((item) => item.id === post.id);
   const previous = seriesIndex > 0 ? state.seriesPosts[seriesIndex - 1] : null;
   const next = seriesIndex >= 0 ? state.seriesPosts[seriesIndex + 1] : null;
-  const renderedBodyHtml = campaignBodyHtml(post);
+  const renderedBodyHtml = articleBodyHtml(post);
+  // 80 of 83 posts carry a curated raster hero in field_seo_brief.visual. The
+  // rest fall back to a generated, category-derived SVG cover so every post has
+  // a distinct visual identity — and the moment a real image is authored, it
+  // wins automatically with no code change.
+  const heroArt = post.visual?.src ? null : heroArtFor(post);
 
   return (
     <article>
@@ -154,6 +180,15 @@ export default function BlogPostPage() {
             <figcaption>
               <img src={post.visual.brand_mark || '/brand/famtastic-mark.svg'} alt="" width="32" height="32" />
               <span>{post.visual.caption}</span>
+            </figcaption>
+          </figure>
+        )}
+        {heroArt && (
+          <figure className="blog-visual blog-visual--art">
+            <div className="fam-hero-art" dangerouslySetInnerHTML={{ __html: heroArt.svg }} />
+            <figcaption>
+              <img src="/brand/famtastic-mark.svg" alt="" width="32" height="32" />
+              <span>{heroArt.caption}</span>
             </figcaption>
           </figure>
         )}

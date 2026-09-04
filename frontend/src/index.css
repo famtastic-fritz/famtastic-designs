@@ -1442,6 +1442,218 @@ a:hover {
 .v1-prose .article-inline-visual figcaption { display: flex; align-items: center; gap: .7rem; margin: 0; padding: .85rem 1rem; color: var(--v1-text-72); font-size: .82rem; line-height: 1.45; }
 .v1-prose .article-inline-visual figcaption img { flex: 0 0 auto; width: 28px; height: 28px; }
 @media (min-width: 800px) { .campaign-explainer-grid { grid-template-columns: 1fr 1fr; } .campaign-anatomy { grid-template-columns: 1.35fr .65fr; align-items: center; } }
+
+/* ------------------------------------------------------------------ */
+/* Generated blog art (src/lib/blogArt.js)                             */
+/*                                                                     */
+/* Two rules govern everything below:                                  */
+/*  1. NO GLOW. The one permitted lime glow per screen is spent by the */
+/*     page chrome; art uses lime as flat fill/stroke only.            */
+/*  2. Art is authored at a NARROW viewBox and capped by max-width, so */
+/*     type scales UP on desktop rather than DOWN on mobile. The prose */
+/*     column is ~286px at a 390px viewport (350px container - 2rem    */
+/*     panel padding either side), which is the width these are drawn  */
+/*     to survive.                                                     */
+/* ------------------------------------------------------------------ */
+
+/* max-width is a legibility control, not a taste call: art is authored in a  */
+/* 360-unit viewBox, so the cap sets the desktop scale factor (420/360 =      */
+/* 1.17x) while a 390px phone renders it at ~0.79x. Type sizes below are      */
+/* chosen so both ends of that range land in a readable band.                 */
+.fam-art { display: flex; justify-content: center; padding: 1.15rem 1rem; }
+.fam-art__svg { display: block; width: 100%; max-width: 420px; height: auto; }
+
+/* On a wide screen the prose column runs ~1150px. An art figure stretched to */
+/* that width would be a thin plate floating in a large empty mat, so the     */
+/* figure itself is capped and centred — it reads as a deliberate plate.      */
+.v1-prose .article-inline-visual--art,
+.v1-prose .fam-pullquote {
+  max-width: 540px;
+  margin-inline: auto;
+}
+
+/* Ornamental break: no frame, no caption — punctuation, not a figure. */
+.fam-art-divider { margin: 2.25rem 0; }
+.fam-art-divider svg { display: block; width: 100%; height: auto; }
+
+/* -- shared art palette ------------------------------------------- */
+.fam-art__ground { fill: #070907; }
+.fam-art__frame { fill: none; stroke: #252b25; stroke-width: 1; }
+.fam-art__frame-strong { fill: none; stroke: #303a30; stroke-width: 1.5; }
+.fam-art__dashed { fill: none; stroke: #333c33; stroke-width: 1.5; stroke-dasharray: 5 4; }
+.fam-art__panel { fill: #141814; stroke: #252b25; stroke-width: 1; }
+.fam-art__panel-lit { fill: #1b211b; stroke: #303a30; stroke-width: 1; }
+.fam-art__cell { fill: #191e19; stroke: #262e26; stroke-width: 1; }
+.fam-art__dot { fill: #ffffff; fill-opacity: 0.055; }
+.fam-art__hatch { stroke: #39423a; stroke-width: 1.4; }
+.fam-art__rule { fill: #ffffff; fill-opacity: 0.16; }
+.fam-art__spine { stroke: #2b332b; stroke-width: 2; }
+.fam-art__node { fill: #141814; stroke: #303a30; stroke-width: 1.5; }
+.fam-art__node-accent { fill: #101310; stroke: var(--v1-lime); stroke-width: 1.8; }
+.fam-art__ring { fill: none; stroke: #2b332b; stroke-width: 2; }
+.fam-art__ring-thick { fill: none; stroke: #262e26; stroke-width: 14; }
+.fam-art__flow { stroke: #2f382f; stroke-width: 2.5; fill: none; }
+.fam-art__flow-fill { fill: #39423a; }
+
+/* Lime is the only accent, and it is flat — never glowing. */
+.fam-art__accent-fill { fill: var(--v1-lime); }
+.fam-art__accent-stroke { stroke: var(--v1-lime); stroke-width: 2.5; fill: none; }
+.fam-art__accent-text { fill: var(--v1-lime); }
+
+/* -- art typography ------------------------------------------------ */
+.fam-art__kicker,
+.fam-art__micro,
+.fam-art__label,
+.fam-art__num,
+.fam-art__num-accent,
+.fam-art__figure { font-family: var(--v1-font-body); }
+
+/* Sizes are in viewBox units. The comment on each is the rendered CSS px at */
+/* a 390px viewport / at desktop — the pair that had to be checked, because  */
+/* a single viewBox cannot be tuned for one width alone.                     */
+.fam-art__kicker { font-size: 13px; font-weight: 700; letter-spacing: 0.09em; fill: rgba(255, 255, 255, 0.55); } /* 10.3 / 15.2 */
+.fam-art__micro { font-size: 12.5px; font-weight: 700; letter-spacing: 0.07em; fill: rgba(255, 255, 255, 0.52); } /*  9.9 / 14.6 */
+.fam-art__label { font-size: 16px; font-weight: 500; fill: rgba(255, 255, 255, 0.88); }                          /* 12.6 / 18.7 */
+.fam-art__num { font-size: 15px; font-weight: 700; fill: rgba(255, 255, 255, 0.75); }                            /* 11.8 / 17.5 */
+.fam-art__num-accent { font-size: 15px; font-weight: 700; fill: var(--v1-lime); }
+.fam-art__figure { font-family: var(--v1-font-display); font-size: 34px; font-weight: 800; fill: #ffffff; }       /* 26.8 / 39.7 */
+
+/* -- pull quote: real text over texture, never SVG <text> ---------- */
+.fam-pullquote {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 2.25rem 0;
+  padding: 1.5rem 1.35rem 1.5rem 1.6rem;
+  border: 1px solid var(--v1-border);
+  border-left: 3px solid var(--v1-lime);
+  border-radius: 18px;
+  background: #101310;
+}
+
+.fam-pullquote__texture {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.v1-prose .fam-pullquote__text {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--v1-font-display);
+  font-size: clamp(1.05rem, 1rem + 0.7vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.45;
+  color: #ffffff;
+  text-wrap: balance;
+}
+
+/* -- scope boundary: HTML rows over an SVG texture ------------------ */
+/* The inclusions are real, wrapping text. An all-SVG version truncated all */
+/* five rows to an ellipsis because SVG <text> cannot wrap.                 */
+.fam-scope {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  max-width: 460px;
+  padding: 1.15rem 1.15rem 1.25rem;
+  border: 1px solid var(--v1-border);
+  border-radius: 18px;
+  background: #070907;
+}
+
+.fam-scope__texture {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.v1-prose .fam-scope__kicker {
+  margin: 0 0 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.v1-prose .fam-scope__kicker--muted { margin: 1.1rem 0 0.6rem; }
+.fam-scope__accent { color: var(--v1-lime); }
+
+.v1-prose .fam-scope__list {
+  margin: 0;
+  padding: 0;
+  border: 1px solid #303a30;
+  border-radius: 14px;
+  list-style: none;
+  overflow: hidden;
+}
+
+.v1-prose .fam-scope__list li {
+  position: relative;
+  margin: 0;
+  padding: 0.6rem 0.85rem 0.6rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: #141814;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.v1-prose .fam-scope__list li:last-child { border-bottom: 0; }
+
+.v1-prose .fam-scope__list li::before {
+  content: '';
+  position: absolute;
+  top: 0.72rem;
+  left: 0.7rem;
+  width: 3px;
+  height: 0.85rem;
+  border-radius: 1.5px;
+  background: var(--v1-lime);
+}
+
+.fam-scope__chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+
+.fam-scope__chips span {
+  padding: 0.35rem 0.7rem;
+  border: 1px dashed #3a433a;
+  border-radius: 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.52);
+}
+
+/* -- generated hero ------------------------------------------------ */
+/* Shares the .blog-visual box exactly, so a generated hero and a raster */
+/* hero are interchangeable with zero layout shift.                     */
+.blog-visual--art { background: #070907; }
+.fam-hero-art { display: block; }
+.fam-hero-art__svg { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.fam-hero-art__word {
+  font-family: var(--v1-font-display);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  fill: #ffffff;
+  fill-opacity: 0.93;
+}
+
+/* On a phone the prose column is only ~284px wide, so the art gives up its  */
+/* side padding entirely rather than give up legible type.                   */
+@media (max-width: 520px) {
+  .fam-art { padding: 0.9rem 0; }
+  .fam-pullquote { padding: 1.15rem 1rem 1.15rem 1.15rem; }
+}
 @media (max-width: 640px) { .campaign-hero { min-height: 720px; align-items: end; } .campaign-hero__image { object-position: 67% center; } .campaign-hero__shade { background: linear-gradient(0deg, rgba(5,7,6,.99) 12%, rgba(5,7,6,.82) 72%, rgba(5,7,6,.32)); } .campaign-hero__content { padding-block: 3rem; } .campaign-hero .v1-hero__actions { flex-direction: column; } .campaign-hero .v1-btn { width: 100%; text-align: center; } }
 
 /* ------------------------------------------------------------ section */
