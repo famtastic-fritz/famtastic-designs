@@ -1,6 +1,13 @@
 services:
   postiz:
-    image: ghcr.io/gitroomhq/postiz-app:v2.22.1
+    # Patched with gitroomhq/postiz-app#1761 (closed-unmerged upstream, blocked
+    # only on a CLA/contributor-application gate, not on code quality) — fixes
+    # the TikTok Direct Post audit rejection cause documented in issues #1362
+    # and #1563: hardcoded PUBLIC_TO_EVERYONE privacy default, no creator_info
+    # display, interaction toggles not off-by-default. Built locally via
+    # tools/postiz-app-src (v2.22.1 + the PR's 3-file diff), see
+    # docker images localhost/postiz-famtastic:tiktok-ux-fix.
+    image: localhost/postiz-famtastic:tiktok-ux-fix
     ports: !override
       - "127.0.0.1:4007:5000"
     environment:
