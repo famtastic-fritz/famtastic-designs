@@ -191,6 +191,102 @@ FAMTASTIC_MARKETING_PUBLISH=true \
   python3 scripts/queue-campaign-drops.py --campaign spring-refresh --schedule
 ```
 
+### Editing, adding, or deleting ONE drop (2026-09-03)
+
+Every drop is now identified by a **compound id**, `<campaign_id>/<content_id>`,
+matching the Phase 0 fix that keyed `famtastic_social_record` on
+`(campaign_id, content_id)` instead of bare `content_id` (two campaigns can and
+do reuse ids like `drop-01`..`drop-04`). Three flags mutate exactly one drop
+without re-running or touching the rest of the campaign:
+
+```bash
+# add a brand-new drop
+python3 scripts/queue-campaign-drops.py --add-drop spring-refresh/drop-05 --confirm \
+    --set scheduled_time=2026-09-15T09:00:00-04:00 \
+    --set channels=facebook,x \
+    --set copy.all_channels="New copy for this drop." \
+    --set media=marketing/campaigns/spring-refresh/assets/drop-05.mp4
+
+# edit fields on an existing drop
+python3 scripts/queue-campaign-drops.py --edit-drop spring-refresh/drop-03 --confirm \
+    --set media=marketing/campaigns/spring-refresh/assets/drop-03-v2.mp4 \
+    --set copy.x_post="Updated X copy." \
+    --set channels=facebook,instagram,x
+
+# remove a drop (default: revert-to-draft then soft-delete via Postiz, keep the
+# JSON entry with provider_ids cleared; --hard also removes the JSON entry)
+python3 scripts/queue-campaign-drops.py --delete-drop spring-refresh/drop-05 --confirm --hard
+```
+
+`--set key=value` is repeatable. Recognized keys: `media` (→
+`primary_media`), `channels` and `tags` (comma-separated → array),
+`copy.<key>`, `utm.<key>`, `platform_settings.<identifier>` (value must be a
+JSON object), `drop_number` (int); any other key is set verbatim as a
+top-level string field (`headline`, `label`, `theme`, `scheduled_time`, …).
+
+Safety properties, all enforced in code, not just by convention:
+
+- **Confirmation gate.** Every one of the three flags refuses to run —
+  before reading the schedule file, before schema validation, before
+  resolving any credential, before any contact with Postiz — unless the
+  caller passes `--confirm`, with one exception: `--test-flow`, reserved for
+  a caller's own disposable verification post that it creates and deletes
+  itself in the same session. `--test-flow` is never appropriate for a real
+  campaign drop.
+- **Schema-validated before any Postiz call, every time.** Each flag applies
+  its change to an in-memory copy of the manifest and runs
+  `campaign_schema_validate.validate_manifest()` before doing anything to
+  Postiz. An invalid result aborts with zero side effects — nothing sent,
+  nothing written for `--add-drop`/`--edit-drop`; for `--delete-drop`, the
+  prospective post-delete manifest is what gets validated.
+- **No in-place content edit.** Postiz's public API v1 has no "edit a post's
+  content" verb — only a status change and a delete. So `--edit-drop` retires
+  whatever record already exists for that drop first (revert-to-draft if it
+  is not already DRAFT, then delete), then lets the normal per-drop queue
+  logic create a fresh draft from the updated fields. It never overwrites a
+  provider record in place.
+- **`--delete-drop` default is always revert-to-draft, then soft-delete via
+  the Postiz API** — `PUT /posts/{id}/status {"status":"draft"}` for anything
+  not already DRAFT, then `DELETE /posts/{id}`. Never a raw database write.
+  `--hard` additionally removes the drop's JSON entry from
+  `posting-schedule.json`; without it, the entry stays (audit trail) with
+  `provider_ids` cleared and `state` reset to `idea`. `--hard` is refused on
+  a campaign's last remaining drop (the schema requires at least one).
+- **Scoped to one drop.** Every one of the three flags resolves to editing
+  exactly the drops array entry named by its compound id (or a synthetic new
+  one for `--add-drop`) and lets the existing, unmodified per-drop queue loop
+  do the actual Postiz work for that single entry — the rest of the
+  campaign's drops are never iterated, re-validated against Postiz, or
+  re-queued by these flags.
+
+**Design decision — CLI and the PHP mutation service are independent
+implementations of the same safe pattern, not a shared code path.**
+`backend/web/modules/custom/famtastic_pipeline/src/Service/PostizDropMutationService.php`
+wraps the identical three Postiz calls (create draft / change status /
+delete) for Drupal-side callers (e.g. a future admin action), with its own
+confirmation gate (`$confirmed` + `$isTestFlow`), its own audit log (Drupal's
+logger channel `famtastic_pipeline`), and its own credential resolution
+(Settings/env first, then — loopback only — the same local-postgres read
+`queue-campaign-drops.py::resolve_api_key()` uses). The two were kept
+separate rather than having the CLI call into Drupal (or vice versa) because:
+
+1. `queue-campaign-drops.py` runs directly on the operator workstation
+   against local Postiz, with no guarantee Drupal itself is running there
+   (e.g. a plain `--dry-run`) — routing it through a Drupal endpoint would add
+   a hard dependency that does not otherwise exist.
+2. A shared HTTP call between the two would be a brand-new place for the
+   Postiz org API key (or a Drupal session/token) to cross a process
+   boundary — a real credential-leakage surface neither implementation has
+   today. Keeping them independent means the Postiz key never leaves the
+   process that resolved it.
+3. Both resolve credentials the same way (Settings/env, then loopback-only
+   local-postgres read) and both invoke subprocesses with **fixed argument
+   arrays** — Python's `subprocess.run([...])` and PHP's
+   `Symfony\Component\Process\Process([...])`, never a shell string built
+   from caller input — so shell-injection risk is equivalent (effectively
+   zero) in both, and duplicating the pattern does not duplicate any actual
+   risk.
+
 ---
 
 ## 5. Arming and safety after 2026-09-03

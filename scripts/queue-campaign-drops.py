@@ -157,12 +157,58 @@ for i, arg in enumerate(ARGS):
     elif arg == "--at" and i + 1 < len(ARGS):
         REQUEUE_AT = ARGS[i + 1]
 
+# --edit-drop/--add-drop/--delete-drop <campaign_id>/<content_id>, plus
+# repeatable --set key=value, --hard, --confirm, --test-flow.
+#
+# Keyed by the compound (campaign_id, content_id) id from the start — the
+# same fix Phase 0 made to famtastic_social_record, applied here so a single
+# drop can never be mistaken for a same-named drop in a different campaign
+# (e.g. both cost-is-not-the-reason and ghost-town-ep1 use "drop-01".."drop-04").
+ADD_DROP = ""
+EDIT_DROP = ""
+DELETE_DROP = ""
+HARD_DELETE = "--hard" in ARGS
+CONFIRM = "--confirm" in ARGS
+TEST_FLOW = "--test-flow" in ARGS
+SET_ARGS: list[str] = []
+for i, arg in enumerate(ARGS):
+    if arg == "--add-drop" and i + 1 < len(ARGS):
+        ADD_DROP = ARGS[i + 1]
+    elif arg == "--edit-drop" and i + 1 < len(ARGS):
+        EDIT_DROP = ARGS[i + 1]
+    elif arg == "--delete-drop" and i + 1 < len(ARGS):
+        DELETE_DROP = ARGS[i + 1]
+    elif arg == "--set" and i + 1 < len(ARGS):
+        SET_ARGS.append(ARGS[i + 1])
+MUTATION_TARGET = ADD_DROP or EDIT_DROP or DELETE_DROP
+if sum(bool(x) for x in (ADD_DROP, EDIT_DROP, DELETE_DROP)) > 1:
+    sys.stderr.write("FAIL: pass only one of --add-drop / --edit-drop / --delete-drop at a time\n")
+    sys.exit(64)
+
 CAMPAIGN = ""
 for i, arg in enumerate(ARGS):
     if arg == "--campaign" and i + 1 < len(ARGS):
         CAMPAIGN = ARGS[i + 1]
     elif arg.startswith("--campaign="):
         CAMPAIGN = arg.split("=", 1)[1]
+
+MUTATION_CONTENT_ID = ""
+if MUTATION_TARGET:
+    if "/" not in MUTATION_TARGET:
+        sys.stderr.write(
+            "FAIL: --add-drop/--edit-drop/--delete-drop need the compound id "
+            "<campaign_id>/<content_id>, e.g. cost-is-not-the-reason/drop-05\n"
+        )
+        sys.exit(64)
+    _mut_campaign, MUTATION_CONTENT_ID = MUTATION_TARGET.split("/", 1)
+    if CAMPAIGN and CAMPAIGN != _mut_campaign:
+        sys.stderr.write(
+            f"FAIL: --campaign={CAMPAIGN} does not match the campaign_id "
+            f"'{_mut_campaign}' in {MUTATION_TARGET!r}\n"
+        )
+        sys.exit(64)
+    CAMPAIGN = _mut_campaign
+
 if not CAMPAIGN:
     available = sorted(
         d.name for d in CAMPAIGNS_ROOT.iterdir()
@@ -170,10 +216,27 @@ if not CAMPAIGN:
     )
     sys.stderr.write(
         "usage: queue-campaign-drops.py --campaign <slug> [--schedule] [--dry-run]\n"
+        "       queue-campaign-drops.py --add-drop <campaign_id>/<content_id> --set k=v [...]\n"
+        "       queue-campaign-drops.py --edit-drop <campaign_id>/<content_id> --set k=v [...]\n"
+        "       queue-campaign-drops.py --delete-drop <campaign_id>/<content_id> [--hard]\n"
+        "       (mutations need --confirm, except a caller's own --test-flow post)\n"
         f"campaigns with a posting-schedule.json: {', '.join(available) or '(none)'}\n"
         "scaffold a new one: python3 scripts/new-campaign.py --slug <slug>\n"
     )
     sys.exit(64)
+
+# Confirmation is checked as early as possible — before the schedule file is
+# even read, before schema validation, before credential resolution, before
+# any contact with Postiz at all. A caller with neither --confirm nor
+# --test-flow gets refused having triggered zero side effects of any kind.
+if MUTATION_TARGET and not TEST_FLOW and not CONFIRM:
+    _verb = "add" if ADD_DROP else "edit" if EDIT_DROP else "delete"
+    sys.stderr.write(
+        f"REFUSED: --{_verb}-drop mutates a real Postiz record. Pass --confirm to "
+        "proceed, or --test-flow only for your own disposable verification post.\n"
+        "Nothing was read, sent, or changed.\n"
+    )
+    sys.exit(2)
 
 CAMPAIGN_DIR = CAMPAIGNS_ROOT / CAMPAIGN
 SCHEDULE_PATH = CAMPAIGN_DIR / "posting-schedule.json"
@@ -400,6 +463,45 @@ def copy_for(integration_ident: str, drop: dict) -> str:
     return f"{body}\n\n{tracked_link(drop)}\n\n{tags}".strip()
 
 
+def find_drop(content_id: str) -> dict | None:
+    return next((d for d in drops if d["content_id"] == content_id), None)
+
+
+def apply_set_args(drop: dict, set_args: list[str]) -> None:
+    """Apply repeatable --set key=value onto one drop dict, in place.
+
+    A handful of keys get shaped values (comma lists, nested dicts); anything
+    else is set verbatim as a top-level string field.
+    """
+    for raw in set_args:
+        if "=" not in raw:
+            sys.stderr.write(f"FAIL: --set '{raw}' needs key=value\n")
+            sys.exit(64)
+        key, value = raw.split("=", 1)
+        key = key.strip()
+        if key == "media":
+            drop["primary_media"] = value
+        elif key == "channels":
+            drop["channels"] = [c.strip() for c in value.split(",") if c.strip()]
+        elif key == "tags":
+            drop["tags"] = [t.strip() for t in value.split(",") if t.strip()]
+        elif key.startswith("copy."):
+            drop.setdefault("copy", {})[key.split(".", 1)[1]] = value
+        elif key.startswith("utm."):
+            drop.setdefault("utm", {})[key.split(".", 1)[1]] = value
+        elif key.startswith("platform_settings."):
+            _, ident = key.split(".", 1)
+            try:
+                drop.setdefault("platform_settings", {})[ident] = json.loads(value)
+            except json.JSONDecodeError:
+                sys.stderr.write(f"FAIL: --set platform_settings.{ident} needs a JSON object value\n")
+                sys.exit(64)
+        elif key == "drop_number":
+            drop["drop_number"] = int(value)
+        else:
+            drop[key] = value
+
+
 # Provider listing window, derived from the schedule itself so it works for any
 # campaign and any date range, with slack on both ends for adoption.
 _times = [datetime.fromisoformat(d["scheduled_time"]).astimezone(timezone.utc) for d in drops]
@@ -486,6 +588,172 @@ if REQUEUE:
     _times = [datetime.fromisoformat(d["scheduled_time"]).astimezone(timezone.utc) for d in drops]
     WINDOW = (f"?startDate={min(_times).strftime('%Y-%m-%dT00:00:00.000Z')}"
               f"&endDate={max(_times).strftime('%Y-%m-%dT23:59:59.000Z')}")
+
+# ---------------------------------------------------------------------------
+# --add-drop / --edit-drop / --delete-drop: mutate exactly ONE drop, never
+# re-running or touching the rest of the campaign. Every path here validates
+# the resulting posting-schedule.json against the schema BEFORE any Postiz
+# call — never after, and never skipped.
+# ---------------------------------------------------------------------------
+if ADD_DROP:
+    if find_drop(MUTATION_CONTENT_ID) is not None:
+        sys.stderr.write(f"FAIL: content_id '{MUTATION_CONTENT_ID}' already exists in {CAMPAIGN}\n")
+        sys.exit(64)
+
+    new_drop = {
+        "drop_id": MUTATION_CONTENT_ID,
+        "content_id": MUTATION_CONTENT_ID,
+        "scheduled_time": "",
+        "channels": [],
+        "copy": {},
+        "state": "idea",
+        "utm": {
+            "source": "social",
+            "medium": "social",
+            "campaign": schedule.get("campaign_id", CAMPAIGN),
+            "content": MUTATION_CONTENT_ID,
+        },
+    }
+    apply_set_args(new_drop, SET_ARGS)
+    if not new_drop.get("scheduled_time"):
+        sys.stderr.write("FAIL: --add-drop needs --set scheduled_time=<ISO8601 with offset>\n")
+        sys.exit(64)
+
+    schedule.setdefault("drops", []).append(new_drop)
+    _problems = validate_manifest(schedule)
+    if _problems:
+        sys.stderr.write(f"FAIL: new drop {MUTATION_CONTENT_ID} fails schema validation "
+                          "(before any Postiz call — nothing sent):\n")
+        for p in _problems:
+            sys.stderr.write(f"  - {p}\n")
+        schedule["drops"].remove(new_drop)
+        sys.exit(65)
+
+    print(f"ADD-DROP: {MUTATION_CONTENT_ID} validated and added to {CAMPAIGN}; queuing its draft now")
+    # Restrict the normal per-drop loop below to ONLY this new drop. `drops`
+    # is rebound to a fresh list here — schedule["drops"] (already appended
+    # above) is untouched, so saving `schedule` at the end of the run persists
+    # every other drop exactly as it was.
+    drops = [new_drop]
+
+elif EDIT_DROP:
+    target = find_drop(MUTATION_CONTENT_ID)
+    if target is None:
+        sys.stderr.write(f"FAIL: no drop '{MUTATION_CONTENT_ID}' in {CAMPAIGN}\n")
+        sys.exit(66)
+
+    apply_set_args(target, SET_ARGS)
+    _problems = validate_manifest(schedule)
+    if _problems:
+        sys.stderr.write(f"FAIL: edited drop {MUTATION_CONTENT_ID} fails schema validation "
+                          "(before any Postiz call — nothing sent):\n")
+        for p in _problems:
+            sys.stderr.write(f"  - {p}\n")
+        sys.exit(65)
+
+    # Postiz has no in-place content-edit endpoint for a post already created
+    # (only a status change and a delete), so an edit means: safely retire
+    # whatever record already exists for this drop, then let the normal loop
+    # below create a fresh one from the updated fields. Never an in-place
+    # overwrite of a record this run did not itself just create.
+    old_ids = set(target.get("provider_ids", {}).get("postiz_scheduled_group", []))
+    for key_ in ("postiz_draft_id", "postiz_scheduled_id"):
+        if target.get("provider_ids", {}).get(key_):
+            old_ids.add(target["provider_ids"][key_])
+    if old_ids and not DRY_RUN:
+        current = api(f"/posts{WINDOW}")
+        states = {
+            str(p.get("id")): p.get("state")
+            for p in (current.get("posts", []) if isinstance(current, dict) else [])
+        }
+        for pid in old_ids:
+            state = states.get(pid, "UNKNOWN")
+            if state not in {"DRAFT", "UNKNOWN"}:
+                # Revert to draft first so it cannot fire mid-edit — the same
+                # order proven safe manually this session.
+                api(f"/posts/{pid}/status", method="PUT", data={"status": "draft"})
+            api(f"/posts/{pid}", method="DELETE")
+            print(f"  removed prior record {pid[:12]} (was {state}) before recreating")
+    target["provider_ids"] = {}
+
+    print(f"EDIT-DROP: {MUTATION_CONTENT_ID} validated and updated; queuing its fresh draft now")
+    drops = [target]
+
+elif DELETE_DROP:
+    target = find_drop(MUTATION_CONTENT_ID)
+    if target is None:
+        sys.stderr.write(f"FAIL: no drop '{MUTATION_CONTENT_ID}' in {CAMPAIGN}\n")
+        sys.exit(66)
+
+    if HARD_DELETE and len(drops) <= 1:
+        sys.stderr.write(
+            "FAIL: refusing --hard on the last remaining drop — posting-schedule.json "
+            "needs at least one drop (schema minItems: 1). Delete the campaign folder "
+            "instead if that is really intended.\n"
+        )
+        sys.exit(3)
+
+    # Validate the resulting manifest state BEFORE touching Postiz, exactly
+    # like the add/edit paths above.
+    if HARD_DELETE:
+        candidate_drops = [d for d in drops if d["content_id"] != MUTATION_CONTENT_ID]
+        candidate = dict(schedule)
+        candidate["drops"] = candidate_drops
+    else:
+        candidate = schedule
+    _problems = validate_manifest(candidate)
+    if _problems:
+        sys.stderr.write(f"FAIL: schedule after deleting {MUTATION_CONTENT_ID} would fail "
+                          "schema validation (before any Postiz call — nothing sent):\n")
+        for p in _problems:
+            sys.stderr.write(f"  - {p}\n")
+        sys.exit(65)
+
+    known = set(target.get("provider_ids", {}).get("postiz_scheduled_group", []))
+    for key_ in ("postiz_draft_id", "postiz_scheduled_id"):
+        if target.get("provider_ids", {}).get(key_):
+            known.add(target["provider_ids"][key_])
+    marker = f"utm_content={target['content_id']}"
+
+    doomed: list[tuple[str, str]] = []
+    if not DRY_RUN:
+        current = api(f"/posts{WINDOW}")
+        for post in (current.get("posts", []) if isinstance(current, dict) else []):
+            pid = str(post.get("id"))
+            if pid in known or marker in str(post.get("content", "")):
+                doomed.append((pid, str(post.get("state"))))
+        seen_ids = {pid for pid, _ in doomed}
+        for pid in known - seen_ids:
+            # A known id the window listing didn't return (e.g. outside the
+            # window, or already gone) — still attempt its delete directly
+            # rather than silently doing nothing with it.
+            doomed.append((pid, "UNKNOWN"))
+
+    if DRY_RUN:
+        print(f"DRY RUN: would revert-to-draft then delete {len(known)} known "
+              f"record(s) for {MUTATION_CONTENT_ID}")
+    else:
+        # Default behavior, always: revert-to-draft then soft-delete via the
+        # Postiz API — never a raw database write.
+        for pid, state in doomed:
+            if state not in {"DRAFT", "UNKNOWN"}:
+                api(f"/posts/{pid}/status", method="PUT", data={"status": "draft"})
+            api(f"/posts/{pid}", method="DELETE")
+            print(f"  deleted {pid[:12]} (was {state})")
+        if not doomed:
+            print(f"  NOTE: {MUTATION_CONTENT_ID} had no known/matched Postiz record to delete")
+
+    if HARD_DELETE:
+        schedule["drops"] = candidate["drops"]
+    else:
+        target["provider_ids"] = {}
+        target["state"] = "idea"
+
+    if not DRY_RUN:
+        SCHEDULE_PATH.write_text(json.dumps(schedule, indent=2) + "\n")
+    print(f"{'DRY RUN ' if DRY_RUN else ''}DELETE-DROP{' (hard)' if HARD_DELETE else ''} "
+          f"complete for {MUTATION_CONTENT_ID}")
+    sys.exit(0)
 
 # Adopt anything a previous partial run already created, so reruns never
 # duplicate a live post.
