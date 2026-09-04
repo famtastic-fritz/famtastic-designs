@@ -16,6 +16,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\famtastic_pipeline\Service\PostizChannelsService;
+use Drupal\famtastic_pipeline\Utility\CampaignFileLocator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -39,6 +40,7 @@ final class MarketingCommandController extends ControllerBase {
     'command' => 'Command',
     'dispatch' => 'Daily Dispatch',
     'queue' => 'Content queue',
+    'drops' => 'Postiz drops',
     'calendar' => 'Calendar',
     'channels' => 'Channel health',
     'attribution' => 'Leads & attribution',
@@ -148,6 +150,89 @@ final class MarketingCommandController extends ControllerBase {
     ];
   }
 
+  /**
+   * Renders a committed marketing/campaigns/<slug>/scorecard.json (see
+   * scripts/score-campaign.py and marketing/engine/schemas/campaign-scorecard.schema.json)
+   * as a staff detail view, matching the Build DNA detail pattern above:
+   * facts table + raw evidence in inspectable <details> blocks. This is
+   * read-only — it never regenerates or edits the scorecard; that stays
+   * scripts/score-campaign.py's job, run against real (read-only) Postiz
+   * state.
+   */
+  public function scorecardDetail(string $campaign_slug): array {
+    $data = CampaignFileLocator::readJson($campaign_slug, 'scorecard.json');
+    if ($data === NULL) {
+      throw new NotFoundHttpException('No scorecard.json found for this campaign. Run: python3 scripts/score-campaign.py --campaign ' . $campaign_slug);
+    }
+    // Plain strings below are deliberately NOT Html::escape()'d: #type table
+    // already HTML-escapes plain-string row cells once when it renders them
+    // (Twig autoescaping in table.html.twig). Escaping here too would
+    // double-encode entities. Html::escape() is used further down only where
+    // a value is concatenated into a raw '#markup' HTML string, which is not
+    // auto-escaped.
+    $totals = (array) ($data['totals'] ?? []);
+    $rows = [
+      ['Campaign slug', (string) ($data['campaign_slug'] ?? $campaign_slug)],
+      ['Campaign ID', (string) ($data['campaign_id'] ?? '—')],
+      ['Program / series', (string) ($data['program_id'] ?? '—') . ' / ' . (string) ($data['series_id'] ?? '—')],
+      ['Generated at', (string) ($data['generated_at'] ?? '—')],
+      ['Provider', (string) ($data['provider'] ?? '—')],
+      ['Clicks/conversions available', empty($data['clicks_conversions_available']) ? 'No — see gap note below' : 'Yes'],
+      ['Drops scored', (string) ($totals['drops'] ?? 0)],
+      ['Requested channels', (string) ($totals['requested_channels'] ?? 0)],
+      ['Provider records found', (string) ($totals['provider_records_found'] ?? 0)],
+      ['Published', (string) ($totals['published'] ?? 0)],
+      ['Error', (string) ($totals['error'] ?? 0)],
+      ['Queued', (string) ($totals['queued'] ?? 0)],
+      ['Not found', (string) ($totals['not_found'] ?? 0)],
+      ['Publish success rate', isset($totals['publish_success_rate']) ? number_format(((float) $totals['publish_success_rate']) * 100, 1) . '%' : '—'],
+    ];
+
+    $dropRows = [];
+    foreach ((array) ($data['drops'] ?? []) as $drop) {
+      if (!is_array($drop)) {
+        continue;
+      }
+      $counts = (array) ($drop['counts'] ?? []);
+      $dropRows[] = [
+        (string) ($drop['content_id'] ?? $drop['drop_id'] ?? '—'),
+        mb_strimwidth((string) ($drop['theme'] ?? ''), 0, 60, '…'),
+        (string) ($counts['requested_channels'] ?? 0),
+        (string) ($counts['provider_records_found'] ?? 0),
+        (string) ($counts['published'] ?? 0),
+        (string) ($counts['error'] ?? 0),
+        (string) ($counts['queued'] ?? 0),
+        (string) ($counts['not_found'] ?? 0),
+      ];
+    }
+
+    return [
+      '#title' => 'Scorecard — ' . $campaign_slug,
+      '#attached' => ['library' => ['famtastic_pipeline/operations']],
+      'truth' => ['#markup' => $this->executionTruth()],
+      'back' => Link::fromTextAndUrl('← Back to Postiz drops', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'drops'], ['query' => ['campaign' => $campaign_slug]]))->toRenderable(),
+      'facts' => ['#type' => 'table', '#header' => ['Field', 'Value'], '#rows' => $rows, '#attributes' => ['class' => ['famtastic-ops__table']]],
+      'per_drop' => $this->table(
+        'Per-drop publish state',
+        'Real Postiz publish state per drop, read directly from the committed scorecard — never estimated or backfilled.',
+        ['Content ID', 'Theme', 'Requested', 'Found', 'Published', 'Error', 'Queued', 'Not found'],
+        $dropRows,
+        'No drops in this scorecard.',
+      ),
+      'gap_note' => [
+        '#type' => 'details',
+        '#title' => $this->t('Gap note (clicks / conversions)'),
+        '#open' => empty($data['clicks_conversions_available']),
+        'pre' => ['#markup' => '<pre class="famtastic-email-body">' . Html::escape((string) ($data['gap_note'] ?? '—')) . '</pre>'],
+      ],
+      'attribution_note' => [
+        '#type' => 'details',
+        '#title' => $this->t('Attribution note'),
+        'pre' => ['#markup' => '<pre class="famtastic-email-body">' . Html::escape((string) ($data['attribution_note'] ?? '—')) . '</pre>'],
+      ],
+    ];
+  }
+
   private function page(string $tab): array {
     $tabs = [];
     foreach (self::TABS as $id => $label) {
@@ -165,6 +250,7 @@ final class MarketingCommandController extends ControllerBase {
       'command' => $this->tabCommand(),
       'dispatch' => $this->tabDispatch(),
       'queue' => $this->tabQueue(),
+      'drops' => $this->tabDrops(),
       'calendar' => $this->tabCalendar(),
       'channels' => $this->tabChannels(),
       'attribution' => $this->tabAttribution(),
@@ -288,6 +374,106 @@ final class MarketingCommandController extends ControllerBase {
       ],
     ];
     $page['actions']['#weight'] = -20;
+    return $page;
+  }
+
+  /**
+   * Postiz drops: per-drop live-record control, read directly from each
+   * campaign's posting-schedule.json (the Phase 1/2 posting-schedule
+   * campaigns — cost-is-not-the-reason, ghost-town-ep1 — are not synced into
+   * famtastic_social_record; that table only holds the older 55-cents-17-day
+   * manifest). Edit/delete here call PostizDropMutationService directly, as
+   * an injected Drupal service — never a shell-out to
+   * scripts/queue-campaign-drops.py, which was flagged as an unplanned
+   * security hole for exactly this reason. Only the live Postiz record is
+   * touched; posting-schedule.json itself stays the CLI's job.
+   */
+  private function tabDrops(): array {
+    $request = \Drupal::request();
+    $campaigns = CampaignFileLocator::listCampaignSlugs();
+    $selected = (string) $request->query->get('campaign', '');
+    if ($selected === '' || !in_array($selected, $campaigns, TRUE)) {
+      $selected = $campaigns[0] ?? '';
+    }
+
+    $pills = [];
+    foreach ($campaigns as $slug) {
+      $pills[] = [
+        '#type' => 'link',
+        '#title' => $slug,
+        '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'drops'], ['query' => ['campaign' => $slug]]),
+        '#attributes' => ['class' => ['button', $slug === $selected ? 'button--primary' : 'button--secondary']],
+      ];
+    }
+    $pillsBuild = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions']], 'items' => $pills];
+
+    if ($selected === '') {
+      return [
+        'campaigns' => $pillsBuild,
+        'heading' => ['#markup' => '<h2>Postiz drops</h2><p class="famtastic-ops__lede">' . $this->t('No campaign with a posting-schedule.json was found under marketing/campaigns/.') . '</p>'],
+      ];
+    }
+
+    $schedule = CampaignFileLocator::readJson($selected, 'posting-schedule.json') ?? [];
+    $rows = [];
+    foreach ((array) ($schedule['drops'] ?? []) as $drop) {
+      if (!is_array($drop)) {
+        continue;
+      }
+      $cid = (string) ($drop['content_id'] ?? '');
+      if ($cid === '') {
+        continue;
+      }
+      $known = CampaignFileLocator::knownProviderIds($drop);
+      // Plain strings here, deliberately NOT Html::escape()'d: Drupal's
+      // #type table already HTML-escapes plain-string row cells once when
+      // it renders them (Twig autoescaping in table.html.twig). Escaping
+      // here too would double-encode entities (e.g. an "&" in a drop theme
+      // rendering as "&amp;amp;") — the table markup below (badge/links) is
+      // the only column that legitimately needs its own escaping, because
+      // it is passed as trusted '#markup'.
+      $rows[] = [
+        $cid,
+        (string) ($drop['scheduled_time'] ?? '—'),
+        mb_strimwidth((string) ($drop['theme'] ?? ''), 0, 60, '…'),
+        implode(', ', array_map('strval', (array) ($drop['channels'] ?? []))),
+        ['data' => ['#markup' => $this->badge((string) ($drop['state'] ?? 'idea'))]],
+        (string) count($known),
+        // '#type' => 'link' render arrays (not Link::toRenderable(), which
+        // carries no class) so these get the theme's .button styling —
+        // a bare <a> here would fall under the 44px mobile touch-target
+        // minimum (Design DNA v1).
+        ['data' => [
+          '#type' => 'link',
+          '#title' => $this->t('Edit'),
+          '#url' => Url::fromRoute('famtastic_pipeline.marketing.drop_edit', ['campaign_slug' => $selected, 'content_id' => $cid]),
+          '#attributes' => ['class' => ['button', 'button--small']],
+        ]],
+        ['data' => [
+          '#type' => 'link',
+          '#title' => $this->t('Delete'),
+          '#url' => Url::fromRoute('famtastic_pipeline.marketing.drop_delete', ['campaign_slug' => $selected, 'content_id' => $cid]),
+          '#attributes' => ['class' => ['button', 'button--small', 'button--danger']],
+        ]],
+      ];
+    }
+
+    $page = $this->table(
+      'Postiz drops — ' . $selected,
+      'Per-drop live Postiz record control, read directly from posting-schedule.json. Edit sets every known record for a drop to draft or scheduled; delete soft-deletes all of them. Copy, media, channels, and schedule time stay the CLI\'s job (scripts/queue-campaign-drops.py --edit-drop), never rewritten here from a live request.',
+      ['Content ID', 'Scheduled', 'Theme', 'Channels', 'State', 'Known Postiz records', '', ''],
+      $rows,
+      'No drops in this campaign schedule.',
+    );
+    $page['campaigns'] = $pillsBuild;
+    $page['campaigns']['#weight'] = -30;
+    $page['scorecard_link'] = [
+      '#type' => 'link',
+      '#title' => $this->t('View scorecard for @s →', ['@s' => $selected]),
+      '#url' => Url::fromRoute('famtastic_pipeline.marketing.scorecard', ['campaign_slug' => $selected]),
+      '#attributes' => ['class' => ['button']],
+      '#weight' => -25,
+    ];
     return $page;
   }
 

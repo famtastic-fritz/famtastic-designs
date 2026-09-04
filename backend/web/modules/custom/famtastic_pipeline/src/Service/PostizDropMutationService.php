@@ -301,6 +301,27 @@ final class PostizDropMutationService {
     ]);
   }
 
+  /**
+   * Composes the exact human-readable line audit() writes to the
+   * famtastic_pipeline logger channel, without writing a second log entry.
+   *
+   * Callers (the admin drop-edit/delete forms) invoke this immediately after
+   * a successful mutation, with the same $action/$detail they just passed to
+   * createDraftPost()/changeStatus()/deletePost(), so the operator sees on
+   * screen precisely what was recorded — never a paraphrase, never a guess.
+   */
+  public function formatAuditLine(string $action, string $contentId, string $campaignId, ?string $actor, array $detail): string {
+    $who = $actor ?? ($this->currentUser->getAccountName() ?: 'uid:' . $this->currentUser->id());
+    return sprintf(
+      'Postiz drop mutation: %s content_id=%s campaign_id=%s by %s — %s',
+      $action,
+      $contentId,
+      $campaignId,
+      $who,
+      (string) json_encode($detail),
+    );
+  }
+
   private function extractPostId(mixed $response): ?string {
     if (is_array($response) && isset($response[0]) && is_array($response[0])) {
       $first = $response[0];
