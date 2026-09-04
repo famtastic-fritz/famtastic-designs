@@ -1015,6 +1015,41 @@ Open follow-up:
   contradictory at a glance but aren't: one is a backend API URL prefix that
   happens to work correctly, the other is a page URL prefix that never does.
   `scripts/suggest-next-blog-topic.py` reuses the same working endpoint.
+## 2026-09-04 — systemic `/web/` canonical-URL defect on every blog_post
+
+- Observation: every published `blog_post` node's canonical meta tag
+  resolved to `https://famtasticdesigns.com/web/blog/<slug>` — Drupal's own
+  backend document-root prefix — instead of the real public frontend route
+  `https://famtasticdesigns.com/blog/<slug>`. Confirmed live via JSON:API
+  across multiple posts (both a recent one and an older one), so this was
+  systemic across the corpus, not a one-off bad node.
+- Root cause: `metatag.metatag_defaults.node` (the one shared metatag default
+  covering every node bundle — no `node__blog_post` override exists) sets
+  `canonical_url: '[node:url]'`. Production Drupal answers every request
+  under `/web` (this is genuinely where Drupal's own document root is
+  reached publicly — see `famtastic_pipeline.settings:public_api_base_url`,
+  which is literally `{frontend_base_url}/web`). Any Drupal-generated node
+  URL token, absolute or relative, therefore carries `/web` baked in, because
+  that really is Drupal's own base path. The frontend renders the same
+  content one path segment up, at the bare origin, so the token-generated
+  "canonical" URL pointed at a route that 404s publicly.
+- Fix: `famtastic_pipeline_metatags_alter()` (`hook_metatags_alter()`) in
+  `backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.module`
+  rewrites the resolved `canonical_url` tag for any node, stripping a literal
+  `/web` prefix and rebuilding it against
+  `famtastic_pipeline.settings:frontend_base_url`. This hook is invoked
+  identically by classic page rendering and by the JSON:API `metatag`
+  computed field (`Drupal\metatag\Plugin\Field\MetatagEntityFieldItemList`),
+  so a single change fixes the tag everywhere it is emitted, for every node
+  bundle, present and future — no per-node field edit, no metatag config
+  edit, and no seed-script change needed.
+- Guidance: when a Drupal absolute/relative URL token looks wrong on a site
+  where Drupal itself is reachable at a URL prefix (like `/web`) distinct
+  from where the public frontend renders the same content, suspect the
+  token first, not the stored data — check `metatag.metatag_defaults.*`
+  before touching individual nodes. `hook_metatags_alter()` is the right
+  place to correct it centrally since it fires for both page rendering and
+  the JSON:API computed metatag field.
 - Guidance: `backend/config/famtastic-content-series.json`'s "posts" array is
   the original 80-article content plan; as of this date all 80 are confirmed
   live via JSON:API. The `marketing/blog/drafts/` folder is a separate,

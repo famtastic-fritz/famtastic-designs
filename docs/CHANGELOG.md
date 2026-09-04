@@ -1,5 +1,38 @@
 # Product changelog
 
+## 2026-09-04 (later session 2) — Fixed systemic `/web/` canonical-URL bug on every blog post
+
+- Confirmed live via JSON:API that every published `blog_post` node's canonical
+  meta tag pointed at `https://famtasticdesigns.com/web/blog/<slug>` — Drupal's
+  own backend document-root prefix, not the real public frontend route
+  (`https://famtasticdesigns.com/blog/<slug>`). The `/web/` URL 404s publicly,
+  so search engines were being told the "real" URL of every blog post is a
+  dead link — a genuine SEO defect, not cosmetic.
+- Root cause: `metatag.metatag_defaults.node` (the shared default applied to
+  every node bundle, no `node__blog_post` override exists) sets
+  `canonical_url: '[node:url]'`. Because production Drupal answers requests
+  under `/web` (matches `famtastic_pipeline.settings:public_api_base_url` =
+  `{frontend_base_url}/web`, already documented in `docs/BACKEND_DEPLOYMENT.md`),
+  every Drupal-generated node URL token — absolute or relative — carries that
+  `/web` prefix baked in. This is not a per-node data problem; the same shared
+  config/token combination breaks the canonical tag for every node, of any
+  bundle, systemically.
+- Fix applied at the shared source, not per-node: added
+  `famtastic_pipeline_metatags_alter()` (implements `hook_metatags_alter()`) in
+  `backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.module`.
+  It rewrites the resolved `canonical_url` tag for any node entity, replacing
+  Drupal's internal `/web`-prefixed path with the same path against
+  `famtastic_pipeline.settings:frontend_base_url`. This hook fires identically
+  for classic page rendering and for the JSON:API `metatag` computed field
+  (`Drupal\metatag\Plugin\Field\MetatagEntityFieldItemList` invokes the same
+  `hook_metatags_alter`), so one change fixes both surfaces. No metatag
+  config, no per-node field, and no seed script needed to change.
+- Deployed via the reviewed `./scripts/deploy-backend-godaddy.sh --apply` lane
+  (module-only change; no dependency, schema, or database update). Re-verified
+  live afterward: refetched multiple posts' canonical tags via JSON:API and
+  confirmed the corrected `https://famtasticdesigns.com/blog/<slug>` form,
+  each resolving 200.
+
 ## 2026-09-04 (later session) — 5 blog drafts written to full length; topic gap-finder + automation options doc
 
 - Wrote/rewrote all 5 remaining blog drafts to real, full-length content

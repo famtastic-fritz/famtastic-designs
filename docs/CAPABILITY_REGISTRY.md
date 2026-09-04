@@ -29,7 +29,7 @@ capability is not “proven” merely because code exists.
 | Portal support cases | Test-provider proven | Customer timelines, priority targets, replies, and staff alerts |
 | Mail reply ingestion | Locally proven | Thread-address matching, validation, attachment policy, and unmatched-reply handling |
 | Google Analytics operations reporting | Production smoke-tested | Separate traffic/campaign reporting and customer analytics entitlement |
-| SEO and dynamic sitemap delivery | Production smoke-tested | Drupal content discovery, route-specific shells, sitemap, robots, and canonical metadata |
+| SEO and dynamic sitemap delivery | Production smoke-tested | Drupal content discovery, route-specific shells, sitemap, robots, and canonical metadata. 2026-09-04: found and fixed a systemic canonical-tag defect — every node's canonical meta tag resolved to Drupal's internal `/web`-prefixed backend path (a dead link publicly) instead of the real frontend URL, because the shared `metatag.metatag_defaults.node` default's `[node:url]` token inherits Drupal's own request-root prefix. Fixed once at the shared source via `famtastic_pipeline_metatags_alter()`, not per-node; re-verified live across multiple posts post-fix. |
 | Synthetic customer journey proof | Locally proven | Repeatable lifecycle QA with explicit provider and production boundaries |
 | Isolated customer site deployment | Locally proven | Build, proof, approval, deployment, rollback, domain, and hosting lifecycle patterns |
 | Preview-to-Site-Studio build packet bridge | Locally proven | Provider-neutral one/two-direction build packet, exact stage journal, signed success validation, project-scoped portal continuation, and transactional notification handoff |
