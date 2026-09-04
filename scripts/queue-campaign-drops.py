@@ -59,6 +59,9 @@ from datetime import datetime, timezone
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 CAMPAIGNS_ROOT = REPO_ROOT / "marketing/campaigns"
 
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from campaign_schema_validate import validate_manifest  # noqa: E402
+
 PG_CONTAINER = os.environ.get("POSTIZ_PG_CONTAINER", "postiz-postgres")
 BASE_URL = os.environ.get(
     "FAMTASTIC_POSTIZ_BASE_URL",
@@ -183,6 +186,26 @@ if not SCHEDULE_PATH.is_file():
     )
     sys.exit(66)
 
+# Validate the manifest against posting-schedule.schema.json before doing
+# anything else — before resolving credentials, before --dry-run, and before
+# any real Postiz call. json.loads() alone (the old behavior) accepted a
+# structurally-broken manifest as long as it parsed.
+try:
+    schedule = json.loads(SCHEDULE_PATH.read_text())
+except json.JSONDecodeError as exc:
+    sys.stderr.write(f"FAIL: {SCHEDULE_PATH.relative_to(REPO_ROOT)} is not valid JSON: {exc}\n")
+    sys.exit(65)
+_schema_problems = validate_manifest(schedule)
+if _schema_problems:
+    sys.stderr.write(
+        f"FAIL: {SCHEDULE_PATH.relative_to(REPO_ROOT)} does not conform to "
+        "posting-schedule.schema.json:\n"
+    )
+    for _p in _schema_problems:
+        sys.stderr.write(f"  - {_p}\n")
+    sys.stderr.write(f"  fix it, or check it with: python3 scripts/new-campaign.py --validate {CAMPAIGN}\n")
+    sys.exit(65)
+
 if DO_SCHEDULE and not ARMED:
     sys.stderr.write(
         "REFUSED: --schedule converts drafts into real, live-firing posts.\n"
@@ -253,7 +276,6 @@ def upload(path: pathlib.Path) -> dict:
         return {}
 
 
-schedule = json.loads(SCHEDULE_PATH.read_text())
 drops = schedule["drops"]
 LANDING = schedule.get("landing_url", DEFAULT_LANDING)
 # A campaign may extend or override the shared maps without touching this code.

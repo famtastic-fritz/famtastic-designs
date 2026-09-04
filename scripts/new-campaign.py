@@ -34,6 +34,9 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 CAMPAIGNS_ROOT = REPO_ROOT / "marketing/campaigns"
 SCHEMA_PATH = REPO_ROOT / "marketing/engine/schemas/posting-schedule.schema.json"
 
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from campaign_schema_validate import validate_manifest  # noqa: E402
+
 # Channel labels the shared map in queue-campaign-drops.py already understands.
 KNOWN_CHANNELS = {
     "facebook", "facebook_video", "instagram", "instagram_reels",
@@ -91,6 +94,8 @@ def scaffold(args: argparse.Namespace) -> int:
     schedule = {
         "schema_version": 2,
         "campaign_id": campaign_id,
+        "program_id": args.program_id,
+        "series_id": args.series_id,
         "campaign_name": args.name or args.slug.replace("-", " ").title(),
         "created_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "status": "draft",
@@ -138,12 +143,7 @@ def validate(slug: str) -> int:
         return 1
     schedule = json.loads(schedule_path.read_text())
 
-    problems: list[str] = []
-    if schedule.get("schema_version") != 2:
-        problems.append("schema_version must be 2")
-    for key in ("campaign_id", "time_zone", "drops"):
-        if not schedule.get(key):
-            problems.append(f"missing required top-level key: {key}")
+    problems: list[str] = list(validate_manifest(schedule))
 
     seen_ids: set[str] = set()
     seen_content: set[str] = set()
@@ -219,6 +219,8 @@ def main() -> int:
     parser.add_argument("--anchor", help="first drop time, ISO 8601 with offset, e.g. 2026-09-03T23:50:00-04:00")
     parser.add_argument("--interval", type=int, default=150, help="minutes between drops (default 150 = 2.5h)")
     parser.add_argument("--time-zone", default="America/New_York")
+    parser.add_argument("--program-id", default="FAM-FOOT-199", help="offer/SKU this campaign sells (required by schema)")
+    parser.add_argument("--series-id", default=None, help="shared id for campaigns in the same narrative sequence (omit for a standalone campaign)")
     parser.add_argument("--landing", default="https://famtasticdesigns.com/onboarding?sku=FAM-FOOT-199")
     parser.add_argument("--force", action="store_true", help="overwrite an existing posting-schedule.json")
     parser.add_argument("--validate", metavar="SLUG", help="validate an existing campaign instead of scaffolding")
