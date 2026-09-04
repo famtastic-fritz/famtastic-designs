@@ -102,6 +102,11 @@ DRAFT_CLASSIFICATION = {
         "category_label": "Get Customers",
         "tags": ["Proof-First", "Website Design", "Customer Experience"],
     },
+    "why-running-business-on-gmail-and-linktree-costs-revenue": {
+        "category": "get-customers",
+        "category_label": "Get Customers",
+        "tags": ["Owned Domain", "Booking", "Small Business"],
+    },
 }
 
 DEFAULT_AUTHOR_UID = 1  # fritz.medine@gmail.com — the account of record for all existing content.
