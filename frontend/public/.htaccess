@@ -43,6 +43,11 @@
 
   # Customer account links, checkout purchase, and direct intake routes.
   RewriteRule ^(?:login|verify-email|reset-password|buy|purchase|pricing|intake)(?:/.*)?$ /index.html [L]
+
+  # Short legal-URL aliases (client-side Navigate to the canonical shell below).
+  # TikTok's app review specifically checks these short paths.
+  RewriteRule ^terms/?$ /index.html [L]
+  RewriteRule ^privacy/?$ /index.html [L]
 </IfModule>
 
 # The Drupal backend root (/web/) is not a landing surface - route it to the SPA.
