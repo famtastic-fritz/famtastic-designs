@@ -1,5 +1,32 @@
 # Product changelog
 
+## 2026-09-04 (later session) — 5 blog drafts written to full length; topic gap-finder + automation options doc
+
+- Wrote/rewrote all 5 remaining blog drafts to real, full-length content
+  (376-449 words each, matching the published-post reference format):
+  `business-email-on-your-own-domain`, `how-local-customers-find-your-business-online`,
+  `what-website-maintenance-actually-covers`, `do-you-guarantee-google-rankings`
+  (an honest "no" — no vendor can guarantee a Google ranking, sourced from
+  `docs/CAPABILITY_REGISTRY.md` and `docs/DEMAND_ENGINE_DOCTRINE.md`), and
+  `what-happens-when-first-year-hosting-ends` (sourced from
+  `docs/CUSTOMER_TERMS_AND_LAUNCH_APPROVAL.md`'s real renewal terms). Every
+  internal link was curled live and confirmed 200 before use. All 5 pass
+  `scripts/publish-blog-draft.py --dry-run` cleanly and are registered in
+  `DRAFT_CLASSIFICATION`. **None have been published** — that remains a
+  `--confirm` decision for a human.
+- Added `scripts/suggest-next-blog-topic.py`: a read-only gap-finder that
+  cross-references the original 80-post content plan
+  (`backend/config/famtastic-content-series.json`), `marketing/blog/drafts/`,
+  and the live published post list (via the same `/web/jsonapi` endpoint
+  `scripts/qa-content-links.py` already proved works). Result: all 80 planned
+  posts are confirmed live; the 8 folders under `marketing/blog/drafts/` are
+  all ad-hoc campaign-driven work outside the original plan, not gaps in it.
+- Added `docs/playbook/RECIPES/BLOG_AUTOMATION_OPTIONS.md`, a decision doc
+  (not a decision) laying out three ways to make `scripts/qa-content-links.py`
+  run automatically instead of manually — launchd, git pre-push hook, or a
+  deploy-script preflight step — with tradeoffs for each. No cadence or
+  mechanism was chosen; that's left to Fritz.
+
 ## 2026-09-04 — Truthful intake-to-proof handoff deployed
 
 - Rebased the proof-handoff repair onto current main and released exact commit `1e0f82cb` through the canonical backend and frontend lanes. The backend record confirms its database/module/theme/services/dependency backups and the frontend record confirms its frontend backup plus all 162 route shells.

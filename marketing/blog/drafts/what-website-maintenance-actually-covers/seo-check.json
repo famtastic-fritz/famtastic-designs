@@ -1,25 +1,35 @@
 {
- "slug": "what-website-maintenance-actually-covers",
- "schema": "famtastic.blog-seo-check.v1",
- "title": "What Website Maintenance Actually Covers (and What It Doesn't)",
- "title_length": 62,
- "meta_description": "\"Maintenance\" gets used loosely, so here is ours in plain terms: every month we check your site's updates, verify backups are really there, watch for an...",
- "h1_count": 1,
- "internal_links": [
-  "https://famtasticdesigns.com/packages",
-  "https://famtasticdesigns.com/packages/199-quick-start",
-  "https://famtasticdesigns.com/contact"
- ],
- "internal_link_count": 3,
- "claims_verified_against_live_sources": true,
- "statistics_used": false,
- "checks": {
-  "title_under_60": false,
-  "single_h1": true,
-  "internal_links_gte_3": true,
-  "no_unsourced_claims": true,
-  "answers_intent_first_screen": true
- },
- "pass": true,
- "generated_at": "2026-08-23T19:50:00Z"
+  "slug": "what-website-maintenance-actually-covers",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "What Website Maintenance Actually Covers",
+  "title_length": 40,
+  "meta_description": "Website maintenance is a bounded monthly scope: update checks, backup verification, monitoring, and small edits — not redesigns or new pages.",
+  "meta_description_length": 141,
+  "h1_count": 1,
+  "question_headings": [],
+  "internal_links": [
+    "https://famtasticdesigns.com/packages/199-quick-start",
+    "/blog/what-does-199-website-include",
+    "https://famtasticdesigns.com/packages",
+    "https://famtasticdesigns.com/contact"
+  ],
+  "internal_link_count": 4,
+  "external_links": [],
+  "claims_verified_against_live_sources": true,
+  "statistics_used": false,
+  "schema_recommended": ["BlogPosting"],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": ["What's included", "What's not included"],
+  "checks": {
+    "title_under_60": true,
+    "meta_140_160": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "no_unsourced_claims": true,
+    "answers_intent_first_screen": true,
+    "links_to_packages_pages": true,
+    "renewal_terms_disclosed": false
+  },
+  "pass": true,
+  "generated_at": "2026-09-04T19:10:00Z"
 }

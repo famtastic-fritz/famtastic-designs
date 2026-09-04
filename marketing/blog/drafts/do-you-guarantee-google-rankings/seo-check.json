@@ -1,15 +1,15 @@
 {
-  "slug": "how-local-customers-find-your-business-online",
+  "slug": "do-you-guarantee-google-rankings",
   "schema": "famtastic.blog-seo-check.v1",
-  "title": "How Local Customers Actually Find Your Business Online",
-  "title_length": 54,
-  "meta_description": "Why don't you show up when nearby customers search? It's usually one missing layer of three: structured data, business profiles, and analytics.",
-  "meta_description_length": 143,
+  "title": "Do You Guarantee Google Rankings?",
+  "title_length": 33,
+  "meta_description": "No — and any vendor who says otherwise is telling you something no one controls. Here's what we actually build, and how to verify it yourself.",
+  "meta_description_length": 142,
   "h1_count": 1,
-  "question_headings": [],
+  "question_headings": ["Do You Guarantee Google Rankings?"],
   "internal_links": [
+    "/blog/how-local-customers-find-your-business-online",
     "https://famtasticdesigns.com/packages/199-quick-start",
-    "/blog/what-does-199-website-include",
     "https://famtasticdesigns.com/packages",
     "https://famtasticdesigns.com/contact"
   ],
@@ -17,9 +17,9 @@
   "external_links": [],
   "claims_verified_against_live_sources": true,
   "statistics_used": false,
-  "schema_recommended": ["BlogPosting"],
+  "schema_recommended": ["BlogPosting", "FAQPage"],
   "geo_answer_first": true,
-  "ai_citation_ready_sections": ["The three layers, plainly", "Why skipping a layer hurts the other two"],
+  "ai_citation_ready_sections": ["Why no one can actually promise this", "What actually can be built, and verified"],
   "checks": {
     "title_under_60": true,
     "meta_140_160": true,
@@ -31,5 +31,5 @@
     "renewal_terms_disclosed": false
   },
   "pass": true,
-  "generated_at": "2026-09-04T19:05:00Z"
+  "generated_at": "2026-09-04T19:15:00Z"
 }
