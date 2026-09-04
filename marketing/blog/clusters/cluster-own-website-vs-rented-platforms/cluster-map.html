@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cluster Map — Own Website vs Rented Platforms</title>
+<style>
+  :root{
+    --bg:#070907; --panel:#101310; --border:#252b25;
+    --text:#eef2ea; --muted:#9aa397; --lime:#7cfc00;
+    --a:#2563eb; --b:#7c3aed; --c:#059669;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:14px/1.5 Inter,system-ui,-apple-system,sans-serif;padding:32px}
+  h1{font-size:22px;margin:0 0 4px}
+  p.sub{color:var(--muted);margin:0 0 24px;font-size:13px}
+  .wrap{max-width:1000px;margin:0 auto}
+  .map{background:var(--panel);border:1px solid var(--border);
+    border-radius:18px;padding:16px;overflow-x:auto}
+  svg{display:block;min-width:820px}
+  .node rect{stroke-width:1.5;rx:10;transition:opacity .15s}
+  .node:hover rect{opacity:.75}
+  .node text{font-size:11px;fill:var(--text)}
+  .node text.kw{font-size:9.5px;fill:var(--muted)}
+  .pill rect{fill:#141c11;stroke:var(--lime)}
+  .ca rect{fill:#101827;stroke:var(--a)}
+  .cb rect{fill:#171029;stroke:var(--b)}
+  .cc rect{fill:#07211a;stroke:var(--c)}
+  .link{stroke:#2f3a2f;stroke-width:1.2;fill:none}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;
+    font-size:12px;color:var(--muted)}
+  .legend span i{display:inline-block;width:10px;height:10px;
+    border-radius:3px;margin-right:6px;vertical-align:middle}
+  table{width:100%;border-collapse:collapse;margin-top:28px;font-size:13px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);
+    vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:11px;
+    text-transform:uppercase;letter-spacing:.06em}
+  .note{margin-top:24px;padding:14px 16px;background:#1a1508;
+    border:1px solid #3a2f18;border-radius:12px;font-size:13px;color:#e8a83c}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Own Website vs Rented Platforms</h1>
+  <p class="sub">1 pillar (already published) &middot; 6 spokes &middot; 22 planned interlinks &middot; plan only, nothing written</p>
+
+  <div class="map">
+  <svg viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" role="img"
+       aria-label="Hub and spoke cluster map">
+    <!-- links -->
+    <path class="link" d="M410,90 L150,190"/>
+    <path class="link" d="M410,90 L150,290"/>
+    <path class="link" d="M410,90 L410,190"/>
+    <path class="link" d="M410,90 L410,290"/>
+    <path class="link" d="M410,90 L670,190"/>
+    <path class="link" d="M410,90 L670,290"/>
+    <path class="link" d="M150,225 L150,290"/>
+    <path class="link" d="M410,225 L410,290"/>
+    <path class="link" d="M670,225 L670,290"/>
+    <path class="link" d="M600,300 L230,210"/>
+
+    <!-- pillar -->
+    <g class="node pill">
+      <title>PILLAR (published, nid 158): Why Gmail and Linktree Cost Your Business Revenue</title>
+      <rect x="250" y="30" width="320" height="60"/>
+      <text x="410" y="54" text-anchor="middle">PILLAR &mdash; already published</text>
+      <text x="410" y="72" text-anchor="middle" class="kw">Why Gmail and Linktree Cost Your Business Revenue</text>
+    </g>
+
+    <!-- cluster A -->
+    <g class="node ca">
+      <title>A1: Linktree vs. a Real Website &mdash; keyword: linktree vs website (high)</title>
+      <rect x="30" y="190" width="240" height="52"/>
+      <text x="150" y="212" text-anchor="middle">A1 &middot; Linktree vs. a Real Website</text>
+      <text x="150" y="229" text-anchor="middle" class="kw">linktree vs website &middot; high</text>
+    </g>
+    <g class="node ca">
+      <title>A2: Why Your Link-in-Bio Page Doesn&#39;t Show Up in Google</title>
+      <rect x="30" y="290" width="240" height="52"/>
+      <text x="150" y="312" text-anchor="middle">A2 &middot; Not showing up in Google</text>
+      <text x="150" y="329" text-anchor="middle" class="kw">link-in-bio seo &middot; medium</text>
+    </g>
+
+    <!-- cluster B -->
+    <g class="node cb">
+      <title>B1: What Booking App Commissions Actually Cost You in a Year</title>
+      <rect x="290" y="190" width="240" height="52"/>
+      <text x="410" y="212" text-anchor="middle">B1 &middot; Commission cost per year</text>
+      <text x="410" y="229" text-anchor="middle" class="kw">booking app commission fees &middot; medium</text>
+    </g>
+    <g class="node cb">
+      <title>B2: Who Owns Your Client List When You Book Through an App?</title>
+      <rect x="290" y="290" width="240" height="52"/>
+      <text x="410" y="312" text-anchor="middle">B2 &middot; Who owns your client list</text>
+      <text x="410" y="329" text-anchor="middle" class="kw">client data ownership &middot; low</text>
+    </g>
+
+    <!-- cluster C -->
+    <g class="node cc">
+      <title>C1: Why &quot;How Much Do You Charge?&quot; in the DMs Costs You Bookings</title>
+      <rect x="550" y="190" width="240" height="52"/>
+      <text x="670" y="212" text-anchor="middle">C1 &middot; The DM price gap</text>
+      <text x="670" y="229" text-anchor="middle" class="kw">price questions in dms &middot; medium</text>
+    </g>
+    <g class="node cc">
+      <title>C2: How a Website Answers Price Questions Before They&#39;re Asked</title>
+      <rect x="550" y="290" width="240" height="52"/>
+      <text x="670" y="312" text-anchor="middle">C2 &middot; Answer before it&#39;s asked</text>
+      <text x="670" y="329" text-anchor="middle" class="kw">quote automation &middot; low</text>
+    </g>
+
+    <text x="150" y="382" text-anchor="middle" class="kw">Cluster A &mdash; Get Found</text>
+    <text x="410" y="382" text-anchor="middle" class="kw">Cluster B &mdash; Get Paid</text>
+    <text x="670" y="382" text-anchor="middle" class="kw">Cluster C &mdash; Get Customers</text>
+  </svg>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:#7cfc00"></i>Pillar (published)</span>
+    <span><i style="background:#2563eb"></i>Cluster A &mdash; Discoverability</span>
+    <span><i style="background:#7c3aed"></i>Cluster B &mdash; Fees &amp; Ownership</span>
+    <span><i style="background:#059669"></i>Cluster C &mdash; Conversion</span>
+  </div>
+
+  <table>
+    <tr><th>ID</th><th>Title</th><th>Primary keyword</th><th>Job</th><th>Words</th></tr>
+    <tr><td>P</td><td>Why Gmail and Linktree Cost Your Business Revenue <em>(published)</em></td><td>own website vs linktree</td><td>&mdash;</td><td>428 &rarr; 900</td></tr>
+    <tr><td>A1</td><td>Linktree vs. a Real Website: What You&#39;re Actually Trading Away</td><td>linktree vs website</td><td>Get Found</td><td>450</td></tr>
+    <tr><td>A2</td><td>Why Your Link-in-Bio Page Doesn&#39;t Show Up in Google</td><td>link-in-bio seo</td><td>Get Found</td><td>425</td></tr>
+    <tr><td>B1</td><td>What Booking App Commissions Actually Cost You in a Year</td><td>booking app commission fees</td><td>Get Paid</td><td>450</td></tr>
+    <tr><td>B2</td><td>Who Owns Your Client List When You Book Through an App?</td><td>client data ownership</td><td>Get Paid</td><td>400</td></tr>
+    <tr><td>C1</td><td>Why &quot;How Much Do You Charge?&quot; in the DMs Costs You Bookings</td><td>price questions in dms</td><td>Get Customers</td><td>425</td></tr>
+    <tr><td>C2</td><td>How a Website Answers Price Questions Before They&#39;re Asked</td><td>quote automation</td><td>Get Customers</td><td>425</td></tr>
+  </table>
+
+  <div class="note">
+    <strong>Open decision:</strong> blog-cluster&#39;s default targets are 2,500&ndash;4,000 words per pillar
+    and 1,200&ndash;1,800 per spoke. This site&#39;s measured house style is 294&ndash;449 words
+    (VOICE.md). Targets above preserve the skill&#39;s pillar-to-spoke depth ratio at this
+    site&#39;s real scale instead of importing generic word counts. Confirm before execution.
+  </div>
+</div>
+</body>
+</html>
