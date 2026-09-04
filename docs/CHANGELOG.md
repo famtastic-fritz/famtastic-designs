@@ -1,5 +1,31 @@
 # Product changelog
 
+## 2026-09-04 — Blog Factory step 6: single-post publish script
+
+- Added `scripts/publish-blog-draft.py` and its companion
+  `backend/scripts/publish-single-blog-post.php`, closing the one gap in
+  `docs/playbook/RECIPES/BLOG_FACTORY.md`: publishing a drafted article into
+  Drupal had no script behind it.
+- Reads `marketing/blog/drafts/<slug>/{draft.md,brief.md,seo-check.json}`,
+  validates every required blog_post field before any write, computes word
+  count, and converts the draft body to basic_html.
+- Auth: no service-account credential exists in this repo for scripted
+  JSON:API writes, so the script reuses the one write path this repo already
+  trusts for blog content — SSH + `vendor/bin/drush php:script` against
+  production, the same mechanism `scripts/deploy-backend-godaddy.sh` uses for
+  the 64-article seed. No credential was fabricated or added.
+- `--dry-run` (default) validates and previews only, including a read-only
+  existing-node check. `--confirm` performs the real, idempotent (by
+  `field_content_key`) create/update and publishes (status=1) directly.
+- Proven end-to-end against production with a throwaway self-test node:
+  created, updated in place on a second `--confirm` run (no duplicate), then
+  deleted via `--unpublish-after-confirm` — nothing was left live.
+  `--unpublish-after-confirm` refuses to run against the two real drafts.
+- The two real, SEO-checked drafts (`what-does-199-website-include`,
+  `proof-first-website-see-before-you-pay`) pass validation and dry-run
+  cleanly and are ready to publish, but were deliberately NOT published —
+  that go-live decision is left to Fritz.
+
 ## 2026-09-03 — Campaign System V2: Mutation Service, Scorecard Generator, and Admin UI
 
 ### Three-phase build ship

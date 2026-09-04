@@ -1,5 +1,49 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — Blog content writes have exactly one proven path: SSH + Drush, not JSON:API
+
+- Observation: asked to publish two ready blog drafts via "authenticated
+  JSON:API POST," a full-repo search for an existing JSON:API write
+  credential for content (grep for jsonapi + POST/Authorization/Bearer
+  patterns across `scripts/`, `backend/`, `frontend/`) found none. The only
+  OAuth consumer in the codebase (`famtastic_spa`, simple_oauth password
+  grant, `frontend/src/api/drupal.js`) authenticates a *customer's own*
+  portal login (email+password they provide) — it is not a service account,
+  and using it to publish blog content would mean either fabricating a fake
+  user credential or hard-coding a real person's password into a script,
+  both of which are exactly the invented-credential failure mode to avoid.
+  A live `curl` against `https://famtasticdesigns.com/web/jsonapi/...` and
+  `https://famtasticdesigns.com/jsonapi/...` also returned nothing — the
+  collection isn't reachable the way the task brief assumed.
+- Root cause: all 64 existing blog posts were created by
+  `backend/scripts/seed-demand-content.php`, a Drush `php:script` run
+  bootstrapped directly against Drupal (no HTTP auth needed) and invoked only
+  from `scripts/deploy-backend-godaddy.sh` during a full, backed-up
+  production deployment. There has never been an out-of-band, single-post
+  publish path — deploy-time bulk seeding was the only mechanism.
+- Guidance: when a task assumes an auth mechanism ("JSON:API POST") that
+  doesn't actually exist in the repo, don't invent one — find what's really
+  there. Here that meant reusing the SSH target
+  (`FAMTASTIC_SSH_TARGET`/`xrdj7j99xhzt@p3plzcpnl497512.prod.phx3.secureserver.net`)
+  already trusted by the deploy script, and writing a companion single-post
+  Drush script (`backend/scripts/publish-single-blog-post.php`) that mirrors
+  `seed-demand-content.php`'s idempotent-by-`field_content_key` upsert
+  pattern instead of a new bulk manifest entry. See
+  `scripts/publish-blog-draft.py` and `docs/CAPABILITY_REGISTRY.md`.
+- Gotcha found while proving it live: calling `exit()` from inside a `drush
+  php:script`-evaluated file makes Drush itself print "[warning] Drush
+  command terminated abnormally" and return a non-zero exit code — even when
+  the script's own JSON output on stdout is completely correct. Restructuring
+  the script as if/elseif branches that fall through to natural end-of-file
+  (no `exit(0)` on the success paths) eliminated the false failure. Confirmed
+  by creating, updating in place, and deleting a real throwaway test node
+  (nid 152-155) against production and reading its final state back.
+- field_author on blog_post is an entity_reference to a Drupal `user`
+  (cardinality 1), not a plain text/taxonomy field; `seed-demand-content.php`
+  never actually sets it on any of the 64 posts. Default it to uid 1
+  (`fritz.medine@gmail.com`, confirmed via `drush sql:query` against
+  `users_field_data`) until a dedicated editorial account exists.
+
 ## 2026-09-03 — Campaign System V2 Shipped: Mutation Service, Scorecard, Admin UI
 
 ### Bare-content_id bug: Multi-platform drops need compound keys
