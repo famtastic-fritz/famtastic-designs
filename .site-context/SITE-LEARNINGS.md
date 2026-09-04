@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-03 — Campaign System V2 Shipped: Mutation Service, Scorecard, Admin UI
+
+### Bare-content_id bug: Multi-platform drops need compound keys
+
+- Observation: Earlier code keyed social records on `content_id` alone. When a campaign generated content for four platforms (FB, IG, X, TikTok), the Postiz queue created only ONE provider record instead of four — one per platform. Mutations and status tracking tried to operate on the single record and couldn't reach the other three platforms.
+- Root cause: Campaign records are aggregated across platforms within a drop. A bare `content_id` is not unique across platforms. The Postiz integration, however, creates one post record per platform/integration pair. To track them, you must key on `campaign_id + content_id`, not just `content_id`.
+- Guidance: **Always trace multi-platform aggregations back to the single-record case first.** When a drop says "3 posts generated for 4 platforms" and only 1 reaches the provider, first ask "what made these three disappear" (answer: they were consolidated under a single key), then trace the actual provider output by name/platform, not by count. Fix: `posting-schedule.json` schema now enforces program_id/series_id grouping (drops) and compound campaign_id+content_id keys.
+- Fixed in Phase 1 (Mutation Service), verified in Phase 2 (Scorecard) by querying real Postiz records.
+
+### Scorecard limitation: No clicks/conversions yet
+
+- Observation: Campaign publish-state scorecard can read real Postiz states (QUEUE, PUBLISH, ERROR) but carries no click/impression/conversion/CTR/CPC fields.
+- Root cause: Postiz `Post` table has no click metrics. GA4 cannot yet query `utm_content` dimension or conversion events. Attribution infrastructure exists (`AttributionService` joins leads→requests→revenue) but is not integrated into scorecard reporting.
+- Guidance: A scorecard that reads real provider state is valuable even without attribution. Document honestly what data exists and what does not. The schema carries `clicks_conversions_available: false` with a required `gap_note` explaining why. This prevents future operators from assuming "all fields are available" and makes it obvious where the next upgrade belongs.
+- Evidence: Phase 2 scorecard run 2026-09-04 against real `cost-is-not-the-reason` campaign: 16/18 provider records resolved with real states (7 published, 8 error, 1 queued), analytics integration deferred.
+
 ## 2026-09-03 — Check the worker is alive before debugging why the work did not happen
 
 - Observation: nine days of total publishing failure. Four real defects were

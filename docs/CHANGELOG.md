@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-09-03 — Campaign System V2: Mutation Service, Scorecard Generator, and Admin UI
+
+### Three-phase build ship
+- **Phase 1: Campaign mutation service** — Single-drop mutation flags and Postiz mutation service enable targeted content/copy/media overrides per platform/drop without re-generating the whole campaign. CLI integration via `scripts/queue-campaign-drops.py --campaign <slug> --drop <N> --mutation <key>=<value>`.
+- **Phase 2: Campaign scorecard** — Scorecard generator reads `posting-schedule.json` (program_id/series_id/drop grouping, campaign_id+content_id keying) and queries the real Postiz postgres for actual state of every recorded provider record. `scripts/score-campaign.py --campaign <slug>` writes `marketing/campaigns/<slug>/scorecard.json` (schema: `marketing/engine/schemas/campaign-scorecard.schema.json`). Publish state only (no clicks/conversions); known gap: Postiz `Post` table has no click/impression/CTR/CPC fields, GA4 cannot query `utm_content` dimension yet.
+- **Phase 3: Admin UI** — Postiz mutation card and scorecard table in the Operations Home Campaign Manager UI. Drop mutation UI chains to mutation service CLI; scorecard table refresh calls read-only query and renders live Postiz states with error highlighting.
+
+### Architecture
+- Campaign identity now requires program_id and series_id grouping. Campaigns are collections of drops; each drop contains platform-specific content keyed by campaign_id+content_id (not content_id alone). `posting-schedule.schema.json` enforces the structure.
+- Mutation service is read-only to Postiz (queries real state, never creates/updates records). All mutations are logged to `marketing/campaigns/<slug>/mutations.jsonl` with timestamp, operator, and audit trail.
+- Scorecard deliberately carries no click/conversion/CTR/CPC fields. Added `clicks_conversions_available: false` with required `gap_note` explaining why Postiz lacks click tracking.
+
+### Known gaps
+- **Bare content_id bug**: Earlier code keyed social records on `content_id` alone, causing multi-platform drops to create only one Postiz record instead of one per platform. Fixed by keying on campaign_id+content_id. **Lesson: always trace multi-platform aggregations back to the single-record case first.**
+- **Scorecard limitations**: No real clicks/impressions/conversions yet. The Postiz `Post` table lacks click metrics; GA4 needs a utm_content dimension and conversion event to attribute. Analytics is a future upgrade.
+
 ## 2026-09-03 — Social Publishing: Root Cause Found After Nine Days, Pipeline Rebuilt
 
 ### The actual cause
