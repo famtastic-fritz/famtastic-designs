@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-04T01:48:06Z",
+  "campaign_slug": "cost-is-not-the-reason",
+  "campaign_id": "cost_is_not_the_reason_eval",
+  "program_id": "FAM-FOOT-199",
+  "series_id": "cost-web-basics-launch",
+  "schedule_path": "marketing/campaigns/cost-is-not-the-reason/posting-schedule.json",
+  "provider": "postiz",
+  "provider_query_note": "read-only `docker exec postiz-postgres psql -U postiz-user -d postiz-db-local` against the \"Post\"/\"Integration\" tables, matched by the provider_ids.postiz_scheduled_group ids posting-schedule.json already recorded at queue/schedule time. No Postiz mutation performed.",
+  "clicks_conversions_available": false,
+  "gap_note": "clicks, impressions, conversions, CTR, and CPC are not available for any drop or channel. Postiz's Post table has no click/impression column (columns are: state, publishDate, content, image, integrationId, organizationId, createdAt, updatedAt, deletedAt, error). GA4 reporting (backend GoogleAnalyticsReportingService.php) requests only activeUsers/sessions/screenPageViews/engagedSessions/keyEvents grouped by pagePath and sessionDefaultChannelGroup \u2014 no utm_content dimension and no conversion event query exists. There is no bridge today between the Postiz publish queue and GA4 events keyed by utm_content. This scorecard reports only real Postiz publish state (published/error/queued/not_found) per drop and channel; it never estimates or backfills a click/conversion number.",
+  "attribution_note": "A separate leads->requests->paid-revenue join keyed on utm_content DOES work today (AttributionService.php snapshotFromRequest/recordSocialLead, MarketingCommandController.php contentGrainRows(), locally proven, not yet deployed) but this script does not query it \u2014 it only reads Postiz. Run the Marketing Command Center's content-grain report separately for lead/request/revenue-per-drop figures.",
+  "drops": [
+    {
+      "drop_id": "drop-01",
+      "content_id": "drop-01",
+      "scheduled_time": "2026-09-03T09:00:00-04:00",
+      "theme": "The Declaration: Fearless Deviation & 55\u00a2 Reality",
+      "channels_requested": [
+        "tiktok",
+        "instagram_reels",
+        "youtube_shorts",
+        "facebook_video",
+        "x"
+      ],
+      "channels_missing_provider_record": [],
+      "records": [
+        {
+          "postiz_post_id": "cmtlhfb2s000grtdmo8io3oi1",
+          "found": true,
+          "state": "ERROR",
+          "has_error": true,
+          "integration_identifier": "tiktok",
+          "integration_name": "FAMtasticDesigns",
+          "publish_date_utc": "2026-09-03T13:00:00Z"
+        },
+        {
+          "postiz_post_id": "cmtlhfb64000hrtdm07mfnj8n",
+          "found": true,
+          "state": "PUBLISHED",
+          "has_error": false,
+          "integration_identifier": "instagram-standalone",
+          "integration_name": "FAMtasticDesigns",
+          "publish_date_utc": "2026-09-03T13:00:00Z"
+        },
+        {
+          "postiz_post_id": "cmtlhfb7f000irtdm9q3nwvkf",
+          "found": true,
+          "state": "ERROR",
+          "has_error": true,
+          "integration_identifier": "youtube",
+          "integration_name": "fritz medine",
+          "publish_date_utc": "2026-09-03T13:00:00Z"
+        },
+        {
+          "postiz_post_id": "cmtlhfb8w000jrtdm9a027bkn",
+          "found": true,
+          "state": "PUBLISHED",
+          "has_error": false,
+          "integration_identifier": "facebook",
+          "integration_name": "FAMTastic Designs",
+          "publish_date_utc": "2026-09-03T13:00:00Z"
+        },
+        {
+          "postiz_post_id": "cmtlhfbb8000krtdmp5lnozzw",
+          "found": true,
+          "state": "ERROR",
+          "has_error": true,
+          "integration_identifier": "x",
+          "integration_name": "FAMtastic Fritz",
+          "publish_date_utc": "2026-09-03T13:00:00Z"
+        }
+      ],
+      "counts": {
+        "requested_channels": 5,
+        "provider_records_found": 5,
+        "published": 2,
+        "error": 3,
+        "queued": 0,
+        "other_state": 0,
+        "not_found": 0
+      }
+    },
+    {
+      "drop_id": "drop-02",
+      "content_id": "drop-02",
+      "scheduled_time": "2026-09-03T10:30:00-04:00",
+      "theme": "Rented Land vs Owned Hub (Linktree & DM Escape)",
+      "channels_requested": [
+        "instagram_carousel",
+        "linkedin",
+        "facebook",
+        "x_thread"
+      ],
+      "channels_missing_provider_record": [
+        "linkedin"
+      ],
+      "records": [
+        {
+          "postiz_post_id": "cmtlg9k4u0000rtdmzy15bo5u",
+          "found": true,
+          "state": "PUBLISHED",
+          "has_error": false,
+          "integration_identifier": "instagram-standalone",
+          "integration_name": "FAMtasticDesigns",
+          "publish_date_utc": "2026-09-03T14:30:00Z"
+        },
+        {
+          "postiz_post_id": "cmtlg9k6w0001rtdmq72z3sgj",
+          "found": true,
+          "state": "PUBLISHED",
+          "has_error": false,
+          "integration_identifier": "facebook",
+          "integration_name": "FAMTastic Designs",
+          "publish_date_utc": "2026-09-03T14:30:00Z"
+        },
+        {
+          "postiz_post_id": "cmtlg9k7c0002rtdmzeuh7i4j",
+          "found": true,
+          "state": "ERROR",
+          "has_error": true,
+          "integration_identifier": "x",
+          "integration_name": "FAMtastic Fritz",
+          "publish_date_utc": "2026-09-03T14:30:00Z"
+        }
+      ],
+      "counts": {
+        "requested_channels": 4,
+        "provider_records_found": 3,
+        "published": 2,
+        "error": 1,
+        "queued": 0,
+        "other_state": 0,
+        "not_found": 0
+      }
+    },
+    {
+      "drop_id": "drop-03",
+      "content_id": "drop-03",
+      "scheduled_time": "2026-09-03T13:00:00-04:00",
+      "theme": "The Math Breakdown & Stop DM Chaos",
+      "channels_requested": [
+        "tiktok",
+        "instagram_reels",
+        "youtube_shorts",
+        "x"
+      ],
+      "channels_missing_provider_record": [],
+      "records": [
+        {
+          "postiz_post_id": "cmtlgme3z0008rtdmp0wqc63l",
+          "found": true,
+          "state": "ERROR",
+          "has_error": true,
+          "integration_identifier": "tiktok",
+          "integration_name": "FAMtasticDesigns",
+          "publish_date_utc": "2026-09-03T17:00:00Z"
+        },
+        {
+          "postiz_post_id": "cmtlgmeak0009rtdm1wnne9cv",
+          "found": true,
+          "state": "PUBLISHED",
+          "has_error": false,
+          "integration_identifier": "instagram-standalone",
+          "integration_name": "FAMtasticDesigns",
+          "publish_date_utc": "2026-09-03T17:00:00Z"
+        },
+        {
+          "postiz_post_id": "cmtlgmegu000artdm4q4yyu6r",
+          "found": true,
+          "state": "QUEUE",
+          "has_error": false,
+          "integration_identifier": "youtube",
+          "integration_name": "fritz medine",
+          "publish_date_utc": "2026-09-03T17:00:00Z"
+        },
+        {
+          "postiz_post_id": "cmtlgmepb000brtdmqqoh5tev",
+          "found": true,
+          "state": "ERROR",
+          "has_error": true,
+          "integration_identifier": "x",
+          "integration_name": "FAMtastic Fritz",
+          "publish_date_utc": "2026-09-03T17:00:00Z"
+        }
+      ],
+      "counts": {
+        "requested_channels": 4,
+        "provider_records_found": 4,
+        "published": 1,
+        "error": 2,
+        "queued": 1,
+        "other_state": 0,
+        "not_found": 0
+      }
+    },
+    {
+      "drop_id": "drop-04",
+      "content_id": "drop-04",
+      "scheduled_time": "2026-09-03T15:30:00-04:00",
+      "theme": "Applying Mastery: The 3-Direction Proof (Safe, Wild, OMG)",
+      "channels_requested": [
+        "instagram",
+        "tiktok",
+        "youtube_shorts",
+        "x",
+        "linkedin"
+      ],
+      "channels_missing_provider_record": [
+        "linkedin"
+      ],
+      "records": [
+        {
+          "postiz_post_id": "cmtltve890006rt7k5szcm4lh",
+          "found": true,
+          "state": "PUBLISHED",
+          "has_error": false,
+          "integration_identifier": "instagram-standalone",
+          "integration_name": "FAMtasticDesigns",
+          "publish_date_utc": "2026-09-03T19:30:00Z"
+        },
+        {
+          "postiz_post_id": "cmtltve9k0007rt7kw8nb7cyo",
+          "found": true,
+          "state": "ERROR",
+          "has_error": true,
+          "integration_identifier": "tiktok",
+          "integration_name": "FAMtasticDesigns",
+          "publish_date_utc": "2026-09-03T19:30:00Z"
+        },
+        {
+          "postiz_post_id": "cmtltveak0008rt7k3e4n1vvo",
+          "found": true,
+          "state": "ERROR",
+          "has_error": true,
+          "integration_identifier": "youtube",
+          "integration_name": "nineoo1",
+          "publish_date_utc": "2026-09-03T19:30:00Z"
+        },
+        {
+          "postiz_post_id": "cmtluew94000brt7k2sn7vslz",
+          "found": true,
+          "state": "PUBLISHED",
+          "has_error": false,
+          "integration_identifier": "x",
+          "integration_name": "FAMtastic Fritz",
+          "publish_date_utc": "2026-09-03T19:30:00Z"
+        }
+      ],
+      "counts": {
+        "requested_channels": 5,
+        "provider_records_found": 4,
+        "published": 2,
+        "error": 2,
+        "queued": 0,
+        "other_state": 0,
+        "not_found": 0
+      }
+    }
+  ],
+  "totals": {
+    "drops": 4,
+    "requested_channels": 18,
+    "provider_records_found": 16,
+    "published": 7,
+    "error": 8,
+    "queued": 1,
+    "other_state": 0,
+    "not_found": 0,
+    "publish_success_rate": 0.4375
+  }
+}

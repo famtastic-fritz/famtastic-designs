@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://famtasticdesigns.com/schemas/campaign-scorecard.v1.json",
+  "title": "FAMtastic campaign scorecard",
+  "description": "Output of scripts/score-campaign.py --campaign <slug>. Scored ONLY from what is honestly observable today: the real publish state of each drop's provider records in the local Postiz postgres, matched by the compound (campaign_id, content_id) key from posting-schedule.json. This schema deliberately has NO clicks, impressions, conversions, or CTR fields — Postiz's Post table carries no click/impression column and GA4 reporting is not queried for per-utm_content events (see GoogleAnalyticsReportingService.php), so a scorecard claiming those numbers would be fabricating data that does not exist anywhere in this codebase. Where a metric is not honestly available, this schema requires an explicit false/null plus a gap_note explaining why, rather than omitting the field silently.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "campaign_slug",
+    "campaign_id",
+    "program_id",
+    "series_id",
+    "provider",
+    "clicks_conversions_available",
+    "gap_note",
+    "drops",
+    "totals"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "generated_at": {
+      "type": "string",
+      "description": "UTC timestamp the scorecard was computed, ISO 8601 with Z."
+    },
+    "campaign_slug": {
+      "type": "string",
+      "description": "marketing/campaigns/<slug> directory name."
+    },
+    "campaign_id": {
+      "type": "string",
+      "description": "posting-schedule.json's campaign_id, the value carried as utm_campaign."
+    },
+    "program_id": {
+      "type": "string",
+      "description": "Offer/SKU this campaign sells, copied from posting-schedule.json."
+    },
+    "series_id": {
+      "type": ["string", "null"],
+      "description": "Narrative-sequence grouping, copied from posting-schedule.json."
+    },
+    "schedule_path": {
+      "type": "string",
+      "description": "Repository-relative path to the posting-schedule.json this scorecard was computed from."
+    },
+    "provider": {
+      "type": "string",
+      "const": "postiz",
+      "description": "Only data source queried for this scorecard. No GA4, no Drupal attribution tables — those are separate, unqueried systems documented in gap_note / attribution_note."
+    },
+    "provider_query_note": {
+      "type": "string",
+      "description": "Human-readable note on how the provider was queried (e.g. read-only docker exec psql against postiz-postgres) so a reader can judge staleness/trust."
+    },
+    "clicks_conversions_available": {
+      "const": false,
+      "description": "Always false today. Postiz's Post table has no click/impression column (state, publishDate, content, image, integrationId, organizationId, createdAt, updatedAt, deletedAt, error — no click tracking) and GA4 reporting does not request a utm_content dimension or any click/conversion metric. This field exists so a consumer of this file cannot mistake its absence for an oversight."
+    },
+    "gap_note": {
+      "type": "string",
+      "description": "Required, non-empty explanation of what this scorecard cannot honestly report and why (clicks, impressions, conversions, CTR, CPC, real-time click-to-publish bridge) so nobody downstream infers those numbers exist."
+    },
+    "attribution_note": {
+      "type": "string",
+      "description": "Optional note on the separate, NOT queried by this script, lead/request/revenue join that already works in AttributionService.php + MarketingCommandController.php (locally proven, not yet deployed) — named here so a reader knows it exists without this script fabricating numbers from it."
+    },
+    "drops": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "drop_id",
+          "content_id",
+          "scheduled_time",
+          "channels_requested",
+          "records",
+          "channels_missing_provider_record",
+          "counts"
+        ],
+        "properties": {
+          "drop_id": { "type": "string" },
+          "content_id": { "type": "string" },
+          "scheduled_time": { "type": "string" },
+          "theme": { "type": "string" },
+          "channels_requested": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Channel labels this drop's posting-schedule.json entry requested."
+          },
+          "channels_missing_provider_record": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Requested channels for which no matching Postiz provider record id could be resolved from provider_ids.postiz_scheduled_group / postiz_draft_id. Never silently dropped."
+          },
+          "records": {
+            "type": "array",
+            "description": "One entry per Postiz Post row actually found for this drop, real state read live from postgres.",
+            "items": {
+              "type": "object",
+              "required": ["postiz_post_id", "state", "has_error", "found"],
+              "properties": {
+                "postiz_post_id": { "type": "string" },
+                "found": {
+                  "type": "boolean",
+                  "description": "False when the id recorded in posting-schedule.json no longer resolves to a row in Postiz's Post table (e.g. deleted)."
+                },
+                "integration_identifier": { "type": ["string", "null"] },
+                "integration_name": { "type": ["string", "null"] },
+                "state": {
+                  "type": ["string", "null"],
+                  "description": "Raw Postiz state value (e.g. DRAFT, QUEUE, PUBLISHED, ERROR) or null if not found."
+                },
+                "has_error": { "type": "boolean" },
+                "publish_date_utc": { "type": ["string", "null"] }
+              }
+            }
+          },
+          "counts": {
+            "type": "object",
+            "required": ["requested_channels", "provider_records_found", "published", "error", "queued", "other_state", "not_found"],
+            "properties": {
+              "requested_channels": { "type": "integer", "minimum": 0 },
+              "provider_records_found": { "type": "integer", "minimum": 0 },
+              "published": { "type": "integer", "minimum": 0 },
+              "error": { "type": "integer", "minimum": 0 },
+              "queued": { "type": "integer", "minimum": 0 },
+              "other_state": { "type": "integer", "minimum": 0 },
+              "not_found": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": [
+        "drops",
+        "requested_channels",
+        "provider_records_found",
+        "published",
+        "error",
+        "queued",
+        "other_state",
+        "not_found",
+        "publish_success_rate"
+      ],
+      "properties": {
+        "drops": { "type": "integer", "minimum": 0 },
+        "requested_channels": { "type": "integer", "minimum": 0 },
+        "provider_records_found": { "type": "integer", "minimum": 0 },
+        "published": { "type": "integer", "minimum": 0 },
+        "error": { "type": "integer", "minimum": 0 },
+        "queued": { "type": "integer", "minimum": 0 },
+        "other_state": { "type": "integer", "minimum": 0 },
+        "not_found": { "type": "integer", "minimum": 0 },
+        "publish_success_rate": {
+          "type": ["number", "null"],
+          "description": "published / provider_records_found, rounded to 4 places. Null when provider_records_found is 0 (never reported as 0.0, which would misleadingly read as 100% failure of a measured population)."
+        }
+      }
+    }
+  }
+}
