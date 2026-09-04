@@ -4,12 +4,20 @@
   "title": "FAMtastic campaign posting schedule",
   "description": "The one file that makes a campaign postable. scripts/queue-campaign-drops.py reads this and needs no per-campaign code. Every campaign differs in cadence, channels, media, and copy, so all of that lives here as data rather than in a bespoke script. Scaffold with scripts/new-campaign.py.",
   "type": "object",
-  "required": ["schema_version", "campaign_id", "time_zone", "drops"],
+  "required": ["schema_version", "campaign_id", "program_id", "series_id", "time_zone", "drops"],
   "properties": {
     "schema_version": { "const": 2 },
     "campaign_id": {
       "type": "string",
       "description": "Stable snake_case campaign identifier used in UTM attribution."
+    },
+    "program_id": {
+      "type": "string",
+      "description": "The offer/SKU this campaign sells, e.g. FAM-FOOT-199. Groups every campaign selling the same offer regardless of series or creative angle."
+    },
+    "series_id": {
+      "type": ["string", "null"],
+      "description": "Groups campaigns that are installments of the same narrative sequence (e.g. a sequel episode). Null when this campaign is a standalone, not part of a series."
     },
     "campaign_name": { "type": "string" },
     "created_at": { "type": "string" },
