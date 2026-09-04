@@ -2,17 +2,26 @@
   "seed_keyword": "own website vs rented platforms for local service businesses",
   "generated_at": "2026-09-04T21:05:00Z",
   "house_style_adaptation": {
-    "note": "blog-cluster's default word counts (pillar 2500-4000, spoke 1200-1800) are 3-7x this blog's measured house style (published posts run 294-449 words, see VOICE.md). Targets below preserve the skill's pillar:spoke DEPTH RATIO (~2:1) at this site's actual scale rather than importing generic targets that would break voice consistency.",
-    "skill_default_pillar": 3000,
-    "adapted_pillar": 900,
-    "skill_default_spoke": 1500,
-    "adapted_spoke": 425,
-    "decision_owner": "pending Fritz confirmation"
+    "note": "SUPERSEDED 2026-09-04 by owner directive: 'more content is better.' The earlier 425-word targets came from measuring the existing corpus (294-449 words) and mistaking that measurement for intended house style. Corrected target is 700-1000 words per post. Depth is now achieved BOTH by longer posts AND by serialization, rather than by compressing the skill's generic targets.",
+    "superseded_targets": {
+      "pillar": 900,
+      "spoke": 425
+    },
+    "current_targets": {
+      "post": "700-1000",
+      "series_total": "~3200 across 4 parts"
+    },
+    "rationale": [
+      "The 400-word ceiling conflicted with VOICE.md's requirement to define every AI/web term inline for a beginner, AI-wary audience.",
+      "Inline SVG art blocks need room; 2-3 visual moments land naturally at 700-1000 words, crowd the text at 400.",
+      "Serialization preserves depth without a wall of text: 4 x 800 = ~3200 words, deeper than blog-cluster's generic 1500-word spoke target."
+    ],
+    "decision_owner": "confirmed by Fritz 2026-09-04"
   },
   "pillar": {
     "id": "P",
     "title": "Why Gmail and Linktree Cost Your Business Revenue",
-    "status": "ALREADY PUBLISHED — expand in place, do not create a duplicate",
+    "status": "ALREADY PUBLISHED \u2014 expand in place, do not create a duplicate",
     "existing_url": "https://famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue",
     "existing_nid": 158,
     "existing_word_count": 428,
@@ -26,7 +35,7 @@
     "template": "pillar-page",
     "word_count_target": 900,
     "cluster": "pillar",
-    "expansion_required": "Add a short section per spoke (2-3 sentences each) that links down to it. Keep the existing metaphor and structure; do not rewrite the opening."
+    "expansion_required": "Expand toward 800-1000 words as Part 1 of the series. Add a short section per sibling part that links to it. Keep the existing metaphor and opening; do not rewrite the lede."
   },
   "clusters": [
     {
@@ -39,25 +48,44 @@
           "id": "A1",
           "title": "Linktree vs. a Real Website: What You're Actually Trading Away",
           "primary_keyword": "linktree vs website",
-          "secondary_keywords": ["linktree for business pros and cons", "is linktree enough for a business"],
+          "secondary_keywords": [
+            "linktree for business pros and cons",
+            "is linktree enough for a business"
+          ],
           "search_volume_estimate": "high",
           "serp_note": "Confirmed competitive SERP with 6+ established results. Dominant differentiator in every competing result: Linktree pages do not rank in Google search.",
           "template": "comparison",
-          "word_count_target": 450,
-          "links_to": ["P", "A2"],
-          "links_from": ["P", "A2", "C1"]
+          "word_count_target": 800,
+          "links_to": [
+            "P",
+            "A2"
+          ],
+          "links_from": [
+            "P",
+            "A2",
+            "C1"
+          ]
         },
         {
           "id": "A2",
           "title": "Why Your Link-in-Bio Page Doesn't Show Up in Google",
           "primary_keyword": "why doesn't my linktree show up on google",
-          "secondary_keywords": ["link in bio seo", "does linktree help seo"],
+          "secondary_keywords": [
+            "link in bio seo",
+            "does linktree help seo"
+          ],
           "search_volume_estimate": "medium",
           "serp_note": "Search-visibility is the single most-cited argument across the competing SERP; no existing FAMtastic post covers it.",
           "template": "explainer",
-          "word_count_target": 425,
-          "links_to": ["P", "A1"],
-          "links_from": ["P", "A1"]
+          "word_count_target": 800,
+          "links_to": [
+            "P",
+            "A1"
+          ],
+          "links_from": [
+            "P",
+            "A1"
+          ]
         }
       ]
     },
@@ -71,25 +99,43 @@
           "id": "B1",
           "title": "What Booking App Commissions Actually Cost You in a Year",
           "primary_keyword": "booking app commission fees",
-          "secondary_keywords": ["salon booking app fees", "booking commission vs subscription"],
+          "secondary_keywords": [
+            "salon booking app fees",
+            "booking commission vs subscription"
+          ],
           "search_volume_estimate": "medium",
           "serp_note": "Real market pattern confirmed: platforms split into commission/marketplace vs flat-subscription models. Per BRAND.md, describe the PATTERN generically; do not cite a named competitor's rate as a FAMtastic claim.",
           "template": "explainer",
-          "word_count_target": 450,
-          "links_to": ["P", "B2"],
-          "links_from": ["P", "B2"]
+          "word_count_target": 800,
+          "links_to": [
+            "P",
+            "B2"
+          ],
+          "links_from": [
+            "P",
+            "B2"
+          ]
         },
         {
           "id": "B2",
           "title": "Who Owns Your Client List When You Book Through an App?",
           "primary_keyword": "who owns client data booking app",
-          "secondary_keywords": ["salon client list ownership", "marketplace app customer data"],
+          "secondary_keywords": [
+            "salon client list ownership",
+            "marketplace app customer data"
+          ],
           "search_volume_estimate": "low",
-          "serp_note": "Thin SERP — genuine information gap, and it is the strongest version of the campaign's existing 'rented land' argument.",
+          "serp_note": "Thin SERP \u2014 genuine information gap, and it is the strongest version of the campaign's existing 'rented land' argument.",
           "template": "explainer",
-          "word_count_target": 400,
-          "links_to": ["P", "B1"],
-          "links_from": ["P", "B1"]
+          "word_count_target": 800,
+          "links_to": [
+            "P",
+            "B1"
+          ],
+          "links_from": [
+            "P",
+            "B1"
+          ]
         }
       ]
     },
@@ -103,25 +149,44 @@
           "id": "C1",
           "title": "Why \"How Much Do You Charge?\" in the DMs Costs You Bookings",
           "primary_keyword": "answering price questions in dms",
-          "secondary_keywords": ["should I post prices on my website", "customers asking how much instagram"],
+          "secondary_keywords": [
+            "should I post prices on my website",
+            "customers asking how much instagram"
+          ],
           "search_volume_estimate": "medium",
           "serp_note": "Expands the 'DM gap' section that already anchors the pillar. No existing FAMtastic post covers response-time cost.",
           "template": "explainer",
-          "word_count_target": 425,
-          "links_to": ["P", "C2", "A1"],
-          "links_from": ["P", "C2"]
+          "word_count_target": 800,
+          "links_to": [
+            "P",
+            "C2",
+            "A1"
+          ],
+          "links_from": [
+            "P",
+            "C2"
+          ]
         },
         {
           "id": "C2",
           "title": "How a Website Answers Price Questions Before They're Asked",
           "primary_keyword": "website quote request automation small business",
-          "secondary_keywords": ["automatic quote estimate website", "intake form for service business"],
+          "secondary_keywords": [
+            "automatic quote estimate website",
+            "intake form for service business"
+          ],
           "search_volume_estimate": "low",
           "serp_note": "Maps directly to a real, registry-backed capability (intake + proof-first flow), so the CTA is honest rather than aspirational.",
           "template": "how-to-guide",
-          "word_count_target": 425,
-          "links_to": ["P", "C1"],
-          "links_from": ["P", "C1"]
+          "word_count_target": 800,
+          "links_to": [
+            "P",
+            "C1"
+          ],
+          "links_from": [
+            "P",
+            "C1"
+          ]
         }
       ]
     }
@@ -149,14 +214,15 @@
   },
   "total_posts": 7,
   "total_interlinks": 22,
-  "estimated_total_words": 3475,
+  "estimated_total_words": 5700,
   "quality_gates": {
-    "cluster_minimum": "PASS — 3 clusters, 2 posts each",
-    "cannibalization": "PASS — 0 shared primary keywords, 3 near-misses differentiated",
-    "link_completeness": "PASS — every spoke has >=2 incoming links",
-    "intent_diversity": "PASS — informational + commercial",
-    "template_diversity": "PASS — comparison, explainer, how-to-guide, pillar-page (4)",
-    "length_estimate": "ADAPTED — see house_style_adaptation, pending confirmation"
+    "cluster_minimum": "PASS \u2014 3 clusters, 2 posts each",
+    "cannibalization": "PASS \u2014 0 shared primary keywords, 3 near-misses differentiated",
+    "link_completeness": "PASS \u2014 every spoke has >=2 incoming links",
+    "intent_diversity": "PASS \u2014 informational + commercial",
+    "template_diversity": "PASS \u2014 comparison, explainer, how-to-guide, pillar-page (4)",
+    "length_estimate": "ADAPTED \u2014 see house_style_adaptation, pending confirmation"
   },
-  "execution_status": "PLAN ONLY — not executed. No posts written. Requires explicit approval per skill contract."
+  "execution_status": "PLAN ONLY \u2014 not executed. No posts written. Requires explicit approval per skill contract.",
+  "architecture_note": "RESTRUCTURED: this site is already series-first (7 existing series, all 85 seeded posts assigned). Flat spokes were the wrong shape. Three proposed posts extend EXISTING series; the platform-dependency arc becomes its own new series with the already-published pillar as Part 1. See conversation 2026-09-04."
 }

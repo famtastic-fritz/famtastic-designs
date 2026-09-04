@@ -69,6 +69,44 @@ published corpus, not from a persona file**. Treat as observed, not canonical:
 - **Jargon rule**: any web term (canonical, structured data, DNS) must be
   defined in the same sentence it first appears, or replaced with plain words.
 
+## Post length — target, not a preserved measurement
+
+**Owner directive, 2026-09-04: "more content is better."** Increase length.
+
+An earlier version of this file measured the existing corpus at 294-449 words
+and treated that as house style to protect. That was a mistake in reasoning:
+those numbers describe what had been published, not what the blog is trying to
+be. Do not treat the old corpus length as a ceiling.
+
+- **Target: 700-1,000 words per post.** Roughly double the old corpus. Still a
+  3-4 minute read on a phone.
+- **Series posts stay within that range** rather than sprawling. A four-part
+  series at 800 words each is ~3,200 words of real depth, delivered in pieces
+  a reader can actually finish — deeper than the generic 1,500-word "spoke"
+  target, without the wall of text.
+- **Length must be earned by substance**, never by padding. If a post reaches
+  its point in 500 words, it ends at 500. The instruction is "more content,"
+  not "more words."
+
+**Why longer is now correct, specifically:**
+
+1. **It resolves a conflict this file created.** The rule "define every AI/web
+   term inline on first use" is impossible to honor in 400 words while also
+   making an argument. The audience is a beginner on AI who is often afraid of
+   it; defining terms costs words, and skipping the definitions to hit a word
+   count fails the reader this brand exists for.
+2. **The art system needs room to breathe.** Inline SVG art blocks placed in a
+   400-word post crowd the text. At 700-1,000 words, 2-3 visual moments land
+   at natural section boundaries instead of interrupting.
+3. **Inclusion and clarity both cost words.** Covering the reader who is
+   already fluent *and* the one who has never heard the term takes more space
+   than covering only one of them.
+
+The sentence and paragraph ceilings below still apply — they govern *rhythm*,
+not total length. Longer posts are built from the same short sentences and
+2-3 sentence paragraphs, just more of them, with more visual and structural
+breaks.
+
 ## Writing for a reader who is behind, or afraid
 
 Added from the owner interview (2026-09-04). This is a voice requirement, not
