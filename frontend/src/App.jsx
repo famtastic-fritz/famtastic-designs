@@ -38,6 +38,8 @@ import PublicPreviewRoomPage from './pages/PublicPreviewRoomPage.jsx';
 import IntakeHubPage from './pages/IntakeHubPage.jsx';
 import SpecializedIntakePage from './pages/SpecializedIntakePage.jsx';
 import DeepDivePage from './pages/DeepDivePage.jsx';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
+import TermsOfServicePage from './pages/TermsOfServicePage.jsx';
 
 export default function App() {
   return (
@@ -81,6 +83,10 @@ export default function App() {
           <Route path="/intake" element={<IntakeHubPage />} />
           <Route path="/intake/:serviceSlug" element={<SpecializedIntakePage />} />
           <Route path="/55-cents-a-day-website" element={<FiftyFiveCentWebsitePage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/privacy" element={<Navigate to="/privacy-policy" replace />} />
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/terms" element={<Navigate to="/terms-of-service" replace />} />
 
           {/* Legacy /content/* URLs → clean routes. */}
           <Route path="/content/page" element={<Navigate to="/" replace />} />

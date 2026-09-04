@@ -2609,6 +2609,22 @@ a:hover {
   margin: 0;
 }
 
+.v1-footer__legal {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.v1-footer__legal a {
+  color: var(--v1-text-45);
+  text-decoration: none;
+}
+
+.v1-footer__legal a:hover,
+.v1-footer__legal a:focus-visible {
+  color: var(--v1-text);
+  text-decoration: underline;
+}
+
 /* --------------------------------------------------------- page helpers */
 
 .v1-loading {

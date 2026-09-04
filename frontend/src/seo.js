@@ -65,6 +65,14 @@ export const SEO_PAGES = {
     title: 'Secure Checkout | Start Your Project | FAMtastic Designs',
     description: 'Purchase your custom website package or digital system securely with first-year hosting and domain included.',
   },
+  '/privacy-policy': {
+    title: 'Privacy Policy | FAMtastic Designs',
+    description: 'How FAMtastic Designs collects, uses, and protects your information across our site, portal, and services.',
+  },
+  '/terms-of-service': {
+    title: 'Terms of Service | FAMtastic Designs',
+    description: 'The terms that apply when you use famtasticdesigns.com, our customer portal, or purchase a package or service from us.',
+  },
   '/pricing': {
     title: 'Packages & Pricing | FAMtastic Designs',
     description: 'Transparent fixed pricing for custom websites, AI applications, and digital business solutions.',

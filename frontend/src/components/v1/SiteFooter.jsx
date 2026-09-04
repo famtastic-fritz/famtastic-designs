@@ -61,6 +61,10 @@ export default function SiteFooter({ services = [], packages = [] }) {
 
       <div className="v1-container v1-footer__bottom">
         <p>© {year} FAMtastic Designs. All rights reserved.</p>
+        <nav className="v1-footer__legal" aria-label="Legal">
+          <Link to="/privacy-policy">Privacy Policy</Link>
+          <Link to="/terms-of-service">Terms of Service</Link>
+        </nav>
         <p className="v1-footer__stack">Design that glows in the dark.</p>
       </div>
     </footer>
