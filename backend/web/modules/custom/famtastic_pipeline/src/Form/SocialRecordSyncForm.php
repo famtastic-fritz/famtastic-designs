@@ -16,6 +16,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Reads marketing/campaigns/55-cents-17-day/manifest.json and updates
  * famtastic_social_record idempotently, preserving owner approval decisions.
+ *
+ * content_id (e.g. "55c-d01-teach") is only unique WITHIN a campaign — every
+ * campaign's posting-schedule.json (and this legacy manifest's `records`)
+ * scaffolds its own content_ids, so the same bare content_id can legitimately
+ * exist under two different campaigns. Each record here already carries its
+ * own `campaign` field, so every lookup and write below matches on the
+ * compound key "{campaign}/{content_id}" (both columns together) — never on
+ * content_id alone, which could silently update the wrong campaign's row.
  */
 final class SocialRecordSyncForm extends ConfirmFormBase {
 
@@ -77,15 +85,28 @@ final class SocialRecordSyncForm extends ConfirmFormBase {
     }
 
     $now = $this->time->getRequestTime();
+    $hasCampaignColumn = $this->database->schema()->fieldExists('famtastic_social_record', 'campaign_id');
     $count = 0;
     foreach ($manifest['records'] as $record) {
       if (empty($record['content_id'])) {
         continue;
       }
-      $existing = $this->database->select('famtastic_social_record', 'r')
+      // The compound identity of a record is campaign + content_id together
+      // — content_id alone is only unique within its own campaign. A record
+      // missing `campaign` cannot be safely matched or written; skip it
+      // rather than guess.
+      if ($hasCampaignColumn && empty($record['campaign'])) {
+        continue;
+      }
+      $campaignId = (string) ($record['campaign'] ?? '');
+
+      $query = $this->database->select('famtastic_social_record', 'r')
         ->fields('r', ['id', 'approval_content', 'approval_media', 'approval_publish'])
-        ->condition('content_id', (string) $record['content_id'])
-        ->execute()->fetchAssoc();
+        ->condition('content_id', (string) $record['content_id']);
+      if ($hasCampaignColumn) {
+        $query->condition('campaign_id', $campaignId);
+      }
+      $existing = $query->execute()->fetchAssoc();
 
       $fields = [
         'day' => (int) ($record['day'] ?? 0),
@@ -112,6 +133,9 @@ final class SocialRecordSyncForm extends ConfirmFormBase {
           'approval_media' => (int) (!empty($record['approval']['media'])),
           'approval_publish' => (int) (!empty($record['approval']['publish'])),
         ];
+        if ($hasCampaignColumn) {
+          $fields['campaign_id'] = $campaignId;
+        }
         $this->database->insert('famtastic_social_record')->fields($fields)->execute();
       }
       $count++;

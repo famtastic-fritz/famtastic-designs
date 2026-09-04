@@ -135,7 +135,7 @@ class PublicRequestController extends ControllerBase {
       $prospect->save();
       // A new lead carrying utm_content counts once for that social record.
       if (!empty($attribution['utm_content'])) {
-        $this->attribution->recordSocialLead((string) $attribution['utm_content']);
+        $this->attribution->recordSocialLead((string) $attribution['utm_content'], (string) ($attribution['utm_campaign'] ?? ''));
       }
     }
 

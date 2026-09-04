@@ -342,7 +342,7 @@ final class CustomerPortalService {
       $prospect->save();
     }
     if (!empty($attribution['utm_content'])) {
-      $this->attribution->recordSocialLead((string) $attribution['utm_content']);
+      $this->attribution->recordSocialLead((string) $attribution['utm_content'], (string) ($attribution['utm_campaign'] ?? ''));
     }
     $publicId = $this->uuid->generate();
     $id = (int) $this->database->insert('famtastic_project_request')->fields([
