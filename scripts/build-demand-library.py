@@ -242,7 +242,7 @@ SERIES = [
         "audience": "New and small-business owners who need a credible first website and a clear explanation of what it takes to get online.",
         "context": "the $199 Web Basics offer",
         "proof": "FAMtastic has implemented the $199 Web Basics product, secure Commerce checkout, customer intake, first-year hosting entitlement, domain-choice workflow, and project onboarding.",
-        "source": ["ICANN Registrant Program", "https://www.icann.org/resources/pages/registrant-2013-09-17-en"],
+        "source": ["ICANN Registrant Program", "https://www.icann.org/resources/pages/benefits-2013-09-16-en"],
         "topics": [
             ("A Professional Website for About 55 Cents a Day", "professional-website-55-cents-a-day", "55 cents a day website", "See how a one-time $199 Web Basics purchase averages to about 55 cents per day across one year without pretending it is daily billing."),
             ("What Is a Domain Name and Why Does Your Business Need One?", "what-is-a-domain-name", "what is a domain name", "Understand the memorable web address customers use to find your business and how registration differs from website ownership and hosting."),
@@ -364,7 +364,7 @@ def build_campaign_body(series: dict, topic: tuple, sequence: int, slugs: list[s
 <h2>A practical checkpoint for {html.escape(keyword)}</h2>
 <p>Before acting, write down the business name, primary customer, clearest offer, strongest available proof, preferred customer action, and the person responsible for responding. Then record the exact boundary described in this guide: {html.escape(guide['decision'])} If that checkpoint exposes a missing requirement, resolve it in assessment rather than hiding it inside a basic purchase.</p>
 <h2>Sources and limitations</h2>
-<ul><li><a href="https://www.brightlocal.com/research/local-consumer-review-survey-2025/">BrightLocal Local Consumer Review Survey 2025</a>: representative SurveyMonkey panel of 1,026 U.S. adults. Findings describe reported consumer behavior and should not be converted into a guaranteed business result.</li><li><a href="https://blog.verisign.com/getting-online/verisign-2015-online-survey-97-percent-of-smbs-would-recommend-having-a-website-to-other-smbs/">Verisign 2015 U.S. online survey</a>: 787 internet consumers ages 18–59 and 456 small businesses. Included only as dated historical context.</li><li><a href="https://www.icann.org/resources/pages/registrant-2013-09-17-en">ICANN registrant resources</a>: background on domain registrant rights and responsibilities.</li></ul>
+<ul><li><a href="https://www.brightlocal.com/research/local-consumer-review-survey-2025/">BrightLocal Local Consumer Review Survey 2025</a>: representative SurveyMonkey panel of 1,026 U.S. adults. Findings describe reported consumer behavior and should not be converted into a guaranteed business result.</li><li><a href="https://blog.verisign.com/getting-online/verisign-2015-online-survey-97-percent-of-smbs-would-recommend-having-a-website-to-other-smbs/">Verisign 2015 U.S. online survey</a>: 787 internet consumers ages 18–59 and 456 small businesses. Included only as dated historical context.</li><li><a href="https://www.icann.org/resources/pages/benefits-2013-09-16-en">ICANN registrant resources</a>: background on domain registrant rights and responsibilities.</li></ul>
 <h2>Continue this series</h2><ul>{related_links}</ul>
 """.strip()
 
@@ -539,7 +539,7 @@ def main() -> None:
                 source_records = [
                     {"name": "BrightLocal Local Consumer Review Survey 2025", "url": "https://www.brightlocal.com/research/local-consumer-review-survey-2025/", "type": "original-research"},
                     {"name": "Verisign 2015 U.S. Online Survey", "url": "https://blog.verisign.com/getting-online/verisign-2015-online-survey-97-percent-of-smbs-would-recommend-having-a-website-to-other-smbs/", "type": "dated-original-research"},
-                    {"name": "ICANN Registrant Resources", "url": "https://www.icann.org/resources/pages/registrant-2013-09-17-en", "type": "primary"},
+                    {"name": "ICANN Registrant Resources", "url": "https://www.icann.org/resources/pages/benefits-2013-09-16-en", "type": "primary"},
                 ]
             visual_file, visual_alt = VISUALS[series["key"]]
             if series["key"] == "fifty-five-cents-a-day":
