@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-04 — Backend deployment staging path hardening
+
+- The approved proof-handoff backend release created its database backup but stopped before code promotion when GoDaddy removed the dot-prefixed temporary module directory between `mkdir` and `rsync`; the frontend was intentionally not deployed, so production stayed on the prior coherent release.
+- The backend deployer now stages module, theme, and services files in a private deployment directory with explicit non-dot names and asserts each staging directory exists before it transfers artifacts. The release remains pending a clean preflight and apply.
+
 ## 2026-09-04 — Mission "Social Posting Capabilities": TikTok audit patch, live link fixes, blog QA
 
 Session tracked at `~/Development/FAMtastic/plans/social-posting-capabilities/plan.md`

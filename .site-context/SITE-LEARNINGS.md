@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — A staging directory is part of the production boundary
+
+- Observation: GoDaddy removed a dot-prefixed backend staging directory after a release had completed validation and backups but before `rsync` could transfer code. The deployment stopped at exit 23 before the live module/theme swap; no frontend release was attempted.
+- Guidance: stage under the private deployment area using explicit non-dot names and assert each directory exists immediately before transfer. A successful preflight and a fresh database backup do not prove code promotion; read the recorded release SHA before claiming a deployment.
+
 ## 2026-09-04 — Three separate "no traffic depends on this" assumptions were all wrong
 
 - Observation: campaign copy referenced a blog post

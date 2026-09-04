@@ -8,7 +8,7 @@ Tasks:
 - [x] Re-anchor to the canonical delivery repository, contracts, current Git history, and prior Tighten Up Your Locs evidence.
 - [ ] Reconcile the starter-site promise: domain branch, first-year hosting, SSL, analytics, email treatment, research summary, three directions, reset/re-direction round, and edit rounds.
 - [ ] Trace the real account → request → submission → proof job → owner review → customer proof lifecycle and identify the exact next customer action for Tighten Up Your Locs.
-- [ ] Integrate the proof-handoff repair with current `origin/main`, run the required proof suite, and deploy the reviewed release if the production gates pass.
+- [ ] Integrate the proof-handoff repair with current `origin/main`, run the required proof suite, and deploy the reviewed release if the production gates pass. (Integrated and locally validated; the first backend apply stopped safely before promotion because GoDaddy removed a dot-prefixed staging path. Repairing and retesting the release script.)
 - [ ] Perform only authorized, non-destructive production checks; provide Fritz the correct customer-facing next-step link, not a fabricated proof link.
 - [ ] Record evidence, material decisions, capability status, and session closeout across the required repository surfaces and Drive mirror.
 

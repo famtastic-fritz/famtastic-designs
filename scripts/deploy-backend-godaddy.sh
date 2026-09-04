@@ -1063,12 +1063,17 @@ commercial_config_backup_stage="$deploy_dir/tmp/commercial-config-$timestamp"
 database_backup="$HOME/backups/famtastic-database-$timestamp-$commit_sha.sql.gz"
 database_dump_target="${database_backup%.gz}"
 dependency_backup="$HOME/backups/famtastic-dependencies-$timestamp-$commit_sha.tgz"
-stage_module="$production_dir/web/modules/custom/.famtastic_pipeline-$commit_sha"
-stage_admin_theme="$production_dir/web/themes/custom/.famtastic_admin-$commit_sha"
-stage_customer_theme="$production_dir/web/themes/custom/.famtastic_customer-$commit_sha"
+# Do not stage beneath a dot-prefixed public path. GoDaddy's host-level cleanup
+# can remove those directories between mkdir and rsync, which leaves an apply
+# with fresh backups but no code promotion. Keep the complete staging tree in
+# the private deployment area, then promote it only after every transfer works.
+stage_root="$deploy_dir/tmp/backend-stage-$timestamp-$commit_sha"
+stage_module="$stage_root/famtastic_pipeline"
+stage_admin_theme="$stage_root/famtastic_admin"
+stage_customer_theme="$stage_root/famtastic_customer"
 settings_dir="$production_dir/web/sites/default"
 settings_mode="$(stat -c '%a' "$settings_dir")"
-stage_services="$production_dir/web/sites/default/.services-$commit_sha.yml"
+stage_services="$stage_root/services.yml"
 previous_module="$production_dir/web/modules/custom/.famtastic_pipeline-previous-$timestamp"
 previous_admin_theme="$production_dir/web/themes/custom/.famtastic_admin-previous-$timestamp"
 previous_customer_theme="$production_dir/web/themes/custom/.famtastic_customer-previous-$timestamp"
@@ -1093,12 +1098,13 @@ test -s "$database_backup" || {
   exit 1
 }
 
-rm -rf "$stage_module"
-mkdir -p "$stage_module"
+rm -rf "$stage_root"
+mkdir -p "$stage_module" "$stage_admin_theme" "$stage_customer_theme"
+test -d "$stage_module" || { echo "Could not create backend module staging directory: $stage_module" >&2; exit 1; }
 rsync -a "$source_module/" "$stage_module/"
-rm -rf "$stage_admin_theme"
-mkdir -p "$stage_admin_theme"
+test -d "$stage_admin_theme" || { echo "Could not create admin-theme staging directory: $stage_admin_theme" >&2; exit 1; }
 rsync -a "$source_admin_theme/" "$stage_admin_theme/"
+test -d "$stage_customer_theme" || { echo "Could not create customer-theme staging directory: $stage_customer_theme" >&2; exit 1; }
 rsync -a "$source_customer_theme/" "$stage_customer_theme/"
 chmod u+w "$settings_dir"
 trap 'chmod "$settings_mode" "$settings_dir" 2>/dev/null || true' ERR
@@ -1117,6 +1123,7 @@ mv "$production_customer_theme" "$previous_customer_theme" 2>/dev/null || true
 mv "$stage_customer_theme" "$production_customer_theme"
 mv "$production_services" "$previous_services"
 mv "$stage_services" "$production_services"
+rm -rf "$stage_root"
 install -m 0644 "$source_product_config" "$production_config_dir/famtastic-products.json"
 install -m 0644 "$source_deal_config" "$production_config_dir/famtastic-deal-terms.json"
 chmod "$settings_mode" "$settings_dir"
