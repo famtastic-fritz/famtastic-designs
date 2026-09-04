@@ -69,6 +69,36 @@ published corpus, not from a persona file**. Treat as observed, not canonical:
 - **Jargon rule**: any web term (canonical, structured data, DNS) must be
   defined in the same sentence it first appears, or replaced with plain words.
 
+## Writing for a reader who is behind, or afraid
+
+Added from the owner interview (2026-09-04). This is a voice requirement, not
+just a content rule — it changes sentence-level choices:
+
+- **The reader is an expert in their business and a beginner here.** Two
+  different registers in one piece: full respect for their trade, full
+  plain-language patience on anything web or AI.
+- **Fear of AI is treated as reasonable, never as ignorance.** Do not open by
+  correcting them. Explain the mechanism, and let the fear resolve itself.
+- **Define every AI/web term on first use, inline, in the same sentence.**
+  If a term can't be defined in a clause, it probably shouldn't be in the post.
+- **Never use AI vocabulary as a credential.** "Agentic," "LLM," "workflow
+  orchestration" as decoration reads as gatekeeping to this audience — the
+  exact opposite of the intended effect.
+- **Behind is not a moral failing.** The reader is absent from where business
+  happens; that's a fact, not a judgment, and the sentence should carry no
+  sting.
+
+## The rebuttal move (house structure)
+
+The reader has, in the owner's words, "1001 reasons and excuses to resist
+change." The signature structure for objection content:
+
+1. **State the excuse in the reader's own words**, fairly and without irony.
+2. **Concede what is true about it.** Most excuses contain something real.
+3. **Answer it with a mechanism or a number**, not with enthusiasm.
+4. **Cost is the one already fully answered** — $199 first year, about 55 cents
+   a day, then $9.99/mo plus the domain. State it plainly; never oversell it.
+
 ## Signature moves (observed, worth keeping)
 
 1. **Name the mechanism instead of citing a statistic.** The corpus repeatedly
