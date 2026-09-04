@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "campaign_id": "ghost_town_ep1",
+  "program_id": "FAM-FOOT-199",
+  "series_id": "cost-web-basics-launch",
+  "campaign_name": "Ghost Town — Episode 1: The Hair Salon Ghosts",
+  "created_at": "2026-09-03T00:00:00-04:00",
+  "status": "draft_not_scheduled",
+  "schedule_type": "sequel_episode",
+  "time_zone": "America/New_York",
+  "note": "DRAFT ONLY. No Postiz drafts have been created and nothing is scheduled or sent. Proposed drops start the day after cost-is-not-the-reason's final drop (2026-09-03T15:30:00-04:00) so the two campaigns don't overlap in the same feed on the same day.",
+  "drops": [
+    {
+      "drop_number": 1,
+      "drop_id": "drop-01",
+      "proposed_time": "2026-09-04T09:00:00-04:00",
+      "label": "Drop 1 — Episode launch: the digital ghost hook",
+      "channels": ["tiktok", "instagram_reels", "youtube_shorts", "facebook_video"],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/ghost-town-ep1/video-scripts/EP1_FULL_SCRIPT.md#master-script-58s",
+      "media_status": "script_only_not_produced",
+      "headline": "Search 'hair stylist near me.' Are you even in the results?",
+      "state": "awaiting_creative_production",
+      "approval": { "content": false, "media": false, "publish": false },
+      "provider_ids": { "postiz_draft_id": null, "postiz_scheduled_id": null }
+    },
+    {
+      "drop_number": 2,
+      "drop_id": "drop-02",
+      "proposed_time": "2026-09-04T13:00:00-04:00",
+      "label": "Drop 2 — Short cut: the DM trap",
+      "channels": ["tiktok", "instagram_reels", "x"],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/ghost-town-ep1/video-scripts/EP1_FULL_SCRIPT.md#short-cut-2--the-dm-trap-15s",
+      "media_status": "script_only_not_produced",
+      "headline": "One algorithm change away from never being found.",
+      "state": "awaiting_creative_production",
+      "approval": { "content": false, "media": false, "publish": false },
+      "provider_ids": { "postiz_draft_id": null, "postiz_scheduled_id": null }
+    },
+    {
+      "drop_number": 3,
+      "drop_id": "drop-03",
+      "proposed_time": "2026-09-05T09:00:00-04:00",
+      "label": "Drop 3 — Before/after search result",
+      "channels": ["instagram_feed", "facebook_feed"],
+      "media_type": "image_1x1",
+      "primary_media": "marketing/campaigns/ghost-town-ep1/images/ep1-02-before-after-search-result.jpg",
+      "media_status": "not_yet_created",
+      "headline": "Same stylist, same work — one of these shows up in search.",
+      "state": "awaiting_creative_production",
+      "approval": { "content": false, "media": false, "publish": false },
+      "provider_ids": { "postiz_draft_id": null, "postiz_scheduled_id": null }
+    },
+    {
+      "drop_number": 4,
+      "drop_id": "drop-04",
+      "proposed_time": "2026-09-05T13:00:00-04:00",
+      "label": "Drop 4 — Offer + blog link",
+      "channels": ["instagram_feed", "facebook_feed", "x"],
+      "media_type": "image_1x1",
+      "primary_media": "marketing/campaigns/ghost-town-ep1/images/ep1-01-hair-salon-ghost-hook.jpg",
+      "media_status": "not_yet_created",
+      "headline": "$199 first year, ~55¢/day. Stop being a ghost.",
+      "link": "https://famtasticdesigns.com/blog/why-independent-stylists-are-invisible-outside-the-app",
+      "state": "awaiting_creative_production",
+      "approval": { "content": false, "media": false, "publish": false },
+      "provider_ids": { "postiz_draft_id": null, "postiz_scheduled_id": null }
+    }
+  ]
+}
