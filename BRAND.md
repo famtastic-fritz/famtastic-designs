@@ -82,17 +82,30 @@
   - Not a booking app or marketplace middleman
   - Not an AI hype shop — automation is explained in plain terms and tied to a
     real capability, or it isn't published
-- **Competitive stance** (internal only — published posts never attack a named
-  company; see Editorial Rules):
-  - **Inertia / doing nothing** — the real primary competitor. Most readers
-    are not choosing a rival vendor; they are choosing to keep postponing.
-    Most content should be written against the excuse, not against a brand.
-  - **DIY site builders** — the reader still has to design, write, and
-    maintain it themselves, and usually stalls. FAMtastic delivers three real
-    working directions built from their business before they pay.
-  - **Cheap freelance marketplaces** — price-comparable, but no defined scope,
-    no proof-first step, no hosting/domain/email included, no path into
-    automation afterward.
+- **Stance — this brand does not compete, it educates** (owner directive,
+  2026-09-04):
+
+  > "I'm not trying to compete. I'm trying to educate and grow businesses,
+  > and in that way and belief system is how I grow financially."
+
+  This is the governing frame, and it is not a softer way of saying
+  "positioning." It changes what content is *for*:
+
+  - **There is no competitor list, internal or external.** Do not write
+    against a rival, a category, or a tool. Do not frame inertia as an
+    opponent to be defeated. A reader who is postponing is not an adversary.
+  - **The growth model is causal, not funnel-shaped**: a business owner
+    learns something real → their business grows → their capacity to invest
+    grows → FAMtastic grows with them. Financial growth is *downstream of
+    genuinely helping*, never the reason to help.
+  - **The editorial test**: would this post be worth reading by someone who
+    will never buy anything from FAMtastic? If no, it is marketing wearing
+    an article's clothes, and it fails. Every post must leave a reader more
+    capable whether or not they ever become a customer.
+  - **The excuse/rebuttal series is a teaching device, not a sales device.**
+    The goal is removing a barrier to someone's growth, not winning an
+    argument. If the honest answer to an objection is "you may not need this
+    yet," say that.
 
 ## Editorial Rules
 
@@ -184,6 +197,20 @@ material ways, all corrected above:
    equal buckets. It is the destination, and the blog is meant to be a real
    automation resource/tutorial/reference library.
 
+5. **Competitive framing was wrong at the root** — v1 (and v2's first pass)
+   included a "competitive stance" listing inertia, DIY builders, and
+   freelance marketplaces to position against. That frame was imported
+   uncritically from the `blog-brand` skill's Step 2, which asks for "top 3
+   competitors with differentiators." **This brand does not compete.** It
+   educates and grows businesses, and financial growth is downstream of that.
+   Replaced with the Stance section above.
+
 Also corrected: the logo is **not final** (v1 cited a placeholder as
 canonical), and the `@nineoo1` YouTube channel is **intentional** (v1 flagged
 it as an error).
+
+**Standing caution for future sessions:** the generic blog skills carry
+assumptions that do not all fit this brand — competitor positioning, and word
+counts 3-7x this blog's house style are two confirmed examples. Adapt them
+deliberately and say so; do not import a generic frame just because a skill
+asks for it.
