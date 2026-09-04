@@ -4,4 +4,4 @@
 
 What it doesn't include: new page builds, redesigns, or marketing campaigns. Those are separate packages so the monthly price stays honest. The point of a care plan is simple - the site you paid for stays the site you paid for.
 
-Related: [Packages](https://famtasticdesigns.com/web/packages) · [Web Basics](https://famtasticdesigns.com/web/packages/web-basics) · [Contact](https://famtasticdesigns.com/contact)
+Related: [Packages](https://famtasticdesigns.com/packages) · [Web Basics](https://famtasticdesigns.com/packages/199-quick-start) · [Contact](https://famtasticdesigns.com/contact)

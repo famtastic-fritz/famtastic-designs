@@ -10,8 +10,8 @@ Investigative: "website design see before you buy" / "pay after you see website 
 FAMtastic's intake produces three real website proofs from your actual business information; you pick a direction, then checkout happens. Payment follows the proof decision, not a promise.
 
 ## Internal links (≥3)
-1. https://famtasticdesigns.com/web/packages
-2. https://famtasticdesigns.com/web/packages/web-basics
+1. https://famtasticdesigns.com/packages
+2. https://famtasticdesigns.com/packages/199-quick-start
 3. https://famtasticdesigns.com/contact
 
 ## Evidence list (verified live)

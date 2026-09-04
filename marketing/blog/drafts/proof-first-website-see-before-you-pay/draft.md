@@ -25,4 +25,4 @@ Local service businesses that need to be findable and contactable — trades, cl
 
 ## Next step
 
-Start with the [packages overview](https://famtasticdesigns.com/web/packages) or go straight to [Web Basics](https://famtasticdesigns.com/web/packages/web-basics). Questions before you commit? [Contact us](https://famtasticdesigns.com/contact).
+Start with the [packages overview](https://famtasticdesigns.com/packages) or go straight to [Web Basics](https://famtasticdesigns.com/packages/199-quick-start). Questions before you commit? [Contact us](https://famtasticdesigns.com/contact).

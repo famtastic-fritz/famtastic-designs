@@ -22,8 +22,8 @@ A Linktree page routes a visitor to your booking app or your Instagram — it do
 
 ## What this actually costs to fix
 
-FAMtastic's Web Basics package is a one-time $199 — about 55 cents a day across the first year — and includes a complete small-business site, mobile-ready pages, a contact form, and your first year of hosting and domain registration. Full scope: [famtasticdesigns.com/web/packages/web-basics](https://famtasticdesigns.com/web/packages/web-basics).
+FAMtastic's Web Basics package is a one-time $199 — about 55 cents a day across the first year — and includes a complete small-business site, mobile-ready pages, a contact form, and your first year of hosting and domain registration. Full scope: [famtasticdesigns.com/packages/199-quick-start](https://famtasticdesigns.com/packages/199-quick-start).
 
-Before you pay, you see three real design directions built from your actual business information — not a template with your logo dropped in. See how that works on the [packages page](https://famtasticdesigns.com/web/packages), or read [what the $199 website actually includes](/blog/what-does-199-website-include) for the full scope breakdown.
+Before you pay, you see three real design directions built from your actual business information — not a template with your logo dropped in. See how that works on the [packages page](https://famtasticdesigns.com/packages), or read [what the $199 website actually includes](/blog/what-does-199-website-include) for the full scope breakdown.
 
 If you're ready to talk through your specific setup, [contact us](https://famtasticdesigns.com/contact).

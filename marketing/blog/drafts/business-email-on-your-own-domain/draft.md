@@ -4,4 +4,4 @@ When your invoice says acmehvac.com but your email says acme.hvac@gmail.com, cus
 
 Our Business Email Setup handles exactly that plumbing - records, connection, testing, handoff - for a one-time $99. You keep your mailbox subscription; we never resell mailboxes. If something needs your provider login at any step, we pause and tell you plainly rather than guessing.
 
-Related: [Packages](https://famtasticdesigns.com/web/packages) · [Web Basics](https://famtasticdesigns.com/web/packages/web-basics) · [Contact](https://famtasticdesigns.com/contact)
+Related: [Packages](https://famtasticdesigns.com/packages) · [Web Basics](https://famtasticdesigns.com/packages/199-quick-start) · [Contact](https://famtasticdesigns.com/contact)

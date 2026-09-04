@@ -14,7 +14,7 @@ Web Basics is a one-time $199 and includes:
 - Your first year of basic managed hosting included
 - First-year registration of a qualifying standard domain when one is needed
 
-Everything above mirrors the live package page at famtasticdesigns.com/web/packages/web-basics — if anything there changes, that page, not this article, is the contract.
+Everything above mirrors the live package page at famtasticdesigns.com/packages/199-quick-start — if anything there changes, that page, not this article, is the contract.
 
 ## What "defined scope" means
 
@@ -34,4 +34,4 @@ The 55-cents-a-day figure is the annualized comparison of the one-time $199 pric
 
 ## Next step
 
-Review the [Web Basics package](https://famtasticdesigns.com/web/packages/web-basics) scope, compare it with [the other packages](https://famtasticdesigns.com/web/packages), and start a website request when you are ready. If you would rather talk it through first, [contact us](https://famtasticdesigns.com/contact) — a human reads those.
+Review the [Web Basics package](https://famtasticdesigns.com/packages/199-quick-start) scope, compare it with [the other packages](https://famtasticdesigns.com/packages), and start a website request when you are ready. If you would rather talk it through first, [contact us](https://famtasticdesigns.com/contact) — a human reads those.
