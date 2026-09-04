@@ -11,6 +11,64 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\user\UserInterface;
 
 /**
+ * Implements hook_metatags_alter().
+ *
+ * Drupal's own document root is served publicly under "/web" (see
+ * famtastic_pipeline.settings:public_api_base_url, which is literally
+ * "{frontend_base_url}/web"). Every content route Drupal generates for
+ * itself — canonical node links, [node:url] tokens, computed relative
+ * URIs — therefore carries that "/web" segment baked in, because that is
+ * genuinely where Drupal answers requests from.
+ *
+ * Public content pages (e.g. blog posts) are not actually served from
+ * there, though: the React frontend renders them at the bare frontend
+ * origin (https://famtasticdesigns.com/blog/<slug>), consuming Drupal only
+ * through the JSON:API. metatag.metatag_defaults.node sets canonical_url
+ * to the token '[node:url]', so every node's canonical tag inherits
+ * Drupal's internal "/web" prefix and points at a route that 404s
+ * publicly — a real SEO defect, not a per-node data problem.
+ *
+ * Rather than patch canonical_url on every node (or worse, on every
+ * bundle-specific metatag default), rewrite the resolved canonical tag
+ * here for any node entity: swap Drupal's "/web"-prefixed internal path
+ * for the same path against the public frontend origin. This runs for
+ * both classic page rendering and the JSON:API "metatag" computed field
+ * (Drupal\metatag\Plugin\Field\MetatagEntityFieldItemList also invokes
+ * this alter), so it fixes the canonical tag wherever it is emitted.
+ */
+function famtastic_pipeline_metatags_alter(array &$metatags, array &$context): void {
+  if (empty($metatags['canonical_url'])) {
+    return;
+  }
+  $entity = $context['entity'] ?? NULL;
+  if (!$entity instanceof EntityInterface || $entity->getEntityTypeId() !== 'node') {
+    return;
+  }
+  $frontendBaseUrl = rtrim((string) \Drupal::config('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+  if ($frontendBaseUrl === '') {
+    return;
+  }
+  try {
+    $internalPath = $entity->toUrl()->toString();
+  }
+  catch (\Throwable $error) {
+    return;
+  }
+  // Strip the literal "/web" document-root prefix, mirroring the inverse of
+  // how public_api_base_url is derived from frontend_base_url.
+  if ($internalPath === '/web') {
+    $publicPath = '/';
+  }
+  elseif (str_starts_with($internalPath, '/web/')) {
+    $publicPath = substr($internalPath, 4);
+  }
+  else {
+    $publicPath = $internalPath;
+  }
+  $metatags['canonical_url'] = $frontendBaseUrl . $publicPath;
+}
+
+/**
  * Implements hook_page_attachments().
  *
  * Gives Drupal Commerce checkout a branded, responsive presentation while the
