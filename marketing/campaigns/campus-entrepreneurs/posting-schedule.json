@@ -1,0 +1,141 @@
+{
+  "schema_version": 2,
+  "campaign_id": "campus_entrepreneurs",
+  "program_id": "FAM-FOOT-199",
+  "series_id": null,
+  "campaign_name": "Campus Hustle: College Student Entrepreneurship",
+  "created_at": "2026-09-04T08:13:23-04:00",
+  "status": "armed_for_scheduling",
+  "schedule_type": "rapid_evaluation_sequence",
+  "time_zone": "America/New_York",
+  "landing_url": "https://famtasticdesigns.com/onboarding?sku=FAM-FOOT-199",
+  "cadence": {
+    "anchor_et": "2026-09-04T14:00:00-04:00",
+    "interval_minutes": 180,
+    "set_by": "scripts/new-campaign.py"
+  },
+  "publish_arming": {
+    "mode": "single_env_switch",
+    "env": "FAMTASTIC_MARKETING_PUBLISH",
+    "note": "Queue creates DRAFTS unarmed. Converting to a live schedule requires FAMTASTIC_MARKETING_PUBLISH=true on the host that runs it."
+  },
+  "media_resolution": {
+    "policy": "resolve_at_runtime_fail_loud",
+    "note": "Media paths resolve on the host running the queue. A missing file blocks that drop by name; it is never substituted or skipped."
+  },
+  "drops": [
+    {
+      "drop_number": 1,
+      "drop_id": "drop-01",
+      "content_id": "drop-01",
+      "scheduled_time": "2026-09-04T14:00:00-04:00",
+      "label": "Drop 1 \u2014 2:00 PM Sep 4",
+      "theme": "Stop building your campus side-hustle on rented land (DMs, Linktree, platform cuts)",
+      "headline": "Running a business from your college dorm?",
+      "state": "media_ready",
+      "channels": [
+        "tiktok",
+        "instagram"
+      ],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/campus-entrepreneurs/videos/01-campus-dorm-entrepreneur-9x16.mp4",
+      "copy": {
+        "tiktok_reels_shorts": "Running a business from your college dorm? \ud83c\udf93\ud83d\udc5f Stop answering price questions in the DMs and paying 20% platform cuts on your side hustle.\n\nFor $199 for your entire first year (about 55\u00a2 a day):\n\u2705 Custom mobile-first web storefront\n\u2705 Branded domain name connection\n\u2705 Direct booking & instant mobile checkout\n\u2705 1 full year of fast managed cloud hosting\n\u2705 3 custom design proofs in 48 hours\n\nA single client order covers your entire website for the whole year.\n\nStop renting. Start owning your brand on campus."
+      },
+      "tags": [
+        "#collegeentrepreneur",
+        "#dormhustle",
+        "#sidehustleideas",
+        "#studentfounder",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "famtastic",
+        "medium": "organic_social",
+        "campaign": "campus_entrepreneurs",
+        "content": "drop-01"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": true
+      },
+      "provider_ids": {
+        "postiz_draft_id": "cmtmx11sl000mrt7kkhvazzy8",
+        "postiz_scheduled_id": "cmtmx11sl000mrt7kkhvazzy8",
+        "postiz_scheduled_group": [
+          "cmtmx11sl000mrt7kkhvazzy8",
+          "cmtmx11sx000nrt7k79578d9y"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-04T12:13:52Z",
+          "postiz_post_id": "cmtmx11sl000mrt7kkhvazzy8",
+          "date_utc": "2026-09-04T18:00:00.000Z",
+          "integrations": [
+            "tiktok",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 2,
+      "drop_id": "drop-02",
+      "content_id": "drop-02",
+      "scheduled_time": "2026-09-04T17:00:00-04:00",
+      "label": "Drop 2 \u2014 5:00 PM Sep 4",
+      "theme": "The real math: one client order covers the whole year's website cost",
+      "headline": "To every student building a business between classes.",
+      "state": "media_ready",
+      "channels": [
+        "facebook",
+        "x"
+      ],
+      "media_type": "image_1x1",
+      "primary_media": "marketing/campaigns/campus-entrepreneurs/images/01-campus-quad-entrepreneur-1x1.jpg",
+      "copy": {
+        "facebook_instagram": "To every student building a business between classes:\n\nWhether you\u2019re doing campus photography, tutoring, mobile detailing, sneaker reselling, or digital marketing from your dorm room\u2014stop building on rented land.\n\nWhen you send customers to a generic link-in-bio or free @gmail address, you lose credibility and leave high-ticket orders on the table.\n\nAt FAMtastic Designs, we engineered the Web Basics Bundle to remove cost as an obstacle:\n\ud83d\udfe2 $199 total for your entire first year (hosting and domain included = ~55\u00a2/day).\n\ud83d\udfe2 3 custom interactive design directions delivered in 48 hours.\n\ud83d\udfe2 Zero monthly software fees for your entire first 12 months.\n\nTurn your dorm side-hustle into an established brand today.",
+        "x_post": "Running your hustle from a dorm? Stop paying 20% platform cuts and posting prices in the DMs.\n\n$199 covers your whole first year (~55\u00a2/day): hosting, domain, 3 design directions in 48h."
+      },
+      "tags": [
+        "#collegeentrepreneur",
+        "#studentfounder",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "famtastic",
+        "medium": "organic_social",
+        "campaign": "campus_entrepreneurs",
+        "content": "drop-02"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": true
+      },
+      "provider_ids": {
+        "postiz_draft_id": "cmtmx1ao5000ort7kctult7zk",
+        "postiz_scheduled_id": "cmtmx1ao5000ort7kctult7zk",
+        "postiz_scheduled_group": [
+          "cmtmx1ao5000ort7kctult7zk",
+          "cmtmx1aoc000prt7kjjy9ehad"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-04T12:14:03Z",
+          "postiz_post_id": "cmtmx1ao5000ort7kctult7zk",
+          "date_utc": "2026-09-04T21:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "x"
+          ]
+        }
+      ]
+    }
+  ]
+}

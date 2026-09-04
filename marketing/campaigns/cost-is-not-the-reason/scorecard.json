@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-04T01:48:06Z",
+  "generated_at": "2026-09-04T12:15:39Z",
   "campaign_slug": "cost-is-not-the-reason",
   "campaign_id": "cost_is_not_the_reason_eval",
   "program_id": "FAM-FOOT-199",
@@ -257,17 +257,67 @@
         "other_state": 0,
         "not_found": 0
       }
+    },
+    {
+      "drop_id": "drop-05",
+      "content_id": "drop-05",
+      "scheduled_time": "2026-09-04T13:00:00-04:00",
+      "theme": "",
+      "channels_requested": [
+        "tiktok",
+        "youtube",
+        "facebook"
+      ],
+      "channels_missing_provider_record": [],
+      "records": [
+        {
+          "postiz_post_id": "cmtmwyo91000lrt7kb5utllk9",
+          "found": true,
+          "state": "QUEUE",
+          "has_error": false,
+          "integration_identifier": "facebook",
+          "integration_name": "FAMTastic Designs",
+          "publish_date_utc": "2026-09-04T17:00:00Z"
+        },
+        {
+          "postiz_post_id": "cmtmwyo78000jrt7k2ssdemiz",
+          "found": true,
+          "state": "ERROR",
+          "has_error": true,
+          "integration_identifier": "tiktok",
+          "integration_name": "FAMtasticDesigns",
+          "publish_date_utc": "2026-09-04T17:00:00Z"
+        },
+        {
+          "postiz_post_id": "cmtmwyo8g000krt7k5984d4jk",
+          "found": true,
+          "state": "QUEUE",
+          "has_error": false,
+          "integration_identifier": "youtube",
+          "integration_name": "nineoo1",
+          "publish_date_utc": "2026-09-04T17:00:00Z"
+        }
+      ],
+      "counts": {
+        "requested_channels": 3,
+        "provider_records_found": 3,
+        "published": 0,
+        "error": 1,
+        "queued": 2,
+        "other_state": 0,
+        "not_found": 0
+      }
     }
   ],
   "totals": {
-    "drops": 4,
-    "requested_channels": 18,
-    "provider_records_found": 16,
+    "drops": 5,
+    "requested_channels": 21,
+    "provider_records_found": 19,
     "published": 7,
-    "error": 8,
-    "queued": 1,
+    "error": 9,
+    "queued": 3,
     "other_state": 0,
     "not_found": 0,
-    "publish_success_rate": 0.4375
+    "publish_success_rate": 0.3684
   }
 }

@@ -3,7 +3,7 @@
   "campaign_id": "cost_is_not_the_reason_eval",
   "program_id": "FAM-FOOT-199",
   "series_id": "cost-web-basics-launch",
-  "campaign_name": "Cost Is Not The Reason \u2014 Brand New Launch",
+  "campaign_name": "Cost Is Not The Reason — Brand New Launch",
   "created_at": "2026-09-02T21:26:00-04:00",
   "status": "armed_for_scheduling",
   "schedule_type": "rapid_evaluation_sequence",
@@ -13,8 +13,8 @@
       "drop_number": 1,
       "drop_id": "drop-01",
       "scheduled_time": "2026-09-03T09:00:00-04:00",
-      "label": "Drop 1 \u2014 9:00 AM ET:00 AM ET kickoff: Declaration & master video",
-      "theme": "The Declaration: Fearless Deviation & 55\u00a2 Reality",
+      "label": "Drop 1 — 9:00 AM ET:00 AM ET kickoff: Declaration & master video",
+      "theme": "The Declaration: Fearless Deviation & 55¢ Reality",
       "channels": [
         "tiktok",
         "instagram_reels",
@@ -27,9 +27,9 @@
       "backup_media": "marketing/campaigns/cost-is-not-the-reason/videos/00-heygen-master-presenter-commercial-9x16.mp4",
       "headline": "Of all the reasons you don't have a website yet... Cost is NOT one of them.",
       "copy": {
-        "tiktok_reels_shorts": "Stop putting your business on hold because agency prices are insane \ud83d\uded1 We build your custom business site with 1 full year of fast cloud hosting, custom domain, and email for $199 total (~55\u00a2/day). 3 custom design proofs delivered in 48 hours \ud83d\ude80 Tap the link in bio to see the proof!",
-        "x_post": "Of all the reasons you don't have a website yet \u2014 cost is NOT one of them.\n\n$199 for your first full year: hosting, domain, email, 3 concepts in 48h. ~55\u00a2/day.",
-        "facebook_instagram": "Of all the reasons or fears you have for not launching your own professional website... Cost is NOT one of them. \ud83d\udeab\n\nAt FAMtastic Designs, we believe in your business idea so much that we are boldly deviating from standard agency retainers.\n\nFor 55 cents a day\u2014that's $199 for your entire first year\u2014you get:\n\ud83d\udfe2 1 Full Year of fast managed cloud hosting\n\ud83d\udfe2 Custom domain name connection\n\ud83d\udfe2 Branded business email address\n\ud83d\udfe2 3 Custom interactive design directions (Safe, Wild, OMG) delivered in 48 hours\n\nBefore you spend thousands on retainers, see what 55\u00a2 a day looks like for your brand.\n\n\ud83d\udc49 Learn more at famtasticdesigns.com"
+        "tiktok_reels_shorts": "Stop putting your business on hold because agency prices are insane 🛑 We build your custom business site with 1 full year of fast cloud hosting, custom domain, and email for $199 total (~55¢/day). 3 custom design proofs delivered in 48 hours 🚀 Tap the link in bio to see the proof!",
+        "x_post": "Of all the reasons you don't have a website yet — cost is NOT one of them.\n\n$199 for your first full year: hosting, domain, email, 3 concepts in 48h. ~55¢/day.",
+        "facebook_instagram": "Of all the reasons or fears you have for not launching your own professional website... Cost is NOT one of them. 🚫\n\nAt FAMtastic Designs, we believe in your business idea so much that we are boldly deviating from standard agency retainers.\n\nFor 55 cents a day—that's $199 for your entire first year—you get:\n🟢 1 Full Year of fast managed cloud hosting\n🟢 Custom domain name connection\n🟢 Branded business email address\n🟢 3 Custom interactive design directions (Safe, Wild, OMG) delivered in 48 hours\n\nBefore you spend thousands on retainers, see what 55¢ a day looks like for your brand.\n\n👉 Learn more at famtasticdesigns.com"
       },
       "tags": [
         "#smallbusinessowner",
@@ -95,7 +95,7 @@
       "drop_number": 2,
       "drop_id": "drop-02",
       "scheduled_time": "2026-09-03T10:30:00-04:00",
-      "label": "Drop 2 \u2014 10:30 AM ET: Rented land vs owned hub",
+      "label": "Drop 2 — 10:30 AM ET: Rented land vs owned hub",
       "theme": "Rented Land vs Owned Hub (Linktree & DM Escape)",
       "channels": [
         "instagram_carousel",
@@ -113,8 +113,8 @@
       "headline": "Why running your business on Linktree and DMs costs you thousands.",
       "copy": {
         "linkedin_facebook": "If you're still booking appointments in the DMs or sending customers to a Linktree with a @gmail address, you are paying rent on land you don't own.\n\nHere is what happens when you switch to an owned hub:\n1. Zero 20% middleman booking fees.\n2. Instant customer credibility with your own domain.\n3. Automatic quote estimates and customer intake.\n\nAll for ~$0.55/day ($199/yr).\n\nRead the breakdown: https://famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue",
-        "x_thread_opener": "Why running your business in the DMs costs you thousands in lost revenue: \ud83e\uddf5\ud83d\udc47\n\nWhen a customer has to message you 'how much?', 40% bounce before booking.\n\nHere's how to fix it for 55 cents a day:",
-        "x_post": "Booking clients in the DMs with a @gmail address? You're paying rent on land you don't own.\n\n0% middleman fees. Your own domain. ~55\u00a2/day ($199/yr)."
+        "x_thread_opener": "Why running your business in the DMs costs you thousands in lost revenue: 🧵👇\n\nWhen a customer has to message you 'how much?', 40% bounce before booking.\n\nHere's how to fix it for 55 cents a day:",
+        "x_post": "Booking clients in the DMs with a @gmail address? You're paying rent on land you don't own.\n\n0% middleman fees. Your own domain. ~55¢/day ($199/yr)."
       },
       "tags": [
         "#entrepreneurship",
@@ -163,7 +163,7 @@
       "drop_number": 3,
       "drop_id": "drop-03",
       "scheduled_time": "2026-09-03T13:00:00-04:00",
-      "label": "Drop 3 \u2014 1:00 PM ET: The 55\u00a2 math & DM chaos",
+      "label": "Drop 3 — 1:00 PM ET: The 55¢ math & DM chaos",
       "theme": "The Math Breakdown & Stop DM Chaos",
       "channels": [
         "tiktok",
@@ -176,8 +176,8 @@
       "backup_media": "marketing/campaigns/cost-is-not-the-reason/videos/01-55-cent-myth-commercial-9x16.mp4",
       "headline": "Stop answering 'how much?' in the DMs at 11 PM.",
       "copy": {
-        "tiktok_reels_shorts": "You didn't start a business to spend your lunch break answering price questions in Instagram DMs \ud83d\udcf1 Here is how top service businesses automate bookings on their own custom website for 55 cents a day ($199/yr) with 0 middleman cuts \ud83d\ude80 Link in bio to check it out!",
-        "x_post": "Booking apps take up to 20% on new clients and hold your list hostage.\n\nYour own site: $199 for the year (~55\u00a2/day), 0% fees, 100% data ownership."
+        "tiktok_reels_shorts": "You didn't start a business to spend your lunch break answering price questions in Instagram DMs 📱 Here is how top service businesses automate bookings on their own custom website for 55 cents a day ($199/yr) with 0 middleman cuts 🚀 Link in bio to check it out!",
+        "x_post": "Booking apps take up to 20% on new clients and hold your list hostage.\n\nYour own site: $199 for the year (~55¢/day), 0% fees, 100% data ownership."
       },
       "tags": [
         "#barberlife",
@@ -228,7 +228,7 @@
       "drop_number": 4,
       "drop_id": "drop-04",
       "scheduled_time": "2026-09-03T15:30:00-04:00",
-      "label": "Drop 4 \u2014 3:30 PM ET: Three-direction proof",
+      "label": "Drop 4 — 3:30 PM ET: Three-direction proof",
       "theme": "Applying Mastery: The 3-Direction Proof (Safe, Wild, OMG)",
       "channels": [
         "instagram",
@@ -242,8 +242,8 @@
       "supporting_media": "marketing/campaigns/cost-is-not-the-reason/images/04-openart-wow-holographic-craft-1x1.png",
       "headline": "Demonstration, not declaration. 3 Working concepts in 48 hours.",
       "copy": {
-        "all_channels": "Most agencies ask for thousands upfront based on promises. We believe the results are the proof.\n\nWithin 48 hours of starting, we deliver 3 custom interactive design directions for your brand:\n1. \ud83d\udee1\ufe0f SAFE \u2014 Clean, polished, and immediately familiar.\n2. \u26a1 WILD \u2014 Bold, high-energy, and distinct.\n3. \u2728 OMG \u2014 Cutting-edge, unforgettable, and premium.\n\nPick the one you love. We launch it on your domain.\n\n\ud83d\udc49 Experience the craft at famtasticdesigns.com",
-        "x_post": "Agencies want thousands upfront on a promise.\n\nWe deliver 3 custom design directions in 48h \u2014 Safe, Wild, OMG. Pick one, we launch it. $199/yr (~55\u00a2/day)."
+        "all_channels": "Most agencies ask for thousands upfront based on promises. We believe the results are the proof.\n\nWithin 48 hours of starting, we deliver 3 custom interactive design directions for your brand:\n1. 🛡️ SAFE — Clean, polished, and immediately familiar.\n2. ⚡ WILD — Bold, high-energy, and distinct.\n3. ✨ OMG — Cutting-edge, unforgettable, and premium.\n\nPick the one you love. We launch it on your domain.\n\n👉 Experience the craft at famtasticdesigns.com",
+        "x_post": "Agencies want thousands upfront on a promise.\n\nWe deliver 3 custom design directions in 48h — Safe, Wild, OMG. Pick one, we launch it. $199/yr (~55¢/day)."
       },
       "tags": [
         "#creativeagency",
@@ -310,6 +310,52 @@
           "reason": "Isolation testing earlier in this session (throwaway text-only post, drop-01, drop-02) confirmed X uploads via this Postiz instance fail video with a generic bad_body/Unknown Error even with valid credits and a spec-compliant file, while images succeed. drop-04's X post was carrying the same primary video as the other channels and would almost certainly have failed the same way at 19:30 UTC. Swapped to the drop's existing supporting_media still image (04-openart-wow-holographic-craft-1x1.png) with identical copy and tracked link; verified QUEUE with no error before 15:30 ET fire time."
         }
       ]
+    },
+    {
+      "drop_id": "drop-05",
+      "content_id": "drop-05",
+      "scheduled_time": "2026-09-04T13:00:00-04:00",
+      "channels": [
+        "tiktok",
+        "youtube",
+        "facebook"
+      ],
+      "copy": {
+        "tiktok_reels_shorts": "The '55 cents a day' website isn't a myth. $199 covers your entire first year: hosting, domain, email, and 3 custom design directions delivered in 48 hours. Tap the link to see it for your business.",
+        "facebook_instagram": "Is '55 cents a day for a professional website' actually real? Yes. $199 covers your entire first year: fast hosting, your own domain, a branded business email, and 3 custom interactive design directions (Safe, Wild, OMG) delivered in 48 hours. No middleman fees, no monthly retainer. See what it looks like for your business at famtasticdesigns.com."
+      },
+      "state": "media_ready",
+      "utm": {
+        "source": "social",
+        "medium": "social",
+        "campaign": "cost_is_not_the_reason_eval",
+        "content": "drop-05"
+      },
+      "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/01-55-cent-myth-commercial-9x16.mp4",
+      "drop_number": 5,
+      "provider_ids": {
+        "postiz_draft_id": "cmtmwyo91000lrt7kb5utllk9",
+        "postiz_scheduled_id": "cmtmwyo91000lrt7kb5utllk9",
+        "postiz_scheduled_group": [
+          "cmtmwyo91000lrt7kb5utllk9",
+          "cmtmwyo78000jrt7k2ssdemiz",
+          "cmtmwyo8g000krt7k5984d4jk"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-04T12:12:01Z",
+          "postiz_post_id": "cmtmwyo78000jrt7k2ssdemiz",
+          "date_utc": "2026-09-04T17:00:00.000Z",
+          "integrations": [
+            "tiktok",
+            "youtube",
+            "facebook"
+          ]
+        }
+      ],
+      "known_gap": "instagram channel requested but never created due to a CLI adopt-tracking gap on --edit-drop; only 3/4 channels live"
     }
   ],
   "cadence": {
