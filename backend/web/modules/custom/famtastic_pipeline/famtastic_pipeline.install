@@ -1463,6 +1463,13 @@ function _famtastic_pipeline_lifecycle_schema(): array {
     'description' => 'Per-record state for the 17-day social campaign: gates, assets, provider ids.',
     'fields' => [
       'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      // content_id (e.g. "drop-01") is a slug that is only unique WITHIN a
+      // campaign, never across campaigns — every campaign's posting-schedule
+      // scaffolds drops named drop-01, drop-02, etc. The durable identity of
+      // a drop is the compound key "{campaign_id}/{content_id}", so every
+      // lookup, insert, and unique constraint on this table is keyed on
+      // (campaign_id, content_id) together. Never match on content_id alone.
+      'campaign_id' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE, 'default' => ''],
       'content_id' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
       'day' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
       'moment' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''],
@@ -1482,8 +1489,8 @@ function _famtastic_pipeline_lifecycle_schema(): array {
       'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
     ],
     'primary key' => ['id'],
-    'unique keys' => ['content_id' => ['content_id']],
-    'indexes' => ['day' => ['day'], 'gates' => ['approval_content', 'approval_media', 'approval_publish'], 'publish_state' => ['provider_state', 'approval_publish']],
+    'unique keys' => ['campaign_content' => ['campaign_id', 'content_id']],
+    'indexes' => ['day' => ['day'], 'gates' => ['approval_content', 'approval_media', 'approval_publish'], 'publish_state' => ['provider_state', 'approval_publish'], 'campaign' => ['campaign_id']],
   ];
   $tables['famtastic_support_draft'] = [
     'description' => 'L0 draft replies generated per inbound message; nothing sends without owner approval.',
@@ -2557,4 +2564,145 @@ function _famtastic_pipeline_seed_microsite_defaults(): void {
     'created' => $now,
     'changed' => $now,
   ])->execute();
+}
+
+/**
+ * Adds a campaign_id column to famtastic_social_record and repoints its
+ * unique key at the compound (campaign_id, content_id) identity.
+ *
+ * content_id (e.g. "drop-01") is a slug scaffolded fresh by every campaign's
+ * posting-schedule.json — it is unique only WITHIN a campaign, never across
+ * campaigns. Before this update the table's only unique key was content_id
+ * alone, so a bare content_id lookup or write (an --edit-drop/--delete-drop
+ * style operation, or AttributionService::recordSocialLead()) could silently
+ * read or overwrite a different campaign's record whose content_id happened
+ * to collide (e.g. two campaigns both scaffolding "drop-01"). Existing rows
+ * are backfilled by cross-referencing every marketing/campaigns/*\/posting-
+ * schedule.json's drops[].content_id and the legacy 55-cents-17-day
+ * manifest's records[].content_id + records[].campaign against the
+ * content_id already stored here. A content_id that cannot be matched to any
+ * manifest is left with an empty campaign_id and reported by name rather
+ * than guessed, and the unique key is only repointed once every row is
+ * matched unambiguously.
+ */
+function famtastic_pipeline_update_8048(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $database = \Drupal::database();
+
+  if (!$schema->tableExists('famtastic_social_record')) {
+    return t('Social record table does not exist; nothing to migrate.');
+  }
+
+  if (!$schema->fieldExists('famtastic_social_record', 'campaign_id')) {
+    $schema->addField(
+      'famtastic_social_record',
+      'campaign_id',
+      _famtastic_pipeline_lifecycle_schema()['famtastic_social_record']['fields']['campaign_id'],
+    );
+  }
+
+  $map = _famtastic_pipeline_social_record_campaign_map();
+
+  $unmatched = [];
+  $rows = $database->select('famtastic_social_record', 'r')
+    ->fields('r', ['id', 'content_id', 'campaign_id'])
+    ->execute();
+  foreach ($rows as $row) {
+    if ($row->campaign_id !== '') {
+      // Already backfilled by a prior partial run of this update.
+      continue;
+    }
+    $campaignId = $map[$row->content_id] ?? NULL;
+    if ($campaignId === NULL) {
+      $unmatched[] = $row->content_id;
+      continue;
+    }
+    $database->update('famtastic_social_record')
+      ->fields(['campaign_id' => $campaignId])
+      ->condition('id', $row->id)
+      ->execute();
+  }
+
+  // Only repoint the unique key once every row resolved to a campaign; an
+  // unmatched row is left with campaign_id = '' and the old bare content_id
+  // key stays authoritative for the whole table until an operator resolves
+  // it by hand (bare content_id collisions across campaigns cannot happen
+  // yet if this table is not fully backfilled, so keeping the old key is
+  // strictly safer than dropping it early).
+  if (!$unmatched && $schema->indexExists('famtastic_social_record', 'content_id')) {
+    $schema->dropUniqueKey('famtastic_social_record', 'content_id');
+  }
+  if (!$unmatched && !$schema->indexExists('famtastic_social_record', 'campaign_content')) {
+    $schema->addUniqueKey('famtastic_social_record', 'campaign_content', ['campaign_id', 'content_id']);
+  }
+  if (!$schema->indexExists('famtastic_social_record', 'campaign')) {
+    $schema->addIndex(
+      'famtastic_social_record',
+      'campaign',
+      ['campaign_id'],
+      _famtastic_pipeline_lifecycle_schema()['famtastic_social_record'],
+    );
+  }
+
+  if ($unmatched) {
+    return t('Added campaign_id to the social record table and backfilled every row that matched a manifest. @count row(s) could not be matched to any campaign manifest and were left with an empty campaign_id — the old content_id unique key was kept until these are resolved by hand: @ids', [
+      '@count' => count($unmatched),
+      '@ids' => implode(', ', array_unique($unmatched)),
+    ]);
+  }
+  return t('Added campaign_id to the social record table, backfilled every row from its source manifest, and repointed the unique key at (campaign_id, content_id).');
+}
+
+/**
+ * Maps every known content_id to the campaign it belongs to, by reading
+ * every campaign's posting-schedule.json plus the legacy 55-cents-17-day
+ * manifest. Used only to backfill famtastic_social_record.campaign_id in
+ * famtastic_pipeline_update_8048(); never used at request time.
+ */
+function _famtastic_pipeline_social_record_campaign_map(): array {
+  $map = [];
+  $roots = [
+    dirname(\Drupal::root(), 2) . '/marketing/campaigns',
+    dirname(\Drupal::root()) . '/marketing/campaigns',
+    \Drupal::root() . '/../marketing/campaigns',
+  ];
+  $campaignsRoot = NULL;
+  foreach ($roots as $candidate) {
+    if (is_dir($candidate)) {
+      $campaignsRoot = $candidate;
+      break;
+    }
+  }
+  if ($campaignsRoot === NULL) {
+    return $map;
+  }
+
+  foreach (glob($campaignsRoot . '/*/posting-schedule.json') ?: [] as $path) {
+    $decoded = json_decode((string) file_get_contents($path), TRUE);
+    if (!is_array($decoded) || empty($decoded['campaign_id'])) {
+      continue;
+    }
+    foreach ($decoded['drops'] ?? [] as $drop) {
+      if (!empty($drop['content_id'])) {
+        $map[(string) $drop['content_id']] = (string) $decoded['campaign_id'];
+      }
+    }
+  }
+
+  // The legacy 68-record 17-day manifest is not shaped like posting-
+  // schedule.json (it uses "records", not "drops"), and every record
+  // already carries its own campaign string — that is the source of truth
+  // for the rows this table actually holds today, so it wins over any
+  // posting-schedule.json that happened to reuse the same content_id.
+  $legacy = $campaignsRoot . '/55-cents-17-day/manifest.json';
+  if (is_file($legacy)) {
+    $decoded = json_decode((string) file_get_contents($legacy), TRUE);
+    foreach ($decoded['records'] ?? [] as $record) {
+      if (!empty($record['content_id']) && !empty($record['campaign'])) {
+        $map[(string) $record['content_id']] = (string) $record['campaign'];
+      }
+    }
+  }
+
+  return $map;
 }

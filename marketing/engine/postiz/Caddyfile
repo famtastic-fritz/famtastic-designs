@@ -1,0 +1,30 @@
+# Caddy front door for the server-hosted Postiz stack.
+#
+# Caddy obtains and renews a real certificate for POSTIZ_DOMAIN automatically,
+# which is what replaces the ngrok free tunnel. Every social platform requires
+# an HTTPS OAuth redirect, and a tunnel that is only up while a laptop is awake
+# is the reason a scheduled drop can silently fail to exist.
+#
+# Postiz is not published on any host port; this is the only public entry point.
+
+{$POSTIZ_DOMAIN} {
+	encode zstd gzip
+
+	# Postiz serves its frontend and its /api under one origin.
+	reverse_proxy postiz:5000 {
+		header_up X-Forwarded-Proto https
+		header_up X-Forwarded-Host {host}
+		# Media uploads and renders are slow; do not cut them off mid-transfer.
+		transport http {
+			read_timeout 300s
+			write_timeout 300s
+		}
+	}
+
+	log {
+		output file /data/access.log {
+			roll_size 10MiB
+			roll_keep 5
+		}
+	}
+}

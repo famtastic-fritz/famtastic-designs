@@ -1,12 +1,27 @@
 #!/usr/bin/env node
 /**
- * OpenArt MCP & API Client with automatic token refresh
+ * OpenArt MCP & API Client with automatic token refresh.
+ *
+ * Credentials never live in this file. A prior version hardcoded a live
+ * client_id and refresh_token here, committed to git in ac212d4 and pushed to
+ * the shared repo -- an incident, not a style issue. That token must be
+ * rotated at OpenArt regardless of this fix; removing it from the file does
+ * not remove it from git history.
+ *
+ * Set OPENART_CLIENT_ID and OPENART_REFRESH_TOKEN in the untracked local
+ * environment (see marketing/.env.example), never in source.
  */
 
 import https from 'https';
 
-const CLIENT_ID = "4GXDAxR4ew54HIMszUvB";
-const REFRESH_TOKEN = "oa_ort_live_jEE6uKeftxluKngD_4W87RXZuRQhhD-eIxgDqK8NrwE";
+const CLIENT_ID = process.env.OPENART_CLIENT_ID;
+const REFRESH_TOKEN = process.env.OPENART_REFRESH_TOKEN;
+
+if (!CLIENT_ID || !REFRESH_TOKEN) {
+  console.error('FAIL: set OPENART_CLIENT_ID and OPENART_REFRESH_TOKEN in the environment.');
+  console.error('Never hardcode these values in source -- see marketing/.env.example.');
+  process.exit(1);
+}
 
 async function postJson(urlStr, data, headers = {}) {
   const url = new URL(urlStr);

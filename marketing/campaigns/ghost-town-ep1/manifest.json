@@ -1,0 +1,73 @@
+{
+  "campaign_id": "ghost-town-ep1",
+  "name": "Ghost Town — Episode 1: The Hair Salon Ghosts",
+  "version": "1.0.0",
+  "created_at": "2026-09-03",
+  "owner": "fritz",
+  "sequence": {
+    "follows_campaign": "cost-is-not-the-reason",
+    "relationship": "sequel_episode_not_duplicate",
+    "note": "Cost Is Not The Reason (2026-09-03) argued the $199 price is affordable. Ghost Town argues the opposite risk: even if price isn't the objection, being invisible online is still costing these businesses customers today. Same offer and audience family, different pain point and creative format (video-episode series vs. static declaration), scheduled to start only after cost-is-not-the-reason's 4 drops finish (last drop 2026-09-03T15:30:00-04:00)."
+  },
+  "business_goal": "Acquire small business owners — starting with independent hair/beauty professionals — who are discoverable nowhere outside a marketplace app (Booksy/Instagram DMs only) via the $199 Web Basics launch offer, using a recurring 'digital ghost' video-episode format instead of a single declaration post.",
+  "primary_offer": {
+    "sku": "FAM-FOOT-199",
+    "price_usd": "199.00",
+    "billing": "one_time_first_year_included",
+    "renewal_usd": "9.99_per_month_after_year_1",
+    "daily_rate_equivalent": "0.55"
+  },
+  "audiences": [
+    {
+      "id": "booksy_beauty_invisible",
+      "label": "Hair Stylists, Barbers, Nail Techs, Estheticians",
+      "pain": "Discoverable only inside a marketplace app or via DM — no independent web presence a customer can find through search, so every new client depends on the marketplace's algorithm and fees"
+    }
+  ],
+  "creative_assets": [
+    {
+      "id": "CREATIVE-EP1-HAIR-GHOST-01",
+      "type": "image",
+      "file": "images/ep1-01-hair-salon-ghost-hook.jpg",
+      "status": "not_yet_created",
+      "aspect_ratio": "1:1",
+      "channels": ["instagram_feed", "facebook_feed"]
+    },
+    {
+      "id": "CREATIVE-EP1-HAIR-GHOST-02",
+      "type": "image",
+      "file": "images/ep1-02-before-after-search-result.jpg",
+      "status": "not_yet_created",
+      "aspect_ratio": "1:1",
+      "channels": ["instagram_feed", "facebook_feed"]
+    }
+  ],
+  "video_scripts": [
+    {
+      "id": "VIDEO-58S-EP1-HAIR-SALON-GHOSTS",
+      "duration": "58s",
+      "format": "9:16",
+      "target": "Independent hair stylists and salon owners with no owned web presence",
+      "file": "video-scripts/EP1_FULL_SCRIPT.md"
+    }
+  ],
+  "articles": [
+    {
+      "id": "ARTICLE-EP1-HAIR-SALON-GHOSTS",
+      "title": "Why Independent Hair Stylists Are Invisible Outside the App",
+      "file": "articles/why-independent-stylists-are-invisible-outside-the-app.md",
+      "slug": "why-independent-stylists-are-invisible-outside-the-app"
+    }
+  ],
+  "utm_parameters": {
+    "utm_campaign": "ghost_town_ep1",
+    "utm_source_options": ["instagram", "facebook", "tiktok", "youtube", "direct_dm"],
+    "utm_medium_options": ["social_feed", "short_form_video", "blog_share"]
+  },
+  "gates": {
+    "promotional_send_approved": false,
+    "live_price_changes_approved": false,
+    "auto_publish_approved": false,
+    "note": "No Postiz drafts or scheduled posts have been created for this campaign. posting-schedule.json is a proposed draft only — nothing here has been sent anywhere."
+  }
+}

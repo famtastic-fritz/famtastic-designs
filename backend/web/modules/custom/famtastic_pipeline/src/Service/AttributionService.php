@@ -16,6 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
  * When a snapshot carries a utm_content that matches a social record's
  * content_id, that record's leads_count counter is incremented so the
  * Marketing Command Center can attribute leads at content grain.
+ *
+ * content_id (e.g. "drop-01") is only unique WITHIN a campaign — every
+ * campaign's posting-schedule.json scaffolds drops named drop-01, drop-02,
+ * etc., so the same bare content_id can legitimately exist in two different
+ * campaigns. The durable identity of a drop is therefore the compound key
+ * "{campaign_id}/{content_id}" (utm_campaign + utm_content together), and
+ * famtastic_social_record.recordSocialLead() matches on both columns —
+ * never on content_id alone, which could silently credit the wrong
+ * campaign's post.
  */
 final class AttributionService {
 
@@ -67,13 +76,25 @@ final class AttributionService {
   }
 
   /**
-   * Increments the social record lead counter for one content ID.
+   * Increments the social record lead counter for one drop.
+   *
+   * A drop's durable identity is the compound key
+   * "{campaign_id}/{content_id}" — content_id alone (e.g. "drop-01") is only
+   * unique WITHIN a campaign, since every campaign's posting-schedule.json
+   * scaffolds drops named drop-01, drop-02, etc. $campaignId is normally
+   * utm_campaign from the same attribution snapshot as $contentId's
+   * utm_content. Matching on content_id alone here would risk crediting a
+   * lead to a different campaign's post that happens to reuse the same
+   * bare content_id.
    *
    * Missing table/column/record is a no-op so lead capture stays durable
-   * regardless of migration or import state.
+   * regardless of migration or import state. An empty $campaignId matches
+   * only rows whose campaign_id is also empty (pre-migration or legacy
+   * rows); it never falls back to a content_id-only match.
    */
-  public function recordSocialLead(string $contentId): void {
+  public function recordSocialLead(string $contentId, string $campaignId = ''): void {
     $contentId = mb_substr(trim($contentId), 0, 64);
+    $campaignId = mb_substr(trim($campaignId), 0, 191);
     if ($contentId === '') {
       return;
     }
@@ -81,9 +102,18 @@ final class AttributionService {
     if (!$schema->tableExists('famtastic_social_record') || !$schema->fieldExists('famtastic_social_record', 'leads_count')) {
       return;
     }
+    if (!$schema->fieldExists('famtastic_social_record', 'campaign_id')) {
+      // Pre-migration table: content_id is still the table's only identity.
+      $this->database->update('famtastic_social_record')
+        ->expression('leads_count', 'leads_count + 1')
+        ->condition('content_id', $contentId)
+        ->execute();
+      return;
+    }
     $this->database->update('famtastic_social_record')
       ->expression('leads_count', 'leads_count + 1')
       ->condition('content_id', $contentId)
+      ->condition('campaign_id', $campaignId)
       ->execute();
   }
 

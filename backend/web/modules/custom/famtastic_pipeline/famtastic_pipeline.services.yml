@@ -189,6 +189,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\PostizChannelsService
     arguments: ['@http_client', '@datetime.time']
 
+  famtastic_pipeline.postiz_drop_mutation:
+    class: Drupal\famtastic_pipeline\Service\PostizDropMutationService
+    arguments: ['@http_client', '@logger.factory', '@current_user']
+
   famtastic_pipeline.front_page_redirect:
     class: Drupal\famtastic_pipeline\EventSubscriber\FrontPageRedirectSubscriber
     tags:

@@ -1,6 +1,100 @@
 # FAMtastic Designs site learnings
 
-<<<<<<< HEAD
+## 2026-09-03 — Campaign System V2 Shipped: Mutation Service, Scorecard, Admin UI
+
+### Bare-content_id bug: Multi-platform drops need compound keys
+
+- Observation: Earlier code keyed social records on `content_id` alone. When a campaign generated content for four platforms (FB, IG, X, TikTok), the Postiz queue created only ONE provider record instead of four — one per platform. Mutations and status tracking tried to operate on the single record and couldn't reach the other three platforms.
+- Root cause: Campaign records are aggregated across platforms within a drop. A bare `content_id` is not unique across platforms. The Postiz integration, however, creates one post record per platform/integration pair. To track them, you must key on `campaign_id + content_id`, not just `content_id`.
+- Guidance: **Always trace multi-platform aggregations back to the single-record case first.** When a drop says "3 posts generated for 4 platforms" and only 1 reaches the provider, first ask "what made these three disappear" (answer: they were consolidated under a single key), then trace the actual provider output by name/platform, not by count. Fix: `posting-schedule.json` schema now enforces program_id/series_id grouping (drops) and compound campaign_id+content_id keys.
+- Fixed in Phase 1 (Mutation Service), verified in Phase 2 (Scorecard) by querying real Postiz records.
+
+### Scorecard limitation: No clicks/conversions yet
+
+- Observation: Campaign publish-state scorecard can read real Postiz states (QUEUE, PUBLISH, ERROR) but carries no click/impression/conversion/CTR/CPC fields.
+- Root cause: Postiz `Post` table has no click metrics. GA4 cannot yet query `utm_content` dimension or conversion events. Attribution infrastructure exists (`AttributionService` joins leads→requests→revenue) but is not integrated into scorecard reporting.
+- Guidance: A scorecard that reads real provider state is valuable even without attribution. Document honestly what data exists and what does not. The schema carries `clicks_conversions_available: false` with a required `gap_note` explaining why. This prevents future operators from assuming "all fields are available" and makes it obvious where the next upgrade belongs.
+- Evidence: Phase 2 scorecard run 2026-09-04 against real `cost-is-not-the-reason` campaign: 16/18 provider records resolved with real states (7 published, 8 error, 1 queued), analytics integration deferred.
+
+## 2026-09-03 — Check the worker is alive before debugging why the work did not happen
+
+- Observation: nine days of total publishing failure. Four real defects were
+  found and fixed above it (closed approval gates, missing per-platform Postiz
+  `settings`, X copy at 2x its 280 limit, backdated drafts). None was the cause.
+  The Postiz `orchestrator` — its Temporal-backed publishing worker — had been
+  OOM-killed (`exit code 137`) inside a 3GiB colima VM since 2026-08-25: 13
+  restarts, no log output, last healthy boot predating the campaign. Posts
+  scheduled perfectly and sat in QUEUE forever. Every layer above reported
+  success throughout.
+- Operator checks, in this order, when scheduled work does not happen:
+  1. `docker exec postiz pm2 list` — a high `↺` restart count with `online`
+     status is a crash loop, not health.
+  2. `docker inspect postiz --format '{{.State.OOMKilled}}'`
+  3. `colima list` — the VM must have ≥8GiB. WordPress and Temporal share it,
+     and Temporal is Postiz's own workflow engine, never something to stop to
+     free memory.
+  4. Age of the newest orchestrator log line. Stale by days = dead.
+  5. Oldest QUEUE post past its publish time. Anything hours old = not draining.
+- Guidance: `colima start` does not resize a running VM. Use
+  `colima stop && colima start --cpu 4 --memory 8`. Everything restarts, so
+  re-run `./scripts/restart-postiz-tunnel.sh` afterwards for the OAuth callback
+  URL.
+- Guidance: this exact failure was recorded as an OPEN RISK on 2026-08-25 with a
+  resize "queued next session" that never happened and was never re-checked. An
+  open risk with no owner and no verification date is a prediction, not a
+  mitigation. Close it or schedule it.
+
+## 2026-09-03 — Clear stale provider state BEFORE reviving a dead worker
+
+- Observation: 20 duplicate posts from an earlier attempt sat in QUEUE, ten of
+  them already past their publish time. Restarting the worker first would have
+  fired all twenty immediately — the same campaign, at wrong times, to live
+  accounts.
+- Guidance: a dead queue accumulates a backlog. Audit and clear it before
+  restoring the consumer, not after. Soft-delete (`deletedAt`) rather than hard
+  delete, so a wrong call is reversible.
+
+## 2026-09-03 — Trace the path to the provider before accepting "it is gated"
+
+> **AMENDED same day**: the operative cause was the OOM-dead worker above, not
+> anything in this entry. One inference below was also plain wrong.
+
+- Observation: no campaign post has ever gone out, and the cause was assumed to
+  be the publish gates. The gates were the last blocker, not the operative one:
+  all 68 records of the 17-day campaign were unapproved so the executor selected
+  zero candidates, and only 12 had ever reached Postiz. The media the newer
+  campaign referenced was gitignored and existed only on the operator
+  workstation.
+- **CORRECTION**: "the newer campaign's schedule file was read by no code at
+  all, therefore it never reached Postiz" — the first half was true, the
+  conclusion was false. Twenty records for that campaign were already in the
+  provider, created outside the repository. What the repo contains does not tell
+  you what the provider holds.
+- Guidance: name the first missing step between artifact and provider before
+  changing a gate — then confirm it by querying the provider, not by reading the
+  repository. An agent session that leaves its outputs on one machine has not
+  shipped them; an audit that never asks the provider has not finished.
+
+## 2026-09-03 — Open a gate and add the guard in the same change
+
+- Observation: Postiz preserves a post's stored date across a draft-to-schedule
+  conversion. Days 1–3 drafts still carried 2026-08-23 dates, so arming
+  publishing would have blasted twelve backdated posts at once.
+- Guidance: when removing a safety gate, identify what that gate was
+  incidentally protecting against and replace it with a precise guard. Here:
+  refuse to convert any draft whose stored date is in the past, and verify
+  re-dating by read-back rather than trusting the provider's response.
+
+## 2026-09-03 — Campaign variation belongs in validated data, not in new scripts
+
+- Observation: every campaign had a bespoke queue script, so a campaign without
+  one had no execution path. That is how a fully produced 4-drop launch reached
+  delivery day with nothing queued.
+- Guidance: one runner, one schema (`posting-schedule.json`), per-campaign
+  overrides as data. Sending remains workstation-dependent until Postiz itself
+  moves off the laptop — server cron alone cannot reach `127.0.0.1` on another
+  machine. See `docs/marketing/CAMPAIGN_POSTING_ARCHITECTURE.md`.
+
 ## 2026-08-31 — A provider receipt is not an account or project claim
 
 - Observation: the Shay invitation has provider acceptance and a sent receipt,

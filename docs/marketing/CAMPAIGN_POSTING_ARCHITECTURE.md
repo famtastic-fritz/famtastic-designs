@@ -1,0 +1,321 @@
+# Campaign Posting Architecture
+
+**Status**: current state + open decision
+**Created**: 2026-09-03
+**Owner question that prompted it**: *"although we can generate assets locally, I
+think this should be a function of the server or Drupal cron to actually send —
+and should I have a way to build new campaigns? Not all will be the same."*
+
+Both instincts are correct. This document records why, what changed on
+2026-09-03, and the one decision still open.
+
+---
+
+## 1. Why nothing has ever posted
+
+> **REVISED 2026-09-03, later the same day.** The table below was written before
+> the real cause was found. Every row in it is a genuine defect, and all were
+> fixed — but none of them is why nothing posted.
+>
+> **The Postiz `orchestrator` — its Temporal-backed publishing worker — had been
+> OOM-killed (`exit code 137`) inside a 3GiB colima VM since 2026-08-25.** 13
+> restarts, no log output, last healthy boot predating the campaign. Posts
+> scheduled correctly and sat in QUEUE indefinitely; records dated `03:05Z` were
+> still unpublished nine hours later. Confirmed by `colima list` (3GiB),
+> `docker inspect` (`OOMKilled=true`), and orchestrator logs full of
+> `ELIFECYCLE Command failed with exit code 137`. Resizing the VM to 8GiB
+> (host RAM 91.5% → 47.8%) brought the worker back on the first attempt.
+>
+> Row 4 below is also **factually wrong** and is retained rather than deleted so
+> the error stays visible: the campaign's schedule file was indeed referenced by
+> no code, but 20 records for it already existed in Postiz, created outside the
+> repository. What the repository contains does not tell you what the provider
+> holds — a lesson recorded in `docs/SITE_LEARNINGS.md`.
+>
+> The ordering lesson: **verify the component that performs the action is alive
+> before debugging anything layered above it.** `pm2 list` would have shown 13
+> restarts in under a minute on any of the preceding nine days.
+
+Not a regression. The pipeline was also built to stop, and every stop was still
+engaged. Five blockers found before the root cause, in the order they bite:
+
+| # | Blocker | Evidence |
+|---|---|---|
+| 1 | All 68 records unapproved (`approval.publish: false`), `public_publish_enabled: false` | `publish-executor.php` selects on `approval_publish = 1` → **zero candidates** |
+| 2 | Only 12 of 68 records ever became Postiz drafts (days 1–3); 0 ever scheduled | manifest `provider_ids` |
+| 3 | Double CLI gate (`FAMTASTIC_MARKETING_PUBLISH` + `--i-have-owner-publish-approval`) | `publish-executor.php` |
+| 4 | The Cost Is Not The Reason campaign had **no execution path at all** | its schedule JSON was referenced by zero code in the repository |
+| 5 | Its media exists only on the operator workstation | video paths resolve to nothing; `.gitignore` excludes `*.mp4` |
+
+Blocker 3 is the one that gets talked about. Blockers 1, 2 and 4 are the ones
+that actually stopped everything — removing the gates alone would still have
+posted nothing.
+
+**Blocker 4 is the structural one.** Every campaign to date had its own bespoke
+queue script (`queue-55-cent-days-1-3-drafts.sh`, `queue-days-4-17.py`, …). A
+campaign nobody hand-wrote a script for had no path to the provider. That is not
+a bug in any one campaign; it is the architecture guaranteeing the next campaign
+fails the same way.
+
+---
+
+## 2. The design flaw: sending is laptop-dependent
+
+Asset generation running locally is fine — it is bursty, creative, and
+supervised. **Sending is not.** A drop scheduled for 23:50 requires, right now:
+
+```
+operator Mac awake  →  colima VM running  →  Postiz container healthy
+                    →  ngrok tunnel up (OAuth callbacks need HTTPS)
+                    →  a human runs a CLI script
+```
+
+Any one of those being false at 23:50 means the post silently does not exist.
+That chain has never held unattended, which is the physical reason the campaign
+did not go out.
+
+**2026-09-03 made this concrete rather than theoretical.** The workstation VM
+also hosts WordPress (3 containers) and Temporal (5, including Elasticsearch).
+Memory contention from those neighbours is what OOM-killed Postiz's publishing
+worker for nine days — a campaign silently destroyed by unrelated software
+sharing a laptop. Note that Temporal is *not* a neighbour to be stopped: it is
+Postiz's own workflow engine, and killing it to reclaim memory would break
+publishing outright. The only fix on this machine is a larger VM. A server host
+removes the contention entirely.
+
+### Moving the trigger to Drupal cron is necessary but not sufficient
+
+This is the important nuance. `famtastic_pipeline_cron()` exists (and is
+currently under a pilot exact-dispatch lock that skips general automation), and
+there are no queue workers. Adding a cron-driven publisher is straightforward.
+
+But **cron on the GoDaddy server cannot reach Postiz**, because Postiz is on the
+Mac. `127.0.0.1:4007` on the server means the server itself. Server cron would
+fire perfectly on time and then fail to connect — the same missed drop, with
+more moving parts and a more confusing failure.
+
+**The trigger and the executor have to move together.** Whichever option is
+chosen below, the ordering is: relocate Postiz first, then move the trigger.
+
+---
+
+## 3. Options for the send path
+
+**Checked 2026-09-03: nothing existing can host it.** The production host is
+GoDaddy **cPanel shared hosting** (`132.148.233.159`), which cannot run Docker or
+long-lived containers — it runs Drupal and cron only. `marketing/providers.json`
+holds creative, model, storage, payment and analytics providers; there is no
+compute host among them. Per the repository's provider rule, reuse was checked
+first and there is nothing to reuse, so options A and B both mean one new paid
+service.
+
+| | Option | What moves | Trade-off |
+|---|---|---|---|
+| **A** | **Self-host Postiz on a small VPS**, then drive it from Drupal cron | Postiz + trigger | Unattended sending finally works. ~$6–12/month; 2 GB is the floor (the workstation instance has already been OOM-killed at 3 GB). Keeps every script in this repo working unchanged — only `FAMTASTIC_POSTIZ_BASE_URL` and the API key change. **Recommended.** Built and dry-run verified: `docs/marketing/POSTIZ_SERVER_MIGRATION.md`. |
+| **B** | **Postiz Cloud** (hosted by the vendor) driven by Drupal cron | Postiz + trigger | No infrastructure to run or patch. Vendor subscription; re-auth all five channels; you give up control of the data and upgrade cadence. Same API, so the scripts still work. |
+| **C** | **Drupal posts directly to platform APIs**, dropping Postiz | Everything | No middleman and no tunnel. But it means owning Meta/X/TikTok/YouTube/LinkedIn OAuth, token refresh, rate limits, and per-platform media rules — months of work that Postiz already does. Not recommended. |
+| **D** | **Keep it on the Mac**, add a launchd job | Trigger only | Free and immediate. Still fails whenever the Mac sleeps, colima stops, or ngrok drops. Acceptable as a stopgap for tonight's evaluation drops; not an answer. |
+
+Recommendation: **A**, with **D** as tonight's stopgap. A is the smallest change
+that makes the failure mode disappear rather than move, and it leaves the entire
+scripted pipeline in this repository intact.
+
+The A migration kit is built and dry-run verified — server compose with real TLS
+(`marketing/engine/postiz/compose.server.yaml`), a Caddy front door, and a
+dry-by-default deploy primitive (`scripts/deploy-postiz-server.sh`). Procedure:
+`docs/marketing/POSTIZ_SERVER_MIGRATION.md`. Nothing has been provisioned or
+paid for; picking the host is the only remaining step.
+
+### What a server-side send lane needs once Postiz has moved
+
+1. A `QueueWorker` plugin in `famtastic_pipeline` (none exist today) that
+   converts due, approved drafts to schedule and records provider IDs.
+2. `famtastic_pipeline_cron()` enqueuing due records — noting the pilot
+   exact-dispatch lock currently short-circuits general automation there.
+3. `FAMTASTIC_MARKETING_PUBLISH` set in the **server** environment, not a repo
+   file, so arming remains an infrastructure act rather than a commit.
+4. Real backend deployment discipline per `docs/BACKEND_DEPLOYMENT.md`.
+
+That work is deliberately **not** built yet: it depends on which option above is
+chosen, and building it against the laptop Postiz would bake in the flaw.
+
+---
+
+## 4. Building new campaigns (as of 2026-09-03)
+
+The per-campaign-script pattern is retired. A campaign is now postable when it
+has **one file** and no new code:
+
+```
+marketing/campaigns/<slug>/posting-schedule.json
+```
+
+conforming to `marketing/engine/schemas/posting-schedule.schema.json`.
+
+Campaigns differ — cadence, channels, media mix, copy shape — so the differences
+live in that data:
+
+- `drops[].scheduled_time` — absolute ISO 8601 **with offset**. Required, because
+  a bare `HH:MM` cannot express a cadence that crosses midnight, which is exactly
+  how a late-night sequence gets mis-ordered.
+- `drops[].channels` — labels resolved through a shared map; a campaign can add
+  its own via `channel_map`. A requested channel that is not connected is
+  reported, never silently dropped.
+- `drops[].copy` — per-surface copy variants; each integration takes the most
+  specific key it prefers, overridable per campaign via `copy_preference`.
+- `drops[].content_id` — the idempotency key, emitted as `utm_content` in the
+  tracked link. A rerun adopts an existing draft instead of duplicating a live
+  post.
+
+### Workflow
+
+```bash
+# 1. scaffold
+python3 scripts/new-campaign.py --slug spring-refresh --name "Spring Refresh" \
+    --drops 4 --anchor 2026-09-10T23:50:00-04:00 --interval 150
+
+# 2. fill in copy, channels, media paths; set approvals when signed off
+
+# 3. validate (blocks on TODO placeholders, unmapped channels, bad times,
+#    duplicate content_ids, out-of-order drops)
+python3 scripts/new-campaign.py --validate spring-refresh
+
+# 4. dry run — resolves media and channels without contacting Postiz
+python3 scripts/queue-campaign-drops.py --campaign spring-refresh --dry-run
+
+# 5. queue as DRAFTS (safe unarmed, idempotent)
+python3 scripts/queue-campaign-drops.py --campaign spring-refresh
+
+# 6. convert to a live schedule (requires the arming switch)
+FAMTASTIC_MARKETING_PUBLISH=true \
+  python3 scripts/queue-campaign-drops.py --campaign spring-refresh --schedule
+```
+
+### Editing, adding, or deleting ONE drop (2026-09-03)
+
+Every drop is now identified by a **compound id**, `<campaign_id>/<content_id>`,
+matching the Phase 0 fix that keyed `famtastic_social_record` on
+`(campaign_id, content_id)` instead of bare `content_id` (two campaigns can and
+do reuse ids like `drop-01`..`drop-04`). Three flags mutate exactly one drop
+without re-running or touching the rest of the campaign:
+
+```bash
+# add a brand-new drop
+python3 scripts/queue-campaign-drops.py --add-drop spring-refresh/drop-05 --confirm \
+    --set scheduled_time=2026-09-15T09:00:00-04:00 \
+    --set channels=facebook,x \
+    --set copy.all_channels="New copy for this drop." \
+    --set media=marketing/campaigns/spring-refresh/assets/drop-05.mp4
+
+# edit fields on an existing drop
+python3 scripts/queue-campaign-drops.py --edit-drop spring-refresh/drop-03 --confirm \
+    --set media=marketing/campaigns/spring-refresh/assets/drop-03-v2.mp4 \
+    --set copy.x_post="Updated X copy." \
+    --set channels=facebook,instagram,x
+
+# remove a drop (default: revert-to-draft then soft-delete via Postiz, keep the
+# JSON entry with provider_ids cleared; --hard also removes the JSON entry)
+python3 scripts/queue-campaign-drops.py --delete-drop spring-refresh/drop-05 --confirm --hard
+```
+
+`--set key=value` is repeatable. Recognized keys: `media` (→
+`primary_media`), `channels` and `tags` (comma-separated → array),
+`copy.<key>`, `utm.<key>`, `platform_settings.<identifier>` (value must be a
+JSON object), `drop_number` (int); any other key is set verbatim as a
+top-level string field (`headline`, `label`, `theme`, `scheduled_time`, …).
+
+Safety properties, all enforced in code, not just by convention:
+
+- **Confirmation gate.** Every one of the three flags refuses to run —
+  before reading the schedule file, before schema validation, before
+  resolving any credential, before any contact with Postiz — unless the
+  caller passes `--confirm`, with one exception: `--test-flow`, reserved for
+  a caller's own disposable verification post that it creates and deletes
+  itself in the same session. `--test-flow` is never appropriate for a real
+  campaign drop.
+- **Schema-validated before any Postiz call, every time.** Each flag applies
+  its change to an in-memory copy of the manifest and runs
+  `campaign_schema_validate.validate_manifest()` before doing anything to
+  Postiz. An invalid result aborts with zero side effects — nothing sent,
+  nothing written for `--add-drop`/`--edit-drop`; for `--delete-drop`, the
+  prospective post-delete manifest is what gets validated.
+- **No in-place content edit.** Postiz's public API v1 has no "edit a post's
+  content" verb — only a status change and a delete. So `--edit-drop` retires
+  whatever record already exists for that drop first (revert-to-draft if it
+  is not already DRAFT, then delete), then lets the normal per-drop queue
+  logic create a fresh draft from the updated fields. It never overwrites a
+  provider record in place.
+- **`--delete-drop` default is always revert-to-draft, then soft-delete via
+  the Postiz API** — `PUT /posts/{id}/status {"status":"draft"}` for anything
+  not already DRAFT, then `DELETE /posts/{id}`. Never a raw database write.
+  `--hard` additionally removes the drop's JSON entry from
+  `posting-schedule.json`; without it, the entry stays (audit trail) with
+  `provider_ids` cleared and `state` reset to `idea`. `--hard` is refused on
+  a campaign's last remaining drop (the schema requires at least one).
+- **Scoped to one drop.** Every one of the three flags resolves to editing
+  exactly the drops array entry named by its compound id (or a synthetic new
+  one for `--add-drop`) and lets the existing, unmodified per-drop queue loop
+  do the actual Postiz work for that single entry — the rest of the
+  campaign's drops are never iterated, re-validated against Postiz, or
+  re-queued by these flags.
+
+**Design decision — CLI and the PHP mutation service are independent
+implementations of the same safe pattern, not a shared code path.**
+`backend/web/modules/custom/famtastic_pipeline/src/Service/PostizDropMutationService.php`
+wraps the identical three Postiz calls (create draft / change status /
+delete) for Drupal-side callers (e.g. a future admin action), with its own
+confirmation gate (`$confirmed` + `$isTestFlow`), its own audit log (Drupal's
+logger channel `famtastic_pipeline`), and its own credential resolution
+(Settings/env first, then — loopback only — the same local-postgres read
+`queue-campaign-drops.py::resolve_api_key()` uses). The two were kept
+separate rather than having the CLI call into Drupal (or vice versa) because:
+
+1. `queue-campaign-drops.py` runs directly on the operator workstation
+   against local Postiz, with no guarantee Drupal itself is running there
+   (e.g. a plain `--dry-run`) — routing it through a Drupal endpoint would add
+   a hard dependency that does not otherwise exist.
+2. A shared HTTP call between the two would be a brand-new place for the
+   Postiz org API key (or a Drupal session/token) to cross a process
+   boundary — a real credential-leakage surface neither implementation has
+   today. Keeping them independent means the Postiz key never leaves the
+   process that resolved it.
+3. Both resolve credentials the same way (Settings/env, then loopback-only
+   local-postgres read) and both invoke subprocesses with **fixed argument
+   arrays** — Python's `subprocess.run([...])` and PHP's
+   `Symfony\Component\Process\Process([...])`, never a shell string built
+   from caller input — so shell-injection risk is equivalent (effectively
+   zero) in both, and duplicating the pattern does not duplicate any actual
+   risk.
+
+---
+
+## 5. Arming and safety after 2026-09-03
+
+Owner directive: record-level approval gates opened; the second CLI gate
+removed so an unattended scheduler can run without a human typing a flag.
+
+**`FAMTASTIC_MARKETING_PUBLISH=true` is the single remaining arming switch.** It
+is deliberately never defaulted on in any committed file — `marketing/.env.example`
+ships it `false`, and `campaign-readiness.py` asserts that. An agent session that
+has not been armed by the host environment still cannot send.
+
+Two safety properties were **added**, not removed, in the same change:
+
+- **Stale-date guard.** Postiz preserves a post's stored date across the status
+  change, so converting a backdated draft publishes it instantly. The days 1–3
+  drafts still carry their 2026-08-23 creation dates; arming publishing without
+  this guard would have fired twelve backdated posts at once. Such records are
+  now reported `BLOCKED (stale_date)` and must be re-dated first via
+  `scripts/retime-campaign-drafts.py`. Override only with `--allow-stale-dates`.
+- **Fail-loud media resolution.** A drop whose media is missing on the executing
+  host is reported BLOCKED by name. It is never posted image-only by silent
+  fallback and never skipped — a drop vanishing quietly is the exact failure this
+  campaign already hit once.
+
+---
+
+## 6. Open decision
+
+**Which option in §3 for the send path?** Until that is answered, sending stays
+on the operator workstation and a drop can only fire while that machine is awake
+with colima and ngrok up. Everything else in this document is already in place.

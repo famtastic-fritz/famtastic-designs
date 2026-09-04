@@ -1,5 +1,46 @@
 # Product changelog
 
+## 2026-09-03 — Campaign System V2: Mutation Service, Scorecard Generator, and Admin UI
+
+### Three-phase build ship
+- **Phase 1: Campaign mutation service** — Single-drop mutation flags and Postiz mutation service enable targeted content/copy/media overrides per platform/drop without re-generating the whole campaign. CLI integration via `scripts/queue-campaign-drops.py --campaign <slug> --drop <N> --mutation <key>=<value>`.
+- **Phase 2: Campaign scorecard** — Scorecard generator reads `posting-schedule.json` (program_id/series_id/drop grouping, campaign_id+content_id keying) and queries the real Postiz postgres for actual state of every recorded provider record. `scripts/score-campaign.py --campaign <slug>` writes `marketing/campaigns/<slug>/scorecard.json` (schema: `marketing/engine/schemas/campaign-scorecard.schema.json`). Publish state only (no clicks/conversions); known gap: Postiz `Post` table has no click/impression/CTR/CPC fields, GA4 cannot query `utm_content` dimension yet.
+- **Phase 3: Admin UI** — Postiz mutation card and scorecard table in the Operations Home Campaign Manager UI. Drop mutation UI chains to mutation service CLI; scorecard table refresh calls read-only query and renders live Postiz states with error highlighting.
+
+### Architecture
+- Campaign identity now requires program_id and series_id grouping. Campaigns are collections of drops; each drop contains platform-specific content keyed by campaign_id+content_id (not content_id alone). `posting-schedule.schema.json` enforces the structure.
+- Mutation service is read-only to Postiz (queries real state, never creates/updates records). All mutations are logged to `marketing/campaigns/<slug>/mutations.jsonl` with timestamp, operator, and audit trail.
+- Scorecard deliberately carries no click/conversion/CTR/CPC fields. Added `clicks_conversions_available: false` with required `gap_note` explaining why Postiz lacks click tracking.
+
+### Known gaps
+- **Bare content_id bug**: Earlier code keyed social records on `content_id` alone, causing multi-platform drops to create only one Postiz record instead of one per platform. Fixed by keying on campaign_id+content_id. **Lesson: always trace multi-platform aggregations back to the single-record case first.**
+- **Scorecard limitations**: No real clicks/impressions/conversions yet. The Postiz `Post` table lacks click metrics; GA4 needs a utm_content dimension and conversion event to attribute. Analytics is a future upgrade.
+
+## 2026-09-03 — Social Publishing: Root Cause Found After Nine Days, Pipeline Rebuilt
+
+### The actual cause
+- The Postiz `orchestrator` — its Temporal-backed publishing worker — had been OOM-killed (`exit code 137`) inside a 3GiB colima VM continuously since **2026-08-25**: 13 restarts, zero log output, last healthy boot predating the campaign. Posts scheduled correctly and sat in QUEUE forever; records dated `03:05Z` were still unpublished nine hours later. Confirmed by `colima list` (3GiB), `docker inspect` (`OOMKilled=true`) and repeated `ELIFECYCLE ... exit code 137` in the orchestrator log. **Every layer above the worker reported success throughout.**
+- Fixed with `colima stop && colima start --cpu 4 --memory 8`: host RAM 91.5% → 47.8%, orchestrator booted clean with 0 restarts and every Temporal task queue `RUNNING`. Memory contention came from WordPress (3 containers) and Temporal (5, incl. Elasticsearch) sharing the VM — Temporal being Postiz's own workflow engine, never something to stop for memory.
+- **This exact failure was recorded as an OPEN RISK on 2026-08-25** in `RECIPES/SOCIAL_POSTING.md`, with a memory resize "queued next session" that never happened and was never re-checked. That entry is now closed with its outcome.
+- 20 stale duplicate records from an earlier attempt were soft-deleted before reviving the worker — a recovered worker drains its backlog, and ten were already past their publish time.
+
+### Defects fixed above the worker (all real, none the cause)
+- **Per-platform Postiz `settings`** — Postiz validates a settings object on every entry in `posts`; one missing field rejects the whole request. TikTok needed `privacy_level`, `duet`, `stitch`, `comment`, `brand_content_toggle`, `brand_organic_toggle`, `content_posting_method`, `autoAddMusic` (a string enum, not a boolean); Instagram `post_type`; X `who_can_reply_post`; Facebook none — which is exactly why the historical facebook-only script was the only one that ever created drafts, and why `queue-days-4-17.py` records still have no draft IDs.
+- **Per-integration sibling scheduling** — Postiz creates one post record PER INTEGRATION and returns only the first id. Converting that id alone scheduled one channel and left siblings as DRAFT; the read-back check shared the blind spot and reported `scheduled_verified=4` while 12 of 16 records would never have fired. Both now operate on the whole group.
+- **X copy over its limit** — every X post ran 434–685 characters against 280, which passes draft validation and fails at *publish*, so X would have silently received nothing. Character-limited platforms now get a compact tracked link (retaining `utm_content`, the rerun idempotency marker) and no hashtag block; each drop gained a fitting `x_post` (260–273 chars) preserving offer, price and claims; any channel still over its limit is excluded loudly rather than truncated.
+- **Stale-date guard** — Postiz preserves a stored date across the status change, so converting a backdated draft publishes instantly. The 17-day days 1–3 drafts still carry 2026-08-23 dates and are now reported BLOCKED rather than fired.
+- **Approval gates** — opened to a single arming switch (`FAMTASTIC_MARKETING_PUBLISH`), never defaulted on in any committed file; `campaign-readiness.py` reworked, since it previously asserted gates were closed and would have failed forever once opened.
+
+### Architecture
+- Retired the per-campaign-script pattern that left new campaigns with no execution path. `scripts/queue-campaign-drops.py --campaign <slug>` posts any campaign from one `posting-schedule.json` (schema: `marketing/engine/schemas/posting-schedule.schema.json`), with `--dry-run`, `--requeue`/`--at`, idempotent adoption by `utm_content`, and per-campaign channel/copy overrides. `scripts/new-campaign.py` scaffolds and validates.
+- `--requeue` initially deleted by timestamp and destroyed 7 records it did not own (recoverable — Postiz soft-deletes; they proved to be duplicates of the same campaign). It now deletes only records provably belonging to the drop, by recorded id or `utm_content` marker, and fails rather than falling back to timestamp matching.
+- Shipped the Postiz server migration kit (`compose.server.yaml`, `Caddyfile`, `deploy-postiz-server.sh`, `POSTIZ_SERVER_MIGRATION.md`). Verified that nothing existing can host it: production is GoDaddy cPanel shared hosting, which cannot run Docker, and `providers.json` holds no compute host. Host decision remains the owner's; nothing provisioned or paid for.
+
+### State
+- All 16 provider records for `cost-is-not-the-reason` verified QUEUE (13:00Z×5, 14:30Z×3, 17:00Z×4, 19:30Z×4). Drops at 09:00 / 10:30 / 13:00 / 15:30 ET.
+- **Publication remains unproven.** No post has been confirmed live on any platform; first genuine attempt 2026-09-03 09:00 ET.
+- Corrected an earlier finding from this same session: the campaign **had** been queued into Postiz (20 records at its original slots). "No code references its schedule file" was true; concluding it never reached the provider was not.
+
 ## 2026-09-02 — Full Campaign Prelaunch Buildout, Muxed Audio Sync & Universal Prompt Architect Plugin
 
 - Muxed full high-fidelity voice track into `00-hyperframes-branded-recut-commercial-9x16.mp4` via FFmpeg, synchronizing Shay's speech with the kinetic HUD calculation graphics and `#7CFC00` single-glow token.

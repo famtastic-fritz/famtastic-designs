@@ -847,7 +847,7 @@ famtastic_pipeline.marketing.tab:
     _title: 'Marketing Command Center'
   requirements:
     _permission: 'administer famtastic pipeline'
-    tab: 'command|dispatch|queue|calendar|channels|attribution|email|creative|builddna'
+    tab: 'command|dispatch|queue|drops|calendar|channels|attribution|email|creative|builddna'
 
 famtastic_pipeline.marketing.asset:
   path: '/admin/famtastic/marketing/asset/{filename}'
@@ -875,6 +875,36 @@ famtastic_pipeline.marketing.build_dna:
   requirements:
     _permission: 'administer famtastic pipeline'
     id: \d+
+
+# --- Postiz drop mutation (Phase 3 admin UI over PostizDropMutationService) ---
+famtastic_pipeline.marketing.drop_edit:
+  path: '/admin/famtastic/marketing/drop/{campaign_slug}/{content_id}/edit'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\PostizDropEditForm'
+    _title: 'Edit campaign drop'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    campaign_slug: '[a-z0-9-]+'
+    content_id: '[a-z0-9-]+'
+
+famtastic_pipeline.marketing.drop_delete:
+  path: '/admin/famtastic/marketing/drop/{campaign_slug}/{content_id}/delete'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\PostizDropDeleteForm'
+    _title: 'Delete campaign drop'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    campaign_slug: '[a-z0-9-]+'
+    content_id: '[a-z0-9-]+'
+
+famtastic_pipeline.marketing.scorecard:
+  path: '/admin/famtastic/marketing/scorecard/{campaign_slug}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MarketingCommandController::scorecardDetail'
+    _title: 'Campaign scorecard'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    campaign_slug: '[a-z0-9-]+'
 
 famtastic_pipeline.notification_retry:
   path: '/admin/famtastic/notification/{id}/retry'

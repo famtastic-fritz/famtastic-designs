@@ -32,11 +32,32 @@ def main() -> int:
     checks.append(report(len(records) == 68, "17 days x 4 content moments = 68 records"))
     checks.append(report(len(ids) == len(set(ids)), "content IDs are unique"))
     checks.append(report(manifest.get("record_count") == len(records), "record count matches records"))
-    checks.append(report(manifest.get("public_publish_enabled") is False, "public publishing defaults off"))
     checks.append(report(all(record.get("utm", {}).get("content") == record.get("content_id") for record in records), "UTM content IDs match records"))
     checks.append(report(all(set(record.get("approval", {})) == {"content", "media", "publish"} for record in records), "three approval gates exist on every record"))
-    checks.append(report(all(not any(record.get("approval", {}).values()) for record in records), "unapproved records cannot imply release authorization"))
     checks.append(report(all(record.get("state") in {"idea", "media_ready"} for record in records), "records advance only through sanctioned pre-publication states"))
+
+    # Owner directive 2026-09-03 opened the record-level approval gates and set
+    # public_publish_enabled. Asserting "all gates closed" would now fail the
+    # audit forever, so the check inverts: an OPEN manifest must name the single
+    # switch that still governs real sends, and that switch must not be armed
+    # from inside the repository. A closed manifest is still valid.
+    gates_open = manifest.get("public_publish_enabled") is True
+    if gates_open:
+        arming = manifest.get("publish_arming", {})
+        checks.append(report(
+            arming.get("mode") == "single_env_switch" and arming.get("env") == "FAMTASTIC_MARKETING_PUBLISH",
+            "open manifest declares FAMTASTIC_MARKETING_PUBLISH as its single arming switch",
+        ))
+        env_file = ROOT / "marketing/.env.example"
+        checks.append(report(
+            "FAMTASTIC_MARKETING_PUBLISH=false" in env_file.read_text(encoding="utf-8"),
+            "arming switch is never defaulted on in committed configuration",
+        ))
+    else:
+        checks.append(report(
+            all(not any(record.get("approval", {}).values()) for record in records),
+            "closed manifest: unapproved records cannot imply release authorization",
+        ))
 
     required_commands = ("git", "python3", "ffmpeg", "ollama")
     checks.append(report(all(shutil.which(command) for command in required_commands), "local command foundation is installed"))
@@ -61,7 +82,11 @@ def main() -> int:
 
     if all(checks):
         print("READY draft production and private-provider tests may begin")
-        print("GATED public posts, promotional sends, social OAuth, paid plans, and ad spend still require Fritz")
+        if gates_open:
+            print("ARMED-BY-ENV record approval gates are open; real sends fire only where")
+            print("            FAMTASTIC_MARKETING_PUBLISH=true is set on the executing host")
+        else:
+            print("GATED public posts, promotional sends, social OAuth, paid plans, and ad spend still require Fritz")
         return 0
     print("BLOCKED campaign production readiness checks failed")
     return 1

@@ -2,7 +2,7 @@
  "schema_version": 1,
  "generated_on": "2026-08-12",
  "campaign": "web_basics_55_cents_17d",
- "public_publish_enabled": false,
+ "public_publish_enabled": true,
  "daily_content_moments": 4,
  "record_count": 68,
  "records": [
@@ -14,7 +14,7 @@
    "moment": "teach",
    "intent": "education",
    "promise": "What 55 cents a day means",
-   "suggested_time_et": "08:00",
+   "suggested_time_et": "08:09",
    "state": "media_ready",
    "channels": [
     "facebook"
@@ -30,9 +30,9 @@
     "content": "55c-d01-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6df0wq0000ue76w9yefw6v"
@@ -44,8 +44,21 @@
      "integration": "facebook",
      "postiz_post_id": "cmt6df0wq0000ue76w9yefw6v",
      "note": "draft existed in Postiz from prior partial run; reconciled into manifest"
+    },
+    {
+     "kind": "schedule_retimed",
+     "at": "2026-09-03T00:00:00Z",
+     "scheduled_at_et": "2026-09-03T23:59:00-04:00",
+     "note": "owner directive 2026-09-03: day 1 relaunch anchored at 23:59 ET with 2.5h cadence; existing Postiz draft must be re-dated by scripts/retime-campaign-drafts.py before conversion"
+    },
+    {
+     "kind": "schedule_retimed",
+     "at": "2026-09-03T11:00:00Z",
+     "scheduled_at_et": "2026-09-03T08:09:00-04:00",
+     "note": "owner directive: day 1 moved to an 08:00 ET daytime cadence"
     }
-   ]
+   ],
+   "scheduled_at_et": "2026-09-03T08:09:00-04:00"
   },
   {
    "content_id": "55c-d01-challenge",
@@ -55,7 +68,7 @@
    "moment": "challenge",
    "intent": "objection",
    "promise": "What 55 cents a day means",
-   "suggested_time_et": "12:30",
+   "suggested_time_et": "10:39",
    "state": "media_ready",
    "channels": [
     "facebook"
@@ -71,9 +84,9 @@
     "content": "55c-d01-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dfcqe0002ue76z8ngx8df"
@@ -85,8 +98,21 @@
      "integration": "facebook",
      "postiz_post_id": "cmt6dfcqe0002ue76z8ngx8df",
      "note": "draft existed in Postiz from prior partial run; reconciled into manifest"
+    },
+    {
+     "kind": "schedule_retimed",
+     "at": "2026-09-03T00:00:00Z",
+     "scheduled_at_et": "2026-09-04T02:29:00-04:00",
+     "note": "owner directive 2026-09-03: day 1 relaunch anchored at 23:59 ET with 2.5h cadence; existing Postiz draft must be re-dated by scripts/retime-campaign-drafts.py before conversion"
+    },
+    {
+     "kind": "schedule_retimed",
+     "at": "2026-09-03T11:00:00Z",
+     "scheduled_at_et": "2026-09-03T10:39:00-04:00",
+     "note": "owner directive: day 1 moved to an 08:00 ET daytime cadence"
     }
-   ]
+   ],
+   "scheduled_at_et": "2026-09-03T10:39:00-04:00"
   },
   {
    "content_id": "55c-d01-prove",
@@ -96,7 +122,7 @@
    "moment": "prove",
    "intent": "evidence",
    "promise": "What 55 cents a day means",
-   "suggested_time_et": "17:30",
+   "suggested_time_et": "13:09",
    "state": "media_ready",
    "channels": [
     "facebook"
@@ -112,9 +138,9 @@
     "content": "55c-d01-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dfda30003ue76eqndehb3"
@@ -126,8 +152,21 @@
      "integration": "facebook",
      "postiz_post_id": "cmt6dfda30003ue76eqndehb3",
      "note": "draft existed in Postiz from prior partial run; reconciled into manifest"
+    },
+    {
+     "kind": "schedule_retimed",
+     "at": "2026-09-03T00:00:00Z",
+     "scheduled_at_et": "2026-09-04T04:59:00-04:00",
+     "note": "owner directive 2026-09-03: day 1 relaunch anchored at 23:59 ET with 2.5h cadence; existing Postiz draft must be re-dated by scripts/retime-campaign-drafts.py before conversion"
+    },
+    {
+     "kind": "schedule_retimed",
+     "at": "2026-09-03T11:00:00Z",
+     "scheduled_at_et": "2026-09-03T13:09:00-04:00",
+     "note": "owner directive: day 1 moved to an 08:00 ET daytime cadence"
     }
-   ]
+   ],
+   "scheduled_at_et": "2026-09-03T13:09:00-04:00"
   },
   {
    "content_id": "55c-d01-invite",
@@ -137,7 +176,7 @@
    "moment": "invite",
    "intent": "cta",
    "promise": "What 55 cents a day means",
-   "suggested_time_et": "20:30",
+   "suggested_time_et": "15:39",
    "state": "media_ready",
    "channels": [
     "facebook"
@@ -153,9 +192,9 @@
     "content": "55c-d01-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dmr6n000aue767thqvyjn"
@@ -167,8 +206,21 @@
      "integration": "facebook",
      "date_utc": "2026-08-25T00:30:00.000Z",
      "postiz_post_id": "cmt6dmr6n000aue767thqvyjn"
+    },
+    {
+     "kind": "schedule_retimed",
+     "at": "2026-09-03T00:00:00Z",
+     "scheduled_at_et": "2026-09-04T07:29:00-04:00",
+     "note": "owner directive 2026-09-03: day 1 relaunch anchored at 23:59 ET with 2.5h cadence; existing Postiz draft must be re-dated by scripts/retime-campaign-drafts.py before conversion"
+    },
+    {
+     "kind": "schedule_retimed",
+     "at": "2026-09-03T11:00:00Z",
+     "scheduled_at_et": "2026-09-03T15:39:00-04:00",
+     "note": "owner directive: day 1 moved to an 08:00 ET daytime cadence"
     }
-   ]
+   ],
+   "scheduled_at_et": "2026-09-03T15:39:00-04:00"
   },
   {
    "content_id": "55c-d02-teach",
@@ -194,9 +246,9 @@
     "content": "55c-d02-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dfdto0004ue76ujy764nf"
@@ -235,9 +287,9 @@
     "content": "55c-d02-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dfdy90005ue76fki9tab6"
@@ -276,9 +328,9 @@
     "content": "55c-d02-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dfe1z0006ue76570rtkke"
@@ -317,9 +369,9 @@
     "content": "55c-d02-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dmrf5000bue76mgj45smv"
@@ -358,9 +410,9 @@
     "content": "55c-d03-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dfebu0007ue76ldcv480j"
@@ -399,9 +451,9 @@
     "content": "55c-d03-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dfemr0008ue76010y2c82"
@@ -440,9 +492,9 @@
     "content": "55c-d03-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dfeqo0009ue76uub09kdg"
@@ -481,9 +533,9 @@
     "content": "55c-d03-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {
     "postiz_draft_id": "cmt6dmruv000cue768s9obssj"
@@ -520,9 +572,9 @@
     "content": "55c-d04-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -558,9 +610,9 @@
     "content": "55c-d04-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -596,9 +648,9 @@
     "content": "55c-d04-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -634,9 +686,9 @@
     "content": "55c-d04-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -672,9 +724,9 @@
     "content": "55c-d05-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -710,9 +762,9 @@
     "content": "55c-d05-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -748,9 +800,9 @@
     "content": "55c-d05-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -786,9 +838,9 @@
     "content": "55c-d05-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -824,9 +876,9 @@
     "content": "55c-d06-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -862,9 +914,9 @@
     "content": "55c-d06-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -900,9 +952,9 @@
     "content": "55c-d06-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -938,9 +990,9 @@
     "content": "55c-d06-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -976,9 +1028,9 @@
     "content": "55c-d07-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1014,9 +1066,9 @@
     "content": "55c-d07-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1052,9 +1104,9 @@
     "content": "55c-d07-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1090,9 +1142,9 @@
     "content": "55c-d07-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1128,9 +1180,9 @@
     "content": "55c-d08-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1166,9 +1218,9 @@
     "content": "55c-d08-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1204,9 +1256,9 @@
     "content": "55c-d08-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1242,9 +1294,9 @@
     "content": "55c-d08-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1280,9 +1332,9 @@
     "content": "55c-d09-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1318,9 +1370,9 @@
     "content": "55c-d09-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1356,9 +1408,9 @@
     "content": "55c-d09-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1394,9 +1446,9 @@
     "content": "55c-d09-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1432,9 +1484,9 @@
     "content": "55c-d10-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1470,9 +1522,9 @@
     "content": "55c-d10-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1508,9 +1560,9 @@
     "content": "55c-d10-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1546,9 +1598,9 @@
     "content": "55c-d10-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1584,9 +1636,9 @@
     "content": "55c-d11-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1622,9 +1674,9 @@
     "content": "55c-d11-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1660,9 +1712,9 @@
     "content": "55c-d11-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1698,9 +1750,9 @@
     "content": "55c-d11-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1736,9 +1788,9 @@
     "content": "55c-d12-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1774,9 +1826,9 @@
     "content": "55c-d12-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1812,9 +1864,9 @@
     "content": "55c-d12-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1850,9 +1902,9 @@
     "content": "55c-d12-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1888,9 +1940,9 @@
     "content": "55c-d13-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1926,9 +1978,9 @@
     "content": "55c-d13-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -1964,9 +2016,9 @@
     "content": "55c-d13-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2002,9 +2054,9 @@
     "content": "55c-d13-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2040,9 +2092,9 @@
     "content": "55c-d14-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2078,9 +2130,9 @@
     "content": "55c-d14-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2116,9 +2168,9 @@
     "content": "55c-d14-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2154,9 +2206,9 @@
     "content": "55c-d14-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2192,9 +2244,9 @@
     "content": "55c-d15-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2230,9 +2282,9 @@
     "content": "55c-d15-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2268,9 +2320,9 @@
     "content": "55c-d15-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2306,9 +2358,9 @@
     "content": "55c-d15-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2344,9 +2396,9 @@
     "content": "55c-d16-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2382,9 +2434,9 @@
     "content": "55c-d16-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2420,9 +2472,9 @@
     "content": "55c-d16-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2458,9 +2510,9 @@
     "content": "55c-d16-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2496,9 +2548,9 @@
     "content": "55c-d17-teach"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2534,9 +2586,9 @@
     "content": "55c-d17-challenge"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2572,9 +2624,9 @@
     "content": "55c-d17-prove"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2610,9 +2662,9 @@
     "content": "55c-d17-invite"
    },
    "approval": {
-    "content": false,
-    "media": false,
-    "publish": false
+    "content": true,
+    "media": true,
+    "publish": true
    },
    "provider_ids": {},
    "evidence": [
@@ -2626,5 +2678,11 @@
     }
    ]
   }
- ]
+ ],
+ "publish_arming": {
+  "mode": "single_env_switch",
+  "env": "FAMTASTIC_MARKETING_PUBLISH",
+  "note": "Record-level approval gates opened by owner directive 2026-09-03. Real sends still require FAMTASTIC_MARKETING_PUBLISH=true in the operator host environment; it is never defaulted on in the repo.",
+  "opened_at": "2026-09-03"
+ }
 }

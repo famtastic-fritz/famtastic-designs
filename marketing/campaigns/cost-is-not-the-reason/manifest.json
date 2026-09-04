@@ -4,6 +4,11 @@
   "version": "1.0.0",
   "created_at": "2026-09-02",
   "owner": "fritz",
+  "sequence": {
+    "followed_by": "ghost-town-ep1",
+    "relationship": "sequel_episode_not_duplicate",
+    "note": "Ghost Town — Episode 1 (2026-09-04) follows this campaign as a sequel: same offer and audience family (FAM-FOOT-199), different pain point and creative format (video-episode series vs. static declaration), scheduled to start only after this campaign's 4 drops finish (last drop 2026-09-03T15:30:00-04:00)."
+  },
   "business_goal": "Acquire small business owners with no website, @gmail/@yahoo users, and Booksy/marketplace-captive beauty/service professionals via the $199 Web Basics launch offer (~55¢/day).",
   "primary_offer": {
     "sku": "FAM-FOOT-199",

@@ -1,6 +1,130 @@
 # FAMtastic Designs site learnings
 
-<<<<<<< HEAD
+## 2026-09-03 — A live OAuth credential was committed and pushed to the shared repo
+
+- Observation: `scripts/openart-client.mjs`, added in `ac212d4`, hardcoded a
+  live OpenArt `client_id` and `refresh_token` in source. It was committed and
+  pushed to the shared branch. Found while answering an unrelated question
+  ("what method in the repo produces these images") — not by a security review.
+- Guidance: rotating the credential is the actual fix; editing the file only
+  stops the practice going forward; the value remains in git history and was
+  already on GitHub regardless. Never hardcode a credential "temporarily" to
+  get a script running — the sibling script in the same commit
+  (`run-three-tier-benchmark.mjs`) shows the correct pattern already in use one
+  file over: pull the key from macOS Keychain (`security find-generic-password`)
+  at runtime, never from source. When two adjacent files in one commit handle
+  secrets differently, that inconsistency is itself worth a second look.
+
+## 2026-09-03 — The campaign never posted because the publishing worker was OOM-dead for nine days
+
+- Observation: no campaign post had ever gone out. Four causes were found and
+  fixed in sequence — closed approval gates, missing per-platform Postiz
+  `settings`, X copy 2x over its limit, backdated drafts — and each was real.
+  None was the reason. The Postiz `orchestrator` (its Temporal-backed publishing
+  worker) had been killed with `exit code 137` inside a **3GiB colima VM** since
+  **2026-08-25**, restarting 13 times and logging nothing. Posts scheduled
+  perfectly and sat in QUEUE forever; records dated `03:05Z` were still QUEUE
+  nine hours later. `colima list` showed 3GiB, `docker inspect` showed
+  `OOMKilled=true`, and the last healthy orchestrator boot log predated the
+  campaign itself. Raising the VM to 8GiB brought host RAM from 91.5% to 47.8%
+  and the worker back on the first try.
+- Guidance: **this exact failure was written down on 2026-08-25** in
+  `RECIPES/SOCIAL_POSTING.md` as "OPEN RISK … orchestrator OOM-killed (exit 137)
+  inside 3GB colima VM … scheduled-publishing worker may be affected", with a
+  memory resize "queued next session". The resize never happened and the risk
+  was never re-checked. A recorded open risk with no owner and no verification
+  date is not a mitigation — it is a prediction nobody read. When a runbook
+  names a component as possibly broken, verify that component **first**, before
+  debugging anything layered on top of it.
+- Guidance: check that the thing which performs the action is alive before
+  debugging why the action did not happen. Cheap liveness probes —
+  `pm2 list` restart counts, `OOMKilled`, the age of the newest log line — would
+  have found this in one minute at any point in the preceding nine days. A
+  process reporting `online` while crash-looping is not evidence of health;
+  restart count and log recency are.
+- Guidance: a queue that only fills is a broken queue. Alert on the age of the
+  oldest unpublished item past its scheduled time, not on whether scheduling
+  succeeded. Every layer above the worker reported success throughout.
+
+## 2026-09-03 — Check what the existing host can actually run before proposing a new one
+
+- Observation: the obvious fix for a laptop-dependent send path was "run it on
+  the server we already pay for." The production host is GoDaddy cPanel shared
+  hosting, which cannot run Docker or long-lived containers — it runs Drupal and
+  cron only. `marketing/providers.json` likewise contains creative, model,
+  storage, payment and analytics providers but no compute host.
+- Guidance: the reuse-before-paying rule requires checking *capability*, not
+  just the existence of a subscription. Name the specific technical reason an
+  existing resource cannot serve, and record it, so the same proposal is not
+  re-litigated next quarter. Having a server is not the same as having a server
+  that can run what you need.
+
+## 2026-09-03 — A campaign with no executor is not "gated", it is unbuilt
+
+> **AMENDED same day.** Two claims below were wrong and are corrected inline.
+> The real cause of nine days of silence was the OOM-dead publishing worker
+> (see the entry at the top of this file), not anything recorded here.
+
+- Observation: three sessions and two campaigns produced creative, copy, and a
+  drop schedule, and nothing ever posted. The failure was attributed to the
+  publish gates. The gates were real but were the *last* blocker, not the
+  operative one: every record was unapproved so the executor selected zero
+  candidates, and only 12 of 68 records of the 17-day campaign had ever reached
+  the provider.
+- **CORRECTION 1**: the newer campaign's schedule JSON being referenced by zero
+  code was true, but the inference drawn from it — that the campaign had
+  therefore never reached Postiz — was false. Twenty records for it existed in
+  the provider at its original slots, created by some path outside the
+  repository (most likely the Postiz UI). *No code reads this file* is a fact
+  about the repository; it is not a fact about the provider. Only the provider
+  can answer what the provider holds.
+- **CORRECTION 2**: "opening the gates alone would have posted nothing" was
+  right for the wrong reason. Nothing would have posted because the worker was
+  dead, not because of gates or wiring.
+- Guidance: before accepting "it is gated" as a diagnosis, follow the path from
+  artifact to provider and name the first step that does not exist. But finish
+  the path — query the provider for its actual state instead of inferring that
+  state from what the repository contains. A repository-side audit answers
+  "could this work"; only the provider answers "what is really there".
+
+## 2026-09-03 — One bespoke queue script per campaign guarantees the next campaign fails
+
+- Observation: each campaign had its own hand-written queue script
+  (`queue-55-cent-days-1-3-drafts.sh`, `queue-days-4-17.py`, ...). A campaign
+  nobody wrote a script for therefore had no path to the provider at all, which
+  is precisely how a fully produced 4-drop launch reached delivery day with
+  nothing queued.
+- Guidance: campaign *differences* (cadence, channels, media mix, copy shape)
+  belong in validated data, not in new code. One runner reads
+  `posting-schedule.json`; a new campaign ships a data file and a validator run,
+  never a new script. When a per-instance script appears, treat it as a design
+  smell rather than throughput.
+
+## 2026-09-03 — A provider that preserves a stored date turns "schedule" into "publish now"
+
+- Observation: Postiz keeps a post's stored date when a draft is converted to a
+  schedule. The days 1–3 drafts still carried their 2026-08-23 creation dates,
+  so arming publishing would have fired twelve backdated posts simultaneously
+  instead of scheduling them — the opposite of the intended outcome, and
+  irreversible once sent.
+- Guidance: never convert a draft to a live schedule without asserting its
+  stored date is in the future. Re-date deliberately and verify by read-back;
+  a provider that accepts and ignores a field looks exactly like success.
+  Opening a gate is the moment to add the guard, not to skip it.
+
+## 2026-09-03 — Generating locally is fine; sending from a laptop is not an architecture
+
+- Observation: the send path required the operator Mac awake, a colima VM up, a
+  Postiz container healthy, an ngrok tunnel live, and a human running a CLI —
+  all simultaneously, at 23:50. That chain has never held unattended, which is
+  the physical reason the drops did not go out.
+- Guidance: separate bursty supervised work (asset generation) from
+  time-critical unattended work (sending). Moving the trigger to server cron is
+  necessary but not sufficient while the provider itself runs on the laptop:
+  server cron would fire on time and then fail to reach `127.0.0.1`. Relocate
+  the executor first, then the trigger. See
+  `docs/marketing/CAMPAIGN_POSTING_ARCHITECTURE.md`.
+
 ## 2026-08-31 — A secure owner control plane needs a separate public demo lane
 
 - Observation: sharing the real Thirst Trap owner URL with a tester correctly
