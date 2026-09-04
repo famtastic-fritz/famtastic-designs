@@ -995,3 +995,29 @@ Open follow-up:
   entry left intact); unrelated live edits were untouched. Rule: always pin
   repo-relative operations with `git -C <repo>` or the bash tool's workdir;
   never bare `cd ..` chains before git writes.
+
+## 2026-09-04 — blog draft completion + topic gap-finder
+
+- Observation: the markdown→basic_html converter in
+  `scripts/publish-blog-draft.py` (`markdown_to_basic_html`) only recognizes a
+  numbered/bulleted list item written on a single physical line — a list item
+  wrapped across multiple source lines (natural when hand-wrapping prose at
+  ~80 chars) breaks the list into multiple single-item `<ol>`/`<ul>` blocks
+  with the continuation text spilled into a stray `<p>`. Guidance: always
+  write each list item as one unwrapped line in `draft.md`, however long, and
+  verify by grepping the `--dry-run` output for `<li>` count matching the
+  intended item count before trusting a draft is ready.
+- Observation: production's bare `/jsonapi/...` path 404s; the real mount is
+  `/web/jsonapi/...` (confirmed live via curl, matches
+  `scripts/qa-content-links.py`'s existing `JSONAPI_BASE`). This is a
+  **read-only API mount**, distinct from the separate, unrelated rule that
+  `/web/...` is never a valid frontend *page* route — the two facts look
+  contradictory at a glance but aren't: one is a backend API URL prefix that
+  happens to work correctly, the other is a page URL prefix that never does.
+  `scripts/suggest-next-blog-topic.py` reuses the same working endpoint.
+- Guidance: `backend/config/famtastic-content-series.json`'s "posts" array is
+  the original 80-article content plan; as of this date all 80 are confirmed
+  live via JSON:API. The `marketing/blog/drafts/` folder is a separate,
+  ad-hoc mechanism for campaign-driven posts outside that plan (the gmail/
+  linktree post, the 5 add-on-explainer posts) — a draft folder's slug not
+  appearing in the plan is expected and not a bug.

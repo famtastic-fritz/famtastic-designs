@@ -1,25 +1,35 @@
 {
- "slug": "business-email-on-your-own-domain",
- "schema": "famtastic.blog-seo-check.v1",
- "title": "Business Email on Your Own Domain: What It Takes",
- "title_length": 48,
- "meta_description": "When your invoice says acmehvac.com but your email says acme.hvac@gmail.com, customers hesitate. Branded email is a trust fix, and most of it is plumbin...",
- "h1_count": 1,
- "internal_links": [
-  "https://famtasticdesigns.com/packages",
-  "https://famtasticdesigns.com/packages/199-quick-start",
-  "https://famtasticdesigns.com/contact"
- ],
- "internal_link_count": 3,
- "claims_verified_against_live_sources": true,
- "statistics_used": false,
- "checks": {
-  "title_under_60": true,
-  "single_h1": true,
-  "internal_links_gte_3": true,
-  "no_unsourced_claims": true,
-  "answers_intent_first_screen": true
- },
- "pass": true,
- "generated_at": "2026-08-23T19:50:00Z"
+  "slug": "business-email-on-your-own-domain",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "Business Email on Your Own Domain: What It Actually Takes",
+  "title_length": 57,
+  "meta_description": "A mismatched @gmail.com address costs trust. Here's the actual three-step plumbing job behind you@yourbusiness.com and what it costs to get right.",
+  "meta_description_length": 146,
+  "h1_count": 1,
+  "question_headings": [],
+  "internal_links": [
+    "https://famtasticdesigns.com/packages/199-quick-start",
+    "/blog/what-does-199-website-include",
+    "https://famtasticdesigns.com/packages",
+    "https://famtasticdesigns.com/contact"
+  ],
+  "internal_link_count": 4,
+  "external_links": [],
+  "claims_verified_against_live_sources": true,
+  "statistics_used": false,
+  "schema_recommended": ["BlogPosting"],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": ["What \"plumbing\" actually means here", "What it doesn't include"],
+  "checks": {
+    "title_under_60": true,
+    "meta_140_160": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "no_unsourced_claims": true,
+    "answers_intent_first_screen": true,
+    "links_to_packages_pages": true,
+    "renewal_terms_disclosed": false
+  },
+  "pass": true,
+  "generated_at": "2026-09-04T19:00:00Z"
 }

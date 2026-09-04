@@ -1,12 +1,12 @@
 {
-  "slug": "how-local-customers-find-your-business-online",
+  "slug": "what-happens-when-first-year-hosting-ends",
   "schema": "famtastic.blog-seo-check.v1",
-  "title": "How Local Customers Actually Find Your Business Online",
-  "title_length": 54,
-  "meta_description": "Why don't you show up when nearby customers search? It's usually one missing layer of three: structured data, business profiles, and analytics.",
-  "meta_description_length": 143,
+  "title": "What Happens When Your First Year of Hosting Ends?",
+  "title_length": 50,
+  "meta_description": "Nothing auto-charges after year one. Here's exactly what hosting and domain renewal cost at month 13, and why nothing bills without your say-so.",
+  "meta_description_length": 144,
   "h1_count": 1,
-  "question_headings": [],
+  "question_headings": ["What Happens When Your First Year of Hosting Ends?"],
   "internal_links": [
     "https://famtasticdesigns.com/packages/199-quick-start",
     "/blog/what-does-199-website-include",
@@ -17,9 +17,9 @@
   "external_links": [],
   "claims_verified_against_live_sources": true,
   "statistics_used": false,
-  "schema_recommended": ["BlogPosting"],
+  "schema_recommended": ["BlogPosting", "FAQPage"],
   "geo_answer_first": true,
-  "ai_citation_ready_sections": ["The three layers, plainly", "Why skipping a layer hurts the other two"],
+  "ai_citation_ready_sections": ["Hosting after month 12", "Domain renewal is a separate thing entirely"],
   "checks": {
     "title_under_60": true,
     "meta_140_160": true,
@@ -28,8 +28,8 @@
     "no_unsourced_claims": true,
     "answers_intent_first_screen": true,
     "links_to_packages_pages": true,
-    "renewal_terms_disclosed": false
+    "renewal_terms_disclosed": true
   },
   "pass": true,
-  "generated_at": "2026-09-04T19:05:00Z"
+  "generated_at": "2026-09-04T19:20:00Z"
 }
