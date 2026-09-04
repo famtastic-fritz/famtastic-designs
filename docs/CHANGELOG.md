@@ -1,9 +1,11 @@
 # Product changelog
 
-## 2026-09-04 — Backend deployment staging path hardening
+## 2026-09-04 — Truthful intake-to-proof handoff deployed
 
-- The approved proof-handoff backend release created its database backup but stopped before code promotion when GoDaddy removed the dot-prefixed temporary module directory between `mkdir` and `rsync`; the frontend was intentionally not deployed, so production stayed on the prior coherent release.
-- The backend deployer now stages module, theme, and services files in a private deployment directory with explicit non-dot names and asserts each staging directory exists before it transfers artifacts. The release remains pending a clean preflight and apply.
+- Rebased the proof-handoff repair onto current main and released exact commit `1e0f82cb` through the canonical backend and frontend lanes. The backend record confirms its database/module/theme/services/dependency backups and the frontend record confirms its frontend backup plus all 162 route shells.
+- The first backend apply stopped before promotion when GoDaddy removed a dot-prefixed temporary module directory between `mkdir` and `rsync`; the frontend was intentionally not deployed then. The deployer now stages under a private non-dot path, asserts every staged directory immediately before transfer, and the retry promoted the reviewed release cleanly.
+- The customer portal now reports durable request/proof state and refuses to dispatch a draft request. Targeted PHP, frontend build, portal Design DNA, and local desktop/mobile browser checks passed. Production browser checks passed for apex and `www`; opening the Tighten Up Your Locs route while signed in as a different account produced the deliberate cross-account refusal.
+- No customer proof was generated, no legacy failed job was retried, no customer email was sent, and no customer-facing price or offer terms changed. The current Tighten Up Your Locs request remains a draft with no proof campaign; customer submission is the next intentional gate.
 
 ## 2026-09-04 — Mission "Social Posting Capabilities": TikTok audit patch, live link fixes, blog QA
 

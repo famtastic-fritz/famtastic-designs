@@ -7,9 +7,9 @@ Goal: The customer-facing offer clearly explains what is included and conditiona
 Tasks:
 - [x] Re-anchor to the canonical delivery repository, contracts, current Git history, and prior Tighten Up Your Locs evidence.
 - [ ] Reconcile the starter-site promise: domain branch, first-year hosting, SSL, analytics, email treatment, research summary, three directions, reset/re-direction round, and edit rounds.
-- [ ] Trace the real account → request → submission → proof job → owner review → customer proof lifecycle and identify the exact next customer action for Tighten Up Your Locs.
-- [ ] Integrate the proof-handoff repair with current `origin/main`, run the required proof suite, and deploy the reviewed release if the production gates pass. (Integrated and locally validated; the first backend apply stopped safely before promotion because GoDaddy removed a dot-prefixed staging path. Repairing and retesting the release script.)
-- [ ] Perform only authorized, non-destructive production checks; provide Fritz the correct customer-facing next-step link, not a fabricated proof link.
+- [x] Trace the real account → request → submission → proof job → owner review → customer proof lifecycle and identify the exact next customer action for Tighten Up Your Locs. (Request `dffd4cb9-c3aa-47fd-a184-52577053bc09` is a verified customer-owned `draft`; its completed deep-dive is linked, its prior job `301` failed at 5/5 attempts, and it has no proof campaign. The next intentional action is customer submission, not a retry of that legacy job.)
+- [x] Integrate the proof-handoff repair with current `origin/main`, run the required proof suite, and deploy the reviewed release if the production gates pass. (Release `1e0f82cb` is deployed to backend and frontend; the staging-directory repair prevented the host's dot-directory removal from interrupting promotion. Targeted PHP, portal-design, frontend-build, and local browser checks passed; the full canonical runner remains locally database-blocked.)
+- [x] Perform only authorized, non-destructive production checks; provide Fritz the correct customer-facing next-step link, not a fabricated proof link. (Production route resolves. An owner-session browser saw the deliberate cross-account refusal, so the link is customer-authenticated rather than a bearer proof URL.)
 - [ ] Record evidence, material decisions, capability status, and session closeout across the required repository surfaces and Drive mirror.
 
 Status: in_progress
