@@ -48,6 +48,14 @@
   # TikTok's app review specifically checks these short paths.
   RewriteRule ^terms/?$ /index.html [L]
   RewriteRule ^privacy/?$ /index.html [L]
+
+  # /onboarding never existed as a real route on this site — every campaign's
+  # tracked link (scripts/queue-campaign-drops.py DEFAULT_LANDING) has been
+  # pointing here since before this repo's records begin, meaning every
+  # published post's CTA has 404'd. The real destination per this project's
+  # own CTA doctrine is /buy?sku=... — redirect instead of silently 404ing so
+  # already-published links start working without editing any live post text.
+  RewriteRule ^onboarding/?$ /buy [R=301,L,QSA]
 </IfModule>
 
 # The Drupal backend root (/web/) is not a landing surface - route it to the SPA.
