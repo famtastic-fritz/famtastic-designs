@@ -1,5 +1,50 @@
 # Product changelog
 
+## 2026-09-04 — Mission "Social Posting Capabilities": TikTok audit patch, live link fixes, blog QA
+
+Session tracked at `~/Development/FAMtastic/plans/social-posting-capabilities/plan.md`
+(FAMtastic-root plan convention — checkbox-based resumable brief, not a control-plane
+packet). Continuation of the campaign-system-v2 work below.
+
+- **TikTok Direct Post UX-compliance patch applied and running.** Found the real
+  rejection cause (not the domain, as first assumed) via 3 real GitHub issues on
+  gitroomhq/postiz-app: the stock composer hardcodes a public privacy default and
+  never shows creator identity. Applied the unmerged community fix (PR #1761, closed
+  only on a contribution-gate technicality), built a patched local image, swapped the
+  running container onto it, DB backed up first. Verified live in the running
+  container. TikTok posting itself is still blocked pending the separate app-review
+  audit and a screen-recorded demo.
+- **Real Privacy Policy and Terms of Service pages shipped** (`/privacy-policy`,
+  `/terms-of-service`, short aliases `/privacy` and `/terms`) — the actual missing
+  piece for TikTok's audit requirement, and now genuinely live with real content.
+- **Found and fixed `/onboarding` returning 404 since launch** — the tracked-link
+  destination for every published post in the `cost-is-not-the-reason` campaign,
+  not just one. Redirected to `/buy` (this project's own documented CTA
+  destination), preserving the query string.
+- **Published 3 real blog posts** via the new publish pipeline: `what-does-199-website-include`,
+  `proof-first-website-see-before-you-pay`, and `why-running-business-on-gmail-and-linktree-costs-revenue`
+  — the last written because a live Facebook post had been linking to it since
+  2026-09-03 with no article ever behind it.
+- **Found and fixed a second systemic bug while publishing:** every blog draft
+  (all 8, not just the 3 published) linked to `/web/packages(/web-basics)` —
+  `/web/` is the Drupal backend route prefix, never a valid frontend path. Real
+  URL is `/packages/199-quick-start`. Fixed in every draft source file and
+  republished the 3 live posts with corrected links.
+- **Ran a full content-QA link audit** (background agent) across all 83 published
+  blog posts — 762 link occurrences, 97 unique targets, each checked live. Confirmed
+  the `/web/` bug never reached production content. Found one real dead external
+  citation (an ICANN URL) reused across 8 posts in the fifty-five-cents-a-day
+  series; fixed live via `drush eval` and in the source seed config so a re-seed
+  can't reintroduce it.
+- Corrected a wrong `docs/CAPABILITY_REGISTRY.md` entry from an earlier session that
+  described a `--drop <N> --mutation k=v` / `mutations.jsonl` ad-CRUD design that
+  was never actually built — replaced with the real `--add-drop/--edit-drop/--delete-drop`
+  CLI shipped in campaign-system-v2.
+- **Known gap carried forward:** content-QA was one ad hoc agent-authored audit
+  pass, not a repeatable tool or scheduled process yet. Turning it into one, and
+  designing how its results surface somewhere phone-reachable on the actual admin
+  surface (not just a CLI report), is explicitly the next open item.
+
 ## 2026-09-04 — Blog Factory step 6: single-post publish script
 
 - Added `scripts/publish-blog-draft.py` and its companion

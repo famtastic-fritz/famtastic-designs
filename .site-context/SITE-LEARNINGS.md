@@ -1,5 +1,45 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — Three separate "no traffic depends on this" assumptions were all wrong
+
+- Observation: campaign copy referenced a blog post
+  (`why-running-business-on-gmail-and-linktree-costs-revenue`) that was never
+  written. It sat 404ing behind a live, already-published Facebook post for a
+  full day before anyone noticed — found only because Fritz personally
+  clicked the link from his own feed (confirmed by the `fbclid` parameter
+  Facebook appends at click time, not something we added).
+  Guidance: a tracked link in a published post is production surface the
+  moment it's posted, identical in blast radius to a live page — "it's just
+  marketing copy" is not a reason to skip verifying every URL resolves
+  before a post goes out, and campaign posting tooling should check this
+  automatically rather than rely on someone happening to click through.
+- Observation: `/onboarding`, the compact tracked-link destination
+  (`DEFAULT_LANDING` in `scripts/queue-campaign-drops.py`) used by every
+  single drop across the entire `cost-is-not-the-reason` campaign, was never
+  a real route on this site — 404 since before this repo's git history
+  begins. Every published post's call-to-action has been dead the whole
+  time. Fixed with a redirect to `/buy` (the project's own documented CTA
+  destination) rather than editing already-published post text, so old
+  links start working without touching a live post.
+  Guidance: a tracked-link base URL used by a campaign generator is exactly
+  as load-bearing as a real site route and needs the same "does this
+  actually resolve" check before the first campaign ever uses it — nobody
+  checked this one when `DEFAULT_LANDING` was first written.
+- Observation: every one of the 8 blog drafts (3 published this session, 5
+  still pending) linked to `https://famtasticdesigns.com/web/packages/web-basics`.
+  `/web/` is the Drupal backend route prefix (see `frontend/public/.htaccess`:
+  "the Drupal backend root is not a landing surface"), never valid on the
+  frontend — the real path is `/packages/199-quick-start`. A full audit of
+  the 83 *already-published* posts found the same bug never actually reached
+  production (it was caught before those posts went live), but a dead ICANN
+  citation reused across 8 posts in the fifty-five-cents-a-day series had
+  been live and broken since that series was seeded.
+  Guidance: link correctness is not "probably fine because it's just a
+  citation/reference" — every internal and external link a post ships with
+  needs to resolve, checked mechanically, not by author confidence. This is
+  why a content-QA audit is being promoted from "one ad hoc pass" to a
+  designed, repeatable capability (see docs/CAPABILITY_REGISTRY.md).
+
 ## 2026-09-04 — Blog content writes have exactly one proven path: SSH + Drush, not JSON:API
 
 - Observation: asked to publish two ready blog drafts via "authenticated

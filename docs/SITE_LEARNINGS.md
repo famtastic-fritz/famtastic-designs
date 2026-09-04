@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — "It's just a link" is a production claim — verify it like one
+
+Full detail in `.site-context/SITE-LEARNINGS.md` (2026-09-04 entry). Summary
+for this file's audience: a campaign-referenced blog post that was never
+written, a tracked-link base URL (`/onboarding`) that was never a real route
+and had been dead behind every published post in a whole campaign, and a
+backend-route-prefix bug (`/web/...`) copied into every blog draft this
+session wrote — all three were live or about-to-be-live production breakage
+that nothing mechanical was checking for. Content-QA (link resolution
+checked live, not assumed) is being promoted from an ad hoc one-off pass to
+a designed, repeatable capability as a direct result.
+
 ## 2026-09-03 — A live OAuth credential was committed and pushed to the shared repo
 
 - Observation: `scripts/openart-client.mjs`, added in `ac212d4`, hardcoded a
