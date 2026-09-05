@@ -596,6 +596,72 @@
         "Fills a genuine gap. Diagrams here have been hand-coded as SVG in blogArt.js or composed in Photoshop; neither is the right tool for a Sankey, a Wardley map or a swimlane.",
         "PNG export needs Playwright; HTML and SVG do not."
       ]
+    },
+    {
+      "id": "agentmemory",
+      "purpose": [
+        "cross-session recall",
+        "session handoff",
+        "confidence-weighted lessons"
+      ],
+      "status": "installed_mcp_only",
+      "automation": "mcp_server",
+      "secret_env": [],
+      "access": "~/.claude.json mcpServers.agentmemory (npx -y @agentmemory/mcp, AGENTMEMORY_URL http://localhost:3111). 17 skills installed.",
+      "notes": [
+        "WIRED MCP-ONLY BY DESIGN. `connect claude-code --dry-run` was run first and confirmed it adds a single mcpServers entry and touches no hooks. That matters: the Brain Sync hooks were found silently broken the same day, and a second system writing hooks would have made that worse.",
+        "Owner decision: agentmemory owns cross-session RECALL; .wolf/ demoted to standing rules (cerebrum + buglog stay mandatory, anatomy dropped from session-start). See FAMtastic/CLAUDE.md.",
+        "Does NOT replace the Obsidian brain. A session that writes only to agentmemory has not met the Brain Sync Contract.",
+        "Local-first: bundled SQLite, ports 3111-3113 and 49134, no API key required."
+      ]
+    },
+    {
+      "id": "cybersecurity_defensive_slice",
+      "purpose": [
+        "web app and API security review",
+        "supply-chain and dependency checks",
+        "CI/CD pipeline hardening"
+      ],
+      "status": "installed_selective_12_of_818",
+      "automation": "agent_skill",
+      "secret_env": [],
+      "access": ".agents/skills/{analyzing-sbom-for-supply-chain-vulnerabilities, analyzing-web-server-logs-for-intrusion, building-devsecops-pipeline-with-gitlab-ci, conducting-api-security-testing, configuring-oauth2-authorization-flow, configuring-tls-1-3-for-secure-communications, detecting-dependency-confusion, detecting-sql-injection-via-waf-logs, detecting-supply-chain-attacks-in-ci-cd, implementing-api-schema-validation-security, implementing-api-security-posture-management, implementing-devsecops-security-scanning}",
+      "notes": [
+        "12 of 818 taken, by owner decision. Markdown and LICENSE only, no executables.",
+        "Selected against the actual stack - Drupal + React, a JSON:API surface, and a GoDaddy deploy pipeline - and filtered to exclude every offensive verb (performing-, abusing-, escaping-, exploiting-, bypassing-, evading-). Red-team, C2 and phishing content deliberately not installed into a marketing repo.",
+        "configuring-oauth2-authorization-flow is directly relevant: the YouTube channel is currently failing on an expired OAuth token."
+      ]
+    },
+    {
+      "id": "openshot",
+      "purpose": [
+        "video editing"
+      ],
+      "status": "evaluated_rejected",
+      "automation": "gui_only",
+      "secret_env": [],
+      "access": "https://github.com/OpenShot/openshot-qt",
+      "notes": [
+        "REJECTED 2026-09-05. GUI desktop editor with no headless mode and no user-facing scripting API. That is disqualifying here, not merely inconvenient: this repo's standing rule is that a GUI application may not sit in a scheduled pipeline's critical path, learned when Premiere's bridge turned out to need a manual in-app button click no agent can reach.",
+        "Strictly worse than what already works: Remotion is headless and deterministic, HyperFrames renders video from HTML, and both are proven and free.",
+        "Also GPL-3.0, which is a distribution consideration the other two do not carry."
+      ]
+    },
+    {
+      "id": "skills_mcp_registry",
+      "purpose": [
+        "serve hundreds of skills over MCP with progressive disclosure",
+        "semantic skill search instead of flat loading"
+      ],
+      "status": "evaluated_recommended_not_installed",
+      "automation": "mcp_server",
+      "secret_env": [],
+      "access": "https://github.com/Jignesh-Ponamwar/skills-mcp (self-hostable) or https://github.com/K-Dense-AI/claude-skills-mcp (vector search over 160+)",
+      "notes": [
+        "THIS IS THE ANSWER TO THE SKILL-COUNT PROBLEM. The repo now carries 230+ installed skills and the binding constraint has been overlap and context cost, not capability. A progressive-disclosure MCP registry embeds only description plus trigger phrases (~100 tokens each) and loads a full skill body only when a task actually matches.",
+        "NOT INSTALLED. It changes how every skill is delivered, which is an architectural decision rather than an install, and it should be made deliberately rather than folded into a batch.",
+        "If adopted, the generic design libraries are the obvious first candidates to move behind it - they are reference material that is rarely all needed at once."
+      ]
     }
   ]
 }
