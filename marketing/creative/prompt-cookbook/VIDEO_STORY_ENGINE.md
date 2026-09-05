@@ -31,6 +31,21 @@ composition, or character-continuity controls.
    HyperFrames own type, captions, transitions, safe areas, pace, and final
    output. Record the prompt-to-output receipt.
 
+Validate a seed before review with:
+
+```sh
+node marketing/creative/prompt-cookbook/validate-campaign-story.mjs path/to/story.json
+```
+
+Immediately before requesting a render, use the stricter gate:
+
+```sh
+node marketing/creative/prompt-cookbook/validate-campaign-story.mjs path/to/story.json --require-render-ready
+```
+
+The stricter command must fail until a reviewer has changed the story status,
+storyboard and claim-ledger decisions, provider authorization, and gate status.
+
 The story seed under `story-seeds/` is deliberately **not render-ready**. It
 demonstrates how an existing pillar can become visual causality rather than a
 slide sequence.

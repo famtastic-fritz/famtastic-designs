@@ -12,7 +12,9 @@
   metaphor, and at least hook/friction/mechanism/turn/offer-or-CTA beats. Every
   scene needs a visual action that carries the argument. Do not spend credits,
   render, or call a storyboard approved until its claim ledger and visual plan
-  are reviewed.
+  are reviewed. Run `validate-campaign-story.mjs --require-render-ready`
+  immediately before a final render so an unreviewed seed cannot silently
+  become a production-shaped asset.
 - Tool decision: HyperFrames is the default final-video framework because its
   faceless-explainer route formalizes the topic-to-script-to-storyboard path.
   MoneyPrinterTurbo is valuable for a cheap disposable previsual or narration

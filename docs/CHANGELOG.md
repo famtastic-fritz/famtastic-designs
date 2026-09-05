@@ -14,6 +14,10 @@
   Your Business Revenue" pillar into six visual causal beats. It is marked
   `seed` / `not_ready`: no paid generation, upload, render, scheduling, or
   posting occurred.
+- **Added a local story validator.** The normal command verifies the minimum
+  narrative structure. Its `--require-render-ready` gate refuses a render
+  unless the story is explicitly approved, its storyboard and claim ledger
+  have been reviewed, and the provider has been authorized.
 - **Set a deliberate role for fast automation.** MoneyPrinterTurbo is now a
   previsual/narration-draft option only; HyperFrames owns the reviewable final
   composition. Premium character anchors and low-cost derivatives are
