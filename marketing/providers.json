@@ -506,6 +506,58 @@
         "Added because this session hit exactly the problems they solve: four agents wrote to one repo concurrently, and a story-seed file that one agent had deliberately deleted was briefly restored by another that had not checked WHY it was gone. commit-archaeologist answers that question before the edit; scope-creep-detector flags files a diff touched that its stated intent did not cover.",
         "SOURCE ASSESSMENT: awesome-llm-apps is overwhelmingly a curated list of Streamlit/Python example apps and tutorials, not a tool library. Its agent_skills/ directory holds 8 skills; 6 (project-graveyard, thinking-out-loud, advisor-orchestrator-worker, evals, dependency-doctor, self-improving-agent-skills) do not address a FAMtastic gap. Do not bulk-install from it."
       ]
+    },
+    {
+      "id": "voicebox",
+      "purpose": [
+        "local text-to-speech for campaign narration",
+        "voice cloning",
+        "speech-to-text",
+        "agent voice via its own MCP server"
+      ],
+      "status": "evaluated_recommended_not_installed",
+      "automation": "desktop_app_plus_mcp",
+      "secret_env": [],
+      "access": "https://github.com/jamiepine/voicebox - Tauri desktop app, MIT, fully local, no API key and no per-use cost",
+      "notes": [
+        "HIGHEST-VALUE OF THE THREE REPOS EVALUATED 2026-09-05, because it fixes a gap that is currently blocking real work: three of the seven HyperFrames films are SILENT for want of approved narration, and HeyGen credits are the only voice source in the stack and are finite.",
+        "Local and free, so narration stops being a metered resource. Its MCP server would also let agents generate VO directly rather than requesting a HeyGen render.",
+        "NOT INSTALLED. Building from source needs Rust and Xcode; on this machine bun 1.3.14, python 3.14.7 and node 24.19.0 are present but cargo/rustc are MISSING and Xcode is absent. The alternative is a prebuilt DMG, which is an executable installer from an external source and a system-level change the owner should perform, not an agent."
+      ]
+    },
+    {
+      "id": "ecc_agent_harness",
+      "purpose": [
+        "agent workflow harness",
+        "delegation agents",
+        "hooks and memory systems"
+      ],
+      "status": "evaluated_do_not_install_as_is",
+      "automation": "harness_installer",
+      "secret_env": [],
+      "access": "https://github.com/affaan-m/ecc - `npx ecc-universal setup`",
+      "notes": [
+        "DO NOT RUN THE INSTALLER WITHOUT A PLAN. Inspected by shallow clone on 2026-09-05 rather than by running setup. It references the hook events PostToolUse (384 times), PreToolUse (318), SessionStart (294), PreCompact (44) and Stop (27).",
+        "FAMtastic already wires four of those in .claude/settings.json to its own scripts: session-checkpoint.js on SessionStart, PreCompact and Stop, and openwolf-post-write.js on PostToolUse. Those are load-bearing for the Brain Sync Contract in CLAUDE.md. A harness that installs its own hooks into the same config is a direct collision risk.",
+        "It also ships 286 skills on top of the 216 already installed. Overlap, not capability, is the binding constraint at this point.",
+        "If it is wanted, the safe path is a contained evaluation: install into a throwaway worktree, diff what it writes to settings.json, and adopt only the pieces that do not displace the brain-sync hooks."
+      ]
+    },
+    {
+      "id": "freeflow",
+      "purpose": [
+        "macOS dictation for the owner"
+      ],
+      "status": "evaluated_owner_tool_not_a_production_capability",
+      "automation": "desktop_app",
+      "secret_env": [
+        "GROQ_API_KEY"
+      ],
+      "access": "https://github.com/zachlatta/freeflow - DMG, MIT",
+      "notes": [
+        "Solves the owner's own dictation, not an agent or production gap. Needs a free Groq API key by default, or an OpenAI-compatible endpoint or local Ollama.",
+        "Evaluated 2026-09-05 and deliberately not installed: nothing in the campaign pipeline is blocked by its absence."
+      ]
     }
   ]
 }
