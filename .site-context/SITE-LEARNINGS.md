@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A freshness alert must be a record before it is a message
+
+- Observation: a broad lifecycle worker can see an overdue request or project
+  more than once, and a normal outbox read followed by provider handoff gives
+  two concurrent workers an opportunity to send the same row. An email alone
+  cannot show whether the underlying condition later recovered.
+- Guidance: materialize each revenue-loop concern as one idempotent owner-task
+  key with the observed source state, deadline, and recovery receipt; only a
+  separately approved human workflow may turn that task into customer contact,
+  proof work, checkout, payment, publication, or release. Generic outbox work
+  must atomically claim and conditionally settle the same row before a provider
+  call can be treated as belonging to that worker.
+
 ## 2026-09-05 — Six automated checks, six false results
 
 Every real defect this session was caught by looking at the artifact. Every check

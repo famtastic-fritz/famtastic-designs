@@ -1433,11 +1433,43 @@ function _famtastic_pipeline_lifecycle_schema(): array {
       'attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
       'max_attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 5],
       'available_at' => $time, 'sent_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      // A generic dispatcher must claim a row before handing it to a provider.
+      // The token lets the final write prove it still owns that exact claim.
+      'claimed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'claim_token' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
       'provider_message_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
       'last_error' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE], 'created' => $time, 'changed' => $time,
     ],
     'primary key' => ['id'], 'unique keys' => ['notification_key' => ['notification_key']],
-    'indexes' => ['queue' => ['status', 'available_at'], 'recipient' => ['recipient', 'created']],
+    'indexes' => ['queue' => ['status', 'available_at'], 'claim' => ['status', 'claimed_at'], 'recipient' => ['recipient', 'created']],
+  ];
+  $tables['famtastic_revenue_freshness'] = [
+    'description' => 'Durable owner-only revenue-loop freshness tasks and recovery evidence. Never a customer dispatch queue.',
+    'fields' => [
+      'id' => $id,
+      'task_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
+      'task_type' => ['type' => 'varchar', 'length' => 48, 'not null' => TRUE],
+      'subject_type' => ['type' => 'varchar', 'length' => 48, 'not null' => TRUE],
+      'subject_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'state' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'severity' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => 'warning'],
+      'status' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => 'open'],
+      'deadline_at' => $time,
+      'detected_at' => $time,
+      'last_seen_at' => $time,
+      'recovered_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'state_evidence_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'recovery_evidence_json' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'created' => $time,
+      'changed' => $time,
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['task_key' => ['task_key']],
+    'indexes' => [
+      'open_deadline' => ['status', 'deadline_at'],
+      'subject' => ['subject_type', 'subject_id'],
+      'type_state' => ['task_type', 'state'],
+    ],
   ];
   $tables += _famtastic_pipeline_preview_delivery_schema();
   $tables += _famtastic_pipeline_cold_proof_schema();
@@ -2741,6 +2773,33 @@ function famtastic_pipeline_update_8053(&$sandbox) {
     $schema->createTable('famtastic_booking_site_owner', _famtastic_pipeline_booking_site_owner_schema());
   }
   return t('Added exact customer and organization ownership bindings for mobile booking controls. No customer site was activated.');
+}
+
+/**
+ * Adds owner-only revenue freshness tasks and atomic generic outbox claims.
+ *
+ * The task table preserves detected state, deadlines, and recovery evidence
+ * without creating a notification or customer-facing action. Outbox fields
+ * only make concurrent generic dispatchers claim rows safely; they do not
+ * send, retry, or alter any existing notification during this update.
+ */
+function famtastic_pipeline_update_8054(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $lifecycle = _famtastic_pipeline_lifecycle_schema();
+  if (!$schema->tableExists('famtastic_revenue_freshness')) {
+    $schema->createTable('famtastic_revenue_freshness', $lifecycle['famtastic_revenue_freshness']);
+  }
+  if ($schema->tableExists('famtastic_notification_outbox')) {
+    foreach (['claimed_at', 'claim_token'] as $field) {
+      if (!$schema->fieldExists('famtastic_notification_outbox', $field)) {
+        $schema->addField('famtastic_notification_outbox', $field, $lifecycle['famtastic_notification_outbox']['fields'][$field]);
+      }
+    }
+    if (!$schema->indexExists('famtastic_notification_outbox', 'claim')) {
+      $schema->addIndex('famtastic_notification_outbox', 'claim', $lifecycle['famtastic_notification_outbox']['indexes']['claim']);
+    }
+  }
+  return t('Added durable owner-only revenue freshness tasks and atomic generic outbox claim fields. No customer action was sent.');
 }
 
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */

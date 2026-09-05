@@ -759,6 +759,31 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Prints durable owner-only freshness tasks for the revenue loop.
+   *
+   * The default refresh only reconciles local Drupal records into the
+   * freshness ledger. It never sends a notification, contacts a customer,
+   * starts proof work, changes an order, or charges a payment method.
+   */
+  #[CLI\Command(name: 'famtastic:revenue-health', aliases: ['frh'])]
+  #[CLI\Option(name: 'refresh', description: 'Refresh durable owner tasks before reporting (default: true; use --refresh=0 for read-only ledger output).')]
+  #[CLI\Usage(name: 'drush famtastic:revenue-health', description: 'Refresh and print dashboard-friendly revenue freshness tasks without any external action.')]
+  #[CLI\Usage(name: 'drush famtastic:revenue-health --refresh=0', description: 'Print the already-recorded ledger without changing it.')]
+  public function revenueHealth(array $options = ['refresh' => TRUE]): int {
+    try {
+      $refresh = !in_array(strtolower((string) $options['refresh']), ['0', 'false', 'no', 'off'], TRUE);
+      /** @var \Drupal\famtastic_pipeline\Service\LifecycleOperationsService $operations */
+      $operations = \Drupal::service('famtastic_pipeline.lifecycle_operations');
+      $this->io()->writeln(json_encode($operations->revenueHealth($refresh), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
+  /**
    * Runs a bounded batch of durable automation jobs.
    */
   #[CLI\Command(name: 'famtastic:jobs-run', aliases: ['fjr'])]

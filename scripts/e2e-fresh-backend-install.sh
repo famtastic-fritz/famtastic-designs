@@ -60,8 +60,12 @@ mkdir -p "$SANDBOX/backend/web/sites/default/files" "$SANDBOX/backend/private"
       "famtastic_lead_import",
       "famtastic_email_message",
       "famtastic_build_run",
+      "famtastic_revenue_freshness",
     ] as $table) {
       assert($schema->tableExists($table), $table);
+    }
+    foreach (["claimed_at", "claim_token"] as $field) {
+      assert($schema->fieldExists("famtastic_notification_outbox", $field), $field);
     }
     foreach (["recipient_address", "from_address", "body_snapshot", "proof_campaign_id", "proof_url"] as $field) {
       assert($schema->fieldExists("famtastic_email_message", $field), $field);
@@ -71,6 +75,8 @@ mkdir -p "$SANDBOX/backend/web/sites/default/files" "$SANDBOX/backend/private"
     assert($ledger->activeOffer("business_499")["amount_minor"] === 49900);
     assert($ledger->activeTerms() !== NULL);
   '
+  FAMTASTIC_SYNTHETIC_RUN_ID="fresh-install-${RANDOM}" \
+    "${DRUSH[@]}" php:script "$SANDBOX/backend/scripts/e2e-revenue-health.php" >/dev/null
 )
 
-echo "PASS: fresh isolated Drupal install, module schema, updates, offers, and terms verified."
+echo "PASS: fresh isolated Drupal install, module schema, revenue freshness recovery, offers, and terms verified."

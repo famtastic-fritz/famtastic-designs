@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-09-05 — Durable owner-only revenue freshness controls prepared
+
+- Added migration `8054` and the `famtastic_revenue_freshness` ledger. It records a stable task key, source state, deadline, severity, current/open-or-recovered status, and recovery evidence for submitted requests, held proof states, selected-but-unpaid requests, stale projects, and missing release receipts. Reconciliation is owner-task-only: it does not send mail, start proof work, create checkout, charge, publish, or change the source request/project.
+- Added `drush famtastic:revenue-health` (`frh`) for structured
+  `famtastic.revenue-health.v1` output; `famtastic:lifecycle-run` now refreshes
+  this ledger through protection and includes its summary in the cycle record.
+- Generic outbox delivery now performs a conditional atomic `dispatching`
+  claim with a claim token before provider handoff, conditionally writes the
+  receipt against that same token, and recovers only an abandoned claim after
+  the bounded timeout. This prevents two concurrent generic workers from
+  sending the same candidate at once; it does not broaden any mail authority.
+- Focused PHP lint and the 91-test/462-assertion unit suite pass. The isolated
+  fresh Drupal installer still stops before module enable on an existing PHP
+  8.5 inheritance fatal in `BookingRequestController`, so the new synthetic
+  runtime script is staged but not yet executed through that harness.
+
 ## 2026-09-05 — The films get a home of their own at /watch
 
 - **Published the campaign films on our own domain instead of waiting on
