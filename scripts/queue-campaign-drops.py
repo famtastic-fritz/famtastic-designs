@@ -761,9 +761,21 @@ existing_by_utm: dict[str, dict] = {}
 if not DRY_RUN:
     window = api(f"/posts{WINDOW}")
     for post in (window.get("posts", []) if isinstance(window, dict) else []):
-        match = re.search(r"utm_content=([a-zA-Z0-9_-]+)", str(post.get("content", "")))
+        body = str(post.get("content", ""))
+        match = re.search(r"utm_content=([a-zA-Z0-9_-]+)", body)
+        camp = re.search(r"utm_campaign=([a-zA-Z0-9_-]+)", body)
         if match and post.get("state") in {"DRAFT", "QUEUE"}:
-            existing_by_utm.setdefault(match.group(1), post)
+            # SCOPED BY CAMPAIGN, deliberately.
+            #
+            # 2026-09-05: three campaigns were built in parallel and every one of
+            # them numbered its drops drop-01..drop-06. Keyed on utm_content
+            # alone, the second campaign to run "adopted" the first campaign's
+            # live records, queued nothing of its own, and printed
+            # "PASS — adopted=6". Its assets were never scheduled and the run
+            # looked clean. A marker that is not unique is not an idempotency
+            # marker; it is a silent overwrite.
+            key = f"{camp.group(1) if camp else '?'}|{match.group(1)}"
+            existing_by_utm.setdefault(key, post)
 
 for drop in drops:
     cid = drop["content_id"]
@@ -791,8 +803,10 @@ for drop in drops:
         print(f"BLOCKED: {cid} — none of its channels are connected in Postiz")
         continue
 
+    _utm = drop.get("utm", {})
+    _key = f"{_utm.get('campaign', '?')}|{_utm.get('content', cid)}"
     prior = drop.get("provider_ids", {}).get("postiz_draft_id") or (
-        existing_by_utm.get(cid, {}).get("id")
+        existing_by_utm.get(_key, {}).get("id")
     )
     if prior:
         drop.setdefault("provider_ids", {})["postiz_draft_id"] = prior

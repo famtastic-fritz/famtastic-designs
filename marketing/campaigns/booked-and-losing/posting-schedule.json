@@ -1,0 +1,410 @@
+{
+  "schema_version": 2,
+  "campaign_id": "booked_and_losing",
+  "program_id": "FAM-FOOT-199",
+  "series_id": "booking-app-to-owned-page",
+  "campaign_name": "Booked and Losing",
+  "created_at": "2026-09-05",
+  "status": "ready_for_evaluation",
+  "schedule_type": "eight_day_argument_arc",
+  "time_zone": "America/New_York",
+  "landing_url": "https://famtasticdesigns.com/packages/199-quick-start/?sku=FAM-FOOT-199",
+  "short_landing_url": "https://famtasticdesigns.com/packages/199-quick-start/?sku=FAM-FOOT-199",
+  "cadence": {
+    "anchor_et": "2026-09-06T10:00:00-04:00",
+    "interval_minutes": 1440,
+    "set_by": "Six drops across the eight days beginning 2026-09-06, ordered as an argument (problem, cost, mechanism, action) rather than at a fixed interval. Times sit where this audience is between clients: weekend mornings, a weekday evening, a mid-morning."
+  },
+  "channels_note": "Facebook and Instagram only. YouTube's OAuth token is expired and TikTok is not approved for public posting; both need the owner. Requesting them here would manufacture a failure, so they are not listed.",
+  "publish_arming": {
+    "mode": "single_env_switch",
+    "env": "FAMTASTIC_MARKETING_PUBLISH",
+    "note": "Nothing in this campaign has been queued. scripts/queue-campaign-drops.py --campaign booked-and-losing creates drafts; --schedule with FAMTASTIC_MARKETING_PUBLISH=true converts them. Every drop carries approval.publish=false until the owner approves the batch."
+  },
+  "media_resolution": {
+    "policy": "resolve_at_runtime_fail_loud",
+    "note": "Every primary_media path is a committed PNG in marketing/creative/campaign-assets/booked-and-losing/stills/. No video, so no gitignored asset can go missing on another host. The 9:16 and 1:1 renders of each drop are recorded per drop under surface_assets; they are not queued because Instagram crops later carousel slides to the first slide's aspect, which would cut the signature block."
+  },
+  "drops": [
+    {
+      "drop_number": 1,
+      "drop_id": "drop-01",
+      "content_id": "bl-drop-01",
+      "scheduled_time": "2026-09-06T10:00:00-04:00",
+      "label": "Drop 1 - 10:00 AM ET: The app is a lead source, not an address",
+      "theme": "Keep the app. Own the address.",
+      "headline": "You do not have to leave the app.",
+      "state": "media_ready",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still_4x5",
+      "primary_media": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-01-feed-4x5.png",
+      "copy": {
+        "facebook_instagram": "No, you do not have to leave the booking app.\n\nThe version of this argument that ends with \"so cancel your app\" is wrong, and it is why a lot of people stop reading three paragraphs in. A channel that brings you paying work is not a problem. If an app is filling your calendar, the app is doing its job.\n\nHere is the distinction worth holding on to.\n\nAn app is good at demand you did not create. Somebody opens it already intending to book somebody, and you are one of the options. That is real value and it is hard to replicate on your own.\n\nA page of your own is good at demand you did create. Somebody heard your name, saw your work, got a referral, or searched for the specific thing you do. They need somewhere of yours to land.\n\nMost barbers, braiders, nail techs and lash artists have both kinds of demand and only serve one of them. The second kind is the one currently evaporating.\n\nThe one thing worth moving is not your bookings. It is the ability to reach the people who already like your work.\n\nRead it here: https://famtasticdesigns.com/blog/do-you-have-to-leave-the-booking-app/"
+      },
+      "tags": [
+        "#barbershop",
+        "#nailtech",
+        "#braider",
+        "#lashartist",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "social",
+        "campaign": "booked_and_losing",
+        "content": "drop-01"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "source_blog_post": "https://famtasticdesigns.com/blog/do-you-have-to-leave-the-booking-app/",
+      "surface_assets": {
+        "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-01-story-9x16.png",
+        "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-01-feed-4x5.png",
+        "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-01-square-1x1.png"
+      },
+      "provider_ids": {
+        "postiz_scheduled_id": "cmtoyihf3000srqvtoe5va1a3",
+        "postiz_scheduled_group": [
+          "cmtoyihf3000srqvtoe5va1a3",
+          "cmtoyhe5j000hrqvtyanoiiyt",
+          "cmtoyihf9000trqvtbd9fwdax",
+          "cmtoyhe56000grqvtpdbv5jxq"
+        ],
+        "postiz_draft_id": "cmtoyihf3000srqvtoe5va1a3"
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:30:57Z",
+          "postiz_post_id": "cmtoyihf3000srqvtoe5va1a3",
+          "date_utc": "2026-09-06T14:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 2,
+      "drop_id": "drop-02",
+      "content_id": "bl-drop-02",
+      "scheduled_time": "2026-09-07T18:00:00-04:00",
+      "label": "Drop 2 - 6:00 PM ET: Booked solid, impossible to find",
+      "theme": "The search that never happens",
+      "headline": "Booked solid. Impossible to find.",
+      "state": "media_ready",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still_4x5",
+      "primary_media": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-02-feed-4x5.png",
+      "copy": {
+        "facebook_instagram": "Someone new to your area searches for what you do. Your name does not come up.\n\nNot because you are not good. Not because you are not busy. It does not come up because there is nothing of yours for a search engine to find: no page in your business name, no address of your own, nothing that exists outside one booking app and your messages.\n\nThis is not the same problem as app fees. You may know exactly what your app costs you every month and be perfectly fine with it. This is the quieter cost, and it never shows up on a statement.\n\nPeople new to the area cannot find you. A move-in, a referral passed along without your handle, a search from somebody who does not already follow you - all of it goes to whoever appears in the results.\n\nA stranger has no work of yours to browse. A marketplace profile shows a few photos in a fixed template. It does not show your range or your specialty.\n\nAnd you own none of the traffic. Everyone who found you through the app found you through the app, so a change to how listings are ordered is a change to your income.\n\nYou are not missing bookings because you are bad at your job.\n\nRead it here: https://famtasticdesigns.com/blog/why-independent-stylists-are-invisible-outside-the-app/"
+      },
+      "tags": [
+        "#independentstylist",
+        "#localbusiness",
+        "#smallbusinessowner",
+        "#loctician",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "social",
+        "campaign": "booked_and_losing",
+        "content": "drop-02"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "source_blog_post": "https://famtasticdesigns.com/blog/why-independent-stylists-are-invisible-outside-the-app/",
+      "surface_assets": {
+        "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-02-story-9x16.png",
+        "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-02-feed-4x5.png",
+        "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-02-square-1x1.png"
+      },
+      "provider_ids": {
+        "postiz_scheduled_id": "cmtoyijv4000urqvtyhcza5d1",
+        "postiz_scheduled_group": [
+          "cmtoyijv4000urqvtyhcza5d1",
+          "cmtoyijvi000vrqvtgktpo3b3"
+        ],
+        "postiz_draft_id": "cmtoyijv4000urqvtyhcza5d1"
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:31:00Z",
+          "postiz_post_id": "cmtoyijv4000urqvtyhcza5d1",
+          "date_utc": "2026-09-07T22:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 3,
+      "drop_id": "drop-03",
+      "content_id": "bl-drop-03",
+      "scheduled_time": "2026-09-09T09:00:00-04:00",
+      "label": "Drop 3 - 9:00 AM ET: Indexed is not the same as owned",
+      "theme": "Crawling, indexing, ranking - and whose domain it all accrues to",
+      "headline": "Google can find their page.",
+      "state": "media_ready",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still_4x5",
+      "primary_media": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-03-feed-4x5.png",
+      "copy": {
+        "facebook_instagram": "Does a search engine index your booking app profile? Usually, yes. And it still is not a web presence of your own.\n\nBoth halves of that sentence are true at the same time, and the gap between them is where work quietly goes missing.\n\nThree words get used as if they mean the same thing, and they are three different steps. Crawling is a search engine following links around the web and reading pages. Indexing is filing a page it has read, so the page can be shown to somebody later. Ranking is deciding which of the filed pages to show first.\n\nA marketplace profile usually clears the first two. Marketplaces want their pages read and filed, because that is how the marketplace gets found. So your profile is probably sitting in the index right now.\n\nThe trouble starts at the third step, and at a fourth thing nobody names. Every page on the web lives at an address, and the memorable part of that address - the yourbusiness.com part - is the domain. The domain is the unit search engines treat as an identity, and reputation accumulates to a domain over time.\n\nYour profile lives on their domain. Every visit it earns and every link anyone points at it accrues to the platform.\n\nRead it here: https://famtasticdesigns.com/blog/does-google-index-your-booking-app-profile/"
+      },
+      "tags": [
+        "#smallbusinessowner",
+        "#localsearch",
+        "#ownyourdomain",
+        "#barbershop",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "social",
+        "campaign": "booked_and_losing",
+        "content": "drop-03"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "source_blog_post": "https://famtasticdesigns.com/blog/does-google-index-your-booking-app-profile/",
+      "surface_assets": {
+        "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-03-story-9x16.png",
+        "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-03-feed-4x5.png",
+        "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-03-square-1x1.png"
+      },
+      "provider_ids": {
+        "postiz_scheduled_id": "cmtoyimbb000wrqvt6y3lbae5",
+        "postiz_scheduled_group": [
+          "cmtoyimbb000wrqvt6y3lbae5",
+          "cmtoyimbj000xrqvteqkcdnao"
+        ],
+        "postiz_draft_id": "cmtoyimbb000wrqvt6y3lbae5"
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:31:03Z",
+          "postiz_post_id": "cmtoyimbb000wrqvt6y3lbae5",
+          "date_utc": "2026-09-09T13:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 4,
+      "drop_id": "drop-04",
+      "content_id": "bl-drop-04",
+      "scheduled_time": "2026-09-10T19:00:00-04:00",
+      "label": "Drop 4 - 7:00 PM ET: The price question that never becomes a message",
+      "theme": "The shop with no price tags",
+      "headline": "It is not the ninety seconds.",
+      "state": "media_ready",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still_4x5",
+      "primary_media": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-04-feed-4x5.png",
+      "copy": {
+        "facebook_instagram": "The message costs you more than the ninety seconds it takes to answer.\n\nWhat it really costs is the bookings that never became a message at all, and those never show up anywhere you would notice them.\n\nPicture a shop where nothing is priced. Everything in it is good and the owner knows the stock cold. But to learn what anything costs, you have to find the owner, wait out the person ahead of you, and ask out loud in front of strangers.\n\nSome people will do it. Most will pick the item up, turn it over, put it back, and leave without speaking. The owner sees a quiet afternoon. What the owner does not see is the people who wanted to buy and would not ask.\n\nA profile that says \"DM for pricing\" is that shop. Nothing about it is wrong or lazy. It is simply asking every interested stranger to do the one thing strangers are least willing to do.\n\nAsking a price out loud is socially expensive. Reading one is free.\n\nThis is not an argument for ignoring your inbox. It is an argument about where the answer should live.\n\nRead it here: https://famtasticdesigns.com/blog/how-much-do-you-charge-dms-costs-bookings/"
+      },
+      "tags": [
+        "#nailtech",
+        "#lashartist",
+        "#pricingstrategy",
+        "#smallbusinessowner",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "social",
+        "campaign": "booked_and_losing",
+        "content": "drop-04"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "source_blog_post": "https://famtasticdesigns.com/blog/how-much-do-you-charge-dms-costs-bookings/",
+      "surface_assets": {
+        "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-04-story-9x16.png",
+        "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-04-feed-4x5.png",
+        "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-04-square-1x1.png"
+      },
+      "provider_ids": {
+        "postiz_scheduled_id": "cmtoyior7000yrqvtk6kq6rag",
+        "postiz_scheduled_group": [
+          "cmtoyior7000yrqvtk6kq6rag",
+          "cmtoyiori000zrqvtrfyfo787"
+        ],
+        "postiz_draft_id": "cmtoyior7000yrqvtk6kq6rag"
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:31:06Z",
+          "postiz_post_id": "cmtoyior7000yrqvtk6kq6rag",
+          "date_utc": "2026-09-10T23:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 5,
+      "drop_id": "drop-05",
+      "content_id": "bl-drop-05",
+      "scheduled_time": "2026-09-12T11:00:00-04:00",
+      "label": "Drop 5 - 11:00 AM ET: A permission is not a possession",
+      "theme": "What a client list actually is",
+      "headline": "A name you cannot reach.",
+      "state": "media_ready",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still_4x5",
+      "primary_media": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-05-feed-4x5.png",
+      "copy": {
+        "facebook_instagram": "You can usually see your client list. You can often export some version of it. You do not control it.\n\nAccess is a permission the platform grants you, and a permission is not the same thing as a possession. That is a practical description, not a legal one. What any specific platform may do with your data is set by the agreement you accepted, and the only reliable way to know yours is to read it.\n\nThe phrase \"client list\" sounds like a document. It is really four things, and platforms treat them very differently.\n\nIdentity - names, and how many of them there are.\nContact details - a phone number or an email address you could use to reach a person outside the app.\nHistory - what they booked, when, how often.\nReach - whether you are permitted to contact them at all, and by what route.\n\nMost people worry about the first one and feel fine, because the app shows a client count. The one that decides whether you have a business independent of the platform is the second, paired with the fourth.\n\nA name you cannot reach is a memory, not a client list.\n\nRead it here: https://famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/"
+      },
+      "tags": [
+        "#clientlist",
+        "#braider",
+        "#loctician",
+        "#smallbusinessowner",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "social",
+        "campaign": "booked_and_losing",
+        "content": "drop-05"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "source_blog_post": "https://famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/",
+      "surface_assets": {
+        "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-05-story-9x16.png",
+        "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-05-feed-4x5.png",
+        "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-05-square-1x1.png"
+      },
+      "provider_ids": {
+        "postiz_scheduled_id": "cmtoyir7a0010rqvtnmynpgq4",
+        "postiz_scheduled_group": [
+          "cmtoyir7a0010rqvtnmynpgq4",
+          "cmtoyir7o0011rqvtivi7brbx"
+        ],
+        "postiz_draft_id": "cmtoyir7a0010rqvtnmynpgq4"
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:31:10Z",
+          "postiz_post_id": "cmtoyir7a0010rqvtnmynpgq4",
+          "date_utc": "2026-09-12T15:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 6,
+      "drop_id": "drop-06",
+      "content_id": "bl-drop-06",
+      "scheduled_time": "2026-09-13T10:00:00-04:00",
+      "label": "Drop 6 - 10:00 AM ET: What a bookable page actually needs",
+      "theme": "Not a prettier profile - a different job",
+      "headline": "Not a prettier profile.",
+      "state": "media_ready",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still_4x5",
+      "primary_media": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-06-feed-4x5.png",
+      "copy": {
+        "facebook_instagram": "A page that gets you booked is not a prettier version of your app profile. It has a different job, because the person reading it arrived with a different question.\n\nOn a marketplace, a visitor has already decided to hire someone from that platform and is choosing between the listings in front of them. On your own page, a visitor is deciding something more basic: whether to hire you at all.\n\nWhat that page actually needs:\n\nWork grouped the way a client shops for it, not by the date you did it. Say what each piece is - \"knotless box braids, mid-back, about five hours\" tells a stranger more than a beautiful photograph with no caption.\n\nA price or a range, and what it depends on. If you truly cannot post a number, post the thing that determines the number. Telling someone what the price depends on is itself an answer.\n\nOne obvious action, visible without scrolling on a phone.\n\nWhere you are, and whether you travel. This is the single most common reason a promising inquiry dies.\n\nWhen you work, even approximately. And who you are, in two or three sentences in your own voice.\n\nWhat you can skip on day one: the blog, the newsletter signup, the gallery that loads a hundred images.\n\nThe Web Basics Bundle is deliberately one focused, mobile-ready page for exactly this reason. It is $199 for the first year, which includes managed hosting and either a new domain registered for you or the one you already own connected. After the first year, hosting is $9.99 a month if you keep it, plus the cost of renewing the domain.\n\nRead it here: https://famtasticdesigns.com/blog/what-a-bookable-page-actually-needs/"
+      },
+      "tags": [
+        "#bookablepage",
+        "#barbershop",
+        "#nailtech",
+        "#smallbusinessowner",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "social",
+        "campaign": "booked_and_losing",
+        "content": "drop-06"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "source_blog_post": "https://famtasticdesigns.com/blog/what-a-bookable-page-actually-needs/",
+      "surface_assets": {
+        "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-06-story-9x16.png",
+        "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-06-feed-4x5.png",
+        "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-06-square-1x1.png"
+      },
+      "provider_ids": {
+        "postiz_scheduled_id": "cmtoyitmc0012rqvtzzpn70r7",
+        "postiz_scheduled_group": [
+          "cmtoyitmc0012rqvtzzpn70r7",
+          "cmtoyitn10013rqvtxi89d5gn"
+        ],
+        "postiz_draft_id": "cmtoyitmc0012rqvtzzpn70r7"
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:31:13Z",
+          "postiz_post_id": "cmtoyitmc0012rqvtzzpn70r7",
+          "date_utc": "2026-09-13T14:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "campaign_id": "see-it-first",
+  "name": "See It First - proof before payment",
+  "version": "1.0.0",
+  "created_at": "2026-09-05",
+  "owner": "fritz",
+  "sequence": {
+    "relationship": "standalone",
+    "note": "One of four campaigns built in parallel on 2026-09-05 under plans/four-campaign-flood/plan.md. It is not a narrative sequel to any of them, so series_id in posting-schedule.json is null. Where the other three argue that the reader needs a website, this one answers the objection that stops the sale after they already agree: 'I have been burned before.'"
+  },
+  "business_goal": "Convert business owners who already accept that they need a website but do not trust anyone to build it, by arguing the one differentiator that is real and registry-backed: FAMtastic produces design directions the customer reviews before paying.",
+  "angle": {
+    "objection": "I have been burned before. I paid, I waited, and what came back was not what I pictured.",
+    "answer": "The order of operations. Three directions are generated from the customer's real business information, a person reviews them before the customer sees them, and the customer looks at the work in a private view-only link before money moves.",
+    "what_this_campaign_never_claims": "That many customers have already been through it. The mechanism is deployed; volume is not evidence we have. No testimonials, customer counts, satisfaction figures, case studies, or delivery-time promises appear anywhere in this campaign."
+  },
+  "primary_offer": {
+    "sku": "FAM-FOOT-199",
+    "price_usd": "199.00",
+    "billing": "one_time_first_year_included",
+    "renewal_sku": "FAM-HOST-999",
+    "renewal_usd": "9.99_per_month_after_year_1",
+    "domain_renewal": "separate, at the domain's own cost",
+    "scope": "One focused landing-page website, one year of FAMtastic-managed hosting, and first-year domain registration or connection of a customer-owned domain. Business email (FAM-BUSINESS-EMAIL, $99) and maintenance (FAM-MAINTENANCE, $49.99/mo) are NOT included.",
+    "source": "backend/config/famtastic-products.json"
+  },
+  "audiences": [
+    {
+      "id": "burned_before",
+      "label": "Owners who already agree they need a website and still will not buy one",
+      "pain": "Paid a builder or a freelancer once, waited, and got back something they did not recognise as their business"
+    },
+    {
+      "id": "quote_skeptic",
+      "label": "Owners who have been pitched rankings, traffic, or growth guarantees",
+      "pain": "Cannot tell a real capability from a confident sales claim, so they treat every studio as the same risk"
+    },
+    {
+      "id": "scope_burned",
+      "label": "Owners who bought a package and discovered the boundaries afterwards",
+      "pain": "Found out what was not included only when they needed it"
+    }
+  ],
+  "creative_assets": [
+    {
+      "id": "DROP-01-SEE-IT-FIRST",
+      "type": "image",
+      "layout": "standard + proof-sheet concept object",
+      "palette": "paper",
+      "files": [
+        "../../creative/campaign-assets/see-it-first/drop-01-see-it-first-story-9x16.png",
+        "../../creative/campaign-assets/see-it-first/drop-01-see-it-first-feed-4x5.png",
+        "../../creative/campaign-assets/see-it-first/drop-01-see-it-first-square-1x1.png"
+      ],
+      "aspect_ratios": ["9:16", "4:5", "1:1"],
+      "channels": ["facebook_feed", "instagram_feed"]
+    },
+    {
+      "id": "DROP-02-PROMISE-VS-PROOF",
+      "type": "image",
+      "layout": "comparison",
+      "palette": "paper",
+      "files": [
+        "../../creative/campaign-assets/see-it-first/drop-02-promise-vs-proof-story-9x16.png",
+        "../../creative/campaign-assets/see-it-first/drop-02-promise-vs-proof-feed-4x5.png",
+        "../../creative/campaign-assets/see-it-first/drop-02-promise-vs-proof-square-1x1.png"
+      ],
+      "aspect_ratios": ["9:16", "4:5", "1:1"],
+      "channels": ["facebook_feed", "instagram_feed"]
+    },
+    {
+      "id": "DROP-03-NO-GUARANTEES",
+      "type": "image",
+      "layout": "monument",
+      "palette": "paper",
+      "files": [
+        "../../creative/campaign-assets/see-it-first/drop-03-no-guarantees-story-9x16.png",
+        "../../creative/campaign-assets/see-it-first/drop-03-no-guarantees-feed-4x5.png",
+        "../../creative/campaign-assets/see-it-first/drop-03-no-guarantees-square-1x1.png"
+      ],
+      "aspect_ratios": ["9:16", "4:5", "1:1"],
+      "channels": ["facebook_feed", "instagram_feed"]
+    },
+    {
+      "id": "DROP-04-TRUST-CHECKLIST",
+      "type": "image",
+      "layout": "checklist",
+      "palette": "paper",
+      "files": [
+        "../../creative/campaign-assets/see-it-first/drop-04-trust-checklist-story-9x16.png",
+        "../../creative/campaign-assets/see-it-first/drop-04-trust-checklist-feed-4x5.png",
+        "../../creative/campaign-assets/see-it-first/drop-04-trust-checklist-square-1x1.png"
+      ],
+      "aspect_ratios": ["9:16", "4:5", "1:1"],
+      "channels": ["facebook_feed", "instagram_feed"]
+    },
+    {
+      "id": "DROP-05-NOTHING-IN-THE-DARK",
+      "type": "image",
+      "layout": "split",
+      "palette": "paper",
+      "files": [
+        "../../creative/campaign-assets/see-it-first/drop-05-nothing-in-the-dark-story-9x16.png",
+        "../../creative/campaign-assets/see-it-first/drop-05-nothing-in-the-dark-feed-4x5.png",
+        "../../creative/campaign-assets/see-it-first/drop-05-nothing-in-the-dark-square-1x1.png"
+      ],
+      "aspect_ratios": ["9:16", "4:5", "1:1"],
+      "channels": ["facebook_feed", "instagram_feed"]
+    },
+    {
+      "id": "DROP-06-WHAT-199-INCLUDES",
+      "type": "image",
+      "layout": "offer-card",
+      "palette": "paper",
+      "files": [
+        "../../creative/campaign-assets/see-it-first/drop-06-what-199-includes-story-9x16.png",
+        "../../creative/campaign-assets/see-it-first/drop-06-what-199-includes-feed-4x5.png",
+        "../../creative/campaign-assets/see-it-first/drop-06-what-199-includes-square-1x1.png"
+      ],
+      "aspect_ratios": ["9:16", "4:5", "1:1"],
+      "channels": ["facebook_feed", "instagram_feed"]
+    }
+  ],
+  "video_scripts": [],
+  "articles": [
+    {
+      "id": "SOURCE-DROP-01",
+      "title": "Proof-First Websites: See Three Real Designs Before You Pay",
+      "url": "https://famtasticdesigns.com/blog/proof-first-website-see-before-you-pay/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "SOURCE-DROP-02",
+      "title": "What the $199 Website Includes-and What It Does Not",
+      "url": "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "SOURCE-DROP-03",
+      "title": "Do You Guarantee Google Rankings?",
+      "url": "https://famtasticdesigns.com/blog/do-you-guarantee-google-rankings/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "SOURCE-DROP-04",
+      "title": "What Makes a Business Website Feel Trustworthy?",
+      "url": "https://famtasticdesigns.com/blog/what-makes-business-website-trustworthy/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "SOURCE-DROP-05",
+      "title": "What Happens After You Buy the $199 Website?",
+      "url": "https://famtasticdesigns.com/blog/after-buying-199-website/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "SOURCE-DROP-06",
+      "title": "What Does the $199 Website Actually Include?",
+      "url": "https://famtasticdesigns.com/blog/what-does-199-website-include/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    }
+  ],
+  "claims_ledger": [
+    {
+      "claim": "Three design directions are generated for the customer.",
+      "source": "docs/CAPABILITY_REGISTRY.md - 'Owner-gated three-direction website proofs'",
+      "registry_status": "Production-deployed; customer delivery not yet proven",
+      "how_this_campaign_states_it": "As a mechanism that exists ('we build three directions'), never as a volume or track record."
+    },
+    {
+      "claim": "A person reviews the directions before the customer sees them.",
+      "source": "docs/CAPABILITY_REGISTRY.md - same row, 'private staff review'; BRAND.md required disclosure",
+      "registry_status": "Production-deployed; customer delivery not yet proven",
+      "how_this_campaign_states_it": "Stated explicitly in drops 1, 4 and 5. BRAND.md requires this sentence in any content describing proof delivery."
+    },
+    {
+      "claim": "The proof opens in a private, view-only link with no account and no login.",
+      "source": "docs/CAPABILITY_REGISTRY.md - 'Anonymous view-only proof sharing'",
+      "registry_status": "Production smoke-tested (signed unlisted rooms load on apex and www; anonymous access exposes only permitted directions; invalid signatures return no data)",
+      "how_this_campaign_states_it": "Described as a capability of the room, not as a claim about how many people have opened one."
+    },
+    {
+      "claim": "The steps are intake, proof, revision, approval, launch.",
+      "source": "backend/config/famtastic-products.json - FAM-FOOT-199.fulfillment.milestones",
+      "registry_status": "Catalog record, not a registry capability claim",
+      "how_this_campaign_states_it": "Quoted verbatim in drop 4's still and copy, and in drop 5's copy."
+    },
+    {
+      "claim": "$199 covers the first year; hosting then renews at $9.99/month; the domain renews separately.",
+      "source": "backend/config/famtastic-products.json - FAM-FOOT-199 price, billing.renewal_sku FAM-HOST-999 ($9.99, recurring monthly, activation after_included_period), billing.domain_renewal_separate true",
+      "registry_status": "Catalog record",
+      "how_this_campaign_states_it": "Renewal disclosed every time the first-year price appears (drops 2 and 6), per BRAND.md."
+    },
+    {
+      "claim": "Business email and maintenance are not included.",
+      "source": "backend/config/famtastic-products.json - FAM-BUSINESS-EMAIL ($99, one-time), FAM-MAINTENANCE ($49.99/mo, recurring)",
+      "registry_status": "Catalog record",
+      "how_this_campaign_states_it": "Stated as an exclusion in drops 2 and 6 rather than omitted."
+    },
+    {
+      "claim": "We do not guarantee Google rankings.",
+      "source": "BRAND.md 'Never do' list; live post /blog/do-you-guarantee-google-rankings/",
+      "registry_status": "Brand policy",
+      "how_this_campaign_states_it": "Drop 3 is built entirely on the refusal. No competitor is named."
+    }
+  ],
+  "claims_deliberately_excluded": [
+    "Any delivery-time promise, including the '48 hours' claim still live on five older posts. There is no SLA anywhere in backend/config/famtastic-products.json, so the campaign makes no timing claim at all.",
+    "Any customer count, testimonial, satisfaction figure, or case study. The registry classifies customer delivery of three-direction proofs as not yet proven.",
+    "Any named competitor, and any statement of a competitor's fees.",
+    "Business email as part of the $199 bundle - an error corrected in an earlier campaign's assets."
+  ],
+  "utm_parameters": {
+    "utm_campaign": "see_it_first",
+    "utm_source_options": ["famtastic"],
+    "utm_medium_options": ["organic_social"],
+    "landing_url": "https://famtasticdesigns.com/buy/?sku=FAM-FOOT-199",
+    "landing_note": "https://famtasticdesigns.com/onboarding?sku=FAM-FOOT-199 (the queue script's DEFAULT_LANDING) 301s to this URL with the query preserved. The schedule uses the verified 200 destination directly."
+  },
+  "production": {
+    "spend_usd": 0.0,
+    "spend_ceiling_usd": 1.5,
+    "image_api_calls": 0,
+    "tooling": "Adobe Photoshop 2026 via the local MCP bridge, driving marketing/creative/templates/famtastic-social-frame.jsx on the existing Creative Cloud subscription",
+    "note": "See README.md for why no paid anchor image was bought."
+  }
+}

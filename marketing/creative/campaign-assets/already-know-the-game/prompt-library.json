@@ -1,0 +1,210 @@
+{
+  "schema": "famtastic.plate-prompt-library.v2",
+  "generated_at": "2026-09-05",
+  "campaign": "already-know-the-game",
+  "art_direction_ref": "docs/marketing/CAMPAIGN_ART_DIRECTION_V1.md",
+  "palette_source_of_truth": "marketing/creative/templates/famtastic-social-frame.jsx (PALETTES.shutter)",
+  "technique_ref": "OpenAI gpt-image-1.5 prompting guide, as recorded in CAMPAIGN_ART_DIRECTION_V1 Rule 4",
+  "hard_constraints": [
+    "No text of any kind is generated. Type is set in Photoshop.",
+    "No identifiable person and no face. This campaign speaks to a skill, not to a person; a generated face would invent an audience the copy deliberately never names.",
+    "One accent only. #E4C227 appears as paint on a surface, never as a light source.",
+    "Every plate reserves real in-scene negative space for display type."
+  ],
+  "palettes": {
+    "shutter": {
+      "ground_hex": "#16181A",
+      "accent_hex": "#E4C227",
+      "rgb": { "ground": [22, 24, 26], "accent": [228, 194, 39] },
+      "use_when": "The argument is that a working business already exists on a physical street and only lacks a formal address. Steel, concrete, weathered paint, xerox and screen-print grain.",
+      "palette_argument": "Argued from the subject, not chosen. The ground is literally what this business stands on and in front of: cold rolled steel roller-shutter and grey concrete in shadow. The accent is the colour system already installed on every street where commerce happens - loading-bay stencil paint, curb markings, shutter warning stripes, hand-lettered price boards - after a few winters have bleached it chalky. Nothing in the palette is new to the reader, which is the campaign's whole claim.",
+      "divergence": "Ground mean luminance 24/255, deliberately outside the 150-175 anchor band in marketing/creative/heygen/reference-tokens.json. Not anchor-graded; never cut beside take-a.",
+      "prompt_clause": "cold rolled steel and grey concrete, #16181A - a dark neutral grey with a faint blue-green cast - filling most of the frame. Exactly ONE saturated accent anywhere in the image: a weathered, chalky stencil yellow, #E4C227, and it is always PAINTED PIGMENT ON A SURFACE - loading-bay floor paint, a curb marking, a shutter warning stripe, hand-lettered signboard paint - never a light source, never a glow, never a lamp. Every other surface is neutral, cold and desaturated: bare concrete, galvanised metal, dirty white, grey primer, with rust brown only at worn edges. No blue sky, no green, no neon, no warm interior lamp, no second saturated colour anywhere."
+    }
+  },
+  "shared": {
+    "use_case_clause": "a background plate for a marketing asset. Large display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real, worn and restrained, not advertising-slick.",
+    "photography_clause": "Photograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, coarse visible film grain, and honest material wear - scuffs, dents, dust, chalky faded paint, rust bloom, tape residue, torn paper edges, uneven weathered surfaces. Hard directional light and deep shadow; high contrast, crushed blacks, a slightly overcooked photocopy quality as if the frame were xeroxed once and screen-printed once. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.",
+    "no_text_clause": "Text rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, watermarks, signatures, logos or brand marks anywhere in the frame - including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones, unlabelled folders. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.",
+    "exclusion_clause": "Exclude: any person, face, hand, body part or silhouette; a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, real identifiable people or celebrities, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, graffiti tags or street-art murals, and any object not named above.",
+    "preserve_clause": "Preserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, the coarse grain, and the complete absence of text and people. Change only what a revision explicitly asks to change; do not alter anything else.",
+    "negative_space_clauses": {
+      "upper-half": "Reserved negative space (mandatory): the top 50% of the frame stays near-empty - one continuous low-detail surface (a wall, a shutter face, an overcast sky, a seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.",
+      "full-field": "Reserved negative space (mandatory): this is an atmosphere plate, not a picture of a thing. No focal subject, no readable object, no strong compositional anchor anywhere. The whole frame is one even, quiet, weathered field with gentle variation only - type will be set across all of it. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, sheet, overlay or flat rectangle placed on top of the photograph. Never introduce a hard straight edge, a colour block or a uniform fill to create it."
+    }
+  },
+  "coverage": {
+    "aspect_ratio_strategy": "One 9:16 plate per drop. famPlateFull cover-scales it into 1080x1920, 1080x1350 and 1080x1080, so a single generation serves all three required still formats instead of paying three times for the same surface.",
+    "note": "1:1 and 4:5 crops were checked by looking at the finished renders, not assumed from the maths."
+  },
+  "topics": [
+    {
+      "topic_id": "akg-01",
+      "campaign": "already-know-the-game",
+      "title": "Drop 1 - the address",
+      "blog_post_slug": "what-is-a-domain-name",
+      "claim": "The business already exists at a physical place. What it does not have is an address anyone can type.",
+      "object": "A closed steel roller shutter with a stencilled bay number on the concrete in front of it. The number belongs to the building, not to the business - which is the gap the post explains.",
+      "palette": "shutter",
+      "variants": [
+        {
+          "id": "akg-01-shutter-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / feed / square (cover-scaled)",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "plates/akg-01-shutter-9x16.jpg",
+          "scene": "A narrow commercial street at first light, overcast. A corrugated steel roller shutter pulled fully down across a small storefront, filling the frame edge to edge, its slats dented and re-painted grey many times over.",
+          "subject": "The lower half: the base of the shutter meeting a cracked concrete sidewalk, with a loading-bay floor marking painted on the concrete directly in front of it in chalky yellow. That marking is PURE GEOMETRY ONLY - one plain unbroken rectangle outline and one solid painted bar inside it, nothing else - and contains absolutely no letterforms, numerals, characters, glyphs, arrows, symbols or anything that could be mistaken for writing. Half of it is scuffed away by foot traffic.",
+          "details": "Rust bleeding at the shutter's bottom rail, a padlock hasp, scraped paint layers, grit and a flattened bottle cap in the concrete seam, tape residue where a sign was once fixed and removed.",
+          "camera": "35mm, straight on, eye level, flat overcast light with one hard raking edge from the left, deep focus so the shutter face reads as a texture across the whole upper frame."
+        }
+      ]
+    },
+    {
+      "topic_id": "akg-02",
+      "campaign": "already-know-the-game",
+      "title": "Drop 2 - the client list",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "claim": "The customer list is the asset. Where it is stored decides whether it is still yours next year.",
+      "object": "Atmosphere only. The comparison layout carries the argument in geometry - a thin rented slab beside a thick owned one - so the plate stays a surface.",
+      "palette": "shutter",
+      "variants": [
+        {
+          "id": "akg-02-slats-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / feed / square (cover-scaled)",
+          "archetype": "comparison",
+          "negative_space": "full-field",
+          "status": "queued",
+          "output_file": "plates/akg-02-slats-9x16.jpg",
+          "scene": "Extreme close range on the face of a galvanised steel roller shutter, so close that only the horizontal slat ribs and their shadow lines fill the entire frame.",
+          "subject": "No subject. The repeating slat ribs run across the frame as an even field, grey primer showing through worn grey topcoat, with one long chalky yellow warning stripe running along a single slat near the lower third, faded and scratched.",
+          "details": "Dents, hail pocks, drip marks, a fine sanded haze of oxidised metal, dust settled on every horizontal lip, the faint ghost of an older paint colour under a chip.",
+          "camera": "50mm, perfectly square to the surface, hard raking light from the upper left so every rib casts a thin shadow, very shallow tonal range, coarse grain."
+        }
+      ]
+    },
+    {
+      "topic_id": "akg-03",
+      "campaign": "already-know-the-game",
+      "title": "Drop 3 - the price",
+      "blog_post_slug": "website-answers-price-questions-before-asked",
+      "claim": "You already know your prices. There is just nowhere public that says them, so every quote costs you a conversation.",
+      "object": "A blank hand-painted signboard leaning against a wall. The board exists, the paint exists, the price does not exist anywhere a stranger can read it.",
+      "palette": "shutter",
+      "variants": [
+        {
+          "id": "akg-03-board-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / feed / square (cover-scaled)",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "plates/akg-03-board-9x16.jpg",
+          "scene": "A poured concrete wall, board-formed, filling the upper two thirds of the frame in flat shade. Cracked pavement at the base.",
+          "subject": "The lower half: a small rectangular plywood signboard leaning face-out against the wall, its face painted an even chalky yellow and completely blank - no writing of any kind - the edges chipped back to bare ply, one corner water-stained.",
+          "details": "A dried paint run down the board's face, a brush bristle stuck in the paint, grit at the base where the board meets the pavement, a shadow gap behind the board, a snapped cable tie on the ground.",
+          "camera": "50mm, low eye level looking slightly down at the board, one hard overhead light source, deep shadow under the board, coarse grain and crushed blacks."
+        }
+      ]
+    },
+    {
+      "topic_id": "akg-04",
+      "campaign": "already-know-the-game",
+      "title": "Drop 4 - taking the booking",
+      "blog_post_slug": "what-a-bookable-page-actually-needs",
+      "claim": "Taking a booking or a payment is already something you do. A page just does it while you are working.",
+      "object": "Atmosphere only. The checklist layout carries the argument as rows of plain facts, so the plate is the working surface those facts sit on.",
+      "palette": "shutter",
+      "variants": [
+        {
+          "id": "akg-04-counter-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / feed / square (cover-scaled)",
+          "archetype": "checklist",
+          "negative_space": "full-field",
+          "status": "queued",
+          "output_file": "plates/akg-04-counter-9x16.jpg",
+          "scene": "Looking straight down at a scratched stainless steel work counter, the metal filling the entire frame with no edge visible.",
+          "subject": "No subject. The steel surface alone: a dense web of circular scouring marks, water spots, a dried ring, and one long chalky yellow paint smear dragged across the lower area where a tin was set down.",
+          "details": "Micro-scratches catching the light, a scatter of grit, a shallow dent, dulled patches where hands have worn the finish smooth.",
+          "camera": "50mm, directly overhead, one hard light from the upper left, high contrast, coarse grain, no props and no depth cues."
+        }
+      ]
+    },
+    {
+      "topic_id": "akg-05",
+      "campaign": "already-know-the-game",
+      "title": "Drop 5 - what survives",
+      "blog_post_slug": "linktree-vs-real-website-what-you-trade-away",
+      "claim": "Everything you have built lives on a surface somebody else can clear at any time.",
+      "object": "A utility pole layered with torn, stapled flyers, all of them shredded down to staples and paper stubs, with one clean rectangle where something was recently pulled off whole.",
+      "palette": "shutter",
+      "variants": [
+        {
+          "id": "akg-05-pole-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / feed / square (cover-scaled)",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "plates/akg-05-pole-9x16.jpg",
+          "scene": "A concrete utility pole on an overcast day, shot against a flat grey concrete wall that fills the upper half of the frame smoothly and emptily.",
+          "subject": "The lower half of the pole: dozens of layers of torn paper flyers stapled over one another and ripped away, leaving only paper stubs, rusted staples, tape residue and bleached fibre - every remaining scrap completely blank with no printing on it. One clean bare rectangle of pole shows through where a whole sheet was pulled off recently.",
+          "details": "Rusted staple heads catching light, curled paper edges, a strip of chalky yellow paint banded round the pole below the paper, damp stains, weathered fibre going grey.",
+          "camera": "35mm, eye level, slightly off-centre so the pole sits left of frame, flat overcast light, deep focus, coarse grain."
+        }
+      ]
+    },
+    {
+      "topic_id": "akg-06",
+      "campaign": "already-know-the-game",
+      "title": "Drop 6 - the paperwork",
+      "blog_post_slug": "what-does-199-website-include",
+      "claim": "The formal side is not another skill. It is a short list of items with a price on it.",
+      "object": "Atmosphere only. The offer-card layout puts the price itself on the surface, so the plate stays a desk.",
+      "palette": "shutter",
+      "variants": [
+        {
+          "id": "akg-06-desk-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / feed / square (cover-scaled)",
+          "archetype": "offer-card",
+          "negative_space": "full-field",
+          "status": "queued",
+          "output_file": "plates/akg-06-desk-9x16.jpg",
+          "scene": "Pressed right up against the grey enamel top of an old steel office desk so the surface runs past every edge of the frame. No edge, rim, corner, side, leg or background of the desk is visible anywhere, and no dark vignette or shadow band crosses a corner - the metal is the entire frame, wall to wall.",
+          "subject": "No subject. Just the desk surface: chipped grey enamel over steel, ring marks, a long scratch, one worn patch rubbed back to bare metal, and one short straight chalky yellow paint dash - a plain solid stroke of pigment with no letterform, numeral, character, glyph or symbol shape to it whatsoever.",
+          "details": "Dust in the shallow dents, corrosion freckles at the worn patch, coarse enamel texture, faint circular wear rings. Nothing anywhere that resembles handwriting, scratched initials, tally marks or engraved characters.",
+          "camera": "50mm, directly overhead, single soft-hard light from the upper left falling evenly across the whole frame, high contrast, coarse grain, no props, no vignette, edge-to-edge surface."
+        }
+      ]
+    },
+    {
+      "topic_id": "akg-tex",
+      "campaign": "already-know-the-game",
+      "title": "Shared grunge tooth",
+      "blog_post_slug": null,
+      "claim": "Not an argument. A texture overlay composited at low opacity in SOFT_LIGHT so flat panels and type edges pick up xerox tooth instead of sitting clean on a dark field.",
+      "object": "None. Surface only.",
+      "palette": "shutter",
+      "variants": [
+        {
+          "id": "akg-tex-xerox-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "texture overlay, all formats",
+          "archetype": "texture",
+          "negative_space": "full-field",
+          "status": "queued",
+          "output_file": "plates/akg-tex-xerox-9x16.jpg",
+          "scene": "A sheet of cheap paper that has been photocopied several generations too many and then screen-printed over in flat grey ink, lying flat and filling the frame.",
+          "subject": "No subject. Only the artefacts: heavy toner speckle, halftone dot breakup, a faint horizontal drum band, blotchy uneven ink coverage, fibre showing through thin areas, and a soft torn edge crossing one corner.",
+          "details": "Dust specks fused into the toner, a crease shadow, slight registration ghosting, no image content of any kind.",
+          "camera": "50mm, flat-on copy-stand framing, even soft light, no vignette, maximum surface texture, monochrome grey with no colour cast."
+        }
+      ]
+    }
+  ]
+}

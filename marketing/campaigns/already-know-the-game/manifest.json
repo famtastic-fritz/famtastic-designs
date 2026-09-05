@@ -1,0 +1,126 @@
+{
+  "campaign_id": "already-know-the-game",
+  "name": "Already Know The Game - the address you do not own yet",
+  "version": "1.0.0",
+  "created_at": "2026-09-05",
+  "owner": "fritz",
+  "plan": "plans/four-campaign-flood/plan.md (lane C2)",
+  "sequence": {
+    "runs_alongside": ["cost-is-not-the-reason", "ghost-town-ep1"],
+    "relationship": "parallel_lane_distinct_palette_and_argument",
+    "note": "Part of the four-campaign flood. Distinct from cost-is-not-the-reason: that campaign answers the price objection; this one answers a competence objection that was never true. Own palette (shutter), own plates, own blog set. No shared media."
+  },
+  "business_goal": "Reach operators who already run a working business on informal infrastructure and show that the formal layer - a domain, a page, a way to be reached - is administrative work they have not done, not a skill they lack.",
+  "positioning_line": "You already run a business. You just do not own the address it runs on.",
+  "audience": {
+    "id": "self_taught_operator",
+    "label": "NOT NAMED IN ANY PUBLISHED COPY. Held here as production context only.",
+    "description": "Someone with real commercial instinct - pricing, margin, demand, reputation, repeat custom, collecting money - learned by running something rather than by studying it. Formalising the operation is in progress or wanted.",
+    "what_they_do_not_need": "To be taught how to sell, to be encouraged, or to be told they are behind.",
+    "what_they_do_need": "A plain description of the administrative layer: a domain, a public page, a way to take a request, something that survives a platform decision."
+  },
+  "tone_contract": {
+    "address_the_skill_never_the_past": "Copy speaks only to present capability. No reference, direct or coded, to any history, circumstance, institution, or 'second chance'. No redemption arc, because nothing here needs redeeming.",
+    "never_name_the_audience": "No drop names, hints at, or bounds who this is for. Every line must read as a message to any self-taught operator. A reader outside the intended audience should notice nothing.",
+    "respect_never_pity": "The reader is competent and is being told something practical. No uplift, no encouragement, no congratulation.",
+    "verification": "Every headline, body line and caption in this campaign was read against these four rules before it was rendered. See README.md, 'Tone audit'."
+  },
+  "primary_offer": {
+    "sku": "FAM-FOOT-199",
+    "price_usd": "199.00",
+    "billing": "one_time_first_year_included",
+    "renewal_sku": "FAM-HOST-999",
+    "renewal_usd": "9.99_per_month_after_included_year",
+    "domain_renewal": "separate, at cost",
+    "scope_verified_against": "backend/config/famtastic-products.json",
+    "scope": "ONE focused landing-page website + ONE year of FAMtastic-managed hosting + first-year registration of a new domain when needed, or connection of a domain the customer already owns.",
+    "explicitly_not_included": [
+      "Business email on the customer domain (FAM-BUSINESS-EMAIL, separate $99 one-time)",
+      "Ongoing website maintenance (FAM-MAINTENANCE, separate $49.99/month)"
+    ]
+  },
+  "creative_direction": {
+    "palette": "shutter",
+    "palette_added_in": "marketing/creative/templates/famtastic-social-frame.jsx",
+    "palette_argument": "Cold rolled steel and grey concrete #16181A is what this business physically stands on and in front of. Weathered stencil yellow #E4C227 is the colour system already installed on every street where commerce happens - loading-bay paint, curb markings, shutter warning stripes, hand-lettered price boards - after a few winters have bleached it chalky. Nothing in the palette is new to the reader, which is the campaign's whole claim.",
+    "anchor_divergence": "DELIBERATE, and measured rather than estimated. Ground swatch luminance 24/255; all 18 finished frames measured at mean luminance 51.4 (range 40.7-60.8) against the 150-175 band from the premium HeyGen anchor (marketing/creative/heygen/reference-tokens.json). Accent coverage measures 2.03% of frame on average (range 0.12%-6.82%; drop-02's comparison slab is the 6.8% outlier) against the anchor's 1-2%. These frames are NOT anchor-graded and must never be cut in beside take-a. Full record and the reproduction command are in the campaign README.",
+    "look": "grunge - high contrast, textured, worn; concrete, steel roller shutters, weathered paint, xerox halftone, torn paste-up edges",
+    "compositor": "marketing/creative/campaign-assets/already-know-the-game/grunge-frame.jsx",
+    "archetypes_rotated": ["standard", "comparison", "standard", "checklist", "standard", "offer-card"],
+    "type_rule": "All type set in Photoshop. Zero generated lettering in any plate."
+  },
+  "plates": [
+    { "id": "akg-01-shutter-9x16", "file": "marketing/creative/campaign-assets/already-know-the-game/plates/akg-01-shutter-9x16.jpg", "argues": "The building is yours; the address on the concrete belongs to the block." },
+    { "id": "akg-02-slats-9x16", "file": "marketing/creative/campaign-assets/already-know-the-game/plates/akg-02-slats-9x16.jpg", "argues": "Atmosphere. The comparison geometry carries the argument." },
+    { "id": "akg-03-board-9x16", "file": "marketing/creative/campaign-assets/already-know-the-game/plates/akg-03-board-9x16.jpg", "argues": "The board exists, the paint exists, the price is written nowhere a stranger can read it." },
+    { "id": "akg-04-counter-9x16", "file": "marketing/creative/campaign-assets/already-know-the-game/plates/akg-04-counter-9x16.jpg", "argues": "Atmosphere. The working surface the checklist sits on." },
+    { "id": "akg-05-pole-9x16", "file": "marketing/creative/campaign-assets/already-know-the-game/plates/akg-05-pole-9x16.jpg", "argues": "Layer on layer of paste-up torn down to staples, and one clean rectangle where something was pulled off whole." },
+    { "id": "akg-06-desk-9x16", "file": "marketing/creative/campaign-assets/already-know-the-game/plates/akg-06-desk-9x16.jpg", "argues": "Atmosphere. The desk the paperwork happens on." },
+    { "id": "akg-tex-xerox-9x16", "file": "marketing/creative/campaign-assets/already-know-the-game/plates/akg-tex-xerox-9x16.jpg", "argues": "Not an argument. SOFT_LIGHT tooth over every frame." }
+  ],
+  "creative_assets": [
+    {
+      "id": "AKG-01-ADDRESS",
+      "drop": "drop-01",
+      "layout": "standard",
+      "aspect_ratios": { "9:16": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-01-address-story-9x16.png", "4:5": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-01-address-feed-4x5.png", "1:1": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-01-address-square-1x1.png" },
+      "channels": ["facebook", "instagram-standalone"]
+    },
+    {
+      "id": "AKG-02-LIST",
+      "drop": "drop-02",
+      "layout": "comparison",
+      "aspect_ratios": { "9:16": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-02-list-story-9x16.png", "4:5": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-02-list-feed-4x5.png", "1:1": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-02-list-square-1x1.png" },
+      "channels": ["facebook", "instagram-standalone"]
+    },
+    {
+      "id": "AKG-03-PRICE",
+      "drop": "drop-03",
+      "layout": "standard",
+      "aspect_ratios": { "9:16": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-03-price-story-9x16.png", "4:5": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-03-price-feed-4x5.png", "1:1": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-03-price-square-1x1.png" },
+      "channels": ["facebook", "instagram-standalone"]
+    },
+    {
+      "id": "AKG-04-BOOKABLE",
+      "drop": "drop-04",
+      "layout": "checklist",
+      "aspect_ratios": { "9:16": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-04-bookable-story-9x16.png", "4:5": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-04-bookable-feed-4x5.png", "1:1": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-04-bookable-square-1x1.png" },
+      "channels": ["facebook", "instagram-standalone"]
+    },
+    {
+      "id": "AKG-05-CLEARED",
+      "drop": "drop-05",
+      "layout": "standard",
+      "aspect_ratios": { "9:16": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-05-cleared-story-9x16.png", "4:5": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-05-cleared-feed-4x5.png", "1:1": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-05-cleared-square-1x1.png" },
+      "channels": ["facebook", "instagram-standalone"]
+    },
+    {
+      "id": "AKG-06-PAPERWORK",
+      "drop": "drop-06",
+      "layout": "offer-card",
+      "aspect_ratios": { "9:16": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-06-paperwork-story-9x16.png", "4:5": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-06-paperwork-feed-4x5.png", "1:1": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-06-paperwork-square-1x1.png" },
+      "channels": ["facebook", "instagram-standalone"]
+    }
+  ],
+  "articles": [
+    { "drop": "drop-01", "title": "What Is a Domain Name and Why Does Your Business Need One?", "url": "https://famtasticdesigns.com/blog/what-is-a-domain-name/", "live_verified": "2026-09-05, HTTP 200 after canonical trailing-slash redirect" },
+    { "drop": "drop-02", "title": "Who Owns Your Client List When You Book Through an App?", "url": "https://famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/", "live_verified": "2026-09-05, HTTP 200" },
+    { "drop": "drop-03", "title": "How a Website Answers Price Questions Before They're Asked", "url": "https://famtasticdesigns.com/blog/website-answers-price-questions-before-asked/", "live_verified": "2026-09-05, HTTP 200" },
+    { "drop": "drop-04", "title": "What a Bookable Page Actually Needs", "url": "https://famtasticdesigns.com/blog/what-a-bookable-page-actually-needs/", "live_verified": "2026-09-05, HTTP 200" },
+    { "drop": "drop-05", "title": "Linktree vs. a Real Website: What You Trade Away", "url": "https://famtasticdesigns.com/blog/linktree-vs-real-website-what-you-trade-away/", "live_verified": "2026-09-05, HTTP 200" },
+    { "drop": "drop-06", "title": "What the $199 Website Includes - and What It Does Not", "url": "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/", "live_verified": "2026-09-05, HTTP 200" }
+  ],
+  "channels": {
+    "targeted": ["facebook", "instagram-standalone"],
+    "excluded": ["youtube", "tiktok", "x", "linkedin"],
+    "exclusion_reason": "Plan hard constraint: YouTube's OAuth token is expired and TikTok is not approved for public posting; both need the owner. X and LinkedIn are out of scope for this lane. Queueing to a broken channel manufactures a failure."
+  },
+  "measured_spend_usd": 0.3024,
+  "spend_detail": "9 Gemini Flash Lite (gemini-3.1-flash-lite-image) generations at the published $0.0336 per 1K image: 7 first-pass plus 2 regenerations of akg-01 and akg-06 after generated letterforms were spotted by eye. Ceiling for this campaign was $1.50. Photoshop composition, the palette, the compositor and all 18 stills cost $0.00 - they run on the existing Adobe subscription. generation-receipt.json reports $0.2352 because it merges results by id and so counts each plate once; $0.3024 is the true billable count.",
+  "utm_parameters": {
+    "utm_campaign": "already_know_the_game",
+    "utm_source": "social",
+    "utm_medium": "organic_social",
+    "utm_content": "drop-01 .. drop-06"
+  }
+}

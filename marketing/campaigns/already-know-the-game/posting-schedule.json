@@ -1,0 +1,385 @@
+{
+  "schema_version": 2,
+  "campaign_id": "already-know-the-game",
+  "program_id": "FAM-FOOT-199",
+  "series_id": "already-know-the-game",
+  "campaign_name": "Already Know The Game",
+  "created_at": "2026-09-05T00:00:00-04:00",
+  "status": "built_not_queued",
+  "queue_note": "This lane deliberately did NOT run scripts/queue-campaign-drops.py. A later step in plans/four-campaign-flood/plan.md owns queueing. Every drop below carries approval.publish=false so an accidental armed run cannot publish it.",
+  "schedule_type": "eight_day_argument_arc",
+  "time_zone": "America/New_York",
+  "landing_url": "https://famtasticdesigns.com/buy/?sku=FAM-FOOT-199",
+  "short_landing_url": "https://famtasticdesigns.com/buy/",
+  "landing_verified": "2026-09-05: https://famtasticdesigns.com/buy/?sku=FAM-FOOT-199 returns HTTP 200 with no redirect hop. The shared DEFAULT_LANDING (/onboarding?sku=...) 301s to this URL, so it is set explicitly here to avoid burning a redirect into every tracked link.",
+  "drops": [
+    {
+      "drop_number": 1,
+      "drop_id": "drop-01",
+      "content_id": "akg-drop-01",
+      "scheduled_time": "2026-09-06T10:00:00-04:00",
+      "label": "Drop 1 - Sun 10:00 AM ET: the address",
+      "theme": "You already run a business. The missing part is an address, not a skill.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still",
+      "primary_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-01-address-feed-4x5.png",
+      "supporting_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-01-address-story-9x16.png",
+      "headline": "You just don't own the address.",
+      "copy": {
+        "facebook_instagram": "You already run a business.\n\nYou know what to charge. You know which customers come back and which ones were never going to. You know what a slow week means and what to do about it. None of that came out of a textbook.\n\nThe part that is missing is not a skill. It is an address.\n\nRight now people find you through somebody else's app, somebody else's feed, somebody else's search box. The work is yours. The address it happens at belongs to a company you have never met.\n\nA domain name is that address. You register it in your own name, and everything else hangs off it: your page, your contact form, your booking link. That is the whole idea.\n\nHere is how a domain actually works, in plain words:\nhttps://famtasticdesigns.com/blog/what-is-a-domain-name/\n\nWeb Basics is a one-time $199 for the first year. That is one focused website, a full year of managed hosting, and your domain registered for you, or the one you already own connected. After the first year it is $9.99 a month, plus what the domain costs to renew."
+      },
+      "tags": [
+        "#smallbusiness",
+        "#ownyourdomain",
+        "#websitedesign",
+        "#smallbusinessowner",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "already_know_the_game",
+        "content": "drop-01"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtoyhe56000grqvtpdbv5jxq",
+        "postiz_scheduled_id": "cmtoyhe56000grqvtpdbv5jxq",
+        "postiz_scheduled_group": [
+          "cmtoyhe56000grqvtpdbv5jxq",
+          "cmtoyhe5j000hrqvtyanoiiyt"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:30:06Z",
+          "postiz_post_id": "cmtoyhe56000grqvtpdbv5jxq",
+          "date_utc": "2026-09-06T14:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 2,
+      "drop_id": "drop-02",
+      "content_id": "akg-drop-02",
+      "scheduled_time": "2026-09-07T18:30:00-04:00",
+      "label": "Drop 2 - Mon 6:30 PM ET: the client list",
+      "theme": "Access is a permission. A permission is not a possession.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still",
+      "primary_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-02-list-feed-4x5.png",
+      "supporting_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-02-list-square-1x1.png",
+      "headline": "Access is a permission.",
+      "copy": {
+        "facebook_instagram": "The list is the business.\n\nEvery name in it you earned one at a time. A first appointment that went well. A referral. Somebody who came back after six months because you remembered what they wanted.\n\nHere is the part worth checking. Depending on where that list lives, you can usually see it, you can often export some version of it, and you do not control it. Access is a permission a platform grants you, and a permission is not the same thing as a possession.\n\nA name you cannot reach is a memory, not a client list.\n\nThis is not an argument for leaving anywhere. It is an argument for keeping a second copy somewhere that answers to you: your own page, your own contact form, your own inbox.\n\nThere is a fifteen-minute audit here that tells you exactly where you stand:\nhttps://famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/"
+      },
+      "tags": [
+        "#smallbusiness",
+        "#clientlist",
+        "#ownyourdata",
+        "#smallbusinessowner",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "already_know_the_game",
+        "content": "drop-02"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtoyhhhl000irqvtpwfmuyn2",
+        "postiz_scheduled_id": "cmtoyhhhl000irqvtpwfmuyn2",
+        "postiz_scheduled_group": [
+          "cmtoyhhhl000irqvtpwfmuyn2",
+          "cmtoyhhi6000jrqvtpek68e1x"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:30:10Z",
+          "postiz_post_id": "cmtoyhhhl000irqvtpwfmuyn2",
+          "date_utc": "2026-09-07T22:30:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 3,
+      "drop_id": "drop-03",
+      "content_id": "akg-drop-03",
+      "scheduled_time": "2026-09-09T08:30:00-04:00",
+      "label": "Drop 3 - Wed 8:30 AM ET: the price",
+      "theme": "You already know your prices. There is nowhere public that says them.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still",
+      "primary_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-03-price-feed-4x5.png",
+      "supporting_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-03-price-story-9x16.png",
+      "headline": "So why does everyone ask?",
+      "copy": {
+        "facebook_instagram": "You already know your prices.\n\nYou worked them out the hard way: what the job takes, what the materials cost, what your time is worth, what people will actually pay. You can price a job in your head while your hands are busy.\n\nSo why does every new customer still have to ask?\n\nRight now the answer lives in your head and in your thumbs. Somebody messages \"how much?\", and at some point tonight you stop what you are doing and type it out again. The ones who did not want to ask never messaged at all.\n\nA page does that first round for you. It says what you do, what it generally costs, and what happens next. It says it at 6am and at midnight, to people who would never have sent a message. You still quote the real number for the real job.\n\nHow a page answers the price question before it is asked:\nhttps://famtasticdesigns.com/blog/website-answers-price-questions-before-asked/"
+      },
+      "tags": [
+        "#smallbusiness",
+        "#pricing",
+        "#websitedesign",
+        "#smallbusinessowner",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "already_know_the_game",
+        "content": "drop-03"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtoyhkub000krqvtpi6mdogg",
+        "postiz_scheduled_id": "cmtoyhkub000krqvtpi6mdogg",
+        "postiz_scheduled_group": [
+          "cmtoyhkub000krqvtpi6mdogg",
+          "cmtoyhkuq000lrqvtw3bs7d4s"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:30:15Z",
+          "postiz_post_id": "cmtoyhkub000krqvtpi6mdogg",
+          "date_utc": "2026-09-09T12:30:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 4,
+      "drop_id": "drop-04",
+      "content_id": "akg-drop-04",
+      "scheduled_time": "2026-09-10T12:30:00-04:00",
+      "label": "Drop 4 - Thu 12:30 PM ET: taking the booking",
+      "theme": "A bookable page answers two questions and can leave the rest for later.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still",
+      "primary_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-04-bookable-feed-4x5.png",
+      "supporting_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-04-bookable-square-1x1.png",
+      "headline": "Two questions, answered.",
+      "copy": {
+        "facebook_instagram": "A page that gets you booked is not a prettier version of your app profile. It has a different job.\n\nOn a marketplace, somebody has already decided to hire through that platform and is choosing between the listings in front of them. On your own page, they are deciding something more basic: whether to hire you at all.\n\nSo a bookable page really only has to answer two questions.\n\nCan this person do the specific thing I want? Not the category. The exact job, named the way a customer would ask for it.\n\nCan I trust them with it? Trust here is mundane. Will they answer. Will the price hold. Will they be where they said they would be.\n\nAnything on the page that serves neither question can wait.\n\nThe full breakdown, including what you can safely leave off for now:\nhttps://famtasticdesigns.com/blog/what-a-bookable-page-actually-needs/"
+      },
+      "tags": [
+        "#smallbusiness",
+        "#bookings",
+        "#websitedesign",
+        "#smallbusinessowner",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "already_know_the_game",
+        "content": "drop-04"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtoyho4s000mrqvty8fw3usg",
+        "postiz_scheduled_id": "cmtoyho4s000mrqvty8fw3usg",
+        "postiz_scheduled_group": [
+          "cmtoyho4s000mrqvty8fw3usg",
+          "cmtoyho55000nrqvtlvcba81r"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:30:19Z",
+          "postiz_post_id": "cmtoyho4s000mrqvty8fw3usg",
+          "date_utc": "2026-09-10T16:30:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 5,
+      "drop_id": "drop-05",
+      "content_id": "akg-drop-05",
+      "scheduled_time": "2026-09-12T17:00:00-04:00",
+      "label": "Drop 5 - Sat 5:00 PM ET: what survives",
+      "theme": "Keep the accounts. Own one address that cannot be cleared.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still",
+      "primary_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-05-cleared-feed-4x5.png",
+      "supporting_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-05-cleared-story-9x16.png",
+      "headline": "Keep the accounts. Own one address.",
+      "copy": {
+        "facebook_instagram": "Everything you have built is sitting on a surface somebody else can clear.\n\nNot out of malice. A policy changes. An automated system flags an account. A platform decides a whole category of business no longer fits. You get an email, and years of posts, followers and history stop being reachable in an afternoon.\n\nYou already know this, because you have watched it happen to somebody.\n\nThe answer is not to leave anywhere. Keep the accounts. They work, and they are where people already are.\n\nThe answer is that one of the places people can find you should be a place that cannot be taken away: a page on a domain in your name, with your own contact details on it. Everything else can point at it.\n\nWhat a link-in-bio page trades away, and what it does not:\nhttps://famtasticdesigns.com/blog/linktree-vs-real-website-what-you-trade-away/"
+      },
+      "tags": [
+        "#smallbusiness",
+        "#ownyourdomain",
+        "#linkinbio",
+        "#smallbusinessowner",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "already_know_the_game",
+        "content": "drop-05"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtoyhs2b000orqvtd68x3mom",
+        "postiz_scheduled_id": "cmtoyhs2b000orqvtd68x3mom",
+        "postiz_scheduled_group": [
+          "cmtoyhs2b000orqvtd68x3mom",
+          "cmtoyhs38000prqvtr7520hw5"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:30:24Z",
+          "postiz_post_id": "cmtoyhs2b000orqvtd68x3mom",
+          "date_utc": "2026-09-12T21:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 6,
+      "drop_id": "drop-06",
+      "content_id": "akg-drop-06",
+      "scheduled_time": "2026-09-13T11:00:00-04:00",
+      "label": "Drop 6 - Sun 11:00 AM ET: the paperwork",
+      "theme": "Not a new skill. Paperwork, with a published price and published boundaries.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "still",
+      "primary_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-06-paperwork-feed-4x5.png",
+      "supporting_media": "marketing/creative/campaign-assets/already-know-the-game/stills/akg-drop-06-paperwork-square-1x1.png",
+      "headline": "Paperwork you have not done yet. $199 for the first year.",
+      "copy": {
+        "facebook_instagram": "None of this is a new skill. It is paperwork you have not done yet.\n\nYou already handle the hard parts: pricing, demand, reputation, collecting money, getting people to come back. The formal side is smaller than it looks from the outside. A domain. A page that says what you do. Somewhere the request lands.\n\nWeb Basics is a one-time $199 for the first year. That covers one focused website, a full year of managed hosting, and first-year registration of a domain, or connecting the one you already own. After the first year it is $9.99 a month, plus whatever the domain costs to renew.\n\nWhat it does not cover, said plainly: business email on your own domain is a separate product, and ongoing maintenance is an add-on. The scope is narrow on purpose, which is why the price can stay where it is.\n\nThe published boundaries, including how to tell when you have outgrown it:\nhttps://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/"
+      },
+      "tags": [
+        "#smallbusiness",
+        "#websitedesign",
+        "#smallbusinessowner",
+        "#ownyourdomain",
+        "#famtasticdesigns"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "already_know_the_game",
+        "content": "drop-06"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtoyhvcw000qrqvtrm2dhc29",
+        "postiz_scheduled_id": "cmtoyhvcw000qrqvtrm2dhc29",
+        "postiz_scheduled_group": [
+          "cmtoyhvcw000qrqvtrm2dhc29",
+          "cmtoyhvda000rrqvtstm0i4p0"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T22:30:28Z",
+          "postiz_post_id": "cmtoyhvcw000qrqvtrm2dhc29",
+          "date_utc": "2026-09-13T15:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    }
+  ],
+  "cadence": {
+    "window": "2026-09-06 through 2026-09-13, eight days inclusive",
+    "shape": "Six drops on six of the eight days, times rotated across morning, midday, evening and weekend so the set does not read as an automated slot.",
+    "arc": "address -> the list -> the price -> the booking -> what survives -> the paperwork and its price",
+    "set_by": "lane C2 of plans/four-campaign-flood/plan.md"
+  },
+  "channel_note": {
+    "map": "'facebook' and 'instagram' both resolve through scripts/queue-campaign-drops.py CHANNEL_TO_INTEGRATION; 'instagram' -> 'instagram-standalone'.",
+    "copy_key": "Both integrations prefer the 'facebook_instagram' copy key, so one caption serves both surfaces.",
+    "limits": "instagram-standalone caps at 2200 characters in CONTENT_LIMITS. The queue script appends '\\n\\n<tracked link>\\n\\n<tags>' to the body, roughly 230 further characters. The longest caption here is drop-01 at 1013 characters, so every drop lands well inside the cap with the appended block."
+  },
+  "publish_arming": {
+    "mode": "single_env_switch",
+    "env": "FAMTASTIC_MARKETING_PUBLISH",
+    "note": "Queue script creates DRAFTS unarmed. This lane has not queued anything. approval.publish is false on every drop."
+  },
+  "media_resolution": {
+    "policy": "resolve_at_runtime_fail_loud",
+    "note": "All 18 stills are committed PNGs at real, measured dimensions - no gitignored video in this campaign, so no drop can go BLOCKED on missing media."
+  }
+}

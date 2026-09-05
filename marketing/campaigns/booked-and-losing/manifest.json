@@ -1,0 +1,226 @@
+{
+  "campaign_id": "booked-and-losing",
+  "name": "Booked and Losing — a booking app is a lead source, not an address",
+  "version": "1.0.0",
+  "created_at": "2026-09-05",
+  "owner": "fritz",
+  "status": "assets_complete_not_queued",
+  "sequence": {
+    "part_of": "four-campaign-flood",
+    "plan": "plans/four-campaign-flood/plan.md",
+    "lane": "C1",
+    "relationship": "standalone_argument_arc",
+    "note": "Sibling of cost-is-not-the-reason rather than a sequel to it. That campaign answers the cost objection for anyone with no website. This one answers a different objection entirely, for people who are already busy: the app is working, so why would I need anything else. It never mentions price except in the final drop, where the full renewal terms are disclosed."
+  },
+  "business_goal": "Reach independent beauty and grooming professionals who take bookings through a marketplace app — barbers, nail techs, braiders, loctitians, estheticians, lash artists — and move them from 'the app is working' to 'the app is one channel and I have no address of my own'. Every drop lands on a live blog post; the tracked CTA lands on the $199 Web Basics package page.",
+  "argument": {
+    "premise": "A booking app is a lead source. It is not an address.",
+    "not_the_argument": "The app is bad, the app is a trap, cancel your app. That framing loses the reader in three paragraphs and it is not true — an app that fills a calendar is doing its job.",
+    "the_argument": "An app is good at demand you did not create. A page of your own is good at demand you did create. Most of this audience has both kinds of demand and only serves one of them, so the work they already earned keeps arriving through somebody else's front door.",
+    "dignity_rule": "These are skilled business owners who are busy and good at their trade. They are missing revenue they earned, not failing. No drop, image or line implies otherwise."
+  },
+  "primary_offer": {
+    "sku": "FAM-FOOT-199",
+    "price_usd": "199.00",
+    "billing": "one_time_first_year_included",
+    "scope": "ONE focused landing-page website, ONE year of FAMtastic-managed hosting, and first-year registration of a new domain or connection of a domain the customer already owns. That is the whole bundle.",
+    "renewal": "$9.99/mo hosting after the first year (FAM-HOST-999), plus the cost of renewing the domain",
+    "explicitly_not_included": [
+      "Business email — FAM-BUSINESS-EMAIL, a separate $99 product",
+      "Maintenance — FAM-MAINTENANCE, a $49.99/mo upsell"
+    ],
+    "source_of_truth": "backend/config/famtastic-products.json",
+    "mentioned_in_drops": ["drop-06"],
+    "note": "Price appears in exactly one drop, with the renewal disclosed in the same paragraph. The other five drops carry no price at all."
+  },
+  "audiences": [
+    {
+      "id": "marketplace_booked_barber",
+      "label": "Independent barbers renting or owning a chair",
+      "situation": "Calendar is full through the app. No page in the shop's own name; a walk-in has nothing to read.",
+      "depicted_in": ["drop-01"]
+    },
+    {
+      "id": "marketplace_booked_braider_loctician",
+      "label": "Braiders and loctitians working from a studio or suite",
+      "situation": "Long, high-value appointments booked almost entirely through referral and one app. Invisible to anyone new to the area.",
+      "depicted_in": ["drop-02", "drop-05"]
+    },
+    {
+      "id": "marketplace_booked_nail_lash",
+      "label": "Nail techs, lash artists and estheticians",
+      "situation": "Answering 'how much?' in messages between clients, at night, one stranger at a time.",
+      "depicted_in": ["drop-04", "drop-05"]
+    }
+  ],
+  "palette": {
+    "name": "salon",
+    "ground_hex": "#1A1013",
+    "accent_hex": "#E8B4B8",
+    "argued_from": "The room and the skin, not the palette's name. Every workplace in this campaign is lit the same way in real life: one warm practical source pointed at the work, and the rest of the room falling off dark. A deep plum-black ground with a single warm accent is a photograph of that room rather than a mood imposed on it. The accent has to be skin-adjacent because the work itself is skin, hair and nails — a dusty rose sits inside the range of warm light on skin of every tone in this campaign.",
+    "rejected": {
+      "trades": "Safety orange on blue-black grades every arm, cheek and cuticle toward sodium and cold steel.",
+      "ghost-town": "Amber dust and weathering argues abandonment. These shops are full — the whole premise is that the reader is booked. It would read as pity.",
+      "paper": "The sober document register. Right for a proposal, wrong for a room you can smell.",
+      "famtastic": "Black and lime is the site identity. FAMtastic is not the subject here; the professional is."
+    },
+    "anchor_divergence": "Deliberate divergence from marketing/creative/heygen/reference-tokens.json (mean luminance 150-175, olive #7FB449 at 1-2% of frame). Recorded in writing as CAMPAIGN_ART_DIRECTION_V1 Rule 1 requires.",
+    "art_direction_ref": "docs/marketing/CAMPAIGN_ART_DIRECTION_V1.md"
+  },
+  "representation": {
+    "rule": "Genuinely multicultural, weighted toward Black professionals, showing competent people at work in their own shops. Physical description only — skin tone, hair, age, dress, posture. No ethnic or national signifier used as shorthand.",
+    "depicted": [
+      "drop-01 — Black barber, late thirties, deep brown skin, close fade, his own shop; a second barber with pale freckled skin and an auburn beard working the next chair",
+      "drop-02 — braider, forties, deep brown skin, long locs, working a client in her own studio",
+      "drop-04 — nail technician, thirties, warm medium-brown skin, dark hair in a low bun, gloved and precise under her lamp",
+      "drop-05 — lash and brow studio owner, late twenties, deep brown skin, natural coils, at ease behind her own counter"
+    ],
+    "missing_money_shown_through_objects": [
+      "drop-01 — an empty barber's chair in a shop that is visibly busy",
+      "drop-02 — an unlettered glass storefront and a prospective customer at the door with a phone, looking for an address that does not exist",
+      "drop-04 — a phone lying face down beside a working nail lamp",
+      "drop-05 — a thick, tabbed appointment book beside an open and empty cash drawer"
+    ],
+    "not_attempted_and_why": "Haitian representation was requested and is not encoded visually. Nationality cannot be depicted without reaching for exactly the signifiers this brief forbids. Instead the Black professionals shown span different ages, features and hair (a fade, long locs, natural coils), and no frame relies on a costume or prop to say who anyone is."
+  },
+  "creative_assets": [
+    {
+      "id": "BL-DROP-01",
+      "layout": "standard (photographic plate, type left / right)",
+      "plate_topic": "bl-01",
+      "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-01-story-9x16.png",
+      "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-01-feed-4x5.png",
+      "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-01-square-1x1.png"
+    },
+    {
+      "id": "BL-DROP-02",
+      "layout": "standard (photographic plate, type left / right)",
+      "plate_topic": "bl-02",
+      "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-02-story-9x16.png",
+      "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-02-feed-4x5.png",
+      "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-02-square-1x1.png"
+    },
+    {
+      "id": "BL-DROP-03",
+      "layout": "split (held colour band, diagonal cut, CTA pill — no photography)",
+      "plate_topic": null,
+      "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-03-story-9x16.png",
+      "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-03-feed-4x5.png",
+      "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-03-square-1x1.png"
+    },
+    {
+      "id": "BL-DROP-04",
+      "layout": "standard (photographic plate, type left)",
+      "plate_topic": "bl-04",
+      "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-04-story-9x16.png",
+      "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-04-feed-4x5.png",
+      "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-04-square-1x1.png"
+    },
+    {
+      "id": "BL-DROP-05",
+      "layout": "standard (photographic plate, type left / right)",
+      "plate_topic": "bl-05",
+      "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-05-story-9x16.png",
+      "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-05-feed-4x5.png",
+      "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-05-square-1x1.png"
+    },
+    {
+      "id": "BL-DROP-06",
+      "layout": "checklist (marker rows, hairlines, CTA pill — no photography)",
+      "plate_topic": null,
+      "story_9x16": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-06-story-9x16.png",
+      "feed_4x5": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-06-feed-4x5.png",
+      "square_1x1": "marketing/creative/campaign-assets/booked-and-losing/stills/bl-drop-06-square-1x1.png"
+    }
+  ],
+  "plates": {
+    "library": "marketing/creative/campaign-assets/booked-and-losing/plate-library.json",
+    "receipt": "marketing/creative/campaign-assets/booked-and-losing/generation-receipt.json",
+    "directory": "marketing/creative/campaign-assets/booked-and-losing/plates/",
+    "provider": "google-gemini-api",
+    "model": "gemini-3.1-flash-lite-image",
+    "count_kept": 12,
+    "generations_billed": 15,
+    "measured_spend_usd": 0.504,
+    "note": "Plates carry no text. All type is set in Photoshop through marketing/creative/templates/famtastic-social-frame.jsx."
+  },
+  "articles": [
+    {
+      "id": "ART-01",
+      "drop": "drop-01",
+      "title": "Do You Have to Leave the Booking App?",
+      "url": "https://famtasticdesigns.com/blog/do-you-have-to-leave-the-booking-app/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "ART-02",
+      "drop": "drop-02",
+      "title": "Why Independent Hair Stylists Are Invisible Outside the App",
+      "url": "https://famtasticdesigns.com/blog/why-independent-stylists-are-invisible-outside-the-app/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "ART-03",
+      "drop": "drop-03",
+      "title": "Does Google Index Your Booking App Profile?",
+      "url": "https://famtasticdesigns.com/blog/does-google-index-your-booking-app-profile/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "ART-04",
+      "drop": "drop-04",
+      "title": "Why \"How Much Do You Charge?\" in the DMs Costs You Bookings",
+      "url": "https://famtasticdesigns.com/blog/how-much-do-you-charge-dms-costs-bookings/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "ART-05",
+      "drop": "drop-05",
+      "title": "Who Owns Your Client List When You Book Through an App?",
+      "url": "https://famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    },
+    {
+      "id": "ART-06",
+      "drop": "drop-06",
+      "title": "What a Bookable Page Actually Needs",
+      "url": "https://famtasticdesigns.com/blog/what-a-bookable-page-actually-needs/",
+      "verified_http": 200,
+      "verified_at": "2026-09-05"
+    }
+  ],
+  "related_live_posts_not_used_in_this_run": [
+    "https://famtasticdesigns.com/blog/booking-app-commissions-cost-per-year/",
+    "https://famtasticdesigns.com/blog/website-answers-price-questions-before-asked/",
+    "https://famtasticdesigns.com/blog/why-link-in-bio-page-doesnt-show-up-in-google/",
+    "https://famtasticdesigns.com/blog/linktree-vs-real-website-what-you-trade-away/",
+    "https://famtasticdesigns.com/blog/how-local-customers-find-your-business-online/",
+    "https://famtasticdesigns.com/blog/business-email-on-your-own-domain/"
+  ],
+  "channels": {
+    "targeted": ["facebook", "instagram-standalone"],
+    "excluded": {
+      "youtube": "OAuth token expired — needs the owner",
+      "tiktok": "app not approved for public posting — needs the owner",
+      "x": "not part of this campaign's brief",
+      "linkedin": "wrong room for this audience"
+    }
+  },
+  "utm_parameters": {
+    "utm_campaign": "booked_and_losing",
+    "utm_source": "social",
+    "utm_medium": "social",
+    "utm_content": "drop-01 .. drop-06",
+    "landing_url": "https://famtasticdesigns.com/packages/199-quick-start/?sku=FAM-FOOT-199",
+    "landing_verified_http": 200
+  },
+  "gates": {
+    "queued": false,
+    "note": "Nothing has been sent to Postiz. Every drop carries approval.publish=false. Queue with `python3 scripts/queue-campaign-drops.py --campaign booked-and-losing`; convert to a live schedule only with owner approval and FAMTASTIC_MARKETING_PUBLISH=true."
+  }
+}

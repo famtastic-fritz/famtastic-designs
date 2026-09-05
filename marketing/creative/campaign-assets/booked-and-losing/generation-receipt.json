@@ -1,0 +1,677 @@
+{
+  "schema": "famtastic.tier2-plate-generation-receipt.v2",
+  "generated_at": "2026-09-05T22:12:18.646Z",
+  "library": "../campaign-assets/booked-and-losing/plate-library.json",
+  "provider": "google-gemini-api",
+  "api": "generateContent",
+  "model": "gemini-3.1-flash-lite-image",
+  "endpoint": "https://generativelanguage.googleapis.com/v1/models/gemini-3.1-flash-lite-image:generateContent",
+  "credential_source": "macos_keychain:FAMtastic.Gemini.Image:famtastic-gemini-image-worker",
+  "cost_per_image_usd_1k": 0.0336,
+  "cost_note": "Published per-image rate for one Gemini 3.1 Flash Lite Image 1K output. The Gemini Developer API generateContent response carries no per-call invoiced dollar amount, so measured spend is (successful images x published per-image rate) \u2014 the same basis every prior Gemini receipt in this repo uses. Token usage per call is recorded in usage_metadata as corroborating evidence. A blocked/safety-filtered image is not charged (confirmed by the provider's own error message) and is excluded from total_cost_usd.",
+  "last_run": {
+    "requested": 3,
+    "succeeded": 3,
+    "failed": 0,
+    "cost_usd": 0.1008,
+    "concurrency": 3
+  },
+  "requested_count": 12,
+  "succeeded_count": 12,
+  "failed_count": 0,
+  "total_cost_usd": 0.4032,
+  "results": [
+    {
+      "id": "bl-01-story-9x16",
+      "topic_id": "bl-01",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "9:16",
+      "surface": "story / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "do-you-have-to-leave-the-booking-app",
+      "started_at": "2026-09-05T22:10:41.426Z",
+      "completed_at": "2026-09-05T22:10:44.727Z",
+      "duration_ms": 3299,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 3299
+        }
+      ],
+      "output_file": "plates/bl-01-story-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 673267,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "86934a1a1852992e62bb71af0cf96bca8aef7b1a4cfd419b78fc34a2ba694eb3",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 976,
+        "candidatesTokenCount": 1619,
+        "totalTokenCount": 2595,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 976
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The interior of a small independent barbershop on a weekday afternoon. Three stations along one mirrored wall, each with its own warm practical bulb; the rest of the room falls away into a low plum-dark. The shop is plainly working - clippings on the tiled floor, capes hung, two chairs occupied.\nSubject: In the upper third of the frame, one empty barber's chair turned three-quarters toward camera: cracked leather honestly worn through at the seat edge, a folded cape over the arm, a set of clippers laid down on the station shelf beside it. Behind it, softly out of focus, the shop's owner - a Black man in his late thirties, deep brown skin, close fade and a short trimmed beard, plain dark work shirt - stands at the next station mid-cut, hands working, absorbed and completely in command of what he is doing. Further back at the third chair, a second barber with pale freckled skin and an auburn beard leans in over his own client, equally absorbed.\nKey details: Hair clippings underfoot, a comb standing in a jar, a towel over a shoulder, fingerprints on the mirror, a scuffed chrome footrest, a worn spray bottle. Every object is used and cared for. Nothing is new, nothing is styled, nobody is posing for the camera. The bottom 40 percent of the frame is empty tiled floor receding into shadow.\nCamera and light: 35mm at seat height, very slight low angle, shallow depth of field holding the empty chair sharp while the working barbers fall soft behind it.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty \u2014 one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-01-feed-4x5",
+      "topic_id": "bl-01",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "4:5",
+      "surface": "facebook / instagram feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "do-you-have-to-leave-the-booking-app",
+      "started_at": "2026-09-05T22:10:41.439Z",
+      "completed_at": "2026-09-05T22:10:44.460Z",
+      "duration_ms": 3020,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 3020
+        }
+      ],
+      "output_file": "plates/bl-01-feed-4x5.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 667283,
+      "dimensions": {
+        "height": 1152,
+        "width": 928
+      },
+      "sha256": "b29e2171b3e104d2b969c4f2201fe0c18a61d3f9e7d03c6f0f78460c4060a2ee",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 889,
+        "candidatesTokenCount": 1618,
+        "totalTokenCount": 2507,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 889
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The same small barbershop, seen down the length of the station wall on a weekday afternoon. Warm practical bulbs over each mirror; the near wall on the left is a plain painted surface with nothing on it, receding into soft shadow.\nSubject: Composed entirely into the right half: one empty barber's chair in the middle distance, cape folded over its arm, clippers resting on the shelf, and past it the shop's owner - a Black man in his late thirties, deep brown skin, close fade, short beard - working a fade on a seated client, his free hand steadying the client's head with obvious care.\nKey details: Chrome arm rests catching the bulb, a strip of hair clippings swept into a line on the tile, a jar of combs, an open cabinet with folded towels. The left 45 percent of the frame is one continuous empty painted wall with its own soft light gradient, a scuff near the floor, and nothing else.\nCamera and light: 50mm at standing eye level, looking down the row, shallow depth of field, warm bulb light falling off quickly toward the empty left wall.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the left 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the right half. That empty band is where large display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-01-square-1x1",
+      "topic_id": "bl-01",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "1:1",
+      "surface": "facebook / instagram feed square",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "do-you-have-to-leave-the-booking-app",
+      "started_at": "2026-09-05T22:12:15.209Z",
+      "completed_at": "2026-09-05T22:12:18.285Z",
+      "duration_ms": 3072,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 3072
+        }
+      ],
+      "output_file": "plates/bl-01-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 648790,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "11574bba2c0f31d298a2d7b258bb11692b4161d180a31cfbfa3799a72ace8d24",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 1005,
+        "candidatesTokenCount": 1617,
+        "totalTokenCount": 2622,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 1005
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A corner of a small independent barbershop at the end of the day. One warm bulb hangs over a single station; the room falls away into a deep plum-dark, and behind and to the right the plain painted rear wall recedes softly into shadow with nothing on it.\nSubject: Weighted into the left half: an empty barber's chair in the foreground, cracked leather worn honestly at the seat, a folded cape over the arm, clippers resting on the station shelf. Just behind it the shop's owner - a Black man in his late thirties, deep brown skin, close fade, short trimmed beard - stands wiping down a pair of clippers with a cloth, unhurried and at ease after a run of clients.\nKey details: Worn leather, a chipped station edge, a towel over the mirror rail, dust drifting in the bulb light, clippings on the floor. The right side of the room is simply deeper unlit space and bare wall, dimming gradually with distance. CRITICAL FRAMING FIX: the quiet area must be an actual surface inside the room, continuous with the rest of the photograph and receding naturally with its own soft falloff, grain and imperfection. There must be NO straight seam, NO visible dividing edge, NO abrupt tonal step and NO rectangle anywhere in the frame. The photograph must bleed to all four edges: no border, no white margin, no frame, no polaroid edge, no matting, no inset panel.\nCamera and light: 35mm, eye level, shallow depth of field on the chair with the owner soft behind it, one warm overhead bulb, image filling the entire frame edge to edge.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-02-story-9x16",
+      "topic_id": "bl-02",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "9:16",
+      "surface": "story / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
+      "started_at": "2026-09-05T22:10:44.154Z",
+      "completed_at": "2026-09-05T22:10:46.989Z",
+      "duration_ms": 2832,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2832
+        }
+      ],
+      "output_file": "plates/bl-02-story-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 741717,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "d672c053c2b9850f778305ab137dee125055312e8a6c217a214e9af0088eccd4",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 929,
+        "candidatesTokenCount": 1549,
+        "totalTokenCount": 2478,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 929
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A small braiding studio in a low-rise storefront, late afternoon, photographed from the public sidewalk. The storefront glass is completely blank: no lettering, no decals, no numerals, no painted signage, no posters, no stickers anywhere on it or anywhere else in frame.\nSubject: In the upper two thirds, behind the glass and warmly lit from inside: a braider in her forties - deep brown skin, long locs gathered back off her face - standing at work behind a seated client, hands raised mid-part, calm and expert. Nearer to camera at the glass, in the lower left and slightly out of focus, the shoulder, forearm and hand of a prospective customer holding a phone up in front of them, plainly trying to look the place up before going in.\nKey details: Street reflections sliding across the glass, a smudge at hand height where the door gets pushed, a rubber floor mat inside, a plant on the sill, the warm interior bulb spilling out onto the pavement. The concrete pavement across the bottom of the frame is empty and low detail. Absolutely no writing on the glass, the door, the phone screen, the mat, or anything else.\nCamera and light: 35mm from the pavement, eye level, natural late daylight outside and warm tungsten inside, shallow depth of field holding the braider sharp through the glass.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty \u2014 one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-02-feed-4x5",
+      "topic_id": "bl-02",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "4:5",
+      "surface": "facebook / instagram feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
+      "started_at": "2026-09-05T22:10:44.460Z",
+      "completed_at": "2026-09-05T22:10:47.185Z",
+      "duration_ms": 2724,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2724
+        }
+      ],
+      "output_file": "plates/bl-02-feed-4x5.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 671000,
+      "dimensions": {
+        "height": 1152,
+        "width": 928
+      },
+      "sha256": "bfe82585a489a742039bf133e7be5a7ba41287a296b68c801a929d44fbaed162",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 850,
+        "candidatesTokenCount": 1555,
+        "totalTokenCount": 2405,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 850
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The same braiding studio storefront in late afternoon, framed so the business occupies the left half and a plain rendered wall of the same building runs away empty on the right.\nSubject: Left half only: through blank unlettered glass, a braider in her forties - deep brown skin, long locs tied back - working confidently on a seated client under a warm interior bulb, and at the glass in the foreground the hand and phone of a prospective customer looking the place up.\nKey details: Reflected street, a hand smudge on the door, warm light spilling onto the pavement. The right 45 percent is one continuous rendered wall in flat late daylight with its own faint stain and texture and nothing on it - no vent, no pipe, no sign, no shadow crossing in.\nCamera and light: 50mm from across the pavement, eye level, shallow depth of field on the glass.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-02-square-1x1",
+      "topic_id": "bl-02",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "1:1",
+      "surface": "facebook / instagram feed square",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
+      "started_at": "2026-09-05T22:10:44.727Z",
+      "completed_at": "2026-09-05T22:10:47.471Z",
+      "duration_ms": 2744,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2744
+        }
+      ],
+      "output_file": "plates/bl-02-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 727598,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "42355a16789d1a97fdebfbbe8f82cc4a71a985a36cc656963fdab1af736c585c",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 851,
+        "candidatesTokenCount": 1614,
+        "totalTokenCount": 2465,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 851
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: Late afternoon on a quiet commercial street. On the left, a plain painted shopfront wall with nothing on it. On the right, the blank unlettered glass door and window of a small braiding studio, warmly lit inside.\nSubject: Right half only: behind the glass, a braider in her forties - deep brown skin, long locs gathered back - standing at work over a seated client, hands raised, unhurried and expert. At the door, a prospective customer stands with a phone in hand, head slightly tilted, plainly searching for the business before stepping in.\nKey details: Warm interior light against cool daylight, a smudge on the door glass, a mat, a plant. The left 45 percent is one continuous empty painted wall with a soft daylight gradient and honest stain. No lettering, decals, numerals or signage anywhere in the frame.\nCamera and light: 35mm, eye level from the pavement, shallow depth of field.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the left 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the right half. That empty band is where large display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-04-story-9x16",
+      "topic_id": "bl-04",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "9:16",
+      "surface": "story / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "how-much-do-you-charge-dms-costs-bookings",
+      "started_at": "2026-09-05T22:12:15.228Z",
+      "completed_at": "2026-09-05T22:12:18.645Z",
+      "duration_ms": 3415,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 3415
+        }
+      ],
+      "output_file": "plates/bl-04-story-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 649230,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "a8315fa0c031fd5a71cb98eaf9c1dbaf2de6c6ca87b44eefb6eec44f6f354438",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 1011,
+        "candidatesTokenCount": 1576,
+        "totalTokenCount": 2587,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 1011
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A nail technician's station in a small private studio at night, photographed along the length of the table. One bright articulated lamp clamped to the table edge throws a warm circle over the work; the long dark tabletop runs away toward camera and the room beyond falls into plum-dark.\nSubject: Weighted high in the frame: a nail technician in her thirties - warm medium-brown skin, dark hair pulled into a low bun, small gold hoops - gloved, steady and completely absorbed, working on a client's hand under the lamp. Nearer to camera on a folded towel, her own phone lies face down, screen hidden, case worn at the corners, set aside so she can work.\nKey details: A dust extractor, small bottles turned so their sides are blank and unlabelled, a cuticle pusher, gel dust on the mat. The lower part of the frame is simply more of the same continuous dark tabletop receding toward the lens, with the lamp's light falling off gradually across it - the same wood surface, same grain, same scuffs, no change of material and no horizon line. CRITICAL FRAMING FIX: the quiet area must be an actual surface inside the room, continuous with the rest of the photograph and receding naturally with its own soft falloff, grain and imperfection. There must be NO straight seam, NO visible dividing edge, NO abrupt tonal step and NO rectangle anywhere in the frame. The photograph must bleed to all four edges: no border, no white margin, no frame, no polaroid edge, no matting, no inset panel.\nCamera and light: 35mm, low and close to the tabletop, looking along it, shallow depth of field, one warm source, image filling the entire frame edge to edge.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty \u2014 one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-04-feed-4x5",
+      "topic_id": "bl-04",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "4:5",
+      "surface": "facebook / instagram feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "how-much-do-you-charge-dms-costs-bookings",
+      "started_at": "2026-09-05T22:10:47.185Z",
+      "completed_at": "2026-09-05T22:10:50.328Z",
+      "duration_ms": 3142,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 3142
+        }
+      ],
+      "output_file": "plates/bl-04-feed-4x5.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 589911,
+      "dimensions": {
+        "height": 1152,
+        "width": 928
+      },
+      "sha256": "3e407a3b446dbd46731132016a3863df020e196dab046607a33a6cc0076b53eb",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 824,
+        "candidatesTokenCount": 1573,
+        "totalTokenCount": 2397,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 824
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The same nail station at night, framed from the side so the dark room fills the left of the frame as one continuous unlit wall and the lit work happens on the right.\nSubject: Right half only: a nail technician in her thirties - warm medium-brown skin, dark hair in a low bun - gloved and working under the clamped lamp on a client's hand, and just in front of her elbow, face down on a folded towel, her phone with its worn case.\nKey details: Warm lamp circle, dust extractor, blank unlabelled bottles, gel dust. The left 45 percent is unlit wall and air receding naturally into plum-dark with a faint falloff gradient and nothing in it.\nCamera and light: 50mm, seated eye level, shallow depth of field, single warm source.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the left 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the right half. That empty band is where large display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-04-square-1x1",
+      "topic_id": "bl-04",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "1:1",
+      "surface": "facebook / instagram feed square",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "how-much-do-you-charge-dms-costs-bookings",
+      "started_at": "2026-09-05T22:10:47.472Z",
+      "completed_at": "2026-09-05T22:10:50.292Z",
+      "duration_ms": 2819,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2819
+        }
+      ],
+      "output_file": "plates/bl-04-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 638516,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "53c1ee94b62b42ece97f3973ec98378a20d9dcf044463d3215382f2a7e163105",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 830,
+        "candidatesTokenCount": 1628,
+        "totalTokenCount": 2458,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 830
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A nail station at night, framed from slightly above and to the right, so the work sits on the left and the dark room recedes on the right.\nSubject: Left half only: under one clamped warm lamp, the gloved hands of a nail technician in her thirties - warm medium-brown skin, dark hair in a low bun - shaping a client's nail with complete concentration, and beside her forearm a phone lying face down on a folded towel.\nKey details: Lamp circle, gel dust, blank unlabelled bottles turned away, a small brush stood in a jar. The right 45 percent is dark unlit room receding with a soft falloff and nothing in it.\nCamera and light: 35mm, slightly above the table, shallow depth of field, one warm source.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-05-story-9x16",
+      "topic_id": "bl-05",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "9:16",
+      "surface": "story / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "started_at": "2026-09-05T22:10:49.907Z",
+      "completed_at": "2026-09-05T22:10:52.635Z",
+      "duration_ms": 2727,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2727
+        }
+      ],
+      "output_file": "plates/bl-05-story-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 654899,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "9a9b94e86364cb34794385f0ab44a5973dbf039ee5ce868a338403b5b325e3eb",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 921,
+        "candidatesTokenCount": 1613,
+        "totalTokenCount": 2534,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 921
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The small front counter of an independent lash and brow studio at the end of the day. One warm pendant bulb hangs over the counter; the treatment room behind is dark, its lash bed just readable in the falloff.\nSubject: In the upper two thirds: a heavy appointment book lying open on the counter, swollen and dog-eared, dozens of coloured tabs down its page edges, its ruled pages completely unwritten and blank, a pen lying in the gutter. Beside it, a cash drawer pulled open and bare - coin wells and note clips visible and empty. Behind the counter, at ease and unhurried, a lash artist in her late twenties - deep brown skin, natural coils pulled back with a band - rests one hand on the counter, relaxed, mid-conversation with someone off frame, plainly the owner of the room.\nKey details: Warm bulb light, a lash tile, a small tray of tools, the counter's laminate worn through at the front edge. The bottom 40 percent is empty counter front and dark floor. The book's pages carry ruled lines only - no handwriting, no numbers, no printing anywhere in frame.\nCamera and light: 35mm just above counter height, shallow depth of field on the open book, the artist soft behind it, one warm overhead source.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty \u2014 one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-05-feed-4x5",
+      "topic_id": "bl-05",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "4:5",
+      "surface": "facebook / instagram feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "started_at": "2026-09-05T22:10:50.292Z",
+      "completed_at": "2026-09-05T22:10:53.048Z",
+      "duration_ms": 2754,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2754
+        }
+      ],
+      "output_file": "plates/bl-05-feed-4x5.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 655119,
+      "dimensions": {
+        "height": 1152,
+        "width": 928
+      },
+      "sha256": "4ec995b749fd234def1ecebd8ac3188b7df4ff41976aa80bd78ccbccac26d15b",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 856,
+        "candidatesTokenCount": 1594,
+        "totalTokenCount": 2450,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 856
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The front counter of a lash and brow studio at closing, framed so the counter and the person occupy the left half and a plain dark painted wall runs away empty on the right.\nSubject: Left half only: a thick, tabbed, well-thumbed appointment book open on the counter with ruled but unwritten pages, an open and empty cash drawer beside it, and behind them a lash artist in her late twenties - deep brown skin, natural coils pulled back - standing relaxed with one hand on the counter, calm and in charge of her own room.\nKey details: One warm pendant bulb, worn laminate, a small tray of tools, coloured tabs down the book's edge. The right 45 percent is dark painted wall receding with a soft falloff gradient and honest scuffing, nothing on it.\nCamera and light: 50mm at standing eye level, shallow depth of field, single warm overhead source.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "bl-05-square-1x1",
+      "topic_id": "bl-05",
+      "campaign": "booked-and-losing",
+      "palette": "salon",
+      "aspect_ratio": "1:1",
+      "surface": "facebook / instagram feed square",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "started_at": "2026-09-05T22:12:15.229Z",
+      "completed_at": "2026-09-05T22:12:18.212Z",
+      "duration_ms": 2979,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2979
+        }
+      ],
+      "output_file": "plates/bl-05-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 641783,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "ee65f148d209160671523745f78aa74f0c207fffa10fa8b60cfbd8551041d659",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 1020,
+        "candidatesTokenCount": 1610,
+        "totalTokenCount": 2630,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 1020
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The front counter of an independent lash and brow studio at closing time, one warm pendant bulb above it. The camera looks across the counter from the dark, unlit end of the room, so the near counter surface and the air above it are simply in deep shadow and brighten gradually toward the bulb.\nSubject: Weighted into the right half: a heavy appointment book open on the counter, swollen and dog-eared, dozens of coloured tabs along its page edges, its ruled pages completely unwritten, a pen lying in the gutter. Beside it a cash drawer pulled open and completely bare - every coin well and note clip empty. Just behind, the studio's owner - a woman in her late twenties, deep brown skin, natural coils pulled back with a band - rests a hand easily on the counter, relaxed and in charge of her own room.\nKey details: Worn laminate counter edge, a lash tile, a small tray of tools, warm bulb falloff. The left of the frame is the same continuous counter and the same dark air above it, unlit and gradually dimming - one unbroken surface, no seam, no edge, no step in tone. CRITICAL FRAMING FIX: the quiet area must be an actual surface inside the room, continuous with the rest of the photograph and receding naturally with its own soft falloff, grain and imperfection. There must be NO straight seam, NO visible dividing edge, NO abrupt tonal step and NO rectangle anywhere in the frame. The photograph must bleed to all four edges: no border, no white margin, no frame, no polaroid edge, no matting, no inset panel.\nCamera and light: 50mm at counter height looking across the counter, shallow depth of field, one warm overhead bulb, image filling the entire frame edge to edge.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the left 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the right half. That empty band is where large display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    }
+  ],
+  "campaign_spend_correction": {
+    "why": "total_cost_usd counts KEPT images only. generate-plates.mjs merges results by id, so a retake overwrites the first take's row and its cost disappears from the total. Three plates were regenerated after visual review (bl-01-square-1x1, bl-04-story-9x16, bl-05-square-1x1), so the receipt shows 12 where 15 successful generations were actually billed.",
+    "successful_generations_billed": 15,
+    "kept_images": 12,
+    "discarded_first_takes": [
+      "bl-01-square-1x1",
+      "bl-04-story-9x16",
+      "bl-05-square-1x1"
+    ],
+    "discard_reason": "First takes rendered the reserved negative space as a flat pasted panel with a hard seam, and one arrived with a white polaroid border - both explicitly excluded by the prompt. Caught by looking at the images, not by any tool status.",
+    "measured_spend_usd": 0.504,
+    "basis": "15 successful generations x $0.0336 published per-image rate for one Gemini 3.1 Flash Lite Image 1K output. The generateContent response carries no invoiced dollar amount; this is the same basis every Gemini receipt in this repo uses.",
+    "campaign_total_usd": 0.504,
+    "campaign_ceiling_usd": 1.5,
+    "other_paid_providers_used": "none - Photoshop compositing is $0 on the existing Adobe subscription, and no HeyGen, OpenAI, MuAPI or Firefly call was made."
+  }
+}

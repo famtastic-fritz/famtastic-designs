@@ -1,0 +1,258 @@
+{
+  "schema": "famtastic.plate-prompt-library.v2",
+  "campaign": "booked-and-losing",
+  "generated_at": "2026-09-05",
+  "art_direction_ref": "docs/marketing/CAMPAIGN_ART_DIRECTION_V1.md",
+  "palette_source_of_truth": "marketing/creative/plates/prompt-library.json (shared clauses and the salon palette are copied verbatim from it)",
+  "palette_argument": "salon (#1A1013 ground / #E8B4B8 accent), argued from the room and from skin, not from the palette's name. Every workplace in this campaign - a barber's station, a nail table, a braiding chair, a lash bed - is lit the same way in real life: one warm practical source pointed at the work, and the rest of the room falling off dark. A deep plum-black ground with a single warm accent is a photograph of that room rather than a mood imposed on it. The accent has to be skin-adjacent because the work itself is skin, hair and nails: a dusty rose sits inside the range of warm light on skin of every tone in this campaign, warming deep brown skin without pushing it orange and warming pale skin without going clinical pink. That is the representation requirement expressed as a colour decision.",
+  "palettes_rejected": {
+    "trades": "Safety orange on blue-black grades every arm, cheek and cuticle toward sodium and cold steel. Wrong for work whose subject is skin.",
+    "ghost-town": "Amber dust and weathering argues abandonment. These shops are full - the whole campaign premise is that the reader is booked. It would read as pity, which the brief forbids.",
+    "paper": "The sober document register. Right for a proposal, wrong for a room you can smell.",
+    "famtastic": "Black and lime is the site identity. FAMtastic is not the subject here; the professional is."
+  },
+  "anchor_divergence": "Deliberate divergence from marketing/creative/heygen/reference-tokens.json (mean luminance 150-175, olive #7FB449 at 1-2% of frame). This campaign's ground is a dark room with a rose accent because the rooms being photographed are genuinely dark and the accent has to be skin-adjacent. CAMPAIGN_ART_DIRECTION_V1 Rule 1 permits an argued divergence; this is that argument, stated in writing as required.",
+  "representation_rules": [
+    "Skilled business owners at work in their own shops. Competence is the baseline, never struggle.",
+    "Physical description only - skin tone, hair, age, dress, posture. No ethnic or national signifiers used as shorthand.",
+    "The missing revenue is carried by objects and situations: an empty chair in a busy shop, a face-down phone, an unlettered storefront, a full appointment book beside an empty drawer. Never by a sad face.",
+    "No character is depicted as pitiable, overwhelmed or failing. Posture reads as unhurried and in command in every frame."
+  ],
+  "hard_constraints": [
+    "No baked-in text of any kind, anywhere, in any plate.",
+    "Every plate reserves deliberate negative space for Photoshop-set type, declared per variant in `negative_space`.",
+    "Every plate names exactly one palette, and that palette comes from the campaign's own subject matter \u2014 not from the house identity by default."
+  ],
+  "palettes": {
+    "salon": {
+      "ground_hex": "#1A1013",
+      "accent_hex": "#E8B4B8",
+      "rgb": {
+        "ground": [
+          26,
+          16,
+          19
+        ],
+        "accent": [
+          232,
+          180,
+          184
+        ]
+      },
+      "use_when": "Personal-service work \u2014 hair, nails, barbering, beauty. Skin-adjacent warmth, close and human.",
+      "prompt_clause": "deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 \u2014 a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast."
+    }
+  },
+  "shared": {
+    "use_case_clause": "a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.",
+    "photography_clause": "Photograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear \u2014 scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.",
+    "no_text_clause": "Text rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame \u2014 including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.",
+    "exclusion_clause": "Exclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.",
+    "preserve_clause": "Preserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else.",
+    "negative_space_clauses": {
+      "right-column": "Reserved negative space (mandatory): the right 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.",
+      "left-column": "Reserved negative space (mandatory): the left 45% of the frame stays near-empty \u2014 one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the right half. That empty band is where large display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.",
+      "lower-third": "Reserved negative space (mandatory): the bottom 40% of the frame stays near-empty \u2014 one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.",
+      "upper-half": "Reserved negative space (mandatory): the top 50% of the frame stays near-empty \u2014 one continuous low-detail surface (wall, sky, ceiling, seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.",
+      "center-band": "Reserved negative space (mandatory): keep a clean horizontal band across the middle third of the frame empty and low-detail. Subject interest sits above and below it; nothing crosses it. Type is set into that band in Photoshop. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can.",
+      "full-field": "Reserved negative space (mandatory): this is an atmosphere plate, not a picture of a thing. No focal subject, no readable object, no strong compositional anchor anywhere. The whole frame is one even, quiet field with gentle variation only \u2014 type will be set across all of it. The emptiness must be REAL DEPTH IN THE SCENE - an actual wall, sky, ceiling or surface receding naturally with its own soft light gradient, grain and imperfection. It is NOT a blank panel, card, sheet, sticker, overlay, crop or flat rectangle placed on top of the photograph or painted onto an object. Never introduce a hard straight edge, a colour block or a uniform fill to create it. If the scene cannot provide that emptiness honestly, re-frame the shot until it can."
+    }
+  },
+  "topics": [
+    {
+      "topic_id": "bl-01",
+      "campaign": "booked-and-losing",
+      "title": "Drop 1 - A booking app is a lead source, not an address",
+      "blog_post_slug": "do-you-have-to-leave-the-booking-app",
+      "claim": "An app is good at demand you did not create. A page of your own is good at demand you did create. Most businesses have both and serve only one.",
+      "object": "One empty barber's chair inside a shop that is visibly busy. The chair is the seat a customer who searched your name would have taken and could not find.",
+      "palette": "salon",
+      "palette_argument": "The room is genuinely lit this way: one warm practical bulb over each station and the rest of the shop falling away dark. Rose-warm accent keeps every skin tone in frame reading as itself.",
+      "variants": [
+        {
+          "id": "bl-01-story-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / reels background",
+          "negative_space": "lower-third",
+          "type_side": "left",
+          "output_file": "plates/bl-01-story-9x16.jpg",
+          "scene": "The interior of a small independent barbershop on a weekday afternoon. Three stations along one mirrored wall, each with its own warm practical bulb; the rest of the room falls away into a low plum-dark. The shop is plainly working - clippings on the tiled floor, capes hung, two chairs occupied.",
+          "subject": "In the upper third of the frame, one empty barber's chair turned three-quarters toward camera: cracked leather honestly worn through at the seat edge, a folded cape over the arm, a set of clippers laid down on the station shelf beside it. Behind it, softly out of focus, the shop's owner - a Black man in his late thirties, deep brown skin, close fade and a short trimmed beard, plain dark work shirt - stands at the next station mid-cut, hands working, absorbed and completely in command of what he is doing. Further back at the third chair, a second barber with pale freckled skin and an auburn beard leans in over his own client, equally absorbed.",
+          "details": "Hair clippings underfoot, a comb standing in a jar, a towel over a shoulder, fingerprints on the mirror, a scuffed chrome footrest, a worn spray bottle. Every object is used and cared for. Nothing is new, nothing is styled, nobody is posing for the camera. The bottom 40 percent of the frame is empty tiled floor receding into shadow.",
+          "camera": "35mm at seat height, very slight low angle, shallow depth of field holding the empty chair sharp while the working barbers fall soft behind it."
+        },
+        {
+          "id": "bl-01-feed-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram feed",
+          "negative_space": "left-column",
+          "type_side": "left",
+          "output_file": "plates/bl-01-feed-4x5.jpg",
+          "scene": "The same small barbershop, seen down the length of the station wall on a weekday afternoon. Warm practical bulbs over each mirror; the near wall on the left is a plain painted surface with nothing on it, receding into soft shadow.",
+          "subject": "Composed entirely into the right half: one empty barber's chair in the middle distance, cape folded over its arm, clippers resting on the shelf, and past it the shop's owner - a Black man in his late thirties, deep brown skin, close fade, short beard - working a fade on a seated client, his free hand steadying the client's head with obvious care.",
+          "details": "Chrome arm rests catching the bulb, a strip of hair clippings swept into a line on the tile, a jar of combs, an open cabinet with folded towels. The left 45 percent of the frame is one continuous empty painted wall with its own soft light gradient, a scuff near the floor, and nothing else.",
+          "camera": "50mm at standing eye level, looking down the row, shallow depth of field, warm bulb light falling off quickly toward the empty left wall."
+        },
+        {
+          "id": "bl-01-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "facebook / instagram feed square",
+          "negative_space": "right-column",
+          "type_side": "right",
+          "output_file": "plates/bl-01-square-1x1.jpg",
+          "scene": "A corner of a small independent barbershop at the end of the day. One warm bulb hangs over a single station; the room falls away into a deep plum-dark, and behind and to the right the plain painted rear wall recedes softly into shadow with nothing on it.",
+          "subject": "Weighted into the left half: an empty barber's chair in the foreground, cracked leather worn honestly at the seat, a folded cape over the arm, clippers resting on the station shelf. Just behind it the shop's owner - a Black man in his late thirties, deep brown skin, close fade, short trimmed beard - stands wiping down a pair of clippers with a cloth, unhurried and at ease after a run of clients.",
+          "details": "Worn leather, a chipped station edge, a towel over the mirror rail, dust drifting in the bulb light, clippings on the floor. The right side of the room is simply deeper unlit space and bare wall, dimming gradually with distance. CRITICAL FRAMING FIX: the quiet area must be an actual surface inside the room, continuous with the rest of the photograph and receding naturally with its own soft falloff, grain and imperfection. There must be NO straight seam, NO visible dividing edge, NO abrupt tonal step and NO rectangle anywhere in the frame. The photograph must bleed to all four edges: no border, no white margin, no frame, no polaroid edge, no matting, no inset panel.",
+          "camera": "35mm, eye level, shallow depth of field on the chair with the owner soft behind it, one warm overhead bulb, image filling the entire frame edge to edge.",
+          "revision": "r2 - first take carried a hard panel seam / border artifact; reframed so the reserved emptiness is real room depth"
+        }
+      ]
+    },
+    {
+      "topic_id": "bl-02",
+      "campaign": "booked-and-losing",
+      "title": "Drop 2 - Outside the app you have no address to be found at",
+      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
+      "claim": "A stranger who has heard your name has nowhere of yours to land. That is not a fee problem; it never shows up on a statement.",
+      "object": "An unlettered glass storefront with a busy studio behind it, and a prospective customer at the glass with a phone, looking for an address that does not exist.",
+      "palette": "salon",
+      "palette_argument": "Warm interior practical light behind glass against a cooling late-afternoon street is the honest lighting of this scene, and it is the same plum-dark-plus-warm-accent structure the palette specifies.",
+      "variants": [
+        {
+          "id": "bl-02-story-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / reels background",
+          "negative_space": "lower-third",
+          "type_side": "left",
+          "output_file": "plates/bl-02-story-9x16.jpg",
+          "scene": "A small braiding studio in a low-rise storefront, late afternoon, photographed from the public sidewalk. The storefront glass is completely blank: no lettering, no decals, no numerals, no painted signage, no posters, no stickers anywhere on it or anywhere else in frame.",
+          "subject": "In the upper two thirds, behind the glass and warmly lit from inside: a braider in her forties - deep brown skin, long locs gathered back off her face - standing at work behind a seated client, hands raised mid-part, calm and expert. Nearer to camera at the glass, in the lower left and slightly out of focus, the shoulder, forearm and hand of a prospective customer holding a phone up in front of them, plainly trying to look the place up before going in.",
+          "details": "Street reflections sliding across the glass, a smudge at hand height where the door gets pushed, a rubber floor mat inside, a plant on the sill, the warm interior bulb spilling out onto the pavement. The concrete pavement across the bottom of the frame is empty and low detail. Absolutely no writing on the glass, the door, the phone screen, the mat, or anything else.",
+          "camera": "35mm from the pavement, eye level, natural late daylight outside and warm tungsten inside, shallow depth of field holding the braider sharp through the glass."
+        },
+        {
+          "id": "bl-02-feed-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram feed",
+          "negative_space": "right-column",
+          "type_side": "right",
+          "output_file": "plates/bl-02-feed-4x5.jpg",
+          "scene": "The same braiding studio storefront in late afternoon, framed so the business occupies the left half and a plain rendered wall of the same building runs away empty on the right.",
+          "subject": "Left half only: through blank unlettered glass, a braider in her forties - deep brown skin, long locs tied back - working confidently on a seated client under a warm interior bulb, and at the glass in the foreground the hand and phone of a prospective customer looking the place up.",
+          "details": "Reflected street, a hand smudge on the door, warm light spilling onto the pavement. The right 45 percent is one continuous rendered wall in flat late daylight with its own faint stain and texture and nothing on it - no vent, no pipe, no sign, no shadow crossing in.",
+          "camera": "50mm from across the pavement, eye level, shallow depth of field on the glass."
+        },
+        {
+          "id": "bl-02-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "facebook / instagram feed square",
+          "negative_space": "left-column",
+          "type_side": "left",
+          "output_file": "plates/bl-02-square-1x1.jpg",
+          "scene": "Late afternoon on a quiet commercial street. On the left, a plain painted shopfront wall with nothing on it. On the right, the blank unlettered glass door and window of a small braiding studio, warmly lit inside.",
+          "subject": "Right half only: behind the glass, a braider in her forties - deep brown skin, long locs gathered back - standing at work over a seated client, hands raised, unhurried and expert. At the door, a prospective customer stands with a phone in hand, head slightly tilted, plainly searching for the business before stepping in.",
+          "details": "Warm interior light against cool daylight, a smudge on the door glass, a mat, a plant. The left 45 percent is one continuous empty painted wall with a soft daylight gradient and honest stain. No lettering, decals, numerals or signage anywhere in the frame.",
+          "camera": "35mm, eye level from the pavement, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "bl-04",
+      "campaign": "booked-and-losing",
+      "title": "Drop 4 - The price question that never becomes a message",
+      "blog_post_slug": "how-much-do-you-charge-dms-costs-bookings",
+      "claim": "The cost is not the ninety seconds spent answering. It is the bookings that never became a message at all.",
+      "object": "A phone lying face down beside a working nail lamp. The work is happening; the question is queueing somewhere the professional cannot see.",
+      "palette": "salon",
+      "palette_argument": "A nail station at night is literally one warm lamp and a dark room. Nothing about this palette had to be imposed on the scene; it is a description of it.",
+      "variants": [
+        {
+          "id": "bl-04-story-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / reels background",
+          "negative_space": "lower-third",
+          "type_side": "left",
+          "output_file": "plates/bl-04-story-9x16.jpg",
+          "scene": "A nail technician's station in a small private studio at night, photographed along the length of the table. One bright articulated lamp clamped to the table edge throws a warm circle over the work; the long dark tabletop runs away toward camera and the room beyond falls into plum-dark.",
+          "subject": "Weighted high in the frame: a nail technician in her thirties - warm medium-brown skin, dark hair pulled into a low bun, small gold hoops - gloved, steady and completely absorbed, working on a client's hand under the lamp. Nearer to camera on a folded towel, her own phone lies face down, screen hidden, case worn at the corners, set aside so she can work.",
+          "details": "A dust extractor, small bottles turned so their sides are blank and unlabelled, a cuticle pusher, gel dust on the mat. The lower part of the frame is simply more of the same continuous dark tabletop receding toward the lens, with the lamp's light falling off gradually across it - the same wood surface, same grain, same scuffs, no change of material and no horizon line. CRITICAL FRAMING FIX: the quiet area must be an actual surface inside the room, continuous with the rest of the photograph and receding naturally with its own soft falloff, grain and imperfection. There must be NO straight seam, NO visible dividing edge, NO abrupt tonal step and NO rectangle anywhere in the frame. The photograph must bleed to all four edges: no border, no white margin, no frame, no polaroid edge, no matting, no inset panel.",
+          "camera": "35mm, low and close to the tabletop, looking along it, shallow depth of field, one warm source, image filling the entire frame edge to edge.",
+          "revision": "r2 - first take carried a hard panel seam / border artifact; reframed so the reserved emptiness is real room depth"
+        },
+        {
+          "id": "bl-04-feed-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram feed",
+          "negative_space": "left-column",
+          "type_side": "left",
+          "output_file": "plates/bl-04-feed-4x5.jpg",
+          "scene": "The same nail station at night, framed from the side so the dark room fills the left of the frame as one continuous unlit wall and the lit work happens on the right.",
+          "subject": "Right half only: a nail technician in her thirties - warm medium-brown skin, dark hair in a low bun - gloved and working under the clamped lamp on a client's hand, and just in front of her elbow, face down on a folded towel, her phone with its worn case.",
+          "details": "Warm lamp circle, dust extractor, blank unlabelled bottles, gel dust. The left 45 percent is unlit wall and air receding naturally into plum-dark with a faint falloff gradient and nothing in it.",
+          "camera": "50mm, seated eye level, shallow depth of field, single warm source."
+        },
+        {
+          "id": "bl-04-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "facebook / instagram feed square",
+          "negative_space": "right-column",
+          "type_side": "right",
+          "output_file": "plates/bl-04-square-1x1.jpg",
+          "scene": "A nail station at night, framed from slightly above and to the right, so the work sits on the left and the dark room recedes on the right.",
+          "subject": "Left half only: under one clamped warm lamp, the gloved hands of a nail technician in her thirties - warm medium-brown skin, dark hair in a low bun - shaping a client's nail with complete concentration, and beside her forearm a phone lying face down on a folded towel.",
+          "details": "Lamp circle, gel dust, blank unlabelled bottles turned away, a small brush stood in a jar. The right 45 percent is dark unlit room receding with a soft falloff and nothing in it.",
+          "camera": "35mm, slightly above the table, shallow depth of field, one warm source."
+        }
+      ]
+    },
+    {
+      "topic_id": "bl-05",
+      "campaign": "booked-and-losing",
+      "title": "Drop 5 - A name you cannot reach is a memory, not a client list",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "claim": "Access is a permission a platform grants you. A permission is not a possession.",
+      "object": "A thick, tabbed, well-used appointment book open on a counter beside an open and empty cash drawer. The work happened. The relationship is filed somewhere else.",
+      "palette": "salon",
+      "palette_argument": "One pendant bulb over a front counter with the treatment room dark behind it is how these studios actually close up at night. The rose-warm accent keeps the professional's skin reading as itself rather than as sodium or steel.",
+      "variants": [
+        {
+          "id": "bl-05-story-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "story / reels background",
+          "negative_space": "lower-third",
+          "type_side": "left",
+          "output_file": "plates/bl-05-story-9x16.jpg",
+          "scene": "The small front counter of an independent lash and brow studio at the end of the day. One warm pendant bulb hangs over the counter; the treatment room behind is dark, its lash bed just readable in the falloff.",
+          "subject": "In the upper two thirds: a heavy appointment book lying open on the counter, swollen and dog-eared, dozens of coloured tabs down its page edges, its ruled pages completely unwritten and blank, a pen lying in the gutter. Beside it, a cash drawer pulled open and bare - coin wells and note clips visible and empty. Behind the counter, at ease and unhurried, a lash artist in her late twenties - deep brown skin, natural coils pulled back with a band - rests one hand on the counter, relaxed, mid-conversation with someone off frame, plainly the owner of the room.",
+          "details": "Warm bulb light, a lash tile, a small tray of tools, the counter's laminate worn through at the front edge. The bottom 40 percent is empty counter front and dark floor. The book's pages carry ruled lines only - no handwriting, no numbers, no printing anywhere in frame.",
+          "camera": "35mm just above counter height, shallow depth of field on the open book, the artist soft behind it, one warm overhead source."
+        },
+        {
+          "id": "bl-05-feed-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram feed",
+          "negative_space": "right-column",
+          "type_side": "right",
+          "output_file": "plates/bl-05-feed-4x5.jpg",
+          "scene": "The front counter of a lash and brow studio at closing, framed so the counter and the person occupy the left half and a plain dark painted wall runs away empty on the right.",
+          "subject": "Left half only: a thick, tabbed, well-thumbed appointment book open on the counter with ruled but unwritten pages, an open and empty cash drawer beside it, and behind them a lash artist in her late twenties - deep brown skin, natural coils pulled back - standing relaxed with one hand on the counter, calm and in charge of her own room.",
+          "details": "One warm pendant bulb, worn laminate, a small tray of tools, coloured tabs down the book's edge. The right 45 percent is dark painted wall receding with a soft falloff gradient and honest scuffing, nothing on it.",
+          "camera": "50mm at standing eye level, shallow depth of field, single warm overhead source."
+        },
+        {
+          "id": "bl-05-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "facebook / instagram feed square",
+          "negative_space": "left-column",
+          "type_side": "left",
+          "output_file": "plates/bl-05-square-1x1.jpg",
+          "scene": "The front counter of an independent lash and brow studio at closing time, one warm pendant bulb above it. The camera looks across the counter from the dark, unlit end of the room, so the near counter surface and the air above it are simply in deep shadow and brighten gradually toward the bulb.",
+          "subject": "Weighted into the right half: a heavy appointment book open on the counter, swollen and dog-eared, dozens of coloured tabs along its page edges, its ruled pages completely unwritten, a pen lying in the gutter. Beside it a cash drawer pulled open and completely bare - every coin well and note clip empty. Just behind, the studio's owner - a woman in her late twenties, deep brown skin, natural coils pulled back with a band - rests a hand easily on the counter, relaxed and in charge of her own room.",
+          "details": "Worn laminate counter edge, a lash tile, a small tray of tools, warm bulb falloff. The left of the frame is the same continuous counter and the same dark air above it, unlit and gradually dimming - one unbroken surface, no seam, no edge, no step in tone. CRITICAL FRAMING FIX: the quiet area must be an actual surface inside the room, continuous with the rest of the photograph and receding naturally with its own soft falloff, grain and imperfection. There must be NO straight seam, NO visible dividing edge, NO abrupt tonal step and NO rectangle anywhere in the frame. The photograph must bleed to all four edges: no border, no white margin, no frame, no polaroid edge, no matting, no inset panel.",
+          "camera": "50mm at counter height looking across the counter, shallow depth of field, one warm overhead bulb, image filling the entire frame edge to edge.",
+          "revision": "r2 - first take carried a hard panel seam / border artifact; reframed so the reserved emptiness is real room depth"
+        }
+      ]
+    }
+  ]
+}

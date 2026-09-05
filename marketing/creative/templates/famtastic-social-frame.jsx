@@ -123,6 +123,33 @@ var PALETTES = {
     ground: [244, 241, 234], accent: [31, 111, 74], head: [20, 18, 15],
     body: [90, 86, 78], hair: [214, 208, 196],
     note: "Ink on warm paper. Light ground; art uses MULTIPLY, not SCREEN."
+  },
+  /*
+   * ARGUED FROM THE SUBJECT, per Rule 1.
+   *
+   * The subject is a business that already works and has no formal address:
+   * it runs on a street, a counter, a folding table, a shutter that rolls up in
+   * the morning. So the ground is what that business is physically standing on
+   * and in front of - cold rolled steel and grey concrete in shadow, #16181A.
+   *
+   * The accent is not a preference either. Every street where commerce already
+   * happens has one colour system already installed on it: the stencil yellow of
+   * loading-bay paint, curb markings, shutter warning stripes and hand-lettered
+   * price boards. #E4C227 is that paint after a few winters - bleached, chalky,
+   * not the clean cadmium it started as. It is the colour the audience's own
+   * working environment is already marked in, which is the point of the campaign:
+   * nothing here is new to them.
+   *
+   * DIVERGENCE ON PURPOSE: mean ground luminance is 24 of 255, far below the
+   * 150-175 band measured off the premium HeyGen anchor
+   * (marketing/creative/heygen/reference-tokens.json). This palette is NOT
+   * anchor-graded and must never be cut in beside take-a. See
+   * marketing/creative/campaign-assets/already-know-the-game/README.md.
+   */
+  "shutter": {
+    ground: [22, 24, 26], accent: [228, 194, 39], head: [237, 234, 227],
+    body: [150, 147, 140], hair: [52, 54, 58],
+    note: "Weathered stencil yellow on cold rolled steel. Grunge; deliberately outside the anchor luminance band."
   }
 };
 
@@ -456,6 +483,105 @@ function famConceptAddressBar(doc, region, cfg) {
   return l;
 }
 
+/*
+ * A proof sheet: three design directions, one of them marked.
+ *
+ * For the objection that actually stops the sale - "I have been burned before."
+ * The counter-argument is not a promise, it is a sequence: three directions are
+ * generated, a person reviews them, and the customer looks at real work before
+ * any money moves. Nothing abstract carries that. Three page proofs with a
+ * selection box under each, one box filled, does - the reader sees a decision
+ * they have not made yet, which is the entire point of the campaign.
+ *
+ * The direction names are the product's REAL vocabulary (Safe / Wild / OMG,
+ * from the three-direction proof system in docs/CAPABILITY_REGISTRY.md), the
+ * same way the business-cards object carries a real email address rather than
+ * lorem. If these names ever change in the product, change them here too.
+ *
+ * The object adapts to its region rather than assuming one: a wide bottom band
+ * lays the three proofs across, a tall right-hand column stacks them down. The
+ * story and feed art regions are bands, not columns, so a fixed row would have
+ * run the third proof off the canvas.
+ *
+ * cfg.proofLabels - three direction names printed under the cards
+ * cfg.proofChosen - index (0-2) of the direction drawn as selected
+ */
+function famConceptProofSheet(doc, region, cfg) {
+  var x = region[0], y = region[1], w = region[2], h = region[3];
+  var l = doc.artLayers.add(); l.name = "concept-proof-sheet";
+
+  var labels = cfg.proofLabels || ["SAFE", "WILD", "OMG"];
+  var n = labels.length;
+  var chosen = (cfg.proofChosen === undefined) ? 1 : cfg.proofChosen;
+
+  var across = (w >= h);
+  var cols = across ? n : 1, rows = across ? 1 : n;
+  var gap = Math.round(Math.min(w, h) * 0.06);
+  var cellW = Math.floor((w - gap * (cols - 1)) / cols);
+  var cellH = Math.floor((h - gap * (rows - 1)) / rows);
+
+  // A browser-shaped proof, plus a band under it for the box and its label.
+  var cw = Math.min(cellW, 360);
+  var ch = Math.min(Math.round(cw * 0.70), Math.round(cellH * 0.66));
+  cw = Math.min(cw, Math.round(ch / 0.70));
+  var band = Math.round(ch * 0.42);
+  var blockH = ch + band;
+
+  var gridW = cw * cols + gap * (cols - 1);
+  var gridH = blockH * rows + gap * (rows - 1);
+  var ox = x + Math.round((w - gridW) / 2);
+  var oy = y + Math.round((h - gridH) / 2);
+
+  var boxSize = Math.max(14, Math.round(band * 0.40));
+  var geom = [];
+
+  for (var i = 0; i < n; i++) {
+    var cx = ox + (across ? i * (cw + gap) : 0);
+    var cy = oy + (across ? 0 : i * (blockH + gap));
+    var sel = (i === chosen);
+
+    // The chosen direction is held a step brighter; the other two are present
+    // and legible, never greyed out. All three are real work.
+    var face = famMix(ACTIVE.ground, ACTIVE.hair, sel ? 0.85 : 0.45);
+    famRect(doc, cx, cy, cw, ch, face, 100);
+    // Browser chrome strip, so the card reads as a page and not as a card.
+    famRect(doc, cx, cy, cw, Math.round(ch * 0.13), famMix(face, ACTIVE.hair, 0.65), 100);
+
+    // Page skeleton: a hero block and two lines of held content.
+    var px = cx + Math.round(cw * 0.10), pw = Math.round(cw * 0.80);
+    var top = cy + Math.round(ch * 0.27);
+    famRect(doc, px, top, Math.round(pw * 0.60), Math.round(ch * 0.17),
+            sel ? ACTIVE.accent : ACTIVE.body, sel ? 100 : 50);
+    famRect(doc, px, top + Math.round(ch * 0.27), pw, Math.round(ch * 0.055),
+            ACTIVE.body, sel ? 70 : 40);
+    famRect(doc, px, top + Math.round(ch * 0.39), Math.round(pw * 0.72),
+            Math.round(ch * 0.055), ACTIVE.body, sel ? 70 : 40);
+
+    famRectOutline(doc, cx, cy, cw, ch, sel ? 3 : 2,
+                   sel ? ACTIVE.accent : ACTIVE.hair, 100);
+
+    // The selection box. Filled means chosen; empty means still the customer's
+    // to decide, which is the state the campaign is actually about.
+    var bx = cx, by = cy + ch + Math.round(band * 0.24);
+    if (sel) famRect(doc, bx, by, boxSize, boxSize, ACTIVE.accent, 100);
+    else     famRectOutline(doc, bx, by, boxSize, boxSize, 2, ACTIVE.hair, 100);
+
+    geom.push({ bx: bx, by: by, sel: sel });
+  }
+
+  famFinishArtLayer(l, 0, 100);   // crisp: this is the subject, not atmosphere
+  l.blendMode = BlendMode.NORMAL;
+
+  var lblSize = Math.max(13, Math.round(band * 0.34));
+  for (var j = 0; j < n; j++) {
+    var g = geom[j];
+    famText(doc, labels[j], g.bx + Math.round(boxSize * 1.55), g.by + boxSize,
+            lblSize, g.sel ? ACTIVE.accent : ACTIVE.body, FONT_UI_BOLD, 160,
+            "proof-label-" + j);
+  }
+  return l;
+}
+
 // Place a generated plate (Gemini / gpt-image-2 / HeyGen frame) and dissolve it
 // into the ground the same way. Plates must carry NO baked-in text.
 function famPlate(doc, path, opacity, blurPx) {
@@ -537,8 +663,24 @@ function famApplyArt(doc, key, cfg) {
   }
   // A concept object REPLACES the abstract theme. Atmosphere may stay behind it.
   if (cfg.concept) {
+    /*
+     * Art regions deliberately bleed to the canvas edge, because atmosphere is
+     * SCREENed/MULTIPLYed at low opacity and is supposed to run off. A concept
+     * object is drawn crisp at full opacity, so the same bleed reads as a
+     * clipped object: the third proof card in the first proof-sheet render
+     * ended exactly on x=1080 and lost its right edge. Hold a concept object
+     * inside the same margin the type respects.
+     */
+    var FM = FAM_FORMATS[key];
+    if (FM) {
+      var mm = FM[2];
+      var rightEdge = Math.min(box[0] + box[2], FM[0] - mm);
+      box[0] = Math.max(box[0], mm);
+      box[2] = Math.max(40, rightEdge - box[0]);
+    }
     if (cfg.concept === "business-cards") { famConceptBusinessCards(doc, box, cfg); return applied.concat(["concept:business-cards"]); }
     if (cfg.concept === "address-bar")    { famConceptAddressBar(doc, box, cfg);    return applied.concat(["concept:address-bar"]); }
+    if (cfg.concept === "proof-sheet")    { famConceptProofSheet(doc, box, cfg);    return applied.concat(["concept:proof-sheet"]); }
     applied.push("concept UNKNOWN: " + cfg.concept);
   }
 
@@ -604,10 +746,22 @@ function renderFamtasticFrames(cfg) {
     famBar(doc, TX, Math.round(H * 0.155), Math.round(W * 0.155),
            Math.max(4, Math.round(H * 0.004)), ACTIVE.accent, "rule-top");
 
-    // When a concept object owns the right side, type gets the left column only.
+    /*
+     * When a concept object owns the RIGHT SIDE, type gets the left column only.
+     *
+     * But not every art region is a right-hand column. story-9x16 and feed-4x5
+     * put the region at x=40 - a full-width band UNDER the type - and the old
+     * unconditional narrowing squeezed those headlines into a 324px column
+     * beside empty canvas, then shrank the body copy to about 16pt to fit it.
+     * So the narrowing now applies only when the region actually starts right
+     * of the text margin. In a band format the type keeps the full width and
+     * the object sits below it, which is what the region was drawn for.
+     */
+    var REG = FAM_ART_REGIONS[key];
+    var conceptOwnsRight = !!(cfg.concept && REG && REG[0] > M + Math.round(W * 0.25));
     var colW = TW;
-    if (cfg.concept && FAM_ART_REGIONS[key]) {
-      colW = Math.max(Math.round(W * 0.30), FAM_ART_REGIONS[key][0] - M - 40);
+    if (conceptOwnsRight) {
+      colW = Math.max(Math.round(W * 0.30), REG[0] - M - 40);
     }
     var hs = Math.min(famFitSize(cfg.head1, colW, HS, "display"),
                       famFitSize(cfg.head2, colW, HS, "display"));
@@ -627,8 +781,8 @@ function renderFamtasticFrames(cfg) {
     // A concept object owns the right side, so the rule stops at the text column
     // rather than sliding behind the artwork.
     var ruleW = W - (M * 2);
-    if (cfg.concept && FAM_ART_REGIONS[key]) {
-      ruleW = Math.max(Math.round(W * 0.28), FAM_ART_REGIONS[key][0] - M - 40);
+    if (conceptOwnsRight) {
+      ruleW = Math.max(Math.round(W * 0.28), REG[0] - M - 40);
     }
     // Same protection the archetype layouts get: over photography the signature
     // carries its own ground, or it renders as grey type on wood grain.
@@ -728,7 +882,11 @@ function famPanel(doc, x, y, w, h, mixT, cutCorner) {
 // Badge chip: small caps label in a solid block. Cox's "SPECIAL OFFER".
 function famChip(doc, x, y, text, size) {
   var padX = Math.round(size * 0.9), padY = Math.round(size * 0.62);
-  var w = Math.round(text.length * size * 0.62) + padX * 2;
+  // The 0.62 glyph estimate ignored the 140 tracking this chip sets, which is
+  // another 0.14em PER CHARACTER - so a ten-character chip ran about 12px past
+  // its own block and clipped the last letter ("WEB BASICS" -> "WEB BASIC|S").
+  // 0.76 = glyph width + tracking. Widening the block only ever adds padding.
+  var w = Math.round(text.length * size * 0.76) + padX * 2;
   var h = size + padY * 2;
   var l = doc.artLayers.add(); l.name = "chip";
   famRect(doc, x, y, w, h, ACTIVE.accent, 100);
