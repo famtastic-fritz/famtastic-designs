@@ -19,9 +19,14 @@
   prohibited claims, and related-system boundary. Commercial lead email stays
   documented separately in `docs/EMAIL_AUTOMATION.md`.
 - Focused email tests pass 5/5 (19 assertions); PHP syntax, journey-harness
-  syntax, diff hygiene, and 30/30 Portal Design DNA checks pass. No customer
-  state was changed, no email was dispatched, and no production deployment was
-  attempted.
+  syntax, diff hygiene, and 30/30 Portal Design DNA checks pass. An owner-only
+  rendering preview of the actual Tighten Up Your Locs receipt was accepted by
+  the configured production SMTP provider for `fritz.medine@gmail.com` under
+  message ID `<thaQpdhEYtsPNgWGbnVIuMyUSVBEDyvRIrbiF7GPuo@default>`.
+  It used the exact committed v1 HTML/plain-text payload and Shay’s currently
+  stored account/project display data, but did not submit her request, create a
+  proof job, or send to her. It is provider-acceptance evidence, not Gmail
+  inbox-delivery evidence. No production deployment was attempted.
 
 ## 2026-09-04 — Account-owned Studio Review email is locally proven
 
