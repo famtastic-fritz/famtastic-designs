@@ -10,7 +10,9 @@ Problem-aware but not solution-aware: "why can't people find my salon on Google"
 An independent stylist whose only presence is a booking-app profile is not invisible because the profile is unindexed — marketplace profiles often do appear in search. They are invisible because nothing in that result is theirs: the web address, the layout, and the search credit all belong to the app, and the other stylists on the platform compete on the same page. One page on a domain you own changes what a stranger finds and who owns the relationship that follows.
 
 ## Series position
-Order 1 of "The Booking App and Your Own Website Series". This is the doorway post and the only one in the series written to a named trade, because it is the landing page for the Ghost Town campaign, whose tracked links already point at this slug. Orders 2-4 deepen the same argument for any business booked through an app rather than rotating to a different trade — rotating trades would produce four posts making one argument to four audiences, which is cannibalization, not a series.
+Order 10 of "The Small-Business Website Strategy Series", sitting directly after order 9, why-running-business-on-gmail-and-linktree-costs-revenue, which makes the general "your presence is on rented land" argument. This post is the booking-app case of that same argument, so it continues order 9 rather than restating it.
+
+It is the doorway post and the only one in the four written to a named trade, because it is the landing page for the Ghost Town campaign, whose tracked links already point at this slug. Orders 11-13 broaden to any business booked through an app rather than rotating to a different trade — rotating trades would produce four posts making one argument to four audiences, which is cannibalization, not a series.
 
 ## Internal links (>=3 to services/packages)
 1. https://famtasticdesigns.com/packages/199-quick-start

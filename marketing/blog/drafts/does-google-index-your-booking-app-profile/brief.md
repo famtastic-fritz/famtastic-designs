@@ -10,7 +10,7 @@ Mechanism-seeking: "does Google index Booksy profiles", "will my marketplace lis
 A booking-app profile is usually crawled and indexed — the common assumption that it is invisible to search is wrong. What a profile cannot do is be steered: you do not control the page title, you cannot add structured data describing your business, you cannot choose where a visitor goes next, and you cannot keep the address if the platform changes it. Search reputation accrues to the domain that hosts the page, which is the platform's, not yours. A page on your own domain puts those four controls back in your hands without requiring you to leave the app.
 
 ## Series position
-Order 2 of "The Booking App and Your Own Website Series". Ep 1 states the felt problem in a stylist's words; this post corrects the naive version of it and supplies the actual mechanism, which is the information-gain move for the whole series. It deliberately does not repeat Ep 1's argument to a different trade — it goes one layer deeper for the same reader.
+Order 11 of "The Small-Business Website Strategy Series". Order 10 states the felt problem in a stylist's words; this post corrects the naive version of it and supplies the actual mechanism, which is the information-gain move for the whole arc. It deliberately does not repeat order 10's argument to a different trade — it goes one layer deeper for the same reader.
 
 ## Internal links (>=3 to services/packages)
 1. https://famtasticdesigns.com/blog/what-is-a-domain-name

@@ -10,7 +10,7 @@ Objection-resolution: "do I need a website if I use a booking app", "should I le
 You do not have to leave the booking app, and the version of this argument that ends in "cancel it" is wrong. An app is good at demand you did not create; a page of your own is good at demand you did create, and most businesses have both kinds and serve only one. The thing worth moving is not the bookings but the relationship — the ability to reach people who already like your work, which currently belongs to the platform. What you own is your domain, your page and its contents, and anyone who contacts you directly. Reviews left on a platform stay there, and a client who prefers the app will keep using it, and neither is a reason to have no address of your own.
 
 ## Series position
-Order 4 of "The Booking App and Your Own Website Series", and the reason the series can exist under this brand at all. FAMtastic educates rather than competes, so a series about marketplace dependency that ended on an ultimatum would contradict the brand's governing stance. This post is the resolution: keep both, and understand which one is rented. It also carries the series' clearest "you may not need this yet" statement.
+Order 13 of "The Small-Business Website Strategy Series", and the reason this arc can exist under this brand at all. FAMtastic educates rather than competes, so a run of posts about marketplace dependency that ended on an ultimatum would contradict the brand's governing stance. This post is the resolution: keep both, and understand which one is rented. It also carries the arc's clearest "you may not need this yet" statement.
 
 ## Internal links (>=3 to services/packages)
 1. https://famtasticdesigns.com/packages/199-quick-start
