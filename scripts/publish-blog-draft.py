@@ -203,8 +203,6 @@ DRAFT_CLASSIFICATION = {
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 9,
         "category": "get-paid",
         "category_label": "Get Paid",
         "tags": ["Business Email", "Add-Ons", "Domain"],
@@ -215,8 +213,6 @@ DRAFT_CLASSIFICATION = {
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 3,
         "category": "get-found",
         "category_label": "Get Found",
         "tags": ["Local SEO", "Structured Data", "Small Business"],
@@ -227,8 +223,6 @@ DRAFT_CLASSIFICATION = {
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 11,
         "category": "serve-customers",
         "category_label": "Serve Customers",
         "tags": ["Maintenance", "Add-Ons", "Website Care"],
@@ -239,8 +233,6 @@ DRAFT_CLASSIFICATION = {
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 4,
         "category": "get-found",
         "category_label": "Get Found",
         "tags": ["SEO", "Local SEO", "Honest Marketing"],
@@ -251,20 +243,18 @@ DRAFT_CLASSIFICATION = {
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 10,
         "category": "get-paid",
         "category_label": "Get Paid",
         "tags": ["Hosting", "Domain Renewal", "Web Basics"],
     },
     "linktree-vs-real-website-what-you-trade-away": {
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 15,
         # Series assigned 2026-09-05 (owner-approved). None of the ten existing
         # series covered the platform-dependency arc, so this one is created.
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 2,
         "category": "get-found",
         "category_label": "Get Found",
         "tags": ["Owned Domain", "SEO", "Small Business"],
@@ -276,17 +266,16 @@ DRAFT_CLASSIFICATION = {
         "search_intent": "informational-comparison",
     },
     "why-link-in-bio-page-doesnt-show-up-in-google": {
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 14,
         # Series assigned 2026-09-05 (owner-approved). None of the ten existing
         # series covered the platform-dependency arc, so this one is created.
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 1,
         # Creates the term. Only this post carries the opt-in; every sibling
         # resolves the existing name, so a typo downstream fails loudly instead
         # of silently spawning a second series.
-        "new_series": True,
         "category": "get-found",
         "category_label": "Get Found",
         "tags": ["SEO", "Owned Domain", "Small Business"],
@@ -298,13 +287,13 @@ DRAFT_CLASSIFICATION = {
         "search_intent": "informational",
     },
     "booking-app-commissions-cost-per-year": {
+        "series": "The Ecommerce and Post-Purchase Series",
+        "series_order": 9,
         # Series assigned 2026-09-05 (owner-approved). None of the ten existing
         # series covered the platform-dependency arc, so this one is created.
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 8,
         "category": "get-paid",
         "category_label": "Get Paid",
         "tags": ["Booking", "Pricing", "Small Business"],
@@ -316,13 +305,13 @@ DRAFT_CLASSIFICATION = {
         "search_intent": "commercial-investigation",
     },
     "who-owns-your-client-list-booking-app": {
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 18,
         # Series assigned 2026-09-05 (owner-approved). None of the ten existing
         # series covered the platform-dependency arc, so this one is created.
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 7,
         "category": "get-paid",
         "category_label": "Get Paid",
         "tags": ["Booking", "Owned Domain", "Small Business"],
@@ -334,13 +323,13 @@ DRAFT_CLASSIFICATION = {
         "search_intent": "informational",
     },
     "how-much-do-you-charge-dms-costs-bookings": {
+        "series": "The Website Lead-Capture Series",
+        "series_order": 9,
         # Series assigned 2026-09-05 (owner-approved). None of the ten existing
         # series covered the platform-dependency arc, so this one is created.
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 5,
         "category": "get-customers",
         "category_label": "Get Customers",
         "tags": ["Pricing", "Customer Experience", "Website Design"],
@@ -352,13 +341,13 @@ DRAFT_CLASSIFICATION = {
         "search_intent": "informational",
     },
     "website-answers-price-questions-before-asked": {
+        "series": "The Website Lead-Capture Series",
+        "series_order": 10,
         # Series assigned 2026-09-05 (owner-approved). None of the ten existing
         # series covered the platform-dependency arc, so this one is created.
         # The arc runs symptom -> comparison -> how being found works -> honest
         # limits -> friction -> the fix -> ownership -> cost -> your own address
         # -> keeping it -> upkeep.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 6,
         "category": "get-customers",
         "category_label": "Get Customers",
         "tags": ["Website Design", "Customer Experience", "Lead Intake"],
@@ -445,41 +434,55 @@ DRAFT_CLASSIFICATION = {
         ],
     },
     "business-email-on-your-own-domain": {
+        "series": "The FAMtastic Website Packages Explained Series",
+        "series_order": 11,
+        "primary_keyword": "business email on your own domain",
+        "secondary_keywords": ['business email address custom domain', 'professional email for small business'],
         "category": "get-paid",
         "category_label": "Get Paid",
         "tags": ["Business Email", "Add-Ons", "Domain"],
     },
     "how-local-customers-find-your-business-online": {
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 16,
+        "primary_keyword": "how local customers find your business online",
+        "secondary_keywords": ['local search for small business', 'get found in local search'],
         # Series assigned 2026-09-05. This slug has TWO entries in this dict and
         # the later one wins at import; the first patch landed on the earlier
         # copy and silently did nothing. Patched here deliberately.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 3,
         "category": "get-found",
         "category_label": "Get Found",
         "tags": ["Local SEO", "Structured Data", "Small Business"],
     },
     "what-website-maintenance-actually-covers": {
+        "series": "The FAMtastic Website Packages Explained Series",
+        "series_order": 13,
+        "primary_keyword": "what website maintenance actually covers",
+        "secondary_keywords": ['website maintenance plan included', 'what does website maintenance include'],
         "category": "serve-customers",
         "category_label": "Serve Customers",
         "tags": ["Maintenance", "Add-Ons", "Website Care"],
     },
     "do-you-guarantee-google-rankings": {
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 17,
+        "primary_keyword": "do you guarantee google rankings",
+        "secondary_keywords": ['seo ranking guarantee', 'can anyone guarantee google rankings'],
         # Series assigned 2026-09-05. This slug has TWO entries in this dict and
         # the later one wins at import; the first patch landed on the earlier
         # copy and silently did nothing. Patched here deliberately.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 4,
         "category": "get-found",
         "category_label": "Get Found",
         "tags": ["SEO", "Local SEO", "Honest Marketing"],
     },
     "what-happens-when-first-year-hosting-ends": {
+        "series": "The FAMtastic Website Packages Explained Series",
+        "series_order": 12,
+        "primary_keyword": "what happens when first year hosting ends",
+        "secondary_keywords": ['website hosting renewal cost', 'what happens after first year hosting'],
         # Series assigned 2026-09-05. This slug has TWO entries in this dict and
         # the later one wins at import; the first patch landed on the earlier
         # copy and silently did nothing. Patched here deliberately.
-        "series": "The Own Your Online Presence Series",
-        "series_order": 10,
         "category": "get-paid",
         "category_label": "Get Paid",
         "tags": ["Hosting", "Domain Renewal", "Web Basics"],
