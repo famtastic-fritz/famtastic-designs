@@ -22,6 +22,25 @@ families and USD 25 for video families. A job must stop and report when it
 reaches its declared cap; a fallback may not silently lower the required
 quality or review standard.
 
+## Provider discovery
+
+Before a job chooses candidates, inspect the live registry rather than relying
+on a remembered subscription or assumed API. This prints safe capability/status
+metadata only; it never prints credentials or proves that a conditional route
+is currently authenticated.
+
+```sh
+node marketing/creative/asset-graph/list-provider-routes.mjs --family video
+node marketing/creative/asset-graph/list-provider-routes.mjs --family still
+node marketing/creative/asset-graph/list-provider-routes.mjs --family copy
+```
+
+The catalog explicitly includes connected, conditional, manual-assisted, and
+unproven routes. MoneyPrinterTurbo is presently an unproven local video
+candidate: historical claims exist, but this checkout has no helper/runtime or
+current receipt. A discovery listing is therefore a routing input, never a
+capability upgrade.
+
 ## Contracts
 
 1. [`creative-job.v1`](./schemas/creative-job.schema.json) declares the

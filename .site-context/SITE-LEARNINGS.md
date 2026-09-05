@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A historical provider mention is not present-tense readiness
+
+- Observation: MoneyPrinterTurbo was described in older benchmark documents as
+  the local engine behind several draft MP4s, while the current checkout has no
+  helper, installed runtime, or current receipt. A provider can therefore have
+  an artifact claim and still be unavailable for the next job.
+- Guidance: every job must query `marketing/providers.json` through the asset
+  graph's provider catalog before candidate selection. Carry the route's actual
+  status into the experiment receipt; never turn a subscription, past document,
+  or environment hint into a capability claim without a fresh result.
+
 ## 2026-09-05 — Structural validity is not creative proof
 
 - Observation: the first `campaign-story.v1` seed passed its structural gate,

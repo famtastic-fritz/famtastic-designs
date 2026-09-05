@@ -55,16 +55,18 @@ await writeFile(reportPath, `${JSON.stringify({ schema_version: 'famtastic.creat
 const validator = new URL('./validate-creative-job.mjs', import.meta.url);
 const graphValidator = new URL('./validate-asset-graph.mjs', import.meta.url);
 const spendPreflight = new URL('./preflight-asset-spend.mjs', import.meta.url);
+const providerCatalog = new URL('./list-provider-routes.mjs', import.meta.url);
 const valid = spawnSync(process.execPath, [validator.pathname, validPath, '--require-run-ready'], { encoding: 'utf8' });
 const invalid = spawnSync(process.execPath, [validator.pathname, invalidPath], { encoding: 'utf8' });
 const overBudget = spawnSync(process.execPath, [validator.pathname, overBudgetPath, '--require-run-ready'], { encoding: 'utf8' });
 const graph = spawnSync(process.execPath, [graphValidator.pathname, validPath, ...nodePaths, '--report', reportPath], { encoding: 'utf8' });
 const spendClear = spawnSync(process.execPath, [spendPreflight.pathname, validPath, ...nodePaths, '--next-cost-usd', '6'], { encoding: 'utf8' });
 const spendBlocked = spawnSync(process.execPath, [spendPreflight.pathname, validPath, ...nodePaths, '--next-cost-usd', '7'], { encoding: 'utf8' });
+const videoRoutes = spawnSync(process.execPath, [providerCatalog.pathname, '--family', 'video'], { encoding: 'utf8' });
 await rm(root, { recursive: true, force: true });
 
-if (valid.status !== 0 || invalid.status === 0 || overBudget.status === 0 || graph.status !== 0 || spendClear.status !== 0 || spendBlocked.status === 0 || !invalid.stderr.includes('human_brief') || !invalid.stderr.includes('at least two cheap') || !overBudget.stderr.includes('at or below USD 25') || !spendBlocked.stderr.includes('BLOCKED')) {
-  console.error(valid.stdout + valid.stderr + invalid.stdout + invalid.stderr + overBudget.stdout + overBudget.stderr + graph.stdout + graph.stderr + spendClear.stdout + spendClear.stderr + spendBlocked.stdout + spendBlocked.stderr);
+if (valid.status !== 0 || invalid.status === 0 || overBudget.status === 0 || graph.status !== 0 || spendClear.status !== 0 || spendBlocked.status === 0 || videoRoutes.status !== 0 || !videoRoutes.stdout.includes('moneyprinterturbo') || !videoRoutes.stdout.includes('hyperframes') || !invalid.stderr.includes('human_brief') || !invalid.stderr.includes('at least two cheap') || !overBudget.stderr.includes('at or below USD 25') || !spendBlocked.stderr.includes('BLOCKED')) {
+  console.error(valid.stdout + valid.stderr + invalid.stdout + invalid.stderr + overBudget.stdout + overBudget.stderr + graph.stdout + graph.stderr + spendClear.stdout + spendClear.stderr + spendBlocked.stdout + spendBlocked.stderr + videoRoutes.stdout + videoRoutes.stderr);
   process.exit(1);
 }
-console.log('asset graph tests: comparison, budget preflight, source-only rejection, and multi-node lineage all passed');
+console.log('asset graph tests: comparison, budget preflight, source-only rejection, lineage, and provider discovery all passed');

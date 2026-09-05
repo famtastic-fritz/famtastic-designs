@@ -65,7 +65,10 @@ workaround.
    only be created from the human brief as an experiment; it no longer infers a
    story from a title or source. HyperFrames, Remotion, HeyGen, image-to-video,
    and MoneyPrinterTurbo are selectable nodes, not a mandatory one-provider
-   route. Do not use raw tracking URLs as on-screen text.
+   route. Run `list-provider-routes.mjs --family <...>` before choosing a
+   candidate. MoneyPrinterTurbo is currently a historical/unproven candidate:
+   do not call it installed or available until a fresh local run has a receipt.
+   Do not use raw tracking URLs as on-screen text.
 
    Do not buy or generate a premium character anchor, upload a customer
    reference, train a local model, or claim low-cost consistent derivatives

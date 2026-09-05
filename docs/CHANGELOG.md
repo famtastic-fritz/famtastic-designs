@@ -1,5 +1,19 @@
 # Product changelog
 
+## 2026-09-05 — Provider discovery includes subscriptions, APIs, and local lanes
+
+- **Added a safe provider-route catalog to the asset graph.** It reads
+  `marketing/providers.json` by asset family before a job chooses candidates,
+  surfacing current status, automation, proof, and operator requirements
+  without exposing credentials. The video view now includes HeyGen, OpenArt,
+  HyperFrames, Remotion, Adobe desktop routes, and MoneyPrinterTurbo; still and
+  copy views include their relevant API/subscription candidates.
+- **Corrected MoneyPrinterTurbo's evidence level.** Historical campaign files
+  claim prior local outputs, but the current checkout has neither its helper
+  nor a present run receipt. It is registered as available-but-unproven until a
+  fresh evidence-first benchmark actually installs/runs it and records a
+  result; it is not presented as a hidden working subscription.
+
 ## 2026-09-05 — Evidence-first, provider-neutral creative asset graph
 
 - **Replaced the unproven default story-seed posture.** New creative work now

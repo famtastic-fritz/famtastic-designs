@@ -124,6 +124,42 @@
       "secret_env": []
     },
     {
+      "id": "hyperframes",
+      "purpose": [
+        "HTML video composition",
+        "storyboard-to-composition experiments",
+        "deterministic branded motion"
+      ],
+      "status": "installed_local_render_proof_exists",
+      "automation": "local_cli_and_skill",
+      "secret_env": [],
+      "notes": "A selectable composition node, not a universal generator. Check the active project and current skill route before a render."
+    },
+    {
+      "id": "moneyprinterturbo",
+      "purpose": [
+        "rapid narrated-video benchmark",
+        "stock-footage assembly",
+        "TTS and subtitle candidate"
+      ],
+      "status": "skill_available_runtime_not_installed_or_receipted_currently",
+      "automation": "local_python_uv_when_installed",
+      "secret_env": [],
+      "notes": "Historical campaign documents name MoneyPrinterTurbo outputs, but the current workspace has no helper, installed runtime, or current-run receipt. Treat it as an unproven video candidate until an evidence-first job installs/runs it and records its result. It must never publish automatically."
+    },
+    {
+      "id": "codex_text",
+      "purpose": [
+        "creative brief alternatives",
+        "copy candidates",
+        "research synthesis"
+      ],
+      "status": "available_in_codex",
+      "automation": "native_runtime",
+      "secret_env": [],
+      "notes": "Use as a candidate text/research route with source and claim review. Runtime usage cost is not exposed as an external API invoice."
+    },
+    {
       "id": "heygen",
       "purpose": [
         "avatar presenter videos"
