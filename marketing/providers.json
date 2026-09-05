@@ -470,6 +470,26 @@
         "Reference material, never authority on FAMtastic brand, audience, pricing or claims. See AGENTS.md.",
         "This install pushed the repo past 200 installed skills. Volume is now itself a risk: prefer the narrowest relevant skill and never let one auto-supply positioning."
       ]
+    },
+    {
+      "id": "better_interface_skills",
+      "purpose": [
+        "code-based UI quality review",
+        "component state stress-testing",
+        "component variant iteration",
+        "reverse-engineering a live interface"
+      ],
+      "status": "installed_reference_only_frontend_lane",
+      "automation": "agent_skill",
+      "secret_env": [],
+      "access": ".agents/skills/{better-ui,better-typography,better-colors,better-accessibility,better-layout,better-writing,better-interface,interface-review,explain-interface,break,variant} (installed 2026-09-05 via `npx skills add jakubkrehel/skills`)",
+      "notes": [
+        "SECURITY: verified locally - 46 markdown files and 11 yaml agent configs, no executable scripts, no network, no shell. A third-party summary claimed these were executable; they are not. Verified rather than trusted.",
+        "SCOPE: these operate on CODE-based UI, i.e. frontend/src. They do NOT apply to the Photoshop-rendered campaign stills, which are the creative-studio lane.",
+        "HEAVY OVERLAP on the review layer: better-ui/-typography/-colors/-accessibility/-layout largely duplicate the designer-skills critique-* suite and ui-ux-pro-max. Do not run both over the same artifact; pick one.",
+        "GENUINELY NEW, and the reason to keep this install: `break` renders a chosen component in every state and scenario on a temporary page and stress tests it. Nothing else installed does that, and the customer portal has many states. `variant` and `explain-interface` are also unduplicated.",
+        "Pairs with the existing hard gate scripts/validate-client-portal-design-dna.mjs, which mechanically enforces the single-glow rule and 44px touch targets. The skill reviews; the script gates. The script wins."
+      ]
     }
   ]
 }
