@@ -860,3 +860,185 @@ function famRender(cfg) {
   }
   return { slug: cfg.slug, layout: cfg.layout, palette: cfg.palette || "famtastic", written: written };
 }
+
+/* ==========================================================================
+ * DIMENSION - real 3D on a 2D surface
+ *
+ * Owner direction 2026-09-04: "start thinking in 3D effect on 2D surfaces, and
+ * non-standard shapes and colors."
+ *
+ * The first pass at this was a drop shadow, which is not depth - it is a hint of
+ * depth. Real dimension needs visible side faces. These build isometric solids
+ * out of polygons, so they are deterministic and need no rotation, no filters,
+ * and no 3D engine. Shade the faces and the eye does the rest.
+ *
+ * Light is treated as coming from the upper left throughout, so the right face
+ * is darker than the top and the bottom face is darkest. Break that consistency
+ * and the whole frame stops reading as solid.
+ * ========================================================================== */
+
+function famShade(color, t) {
+  // t < 0 darkens toward black, t > 0 lifts toward the headline colour.
+  return t < 0 ? famMix(color, [0, 0, 0], -t) : famMix(color, ACTIVE.head, t);
+}
+
+/*
+ * An extruded rectangular block. depth is the isometric offset in pixels;
+ * positive pushes the solid down and to the right.
+ */
+function famExtrudeRect(doc, x, y, w, h, depth, faceColor, name) {
+  var d = depth === undefined ? 26 : depth;
+  var face = faceColor || famMix(ACTIVE.ground, ACTIVE.head, 0.12);
+  var l = doc.artLayers.add(); l.name = name || "solid";
+
+  // Right face, then bottom face, then the top face over both.
+  famPoly(doc, [[x + w, y], [x + w + d, y + d],
+                [x + w + d, y + h + d], [x + w, y + h]], famShade(face, -0.34), 100);
+  famPoly(doc, [[x, y + h], [x + w, y + h],
+                [x + w + d, y + h + d], [x + d, y + h + d]], famShade(face, -0.55), 100);
+  famPoly(doc, [[x, y], [x + w, y], [x + w, y + h], [x, y + h]], face, 100);
+  return l;
+}
+
+/*
+ * A slab of accent colour standing on edge - a bar chart column, a plinth, a
+ * block of held colour with actual thickness.
+ */
+function famExtrudeBar(doc, x, y, w, h, depth, color, name) {
+  var d = depth === undefined ? 18 : depth;
+  var c = color || ACTIVE.accent;
+  var l = doc.artLayers.add(); l.name = name || "bar";
+  famPoly(doc, [[x + w, y], [x + w + d, y + d],
+                [x + w + d, y + h + d], [x + w, y + h]], famShade(c, -0.40), 100);
+  famPoly(doc, [[x, y], [x + d, y - 0], [x + w + d, y + d], [x + w, y]],
+          famShade(c, 0.22), 100);
+  famPoly(doc, [[x, y], [x + w, y], [x + w, y + h], [x, y + h]], c, 100);
+  return l;
+}
+
+/*
+ * Perspective grid receding to a vanishing point. A floor for solids to stand
+ * on, so extruded objects do not float.
+ */
+function famPerspectiveGrid(doc, region, vx, vy, lines) {
+  var x = region[0], y = region[1], w = region[2], h = region[3];
+  var n = lines || 12;
+  var l = doc.artLayers.add(); l.name = "art-perspective";
+  for (var i = 0; i <= n; i++) {
+    var px = x + (w / n) * i;
+    famLine(doc, px, y + h, vx, vy, 2, ACTIVE.accent, 42);
+  }
+  // Horizontals compress toward the vanishing point.
+  for (var r = 1; r <= 7; r++) {
+    var t = Math.pow(r / 8, 2.1);
+    var ry = y + h - (y + h - vy) * t;
+    famLine(doc, x, ry, x + w, ry, 1.5, ACTIVE.accent, Math.round(40 * (1 - t) + 8));
+  }
+  famFinishArtLayer(l, 1, 24);
+  return l;
+}
+
+/*
+ * Composite a texture over the frame. Textures live in
+ * marketing/creative/textures/ and carry no colour of their own - they exist to
+ * give a flat surface tooth. SOFT_LIGHT keeps the palette intact where OVERLAY
+ * would blow out the accent.
+ */
+function famTexture(doc, path, opacity, mode) {
+  var f = new File(path);
+  if (!f.exists) return null;
+  var before = doc.artLayers.length;
+  var d = new ActionDescriptor();
+  d.putPath(charIDToTypeID("null"), f);
+  d.putBoolean(charIDToTypeID("Lnkd"), false);
+  executeAction(charIDToTypeID("Plc "), d, DialogModes.NO);
+  if (doc.artLayers.length <= before) return null;
+  var l = doc.activeLayer;
+  l.name = "texture";
+  l.blendMode = (mode === "overlay") ? BlendMode.OVERLAY : BlendMode.SOFTLIGHT;
+  l.opacity = opacity === undefined ? 26 : opacity;
+  return l;
+}
+
+/*
+ * COMPARISON - two solids, unequal. The argument is carried by the geometry:
+ * the thing you rent is thin, the thing you own has mass.
+ *
+ * Not a chart. A chart implies measurement and would need a sourced number;
+ * this is a shape contrast, which claims nothing it cannot support.
+ */
+function famLayoutComparison(doc, F, cfg) {
+  var W = F[0], H = F[1], M = F[2], ES = F[3], HS = F[4], BS = F[6], FS = F[7];
+
+  famText(doc, cfg.eyebrow, M, Math.round(H * 0.115), ES, ACTIVE.accent, FONT_UI_BOLD, 240, "eyebrow");
+  var hs = famFitSize(cfg.head1, W - M * 2, Math.round(HS * 0.80), "display");
+  famText(doc, cfg.head1, M, Math.round(H * 0.205), hs, ACTIVE.head, FONT_DISPLAY, -20, "cmp-head");
+
+  var baseY = Math.round(H * 0.66);
+  var colW = Math.round((W - M * 2) * 0.34);
+  var gap = Math.round((W - M * 2) * 0.18);
+  var depth = Math.round(colW * 0.16);
+
+  var leftH = Math.round(H * 0.055);
+  var rightH = Math.round(H * 0.235);
+
+  famPerspectiveGrid(doc, [M, Math.round(H * 0.42), W - M * 2, Math.round(H * 0.26)],
+                     Math.round(W / 2), Math.round(H * 0.40), 10);
+
+  famExtrudeBar(doc, M, baseY - leftH, colW, leftH, depth,
+                famMix(ACTIVE.ground, ACTIVE.head, 0.26), "solid-rented");
+  famExtrudeBar(doc, M + colW + gap, baseY - rightH, colW, rightH, depth,
+                ACTIVE.accent, "solid-owned");
+
+  var lbl = Math.max(16, Math.round(BS * 0.80));
+  famText(doc, cfg.labelA || "RENTED", M, baseY + depth + Math.round(H * 0.045), lbl,
+          ACTIVE.body, FONT_UI_BOLD, 160, "cmp-lbl-a");
+  famText(doc, cfg.labelB || "OWNED", M + colW + gap, baseY + depth + Math.round(H * 0.045), lbl,
+          ACTIVE.accent, FONT_UI_BOLD, 160, "cmp-lbl-b");
+
+  var body = cfg.body || [];
+  var bs = BS;
+  for (var i = 0; i < body.length; i++) bs = Math.min(bs, famFitSize(body[i], W - M * 2, BS, "body"));
+  for (var b = 0; b < body.length; b++) {
+    famText(doc, body[b], M, baseY + depth + Math.round(H * 0.095) + Math.round(bs * 1.45 * b),
+            bs, ACTIVE.body, FONT_UI, 0, "cmp-b" + b);
+  }
+  famSignature(doc, W, H, M, FS, cfg);
+}
+
+/*
+ * MONUMENT - one extruded slab carrying a single word or number, standing on a
+ * perspective floor. For the moment a campaign needs presence rather than
+ * explanation.
+ */
+function famLayoutMonument(doc, F, cfg) {
+  var W = F[0], H = F[1], M = F[2], ES = F[3], BS = F[6], FS = F[7];
+  famText(doc, cfg.eyebrow, M, Math.round(H * 0.115), ES, ACTIVE.accent, FONT_UI_BOLD, 240, "eyebrow");
+
+  famPerspectiveGrid(doc, [0, Math.round(H * 0.46), W, Math.round(H * 0.30)],
+                     Math.round(W / 2), Math.round(H * 0.44), 14);
+
+  var bw = Math.round(W * 0.70), bh = Math.round(H * 0.20);
+  var bx = M, by = Math.round(H * 0.44);
+  famExtrudeRect(doc, bx, by, bw, bh, Math.round(bw * 0.055),
+                 famMix(ACTIVE.ground, ACTIVE.head, 0.14), "monument");
+
+  var word = cfg.word || "YOURS";
+  var ws = famFitSize(word, bw - Math.round(bw * 0.12), Math.round(bh * 0.82), "display");
+  famText3D(doc, word, bx + Math.round(bw * 0.06), by + Math.round(bh * 0.70), ws,
+            Math.round(ws * 0.035), "monument-word");
+
+  var body = cfg.body || [];
+  var bs = BS;
+  for (var i = 0; i < body.length; i++) bs = Math.min(bs, famFitSize(body[i], W - M * 2, BS, "body"));
+  for (var b = 0; b < body.length; b++) {
+    famText(doc, body[b], M, Math.round(H * 0.74) + Math.round(bs * 1.45 * b), bs,
+            ACTIVE.body, FONT_UI, 0, "mon-b" + b);
+  }
+  if (cfg.cta) famPill(doc, M, Math.round(H * 0.74) + Math.round(bs * 1.45 * body.length) + Math.round(H * 0.02),
+                       cfg.cta, Math.max(16, Math.round(BS * 0.74)));
+  famSignature(doc, W, H, M, FS, cfg);
+}
+
+FAM_LAYOUTS["comparison"] = famLayoutComparison;
+FAM_LAYOUTS["monument"]   = famLayoutMonument;
