@@ -1,5 +1,32 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A rejected push is not always a broken repo
+
+Forty-two commits would not push. The remote rejected every attempt with
+`inflate: data stream error` and `pack has bad object at offset …` — a different
+offset and sometimes a different error string each time. An earlier session had
+hit the same wall, recorded it honestly, and stopped there.
+
+`git fsck --no-dangling` was clean, so the local objects were fine. The diagnosis
+came from two control pushes: a ref update carrying **no new objects** succeeded,
+and a single small text-only commit succeeded. Auth, network and remote were all
+healthy — the failure was **pack size**, not corruption.
+
+Disabling delta compression did not help (`pack.threads=1`, `core.compression=0`,
+`pack.window=0`). Batching into six-commit packs did not help either.
+
+**What worked: pushing one commit at a time, with retries.** 31 of 41 went
+straight through; the three that failed all carried large binaries, and every one
+of them succeeded on a later attempt — one on the third try. Final state: all 42
+pushed, remote and local identical.
+
+**Guidance.** When a push is rejected with an inflate error, do not rebase, reset
+or force-push. Run `git fsck` first: if it is clean, the objects are fine.
+Establish a baseline with a no-op ref push, then push commit-by-commit with two
+or three retries each. A repository carrying rendered video and generated imagery
+will hit this again; the size, not the content, is the problem.
+
+
 ## 2026-09-05 — A render that completes is not a render that is correct
 
 Three defects in the Platform Dependency HyperFrames film survived a fully green

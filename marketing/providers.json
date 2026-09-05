@@ -515,15 +515,17 @@
         "speech-to-text",
         "agent voice via its own MCP server"
       ],
-      "status": "evaluated_recommended_not_installed",
-      "automation": "desktop_app_plus_mcp",
+      "status": "installed_headless_proven",
+      "automation": "local_sidecar_plus_mcp",
       "secret_env": [],
-      "access": "https://github.com/jamiepine/voicebox - Tauri desktop app, MIT, fully local, no API key and no per-use cost",
+      "access": "~/Development/voicebox — headless, no GUI needed:\n  start:  ~/Development/voicebox/tauri/src-tauri/binaries/voicebox-server-aarch64-apple-darwin --port 17493\n  health: curl http://127.0.0.1:17493/health\n  mcp:    ~/Development/voicebox/tauri/src-tauri/binaries/voicebox-mcp-aarch64-apple-darwin (connects to :17493)",
       "notes": [
-        "HIGHEST-VALUE OF THE THREE REPOS EVALUATED 2026-09-05, because it fixes a gap that is currently blocking real work: three of the seven HyperFrames films are SILENT for want of approved narration, and HeyGen credits are the only voice source in the stack and are finite.",
-        "Local and free, so narration stops being a metered resource. Its MCP server would also let agents generate VO directly rather than requesting a HeyGen render.",
-        "NOT INSTALLED. Building from source needs Rust and Xcode; on this machine bun 1.3.14, python 3.14.7 and node 24.19.0 are present but cargo/rustc are MISSING and Xcode is absent. The alternative is a prebuilt DMG, which is an executable installer from an external source and a system-level change the owner should perform, not an agent."
-      ]
+        "LOCAL AND FREE. No API key, no per-use cost, Apple Silicon GPU (MPS/mlx). This removes narration from the metered budget - three of the seven HyperFrames films are currently silent for want of approved voice, and HeyGen credits were the only source.",
+        "BUILD GOTCHAS, in the order hit: build-server.sh calls `python` and this machine only has `python3`; Homebrew Python refuses global pip under PEP 668 (use a venv, never --break-system-packages); and the hard blocker - the `kokoro` TTS dep requires Python >=3.10,<3.13 while the system runs 3.14.7. Resolved with `uv venv --python 3.12 backend/venv`, which is what the build script expects.",
+        "THE GUI DOES NOT BUILD HERE and does not need to. Tauri fails at `actool failed to compile icon`; actool ships with full Xcode, and only Command Line Tools are installed. The Python sidecars - the TTS/STT engine and the MCP server, which is the entire agent-facing surface - build and run fine.",
+        "Rust 1.98.1 was installed as a prerequisite and is now available at ~/.cargo/bin."
+      ],
+      "proof": "2026-09-05: built from source and started headless. /health returned {\"status\":\"healthy\",\"gpu_available\":true,\"gpu_type\":\"MPS (Apple Silicon)\",\"backend_type\":\"mlx\"}. Sidecars: voicebox-server 581 MB, voicebox-mcp 20 MB."
     },
     {
       "id": "ecc_agent_harness",
