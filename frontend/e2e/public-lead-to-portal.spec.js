@@ -12,7 +12,7 @@ async function expectNoHorizontalOverflow(page) {
 
 async function finishWebBasicsResearch(page) {
   await page.goto('/start');
-  await page.getByRole('button', { name: /Web Basics.*\$199 starting point/ }).first().click();
+  await page.getByRole('button', { name: /Starter Mobile Business Foundation.*\$199 starting point/ }).first().click();
   await page.getByRole('button', { name: 'I have domain & logo ready' }).click();
   await page.getByRole('button', { name: 'Solo Service Business' }).click();
   await page.getByRole('button', { name: /Planning ahead/ }).click();

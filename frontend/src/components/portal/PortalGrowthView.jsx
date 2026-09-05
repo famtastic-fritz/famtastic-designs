@@ -1,6 +1,7 @@
 import { Panel } from './PortalShared.jsx';
+import PaymentHandoffSettings from './PaymentHandoffSettings.jsx';
 
-export default function PortalGrowthView({ workspace, go }) {
+export default function PortalGrowthView({ workspace, go, organization }) {
   const offers = workspace.offers || [];
 
   return (
@@ -29,6 +30,7 @@ export default function PortalGrowthView({ workspace, go }) {
           Describe my goal
         </button>
       </Panel>
+      <PaymentHandoffSettings organization={organization} />
     </section>
   );
 }

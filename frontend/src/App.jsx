@@ -43,6 +43,7 @@ import TermsOfServicePage from './pages/TermsOfServicePage.jsx';
 import WatchHubPage from './pages/WatchHubPage.jsx';
 import WatchFilmPage from './pages/WatchFilmPage.jsx';
 import WebsiteOptionsPage from './pages/WebsiteOptionsPage.jsx';
+import PaymentHandoffPage from './pages/PaymentHandoffPage.jsx';
 
 export default function App() {
   return (
@@ -93,6 +94,7 @@ export default function App() {
           <Route path="/intake/:serviceSlug" element={<SpecializedIntakePage />} />
           <Route path="/55-cents-a-day-website" element={<FiftyFiveCentWebsitePage />} />
           <Route path="/website-options" element={<WebsiteOptionsPage />} />
+          <Route path="/pay/:organization/:siteKey" element={<PaymentHandoffPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/privacy" element={<Navigate to="/privacy-policy" replace />} />
           <Route path="/terms-of-service" element={<TermsOfServicePage />} />

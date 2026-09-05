@@ -31,6 +31,10 @@ final class RevenueLoopContractTest extends UnitTestCase {
     $this->assertStringContainsString("'offer_contracts' => array_map", $controller);
     $this->assertStringContainsString('$item[\'offer_contract\'] = $this->offerContractSnapshot', $controller);
     $this->assertStringContainsString("'hash'", $controller);
+    $lifecycle = file_get_contents($module . '/src/Service/CommerceLifecycleService.php');
+    $this->assertIsString($lifecycle);
+    $this->assertStringContainsString("(array) (\$checkout['offer_contracts'] ?? [])", $lifecycle);
+    $this->assertStringContainsString('commerce_checkout_contract_missing:', $lifecycle);
   }
 
   public function testConversionProvisionsOnlyAPrivateOwnerDeskBinding(): void {
