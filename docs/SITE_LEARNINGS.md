@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A texture is a composition ingredient, not a campaign argument
+
+The planned texture-library directory was missing even though the plate worker
+already named it as a future input. Filling that gap with an unapproved paid
+image run would confuse a quiet background surface with an evidence-first
+creative experiment. Five palette-specific SVG sources instead provide a
+deterministic, editable local base with no text, person, logo, claim, or
+provider dependency.
+
+The source texture must sit under exact composed type at low opacity. It never
+substitutes for a subject-specific plate: a business-card image can carry a
+credibility argument; paper fibre cannot. Keep external texture candidates in a
+separate asset-graph job with its own brief, cost receipt, hashes, QA, and human
+decision.
+
 ## 2026-09-05 — A completed provider render is footage, not a finished campaign
 
 The interrupted session left a local script for the business-email presenter

@@ -1,0 +1,66 @@
+{
+  "schema": "famtastic.creative-texture-library.v1",
+  "created_at": "2026-09-05",
+  "purpose": "Deterministic, editable texture sources for Photoshop, Remotion, HyperFrames, and local HTML composition. They provide atmosphere behind exact typography; they are not campaign plates or finished ads.",
+  "production_boundary": {
+    "current_assets": "Local procedural SVG source files only. No provider, model, key, credits, or paid generation were used.",
+    "external_variants": "An external texture candidate may be proposed only in an approved asset-graph job. It must have a human brief, cost receipt, source/output hashes, task-specific QA, and a human decision before use.",
+    "text_rule": "Textures contain no text, logo, person, or factual claim. Exact typography is composed later."
+  },
+  "usage": {
+    "default": "Use as a low-opacity background layer. Preserve enough quiet field for readable type and never let the texture become the subject.",
+    "safe_starting_opacity": "8-18%, then inspect at the intended export size.",
+    "do_not": [
+      "Treat a texture as a blog hero or a visual argument on its own.",
+      "Use the FAMtastic black/lime texture as a default for a subject-specific campaign.",
+      "Bake headline, CTA, price, or URL into any texture."
+    ]
+  },
+  "assets": [
+    {
+      "id": "paper-fibre-light",
+      "palette": "paper",
+      "file": "assets/paper-fibre-light.svg",
+      "format": "SVG, scalable, 1600x1000 viewBox",
+      "visual_role": "Sober document, ownership, credibility, and LinkedIn surfaces.",
+      "composition": "Warm off-white field, subtle paper fibre and a tiny deep-green ink incident at the lower edge.",
+      "status": "procedural_local"
+    },
+    {
+      "id": "ghost-town-dust",
+      "palette": "ghost-town",
+      "file": "assets/ghost-town-dust.svg",
+      "format": "SVG, scalable, 1600x1000 viewBox",
+      "visual_role": "Absence, discoverability, and weathered-location surfaces.",
+      "composition": "Dark dusty earth field with one muted amber wash, faint grain, and no object or signage.",
+      "status": "procedural_local"
+    },
+    {
+      "id": "salon-soft-grain",
+      "palette": "salon",
+      "file": "assets/salon-soft-grain.svg",
+      "format": "SVG, scalable, 1600x1000 viewBox",
+      "visual_role": "Personal-service, care, and close human-work surfaces.",
+      "composition": "Deep plum field, gentle dusty-rose practical glow, and fine soft grain.",
+      "status": "procedural_local"
+    },
+    {
+      "id": "trades-workshop-scratch",
+      "palette": "trades",
+      "file": "assets/trades-workshop-scratch.svg",
+      "format": "SVG, scalable, 1600x1000 viewBox",
+      "visual_role": "Repair, work, field service, and industrial-process surfaces.",
+      "composition": "Blue-black steel ground with restrained safety-orange edge light and worn diagonal scratch marks.",
+      "status": "procedural_local"
+    },
+    {
+      "id": "famtastic-grid-quiet",
+      "palette": "famtastic",
+      "file": "assets/famtastic-grid-quiet.svg",
+      "format": "SVG, scalable, 1600x1000 viewBox",
+      "visual_role": "FAMtastic offer and system surfaces only.",
+      "composition": "Near-black field, quiet architectural grid, and one constrained lime edge accent.",
+      "status": "procedural_local"
+    }
+  ]
+}

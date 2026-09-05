@@ -62,10 +62,13 @@ workaround.
    composition, captions, CTA treatment, a storyboard/treatment receipt, and
    a human promotion decision. Use them only as optional source nodes after a
    human brief chooses that route; do not post either render.
-3. **Plate/texture lane:** validate the modified
-   `marketing/creative/plates/generate-plates.mjs` and prompt library. The
-   planned `marketing/creative/textures/` library was not created before the
-   interruption.
+3. **Plate/texture lane:** the modified plate generator now passes syntax and
+   its 95-entry local dry run ($3.1920 displayed as future queued-run estimate;
+   no provider call was made). Its pre-existing dirty generator/library changes
+   remain intentionally uncommitted and were not claimed by this recovery. The
+   missing `marketing/creative/textures/` library is now complete as five local,
+   editable SVG sources plus `validate-texture-library.mjs`; it is a quiet
+   composition layer, not a paid plate substitute or a finished campaign asset.
 4. **Creative/video lane:** resume from
    `marketing/creative/asset-graph/README.md`, not from a default storyboard.
    A job may begin with a human brief plus any declared source (blog, research,

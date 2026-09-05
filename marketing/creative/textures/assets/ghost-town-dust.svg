@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Dusty weathered texture">
+  <defs>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.48" numOctaves="3" seed="31"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .16"/></feComponentTransfer></filter>
+    <radialGradient id="dust" cx="14%" cy="28%" r="72%"><stop stop-color="#d9a441" stop-opacity=".3"/><stop offset=".55" stop-color="#6a4b25" stop-opacity=".12"/><stop offset="1" stop-color="#17120d" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="#17120d"/>
+  <rect width="1600" height="1000" fill="url(#dust)"/>
+  <rect width="1600" height="1000" filter="url(#grain)" opacity=".46"/>
+  <path d="M0 760C380 700 830 842 1600 720v280H0Z" fill="#0e0b08" opacity=".34"/>
+</svg>

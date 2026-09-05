@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-05 — Deterministic local texture library
+
+- **Completed the missing texture-library lane without creating a new paid
+  generation run.** Five editable, text-free SVG sources now cover the active
+  paper, ghost-town, salon, trades, and FAMtastic palettes. They are local
+  composition ingredients for Photoshop, Remotion, and HyperFrames rather than
+  substitute campaign imagery.
+- **Added a no-network verifier and inspected rendered previews.** It confirms
+  every manifest entry has a matching scalable SVG, matching viewBox, and no
+  embedded text. The existing plate generator also passes syntax validation and
+  a 95-entry dry run; its displayed $3.1920 would be a future queued-run
+  estimate, not spend made in this recovery.
+
 ## 2026-09-05 — HeyGen presenter receipt recovery and local source-node audit
 
 - **Recovered the missing completed Take B without generating anything new.**
