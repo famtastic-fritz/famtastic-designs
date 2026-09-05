@@ -46,7 +46,7 @@ final class LifecycleOperationsService {
     foreach ($rows as $row) {
       $result['processed']++;
       try {
-        $messageId = $this->mailer->send($row['recipient'], $row['subject'], $row['body']);
+        $messageId = $this->mailer->send($row['recipient'], $row['subject'], $row['body'], NULL, $this->notificationTemplate($row));
         $this->database->update('famtastic_notification_outbox')->fields([
           'status' => 'sent', 'attempts' => (int) $row['attempts'] + 1, 'sent_at' => $now,
           'provider_message_id' => $messageId, 'last_error' => NULL, 'changed' => $now,
@@ -73,6 +73,18 @@ final class LifecycleOperationsService {
     }
     $this->heartbeat('notification_dispatch', $result, $now + 300);
     return $result;
+  }
+
+  /** Selects a visual template from durable delivery identity, never copy. */
+  private function notificationTemplate(array $row): string {
+    $key = (string) ($row['notification_key'] ?? '');
+    if (
+      preg_match('/^website-request:\d+:proofs:\d+:(?:3|6)$/', $key) === 1
+      || preg_match('/^project:\d+:proofs:[^:]+:(?:3|6)$/', $key) === 1
+    ) {
+      return OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY;
+    }
+    return OutreachMailer::TEMPLATE_STANDARD;
   }
 
   /** Runs bounded durable proof and delivery jobs and records worker health. */

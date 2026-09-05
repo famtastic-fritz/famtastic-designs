@@ -15,6 +15,9 @@ use RuntimeException;
  */
 class OutreachMailer {
 
+  public const TEMPLATE_STANDARD = 'standard';
+  public const TEMPLATE_CUSTOMER_PROOF_READY = 'customer_proof_ready';
+
   public function __construct(
     protected ConfigFactoryInterface $configFactory,
     protected LoggerInterface $logger,
@@ -38,15 +41,19 @@ class OutreachMailer {
    * The campaign boundary uses PHPMailer directly so a provider message id is
    * returned and an SMTP rejection cannot be mistaken for successful delivery.
    */
-  public function send(string $to, string $subject, string $body, ?string $oneClickUnsubscribeUrl = NULL): string {
+  public function send(string $to, string $subject, string $body, ?string $oneClickUnsubscribeUrl = NULL, string $template = self::TEMPLATE_STANDARD): string {
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
       throw new RuntimeException('notification_recipient_invalid');
     }
+    if (!in_array($template, [self::TEMPLATE_STANDARD, self::TEMPLATE_CUSTOMER_PROOF_READY], TRUE)) {
+      throw new RuntimeException('notification_template_invalid');
+    }
     $oneClickHeaders = $this->oneClickUnsubscribeHeaders($oneClickUnsubscribeUrl);
+    $htmlBody = $this->renderHtmlMessage($subject, $body, $template);
 
     $transport = (string) (getenv('FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT') ?: Settings::get('famtastic_transactional_email_transport', 'smtp'));
     if ($transport === 'memory') {
-      return $this->captureMemoryMessage($to, $subject, $body, $oneClickHeaders);
+      return $this->captureMemoryMessage($to, $subject, $body, $oneClickHeaders, $htmlBody);
     }
     if ($transport !== 'smtp') {
       throw new RuntimeException('notification_transport_invalid');
@@ -98,7 +105,7 @@ class OutreachMailer {
       // mobile-safe presentation.  Callers deliberately provide plain text so
       // request data can never become executable markup in an email.
       $mailer->isHTML(TRUE);
-      $mailer->Body = $this->renderHtmlMessage($subject, $body);
+      $mailer->Body = $htmlBody;
       $mailer->AltBody = $body;
       $mailer->send();
       $providerMessageId = trim($mailer->getLastMessageID());
@@ -167,7 +174,10 @@ class OutreachMailer {
    * system: the outbox and memory transport retain the exact readable text,
    * and only http(s) links become anchors after escaping.
    */
-  private function renderHtmlMessage(string $subject, string $body): string {
+  private function renderHtmlMessage(string $subject, string $body, string $template = self::TEMPLATE_STANDARD): string {
+    if ($template === self::TEMPLATE_CUSTOMER_PROOF_READY) {
+      return $this->renderCustomerProofReadyMessage($subject, $body);
+    }
     $paragraphs = preg_split('/\R{2,}/', trim($body)) ?: [];
     $content = '';
     foreach ($paragraphs as $paragraph) {
@@ -210,9 +220,72 @@ class OutreachMailer {
   }
 
   /**
+   * Renders the account-owned proof delivery without borrowing commercial
+   * campaign language or external proof/share links.
+   *
+   * The source body remains plain text and is stored verbatim in the durable
+   * outbox. That keeps a human-readable receipt and prevents customer input
+   * from becoming executable markup; this method only adds the trusted visual
+   * treatment around it.
+   */
+  private function renderCustomerProofReadyMessage(string $subject, string $body): string {
+    $safeSubject = htmlspecialchars($subject, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $paragraphs = preg_split('/\R{2,}/', trim($body)) ?: [];
+    $content = '';
+    $reviewUrl = '';
+    foreach ($paragraphs as $paragraph) {
+      $escaped = htmlspecialchars(trim($paragraph), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+      $escaped = preg_replace_callback(
+        '#(https?://[^\s]+)#i',
+        static function (array $match) use (&$reviewUrl): string {
+          $url = $match[1];
+          $trailing = '';
+          if (preg_match('#[),.;:!?"\']+$#', $url, $m)) {
+            $trailing = $m[0];
+            $url = substr($url, 0, strlen($url) - strlen($trailing));
+          }
+          if ($reviewUrl === '' && filter_var($url, FILTER_VALIDATE_URL)) {
+            $reviewUrl = $url;
+          }
+          return '<a href="' . $url . '" style="color:#114b31;font-weight:800;word-break:break-word">' . $url . '</a>' . $trailing;
+        },
+        $escaped,
+      ) ?? $escaped;
+      $content .= '<p style="margin:0 0 15px;color:#26372c;font:16px/1.6 Arial,Helvetica,sans-serif">'
+        . nl2br($escaped, FALSE)
+        . '</p>';
+    }
+    if ($content === '') {
+      $content = '<p style="margin:0;color:#26372c;font:16px/1.6 Arial,Helvetica,sans-serif">Your private Studio Review is ready in your FAMtastic workspace.</p>';
+    }
+
+    $cta = '';
+    if ($reviewUrl !== '') {
+      $cta = '<table role="presentation" cellspacing="0" cellpadding="0" style="margin:22px 0 26px"><tr><td style="border-radius:8px;background:#7cfc00">'
+        . '<a href="' . $reviewUrl . '" style="display:inline-block;padding:14px 20px;border-radius:8px;color:#102a1c;font:800 15px/1 Arial,Helvetica,sans-serif;text-decoration:none">Open your Studio Review →</a>'
+        . '</td></tr></table>';
+    }
+
+    return '<!doctype html><html lang="en"><body style="margin:0;padding:0;background:#070907">'
+      . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#070907"><tr><td style="padding:28px 14px">'
+      . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;margin:0 auto;background:#f8fbf7;border:1px solid #263529;border-radius:18px;overflow:hidden">'
+      . '<tr><td style="padding:24px 28px;background:#102a1c;color:#ffffff">'
+      . '<div style="color:#7cfc00;font:800 12px/1 Arial,Helvetica,sans-serif;letter-spacing:.13em;text-transform:uppercase">FAMtastic Concierge</div>'
+      . '<div style="margin-top:10px;font:800 23px/1.15 Arial,Helvetica,sans-serif">Your Studio Review is ready</div>'
+      . '</td></tr>'
+      . '<tr><td style="padding:28px">'
+      . '<div style="display:inline-block;margin:0 0 18px;padding:7px 10px;border:1px solid #b5d7b2;border-radius:999px;color:#114b31;background:#edf8ea;font:800 12px/1 Arial,Helvetica,sans-serif;letter-spacing:.06em;text-transform:uppercase">Private concept review · verified workspace</div>'
+      . '<h1 style="margin:0 0 18px;color:#102a1c;font:800 28px/1.15 Arial,Helvetica,sans-serif">' . $safeSubject . '</h1>'
+      . $content . $cta
+      . '<div style="margin-top:8px;padding:16px;border:1px solid #d8e8d6;border-radius:12px;background:#ffffff;color:#526356;font:14px/1.5 Arial,Helvetica,sans-serif">Your concepts stay inside your verified FAMtastic account until you choose to share feedback. FAMtastic Concierge is here when you are ready to talk through a direction.</div>'
+      . '<p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #d8e0d8;color:#66736a;font:13px/1.45 Arial,Helvetica,sans-serif">FAMtastic Designs · 1729 NW St. Lucie West Blvd #1181 · Port Saint Lucie, FL 34986</p>'
+      . '</td></tr></table></td></tr></table></body></html>';
+  }
+
+  /**
    * Captures deterministic test messages without contacting an SMTP server.
    */
-  private function captureMemoryMessage(string $to, string $subject, string $body, array $headers = []): string {
+  private function captureMemoryMessage(string $to, string $subject, string $body, array $headers = [], ?string $htmlBody = NULL): string {
     $path = trim((string) (getenv('FAMTASTIC_TRANSACTIONAL_EMAIL_CAPTURE') ?: Settings::get('famtastic_transactional_email_capture', '')));
     if ($path === '' || !is_dir(dirname($path)) || !is_writable(dirname($path))) {
       throw new RuntimeException('notification_capture_path_invalid');
@@ -225,6 +298,9 @@ class OutreachMailer {
       'body' => $body,
       'captured_at' => gmdate(DATE_ATOM),
     ];
+    if ($htmlBody !== NULL) {
+      $recordData['html_body'] = $htmlBody;
+    }
     if ($headers !== []) {
       $recordData['headers'] = $headers;
     }

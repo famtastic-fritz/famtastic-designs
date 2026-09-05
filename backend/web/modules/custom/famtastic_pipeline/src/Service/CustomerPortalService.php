@@ -1118,7 +1118,7 @@ final class CustomerPortalService {
     $setLabel = $count === 6 ? 'six website concepts—including three fully FAMtastic directions—' : 'Safe, Wild, and OMG concepts';
     $reviewUrl = $base . '/portal/?section=projects&request=' . rawurlencode((string) $row['public_id']);
     $this->queueNotification('website-request:' . $requestId . ':proofs:' . (int) $row['proof_campaign_id'] . ':' . $count, 'transactional', (string) $customer['email'],
-      'Your FAMtastic website concepts are ready', "Your {$setLabel} are ready. Sign in to compare them and choose your direction:\n{$reviewUrl}\n\nUse the same email address that received this message.");
+      'Your FAMtastic Studio Review is ready', "Hi {$customer['display_name']},\n\nYour {$setLabel} are ready in your private Studio Review. We used the business context you shared to shape each direction.\n\nInside, you can compare every concept, choose the direction that feels most like your business, or send FAMtastic Concierge feedback when you are ready.\n\nOpen your private Studio Review:\n{$reviewUrl}\n\nUse the same verified email address that received this message.");
     $this->activity((int) $row['organization_id'], 'website_request.proofs_approved', ucfirst($setLabel) . ' were approved for customer review.');
     return $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc() ?: [];
   }

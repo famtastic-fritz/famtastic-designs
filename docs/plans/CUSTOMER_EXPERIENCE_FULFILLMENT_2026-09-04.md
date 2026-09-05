@@ -10,7 +10,7 @@ Tasks:
 - [x] Trace the real account → request → submission → proof job → owner review → customer proof lifecycle and identify the exact next customer action for Tighten Up Your Locs. (Request `dffd4cb9-c3aa-47fd-a184-52577053bc09` is a verified customer-owned `draft`; its completed deep-dive is linked, its prior job `301` failed at 5/5 attempts, and it has no proof campaign. The next intentional action is customer submission, not a retry of that legacy job.)
 - [x] Integrate the proof-handoff repair with current `origin/main`, run the required proof suite, and deploy the reviewed release if the production gates pass. (Release `1e0f82cb` is deployed to backend and frontend; the staging-directory repair prevented the host's dot-directory removal from interrupting promotion. Targeted PHP, portal-design, frontend-build, and local browser checks passed; the full canonical runner remains locally database-blocked.)
 - [x] Perform only authorized, non-destructive production checks; provide Fritz the correct customer-facing next-step link, not a fabricated proof link. (Production route resolves. An owner-session browser saw the deliberate cross-account refusal, so the link is customer-authenticated rather than a bearer proof URL.)
-- [ ] Record evidence, material decisions, capability status, and session closeout across the required repository surfaces and Drive mirror.
+- [x] Record evidence, material decisions, capability status, and session closeout across the required repository surfaces and Drive mirror. (2026-09-04: branded account-owned Studio Review email locally proven; Drive mirror and repository records updated. Production/customer receipt remains an explicitly separate owner-authorized gate.)
 
 Status: in_progress
 Started: 2026-09-04 00:00 America/New_York
@@ -34,6 +34,8 @@ Proof:
 **Existing ready notice:** `CustomerPortalService::approveWebsiteRequestProof()` requires an owner-reviewed, complete three- or six-direction set, changes the request to `customer_ready`, and queues the exact authenticated portal link to the verified customer email. `LifecycleOperationsService::dispatchNotifications()` records provider acceptance and only then changes the request to `notified`. A provider acceptance is not inbox-delivery proof.
 
 **Current gap:** the account-owned request has intake research context but no immutable, evidence-bound Business Opportunity Snapshot; no customer API/panel; and no proof-ready email content that references one. The separate public-preview research snapshot is a good boundary pattern but cannot be reused because it is a different pre-registration identity model.
+
+**Implemented local improvement (2026-09-04):** the proof-ready outbox notice now selects a dedicated FAMtastic Concierge HTML Studio Review template from its durable notification key. It retains the authenticated account portal link and plain-text fallback, is not used for leads/campaigns, and intentionally does not claim that a research snapshot is available. Focused memory-transport email evidence passed; the full local journey cannot currently start because the checkout's Drupal database is unreachable.
 
 **Implementation order:**
 

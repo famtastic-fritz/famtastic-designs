@@ -1,5 +1,26 @@
 # Product changelog
 
+## 2026-09-04 — Account-owned Studio Review email is locally proven
+
+- Reworked the customer notification sent only after an owner approves a
+  complete, account-bound three- or six-concept proof campaign. It now uses a
+  distinct FAMtastic Concierge HTML “Studio Review” design with the exact
+  authenticated portal URL, a readable plain-text fallback, escaped customer
+  content, and a quiet business-identity footer. This is not the lead or
+  campaign-email path and contains no promotional offer or buy prompt.
+- Template selection is derived from the durable outbox notification identity,
+  not subject text. The memory transport now retains the rendered HTML for
+  deterministic local verification while the provider path preserves the
+  original plain-text `AltBody`.
+- Focused PHPUnit evidence: 3 tests / 10 assertions passed. PHP syntax,
+  journey-harness syntax, diff hygiene, and all 30 Client Portal Design DNA
+  checks passed. The full local customer-journey runner remains blocked before
+  execution because this checkout cannot reach its Drupal database; no provider
+  email, customer mail, or production deployment was attempted.
+- The Business Opportunity Snapshot is deliberately still absent from this
+  notice. It requires the separately planned immutable, request-owned research
+  snapshot and customer portal surface before it can be represented as ready.
+
 ## 2026-09-04 (later session 2) — Fixed systemic `/web/` canonical-URL bug on every blog post
 
 - Confirmed live via JSON:API that every published `blog_post` node's canonical
