@@ -50,7 +50,7 @@ same name.
 | # | Step | Definition of done | Evidence | Status |
 |---|------|--------------------|----------|--------|
 | 1 | Register the desktop surface in `providers.json` | Working Adobe capabilities appear in the first file agents read, with access path, preconditions and known bugs | 4 entries added, `adobe_photoshop_api` annotated to redirect to the desktop path | ✅ DONE 2026-09-04 |
-| 2 | Prove Photoshop end to end | A Design-DNA-compliant asset built and exported entirely through the bridge | `marketing/creative/adobe-proofs/cost-is-not-the-reason-story-1080x1920.png` + reusable `famtastic-story-9x16-template.psd` | ✅ DONE 2026-09-04 |
+| 2 | Prove Photoshop end to end | A Design-DNA-compliant asset built and exported entirely through the bridge | `marketing/creative/adobe-proofs/cost-is-not-the-reason-story-1080x1920.png` (**copy superseded 2026-09-04 — it says the bundle is "maintained", which the catalog contradicts; kept only as the first end-to-end proof, never reuse its copy**) + reusable `famtastic-story-9x16-template.psd` | ✅ DONE 2026-09-04 |
 | 3 | Install the brand faces | Inter and Space Grotesk resolve inside Photoshop | — | ☐ BLOCKED — see *Known gaps* |
 | 4 | Prove Premiere end to end | `ping` answers, then a disposable sequence assembles and exports | `marketing/creative/premiere-proof/PROOF.md` | ☐ BLOCKED 2026-09-04 — app running, bridge panel not started, see *Known gaps* |
 | 5 | Media Encoder watch folders | One master render fans out to every social aspect ratio with no bridge work | — | ☐ cheapest remaining win |

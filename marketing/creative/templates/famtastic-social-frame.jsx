@@ -574,3 +574,289 @@ function renderFamtasticFrames(cfg) {
   }
   return { slug: cfg.slug, palette: palName, written: written };
 }
+
+/* ==========================================================================
+ * LAYOUT ARCHETYPES
+ *
+ * Owner correction 2026-09-04: "there isn't enough variety in your designs.
+ * You need to see how Cox does it or something."
+ *
+ * Fair. Every asset above used ONE composition - eyebrow, rule, two-line
+ * headline, body, signature - and varied only the palette. Changing colour is
+ * not variety; it is the same poster in a different shirt.
+ *
+ * Studied cox.com directly. Across a single page they alternate at least seven
+ * compositions: split panel with photo bleeding to one edge, offer card with a
+ * badge chip and a CTA pill, thin utility strip, three-up card grid, icon nav
+ * row, inline form band, and price-as-hero. The variety comes from a small kit
+ * of reusable OBJECTS - chips, pills, tinted panels, cards - recombined, not
+ * from bespoke art each time.
+ *
+ * So: a component kit, then archetypes built from it.
+ * ========================================================================== */
+
+/* ---- Components --------------------------------------------------------- */
+
+// Depth on a 2D surface. A dark ground cannot take a drop shadow (black on
+// near-black is nothing), so it gets a lit edge instead; a light ground gets a
+// real cast shadow. Same intent, opposite physics.
+function famElevate(doc, x, y, w, h, strength) {
+  var s = strength || 1;
+  var l = doc.artLayers.add(); l.name = "elevation";
+  if (famIsLightGround()) {
+    famRect(doc, x + Math.round(6 * s), y + Math.round(8 * s), w, h, [0, 0, 0], 100);
+    l.applyGaussianBlur(Math.round(14 * s));
+    l.blendMode = BlendMode.MULTIPLY;
+    l.opacity = 22;
+  } else {
+    famRect(doc, x - Math.round(5 * s), y - Math.round(5 * s), w, h, ACTIVE.accent, 100);
+    l.applyGaussianBlur(Math.round(18 * s));
+    l.blendMode = BlendMode.SCREEN;
+    l.opacity = 16;
+  }
+  return l;
+}
+
+// Tinted panel. The single most useful thing borrowed from Cox: a block of
+// held colour that a section sits inside, instead of everything floating on one
+// flat ground.
+function famPanel(doc, x, y, w, h, mixT, cutCorner) {
+  var l = doc.artLayers.add(); l.name = "panel";
+  // Lift toward the headline colour for a neutral panel, then a whisper of
+  // accent. Tinting straight to the accent muddies warm palettes.
+  var lift = famMix(ACTIVE.ground, ACTIVE.head, mixT === undefined ? 0.09 : mixT);
+  var face = famMix(lift, ACTIVE.accent, 0.06);
+  if (cutCorner) {
+    // Angled corner - a non-rectangular edge, so the frame stops reading as a
+    // stack of boxes.
+    var c = Math.round(Math.min(w, h) * 0.16);
+    famPoly(doc, [[x, y], [x + w, y], [x + w, y + h - c], [x + w - c, y + h],
+                  [x, y + h]], face, 100);
+  } else {
+    famRect(doc, x, y, w, h, face, 100);
+  }
+  return l;
+}
+
+// Badge chip: small caps label in a solid block. Cox's "SPECIAL OFFER".
+function famChip(doc, x, y, text, size) {
+  var padX = Math.round(size * 0.9), padY = Math.round(size * 0.62);
+  var w = Math.round(text.length * size * 0.62) + padX * 2;
+  var h = size + padY * 2;
+  var l = doc.artLayers.add(); l.name = "chip";
+  famRect(doc, x, y, w, h, ACTIVE.accent, 100);
+  famText(doc, text, x + padX, y + h - padY - Math.round(size * 0.15), size,
+          ACTIVE.ground, FONT_UI_BOLD, 140, "chip-text");
+  return { w: w, h: h };
+}
+
+// CTA pill. An actual button object, not a bare URL in the footer.
+function famPill(doc, x, y, text, size) {
+  var padX = Math.round(size * 1.5), padY = Math.round(size * 0.72);
+  var w = Math.round(text.length * size * 0.60) + padX * 2;
+  var h = size + padY * 2;
+  var r = Math.round(h / 2);
+  var l = doc.artLayers.add(); l.name = "pill";
+  famRect(doc, x + r, y, w - r * 2, h, ACTIVE.accent, 100);
+  famCircle(doc, x + r, y + r, r, ACTIVE.accent, 100);
+  famCircle(doc, x + w - r, y + r, r, ACTIVE.accent, 100);
+  famText(doc, text, x + padX, y + h - padY - Math.round(size * 0.16), size,
+          ACTIVE.ground, FONT_UI_BOLD, 20, "pill-text");
+  return { w: w, h: h };
+}
+
+// Extruded display type. Depth without a bevel filter: a copy behind, offset,
+// in accent. Reads as dimensional on both light and dark grounds.
+function famText3D(doc, text, x, y, size, depth, name) {
+  var d = depth || Math.round(size * 0.06);
+  famText(doc, text, x + d, y + d, size, ACTIVE.accent, FONT_DISPLAY, -20, name + "-back");
+  famText(doc, text, x, y, size, ACTIVE.head, FONT_DISPLAY, -20, name);
+}
+
+// Shared signature block, so every archetype closes the same way.
+function famSignature(doc, W, H, M, FS, cfg, ruleW) {
+  famBar(doc, M, H - Math.round(H * 0.135), ruleW || (W - M * 2), 2, ACTIVE.hair, "rule-bot");
+  var studio = cfg.studio || "AGENTIC AI BUSINESS SOLUTIONS ENGINEERING STUDIO";
+  if (studio !== "none") {
+    famText(doc, studio, M, H - Math.round(H * 0.088),
+            Math.max(14, Math.round(FS * 0.58)), ACTIVE.body, FONT_UI_BOLD, 120, "studio");
+  }
+  famText(doc, cfg.footer, M, H - Math.round(H * 0.038), FS, ACTIVE.accent,
+          FONT_UI_BOLD, 40, "footer");
+}
+
+function famNewDoc(W, H, name) {
+  var doc = app.documents.add(W, H, 72, name);
+  doc.artLayers[0].isBackgroundLayer = false;
+  doc.selection.selectAll();
+  doc.selection.fill(famColor(ACTIVE.ground[0], ACTIVE.ground[1], ACTIVE.ground[2]),
+                     ColorBlendMode.NORMAL, 100);
+  doc.selection.deselect();
+  return doc;
+}
+
+/* ---- Archetypes --------------------------------------------------------- */
+
+/*
+ * OFFER CARD - price is the hero.
+ * Badge chip, headline, an enormous number, one line of terms, a CTA pill.
+ * For the moment a campaign is actually asking for the sale.
+ */
+function famLayoutOfferCard(doc, F, cfg) {
+  var W = F[0], H = F[1], M = F[2], ES = F[3], BS = F[6], FS = F[7];
+  var px = M, pw = W - M * 2;
+  var py = Math.round(H * 0.20), ph = Math.round(H * 0.50);
+
+  famText(doc, cfg.eyebrow, M, Math.round(H * 0.115), ES, ACTIVE.accent, FONT_UI_BOLD, 240, "eyebrow");
+  famElevate(doc, px, py, pw, ph, 1);
+  famPanel(doc, px, py, pw, ph, 0.12, true);
+
+  var inx = px + Math.round(pw * 0.07);
+  var chip = famChip(doc, inx, py + Math.round(ph * 0.09),
+                     cfg.chip || "SPECIAL OFFER", Math.max(16, Math.round(BS * 0.62)));
+
+  var headSize = famFitSize(cfg.head1, pw - Math.round(pw * 0.14), Math.round(F[4] * 0.62), "display");
+  famText(doc, cfg.head1, inx, py + Math.round(ph * 0.34), headSize,
+          ACTIVE.head, FONT_DISPLAY, -20, "oc-head");
+
+  var priceSize = famFitSize(cfg.price || "55 cents", pw - Math.round(pw * 0.14),
+                             Math.round(F[4] * 1.35), "display");
+  famText3D(doc, cfg.price || "55 cents", inx, py + Math.round(ph * 0.58), priceSize,
+            Math.round(priceSize * 0.035), "oc-price");
+
+  famText(doc, cfg.terms || "a day, first year all in", inx, py + Math.round(ph * 0.70),
+          Math.max(16, Math.round(BS * 0.86)), ACTIVE.body, FONT_UI, 0, "oc-terms");
+  famPill(doc, inx, py + Math.round(ph * 0.78), cfg.cta || "See what is included",
+          Math.max(16, Math.round(BS * 0.74)));
+
+  famSignature(doc, W, H, M, FS, cfg);
+}
+
+/*
+ * SPLIT - a full-bleed band of held colour against the ground.
+ * The band carries a single statement; the ground carries the explanation.
+ * Cox uses this constantly and it is the fastest way out of "text on a field".
+ */
+function famLayoutSplit(doc, F, cfg) {
+  var W = F[0], H = F[1], M = F[2], ES = F[3], HS = F[4], HL = F[5], BS = F[6], FS = F[7];
+  var bandH = Math.round(H * 0.42), bandY = Math.round(H * 0.10);
+
+  famPanel(doc, 0, bandY, W, bandH, 0.16, false);
+  // Diagonal accent cut along the band's lower edge - a non-standard shape, so
+  // the composition is not four stacked rectangles.
+  var cut = Math.round(bandH * 0.18);
+  var cl = doc.artLayers.add(); cl.name = "band-cut";
+  famPoly(doc, [[0, bandY + bandH], [W, bandY + bandH - cut],
+                [W, bandY + bandH], [0, bandY + bandH]], ACTIVE.accent, 100);
+  cl.opacity = 70;
+
+  famText(doc, cfg.eyebrow, M, bandY + Math.round(bandH * 0.20), ES,
+          ACTIVE.accent, FONT_UI_BOLD, 240, "eyebrow");
+
+  var hs = Math.min(famFitSize(cfg.head1, W - M * 2, HS, "display"),
+                    famFitSize(cfg.head2, W - M * 2, HS, "display"));
+  famText(doc, cfg.head1, M, bandY + Math.round(bandH * 0.55), hs, ACTIVE.head, FONT_DISPLAY, -20, "sp-h1");
+  famText(doc, cfg.head2, M, bandY + Math.round(bandH * 0.55) + Math.round(hs * 1.12), hs,
+          ACTIVE.accent, FONT_DISPLAY, -20, "sp-h2");
+
+  var body = cfg.body || [], bodyTop = bandY + bandH + Math.round(H * 0.09);
+  var bs = BS;
+  for (var i = 0; i < body.length; i++) bs = Math.min(bs, famFitSize(body[i], W - M * 2, BS, "body"));
+  for (var b = 0; b < body.length; b++) {
+    famText(doc, body[b], M, bodyTop + Math.round(bs * 1.45 * b), bs, ACTIVE.body, FONT_UI, 0, "sp-b" + b);
+  }
+  if (cfg.cta) famPill(doc, M, bodyTop + Math.round(bs * 1.45 * body.length) + Math.round(H * 0.02),
+                       cfg.cta, Math.max(16, Math.round(BS * 0.74)));
+  famSignature(doc, W, H, M, FS, cfg);
+}
+
+/*
+ * STAT - one number, very large, and the sentence that gives it meaning.
+ * Use only with a figure that is verifiable from the repo. No invented stats.
+ */
+function famLayoutStat(doc, F, cfg) {
+  var W = F[0], H = F[1], M = F[2], ES = F[3], BS = F[6], FS = F[7];
+  famText(doc, cfg.eyebrow, M, Math.round(H * 0.135), ES, ACTIVE.accent, FONT_UI_BOLD, 240, "eyebrow");
+  famBar(doc, M, Math.round(H * 0.155), Math.round(W * 0.155), 6, ACTIVE.accent, "rule-top");
+
+  var big = cfg.stat || "199";
+  var statSize = famFitSize(big, W - M * 2, Math.round(H * 0.26), "display");
+  famText3D(doc, big, M, Math.round(H * 0.50), statSize, Math.round(statSize * 0.035), "stat");
+
+  var cap = cfg.body || [];
+  var bs = Math.round(F[6] * 1.05);
+  for (var i = 0; i < cap.length; i++) bs = Math.min(bs, famFitSize(cap[i], W - M * 2, bs, "body"));
+  for (var c = 0; c < cap.length; c++) {
+    famText(doc, cap[c], M, Math.round(H * 0.60) + Math.round(bs * 1.45 * c), bs,
+            ACTIVE.body, FONT_UI, 0, "stat-cap" + c);
+  }
+  if (cfg.cta) famPill(doc, M, Math.round(H * 0.60) + Math.round(bs * 1.45 * cap.length) + Math.round(H * 0.03),
+                       cfg.cta, Math.max(16, Math.round(BS * 0.74)));
+  famSignature(doc, W, H, M, FS, cfg);
+}
+
+/*
+ * CHECKLIST - what is actually included. Answers the real objection instead of
+ * asserting value. Each row is a marker plus a fact.
+ */
+function famLayoutChecklist(doc, F, cfg) {
+  var W = F[0], H = F[1], M = F[2], ES = F[3], HS = F[4], BS = F[6], FS = F[7];
+  famText(doc, cfg.eyebrow, M, Math.round(H * 0.115), ES, ACTIVE.accent, FONT_UI_BOLD, 240, "eyebrow");
+
+  var hs = famFitSize(cfg.head1, W - M * 2, Math.round(HS * 0.78), "display");
+  famText(doc, cfg.head1, M, Math.round(H * 0.215), hs, ACTIVE.head, FONT_DISPLAY, -20, "cl-head");
+
+  var items = cfg.items || [];
+  var top = Math.round(H * 0.30), rowH = Math.round((H * 0.46) / Math.max(items.length, 1));
+  var isz = Math.max(18, Math.min(Math.round(F[6] * 1.05), Math.round(rowH * 0.42)));
+
+  var rl = doc.artLayers.add(); rl.name = "checklist-rows";
+  for (var i = 0; i < items.length; i++) {
+    var ry = top + rowH * i;
+    famRect(doc, M, ry + Math.round(rowH * 0.30), Math.round(isz * 0.55), Math.round(isz * 0.55),
+            ACTIVE.accent, 100);
+    if (i > 0) famRect(doc, M, ry, W - M * 2, 1, ACTIVE.hair, 100);
+  }
+  for (var j = 0; j < items.length; j++) {
+    var ty = top + rowH * j;
+    famText(doc, items[j], M + Math.round(isz * 1.35), ty + Math.round(rowH * 0.30) + Math.round(isz * 0.52),
+            famFitSize(items[j], W - M * 2 - Math.round(isz * 1.35), isz, "body"),
+            ACTIVE.head, FONT_UI, 0, "cl-item" + j);
+  }
+  if (cfg.cta) famPill(doc, M, top + rowH * items.length + Math.round(H * 0.02),
+                       cfg.cta, Math.max(16, Math.round(BS * 0.74)));
+  famSignature(doc, W, H, M, FS, cfg);
+}
+
+var FAM_LAYOUTS = {
+  "offer-card": famLayoutOfferCard,
+  "split":      famLayoutSplit,
+  "stat":       famLayoutStat,
+  "checklist":  famLayoutChecklist
+};
+
+/*
+ * Entry point. layout:"standard" (or omitted) keeps the original composition;
+ * anything in FAM_LAYOUTS renders that archetype instead.
+ */
+function famRender(cfg) {
+  if (!cfg.layout || cfg.layout === "standard") return renderFamtasticFrames(cfg);
+  var fn = FAM_LAYOUTS[cfg.layout];
+  if (!fn) return { error: "unknown layout: " + cfg.layout,
+                    known: ["standard", "offer-card", "split", "stat", "checklist"] };
+
+  ACTIVE = PALETTES[cfg.palette || "famtastic"] || PALETTES["famtastic"];
+  var formats = cfg.formats || ["story-9x16"];
+  var written = [];
+  for (var i = 0; i < formats.length; i++) {
+    var key = formats[i], F = FAM_FORMATS[key];
+    if (!F) { written.push(key + " SKIPPED: unknown format"); continue; }
+    var doc = famNewDoc(F[0], F[1], cfg.slug + "-" + key);
+    fn(doc, F, cfg);
+    var path = cfg.outDir + cfg.slug + "-" + key + ".png";
+    famExportPNG(doc, path);
+    written.push(key + " " + F[0] + "x" + F[1] + " [" + cfg.layout + "] -> " + path);
+    doc.close(SaveOptions.DONOTSAVECHANGES);
+  }
+  return { slug: cfg.slug, layout: cfg.layout, palette: cfg.palette || "famtastic", written: written };
+}

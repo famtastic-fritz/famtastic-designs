@@ -101,6 +101,44 @@ One campaign, produced correctly:
 **Full campaign, every surface: well under $2.** That figure is the existing
 cascade target and this model is how it is met.
 
+### The premium asset is the REFERENCE, not just the first asset
+
+Owner directive 2026-09-04: *"use premium asset, then build assets for cheap or
+free using the premium as the reference. It's been working."*
+
+This is the part that makes the model work, and it is easy to miss. The premium
+anchor is not simply one expensive item sitting in a set of cheap ones. It is the
+**style reference every cheap asset is matched against.** Buy the anchor first,
+then derive.
+
+Concretely, from the drop-06 rebuild that proved it:
+
+1. **Buy the anchor.** One HeyGen presenter render off the existing "FAMtastic
+   Guide" avatar. 12 credits.
+2. **Read the anchor.** Its brand kit resolved the real accent (`#7CFC00`) and the
+   real faces (Space Grotesk, Inter). Those values then governed everything
+   downstream instead of being guessed.
+3. **Match the cheap tier to it.** The five Gemini plates were brand-graded *in
+   the prompt* — near-black ground, a single chartreuse practical, no text — so
+   they were born matching the anchor rather than being colour-corrected toward
+   it afterwards. $0.168.
+4. **Compose free.** Remotion authored every word, colour and edge against the
+   same reference. $0.
+
+Total: **$0.168 + 12 credits** against a $2.00 target, and the result was
+accepted where the previous unbranded attempt was rejected.
+
+**Why the ordering matters.** If cheap assets are generated *before* the anchor
+exists, they have nothing to match and you pay again to reconcile them — or worse,
+ship a set that does not cohere. Cheap assets are cheap precisely because the
+expensive decision was already made somewhere else. Generate the anchor, extract
+its actual values (colour, type, grade, framing), then push those values into
+every downstream prompt and composition as explicit constraints.
+
+This also decides *what* to buy premium: buy the thing that carries the most
+style information. A presenter take, a hero photograph, or a flagship key visual
+sets colour, light and framing for a whole campaign. A single icon does not.
+
 ### Why generated text is never used
 
 Every plate prompt must forbid baked-in text. Generated typography is unreliable

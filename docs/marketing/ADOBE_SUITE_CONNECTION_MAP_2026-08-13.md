@@ -40,8 +40,8 @@ ignored anyway — see below.
 
 - **Photoshop 2026 MCP: now production-proven, not just discovered.** A complete
   Design-DNA-compliant 9:16 story frame was composed and exported entirely
-  through the bridge: `marketing/creative/adobe-proofs/cost-is-not-the-reason-story-1080x1920.png`,
-  with the layout retained as `famtastic-story-9x16-template.psd`.
+  through the bridge: `marketing/creative/adobe-proofs/cost-is-not-the-reason-story-1080x1920.png` (**copy superseded 2026-09-04 — it says the bundle is "maintained", which the catalog contradicts; kept only as the first end-to-end proof, never reuse its copy**),
+  with the reusable template now living as parametrised code at `marketing/creative/templates/famtastic-social-frame.jsx`.
 - **Premiere Pro 2026 MCP: still unproven.** `mcp__premiere-pro__ping` timed out
   because the application was closed. The bridge requires the app to be running;
   the disposable edit/export proof named above remains outstanding.

@@ -105,7 +105,59 @@ rather than by trusting the tool's success message.
 
 ---
 
-## Rule 3 — Prompting image models (OpenAI Cookbook techniques)
+## Rule 3 — Vary the composition, not just the colour
+
+Owner correction 2026-09-04: *"there isn't enough variety in your designs. You
+need to see how Cox does it or something."*
+
+Correct, and it exposed that Rule 1 had only half-solved the problem. Every asset
+still used **one composition** — eyebrow, rule, two-line headline, body,
+signature — with the palette swapped. Changing colour is not variety. It is the
+same poster in a different shirt.
+
+### What cox.com actually does
+
+Studied live. Across a single page they alternate at least seven compositions:
+split panel with a photo bleeding to one edge, offer card with a badge chip and a
+CTA pill, thin utility strip, three-up card grid, icon nav row, inline form band,
+and price-as-hero.
+
+The important part is *how* they get the variety: not bespoke art each time, but a
+**small kit of reusable objects recombined** — chips, pills, tinted panels, cards,
+rules. That is reproducible; taste is not.
+
+### The component kit
+
+| Component | What it does |
+|---|---|
+| `famPanel` | A block of held colour a section sits inside, optionally with an angled corner so the frame stops reading as stacked rectangles |
+| `famChip` | Small-caps badge in a solid block — Cox's "SPECIAL OFFER" |
+| `famPill` | A real CTA button object, instead of a bare URL in the footer |
+| `famElevate` | Depth on a 2D surface. A dark ground cannot take a cast shadow, so it gets a lit edge; a light ground gets a real shadow. Same intent, opposite physics |
+| `famText3D` | Extruded display type — a copy behind, offset, in accent |
+| `famCircle` / angled `famPoly` | Non-rectangular shapes, so compositions are not all boxes |
+
+### The archetypes
+
+| Layout | Shape | Use when |
+|---|---|---|
+| `standard` | Left column, art right | The default essay-like statement |
+| `offer-card` | Chip, headline, enormous price, terms, CTA pill, on an elevated angled panel | The campaign is actually asking for the sale |
+| `split` | Full-bleed band of held colour with a diagonal cut, statement inside, explanation on the ground below | Fastest way out of "text on a field" |
+| `stat` | One number very large, plus the sentence that gives it meaning | Only with a figure verifiable from the repo |
+| `checklist` | Marker rows with hairlines, then a CTA pill | Answering "what do I actually get" |
+
+Rotate archetypes across a campaign. A drop series that uses the same layout five
+times is the cookie-cutter failure again, one level up.
+
+**Owner note, same session:** *"start thinking in 3D effect on 2D surfaces, and
+non-standard shapes and colors."* `famElevate`, `famText3D`, the angled panel
+corner and the diagonal band cut are the first pass at this. It is not finished —
+perspective, overlap, and true depth layering are still absent.
+
+---
+
+## Rule 4 — Prompting image models (OpenAI Cookbook techniques)
 
 Applied from the [gpt-image-1.5 prompting guide](https://developers.openai.com/cookbook/examples/multimodal/image-gen-1.5-prompting_guide).
 These upgrade `marketing/creative/plates/prompt-library.json`.
