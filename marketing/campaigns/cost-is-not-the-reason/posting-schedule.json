@@ -381,7 +381,14 @@
       "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/06-gmail-linktree-blog-recut-9x16.mp4",
       "drop_number": 6,
       "provider_ids": {
-        "postiz_draft_id": "cmtnmp5sc000lo17bs8c2v40i"
+        "postiz_draft_id": "cmtnmp5sc000lo17bs8c2v40i",
+        "postiz_scheduled_id": "cmtnmp5sc000lo17bs8c2v40i",
+        "postiz_scheduled_group": [
+          "cmtnmp5sc000lo17bs8c2v40i",
+          "cmtnmp5te000mo17bqmqsldx8",
+          "cmtnmp5ug000no17bn70cdtz6",
+          "cmtnmp5vm000oo17bqfqxdtmc"
+        ]
       },
       "evidence": [
         {

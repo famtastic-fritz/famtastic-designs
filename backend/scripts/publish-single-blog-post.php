@@ -30,8 +30,23 @@
  *   "meta_title": "...",
  *   "meta_description": "...",
  *   "word_count": 374,
+ *   "seo_brief": {"primary_keyword": "...", "visual": {"src": "...", "alt": "..."}, ...},
+ *   "capability_keys": ["website-discovery", "product-onboarding", "commerce-lifecycle"],
+ *   "cta_text": "Find the right next step",
+ *   "cta_link_uri": "internal:/start?source=blog&series=...&article=...",
+ *   "related_faq_keys": ["website-packages-explained-fit", ...],
  *   "status": 1
  * }
+ *
+ * Field parity (added 2026-09-04 after a second field-loss audit): a
+ * blog_post can carry 19 fields. This script writes 17 of them. The two it
+ * does not — field_featured_image and field_published_date — are unused by
+ * every one of the 83 published posts, and are left alone deliberately rather
+ * than by omission. The hero image is field_seo_brief.visual, NOT
+ * field_featured_image; that name is a trap and has never held a value on
+ * this bundle. The five fields added in this pass (seo_brief, related_faqs,
+ * cta_link, cta_text, capability_keys) were each populated on 80 of 83 posts,
+ * and missing on exactly the three this pipeline had published.
  *
  * Series handling (added 2026-09-04 to fix a real defect): this blog is
  * series-first. blog_post carries field_blog_series ("Ordered learning journey
@@ -87,6 +102,8 @@ $required_blog_fields = [
   'field_blog_category', 'field_blog_series', 'field_blog_tags', 'field_author',
   'field_excerpt', 'field_meta_description', 'field_meta_title',
   'field_series_order', 'field_word_count', 'field_content_key',
+  'field_seo_brief', 'field_related_faqs', 'field_cta_link', 'field_cta_text',
+  'field_capability_keys',
 ];
 $field_manager = \Drupal::service('entity_field.manager');
 $blog_fields = $field_manager->getFieldDefinitions('node', 'blog_post');
@@ -225,6 +242,75 @@ elseif ($action === 'publish') {
     );
   }
 
+  // --- The five fields nid 156/157/158 shipped without (added 2026-09-04). ---
+  // A corpus audit of all 83 published posts found five fields the 80 seeded
+  // posts populate and this script never set. field_seo_brief carries the hero
+  // image (frontend BlogPostPage.jsx renders post.visual.src, BlogHubPage.jsx
+  // uses it for the card thumbnail, and it becomes Article.image in the JSON-LD)
+  // plus the keywords that become Article.keywords; field_related_faqs renders
+  // the whole on-page FAQ section AND the FAQPage JSON-LD node, so its absence
+  // silently removed both. Same fail-loud contract as series: a payload missing
+  // any of them is refused rather than written half-populated.
+  $seo_brief = $payload['seo_brief'] ?? NULL;
+  if (!is_array($seo_brief) || empty($seo_brief['visual']['src']) || empty($seo_brief['primary_keyword'])) {
+    throw new RuntimeException(
+      "Payload for '$content_key' has no usable 'seo_brief'. It must carry at least " .
+      'visual.src (the hero image and the Article JSON-LD image) and primary_keyword. ' .
+      'Publishing without it is what left nid 156/157/158 with no hero and no image ' .
+      'in their structured data. Note field_featured_image is NOT the hero — no post ' .
+      'on this bundle has ever used it.'
+    );
+  }
+
+  $capability_keys = $payload['capability_keys'] ?? NULL;
+  if (!is_array($capability_keys) || !$capability_keys) {
+    throw new RuntimeException(
+      "Payload for '$content_key' has no 'capability_keys'. All 80 seeded posts carry " .
+      "their series' capability-registry keys."
+    );
+  }
+
+  $cta_text = $payload['cta_text'] ?? NULL;
+  $cta_link_uri = $payload['cta_link_uri'] ?? NULL;
+  if (!is_string($cta_text) || trim($cta_text) === '' || !is_string($cta_link_uri) || trim($cta_link_uri) === '') {
+    throw new RuntimeException(
+      "Payload for '$content_key' is missing 'cta_text' or 'cta_link_uri'. The frontend " .
+      "falls back to a generic 'Explore your options' -> /start, which silently drops " .
+      'the per-article attribution query string the CTA link exists to carry.'
+    );
+  }
+
+  // Resolve the FAQ nodes by content key, exactly the way seed-demand-content.php
+  // created them (bundle faq_item, keyed by field_content_key). Never created
+  // implicitly — an unresolvable key means the manifest and the live site have
+  // drifted, and that must be seen, not papered over with a shorter FAQ list.
+  $related_faq_keys = $payload['related_faq_keys'] ?? NULL;
+  if (!is_array($related_faq_keys) || !$related_faq_keys) {
+    throw new RuntimeException(
+      "Payload for '$content_key' has no 'related_faq_keys'. field_related_faqs renders " .
+      'the on-page FAQ section and the FAQPage JSON-LD node; publishing without it drops ' .
+      'both with no error, which is exactly what happened to nid 156/157/158.'
+    );
+  }
+  $faq_ids = [];
+  $missing_faqs = [];
+  foreach ($related_faq_keys as $faq_key) {
+    $matches = $node_storage->loadByProperties(['type' => 'faq_item', 'field_content_key' => $faq_key]);
+    if (!$matches) {
+      $missing_faqs[] = $faq_key;
+      continue;
+    }
+    $faq_ids[] = ['target_id' => (int) reset($matches)->id()];
+  }
+  if ($missing_faqs) {
+    throw new RuntimeException(
+      "No faq_item node found for content key(s): " . implode(', ', $missing_faqs) .
+      ". These come from backend/config/famtastic-content-series.json and were seeded by " .
+      'seed-demand-content.php. A missing one means the manifest and production have ' .
+      'drifted — fix that rather than publishing with a truncated FAQ set.'
+    );
+  }
+
   $node = $load_by_key($content_key, $payload['title'] ?? '');
   $created = !$node;
   $node = $node ?: Node::create(['type' => 'blog_post']);
@@ -240,6 +326,13 @@ elseif ($action === 'publish') {
   $node->set('field_meta_title', $payload['meta_title']);
   $node->set('field_meta_description', $payload['meta_description']);
   $node->set('field_word_count', (int) $payload['word_count']);
+  // Same encoding flags as seed-demand-content.php so a pipeline-published
+  // brief is byte-comparable with a seeded one.
+  $node->set('field_seo_brief', json_encode($seo_brief, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+  $node->set('field_capability_keys', array_map(fn ($key) => ['value' => $key], $capability_keys));
+  $node->set('field_cta_text', $cta_text);
+  $node->set('field_cta_link', ['uri' => $cta_link_uri, 'title' => $cta_text]);
+  $node->set('field_related_faqs', $faq_ids);
   if (!empty($payload['author_uid']) && $node->hasField('field_author')) {
     $node->set('field_author', (int) $payload['author_uid']);
   }
@@ -248,6 +341,61 @@ elseif ($action === 'publish') {
   // override Node::setPublished(FALSE).
   $node->set('status', (int) !empty($payload['status']));
   $node->set('path', ['alias' => '/blog/' . ($payload['slug'] ?? $content_key), 'pathauto' => 0]);
+
+  // --- Field-parity gate (added 2026-09-04). ---
+  // Two separate field-loss defects shipped from this pipeline before anyone
+  // diffed it against the incumbent writer: first field_blog_series +
+  // field_series_order, then field_seo_brief, field_related_faqs,
+  // field_cta_link, field_cta_text and field_capability_keys. Both were
+  // invisible — nothing errored, and the posts looked fine in isolation. The
+  // loss was only visible by comparing a new post against an old one.
+  //
+  // So do exactly that, mechanically, on every publish: take a reference post
+  // that the seeder created, and refuse to save if this node leaves empty any
+  // field the reference populates. This runs BEFORE save, so a third dropped
+  // field is caught with nothing written rather than discovered weeks later.
+  // Fields the reference itself leaves empty (field_featured_image,
+  // field_published_date — unused by all 83 posts) never enter the comparison,
+  // and extra fields this pipeline sets but the seeder does not (field_author)
+  // are not penalised: the check is one-directional.
+  // Pick the reference with a bounded query rather than loading all 83 posts:
+  // any published post that carries a brief is a complete seeded node, and one
+  // is all the comparison needs.
+  $reference = NULL;
+  $reference_ids = $node_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'blog_post')
+    ->condition('field_content_key', $content_key, '<>')
+    ->exists('field_seo_brief')
+    ->range(0, 1)
+    ->execute();
+  if ($reference_ids) {
+    $reference = $node_storage->load(reset($reference_ids));
+  }
+  if ($reference) {
+    $dropped = [];
+    foreach ($reference->getFields() as $field_name => $field) {
+      if (strpos($field_name, 'field_') !== 0 || $field->isEmpty()) {
+        continue;
+      }
+      if ($node->hasField($field_name) && $node->get($field_name)->isEmpty()) {
+        $dropped[] = $field_name;
+      }
+    }
+    if ($dropped) {
+      throw new RuntimeException(
+        "FIELD PARITY FAILURE: this post would be saved with " . count($dropped) .
+        ' field(s) empty that reference post nid' . $reference->id() . ' (' .
+        $reference->get('field_content_key')->value . ") populates:\n  - " .
+        implode("\n  - ", $dropped) .
+        "\nNothing was written. This is the check that would have caught the series " .
+        'and seo_brief losses. Either set the field in the payload, or — if it is ' .
+        'genuinely optional for this post — say so explicitly rather than letting it ' .
+        'default to empty.'
+      );
+    }
+  }
+
   $node->save();
 
   echo json_encode([
@@ -260,6 +408,9 @@ elseif ($action === 'publish') {
     'series_tid' => (int) $series_term->id(),
     'series_order' => $series_order,
     'series_created' => $series_created,
+    'field_parity_reference_nid' => $reference ? (int) $reference->id() : NULL,
+    'related_faq_count' => count($faq_ids),
+    'hero_visual_src' => $seo_brief['visual']['src'],
   ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
 }
 else {

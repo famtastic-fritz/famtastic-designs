@@ -61,6 +61,11 @@ Safety:
       no `series`/`series_order` in DRAFT_CLASSIFICATION fails validation
       before any SSH contact, and the remote script refuses the write too.
       See the DRAFT_CLASSIFICATION comment for the full rationale.
+    - Never publishes a node with fewer fields than the corpus. All 19 fields a
+      blog_post can carry are accounted for: 17 are written, and the two the
+      corpus has never used (field_featured_image, field_published_date) are
+      documented as unused rather than silently forgotten. See the
+      series_facts() comment for the audit that established the difference.
 """
 
 from __future__ import annotations
@@ -134,6 +139,14 @@ DRAFT_CLASSIFICATION = {
         "tags": ["Pricing", "Web Basics", "Website Packages"],
         "series": "The FAMtastic Website Packages Explained Series",
         "series_order": 9,
+        # Verbatim from this draft's own brief.md "Search intent" line:
+        # 'Transactional-investigation: "what does a $199 website include" /
+        # "cheap website what do you get"'. Only the two queries the author
+        # actually named — the seeded posts carry three, but a third invented
+        # here would be exactly the guess this pipeline refuses.
+        "primary_keyword": "what does a $199 website include",
+        "secondary_keywords": ["cheap website what do you get"],
+        "search_intent": "commercial-investigation",
     },
     # Live, backfilled 2026-09-04. The proof-first intake -> three proofs ->
     # selection -> checkout flow is how the FAMtastic packaged offer is bought,
@@ -144,6 +157,15 @@ DRAFT_CLASSIFICATION = {
         "tags": ["Proof-First", "Website Design", "Customer Experience"],
         "series": "The FAMtastic Website Packages Explained Series",
         "series_order": 10,
+        # From this draft's brief.md: 'Investigative: "website design see before
+        # you buy" / "pay after you see website design"', plus the author's own
+        # phrase in the following sentence, "try-before-pay web design".
+        "primary_keyword": "website design see before you buy",
+        "secondary_keywords": [
+            "pay after you see website design",
+            "try-before-pay web design",
+        ],
+        "search_intent": "commercial-investigation",
     },
     # Live, backfilled 2026-09-04. Owned domain vs rented platforms is the
     # upstream "why have your own site at all" argument, which sits directly
@@ -155,12 +177,31 @@ DRAFT_CLASSIFICATION = {
         "tags": ["Owned Domain", "Booking", "Small Business"],
         "series": "The Small-Business Website Strategy Series",
         "series_order": 9,
+        # From this draft's brief.md: 'Investigative/comparison: "do I need a
+        # website if I have Instagram" / "linktree vs website for small
+        # business" / "professional email vs gmail for business"'. The Linktree
+        # comparison is primary because it is the one the title and key
+        # takeaway are built on.
+        "primary_keyword": "linktree vs website for small business",
+        "secondary_keywords": [
+            "do I need a website if I have Instagram",
+            "professional email vs gmail for business",
+        ],
+        "search_intent": "commercial-investigation",
     },
     # The five rows below are drafted but NOT published. They deliberately
     # carry no series/series_order: nobody has decided where they belong, and
     # this script's contract is to fail loud rather than pick one. Publishing
     # any of them stops at validation with a message naming the slug and
     # listing the real series names. Decide, add the two keys, then publish.
+    #
+    # They also carry no primary_keyword/secondary_keywords, for the same
+    # reason — those are the post's own SEO truth and belong to whoever wrote
+    # it. Validation names both gaps at once, so a single --dry-run tells you
+    # everything the row still needs. Everything else a post carries
+    # (capability keys, related FAQs, CTA link, hero visual, audience,
+    # evidence boundary, sources) is inherited from the series and needs no
+    # entry here.
     "business-email-on-your-own-domain": {
         "category": "get-paid",
         "category_label": "Get Paid",
@@ -186,6 +227,81 @@ DRAFT_CLASSIFICATION = {
         "category_label": "Get Paid",
         "tags": ["Hosting", "Domain Renewal", "Web Basics"],
     },
+    # ------------------------------------------------------------------
+    # Orders 10-13 of "The Small-Business Website Strategy Series", drafted
+    # 2026-09-04, NOT yet published. This is the editorial series the
+    # ghost-town-ep1 campaign will distribute, written first under
+    # docs/architecture/SERIES_FIRST_CONTENT_ORIGIN_V1.md. Publish 10 -> 13.
+    #
+    # Why this series rather than a new "Ghost Town" term. Order 9 of this
+    # series is why-running-business-on-gmail-and-linktree-costs-revenue —
+    # the general "your presence is on rented land" argument. These four are
+    # the booking-app case of exactly that argument: the felt problem (10),
+    # the indexing mechanism behind it (11), the page that answers it (12),
+    # and how an app and an owned page coexist (13). They continue order 9
+    # rather than restating it, so the prev/next nav reads as one journey.
+    #
+    # A new "Ghost Town" term was considered and rejected twice over. It is a
+    # campaign codename, not an editorial journey, and every live series term
+    # is descriptive. More concretely, this pipeline cannot create a new
+    # series at all right now: series_facts() derives capabilities, FAQ keys,
+    # hero visual, audience, evidence boundary and sources from the seeded
+    # posts of an existing series in famtastic-content-series.json, so a
+    # series with no seeded posts returns None and validation refuses it —
+    # regardless of "new_series": True. See the report accompanying this work.
+    # ------------------------------------------------------------------
+    "why-independent-stylists-are-invisible-outside-the-app": {
+        "category": "get-found",
+        "category_label": "Get Found",
+        "tags": ["Booking", "Small Business", "Owned Domain"],
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 10,
+        "primary_keyword": "why independent stylists are invisible online",
+        "secondary_keywords": [
+            "do I need a website if I have a booking app",
+            "how new clients find a hair stylist",
+            "hair stylist website vs booking app",
+        ],
+    },
+    "does-google-index-your-booking-app-profile": {
+        "category": "get-found",
+        "category_label": "Get Found",
+        "tags": ["SEO", "Structured Data", "Owned Domain"],
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 11,
+        "primary_keyword": "does google index booking app profiles",
+        "secondary_keywords": [
+            "will my marketplace listing show up in search",
+            "why my business does not show up on google",
+            "booking app profile search visibility",
+        ],
+    },
+    "what-a-bookable-page-actually-needs": {
+        "category": "get-customers",
+        "category_label": "Get Customers",
+        "tags": ["Website Design", "Booking", "Customer Experience"],
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 12,
+        "primary_keyword": "what to put on a bookable business page",
+        "secondary_keywords": [
+            "what should be on a stylist website",
+            "one page business website for bookings",
+            "should I put prices on my website",
+        ],
+    },
+    "do-you-have-to-leave-the-booking-app": {
+        "category": "get-customers",
+        "category_label": "Get Customers",
+        "tags": ["Booking", "Owned Domain", "Small Business"],
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 13,
+        "primary_keyword": "do I need a website if I use a booking app",
+        "secondary_keywords": [
+            "booking app versus own website",
+            "should I leave my booking app",
+            "keep booking app and have a website",
+        ],
+    },
 }
 
 # The blog_series vocabulary was seeded from this manifest by
@@ -196,14 +312,117 @@ DRAFT_CLASSIFICATION = {
 SERIES_MANIFEST_PATH = BACKEND_DIR / "config/famtastic-content-series.json"
 
 
-def known_series_titles() -> list[str]:
+def load_series_manifest() -> dict:
     try:
-        manifest = json.loads(SERIES_MANIFEST_PATH.read_text())
+        return json.loads(SERIES_MANIFEST_PATH.read_text())
     except (OSError, json.JSONDecodeError) as exc:
         raise ValidationError(
             f"Could not read the series manifest at {SERIES_MANIFEST_PATH}: {exc}"
         )
-    return [item["title"] for item in manifest.get("series", []) if item.get("title")]
+
+
+def known_series_titles() -> list[str]:
+    return [item["title"] for item in load_series_manifest().get("series", []) if item.get("title")]
+
+
+# --- Series-derived fields (added 2026-09-04 after the second field-loss audit) ---
+#
+# The first version of this pipeline set 14 of the 19 fields a blog_post can
+# carry. A corpus audit of all 83 published posts found FIVE fields that the
+# 80 seeded posts populate and this pipeline never did:
+#
+#   field_seo_brief        80/83   hero image, JSON-LD Article.image, keywords
+#   field_related_faqs     80/83   the on-page FAQ section + FAQPage JSON-LD
+#   field_cta_link         80/83   the article's attributed next-step link
+#   field_cta_text         80/83   that link's label
+#   field_capability_keys  80/83   capability-registry evidence keys
+#
+# The three missing posts were exactly nid 156/157/158 — the three this
+# pipeline published. Same root cause as the series defect: the field list was
+# assembled from what a draft folder happens to provide, not from what the
+# content type requires.
+#
+# The important discovery is that four of the five are NOT per-post editorial
+# judgement at all — they are SERIES-LEVEL facts, verified across all 80 seeded
+# posts against backend/config/famtastic-content-series.json:
+#
+#   - capabilities        identical to the series' own `capabilities`   80/80
+#   - cta.label           the constant "Find the right next step"       80/80
+#   - cta.href            /start?source=blog&series=<key>&article=<slug> 80/80
+#   - faqs                the series' own 4 FAQ keys                    10/10 series
+#   - visual, target_audience, evidence_boundary, sources
+#                         one value per series                          10/10 series
+#
+# So they are DERIVED from the manifest here rather than re-declared per draft.
+# Re-typing a series' capability list into every row would just be a new place
+# for the two to drift apart — the manifest is the thing that seeded the live
+# terms, so it stays the single source of truth.
+#
+# What is NOT derivable, and is therefore required per draft:
+#   - primary_keyword / secondary_keywords. These are the post's own editorial
+#     SEO truth, they differ for all 80 posts, and BlogPostPage.jsx puts them
+#     straight into the Article JSON-LD `keywords`. Guessing one would be
+#     exactly the invention this pipeline exists to refuse.
+#
+# Deliberately NOT made mandatory (see the session report):
+#   - field_featured_image and field_published_date. 0/83 posts set either.
+#     The hero is field_seo_brief.visual, NOT field_featured_image — the name
+#     is a trap, and the image field has never been used on this bundle.
+#
+# The series slug is NOT derivable from the series title: "The Lead Response
+# and Follow-Up Series" is keyed `lead-response-operations`, "The Ecommerce and
+# Post-Purchase Series" is `commerce-customer-lifecycle`. It is an arbitrary
+# manifest key, which is why it is looked up rather than slugified.
+
+CTA_LABEL = "Find the right next step"
+
+# Non-pillar defaults, verified against the 70 non-pillar seeded posts:
+# content_template is 'how-to-guide' 70/70 and schema_types is
+# ["Article", "BreadcrumbList"] 70/70. search_intent splits 60 informational /
+# 10 commercial-investigation, so it defaults to the majority and a draft row
+# may override it. A new post appended to an existing series is never the
+# pillar (the pillar is order 1 and already exists).
+DEFAULT_SEARCH_INTENT = "informational"
+DEFAULT_CONTENT_TEMPLATE = "how-to-guide"
+DEFAULT_SCHEMA_TYPES = ["Article", "BreadcrumbList"]
+DEFAULT_REVIEW_STATUS = "editorial-review-required"  # 80/80 seeded posts.
+
+
+def series_facts(series_title: str) -> dict | None:
+    """Everything a new post inherits from its series, read from the manifest
+    that seeded the live taxonomy. Returns None for a series the manifest does
+    not know (i.e. a deliberate new_series), so the caller can demand the
+    values explicitly instead."""
+    manifest = load_series_manifest()
+    series = next(
+        (s for s in manifest.get("series", []) if s.get("title") == series_title), None
+    )
+    if not series:
+        return None
+
+    members = [p for p in manifest.get("posts", []) if p.get("series") == series["key"]]
+    if not members:
+        return None
+
+    def unique(field: str):
+        """The single value all members of this series share, or None if they
+        disagree — an ambiguous field must be declared, never picked at random."""
+        values = {json.dumps(p.get(field), sort_keys=True) for p in members}
+        return json.loads(values.pop()) if len(values) == 1 else None
+
+    return {
+        "key": series["key"],
+        "capabilities": series.get("capabilities") or [],
+        "faq_keys": unique("faqs"),
+        # One visual per series for 9 of 10 series. The 55-cents campaign
+        # series deliberately uses four different pieces of commissioned art
+        # across its eight posts, so unique() returns None there and the draft
+        # row has to name the artwork — the script will not pick one.
+        "visual": unique("visual"),
+        "target_audience": unique("target_audience") or series.get("audience"),
+        "evidence_boundary": unique("evidence_boundary"),
+        "sources": unique("sources"),
+    }
 
 DEFAULT_AUTHOR_UID = 1  # fritz.medine@gmail.com — the account of record for all existing content.
 
@@ -430,6 +649,121 @@ def load_draft(slug: str) -> dict:
                 f"{series_order!r}."
             )
 
+    # --- The five fields the corpus populates and this pipeline used to drop. ---
+    # Four are inherited from the series; only the keywords are per-post
+    # editorial input. See the series_facts() comment block for the audit that
+    # established which is which.
+    seo_brief: dict = {}
+    capability_keys: list = []
+    related_faq_keys: list = []
+    cta_href = ""
+    primary_keyword = classification.get("primary_keyword") if classification else None
+    secondary_keywords = classification.get("secondary_keywords") if classification else None
+    if classification:
+        # Checked independently of the series so a single --dry-run reports
+        # every gap in the row at once, rather than one per run.
+        if not isinstance(primary_keyword, str) or not primary_keyword.strip():
+            errors.append(
+                f"No primary_keyword registered for slug '{slug}'. Every one of the 80 "
+                "seeded posts carries its own primary and secondary keywords in "
+                "field_seo_brief, and BlogPostPage.jsx writes them straight into the "
+                "Article JSON-LD `keywords`. This script will not invent a keyword for "
+                "an article it did not write — take it from the draft's own brief.md "
+                "\"Search intent\" section and add \"primary_keyword\" to the "
+                f"'{slug}' row in DRAFT_CLASSIFICATION."
+            )
+        if (
+            not isinstance(secondary_keywords, list)
+            or not secondary_keywords
+            or not all(isinstance(k, str) and k.strip() for k in secondary_keywords)
+        ):
+            errors.append(
+                f"No usable secondary_keywords for slug '{slug}' (got "
+                f"{secondary_keywords!r}). Provide a non-empty list of strings — the "
+                "seeded posts carry three each. Same source as primary_keyword: the "
+                "draft's own brief, never invented here."
+            )
+
+    # Everything else a post carries is inherited from its series, so this
+    # block only runs once a series is actually named.
+    if classification and series_name:
+        facts = series_facts(series_name)
+
+        if not facts:
+            # A deliberate new_series has no manifest row, so none of the
+            # series-level facts exist yet. Refuse rather than publish a post
+            # with an empty brief, no FAQs and no CTA.
+            errors.append(
+                f"Series '{series_name}' has no entry in "
+                f"{SERIES_MANIFEST_PATH.relative_to(REPO_ROOT)}, so this script cannot "
+                "derive the capability keys, related FAQs, CTA link, hero visual, "
+                "audience, evidence boundary or sources that every other post carries. "
+                "Creating a brand-new series needs those decided and added to the "
+                "manifest first — a post published without them is the same kind of "
+                "orphan the series fix was written to prevent."
+            )
+        else:
+            capability_keys = facts["capabilities"]
+            related_faq_keys = facts["faq_keys"] or []
+            cta_href = (
+                f"/start?source=blog&series={facts['key']}&article={slug}"
+            )
+
+            # The hero. Its absence is what shipped nid 156/157/158 with no
+            # image on the blog hub and no `image` in their Article JSON-LD.
+            visual = classification.get("visual") or facts["visual"]
+            if not isinstance(visual, dict) or not visual.get("src") or not visual.get("alt"):
+                errors.append(
+                    f"No usable hero visual for slug '{slug}'. The series "
+                    f"'{series_name}' does not resolve to a single shared visual "
+                    "(the 55-cents campaign series uses four different pieces of art "
+                    "across its posts), so the artwork has to be named explicitly. Add "
+                    '"visual": {"src": "/blog-images/<file>.webp", "alt": "..."} to the '
+                    f"'{slug}' row. field_featured_image is NOT the hero — no post on "
+                    "this bundle has ever used it; the hero lives in "
+                    "field_seo_brief.visual."
+                )
+                visual = None
+
+            if not facts["evidence_boundary"] or not facts["sources"]:
+                errors.append(
+                    f"Series '{series_name}' has no single shared evidence_boundary or "
+                    "sources in the manifest. Both are claims-safety records; this "
+                    "script will not guess one."
+                )
+
+            if not related_faq_keys:
+                errors.append(
+                    f"Series '{series_name}' has no single shared FAQ set in the "
+                    "manifest, so this script cannot derive field_related_faqs. That "
+                    "field renders the on-page FAQ section and the FAQPage JSON-LD "
+                    "node; publishing without it silently drops both."
+                )
+
+            if visual and not errors:
+                seo_brief = {
+                    "primary_keyword": primary_keyword.strip(),
+                    "secondary_keywords": [k.strip() for k in secondary_keywords],
+                    "search_intent": classification.get(
+                        "search_intent", DEFAULT_SEARCH_INTENT
+                    ),
+                    "content_template": DEFAULT_CONTENT_TEMPLATE,
+                    "target_audience": facts["target_audience"],
+                    "evidence_boundary": facts["evidence_boundary"],
+                    # Recomputed, never copied: BlogPostPage.jsx builds the real
+                    # canonical the same way, and the frontend has no /web/ prefix
+                    # (see the 2026-09-04 canonical-URL defect).
+                    "canonical_url": f"https://famtasticdesigns.com/blog/{slug}/",
+                    "open_graph": {
+                        "title": meta_title,
+                        "description": meta_description,
+                    },
+                    "schema_types": list(DEFAULT_SCHEMA_TYPES),
+                    "sources": facts["sources"],
+                    "review_status": DEFAULT_REVIEW_STATUS,
+                    "visual": visual,
+                }
+
     if errors:
         raise ValidationError("Draft failed validation:\n  - " + "\n  - ".join(errors))
 
@@ -456,6 +790,14 @@ def load_draft(slug: str) -> dict:
         "meta_title": meta_title,
         "meta_description": meta_description,
         "word_count": computed_word_count,
+        # The five fields nid 156/157/158 shipped without. All validated above;
+        # the remote script re-checks each one and refuses the write if any is
+        # missing, so neither half of the pipeline can silently drop them again.
+        "seo_brief": seo_brief,
+        "capability_keys": capability_keys,
+        "cta_text": CTA_LABEL,
+        "cta_link_uri": f"internal:{cta_href}",
+        "related_faq_keys": related_faq_keys,
         "status": 1,
     }
     return payload

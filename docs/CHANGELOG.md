@@ -1,5 +1,37 @@
 # Product changelog
 
+## 2026-09-04 (latest) — Blog publish pipeline: full field audit, five dropped fields fixed, parity gate added
+
+- **Audited all 19 `blog_post` fields against the live corpus (83 published posts, via
+  `/web/jsonapi/node/blog_post`) instead of finding losses one at a time.** Five fields
+  are populated on 80/83 posts and were never set by the publish pipeline; the three
+  posts missing each one are exactly nid 156/157/158 — the three this pipeline
+  published. `field_seo_brief` (hero image, `Article.image`, `keywords`),
+  `field_related_faqs` (the on-page FAQ section *and* the `FAQPage` JSON-LD node),
+  `field_cta_link`, `field_cta_text`, `field_capability_keys`.
+- **Four of the five are series-level facts, not per-post judgement — so they are now
+  derived from `backend/config/famtastic-content-series.json` rather than re-declared
+  per draft.** Verified across all 80 seeded posts: capabilities match the series' own
+  list 80/80, the CTA label is a constant 80/80, the CTA href is
+  `/start?source=blog&series=<key>&article=<slug>` 80/80, and FAQ set, hero visual,
+  audience, evidence boundary and sources are one value per series. Re-typing them into
+  every draft row would only create a second place for them to drift.
+- **`primary_keyword` / `secondary_keywords` are now required per draft** in
+  `DRAFT_CLASSIFICATION`, validated before any SSH contact, mirroring the `series`
+  contract. They are the one genuinely per-post editorial value (all 80 posts differ)
+  and feed the `Article` JSON-LD `keywords`, so the pipeline refuses to invent one.
+- **Added a mechanical field-parity gate to `backend/scripts/publish-single-blog-post.php`.**
+  Before saving, it diffs the node against a seeded reference post and throws if this
+  post leaves empty any field the reference populates. This is the cheap check the
+  2026-09-04 series post-mortem asked for, and it is the durable fix — it would have
+  caught both losses. One-directional, so the two fields no post has ever used are not
+  falsely flagged.
+- `field_featured_image` and `field_published_date` are populated on **0/83** posts and
+  are deliberately left unset. The hero is `field_seo_brief.visual`; the
+  `field_featured_image` name is a trap.
+- Backfill of nid 156/157/158 is prepared and dry-run verified but **not applied** — it
+  is a live content write and awaits explicit authorization.
+
 ## 2026-09-04 (late) — YouTube upload SSL failure root-caused; drop-06 built from a real blog post
 
 - **The YouTube `ERR_SSL_SSL/TLS_ALERT_BAD_RECORD_MAC` failure is not a network defect.**

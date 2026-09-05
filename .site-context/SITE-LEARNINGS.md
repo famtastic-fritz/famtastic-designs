@@ -1,5 +1,67 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — Finding dropped fields one at a time is the bug; enumerate the corpus instead
+
+- Observation: an earlier entry today records the `field_blog_series` loss,
+  found by accident. `field_seo_brief.visual` was then found the same way,
+  separately. Rather than wait for a third, all 19 `blog_post` fields were
+  enumerated and scored for population rate across all 83 published posts
+  (JSON:API, `page[limit]=50` twice — the corpus is 83, so a single
+  default-page request silently truncates). The result: **five** fields sat at
+  80/83, not two, and the three posts missing each one were the same three
+  every time — 156/157/158, the only posts this pipeline has ever published.
+  `field_seo_brief`, `field_related_faqs`, `field_cta_link`, `field_cta_text`,
+  `field_capability_keys`. Two of the five are user-visible losses nobody had
+  noticed: the FAQ section and the `FAQPage` JSON-LD node simply do not exist
+  on those three pages, because `BlogPostPage.jsx` renders both behind
+  `post.faqs.length > 0` and there is no empty state.
+- Root cause of the *search* being wrong, not just the code: both earlier
+  misses came from reasoning about a handful of posts. The population-rate
+  table takes about two minutes to build and answers "is this field
+  load-bearing?" definitively — 80/83 is a specification, 0/83 is vestigial.
+  Do that before concluding anything about a field.
+- Guidance: **a field's name is not evidence of its job.** `field_featured_image`
+  is populated on 0 of 83 posts. The hero image is a `src` inside the JSON blob
+  in `field_seo_brief.visual`. An agent that goes looking for "the image field"
+  finds the wrong one, sets it, sees nothing render, and has no idea why. The
+  inverse trap also exists: `field_author` is set on exactly 3 of 83 posts —
+  the three this pipeline published — so the *new* writer diverged from the
+  corpus in both directions at once, dropping five fields and adding one.
+- Guidance: derive series-level facts, do not re-declare them. Four of the five
+  dropped fields turned out not to be per-post editorial judgement at all.
+  Verified across all 80 seeded posts: `capabilities` is identical to the
+  series' own list (80/80), the CTA label is a constant (80/80), the CTA href
+  is `/start?source=blog&series=<key>&article=<slug>` (80/80), and the FAQ set,
+  hero visual, target audience, evidence boundary and sources are each a single
+  value per series. They are now read from
+  `backend/config/famtastic-content-series.json` — the file that seeded the
+  live terms — instead of being copied into each draft row, because a copy is
+  just a second place for the two to drift apart. Only
+  `primary_keyword`/`secondary_keywords` are genuinely per-post, and those are
+  now a hard validation failure rather than a guess.
+- Gotcha: the series *slug* is not derivable from the series *title*. "The Lead
+  Response and Follow-Up Series" is keyed `lead-response-operations`; "The
+  Ecommerce and Post-Purchase Series" is `commerce-customer-lifecycle`. Slugify
+  the title and every CTA attribution parameter is silently wrong. Look it up.
+- Gotcha: one series is not uniform. The 55-cents campaign series deliberately
+  uses four different pieces of commissioned art across its eight posts, so
+  "inherit the series visual" has no answer there. The loader returns a value
+  only when all members of a series agree, and demands an explicit one
+  otherwise — an ambiguous field must be declared, never picked at random.
+- The durable fix is mechanical, not another remembered rule:
+  `publish-single-blog-post.php` now diffs the node against a seeded reference
+  post *before* saving and refuses to write if this post leaves empty any field
+  the reference populates. One-directional, so the two genuinely-unused fields
+  are not falsely flagged. This is exactly the check the earlier post-mortem
+  asked for, and it would have caught both losses. It is committed but has not
+  yet run against production — a publish has to happen before it is proven, and
+  it should not be described as working until it has.
+- Measurement note: `/start`, the CTA destination all 80 posts point at, was
+  verified to actually resolve (301 → 200 at `/start/`) before being written
+  into anything. That check exists because `/onboarding` — the equivalent
+  destination for the whole campaign — was a 404 from before this repo's git
+  history began and nobody had ever tried it.
+
 ## 2026-09-04 (late) — A transient network fault became a permanent failure, and a stale read almost became a false defect report
 
 - Observation: every YouTube publish attempt has failed, most recently with
