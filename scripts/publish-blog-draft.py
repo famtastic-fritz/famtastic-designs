@@ -189,19 +189,14 @@ DRAFT_CLASSIFICATION = {
         ],
         "search_intent": "commercial-investigation",
     },
-    # The five rows below are drafted but NOT published. They deliberately
-    # carry no series/series_order: nobody has decided where they belong, and
-    # this script's contract is to fail loud rather than pick one. Publishing
-    # any of them stops at validation with a message naming the slug and
-    # listing the real series names. Decide, add the two keys, then publish.
-    #
-    # They also carry no primary_keyword/secondary_keywords, for the same
-    # reason — those are the post's own SEO truth and belong to whoever wrote
-    # it. Validation names both gaps at once, so a single --dry-run tells you
-    # everything the row still needs. Everything else a post carries
-    # (capability keys, related FAQs, CTA link, hero visual, audience,
-    # evidence boundary, sources) is inherited from the series and needs no
-    # entry here.
+    # The six rows below are drafted but NOT published. Their local briefs,
+    # structural SEO checks, categories, tags, and keywords are restored from
+    # the approved platform-dependency cluster plan. They deliberately carry
+    # no series/series_order: the plan calls for a new ordered arc, but its
+    # final manifest facts and production taxonomy term have not been decided.
+    # Publishing any of them must therefore stop at that explicit decision;
+    # it must not be blocked by missing local paperwork or guessed into an
+    # unrelated existing series.
     "business-email-on-your-own-domain": {
         "category": "get-paid",
         "category_label": "Get Paid",
@@ -226,6 +221,72 @@ DRAFT_CLASSIFICATION = {
         "category": "get-paid",
         "category_label": "Get Paid",
         "tags": ["Hosting", "Domain Renewal", "Web Basics"],
+    },
+    "linktree-vs-real-website-what-you-trade-away": {
+        "category": "get-found",
+        "category_label": "Get Found",
+        "tags": ["Owned Domain", "SEO", "Small Business"],
+        "primary_keyword": "linktree vs website",
+        "secondary_keywords": [
+            "linktree for business pros and cons",
+            "is linktree enough for a business",
+        ],
+        "search_intent": "informational-comparison",
+    },
+    "why-link-in-bio-page-doesnt-show-up-in-google": {
+        "category": "get-found",
+        "category_label": "Get Found",
+        "tags": ["SEO", "Owned Domain", "Small Business"],
+        "primary_keyword": "why doesn't my linktree show up on google",
+        "secondary_keywords": [
+            "link in bio seo",
+            "does linktree help seo",
+        ],
+        "search_intent": "informational",
+    },
+    "booking-app-commissions-cost-per-year": {
+        "category": "get-paid",
+        "category_label": "Get Paid",
+        "tags": ["Booking", "Pricing", "Small Business"],
+        "primary_keyword": "booking app commission fees",
+        "secondary_keywords": [
+            "salon booking app fees",
+            "booking commission vs subscription",
+        ],
+        "search_intent": "commercial-investigation",
+    },
+    "who-owns-your-client-list-booking-app": {
+        "category": "get-paid",
+        "category_label": "Get Paid",
+        "tags": ["Booking", "Owned Domain", "Small Business"],
+        "primary_keyword": "who owns client data booking app",
+        "secondary_keywords": [
+            "salon client list ownership",
+            "marketplace app customer data",
+        ],
+        "search_intent": "informational",
+    },
+    "how-much-do-you-charge-dms-costs-bookings": {
+        "category": "get-customers",
+        "category_label": "Get Customers",
+        "tags": ["Pricing", "Customer Experience", "Website Design"],
+        "primary_keyword": "answering price questions in dms",
+        "secondary_keywords": [
+            "should I post prices on my website",
+            "customers asking how much instagram",
+        ],
+        "search_intent": "informational",
+    },
+    "website-answers-price-questions-before-asked": {
+        "category": "get-customers",
+        "category_label": "Get Customers",
+        "tags": ["Website Design", "Customer Experience", "Lead Intake"],
+        "primary_keyword": "website quote request automation small business",
+        "secondary_keywords": [
+            "automatic quote estimate website",
+            "intake form for service business",
+        ],
+        "search_intent": "informational-how-to",
     },
     # ------------------------------------------------------------------
     # Orders 10-13 of "The Small-Business Website Strategy Series", drafted

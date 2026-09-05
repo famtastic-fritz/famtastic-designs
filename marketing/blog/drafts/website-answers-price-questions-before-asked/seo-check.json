@@ -1,0 +1,36 @@
+{
+  "slug": "website-answers-price-questions-before-asked",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "How a Website Answers Price Questions Before They're Asked",
+  "title_length": 58,
+  "meta_description": "Use the real questions in your inbox to build a page that answers prices, services, and availability before someone needs to send a DM.",
+  "meta_description_length": 135,
+  "h1_count": 1,
+  "question_headings": ["What \"automation\" honestly means here", "What this does not do"],
+  "internal_links": [
+    "https://famtasticdesigns.com/blog/what-should-website-contact-form-ask",
+    "https://famtasticdesigns.com/blog/contact-form-vs-quote-form-vs-assessment",
+    "https://famtasticdesigns.com/blog/new-lead-notification-checklist",
+    "https://famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue",
+    "https://famtasticdesigns.com/packages/199-quick-start",
+    "https://famtasticdesigns.com/packages",
+    "https://famtasticdesigns.com/contact"
+  ],
+  "internal_link_count": 7,
+  "external_links": [],
+  "claims_verified_against_live_sources": false,
+  "statistics_used": false,
+  "schema_recommended": ["BlogPosting"],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": ["Step two: give every repeated question a stated answer", "What \"automation\" honestly means here"],
+  "validation_scope": "Local structural preflight and internal-link inventory; no remote link probe or provider/automation run was performed.",
+  "checks": {
+    "title_under_60": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "automation_scope_disclosed": true,
+    "answers_intent_first_screen": true
+  },
+  "pass": true,
+  "generated_at": "2026-09-05T00:00:00Z"
+}

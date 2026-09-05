@@ -1,0 +1,34 @@
+{
+  "slug": "booking-app-commissions-cost-per-year",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "What Booking App Commissions Actually Cost You in a Year",
+  "title_length": 56,
+  "meta_description": "A four-minute way to total booking-platform fees, split introduction costs from repeat-client rent, and compare the result with a flat monthly tool.",
+  "meta_description_length": 148,
+  "h1_count": 1,
+  "question_headings": ["The two shapes a booking platform charges in", "Where the two models cross"],
+  "internal_links": [
+    "https://famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue",
+    "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries",
+    "https://famtasticdesigns.com/packages/199-quick-start",
+    "https://famtasticdesigns.com/packages",
+    "https://famtasticdesigns.com/contact"
+  ],
+  "internal_link_count": 5,
+  "external_links": [],
+  "claims_verified_against_live_sources": false,
+  "statistics_used": false,
+  "schema_recommended": ["BlogPosting"],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": ["The four minutes of arithmetic", "Where the two models cross"],
+  "validation_scope": "Local structural preflight and internal-link inventory; no remote link probe or platform-rate audit was run.",
+  "checks": {
+    "title_under_60": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "no_platform_specific_rates": true,
+    "answers_intent_first_screen": true
+  },
+  "pass": true,
+  "generated_at": "2026-09-05T00:00:00Z"
+}

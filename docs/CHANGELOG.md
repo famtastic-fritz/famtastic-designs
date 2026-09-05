@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-05 — Platform-dependency draft metadata is restored without weakening release gates
+
+- **Completed the six missing local draft packages.** Each platform-dependency draft now has a source-bound `brief.md`, structural `seo-check.json`, and its cluster-plan category/tag/keyword classification. The local metadata no longer prevents a validation run.
+- **Kept the meaningful series gate intact.** The drafts still deliberately have no series/order because their proposed new ordered arc has no decided manifest facts or production taxonomy term. A dry run now stops there, before SSH, rather than treating a missing brief or SEO file as a reason to bypass architecture.
+
 ## 2026-09-05 — Specialist-agent and local-model routing is explicit
 
 - **Confirmed the existing specialist registry instead of inventing a duplicate.** `docs/playbook/ROSTER.md` plus `.opencode/agent/` remains the authoritative roster for 13 named FAMtastic roles; project and shared skills remain capability references, while provider proof remains in `marketing/providers.json`.

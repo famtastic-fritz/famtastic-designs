@@ -43,10 +43,12 @@ workaround.
 
 ## Resume order
 
-1. **Blog lane:** finish all six requested draft folders with `draft.md`,
-   `brief.md`, and `seo-check.json`; current new A1/A2 folders contain only
-   drafts and B1/B2 drafts were left over the requested word range. Run each
-   publish command in `--dry-run` only. Do not publish.
+1. **Blog lane:** all six requested draft folders now have `draft.md`,
+   `brief.md`, and `seo-check.json`; their local cluster-plan category/tag/
+   keyword values are also restored. Run each publish command in `--dry-run`
+   only. Do not publish. The remaining intentional blocker is the platform-
+   dependency arc's series/title/order and complete manifest facts: do not
+   assign the drafts to an unrelated existing series or remove that gate.
 2. **HeyGen lane:** Take A exists under `marketing/creative/heygen/`; Take B
    had just been submitted when the session ended. Inspect provider status and
    save its actual receipt/render before treating it as complete. Do not post

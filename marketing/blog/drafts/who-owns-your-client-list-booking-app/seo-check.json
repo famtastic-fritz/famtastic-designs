@@ -1,0 +1,35 @@
+{
+  "slug": "who-owns-your-client-list-booking-app",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "Who Owns Your Client List When You Book Through an App?",
+  "title_length": 55,
+  "meta_description": "A practical 15-minute audit of what your booking platform lets you export, whether you can contact clients, and what happens if access ends.",
+  "meta_description_length": 140,
+  "h1_count": 1,
+  "question_headings": ["What a client list actually is", "The three questions worth answering today"],
+  "internal_links": [
+    "https://famtasticdesigns.com/blog/what-should-website-contact-form-ask",
+    "https://famtasticdesigns.com/blog/what-is-a-domain-name",
+    "https://famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue",
+    "https://famtasticdesigns.com/packages/199-quick-start",
+    "https://famtasticdesigns.com/packages",
+    "https://famtasticdesigns.com/contact"
+  ],
+  "internal_link_count": 6,
+  "external_links": [],
+  "claims_verified_against_live_sources": false,
+  "statistics_used": false,
+  "schema_recommended": ["BlogPosting"],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": ["The three questions worth answering today", "The one-sentence test"],
+  "validation_scope": "Local structural preflight and internal-link inventory; no remote link probe or legal/terms audit was run.",
+  "checks": {
+    "title_under_60": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "legal_advice_disclaimer_present": true,
+    "answers_intent_first_screen": true
+  },
+  "pass": true,
+  "generated_at": "2026-09-05T00:00:00Z"
+}

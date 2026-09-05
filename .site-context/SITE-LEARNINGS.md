@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Default local metadata, not editorial architecture
+
+- Observation: six complete platform-dependency drafts were unable to enter a
+  local dry run because `brief.md` and `seo-check.json` were absent. Their
+  cluster plan already held the post-specific categories, tags, and keywords,
+  so the missing artifacts were a recoverable local packaging gap rather than
+  an editorial decision.
+- Guidance: restore deterministic draft metadata from a named plan and record
+  the limited validation scope. Do not solve a missing series decision by
+  silently assigning an unrelated series or removing `series_order`: those
+  fields drive both reader navigation and structured-data hierarchy. A dry run
+  should progress to the first genuinely undecided architecture boundary and
+  stop before any remote contact.
+
 ## 2026-09-05 — A specialist registry needs one owner per kind of truth
 
 - Observation: FAMtastic already had 13 specialist role definitions in
