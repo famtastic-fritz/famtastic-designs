@@ -1,0 +1,219 @@
+{
+  "schema": "famtastic.creative-prompt-library.v1",
+  "generated_at": "2026-09-04T22:00:00Z",
+  "purpose": "Reusable Tier-2 (Gemini Flash Lite) and Tier-1 (flagship) prompt set for the platform-dependency blog series and the Ghost Town Ep1 campaign. Every plate is composed to sit UNDER Photoshop-set display type: dark ground, deliberate negative space, zero baked-in text.",
+  "design_dna_ref": {
+    "ground_hex": "#070907",
+    "accent_hex": "#7cfc00",
+    "rule": "single-glow — exactly one lime (#7CFC00) glow/rim-light source per frame; every other light stays neutral or warm-neutral; high contrast; restrained; no clutter"
+  },
+  "shared_composition_constraint": "Composition constraint (mandatory, apply in every prompt): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject, texture, or clutter in it — this negative space is reserved for large Photoshop display type added after generation, not for anything in the plate itself. Do not render any text, letters, numbers, words, logos, watermarks, subtitles, captions, or UI copy anywhere in the image. Generated text is always illegible garbage; this plate must arrive completely clean so type can be set over it later in Photoshop.",
+  "shared_lighting_constraint": "Lighting constraint (mandatory, apply in every prompt): follow the single-glow rule — exactly one restrained lime-green (#7CFC00) glow or rim-light source as the only saturated color accent in the frame; every other light source is neutral, cool-neutral, or warm-neutral against a near-black (#070907) ground. High contrast, editorial, restrained. No second or third colored light source, no rainbow gradient, no multiple competing highlights, no oversaturated fill light.",
+  "shared_negative_prompt": "text, letters, numbers, words, typography, captions, subtitles, logos, watermark, signature, UI chrome, readable screen content, readable signage, multiple light sources, colored gels other than lime, rainbow gradient, oversaturated colors, blown highlights, low contrast, flat lighting, muddy midtones, generic stock-photo smile, extra fingers, malformed hands, cloned faces, real brand name, real identifiable person, celebrity, logo mark, clutter, busy background, motion blur artifacts",
+  "series_context": {
+    "series": "Own Website vs. Rented Platforms",
+    "pillar_post": "why-running-business-on-gmail-and-linktree-costs-revenue",
+    "cluster_plan": "marketing/blog/clusters/cluster-own-website-vs-rented-platforms/cluster-plan.json",
+    "companion_campaign": "marketing/campaigns/ghost-town-ep1/manifest.json"
+  },
+  "prompts": [
+    {
+      "id": "p-hero-blog",
+      "topic": "Own Website vs Rented Platforms — Pillar",
+      "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "status": "generated",
+      "output_file": "plate-01-pillar-hero-16x9.jpg",
+      "prompt": "Use case: blog hero image, editorial and conceptual, not literal stock photography.\nAsset type: 16:9 hero image for a pillar article about owning a website instead of renting space on someone else's platform.\nPrimary request: a single small unoccupied shopfront porch light glowing on a vast, otherwise pitch-black empty field at night, with no other structures, fences, or landmarks visible — the shop is a lone lit point on land it does not own.\nScene/backdrop: an empty dark field stretching into soft blackness in every direction; the only detail is a modest, unbranded storefront facade with one working porch lamp. No people, no animals, no vehicles.\nSubject: the storefront facade and its single lamp only.\nStyle/medium: cinematic conceptual architectural photography, 35mm lens, believable materials — weathered wood, painted metal, glass — not illustration, not 3D render.\nComposition/framing: horizontal 16:9, storefront and lamp weighted to the left third of the frame; the entire right two-thirds of the frame is empty near-black ground reserved for large display type.\nLighting/mood: calm, quiet, self-sufficient — the one lamp is doing all the work.\nMaterials/textures: painted clapboard, old glass, dry dirt ground, faint cool moonlight only where the lamp does not reach.\nConstraints: no people, no text, letters, numbers, signage, logos, brand marks, watermark, real identifiable person, or celebrity. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter in it — reserved for Photoshop display type added after generation; render zero text, letters, numbers, words, logos, or captions anywhere in the image; generated text is always illegible garbage. Lighting constraint (mandatory): single-glow rule — exactly one restrained lime-green (#7CFC00) glow (the porch lamp) as the only saturated color accent; every other light stays neutral or cool-neutral against a near-black (#070907) ground; high contrast, editorial, restrained.\nAvoid: multiple light sources, string lights, neon signage, crowd of people, daytime lighting, warm orange lamp color (must read as lime-green, not amber)."
+    },
+    {
+      "id": "p-thumb-youtube",
+      "topic": "Own Website vs Rented Platforms — Pillar",
+      "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
+      "aspect_ratio": "16:9",
+      "surface": "YouTube thumb",
+      "tier": "1 flagship",
+      "status": "planned",
+      "prompt": "Use case: YouTube thumbnail — must read instantly at 320x180 preview size, punchy and high contrast.\nAsset type: 16:9 flagship still, tight and graphic rather than wide and atmospheric.\nPrimary request: an extreme close-up on a single string-light bulb or porch lamp filament glowing lime-green, suspended in total blackness, wire trailing off into the dark at the edge of frame.\nScene/backdrop: pure near-black (#070907) void; no environment detail beyond the single lamp and its wire.\nSubject: the lamp/bulb only — no people.\nStyle/medium: high-contrast product-style macro photography, glass and filament detail crisp, everything else falling to black.\nComposition/framing: bulb positioned in the left half of frame at roughly one-third height; the right half and lower third are pure empty near-black ground reserved for a bold headline word treatment added afterward.\nLighting/mood: dramatic single-source glow, punchy, urgent, isolated.\nMaterials/textures: glass, thin filament or LED strip, faint dust motes catching the glow.\nConstraints: no text, no numbers, no channel logo, no subscribe button, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow as the only saturated color accent in the frame; every other tone stays near-black or cool-neutral; high contrast, restrained.\nAvoid: multiple bulbs, warm amber color cast, lens flare rainbow artifacts, cluttered background detail."
+    },
+    {
+      "id": "p-square-ig",
+      "topic": "Own Website vs Rented Platforms — Pillar",
+      "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
+      "aspect_ratio": "1:1",
+      "surface": "IG",
+      "tier": "2 cheap-multiplier",
+      "status": "planned",
+      "prompt": "Use case: Instagram feed still, square, conceptual and quiet rather than busy.\nAsset type: 1:1 square image.\nPrimary request: a single small lantern sitting alone on an otherwise empty dark wooden shelf, the only object on the shelf, in an unlit room.\nScene/backdrop: a plain dark wooden shelf against a near-black wall; no other objects, no books, no decor.\nSubject: the lantern only.\nStyle/medium: still-life editorial photography, tactile material detail, believable shadow falloff.\nComposition/framing: lantern placed left-of-center on the shelf, generous near-black negative space filling the right half and top third of the frame for a caption card added later.\nLighting/mood: single warm-to-lime glow from inside the lantern, calm, self-sufficient, quietly proud.\nMaterials/textures: brushed metal lantern frame, glass panes, worn wood grain shelf.\nConstraints: no text, no labels, no brand marks, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one restrained lime-green (#7CFC00) glow as the only saturated color accent; every other light stays neutral against a near-black (#070907) ground; high contrast, restrained.\nAvoid: multiple lanterns, string lights, colorful shelf decor, daytime window light."
+    },
+    {
+      "id": "a1-hero-blog",
+      "topic": "Linktree vs Real Website",
+      "blog_post_slug": "linktree-vs-real-website-what-youre-trading-away",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "status": "generated",
+      "output_file": "plate-02-a1-two-doors-16x9.jpg",
+      "prompt": "Use case: blog hero image for a comparison article, conceptual not literal.\nAsset type: 16:9 hero image.\nPrimary request: two doors standing side by side in total darkness — the left door is small, plain, and closed off behind a velvet rope stanchion; the right door is larger, standing open, with a single lime-green glow spilling out from inside.\nScene/backdrop: a featureless near-black corridor or wall; no other doors, no signage, no crowd.\nSubject: the two doors and the single stanchion rope; no people required.\nStyle/medium: cinematic conceptual editorial photography, believable materials — wood grain, brass hardware, worn velvet rope.\nComposition/framing: both doors occupy the left two-thirds of frame, weighted slightly left; the right third of the frame is empty near-black ground reserved for display type.\nLighting/mood: contrast between a roped-off, unlit small door and an open, glowing larger door; quietly makes the comparison without any label.\nMaterials/textures: brass door hardware, velvet rope, painted wood, cool dark stone floor.\nConstraints: no text, no exit signs, no numbers on the doors, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow (from the open door) as the only saturated color accent; every other surface stays neutral or cool-dark; high contrast, restrained.\nAvoid: crowds, queue barriers with readable signs, warm amber glow (must be lime-green), symmetrical center composition."
+    },
+    {
+      "id": "a1-x-card",
+      "topic": "Linktree vs Real Website",
+      "blog_post_slug": "linktree-vs-real-website-what-youre-trading-away",
+      "aspect_ratio": "16:9",
+      "surface": "X",
+      "tier": "2 cheap-multiplier",
+      "status": "planned",
+      "prompt": "Use case: X (Twitter) link-card image, needs to read clearly when cropped tight by the platform.\nAsset type: 16:9 image, tighter and simpler than the blog hero variant of the same concept.\nPrimary request: a single closed velvet rope stanchion standing alone in near-total darkness, one lime-green glow crossing it from off-frame, nothing else in the scene.\nScene/backdrop: pure near-black void.\nSubject: the stanchion and rope only.\nStyle/medium: high-contrast studio-still photography, tactile material rendering.\nComposition/framing: stanchion centered-left, generous near-black negative space filling the right half of frame for a headline added later.\nLighting/mood: cool, exclusionary, a single lime rim-light catching the rope fibers.\nMaterials/textures: brushed brass post, velvet rope weave.\nConstraints: no text, no numbers, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow as the only saturated color accent; every other tone stays near-black or cool-neutral; high contrast, restrained.\nAvoid: crowd, queue signage, multiple stanchions, warm color cast."
+    },
+    {
+      "id": "a2-hero-blog",
+      "topic": "Link-in-Bio SEO Invisibility",
+      "blog_post_slug": "why-link-in-bio-doesnt-show-up-in-google",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "status": "planned",
+      "prompt": "Use case: blog hero image for an explainer about search invisibility, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a single narrow lime-lit footpath cutting through pure blackness toward a small distant lit doorway; everywhere else in the frame is unmarked, pathless void.\nScene/backdrop: total darkness except the path and the distant doorway; no other structures, no stars, no horizon line.\nSubject: the footpath and distant doorway only; no people required.\nStyle/medium: cinematic conceptual landscape photography, long exposure quality, believable ground texture on the path only.\nComposition/framing: path enters from bottom-left and recedes toward a small glowing doorway in the upper-right third; the remaining lower-right and upper-left areas are empty near-black ground reserved for display type.\nLighting/mood: quiet, exploratory, the only way anyone finds the doorway is by the path being lit at all.\nMaterials/textures: packed dirt or worn stone path catching a faint lime glow, distant doorway glowing the same lime.\nConstraints: no text, no trail markers, no signage, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow source illuminating both the path and the distant doorway consistently; every other tone stays near-black; high contrast, restrained.\nAvoid: multiple paths, stars or moonlight as a second light source, warm color cast, visible horizon."
+    },
+    {
+      "id": "a2-fb-square",
+      "topic": "Link-in-Bio SEO Invisibility",
+      "blog_post_slug": "why-link-in-bio-doesnt-show-up-in-google",
+      "aspect_ratio": "1:1",
+      "surface": "FB",
+      "tier": "2 cheap-multiplier",
+      "status": "planned",
+      "prompt": "Use case: Facebook feed still, square, simplified version of the path concept.\nAsset type: 1:1 square image.\nPrimary request: a single lit stepping-stone glowing lime-green, alone on an otherwise dark, featureless floor with no other stones or markings visible.\nScene/backdrop: near-black floor plane fading to void at the edges.\nSubject: the one stepping-stone only.\nStyle/medium: overhead-leaning conceptual still photography, tactile stone texture.\nComposition/framing: stone placed lower-left, generous near-black negative space filling the upper two-thirds of frame for a caption card.\nLighting/mood: isolated, quiet, a single point of visibility in the dark.\nMaterials/textures: rough-cut stone, faint damp sheen catching the glow.\nConstraints: no text, no arrows, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow as the only saturated color accent; every other tone stays near-black; high contrast, restrained.\nAvoid: multiple stones, path lines, warm color cast, visible horizon or sky."
+    },
+    {
+      "id": "b1-hero-blog",
+      "topic": "Booking App Commission Costs",
+      "blog_post_slug": "what-booking-app-commissions-actually-cost-you",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "status": "generated",
+      "output_file": "plate-03-b1-coin-drain-16x9.jpg",
+      "prompt": "Use case: blog hero image for an explainer about recurring commission fees, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a small, tidy stack of plain unmarked coins on a dark table, with one coin caught mid-fall through a narrow slot cut into the table into an unseen dark chute below, that one falling coin rim-lit in lime-green.\nScene/backdrop: a plain dark tabletop and the narrow slot; nothing else on the table.\nSubject: the coin stack and the single falling coin.\nStyle/medium: high-contrast macro-still photography, believable metal texture and reflection.\nComposition/framing: coin stack and slot positioned in the lower-left third of frame; the upper two-thirds and right third are empty near-black ground reserved for display type.\nLighting/mood: quiet, continuous, a small steady loss rather than a dramatic one.\nMaterials/textures: brushed unmarked metal coins, dark wood tabletop, faint dust.\nConstraints: no currency symbols, no numbers, no denominations, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow, on the falling coin only, as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: piles of bills, visible currency symbols or numbers, warm gold lighting, multiple falling coins at once."
+    },
+    {
+      "id": "b1-ig-square",
+      "topic": "Booking App Commission Costs",
+      "blog_post_slug": "what-booking-app-commissions-actually-cost-you",
+      "aspect_ratio": "1:1",
+      "surface": "IG",
+      "tier": "2 cheap-multiplier",
+      "status": "planned",
+      "prompt": "Use case: Instagram feed still, square, simplified version of the commission concept.\nAsset type: 1:1 square image.\nPrimary request: a simple analog balance scale standing alone in near darkness, one side weighted noticeably lower than the other, the fulcrum catching a single lime-green rim-light.\nScene/backdrop: near-black void, no table, no other objects.\nSubject: the balance scale only.\nStyle/medium: still-life conceptual photography, believable brushed-metal material.\nComposition/framing: scale centered-left, generous near-black negative space filling the right half and top third of frame for a caption card.\nLighting/mood: quiet imbalance, matter-of-fact rather than dramatic.\nMaterials/textures: brushed metal arms and pans, fine chain links.\nConstraints: no text, no numbers or measurement marks, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow on the fulcrum as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: coins or bills on the pans, measurement markings, warm gold lighting, symmetrical balance (one side must read visibly heavier)."
+    },
+    {
+      "id": "b2-hero-blog",
+      "topic": "Who Owns Your Client List",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "status": "generated",
+      "output_file": "plate-04-b2-locked-ledger-16x9.jpg",
+      "prompt": "Use case: blog hero image for an explainer about data ownership, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a closed leather ledger book on a dark table, wrapped shut with a simple hasp and a small padlock, the keyhole of the padlock glowing lime-green from within as if something valuable is lit behind it.\nScene/backdrop: a plain dark tabletop; nothing else visible.\nSubject: the ledger and padlock only.\nStyle/medium: high-contrast still-life editorial photography, tactile leather and metal detail.\nComposition/framing: ledger and padlock positioned in the lower-left third of frame; the upper two-thirds and right third are empty near-black ground reserved for display type.\nLighting/mood: withheld, private, something valuable kept just out of reach.\nMaterials/textures: worn leather cover, brass hasp and padlock, faint dust on the table.\nConstraints: no text, no embossed lettering, no monogram, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow from the keyhole as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: open ledger with visible pages, embossed initials or letters, warm gold lighting, multiple locks."
+    },
+    {
+      "id": "b2-x-card",
+      "topic": "Who Owns Your Client List",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "aspect_ratio": "16:9",
+      "surface": "X",
+      "tier": "2 cheap-multiplier",
+      "status": "planned",
+      "prompt": "Use case: X (Twitter) link-card image, tighter crop of the ownership concept.\nAsset type: 16:9 image.\nPrimary request: a single old rolodex card floating in near-total darkness, the visible half of the card lit by a single lime-green glow while the other half dissolves into fine black particulate, as if fading from view.\nScene/backdrop: pure near-black void.\nSubject: the single card only.\nStyle/medium: high-contrast conceptual macro-still photography, believable paper-fiber texture on the lit half.\nComposition/framing: card centered-left, tilted slightly, generous near-black negative space filling the right half of frame for a headline.\nLighting/mood: partial, precarious — you can see it, but only some of it, and only while someone else lets you.\nMaterials/textures: aged card stock fiber, fine dissolving particulate at the fade edge.\nConstraints: no visible handwriting, no letters, no numbers, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow on the lit half of the card as the only saturated color accent; every other tone stays near-black; high contrast, restrained.\nAvoid: readable handwriting or print, multiple cards, warm color cast, symmetrical even lighting across the whole card."
+    },
+    {
+      "id": "c1-hero-blog",
+      "topic": "DM Price Questions Cost Bookings",
+      "blog_post_slug": "how-much-do-you-charge-dms-cost-bookings",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "status": "generated",
+      "output_file": "plate-05-c1-message-backlog-16x9.jpg",
+      "prompt": "Use case: blog hero image for an explainer about slow manual DM replies costing bookings, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a phone screen glowing in an otherwise dark room, showing a single blank lime-green message bubble shape pulsing at the top of a short stack of dim, unlit gray blank bubble shapes receding downward into blackness — none of the bubbles contain any text or letters, only plain rounded shapes.\nScene/backdrop: a dark room with only the phone screen providing light; no other furniture visible beyond a soft dark silhouette of a hand or desk edge if needed.\nSubject: the phone screen and its stack of blank bubble shapes.\nStyle/medium: high-contrast conceptual product photography, believable glass and screen glow.\nComposition/framing: phone positioned lower-left, generous near-black negative space filling the right two-thirds and top of frame for display type.\nLighting/mood: mounting, quietly urgent — the backlog is visible without a single word being legible.\nMaterials/textures: glass screen, soft screen bloom, matte phone body.\nConstraints: no legible text or numerals anywhere on the screen, no app logos, no real identifiable person or hand with a visible face reflection. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including on the phone screen itself — bubbles are blank shapes only. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow (the top pulsing bubble and the screen backlight) as the only saturated color accent; every other bubble and surface stays neutral gray or near-black; high contrast, restrained.\nAvoid: any legible chat text, app UI chrome or logos, multiple colored bubbles, warm screen color temperature."
+    },
+    {
+      "id": "c1-tiktok-vertical",
+      "topic": "DM Price Questions Cost Bookings",
+      "blog_post_slug": "how-much-do-you-charge-dms-cost-bookings",
+      "aspect_ratio": "9:16",
+      "surface": "TikTok",
+      "tier": "2 cheap-multiplier",
+      "status": "planned",
+      "prompt": "Use case: TikTok vertical still/poster frame, needs deep top and bottom negative space for on-screen captions.\nAsset type: 9:16 vertical image.\nPrimary request: an extreme close crop on the single glowing blank lime-green message bubble from the phone-screen concept, isolated against near-total blackness, no visible phone bezel.\nScene/backdrop: pure near-black void.\nSubject: the single bubble shape only.\nStyle/medium: high-contrast macro conceptual still, soft screen-glow bloom.\nComposition/framing: bubble centered horizontally, positioned at the vertical center of frame; the top third and bottom third of frame are pure empty near-black ground reserved for a caption hook and CTA text added later.\nLighting/mood: isolated, urgent, quiet.\nMaterials/textures: soft glass-screen glow bloom only, no visible screen texture or bezel.\nConstraints: no text or letters inside or near the bubble, no app UI, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame (top and bottom combined) as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop/caption type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow as the only saturated color accent; everything else stays near-black; high contrast, restrained.\nAvoid: visible phone bezel or UI chrome, multiple bubbles in frame, warm color cast, centered-square crop (must read as tall vertical)."
+    },
+    {
+      "id": "c1-shorts-vertical",
+      "topic": "DM Price Questions Cost Bookings",
+      "blog_post_slug": "how-much-do-you-charge-dms-cost-bookings",
+      "aspect_ratio": "9:16",
+      "surface": "Shorts",
+      "tier": "2 cheap-multiplier",
+      "status": "generated",
+      "output_file": "plate-06-c1-hand-phone-vertical-9x16.jpg",
+      "prompt": "Use case: YouTube Shorts vertical poster frame, needs a strong top-third negative space for a hook headline.\nAsset type: 9:16 vertical image.\nPrimary request: a soft-focus silhouette of a hand hovering just above a dark phone resting on a table, one small lime-green notification-dot glow visible on the phone's edge, everything else unlit.\nScene/backdrop: a dark tabletop and the phone; no other objects, no background detail beyond soft near-black falloff.\nSubject: the hand silhouette and the phone.\nStyle/medium: cinematic conceptual editorial photography, shallow depth of field, believable skin and fabric silhouette (no visible face).\nComposition/framing: hand and phone positioned in the lower half of frame; the entire top third of frame is empty near-black ground reserved for a bold hook headline added later.\nLighting/mood: hesitant, quietly anxious — a decision being delayed.\nMaterials/textures: soft skin silhouette, matte phone body, dark wood table grain.\nConstraints: no visible face, no legible screen content, no app logos, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including on the phone screen. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow (the notification dot) as the only saturated color accent; every other surface stays neutral cool-dark silhouette; high contrast, restrained.\nAvoid: visible face or identifying features, legible screen UI, multiple light sources, warm skin-tone lighting that competes with the lime accent."
+    },
+    {
+      "id": "c2-hero-blog",
+      "topic": "Website Auto-Answers Price Questions",
+      "blog_post_slug": "how-a-website-answers-price-questions-automatically",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "status": "generated",
+      "output_file": "plate-07-c2-concierge-desk-16x9.jpg",
+      "prompt": "Use case: blog hero image for an explainer about automatic quote/response tooling, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a single small reception-desk lamp glowing lime-green in an otherwise pitch-black lobby, illuminating one closed, blank-covered ledger sitting open just enough to show empty unlined pages, waiting and ready.\nScene/backdrop: a plain dark lobby counter; no other furniture or people needed.\nSubject: the lamp and ledger only.\nStyle/medium: high-contrast still-life editorial photography, believable brass and paper texture.\nComposition/framing: lamp and ledger positioned in the lower-left third of frame; the upper two-thirds and right third are empty near-black ground reserved for display type.\nLighting/mood: calm, always-on, ready before it is asked to be.\nMaterials/textures: brass desk lamp, blank cream paper, dark wood counter.\nConstraints: no text or numbers on the ledger pages, no signage, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including on the ledger pages, which must be blank. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow from the lamp as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: visible handwriting or printed text on the ledger, warm amber lamp color, multiple lamps, daytime lighting."
+    },
+    {
+      "id": "c2-fb-square",
+      "topic": "Website Auto-Answers Price Questions",
+      "blog_post_slug": "how-a-website-answers-price-questions-automatically",
+      "aspect_ratio": "1:1",
+      "surface": "FB",
+      "tier": "2 cheap-multiplier",
+      "status": "planned",
+      "prompt": "Use case: Facebook feed still, square, simplified version of the instant-response concept.\nAsset type: 1:1 square image.\nPrimary request: a single analog clock face with a completely blank dial (no numerals, no hands markings beyond the hands themselves) glowing lime-green at its center, floating in near-total darkness, one hand pointing straight up.\nScene/backdrop: pure near-black void.\nSubject: the clock face only.\nStyle/medium: high-contrast conceptual still photography, believable brushed-metal clock hands and glass.\nComposition/framing: clock centered-left, generous near-black negative space filling the right half and lower third of frame for a caption card.\nLighting/mood: precise, instant, calm.\nMaterials/textures: brushed metal hands, glass cover, faint reflective sheen.\nConstraints: no numerals, no text, no brand marks, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including on the clock face, which must be blank apart from its hands. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow at the clock's center as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: numerals or tick marks on the dial, warm gold lighting, multiple clocks, visible brand marks."
+    },
+    {
+      "id": "ghost-ig-hook",
+      "topic": "Ghost Town Ep1 — Invisible Outside the App",
+      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
+      "aspect_ratio": "1:1",
+      "surface": "IG",
+      "tier": "2 cheap-multiplier",
+      "status": "generated",
+      "output_file": "plate-08-ghost-hook-square-1x1.jpg",
+      "prompt": "Use case: Instagram/Facebook feed hook image for a video-episode campaign about businesses invisible outside a single marketplace app. Fills campaign slot CREATIVE-EP1-HAIR-GHOST-01 (marketing/campaigns/ghost-town-ep1/manifest.json), reused here as a Tier-2 plate.\nAsset type: 1:1 square image.\nPrimary request: a faint, semi-transparent human silhouette (generic, non-identifiable, no visible face detail) standing just outside a small lit shopfront window at night, the silhouette itself rendered ghostly and translucent, dissolving into the blackness behind it as if only partly present in this space.\nScene/backdrop: a plain, unbranded small shopfront window glowing lime-green from within; everything beyond the window's light falls to total black.\nSubject: the shopfront window and the single translucent silhouette standing just outside it.\nStyle/medium: cinematic conceptual editorial photography, believable glass and fabric-silhouette rendering, ghostly translucency effect on the figure only.\nComposition/framing: window and silhouette positioned in the lower-left third of frame; the upper two-thirds and right third are empty near-black ground reserved for display type.\nLighting/mood: wistful, unseen, present but unreachable from outside the one lit doorway.\nMaterials/textures: glass storefront window, painted wood frame, soft translucent figure edge.\nConstraints: no text, no shop signage, no readable window lettering, no real identifiable person, no menacing or horror framing — the mood is quiet invisibility, not fear. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow from the shopfront window as the only saturated color accent; every other surface stays near-black; high contrast, restrained.\nAvoid: horror or jump-scare framing, visible face on the silhouette, readable shop signage, multiple windows or figures, warm amber window light."
+    },
+    {
+      "id": "ghost-ig-beforeafter",
+      "topic": "Ghost Town Ep1 — Invisible Outside the App",
+      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
+      "aspect_ratio": "1:1",
+      "surface": "IG",
+      "tier": "2 cheap-multiplier",
+      "status": "planned",
+      "prompt": "Use case: Instagram/Facebook feed before/after concept image for the same campaign. Fills campaign slot CREATIVE-EP1-HAIR-GHOST-02 (marketing/campaigns/ghost-town-ep1/manifest.json), reused here as a Tier-2 plate.\nAsset type: 1:1 square image, split composition.\nPrimary request: a split dark composition — the left half contains a single small blank phone-app-shaped rounded rectangle glowing lime-green, floating alone in blackness (representing the one narrow app where the business is visible); the right half is pure black empty void with only the faintest barely-visible unlit shapes suggesting an entire unlit street or web of paths (representing everywhere else the business does not exist).\nScene/backdrop: total near-black void split conceptually down the center; no literal dividing line should be drawn, the split is compositional only.\nSubject: the single glowing rounded-rectangle shape on the left; nothing rendered on the right beyond near-invisible dark suggestion.\nStyle/medium: high-contrast conceptual still photography, minimal, graphic.\nComposition/framing: glowing shape occupies roughly the left third of frame at vertical center; the remaining two-thirds (center and right) are empty to near-empty near-black ground reserved for a before/after caption treatment added later.\nLighting/mood: stark contrast between one narrow point of visibility and vast surrounding absence.\nMaterials/textures: soft screen-glow bloom on the left shape only; no texture on the right beyond faint film grain.\nConstraints: no text or icons inside the glowing shape, no app logos, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including inside the glowing shape, which must be blank. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow (the left shape) as the only saturated color accent; the right two-thirds of the frame stays near-black with no competing light; high contrast, restrained.\nAvoid: any icon, letter, or logo inside the glowing shape, a literal drawn dividing line, warm color cast, visible cityscape detail on the right side."
+    },
+    {
+      "id": "ghost-vertical-shorts",
+      "topic": "Ghost Town Ep1 — Invisible Outside the App",
+      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
+      "aspect_ratio": "9:16",
+      "surface": "Shorts",
+      "tier": "1 flagship",
+      "status": "planned",
+      "prompt": "Use case: flagship anchor still for the Ghost Town Ep1 58s video (marketing/campaigns/ghost-town-ep1/video-scripts/EP1_FULL_SCRIPT.md), premium quality — intended for a Tier-1 provider (e.g. Imagen 3 / GPT Image / a HeyGen-adjacent still), not this Tier-2 proof run.\nAsset type: 9:16 vertical cinematic still.\nPrimary request: a full-figure generic human silhouette (no visible face, no identifiable features) standing in a single vertical beam of lime-green light falling from an unseen source directly above, the edges of the silhouette dissolving into fine dark particulate drifting upward like smoke or static, as if the figure is only partly present.\nScene/backdrop: total near-black void; the only light is the single vertical beam.\nSubject: the dissolving silhouette and the light beam only.\nStyle/medium: premium cinematic editorial photography, believable fabric silhouette and particulate simulation, flagship production quality.\nComposition/framing: figure centered horizontally, standing in the lower third of frame; the top two-thirds of frame is vast empty near-black ground reserved for a hook headline and CTA type added later.\nLighting/mood: cinematic, dignified, quietly haunting without horror — presence fading from view rather than being erased violently.\nMaterials/textures: soft fabric silhouette, fine drifting particulate, volumetric light beam.\nConstraints: no visible face, no text, no logos, no real identifiable person, no horror or gore framing. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) volumetric beam as the only saturated color accent; every other surface stays near-black; high contrast, restrained, premium.\nAvoid: visible face, horror framing, multiple light beams, warm color cast, ground-level clutter or props."
+    }
+  ]
+}

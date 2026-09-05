@@ -1,5 +1,38 @@
 # Product changelog
 
+## 2026-09-05 — Tier-2 cheap image proof + reusable prompt library for the platform-dependency series
+
+- **Built a 19-prompt reusable library** at `marketing/creative/plates/prompt-library.json`
+  covering the 7-post platform-dependency blog series
+  (`marketing/blog/clusters/cluster-own-website-vs-rented-platforms/cluster-plan.json`)
+  and the Ghost Town Ep1 campaign, spanning blog hero, YouTube thumb, Shorts,
+  TikTok, X, FB, and IG surfaces. Every prompt mandates dark near-black
+  (`#070907`) ground, one lime (`#7CFC00`) single-glow accent, deliberate
+  negative space, and zero baked-in text, so plates compose under Photoshop
+  type rather than needing repair afterward.
+- **Generated and verified 8 real plates** with Gemini Flash Lite
+  (`gemini-3.1-flash-lite-image` via `generateContent`, keychain credential
+  `FAMtastic.Gemini.Image`), each confirmed a real, correctly-dimensioned,
+  non-zero JPEG via `file` + `shasum -a 256`. Measured total spend:
+  **USD 0.2688** (8 x $0.0336; a 9th attempt was blocked by the provider's
+  safety filter and, per the provider's own message, not charged). This run
+  is the first proof of `imageConfig.aspectRatio: "1:1"` in this repo
+  (1024x1024 at `imageSize: '1K'`); `16:9`, `3:2`, `4:5`, and `9:16` were
+  already proven in prior sessions.
+- **Found a registry gap**: `marketing/providers.json` has no entry at all for
+  Gemini/Imagen image generation despite it being a working, repeatedly-proven,
+  keychain-credentialed route — flagged in `marketing/creative/plates/README.md`
+  with a recommended entry shape.
+- **Hit and fixed a real tooling bug**: the first version of
+  `generate-plates.mjs` overwrote its own receipt file on a second, narrower
+  run rather than merging, silently losing six of eight images'
+  provider `usageMetadata`. Fixed to merge by prompt id; the historical gap
+  is disclosed rather than papered over (see the receipt's `backfill_note`).
+- Deferred: no Build DNA record was created (out of scope for an internal
+  capability-proving run, not a customer-facing creative proof); the 8 plates
+  were not composited with Photoshop type; 11 library entries (including the
+  2 Tier-1 flagship specs) remain `"planned"`, not generated.
+
 ## 2026-09-05 — drop-06 rebuilt on the real creative stack; unbranded recut replaced
 
 - **The drop-06 video was rebuilt from scratch and the drop re-staged.** The

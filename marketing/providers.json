@@ -215,6 +215,25 @@
       "notes": "Key in OS keychain (service: muapi-cli, account: api-key) - never committed. CLI binary absent; call REST directly: POST https://api.muapi.ai/api/v1/flux-schnell-image (x-api-key header), poll /predictions/{id}/result. Image dims must be multiples of 64 (128-2048). Generator: scripts/muapi-generate-mockups.sh. AI text renders as gibberish - use outputs as layout comps only."
     },
     {
+      "id": "gemini_image",
+      "purpose": [
+        "Tier-2 cheap-multiplier campaign/blog plates",
+        "cinematic b-roll and hero backgrounds",
+        "reference-led image variants"
+      ],
+      "status": "connected_local_keychain",
+      "automation": "api",
+      "secret_env": [],
+      "access": "google-gemini-api, model gemini-3.1-flash-lite-image, POST https://generativelanguage.googleapis.com/v1/models/gemini-3.1-flash-lite-image:generateContent (v1, not v1beta; x-goog-api-key header)",
+      "notes": [
+        "Key in OS keychain (service: FAMtastic.Gemini.Image, account: famtastic-gemini-image-worker), retrieved via `security find-generic-password -s FAMtastic.Gemini.Image -a famtastic-gemini-image-worker -w` - never an env var, never committed.",
+        "Cost: $0.0336 per image at generationConfig.imageConfig.imageSize '1K' (published rate; the API does not return a per-call invoice, so measured spend = successful images x this rate). '2K' is rejected by this model - use gemini-3-pro-image for 2K.",
+        "generationConfig.imageConfig.aspectRatio takes plain strings ('16:9', '9:16', '1:1', '3:2', '4:5' all proven), not the ASPECT_RATIO_* enum. Output is always image/jpeg regardless of requested filename extension. This is the Tier-2 provider in docs/architecture/CAMPAIGN_ASSET_CASCADE_AND_DISTRIBUTION_V1.md and docs/marketing/CHEAP_PRODUCTION_ECONOMICS_V1.md.",
+        "Reusable prompt library, generator script, and a 2026-09-05 8-plate/$0.2688 proof receipt: marketing/creative/plates/ (prompt-library.json, generate-plates.mjs, generation-receipt.json, README.md). Production workers: website-delivery-swarm/gemini_flash_lite_image_worker.mjs.",
+        "A blocked image (finishReason IMAGE_SAFETY) returns HTTP 200 with no inline image data and is not charged, per the provider's own error message - handle as a distinct outcome, not a hard failure."
+      ]
+    },
+    {
       "id": "adobe_photoshop_desktop_mcp",
       "purpose": [
         "text-on-image composition",
@@ -245,15 +264,17 @@
         "transitions, auto-reframe to 9:16 / 1:1",
         "export via render queue"
       ],
-      "status": "installed_bridge_present_app_not_launched",
+      "status": "installed_bridge_present_cep_panel_not_started",
       "automation": "local_mcp_bridge",
       "secret_env": [],
       "access": "mcp__premiere-pro__* (tools/adobe-automation/premiere-pro-mcp)",
-      "requires": "Adobe Premiere Pro 2026 must be RUNNING; mcp__premiere-pro__ping times out otherwise",
-      "proof": "not yet proven end to end — ping timed out 2026-09-04 because the app was closed",
+      "requires": "Adobe Premiere Pro 2026 must be RUNNING AND the CEP panel's Start Bridge button must be clicked once per launch (Window > Extensions > MCP Bridge (CEP) > Start Bridge); mcp__premiere-pro__ping times out if either is missing",
+      "proof": "not yet proven end to end — re-attempted 2026-09-04 with the app running and idle for 20+ minutes; ping/verify_premiere_connection/get_capabilities(checkConnection:true) all timed out across 5 attempts. Root cause confirmed via unanswered command files in /tmp/premiere-mcp-bridge/: the app being open is not sufficient, the CEP panel must also be opened and Start Bridge clicked. Full ledger: marketing/creative/premiere-proof/PROOF.md",
       "notes": [
         "PREFER THIS OVER ffmpeg concat for any multi-clip branded video.",
-        "auto_reframe_sequence produces platform aspect ratios without re-rendering by hand."
+        "auto_reframe_sequence produces platform aspect ratios without re-rendering by hand.",
+        "add_text_overlay requires a .mogrt template path — there is no freeform-text tool in the current catalog.",
+        "Neither computer-use screen automation nor AppleScript/System Events UI scripting could click Start Bridge on this machine (Screen Recording / Accessibility permissions not granted to the Claude session); Premiere itself has no AppleScript scripting dictionary beyond name/version to fall back to."
       ]
     },
     {

@@ -52,7 +52,7 @@ same name.
 | 1 | Register the desktop surface in `providers.json` | Working Adobe capabilities appear in the first file agents read, with access path, preconditions and known bugs | 4 entries added, `adobe_photoshop_api` annotated to redirect to the desktop path | ✅ DONE 2026-09-04 |
 | 2 | Prove Photoshop end to end | A Design-DNA-compliant asset built and exported entirely through the bridge | `marketing/creative/adobe-proofs/cost-is-not-the-reason-story-1080x1920.png` + reusable `famtastic-story-9x16-template.psd` | ✅ DONE 2026-09-04 |
 | 3 | Install the brand faces | Inter and Space Grotesk resolve inside Photoshop | — | ☐ BLOCKED — see *Known gaps* |
-| 4 | Prove Premiere end to end | `ping` answers, then a disposable sequence assembles and exports | — | ☐ Premiere Pro 2026 has to be launched first |
+| 4 | Prove Premiere end to end | `ping` answers, then a disposable sequence assembles and exports | `marketing/creative/premiere-proof/PROOF.md` | ☐ BLOCKED 2026-09-04 — app running, bridge panel not started, see *Known gaps* |
 | 5 | Media Encoder watch folders | One master render fans out to every social aspect ratio with no bridge work | — | ☐ cheapest remaining win |
 | 6 | Audition pass on machine-assembled audio | Voiceover normalised, bed mixed, loudness to platform spec | — | ☐ |
 | 7 | Retire ffmpeg text rendering | No script in the repo burns type with `drawtext` | — | ☐ audit outstanding |
@@ -161,8 +161,37 @@ So the split is:
 - **Adobe Fonts has never been used.** `~/Library/Application Support/Adobe/CoreSync/plugins/livetype/.r`
   is empty — zero fonts activated on a paid plan. Activating Inter there is the
   single cleanest fix for the gap above, and costs nothing.
-- **Premiere is unproven.** The bridge exists and the connection map claims it is
-  live, but no disposable edit/export proof has ever been produced.
+- **Premiere is still unproven, and the specific reason is now known.** On
+  2026-09-04, with Premiere Pro 2026 (build 26.3.2) launched and idle for over
+  20 minutes, every one of `ping`, `verify_premiere_connection`, and
+  `get_capabilities({checkConnection:true})` timed out — five attempts across
+  ~18 minutes. The MCP server side is healthy (`get_capabilities({checkConnection:false})`
+  answers instantly); the failure is entirely on the Premiere side. Diagnosis:
+  the server writes each call as a command file to `/tmp/premiere-mcp-bridge/`
+  and waits for the CEP panel inside Premiere to answer it — every command file
+  from this session sat there with no response ever written, because **the CEP
+  panel's `Start Bridge` button had not been clicked this launch.** This is a
+  manual, one-time-per-launch UI step
+  (`Window > Extensions > MCP Bridge (CEP)` → `Start Bridge`) that the bridge's
+  own code requires; nothing auto-starts it. Full ledger, diagnostic evidence,
+  and the exact five-minute plan for whoever runs this next:
+  `marketing/creative/premiere-proof/PROOF.md`.
+  - Two automated ways to click that button for the operator were tried and
+    both are blocked on this machine: `computer-use` screen automation needs
+    macOS Screen Recording permission for the Claude desktop app (not granted,
+    and not grantable by an agent — that's a system-settings change); AppleScript
+    `System Events` UI scripting needs Accessibility permission (also not
+    granted: `osascript is not allowed assistive access (-25211)`). Direct
+    AppleScript to Premiere itself has no scripting dictionary beyond `name`/
+    `version` — no `do javascript`, no window list — so there is no scriptable
+    back door the way there might be for a classic Adobe app.
+  - Real source stills for the eventual proof already exist and do not need to
+    be generated: `marketing/creative/plates/plate-01..08*.jpg` and 13 PNGs
+    under `marketing/creative/adobe-proofs/`.
+  - Second gap found while planning the re-run: `add_text_overlay` requires a
+    `.mogrt` template path. There is no tool in the current 283-tool catalog
+    for writing freeform title text directly the way `ps_create_text` does for
+    Photoshop — a minimal reusable MOGRT needs to exist first.
 - **Sixteen of eighteen installed Adobe apps have no bridge.** After Effects and
   Illustrator are ExtendScript-scriptable today. Media Encoder needs no bridge at
   all — watch folders would fan one render out to every social spec.
@@ -175,7 +204,7 @@ So the split is:
 |---|---|---|
 | Photoshop bridge returns `No such element` | No document is open | `ps_new_document` first |
 | `ps_create_text` returns `Required value is missing` | Non-ASCII in `content` | Replace with ASCII; delete the empty layer left behind |
-| `mcp__premiere-pro__ping` times out | Premiere is not running | Launch it; do not fall back to ffmpeg for branded output |
+| `mcp__premiere-pro__ping` times out | Premiere is not running, **or** it is running but the CEP panel's `Start Bridge` was never clicked this launch (check `/tmp/premiere-mcp-bridge/` for command files with no matching response) | Launch Premiere if closed; if already running, open `Window > Extensions > MCP Bridge (CEP)` and click `Start Bridge` — do not fall back to ffmpeg for branded output |
 | Brand font missing | Photoshop substitutes silently | Use the documented stand-ins and record the substitution in the Build DNA record |
 
 ## Approval gates
@@ -192,3 +221,16 @@ not a generic "local assembly".
   `providers.json` describing only the pending Adobe cloud APIs. Registry
   corrected, Photoshop proven end to end, ASCII and `fontFamily` bugs recorded,
   brand-font and Adobe-Fonts gaps opened.
+- 2026-09-04 — Attempted the step 4 Premiere proof with Premiere Pro 2026
+  launched and confirmed idle for 20+ minutes. Every live-connection call still
+  timed out. Root-caused conclusively (not just observed) to the CEP panel's
+  `Start Bridge` never having been clicked this launch — the MCP server side is
+  healthy, command files queue correctly, nothing inside Premiere answers them.
+  Both available ways to click that button on the operator's behalf
+  (`computer-use`, AppleScript/System Events) are blocked by macOS permissions
+  not granted to this Claude session; a direct-AppleScript-to-Premiere longshot
+  confirmed Premiere has no scripting dictionary to fall back to. No video was
+  produced and ffmpeg was correctly not used as a substitute. Full ledger:
+  `marketing/creative/premiere-proof/PROOF.md`. Step 4 remains open, now with an
+  exact five-minute human fix and an exact five-minute re-run plan once
+  unblocked, plus a newly discovered `add_text_overlay`/MOGRT gap.

@@ -1,5 +1,43 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Capability-discovery order worked; a receipt-overwrite bug did not, until it was tested
+
+- Observation: tasked with proving the Tier-2 cheap image provider from
+  scratch, following this same file's guidance below (providers.json, then
+  keychain, then authenticated CLI config) found the working credential and
+  model on the first pass: `security find-generic-password -s
+  "FAMtastic.Gemini.Image" -a "famtastic-gemini-image-worker" -w` returned a
+  live key, and `marketing/providers.json` had **no entry at all** for
+  Gemini/Imagen despite the capability being real and repeatedly proven
+  elsewhere in this repo (`docs/CAPABILITY_REGISTRY.md` row 47,
+  `marketing/campaigns/and-if-it-is-rattler-lifers/evidence/`,
+  `marketing/campaigns/cost-is-not-the-reason/images/broll/`). The registry
+  gap this file warned about on 2026-09-05 (the four-false-calls entry below)
+  is confirmed still open for this specific provider; recommended fix
+  (a `gemini_image` entry) is written up in `marketing/creative/plates/README.md`.
+- Guidance: when a provider clearly works and is clearly undocumented in
+  `marketing/providers.json`, fix the registry in the same session rather than
+  just noting the gap in a task-specific README — the README will be read by
+  whoever opens that folder; the registry is what the *next* agent checks
+  first, per this file's own guidance, and it is currently silent on this
+  provider.
+- Observation: a generator script (`marketing/creative/plates/generate-plates.mjs`)
+  wrote its measured receipt (`generation-receipt.json`) by full overwrite
+  instead of merge. Running it once for 7 prompts, then again for a single
+  retry after one prompt was safety-blocked, silently destroyed the first
+  run's per-image `usageMetadata` before it was ever read back — caught only
+  by re-reading the receipt file immediately after the second run and noticing
+  it had one result instead of eight. The image files themselves (written
+  before the receipt, as separate files) and their sizes/hashes were
+  unaffected; only the corroborating provider-usage detail for 6 of 8 images
+  was lost.
+- Guidance: **a script that writes a cumulative receipt across possibly-partial
+  runs must merge by a stable id, never overwrite the whole file** — the same
+  class of bug as clobbering a shared log. Verify this specifically after
+  writing any receipt/ledger-style script by running it twice with different
+  subsets and confirming the earlier subset's data survives, rather than
+  assuming a single successful run proves the write path is safe.
+
 ## 2026-09-05 — Four false "capability unavailable" calls in one session, same root cause
 
 - Observation: across one session an agent declared, with confidence and
