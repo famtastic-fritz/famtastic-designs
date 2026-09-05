@@ -36,6 +36,10 @@ workaround.
   video names only product-registry facts: one focused landing page, first year
   of managed hosting, first-year new-domain registration when needed or domain
   connection, and separate $99 business-email setup.
+- Added `marketing/creative/prompt-cookbook/` in `ec6a7c27`: source-attributed
+  image/video prompt recipes, provider notes, and a required receipt schema.
+  Treat this as the prompt-training entry point rather than starting another
+  unstructured prompt list.
 
 ## Resume order
 
