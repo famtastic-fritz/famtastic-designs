@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Customer proof choice is a decision record, not editable intake data
+
+Research backing a proof direction must survive routine brief edits, and a customer cannot be able to silently replace an already-recorded direction. Keep the proof snapshot separate from mutable intake fields, require an explicit staff reopen before checkout, and scope mobile owner controls to the exact converted customer request. The full lifecycle still needs an initialized isolated Drupal test database before any production claim.
+
 ## 2026-09-05 — A rejected push is not always a broken repo
 
 Forty-two commits would not push. The remote rejected every attempt with

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>FAMtastic Concierge — Intake Email v2</title>
+  <style>
+    :root {
+      --void:#060908;
+      --ink:#0d1712;
+      --panel:#111b16;
+      --paper:#f6f3eb;
+      --cream:#e8e2d3;
+      --lime:#9cff3c;
+      --mint:#b9f6cb;
+      --quiet:#8d9a90;
+      --line:rgba(185,246,203,.18);
+      --orange:#ffb257;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 75% 0,#1b3528 0,transparent 28rem),var(--void); color:#fff; font:15px/1.5 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    .context { max-width:1240px; margin:0 auto; padding:42px 24px 26px; }
+    .eyebrow { color:var(--lime); font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    h1 { max-width:800px; margin:10px 0 12px; font-size:clamp(35px,5vw,66px); line-height:.94; letter-spacing:-.065em; }
+    h1 em { color:var(--mint); font-family:Georgia,serif; font-weight:400; }
+    .context p { max-width:670px; margin:0; color:#b8c6bd; font-size:17px; }
+    .rules { display:flex; flex-wrap:wrap; gap:8px; margin:24px 0 0; }
+    .rules span { padding:7px 10px; border:1px solid var(--line); border-radius:999px; color:#c8d5cc; font-size:11px; font-weight:700; }
+    .rules span:first-child { border-color:rgba(156,255,60,.5); color:var(--lime); }
+
+    .mail-shell { width:min(1060px,calc(100% - 32px)); margin:18px auto 92px; overflow:hidden; border:1px solid rgba(255,255,255,.16); border-radius:24px; background:#edf0ec; box-shadow:0 35px 100px rgba(0,0,0,.5); }
+    .toolbar { display:flex; align-items:center; gap:8px; padding:13px 18px; border-bottom:1px solid #d6dbd7; background:#f7f8f6; }
+    .dot { width:10px; height:10px; border-radius:50%; background:#c9d0cb; }
+    .subject { display:grid; grid-template-columns:50px 1fr auto; gap:13px; align-items:center; padding:22px 28px; background:#fff; color:#111813; }
+    .sigil { display:grid; width:48px; height:48px; place-items:center; border-radius:15px 15px 15px 4px; background:#10241a; color:var(--lime); font-size:12px; font-weight:900; letter-spacing:.08em; }
+    .subject strong,.subject small { display:block; }
+    .subject strong { margin-bottom:2px; font-size:16px; }
+    .subject small { color:#6d786f; }
+    .subject time { color:#6d786f; font-size:12px; }
+
+    .letter { width:min(640px,calc(100% - 28px)); margin:36px auto 46px; overflow:hidden; background:var(--paper); color:#1d261f; box-shadow:0 16px 40px rgba(12,28,17,.17); }
+    .letter-head { position:relative; overflow:hidden; min-height:262px; padding:28px; background:linear-gradient(135deg,#07130d 0%,#102b1b 58%,#285b31 100%); color:#fff; }
+    .letter-head::after { content:""; position:absolute; right:-100px; bottom:-145px; width:380px; height:380px; border:1px solid rgba(185,246,203,.3); border-radius:50%; box-shadow:0 0 0 28px rgba(185,246,203,.04),0 0 0 58px rgba(185,246,203,.035),0 0 0 100px rgba(185,246,203,.025); }
+    .brandline { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:12px; color:#dfeadf; font-size:10px; font-weight:800; letter-spacing:.15em; text-transform:uppercase; }
+    .brandline b { color:var(--lime); }
+    .headline { position:relative; z-index:2; max-width:470px; margin:46px 0 0; font-size:39px; font-weight:850; letter-spacing:-.065em; line-height:.92; }
+    .headline i { color:var(--lime); font-family:Georgia,serif; font-weight:400; }
+    .signal-map { position:absolute; z-index:2; right:28px; bottom:28px; width:164px; height:102px; }
+    .orbit { position:absolute; inset:3px 2px; border:1px solid rgba(156,255,60,.4); border-radius:50%; transform:rotate(-20deg); }
+    .orbit.two { inset:17px -7px; border-color:rgba(185,246,203,.32); transform:rotate(22deg); }
+    .orbit.three { inset:34px 15px; border-color:rgba(255,178,87,.4); transform:rotate(-8deg); }
+    .node { position:absolute; width:9px; height:9px; border-radius:50%; background:var(--lime); box-shadow:0 0 14px var(--lime); }
+    .node.a { top:10px; right:44px; }.node.b { top:50px; left:4px; background:var(--mint); box-shadow:0 0 14px var(--mint); }.node.c { right:12px; bottom:8px; background:var(--orange); box-shadow:0 0 14px var(--orange); }
+    .map-label { position:absolute; right:0; bottom:-3px; color:#cce0d1; font-size:8px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+
+    .letter-body { padding:31px 28px 0; }
+    .letter-body p { margin:0 0 17px; font-size:16px; line-height:1.62; }
+    .letter-body .lead { font-size:19px; line-height:1.48; letter-spacing:-.02em; }
+    .letter-body strong { color:#0c311c; }
+    .studio-stamp { margin:26px 0; padding:15px 16px; border-left:3px solid var(--lime); background:#e6efdf; color:#20442b; font-size:13px; line-height:1.48; }
+    .studio-stamp b { display:block; margin-bottom:3px; color:#0b351d; font-size:11px; letter-spacing:.11em; text-transform:uppercase; }
+    .workboard { margin:29px 0; overflow:hidden; border:1px solid #cad5c8; border-radius:16px; background:#fff; }
+    .workboard header { display:flex; justify-content:space-between; gap:12px; padding:15px 17px; border-bottom:1px solid #dde5dc; background:#f1f5ee; }
+    .workboard header b { color:#173f23; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+    .workboard header span { color:#50705b; font-size:11px; font-weight:700; }
+    .lane { display:grid; grid-template-columns:34px 1fr auto; gap:12px; align-items:center; padding:14px 17px; border-bottom:1px solid #e4ebe3; }
+    .lane:last-child { border-bottom:0; }
+    .num { display:grid; width:28px; height:28px; place-items:center; border-radius:8px; background:#10291a; color:var(--lime); font-size:10px; font-weight:900; }
+    .lane b,.lane small { display:block; }.lane b { color:#16271b; font-size:13px; }.lane small { margin-top:2px; color:#637067; font-size:11px; }
+    .state { padding:5px 8px; border-radius:999px; background:#edf5e8; color:#236333; font-size:9px; font-weight:900; letter-spacing:.07em; text-transform:uppercase; }
+    .state.queued { background:#f7eee0; color:#925e1f; }.state.next { background:#e9eef9; color:#315785; }
+    .promise { margin:0 -28px; padding:27px 28px; background:#10271a; color:#edf5ec; }
+    .promise p { max-width:480px; margin:0; color:#d4e3d6; font-size:14px; }
+    .promise b { color:var(--lime); }
+    .cta { display:block; margin:21px 0 0; padding:15px 18px; border-radius:9px; background:var(--lime); color:#0c2515; font-size:15px; font-weight:900; text-align:center; text-decoration:none; }
+    .signature { display:flex; align-items:center; gap:12px; padding:26px 0; }
+    .avatar { display:grid; width:44px; height:44px; place-items:center; border-radius:50% 50% 50% 10px; background:linear-gradient(135deg,#173e26,#76bd70); color:#fff; font-size:13px; font-weight:900; }
+    .signature b,.signature small { display:block; }.signature b { color:#143720; }.signature small { color:#607066; font-size:12px; }
+    .letter-foot { padding:20px 28px 25px; background:#e7e4dc; color:#657069; font-size:11px; line-height:1.55; }
+    .letter-foot strong { color:#4c5b50; }
+
+    .notes { width:min(1060px,calc(100% - 32px)); margin:-54px auto 80px; padding:0 0 50px; color:#aebcb2; }
+    .notes h2 { margin:0 0 14px; color:#fff; font-size:20px; letter-spacing:-.03em; }
+    .notes-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .notes article { padding:17px; border:1px solid var(--line); border-radius:16px; background:#0d1611; }
+    .notes article b { display:block; margin-bottom:6px; color:var(--lime); font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
+    .notes article p { margin:0; font-size:13px; line-height:1.5; }
+    @media (max-width:680px) { .context{padding-top:28px}.subject{grid-template-columns:48px 1fr;padding:18px}.subject time{display:none}.headline{font-size:34px}.signal-map{opacity:.68;right:12px}.notes-grid{grid-template-columns:1fr}.mail-shell{width:calc(100% - 18px)}.letter{width:calc(100% - 16px)} }
+  </style>
+</head>
+<body>
+  <header class="context">
+    <div class="eyebrow">Email design exploration · not sendable</div>
+    <h1>Not a receipt. A first glimpse of the <em>business system</em> now working for them.</h1>
+    <p>This direction keeps the email operationally honest while making FAMtastic feel like the agentic business-solutions studio it is: signal gathering, opportunity framing, design work, and a human-led decision path.</p>
+    <div class="rules"><span>V2 proposed direction</span><span>No fake work completed</span><span>No price or payment ask</span><span>Authenticated workspace only</span></div>
+  </header>
+
+  <main class="mail-shell" aria-label="Gmail-style preview of the customer email">
+    <div class="toolbar" aria-hidden="true"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>
+    <section class="subject">
+      <span class="sigil">F//</span>
+      <span><strong>Your FAMtastic Design Review has started</strong><small>FAMtastic Business Solutions Studio · to Shay · preview only</small></span>
+      <time>Today</time>
+    </section>
+
+    <article class="letter">
+      <header class="letter-head">
+        <div class="brandline"><span><b>FAMtastic</b> / Business Solutions Studio</span><span>Intake received // 01</span></div>
+        <div class="headline">We’re turning your business into a <i>front door that works.</i></div>
+        <div class="signal-map" aria-label="Business signal map illustration"><i class="orbit"></i><i class="orbit two"></i><i class="orbit three"></i><i class="node a"></i><i class="node b"></i><i class="node c"></i><span class="map-label">Signal map / active</span></div>
+      </header>
+
+      <div class="letter-body">
+        <p class="lead">Hi Shay,</p>
+        <p>Your intake for <strong>Tighten Up Your Locs</strong> is in. This is where we move from your answers to a working point of view: what your clients need to understand, trust, and do when they meet your business online.</p>
+        <div class="studio-stamp"><b>FAMtastic Concierge is on it</b>We are not asking you to imagine a generic website. We are assembling the research, client journey, and visual directions that will let you react to something real.</div>
+
+        <section class="workboard" aria-label="Design review workboard">
+          <header><b>Your Design Review</b><span>Account-owned / private</span></header>
+          <div class="lane"><span class="num">01</span><span><b>Business signal map</b><small>Your goals, offers, audience, and booking path</small></span><i class="state">received</i></div>
+          <div class="lane"><span class="num">02</span><span><b>Opportunity + client journey</b><small>What the website needs to make easier for your clients</small></span><i class="state queued">in studio</i></div>
+          <div class="lane"><span class="num">03</span><span><b>Three working directions</b><small>Distinct visual and conversion ideas for you to compare</small></span><i class="state next">next</i></div>
+        </section>
+
+        <p>We will send a separate <strong>Studio Review</strong> when the concepts have completed FAMtastic owner review. That is the moment you will compare directions, tell us what feels like your business, and decide what deserves refinement.</p>
+        <section class="promise"><p><b>Nothing is being charged or launched right now.</b> This stage is our investment in getting the business, the customer journey, and the first creative decision right before we talk about final scope or payment.</p></section>
+        <a class="cta" href="#preview-only">Open your Design Review workspace&nbsp; →</a>
+
+        <div class="signature"><span class="avatar">S</span><span><b>Shay</b><small>AI Business Concierge<br>with Fritz and the FAMtastic team</small></span></div>
+      </div>
+      <footer class="letter-foot"><strong>Private account message.</strong> Your Design Review stays connected to your verified FAMtastic workspace. FAMtastic Designs · 1729 NW St. Lucie West Blvd #1181 · Port Saint Lucie, FL 34986</footer>
+    </article>
+  </main>
+
+  <section class="notes">
+    <h2>What this direction fixes</h2>
+    <div class="notes-grid">
+      <article><b>Visual story</b><p>The signal-map motif makes research, orchestration, and intent visible without relying on stock art or an unsupported external image.</p></article>
+      <article><b>Agentic, not magical</b><p>It names the work in progress and the owner-review gate. It never implies that research or concepts already exist.</p></article>
+      <article><b>Customer confidence</b><p>It makes the sequence and the no-payment boundary obvious, while the CTA remains the account-owned workspace rather than a public proof link.</p></article>
+    </div>
+  </section>
+</body>
+</html>

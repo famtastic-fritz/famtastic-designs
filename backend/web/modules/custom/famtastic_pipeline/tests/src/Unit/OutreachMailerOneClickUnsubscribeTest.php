@@ -72,6 +72,72 @@ final class OutreachMailerOneClickUnsubscribeTest extends UnitTestCase {
     );
   }
 
+  public function testCustomerProofReadyTemplateIsBrandedAndKeepsEscapedPlainText(): void {
+    $mailer = new OutreachMailer(
+      $this->createMock(ConfigFactoryInterface::class),
+      $this->createMock(LoggerInterface::class),
+    );
+    $reviewUrl = 'https://famtasticdesigns.com/portal/?section=projects&request=11111111-1111-1111-1111-111111111111';
+
+    $mailer->send(
+      'customer@example.test',
+      'Your FAMtastic Studio Review is ready',
+      "Hi Customer,\n\nYour three directions are ready. <script>never-run()</script>\n\nOpen your private Studio Review:\n{$reviewUrl}",
+      NULL,
+      OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY,
+    );
+
+    $line = trim((string) file_get_contents($this->capturePath));
+    $record = json_decode($line, TRUE, 512, JSON_THROW_ON_ERROR);
+    $html = (string) ($record['html_body'] ?? '');
+    $this->assertStringContainsString('FAMtastic Concierge', $html);
+    $this->assertStringContainsString('Open your Studio Review', $html);
+    $this->assertStringContainsString(str_replace('&', '&amp;', $reviewUrl), $html);
+    $this->assertStringContainsString('&lt;script&gt;never-run()&lt;/script&gt;', $html);
+    $this->assertStringNotContainsString('<script>never-run()</script>', $html);
+    $this->assertSame('Your FAMtastic Studio Review is ready', $record['subject']);
+    $this->assertStringContainsString('Your three directions are ready.', (string) $record['body']);
+    $this->assertSame(OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY, $record['template_id']);
+    $this->assertSame(OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY_VERSION, $record['template_version']);
+  }
+
+  public function testCustomerIntakeReceiptIsBrandedAndVersioned(): void {
+    $mailer = new OutreachMailer(
+      $this->createMock(ConfigFactoryInterface::class),
+      $this->createMock(LoggerInterface::class),
+    );
+    $workspaceUrl = 'https://famtasticdesigns.com/portal/?section=projects&request=22222222-2222-2222-2222-222222222222';
+
+    $mailer->send(
+      'customer@example.test',
+      'Your FAMtastic design review has started',
+      "Hi Customer,\n\nYour intake is received.\n\nOpen your workspace:\n{$workspaceUrl}",
+      NULL,
+      OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED,
+      OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION,
+    );
+
+    $line = trim((string) file_get_contents($this->capturePath));
+    $record = json_decode($line, TRUE, 512, JSON_THROW_ON_ERROR);
+    $html = (string) ($record['html_body'] ?? '');
+    $this->assertStringContainsString('Your design review has started', $html);
+    $this->assertStringContainsString('Intake received', $html);
+    $this->assertStringContainsString('Open your workspace', $html);
+    $this->assertSame(OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED, $record['template_id']);
+    $this->assertSame(OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION, $record['template_version']);
+  }
+
+  public function testUnknownTemplateVersionIsRejected(): void {
+    $mailer = new OutreachMailer(
+      $this->createMock(ConfigFactoryInterface::class),
+      $this->createMock(LoggerInterface::class),
+    );
+
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('notification_template_invalid');
+    $mailer->send('customer@example.test', 'Subject', 'Body', NULL, OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY, 99);
+  }
+
   private function setEnvironment(string $name, string $value): void {
     if (!array_key_exists($name, $this->previousEnvironment)) {
       $this->previousEnvironment[$name] = getenv($name);

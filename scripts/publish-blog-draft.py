@@ -363,6 +363,31 @@ DRAFT_CLASSIFICATION = {
             "keep booking app and have a website",
         ],
     },
+    "business-email-on-your-own-domain": {
+        "category": "get-paid",
+        "category_label": "Get Paid",
+        "tags": ["Business Email", "Add-Ons", "Domain"],
+    },
+    "how-local-customers-find-your-business-online": {
+        "category": "get-found",
+        "category_label": "Get Found",
+        "tags": ["Local SEO", "Structured Data", "Small Business"],
+    },
+    "what-website-maintenance-actually-covers": {
+        "category": "serve-customers",
+        "category_label": "Serve Customers",
+        "tags": ["Maintenance", "Add-Ons", "Website Care"],
+    },
+    "do-you-guarantee-google-rankings": {
+        "category": "get-found",
+        "category_label": "Get Found",
+        "tags": ["SEO", "Local SEO", "Honest Marketing"],
+    },
+    "what-happens-when-first-year-hosting-ends": {
+        "category": "get-paid",
+        "category_label": "Get Paid",
+        "tags": ["Hosting", "Domain Renewal", "Web Basics"],
+    },
 }
 
 # The blog_series vocabulary was seeded from this manifest by

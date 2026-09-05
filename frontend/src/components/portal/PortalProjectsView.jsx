@@ -2,6 +2,67 @@ import { useEffect, useRef, useState } from 'react';
 import { Panel, Empty, title, money, date } from './PortalShared.jsx';
 import { collectUtmParams } from '../../api/pipeline.js';
 
+function ProofDecisionGuide({ request }) {
+  const research = request.proofs?.research_snapshot;
+  const terms = request.proofs?.review_terms || {};
+  const signals = research?.market_signals || [];
+  const opportunities = research?.opportunities || [];
+  const directions = research?.direction_rationale || {};
+
+  return (
+    <section className="portal-proof-decision-guide" aria-label="Research and review guide">
+      <div>
+        <span className="eyebrow">Why these directions</span>
+        <h3>Built from your business research—not a template swap.</h3>
+        <p>
+          {research?.overview || 'Your research brief will be published with the concepts that FAMtastic approves for review.'}
+        </p>
+      </div>
+
+      {Object.keys(directions).length > 0 && (
+        <div className="portal-proof-rationale" aria-label="Direction rationale">
+          {Object.entries(directions).map(([direction, rationale]) => (
+            <p key={direction}>
+              <strong>{direction.toUpperCase()}:</strong> {rationale}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {(signals.length > 0 || opportunities.length > 0) && (
+        <div className="portal-proof-research-list">
+          {signals.length > 0 && (
+            <div>
+              <strong>What we found</strong>
+              <ul>{signals.map((signal) => <li key={signal}>{signal}</li>)}</ul>
+            </div>
+          )}
+          {opportunities.length > 0 && (
+            <div>
+              <strong>Growth moves this site supports</strong>
+              <ul>{opportunities.map((opportunity) => <li key={opportunity}>{opportunity}</li>)}</ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      {research?.sources?.length > 0 && (
+        <details className="portal-proof-sources">
+          <summary>Research recorded {research.researched_at ? `on ${research.researched_at}` : ''}</summary>
+          <ul>{research.sources.map((source) => <li key={source}>{source}</li>)}</ul>
+        </details>
+      )}
+
+      <div className="portal-proof-terms">
+        <strong>Your included review path</strong>
+        <span>3 concepts to compare</span>
+        <span>{terms.design_reset_remaining ?? 1} design reset remaining</span>
+        <span>{terms.edit_rounds_remaining ?? 3} edit rounds after you choose</span>
+      </div>
+    </section>
+  );
+}
+
 export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
   const [revisionOpen, setRevisionOpen] = useState(false);
   const [savingDirection, setSavingDirection] = useState('');
@@ -15,6 +76,10 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
   const selectedProof = variants.find((proof) => proof.direction_id === selectedDirection);
   const revisionPending = request.proof_review_status === 'revision_requested';
   const proofShare = request.proof_share || { enabled: false, url: '' };
+  const terms = request.proofs?.review_terms || {};
+  const changesRemaining = selectedDirection
+    ? (terms.edit_rounds_remaining ?? 3)
+    : (terms.design_reset_remaining ?? 1);
 
   useEffect(() => {
     if (!revisionOpen) return;
@@ -63,6 +128,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
       className="portal-proof-review"
       aria-label={`Review concepts for ${request.project_name}`}
     >
+      <ProofDecisionGuide request={request} />
       <div className={`portal-proof-grid${selectedDirection ? ' has-selection' : ''}`}>
         {variants.map((proof) => {
           const selected = selectedDirection === proof.direction_id;
@@ -98,7 +164,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
               <button
                 type="button"
                 aria-pressed={selected}
-                disabled={busy || selected}
+                disabled={busy || Boolean(selectedDirection)}
                 onClick={() => choose(proof.direction_id)}
               >
                 {savingDirection === proof.direction_id
@@ -106,7 +172,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
                   : selected
                   ? `${proof.direction_name} selected ✓`
                   : selectedDirection
-                  ? `Switch to ${proof.direction_name}`
+                  ? 'Choice locked for review'
                   : `Choose ${proof.direction_name}`}
               </button>
             </article>
@@ -141,13 +207,16 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
               type="button"
               aria-expanded={revisionOpen}
               aria-controls={`proof-revision-${request.public_id}`}
+              disabled={changesRemaining < 1}
               onClick={() => setRevisionOpen((open) => !open)}
             >
               {revisionOpen
                 ? 'Close changes'
+                : changesRemaining < 1
+                ? 'Included edit rounds used'
                 : revisionPending
                 ? 'Update change request'
-                : 'Make changes'}
+                : 'Request an edit round'}
             </button>
           </div>
         </section>
@@ -159,9 +228,14 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
           type="button"
           aria-expanded={revisionOpen}
           aria-controls={`proof-revision-${request.public_id}`}
+          disabled={changesRemaining < 1}
           onClick={() => setRevisionOpen((open) => !open)}
         >
-          {revisionOpen ? 'Close changes' : 'Need changes before choosing?'}
+          {revisionOpen
+            ? 'Close design reset'
+            : changesRemaining < 1
+            ? 'Included design reset used'
+            : 'None of these fit? Request your design reset'}
         </button>
       )}
 
@@ -173,9 +247,13 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
           onSubmit={requestChanges}
         >
           <div>
-            <span>Revision request</span>
-            <h3>What should FAMtastic change?</h3>
-            <p>Be specific about colors, layout, wording, images, or anything that does not feel right.</p>
+            <span>{selectedProof ? 'Edit round request' : 'Design reset request'}</span>
+            <h3>{selectedProof ? 'What should FAMtastic refine?' : 'What should we rethink before a new proof set?'}</h3>
+            <p>
+              {selectedProof
+                ? 'Use one of your included edit rounds for specific changes to the direction you chose.'
+                : 'Use your included design reset when all three directions miss the mark. Tell us what should change at the concept level.'}
+            </p>
           </div>
           <label htmlFor={`proof-revision-notes-${request.public_id}`}>
             Your change notes

@@ -30,7 +30,12 @@ function famtastic_pipeline_update_8001(&$sandbox) {
  * Implements hook_schema().
  */
 function famtastic_pipeline_schema(): array {
-  return _famtastic_pipeline_automation_schema();
+  return _famtastic_pipeline_automation_schema() + [
+    'famtastic_website_proof_research_snapshot' => _famtastic_pipeline_website_proof_research_snapshot_schema(),
+    'famtastic_booking_site_owner' => _famtastic_pipeline_booking_site_owner_schema(),
+    'famtastic_booking_request' => _famtastic_pipeline_booking_request_schema(),
+    'famtastic_booking_availability' => _famtastic_pipeline_booking_availability_schema(),
+  ];
 }
 
 /**
@@ -1421,7 +1426,10 @@ function _famtastic_pipeline_lifecycle_schema(): array {
       'id' => $id, 'notification_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
       'category' => $short, 'recipient' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE],
       'subject' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
-      'body' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE], 'status' => $short,
+      'body' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'template_id' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => 'legacy_unclassified'],
+      'template_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'status' => $short,
       'attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
       'max_attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 5],
       'available_at' => $time, 'sent_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
@@ -2651,6 +2659,181 @@ function famtastic_pipeline_update_8048(&$sandbox) {
     ]);
   }
   return t('Added campaign_id to the social record table, backfilled every row from its source manifest, and repointed the unique key at (campaign_id, content_id).');
+}
+
+/** Records the versioned visual template selected for each new outbox notice. */
+function famtastic_pipeline_update_8049(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('famtastic_notification_outbox')) {
+    return t('Notification outbox is not installed; no template metadata to add.');
+  }
+  $fields = _famtastic_pipeline_lifecycle_schema()['famtastic_notification_outbox']['fields'];
+  foreach (['template_id', 'template_version'] as $field) {
+    if (!$schema->fieldExists('famtastic_notification_outbox', $field)) {
+      $schema->addField('famtastic_notification_outbox', $field, $fields[$field]);
+    }
+  }
+  return t('Added immutable template identity and version fields to the notification outbox. Existing notices remain honestly marked legacy_unclassified v0.');
+}
+
+/**
+ * Adds a consented, owner-managed request-to-book ledger.
+ *
+ * No site is enabled by this update. An operator must explicitly add its
+ * exact site key to booking_request_enabled_sites after client approval.
+ */
+function famtastic_pipeline_update_8050(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_booking_request_schema();
+  if (!$schema->tableExists('famtastic_booking_request')) {
+    $schema->createTable('famtastic_booking_request', $definition);
+  }
+  return t('Added the owner-managed request-to-book ledger. No public site was enabled.');
+}
+
+/** Adds owner-published availability windows without a calendar connection. */
+function famtastic_pipeline_update_8051(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('famtastic_booking_availability')) {
+    $schema->createTable('famtastic_booking_availability', _famtastic_pipeline_booking_availability_schema());
+  }
+  return t('Added the owner-published availability ledger. No public site was enabled.');
+}
+
+/** Moves proof rationale out of mutable customer intake data. */
+function famtastic_pipeline_update_8052(&$sandbox) {
+  $database = \Drupal::database();
+  $schema = $database->schema();
+  if (!$schema->tableExists('famtastic_website_proof_research_snapshot')) {
+    $schema->createTable('famtastic_website_proof_research_snapshot', _famtastic_pipeline_website_proof_research_snapshot_schema());
+  }
+  if (!$schema->tableExists('famtastic_project_request')) {
+    return t('Created the immutable proof research table; no website requests exist to migrate.');
+  }
+  $rows = $database->select('famtastic_project_request', 'r')->fields('r', ['id', 'proof_campaign_id', 'intake_data', 'proof_approved_by_uid', 'proof_approved_at', 'created', 'changed'])
+    ->isNotNull('proof_campaign_id')->execute()->fetchAll(\PDO::FETCH_ASSOC);
+  $migrated = 0;
+  foreach ($rows as $row) {
+    $intake = json_decode((string) $row['intake_data'], TRUE);
+    $snapshot = is_array($intake) ? ($intake['proof_research_snapshot'] ?? NULL) : NULL;
+    if (!is_array($snapshot)) {
+      continue;
+    }
+    $now = \Drupal::time()->getRequestTime();
+    $database->merge('famtastic_website_proof_research_snapshot')->key(['website_request_id' => (int) $row['id']])->fields([
+      'proof_campaign_id' => (int) $row['proof_campaign_id'],
+      'snapshot_json' => json_encode($snapshot, JSON_UNESCAPED_SLASHES),
+      'snapshot_hash' => hash('sha256', json_encode($snapshot, JSON_UNESCAPED_SLASHES)),
+      'approved_by_uid' => (int) ($snapshot['approved_by_uid'] ?? $row['proof_approved_by_uid'] ?? 0),
+      'approved_at' => (int) ($row['proof_approved_at'] ?? 0) ?: $now,
+      'created' => (int) ($row['created'] ?? $now),
+      'changed' => (int) ($row['changed'] ?? $now),
+    ])->execute();
+    $migrated++;
+  }
+  return t('Created immutable proof research storage and migrated @count existing snapshot(s).', ['@count' => $migrated]);
+}
+
+/** Adds exact site-to-customer bindings for the authenticated mobile Owner Desk. */
+function famtastic_pipeline_update_8053(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('famtastic_booking_site_owner')) {
+    $schema->createTable('famtastic_booking_site_owner', _famtastic_pipeline_booking_site_owner_schema());
+  }
+  return t('Added exact customer and organization ownership bindings for mobile booking controls. No customer site was activated.');
+}
+
+/** One immutable owner-reviewed research snapshot for the current proof campaign. */
+function _famtastic_pipeline_website_proof_research_snapshot_schema(): array {
+  return [
+    'description' => 'Owner-approved proof research retained independently from customer-editable website intake data.',
+    'fields' => [
+      'website_request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'proof_campaign_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'snapshot_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'snapshot_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'approved_by_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'approved_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['website_request_id'],
+    'indexes' => ['campaign' => ['proof_campaign_id']],
+  ];
+}
+
+/** One active customer owner and organization binding per branded booking site. */
+function _famtastic_pipeline_booking_site_owner_schema(): array {
+  return [
+    'description' => 'Exact authenticated owner scope for a branded site mobile command center.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'website_request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'active'],
+      'created_by_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['site_key' => ['site_key']],
+    'indexes' => ['customer_status' => ['customer_id', 'status'], 'organization_status' => ['organization_id', 'status'], 'website_request' => ['website_request_id']],
+  ];
+}
+
+/** Schema for public request invitations, not appointment confirmations. */
+function _famtastic_pipeline_booking_availability_schema(): array {
+  return [
+    'description' => 'Owner-published availability invitations; not calendar events or confirmed appointments.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+      'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'label' => ['type' => 'varchar', 'length' => 100, 'not null' => TRUE, 'default' => ''],
+      'starts_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'ends_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'service_keys_json' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'draft'],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => ['site_status_starts' => ['site_key', 'status', 'starts_at']],
+  ];
+}
+
+/** Schema for durable request-to-book records. */
+function _famtastic_pipeline_booking_request_schema(): array {
+  return [
+    'description' => 'Owner-managed customer appointment requests; never a calendar or payment record.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+      'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'service_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => 'general'],
+      'customer_name' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE],
+      'email' => ['type' => 'varchar', 'length' => 254, 'not null' => TRUE],
+      'email_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'phone' => ['type' => 'varchar', 'length' => 40, 'not null' => TRUE, 'default' => ''],
+      'requested_window' => ['type' => 'varchar', 'length' => 180, 'not null' => TRUE, 'default' => ''],
+      'message' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE, 'default' => ''],
+      'consent' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+      'status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'new'],
+      'source' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE, 'default' => 'site'],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => [
+      'site_status' => ['site_key', 'status', 'created'],
+      'site_email' => ['site_key', 'email_hash'],
+      'created' => ['created'],
+    ],
+  ];
 }
 
 /**

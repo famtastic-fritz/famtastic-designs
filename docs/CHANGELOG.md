@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-05 — Customer proof handoff and mobile Owner Desk release candidate
+
+- Consolidated the research-first proof handoff work into `main`: submitted website intake starts the internal proof lane; customer email is notification only; authenticated FAMtastic workspace remains the proof comparison and decision surface.
+- Added owner-approved research rationale, three-direction proof review, bounded revision/reset requests, exact customer-to-site Owner Desk authorization, first-party request/availability controls, and the Tighten Up Your Locs mobile proof set. These controls do not book appointments, charge customers, publish availability, or connect Booksy.
+- Proof research is now retained separately from mutable intake data, customer direction choice is final until an explicit pre-checkout owner reopen action, and the synthetic lifecycle test now covers those facts plus cross-customer owner-desk denial.
+- Release evidence: source checks, Portal DNA, mobile recipe validation, and frontend production build pass. The full Drupal lifecycle remains required against an initialized isolated database before production deployment or paid-project diagnosis.
+
 ## 2026-09-05 — Three HyperFrames films for the offer and the two add-on products
 
 - **Authored and rendered three 9:16 films from HTML, at $0 total.**

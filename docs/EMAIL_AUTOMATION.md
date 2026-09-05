@@ -1,5 +1,10 @@
 # Email Campaign Automation
 
+> Scope: this document governs commercial lead/campaign email. Account-owned
+> transactional customer notices use the separate versioned
+> [Transactional Email Template Registry](templates/TRANSACTIONAL_EMAIL_TEMPLATE_REGISTRY_V1.md)
+> and must never be routed through this campaign system.
+
 ## Safety contract
 
 Imported leads never send email directly. The sequence is:

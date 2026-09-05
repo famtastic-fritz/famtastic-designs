@@ -358,7 +358,7 @@ final class CustomerPortalService {
     $this->previews->attachClaimedRequest($customerId, $id, $clean['status']);
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
     if ($clean['status'] === 'submitted') {
-      $this->queueWebsiteRequestNotifications($id, $customer, $clean);
+      $this->queueWebsiteRequestNotifications($id, $publicId, $customer, $clean);
       $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
     }
     return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
@@ -466,6 +466,15 @@ final class CustomerPortalService {
     if (in_array($row['status'], ['submitted', 'checkout_started'], TRUE) && $clean['status'] === 'draft') {
       $clean['status'] = $row['status'];
     }
+    // Customer edits may change the brief, but never erase the durable record
+    // of an included reset or edit round. Research is retained in its own
+    // proof-campaign table below for the same reason.
+    $existingIntake = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    foreach (['proof_design_reset_requests', 'proof_edit_round_requests', 'proof_revision_request'] as $protectedKey) {
+      if (array_key_exists($protectedKey, $existingIntake)) {
+        $clean['intake'][$protectedKey] = $existingIntake[$protectedKey];
+      }
+    }
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_project_request')->fields([
       'status' => $clean['status'], 'project_name' => $clean['project_name'], 'business_name' => $clean['business_name'],
@@ -481,7 +490,7 @@ final class CustomerPortalService {
         $prospect->save();
       }
       $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
-      $this->queueWebsiteRequestNotifications((int) $row['id'], $customer, $clean);
+      $this->queueWebsiteRequestNotifications((int) $row['id'], (string) $row['public_id'], $customer, $clean);
       $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $clean['intake']);
       $this->activity((int) $row['organization_id'], 'website_request.submitted', 'A website request was submitted for review.');
     }
@@ -986,7 +995,138 @@ final class CustomerPortalService {
       'status' => (string) $row['proof_review_status'],
       'selected_variant' => (string) ($row['selected_proof_direction'] ?? ''),
       'variants' => $variants,
+      'research_snapshot' => $this->proofResearchSnapshot($row),
+      'review_terms' => $this->proofReviewTerms($row),
     ] : NULL;
+  }
+
+  /**
+   * Returns the owner-approved research brief that explains the proof set.
+   *
+   * Proofs are deliberately not made customer-visible without this brief. It
+   * keeps the evidence and growth plan next to the concepts rather than
+   * turning the notification email into a second, untracked review surface.
+   */
+  private function proofResearchSnapshot(array $row): ?array {
+    $requestId = (int) ($row['id'] ?? 0);
+    $campaignId = (int) ($row['proof_campaign_id'] ?? 0);
+    if (!$requestId || !$campaignId) {
+      return NULL;
+    }
+    try {
+      $snapshot = $this->database->select('famtastic_website_proof_research_snapshot', 's')
+        ->fields('s', ['snapshot_json'])
+        ->condition('website_request_id', $requestId)
+        ->condition('proof_campaign_id', $campaignId)
+        ->range(0, 1)->execute()->fetchField();
+      if ($snapshot === FALSE) {
+        return NULL;
+      }
+      $decoded = json_decode((string) $snapshot, TRUE, flags: JSON_THROW_ON_ERROR);
+    }
+    catch (\Exception) {
+      return NULL;
+    }
+    return $this->normalizeProofResearchSnapshot($decoded);
+  }
+
+  /** Validates and sanitizes the research brief retained with one proof set. */
+  private function normalizeProofResearchSnapshot(mixed $snapshot): ?array {
+    if (!is_array($snapshot)) {
+      return NULL;
+    }
+    $cleanText = static fn(mixed $value): string => mb_substr(trim(strip_tags((string) $value)), 0, 1200);
+    $overview = $cleanText($snapshot['overview'] ?? '');
+    $rawRationale = is_array($snapshot['direction_rationale'] ?? NULL) ? $snapshot['direction_rationale'] : [];
+    $rationale = [];
+    foreach (['a', 'b', 'c'] as $direction) {
+      $value = $cleanText($rawRationale[$direction] ?? '');
+      if ($value === '') {
+        return NULL;
+      }
+      $rationale[$direction] = $value;
+    }
+    if ($overview === '') {
+      return NULL;
+    }
+    $cleanList = static function (mixed $values) use ($cleanText): array {
+      if (!is_array($values)) return [];
+      $result = [];
+      foreach (array_slice($values, 0, 8) as $value) {
+        $text = $cleanText($value);
+        if ($text !== '') $result[] = $text;
+      }
+      return $result;
+    };
+    $sources = $cleanList($snapshot['sources'] ?? []);
+    $researchedAt = $cleanText($snapshot['researched_at'] ?? '');
+    if (!$sources || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $researchedAt)) {
+      return NULL;
+    }
+    return [
+      'overview' => $overview,
+      'direction_rationale' => $rationale,
+      'market_signals' => $cleanList($snapshot['market_signals'] ?? []),
+      'opportunities' => $cleanList($snapshot['opportunities'] ?? []),
+      'sources' => $sources,
+      'researched_at' => $researchedAt,
+    ];
+  }
+
+  /** Saves the owner-reviewed research brief before the customer proof gate. */
+  public function saveWebsiteRequestProofResearchSnapshot(int $requestId, int $uid, array $input): void {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$row || $row['proof_review_status'] !== 'owner_review' || empty($row['proof_campaign_id'])) {
+      throw new \RuntimeException('Research can only be saved for a proof set awaiting owner review.');
+    }
+    $snapshot = $this->normalizeProofResearchSnapshot($input);
+    if (!$snapshot) {
+      throw new \InvalidArgumentException('Research needs an overview, a rationale for Safe/Wild/OMG, a research date, and at least one source.');
+    }
+    $snapshot['approved_by_uid'] = $uid;
+    $snapshot['approved_at'] = gmdate(DATE_ATOM, $this->time->getRequestTime());
+    $now = $this->time->getRequestTime();
+    $snapshotJson = json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+    $this->database->merge('famtastic_website_proof_research_snapshot')->key(['website_request_id' => $requestId])->insertFields([
+      'website_request_id' => $requestId,
+      'proof_campaign_id' => (int) $row['proof_campaign_id'],
+      'snapshot_json' => $snapshotJson,
+      'snapshot_hash' => hash('sha256', $snapshotJson),
+      'approved_by_uid' => $uid,
+      'approved_at' => $now,
+      'created' => $now,
+      'changed' => $now,
+    ])->updateFields([
+      'proof_campaign_id' => (int) $row['proof_campaign_id'],
+      'snapshot_json' => $snapshotJson,
+      'snapshot_hash' => hash('sha256', $snapshotJson),
+      'approved_by_uid' => $uid,
+      'approved_at' => $now,
+      'changed' => $now,
+    ])->execute();
+    $this->activity((int) $row['organization_id'], 'website_request.proof_research_saved', 'Owner-reviewed proof research snapshot saved.');
+  }
+
+  /** Returns the current owner-reviewed research fields for the owner form only. */
+  public function websiteRequestProofResearchSnapshot(int $requestId): ?array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    return $row ? $this->proofResearchSnapshot($row) : NULL;
+  }
+
+  /** Returns the included customer review allowance and its current use. */
+  private function proofReviewTerms(array $row): array {
+    $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE) ?: [];
+    $resets = is_array($intake['proof_design_reset_requests'] ?? NULL) ? $intake['proof_design_reset_requests'] : [];
+    $edits = is_array($intake['proof_edit_round_requests'] ?? NULL) ? $intake['proof_edit_round_requests'] : [];
+    return [
+      'design_reset_included' => 1,
+      'design_reset_used' => count($resets),
+      'design_reset_remaining' => max(0, 1 - count($resets)),
+      'edit_rounds_included' => 3,
+      'edit_rounds_used' => count($edits),
+      'edit_rounds_remaining' => max(0, 3 - count($edits)),
+    ];
   }
 
   /** Returns integrity metadata for request-owned private reference files. */
@@ -999,11 +1139,16 @@ final class CustomerPortalService {
       ->condition('website_request_id', $requestId)->condition('status', 'active')->orderBy('created')->execute()->fetchAll(\PDO::FETCH_ASSOC));
   }
 
-  private function queueWebsiteRequestNotifications(int $id, array $customer, array $request): void {
+  private function queueWebsiteRequestNotifications(int $id, string $publicId, array $customer, array $request): void {
     $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
-    $subject = 'Website request received — ' . $request['project_name'];
+    $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+    $workspaceUrl = $base . '/portal/?section=projects&request=' . rawurlencode($publicId);
+    $subject = 'Your FAMtastic design review has started';
     $this->queueNotification("website-request:{$id}:customer", 'transactional', (string) $customer['email'], $subject,
-      "We received your website request for {$request['project_name']}. Fritz will review it within 3 business days. You can continue or review it from your customer portal.");
+      "Hi {$customer['display_name']},\n\nWe received your website intake for {$request['project_name']}. Your FAMtastic Design Review has started.\n\nNext, we review the business context you shared and prepare your proof routine. You will receive a separate Studio Review email after FAMtastic approves concepts for you to view. No payment has been requested at this step.\n\nOpen your workspace:\n{$workspaceUrl}\n\nUse the same verified email address that received this message.",
+      OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED,
+      OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION,
+    );
     $this->queueNotification("website-request:{$id}:staff", 'operational', $admin, 'New portal website request — ' . $request['project_name'],
       "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nType: {$request['project_type']}\nProof generation has been queued.\nOwner review queue: https://famtasticdesigns.com/web/admin/famtastic/metric/website-requests");
   }
@@ -1105,6 +1250,7 @@ final class CustomerPortalService {
       array_values($this->entities->getStorage('proof_variant')->loadMultiple($directions)));
     $validSet = $directionValues === ['a', 'b', 'c'] || $directionValues === ['a', 'b', 'c', 'd', 'e', 'f'];
     if (!$campaign || $campaign->get('generation_status')->value !== 'ready' || !in_array($variantCount, [3, 6], TRUE) || !$validSet) throw new \RuntimeException('A complete three- or six-direction proof set is required.');
+    if (!$this->proofResearchSnapshot($row)) throw new \RuntimeException('An owner-approved proof research snapshot with rationale for all three core directions is required.');
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_project_request')->fields([
       'proof_review_status' => 'customer_ready', 'proof_approved_by_uid' => $uid, 'proof_approved_at' => $now, 'changed' => $now,
@@ -1118,7 +1264,10 @@ final class CustomerPortalService {
     $setLabel = $count === 6 ? 'six website concepts—including three fully FAMtastic directions—' : 'Safe, Wild, and OMG concepts';
     $reviewUrl = $base . '/portal/?section=projects&request=' . rawurlencode((string) $row['public_id']);
     $this->queueNotification('website-request:' . $requestId . ':proofs:' . (int) $row['proof_campaign_id'] . ':' . $count, 'transactional', (string) $customer['email'],
-      'Your FAMtastic website concepts are ready', "Your {$setLabel} are ready. Sign in to compare them and choose your direction:\n{$reviewUrl}\n\nUse the same email address that received this message.");
+      'Your FAMtastic Studio Review is ready', "Hi {$customer['display_name']},\n\nYour {$setLabel} are ready in your private Studio Review. We used the business context you shared to shape each direction.\n\nInside, you can read the research brief behind the concepts, compare every direction, choose the one that feels most like your business, or send FAMtastic Concierge feedback when you are ready.\n\nOpen your private Studio Review:\n{$reviewUrl}\n\nUse the same verified email address that received this message.",
+      OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY,
+      OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY_VERSION,
+    );
     $this->activity((int) $row['organization_id'], 'website_request.proofs_approved', ucfirst($setLabel) . ' were approved for customer review.');
     return $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc() ?: [];
   }
@@ -1174,14 +1323,36 @@ final class CustomerPortalService {
   /** Records one account-owned selection or revision request. */
   public function decideWebsiteRequestProof(int $customerId, string $publicId, array $input): array {
     $row = $this->ownedWebsiteRequest($customerId, $publicId);
-    if (!$row || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) throw new \RuntimeException('Website proofs are not available.');
+    if (!$row) throw new \RuntimeException('Website proofs are not available.');
     $action = (string) ($input['action'] ?? 'select');
+    if (!in_array($action, ['select', 'revision'], TRUE)) {
+      throw new \InvalidArgumentException('Choose a proof direction or request a permitted revision.');
+    }
+    $status = (string) $row['proof_review_status'];
+    if ($action === 'select' && !in_array($status, ['customer_ready', 'notified'], TRUE)) {
+      throw new \RuntimeException($status === 'selected' || $status === 'revision_requested'
+        ? 'Your proof choice is already recorded. Contact FAMtastic if it needs to be reopened before checkout.'
+        : 'Website proofs are not available.');
+    }
+    if ($action === 'revision' && !in_array($status, ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) {
+      throw new \RuntimeException('Website proofs are not available.');
+    }
     $now = $this->time->getRequestTime();
     if ($action === 'revision') {
       $notes = mb_substr(trim(strip_tags((string) ($input['notes'] ?? ''))), 0, 5000);
       if ($notes === '') throw new \InvalidArgumentException('Tell us what you want adjusted.');
       $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
-      $intake['proof_revision_request'] = ['notes' => $notes, 'requested_at' => gmdate(DATE_ATOM, $now)];
+      $isEditRound = !empty($row['selected_proof_direction']);
+      $historyKey = $isEditRound ? 'proof_edit_round_requests' : 'proof_design_reset_requests';
+      $limit = $isEditRound ? 3 : 1;
+      $history = is_array($intake[$historyKey] ?? NULL) ? $intake[$historyKey] : [];
+      if (count($history) >= $limit) {
+        throw new \RuntimeException($isEditRound ? 'All included edit rounds have been used. Contact FAMtastic to plan the next change.' : 'Your included design reset has already been requested. Contact FAMtastic to plan the next step.');
+      }
+      $entry = ['notes' => $notes, 'requested_at' => gmdate(DATE_ATOM, $now)];
+      $history[] = $entry;
+      $intake[$historyKey] = $history;
+      $intake['proof_revision_request'] = $entry;
       $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'revision_requested', 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'changed' => $now])->condition('id', $row['id'])->execute();
       $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
       $notesHash = hash('sha256', $notes);
@@ -1220,6 +1391,32 @@ final class CustomerPortalService {
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
     return $this->serializeWebsiteRequest($updated);
+  }
+
+  /**
+   * Owner-controlled exception path for a recorded choice before checkout.
+   *
+   * A customer cannot silently replace a choice. This explicit staff action
+   * returns the current proof set to the account and preserves all history.
+   */
+  public function reopenWebsiteRequestProofSelection(int $requestId, int $uid): void {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$row || !in_array($row['proof_review_status'], ['selected', 'revision_requested'], TRUE) || !empty($row['commerce_order_id']) || $row['status'] !== 'submitted') {
+      throw new \RuntimeException('A proof choice can only be reopened before checkout begins.');
+    }
+    $now = $this->time->getRequestTime();
+    $this->database->update('famtastic_project_request')->fields([
+      'proof_review_status' => 'customer_ready',
+      'selected_proof_direction' => '',
+      'selected_proof_at' => NULL,
+      'changed' => $now,
+    ])->condition('id', $requestId)->condition('proof_review_status', $row['proof_review_status'])->execute();
+    $campaign = !empty($row['proof_campaign_id']) ? $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']) : NULL;
+    if ($campaign) {
+      $campaign->set('selected_variant', '')->set('selected_at', NULL)->save();
+    }
+    $this->activity((int) $row['organization_id'], 'website_request.proof_selection_reopened', 'The recorded website proof choice was explicitly reopened by FAMtastic before checkout.');
   }
 
   /** Returns one customer's acknowledgment contact details. */
@@ -1548,14 +1745,21 @@ final class CustomerPortalService {
     if ($email !== '') {
       $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
       $this->queueNotification('project:' . $projectId . ':proofs:' . $campaignId . ':' . $count, 'transactional', $email,
-        'Your FAMtastic website concepts are ready', "Review, compare, and select your {$count} concepts securely in your account:\n{$base}/portal/?section=projects\n\nUse the same email address that received this message.");
+        'Your FAMtastic website concepts are ready', "Review, compare, and select your {$count} concepts securely in your account:\n{$base}/portal/?section=projects\n\nUse the same email address that received this message.",
+        OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY,
+        OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY_VERSION,
+      );
     }
   }
 
-  public function queueNotification(string $key, string $category, string $recipient, string $subject, string $body): void {
+  public function queueNotification(string $key, string $category, string $recipient, string $subject, string $body, string $templateId = OutreachMailer::TEMPLATE_STANDARD, int $templateVersion = OutreachMailer::TEMPLATE_STANDARD_VERSION): void {
+    if (!OutreachMailer::supportsTemplate($templateId, $templateVersion)) {
+      throw new \InvalidArgumentException('Notification template is not supported.');
+    }
     $now = $this->time->getRequestTime();
     $this->database->merge('famtastic_notification_outbox')->key('notification_key', $key)->insertFields([
       'notification_key' => $key, 'category' => $category, 'recipient' => mb_strtolower($recipient), 'subject' => $subject, 'body' => $body,
+      'template_id' => $templateId, 'template_version' => $templateVersion,
       'status' => 'queued', 'attempts' => 0, 'max_attempts' => 5, 'available_at' => $now, 'created' => $now, 'changed' => $now,
     ])->execute();
   }

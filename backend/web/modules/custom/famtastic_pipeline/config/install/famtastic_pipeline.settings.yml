@@ -16,6 +16,12 @@ sla_alerts_enabled: true
 # releases explicitly turn it back off.
 pilot_exact_dispatch_only: false
 legacy_checkout_enabled: false
+# Public request-to-book is deliberately opt-in per microsite. A code release
+# alone must never begin collecting appointment requests for a client.
+booking_request_enabled_sites: []
+# Availability is separately opt-in. Publishing a request window never creates
+# a calendar event or changes an external booking provider.
+booking_availability_enabled_sites: []
 # Site Studio proof generation endpoint. Empty = built-in stub generator.
 studio_url: ''
 # Public base URL for proof previews (scheme+host+path prefix, no trailing

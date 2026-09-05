@@ -29,6 +29,18 @@ famtastic_pipeline.settings:
     legacy_checkout_enabled:
       type: boolean
       label: 'Allow the legacy prospect-token checkout'
+    booking_request_enabled_sites:
+      type: sequence
+      label: 'Microsite keys allowed to accept public request-to-book records'
+      sequence:
+        type: string
+        label: 'Microsite key'
+    booking_availability_enabled_sites:
+      type: sequence
+      label: 'Microsite keys allowed to publish public availability windows'
+      sequence:
+        type: string
+        label: 'Microsite key'
     package:
       type: mapping
       label: 'Offer package'

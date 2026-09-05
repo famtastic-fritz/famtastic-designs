@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Proof evidence and owner controls need exact durable boundaries
+
+- Observation: a normal customer intake save can overwrite any research stored in the same mutable blob, and a portal session alone does not establish that a customer owns every branded business surface.
+- Guidance: retain owner-approved research by exact request/campaign identity; make a recorded proof choice terminal until a named owner reopen action; and authorize owner controls through a durable converted-request/customer/site binding. A local fixture or source gate does not establish production delivery, payment, booking, or launch proof.
+
 ## 2026-09-05 — Two luminance scales live in this repo and they disagree by 6-8 points
 
 - Observation: a verification script written for three new HyperFrames films
