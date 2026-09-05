@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A completed provider render is footage, not a finished campaign
+
+The interrupted session left a local script for the business-email presenter
+take but no local render receipt. A read-only provider query found a completed
+29.4661-second record, which was downloaded for local inspection. The file is
+technically valid 1080p H.264/AAC footage and its sampled frames keep the same
+illustrated presenter and wardrobe as the existing anchor.
+
+That proves only source-footage availability. Both takes have no embedded
+captions, campaign composition, visual-story/treatment receipt, CTA treatment,
+or human decision. The business-email take also retains a plain near-white
+field despite its source script requesting background removal. Marking either
+as a finished, premium, or publishable campaign asset would turn a media
+receipt into a quality claim. Keep the render and frame hashes with the source
+node; require a human brief and task-specific assembly/QA before promotion.
+
 ## 2026-09-04 — A capability absent from the first file agents read does not exist
 
 A campaign video shipped with no branding because it was rendered by an `ffmpeg`

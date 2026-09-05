@@ -54,10 +54,14 @@ workaround.
    title, provisional reader persona, current Google-source notes, and a
    pillar revision candidate. It is not the Drupal manifest and must not be
    treated as publication authority.
-2. **HeyGen lane:** Take A exists under `marketing/creative/heygen/`; Take B
-   had just been submitted when the session ended. Inspect provider status and
-   save its actual receipt/render before treating it as complete. Do not post
-   either render.
+2. **HeyGen lane:** Take A and Take B are now both locally recovered under
+   `marketing/creative/heygen/`. The evidence audit is
+   `qa/take-a-and-b-local-audit.json`: Take A is an 18.455s 1080p source and
+   Take B is a completed 29.480s 1080p source, with input/output hashes and
+   five sampled frames each. Neither is a finished campaign video: both lack
+   composition, captions, CTA treatment, a storyboard/treatment receipt, and
+   a human promotion decision. Use them only as optional source nodes after a
+   human brief chooses that route; do not post either render.
 3. **Plate/texture lane:** validate the modified
    `marketing/creative/plates/generate-plates.mjs` and prompt library. The
    planned `marketing/creative/textures/` library was not created before the

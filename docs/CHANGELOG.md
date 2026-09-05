@@ -1,5 +1,19 @@
 # Product changelog
 
+## 2026-09-05 — HeyGen presenter receipt recovery and local source-node audit
+
+- **Recovered the missing completed Take B without generating anything new.**
+  The existing provider record was read through the official CLI and its
+  29.480-second 1080p local render plus five sampled frames were saved beside
+  the existing Take A proof. The audit records script/render hashes, technical
+  media facts, and a provider receipt without committing expiring delivery
+  URLs or credentials.
+- **Kept the quality claim honest.** Both takes are consistent illustrated
+  presenter footage, but neither contains a composed campaign story, captions,
+  campaign typography, CTA, treatment receipt, factual-audio review, or owner
+  acceptance. They are explicitly reusable source nodes, not premium-character
+  proof or publishable video.
+
 ## 2026-09-05 — Draft-only, persona-led platform-dependency series package
 
 - **Prepared a reviewable seven-part series instead of bulk-producing unlinked posts.** The new local package contains a proposed title, explicit publication boundary, reader-persona hypothesis with research gaps, source notes, a complete part map, and an expanded local pillar candidate that points to the six prepared spokes.

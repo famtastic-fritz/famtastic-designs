@@ -1,0 +1,79 @@
+{
+  "schema": "famtastic.heygen-local-audit.v1",
+  "audited_at": "2026-09-05",
+  "scope": "Receipt recovery and local technical/visual inspection only. No new video was submitted, uploaded, scheduled, posted, or promoted.",
+  "provider": {
+    "name": "HeyGen",
+    "transport": "official CLI via existing OAuth session",
+    "account_state_observed": "creator subscription with 461 premium credits remaining at inspection; remaining-credit balance is not attributed to either individual take",
+    "model": "not recorded by the pre-existing local scripts; do not infer one"
+  },
+  "takes": [
+    {
+      "slug": "take-a-platform-dependency",
+      "role": "reference presenter take and style-measurement anchor",
+      "script_path": "marketing/creative/heygen/scripts/take-a-platform-dependency.json",
+      "script_sha256": "502acaa961dd9c489dd5eec80864f2126e4636e2ab4265b573a0cd75970c6924",
+      "render_path": "marketing/creative/heygen/renders/take-a-platform-dependency.mp4",
+      "render_sha256": "e149946c40b638f7928ae41061bb66d06643672bf4fe70c8e0fa457c7433af83",
+      "technical_check": {
+        "container": "mp4",
+        "video": "h264, 1920x1080, 25 fps",
+        "audio": "aac stream present",
+        "duration_seconds": 18.455,
+        "sampled_frames": [
+          "marketing/creative/heygen/frames/take-a-1s.jpg",
+          "marketing/creative/heygen/frames/take-a-5s.jpg",
+          "marketing/creative/heygen/frames/take-a-9s.jpg",
+          "marketing/creative/heygen/frames/take-a-13s.jpg",
+          "marketing/creative/heygen/frames/take-a-17s.jpg"
+        ]
+      },
+      "visual_observations": [
+        "The illustrated presenter, wardrobe, framing, and office backdrop remain visually consistent across the five sampled frames.",
+        "The render contains no built-in captions, campaign typography, CTA card, or visual treatment receipt."
+      ],
+      "decision": "usable_as_source_only_pending_human_review"
+    },
+    {
+      "slug": "take-b-business-email-scope",
+      "role": "business-email scope presenter source",
+      "provider_video_id": "581e196f2d141561415821c3f60a6c08",
+      "provider_status_observed": "completed",
+      "provider_duration_seconds": 29.4661,
+      "script_path": "marketing/creative/heygen/scripts/take-b-business-email-scope.json",
+      "script_sha256": "1dfdb52f8e0fab30cce7c0553e0ef43e85fe38f38269268d8055e4ab38a8e565",
+      "render_path": "marketing/creative/heygen/renders/take-b-business-email-scope.mp4",
+      "render_sha256": "a33acd499bb109f24c6c608f37dc75b4a08a467e6467f776478d64a45a00ff12",
+      "technical_check": {
+        "container": "mp4",
+        "video": "h264, 1920x1080, 25 fps",
+        "audio": "aac stream present",
+        "local_duration_seconds": 29.48,
+        "sampled_frames": [
+          "marketing/creative/heygen/frames/take-b/take-b-1s.jpg",
+          "marketing/creative/heygen/frames/take-b/take-b-8s.jpg",
+          "marketing/creative/heygen/frames/take-b/take-b-15s.jpg",
+          "marketing/creative/heygen/frames/take-b/take-b-22s.jpg",
+          "marketing/creative/heygen/frames/take-b/take-b-28s.jpg"
+        ]
+      },
+      "visual_observations": [
+        "The illustrated presenter and wardrobe remain consistent across the five sampled frames.",
+        "The transparent-background request is not a final composition: sampled frames show a plain near-white field with substantial unused canvas.",
+        "The render contains no built-in captions, campaign typography, CTA card, or visual treatment receipt."
+      ],
+      "decision": "usable_as_foreground_source_only_pending_human_review"
+    }
+  ],
+  "quality_boundary": {
+    "not_accepted_as": [
+      "a finished campaign video",
+      "a premium-character benchmark",
+      "a storyboard or visual-treatment proof",
+      "a publishable or scheduled social asset"
+    ],
+    "why": "Technical validity and identity consistency do not establish campaign quality, factual-audio QA, accessibility, visual-story coverage, or owner approval."
+  },
+  "next_step": "After an operator supplies a brief and selects this optional presenter route, create an asset-graph job that records the treatment decision, caption/composition plan, source hashes, cost attribution, task-specific QA, and human promotion decision."
+}
