@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-05 — Draft-only, persona-led platform-dependency series package
+
+- **Prepared a reviewable seven-part series instead of bulk-producing unlinked posts.** The new local package contains a proposed title, explicit publication boundary, reader-persona hypothesis with research gaps, source notes, a complete part map, and an expanded local pillar candidate that points to the six prepared spokes.
+- **Kept the writing people-first and evidence-bounded.** The pillar candidate cites current Google documentation only for crawl/index/serve and people-first-content mechanics; it makes no ranking, conversion, platform-fee, contact-right, pricing, or legal promise. It does not alter the live pillar or create a taxonomy term.
+
 ## 2026-09-05 — Platform-dependency draft metadata is restored without weakening release gates
 
 - **Completed the six missing local draft packages.** Each platform-dependency draft now has a source-bound `brief.md`, structural `seo-check.json`, and its cluster-plan category/tag/keyword classification. The local metadata no longer prevents a validation run.

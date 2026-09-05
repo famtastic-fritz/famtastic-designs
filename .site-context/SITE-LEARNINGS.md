@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A persona can focus a draft without pretending to be customer research
+
+- Observation: the active platform-dependency work has a clear behavioral
+  audience but no interview corpus or query analytics. Treating a fictional
+  persona as a proven customer would create the same false certainty as an
+  unsupported performance claim.
+- Guidance: use a plainly labeled provisional persona to keep the writing
+  consistent—goals, friction, behaviors, and editorial implications—then list
+  the research needed to validate it. A persona-led draft may be useful for
+  review, but it remains draft-only until sources, links, visuals, series
+  taxonomy, and owner approval are complete.
+
 ## 2026-09-05 — Default local metadata, not editorial architecture
 
 - Observation: six complete platform-dependency drafts were unable to enter a

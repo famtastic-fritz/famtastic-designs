@@ -49,6 +49,11 @@ workaround.
    only. Do not publish. The remaining intentional blocker is the platform-
    dependency arc's series/title/order and complete manifest facts: do not
    assign the drafts to an unrelated existing series or remove that gate.
+   A separate review-only series package now lives at
+   `marketing/blog/series-drafts/platform-dependency/`; it has a proposed
+   title, provisional reader persona, current Google-source notes, and a
+   pillar revision candidate. It is not the Drupal manifest and must not be
+   treated as publication authority.
 2. **HeyGen lane:** Take A exists under `marketing/creative/heygen/`; Take B
    had just been submitted when the session ended. Inspect provider status and
    save its actual receipt/render before treating it as complete. Do not post
