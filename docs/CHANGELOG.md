@@ -12,9 +12,24 @@
   the bounded timeout. This prevents two concurrent generic workers from
   sending the same candidate at once; it does not broaden any mail authority.
 - Focused PHP lint and the 91-test/462-assertion unit suite pass. The isolated
-  fresh Drupal installer still stops before module enable on an existing PHP
-  8.5 inheritance fatal in `BookingRequestController`, so the new synthetic
-  runtime script is staged but not yet executed through that harness.
+  original fresh-install blocker was the inherited PHP 8.5 `$configFactory`
+  collision, now repaired in the booking controllers. The full fresh-install
+  harness still needs a project-local Composer vendor tree; copied vendor trees
+  embed their original Drupal root and cannot serve as a relocation substitute.
+
+## 2026-09-05 — Verified revenue-loop completion gates tightened
+
+- Website Commerce now carries the captured per-SKU `famtastic.offer-contract.v1`
+  snapshot into fulfillment and fails closed if it is absent, so later catalog
+  edits cannot silently rewrite a paid order's scope.
+- Added the account-owner payment-handoff controls in the Growth portal and a
+  first-party `/pay/:organization/:siteKey` consumer. QR-only remains usable;
+  an outbound destination and `opened` event exist only when the owner supplied
+  an optional fallback. None of these events represents payment or revenue.
+- The isolated payment-handoff HTTP acceptance now passes from a fresh Drupal
+  install, including update 8055, authorization/isolation, QR/Cash App/HTTPS
+  validation, and explicit non-purchase semantics. No provider, charge, send,
+  deployment, or live customer action occurred.
 ## 2026-09-05 — Public website research and request-continuation clarity
 
 - Normalized Drupal-owned public `/web` CTA paths to their frontend routes

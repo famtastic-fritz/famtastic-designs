@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A captured checkout contract must outlive the catalog
+
+- Observation: a checkout can save the exact offer contract it displayed while
+  fulfillment accidentally re-reads mutable product terms. That turns a later
+  catalog edit into an invisible change to a paid customer's evidence.
+- Guidance: copy the checksummed checkout-time contract into the fulfillment
+  snapshot and fail closed when any selected SKU lacks it. Payment-handoff QR
+  configurations must also work without an outbound URL; only render/open a
+  link when the owner has supplied that optional fallback.
+
 ## 2026-09-05 — A freshness alert must be a record before it is a message
 
 - Observation: a broad lifecycle worker can see an overdue request or project
