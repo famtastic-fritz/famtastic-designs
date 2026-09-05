@@ -1,5 +1,31 @@
 # Product changelog
 
+## 2026-09-05 — Reconnected and locally proved the reusable multi-format campaign-video system
+
+- **Recovered the interrupted creative build instead of starting a second video
+  stack.** The shared `marketing/video/src/system/` kit now has a real,
+  source-backed first configuration at
+  `marketing/video/src/drops/platform-dependency.ts`, registered as
+  `PlatformDependency-9x16`, `PlatformDependency-1x1`, and
+  `PlatformDependency-16x9`. One declarative scene list drives all three
+  aspect ratios; it changes typography, safe areas, layout, and plate bindings
+  by format rather than cropping a single master.
+- **Rendered a complete local proof.**
+  `campaigns/own-website-vs-rented-platforms/videos/platform-dependency-9x16.mp4`
+  is a 25-second, 1080x1920 h264 render. It uses an aspect-specific plate hook,
+  split, checklist, exact-scope offer card, and outro. The $199 Website Launch
+  scope and separate $99 business-email disclosure come directly from
+  `backend/config/famtastic-products.json`; the final purchase destination was
+  freshly checked to HTTP 200 before rendering.
+- **QA fixed a real mobile presentation fault.** The renderer had burned a full
+  UTM URL into the signature, which overflowed a portrait safe area. The
+  actual exact URL remains the click target; the frame now displays the compact
+  human-readable origin and path (`famtasticdesigns.com/buy/`). Still proofs of
+  the hook, checklist, and offer card were rendered and visually inspected in
+  9:16, 1:1, and 16:9.
+- **Boundary:** this is a local creative proof only. It has not been uploaded,
+  scheduled, posted, deployed, or represented as channel delivery.
+
 ## 2026-09-05 — Tier-2 cheap image proof + reusable prompt library for the platform-dependency series
 
 - **Built a 19-prompt reusable library** at `marketing/creative/plates/prompt-library.json`

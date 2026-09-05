@@ -1365,3 +1365,19 @@ Permanent rules:
   and recreates), never an in-place edit. Prove the swap by comparing the
   SHA-256 of `/uploads/<...>.mp4` inside the `postiz` container against the local
   file — the manifest path alone does not prove what was uploaded.
+## 2026-09-05 — A reusable render system is not real until its compositions render
+
+- Observation: the interrupted Remotion work had a substantial generic system
+  under `marketing/video/src/system/`, but no composition imported it. It could
+  look complete in source while having no route through `src/root.tsx` and no
+  artifact a reviewer could inspect.
+- Guidance: a reusable video system has reached a real stopping point only when
+  at least one source-backed configuration is registered, its three intended
+  aspect ratios bundle, and representative stills have been visually checked.
+  Rendering only a first frame is insufficient; check a content scene and an
+  offer/CTA scene too.
+- Observation: preserving raw UTM parameters in a rendered signature overflowed
+  the 9:16 safe area. Keep the exact verified URL as the destination, but show
+  only its human-readable origin and path in on-frame type.
+- Boundary: local output is not a platform upload, scheduled post, or delivery
+  proof. Record each state separately.
