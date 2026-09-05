@@ -1,5 +1,77 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — A capability absent from the first file agents read does not exist
+
+A campaign video shipped with no branding because it was rendered by an `ffmpeg`
+build that has neither `drawtext` nor `subtitles`. At that moment Photoshop 2026
+was **running on the same machine with a live MCP bridge attached**, and eighteen
+Adobe applications were installed on a paid subscription.
+
+The agent was not careless. It consulted `marketing/providers.json`, which
+`CLAUDE.md` mandates as the first read before choosing a creative provider. That
+file carried seven Adobe rows and marked **every one of them pending**, because
+it described only the Adobe *cloud APIs* (Firefly Services, Photoshop API, PDF
+Services, Frame.io) and never mentioned the *desktop applications under local MCP
+control*, which need no entitlement at all. Reading "Adobe pending", the agent
+correctly reached for something else.
+
+`docs/marketing/ADOBE_SUITE_CONNECTION_MAP_2026-08-13.md` had said Photoshop was
+live for three weeks. Being right in the second document did not help, because
+the decision was made from the first one.
+
+**Guidance.** When a capability is proven, register it in the file agents are
+*required* to read first, with its access path, its preconditions, and its known
+bugs — not only in the topic document. A registry entry is a routing decision,
+not a description. Two further rules fell out of this:
+
+- A `*_pending` status on a cloud API says nothing about the desktop application
+  of the same name. Record the two surfaces separately.
+- Never let a silent fallback substitute a weaker tool. The ffmpeg path produced
+  output that looked finished and was unusable. A missing capability must fail
+  loudly, not degrade quietly.
+
+## 2026-09-04 — A GUI application may not sit in a pipeline's critical path
+
+Owner note: Premiere is known to freeze. Both Adobe bridges drive a *live*
+application and inherit every failure mode it has — hangs, modal dialogs,
+unresponsive waits with no timeout.
+
+**Guidance.** Remotion (headless, deterministic, local, free) is the default for
+any video that is produced more than once or on a schedule. Adobe earns the
+one-off hero pieces, the finishing, the colour and the audio, where a human is
+watching and a freeze is survivable. Bound every Adobe MCP call with a timeout
+and a retry limit; on exhaustion report `BLOCKED`, never `failed` — a frozen app
+produces an *unmeasured* result, not a bad one, and conflating the two is how a
+gate starts failing good work.
+
+## 2026-09-04 — Unsourced statistics live in drafts long after the live page is clean
+
+An ad-writing pass flagged "74%" and "40%" figures in the platform-dependency
+pillar. Checking production first: the live post (nid 158) is a 419-word rewrite
+containing no percentage at all, and no published title carries a percentage or a
+competitor name. **Nothing unsourced had reached customers.**
+
+The figures were in the campaign *source draft* under
+`marketing/campaigns/<slug>/articles/`, along with a title claiming "30% of Your
+Revenue". That file is publishable input, so the claims were latent rather than
+harmless. They were replaced with the mechanism argument — VOICE.md's actual
+signature move, and true without needing a citation.
+
+**Guidance.** Check production before reporting a live claims defect; a draft
+finding and a live finding are different severities and the difference is one
+`curl`. Then fix the draft anyway, because the draft is what gets published next.
+Two thirds of this repo's percentage matches were CSS gradient stops
+(`rgba(7,9,7,0.78) 74%`) — grep for `\d+%` will lie to you.
+
+**Still open, needs an owner decision:**
+`marketing/campaigns/cost-is-not-the-reason/articles/beauty-stylist-guide-escape-booksy-fees.md`
+names a competitor directly and states their subscription price and commission
+range as fact, plus an unsourced "80%+ of your bookings come from repeat clients".
+BRAND.md's stance is educate, never compete, and the cluster plan already ruled
+that competitor rates must be described as a generic market *pattern*, never
+quoted as a FAMtastic claim. Unpublished. Not rewritten unilaterally because the
+whole article is built on that framing.
+
 ## 2026-09-04 — Verify the runtime and the delivery separately
 
 The YouTube retry source repair (`ea5db55`) compiled, passed focused transient and HTTP-400 tests, and is now the healthy local Postiz image. That establishes retry mechanics, not delivery. The existing 9:00 AM ET scheduled post is the first legitimate provider-side proof point; inspect its resulting record rather than reporting success early. Separately, frontend commit `a05c7c60` is live and browser-proven at both public hostnames. The two facts must not be conflated.
