@@ -360,7 +360,7 @@
     {
       "drop_id": "drop-06",
       "content_id": "drop-06",
-      "scheduled_time": "2026-09-04T15:55:00-04:00",
+      "scheduled_time": "2026-09-05T09:00:00-04:00",
       "channels": [
         "youtube",
         "tiktok",
@@ -381,14 +381,14 @@
       "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/06-gmail-linktree-blog-recut-9x16.mp4",
       "drop_number": 6,
       "provider_ids": {
-        "postiz_draft_id": "cmtne6hg80008o17bkd0u7k13"
+        "postiz_draft_id": "cmtnmp5sc000lo17bs8c2v40i"
       },
       "evidence": [
         {
           "kind": "postiz_draft_queued",
-          "at": "2026-09-04T20:13:59Z",
-          "postiz_post_id": "cmtne6hg80008o17bkd0u7k13",
-          "date_utc": "2026-09-04T19:55:00.000Z",
+          "at": "2026-09-05T00:12:27Z",
+          "postiz_post_id": "cmtnmp5sc000lo17bs8c2v40i",
+          "date_utc": "2026-09-05T13:00:00.000Z",
           "integrations": [
             "youtube",
             "tiktok",

@@ -1,5 +1,55 @@
 # Product changelog
 
+## 2026-09-04 (late) — YouTube upload SSL failure root-caused; drop-06 built from a real blog post
+
+- **The YouTube `ERR_SSL_SSL/TLS_ALERT_BAD_RECORD_MAC` failure is not a network defect.**
+  Reproduced the exact failing request from inside the `postiz` container with a raw Node
+  `https` client — a 20MB body to
+  `youtube.googleapis.com/upload/youtube/v3/videos?part=id&part=snippet&part=status&notifySubscribers=true&uploadType=multipart`,
+  three times as `application/octet-stream` and twice as the byte-identical
+  `multipart/related` shape with the same `x-goog-api-client` header. **5/5 succeeded**
+  (HTTP 401 as expected from a deliberately bad token, full 20,971,799 bytes transferred,
+  no TLS alert). MTU is a uniform 1500 across host `en0`, `bridge0` and container
+  `eth0`/`eth1` — there is no MTU mismatch to fix. A control POST to `postman-echo.com`
+  did throw `BAD_RECORD_MAC` once at 653ms, which identifies the fault as intermittent
+  path-level packet corruption, not a property of large uploads or of the Google endpoint.
+- **What makes a transient blip permanent is Postiz's retry policy, and that is the real bug.**
+  Read live from drop-05's stored error payload and the running container's source:
+  (1) gaxios' `retryConfig` lists `httpMethodsToRetry: [GET, HEAD, PUT, OPTIONS, DELETE]` —
+  POST is excluded, so the upload is never retried at the HTTP layer;
+  (2) `libraries/nestjs-libraries/src/integrations/social.abstract.ts:173` `runInConcurrent()`
+  catches *any* error and rethrows `BadBody`, which Temporal stores as
+  `{"type":"bad_body","nonRetryable":true}` — a TLS blip is permanently classified as a
+  malformed request; (3) `social/youtube.provider.ts:433` `post()` fetches the media with
+  `axios({responseType:'stream'})` and hands that stream to `youtubeClient.videos.insert()`,
+  so the body is consumed and could not be retried even with correct classification. A real
+  fix is a resumable upload or a per-attempt media re-fetch. **Not patched** — it is a source
+  change to a pinned local Postiz image and belongs in its own reviewed change.
+- **YouTube has still never published**: live DB counts across the last 2 days are
+  youtube 0 PUBLISHED / 3 ERROR / 6 QUEUE / 4 DRAFT, while facebook, instagram-standalone
+  and x all have real PUBLISHED rows. drop-05 read live: facebook PUBLISHED, tiktok ERROR
+  ("No Post"), youtube ERROR (the SSL failure above).
+- **Added drop-06 to `cost-is-not-the-reason`, built from the real blog post**
+  `why-running-business-on-gmail-and-linktree-costs-revenue`: script written from that
+  post's actual thesis, narrated with edge-tts (`en-US-ChristopherNeural`, `--rate=+25%`),
+  captions from edge-tts' own word-timed SRT, rendered to
+  `marketing/campaigns/cost-is-not-the-reason/videos/06-gmail-linktree-blog-recut-9x16.mp4`
+  (1080x1920 h264+aac, 62.67s, 5,061,274 bytes). Staged as 4 DRAFTs for 2026-09-05T13:00:00Z.
+  **Not armed** — stage 2 (`FAMTASTIC_MARKETING_PUBLISH=true ... --schedule`) is the human
+  gate and sends to four live public accounts.
+- **Local ffmpeg cannot burn text.** `/opt/homebrew/bin/ffmpeg` 9.0 is built without
+  libass/libfreetype: both `subtitles` and `drawtext` are missing filters. Captions, title
+  and CTA are rendered to transparent PNGs with Pillow and composited with `overlay`. Use
+  that approach or `brew install ffmpeg-full`; swapping the pinned ffmpeg was deliberately
+  avoided.
+- **Caught and fixed a link defect introduced in this session's own creative:** the video's
+  burned-in CTA and the drop's facebook/instagram copy carried
+  `famtasticdesigns.com/web/packages/web-basics` (404). It came from a stale cached fetch of
+  the blog page; a cache-busted re-fetch confirms the live post is correct. Copy fixed in
+  commit 2c8d8e74; the burned-in URL required a re-render, and the drop was hard-deleted and
+  re-added so the Postiz drafts carry the corrected upload (media is uploaded at
+  draft-creation time). Verified `/web/packages/web-basics` → 404, `/packages/199-quick-start` → 200.
+
 ## 2026-09-04 (later session 4) — Publish pipeline was silently orphaning posts from the series architecture
 
 - Defect: this blog is series-first — `blog_post` carries `field_blog_series`

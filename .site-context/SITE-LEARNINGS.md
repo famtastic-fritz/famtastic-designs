@@ -1,5 +1,53 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 (late) — A transient network fault became a permanent failure, and a stale read almost became a false defect report
+
+- Observation: every YouTube publish attempt has failed, most recently with
+  `ERR_SSL_SSL/TLS_ALERT_BAD_RECORD_MAC` during the multipart upload, which
+  read like a colima/Docker MTU or TLS-path defect. It is not. The exact
+  request — 20MB, `multipart/related`, same URL and `x-goog-api-client`
+  header — was replayed five times from inside the same `postiz` container
+  and succeeded five times out of five, full body transferred, clean HTTP
+  401 from the deliberately-bad token. MTU is a uniform 1500 host/VM/container.
+  A control POST to an unrelated host did throw the same TLS alert once,
+  which is the actual signature: intermittent packet corruption on the path.
+  Guidance: before accepting a stack-trace error string as the root cause,
+  replay the exact request shape in isolation. An error that names TLS is
+  not proof the TLS configuration is wrong — here the network was healthy
+  and the error was real but transient.
+- Observation: what turned one transient blip into a permanently failed post
+  is retry policy in three places, none of them the network. gaxios does not
+  retry POST (`httpMethodsToRetry` excludes it); Postiz's
+  `social.abstract.ts runInConcurrent()` converts *any* caught error into a
+  non-retryable `BadBody`, so Temporal records a TLS blip as a malformed
+  request and never retries; and `youtube.provider.ts post()` streams the
+  media body, so the body is consumed and cannot be retried even if
+  classification were fixed.
+  Guidance: for any upload path, ask what happens on a *transient* failure,
+  not just a rejected one. A pipeline that classifies every error as
+  non-retryable will convert normal internet flakiness into permanent
+  content loss, and the symptom will look like a provider or config bug.
+- Observation: a video was scripted from a blog post fetched at the start of
+  the session. That fetch returned a stale cached copy still carrying the
+  `/web/packages/web-basics` links this project fixed earlier the same day,
+  so the dead URL was baked into both the ad copy and the video's burned-in
+  CTA card. A cache-busted re-fetch showed the live post was correct all
+  along — the post was never broken, and reporting it as broken would have
+  been a false defect against work that was already right.
+  Guidance: this is the Measurement Discipline rule in practice — before
+  reporting a defect, ask what would have to be true for it to be a
+  measurement artifact, and re-check that first. For live pages that means
+  a cache-busted re-fetch, not the response already sitting on disk.
+- Observation: the bad URL in the video could not be caught by any existing
+  QA. `scripts/qa-content-links.py`, copy review, and the campaign CLI's own
+  validation all read text; a URL burned into video pixels is invisible to
+  every one of them, and the media is uploaded to Postiz at draft-creation
+  time, so fixing the file on disk afterwards leaves the already-created
+  drafts pointing at the bad render.
+  Guidance: any URL that will be burned into a video gets curled before the
+  render, and a corrected render requires re-creating the drop
+  (`--delete-drop --hard` then `--add-drop`), not just replacing the file.
+
 ## 2026-09-04 — A new write path must reproduce the schema the old one established, not just the fields it happens to think about
 
 - Observation: `scripts/publish-blog-draft.py` and
