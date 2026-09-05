@@ -313,6 +313,47 @@
         "Inter is available on Adobe Fonts; activating it would make Photoshop output match the live site exactly.",
         "Space Grotesk is not on Adobe Fonts, but SpaceGrotesk-{Regular,SemiBold,Bold}.woff2 already exist in famtastic-hosting/public/fonts/ and only need conversion to OTF plus a user-space install."
       ]
+    },
+    {
+      "id": "superdesign",
+      "purpose": [
+        "UI and page design judgement",
+        "design-system extraction from a URL",
+        "presentations",
+        "marketing graphics",
+        "design variant comparison across models"
+      ],
+      "status": "skill_installed_cli_login_required",
+      "automation": "agent_skill_plus_remote_cli",
+      "secret_env": [],
+      "access": ".agents/skills/superdesign (installed 2026-09-05 via `npx skills add superdesigndev/superdesign-skill`)",
+      "requires": "`npx --yes @superdesign/cli@latest login` - an interactive account login the owner must complete; no agent may authenticate.",
+      "notes": [
+        "SECURITY: the installer's own assessment reported Snyk 'Critical Risk' and one Socket alert. The installed skill is 180 KB of markdown with no executable code; the risk is what it INSTRUCTS - running `npx --yes @superdesign/cli@latest` on every use, which fetches and executes an always-latest remote npm package with full agent permissions. Details: https://skills.sh/superdesigndev/superdesign-skill",
+        "Owner-requested install, 2026-09-05. Reported before use rather than after.",
+        "Complements rather than replaces the Photoshop path: famtastic-social-frame.jsx renders exact, deterministic, on-brand frames at zero marginal cost. Reach for superdesign for exploration, variants and design judgement, not for the final campaign frame."
+      ]
+    },
+    {
+      "id": "openart",
+      "purpose": [
+        "premium campaign imagery",
+        "gpt-image-2 access without a direct OpenAI project"
+      ],
+      "status": "proven_route_transport_not_connected_this_session",
+      "automation": "mcp_when_connected",
+      "secret_env": [
+        "OPENART_CLIENT_ID",
+        "OPENART_REFRESH_TOKEN"
+      ],
+      "access": "OpenArt MCP server (not attached to this session); owner holds an OpenArt account",
+      "proof": "marketing/campaigns/and-if-it-is-rattler-lifers/ - gpt-image-2 via OpenArt MCP, one 2K 16:9 and one 2K 4:5 image, 315 OpenArt credits. Evidence: prompts.json, evidence/run-ledger.json, evidence/visual-review.json, evidence/browser-results.json, image-routing.json.",
+      "notes": [
+        "This provider was MISSING FROM THE REGISTRY ENTIRELY while a completed, evidenced production run using it already existed in the repo. Same failure class as the Adobe rows: the capability was real, the routing table did not know.",
+        "Transport is an MCP server not attached to every session. A missing tool here is a transport gap, not a missing capability - do not record it as unavailable.",
+        "SAME MODEL WITHOUT IT: image-routing.json lists openai-image-api-gpt-image-2 as a same-model alternative, and a key already sits in the macOS Keychain under service 'FAMtastic.OpenAI.Image'. Prefer the direct API when OpenArt credits are the only thing OpenArt adds.",
+        "marketing/.env.example names OPENART_CLIENT_ID and OPENART_REFRESH_TOKEN; no marketing/.env exists in the working tree."
+      ]
     }
   ]
 }

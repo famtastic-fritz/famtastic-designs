@@ -85,6 +85,27 @@ solid.
 | One-off hero video, finishing, colour, audio | Premiere / After Effects / Audition | $0 — subscription |
 | Background plates, b-roll, texture | **Gemini Flash Lite** | ~$0.0336/image |
 | Presenter / avatar anchor | **HeyGen** | credits — premium tier |
+| Design exploration, variants, design-system extraction from a URL, decks | **superdesign** skill | account login required |
+
+**superdesign vs the Photoshop path.** They are not competitors. `famtastic-social-frame.jsx`
+renders exact, deterministic, on-brand frames at zero marginal cost and is the
+right tool for a final campaign asset. Reach for superdesign when you need design
+*judgement* — exploring directions, comparing variants across models, pulling a
+design system off a reference URL, or building a deck. Bring what it finds back
+into the deterministic renderer; do not ship its output as the campaign frame.
+
+Two caveats: it needs an interactive `npx --yes @superdesign/cli@latest login`
+that only the owner can complete, and its install carried a Snyk "Critical Risk"
+rating — the skill itself is markdown with no executable code, but it instructs
+you to execute an always-latest remote npm package with full permissions. See the
+`superdesign` row in `marketing/providers.json`.
+
+**gpt-image-2 has two routes.** OpenArt MCP is *proven* in this repo
+(`marketing/campaigns/and-if-it-is-rattler-lifers/`, 315 credits) but its MCP
+transport is not attached to every session — that is a transport gap, not a
+missing capability. The same model is reachable directly through the OpenAI Image
+API with a key already in the macOS Keychain under `FAMtastic.OpenAI.Image`.
+Prefer the direct route when OpenArt credits are the only thing OpenArt adds.
 
 **Never** burn text with `ffmpeg drawtext` (the local build lacks it) and never
 silently fall back to a weaker tool — that silent fallback is what shipped the

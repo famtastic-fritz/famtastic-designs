@@ -62,6 +62,24 @@ updated, say so explicitly in the session report rather than skipping silently.
   command, duration, cost status, hashes, QA, and approval state in the same
   Build DNA record before handing a media artifact to a customer, campaign, or
   Site Studio.
+- For ANY branded visual asset — campaign stills, ads, blog heroes, social
+  graphics — use `.agents/skills/famtastic-creative-studio/SKILL.md`. It carries
+  the tool-routing table (which tool for which job and what each costs), the five
+  campaign palettes, the layout archetypes, the concept objects, and the bugs not
+  worth rediscovering. Never burn text into an image with `ffmpeg drawtext`, and
+  never let a missing capability degrade silently into a weaker tool — that is
+  what shipped an unbranded campaign video on 2026-09-04.
+- The `superdesign` skill (`.agents/skills/superdesign/`) is for design
+  *judgement*: exploring directions, comparing variants across models, extracting
+  a design system from a reference URL, and decks. Bring its results back into
+  the deterministic Photoshop renderer; do not ship its output as a final
+  campaign frame. It requires an owner-completed interactive login and carries a
+  Snyk "Critical Risk" rating on its remote CLI — see the `superdesign` row in
+  `marketing/providers.json` before using it.
+- A `*_pending` or missing row in `marketing/providers.json` is not proof a
+  capability is absent. Adobe desktop and OpenArt were both real, proven and
+  unregistered. Check the registry, then the Keychain, then authenticated CLI
+  dotfiles, before concluding anything is unavailable.
 - For marketing strategy, demand generation, blog series, SEO content, FAQs,
   CTAs, product explanations, or pricing recommendations, read
   `docs/DEMAND_ENGINE_DOCTRINE.md` and use
