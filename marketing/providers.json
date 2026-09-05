@@ -490,6 +490,22 @@
         "GENUINELY NEW, and the reason to keep this install: `break` renders a chosen component in every state and scenario on a temporary page and stress tests it. Nothing else installed does that, and the customer portal has many states. `variant` and `explain-interface` are also unduplicated.",
         "Pairs with the existing hard gate scripts/validate-client-portal-design-dna.mjs, which mechanically enforces the single-glow rule and 44px touch targets. The skill reviews; the script gates. The script wins."
       ]
+    },
+    {
+      "id": "repo_hygiene_skills",
+      "purpose": [
+        "catch scope creep in a diff",
+        "reconstruct why code exists before changing it"
+      ],
+      "status": "installed_reference_only",
+      "automation": "agent_skill",
+      "secret_env": [],
+      "access": ".agents/skills/{scope-creep-detector,commit-archaeologist} (installed 2026-09-05 from Shubhamsaboo/awesome-llm-apps agent_skills/)",
+      "notes": [
+        "Both scanned Safe with 0 alerts. Both run entirely locally.",
+        "Added because this session hit exactly the problems they solve: four agents wrote to one repo concurrently, and a story-seed file that one agent had deliberately deleted was briefly restored by another that had not checked WHY it was gone. commit-archaeologist answers that question before the edit; scope-creep-detector flags files a diff touched that its stated intent did not cover.",
+        "SOURCE ASSESSMENT: awesome-llm-apps is overwhelmingly a curated list of Streamlit/Python example apps and tutorials, not a tool library. Its agent_skills/ directory holds 8 skills; 6 (project-graveyard, thinking-out-loud, advisor-orchestrator-worker, evals, dependency-doctor, self-improving-agent-skills) do not address a FAMtastic gap. Do not bulk-install from it."
+      ]
     }
   ]
 }
