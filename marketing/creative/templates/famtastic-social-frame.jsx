@@ -161,7 +161,10 @@ var FAM_ART_REGIONS = {
  * Average glyph width as a fraction of point size, measured against the faces
  * actually used here: condensed display is narrow, humanist body is not.
  */
-var FAM_CHAR_W = { display: 0.42, body: 0.50, bodyBold: 0.52 };
+// 0.42 underestimated caps-heavy display strings (YOURS, wide O/U/R/S), which
+// let a word cross an extrusion edge and break the 3D read. 0.46 is measured
+// safe for all-caps condensed bold and barely changes normal headlines.
+var FAM_CHAR_W = { display: 0.46, body: 0.50, bodyBold: 0.52 };
 
 function famFitSize(text, maxW, baseSize, kind) {
   var f = FAM_CHAR_W[kind] || FAM_CHAR_W.body;
@@ -1018,13 +1021,22 @@ function famLayoutMonument(doc, F, cfg) {
   famPerspectiveGrid(doc, [0, Math.round(H * 0.46), W, Math.round(H * 0.30)],
                      Math.round(W / 2), Math.round(H * 0.44), 14);
 
+  // Optional headline fills the upper third; without it the slab carries alone.
+  if (cfg.head1) {
+    var mhs = famFitSize(cfg.head1, W - M * 2, Math.round(F[4] * 0.80), "display");
+    famText(doc, cfg.head1, M, Math.round(H * 0.235), mhs, ACTIVE.head, FONT_DISPLAY, -20, "mon-head");
+  }
+
   var bw = Math.round(W * 0.70), bh = Math.round(H * 0.20);
   var bx = M, by = Math.round(H * 0.44);
-  famExtrudeRect(doc, bx, by, bw, bh, Math.round(bw * 0.055),
+  var mdepth = Math.round(bw * 0.055);
+  famExtrudeRect(doc, bx, by, bw, bh, mdepth,
                  famMix(ACTIVE.ground, ACTIVE.head, 0.14), "monument");
 
+  // Fit inside the TOP FACE, not the silhouette - the extrusion depth is not
+  // usable width, and the word ran off the right edge when it was counted.
   var word = cfg.word || "YOURS";
-  var ws = famFitSize(word, bw - Math.round(bw * 0.12), Math.round(bh * 0.82), "display");
+  var ws = famFitSize(word, bw - Math.round(bw * 0.12) - mdepth, Math.round(bh * 0.82), "display");
   famText3D(doc, word, bx + Math.round(bw * 0.06), by + Math.round(bh * 0.70), ws,
             Math.round(ws * 0.035), "monument-word");
 
@@ -1035,8 +1047,11 @@ function famLayoutMonument(doc, F, cfg) {
     famText(doc, body[b], M, Math.round(H * 0.74) + Math.round(bs * 1.45 * b), bs,
             ACTIVE.body, FONT_UI, 0, "mon-b" + b);
   }
-  if (cfg.cta) famPill(doc, M, Math.round(H * 0.74) + Math.round(bs * 1.45 * body.length) + Math.round(H * 0.02),
-                       cfg.cta, Math.max(16, Math.round(BS * 0.74)));
+  if (cfg.cta) {
+    var pillY = Math.round(H * 0.74) + Math.round(bs * 1.45 * body.length) + Math.round(H * 0.02);
+    var ceiling = H - Math.round(H * 0.135) - Math.round(BS * 2.6);
+    famPill(doc, M, Math.min(pillY, ceiling), cfg.cta, Math.max(16, Math.round(BS * 0.74)));
+  }
   famSignature(doc, W, H, M, FS, cfg);
 }
 
