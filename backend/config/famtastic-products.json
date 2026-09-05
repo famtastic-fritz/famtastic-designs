@@ -11,17 +11,18 @@
   },
   "products": [
     {
-      "sku": "FAM-FOOT-199", "type": "service", "title": "Web Basics Bundle — Website Launch", "price": "199.00", "published": true,
-      "summary": "One focused landing-page website with one year of FAMtastic-managed hosting. Includes first-year new-domain registration when needed or connection of an existing customer-owned domain.",
+      "sku": "FAM-FOOT-199", "type": "service", "title": "Starter Mobile Business Foundation", "price": "199.00", "published": true,
+      "summary": "An owned, mobile-first business foundation with a focused website, universal contact path, research-backed proof directions, a growth plan, and one year of FAMtastic-managed hosting.",
       "billing": {"kind": "one_time", "included_period_days": 365, "renewal_sku": "FAM-HOST-999", "domain_renewal_separate": true},
       "eligibility": ["direct", "organic", "campaign", "returning_customer"],
       "entitlements": ["website_service", "hosting_included_year", "domain_choice"], "intake_schema": "web_basics_v1",
-      "fulfillment": {"project_template": "web_basics", "milestones": ["intake", "proof", "revision", "approval", "launch"]},
+      "foundation_modules": ["universal_contact", "social_profile_setup", "research_snapshot", "growth_plan", "mobile_owner_desk", "research_selected_action_path", "payment_handoff_optional"],
+      "fulfillment": {"project_template": "web_basics", "milestones": ["intake", "research", "proof", "selection", "revision", "approval", "owner_desk_provisioning", "launch"]},
       "communications": ["purchase_receipt", "customer_welcome", "staff_sale_alert", "intake_reminders", "launch_confirmation", "renewal_notices"],
-      "portal": ["purchases", "services", "projects", "files", "messages", "domains_hosting", "support", "documentation"],
+      "portal": ["purchases", "services", "projects", "files", "messages", "domains_hosting", "support", "documentation", "growth"],
       "upsells": ["FAM-PAGE-EXTRA", "FAM-COPY", "FAM-BRAND", "FAM-LEAD-AUTOMATION", "FAM-ANALYTICS", "FAM-LOCAL-SEO", "FAM-MAINTENANCE", "FAM-AI-AGENT"],
       "reporting": ["revenue", "acquisition", "conversion", "renewal", "engagement"],
-      "acceptance": ["success", "decline", "abandon", "intake", "entitlements", "notifications", "portal", "refund", "cancellation", "authorization", "mobile"]
+      "acceptance": ["success", "decline", "abandon", "intake", "research", "proof_selection", "entitlements", "notifications", "portal", "owner_desk", "action_path", "refund", "cancellation", "authorization", "mobile"]
     },
     {
       "sku":"FAM-BUSINESS-499","type":"service","title":"Business Website Bundle — Growth Launch","price":"499.00","published":true,

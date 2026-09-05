@@ -72,6 +72,16 @@ final class BookingSiteOwnerService {
     return $this->forCustomer($customerId, $siteKey) ?? throw new \RuntimeException('booking_owner_access_denied');
   }
 
+  /** Returns the provisioned mobile command-center binding for one request. */
+  public function forWebsiteRequest(int $websiteRequestId): ?array {
+    if ($websiteRequestId <= 0) {
+      return NULL;
+    }
+    return $this->database->select('famtastic_booking_site_owner', 'b')->fields('b')
+      ->condition('website_request_id', $websiteRequestId)->condition('status', 'active')
+      ->range(0, 1)->execute()->fetchAssoc() ?: NULL;
+  }
+
   private function binding(string $siteKey): ?array {
     return $this->database->select('famtastic_booking_site_owner', 'b')->fields('b')
       ->condition('site_key', $siteKey)->range(0, 1)->execute()->fetchAssoc() ?: NULL;

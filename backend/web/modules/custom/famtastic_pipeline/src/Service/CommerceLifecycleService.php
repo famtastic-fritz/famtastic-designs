@@ -24,6 +24,7 @@ final class CommerceLifecycleService {
     private readonly CustomerPortalService $portal,
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
+    private readonly BookingSiteOwnerService $bookingSiteOwners,
   ) {}
 
   /**
@@ -202,6 +203,12 @@ final class CommerceLifecycleService {
       $this->database->update('famtastic_project_request')->fields([
         'status' => 'converted', 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id(), 'changed' => $this->time->getRequestTime(),
       ])->condition('id', $request['id'])->execute();
+      // Every converted proof-first website request receives a private,
+      // account-bound mobile command-center key. This does not publish a
+      // booking surface, enable payments, or connect a third party; it only
+      // removes the former manual binding gap after a verified purchase.
+      $siteKey = 'site-' . substr(str_replace('-', '', (string) $request['public_id']), 0, 16);
+      $this->bookingSiteOwners->bindToConvertedRequest($siteKey, (int) $request['id'], 1);
     }
     return ['prospect_id' => (int) $prospect->id(), 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id()];
   }

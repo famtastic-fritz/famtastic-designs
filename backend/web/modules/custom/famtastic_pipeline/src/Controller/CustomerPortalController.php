@@ -238,11 +238,13 @@ final class CustomerPortalController extends ControllerBase {
     $items = [];
     foreach ($definitions as $definition) {
       if (empty($definition['published'])) continue;
-      $items[] = array_intersect_key($definition, array_flip([
+      $item = array_intersect_key($definition, array_flip([
         'sku', 'type', 'title', 'summary', 'price', 'currency', 'billing',
         'included', 'exclusions', 'entitlements', 'intake_schema', 'fulfillment',
         'portal', 'upsells',
       ]));
+      $item['offer_contract'] = $this->offerContractSnapshot((string) $definition['sku']);
+      $items[] = $item;
     }
     return $this->noStore(new JsonResponse(['products' => $items, 'terms' => [
       'version' => $policy['version'], 'status' => $policy['status'],
@@ -304,11 +306,11 @@ final class CustomerPortalController extends ControllerBase {
     $websiteSkus = array_values(array_intersect($skus, ['FAM-FOOT-199', 'FAM-BUSINESS-499']));
     if (count($websiteSkus) > 1) return $this->error('invalid_cart', 422, 'Choose one website bundle per request.');
     if ($websiteSkus) {
+      if (!$websiteRequest) {
+        return $this->error('website_proof_selection_required', 422, 'Start with your business intake and choose an approved website direction before checkout.');
+      }
       if (!in_array((string) ($data['domain_choice'] ?? ''), ['new_domain', 'existing_domain'], TRUE)) {
         return $this->error('domain_choice_required', 422, 'Choose a new domain or connect an existing domain.');
-      }
-      if (empty($data['recurring_authorized'])) {
-        return $this->error('renewal_authorization_required', 422, 'Authorize the disclosed month-13 hosting renewal or contact us for a non-renewing arrangement.');
       }
     }
     $terms = $this->dealRegistry();
@@ -377,6 +379,7 @@ final class CustomerPortalController extends ControllerBase {
       'recurring_authorized' => !empty($data['recurring_authorized']),
       'marketing_opt_in' => !empty($data['marketing_opt_in']),
       'selected_skus' => $skus,
+      'offer_contracts' => array_map(fn(string $sku): array => $this->offerContractSnapshot($sku), $skus),
       'website_request_public_id' => $websiteRequest['public_id'] ?? '',
       'private_offer' => $privateOffer ? ['public_id' => $privateOffer['public_id'], 'sku' => $privateOffer['sku'], 'list_amount_minor' => (int) $privateOffer['list_amount_minor'], 'offered_amount_minor' => (int) $privateOffer['offered_amount_minor'], 'reason' => $privateOffer['reason']] : NULL,
       'grant' => $grantQuote ? array_diff_key($grantQuote, ['id' => TRUE]) : NULL,
@@ -585,5 +588,39 @@ final class CustomerPortalController extends ControllerBase {
   private function dealRegistry(): array {
     $path = dirname(\Drupal::root()) . '/config/famtastic-deal-terms.json';
     return json_decode((string) file_get_contents($path), TRUE, 512, JSON_THROW_ON_ERROR);
+  }
+
+  /**
+   * Produces the exact public/commercial terms used by a checkout attempt.
+   *
+   * This is intentionally derived from the existing canonical product and
+   * deal-term registries. It stops routes, receipts, and fulfillment from
+   * carrying independent hand-maintained feature lists.
+   */
+  private function offerContractSnapshot(string $sku): array {
+    $definitions = $this->productDefinitions();
+    $registry = $this->dealRegistry();
+    $product = $definitions[$sku] ?? [];
+    $deal = $registry['deals'][$sku] ?? [];
+    $snapshot = [
+      'schema' => 'famtastic.offer-contract.v1',
+      'policy_version' => (string) ($registry['policy']['version'] ?? ''),
+      'sku' => $sku,
+      'price' => (string) ($product['price'] ?? ''),
+      'currency' => strtoupper((string) ($product['currency'] ?? 'USD')),
+      'scope_version' => (int) ($deal['scope_version'] ?? 0),
+      'promise' => (string) ($deal['promise'] ?? $product['summary'] ?? ''),
+      'deliverables' => array_values((array) ($deal['deliverables'] ?? [])),
+      'included' => array_values((array) ($deal['included'] ?? $product['included'] ?? [])),
+      'not_included' => array_values((array) ($deal['not_included'] ?? $product['exclusions'] ?? [])),
+      'renewal' => $deal['renewal'] ?? NULL,
+      'required_consents' => array_values((array) ($deal['required_consents'] ?? [])),
+      'optional_consents' => array_values((array) ($deal['optional_consents'] ?? [])),
+      'eligibility' => array_values((array) ($product['eligibility'] ?? [])),
+      'fulfillment' => $product['fulfillment'] ?? [],
+      'portal' => array_values((array) ($product['portal'] ?? [])),
+    ];
+    $snapshot['hash'] = hash('sha256', json_encode($snapshot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+    return $snapshot;
   }
 }
