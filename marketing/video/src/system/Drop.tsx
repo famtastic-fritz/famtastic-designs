@@ -15,6 +15,7 @@ import {
   ChecklistScene,
   OfferCardScene,
   PlateScene,
+  PresenterScene,
   SplitScene,
   StatScene,
   StatementScene,
@@ -47,6 +48,8 @@ const SceneBody: React.FC<{ scene: Scene; length: number; ctaUrl: string }> = ({
       return <ChecklistScene scene={scene} length={length} ctaUrl={ctaUrl} />;
     case 'statement':
       return <StatementScene scene={scene} length={length} ctaUrl={ctaUrl} />;
+    case 'presenter':
+      return <PresenterScene scene={scene} length={length} ctaUrl={ctaUrl} />;
     case 'outro':
       return <OutroScene scene={scene} length={length} ctaUrl={ctaUrl} />;
   }

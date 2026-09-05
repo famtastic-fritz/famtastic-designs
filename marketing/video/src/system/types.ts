@@ -64,6 +64,29 @@ export type Scene =
   | (Base & { kind: 'checklist'; head: string[]; items: string[]; note?: string })
   /** Type alone on the ground, or over a plate. The turn of the argument. */
   | (Base & { kind: 'statement'; head: string[]; plate?: Plate })
+  /**
+   * THE PREMIUM ANCHOR, on screen.
+   *
+   * A HeyGen presenter take is the one bought asset in a campaign, and under
+   * CHEAP_PRODUCTION_ECONOMICS_V1 it is also the style REFERENCE the free tiers
+   * are graded to. Playing it inside the same kit is what makes the cheap tiers
+   * read as the same piece rather than as a montage.
+   *
+   * Takes are rendered 1920x1080. In 16:9 that is full bleed; in 9:16 and 1:1 a
+   * landscape figure is framed in a bordered panel on the brand ground rather
+   * than centre-cropped, because cropping a head-and-shoulders take to portrait
+   * throws away the composition the take was paid for.
+   */
+  | (Base & {
+      kind: 'presenter';
+      /** Path under public/, e.g. 'presenter/take-a.mp4'. */
+      src: string;
+      head?: string[];
+      /** Force full bleed in every aspect. Default: only 16:9. */
+      full?: boolean;
+      /** Drop the take's own audio (it normally carries the VO). */
+      muted?: boolean;
+    })
   /** Mark, promise, CTA pill, terms. Always last. */
   | (Base & { kind: 'outro'; head: string[]; cta: string; terms?: string });
 

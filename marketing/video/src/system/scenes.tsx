@@ -11,7 +11,7 @@
  * swap to art shot in the target aspect. A crop cannot do any of that.
  */
 import React from 'react';
-import { AbsoluteFill, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, OffthreadVideo, staticFile, useCurrentFrame } from 'remotion';
 import { fitLines, fitSize, safeBox } from './formats';
 import {
   BandCut,
@@ -418,6 +418,86 @@ export const StatementScene: React.FC<SceneProps<'statement'>> = ({ scene, lengt
           shadow={Boolean(scene.plate)}
         />
       </div>
+    </AbsoluteFill>
+  );
+};
+
+/* --------------------------------------------------------------- presenter */
+
+/**
+ * PRESENTER — the bought anchor, played inside the kit.
+ *
+ * Takes render 1920x1080. Full bleed in 16:9. In 9:16 and 1:1 the take sits in a
+ * bordered panel on the brand ground: a head-and-shoulders composition
+ * centre-cropped to portrait throws away the framing the credits paid for, and
+ * a panel reads as deliberate where a crop reads as an accident.
+ */
+export const PresenterScene: React.FC<SceneProps<'presenter'>> = ({ scene, length }) => {
+  const { t, f } = useKit();
+  const box = safeBox(f);
+  const full = scene.full || f.columns === 2;
+  const g = t.p.ground;
+  const ground = `rgb(${g[0]},${g[1]},${g[2]})`;
+
+  const video = (
+    <OffthreadVideo
+      src={staticFile(scene.src)}
+      muted={scene.muted ?? false}
+      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 35%' }}
+    />
+  );
+
+  if (full) {
+    return (
+      <AbsoluteFill style={{ backgroundColor: ground }}>
+        <AbsoluteFill>{video}</AbsoluteFill>
+        {scene.eyebrow ? (
+          <div style={{ position: 'absolute', left: box.x, top: box.y }}>
+            <Eyebrow text={scene.eyebrow} />
+          </div>
+        ) : null}
+      </AbsoluteFill>
+    );
+  }
+
+  // Portrait / square: panel the take, keep its native 16:9 ratio.
+  const panelW = box.w;
+  const panelH = Math.round(panelW * (9 / 16));
+  const panelY = Math.round(box.y + (box.h - panelH) * 0.42);
+  const headSize = scene.head ? fitLines(scene.head, box.w, Math.round(f.type.head * 0.82)) : 0;
+
+  return (
+    <AbsoluteFill style={{ backgroundColor: ground }}>
+      {scene.eyebrow ? (
+        <div style={{ position: 'absolute', left: box.x, top: box.y }}>
+          <Eyebrow text={scene.eyebrow} />
+        </div>
+      ) : null}
+      <div
+        style={{
+          position: 'absolute',
+          left: box.x,
+          top: panelY,
+          width: panelW,
+          height: panelH,
+          overflow: 'hidden',
+          border: `2px solid rgba(${t.p.accent[0]},${t.p.accent[1]},${t.p.accent[2]},0.55)`,
+        }}
+      >
+        {video}
+      </div>
+      {scene.head ? (
+        <div style={{ position: 'absolute', left: box.x, top: panelY + panelH + Math.round(f.type.head * 0.7), width: box.w }}>
+          <Headline
+            lines={scene.head}
+            size={headSize}
+            lead={headSize * 1.04}
+            accentFrom={scene.head.length - 1}
+            at={8}
+            step={10}
+          />
+        </div>
+      ) : null}
     </AbsoluteFill>
   );
 };

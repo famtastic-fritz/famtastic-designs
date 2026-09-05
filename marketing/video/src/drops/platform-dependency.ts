@@ -36,6 +36,20 @@ export const platformDependency: DropConfig = {
       },
     },
     {
+      /*
+       * THE ANCHOR. The one bought asset in this campaign: a HeyGen take of the
+       * existing "FAMtastic Guide" avatar. Under CHEAP_PRODUCTION_ECONOMICS_V1
+       * it is also the style reference the free tiers are graded to, so it plays
+       * inside the kit rather than being bolted on as a separate cut.
+       * Source take: marketing/creative/heygen/renders/take-a-platform-dependency.mp4
+       */
+      kind: 'presenter',
+      seconds: 8,
+      eyebrow: 'Why it matters',
+      src: 'presenter/take-a.mp4',
+      head: ['Own the address', 'customers type.'],
+    },
+    {
       kind: 'split',
       seconds: 5,
       eyebrow: 'The distinction',
