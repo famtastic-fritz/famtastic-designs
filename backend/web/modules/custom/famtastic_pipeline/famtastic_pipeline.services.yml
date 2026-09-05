@@ -150,6 +150,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\MicrositeService
     arguments: ['@database', '@datetime.time']
 
+  famtastic_pipeline.payment_handoffs:
+    class: Drupal\famtastic_pipeline\Service\PaymentHandoffService
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.booking_site_owners']
+
   famtastic_pipeline.booking_requests:
     class: Drupal\famtastic_pipeline\Service\BookingRequestService
     arguments: ['@database', '@datetime.time', '@uuid']

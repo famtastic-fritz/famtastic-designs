@@ -37,6 +37,29 @@
 - Verified locally with the public-flow contract script, portal design-DNA
   validator, production build, and mobile/desktop browser tests using mocked
   API responses. No deployment, payment, or customer communication occurred.
+## 2026-09-05 — Customer-owned payment handoff, not a second checkout
+
+- Added the reusable, organization-scoped `PaymentHandoff` module for Starter
+  sites and Owner Desk. An active organization owner can configure only four
+  deliberate states: disabled, direct Cash App, an existing QR image (with an
+  optional accessible HTTPS fallback), or a generic HTTPS payment link.
+- Public configuration is absent until the owner enables it, and a public
+  render must pass the existing exact converted-request → booking-site →
+  organization boundary. The public model exposes only the handoff destination,
+  label, instructions, and a disclosure that it cannot confirm payment, create
+  an order, or reserve a service.
+  `viewed` and `opened` are anonymous, append-only interaction events—not
+  purchases, payment attempts, or payment verification.
+- Added update `8055`, the owner/private and public handoff APIs, and a fresh
+  SQLite HTTP acceptance test. It exercises owner-role and
+  cross-organization/site-binding isolation, disabled clearing, scheme-less
+  HTTPS normalization, QR/Cash App/generic-link
+  validation, and explicit non-purchase event semantics. No provider call,
+  merchant credential, charge, deploy, or send occurred.
+- Repaired two existing PHP 8.5 module-boot fatals: Booking Request and Booking
+  Availability controllers no longer redeclare ControllerBase's inherited
+  `$configFactory` property as readonly. Their injected setting dependency now
+  has a distinct private name, so the full module can load during acceptance.
 
 ## 2026-09-05 — The films get a home of their own at /watch
 

@@ -18,7 +18,7 @@ final class BookingRequestController extends ControllerBase {
   public function __construct(
     private readonly BookingRequestService $requests,
     private readonly FloodInterface $flood,
-    private readonly ConfigFactoryInterface $configFactory,
+    private readonly ConfigFactoryInterface $bookingConfigFactory,
   ) {}
 
   public static function create(ContainerInterface $container): static {
@@ -90,7 +90,7 @@ final class BookingRequestController extends ControllerBase {
   }
 
   private function enabled(string $siteKey): bool {
-    $enabled = $this->configFactory->get('famtastic_pipeline.settings')->get('booking_request_enabled_sites') ?: [];
+    $enabled = $this->bookingConfigFactory->get('famtastic_pipeline.settings')->get('booking_request_enabled_sites') ?: [];
     return in_array($siteKey, is_array($enabled) ? $enabled : [], TRUE);
   }
 

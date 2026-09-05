@@ -35,6 +35,8 @@ function famtastic_pipeline_schema(): array {
     'famtastic_booking_site_owner' => _famtastic_pipeline_booking_site_owner_schema(),
     'famtastic_booking_request' => _famtastic_pipeline_booking_request_schema(),
     'famtastic_booking_availability' => _famtastic_pipeline_booking_availability_schema(),
+    'famtastic_payment_handoff' => _famtastic_pipeline_payment_handoff_schema(),
+    'famtastic_payment_handoff_event' => _famtastic_pipeline_payment_handoff_event_schema(),
   ];
 }
 
@@ -2800,6 +2802,22 @@ function famtastic_pipeline_update_8054(&$sandbox) {
     }
   }
   return t('Added durable owner-only revenue freshness tasks and atomic generic outbox claim fields. No customer action was sent.');
+/** Adds owner-controlled external payment handoff records without a processor. */
+function famtastic_pipeline_update_8055(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $created = [];
+  foreach ([
+    'famtastic_payment_handoff' => _famtastic_pipeline_payment_handoff_schema(),
+    'famtastic_payment_handoff_event' => _famtastic_pipeline_payment_handoff_event_schema(),
+  ] as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+      $created[] = $table;
+    }
+  }
+  return t('Added owner-controlled external payment handoff storage (@tables). No merchant credentials, charges, or payment verification were added.', [
+    '@tables' => $created ? implode(', ', $created) : 'already present',
+  ]);
 }
 
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */
@@ -2839,6 +2857,46 @@ function _famtastic_pipeline_booking_site_owner_schema(): array {
     'primary key' => ['id'],
     'unique keys' => ['site_key' => ['site_key']],
     'indexes' => ['customer_status' => ['customer_id', 'status'], 'organization_status' => ['organization_id', 'status'], 'website_request' => ['website_request_id']],
+  ];
+}
+
+/** One configuration per customer organization for an external payment destination. */
+function _famtastic_pipeline_payment_handoff_schema(): array {
+  return [
+    'description' => 'Owner-controlled external payment handoff; never a merchant account, payment instrument, or verification record.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'mode' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'disabled'],
+      'destination_url' => ['type' => 'varchar', 'length' => 500, 'not null' => TRUE, 'default' => ''],
+      'qr_image_url' => ['type' => 'varchar', 'length' => 500, 'not null' => TRUE, 'default' => ''],
+      'label' => ['type' => 'varchar', 'length' => 80, 'not null' => TRUE, 'default' => ''],
+      'instructions' => ['type' => 'varchar', 'length' => 240, 'not null' => TRUE, 'default' => ''],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['organization' => ['organization_id']],
+  ];
+}
+
+/** Append-only interaction records for a handoff, explicitly not payment state. */
+function _famtastic_pipeline_payment_handoff_event_schema(): array {
+  return [
+    'description' => 'Anonymous payment-handoff viewed/opened events; not purchase, charge, payment, or fulfillment records.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'payment_handoff_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'event_type' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE],
+      'surface' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'handoff_event_time' => ['payment_handoff_id', 'event_type', 'created'],
+      'organization_time' => ['organization_id', 'created'],
+    ],
   ];
 }
 

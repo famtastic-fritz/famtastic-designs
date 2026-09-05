@@ -25,6 +25,31 @@
   and any optional renewal remain server-controlled account states.
 - Boundary: local mocked-response browser checks do not prove production
   persistence, payment, renewal, or customer delivery.
+## 2026-09-05 — An external payment handoff is an interaction boundary, not commerce evidence
+
+- Observation: a business-owned Cash App URL, existing QR image, or generic
+  payment link can make it easier for a client to leave a Starter site, but it
+  proves none of the facts that Commerce or fulfillment needs. A QR scan cannot
+  be observed by the site at all.
+- Guidance: keep payment-profile configuration organization-scoped and require
+  a verified customer with active `owner` membership. A consumer site composes
+  it only through its existing exact converted-request → booking-site →
+  organization binding; do not create a second site-key or request binding.
+  `viewed` means rendered and `opened` means outbound action requested. Neither
+  event is a payment attempt, purchase, receipt, paid order, booking, service
+  reservation, provider verification, or FAMtastic settlement. Public read
+  stays absent until the owner enables it, and configurations must remain
+  isolated across organizations.
+
+## 2026-09-05 — PHP 8.5 rejects readonly redeclarations of inherited controller properties
+
+- Observation: `ControllerBase` already owns a mutable protected
+  `$configFactory`; declaring a readonly child property with that same name is a
+  fatal during route discovery, stopping the whole custom module before an
+  unrelated route is reached.
+- Guidance: inject a controller dependency under a distinct child-property
+  name. Exercise a full isolated module install in acceptance, not only PHP
+  lint, to catch class-loading failures.
 
 ## 2026-09-05 — Six automated checks, six false results
 
