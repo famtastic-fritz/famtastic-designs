@@ -354,6 +354,26 @@
         "SAME MODEL WITHOUT IT: image-routing.json lists openai-image-api-gpt-image-2 as a same-model alternative, and a key already sits in the macOS Keychain under service 'FAMtastic.OpenAI.Image'. Prefer the direct API when OpenArt credits are the only thing OpenArt adds.",
         "marketing/.env.example names OPENART_CLIENT_ID and OPENART_REFRESH_TOKEN; no marketing/.env exists in the working tree."
       ]
+    },
+    {
+      "id": "ui_ux_pro_max_skills",
+      "purpose": [
+        "design craft reference",
+        "palette and font-pairing exploration",
+        "UX guidelines and accessibility rules",
+        "layout patterns",
+        "chart selection"
+      ],
+      "status": "installed_reference_only",
+      "automation": "agent_skill",
+      "secret_env": [],
+      "access": ".agents/skills/{brand,design,design-system,slides,ui-styling,ui-ux-pro-max,banner-design} (installed 2026-09-05 via `npx skills add nextlevelbuilder/ui-ux-pro-max-skill` - one command, seven skills)",
+      "notes": [
+        "SECURITY: materially safer than superdesign. The five Python scripts import stdlib only (argparse, csv, difflib, hashlib, io, json, math, os, re, statistics, sys, tempfile, urllib.parse for URL parsing). No requests, no subprocess, no os.system, no eval/exec, no sockets. Nothing executes a remote package.",
+        "DOCTRINE RISK, and it is the real one: the `brand` skill auto-activates on branded content, tone of voice, marketing assets and style guides - exactly where FAMtastic's own BRAND.md, VOICE.md and Design DNA live. These skills are reference material, never authority. See AGENTS.md.",
+        "Useful local data: 79 styles, 192 product palettes, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, 22 stacks. Good answer to a variety problem; not a source of positioning or claims.",
+        "ui-styling ships 29 font families (~5.7 MB of TTF) but NOT Inter and NOT Space Grotesk, so it does not close the FAMtastic brand-typography gap."
+      ]
     }
   ]
 }

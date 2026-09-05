@@ -86,6 +86,24 @@ updated, say so explicitly in the session report rather than skipping silently.
   `agent-skills/famtastic-demand-engine/SKILL.md`.
 - Installed `blog-*`, `seo-*`, and marketing skills are supporting references.
   FAMtastic's repository contracts override generic skill guidance.
+- **The installed generic design skills — `brand`, `design`, `design-system`,
+  `slides`, `ui-styling`, `ui-ux-pro-max`, `banner-design`, `superdesign` — are
+  REFERENCE MATERIAL, never authority on FAMtastic's brand.** `brand` in
+  particular auto-activates on "branded content, tone of voice, marketing assets,
+  style guides," which is exactly where FAMtastic's own doctrine lives. When any
+  of them disagrees with `BRAND.md`, `VOICE.md`, Design DNA v1,
+  `docs/marketing/CAMPAIGN_ART_DIRECTION_V1.md`, or the product catalog, the
+  repository wins and the skill is ignored on that point.
+  This is not hypothetical: on 2026-09-04 a generic blog skill's competitor-
+  positioning step was followed and produced brand doctrine the owner had to
+  reject outright — "I'm not trying to compete, I'm trying to educate and grow
+  businesses." Never let a generic skill supply audience, positioning, pricing,
+  claims, or voice. Use them for craft: palettes to explore, font pairings, UX
+  guidelines, layout patterns, accessibility rules.
+  `ui-ux-pro-max` carries genuinely useful local data for this — 192 product
+  palettes, 74 font pairings, 119 UX guidelines, 25 chart types — and its scripts
+  are stdlib-only with no network or shell calls, unlike `superdesign`, which
+  executes an always-latest remote package.
 - The project-shared marketing core lives in `.agents/skills/` and begins with
   `.agents/product-marketing.md`. For marketing, conversion, intake, campaign,
   measurement, or sales-handoff work, read that context and then load only the
