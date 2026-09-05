@@ -451,11 +451,32 @@ export const PresenterScene: React.FC<SceneProps<'presenter'>> = ({ scene, lengt
   );
 
   if (full) {
+    /*
+     * Full bleed puts the take under the shared <Chrome/> brand lock-up, which
+     * the portrait path never has to contend with because the take sits in a
+     * panel below it. Two consequences, both visible in the 16:9 render before
+     * this fix: the eyebrow was drawn at box.y and collided with the wordmark,
+     * and both sat on a bright illustrated office with almost no contrast.
+     *
+     * So the eyebrow clears the lock-up, and a short top scrim gives the whole
+     * lock-up zone something to sit on. The scrim is the palette ground, so it
+     * reads as the film's own surface rather than as a black bar.
+     */
+    const g = t.p.ground;
+    const scrimTo = `rgba(${g[0]},${g[1]},${g[2]},0)`;
+    const scrimFrom = `rgba(${g[0]},${g[1]},${g[2]},0.92)`;
     return (
       <AbsoluteFill style={{ background: ground }}>
         <AbsoluteFill>{video}</AbsoluteFill>
+        <AbsoluteFill
+          style={{
+            background: `linear-gradient(180deg, ${scrimFrom} 0%, ${scrimFrom} ${Math.round(
+              (box.y + f.type.eyebrow * 3.4) / 10,
+            )}%, ${scrimTo} 34%)`,
+          }}
+        />
         {scene.eyebrow ? (
-          <div style={{ position: 'absolute', left: box.x, top: box.y }}>
+          <div style={{ position: 'absolute', left: box.x, top: box.y + Math.round(f.type.eyebrow * 2.6) }}>
             <Eyebrow text={scene.eyebrow} />
           </div>
         ) : null}
