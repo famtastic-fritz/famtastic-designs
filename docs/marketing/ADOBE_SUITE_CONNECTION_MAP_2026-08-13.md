@@ -32,3 +32,44 @@ customer lifecycle state.
 
 The proof gallery at `marketing/adobe-pipeline/proofs/index.html` maps real
 sample artifacts to the corresponding stages in the command-center mockup.
+
+## Verification, 2026-09-04
+
+Re-verified live. The desktop half of this map was accurate and was being
+ignored anyway — see below.
+
+- **Photoshop 2026 MCP: now production-proven, not just discovered.** A complete
+  Design-DNA-compliant 9:16 story frame was composed and exported entirely
+  through the bridge: `marketing/creative/adobe-proofs/cost-is-not-the-reason-story-1080x1920.png`,
+  with the layout retained as `famtastic-story-9x16-template.psd`.
+- **Premiere Pro 2026 MCP: still unproven.** `mcp__premiere-pro__ping` timed out
+  because the application was closed. The bridge requires the app to be running;
+  the disposable edit/export proof named above remains outstanding.
+- **Eighteen Adobe applications are installed**, only Photoshop was running, and
+  only Photoshop and Premiere have bridges. After Effects, Audition, Media
+  Encoder, Illustrator, InDesign, Animate, Character Animator, Lightroom and
+  Acrobat are all paid for and entirely outside agent reach.
+- **Adobe Fonts has never been activated.** `~/Library/Application Support/Adobe/CoreSync/plugins/livetype/.r`
+  is empty. Neither brand face — Inter or Space Grotesk — is installed on this
+  machine, so Adobe-produced artwork currently substitutes Helvetica Neue
+  Condensed and Avenir Next.
+
+### Why the map being right was not enough
+
+On 2026-09-04 a campaign video was assembled with an `ffmpeg` build lacking
+`drawtext`, producing unbranded output, while Photoshop ran idle with a live
+bridge. This document already said Photoshop was live. The failure was upstream:
+`marketing/providers.json` — the file agents are required to read *first* —
+carried seven Adobe rows and marked every one of them pending, because it
+described only the Adobe **cloud APIs**. Agents correctly read "Adobe pending"
+and reached for ffmpeg.
+
+`providers.json` now carries `adobe_photoshop_desktop_mcp`,
+`adobe_premiere_desktop_mcp`, `adobe_desktop_suite_unbridged` and
+`adobe_fonts_typekit`, and `adobe_photoshop_api` is annotated to redirect to the
+desktop path. Operating guidance lives in
+`docs/playbook/RECIPES/ADOBE_CREATIVE_PRODUCTION.md`.
+
+**Rule:** a `*_pending` status on an Adobe cloud API says nothing about the
+desktop application of the same name. The desktop apps need no entitlement — the
+subscription is the entitlement.

@@ -77,6 +77,10 @@
       "secret_env": [
         "ADOBE_PHOTOSHOP_CLIENT_ID",
         "ADOBE_PHOTOSHOP_CLIENT_SECRET"
+      ],
+      "notes": [
+        "CLOUD API ONLY — still entitlement-pending.",
+        "This pending status does NOT mean Photoshop is unavailable: use adobe_photoshop_desktop_mcp, which is proven and needs no entitlement."
       ]
     },
     {
@@ -209,6 +213,85 @@
         "MUAPI_API_KEY"
       ],
       "notes": "Key in OS keychain (service: muapi-cli, account: api-key) - never committed. CLI binary absent; call REST directly: POST https://api.muapi.ai/api/v1/flux-schnell-image (x-api-key header), poll /predictions/{id}/result. Image dims must be multiples of 64 (128-2048). Generator: scripts/muapi-generate-mockups.sh. AI text renders as gibberish - use outputs as layout comps only."
+    },
+    {
+      "id": "adobe_photoshop_desktop_mcp",
+      "purpose": [
+        "text-on-image composition",
+        "9:16 / 1:1 / 16:9 social stills",
+        "branded story frames and campaign cards",
+        "PSD templates with editable text layers",
+        "layer-accurate finishing on generated plates"
+      ],
+      "status": "connected_local_proven",
+      "automation": "local_mcp_bridge",
+      "secret_env": [],
+      "access": "mcp__photoshop-bridge__* (bun run tools/adobe-automation/photoshop-mcp/src/server.ts)",
+      "requires": "Adobe Photoshop 2026 must be RUNNING; the bridge drives the live app via ExtendScript",
+      "proof": "2026-09-04 built and exported marketing/creative/adobe-proofs/cost-is-not-the-reason-story-1080x1920.png end to end",
+      "notes": [
+        "This is the paid desktop subscription, NOT the Adobe cloud API. It needs no entitlement and no client credentials.",
+        "PREFER THIS OVER ffmpeg drawtext for any text burned into an image.",
+        "ASCII-only text: non-ASCII (e.g. the cent sign) either fails with 'Required value is missing' or renders mojibake. Spell out 'cents'.",
+        "ps_create_text takes fontFamily (PostScript name), not font.",
+        "Brand faces Inter and Space Grotesk are NOT installed on this machine; graphics currently fall back to HelveticaNeue-CondensedBold / AvenirNext."
+      ]
+    },
+    {
+      "id": "adobe_premiere_desktop_mcp",
+      "purpose": [
+        "video assembly and timeline editing",
+        "text overlays and lower thirds",
+        "transitions, auto-reframe to 9:16 / 1:1",
+        "export via render queue"
+      ],
+      "status": "installed_bridge_present_app_not_launched",
+      "automation": "local_mcp_bridge",
+      "secret_env": [],
+      "access": "mcp__premiere-pro__* (tools/adobe-automation/premiere-pro-mcp)",
+      "requires": "Adobe Premiere Pro 2026 must be RUNNING; mcp__premiere-pro__ping times out otherwise",
+      "proof": "not yet proven end to end — ping timed out 2026-09-04 because the app was closed",
+      "notes": [
+        "PREFER THIS OVER ffmpeg concat for any multi-clip branded video.",
+        "auto_reframe_sequence produces platform aspect ratios without re-rendering by hand."
+      ]
+    },
+    {
+      "id": "adobe_desktop_suite_unbridged",
+      "purpose": [
+        "After Effects: motion graphics, animated logo stings",
+        "Audition: voiceover cleanup, loudness normalisation, music beds",
+        "Media Encoder: batch transcode to every social spec",
+        "Illustrator: vector logo and blog art production",
+        "InDesign: proposals, lead magnets, multi-page PDFs",
+        "Acrobat: customer-facing PDF finishing"
+      ],
+      "status": "installed_no_mcp_bridge",
+      "automation": "manual_or_scriptable",
+      "secret_env": [],
+      "access": "no MCP bridge yet; After Effects and Illustrator are ExtendScript-scriptable, Media Encoder has a watch-folder CLI",
+      "requires": "paid Creative Cloud subscription (already held)",
+      "notes": [
+        "18 Adobe applications are installed on this machine and only Photoshop is under agent control.",
+        "Media Encoder watch folders are the cheapest next win: drop a file in, get every social aspect ratio out, no bridge needed.",
+        "Audition is the fix for the unusable audio on machine-assembled videos."
+      ]
+    },
+    {
+      "id": "adobe_fonts_typekit",
+      "purpose": [
+        "brand typography for all Adobe-produced artwork"
+      ],
+      "status": "subscription_active_zero_fonts_activated",
+      "automation": "creative_cloud_desktop",
+      "secret_env": [],
+      "access": "~/Library/Application Support/Adobe/CoreSync/plugins/livetype/.r",
+      "proof": "2026-09-04: directory empty — no Adobe Font has ever been activated",
+      "notes": [
+        "Included in the subscription already paid for and currently 100% unused.",
+        "Inter is available on Adobe Fonts; activating it would make Photoshop output match the live site exactly.",
+        "Space Grotesk is not on Adobe Fonts, but SpaceGrotesk-{Regular,SemiBold,Bold}.woff2 already exist in famtastic-hosting/public/fonts/ and only need conversion to OTF plus a user-space install."
+      ]
     }
   ]
 }
