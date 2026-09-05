@@ -22,7 +22,7 @@ export default function PaymentHandoffSettings({ organization }) {
     <p>Show your own Cash App, existing QR image, or HTTPS payment link on an eligible branded site. FAMtastic does not collect, verify, or settle these payments.</p>
     <form onSubmit={save} className="portal-stack">
       <label>Method<select value={handoff.mode} onChange={(e) => setHandoff({ ...handoff, mode: e.target.value })}><option value="disabled">Disabled</option><option value="cash_app">Cash App</option><option value="payment_link">Payment link</option><option value="qr">Existing QR image</option></select></label>
-      {handoff.mode !== 'disabled' && <label>Destination URL<input required value={handoff.destination_url || ''} onChange={(e) => setHandoff({ ...handoff, destination_url: e.target.value })} placeholder="https://… or $cashtag" /></label>}
+      {handoff.mode !== 'disabled' && <label>Destination URL{handoff.mode === 'qr' ? ' (optional accessible fallback)' : ''}<input required={handoff.mode !== 'qr'} value={handoff.destination_url || ''} onChange={(e) => setHandoff({ ...handoff, destination_url: e.target.value })} placeholder="https://… or $cashtag" /></label>}
       {handoff.mode === 'qr' && <label>QR image URL<input required value={handoff.qr_image_url || ''} onChange={(e) => setHandoff({ ...handoff, qr_image_url: e.target.value })} placeholder="https://…" /></label>}
       <label>Button label<input value={handoff.label || ''} onChange={(e) => setHandoff({ ...handoff, label: e.target.value })} /></label>
       <label>Instructions<textarea value={handoff.instructions || ''} onChange={(e) => setHandoff({ ...handoff, instructions: e.target.value })} /></label>

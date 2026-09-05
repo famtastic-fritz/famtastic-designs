@@ -2,6 +2,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+BACKEND_VENDOR="${FAMTASTIC_BACKEND_VENDOR:-$REPO_ROOT/backend/vendor}"
 SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/famtastic-fresh-install.XXXXXX")"
 cleanup() {
   case "$SANDBOX" in
@@ -24,7 +25,7 @@ chmod -R u+rwX "$SANDBOX/backend/web/sites/default"
 # Drush intentionally redispatches to the Drupal project that owns its vendor
 # directory. A symlink here silently points the test back at the developer
 # site, so copy the installed dependencies and assert the resulting root below.
-cp -R "$REPO_ROOT/backend/vendor" "$SANDBOX/backend/vendor"
+cp -R "$BACKEND_VENDOR" "$SANDBOX/backend/vendor"
 mkdir -p "$SANDBOX/backend/web/sites/default/files" "$SANDBOX/backend/private"
 
 (

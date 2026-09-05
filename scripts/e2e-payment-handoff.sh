@@ -96,8 +96,10 @@ member_jar="$sandbox/member.cookies"
 test "$(curl -sS -o "$sandbox/absent.json" -w '%{http_code}' "$base/api/payment-handoff/$organization/$site_key")" = "404"
 jq -e '.ok == false and .error == "payment_handoff_unavailable"' "$sandbox/absent.json" >/dev/null
 
-test "$(curl -sS -o "$sandbox/owner-login.json" -w '%{http_code}' -c "$owner_jar" -H 'Content-Type: application/json' -d "{\"email\":\"$owner_email\",\"password\":\"$owner_password\"}" "$base/api/customer/login")" = "200"
-test "$(curl -sS -o "$sandbox/member-login.json" -w '%{http_code}' -c "$member_jar" -H 'Content-Type: application/json' -d "{\"email\":\"$member_email\",\"password\":\"$member_password\"}" "$base/api/customer/login")" = "200"
+owner_login_payload="$(jq -cn --arg email "$owner_email" --arg password "$owner_password" '{email:$email,password:$password}')"
+member_login_payload="$(jq -cn --arg email "$member_email" --arg password "$member_password" '{email:$email,password:$password}')"
+test "$(curl -sS -o "$sandbox/owner-login.json" -w '%{http_code}' -c "$owner_jar" -H 'Content-Type: application/json' -d "$owner_login_payload" "$base/api/customer/login")" = "200"
+test "$(curl -sS -o "$sandbox/member-login.json" -w '%{http_code}' -c "$member_jar" -H 'Content-Type: application/json' -d "$member_login_payload" "$base/api/customer/login")" = "200"
 test "$(curl -sS -o "$sandbox/member-owner.json" -w '%{http_code}' -b "$member_jar" -G --data-urlencode "organization=$organization" "$base/api/customer/payment-handoff")" = "404"
 jq -e '.ok == false and .error == "payment_handoff_not_found"' "$sandbox/member-owner.json" >/dev/null
 
