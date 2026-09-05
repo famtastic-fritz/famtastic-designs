@@ -588,19 +588,31 @@ function renderFamtasticFrames(cfg) {
     FAM_PLATE_ACTIVE = false;   // per-frame; must not leak into the next format
     var art = famApplyArt(doc, key, cfg);
 
-    famText(doc, cfg.eyebrow, M, Math.round(H * 0.135), ES, ACTIVE.accent, FONT_UI_BOLD, 240, "eyebrow");
-    famBar(doc, M, Math.round(H * 0.155), Math.round(W * 0.155),
+    /*
+     * Type origin. Plates are generated with a RESERVED EMPTY BAND
+     * (prompt-library.json records it per variant as negative_space), and until
+     * now the template ignored that and always set type hard left - so type
+     * landed on the busy half of a plate that had deliberately cleared the other
+     * side. Pass typeSide:'right' for a right-reserved plate.
+     */
+    var TX = M;
+    if (cfg.typeSide === 'right') TX = Math.round(W * 0.52);
+    else if (typeof cfg.typeOffsetX === 'number') TX = M + cfg.typeOffsetX;
+    var TW = W - TX - M;
+
+    famText(doc, cfg.eyebrow, TX, Math.round(H * 0.135), ES, ACTIVE.accent, FONT_UI_BOLD, 240, "eyebrow");
+    famBar(doc, TX, Math.round(H * 0.155), Math.round(W * 0.155),
            Math.max(4, Math.round(H * 0.004)), ACTIVE.accent, "rule-top");
 
     // When a concept object owns the right side, type gets the left column only.
-    var colW = W - (M * 2);
+    var colW = TW;
     if (cfg.concept && FAM_ART_REGIONS[key]) {
       colW = Math.max(Math.round(W * 0.30), FAM_ART_REGIONS[key][0] - M - 40);
     }
     var hs = Math.min(famFitSize(cfg.head1, colW, HS, "display"),
                       famFitSize(cfg.head2, colW, HS, "display"));
-    famText(doc, cfg.head1, M, HT,      hs, ACTIVE.head,   FONT_DISPLAY, -20, "head-1");
-    famText(doc, cfg.head2, M, HT + HL, hs, ACTIVE.accent, FONT_DISPLAY, -20, "head-2");
+    famText(doc, cfg.head1, TX, HT,      hs, ACTIVE.head,   FONT_DISPLAY, -20, "head-1");
+    famText(doc, cfg.head2, TX, HT + HL, hs, ACTIVE.accent, FONT_DISPLAY, -20, "head-2");
 
     var bodyTop = HT + HL + Math.round(HL * 0.72);
     var bs = BS;
@@ -608,7 +620,7 @@ function renderFamtasticFrames(cfg) {
       bs = Math.min(bs, famFitSize(body[bf], colW, BS, "body"));
     }
     for (var b = 0; b < body.length; b++) {
-      famText(doc, body[b], M, bodyTop + Math.round(bs * 1.45 * b), bs,
+      famText(doc, body[b], TX, bodyTop + Math.round(bs * 1.45 * b), bs,
               ACTIVE.body, FONT_UI, 0, "body-" + (b + 1));
     }
 
