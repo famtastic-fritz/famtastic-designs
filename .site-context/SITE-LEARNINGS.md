@@ -1,5 +1,50 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Six automated checks, six false results
+
+Every real defect this session was caught by looking at the artifact. Every check
+written to catch defects automatically returned a false result at least once:
+
+1. A flat-region detector reported 0.0% blown on a plate with an obvious pasted
+   white panel — the panel was off-white, below the threshold.
+2. Its retuned successor flagged two plates whose pale bands were *intended*
+   reserved negative space, and still missed the real defect.
+3. A JSON:API draft-status check returned 49 of 83 posts and reported a post as
+   unpublished that had been verified live an hour earlier.
+4. A dry-run gate reported **15 of 15 PASS** when zero had passed: the flag is
+   `--draft`, not `--slug`, so every run printed help text and the grep matched
+   the word "valid" inside it.
+5. A claims audit flagged three "ranking promises" that were posts explicitly
+   *warning against* ranking promises.
+6. An agent's luminance verifier gated RGB-derived luma against a signalstats
+   band — two scales that differ by 6-8 points — and failed a film that was in
+   spec.
+
+**Guidance.** A check is a hypothesis, not evidence. Before acting on one, look
+at the thing it is describing; before trusting a pass, confirm the check can
+fail. Prefer the `critique-*` skills over hand-rolled heuristics for anything
+visual. And when a tool reports success, confirm the artifact exists and is
+correct — `publish-blog-draft.py` exits 0 while the page still 404s, because
+publishing a node and deploying its static shell are two steps that read like one.
+
+## 2026-09-05 — Grade to how the anchor LOOKS, not to the brand spec
+
+The premium anchor is the style reference the cheap tiers are matched against,
+and the reference is its *appearance*. Measured across five frames and 113,000
+pixels, the HeyGen take runs at mean luminance 155.4 — a light frame — and the
+brand accent `#7cfc00` renders as `#7fb449` under its lighting, occupying 1.31%
+of frame area because it is jacket trim, not a field of colour.
+
+Grading plates to the spec would have produced assets that clash with the very
+video they must cut against. A Remotion cut built before this measurement came
+out at 212.1 and had to be regraded.
+
+Also: `ffmpeg palettegen` reported `#00ff00` at full saturation as a dominant
+colour. That is its transparency sentinel, not a colour in the take. Recording it
+would have graded every downstream asset to a colour that does not exist. Sample
+real frames.
+
+
 ## 2026-09-05 — Proof evidence and owner controls need exact durable boundaries
 
 - Observation: a normal customer intake save can overwrite any research stored in the same mutable blob, and a portal session alone does not establish that a customer owns every branded business surface.

@@ -1,5 +1,47 @@
 # Product changelog
 
+## 2026-09-05 — Creative production system, 15 posts live, and a delivery cycle that alerts
+
+- **Registered Adobe desktop as a working capability, which it always was.** An
+  unbranded campaign video shipped from an `ffmpeg` build lacking `drawtext`
+  while Photoshop 2026 sat running with a live MCP bridge. Root cause was
+  `marketing/providers.json` marking all seven Adobe rows pending because it
+  described only the *cloud* APIs. The registry now separates desktop-under-MCP
+  from cloud-entitlement, and `AGENTS.md` states the general rule: a pending or
+  missing registry row is not proof a capability is absent.
+- **Built a still system in Photoshop at zero marginal cost.** Five palettes
+  argued from subject matter, seven layout archetypes, concept objects that
+  carry the argument rather than decorate it, isometric solids on a perspective
+  floor for real depth, and a parametrised template at
+  `marketing/creative/templates/famtastic-social-frame.jsx`. 38 stills produced.
+- **Two video systems, both graded to one measured anchor.** Remotion renders
+  9:16/1:1/16:9 from one master; HyperFrames renders HTML compositions. Seven
+  HyperFrames films plus three Remotion aspects. The grade is measured, not
+  eyeballed: the HeyGen anchor is 155.4 mean luminance, and a Remotion cut that
+  measured 212.1 was corrected to 163.2 rather than shipped.
+- **Voice is no longer metered.** Voicebox installed headless (Python sidecars
+  build; the Tauri GUI needs full Xcode and is not required). Three silent films
+  narrated at $0. Skill at `.agents/skills/famtastic-voice/SKILL.md`.
+- **15 blog posts published and deployed.** The corpus went 83 → 98, route
+  shells 162 → 177. Eleven were reassigned to existing series rather than forced
+  into a new one, because `series_facts()` derives `evidence_boundary` and
+  `sources` from existing members and those are claims governance, not fields to
+  invent. "The Own Your Online Presence Series" is defined but unpopulated,
+  pending an owner decision.
+- **Whole campaign spend: about $1.** 21 Gemini plates at $0.7056, one
+  gpt-image-2 flagship anchor at ~$0.18, 12 HeyGen credits. Everything else ran
+  on tools already paid for.
+- **Added `scripts/delivery/run-cycle.sh`, scheduled on launchd at 07:12 daily.**
+  It reads queue depth from Postiz, audits every live link, finds content gaps
+  and exits 3 when runway falls below three days. Its first run exited 3 against
+  an empty queue — which is the point: this repo held 98 posts, 12 films and 38
+  stills with nothing scheduled and nothing saying so.
+- **Delivery boundary, stated plainly:** drop-06 published to Facebook and
+  Instagram — the first confirmed delivery from this pipeline. YouTube failed on
+  an expired OAuth token and TikTok on an unapproved app. Both need the owner;
+  neither is a code defect.
+
+
 ## 2026-09-05 — Customer proof handoff and mobile Owner Desk release candidate
 
 - Consolidated the research-first proof handoff work into `main`: submitted website intake starts the internal proof lane; customer email is notification only; authenticated FAMtastic workspace remains the proof comparison and decision surface.
