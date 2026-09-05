@@ -16,7 +16,7 @@ final class BookingAvailabilityController extends ControllerBase {
 
   public function __construct(
     private readonly BookingAvailabilityService $availability,
-    private readonly ConfigFactoryInterface $configFactory,
+    private readonly ConfigFactoryInterface $bookingConfigFactory,
   ) {}
 
   public static function create(ContainerInterface $container): static {
@@ -63,7 +63,7 @@ final class BookingAvailabilityController extends ControllerBase {
   }
 
   private function enabled(string $siteKey): bool {
-    $enabled = $this->configFactory->get('famtastic_pipeline.settings')->get('booking_availability_enabled_sites') ?: [];
+    $enabled = $this->bookingConfigFactory->get('famtastic_pipeline.settings')->get('booking_availability_enabled_sites') ?: [];
     return in_array($siteKey, is_array($enabled) ? $enabled : [], TRUE);
   }
 

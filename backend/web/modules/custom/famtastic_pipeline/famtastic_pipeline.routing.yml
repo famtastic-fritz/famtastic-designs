@@ -50,6 +50,32 @@ famtastic_pipeline.microsite_preorder:
   options:
     no_cache: 'TRUE'
 
+# Public sites receive only an owner-enabled external destination. A handoff
+# event is deliberately telemetry, not a purchase, payment, or reservation.
+famtastic_pipeline.payment_handoff_public:
+  path: '/api/payment-handoff/{organization}/{site_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PaymentHandoffController::publicSnapshot'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    organization: '[0-9a-f-]{36}'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.payment_handoff_event:
+  path: '/api/payment-handoff/{organization}/{site_key}/events'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PaymentHandoffController::event'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    organization: '[0-9a-f-]{36}'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
 # A request-to-book is not a calendar integration: it stores a customer
 # request for the owner to accept, propose an alternate time, or decline.
 # Each client site is separately enabled in configuration after owner approval.
@@ -412,6 +438,29 @@ famtastic_pipeline.customer_website_request_proof_decision:
     _access: 'TRUE'
     _csrf_request_header_token: 'TRUE'
     website_request: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
+# Organization owners configure their own direct payment handoff here. It is
+# intentionally separate from Commerce checkout and from site-key bindings.
+famtastic_pipeline.customer_payment_handoff:
+  path: '/api/customer/payment-handoff'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PaymentHandoffController::owner'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_payment_handoff_update:
+  path: '/api/customer/payment-handoff'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PaymentHandoffController::owner'
+  methods: [PUT]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
   options:
     no_cache: 'TRUE'
 

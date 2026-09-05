@@ -699,9 +699,12 @@ final class CustomerPortalService {
     $intake['famtastic_level'] = max(0, min(10, (int) ($input['famtastic_level'] ?? 5)));
     $intake['allow_bolder_direction'] = !empty($input['allow_bolder_direction']);
     $intake['life_path_opt_in'] = !empty($input['life_path_opt_in']);
+    $intake['action_path_preference'] = in_array($input['action_path_preference'] ?? '', ['contact', 'request_to_book', 'quote_location', 'inquiry'], TRUE)
+      ? (string) $input['action_path_preference'] : '';
     $intake['ai_enrichment_mode'] = in_array($input['ai_enrichment_mode'] ?? '', ['none', 'famtastic_managed', 'customer_managed'], TRUE)
       ? (string) $input['ai_enrichment_mode'] : 'none';
     $intake['recommendation'] = $this->recommendWebsitePackage($type, $intake);
+    $intake['action_path_recommendation'] = $this->recommendActionPath($intake);
     if ($status === 'submitted' && ($intake['primary_goal'] === '' || $intake['products_services'] === '')) throw new \InvalidArgumentException('Add the primary goal and what the business sells before submitting.');
     return [
       'status' => $status, 'project_name' => $projectName, 'business_name' => $text('business_name', 255),
@@ -745,6 +748,37 @@ final class CustomerPortalService {
     }
     $reasons[] = 'The stated need fits a focused one-page website or landing page.';
     return ['recommended_sku' => 'FAM-FOOT-199', 'label' => 'Web Basics Bundle', 'complexity_score' => $score, 'review_required' => FALSE, 'reasons' => $reasons, 'suggested_addon_skus' => array_values(array_unique($addons))];
+  }
+
+  /**
+   * Recommends one first customer action without pretending every business is
+   * an appointment business. Owner review and fulfilled configuration remain
+   * required before any non-contact action is shown as live.
+   */
+  private function recommendActionPath(array $intake): array {
+    $text = mb_strtolower(implode(' ', [
+      (string) ($intake['industry'] ?? ''),
+      (string) ($intake['products_services'] ?? ''),
+      (string) ($intake['desired_actions'] ?? ''),
+      (string) ($intake['required_features'] ?? ''),
+      (string) ($intake['booking_details'] ?? ''),
+      (string) ($intake['custom_needs'] ?? ''),
+    ]));
+    $configured = (string) ($intake['action_path_preference'] ?? '');
+    $allowed = ['contact', 'request_to_book', 'quote_location', 'inquiry'];
+    if (in_array($configured, $allowed, TRUE)) {
+      return ['key' => $configured, 'source' => 'customer_preference', 'status' => 'owner_review_required'];
+    }
+    if (preg_match('/\b(book|booking|appointment|stylist|barber|braid|loc|nail|salon|service time)\b/', $text)) {
+      return ['key' => 'request_to_book', 'source' => 'intake_research', 'status' => 'owner_review_required'];
+    }
+    if (preg_match('/\b(junk|removal|haul|estimate|quote|location|address|pickup)\b/', $text)) {
+      return ['key' => 'quote_location', 'source' => 'intake_research', 'status' => 'owner_review_required'];
+    }
+    if (preg_match('/\b(marketing|consult|agency|speaker|coaching|professional service)\b/', $text)) {
+      return ['key' => 'inquiry', 'source' => 'intake_research', 'status' => 'owner_review_required'];
+    }
+    return ['key' => 'contact', 'source' => 'universal_default', 'status' => 'ready'];
   }
 
   private function serializeWebsiteRequest(array $row): array {

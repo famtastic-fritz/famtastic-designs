@@ -485,6 +485,7 @@ export default function CustomerPortalDashboard() {
           <PortalGrowthView
             workspace={workspace}
             go={go}
+            organization={org}
           />
         )}
 

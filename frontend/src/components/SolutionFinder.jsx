@@ -11,23 +11,19 @@ export function branchForServiceSlug(slug = '') {
   if (s.includes('landing')) return 'landing-page';
   if (s.includes('portal') || s.includes('app')) return 'client-portal';
   if (s.includes('custom') || s.includes('system') || s.includes('automation')) return 'custom-dev';
+  if (s.includes('business-website') || s.includes('499')) return 'site-rebuild';
   if (s.includes('199') || s.includes('basic') || s.includes('quick')) return 'web-basics';
   return null;
 }
 
-// The 7 Core FAMtastic Service Branches
+// Public research branches. They deliberately gather context without
+// promising a price, timeframe, deliverable list, or automated outcome.
 const SERVICE_BRANCHES = [
   {
     id: 'web-basics',
     icon: '⚡',
-    title: '$199 Quick-Start Site',
-    desc: '1 focused page, booking/contact, hosting & domain included',
-    price: 199,
-    priceFormatted: '$199',
-    timeline: '3–5 business days',
-    packageSku: 'web-basics',
-    packageTitle: 'Web Basics Bundle — $199',
-    q2Prompt: 'For the $199 Quick-Start, do you have a domain and logo ready, or are you starting from scratch?',
+    title: 'Starter Mobile Business Foundation — $199 starting point',
+    q2Prompt: 'For a focused first website, do you have a domain and logo ready, or are you starting from scratch?',
     q2Options: [
       'I have domain & logo ready',
       'Have domain, need logo created',
@@ -37,19 +33,11 @@ const SERVICE_BRANCHES = [
     q3Prompt: 'What is your business name and primary service or city?',
     q3Placeholder: 'e.g. Ace Barbershop in Port St. Lucie, FL',
     q3Options: ['Solo Service Business', 'Storefront / Local Shop', 'Consultant / Freelancer', 'Church / Community'],
-    pages: ['1 High-Conversion Single Page', 'Service & Price Guide', 'Lead / Booking Request Form', 'Verified Reviews & Trust', 'Google Map & Contact Section'],
-    features: ['Mobile-responsive layout', 'Fast lead alerts to your email', 'Foundational local SEO', '1st-year hosting & domain included'],
   },
   {
     id: 'ai-chatbot',
     icon: '🤖',
-    title: 'AI Chatbot & Automation',
-    desc: '24/7 AI trained on your business that answers questions, qualifies leads & books appointments',
-    price: 6999,
-    priceFormatted: '$6,999',
-    timeline: '3–4 weeks',
-    packageSku: 'premium-ai',
-    packageTitle: 'Premium Website + AI System — $6,999',
+    title: 'AI assistant or automation',
     q2Prompt: 'Where should your AI Assistant engage with your customers?',
     q2Options: [
       'Website Chat Widget',
@@ -61,23 +49,15 @@ const SERVICE_BRANCHES = [
     q3Placeholder: 'e.g. Answer FAQ, qualify leads, and book calendar appointments...',
     q3Options: [
       'Qualify leads & book calendar appointments',
-      '24/7 Customer support & FAQ answers',
-      'Calculate instant project price estimates',
+      'Customer support & FAQ answers',
+      'Guided project-price questions',
       'All of the above',
     ],
-    pages: ['AI Chatbot Knowledge Engine', 'Governed Prompt & Rule Set', 'Live Lead Dashboard', 'Web & Messaging Connectors', 'Human Escalation & Email Routing'],
-    features: ['Custom AI training on your docs/FAQs', 'Zero hallucination guardrails', 'SMS & CRM sync', 'Full source code & hosting'],
   },
   {
     id: 'site-rebuild',
     icon: '🔄',
-    title: 'Website Rebuild & Redesign',
-    desc: 'Transform a slow, outdated, or broken site into a fast, modern, high-converting asset',
-    price: 499,
-    priceFormatted: '$499',
-    timeline: '5–10 business days',
-    packageSku: 'business-website',
-    packageTitle: 'Business Website Bundle — $499',
+    title: 'Business Website — $499 starting point',
     q2Prompt: 'What is the biggest problem with your current website right now?',
     q2Options: [
       'Slow loading & outdated design',
@@ -87,20 +67,12 @@ const SERVICE_BRANCHES = [
     ],
     q3Prompt: 'What is your current website URL and business name?',
     q3Placeholder: 'e.g. https://myoldwebsite.com (Apex Roofing)',
-    q3Options: ['Up to 5 standard pages', 'Custom 5–10 page redesign ($1,999)', 'Needs fresh copy & branding too'],
-    pages: ['Home (Modernized conversion hero)', 'Services & Offerings', 'About & Team Story', 'Case Studies / Reviews', 'Contact & Lead Capture Form'],
-    features: ['Core Web Vitals 90+ speed overhaul', 'Mobile-first responsive build', 'On-page SEO migration', 'Google Analytics GA4 integration'],
+    q3Options: ['Up to 5 standard pages', 'More than 5 pages', 'Needs fresh copy & branding too'],
   },
   {
     id: 'ecommerce',
     icon: '🛍️',
-    title: 'E-Commerce Online Store',
-    desc: 'Full-featured online store with product catalog, secure Stripe/PayPal checkout & inventory',
-    price: 1999,
-    priceFormatted: '$1,999',
-    timeline: '2–3 weeks',
-    packageSku: 'custom-website',
-    packageTitle: 'Custom E-Commerce Store — $1,999',
+    title: 'Ecommerce or online store',
     q2Prompt: 'What type of products will you be selling online?',
     q2Options: [
       'Physical goods & shipping',
@@ -111,19 +83,11 @@ const SERVICE_BRANCHES = [
     q3Prompt: 'Approximately how many products will you launch with?',
     q3Placeholder: 'e.g. 15 apparel items with size variants...',
     q3Options: ['1–10 starter products', '10–50 products', '50–200 products', '200+ enterprise catalog'],
-    pages: ['Storefront & Featured Collections', 'Product Detail Pages with Variants', 'Secure Cart & 1-Click Checkout', 'Customer Account & Order History', 'Shipping, Returns & Policy Pages'],
-    features: ['Stripe / PayPal payment processing', 'Inventory & order management', 'Automated customer receipts', 'Mobile-optimized checkout flow'],
   },
   {
     id: 'landing-page',
     icon: '🎯',
-    title: 'Landing Page for Ads & Campaigns',
-    desc: 'High-converting landing page engineered for paid ads, Google/Meta traffic & product launches',
-    price: 1499,
-    priceFormatted: '$1,499',
-    timeline: '5–7 business days',
-    packageSku: 'landing-page',
-    packageTitle: 'Campaign Landing Page System — $1,499',
+    title: 'Campaign or landing page',
     q2Prompt: 'What is the primary traffic source or campaign goal for this landing page?',
     q2Options: [
       'Google / Meta Paid Ads traffic',
@@ -138,19 +102,11 @@ const SERVICE_BRANCHES = [
       'Copy is ready, need high-converting design',
       'Have everything, need fast responsive build',
     ],
-    pages: ['High-Conversion Hero with Strong Hook', 'Social Proof & Testimonial Carousel', 'Problem vs. Solution Section', 'Offer Breakdown & Pricing Table', 'FAQ & Risk-Reversal Guarantee'],
-    features: ['A/B testing-ready architecture', 'Dual-grain UTM tracking for ad ROI', 'Instant lead notifications via email/SMS', 'Blazing sub-second load times'],
   },
   {
     id: 'client-portal',
     icon: '🔐',
-    title: 'Client Portal & Web App',
-    desc: 'Private, branded client portals for client logins, project tracking, invoicing & file sharing',
-    price: 3999,
-    priceFormatted: '$3,999',
-    timeline: '3–4 weeks',
-    packageSku: 'business-growth',
-    packageTitle: 'Business Growth & Portal System — $3,999',
+    title: 'Client portal or web app',
     q2Prompt: 'Who will be logging into the portal and what is the primary workflow?',
     q2Options: [
       'Clients (View project status, approve proofs, pay invoices)',
@@ -166,19 +122,11 @@ const SERVICE_BRANCHES = [
       'Client messaging & support desk',
       'Custom database & REST API',
     ],
-    pages: ['Branded Login & Authentication Gate', 'Client Dashboard with Active Projects', 'Invoicing & Payment History', 'Document & File Vault', 'Messaging & Support Hub'],
-    features: ['Role-based access control (RBAC)', 'SSL encryption & security audit', 'Automated email alerts on status updates', 'Exportable client records'],
   },
   {
     id: 'custom-dev',
     icon: '🛠️',
-    title: 'Custom Bespoke Development',
-    desc: 'Bespoke web architecture, custom API integrations & enterprise digital systems',
-    price: 1999,
-    priceFormatted: '$1,999',
-    timeline: '2–3 weeks',
-    packageSku: 'custom-website',
-    packageTitle: 'Custom Website — $1,999',
+    title: 'Custom website or digital system',
     q2Prompt: 'What is the primary technical requirement or goal for this custom build?',
     q2Options: [
       'Unique bespoke design (no templates)',
@@ -189,8 +137,6 @@ const SERVICE_BRANCHES = [
     q3Prompt: 'What is your company name and target audience?',
     q3Placeholder: 'e.g. Nexus Logistics, B2B enterprise clients...',
     q3Options: ['B2B Enterprise', 'Local Services / Multi-location', 'Tech Startup / SaaS', 'Creative Agency'],
-    pages: ['Bespoke Custom Homepage', 'Interactive Capabilities / Solutions Hub', 'Case Studies & Results Showcase', 'Company & Leadership', 'Custom Intake / Request Architecture'],
-    features: ['Tailored Information Architecture', 'Dual revision rounds with design tokens', 'Comprehensive SEO & schema markup', 'Full code handoff & training'],
   },
 ];
 
@@ -217,6 +163,7 @@ export default function SolutionFinder({ initialBranch = null }) {
 
   const [status, setStatus] = useState('idle');
   const [requestId, setRequestId] = useState(null);
+  const [submissionError, setSubmissionError] = useState('');
 
   const chatBodyRef = useRef(null);
   const inputRef = useRef(null);
@@ -230,18 +177,21 @@ export default function SolutionFinder({ initialBranch = null }) {
   // Initial branch trigger if provided (e.g. from service page)
   useEffect(() => {
     if (initialBranch) {
-      const match = SERVICE_BRANCHES.find((b) => b.id === initialBranch || b.packageSku === initialBranch);
+      const match = SERVICE_BRANCHES.find((b) => b.id === initialBranch);
       if (match) {
-        openChat();
-        handleServiceSelect(match);
+        openChat(match);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialBranch]);
 
-  function openChat() {
+  function openChat(branch = null) {
     setIsOpen(true);
     document.body.style.overflow = 'hidden';
+    if (branch) {
+      handleServiceSelect(branch);
+      return;
+    }
     if (messages.length === 0) {
       startDynamicFlow();
     }
@@ -380,15 +330,9 @@ export default function SolutionFinder({ initialBranch = null }) {
           isScopeCard: true,
           scopeData: {
             icon: branch.icon,
-            title: branch.packageTitle,
-            price: branch.price,
-            priceFormatted: branch.priceFormatted,
-            timeline: timelineText.includes('ASAP') ? branch.timeline : 'Scheduled per agreement',
-            pages: branch.pages,
-            features: branch.features,
+            title: branch.title,
             q2Answer: updatedAnswers.q2Answer || 'Confirmed',
             q3Answer: updatedAnswers.q3Answer || 'Custom Scope',
-            packageSku: branch.packageSku,
           },
         },
       ]);
@@ -401,16 +345,11 @@ export default function SolutionFinder({ initialBranch = null }) {
           {
             id: Date.now(),
             who: 'bot',
-            text: `Here is your exact project blueprint and locked price (${branch.priceFormatted}). Where should I email your full PDF scope & specifications?`,
+            text: 'This is a research summary, not a quote or a reserved package. Where should we save it so you can continue with a fuller brief?',
           },
         ]);
         setChips([
-          {
-            label: `Start with this Package (${branch.priceFormatted}) →`,
-            primary: true,
-            fn: () => (window.location.href = `/purchase?bundle=${branch.packageSku}`),
-          },
-          { label: 'Talk to a real human', fn: () => escalateHuman() },
+          { label: 'Compare $199 and $499 website options', fn: () => (window.location.href = '/website-options') },
         ]);
         setInputPlaceholder('Enter your work email address...');
         inputRef.current?.focus();
@@ -418,35 +357,13 @@ export default function SolutionFinder({ initialBranch = null }) {
     }, 900);
   }
 
-  function finishWithEmail(email) {
+  async function finishWithEmail(email) {
     appendUserMsg(email);
     const finalData = { ...answers, email };
     setAnswers(finalData);
     setChips([]);
     setIsTyping(true);
-
-    void submitIntakeData(finalData, selectedBranch);
-
-    setTimeout(() => {
-      setIsTyping(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now(),
-          who: 'bot',
-          text: `All set! Your complete blueprint and specifications have been sent to ${email}. Your ${selectedBranch?.priceFormatted || '$199'} price is locked for 30 days. You can start the build with one click from that email or right here.`,
-        },
-      ]);
-      setChips([
-        {
-          label: `Start My Build (${selectedBranch?.priceFormatted || '$199'}) →`,
-          primary: true,
-          fn: () => (window.location.href = `/purchase?bundle=${selectedBranch?.packageSku || 'web-basics'}`),
-        },
-        { label: 'Talk to a real human', fn: () => escalateHuman() },
-        { label: 'Close window', fn: () => closeChat() },
-      ]);
-    }, 500);
+    await submitIntakeData(finalData, selectedBranch);
   }
 
   function escalateHuman() {
@@ -461,7 +378,7 @@ export default function SolutionFinder({ initialBranch = null }) {
         {
           id: Date.now(),
           who: 'bot',
-          text: "You got it! I've flagged our lead engineer for a direct follow-up within 1 business day. What is the best phone number or email to reach you?",
+          text: 'Save your research with an email first. Once the server confirms the request, you can create an account and add the details the team should review.',
         },
       ]);
       setInputPlaceholder('Enter your phone or email...');
@@ -534,14 +451,15 @@ export default function SolutionFinder({ initialBranch = null }) {
   }
 
   async function submitIntakeData(finalAnswers, branch) {
-    if (status === 'submitting' || requestId) return;
+    if (status === 'submitting') return;
     setStatus('submitting');
+    setSubmissionError('');
 
     const transcript = messages.map((m) => `${m.who.toUpperCase()}: ${m.text || '[Card]'}`).join('\n');
 
     const payload = {
-      source: 'famtastic-dynamic-scout',
-      branch: branch?.packageSku || 'web-basics',
+      source: 'solution-finder',
+      branch: branch?.id || 'web-basics',
       answers: {
         selectedService: branch?.title,
         branchSpecificAnswers: {
@@ -553,11 +471,7 @@ export default function SolutionFinder({ initialBranch = null }) {
         email: finalAnswers.email,
         phone: finalAnswers.phone,
         conversationTranscript: transcript,
-        recommendedPackage: branch?.packageTitle,
-      },
-      estimate: {
-        low: branch?.price || 199,
-        high: branch?.price || 199,
+        recommendedStartingPoint: branch?.title,
       },
       utm: {
         ...collectUtmParams(),
@@ -569,10 +483,50 @@ export default function SolutionFinder({ initialBranch = null }) {
 
     try {
       const res = await postIntake(payload);
-      setRequestId(res?.request_id || null);
-      setStatus('success');
-    } catch {
+      if (res?.ok !== true || !res?.request_id) {
+        throw new Error(res?.message || 'We could not confirm that your request was saved.');
+      }
+      setRequestId(res.request_id);
+      setStatus(res.status === 'partial_success' ? 'partial' : 'success');
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          text: res.status === 'partial_success'
+            ? `Request #${res.request_id} is saved, but the confirmation notification needs attention. You can still continue securely with the account link below.`
+            : `Request #${res.request_id} is saved. ${res.message || 'Continue with a free account to add the full brief.'}`,
+        },
+      ]);
+      setChips([
+        ...(res.registration_url
+          ? [{
+              label: 'Create a free account to continue',
+              primary: true,
+              fn: () => window.location.assign(res.registration_url),
+            }]
+          : []),
+        { label: 'Compare website options', fn: () => (window.location.href = '/website-options') },
+        { label: 'Close window', fn: () => closeChat() },
+      ]);
+    } catch (error) {
       setStatus('error');
+      setSubmissionError(error?.message || 'We could not save your request.');
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          who: 'bot',
+          text: 'We could not confirm that your request was saved. Nothing has been submitted yet. Your answers are still here so you can try again.',
+        },
+      ]);
+      setChips([
+        { label: 'Try saving again', primary: true, fn: () => submitIntakeData(finalAnswers, branch) },
+        { label: 'Change my email', fn: () => inputRef.current?.focus() },
+        { label: 'Close window', fn: () => closeChat() },
+      ]);
+    } finally {
+      setIsTyping(false);
     }
   }
 
@@ -580,23 +534,23 @@ export default function SolutionFinder({ initialBranch = null }) {
     <div className="sf" id="solution-finder">
       {/* ============ HERO ENTRY POINT ============ */}
       <section className="sf__hero-entry">
-        <span className="sf__ai-badge">⚡ FAMtastic Solutions Studio · Interactive Project Architecture</span>
+        <span className="sf__ai-badge">FAMtastic Solutions Studio · Guided project research</span>
         <h2 className="sf__hero-title">
-          We engineer solutions <span className="sf__accent-green">where they don't exist.</span>
+          Start with <span className="sf__accent-green">what your business needs to do.</span>
         </h2>
         <p className="sf__hero-sub">
-          Dynamic, one-question-at-a-time intake. Tailored specifications, custom architecture blueprints, and transparent locked pricing designed around your exact business workflow.
+          Answer a few practical questions. We will save a research summary only after the server confirms it, then you can add the full brief in your account.
         </p>
 
         <div className="sf__entry-box">
           <button
             type="button"
             className="sf__entry-btn"
-            onClick={openChat}
+            onClick={() => openChat()}
             aria-haspopup="dialog"
           >
-            <span className="sf__entry-btn-text">What solution does your business need? (e.g. $199 Launch, AI Automation, Custom Web App...)</span>
-            <span className="sf__entry-btn-go">Start scoping →</span>
+            <span className="sf__entry-btn-text">What does your business need help with? (e.g. first website, store, client workspace...)</span>
+            <span className="sf__entry-btn-go">Start research →</span>
           </button>
 
           <div className="sf__hero-chips">
@@ -605,8 +559,7 @@ export default function SolutionFinder({ initialBranch = null }) {
                 key={b.id}
                 type="button"
                 onClick={() => {
-                  openChat();
-                  handleServiceSelect(b);
+                  openChat(b);
                 }}
               >
                 {b.icon} {b.title}
@@ -615,14 +568,14 @@ export default function SolutionFinder({ initialBranch = null }) {
           </div>
 
           <p className="sf__entry-hint">
-            <strong>One question at a time.</strong> Clickable choices + fill-in-the-blank · <strong>Locked pricing from $199</strong>
+            <strong>One question at a time.</strong> Clickable choices + fill-in-the-blank · <strong>saved only after confirmation</strong>
           </p>
         </div>
 
         <div className="sf__trust-row">
-          <span><strong>22+ yrs</strong> engineering systems</span>
-          <span><strong>Fixed price</strong> before we start</span>
-          <span><strong>Verified working</strong> before you pay</span>
+          <span><strong>Server-confirmed</strong> request saving</span>
+          <span><strong>Account-based</strong> detailed brief</span>
+          <span><strong>Scope-first</strong> website path</span>
         </div>
       </section>
 
@@ -671,7 +624,7 @@ export default function SolutionFinder({ initialBranch = null }) {
                       ? 'Project Specifics'
                       : step === 4
                       ? 'Launch Timeline'
-                      : 'Scope & Price Reveal'}
+                      : 'Research Summary'}
                   </span>
                   <span>{step * 20}%</span>
                 </div>
@@ -686,9 +639,9 @@ export default function SolutionFinder({ initialBranch = null }) {
                   <div key={msg.id} className={`sf__msg-row ${msg.who}`}>
                     {msg.isScopeCard ? (
                       <div className="sf__scope-card">
-                        <span className="sf__scope-tag">{msg.scopeData.icon} Tailored Project Scope</span>
+                        <span className="sf__scope-tag">{msg.scopeData.icon} Research summary</span>
                         <h3>{msg.scopeData.title}</h3>
-                        <div className="sf__scope-city">Timeline: {msg.scopeData.timeline}</div>
+                        <div className="sf__scope-city">We will use this context to prepare the next recommendation.</div>
 
                         <div className="sf__scope-row">
                           <span className="k">Target Objective</span>
@@ -699,23 +652,8 @@ export default function SolutionFinder({ initialBranch = null }) {
                           <span className="v">{msg.scopeData.q3Answer}</span>
                         </div>
 
-                        <div style={{ margin: '0.85rem 0 0.5rem', borderTop: '1px solid #d1cebe', paddingTop: '0.65rem' }}>
-                          <strong style={{ fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#4b634b' }}>
-                            Included Architecture & Features:
-                          </strong>
-                          <ul style={{ margin: '0.4rem 0 0', paddingLeft: '1.2rem', fontSize: '0.84rem', lineHeight: '1.4' }}>
-                            {msg.scopeData.pages.slice(0, 4).map((p, i) => (
-                              <li key={i}>{p}</li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <div className="sf__scope-price-box">
-                          <span className="label">Exact Fixed Price</span>
-                          <span className="amount">{msg.scopeData.priceFormatted}</span>
-                        </div>
                         <div className="sf__scope-note">
-                          Price locked for 30 days · Verified working before balance is due
+                          This is not a quote, reserved price, or purchase approval. The saved request and your account brief determine the next step.
                         </div>
                       </div>
                     ) : (
@@ -735,6 +673,11 @@ export default function SolutionFinder({ initialBranch = null }) {
 
               {/* Chat Footer */}
               <div className="sf__chat-foot">
+                {status === 'submitting' && <p className="sf__submission-status" role="status">Saving your request…</p>}
+                {status === 'error' && <p className="sf__submission-status is-error" role="alert">{submissionError}</p>}
+                {(status === 'success' || status === 'partial') && requestId && (
+                  <p className="sf__submission-status" role="status">Server-confirmed request #{requestId}.</p>
+                )}
                 {chips && chips.length > 0 && (
                   <div className="sf__chips-row">
                     {chips.map((chip, idx) => (
@@ -764,12 +707,12 @@ export default function SolutionFinder({ initialBranch = null }) {
                     value={inputVal}
                     onChange={(e) => setInputVal(e.target.value)}
                     placeholder={inputPlaceholder}
-                    disabled={isTyping}
+                    disabled={isTyping || status === 'submitting' || status === 'success' || status === 'partial'}
                   />
                   <button
                     type="submit"
                     className="sf__send-btn"
-                    disabled={isTyping || !inputVal.trim()}
+                    disabled={isTyping || status === 'submitting' || status === 'success' || status === 'partial' || !inputVal.trim()}
                     aria-label="Send response"
                   >
                     ➤

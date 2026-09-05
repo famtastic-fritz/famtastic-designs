@@ -24,6 +24,7 @@ final class CommerceLifecycleService {
     private readonly CustomerPortalService $portal,
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
+    private readonly BookingSiteOwnerService $bookingSiteOwners,
   ) {}
 
   /**
@@ -202,6 +203,12 @@ final class CommerceLifecycleService {
       $this->database->update('famtastic_project_request')->fields([
         'status' => 'converted', 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id(), 'changed' => $this->time->getRequestTime(),
       ])->condition('id', $request['id'])->execute();
+      // Every converted proof-first website request receives a private,
+      // account-bound mobile command-center key. This does not publish a
+      // booking surface, enable payments, or connect a third party; it only
+      // removes the former manual binding gap after a verified purchase.
+      $siteKey = 'site-' . substr(str_replace('-', '', (string) $request['public_id']), 0, 16);
+      $this->bookingSiteOwners->bindToConvertedRequest($siteKey, (int) $request['id'], 1);
     }
     return ['prospect_id' => (int) $prospect->id(), 'intake_id' => (int) $intake->id(), 'project_id' => (int) $project->id()];
   }
@@ -300,6 +307,26 @@ final class CommerceLifecycleService {
 
   /** Captures the exact catalog and promise presented for immutable fulfillment evidence. */
   private function dealSnapshot(array $skus, array $definitions, array $checkout = []): array {
+    // Fulfillment must preserve the offer contract the customer actually saw
+    // at checkout. Re-reading today's catalog here would silently rewrite a
+    // paid order after a later price or scope edit.
+    $capturedContracts = (array) ($checkout['offer_contracts'] ?? []);
+    if ($capturedContracts) {
+      $items = [];
+      foreach ($skus as $sku) {
+        $contract = $capturedContracts[$sku] ?? NULL;
+        if (!is_array($contract) || (string) ($contract['sku'] ?? '') !== $sku || empty($contract['hash'])) {
+          throw new \RuntimeException('commerce_checkout_contract_missing:' . $sku);
+        }
+        $items[] = ['sku' => $sku, 'offer_contract' => $contract];
+      }
+      $snapshot = ['policy' => (string) ($checkout['terms_version'] ?? ''), 'items' => $items, 'customer_selection' => array_intersect_key($checkout, array_flip([
+        'organization_public_id', 'domain_choice', 'terms_version', 'recurring_authorized', 'marketing_opt_in', 'selected_skus', 'captured_at',
+        'website_request_public_id',
+      ]))];
+      $snapshot['checksum'] = hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
+      return $snapshot;
+    }
     $path = dirname(\Drupal::root()) . '/config/famtastic-deal-terms.json';
     $registry = json_decode((string) file_get_contents($path), TRUE, 512, JSON_THROW_ON_ERROR);
     $items = [];

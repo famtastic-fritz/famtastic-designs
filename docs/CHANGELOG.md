@@ -1,5 +1,82 @@
 # Product changelog
 
+## 2026-09-05 — Durable owner-only revenue freshness controls prepared
+
+- Added migration `8054` and the `famtastic_revenue_freshness` ledger. It records a stable task key, source state, deadline, severity, current/open-or-recovered status, and recovery evidence for submitted requests, held proof states, selected-but-unpaid requests, stale projects, and missing release receipts. Reconciliation is owner-task-only: it does not send mail, start proof work, create checkout, charge, publish, or change the source request/project.
+- Added `drush famtastic:revenue-health` (`frh`) for structured
+  `famtastic.revenue-health.v1` output; `famtastic:lifecycle-run` now refreshes
+  this ledger through protection and includes its summary in the cycle record.
+- Generic outbox delivery now performs a conditional atomic `dispatching`
+  claim with a claim token before provider handoff, conditionally writes the
+  receipt against that same token, and recovers only an abandoned claim after
+  the bounded timeout. This prevents two concurrent generic workers from
+  sending the same candidate at once; it does not broaden any mail authority.
+- Focused PHP lint and the 91-test/462-assertion unit suite pass. The isolated
+  original fresh-install blocker was the inherited PHP 8.5 `$configFactory`
+  collision, now repaired in the booking controllers. The harness now mirrors
+  the matching Drupal runtime beside a supplied Composer vendor tree and passes
+  a fresh isolated install, module schema, revenue freshness recovery, offers,
+  and terms check.
+
+## 2026-09-05 — Verified revenue-loop completion gates tightened
+
+- Website Commerce now carries the captured per-SKU `famtastic.offer-contract.v1`
+  snapshot into fulfillment and fails closed if it is absent, so later catalog
+  edits cannot silently rewrite a paid order's scope.
+- Added the account-owner payment-handoff controls in the Growth portal and a
+  first-party `/pay/:organization/:siteKey` consumer. QR-only remains usable;
+  an outbound destination and `opened` event exist only when the owner supplied
+  an optional fallback. None of these events represents payment or revenue.
+- The isolated payment-handoff HTTP acceptance now passes from a fresh Drupal
+  install, including update 8055, authorization/isolation, QR/Cash App/HTTPS
+  validation, and explicit non-purchase semantics. No provider, charge, send,
+  deployment, or live customer action occurred.
+## 2026-09-05 — Public website research and request-continuation clarity
+
+- Normalized Drupal-owned public `/web` CTA paths to their frontend routes
+  while retaining backend API, admin, checkout, session, and user paths. The
+  production rewrite allowlist now includes the public `/start` intake route.
+- Removed public homepage conversion and revenue counters that did not carry
+  source evidence. Public website CTAs now lead to contained first-party
+  research or the $199 / $499 scope comparison, never a direct purchase path.
+- Made Solution Finder success contingent on the existing intake API returning
+  `ok` and a durable request ID. A failed save keeps the visitor's answers,
+  exposes an error and retry action, and offers account continuation only when
+  the server returns its registration URL.
+- Added the public Starter ($199) versus Business Website ($499) comparison as
+  a read-more experience. It describes only catalog-backed starting scope and
+  directs visitors into research; an account-owned request and selected
+  direction remain prerequisites for website checkout.
+- Website purchase UI now treats the server-returned linked request as the
+  eligibility signal, presents month-13 renewal as optional, and does not
+  represent a public direct checkout or automatic recurring authorization.
+- Verified locally with the public-flow contract script, portal design-DNA
+  validator, production build, and mobile/desktop browser tests using mocked
+  API responses. No deployment, payment, or customer communication occurred.
+## 2026-09-05 — Customer-owned payment handoff, not a second checkout
+
+- Added the reusable, organization-scoped `PaymentHandoff` module for Starter
+  sites and Owner Desk. An active organization owner can configure only four
+  deliberate states: disabled, direct Cash App, an existing QR image (with an
+  optional accessible HTTPS fallback), or a generic HTTPS payment link.
+- Public configuration is absent until the owner enables it, and a public
+  render must pass the existing exact converted-request → booking-site →
+  organization boundary. The public model exposes only the handoff destination,
+  label, instructions, and a disclosure that it cannot confirm payment, create
+  an order, or reserve a service.
+  `viewed` and `opened` are anonymous, append-only interaction events—not
+  purchases, payment attempts, or payment verification.
+- Added update `8055`, the owner/private and public handoff APIs, and a fresh
+  SQLite HTTP acceptance test. It exercises owner-role and
+  cross-organization/site-binding isolation, disabled clearing, scheme-less
+  HTTPS normalization, QR/Cash App/generic-link
+  validation, and explicit non-purchase event semantics. No provider call,
+  merchant credential, charge, deploy, or send occurred.
+- Repaired two existing PHP 8.5 module-boot fatals: Booking Request and Booking
+  Availability controllers no longer redeclare ControllerBase's inherited
+  `$configFactory` property as readonly. Their injected setting dependency now
+  has a distinct private name, so the full module can load during acceptance.
+
 ## 2026-09-05 — The films get a home of their own at /watch
 
 - **Published the campaign films on our own domain instead of waiting on

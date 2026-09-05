@@ -68,7 +68,7 @@ export default function ServicePage() {
     );
   }
 
-  const cta = { label: service.ctaText, href: service.ctaHref };
+  const cta = { label: 'Start a scoped request', href: '/start' };
   const serviceBranch = branchForServiceSlug(slug);
 
   function openFinder() {
@@ -169,7 +169,7 @@ export default function ServicePage() {
       <Section
         eyebrow="Start"
         title="Start with this service"
-        intro="Answer a few quick questions and get an instant ballpark estimate — no phone call required."
+        intro="Answer a few practical questions, then save a research summary once the server confirms it. Your account is where the full brief and next eligible step continue."
       >
         <div ref={finderRef}>
           {finderOpen ? (
@@ -188,7 +188,7 @@ export default function ServicePage() {
       <CTABanner
         title="Ready to put this system to work?"
         primaryCta={cta}
-        secondaryCta={{ label: 'Contact', href: '/contact' }}
+        secondaryCta={{ label: 'Compare website options', href: '/website-options' }}
       />
     </article>
   );

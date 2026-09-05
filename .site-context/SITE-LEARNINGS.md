@@ -1,5 +1,66 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A captured checkout contract must outlive the catalog
+
+- Observation: a checkout can save the exact offer contract it displayed while
+  fulfillment accidentally re-reads mutable product terms. That turns a later
+  catalog edit into an invisible change to a paid customer's evidence.
+- Guidance: copy the checksummed checkout-time contract into the fulfillment
+  snapshot and fail closed when any selected SKU lacks it. Payment-handoff QR
+  configurations must also work without an outbound URL; only render/open a
+  link when the owner has supplied that optional fallback.
+
+## 2026-09-05 — A freshness alert must be a record before it is a message
+
+- Observation: a broad lifecycle worker can see an overdue request or project
+  more than once, and a normal outbox read followed by provider handoff gives
+  two concurrent workers an opportunity to send the same row. An email alone
+  cannot show whether the underlying condition later recovered.
+- Guidance: materialize each revenue-loop concern as one idempotent owner-task
+  key with the observed source state, deadline, and recovery receipt; only a
+  separately approved human workflow may turn that task into customer contact,
+  proof work, checkout, payment, publication, or release. Generic outbox work
+  must atomically claim and conditionally settle the same row before a provider
+  call can be treated as belonging to that worker.
+## 2026-09-05 — Client-side success is not intake proof
+
+- Observation: reporting a completed Solution Finder before the request API
+  returns can make an unsaved visitor response appear durable; presenting a
+  catalogue price as a direct purchase can likewise overstate the commercial
+  state.
+- Guidance: require the existing API's affirmative result and request ID before
+  showing success, keep submitted answers available for an explicit retry on
+  failure, and use a server-returned continuation URL when it exists. Keep
+  public $199/$499 scope comparison in the research lane; checkout eligibility
+  and any optional renewal remain server-controlled account states.
+- Boundary: local mocked-response browser checks do not prove production
+  persistence, payment, renewal, or customer delivery.
+## 2026-09-05 — An external payment handoff is an interaction boundary, not commerce evidence
+
+- Observation: a business-owned Cash App URL, existing QR image, or generic
+  payment link can make it easier for a client to leave a Starter site, but it
+  proves none of the facts that Commerce or fulfillment needs. A QR scan cannot
+  be observed by the site at all.
+- Guidance: keep payment-profile configuration organization-scoped and require
+  a verified customer with active `owner` membership. A consumer site composes
+  it only through its existing exact converted-request → booking-site →
+  organization binding; do not create a second site-key or request binding.
+  `viewed` means rendered and `opened` means outbound action requested. Neither
+  event is a payment attempt, purchase, receipt, paid order, booking, service
+  reservation, provider verification, or FAMtastic settlement. Public read
+  stays absent until the owner enables it, and configurations must remain
+  isolated across organizations.
+
+## 2026-09-05 — PHP 8.5 rejects readonly redeclarations of inherited controller properties
+
+- Observation: `ControllerBase` already owns a mutable protected
+  `$configFactory`; declaring a readonly child property with that same name is a
+  fatal during route discovery, stopping the whole custom module before an
+  unrelated route is reached.
+- Guidance: inject a controller dependency under a distinct child-property
+  name. Exercise a full isolated module install in acceptance, not only PHP
+  lint, to catch class-loading failures.
+
 ## 2026-09-05 — Six automated checks, six false results
 
 Every real defect this session was caught by looking at the artifact. Every check

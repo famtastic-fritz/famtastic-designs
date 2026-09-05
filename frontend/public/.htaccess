@@ -41,8 +41,30 @@
   # the React shell and does not broaden the shared Drupal document root.
   RewriteRule ^deep-dive/[^/]+/?$ /index.html [L]
 
-  # Customer account links, checkout purchase, and direct intake routes.
-  RewriteRule ^(?:login|verify-email|reset-password|buy|purchase|pricing|intake)(?:/.*)?$ /index.html [L]
+  # Customer account links, request continuation, and guided intake routes.
+  RewriteRule ^(?:login|verify-email|reset-password|buy|purchase|pricing|start|intake)(?:/.*)?$ /index.html [L]
+
+  # Public film library. The build writes a real index.html for /watch and for
+  # every /watch/<slug>, so those requests resolve as files and never reach a
+  # rewrite. These rules exist for the cases that DO reach it: a trailing-slash
+  # variant, a stale or mistyped slug, and any film added to the catalog before
+  # its shell is rebuilt. Without them the request falls through this
+  # allowlist-only rule set and 404s in production even though the React route
+  # is correct.
+  #
+  # Both conditions are load-bearing. `!-f` keeps these lines off the MP4s and
+  # posters, which are real files that must be served as themselves. `!-d` keeps
+  # them off the generated per-film shells: /watch/ and /watch/<slug>/ are real
+  # DIRECTORIES holding their own index.html, and mod_rewrite runs before
+  # DirectoryIndex — without `!-d` these rules would quietly replace every
+  # film's structured-data shell with the generic app shell, which is the exact
+  # failure this route was built to avoid.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^watch/?$ /index.html [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^watch/[^/]+/?$ /index.html [L]
 
   # Public film library. The build writes a real index.html for /watch and for
   # every /watch/<slug>, so those requests resolve as files and never reach a

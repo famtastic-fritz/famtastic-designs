@@ -31,6 +31,8 @@ export const resetCustomerPassword = (token, password) => request('/reset-passwo
 export const getCustomerWorkspace = (organization = '') => request(`/workspace${organization ? `?organization=${encodeURIComponent(organization)}` : ''}`);
 export const getCustomerCatalog = () => request('/catalog');
 export const createCommerceCheckout = (payload) => request('/checkout', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
+export const getPaymentHandoff = (organization) => request(`/payment-handoff?organization=${encodeURIComponent(organization)}`);
+export const savePaymentHandoff = (payload) => request('/payment-handoff', { method: 'PUT', csrf: true, body: JSON.stringify(payload) });
 export const createWebsiteRequest = (payload) => request('/website-requests', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const updateWebsiteRequest = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}`, { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const decideWebsiteRequestProof = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}/proof-decision`, { method: 'POST', csrf: true, body: JSON.stringify(payload) });

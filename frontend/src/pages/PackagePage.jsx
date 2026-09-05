@@ -66,7 +66,9 @@ export default function PackagePage() {
 
   const included = plan.whatsIncluded.length ? plan.whatsIncluded : plan.features;
   const isWebBasics = /199|web basics/i.test(`${plan.price} ${plan.title}`);
-  const cta = isWebBasics ? { label: 'Buy Web Basics securely', href: '/buy' } : { label: plan.ctaText, href: plan.ctaHref };
+  const cta = isWebBasics
+    ? { label: 'Research Web Basics', href: '/start?option=web-basics' }
+    : { label: 'Start a scoped request', href: '/start' };
 
   return (
     <article>
@@ -124,9 +126,9 @@ export default function PackagePage() {
 
       <CTABanner
         title="Ready to get started?"
-        body="The listed package price applies to its defined scope. Intake confirms fit, and any different scope or optional add-on is explained before approval."
+        body="The listed package price applies to its defined scope. Start with research and a saved brief; website payment is available only from the eligible request in your account."
         primaryCta={cta}
-        secondaryCta={{ label: 'Contact', href: '/contact' }}
+        secondaryCta={{ label: 'Compare website options', href: '/website-options' }}
       />
     </article>
   );

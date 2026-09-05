@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A public intake is not saved until the server says it is
+
+- Observation: a friendly client-side completion state can falsely imply a
+  saved lead, quote, or purchasable website when the intake request has failed.
+  Static catalog scope and price labels can create the same problem when they
+  are presented as a reservation or authorization.
+- Guidance: show a public success state only after the existing endpoint
+  returns both an affirmative result and durable request identifier. Preserve
+  the answers on error, make retry and changing the contact information easy,
+  and render account continuation only from the server-provided URL. Describe
+  $199 and $499 as research starting points, never as a public direct checkout
+  or an automatic recurring-payment commitment.
+- Boundary: mocked browser coverage proves client behavior, not deployed
+  Drupal persistence, payment collection, recurring renewal, or customer
+  delivery.
+
 ## 2026-09-05 — Two silent gates stand between a working route and a working page
 
 Building the `/watch` film library surfaced two failure modes that a green

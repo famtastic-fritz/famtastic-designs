@@ -150,6 +150,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\MicrositeService
     arguments: ['@database', '@datetime.time']
 
+  famtastic_pipeline.payment_handoffs:
+    class: Drupal\famtastic_pipeline\Service\PaymentHandoffService
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.booking_site_owners']
+
   famtastic_pipeline.booking_requests:
     class: Drupal\famtastic_pipeline\Service\BookingRequestService
     arguments: ['@database', '@datetime.time', '@uuid']
@@ -180,7 +184,7 @@ services:
 
   famtastic_pipeline.commerce_lifecycle:
     class: Drupal\famtastic_pipeline\Service\CommerceLifecycleService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@famtastic_pipeline.customer_portal', '@config.factory', '@famtastic_pipeline.operational_ledger']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@famtastic_pipeline.customer_portal', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.booking_site_owners']
 
   famtastic_pipeline.lifecycle_operations:
     class: Drupal\famtastic_pipeline\Service\LifecycleOperationsService

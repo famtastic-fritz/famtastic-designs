@@ -11,7 +11,8 @@
     "dev": "vite",
     "build": "vite build && node scripts/generate-seo-shells.mjs",
     "preview": "vite preview",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:public-flow": "node scripts/test-public-customer-flow.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.42.2",
