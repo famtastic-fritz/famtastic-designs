@@ -39,6 +39,8 @@ Proof:
 
 **Activation and template follow-through (2026-09-04):** an explicit customer draft → submitted transition queues exactly one proof job and a separate Concierge “Design Review started” receipt. The subsequent owner-approved proof release remains a distinct Studio Review email. New outbox rows persist template ID/version, and `docs/templates/TRANSACTIONAL_EMAIL_TEMPLATE_REGISTRY_V1.md` is the versioned inventory and copy/claim contract. The committed source has local unit/static evidence; one owner-authorized preview was accepted by production SMTP for `fritz.medine@gmail.com` as `<thaQpdhEYtsPNgWGbnVIuMyUSVBEDyvRIrbiF7GPuo@default>`, using the exact source-rendered Tighten Up Your Locs payload. It did not change Shay’s draft request, create a job, send to Shay, or deploy the source/migration. Gmail inbox confirmation remains separate evidence.
 
+**Visual alignment gate (2026-09-04):** the owner preview exposed that the v1 receipt was technically branded but visually generic. A review-only v2 mock now lives at `docs/design/mockups/2026-09-04-concierge-intake-email-v2.html` and is served locally for inspection. It proposes the Business Solutions Studio / Business Signal Map visual language while retaining honest lifecycle states. Do not translate it into the production renderer, re-send an owner preview, submit Shay, or send her mail until the visual direction is approved.
+
 **Implementation order:**
 
 1. Approve the starter-site contract and bounded report schema: sources/date, observed facts, labeled opportunities/hypotheses, constraints, customer decisions, and no growth guarantees.

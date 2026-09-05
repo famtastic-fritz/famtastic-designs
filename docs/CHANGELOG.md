@@ -1,5 +1,23 @@
 # Product changelog
 
+## 2026-09-04 — Concierge intake email v2 visual direction prepared for review
+
+- Added the local review-only mock
+  `docs/design/mockups/2026-09-04-concierge-intake-email-v2.html`. It replaces
+  the generic transactional-card direction with a FAMtastic Business Solutions
+  Studio narrative: a visual Business Signal Map, transparent workboard
+  (signal map → opportunity/client journey → three working directions), a
+  no-payment boundary, and a private-workspace CTA.
+- The direction is grounded in the repository's stronger Booked & Branded
+  email/room visual system and the FAMtastic agentic-business-solutions brand
+  language. It uses only deterministic CSS shapes in the mock—not external
+  tracking images, invented research, fake agent activity, or a sendable
+  customer link.
+- This is a design candidate only. The live `customer_intake_submitted` v1
+  renderer, existing owner SMTP preview, customer state, and Shay delivery
+  remain unchanged until Fritz approves the visual direction and its
+  email-client-safe translation.
+
 ## 2026-09-04 — Versioned Concierge email templates for proof activation
 
 - A completed account-owned website intake, when the customer explicitly
