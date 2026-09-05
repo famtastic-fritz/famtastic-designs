@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>My Customers Know Where I Am</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; }
+      body {
+        --paper: #c3bba6;
+        --paper-warm: #b8b09b;
+        --ink: #2a2126;
+        --ink-soft: #4e4348;
+        --muted: #4f4448;
+        --shadow: #33272e;
+        --accent: #7fb449;
+        --rule: #b7ad9a;
+        background: var(--paper);
+        font-family: Inter, sans-serif;
+        color: var(--ink);
+      }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+      #base { position: absolute; inset: 0; background: var(--paper); z-index: 0; }
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .eyebrow {
+        position: absolute; left: 84px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700;
+        font-size: 30px; letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--muted); opacity: 0;
+      }
+      .hl {
+        position: absolute; left: 84px;
+        font-family: Oswald, sans-serif; font-weight: 700;
+        line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase;
+        white-space: nowrap; opacity: 0;
+      }
+      .body {
+        position: absolute; left: 84px; width: 912px;
+        font-family: Inter, sans-serif; font-weight: 400;
+        font-size: 44px; line-height: 1.28; letter-spacing: -0.01em;
+        color: var(--ink); opacity: 0;
+      }
+      .accent-rule {
+        position: absolute; left: 84px; height: 12px;
+        background: var(--accent); transform-origin: 0% 50%;
+      }
+      .vignette {
+        position: absolute; inset: 0; pointer-events: none;
+        background: radial-gradient(
+          116% 74% at 50% 40%,
+          rgba(51, 39, 46, 0) 33%,
+          rgba(51, 39, 46, 0.15) 68%,
+          rgba(51, 39, 46, 0.4) 100%
+        );
+      }
+      /* A photograph placed as an object ON the paper, not as a background.
+         The dark night plates keep their darkness; the paper carries the frame. */
+      .photo {
+        position: absolute; overflow: hidden; border-radius: 6px;
+        box-shadow: 0 2px 0 rgba(51, 39, 46, 0.1), 0 24px 54px rgba(51, 39, 46, 0.28);
+        opacity: 0;
+      }
+
+      /* ---- Beat 1 ---------------------------------------------------- */
+      #s1-eb { top: 200px; }
+      #s1-rl { top: 258px; width: 208px; }
+      #s1-q1, #s1-q2, #s1-q3 { font-size: 100px; }
+      #s1-q1 { top: 330px; }
+      #s1-q2 { top: 438px; }
+      #s1-q3 { top: 546px; }
+      #s1-card { left: 84px; top: 730px; width: 912px; height: 1000px; }
+      #s1-card img { position: absolute; left: 0; top: -420px; width: 912px; height: 1633px; object-fit: cover; }
+
+      /* ---- Beat 2 — the composition inverts: photograph up, type down -- */
+      #s2-card { left: 84px; top: 110px; width: 912px; height: 620px; }
+      #s2-card img { position: absolute; left: 0; top: -800px; width: 912px; height: 1633px; object-fit: cover; }
+      #s2-hl { top: 812px; font-size: 84px; }
+      #s2-sub { top: 936px; }
+      #s2-k1, #s2-k2 { font-size: 74px; }
+      #s2-k1 { top: 1188px; }
+      #s2-k2 { top: 1280px; }
+      #s2-mk { top: 1428px; width: 168px; }
+      #s2-tail { top: 1490px; font-size: 40px; color: var(--ink-soft); }
+
+      /* ---- Beat 3 — the answer, then the offer ------------------------ */
+      #s3-a1, #s3-a2 { font-size: 84px; }
+      #s3-a1 { top: 280px; }
+      #s3-a2 { top: 372px; }
+      #s3-hair { position: absolute; left: 84px; top: 530px; width: 912px; height: 3px; background: var(--rule); }
+      #s3-eb { top: 546px; }
+      #s3-price {
+        position: absolute; left: 84px; top: 664px;
+        font-family: Oswald, sans-serif; font-weight: 700; font-size: 172px;
+        line-height: 1; letter-spacing: -0.03em; white-space: nowrap; opacity: 0;
+      }
+      #s3-mk { position: absolute; left: 84px; top: 924px; width: 152px; height: 14px;
+        background: var(--accent); transform-origin: 0% 50%; }
+      #s3-pd {
+        position: absolute; left: 260px; top: 912px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 32px;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft);
+        white-space: nowrap; opacity: 0;
+      }
+      #s3-inc { top: 1008px; font-size: 42px; }
+      #s3-foot {
+        position: absolute; left: 84px; top: 1228px; width: 912px;
+        padding-top: 30px; border-top: 3px solid var(--rule);
+        font-family: Inter, sans-serif; font-size: 32px; line-height: 1.4;
+        color: var(--muted); opacity: 0;
+      }
+      #s3-sig {
+        position: absolute; left: 84px; top: 1532px; width: 912px; height: 26px;
+        background: var(--accent); transform-origin: 0% 50%;
+      }
+      #s3-url {
+        position: absolute; left: 84px; top: 1580px; width: 912px;
+        font-family: Oswald, sans-serif; font-weight: 700; font-size: 58px;
+        letter-spacing: -0.01em; color: var(--ink); opacity: 0;
+      }
+      #s3-studio {
+        position: absolute; left: 84px; top: 1678px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 28px;
+        letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="21.1"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div id="base"></div>
+
+      <!-- Beat 1 — the objection. -->
+      <div class="clip scene" id="beat1" data-start="0" data-duration="4.95" data-track-index="1">
+        <div class="vignette"></div>
+        <div class="photo" id="s1-card" data-layout-allow-overflow="true"><img src="assets/plates/pd-c2-card.jpg" alt="" /></div>
+        <div class="eyebrow" id="s1-eb">What we hear</div>
+        <div class="accent-rule" id="s1-rl"></div>
+        <div class="hl" id="s1-q1" data-layout-allow-overlap="true">“My customers</div>
+        <div class="hl" id="s1-q2" data-layout-allow-overlap="true">know where</div>
+        <div class="hl" id="s1-q3" data-layout-allow-overlap="true">I am.”</div>
+      </div>
+
+      <!-- Beat 2 — concede it, then the one it does not cover. -->
+      <div class="clip scene" id="beat2" data-start="4.95" data-duration="9.15" data-track-index="1">
+        <div class="vignette"></div>
+        <div class="photo" id="s2-card" data-layout-allow-overflow="true"><img src="assets/plates/pd-c1-card.jpg" alt="" /></div>
+        <div class="hl" id="s2-hl">The ones you have, yes.</div>
+        <div class="body" id="s2-sub">The family that moved onto that street last year does not.</div>
+        <div class="hl" id="s2-k1" data-layout-allow-overlap="true">They looked on a phone</div>
+        <div class="hl" id="s2-k2" data-layout-allow-overlap="true">at nine at night.</div>
+        <div class="accent-rule" id="s2-mk"></div>
+        <div class="body" id="s2-tail">Your sign was dark. Your door was locked.</div>
+      </div>
+
+      <!-- Beat 3 — the answer, then the offer. -->
+      <div class="clip scene" id="beat3" data-start="14.1" data-duration="7" data-track-index="1">
+        <div class="vignette"></div>
+        <div class="hl" id="s3-a1" data-layout-allow-overlap="true">A page answers</div>
+        <div class="hl" id="s3-a2" data-layout-allow-overlap="true">at nine at night.</div>
+        <div id="s3-hair"></div>
+        <div class="eyebrow" id="s3-eb">Web Basics</div>
+        <div id="s3-price">$199</div>
+        <div id="s3-mk"></div>
+        <div id="s3-pd">55 cents a day</div>
+        <div class="body" id="s3-inc">One page. One year of hosting. A domain that is yours.</div>
+        <div id="s3-foot">First year $199. Then $9.99 a month, plus the domain.</div>
+        <div id="s3-sig"></div>
+        <div id="s3-url">famtasticdesigns.com</div>
+        <div id="s3-studio">FAMtastic Designs</div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var tl = gsap.timeline({ paused: true });
+        var F = 1 / 30;
+        function whip(sel, t, y, d) {
+          tl.set(sel, { opacity: 1, y: y }, t);
+          tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+        }
+        function rise(sel, t, y, d) {
+          tl.fromTo(sel, { opacity: 0, y: y }, { opacity: 1, y: 0, duration: d, ease: "power3.out" }, t);
+        }
+
+        /* ---- Beat 1 ------------------------------------------------- */
+        rise("#s1-eb", 0.18, 16, 0.4);
+        tl.fromTo("#s1-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.44, ease: "power3.out" }, 0.32);
+        whip("#s1-q1", 0.8, 74, 0.19);
+        whip("#s1-q2", 0.8 + 0.19 - F, 46, 0.16);
+        whip("#s1-q3", 0.8 + 0.35 - 2 * F, 46, 0.16);
+        tl.fromTo("#s1-card", { opacity: 0, y: 34, scale: 0.985 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.58, ease: "power3.out" }, 1.55);
+
+        /* ---- Beat 2 — the photograph arrives first, then the argument. */
+        var B = 4.95;
+        tl.fromTo("#s2-card", { opacity: 0, y: -26, scale: 0.99 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.54, ease: "power3.out" }, B + 0.05);
+        whip("#s2-hl", B + 0.3, 60, 0.2);
+        rise("#s2-sub", B + 0.75, 24, 0.44);
+        whip("#s2-k1", B + 3.4, 58, 0.19);
+        whip("#s2-k2", B + 3.4 + 0.19 - F, 44, 0.16);
+        tl.fromTo("#s2-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "power3.out" }, B + 5.5);
+        rise("#s2-tail", B + 5.7, 22, 0.44);
+
+        /* ---- Beat 3 ------------------------------------------------- */
+        var C = 14.1;
+        whip("#s3-a1", C + 0.14, 62, 0.2);
+        whip("#s3-a2", C + 0.14 + 0.2 - F, 46, 0.17);
+        rise("#s3-eb", C + 0.7, 16, 0.34);
+        tl.fromTo("#s3-price", { opacity: 0, scale: 0.87, y: 18 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.46, ease: "back.out(1.6)" }, C + 0.9);
+        tl.fromTo("#s3-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, C + 1.2);
+        rise("#s3-pd", C + 1.28, 0, 0.36);
+        rise("#s3-inc", C + 1.66, 30, 0.42);
+        rise("#s3-foot", C + 2.2, 20, 0.42);
+        tl.fromTo("#s3-sig", { scaleX: 0 }, { scaleX: 1, duration: 0.46, ease: "power3.out" }, C + 2.72);
+        rise("#s3-url", C + 2.9, 26, 0.44);
+        rise("#s3-studio", C + 3.15, 16, 0.4);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

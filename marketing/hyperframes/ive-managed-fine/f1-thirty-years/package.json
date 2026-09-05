@@ -1,0 +1,10 @@
+{
+  "name": "f1-thirty-years",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "npx --yes hyperframes@0.8.29 check",
+    "render": "npx --yes hyperframes@0.8.29 render --quality high",
+    "preview": "npx --yes hyperframes@0.8.29 preview"
+  }
+}

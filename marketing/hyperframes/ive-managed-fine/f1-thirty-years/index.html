@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>I've Managed Fine For Thirty Years</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; }
+      /* Tokens — frame.md is the source of truth. */
+      body {
+        --paper: #c3bba6;
+        --paper-warm: #b8b09b;
+        --ink: #2a2126;
+        --ink-soft: #4e4348;
+        --muted: #4f4448;
+        --shadow: #33272e;
+        --accent: #7fb449;
+        --rule: #b7ad9a;
+        background: var(--paper);
+        font-family: Inter, sans-serif;
+        color: var(--ink);
+      }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+      /* Full-bleed fill lives on a CHILD, never on the root: the producer's
+         frame compositing can drop a root background and render black. */
+      #base { position: absolute; inset: 0; background: var(--paper); z-index: 0; }
+
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .eyebrow {
+        position: absolute; left: 84px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700;
+        font-size: 30px; letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--muted); opacity: 0;
+      }
+      .hl {
+        position: absolute; left: 84px;
+        font-family: Oswald, sans-serif; font-weight: 700;
+        line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase;
+        white-space: nowrap; opacity: 0;
+      }
+      .body {
+        position: absolute; left: 84px; width: 912px;
+        font-family: Inter, sans-serif; font-weight: 400;
+        font-size: 44px; line-height: 1.28; letter-spacing: -0.01em;
+        color: var(--ink); opacity: 0;
+      }
+      .accent-rule {
+        position: absolute; left: 84px; height: 12px;
+        background: var(--accent); transform-origin: 0% 50%;
+      }
+      .vignette {
+        position: absolute; inset: 0; pointer-events: none;
+        background: radial-gradient(
+          116% 74% at 50% 40%,
+          rgba(51, 39, 46, 0) 33%,
+          rgba(51, 39, 46, 0.15) 68%,
+          rgba(51, 39, 46, 0.4) 100%
+        );
+      }
+
+      /* ---- Beat 1: full-bleed plate under a paper band --------------- */
+      #s1-world {
+        position: absolute; left: -54px; top: -104px;
+        width: 1188px; height: 2128px;
+        transform-origin: 50% 50%; will-change: transform;
+      }
+      #s1-world img { display: block; width: 1188px; height: 2128px; object-fit: cover; }
+      #s1-band {
+        position: absolute; left: 0; top: 0; width: 1080px; height: 1190px;
+        background: linear-gradient(
+          to bottom,
+          var(--paper) 0px, var(--paper) 780px, rgba(195, 187, 166, 0) 1190px
+        );
+      }
+      #s1-eb { top: 208px; }
+      #s1-rl { top: 266px; width: 208px; }
+      #s1-q1, #s1-q2, #s1-q3 { font-size: 104px; }
+      #s1-q1 { top: 340px; }
+      #s1-q2 { top: 452px; }
+      #s1-q3 { top: 564px; }
+
+      /* ---- Beat 2: split — type above, photograph band below --------- */
+      #s2-hl { top: 190px; font-size: 116px; }
+      #s2-sub { top: 348px; }
+      .row {
+        position: absolute; left: 148px;
+        font-family: Oswald, sans-serif; font-weight: 700;
+        font-size: 58px; line-height: 1; letter-spacing: -0.015em;
+        text-transform: uppercase; white-space: nowrap;
+        color: var(--ink-soft); opacity: 0;
+      }
+      .mark {
+        position: absolute; left: 84px; width: 34px; height: 34px;
+        background: var(--accent); transform-origin: 50% 50%; opacity: 0;
+      }
+      #s2-r1 { top: 516px; } #s2-m1 { top: 528px; }
+      #s2-r2 { top: 612px; } #s2-m2 { top: 624px; }
+      #s2-r3 { top: 708px; } #s2-m3 { top: 720px; }
+      #s2-k1, #s2-k2, #s2-k3 { font-size: 66px; }
+      #s2-k1 { top: 872px; }
+      #s2-k2 { top: 956px; }
+      #s2-k3 { top: 1040px; }
+      #s2-strip {
+        position: absolute; left: 0; top: 1240px; width: 1080px; height: 680px;
+        overflow: hidden; opacity: 0;
+      }
+      #s2-strip img {
+        position: absolute; left: -54px; top: -34px;
+        width: 1188px; height: 748px; object-fit: cover;
+      }
+      #s2-hair {
+        position: absolute; left: 0; top: 1240px; width: 1080px; height: 4px;
+        background: var(--rule);
+      }
+
+      /* ---- Beat 3: close card ---------------------------------------- */
+      #s3-panel {
+        position: absolute; left: 60px; top: 430px; width: 960px; height: 940px;
+        background: var(--paper-warm);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 64px), calc(100% - 64px) 100%, 0 100%);
+        box-shadow: 0 2px 0 rgba(51, 39, 46, 0.1), 0 26px 58px rgba(51, 39, 46, 0.22);
+        opacity: 0;
+      }
+      #s3-eb { top: 480px; left: 124px; }
+      #s3-price {
+        position: absolute; left: 124px; top: 585px;
+        font-family: Oswald, sans-serif; font-weight: 700; font-size: 184px;
+        line-height: 1; letter-spacing: -0.03em; white-space: nowrap; opacity: 0;
+      }
+      #s3-mk { position: absolute; left: 124px; top: 872px; width: 152px; height: 14px;
+        background: var(--accent); transform-origin: 0% 50%; }
+      #s3-pd {
+        position: absolute; left: 300px; top: 860px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 32px;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft);
+        white-space: nowrap; opacity: 0;
+      }
+      #s3-inc { left: 124px; top: 950px; width: 856px; font-size: 42px; }
+      #s3-foot {
+        position: absolute; left: 124px; top: 1130px; width: 832px;
+        padding-top: 30px; border-top: 3px solid var(--rule);
+        font-family: Inter, sans-serif; font-size: 32px; line-height: 1.4;
+        color: var(--muted); opacity: 0;
+      }
+      #s3-sig {
+        position: absolute; left: 84px; top: 1572px; width: 912px; height: 26px;
+        background: var(--accent); transform-origin: 0% 50%;
+      }
+      #s3-url {
+        position: absolute; left: 84px; top: 1620px; width: 912px;
+        font-family: Oswald, sans-serif; font-weight: 700; font-size: 58px;
+        letter-spacing: -0.01em; color: var(--ink); opacity: 0;
+      }
+      #s3-studio {
+        position: absolute; left: 84px; top: 1718px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 28px;
+        letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="21.15"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div id="base"></div>
+
+      <!-- Beat 1 — the objection, in their words. -->
+      <div
+        class="clip scene"
+        id="beat1"
+        data-start="0"
+        data-duration="5.325"
+        data-track-index="1"
+        data-layout-allow-overflow="true"
+      >
+        <div id="s1-world"><img src="assets/plates/pd-a2.jpg" alt="" /></div>
+        <div id="s1-band"></div>
+        <div class="vignette"></div>
+        <div class="eyebrow" id="s1-eb">What we hear</div>
+        <div class="accent-rule" id="s1-rl"></div>
+        <div class="hl" id="s1-q1" data-layout-allow-overlap="true">“I’ve managed</div>
+        <div class="hl" id="s1-q2" data-layout-allow-overlap="true">fine for</div>
+        <div class="hl" id="s1-q3" data-layout-allow-overlap="true">thirty years.”</div>
+      </div>
+
+      <!-- Beat 2 — concede it, then the mechanism. -->
+      <div
+        class="clip scene"
+        id="beat2"
+        data-start="5.325"
+        data-duration="9.925"
+        data-track-index="1"
+        data-layout-allow-overflow="true"
+      >
+        <div class="vignette"></div>
+        <div id="s2-strip"><img src="assets/plates/pd-a2-tight.jpg" alt="" /></div>
+        <div id="s2-hair"></div>
+        <div class="hl" id="s2-hl">You have.</div>
+        <div class="body" id="s2-sub">They did not find you the same way twice.</div>
+        <div class="mark" id="s2-m1"></div>
+        <div class="row" id="s2-r1">The phone book</div>
+        <div class="mark" id="s2-m2"></div>
+        <div class="row" id="s2-r2">Then a neighbor</div>
+        <div class="mark" id="s2-m3"></div>
+        <div class="row" id="s2-r3">Then a phone</div>
+        <div class="hl" id="s2-k1" data-layout-allow-overlap="true">Same business.</div>
+        <div class="hl" id="s2-k2" data-layout-allow-overlap="true">Three different</div>
+        <div class="hl" id="s2-k3" data-layout-allow-overlap="true">front doors.</div>
+      </div>
+
+      <!-- Beat 3 — the offer, plainly, with the renewal. -->
+      <div
+        class="clip scene"
+        id="beat3"
+        data-start="15.25"
+        data-duration="5.9"
+        data-track-index="1"
+      >
+        <div class="vignette"></div>
+        <div id="s3-panel"></div>
+        <div class="eyebrow" id="s3-eb">Web Basics</div>
+        <div id="s3-price">$199</div>
+        <div id="s3-mk"></div>
+        <div id="s3-pd">55 cents a day</div>
+        <div class="body" id="s3-inc">One page. One year of hosting. A domain that is yours.</div>
+        <div id="s3-foot">First year $199. Then $9.99 a month, plus the domain.</div>
+        <div id="s3-sig"></div>
+        <div id="s3-url">famtasticdesigns.com</div>
+        <div id="s3-studio">FAMtastic Designs</div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var tl = gsap.timeline({ paused: true });
+        var F = 1 / 30;
+
+        function whip(sel, t, y, d) {
+          tl.set(sel, { opacity: 1, y: y }, t);
+          tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+        }
+        function rise(sel, t, y, d) {
+          tl.fromTo(sel, { opacity: 0, y: y }, { opacity: 1, y: 0, duration: d, ease: "power3.out" }, t);
+        }
+
+        /* ---- Beat 1 ------------------------------------------------- */
+        var world = document.getElementById("s1-world");
+        var cam = { scale: 1 };
+        function applyCamera() { world.style.transform = "scale(" + cam.scale + ")"; }
+        applyCamera();
+        tl.fromTo(cam, { scale: 1 }, {
+          scale: 1.055, duration: 5.325, ease: "none", onUpdate: applyCamera
+        }, 0);
+
+        rise("#s1-eb", 0.18, 16, 0.4);
+        tl.fromTo("#s1-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.44, ease: "power3.out" }, 0.32);
+        whip("#s1-q1", 0.82, 76, 0.19);
+        whip("#s1-q2", 0.82 + 0.19 - F, 48, 0.16);
+        whip("#s1-q3", 0.82 + 0.35 - 2 * F, 48, 0.16);
+
+        /* ---- Beat 2 ------------------------------------------------- */
+        var B = 5.325;
+        whip("#s2-hl", B + 0.22, 70, 0.2);
+        rise("#s2-sub", B + 0.62, 22, 0.42);
+
+        /* waterfall on the three eras, each with its accent marker. */
+        var rows = [["#s2-m1", "#s2-r1"], ["#s2-m2", "#s2-r2"], ["#s2-m3", "#s2-r3"]];
+        var t = B + 2.55;
+        for (var i = 0; i < rows.length; i++) {
+          tl.fromTo(rows[i][0], { opacity: 0, scale: 0.2 },
+            { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, t);
+          whip(rows[i][1], t + 0.05, 34, 0.18);
+          t += 0.86;
+        }
+
+        var k = B + 5.9;
+        whip("#s2-k1", k, 62, 0.19);
+        whip("#s2-k2", k + 0.19 - F, 44, 0.16);
+        whip("#s2-k3", k + 0.35 - 2 * F, 44, 0.16);
+
+        /* The photograph returns underneath, tighter — the same wall, closer. */
+        tl.fromTo("#s2-strip", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, B + 0.1);
+
+        /* ---- Beat 3 ------------------------------------------------- */
+        var C = 15.25;
+        tl.fromTo("#s3-panel", { opacity: 0, y: 26 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, C + 0.05);
+        rise("#s3-eb", C + 0.28, 16, 0.34);
+        tl.fromTo("#s3-price", { opacity: 0, scale: 0.87, y: 18 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.46, ease: "back.out(1.6)" }, C + 0.42);
+        tl.fromTo("#s3-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, C + 0.72);
+        rise("#s3-pd", C + 0.8, 0, 0.36);
+        rise("#s3-inc", C + 1.15, 30, 0.42);
+        rise("#s3-foot", C + 1.7, 20, 0.42);
+        tl.fromTo("#s3-sig", { scaleX: 0 }, { scaleX: 1, duration: 0.46, ease: "power3.out" }, C + 2.12);
+        rise("#s3-url", C + 2.3, 26, 0.44);
+        rise("#s3-studio", C + 2.55, 16, 0.4);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

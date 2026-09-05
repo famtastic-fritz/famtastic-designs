@@ -1,0 +1,9 @@
+# Delivered renders and their intermediates. Reproducible from the repo with
+# scripts/stage-assets.sh + build-narration.py + `hyperframes render` +
+# scripts/mux-narration.sh — see README.md.
+*/renders/
+*/verify/
+*/snapshots/
+assets/
+narration/*.wav
+narration/*/

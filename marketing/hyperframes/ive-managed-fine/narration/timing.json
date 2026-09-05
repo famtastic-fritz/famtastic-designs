@@ -1,0 +1,208 @@
+{
+  "generated_at": "2026-09-05T18:11:40-0400",
+  "engine": "voicebox / kokoro / af_heart (house profile 'FAMtastic Narrator')",
+  "cost_usd": 0,
+  "lead_seconds": 0.9,
+  "gap_seconds": 0.45,
+  "tail_seconds": 1.1,
+  "films": {
+    "f1-thirty-years": {
+      "bed": "narration/f1-thirty-years.wav",
+      "bed_duration": 21.15,
+      "film_duration": 21.15,
+      "beats": [
+        {
+          "beat": 1,
+          "audio_start": 0.9,
+          "audio_duration": 4.2,
+          "clip_start": 0.0,
+          "clip_duration": 5.325
+        },
+        {
+          "beat": 2,
+          "audio_start": 5.55,
+          "audio_duration": 9.475,
+          "clip_start": 5.325,
+          "clip_duration": 9.925
+        },
+        {
+          "beat": 3,
+          "audio_start": 15.475,
+          "audio_duration": 4.575,
+          "clip_start": 15.25,
+          "clip_duration": 5.9
+        }
+      ],
+      "text": [
+        "You have managed fine for thirty years. That is not in question.",
+        "But the customers who found you did not find you the same way twice. The phone book. Then a neighbor. Then a phone. Same business, three different front doors.",
+        "One hundred and ninety-nine dollars puts you on the one they use now."
+      ]
+    },
+    "f2-know-where": {
+      "bed": "narration/f2-know-where.wav",
+      "bed_duration": 21.1,
+      "film_duration": 21.1,
+      "beats": [
+        {
+          "beat": 1,
+          "audio_start": 0.9,
+          "audio_duration": 3.825,
+          "clip_start": 0.0,
+          "clip_duration": 4.95
+        },
+        {
+          "beat": 2,
+          "audio_start": 5.175,
+          "audio_duration": 8.7,
+          "clip_start": 4.95,
+          "clip_duration": 9.15
+        },
+        {
+          "beat": 3,
+          "audio_start": 14.325,
+          "audio_duration": 5.675,
+          "clip_start": 14.1,
+          "clip_duration": 7.0
+        }
+      ],
+      "text": [
+        "Your customers know where you are. The ones you already have.",
+        "The family that moved onto that street last year does not. They looked on a phone at nine at night, when your sign was dark and your door was locked.",
+        "A page answers at nine at night. One hundred and ninety-nine dollars for the first year."
+      ]
+    },
+    "f3-not-technical": {
+      "bed": "narration/f3-not-technical.wav",
+      "bed_duration": 22.15,
+      "film_duration": 22.15,
+      "beats": [
+        {
+          "beat": 1,
+          "audio_start": 0.9,
+          "audio_duration": 3.025,
+          "clip_start": 0.0,
+          "clip_duration": 4.15
+        },
+        {
+          "beat": 2,
+          "audio_start": 4.375,
+          "audio_duration": 11.25,
+          "clip_start": 4.15,
+          "clip_duration": 11.7
+        },
+        {
+          "beat": 3,
+          "audio_start": 16.075,
+          "audio_duration": 4.975,
+          "clip_start": 15.85,
+          "clip_duration": 6.3
+        }
+      ],
+      "text": [
+        "You are not technical. You will not need to be.",
+        "Nobody who has a website built for them touches the machinery. You answer questions about your own business, the ones only you can answer. We build it, we host it, we keep it running.",
+        "One hundred and ninety-nine dollars for the first year. You never open a file."
+      ]
+    },
+    "f4-got-burned": {
+      "bed": "narration/f4-got-burned.wav",
+      "bed_duration": 19.8,
+      "film_duration": 19.8,
+      "beats": [
+        {
+          "beat": 1,
+          "audio_start": 0.9,
+          "audio_duration": 3.825,
+          "clip_start": 0.0,
+          "clip_duration": 4.95
+        },
+        {
+          "beat": 2,
+          "audio_start": 5.175,
+          "audio_duration": 5.975,
+          "clip_start": 4.95,
+          "clip_duration": 6.425
+        },
+        {
+          "beat": 3,
+          "audio_start": 11.6,
+          "audio_duration": 7.1,
+          "clip_start": 11.375,
+          "clip_duration": 8.425
+        }
+      ],
+      "text": [
+        "You tried before and you got burned. Let us name the pattern.",
+        "You paid up front. You never saw proof. Then the calls stopped. We run it the other way around.",
+        "You see three real designs of your own business first, reviewed by a person. Then you decide whether to pay."
+      ]
+    },
+    "f5-too-expensive": {
+      "bed": "narration/f5-too-expensive.wav",
+      "bed_duration": 23.825,
+      "film_duration": 23.825,
+      "beats": [
+        {
+          "beat": 1,
+          "audio_start": 0.9,
+          "audio_duration": 3.75,
+          "clip_start": 0.0,
+          "clip_duration": 4.875
+        },
+        {
+          "beat": 2,
+          "audio_start": 5.1,
+          "audio_duration": 10.025,
+          "clip_start": 4.875,
+          "clip_duration": 10.475
+        },
+        {
+          "beat": 3,
+          "audio_start": 15.575,
+          "audio_duration": 7.15,
+          "clip_start": 15.35,
+          "clip_duration": 8.475
+        }
+      ],
+      "text": [
+        "A website is too expensive. Here is the whole number.",
+        "One hundred and ninety-nine dollars. That is fifty-five cents a day for the first year. One page. One year of hosting. A domain that belongs to you.",
+        "After the first year it is nine ninety-nine a month, plus the domain. Business email and maintenance are separate."
+      ]
+    },
+    "f6-retiring": {
+      "bed": "narration/f6-retiring.wav",
+      "bed_duration": 21.5,
+      "film_duration": 21.5,
+      "beats": [
+        {
+          "beat": 1,
+          "audio_start": 0.9,
+          "audio_duration": 3.65,
+          "clip_start": 0.0,
+          "clip_duration": 4.775
+        },
+        {
+          "beat": 2,
+          "audio_start": 5.0,
+          "audio_duration": 10.925,
+          "clip_start": 4.775,
+          "clip_duration": 11.375
+        },
+        {
+          "beat": 3,
+          "audio_start": 16.375,
+          "audio_duration": 4.025,
+          "clip_start": 16.15,
+          "clip_duration": 5.35
+        }
+      ],
+      "text": [
+        "You are close to retiring. Then it matters more, not less.",
+        "Whoever buys this business buys what transfers. A domain transfers. A page transfers. Thirty years of people knowing your name does not. That walks out the door with you.",
+        "One hundred and ninety-nine dollars leaves something behind."
+      ]
+    }
+  }
+}

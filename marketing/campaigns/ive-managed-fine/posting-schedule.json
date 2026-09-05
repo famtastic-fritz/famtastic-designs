@@ -1,0 +1,381 @@
+{
+  "schema_version": 2,
+  "campaign_id": "ive_managed_fine",
+  "program_id": "FAM-FOOT-199",
+  "series_id": "objection-films",
+  "campaign_name": "I've Managed Fine \u2014 Six Objections, Six Films",
+  "created_at": "2026-09-05T18:40:00-04:00",
+  "status": "armed_for_scheduling",
+  "schedule_type": "one_film_per_objection_over_eight_days",
+  "time_zone": "America/New_York",
+  "landing_url": "https://famtasticdesigns.com/onboarding?sku=FAM-FOOT-199",
+  "short_landing_url": "https://famtasticdesigns.com/packages/199-quick-start/",
+  "cadence": {
+    "anchor_et": "2026-09-06T09:30:00-04:00",
+    "interval_minutes": 2130,
+    "set_by": "Six drops across eight days (2026-09-06 to 2026-09-13), roughly every 36 hours with the times walked around the clock so the same objection is not always shown to the same daypart. Weekend mornings and weekday evenings are deliberate: this audience is behind a counter during business hours."
+  },
+  "publish_arming": {
+    "mode": "single_env_switch",
+    "env": "FAMTASTIC_MARKETING_PUBLISH",
+    "note": "Queue script creates DRAFTS unarmed. Conversion to a live schedule requires FAMTASTIC_MARKETING_PUBLISH=true on the operator host. This campaign has NOT been queued by the agent that built it."
+  },
+  "media_resolution": {
+    "policy": "resolve_at_runtime_fail_loud",
+    "note": "Films are gitignored (.gitignore: *.mp4) and exist only on the operator workstation under marketing/campaigns/ive-managed-fine/videos/. They are reproducible from source with marketing/hyperframes/ive-managed-fine/scripts/stage-assets.sh, build-narration.py, `hyperframes render`, and scripts/voice/narrate-film.sh. A drop whose primary media is missing is reported BLOCKED by name; it is never posted image-only by fallback."
+  },
+  "drops": [
+    {
+      "drop_number": 1,
+      "drop_id": "drop-01",
+      "content_id": "drop-01",
+      "scheduled_time": "2026-09-06T09:30:00-04:00",
+      "label": "Drop 1 \u2014 Sat 9:30 AM ET: \"I've managed fine for thirty years.\"",
+      "theme": "Objection 1 \u2014 thirty years is true, and it is the point",
+      "headline": "You have managed fine for thirty years. The way people look for you changed three times.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/ive-managed-fine/videos/01-thirty-years-9x16.mp4",
+      "supporting_media": "marketing/creative/campaign-assets/ive-managed-fine/01-thirty-years-objection-9x16.jpg",
+      "copy": {
+        "facebook_instagram": "\"I've managed fine for thirty years.\"\n\nYou have. That is not in question, and nobody at FAMtastic thinks otherwise.\n\nHere is the part worth thinking about. The customers who found you over those thirty years did not find you the same way twice. Some found you in a phone book. Some heard your name from a neighbor. The ones arriving now are looking on a phone \u2014 and that is the only one of the three you are not on.\n\nSame business. Three different front doors.\n\nWhat a small business website is actually for, in plain terms:\nhttps://famtasticdesigns.com/blog/what-should-a-small-business-website-do/\n\nWeb Basics is a one-time $199 \u2014 about 55 cents a day across the first year. One page, one year of managed hosting, and a domain that is yours. First year $199, then $9.99 a month, plus the domain. Business email and maintenance are separate."
+      },
+      "tags": [
+        "#smallbusiness",
+        "#localbusiness",
+        "#familybusiness",
+        "#famtasticdesigns",
+        "#websitedesign"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "ive_managed_fine",
+        "content": "drop-01"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtozygvv0014rqvtdoy13x82",
+        "postiz_scheduled_id": "cmtozygvv0014rqvtdoy13x82",
+        "postiz_scheduled_group": [
+          "cmtozygvv0014rqvtdoy13x82",
+          "cmtozygwt0015rqvth1fnngwg"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T23:11:22Z",
+          "postiz_post_id": "cmtozygvv0014rqvtdoy13x82",
+          "date_utc": "2026-09-06T13:30:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 2,
+      "drop_id": "drop-02",
+      "content_id": "drop-02",
+      "scheduled_time": "2026-09-07T16:00:00-04:00",
+      "label": "Drop 2 \u2014 Sun 4:00 PM ET: \"My customers know where I am.\"",
+      "theme": "Objection 2 \u2014 the ones you have, yes; the ones who moved in last year, no",
+      "headline": "Your customers know where you are. The family that moved in last year does not.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/ive-managed-fine/videos/02-know-where-9x16.mp4",
+      "supporting_media": "marketing/creative/campaign-assets/ive-managed-fine/02-know-where-objection-9x16.jpg",
+      "copy": {
+        "facebook_instagram": "\"My customers know where I am.\"\n\nThe ones you already have, yes. They have known for years and they are not the question.\n\nThe question is the family that moved onto that street last year. They looked on a phone at nine at night, when your sign was dark and your door was locked. Whatever answered them at nine at night is where they went.\n\nA page answers at nine at night. That is most of what it does.\n\nHow local customers actually find a business now:\nhttps://famtasticdesigns.com/blog/how-local-customers-find-your-business-online/\n\nWeb Basics is a one-time $199 \u2014 about 55 cents a day across the first year. One page, one year of managed hosting, and a domain that is yours. First year $199, then $9.99 a month, plus the domain."
+      },
+      "tags": [
+        "#localbusiness",
+        "#smallbusinessowner",
+        "#shoplocal",
+        "#famtasticdesigns",
+        "#smallbusinesstips"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "ive_managed_fine",
+        "content": "drop-02"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtozykin0016rqvt2qty2ncm",
+        "postiz_scheduled_id": "cmtozykin0016rqvt2qty2ncm",
+        "postiz_scheduled_group": [
+          "cmtozykin0016rqvt2qty2ncm",
+          "cmtozykit0017rqvtb1tejzpm"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T23:11:27Z",
+          "postiz_post_id": "cmtozykin0016rqvt2qty2ncm",
+          "date_utc": "2026-09-07T20:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 3,
+      "drop_id": "drop-03",
+      "content_id": "drop-03",
+      "scheduled_time": "2026-09-09T08:30:00-04:00",
+      "label": "Drop 3 \u2014 Tue 8:30 AM ET: \"I'm not technical.\"",
+      "theme": "Objection 3 \u2014 you will not touch it, and neither does anyone else who has one",
+      "headline": "You are not technical. You will not need to be.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/ive-managed-fine/videos/03-not-technical-9x16.mp4",
+      "supporting_media": "marketing/creative/campaign-assets/ive-managed-fine/03-not-technical-objection-9x16.jpg",
+      "copy": {
+        "facebook_instagram": "\"I'm not technical.\"\n\nYou will not need to be. Nobody who has a website built for them touches the machinery \u2014 not the people you assume are more comfortable with this than you are.\n\nThe division of labour is short enough to say in one breath.\n\nYou answer questions about your own business. What you do, who you serve, what a good customer looks like. Those are the ones only you can answer.\n\nWe build the page, host it, and keep it running.\n\nYou never open a file.\n\nWhat actually happens after you buy, step by step:\nhttps://famtasticdesigns.com/blog/after-buying-199-website/\n\nWeb Basics is a one-time $199 \u2014 about 55 cents a day across the first year. First year $199, then $9.99 a month, plus the domain."
+      },
+      "tags": [
+        "#smallbusinessowner",
+        "#familybusiness",
+        "#websitedesign",
+        "#famtasticdesigns",
+        "#localbusiness"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "ive_managed_fine",
+        "content": "drop-03"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtozyntl0018rqvtu25e86b5",
+        "postiz_scheduled_id": "cmtozyntl0018rqvtu25e86b5",
+        "postiz_scheduled_group": [
+          "cmtozyntl0018rqvtu25e86b5",
+          "cmtoyhkuq000lrqvtw3bs7d4s",
+          "cmtozynts0019rqvtpi23itd6",
+          "cmtoyhkub000krqvtpi6mdogg"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T23:11:31Z",
+          "postiz_post_id": "cmtozyntl0018rqvtu25e86b5",
+          "date_utc": "2026-09-09T12:30:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 4,
+      "drop_id": "drop-04",
+      "content_id": "drop-04",
+      "scheduled_time": "2026-09-10T18:30:00-04:00",
+      "label": "Drop 4 \u2014 Wed 6:30 PM ET: \"I tried before and got burned.\"",
+      "theme": "Objection 4 \u2014 name the pattern, then reverse it",
+      "headline": "You paid up front. You never saw proof. Then the calls stopped.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/ive-managed-fine/videos/04-got-burned-9x16.mp4",
+      "supporting_media": "marketing/creative/campaign-assets/ive-managed-fine/04-got-burned-objection-9x16.jpg",
+      "copy": {
+        "facebook_instagram": "\"I tried before and I got burned.\"\n\nLet us name the pattern out loud, because it is nearly always the same one.\n\nYou paid up front. You never saw proof. Then the calls stopped.\n\nThat is not a reason to be suspicious of websites. It is a reason to be suspicious of that order.\n\nFAMtastic runs it the other way around:\n\n01 \u2014 You describe your business.\n02 \u2014 Three real designs of it get built, and a person reviews them before you see them.\n03 \u2014 You choose one. Then you pay.\n\nIf you do not like any of the three, you have not paid for anything.\n\nThe whole proof-first flow, written out:\nhttps://famtasticdesigns.com/blog/proof-first-website-see-before-you-pay/\n\nWeb Basics is a one-time $199 \u2014 first year $199, then $9.99 a month, plus the domain."
+      },
+      "tags": [
+        "#smallbusiness",
+        "#localbusiness",
+        "#websitedesign",
+        "#famtasticdesigns",
+        "#smallbusinesstips"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "ive_managed_fine",
+        "content": "drop-04"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtozyr25001arqvt2ip7uus7",
+        "postiz_scheduled_id": "cmtozyr25001arqvt2ip7uus7",
+        "postiz_scheduled_group": [
+          "cmtozyr25001arqvt2ip7uus7",
+          "cmtozyr2f001brqvtuvu22vdg"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T23:11:36Z",
+          "postiz_post_id": "cmtozyr25001arqvt2ip7uus7",
+          "date_utc": "2026-09-10T22:30:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 5,
+      "drop_id": "drop-05",
+      "content_id": "drop-05",
+      "scheduled_time": "2026-09-11T12:00:00-04:00",
+      "label": "Drop 5 \u2014 Thu 12:00 PM ET: \"It's too expensive.\"",
+      "theme": "Objection 5 \u2014 the whole number, including what renews",
+      "headline": "$199 for the first year. About 55 cents a day. Then $9.99 a month, plus the domain.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/ive-managed-fine/videos/05-too-expensive-9x16.mp4",
+      "supporting_media": "marketing/creative/campaign-assets/ive-managed-fine/05-too-expensive-offer-9x16.jpg",
+      "copy": {
+        "facebook_instagram": "\"A website is too expensive.\"\n\nHere is the whole number, with nothing held back for later.\n\nFirst year \u2014 $199. That is about 55 cents a day.\nEvery month after that \u2014 $9.99.\nThe domain \u2014 billed separately.\nBusiness email \u2014 a separate product.\nMaintenance \u2014 a separate product.\n\nThat is all of it. No retainer, no minimum term, no line you find out about in month four.\n\nWhat the $199 covers: one focused page, one year of managed hosting, and a domain that belongs to you \u2014 a new one, or the one you already own connected up.\n\nThe arithmetic, written out:\nhttps://famtasticdesigns.com/blog/professional-website-55-cents-a-day/"
+      },
+      "tags": [
+        "#smallbusinessowner",
+        "#affordablewebsite",
+        "#localbusiness",
+        "#famtasticdesigns",
+        "#smallbusiness"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "ive_managed_fine",
+        "content": "drop-05"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtozyubc001crqvtfje6pv1p",
+        "postiz_scheduled_id": "cmtozyubc001crqvtfje6pv1p",
+        "postiz_scheduled_group": [
+          "cmtozyubc001crqvtfje6pv1p",
+          "cmtozyubt001drqvtdds5m5v2"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T23:11:40Z",
+          "postiz_post_id": "cmtozyubc001crqvtfje6pv1p",
+          "date_utc": "2026-09-11T16:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_number": 6,
+      "drop_id": "drop-06",
+      "content_id": "drop-06",
+      "scheduled_time": "2026-09-13T10:00:00-04:00",
+      "label": "Drop 6 \u2014 Sun 10:00 AM ET: \"I'm too close to retiring.\"",
+      "theme": "Objection 6 \u2014 a buyer buys what transfers",
+      "headline": "Whoever buys this business buys what transfers. A domain transfers.",
+      "channels": [
+        "facebook",
+        "instagram"
+      ],
+      "media_type": "video_9x16",
+      "primary_media": "marketing/campaigns/ive-managed-fine/videos/06-retiring-9x16.mp4",
+      "supporting_media": "marketing/creative/campaign-assets/ive-managed-fine/06-retiring-objection-9x16.jpg",
+      "copy": {
+        "facebook_instagram": "\"I'm too close to retiring.\"\n\nThen it matters more, not less.\n\nWhoever buys this business buys what transfers. A domain transfers. A page transfers. Thirty years of people knowing your name does not \u2014 that walks out the door with you on the last day, and the buyer starts over on the part you were best at.\n\nAn address the business owns is one of the few things you can actually hand somebody.\n\nWhat a domain name is, and why it is the piece that belongs to you:\nhttps://famtasticdesigns.com/blog/what-is-a-domain-name/\n\nWeb Basics is a one-time $199 \u2014 about 55 cents a day across the first year. One page, one year of managed hosting, and a domain that is yours. First year $199, then $9.99 a month, plus the domain."
+      },
+      "tags": [
+        "#familybusiness",
+        "#smallbusinessowner",
+        "#businesssuccession",
+        "#famtasticdesigns",
+        "#localbusiness"
+      ],
+      "utm": {
+        "source": "social",
+        "medium": "organic_social",
+        "campaign": "ive_managed_fine",
+        "content": "drop-06"
+      },
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": false
+      },
+      "state": "media_ready",
+      "provider_ids": {
+        "postiz_draft_id": "cmtozyxlx001erqvt3yg44c4c",
+        "postiz_scheduled_id": "cmtozyxlx001erqvt3yg44c4c",
+        "postiz_scheduled_group": [
+          "cmtozyxlx001erqvt3yg44c4c",
+          "cmtoyitn10013rqvtxi89d5gn",
+          "cmtozyxm5001frqvtnypboay8",
+          "cmtoyitmc0012rqvtzzpn70r7"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-05T23:11:44Z",
+          "postiz_post_id": "cmtozyxlx001erqvt3yg44c4c",
+          "date_utc": "2026-09-13T14:00:00.000Z",
+          "integrations": [
+            "facebook",
+            "instagram-standalone"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>A Website Is Too Expensive</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; }
+      body {
+        --paper: #c3bba6;
+        --paper-warm: #b8b09b;
+        --ink: #2a2126;
+        --ink-soft: #4e4348;
+        --muted: #4f4448;
+        --shadow: #33272e;
+        --accent: #7fb449;
+        --rule: #b7ad9a;
+        background: var(--paper);
+        font-family: Inter, sans-serif;
+        color: var(--ink);
+      }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+      #base { position: absolute; inset: 0; background: var(--paper); z-index: 0; }
+      .scene { position: absolute; inset: 0; overflow: hidden; }
+      .eyebrow {
+        position: absolute; left: 84px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700;
+        font-size: 30px; letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--muted); opacity: 0;
+      }
+      .hl {
+        position: absolute; left: 84px;
+        font-family: Oswald, sans-serif; font-weight: 700;
+        line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase;
+        white-space: nowrap; opacity: 0;
+      }
+      .body {
+        position: absolute; left: 84px; width: 912px;
+        font-family: Inter, sans-serif; font-weight: 400;
+        font-size: 44px; line-height: 1.28; letter-spacing: -0.01em;
+        color: var(--ink); opacity: 0;
+      }
+      .accent-rule {
+        position: absolute; left: 84px; height: 12px;
+        background: var(--accent); transform-origin: 0% 50%;
+      }
+      .vignette {
+        position: absolute; inset: 0; pointer-events: none;
+        background: radial-gradient(
+          116% 74% at 50% 40%,
+          rgba(51, 39, 46, 0) 33%,
+          rgba(51, 39, 46, 0.15) 68%,
+          rgba(51, 39, 46, 0.4) 100%
+        );
+      }
+      .photo {
+        position: absolute; overflow: hidden; border-radius: 6px;
+        box-shadow: 0 2px 0 rgba(51, 39, 46, 0.1), 0 24px 54px rgba(51, 39, 46, 0.24);
+        opacity: 0;
+      }
+
+      /* ---- Beat 1 ---------------------------------------------------- */
+      #s1-eb { top: 200px; }
+      #s1-rl { top: 258px; width: 208px; }
+      #s1-q1, #s1-q2 { font-size: 104px; }
+      #s1-q1 { top: 330px; }
+      #s1-q2 { top: 442px; }
+      #s1-card { left: 84px; top: 690px; width: 912px; height: 1070px; }
+      #s1-card img { position: absolute; left: 0; top: -300px; width: 912px; height: 1633px; object-fit: cover; }
+
+      /* ---- Beat 2: the offer card, price as hero --------------------- */
+      #s2-panel {
+        position: absolute; left: 48px; top: 226px; width: 984px; height: 1230px;
+        background: var(--paper-warm);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 76px), calc(100% - 76px) 100%, 0 100%);
+        box-shadow: 0 3px 0 rgba(51, 39, 46, 0.12), 0 32px 70px rgba(51, 39, 46, 0.26);
+        opacity: 0;
+      }
+      #s2-eb { top: 276px; left: 116px; }
+      #s2-price {
+        position: absolute; left: 116px; top: 404px;
+        font-family: Oswald, sans-serif; font-weight: 700; font-size: 236px;
+        line-height: 1; letter-spacing: -0.035em; white-space: nowrap; opacity: 0;
+      }
+      #s2-mk { position: absolute; left: 116px; top: 748px; width: 160px; height: 14px;
+        background: var(--accent); transform-origin: 0% 50%; }
+      #s2-pd {
+        position: absolute; left: 300px; top: 736px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 32px;
+        letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft);
+        white-space: nowrap; opacity: 0;
+      }
+      #s2-hair { position: absolute; left: 116px; top: 812px; width: 848px; height: 3px; background: var(--rule); }
+      .item {
+        position: absolute; left: 116px; width: 848px;
+        font-family: Inter, sans-serif; font-weight: 400;
+        font-size: 44px; line-height: 1.24; letter-spacing: -0.01em;
+        color: var(--ink); opacity: 0;
+      }
+      .item span {
+        display: inline-block; width: 76px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 34px;
+        font-variant-numeric: tabular-nums; color: var(--muted);
+      }
+      #s2-i1 { top: 880px; }
+      #s2-i2 { top: 976px; }
+      #s2-i3 { top: 1072px; }
+      #s2-strip {
+        position: absolute; left: 0; top: 1560px; width: 1080px; height: 360px;
+        overflow: hidden; opacity: 0;
+      }
+      #s2-strip img { position: absolute; left: -54px; top: -18px; width: 1188px; height: 396px; object-fit: cover; }
+      #s2-shair { position: absolute; left: 0; top: 1560px; width: 1080px; height: 4px; background: var(--rule); }
+
+      /* ---- Beat 3: the whole number, as terms ----------------------- */
+      #s3-eb { top: 248px; }
+      #s3-h1 { top: 316px; font-size: 88px; }
+      .trow-l {
+        position: absolute; left: 84px; width: 500px;
+        font-family: Inter, sans-serif; font-weight: 400; font-size: 40px;
+        line-height: 1.2; color: var(--ink); opacity: 0;
+      }
+      .trow-v {
+        position: absolute; left: 596px; width: 400px; text-align: right;
+        font-family: Oswald, sans-serif; font-weight: 700; font-size: 52px;
+        line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); opacity: 0;
+      }
+      .trow-s {
+        position: absolute; left: 596px; width: 400px; text-align: right;
+        font-family: Inter, sans-serif; font-weight: 400; font-size: 34px;
+        line-height: 1.2; color: var(--muted); opacity: 0;
+      }
+      .trule { position: absolute; left: 84px; width: 912px; height: 2px; background: var(--rule); transform-origin: 0% 50%; }
+      #s3-l1 { top: 526px; } #s3-v1 { top: 512px; } #s3-u1 { top: 594px; }
+      #s3-l2 { top: 646px; } #s3-v2 { top: 632px; } #s3-u2 { top: 714px; }
+      #s3-l3 { top: 766px; } #s3-s3v { top: 770px; } #s3-u3 { top: 834px; }
+      #s3-l4 { top: 886px; } #s3-s4v { top: 890px; } #s3-u4 { top: 954px; }
+      #s3-l5 { top: 1006px; } #s3-s5v { top: 1010px; } #s3-u5 { top: 1074px; }
+      #s3-close { top: 1180px; font-size: 66px; }
+      #s3-sig {
+        position: absolute; left: 84px; top: 1532px; width: 912px; height: 26px;
+        background: var(--accent); transform-origin: 0% 50%;
+      }
+      #s3-url {
+        position: absolute; left: 84px; top: 1580px; width: 912px;
+        font-family: Oswald, sans-serif; font-weight: 700; font-size: 58px;
+        letter-spacing: -0.01em; color: var(--ink); opacity: 0;
+      }
+      #s3-studio {
+        position: absolute; left: 84px; top: 1678px;
+        font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 28px;
+        letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="23.825"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div id="base"></div>
+
+      <!-- Beat 1 — the objection. -->
+      <div class="clip scene" id="beat1" data-start="0" data-duration="4.875" data-track-index="1">
+        <div class="vignette"></div>
+        <div class="photo" id="s1-card" data-layout-allow-overflow="true"><img src="assets/plates/pd-p.jpg" alt="" /></div>
+        <div class="eyebrow" id="s1-eb">What we hear</div>
+        <div class="accent-rule" id="s1-rl"></div>
+        <div class="hl" id="s1-q1" data-layout-allow-overlap="true">“A website is</div>
+        <div class="hl" id="s1-q2" data-layout-allow-overlap="true">too expensive.”</div>
+      </div>
+
+      <!-- Beat 2 — the whole number, on the card. -->
+      <div class="clip scene" id="beat2" data-start="4.875" data-duration="10.475" data-track-index="1">
+        <div class="vignette"></div>
+        <div id="s2-panel"></div>
+        <div class="eyebrow" id="s2-eb">Web Basics</div>
+        <div id="s2-price">$199</div>
+        <div id="s2-mk"></div>
+        <div id="s2-pd">55 cents a day, first year</div>
+        <div id="s2-hair"></div>
+        <div class="item" id="s2-i1"><span>01</span>One page</div>
+        <div class="item" id="s2-i2"><span>02</span>One year of managed hosting</div>
+        <div class="item" id="s2-i3"><span>03</span>A domain that belongs to you</div>
+        <div id="s2-strip" data-layout-allow-overflow="true"><img src="assets/plates/pd-p-tight.jpg" alt="" /></div>
+        <div id="s2-shair"></div>
+      </div>
+
+      <!-- Beat 3 — what renews, said before it is asked. -->
+      <div class="clip scene" id="beat3" data-start="15.35" data-duration="8.475" data-track-index="1">
+        <div class="vignette"></div>
+        <div class="eyebrow" id="s3-eb">No small print</div>
+        <div class="hl" id="s3-h1">The whole number.</div>
+
+        <div class="trow-l" id="s3-l1">First year</div>
+        <div class="trow-v" id="s3-v1">$199</div>
+        <div class="trule" id="s3-u1"></div>
+
+        <div class="trow-l" id="s3-l2">Every month after that</div>
+        <div class="trow-v" id="s3-v2">$9.99</div>
+        <div class="trule" id="s3-u2"></div>
+
+        <div class="trow-l" id="s3-l3">The domain</div>
+        <div class="trow-s" id="s3-s3v">billed separately</div>
+        <div class="trule" id="s3-u3"></div>
+
+        <div class="trow-l" id="s3-l4">Business email</div>
+        <div class="trow-s" id="s3-s4v">a separate product</div>
+        <div class="trule" id="s3-u4"></div>
+
+        <div class="trow-l" id="s3-l5">Maintenance</div>
+        <div class="trow-s" id="s3-s5v">a separate product</div>
+        <div class="trule" id="s3-u5"></div>
+
+        <div class="hl" id="s3-close">That is all of it.</div>
+        <div id="s3-sig"></div>
+        <div id="s3-url">famtasticdesigns.com</div>
+        <div id="s3-studio">FAMtastic Designs</div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var tl = gsap.timeline({ paused: true });
+        var F = 1 / 30;
+        function whip(sel, t, y, d) {
+          tl.set(sel, { opacity: 1, y: y }, t);
+          tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+        }
+        function rise(sel, t, y, d) {
+          tl.fromTo(sel, { opacity: 0, y: y }, { opacity: 1, y: 0, duration: d, ease: "power3.out" }, t);
+        }
+
+        /* ---- Beat 1 ------------------------------------------------- */
+        rise("#s1-eb", 0.18, 16, 0.4);
+        tl.fromTo("#s1-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.44, ease: "power3.out" }, 0.32);
+        whip("#s1-q1", 0.78, 74, 0.19);
+        whip("#s1-q2", 0.78 + 0.19 - F, 46, 0.16);
+        tl.fromTo("#s1-card", { opacity: 0, y: 36, scale: 0.985 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.58, ease: "power3.out" }, 1.5);
+
+        /* ---- Beat 2 ------------------------------------------------- */
+        var B = 4.875;
+        tl.fromTo("#s2-panel", { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 0.52, ease: "power3.out" }, B + 0.04);
+        rise("#s2-eb", B + 0.26, 16, 0.34);
+        tl.fromTo("#s2-price", { opacity: 0, scale: 0.86, y: 20 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(1.6)" }, B + 0.44);
+        tl.fromTo("#s2-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "power3.out" }, B + 2.3);
+        rise("#s2-pd", B + 2.4, 0, 0.36);
+        var a = B + 4.4;
+        whip("#s2-i1", a, 40, 0.17);
+        whip("#s2-i2", a + 1.15, 40, 0.17);
+        whip("#s2-i3", a + 2.35, 40, 0.17);
+        tl.fromTo("#s2-strip", { opacity: 0 }, { opacity: 1, duration: 0.7, ease: "power2.out" }, B + 7.9);
+
+        /* ---- Beat 3: the terms, one row at a time. ------------------ */
+        var C = 15.35;
+        rise("#s3-eb", C + 0.12, 16, 0.34);
+        whip("#s3-h1", C + 0.3, 62, 0.2);
+        var rows = [
+          ["#s3-l1", "#s3-v1", "#s3-u1"],
+          ["#s3-l2", "#s3-v2", "#s3-u2"],
+          ["#s3-l3", "#s3-s3v", "#s3-u3"],
+          ["#s3-l4", "#s3-s4v", "#s3-u4"],
+          ["#s3-l5", "#s3-s5v", "#s3-u5"],
+        ];
+        var t = C + 1.0;
+        for (var i = 0; i < rows.length; i++) {
+          rise(rows[i][0], t, 22, 0.34);
+          rise(rows[i][1], t + 0.06, 22, 0.34);
+          tl.fromTo(rows[i][2], { scaleX: 0 }, { scaleX: 1, duration: 0.36, ease: "power2.out" }, t + 0.12);
+          t += 0.72;
+        }
+        whip("#s3-close", C + 5.5, 52, 0.2);
+        tl.fromTo("#s3-sig", { scaleX: 0 }, { scaleX: 1, duration: 0.46, ease: "power3.out" }, C + 5.92);
+        rise("#s3-url", C + 6.1, 26, 0.44);
+        rise("#s3-studio", C + 6.35, 16, 0.4);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

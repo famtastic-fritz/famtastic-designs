@@ -1,0 +1,41 @@
+{
+  "schema": "famtastic.film-narration.v1",
+  "engine": "voicebox / kokoro / af_heart (house profile 'FAMtastic Narrator')",
+  "cost_usd": 0,
+  "note": "One block per beat. Beat boundaries in the film land in the silence BETWEEN blocks, so no cut falls mid-sentence. Numbers are spelled out because the engine reads digits unreliably.",
+  "lead_seconds": 0.9,
+  "gap_seconds": 0.45,
+  "tail_seconds": 1.1,
+  "films": {
+    "f1-thirty-years": [
+      "You have managed fine for thirty years. That is not in question.",
+      "But the customers who found you did not find you the same way twice. The phone book. Then a neighbor. Then a phone. Same business, three different front doors.",
+      "One hundred and ninety-nine dollars puts you on the one they use now."
+    ],
+    "f2-know-where": [
+      "Your customers know where you are. The ones you already have.",
+      "The family that moved onto that street last year does not. They looked on a phone at nine at night, when your sign was dark and your door was locked.",
+      "A page answers at nine at night. One hundred and ninety-nine dollars for the first year."
+    ],
+    "f3-not-technical": [
+      "You are not technical. You will not need to be.",
+      "Nobody who has a website built for them touches the machinery. You answer questions about your own business, the ones only you can answer. We build it, we host it, we keep it running.",
+      "One hundred and ninety-nine dollars for the first year. You never open a file."
+    ],
+    "f4-got-burned": [
+      "You tried before and you got burned. Let us name the pattern.",
+      "You paid up front. You never saw proof. Then the calls stopped. We run it the other way around.",
+      "You see three real designs of your own business first, reviewed by a person. Then you decide whether to pay."
+    ],
+    "f5-too-expensive": [
+      "A website is too expensive. Here is the whole number.",
+      "One hundred and ninety-nine dollars. That is fifty-five cents a day for the first year. One page. One year of hosting. A domain that belongs to you.",
+      "After the first year it is nine ninety-nine a month, plus the domain. Business email and maintenance are separate."
+    ],
+    "f6-retiring": [
+      "You are close to retiring. Then it matters more, not less.",
+      "Whoever buys this business buys what transfers. A domain transfers. A page transfers. Thirty years of people knowing your name does not. That walks out the door with you.",
+      "One hundred and ninety-nine dollars leaves something behind."
+    ]
+  }
+}

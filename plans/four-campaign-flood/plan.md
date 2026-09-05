@@ -4,7 +4,7 @@
 
 **Goal**: Four campaigns built and queued across 8 days (2026-09-06 → 09-13), plus a recurring job that keeps producing without being asked. Success = a non-empty queue every day for 8 days, every asset traceable to a live blog post, and a cron that refills it.
 
-**Status**: active — three of four campaigns queued and live in Postiz, one queued campaign pending, delivery cron running, video library built and blocked only on a git push.
+**Status**: active — all four campaigns queued and verified live in Postiz (48 records), delivery cron running, video library pushed to `origin/main`. Remaining: production deploy of `/watch`, post-flood review.
 
 **Started**: 2026-09-05
 **Ended**: —
@@ -14,27 +14,26 @@
 
 - [x] C1 — Booksy-client campaign (`booked-and-losing`) — **queued live**, 6/6 drops verified in Postiz
 - [x] C2 — Commerce-instinct campaign (`already-know-the-game`, grunge, audience never named) — **queued live**, 6/6 drops verified in Postiz
-- [x] C3 — Late-adopter campaign (`ive-managed-fine`, video-heavy, 6 objection films) — **built, all 6 films rendered/narrated/graded, NOT yet queued**
+- [x] C3 — Late-adopter campaign (`ive-managed-fine`, video-heavy, 6 objection films) — **queued live**, 6/6 drops verified in Postiz
 - [x] C4 — Proof-first campaign (`see-it-first`) — **queued live**, 6/6 drops verified in Postiz
 - [x] Automation: recurring delivery cycle (`scripts/delivery/run-cycle.sh`) — **running on launchd, 07:12 daily**
-- [ ] Schedule C3 into Postiz (blocked on nothing — just needs the `queue-campaign-drops.py --schedule` run)
-- [ ] Video library (`/watch`) — **built, verified, committed locally, NOT YET PUSHED** (see Blocked, below)
-- [ ] Deploy the video library to production (depends on the push landing)
+- [x] Video library (`/watch`) — **built, verified, pushed to `origin/main`** (split into 9 commits after the original 119.8MB commit hit a network-corruption wall — see Blocked, below, now resolved)
+- [ ] Deploy the video library to production
 - [ ] Post-run review: what shipped, what failed, what to adjust for the next flood
 
 ## Current state, in one table
 
 | Item | State | Evidence |
 |---|---|---|
-| Postiz queue | **36 posts scheduled**, Sep 6–13 | Read from Postgres directly, not from script output |
+| Postiz queue | **48 posts scheduled**, Sep 6–13, all 4 campaigns present, zero collisions | Read from Postgres directly (`utm_campaign` per row), not from script output |
 | `booked-and-losing` | queued | 6/6 `VERIFIED` in queue |
 | `already-know-the-game` | queued | 6/6 `VERIFIED` in queue |
 | `see-it-first` | queued | 6/6 `VERIFIED` in queue |
-| `ive-managed-fine` | **built, not queued** | 6 films on disk, `approval.publish: false` |
+| `ive-managed-fine` | queued | 6/6 `VERIFIED` in queue |
 | Delivery cron | running | `launchctl list \| grep famtastic.delivery-cycle` |
-| `/watch` library | **committed, not pushed** | local commit `18a3b238`; push failing on pack-size/inflate error |
-| Repo push state | **2 commits behind push**, local `HEAD` ahead of `origin/main` | `git log --oneline origin/main..HEAD` |
-| Production deploy | **not run since the 15-post blog deploy** | video library not yet live |
+| `/watch` library | **pushed** | `origin/main` at `fdf28a5b`, local/origin synced |
+| Repo push state | **synced** | `git rev-parse HEAD` == `git rev-parse origin/main` |
+| Production deploy | **not yet run for `/watch`** | video library on `main`, not yet deployed |
 
 ## Blocked
 

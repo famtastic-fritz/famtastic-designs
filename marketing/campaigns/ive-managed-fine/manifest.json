@@ -1,0 +1,220 @@
+{
+  "campaign_id": "ive-managed-fine",
+  "name": "I've Managed Fine — Six Objections, Six Films",
+  "version": "1.0.0",
+  "created_at": "2026-09-05",
+  "owner": "fritz",
+  "sequence": {
+    "follows": "cost-is-not-the-reason",
+    "relationship": "different_audience_same_offer",
+    "note": "Cost Is Not The Reason answers one objection loudly. This campaign answers six objections quietly, to a different reader: an established owner, usually older, who has run a good business for years without a website and does not believe they need one. Same SKU (FAM-FOOT-199), different register. It is not a sequel and does not depend on that campaign having been seen."
+  },
+  "business_goal": "Reach established, profitable, web-absent business owners who are not postponing out of cost but out of a reasonable read of decades of their own evidence. Answer the six objections they actually voice, one film each, without condescension — and give the owner a set of films short enough to send to one prospect at a time.",
+  "primary_offer": {
+    "sku": "FAM-FOOT-199",
+    "price_usd": "199.00",
+    "billing": "one_time_first_year_included",
+    "renewal_sku": "FAM-HOST-999",
+    "renewal_usd": "9.99_per_month_after_year_1",
+    "domain_renewal_separate": true,
+    "daily_rate_equivalent": "0.55",
+    "scope_source": "backend/config/famtastic-products.json",
+    "scope": "One focused landing-page website, one year of FAMtastic-managed hosting, and first-year domain registration when needed — or connection of a domain the customer already owns. Business email (FAM-BUSINESS-EMAIL) and maintenance (FAM-MAINTENANCE) are separate products and are never implied to be included."
+  },
+  "audience": {
+    "id": "established_web_absent_owner",
+    "label": "Owners who have run a real business for years with no website",
+    "profile": "Real customers, real revenue, no web presence. Typically older. Expert in their trade, beginner on anything web. Frequently burned once by a 'computer guy'.",
+    "why_they_have_not": "Not laziness and not ignorance. They are pattern-matching on decades of evidence that word of mouth worked — because it did.",
+    "tone_contract": "Never mock the objection. Never imply they are behind. The words 'still', 'finally' and 'even you' are banned from every asset in this campaign. Respect is the whole tone."
+  },
+  "creative_thesis": "Each film states one objection in the owner's own words, in quotation marks, concedes what is true about it out loud, and only then answers with a mechanism. No statistic, no urgency, no named competitor. The images are photographs of objects this viewer has touched — an empty sign bracket, a card-file drawer, a cash drawer, a brass letter slot — on warm paper, never neon.",
+  "films": [
+    {
+      "id": "FILM-01-THIRTY-YEARS",
+      "objection": "I've managed fine for thirty years.",
+      "answer": "True, and the customers who found you did it differently each decade.",
+      "file": "videos/01-thirty-years-9x16.mp4",
+      "source": "marketing/hyperframes/ive-managed-fine/f1-thirty-years/",
+      "duration_s": 21.15,
+      "aspect_ratio": "9:16",
+      "narrated": true,
+      "blog": "https://famtasticdesigns.com/blog/what-should-a-small-business-website-do/"
+    },
+    {
+      "id": "FILM-02-KNOW-WHERE",
+      "objection": "My customers know where I am.",
+      "answer": "The ones you have, yes. The question is the ones who moved in last year.",
+      "file": "videos/02-know-where-9x16.mp4",
+      "source": "marketing/hyperframes/ive-managed-fine/f2-know-where/",
+      "duration_s": 21.1,
+      "aspect_ratio": "9:16",
+      "narrated": true,
+      "blog": "https://famtasticdesigns.com/blog/how-local-customers-find-your-business-online/"
+    },
+    {
+      "id": "FILM-03-NOT-TECHNICAL",
+      "objection": "I'm not technical.",
+      "answer": "You will not touch it. Neither does anyone else who has one.",
+      "file": "videos/03-not-technical-9x16.mp4",
+      "source": "marketing/hyperframes/ive-managed-fine/f3-not-technical/",
+      "duration_s": 22.15,
+      "aspect_ratio": "9:16",
+      "narrated": true,
+      "blog": "https://famtasticdesigns.com/blog/after-buying-199-website/"
+    },
+    {
+      "id": "FILM-04-GOT-BURNED",
+      "objection": "I tried before and got burned.",
+      "answer": "Name the real pattern: paid up front, no proof, then silence. We run it the other way around.",
+      "file": "videos/04-got-burned-9x16.mp4",
+      "source": "marketing/hyperframes/ive-managed-fine/f4-got-burned/",
+      "duration_s": 19.8,
+      "aspect_ratio": "9:16",
+      "narrated": true,
+      "blog": "https://famtasticdesigns.com/blog/proof-first-website-see-before-you-pay/"
+    },
+    {
+      "id": "FILM-05-TOO-EXPENSIVE",
+      "objection": "It's too expensive.",
+      "answer": "55 cents a day. One page, one year of hosting, a domain that is yours — and what renews, said before it is asked.",
+      "file": "videos/05-too-expensive-9x16.mp4",
+      "source": "marketing/hyperframes/ive-managed-fine/f5-too-expensive/",
+      "duration_s": 23.825,
+      "aspect_ratio": "9:16",
+      "narrated": true,
+      "blog": "https://famtasticdesigns.com/blog/professional-website-55-cents-a-day/"
+    },
+    {
+      "id": "FILM-06-RETIRING",
+      "objection": "I'm too close to retiring.",
+      "answer": "Then it matters more, not less. A buyer buys what transfers, and a domain transfers.",
+      "file": "videos/06-retiring-9x16.mp4",
+      "source": "marketing/hyperframes/ive-managed-fine/f6-retiring/",
+      "duration_s": 21.5,
+      "aspect_ratio": "9:16",
+      "narrated": true,
+      "blog": "https://famtasticdesigns.com/blog/what-is-a-domain-name/"
+    }
+  ],
+  "creative_assets": [
+    {
+      "id": "STILL-01-THIRTY-YEARS",
+      "type": "image",
+      "file": "marketing/creative/campaign-assets/ive-managed-fine/01-thirty-years-objection-9x16.jpg",
+      "aspect_ratio": "9:16",
+      "derivation": "frame extracted from the delivered film",
+      "channels": ["instagram_feed", "facebook_feed"]
+    },
+    {
+      "id": "STILL-02-KNOW-WHERE",
+      "type": "image",
+      "file": "marketing/creative/campaign-assets/ive-managed-fine/02-know-where-objection-9x16.jpg",
+      "aspect_ratio": "9:16",
+      "derivation": "frame extracted from the delivered film",
+      "channels": ["instagram_feed", "facebook_feed"]
+    },
+    {
+      "id": "STILL-03-NOT-TECHNICAL",
+      "type": "image",
+      "file": "marketing/creative/campaign-assets/ive-managed-fine/03-not-technical-objection-9x16.jpg",
+      "aspect_ratio": "9:16",
+      "derivation": "frame extracted from the delivered film",
+      "channels": ["instagram_feed", "facebook_feed"]
+    },
+    {
+      "id": "STILL-04-GOT-BURNED",
+      "type": "image",
+      "file": "marketing/creative/campaign-assets/ive-managed-fine/04-got-burned-objection-9x16.jpg",
+      "aspect_ratio": "9:16",
+      "derivation": "frame extracted from the delivered film",
+      "channels": ["instagram_feed", "facebook_feed"]
+    },
+    {
+      "id": "STILL-05-TOO-EXPENSIVE-OFFER",
+      "type": "image",
+      "file": "marketing/creative/campaign-assets/ive-managed-fine/05-too-expensive-offer-9x16.jpg",
+      "aspect_ratio": "9:16",
+      "derivation": "frame extracted from the delivered film",
+      "channels": ["instagram_feed", "facebook_feed"]
+    },
+    {
+      "id": "STILL-06-RETIRING",
+      "type": "image",
+      "file": "marketing/creative/campaign-assets/ive-managed-fine/06-retiring-objection-9x16.jpg",
+      "aspect_ratio": "9:16",
+      "derivation": "frame extracted from the delivered film",
+      "channels": ["instagram_feed", "facebook_feed"]
+    }
+  ],
+  "articles": [
+    {
+      "id": "LIVE-WHAT-SHOULD-A-SITE-DO",
+      "title": "What Should a Small-Business Website Actually Do?",
+      "url": "https://famtasticdesigns.com/blog/what-should-a-small-business-website-do/",
+      "status": "already_live",
+      "used_by": "drop-01"
+    },
+    {
+      "id": "LIVE-HOW-LOCALS-FIND-YOU",
+      "title": "How Local Customers Actually Find Your Business Online",
+      "url": "https://famtasticdesigns.com/blog/how-local-customers-find-your-business-online/",
+      "status": "already_live",
+      "used_by": "drop-02"
+    },
+    {
+      "id": "LIVE-AFTER-BUYING",
+      "title": "What Happens After You Buy the $199 Website?",
+      "url": "https://famtasticdesigns.com/blog/after-buying-199-website/",
+      "status": "already_live",
+      "used_by": "drop-03"
+    },
+    {
+      "id": "LIVE-PROOF-FIRST",
+      "title": "Proof-First Websites: See Three Real Designs Before You Pay",
+      "url": "https://famtasticdesigns.com/blog/proof-first-website-see-before-you-pay/",
+      "status": "already_live",
+      "used_by": "drop-04"
+    },
+    {
+      "id": "LIVE-55-CENTS",
+      "title": "A Professional Website for About 55 Cents a Day",
+      "url": "https://famtasticdesigns.com/blog/professional-website-55-cents-a-day/",
+      "status": "already_live",
+      "used_by": "drop-05"
+    },
+    {
+      "id": "LIVE-WHAT-IS-A-DOMAIN",
+      "title": "What Is a Domain Name and Why Does Your Business Need One?",
+      "url": "https://famtasticdesigns.com/blog/what-is-a-domain-name/",
+      "status": "already_live",
+      "used_by": "drop-06"
+    }
+  ],
+  "direct_send": {
+    "note": "Every film is built to stand alone with no campaign context, because the owner sends them one-to-one. Which film answers which objection is in SEND-DIRECT.md.",
+    "file": "SEND-DIRECT.md"
+  },
+  "channels": {
+    "publishing": ["facebook", "instagram"],
+    "excluded": ["youtube", "tiktok", "x", "linkedin"],
+    "exclusion_reason": "Owner-blocked as of 2026-09-05: YouTube's OAuth token is expired and TikTok is not approved for public posting. X and LinkedIn are out of scope for this campaign. Queueing to a broken channel manufactures a failure; these six drops target only the two channels that publish today."
+  },
+  "spend": {
+    "total_usd": 0,
+    "breakdown": "No provider call of any kind. Plates were already on disk (generated for the platform-dependency drop before this campaign existed). Narration is local Voicebox/kokoro on Apple Silicon — free, no API key, no metered credits. Grading, rendering and muxing are local ffmpeg and Chrome. HyperFrames renders locally; its paid hosted cloud path was not used."
+  },
+  "utm_parameters": {
+    "utm_campaign": "ive_managed_fine",
+    "utm_source_options": ["facebook", "instagram", "direct_dm", "cold_email"],
+    "utm_medium_options": ["organic_social", "dm_outreach", "blog_share"]
+  },
+  "claims_policy": {
+    "statistics": "none used — every argument is a mechanism, per BRAND.md",
+    "competitors": "none named",
+    "delivery_time": "no delivery-time promise appears anywhere; the '48 hours' claim live on older posts is not repeated",
+    "rankings": "no ranking claim",
+    "renewal_disclosure": "every film that names $199 also states '$9.99 a month, plus the domain' on screen",
+    "reviewer_disclosure": "the proof-first film states that a person reviews the designs before the customer sees them"
+  }
+}
