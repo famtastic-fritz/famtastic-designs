@@ -7,7 +7,7 @@ const storyPath = process.argv.find((argument) => !argument.startsWith('--') && 
 const requireRenderReady = process.argv.includes('--require-render-ready');
 
 if (!storyPath) {
-  console.error('Usage: node validate-campaign-story.mjs <story.json> [--require-render-ready]');
+  console.error('Usage: node validate-campaign-story.mjs <human-supplied-treatment.json> [--require-render-ready]');
   process.exit(2);
 }
 
@@ -55,4 +55,4 @@ if (problems.length) {
   process.exit(1);
 }
 
-console.log(`VALID: ${storyPath}${requireRenderReady ? ' is render-ready' : ' has a complete story structure'}`);
+console.log(`VALID: ${storyPath}${requireRenderReady ? ' is render-ready' : ' has a complete supplied-treatment structure'}`);

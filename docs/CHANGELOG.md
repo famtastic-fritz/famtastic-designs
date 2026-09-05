@@ -1,5 +1,27 @@
 # Product changelog
 
+## 2026-09-05 — Evidence-first, provider-neutral creative asset graph
+
+- **Replaced the unproven default story-seed posture.** New creative work now
+  starts as a generic job with an operator-supplied brief and declared inputs;
+  no blog, title, or source file automatically becomes a prescribed visual
+  treatment. The illustrative platform-dependency story seed was removed from
+  active use rather than promoted from a structurally-valid guess.
+- **Added a reusable lineage and comparison contract** under
+  `marketing/creative/asset-graph/`: creative jobs accept briefs, research,
+  guides, media, or previous nodes; every output records its direct inputs,
+  provider/model/tool, hash, cost, and QA. One premium benchmark is compared
+  with at least two cheap/local candidates under a USD 5 still/copy or USD 25
+  video-family experiment cap.
+- **Made the comparison budget executable.** A preflight totals recorded node
+  costs immediately before a paid provider call and blocks a call that would
+  exceed the job cap; the full graph validator also fails an overspent receipt.
+- **Changed storyboarding from a universal rule to an optional adapter.** It
+  can be chosen for a video experiment after a human brief, then assessed for
+  whether it actually illustrates the topic. HyperFrames, Remotion, HeyGen,
+  image-to-video routes, and MoneyPrinterTurbo are all selectable nodes; no
+  provider is promoted without an accepted comparison receipt.
+
 ## 2026-09-05 — Story-first HyperFrames campaign-video contract
 
 - **Made HyperFrames the default final-video route for new campaign

@@ -55,23 +55,22 @@ workaround.
    `marketing/creative/plates/generate-plates.mjs` and prompt library. The
    planned `marketing/creative/textures/` library was not created before the
    interruption.
-4. **Video lane:** the recovered Remotion proof remains valid local evidence,
-   but HyperFrames is now the default **final-video** route for new campaign
-   explainers. Before any new render, make a `campaign-story.v1` from
-   `marketing/creative/prompt-cookbook/schemas/` and follow
-   `VIDEO_STORY_ENGINE.md`: claim ledger -> visual story -> scene storyboard
-   -> review gate -> controlled shot assets -> final composition. The local
-   `faceless-explainer` workflow is the intended topic/blog-title-to-story
-   route. MoneyPrinterTurbo is previsual/narration-draft only, never the final
-   branded-video source of truth. Do not use raw tracking URLs as on-screen
-   text.
+4. **Creative/video lane:** resume from
+   `marketing/creative/asset-graph/README.md`, not from a default storyboard.
+   A job may begin with a human brief plus any declared source (blog, research,
+   guide, image, audio, video, or prior asset node). It must compare one
+   premium benchmark with at least two cheap/local candidates, retain hashes,
+   inputs, costs, QA, and rejected results, and stop at the USD 5 still/copy or
+   USD 25 video experiment cap. The video-story treatment is optional and may
+   only be created from the human brief as an experiment; it no longer infers a
+   story from a title or source. HyperFrames, Remotion, HeyGen, image-to-video,
+   and MoneyPrinterTurbo are selectable nodes, not a mandatory one-provider
+   route. Do not use raw tracking URLs as on-screen text.
 
    Do not buy or generate a premium character anchor, upload a customer
    reference, train a local model, or claim low-cost consistent derivatives
    until owner authorization, rights/consent, a character bible, and a
-   receipt-backed pose-matrix test exist. The current
-   `story-seeds/platform-dependency-pillar.story.json` is deliberately a
-   non-render-ready seed; it has not spent credits or changed social state.
+   receipt-backed pose-matrix test exist.
 
 ## Boundaries and current state
 

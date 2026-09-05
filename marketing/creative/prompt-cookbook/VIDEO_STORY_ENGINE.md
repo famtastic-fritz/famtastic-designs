@@ -1,31 +1,35 @@
-# Story-first campaign-video engine
+# Experimental story-treatment adapter
 
-HyperFrames is the default **final-video** framework for new FAMtastic
-campaign explainers. A video begins with the story, claim ledger, and planned
-keyframes—not with a render timeline. The nearest route is the local
-`faceless-explainer` HyperFrames skill: article or topic -> narrative angle ->
-script -> storyboard -> reviewable render brief -> composition. The
-`muapi-storyboard` route may generate keyframes after a storyboard is approved.
+This is an optional visual-treatment adapter for a video job in the
+[creative asset graph](../asset-graph/README.md). It is not a default source
+interpreter and does not predict a prescribed story from an article, title, or
+other input. A human brief selects whether a job needs a storyboard at all.
+
+When a video experiment does need a storyboard, the local
+`faceless-explainer` HyperFrames workflow can turn the selected treatment into
+an explicit script and board; `muapi-storyboard` may create reviewable
+keyframes afterwards. HyperFrames is a selectable final-composition route, not
+the only asset generator.
 
 MoneyPrinterTurbo remains available for a quick previsual, narration draft, or
 stock-footage sketch. It is not the final branded-video source of truth: its
 default stock-footage/voice assembly cannot establish FAMtastic's claim,
 composition, or character-continuity controls.
 
-## Required flow
+## Optional treatment flow
 
-1. Start with one source: a published blog, approved campaign brief, or
-   source-backed research note. Extract only claims that have a named source.
-2. Make a `campaign-story.v1` document using
+1. Start from the creative job's **human brief** and declared source inputs.
+   An input source informs the treatment; it does not prescribe one.
+2. If the experiment selects a storyboard, make a `campaign-story.v1` document using
    [`schemas/campaign-story.schema.json`](./schemas/campaign-story.schema.json).
    It names the audience, one angle, one visual metaphor, destination, and
    30–90 second duration.
 3. Plan at least five scenes: hook, friction, mechanism, turn, and offer/CTA.
    Each scene gets one visual job and one physical action; it may not merely
    repeat a heading as text on a card.
-4. Review the storyboard and claim ledger before requesting any generation or
-   render. A storyboard is a decision artifact, not an automatic permission to
-   use credits, upload a reference, or publish.
+4. Review the storyboard and claim ledger as an experiment before requesting
+   any generation or render. A storyboard is a decision artifact, not
+   automatic permission to use credits, upload a reference, or publish.
 5. Create or select only the scene ingredients that passed review. Use an
    image-to-video provider for one physical shot at a time, then let
    HyperFrames own type, captions, transitions, safe areas, pace, and final
@@ -46,9 +50,9 @@ node marketing/creative/prompt-cookbook/validate-campaign-story.mjs path/to/stor
 The stricter command must fail until a reviewer has changed the story status,
 storyboard and claim-ledger decisions, provider authorization, and gate status.
 
-The story seed under `story-seeds/` is deliberately **not render-ready**. It
-demonstrates how an existing pillar can become visual causality rather than a
-slide sequence.
+Use the asset-graph validator to authorize the comparison plan before any
+provider call. This treatment validator checks only a supplied storyboard's
+structure; it does not nominate a provider, spend money, or trigger a render.
 
 ## Brand-character anchor and derivative policy
 
@@ -79,11 +83,11 @@ pretend a $3 anchor will automatically yield $0.50 assets.
 
 | Need | Default route | Why |
 |---|---|---|
-| Blog title to a branded explainable story | HyperFrames + faceless-explainer | Forces narrative/script/storyboard before rendering. |
+| Human-brief video experiment needing a visual treatment | HyperFrames + faceless-explainer | Produces a reviewable script/storyboard only when the job selects it. |
 | Reviewable visual beats | Written story document, then `muapi-storyboard` after approval | Keyframes test visual logic before motion spend. |
 | Short cinematic ingredient | Approved image-to-video provider | One controlled shot, then compose deterministically. |
 | Approved talking presenter | HeyGen | Presenter continuity and spoken delivery. |
-| Quick disposable previsual | MoneyPrinterTurbo | Fast draft only; never final campaign truth. |
+| Quick disposable previsual | MoneyPrinterTurbo | Candidate route only; compare it against the job's quality rubric. |
 | Consistent character variations | Approved anchor + validated edit/control route | Variation is measured against a character bible, not guessed. |
 
 ## Receipt additions for character work

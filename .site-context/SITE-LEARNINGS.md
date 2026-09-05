@@ -1,5 +1,24 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Structural validity is not creative proof
+
+- Observation: the first `campaign-story.v1` seed passed its structural gate,
+  but that only proved required fields and review flags existed. It did not
+  prove that the inferred treatment communicated the subject, looked good, or
+  was the right route for the job. A structurally valid seed was therefore a
+  prediction, not evidence.
+- Guidance: never let a blog, title, or other source automatically prescribe a
+  visual treatment. Start an evidence-first creative job from a human brief,
+  then compare one premium benchmark against at least two cheap/local
+  candidates using a task-specific rubric. Retain the full input/output lineage
+  and rejected candidates; promote only after human acceptance. A budget field
+  alone is not a cap: preflight the next paid call against recorded node costs
+  and fail an overspent graph at validation time.
+- Tool decision: HyperFrames is a compositional option for a video node, not
+  the whole asset system. Treat its storyboard route, HeyGen, image/video
+  providers, Remotion, MoneyPrinterTurbo, Photoshop, and local tools as
+  interchangeable capability candidates subject to the job's quality contract.
+
 ## 2026-09-05 — A branded explainer needs visual causality before it needs a renderer
 
 - Observation: the recovered 25-second platform-dependency proof had real

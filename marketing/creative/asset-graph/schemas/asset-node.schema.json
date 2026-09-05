@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://famtasticdesigns.com/schemas/asset-node.v1.json",
+  "title": "FAMtastic asset graph node",
+  "type": "object",
+  "required": ["schema_version", "node_id", "job_id", "kind", "status", "input_source_ids", "input_node_ids", "execution", "output", "qa"],
+  "properties": {
+    "schema_version": { "const": "famtastic.asset-node.v1" },
+    "node_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]+$" },
+    "job_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]+$" },
+    "kind": { "enum": ["copy", "still", "character_anchor", "visual_treatment", "keyframe", "motion_clip", "presenter", "audio", "composition", "other"] },
+    "status": { "enum": ["candidate", "accepted", "rejected", "failed"] },
+    "input_source_ids": { "type": "array", "items": { "type": "string" } },
+    "input_node_ids": { "type": "array", "items": { "type": "string" } },
+    "execution": {
+      "type": "object",
+      "required": ["kind", "provider", "model_or_tool", "input_or_prompt_hash", "cost_usd", "cost_or_credits"],
+      "properties": {
+        "kind": { "enum": ["provider_generation", "deterministic_assembly", "human_authored", "analysis"] },
+        "provider": { "type": "string", "minLength": 1 },
+        "model_or_tool": { "type": "string", "minLength": 1 },
+        "input_or_prompt_hash": { "type": "string", "minLength": 1 },
+        "cost_usd": { "type": "number", "minimum": 0 },
+        "cost_or_credits": { "type": "string", "minLength": 1 },
+        "fallback_reason": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "output": {
+      "type": "object",
+      "required": ["location", "sha256"],
+      "properties": {
+        "location": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "qa": {
+      "type": "object",
+      "required": ["decision", "notes"],
+      "properties": {
+        "decision": { "enum": ["accepted", "revise", "rejected", "not_reviewed"] },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

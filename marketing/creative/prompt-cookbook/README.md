@@ -39,21 +39,21 @@ The canonical field schema lives in
 [prompt-cookbook.json](./prompt-cookbook.json). It makes a prompt reviewable
 before it costs credits.
 
-## Story before video
+## Asset graph before provider choice
 
-For any new campaign explainer, use the
-[story-first campaign-video engine](./VIDEO_STORY_ENGINE.md) before choosing a
-renderer. HyperFrames is the final-video default. The required story contract
-forces a claim ledger, visual causality, scene plan, asset policy, and explicit
-render gate; it prevents a blog title from turning into a sequence of generic
-slides. A non-render-ready example from the published platform-dependency
-pillar lives at
-[story-seeds/platform-dependency-pillar.story.json](./story-seeds/platform-dependency-pillar.story.json).
+The [creative asset graph](../asset-graph/README.md) is the entry point for
+new work. It accepts a human-supplied brief plus any legitimate input source
+and records how each output becomes an input to another skill. It benchmarks a
+premium route against multiple cheaper/local routes before promoting a
+repeatable recipe.
 
-MoneyPrinterTurbo can assist with a fast previsual or narration draft, but it
-is not the final FAMtastic branded-video route. For a premium character, use
-the anchor-and-derivative policy in the story engine: no paid asset, reference
-upload, or claimed cost saving is authorized merely by preparing the recipe.
+The [story-first campaign-video engine](./VIDEO_STORY_ENGINE.md) is now an
+optional video-treatment adapter inside that graph. It must not infer a
+prescribed story from a blog title or source file. MoneyPrinterTurbo, HeyGen,
+image-to-video providers, HyperFrames, Remotion, and deterministic composition
+can all be nodes in a job; none is the universal generator. A paid asset,
+reference upload, or claimed cost saving still needs its separate authority and
+receipt.
 
 ## Image recipes
 
