@@ -15,6 +15,28 @@
   fresh Drupal installer still stops before module enable on an existing PHP
   8.5 inheritance fatal in `BookingRequestController`, so the new synthetic
   runtime script is staged but not yet executed through that harness.
+## 2026-09-05 — Public website research and request-continuation clarity
+
+- Normalized Drupal-owned public `/web` CTA paths to their frontend routes
+  while retaining backend API, admin, checkout, session, and user paths. The
+  production rewrite allowlist now includes the public `/start` intake route.
+- Removed public homepage conversion and revenue counters that did not carry
+  source evidence. Public website CTAs now lead to contained first-party
+  research or the $199 / $499 scope comparison, never a direct purchase path.
+- Made Solution Finder success contingent on the existing intake API returning
+  `ok` and a durable request ID. A failed save keeps the visitor's answers,
+  exposes an error and retry action, and offers account continuation only when
+  the server returns its registration URL.
+- Added the public Starter ($199) versus Business Website ($499) comparison as
+  a read-more experience. It describes only catalog-backed starting scope and
+  directs visitors into research; an account-owned request and selected
+  direction remain prerequisites for website checkout.
+- Website purchase UI now treats the server-returned linked request as the
+  eligibility signal, presents month-13 renewal as optional, and does not
+  represent a public direct checkout or automatic recurring authorization.
+- Verified locally with the public-flow contract script, portal design-DNA
+  validator, production build, and mobile/desktop browser tests using mocked
+  API responses. No deployment, payment, or customer communication occurred.
 
 ## 2026-09-05 — The films get a home of their own at /watch
 

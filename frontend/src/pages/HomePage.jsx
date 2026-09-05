@@ -7,7 +7,6 @@ import {
 import {
   Hero,
   Section,
-  StatsBar,
   ServiceCard,
   CTABanner,
   Stagger,
@@ -18,33 +17,25 @@ import SolutionFinder from '../components/SolutionFinder.jsx';
 /**
  * / — marketing homepage, v1 visual port.
  *
- * Composition: particle Hero → StatsBar → services teaser → Why → Process →
+ * Composition: particle Hero → guided research → website options → services → Why → Process →
  * final CTA, all from the `homepage` node + service_page teasers via the
  * drupalAdapter. When the homepage node is missing/unreachable the
  * HARDCODED FALLBACK renders the same messaging so the page never ships empty.
  */
 const FALLBACK = {
-  headline: 'Websites and Digital Systems Built Around Your Business',
+  headline: 'Websites and Digital Systems Built Around the Work You Need Done',
   subheadline:
-    'We design and build intelligent systems that automate the busywork, answer your customers, and grow your revenue — engineered for your specific business, not a template.',
-  primaryCta: { label: 'Start Your Project', href: '/contact' },
-  secondaryCta: { label: 'See Our Work', href: '/work' },
+    'Start with practical research about your business, then move into a saved brief, a clear recommendation, and the next appropriate step.',
   proofBullets: [
-    'Fixed-scope builds — you always know the price before we start',
-    'Every system verified working before you pay the balance',
-  ],
-  stats: [
-    { id: 'years', value: '22+', label: 'Years engineering systems' },
-    { id: 'systems', value: 'Mobile', label: 'Designed for how customers browse' },
-    { id: 'beya', value: '2024', label: 'BEYA STEM Leader' },
-    { id: 'response', value: 'End-to-end', label: 'From discovery through support' },
+    'Research identifies the starting point before a package is chosen.',
+    'A website request is saved only after the server confirms it.',
   ],
   whyTitle: 'Why FAMtastic Designs?',
   whyItems: [
     {
       id: 'w1',
       title: 'A website should act like a business asset',
-      body: 'Not a brochure that just sits there — every build is scoped around leads, bookings, and revenue.',
+      body: 'Not a brochure that just sits there — every build starts with the customer action and operating work it needs to support.',
     },
     {
       id: 'w2',
@@ -81,8 +72,8 @@ export default function HomePage() {
       // Degrade the include list until the request succeeds so the hero
       // still renders if a paragraph type is missing on the backend.
       const includeOptions = [
-        'field_stats_items,field_process_steps,field_why_items',
         'field_process_steps,field_why_items',
+        'field_process_steps',
         '',
       ];
       for (const include of includeOptions) {
@@ -116,9 +107,6 @@ export default function HomePage() {
 
   const headline = home?.headline || FALLBACK.headline;
   const subheadline = home?.subheadline || FALLBACK.subheadline;
-  const primaryCta = home?.primaryCta?.label ? home.primaryCta : FALLBACK.primaryCta;
-  const secondaryCta = home?.secondaryCta?.label ? home.secondaryCta : FALLBACK.secondaryCta;
-  const stats = home?.stats?.length ? home.stats : FALLBACK.stats;
   const whyTitle = home?.whyTitle || FALLBACK.whyTitle;
   const whyItems = home?.whyItems?.length ? home.whyItems : FALLBACK.whyItems;
   const processTitle = home?.processTitle || FALLBACK.processTitle;
@@ -132,8 +120,8 @@ export default function HomePage() {
         eyebrow="FAMtastic Designs"
         title={headline}
         lede={subheadline}
-        primaryCta={primaryCta}
-        secondaryCta={secondaryCta}
+        primaryCta={{ label: 'Start the research conversation', href: '/start' }}
+        secondaryCta={{ label: 'Compare website starting points', href: '/website-options' }}
         bullets={FALLBACK.proofBullets}
       />
 
@@ -143,13 +131,11 @@ export default function HomePage() {
       </Section>
 
       <CTABanner
-        title="A professional website for about 55 cents a day."
-        body="There may be a hundred reasons your business still doesn’t have a website. Cost is not one of them. Period. See what the $199 Web Basics offer includes before you decide."
-        primaryCta={{ label: 'Explore the $199 website', href: '/55-cents-a-day-website' }}
-        secondaryCta={{ label: 'Start my website', href: '/buy' }}
+        title="Choose the website starting point that fits the work."
+        body="Compare the defined $199 Web Basics and $499 Business Website scopes, then use the Solution Finder to save research for the option that fits."
+        primaryCta={{ label: 'Compare $199 and $499 options', href: '/website-options' }}
+        secondaryCta={{ label: 'Start the Solution Finder', href: '/start' }}
       />
-
-      <StatsBar items={stats} />
 
       <Section
         eyebrow="Services"
@@ -199,8 +185,8 @@ export default function HomePage() {
       <CTABanner
         title={finalCta.title}
         bodyHtml={finalCta.bodyHtml}
-        primaryCta={{ label: primaryCta.label, href: primaryCta.href }}
-        secondaryCta={{ label: 'Contact', href: '/contact' }}
+        primaryCta={{ label: 'Start the research conversation', href: '/start' }}
+        secondaryCta={{ label: 'Compare website starting points', href: '/website-options' }}
       />
     </>
   );

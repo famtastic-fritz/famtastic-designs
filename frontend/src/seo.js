@@ -27,6 +27,11 @@ export const SEO_PAGES = {
     description: 'Get a professional one-page business website for $199—about 55 cents a day across one year—with first-year basic hosting and a domain path included.',
     keywords: '$199 website, 55 cents a day website, affordable small business website, domain and hosting included, one page website',
   },
+  '/website-options': {
+    title: 'Compare $199 and $499 Website Options | FAMtastic Designs',
+    description: 'Compare the defined Web Basics and Business Website starting points, then use research to confirm the right scope before any website purchase.',
+    keywords: '$199 website, $499 business website, website scope comparison, business website intake',
+  },
   '/packages': {
     title: 'Packages | Custom Website & AI Solution Builds',
     description:
@@ -69,12 +74,12 @@ export const SEO_PAGES = {
       'Use the FAMtastic Designs Solution Finder to describe your custom website, application, AI-powered system, or digital solution project.',
   },
   '/buy': {
-    title: 'Secure Checkout | Start Your Project | FAMtastic Designs',
-    description: 'Purchase your custom website package or digital system securely with first-year hosting and domain included.',
+    title: 'Continue a Website Request | FAMtastic Designs',
+    description: 'Website checkout is available from an eligible, account-owned request after its brief and selected website direction are recorded.',
   },
   '/purchase': {
-    title: 'Secure Checkout | Start Your Project | FAMtastic Designs',
-    description: 'Purchase your custom website package or digital system securely with first-year hosting and domain included.',
+    title: 'Continue a Website Request | FAMtastic Designs',
+    description: 'Website checkout is available from an eligible, account-owned request after its brief and selected website direction are recorded.',
   },
   '/privacy-policy': {
     title: 'Privacy Policy | FAMtastic Designs',

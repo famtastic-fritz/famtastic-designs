@@ -2,8 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { createCommerceCheckout, customerSession, getCustomerCatalog, getCustomerWorkspace } from '../api/customer.js';
 
-const WEBSITE_SKUS = ['FAM-FOOT-199', 'FAM-BUSINESS-499', 'FAM-CUSTOM-1999', 'FAM-GROWTH-3999', 'FAM-AI-6999', 'FAM-LANDING-1499'];
-
 const BUNDLE_MAP = {
   'web-basics': 'FAM-FOOT-199',
   '199-quick-start': 'FAM-FOOT-199',
@@ -52,13 +50,15 @@ export default function PurchasePage() {
   const base = state.products.find((item) => item.sku === baseSku) || state.products.find((item) => item.sku === 'FAM-FOOT-199');
   const requestRecord = state.workspace?.website_requests?.find((item) => item.public_id === websiteRequest);
   const displayedBasePrice = requestRecord?.private_offer ? requestRecord.private_offer.offered_amount_minor / 100 : Number(base?.price || 199);
-  const websiteBundles = state.products.filter((item) => WEBSITE_SKUS.includes(item.sku) || item.sku === 'FAM-FOOT-199');
   const addons = state.products.filter((item) => item.type === 'add_on' && item.billing?.kind !== 'recurring');
   const total = useMemo(() => displayedBasePrice + addons.filter((item) => selected.includes(item.sku)).reduce((sum, item) => sum + Number(item.price), 0), [displayedBasePrice, addons, selected]);
   const organization = state.session?.organizations?.[0];
+  const checkoutEligible = Boolean(websiteRequest && requestRecord?.direct_checkout_available);
+  const portalHref = '/portal?start=website';
 
   async function checkout(event) {
     event.preventDefault();
+    if (!checkoutEligible) return;
     setBusy(true);
     setState((current) => ({ ...current, error: '' }));
     try {
@@ -87,12 +87,27 @@ export default function PurchasePage() {
   if (!state.session) {
     return (
       <section className="purchase-shell">
-        <span>Account-protected checkout</span>
-        <h1>{base?.title || 'Start Your Project'}</h1>
-        <p>Create or sign in to your customer account to lock in your fixed price, hosting, and project workspace.</p>
+        <span>Website request required</span>
+        <h1>Website checkout follows a saved request.</h1>
+        <p>There is no direct public website checkout. Sign in to continue an existing request, or start research first so you can submit a brief and select an available website direction.</p>
         <Link className="btn btn--lime" to={`/login?redirect=${currentRedirect}`}>
-          Sign in or create account →
+          Sign in to continue a request →
         </Link>
+        <Link className="btn btn--secondary" to="/start">Start website research →</Link>
+      </section>
+    );
+  }
+
+  if (!checkoutEligible) {
+    return (
+      <section className="purchase-shell">
+        <span>Website request required</span>
+        <h1>Complete the request before payment.</h1>
+        <p>A website payment step becomes available only from your account-owned request after its full brief is submitted and one available website direction is selected.</p>
+        {websiteRequest && !requestRecord && <p className="purchase-context">We could not find that request in this account. Open your website workspace to choose the correct request.</p>}
+        {requestRecord && <p className="purchase-context">This request is not ready for payment yet. Continue it in the portal; scope and selected direction stay connected to the purchase step.</p>}
+        <Link className="btn btn--lime" to={portalHref}>Continue in my website workspace →</Link>
+        <Link className="btn btn--secondary" to="/website-options">Compare website starting points →</Link>
       </section>
     );
   }
@@ -105,7 +120,7 @@ export default function PurchasePage() {
       <span>Secure Commerce checkout</span>
       <h1>{base?.title || 'Web Basics Bundle — $199'}</h1>
       <p>{base?.summary || 'One focused high-conversion business page with first-year hosting and domain included.'}</p>
-      {websiteRequest && <p className="purchase-context">This purchase will activate the website request you selected in your portal.</p>}
+      <p className="purchase-context">This payment step is linked to the submitted request and website direction you selected in your portal.</p>
       {requestRecord?.private_offer && (
         <p className="purchase-context">
           <strong>Your private price: {money(displayedBasePrice)}</strong>
@@ -117,21 +132,9 @@ export default function PurchasePage() {
       {state.error && <div className="alert alert--error" role="alert">{state.error}</div>}
 
       <fieldset>
-        <legend>Select Package</legend>
-        {(websiteBundles.length > 0 ? websiteBundles : [{ sku: 'FAM-FOOT-199', title: 'Web Basics Bundle', price: 199, summary: '1-page site with hosting and domain' }]).map((item) => (
-          <label key={item.sku}>
-            <input
-              type="radio"
-              name="bundle"
-              value={item.sku}
-              checked={baseSku === item.sku}
-              onChange={(event) => setBaseSku(event.target.value)}
-              required
-            />{' '}
-            <b>{item.title}</b> — {money(item.price)}
-            <small>{item.summary}</small>
-          </label>
-        ))}
+        <legend>Website recommendation</legend>
+        <p><b>{base?.title}</b> — {money(displayedBasePrice)}</p>
+        <small>This package is the recommendation or account-scoped offer linked to the request you completed. To change scope, return to the website workspace.</small>
       </fieldset>
 
       <fieldset>
@@ -195,10 +198,10 @@ export default function PurchasePage() {
       </fieldset>
 
       <label className="purchase-consent">
-        <input type="checkbox" checked={renewal} onChange={(e) => setRenewal(e.target.checked)} required /> I authorize the hosting included with this package to renew at {renewalPrice}{renewalSku ? '/month' : '/month'} rate after the included first year. I can cancel anytime before renewal from my account.
+        <input type="checkbox" checked={renewal} onChange={(e) => setRenewal(e.target.checked)} /> I choose to authorize hosting to renew at {renewalPrice}/month after the included first year. This is optional; leaving it unchecked does not authorize a recurring charge.
       </label>
       <label className="purchase-consent">
-        <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} required /> I accept the recorded product scope, payment, cancellation, renewal, and domain terms.
+        <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} required /> I accept the recorded product scope, one-time payment, cancellation, and domain terms. This acceptance does not authorize a recurring hosting charge.
       </label>
       <label className="purchase-consent">
         <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} /> Send me useful system updates and relevant offers.

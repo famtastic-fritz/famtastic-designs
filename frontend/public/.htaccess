@@ -41,8 +41,8 @@
   # the React shell and does not broaden the shared Drupal document root.
   RewriteRule ^deep-dive/[^/]+/?$ /index.html [L]
 
-  # Customer account links, checkout purchase, and direct intake routes.
-  RewriteRule ^(?:login|verify-email|reset-password|buy|purchase|pricing|intake)(?:/.*)?$ /index.html [L]
+  # Customer account links, request continuation, and guided intake routes.
+  RewriteRule ^(?:login|verify-email|reset-password|buy|purchase|pricing|start|intake)(?:/.*)?$ /index.html [L]
 
   # Public film library. The build writes a real index.html for /watch and for
   # every /watch/<slug>, so those requests resolve as files and never reach a

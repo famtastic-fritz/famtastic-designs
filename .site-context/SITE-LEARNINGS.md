@@ -12,6 +12,19 @@
   proof work, checkout, payment, publication, or release. Generic outbox work
   must atomically claim and conditionally settle the same row before a provider
   call can be treated as belonging to that worker.
+## 2026-09-05 — Client-side success is not intake proof
+
+- Observation: reporting a completed Solution Finder before the request API
+  returns can make an unsaved visitor response appear durable; presenting a
+  catalogue price as a direct purchase can likewise overstate the commercial
+  state.
+- Guidance: require the existing API's affirmative result and request ID before
+  showing success, keep submitted answers available for an explicit retry on
+  failure, and use a server-returned continuation URL when it exists. Keep
+  public $199/$499 scope comparison in the research lane; checkout eligibility
+  and any optional renewal remain server-controlled account states.
+- Boundary: local mocked-response browser checks do not prove production
+  persistence, payment, renewal, or customer delivery.
 
 ## 2026-09-05 — Six automated checks, six false results
 

@@ -82,14 +82,23 @@ export function listValues(v) {
 }
 
 /**
- * Resolve a Drupal link field (or plain string) to an href.
- * Strips the 'internal:' scheme prefix. Falls back when empty.
+ * Resolve a Drupal link field (or plain string) to a public SPA href.
+ * Drupal is mounted below /web, while public React routes are mounted at the
+ * domain root. Content editors can therefore use either `internal:/start` or
+ * Drupal's `internal:/web/start` without sending a public CTA to backend
+ * chrome. Backend-only paths intentionally retain their /web prefix.
  */
 export function linkHref(v, fallback = '/contact') {
   if (!v) return fallback;
   const raw = typeof v === 'string' ? v : (v.resolvable_uri ?? v.uri ?? v.url ?? '');
   const clean = String(raw).replace(/^internal:/, '').trim();
-  return clean || fallback;
+  if (!clean) return fallback;
+
+  if (clean === '/web' || clean === '/web/') return '/';
+  if (/^\/web\/(?!api(?:\/|$)|admin(?:\/|$)|checkout(?:\/|$)|session(?:\/|$)|user(?:\/|$))/.test(clean)) {
+    return clean.slice('/web'.length) || '/';
+  }
+  return clean;
 }
 
 /** True when a link points off-site (http/https/mailto/tel). */

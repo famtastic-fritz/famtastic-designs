@@ -11,7 +11,7 @@ const facts = [
 ];
 
 const steps = [
-  ['Choose', 'Buy Web Basics securely or complete the assessment if you are not sure the one-page scope fits.'],
+  ['Choose', 'Read the defined Web Basics scope, then complete research if you are not sure the one-page scope fits.'],
   ['Tell us', 'Complete the website intake so we understand the business, audience, offer, content, and contact path.'],
   ['Build', 'FAMtastic turns the approved scope and supplied information into a focused, branded website.'],
   ['Review', 'You review the work, supply any required missing material, and approve the launch direction.'],
@@ -33,10 +33,10 @@ export default function FiftyFiveCentWebsitePage() {
           <p className="campaign-hero__declaration">Cost is not one of them. Period.</p>
           <p className="campaign-hero__lede">Get a professional one-page business website for $199—about <strong>55 cents a day</strong> when averaged across one year.</p>
           <div className="v1-hero__actions">
-            <Link className="v1-btn v1-btn--primary" to="/buy">Start my $199 website</Link>
-            <Link className="v1-btn v1-btn--secondary" to="/start">Check what my business needs</Link>
+            <Link className="v1-btn v1-btn--primary" to="/start?option=web-basics">Research the $199 starting point</Link>
+            <Link className="v1-btn v1-btn--secondary" to="/website-options">Compare it with the $499 option</Link>
           </div>
-          <p className="campaign-disclosure">$199 is a one-time purchase, not daily billing. Scope and renewal details are explained below.</p>
+          <p className="campaign-disclosure">$199 is a one-time defined scope, not daily billing. Research confirms fit; a saved brief and selected direction are required before website checkout is available.</p>
         </div>
       </header>
 
@@ -83,7 +83,7 @@ export default function FiftyFiveCentWebsitePage() {
         <div className="v1-panel"><ul className="v1-dot-list"><li>The $199 price is paid once for the defined Web Basics build.</li><li>Basic managed hosting is included for one year, then currently renews at $9.99/month unless canceled.</li><li>New-domain registration is conditional on availability and included for the first year when selected.</li><li>Domain renewal is a separate annual prepaid charge disclosed before it is due.</li><li>Existing-domain customers do not receive a new-domain renewal charge.</li><li>Ecommerce, custom applications, extra pages, and complex integrations are assessed and scoped separately.</li></ul></div>
       </Section>
 
-      <CTABanner title="Your business can get online for about 55 cents a day." body="Whatever is stopping you, cost is not one of them. Period." primaryCta={{ label: 'Start my $199 website', href: '/buy' }} secondaryCta={{ label: 'Read the full series', href: '/blog/professional-website-55-cents-a-day' }} />
+      <CTABanner title="A focused first website can start at $199." body="Read the scope, compare the $499 Business Website option when you need more than one page, and let research confirm the appropriate path." primaryCta={{ label: 'Research Web Basics', href: '/start?option=web-basics' }} secondaryCta={{ label: 'Compare website options', href: '/website-options' }} />
     </article>
   );
 }
