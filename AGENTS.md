@@ -86,9 +86,21 @@ updated, say so explicitly in the session report rather than skipping silently.
   `agent-skills/famtastic-demand-engine/SKILL.md`.
 - Installed `blog-*`, `seo-*`, and marketing skills are supporting references.
   FAMtastic's repository contracts override generic skill guidance.
-- **The installed generic design skills — `brand`, `design`, `design-system`,
-  `slides`, `ui-styling`, `ui-ux-pro-max`, `banner-design`, `superdesign` — are
-  REFERENCE MATERIAL, never authority on FAMtastic's brand.** `brand` in
+- **Every installed generic design skill is REFERENCE MATERIAL, never authority
+  on FAMtastic's brand.** This now covers 200+ skills across three libraries:
+  `superdesign`; the ui-ux-pro-max set (`brand`, `design`, `design-system`,
+  `slides`, `ui-styling`, `ui-ux-pro-max`, `banner-design`); and the
+  designer-skills set (the `critique-*` suite, `heuristic-evaluation`,
+  `design-debt-audit`, `design-token-audit`, `accessibility-audit`,
+  `research-repository`, and the interaction/gestalt principle skills).
+  **Volume is itself a risk now** — prefer the narrowest relevant skill, and
+  never let one auto-supply audience, positioning, pricing, claims or voice.
+  The `critique-*` suite is the most useful of the three: run a structured pass
+  over a rendered asset instead of eyeballing it. Point `critique-brand-consistency`
+  at `BRAND.md`, `VOICE.md` and the `PALETTES` block in
+  `marketing/creative/templates/famtastic-social-frame.jsx` — do not let it
+  create competing `mood.md` / `tokens.md` files.
+  `brand` in
   particular auto-activates on "branded content, tone of voice, marketing assets,
   style guides," which is exactly where FAMtastic's own doctrine lives. When any
   of them disagrees with `BRAND.md`, `VOICE.md`, Design DNA v1,

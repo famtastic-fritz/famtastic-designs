@@ -8,9 +8,19 @@
         "article graphics",
         "creative variations"
       ],
-      "status": "available_in_codex",
-      "automation": "native_tool",
-      "secret_env": []
+      "status": "authenticated_proven_cost_measured",
+      "automation": "local_swift_worker_cost_capped",
+      "secret_env": [],
+      "access": "website-delivery-swarm/openai_image_worker.swift  --preflight | --prompts <json> --output <dir> [--execute --max-cost-usd <usd>]",
+      "credential": "macOS Keychain, service 'FAMtastic.OpenAI.Image', account 'famtastic-image-worker'. IMAGE-ONLY key. Both service AND account are required - querying by service alone stalls on a Keychain picker.",
+      "proof": "Preflight returned OPENAI_IMAGE_PREFLIGHT_AUTHENTICATED on 2026-09-05. Measured head-to-head against OpenArt for the same model, prompts, dimensions and quality: marketing/campaigns/and-if-it-is-rattler-lifers/evidence/openai-image-api-comparison-20260819/ - 2 images, $0.43385 total ($0.19577 at 2304x1296, $0.238075 at 1344x1680).",
+      "notes": [
+        "THE PREMIUM IMAGE TIER, and it is already paid for and authenticated. gpt-image-2 at roughly $0.20 per large image, with a real USD receipt per call.",
+        "Prefer this over OpenArt for gpt-image-2. Identical model; OpenArt spent 315 credits on the same two images and its ledger yields no direct USD figure, while this route prices every call.",
+        "The worker takes --max-cost-usd. Use it. It is the only image route in the repo with a hard spend ceiling built in.",
+        "Slow: 84-126 seconds per image. It is the anchor tier, not the multiplier - use Gemini Flash Lite at ~$0.0336 for volume.",
+        "Do NOT confuse with 'openai-imagegen-builtin' in the showcase receipts; that is the Codex built-in tool with no model-identity guarantee, not this key."
+      ]
     },
     {
       "id": "adobe_firefly_web",
@@ -438,6 +448,27 @@
         "DOCTRINE RISK, and it is the real one: the `brand` skill auto-activates on branded content, tone of voice, marketing assets and style guides - exactly where FAMtastic's own BRAND.md, VOICE.md and Design DNA live. These skills are reference material, never authority. See AGENTS.md.",
         "Useful local data: 79 styles, 192 product palettes, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, 22 stacks. Good answer to a variety problem; not a source of positioning or claims.",
         "ui-styling ships 29 font families (~5.7 MB of TTF) but NOT Inter and NOT Space Grotesk, so it does not close the FAMtastic brand-typography gap."
+      ]
+    },
+    {
+      "id": "designer_skills_library",
+      "purpose": [
+        "structured design critique of rendered work",
+        "UX research method reference",
+        "design-system and token auditing",
+        "accessibility auditing",
+        "interaction and gestalt principles"
+      ],
+      "status": "installed_reference_only",
+      "automation": "agent_skill",
+      "secret_env": [],
+      "access": ".agents/skills/ (installed 2026-09-05 via `npx skills add owl-listener/designer-skills`)",
+      "notes": [
+        "SECURITY: markdown only, no scripts, no network, no shell. Safest of the three skill installs.",
+        "THE CRITIQUE SUITE IS THE POINT: critique-typography, critique-color, critique-composition, critique-visual-hierarchy, critique-information-density, critique-affordance, critique-brand-consistency, plus heuristic-evaluation, design-debt-audit, design-token-audit and accessibility-audit. These replace eyeballing a render with a structured pass - the gap that let an address overflow a card, a headline slide under artwork, and a signature render at 640pt.",
+        "critique-brand-consistency expects mood.md / voice.md / tokens.md. FAMtastic's equivalents are BRAND.md, VOICE.md and the PALETTES block in marketing/creative/templates/famtastic-social-frame.jsx. Point it at those; do not create competing files.",
+        "Reference material, never authority on FAMtastic brand, audience, pricing or claims. See AGENTS.md.",
+        "This install pushed the repo past 200 installed skills. Volume is now itself a risk: prefer the narrowest relevant skill and never let one auto-supply positioning."
       ]
     }
   ]
