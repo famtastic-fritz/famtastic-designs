@@ -466,6 +466,15 @@ final class CustomerPortalService {
     if (in_array($row['status'], ['submitted', 'checkout_started'], TRUE) && $clean['status'] === 'draft') {
       $clean['status'] = $row['status'];
     }
+    // Customer edits may change the brief, but never erase the durable record
+    // of an included reset or edit round. Research is retained in its own
+    // proof-campaign table below for the same reason.
+    $existingIntake = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    foreach (['proof_design_reset_requests', 'proof_edit_round_requests', 'proof_revision_request'] as $protectedKey) {
+      if (array_key_exists($protectedKey, $existingIntake)) {
+        $clean['intake'][$protectedKey] = $existingIntake[$protectedKey];
+      }
+    }
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_project_request')->fields([
       'status' => $clean['status'], 'project_name' => $clean['project_name'], 'business_name' => $clean['business_name'],
@@ -999,13 +1008,26 @@ final class CustomerPortalService {
    * turning the notification email into a second, untracked review surface.
    */
   private function proofResearchSnapshot(array $row): ?array {
-    try {
-      $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE, flags: JSON_THROW_ON_ERROR);
-    }
-    catch (\JsonException) {
+    $requestId = (int) ($row['id'] ?? 0);
+    $campaignId = (int) ($row['proof_campaign_id'] ?? 0);
+    if (!$requestId || !$campaignId) {
       return NULL;
     }
-    return $this->normalizeProofResearchSnapshot($intake['proof_research_snapshot'] ?? NULL);
+    try {
+      $snapshot = $this->database->select('famtastic_website_proof_research_snapshot', 's')
+        ->fields('s', ['snapshot_json'])
+        ->condition('website_request_id', $requestId)
+        ->condition('proof_campaign_id', $campaignId)
+        ->range(0, 1)->execute()->fetchField();
+      if ($snapshot === FALSE) {
+        return NULL;
+      }
+      $decoded = json_decode((string) $snapshot, TRUE, flags: JSON_THROW_ON_ERROR);
+    }
+    catch (\Exception) {
+      return NULL;
+    }
+    return $this->normalizeProofResearchSnapshot($decoded);
   }
 
   /** Validates and sanitizes the research brief retained with one proof set. */
@@ -1063,13 +1085,33 @@ final class CustomerPortalService {
     }
     $snapshot['approved_by_uid'] = $uid;
     $snapshot['approved_at'] = gmdate(DATE_ATOM, $this->time->getRequestTime());
-    $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
-    $intake['proof_research_snapshot'] = $snapshot;
-    $this->database->update('famtastic_project_request')->fields([
-      'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
-      'changed' => $this->time->getRequestTime(),
-    ])->condition('id', $requestId)->execute();
+    $now = $this->time->getRequestTime();
+    $snapshotJson = json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+    $this->database->merge('famtastic_website_proof_research_snapshot')->key(['website_request_id' => $requestId])->insertFields([
+      'website_request_id' => $requestId,
+      'proof_campaign_id' => (int) $row['proof_campaign_id'],
+      'snapshot_json' => $snapshotJson,
+      'snapshot_hash' => hash('sha256', $snapshotJson),
+      'approved_by_uid' => $uid,
+      'approved_at' => $now,
+      'created' => $now,
+      'changed' => $now,
+    ])->updateFields([
+      'proof_campaign_id' => (int) $row['proof_campaign_id'],
+      'snapshot_json' => $snapshotJson,
+      'snapshot_hash' => hash('sha256', $snapshotJson),
+      'approved_by_uid' => $uid,
+      'approved_at' => $now,
+      'changed' => $now,
+    ])->execute();
     $this->activity((int) $row['organization_id'], 'website_request.proof_research_saved', 'Owner-reviewed proof research snapshot saved.');
+  }
+
+  /** Returns the current owner-reviewed research fields for the owner form only. */
+  public function websiteRequestProofResearchSnapshot(int $requestId): ?array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    return $row ? $this->proofResearchSnapshot($row) : NULL;
   }
 
   /** Returns the included customer review allowance and its current use. */
@@ -1281,8 +1323,20 @@ final class CustomerPortalService {
   /** Records one account-owned selection or revision request. */
   public function decideWebsiteRequestProof(int $customerId, string $publicId, array $input): array {
     $row = $this->ownedWebsiteRequest($customerId, $publicId);
-    if (!$row || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) throw new \RuntimeException('Website proofs are not available.');
+    if (!$row) throw new \RuntimeException('Website proofs are not available.');
     $action = (string) ($input['action'] ?? 'select');
+    if (!in_array($action, ['select', 'revision'], TRUE)) {
+      throw new \InvalidArgumentException('Choose a proof direction or request a permitted revision.');
+    }
+    $status = (string) $row['proof_review_status'];
+    if ($action === 'select' && !in_array($status, ['customer_ready', 'notified'], TRUE)) {
+      throw new \RuntimeException($status === 'selected' || $status === 'revision_requested'
+        ? 'Your proof choice is already recorded. Contact FAMtastic if it needs to be reopened before checkout.'
+        : 'Website proofs are not available.');
+    }
+    if ($action === 'revision' && !in_array($status, ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) {
+      throw new \RuntimeException('Website proofs are not available.');
+    }
     $now = $this->time->getRequestTime();
     if ($action === 'revision') {
       $notes = mb_substr(trim(strip_tags((string) ($input['notes'] ?? ''))), 0, 5000);
@@ -1337,6 +1391,32 @@ final class CustomerPortalService {
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
     return $this->serializeWebsiteRequest($updated);
+  }
+
+  /**
+   * Owner-controlled exception path for a recorded choice before checkout.
+   *
+   * A customer cannot silently replace a choice. This explicit staff action
+   * returns the current proof set to the account and preserves all history.
+   */
+  public function reopenWebsiteRequestProofSelection(int $requestId, int $uid): void {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$row || !in_array($row['proof_review_status'], ['selected', 'revision_requested'], TRUE) || !empty($row['commerce_order_id']) || $row['status'] !== 'submitted') {
+      throw new \RuntimeException('A proof choice can only be reopened before checkout begins.');
+    }
+    $now = $this->time->getRequestTime();
+    $this->database->update('famtastic_project_request')->fields([
+      'proof_review_status' => 'customer_ready',
+      'selected_proof_direction' => '',
+      'selected_proof_at' => NULL,
+      'changed' => $now,
+    ])->condition('id', $requestId)->condition('proof_review_status', $row['proof_review_status'])->execute();
+    $campaign = !empty($row['proof_campaign_id']) ? $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']) : NULL;
+    if ($campaign) {
+      $campaign->set('selected_variant', '')->set('selected_at', NULL)->save();
+    }
+    $this->activity((int) $row['organization_id'], 'website_request.proof_selection_reopened', 'The recorded website proof choice was explicitly reopened by FAMtastic before checkout.');
   }
 
   /** Returns one customer's acknowledgment contact details. */

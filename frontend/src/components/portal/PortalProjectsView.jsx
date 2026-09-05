@@ -164,7 +164,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
               <button
                 type="button"
                 aria-pressed={selected}
-                disabled={busy || selected}
+                disabled={busy || Boolean(selectedDirection)}
                 onClick={() => choose(proof.direction_id)}
               >
                 {savingDirection === proof.direction_id
@@ -172,7 +172,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
                   : selected
                   ? `${proof.direction_name} selected ✓`
                   : selectedDirection
-                  ? `Switch to ${proof.direction_name}`
+                  ? 'Choice locked for review'
                   : `Choose ${proof.direction_name}`}
               </button>
             </article>

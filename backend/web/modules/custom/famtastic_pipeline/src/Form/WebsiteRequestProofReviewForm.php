@@ -62,8 +62,7 @@ final class WebsiteRequestProofReviewForm extends FormBase {
     $notification = $campaignId && $complete ? $this->database->select('famtastic_notification_outbox', 'n')->fields('n')->condition('notification_key', 'website-request:' . $website_request . ':proofs:' . $campaignId . ':' . $proofCount)->execute()->fetchAssoc() : NULL;
     $form['delivery'] = ['#type' => 'item', '#title' => $this->t('Customer delivery'), '#markup' => '<p>' . ($notification ? 'Notification status: <strong>' . htmlspecialchars((string) $notification['status']) . '</strong>' : '<strong>Not queued.</strong> The customer has not been sent these proofs.') . '</p>'];
     if ($complete && $this->requestRow['proof_review_status'] === 'owner_review') {
-      $intake = json_decode((string) $this->requestRow['intake_data'], TRUE) ?: [];
-      $research = is_array($intake['proof_research_snapshot'] ?? NULL) ? $intake['proof_research_snapshot'] : [];
+      $research = $this->portal->websiteRequestProofResearchSnapshot((int) $this->requestRow['id']) ?? [];
       $rationale = is_array($research['direction_rationale'] ?? NULL) ? $research['direction_rationale'] : [];
       $lines = static fn(mixed $value): string => is_array($value) ? implode("\n", $value) : '';
       $form['research'] = ['#type' => 'details', '#title' => $this->t('Research & opportunity snapshot shown with these proofs'), '#open' => TRUE];
@@ -100,6 +99,17 @@ final class WebsiteRequestProofReviewForm extends FormBase {
           '#type' => 'submit', '#value' => $this->t('Revoke and create a new link'), '#proof_action' => 'rotate', '#limit_validation_errors' => [],
         ];
       }
+      if (in_array($this->requestRow['proof_review_status'], ['selected', 'revision_requested'], TRUE) && empty($this->requestRow['commerce_order_id'])) {
+        $form['selection'] = ['#type' => 'details', '#title' => $this->t('Locked customer choice'), '#open' => TRUE];
+        $form['selection']['detail'] = ['#markup' => '<p>The customer’s chosen direction is <strong>' . htmlspecialchars(strtoupper((string) $this->requestRow['selected_proof_direction'])) . '</strong>. Reopening clears that recorded choice and returns this proof set to the customer for a fresh decision. This cannot be used after checkout begins.</p>'];
+        $form['selection']['actions']['#type'] = 'actions';
+        $form['selection']['actions']['reopen'] = [
+          '#type' => 'submit',
+          '#value' => $this->t('Reopen customer proof choice'),
+          '#proof_action' => 'reopen_selection',
+          '#limit_validation_errors' => [],
+        ];
+      }
     }
     return $form;
   }
@@ -123,6 +133,10 @@ final class WebsiteRequestProofReviewForm extends FormBase {
       ]);
       $this->portal->approveWebsiteRequestProof((int) $this->requestRow['id'], (int) $this->account->id());
       $this->messenger()->addStatus($this->t('Proofs approved and one customer notification queued.'));
+    }
+    elseif ($action === 'reopen_selection') {
+      $this->portal->reopenWebsiteRequestProofSelection((int) $this->requestRow['id'], (int) $this->account->id());
+      $this->messenger()->addStatus($this->t('The customer proof choice was reopened. No checkout or provider action was changed.'));
     }
     else {
       $share = $this->portal->manageWebsiteProofShare((int) $this->requestRow['id'], $action, (int) $this->account->id());

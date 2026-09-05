@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Research and a proof selection are decision records, not mutable intake fields
+
+- Observation: storing proof research inside the same JSON blob used by a normal customer intake edit lets a routine save erase the rationale that justified an approved design direction. Treating a customer selection as a normal editable preference creates the inverse problem: the client can silently replace a recorded decision after the work has moved downstream.
+- Guidance: persist approved research separately by exact request/campaign identity; make the customer-facing decision terminal; and use a named, audited owner reopen step before checkout for the rare correction. Likewise, a customer portal session is not sufficient authorization for a business command center—bind access to the exact converted request/site and verify the customer relationship for every action.
+
 ## 2026-09-04 — A staging directory is part of the production boundary
 
 - Observation: GoDaddy removed a dot-prefixed backend staging directory after a release had completed validation and backups but before `rsync` could transfer code. The deployment stopped at exit 23 before the live module/theme swap; no frontend release was attempted. After moving staging to an explicit non-dot private path, the same reviewed release promoted cleanly.

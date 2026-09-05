@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-05 — Proof handoff integrity and first-party owner controls release candidate
+
+- Moved approved website-proof research from mutable intake JSON into a dedicated request/campaign snapshot table. A later intake save can no longer silently erase the approved rationale, market signals, opportunities, or direction evidence shown to the customer.
+- Made a submitted customer design selection final at the portal boundary. The customer cannot switch directions after selecting; an explicit owner-only reopen action exists before checkout and records the exception rather than masking it as a normal edit.
+- Added exact customer-to-site ownership bindings and authenticated first-party owner APIs for request inbox state and availability windows. A valid portal session alone is insufficient: the current customer must own that exact converted request/site binding. These endpoints do not create appointments, calendar events, charges, or published availability automatically.
+- Extended the synthetic lifecycle harness to prove the snapshot survives a later intake save, a second selection is refused, and another verified customer receives no owner-desk data. PHP lint, mobile recipe validation, Portal DNA validation (30/30), frontend production build, and diff hygiene pass. Full Drupal journey execution is currently blocked in this isolated worktree because it has no initialized local database; it must be run after a local database is provisioned and migrations 8052/8053 are applied. No production deployment or customer communication occurred.
+
 ## 2026-09-04 — Tighten Up Your Locs owned mobile business system and review handoff
 
 - Replaced the client-facing proof chooser with a Shay-first self-contained mobile public-site build: branded-domain treatment, services, owner-published availability, protected contact/request boundary, Find Us directions, and a four-action phone dock (Openings, Contact, Find Us, Owner). The site has no client-facing Booksy exit.

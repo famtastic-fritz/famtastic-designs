@@ -415,6 +415,68 @@ famtastic_pipeline.customer_website_request_proof_decision:
   options:
     no_cache: 'TRUE'
 
+# The mobile Owner Desk uses the signed-in customer's account and one durable
+# site-owner binding. It intentionally does not reuse the staff/operator API.
+famtastic_pipeline.customer_booking_owner_requests:
+  path: '/api/customer/owner-sites/{site_key}/booking-requests'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerBookingOwnerController::requests'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_booking_owner_request:
+  path: '/api/customer/owner-sites/{site_key}/booking-requests/{request_id}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerBookingOwnerController::updateRequest'
+  methods: [PATCH]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+    request_id: '\\d+'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_booking_owner_availability:
+  path: '/api/customer/owner-sites/{site_key}/availability'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerBookingOwnerController::availability'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_booking_owner_availability_create:
+  path: '/api/customer/owner-sites/{site_key}/availability'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerBookingOwnerController::availability'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.customer_booking_owner_availability_window:
+  path: '/api/customer/owner-sites/{site_key}/availability/{window_id}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerBookingOwnerController::updateAvailability'
+  methods: [PATCH]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+    window_id: '\\d+'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_website_request_proof_share:
   path: '/api/customer/website-requests/{website_request}/proof-share'
   defaults:

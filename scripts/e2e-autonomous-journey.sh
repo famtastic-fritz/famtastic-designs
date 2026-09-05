@@ -300,12 +300,16 @@ assert_json "$website_submitted" '.website_request.status == "submitted" and .we
   assert(\$request['proof_review_status'] === 'owner_review');
 "
 test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "404"
-"$DRUSH" eval "\$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); \Drupal::service('famtastic_pipeline.customer_portal')->approveWebsiteRequestProof((int) \$request['id'], 1); \$pending = \$db->select('famtastic_notification_outbox', 'n')->condition('notification_key', 'website-request:' . \$request['id'] . ':owner-proof-review:%', 'LIKE')->condition('status', ['queued', 'retry'], 'IN')->countQuery()->execute()->fetchField(); assert((int) \$pending === 0); \$notice = \$db->select('famtastic_notification_outbox', 'n')->fields('n', ['body', 'template_id', 'template_version'])->condition('notification_key', 'website-request:' . \$request['id'] . ':proofs:%', 'LIKE')->execute()->fetchAssoc(); assert(str_contains((string) \$notice['body'], '/portal/?section=projects&request=$website_request_id')); assert(\$notice['template_id'] === 'customer_proof_ready'); assert((int) \$notice['template_version'] === 1);"
+"$DRUSH" eval "\$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); \$portal = \Drupal::service('famtastic_pipeline.customer_portal'); \$portal->saveWebsiteRequestProofResearchSnapshot((int) \$request['id'], 1, ['overview' => 'Synthetic research snapshot', 'direction_rationale' => ['a' => 'Safe rationale', 'b' => 'Wild rationale', 'c' => 'OMG rationale'], 'market_signals' => ['Synthetic signal'], 'opportunities' => ['Synthetic opportunity'], 'sources' => ['Synthetic fixture'], 'researched_at' => '2026-09-05']); \$portal->approveWebsiteRequestProof((int) \$request['id'], 1); \$pending = \$db->select('famtastic_notification_outbox', 'n')->condition('notification_key', 'website-request:' . \$request['id'] . ':owner-proof-review:%', 'LIKE')->condition('status', ['queued', 'retry'], 'IN')->countQuery()->execute()->fetchField(); assert((int) \$pending === 0); \$notice = \$db->select('famtastic_notification_outbox', 'n')->fields('n', ['body', 'template_id', 'template_version'])->condition('notification_key', 'website-request:' . \$request['id'] . ':proofs:%', 'LIKE')->execute()->fetchAssoc(); assert(str_contains((string) \$notice['body'], '/portal/?section=projects&request=$website_request_id')); assert(\$notice['template_id'] === 'customer_proof_ready'); assert((int) \$notice['template_version'] === 1);"
 FAMTASTIC_TRANSACTIONAL_EMAIL_CAPTURE="$mail_capture" FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT=memory "$DRUSH" php:eval '\Drupal::service("famtastic_pipeline.lifecycle_operations")->dispatchNotifications(100);' >/dev/null
 "$DRUSH" eval "\$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); assert(\$request['proof_review_status'] === 'notified');"
 test "$(jq -rs --arg email "$email" '[.[] | select(.to == $email and .subject == "Your FAMtastic design review has started" and .template_id == "customer_intake_submitted" and .template_version == 1 and (.html_body | contains("Your design review has started")))] | length == 1' "$mail_capture")" = "true"
 test "$(jq -rs --arg email "$email" '[.[] | select(.to == $email and .subject == "Your FAMtastic Studio Review is ready" and (.html_body | contains("FAMtastic Concierge")))] | length == 1' "$mail_capture")" = "true"
 test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "200"
+research_safe_update="$(curl -s -b "$cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
+  \"project_name\":\"Bakery website $run_id\",\"business_name\":\"Synthetic Sweet Bakery\",\"project_type\":\"landing_page\",\"domain_choice\":\"existing_domain\",\"existing_domain\":\"bakery-$run_id.example\",\"primary_goal\":\"Accept cake orders and explain pickup\",\"products_services\":\"Cakes, pastries, and custom orders\",\"required_features\":\"Lead form and photo gallery\",\"recommendation_requested\":false,\"action\":\"save\"
+}" "$BASE/api/customer/website-requests/$website_request_id")"
+assert_json "$research_safe_update" '.website_request.proof_review_status == "notified" and .website_request.proofs.research_snapshot.overview == "Synthetic research snapshot"'
 assert_json "$(curl -s -b "$cookie_jar" "$BASE/api/customer/workspace")" --arg request "$website_request_id" '([.website_requests[] | select(.public_id == $request)][0].proof_share) == {"enabled":false,"url":"","changed_at":null}'
 test "$(http_code "$BASE/api/proof-shares/$website_request_id/$(printf '0%.0s' {1..64})")" = "404"
 proof_share_enabled="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"enable"}' "$BASE/api/customer/website-requests/$website_request_id/proof-share")"
@@ -327,6 +331,7 @@ assert_json "$proof_share_disabled" '.website_request.proof_share.enabled == fal
 test "$(http_code "$BASE/api/proof-shares/$website_request_id/$new_proof_share_signature")" = "404"
 proof_decision="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"a"}' "$BASE/api/customer/website-requests/$website_request_id/proof-decision")"
 assert_json "$proof_decision" '.website_request.proof_review_status == "selected" and .website_request.direct_checkout_available == true and (.website_request.proofs.variants | length) == 3'
+test "$(http_code -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"b"}' "$BASE/api/customer/website-requests/$website_request_id/proof-decision")" = "404"
 second_request="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
   \"organization\":\"$organization_id\",\"project_name\":\"Second independent site $run_id\",\"business_name\":\"Second Business\",\"project_type\":\"new_website\",\"primary_goal\":\"Generate leads\",\"products_services\":\"Consulting\",\"action\":\"save\"
 }" "$BASE/api/customer/website-requests")"
@@ -344,7 +349,9 @@ business_request_id="$(jq -r '.website_request.public_id' <<<"$business_request"
   \$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$business_request_id')->execute()->fetchAssoc(); \$now = \Drupal::time()->getRequestTime();
   \Drupal::service('famtastic_pipeline.automation_worker')->run(10, 'proof.generate', [(int) \$request['prospect_id']]);
   \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('id', \$request['id'])->execute()->fetchAssoc();
-  \Drupal::service('famtastic_pipeline.customer_portal')->approveWebsiteRequestProof((int) \$request['id'], 1);
+  \$portal = \Drupal::service('famtastic_pipeline.customer_portal');
+  \$portal->saveWebsiteRequestProofResearchSnapshot((int) \$request['id'], 1, ['overview' => 'Business research snapshot', 'direction_rationale' => ['a' => 'Safe rationale', 'b' => 'Wild rationale', 'c' => 'OMG rationale'], 'market_signals' => ['Synthetic signal'], 'opportunities' => ['Synthetic opportunity'], 'sources' => ['Synthetic fixture'], 'researched_at' => '2026-09-05']);
+  \$portal->approveWebsiteRequestProof((int) \$request['id'], 1);
   \$db->insert('famtastic_private_offer')->fields(['public_id' => \Drupal::service('uuid')->generate(), 'website_request_id' => \$request['id'], 'organization_id' => \$request['organization_id'], 'customer_id' => \$request['customer_id'], 'sku' => 'FAM-BUSINESS-499', 'list_amount_minor' => 49900, 'offered_amount_minor' => 19900, 'currency' => 'usd', 'reason' => 'Approved friend launch price', 'status' => 'active', 'expires_at' => \$now + 86400, 'created_by_uid' => 1, 'created' => \$now, 'changed' => \$now])->execute();
 "
 assert_json "$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"b"}' "$BASE/api/customer/website-requests/$business_request_id/proof-decision")" '.website_request.proof_review_status == "selected" and .website_request.direct_checkout_available == true'
@@ -358,7 +365,9 @@ grant_code="$("$DRUSH" eval "
   \$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$grant_request_id')->execute()->fetchAssoc();
   \Drupal::service('famtastic_pipeline.automation_worker')->run(10, 'proof.generate', [(int) \$request['prospect_id']]);
   \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('id', \$request['id'])->execute()->fetchAssoc();
-  \Drupal::service('famtastic_pipeline.customer_portal')->approveWebsiteRequestProof((int) \$request['id'], 1);
+  \$portal = \Drupal::service('famtastic_pipeline.customer_portal');
+  \$portal->saveWebsiteRequestProofResearchSnapshot((int) \$request['id'], 1, ['overview' => 'Grant research snapshot', 'direction_rationale' => ['a' => 'Safe rationale', 'b' => 'Wild rationale', 'c' => 'OMG rationale'], 'market_signals' => ['Synthetic signal'], 'opportunities' => ['Synthetic opportunity'], 'sources' => ['Synthetic fixture'], 'researched_at' => '2026-09-05']);
+  \$portal->approveWebsiteRequestProof((int) \$request['id'], 1);
   \$grant = \Drupal::service('famtastic_pipeline.grant_codes')->create(['grant_class' => 'CUSTOMER_GRANT', 'label' => 'Synthetic exact-request grant', 'customer_id' => (int) \$request['customer_id'], 'organization_id' => (int) \$request['organization_id'], 'website_request_id' => (int) \$request['id'], 'sku' => 'FAM-FOOT-199', 'discount_type' => 'free', 'max_redemptions' => 1, 'expires_at' => \Drupal::time()->getRequestTime() + 3600], 1);
   print \$grant['code'];
 " | tr -d '\r\n')"
@@ -424,6 +433,14 @@ assert_json "$converted_workspace" --arg request "$website_request_id" '
   ([.website_requests[] | select(.status == "draft")] | length) >= 1 and
   (.projects | length) >= 2
 '
+owner_site_key="synthetic-owner-$run_id"
+"$DRUSH" eval "\$request = \Drupal::database()->select('famtastic_project_request', 'r')->fields('r', ['id'])->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); \Drupal::service('famtastic_pipeline.booking_site_owners')->bindToConvertedRequest('$owner_site_key', (int) \$request['id'], 1);"
+assert_json "$(curl -s -b "$cookie_jar" "$BASE/api/customer/owner-sites/$owner_site_key/booking-requests")" '.ok == true and .site_key != "" and (.requests | type == "array")'
+test "$(http_code -b "$other_cookie_jar" "$BASE/api/customer/owner-sites/$owner_site_key/booking-requests")" = "404"
+owner_window="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"label":"Synthetic request window","starts_at":1893456000,"ends_at":1893459600,"service_keys":["consultation"],"status":"draft"}' "$BASE/api/customer/owner-sites/$owner_site_key/availability")"
+assert_json "$owner_window" '.ok == true and .window.status == "draft"'
+assert_json "$(curl -s -b "$cookie_jar" "$BASE/api/customer/owner-sites/$owner_site_key/availability")" '.ok == true and (.windows | length) == 1'
+test "$(http_code -b "$other_cookie_jar" "$BASE/api/customer/owner-sites/$owner_site_key/availability")" = "404"
 preferences="$(curl -s -b "$cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{
   "project_email":true,
   "support_email":true,
