@@ -1,0 +1,52 @@
+{
+  "slug": "what-a-bookable-page-actually-needs",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "What a Bookable Page Actually Needs",
+  "title_length": 35,
+  "meta_description": "A page that gets you booked has a different job than an app profile. The two questions it has to answer, and what you can safely leave off for now.",
+  "meta_description_length": 147,
+  "h1_count": 1,
+  "question_headings": [],
+  "series": "The Booking App and Your Own Website Series",
+  "series_order": 3,
+  "internal_links": [
+    "https://famtasticdesigns.com/packages/199-quick-start",
+    "https://famtasticdesigns.com/blog/parts-of-a-one-page-business-website",
+    "https://famtasticdesigns.com/blog/proof-first-website-see-before-you-pay",
+    "https://famtasticdesigns.com/contact"
+  ],
+  "internal_link_count": 4,
+  "external_links": [],
+  "link_verification": {
+    "method": "curl -s -o /dev/null -w %{http_code} -L",
+    "verified_on": "2026-09-04",
+    "all_returned_200": true,
+    "note": "Every internal link in this draft was confirmed HTTP 200 before it was written into the body. No link points at an unpublished sibling in this series: siblings are connected by the Drupal series nav (field_blog_series + field_series_order), not by in-body links, so no post in this series can ship a link to a page that is not live."
+  },
+  "claims_verified_against_live_sources": true,
+  "statistics_used": false,
+  "schema_recommended": [
+    "BlogPosting"
+  ],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": [
+    "The two things a stranger is deciding",
+    "The unglamorous details people leave off"
+  ],
+  "checks": {
+    "title_under_60": true,
+    "meta_140_160": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "no_unsourced_claims": true,
+    "answers_intent_first_screen": true,
+    "links_to_packages_pages": true,
+    "renewal_terms_disclosed": true,
+    "no_named_competitor_claims": true,
+    "all_internal_links_http_200": true,
+    "no_web_prefixed_urls": true,
+    "word_count_700_1000": true
+  },
+  "pass": true,
+  "generated_at": "2026-09-04T20:15:00Z"
+}

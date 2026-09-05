@@ -1,0 +1,52 @@
+{
+  "slug": "do-you-have-to-leave-the-booking-app",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "Do You Have to Leave the Booking App?",
+  "title_length": 37,
+  "meta_description": "No. An app serves demand you did not create, a page of your own serves demand you did. What to move, what you own, and how both work together.",
+  "meta_description_length": 142,
+  "h1_count": 1,
+  "question_headings": [],
+  "series": "The Booking App and Your Own Website Series",
+  "series_order": 4,
+  "internal_links": [
+    "https://famtasticdesigns.com/packages/199-quick-start",
+    "https://famtasticdesigns.com/blog/measure-whether-website-works",
+    "https://famtasticdesigns.com/blog/grow-beyond-first-website",
+    "https://famtasticdesigns.com/contact"
+  ],
+  "internal_link_count": 4,
+  "external_links": [],
+  "link_verification": {
+    "method": "curl -s -o /dev/null -w %{http_code} -L",
+    "verified_on": "2026-09-04",
+    "all_returned_200": true,
+    "note": "Every internal link in this draft was confirmed HTTP 200 before it was written into the body. No link points at an unpublished sibling in this series: siblings are connected by the Drupal series nav (field_blog_series + field_series_order), not by in-body links, so no post in this series can ship a link to a page that is not live."
+  },
+  "claims_verified_against_live_sources": true,
+  "statistics_used": false,
+  "schema_recommended": [
+    "BlogPosting"
+  ],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": [
+    "What each one is actually good at",
+    "What you actually own"
+  ],
+  "checks": {
+    "title_under_60": true,
+    "meta_140_160": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "no_unsourced_claims": true,
+    "answers_intent_first_screen": true,
+    "links_to_packages_pages": true,
+    "renewal_terms_disclosed": true,
+    "no_named_competitor_claims": true,
+    "all_internal_links_http_200": true,
+    "no_web_prefixed_urls": true,
+    "word_count_700_1000": true
+  },
+  "pass": true,
+  "generated_at": "2026-09-04T20:15:00Z"
+}
