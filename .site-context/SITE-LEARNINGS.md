@@ -1,5 +1,43 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Four false "capability unavailable" calls in one session, same root cause
+
+- Observation: across one session an agent declared, with confidence and
+  evidence, that image generation, HeyGen, and branded video tooling were all
+  unavailable. Every one was wrong. What actually exists, all verified:
+  - **MUAPI** — key in OS keychain (`muapi-cli` / `api-key`), 59 installed
+    skills covering text-to-image, text-to-video, image-to-video, TTS, music.
+  - **Google Imagen 3 / Gemini Flash Lite** — key in keychain
+    (`FAMtastic.Gemini.Image`), $0.0336 per image on Flash Lite.
+  - **HeyGen** — authenticated CLI at `~/.local/bin/heygen` with credentials
+    in `~/.heygen/`, including a `brand` command for brand kits.
+  - **OpenArt MCP** — gpt-image-2, nano-banana-pro, seedance-2.5, Kling.
+  - **Remotion** — installed twice: `~/Development/FAMtastic/remotion` and
+    `marketing/video/`, with branded compositions and render presets.
+- Root cause: the agent checked `env | grep` for each credential, found
+  nothing, and stopped. **Credentials in this project live in the macOS
+  keychain, in authenticated CLI config directories, and behind MCP servers —
+  almost never in environment variables.** A negative `env` check is not
+  evidence of absence.
+- Compounding cause: `marketing/providers.json` is the registry of record and
+  this repo's own CLAUDE.md instructs agents to read it *before* choosing a
+  provider. It was never opened. The Drive-synced
+  `2026-09-02-ai-creative-platforms-comparison-matrix.md` documents every
+  platform with cost and access method, and was also never opened.
+- Guidance: **before claiming any capability is unavailable, read
+  `marketing/providers.json` first, then check the keychain
+  (`security find-generic-password -s <service>`), then check for an
+  authenticated CLI in `~/.local/bin` and its dotfile config.** Only after all
+  three come back empty is "unavailable" a defensible claim. State which
+  locations you checked, so a wrong conclusion is auditable.
+- Consequence of getting this wrong: drop-06's video was assembled with
+  edge-tts and Pillow-drawn PNGs (because the local ffmpeg has no `drawtext`
+  or `subtitles` filters) while HeyGen, Imagen 3, MUAPI and two branded
+  Remotion installs sat unused. The result had no brand system at all and was
+  rejected. The documented architecture is Tier 1 flagship (Imagen 3 / GPT
+  Image 2 / HeyGen presenter / Kling) -> Tier 2 Gemini multiplier -> Tier 3
+  local assembly, targeting under $2.00 per campaign.
+
 ## 2026-09-04 — A source fix is not evidence until the intended runtime is actually running it
 
 - Observation: the YouTube upload repair had three required layers: source classification, a fresh stream for every retry, and the actual Postiz image swap. A clean source diff alone would have left the old `tiktok-ux-fix` container running and changed nothing. Conversely, Docker's legacy builder hung while saving the final `CMD` metadata even though its frontend, backend, and orchestrator compilation had completed; the completed intermediate had to be committed with the intended command and then inspected before use.
