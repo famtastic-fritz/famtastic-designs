@@ -1,6 +1,11 @@
 # Workforce roster
 
-Maintained by the CEO (`fam-ceo`). Every hire = an agent file in `.opencode/agent/` + a row here with mandate + first assignment. Terminated roles stay listed with reason.
+Maintained by the CEO (`fam-ceo`). This is the authoritative registry for
+specialist workforce roles: every hire = an agent file in `.opencode/agent/` +
+a row here with mandate + first assignment. Provider/model availability lives
+in `marketing/providers.json` and bounded local-model roles live in
+`marketing/local-models.json`; this file links to them rather than duplicating
+their proof. Terminated roles stay listed with reason.
 
 ## Active
 
@@ -35,6 +40,10 @@ Maintained by the CEO (`fam-ceo`). Every hire = an agent file in `.opencode/agen
 
 | Tool / skill pack | Source | Used for | Registered |
 |---|---|---|---|
+| OpenCode specialist roles | `.opencode/agent/` + this roster | 13 named FAMtastic operating roles, selected by bounded recipe work | 2026-09-05 routing index confirmed |
+| Ollama local models | `marketing/local-models.json` | Low-cost local drafting, independent critique, and image-aware review under bounded roles | 2026-09-05 local runtime receipt (`qwen3:8b`, `glm4:9b`, `gemma3:4b`) |
+| OpenCode Go | `marketing/providers.json#opencode_go` | Optional cloud specialist/model comparison after authentication proof | Owner subscription reported 2026-09-05; local CLI present, current Go login unverified |
+| Piece subscription | Pending exact product URL/name | Do not route until the owner identifies the specific service and operator boundary | Owner reported 2026-09-05 |
 
 ## Terminated
 

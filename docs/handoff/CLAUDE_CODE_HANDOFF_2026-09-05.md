@@ -75,6 +75,16 @@ workaround.
    until owner authorization, rights/consent, a character bible, and a
    receipt-backed pose-matrix test exist.
 
+5. **Specialist and model routing:** select named FAMtastic roles from
+   `docs/playbook/ROSTER.md` / `.opencode/agent/`, not from a duplicate agent
+   list. The local Ollama runtime has `qwen3:8b`, `glm4:9b`, and `gemma3:4b`;
+   use the bounded roles in `marketing/local-models.json` and disclose cloud
+   tags. The owner reports an OpenCode Go subscription, but the local CLI has
+   only an OpenRouter credential receipt so far; do not call Go authenticated
+   until an authorized status/login check is recorded. The owner also reports a
+   Piece subscription; leave it un-routed until the exact product URL/name is
+   supplied.
+
 ## Boundaries and current state
 
 - This recovery created local creative proof only. Nothing in this handoff has

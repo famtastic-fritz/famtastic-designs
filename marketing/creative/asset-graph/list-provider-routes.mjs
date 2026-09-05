@@ -10,7 +10,7 @@ const family = familyIndex === -1 ? 'all' : args[familyIndex + 1];
 const registryIndex = args.indexOf('--registry');
 const registryPath = resolve(registryIndex === -1 ? 'marketing/providers.json' : args[registryIndex + 1]);
 const families = {
-  copy: ['codex_text', 'poe'],
+  copy: ['codex_text', 'ollama_local', 'opencode_go', 'poe'],
   still: ['openai_image', 'openart', 'gemini_image', 'muapi', 'adobe_firefly_web', 'adobe_photoshop_desktop_mcp'],
   video: ['heygen', 'openart', 'hyperframes', 'remotion', 'moneyprinterturbo', 'adobe_premiere_desktop_mcp', 'adobe_photoshop_desktop_mcp'],
   composition: ['hyperframes', 'remotion', 'adobe_premiere_desktop_mcp', 'adobe_photoshop_desktop_mcp']

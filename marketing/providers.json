@@ -160,6 +160,35 @@
       "notes": "Use as a candidate text/research route with source and claim review. Runtime usage cost is not exposed as an external API invoice."
     },
     {
+      "id": "ollama_local",
+      "purpose": [
+        "low-cost local copy candidates",
+        "local classification and critique",
+        "independent draft comparison"
+      ],
+      "status": "installed_local_models_receipted",
+      "automation": "local_cli_and_api",
+      "secret_env": [],
+      "access": "ollama CLI and local API; installed models: qwen3:8b, glm4:9b, gemma3:4b",
+      "proof": "2026-09-05 `ollama list` returned qwen3:8b, glm4:9b, and gemma3:4b on this workstation",
+      "notes": "Use the bounded roles in marketing/local-models.json. Local output is advisory: it cannot approve factual claims, spend, upload, publish, or replace human review. A model tag ending in :cloud is cloud execution even when invoked through Ollama."
+    },
+    {
+      "id": "opencode_go",
+      "purpose": [
+        "specialist-agent routing",
+        "coding and research candidate",
+        "model comparison when authenticated"
+      ],
+      "status": "cli_installed_subscription_claimed_auth_unverified",
+      "automation": "opencode_cli",
+      "secret_env": [],
+      "access": "opencode CLI; project specialist roles live in .opencode/agent/",
+      "proof": "2026-09-05 `opencode --help` confirmed the local CLI; `opencode providers list` reported one OpenRouter credential and no confirmed OpenCode Go login",
+      "requires": "Before a paid or cloud run, verify the owner-authorized OpenCode Go login without reading or exposing credential material; record the selected provider/model and receipt.",
+      "notes": "The owner reports an OpenCode Go subscription. A subscription is not API authority or proof that this checkout is authenticated. Do not treat this row as a media-generation provider or an approval authority."
+    },
+    {
       "id": "heygen",
       "purpose": [
         "avatar presenter videos"

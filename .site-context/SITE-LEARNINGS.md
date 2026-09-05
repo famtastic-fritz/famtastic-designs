@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A specialist registry needs one owner per kind of truth
+
+- Observation: FAMtastic already had 13 specialist role definitions in
+  `.opencode/agent/`, a human-readable workforce roster, project skills, shared
+  skills, and separate local-model routing. The real risk was not a missing
+  agent registry; it was treating one of those surfaces as proof of a provider
+  login or model capability.
+- Guidance: use `docs/playbook/ROSTER.md` to choose a named specialist,
+  `marketing/local-models.json` for bounded local roles, and
+  `marketing/providers.json` for runtime/provider proof. An owner-reported
+  subscription is a routing lead, never automatic authentication or API
+  authority. Record the exact product identity before adding an ambiguous
+  subscription such as Piece.
+
 ## 2026-09-05 — A historical provider mention is not present-tense readiness
 
 - Observation: MoneyPrinterTurbo was described in older benchmark documents as

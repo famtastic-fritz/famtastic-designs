@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-05 — Specialist-agent and local-model routing is explicit
+
+- **Confirmed the existing specialist registry instead of inventing a duplicate.** `docs/playbook/ROSTER.md` plus `.opencode/agent/` remains the authoritative roster for 13 named FAMtastic roles; project and shared skills remain capability references, while provider proof remains in `marketing/providers.json`.
+- **Made local Ollama selectable in the evidence-first copy route.** The route catalog now returns the locally listed `qwen3:8b`, `glm4:9b`, and `gemma3:4b` lane with its bounded-role and approval limits, alongside Codex, OpenCode Go, and Poe. The asset-graph regression test verifies those routes without invoking a model.
+- **Recorded OpenCode Go truthfully.** The CLI is installed and the owner reports a subscription, but the current credential listing proves only an OpenRouter credential. The route stays authentication-unverified until an authorized, receipt-backed status/login check; no credentials were read or exposed. Piece remains un-routed pending its exact product identity.
+
 ## 2026-09-05 — Provider discovery includes subscriptions, APIs, and local lanes
 
 - **Added a safe provider-route catalog to the asset graph.** It reads
