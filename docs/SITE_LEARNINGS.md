@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — Verify the runtime and the delivery separately
+
+The YouTube retry source repair (`ea5db55`) compiled, passed focused transient and HTTP-400 tests, and is now the healthy local Postiz image. That establishes retry mechanics, not delivery. The existing 9:00 AM ET scheduled post is the first legitimate provider-side proof point; inspect its resulting record rather than reporting success early. Separately, frontend commit `a05c7c60` is live and browser-proven at both public hostnames. The two facts must not be conflated.
+
 ## 2026-09-04 — Measure art after it settles, and never freeze `transform` on `*`
 
 While building the generated blog-art system, two "defects" were reported that

@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — A source fix is not evidence until the intended runtime is actually running it
+
+- Observation: the YouTube upload repair had three required layers: source classification, a fresh stream for every retry, and the actual Postiz image swap. A clean source diff alone would have left the old `tiktok-ux-fix` container running and changed nothing. Conversely, Docker's legacy builder hung while saving the final `CMD` metadata even though its frontend, backend, and orchestrator compilation had completed; the completed intermediate had to be committed with the intended command and then inspected before use.
+- Guidance: record and verify the running image tag and health after every local-runtime patch. For this repair, `localhost/postiz-famtastic:youtube-retry-fix` passed focused transient/no-retry tests and the recreated `postiz` container reports healthy. That is runtime readiness only: do not promote the YouTube capability beyond publish-unproven until an authoritative scheduled-post provider record proves delivery.
+- Observation: the public frontend release was a different deployment lane. Commit `a05c7c60` was promoted through the GoDaddy script, then both `famtasticdesigns.com` and `www.famtasticdesigns.com` rendered a nonempty root and main heading with current JavaScript and CSS assets, no console errors, and the generated article art at a compact 220px hero height with no horizontal overflow.
+- Guidance: keep these evidence lanes separate. Local Postiz health does not prove a public social post; a browser-proven frontend deployment does not prove a Drupal content write or a provider delivery.
+
 ## 2026-09-04 — Finding dropped fields one at a time is the bug; enumerate the corpus instead
 
 - Observation: an earlier entry today records the `field_blog_series` loss,

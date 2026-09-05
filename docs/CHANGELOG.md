@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-04 (recovery release) — Generated blog art refined and transient YouTube failures made retryable
+
+- **Released frontend commit `a05c7c602aa94c4ec142fe9e14a22f0cc8cac0a2` to GoDaddy.** The generated fallback blog-art hero is now a compact masthead, and the ownership illustration wraps article copy on desktop instead of consuming the article's opening viewport. Author-supplied raster `post.visual` assets are unchanged. The production release marker and real-browser checks passed for both apex and `www`; the reviewed article has no horizontal overflow or console errors.
+- **Patched the local Postiz runtime's YouTube upload path in `ea5db55`.** A transient network failure now remains retryable and each retry re-fetches the media stream; HTTP 400 responses remain terminal. Focused container tests proved one `ECONNRESET` retry and one HTTP 400 no-retry case, and the recreated `postiz` container is healthy on `localhost/postiz-famtastic:youtube-retry-fix`.
+- **Delivery boundary remains explicit:** no successful YouTube publication has been observed from the repaired image. The armed drop-06 schedule was not changed; inspect its provider record after its 2026-09-05 09:00 ET attempt before claiming delivery.
+
 ## 2026-09-04 (latest) — Blog publish pipeline: full field audit, five dropped fields fixed, parity gate added
 
 - **Audited all 19 `blog_post` fields against the live corpus (83 published posts, via
