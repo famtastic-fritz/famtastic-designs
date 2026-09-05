@@ -7,7 +7,7 @@ services:
     # display, interaction toggles not off-by-default. Built locally via
     # tools/postiz-app-src (v2.22.1 + the PR's 3-file diff), see
     # docker images localhost/postiz-famtastic:tiktok-ux-fix.
-    image: localhost/postiz-famtastic:tiktok-ux-fix
+    image: localhost/postiz-famtastic:youtube-retry-fix
     ports: !override
       - "127.0.0.1:4007:5000"
     environment:
