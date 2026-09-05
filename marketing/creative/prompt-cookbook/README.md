@@ -39,6 +39,22 @@ The canonical field schema lives in
 [prompt-cookbook.json](./prompt-cookbook.json). It makes a prompt reviewable
 before it costs credits.
 
+## Story before video
+
+For any new campaign explainer, use the
+[story-first campaign-video engine](./VIDEO_STORY_ENGINE.md) before choosing a
+renderer. HyperFrames is the final-video default. The required story contract
+forces a claim ledger, visual causality, scene plan, asset policy, and explicit
+render gate; it prevents a blog title from turning into a sequence of generic
+slides. A non-render-ready example from the published platform-dependency
+pillar lives at
+[story-seeds/platform-dependency-pillar.story.json](./story-seeds/platform-dependency-pillar.story.json).
+
+MoneyPrinterTurbo can assist with a fast previsual or narration draft, but it
+is not the final FAMtastic branded-video route. For a premium character, use
+the anchor-and-derivative policy in the story engine: no paid asset, reference
+upload, or claimed cost saving is authorized merely by preparing the recipe.
+
 ## Image recipes
 
 ### 1. Campaign plate — text set later

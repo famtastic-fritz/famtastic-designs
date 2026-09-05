@@ -1,0 +1,103 @@
+{
+  "schema_version": "campaign-story.v1",
+  "status": "seed",
+  "source": {
+    "title": "Why Gmail and Linktree Cost Your Business Revenue",
+    "url_or_path": "https://famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue",
+    "source_kind": "blog"
+  },
+  "creative_brief": {
+    "angle": "narrative",
+    "audience": "A local service business owner whose social profile, general inbox, and bio link are carrying their entire customer journey.",
+    "destination": "9:16",
+    "duration_seconds": 45,
+    "visual_metaphor": "A rented hallway of closed doors becomes an owned front door that can answer a visitor without making them wait."
+  },
+  "claim_ledger": [
+    {
+      "id": "CL-1",
+      "claim": "A link-in-bio page can route a visitor but does not itself answer practical booking questions.",
+      "source": "Published pillar, paragraph 15.",
+      "on_screen_or_spoken": "spoken"
+    },
+    {
+      "id": "CL-2",
+      "claim": "The Web Basics Bundle is $199 for its first year and business email setup is a separate $99 add-on.",
+      "source": "backend/config/famtastic-products.json: FAM-FOOT-199 and FAM-BUSINESS-EMAIL.",
+      "on_screen_or_spoken": "both"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "S1",
+      "range_seconds": "0-6",
+      "story_beat": "hook",
+      "visual_purpose": "Make the abstract problem physical before naming a platform.",
+      "visual": "Predawn: a visitor reaches a narrow, unmarked hallway with several identical closed doors; one phone glow is the only guide.",
+      "copy_or_narration": "If every path to your business ends at someone else's doorway, customers have to work to find you.",
+      "asset_needed": "Text-free vertical establishing plate; one locked camera shot.",
+      "continuity_locks": ["blue-black ground", "one lime practical glow", "no generated text", "no logos"]
+    },
+    {
+      "id": "S2",
+      "range_seconds": "6-13",
+      "story_beat": "friction",
+      "visual_purpose": "Show the visitor's question becoming a delay instead of a conversation.",
+      "visual": "A simple paper appointment card slides under a closed door and waits untouched while a phone notification blinks once.",
+      "copy_or_narration": "A bio link can point somewhere. It cannot answer what you charge or when you are free while you are working.",
+      "asset_needed": "Close controlled insert; physical paper and door detail.",
+      "continuity_locks": ["same hallway material", "same single glow", "no readable writing on card"]
+    },
+    {
+      "id": "S3",
+      "range_seconds": "13-21",
+      "story_beat": "mechanism",
+      "visual_purpose": "Contrast a chain of hand-offs with a destination built to answer.",
+      "visual": "Overhead tabletop: three small directional arrows lead through tiny door tokens; the final token is a keyed, clearly owned front door.",
+      "copy_or_narration": "The point is not to abandon social. It is to give the link a real destination that belongs to your business.",
+      "asset_needed": "Designed graphic scene assembled in HyperFrames, with no generated UI.",
+      "continuity_locks": ["single accent colour", "simple tactile objects", "no platform marks"]
+    },
+    {
+      "id": "S4",
+      "range_seconds": "21-30",
+      "story_beat": "turn",
+      "visual_purpose": "Make ownership feel useful, not territorial.",
+      "visual": "The owned door opens onto a calm, practical workspace: price card, service card, and appointment card are organized on a table; their type is added later in composition.",
+      "copy_or_narration": "Now the visitor can understand the service and choose a next step without waiting for an inbox reply.",
+      "asset_needed": "Text-free hero plate with quiet areas for deterministic labels.",
+      "continuity_locks": ["warm practical light after the doorway", "same safety-lime accent", "no invented prices"]
+    },
+    {
+      "id": "S5",
+      "range_seconds": "30-39",
+      "story_beat": "offer",
+      "visual_purpose": "State the precise offer without letting the model invent scope.",
+      "visual": "The workspace resolves into an orderly owned-front-door composition; HyperFrames supplies a sourced offer card.",
+      "copy_or_narration": "A focused website launch starts at $199 for the first year. Business email setup is separate at $99.",
+      "asset_needed": "HyperFrames offer card; no generated plate text.",
+      "continuity_locks": ["use only CL-2 wording", "product facts loaded from registry"]
+    },
+    {
+      "id": "S6",
+      "range_seconds": "39-45",
+      "story_beat": "cta",
+      "visual_purpose": "Land the metaphor and give a restrained next step.",
+      "visual": "Exterior of the same front door at morning. It is open, marked only by a composed FAMtastic end card.",
+      "copy_or_narration": "Keep the link. Change where it leads.",
+      "asset_needed": "Return-to-opening plate plus deterministic end card.",
+      "continuity_locks": ["same door geometry", "no URL rendered by image model", "end-card review required"]
+    }
+  ],
+  "asset_policy": {
+    "anchor_strategy": "none",
+    "text_policy": "compose_later_no_generated_type",
+    "receipt_required": true
+  },
+  "render_gate": {
+    "storyboard_reviewed": false,
+    "claim_ledger_reviewed": false,
+    "provider_authorized": false,
+    "status": "not_ready"
+  }
+}

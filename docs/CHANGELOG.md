@@ -1,5 +1,25 @@
 # Product changelog
 
+## 2026-09-05 — Story-first HyperFrames campaign-video contract
+
+- **Made HyperFrames the default final-video route for new campaign
+  explainers.** The new
+  `marketing/creative/prompt-cookbook/VIDEO_STORY_ENGINE.md` requires a
+  source-backed story, claim ledger, visual beats, asset policy, and an
+  explicit review gate before a render. It routes a topic or blog title through
+  the local `faceless-explainer` HyperFrames workflow rather than treating a
+  finished slide timeline as a story.
+- **Added a machine-checkable `campaign-story.v1` contract and a draft visual
+  story seed.** The seed translates the published "Why Gmail and Linktree Cost
+  Your Business Revenue" pillar into six visual causal beats. It is marked
+  `seed` / `not_ready`: no paid generation, upload, render, scheduling, or
+  posting occurred.
+- **Set a deliberate role for fast automation.** MoneyPrinterTurbo is now a
+  previsual/narration-draft option only; HyperFrames owns the reviewable final
+  composition. Premium character anchors and low-cost derivatives are
+  documented as approval-gated, receipt-backed experiments—not promised
+  savings or assumed local-model consistency.
+
 ## 2026-09-05 — Source-attributed image and video prompt cookbook
 
 - **Added `marketing/creative/prompt-cookbook/`**: a durable training library

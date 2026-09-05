@@ -1,5 +1,25 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A branded explainer needs visual causality before it needs a renderer
+
+- Observation: the recovered 25-second platform-dependency proof had real
+  product sources, responsive layouts, and local render evidence, but its
+  scene list was composition-first. The absence of an explicit story,
+  keyframe plan, and scene-level visual purpose made it read as a competent
+  slide sequence rather than an authored visual argument.
+- Guidance: for a campaign sourced from a blog title, first write a
+  `campaign-story.v1`: a bounded 30–90 second angle, claim ledger, visual
+  metaphor, and at least hook/friction/mechanism/turn/offer-or-CTA beats. Every
+  scene needs a visual action that carries the argument. Do not spend credits,
+  render, or call a storyboard approved until its claim ledger and visual plan
+  are reviewed.
+- Tool decision: HyperFrames is the default final-video framework because its
+  faceless-explainer route formalizes the topic-to-script-to-storyboard path.
+  MoneyPrinterTurbo is valuable for a cheap disposable previsual or narration
+  draft, not as the source of final brand composition. A premium character
+  anchor is only an input to an approval-gated, receipt-backed variation test;
+  local identity consistency must be demonstrated, not assumed.
+
 ## 2026-09-05 — Capability-discovery order worked; a receipt-overwrite bug did not, until it was tested
 
 - Observation: tasked with proving the Tier-2 cheap image provider from
