@@ -11,6 +11,6 @@ A launched website isn't a finished project - it's a living thing. Plugin update
 
 The Care Plan ($49.99/month) puts your site on monthly watch: updates checked, backups verified, and small content touches included, with a human who already knows your build.
 
-Start anytime: https://famtasticdesigns.com/web/packages?utm_source=email&utm_medium=manual&utm_campaign=famtastic_addons_2026q3&utm_content=fam-maintenance
+Start anytime: https://famtasticdesigns.com/packages?utm_source=email&utm_medium=manual&utm_campaign=famtastic_addons_2026q3&utm_content=fam-maintenance
 
 - FAMtastic Designs

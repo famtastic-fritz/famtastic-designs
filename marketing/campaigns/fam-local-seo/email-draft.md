@@ -11,6 +11,6 @@ When someone searches "your service + your town", does your business show up wit
 
 Local SEO Setup ($299, one time) puts structured local data on your site, sets up your core profiles, and verifies analytics so you can see the visits yourself.
 
-See what's included: https://famtasticdesigns.com/web/packages?utm_source=email&utm_medium=manual&utm_campaign=famtastic_addons_2026q3&utm_content=fam-local-seo
+See what's included: https://famtasticdesigns.com/packages?utm_source=email&utm_medium=manual&utm_campaign=famtastic_addons_2026q3&utm_content=fam-local-seo
 
 - FAMtastic Designs

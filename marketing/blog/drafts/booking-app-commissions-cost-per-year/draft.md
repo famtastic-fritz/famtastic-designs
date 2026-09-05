@@ -34,7 +34,7 @@ The two halves are completely different purchases.
 
 Commission on a genuinely new client is an introduction fee. The platform advertised, a stranger found you, and you paid for the introduction. Measured against what advertising costs and how unreliably it works, that is often a good deal and a real service.
 
-Commission on a repeat client is rent. That person already knows your work and would have found you anyway. They book through the app because the app is the door they know. You are paying a percentage, indefinitely, on a relationship you earned yourself — and that number quietly grows, because a healthy business accumulates repeat clients. The better you get, the larger the share of your fees that buys you nothing.
+Commission on a repeat client is rent. That person already knows your work and would have found you anyway; they book through the app because the app is the door they know. You are paying a percentage, indefinitely, on a relationship you earned yourself — and that number quietly grows, because a healthy business accumulates repeat clients. The better you get, the larger the share of your fees that buys you nothing.
 
 ## Where the two models cross
 
@@ -42,11 +42,11 @@ The structural difference in one line: a commission grows as you grow, and a fla
 
 For your own crossover point, take the monthly cost of a flat subscription tool you are considering and divide it by the fee you currently pay on one average booking. The result is the number of bookings per month at which the two cost the same. Below it, commission is cheaper. Above it, the gap widens every month you get busier.
 
-Run that with your real numbers rather than anyone's example — the answer depends on your average ticket and moves whenever your prices do.
+Run that with your real numbers rather than anyone's example — the answer moves whenever your prices do.
 
 ## What the statement does not show
 
-Two costs sit outside the fee line entirely. Your listing sits on a screen with other listings, so your price is always read next to somebody else's, which shapes what you feel able to charge in a direction that is rarely upward. And your volume depends on how the platform orders its results, which can change without notice. That is not personal, and it is not something you get a say in.
+Two costs sit outside the fee line entirely. Your listing sits on a screen with other listings, so your price is always read next to somebody else's, which shapes what you feel able to charge in a direction that is rarely upward. And your volume depends on how the platform orders its results, which can change without notice.
 
 There is a third — where the client relationship actually lives — and it is large enough that this series gives it its own article rather than a paragraph here.
 

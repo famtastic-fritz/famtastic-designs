@@ -1,5 +1,83 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Two luminance scales live in this repo and they disagree by 6-8 points
+
+- Observation: a verification script written for three new HyperFrames films
+  computed Rec.709 luma from decoded RGB and gated it against the 150-175 band
+  that `reference-tokens.json` and the accepted platform-dependency film are
+  expressed in. It failed 16 of 28 seconds on a film that measures 163.1 by
+  `ffmpeg -vf signalstats` — the command the contract itself names. The two
+  measures are not interchangeable: signalstats reads the decoded Y plane, the
+  RGB conversion runs consistently 6-8 points higher on the same file. Note that
+  `reference-tokens.json` reports the anchor at 161.9 using its own RGB
+  sampling, while the same take measures 155.4 by signalstats — both numbers are
+  already in the repo and neither is labelled.
+- Guidance: state the measuring command alongside any luminance number, and gate
+  on `signalstats` YAVG because that is what the campaign anchor, the accepted
+  film and the rejected Remotion cut (155.4 / 160.1 / 212.1) were all compared
+  by. Print the other figure if it is useful, but label it as reference only. A
+  gate that fails good work trains everyone to ignore it, which is worse than no
+  gate.
+
+## 2026-09-05 — The anchor luminance contract disqualifies most of the palette and plate library
+
+- Observation: `docs/marketing/CAMPAIGN_ART_DIRECTION_V1.md` ships six campaign
+  palettes, four of which (`famtastic`, `ghost-town`, `salon`, `trades`) have
+  near-black grounds. `marketing/creative/heygen/reference-tokens.json` requires
+  anything cutting against the campaign anchor to sit at 150-175 mean luminance.
+  Only `paper` and `anchor-take-a` satisfy both, yet
+  `marketing/creative/plates/prompt-library.json` assigns a dark palette to most
+  of its topics — including the two topics filmed this session (`cinr-55c` under
+  `famtastic`, `flseo` under `trades`). Measured across every plate on disk, all
+  but six images sit between 14 and 61 mean luminance; the six usable ones are
+  `pd-a1`, `pd-a2`, `pd-b2`, `pd-p`, the gpt-image anchor and one OpenArt
+  bakery frame, four of which platform-dependency had already used.
+- Guidance: when a subject argues for a dark palette and the piece must cut
+  against the anchor, do not quietly substitute a light palette and call it a
+  preference. Either re-derive the palette's own light half and argue it from
+  the palette's own prompt clause (ghost-town's "bleached, dry and desaturated
+  ... grey weathered timber" supports a daylight ground as faithfully as a dark
+  one), or escalate the conflict. It is an owner decision about which doctrine
+  wins, and it will recur on every campaign until light plates exist.
+
+## 2026-09-05 — A quality gate has no opinion about what a photograph contains
+
+- Observation: `hyperframes check` passed clean on first run for all three new
+  films, including its layout audit, while three real defects were on screen: a
+  cent-sign descender crossing the olive accent bar beneath it, a paper sheet
+  covering the entire subject of the photograph behind it (leaving a blank wall
+  as the visible strip), and a ground plane cutting the film's own hero object —
+  a sign bracket — two-thirds away. All three were found by taking a snapshot
+  and looking at it, and one only by zooming into a crop. A fourth, a 2.75x
+  plate enlargement, survived a 1:1 detail inspection and still read mushy at
+  frame size in the render.
+- Guidance: `check` gates structure, motion, layout geometry and contrast. It
+  cannot see composition, subject occlusion, glyph collisions or enlargement
+  softness. Budget a snapshot-and-look pass per beat before rendering and a
+  frame-extraction pass after, and inspect the enlarged asset at delivered
+  frame size rather than at native crop. The contrast gate is the counterexample
+  worth keeping: it caught a 2.96:1 footnote against WCAG AA's 3:1 that no eye
+  would have.
+
+## 2026-09-05 — A background-removal render is not an alpha channel
+
+- Observation: `take-b-business-email-scope.mp4` was requested from HeyGen with
+  `remove_background: true`. The delivered MP4 has no alpha; it has a figure on
+  a perfectly uniform `#F4F5FA` field. Keying it locally worked, but only at a
+  narrow tolerance: at `colorkey` similarity 0.12 a patch of the presenter's
+  forehead highlight keys out, and at 0.20 it becomes a hole the size of an
+  eyebrow. Separately, the removal cost the take its ambient light, so the same
+  jacket trim that measures `#7FB449` in take-a measures `#90AD43` here and
+  cannot be pushed the rest of the way without desaturating skin and hair with
+  it.
+- Guidance: treat a background-removed take as a foreground source to be keyed
+  locally, at similarity 0.06 or lower, and always compare candidate keys side
+  by side on a mid-tone ground before committing. When compositing a keyed
+  figure onto a designed ground, grade the composite and then **measure** the
+  resulting ground colour and set the design token to that measured value —
+  the token and the composite must be the same value or the cut-out is visible.
+  Record the accent's measured drift rather than rounding it to the spec.
+
 ## 2026-09-05 — A persona can focus a draft without pretending to be customer research
 
 - Observation: the active platform-dependency work has a clear behavioral

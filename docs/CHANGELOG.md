@@ -1,5 +1,40 @@
 # Product changelog
 
+## 2026-09-05 — Three HyperFrames films for the offer and the two add-on products
+
+- **Authored and rendered three 9:16 films from HTML, at $0 total.**
+  `marketing/hyperframes/cost-is-not-the-reason/` (Fifty-Five Cents, 28.0 s, 840
+  frames, 23.3 MB, rendered in 32.1 s),
+  `marketing/hyperframes/services/business-email/` (Two Different Jobs, 31.5 s,
+  945 frames, 17.7 MB, 52.4 s) and
+  `marketing/hyperframes/services/local-seo/` (Found, Then Kept, 28.0 s, 840
+  frames, 14.8 MB, 25.8 s). No image, voice, video or model call was generated:
+  every input already existed on disk. Renders and staged media are gitignored
+  and reproducible from `scripts/stage-assets.sh` plus `npm run render`.
+- **All three graded to the anchor's measured appearance.** Measured on
+  identical `signalstats` YAVG: the HeyGen anchor take is 155.4, the accepted
+  platform-dependency film is 160.1, and these are 160.8, 159.8 and 163.1. Every
+  second of all three sits inside the 150-175 band (0/28, 0/32, 0/28) and the
+  olive accent averages 0.28 %, 0.58 % and 0.30 % of frame area.
+- **The films de-bundle the offer instead of blurring it.** Live scheduled drops
+  in `posting-schedule.json` still say the $199 bundle includes a branded
+  business email address; `famtastic-products.json` says it is
+  `FAM-BUSINESS-EMAIL` at $99. All three films state the separateness on screen,
+  and Two Different Jobs is built entirely around the approved take-b narration
+  that says it in the studio's own voice. All three also carry the $9.99/month
+  renewal disclosure that `BRAND.md` requires and the existing campaign assets
+  omit.
+- **Found and recorded a doctrine conflict.** Four of the six shipped campaign
+  palettes have near-black grounds and cannot satisfy the anchor's 150-175
+  luminance contract; only `paper` and `anchor-take-a` can. The same constraint
+  disqualifies all but six images in the existing plate library. Full tables in
+  the two lane READMEs — this is an owner decision, not a design one.
+- **Deferred:** Found, Then Kept ships silent (no approved narration for either
+  product, no licensed music, no authorised spend) and Fifty-Five Cents is silent
+  after 10.45 s. All three are portrait only; HyperFrames bakes aspect into the
+  composition. `docs/CAPABILITY_REGISTRY.md` is unchanged — these are rendered
+  and locally verified, not published, so no classification moves.
+
 ## 2026-09-05 — Platform Dependency campaign film rendered in HyperFrames
 
 - **Authored and rendered a 29-second 9:16 campaign film from HTML, at $0.**

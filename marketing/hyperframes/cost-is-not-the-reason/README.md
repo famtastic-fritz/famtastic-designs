@@ -177,7 +177,7 @@ it a beat of its own.
 No statistic, no percentage, no named competitor, no delivery promise, no
 ranking promise. No `/web/` path appears anywhere — note that
 `marketing/campaigns/*/email-draft.md` all contain
-`https://famtasticdesigns.com/web/packages?...`, which `BRAND.md` says 404s
+`https://famtasticdesigns.com/packages?...`, which `BRAND.md` says 404s
 publicly. Those drafts need fixing; nothing from them was copied here.
 
 ### The claim this film does NOT make

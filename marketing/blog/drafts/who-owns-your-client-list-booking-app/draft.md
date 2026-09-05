@@ -19,7 +19,7 @@ Most people worry about the first one and feel fine, because the app shows a cli
 
 Open your platform's settings and its terms and answer these. Write the answers down — the point is having them before you need them.
 
-1. **What comes out when you export?** Nearly every platform has an export button; the question is what is inside the file. Names only? Booking history with no contact details? Full emails and phone numbers? Some platforms mask or withhold client contact information entirely, on the reasoning that the client is the platform's customer as much as yours. Export the file and open it. Do not assume.
+1. **What comes out when you export?** Nearly every platform has an export button; the question is what is inside the file. Names only? Booking history with no contact details? Full emails and phone numbers? Some platforms mask or withhold client contact information entirely, on the reasoning that the client is the platform's customer as much as yours. Export the file and open it.
 2. **Are you allowed to contact them outside the app?** This varies enormously and it is the question people skip. Some platforms are simply software and do not care. Some marketplaces restrict off-platform contact for clients they introduced. The rule lives in your agreement, usually not on the settings screen.
 3. **What happens if the account ends?** Not if you leave in a huff — if a payment fails, a policy changes, a listing is suspended, or a product is shut down. Find the section describing what happens to your data then, and how long you have to retrieve it. It is a dull paragraph and it decides a great deal.
 
