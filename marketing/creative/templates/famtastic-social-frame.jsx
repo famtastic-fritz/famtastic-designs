@@ -474,11 +474,55 @@ function famPlate(doc, path, opacity, blurPx) {
   return l;
 }
 
+/*
+ * Full-bleed plate: the generated image IS the background, not atmosphere behind
+ * it. Placed at full strength, scaled to cover, then a scrim so type keeps its
+ * contrast. This is the mode the Gemini plates are actually composed for - they
+ * are generated with a reserved empty band precisely so type can land on it.
+ */
+function famPlateFull(doc, path, scrim) {
+  var f = new File(path);
+  if (!f.exists) return null;
+  var before = doc.artLayers.length;
+  var d = new ActionDescriptor();
+  d.putPath(charIDToTypeID("null"), f);
+  d.putBoolean(charIDToTypeID("Lnkd"), false);
+  executeAction(charIDToTypeID("Plc "), d, DialogModes.NO);
+  if (doc.artLayers.length <= before) return null;
+  var l = doc.activeLayer;
+  l.name = "plate-full";
+
+  // Cover the canvas: scale up by the larger axis ratio.
+  var b = l.bounds;
+  var w = b[2].value - b[0].value, h = b[3].value - b[1].value;
+  var k = Math.max(doc.width.value / w, doc.height.value / h) * 100;
+  l.resize(k, k, AnchorPosition.MIDDLECENTER);
+
+  // Scrim toward the palette ground so type holds contrast over any plate.
+  var sc = doc.artLayers.add(); sc.name = "plate-scrim";
+  doc.selection.selectAll();
+  doc.selection.fill(famColor(ACTIVE.ground[0], ACTIVE.ground[1], ACTIVE.ground[2]),
+                     ColorBlendMode.NORMAL, 100);
+  doc.selection.deselect();
+  sc.opacity = scrim === undefined ? 42 : scrim;
+  return l;
+}
+
+/* Set when a full-bleed plate is composited, so the signature knows it is
+ * sitting on photography rather than on flat ground. */
+var FAM_PLATE_ACTIVE = false;
+
 function famApplyArt(doc, key, cfg) {
   var region = FAM_ART_REGIONS[key];
   if (!region) return [];
   var applied = [];
   var box = [region[0], region[1], region[2], region[3]];
+
+  // A full-bleed plate replaces atmosphere and theme entirely.
+  if (cfg.plateFull) {
+    if (famPlateFull(doc, cfg.plateFull, cfg.scrim)) { FAM_PLATE_ACTIVE = true; return ["plate-full"]; }
+    return ["plate-full MISSING: " + cfg.plateFull];
+  }
 
   if (cfg.atmosphere !== false) {
     // Keep the bloom as depth, not as a green wash over the ground. Design DNA
@@ -541,6 +585,7 @@ function renderFamtasticFrames(cfg) {
     doc.selection.deselect();
 
     // ART FIRST, TYPE ON TOP. Never the other way around.
+    FAM_PLATE_ACTIVE = false;   // per-frame; must not leak into the next format
     var art = famApplyArt(doc, key, cfg);
 
     famText(doc, cfg.eyebrow, M, Math.round(H * 0.135), ES, ACTIVE.accent, FONT_UI_BOLD, 240, "eyebrow");
@@ -572,6 +617,14 @@ function renderFamtasticFrames(cfg) {
     var ruleW = W - (M * 2);
     if (cfg.concept && FAM_ART_REGIONS[key]) {
       ruleW = Math.max(Math.round(W * 0.28), FAM_ART_REGIONS[key][0] - M - 40);
+    }
+    // Same protection the archetype layouts get: over photography the signature
+    // carries its own ground, or it renders as grey type on wood grain.
+    if (FAM_PLATE_ACTIVE) {
+      var sBandTop = H - Math.round(H * 0.195);
+      var sBand = doc.artLayers.add(); sBand.name = "signature-scrim";
+      famRect(doc, 0, sBandTop, W, H - sBandTop, ACTIVE.ground, 100);
+      sBand.opacity = 94;
     }
     famBar(doc, M, H - Math.round(H * 0.135), ruleW, 2, ACTIVE.hair, "rule-bot");
 
@@ -697,6 +750,18 @@ function famText3D(doc, text, x, y, size, depth, name) {
 
 // Shared signature block, so every archetype closes the same way.
 function famSignature(doc, W, H, M, FS, cfg, ruleW) {
+  /*
+   * Over a plate the signature was rendering dark grey on mid-brown wood and
+   * was effectively unreadable. A photograph does not owe the type any
+   * particular value, so the signature carries its own ground when it is
+   * standing on one.
+   */
+  if (FAM_PLATE_ACTIVE) {
+    var bandTop = H - Math.round(H * 0.195);
+    var band = doc.artLayers.add(); band.name = "signature-scrim";
+    famRect(doc, 0, bandTop, W, H - bandTop, ACTIVE.ground, 100);
+    band.opacity = 94;  // 82 still let wood grain read through the studio line
+  }
   famBar(doc, M, H - Math.round(H * 0.135), ruleW || (W - M * 2), 2, ACTIVE.hair, "rule-bot");
   var studio = cfg.studio || "AGENTIC AI BUSINESS SOLUTIONS ENGINEERING STUDIO";
   if (studio !== "none") {
@@ -874,6 +939,7 @@ function famRender(cfg) {
     var key = formats[i], F = FAM_FORMATS[key];
     if (!F) { written.push(key + " SKIPPED: unknown format"); continue; }
     var doc = famNewDoc(F[0], F[1], cfg.slug + "-" + key);
+    FAM_PLATE_ACTIVE = false;
     fn(doc, F, cfg);
     var path = cfg.outDir + cfg.slug + "-" + key + ".png";
     famExportPNG(doc, path);

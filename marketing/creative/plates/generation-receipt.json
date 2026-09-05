@@ -1,32 +1,26 @@
 {
-  "schema": "famtastic.tier2-plate-generation-receipt.v1",
-  "generated_at": "2026-09-05T01:54:14.415Z",
+  "schema": "famtastic.tier2-plate-generation-receipt.v2",
+  "generated_at": "2026-09-05T12:13:34.685Z",
+  "library": "prompt-library.json",
   "provider": "google-gemini-api",
   "api": "generateContent",
   "model": "gemini-3.1-flash-lite-image",
   "endpoint": "https://generativelanguage.googleapis.com/v1/models/gemini-3.1-flash-lite-image:generateContent",
   "credential_source": "macos_keychain:FAMtastic.Gemini.Image:famtastic-gemini-image-worker",
   "cost_per_image_usd_1k": 0.0336,
-  "cost_note": "Published per-image rate for one Gemini 3.1 Flash Lite Image 1K output (confirmed against every prior Gemini Flash Lite receipt in this repo under marketing/campaigns/and-if-it-is-rattler-lifers/evidence/). The Gemini Developer API generateContent response does not include a per-call invoiced dollar amount, so measured spend is (successful images x published per-image rate). A blocked/safety-filtered image is not charged, per the provider's own error message on that response, and is excluded from total_cost_usd.",
-  "backfill_note": "This file was reconstructed once by hand after generate-plates.mjs's first version overwrote its own receipt on a second, narrower run (a real bug hit while proving this script; fixed in generate-plates.mjs to merge by id going forward, see its header comment). Every value below is either copied verbatim from the live terminal output of the two actual generation runs on 2026-09-04/05, or independently re-verified afterward against the saved image files with `shasum -a 256` and `file` (see README.md 'Verification'). Nothing here is estimated. usage_metadata (exact provider token counts) was only preserved for the p-hero-blog retry, whose JSON survived; the other six successful calls' usage_metadata objects were not preserved because the original combined receipt was overwritten before being read back — their bytes/duration/cost/sha256/dimensions are still exact, measured values.",
-  "requested_count": 9,
-  "succeeded_count": 8,
-  "failed_count": 1,
-  "total_cost_usd": 0.2688,
+  "cost_note": "Published per-image rate for one Gemini 3.1 Flash Lite Image 1K output. The Gemini Developer API generateContent response carries no per-call invoiced dollar amount, so measured spend is (successful images x published per-image rate) — the same basis every prior Gemini receipt in this repo uses. Token usage per call is recorded in usage_metadata as corroborating evidence. A blocked/safety-filtered image is not charged (confirmed by the provider's own error message) and is excluded from total_cost_usd.",
+  "last_run": {
+    "requested": 21,
+    "succeeded": 21,
+    "failed": 0,
+    "cost_usd": 0.7056,
+    "concurrency": 4
+  },
+  "requested_count": 29,
+  "succeeded_count": 29,
+  "failed_count": 0,
+  "total_cost_usd": 0.9744,
   "results": [
-    {
-      "id": "p-hero-blog",
-      "attempt": 1,
-      "aspect_ratio": "16:9",
-      "surface": "blog hero",
-      "tier": "2 cheap-multiplier",
-      "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
-      "http_status": 200,
-      "ok": false,
-      "charged": false,
-      "error": "IMAGE_SAFETY: Unable to show the generated image. The image was filtered out because it violated Google's Generative AI Prohibited Use policy. You will not be charged for blocked images. (finishReason: IMAGE_SAFETY, on the original prompt which included 'one small unidentifiable silhouette standing just inside the doorway, not facing camera' at night in an isolated setting)",
-      "resolution": "Rephrased the prompt to remove the human silhouette entirely (architecture-only scene); attempt 2 succeeded. prompt-library.json was updated to the safe wording so the library reflects what actually works."
-    },
     {
       "id": "p-hero-blog",
       "attempt": 2,
@@ -49,8 +43,18 @@
         "promptTokenCount": 493,
         "candidatesTokenCount": 1546,
         "totalTokenCount": 2039,
-        "promptTokensDetails": [{ "modality": "TEXT", "tokenCount": 493 }],
-        "candidatesTokensDetails": [{ "modality": "IMAGE", "tokenCount": 1120 }],
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 493
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
         "serviceTier": "standard"
       }
     },
@@ -186,6 +190,1119 @@
       "cost_usd": 0.0336,
       "usage_metadata": null,
       "usage_metadata_note": "Not preserved — see backfill_note. bytes/duration/cost/sha256/dimensions are exact measured values."
+    },
+    {
+      "id": "pd-p-hero-16x9",
+      "topic_id": "pd-p",
+      "campaign": "platform-dependency",
+      "palette": "anchor-take-a",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
+      "started_at": "2026-09-05T12:13:18.008Z",
+      "completed_at": "2026-09-05T12:13:21.098Z",
+      "duration_ms": 3089,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 3089
+        }
+      ],
+      "output_file": "platform-dependency/pd-p-hero-16x9.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 538272,
+      "dimensions": {
+        "height": 768,
+        "width": 1376
+      },
+      "sha256": "1304fa7967f9a22a902bfad453a146db52f9aa43ef7f5a89c9883b9e9c25c267",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 753,
+        "candidatesTokenCount": 1547,
+        "totalTokenCount": 2300,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 753
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A shop counter of pale oiled oak beside a window on an overcast morning. A pen, a coffee ring, the corner of a receipt pad.\nSubject: Two completely blank, unprinted business cards lying side by side and face up on the counter: one heavy cotton stock with a clean crisp edge, one thin and slightly curled with a bruised corner.\nKey details: Wood grain visible under the cards, a fingerprint on the thin card, a soft shadow under the heavy one, dust in the window light.\nCamera and light: 50mm, eye level with the counter surface, shallow depth of field — cards sharp, the room behind falling away.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty — one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-p-square-1x1",
+      "topic_id": "pd-p",
+      "campaign": "platform-dependency",
+      "palette": "anchor-take-a",
+      "aspect_ratio": "1:1",
+      "surface": "instagram / facebook feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
+      "started_at": "2026-09-05T12:13:18.033Z",
+      "completed_at": "2026-09-05T12:13:20.850Z",
+      "duration_ms": 2815,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2815
+        }
+      ],
+      "output_file": "platform-dependency/pd-p-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 606644,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "47c23a9304c7e18c49a07d4b8651781c54d478a93e6161b225b2626ad7f830d1",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 711,
+        "candidatesTokenCount": 1563,
+        "totalTokenCount": 2274,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 711
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: Overhead flat lay on a warm off-white desk blotter, daylight from a window to the left.\nSubject: Two blank unprinted business cards, one thick and one thin, laid slightly apart in the upper half of the frame with a fountain pen between them.\nKey details: Blotter fibre, a faint ink smudge on the blotter, the thin card's cut edge fraying, no writing on anything.\nCamera and light: 35mm directly overhead, flat even daylight, gentle contrast.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty — one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-p-vertical-9x16",
+      "topic_id": "pd-p",
+      "campaign": "platform-dependency",
+      "palette": "anchor-take-a",
+      "aspect_ratio": "9:16",
+      "surface": "stories / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
+      "started_at": "2026-09-05T12:13:18.034Z",
+      "completed_at": "2026-09-05T12:13:20.917Z",
+      "duration_ms": 2882,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2882
+        }
+      ],
+      "output_file": "platform-dependency/pd-p-vertical-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 623188,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "a26a9371f73824880bdf9453d45bb57866fef3f9fbfb072eab8c214ee73a4b5d",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 696,
+        "candidatesTokenCount": 1544,
+        "totalTokenCount": 2240,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 696
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A plain warm-white wall behind a small reception counter in daylight.\nSubject: A single blank business card standing upright in a small brass card holder on the counter, in the lower third of the frame.\nKey details: The card is entirely unprinted; brass slightly tarnished; the wall above is empty and evenly lit.\nCamera and light: 50mm at eye level, straight on, soft window light from the left.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse.\nReserved negative space (mandatory): the top 50% of the frame stays near-empty — one continuous low-detail surface (wall, sky, ceiling, seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-a1-hero-16x9",
+      "topic_id": "pd-a1",
+      "campaign": "platform-dependency",
+      "palette": "anchor-take-a",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "linktree-vs-real-website-what-youre-trading-away",
+      "started_at": "2026-09-05T12:13:18.034Z",
+      "completed_at": "2026-09-05T12:13:21.062Z",
+      "duration_ms": 3025,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 3025
+        }
+      ],
+      "output_file": "platform-dependency/pd-a1-hero-16x9.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 653726,
+      "dimensions": {
+        "height": 768,
+        "width": 1376
+      },
+      "sha256": "6eda0057bc559f67e053d1a03d5bb3679b4d699724ee335d16250b685c2955c4",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 733,
+        "candidatesTokenCount": 1552,
+        "totalTokenCount": 2285,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 733
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The interior wall of an old small-town post office lobby, daylight through a high window.\nSubject: A bank of identical small brass post-office boxes filling the left half of the frame, every door blank with no numbers or dials rendered, one door hanging slightly open on an empty box.\nKey details: Tarnished brass, worn paint on the surrounding woodwork, scuffed terrazzo below, dust in the light.\nCamera and light: 35mm, eye level, straight on to the wall, soft diffuse daylight, slight vignette from the lens.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty — one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-a1-square-1x1",
+      "topic_id": "pd-a1",
+      "campaign": "platform-dependency",
+      "palette": "anchor-take-a",
+      "aspect_ratio": "1:1",
+      "surface": "instagram / facebook feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "linktree-vs-real-website-what-youre-trading-away",
+      "started_at": "2026-09-05T12:13:20.851Z",
+      "completed_at": "2026-09-05T12:13:23.758Z",
+      "duration_ms": 2902,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2902
+        }
+      ],
+      "output_file": "platform-dependency/pd-a1-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 633802,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "953b64435cf9309781ad674ca4b484773af4f74fd20cc1f1c91d67bd4fb75c71",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 693,
+        "candidatesTokenCount": 1560,
+        "totalTokenCount": 2253,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 693
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: Close on the same brass box wall, shallow focus.\nSubject: One small brass door standing open on an empty box in the upper half of the frame, the neighbouring blank doors falling out of focus.\nKey details: Fingerprints in the tarnish, a scratch across the hinge, nothing inside the box.\nCamera and light: 50mm close-up, eye level, shallow depth of field, soft daylight.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty — one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-a1-vertical-9x16",
+      "topic_id": "pd-a1",
+      "campaign": "platform-dependency",
+      "palette": "anchor-take-a",
+      "aspect_ratio": "9:16",
+      "surface": "stories / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "linktree-vs-real-website-what-youre-trading-away",
+      "started_at": "2026-09-05T12:13:20.917Z",
+      "completed_at": "2026-09-05T12:13:24.124Z",
+      "duration_ms": 3204,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 3204
+        }
+      ],
+      "output_file": "platform-dependency/pd-a1-vertical-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 672767,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "44aa64432d5a881a00375681a6e23e152a6735546e481933048e884eb722553a",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 711,
+        "candidatesTokenCount": 1589,
+        "totalTokenCount": 2300,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 711
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The front door of a modest old house in flat daylight, painted timber, a stone step.\nSubject: A brass letter slot set into the lower third of the door, plate blank and unengraved, the door's painted surface filling the frame above it.\nKey details: Chipped paint around the slot, a hairline crack in the timber, a worn brass lip where hands have pushed it.\nCamera and light: 50mm straight on, eye level, soft overcast daylight, no direct sun.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse.\nReserved negative space (mandatory): the top 50% of the frame stays near-empty — one continuous low-detail surface (wall, sky, ceiling, seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-a2-hero-16x9",
+      "topic_id": "pd-a2",
+      "campaign": "platform-dependency",
+      "palette": "ghost-town",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-your-link-in-bio-doesnt-show-up-in-google",
+      "started_at": "2026-09-05T12:13:21.062Z",
+      "completed_at": "2026-09-05T12:13:23.795Z",
+      "duration_ms": 2732,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2732
+        }
+      ],
+      "output_file": "platform-dependency/pd-a2-hero-16x9.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 755960,
+      "dimensions": {
+        "height": 768,
+        "width": 1376
+      },
+      "sha256": "d88f9635f3a3ff8db979c1236677251a45d195bc59cd941742d4f0f2b4c1c9d0",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 698,
+        "candidatesTokenCount": 1557,
+        "totalTokenCount": 2255,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 698
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A narrow side alley of sun-bleached stucco in late afternoon, dry dust on the ground, no vehicles, no people.\nSubject: A single plain painted door set flush into the wall on the left, no number, no plate, no handle detail beyond a worn knob — an entrance nobody could name.\nKey details: Paint blistered by heat, a dusty threshold, a wedge of low amber sun crossing the wall above the door.\nCamera and light: 35mm, eye level, low late sun raking across the wall, deep natural shadow, visible grain.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): warm near-black earth ground, #17120D, a dark dusty brown. ONE warm amber accent, #D9A441 — low late sun, a sodium lamp, or dust caught in a single shaft of light. Everything else bleached, dry and desaturated: bone, sand, faded paint, grey weathered timber. No blue, no green, no neon, no cool light anywhere.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty — one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-a2-square-1x1",
+      "topic_id": "pd-a2",
+      "campaign": "platform-dependency",
+      "palette": "ghost-town",
+      "aspect_ratio": "1:1",
+      "surface": "instagram / facebook feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-your-link-in-bio-doesnt-show-up-in-google",
+      "started_at": "2026-09-05T12:13:21.098Z",
+      "completed_at": "2026-09-05T12:13:24.127Z",
+      "duration_ms": 3026,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 3026
+        }
+      ],
+      "output_file": "platform-dependency/pd-a2-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 731018,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "52455d99826502df4f0d41a39ff7075dd0b5400badbabfa0eaf280515187ca04",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 672,
+        "candidatesTokenCount": 1627,
+        "totalTokenCount": 2299,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 672
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A wide empty main street at dusk, dust hanging in the air, storefronts shuttered on both sides.\nSubject: One shopfront near the centre with its door propped open and a warm light inside — the only open business on a street with no one on it.\nKey details: Cracked sidewalk, a dry tumble of litter, faded awning fabric, no signage panels anywhere.\nCamera and light: 35mm, eye level from the middle of the street, low amber sun behind, heavy natural grain.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): warm near-black earth ground, #17120D, a dark dusty brown. ONE warm amber accent, #D9A441 — low late sun, a sodium lamp, or dust caught in a single shaft of light. Everything else bleached, dry and desaturated: bone, sand, faded paint, grey weathered timber. No blue, no green, no neon, no cool light anywhere.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty — one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-a2-vertical-9x16",
+      "topic_id": "pd-a2",
+      "campaign": "platform-dependency",
+      "palette": "ghost-town",
+      "aspect_ratio": "9:16",
+      "surface": "stories / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-your-link-in-bio-doesnt-show-up-in-google",
+      "started_at": "2026-09-05T12:13:23.759Z",
+      "completed_at": "2026-09-05T12:13:26.470Z",
+      "duration_ms": 2709,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2709
+        }
+      ],
+      "output_file": "platform-dependency/pd-a2-vertical-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 731392,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "0d8480a5a89fc1a59bd24ff052a8f66aefdd7acdfef679f0b0bf609bf2824679",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 671,
+        "candidatesTokenCount": 1591,
+        "totalTokenCount": 2262,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 671
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The face of a weathered timber shopfront in low sun.\nSubject: An empty wrought-iron sign bracket projecting from the wall in the lower half of the frame with no sign hanging from it, just the bare hook and two loose chain links.\nKey details: Rust bleeding down the paint beneath the bracket, a pale rectangle where a board used to hang, dust in the air.\nCamera and light: 50mm, slightly below eye level looking up at the bracket, warm low sun, natural contrast.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): warm near-black earth ground, #17120D, a dark dusty brown. ONE warm amber accent, #D9A441 — low late sun, a sodium lamp, or dust caught in a single shaft of light. Everything else bleached, dry and desaturated: bone, sand, faded paint, grey weathered timber. No blue, no green, no neon, no cool light anywhere.\nReserved negative space (mandatory): the top 50% of the frame stays near-empty — one continuous low-detail surface (wall, sky, ceiling, seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-b1-hero-16x9",
+      "topic_id": "pd-b1",
+      "campaign": "platform-dependency",
+      "palette": "salon",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "what-booking-app-commissions-cost-you-in-a-year",
+      "started_at": "2026-09-05T12:13:23.796Z",
+      "completed_at": "2026-09-05T12:13:26.681Z",
+      "duration_ms": 2884,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2884
+        }
+      ],
+      "output_file": "platform-dependency/pd-b1-hero-16x9.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 589940,
+      "dimensions": {
+        "height": 768,
+        "width": 1376
+      },
+      "sha256": "41c8570f94967b38d40f0ccdc3f136b7d977bc1ad4e560a17cafdafc2719d6fd",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 672,
+        "candidatesTokenCount": 1500,
+        "totalTokenCount": 2172,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 672
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A hair-salon station counter after closing, one warm mirror bulb still on, the rest of the room dark.\nSubject: A long curl of blank thermal receipt paper spilling off the left of the counter and pooling on the floor, entirely unprinted.\nKey details: Shears and a comb pushed aside, a smear of product on the counter, the paper catching the bulb along one edge.\nCamera and light: 50mm, eye level with the counter, shallow depth of field, single practical light, visible grain.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 — a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty — one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-b1-square-1x1",
+      "topic_id": "pd-b1",
+      "campaign": "platform-dependency",
+      "palette": "salon",
+      "aspect_ratio": "1:1",
+      "surface": "instagram / facebook feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "what-booking-app-commissions-cost-you-in-a-year",
+      "started_at": "2026-09-05T12:13:24.125Z",
+      "completed_at": "2026-09-05T12:13:26.857Z",
+      "duration_ms": 2731,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2731
+        }
+      ],
+      "output_file": "platform-dependency/pd-b1-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 528834,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "9eb9eb386eb66844bb84aec99f42848f5de7ea6f97e14740eed49bb5972b2a3a",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 649,
+        "candidatesTokenCount": 1506,
+        "totalTokenCount": 2155,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 649
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The same station counter, close and low.\nSubject: A glass tip jar in the upper half of the frame, only a shallow layer of coins left in the bottom of it, a warm bulb behind throwing rose light through the glass.\nKey details: Fingerprints on the glass, a chipped rim, coins dull and unpolished, no printed labels anywhere.\nCamera and light: 50mm close-up, eye level, shallow depth of field, one practical bulb.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 — a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty — one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-b1-vertical-9x16",
+      "topic_id": "pd-b1",
+      "campaign": "platform-dependency",
+      "palette": "salon",
+      "aspect_ratio": "9:16",
+      "surface": "stories / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "what-booking-app-commissions-cost-you-in-a-year",
+      "started_at": "2026-09-05T12:13:24.127Z",
+      "completed_at": "2026-09-05T12:13:26.917Z",
+      "duration_ms": 2789,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2789
+        }
+      ],
+      "output_file": "platform-dependency/pd-b1-vertical-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 574741,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "aa0001cbfb0c219e056bce85194b0d739940f08ad8db5bcf518f3a5a9a923a5e",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 647,
+        "candidatesTokenCount": 1576,
+        "totalTokenCount": 2223,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 647
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: Looking down into an open cash drawer on a salon reception desk at night.\nSubject: The drawer in the lower half of the frame with most of its coin wells empty and only a few notes in the clip.\nKey details: Worn plastic dividers, a hair elastic in one well, one warm bulb overhead, the desk surface above dark and empty.\nCamera and light: 35mm from above and slightly behind, single warm practical light, soft falloff.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 — a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the top 50% of the frame stays near-empty — one continuous low-detail surface (wall, sky, ceiling, seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-b2-hero-16x9",
+      "topic_id": "pd-b2",
+      "campaign": "platform-dependency",
+      "palette": "anchor-take-a",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "started_at": "2026-09-05T12:13:26.470Z",
+      "completed_at": "2026-09-05T12:13:29.228Z",
+      "duration_ms": 2757,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2757
+        }
+      ],
+      "output_file": "platform-dependency/pd-b2-hero-16x9.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 653186,
+      "dimensions": {
+        "height": 768,
+        "width": 1376
+      },
+      "sha256": "d340ce2c28acfa2965a7b43868ce7059efd0988d5bf96773a51fd2ca6846b20f",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 734,
+        "candidatesTokenCount": 1553,
+        "totalTokenCount": 2287,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 734
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A back-office table of pale worn wood in flat daylight, warm off-white wall behind.\nSubject: An oak card-index drawer pulled open on the left of the frame, packed tight with blank unwritten index cards standing on edge.\nKey details: Brass pull tarnished, the cards' top edges soft and thumbed, one card standing slightly proud of the rest, no writing on any of them.\nCamera and light: 50mm, eye level with the tabletop, soft diffuse daylight, shallow depth of field along the row of cards.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty — one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-b2-square-1x1",
+      "topic_id": "pd-b2",
+      "campaign": "platform-dependency",
+      "palette": "anchor-take-a",
+      "aspect_ratio": "1:1",
+      "surface": "instagram / facebook feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "started_at": "2026-09-05T12:13:26.682Z",
+      "completed_at": "2026-09-05T12:13:29.513Z",
+      "duration_ms": 2827,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2827
+        }
+      ],
+      "output_file": "platform-dependency/pd-b2-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 560068,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "54cc442e3be59b0ffa1c3212e037d33d1707bce4081b8079bd2723dc353fa3bc",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 705,
+        "candidatesTokenCount": 1529,
+        "totalTokenCount": 2234,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 705
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: Close on the front of the same card-index drawer.\nSubject: A small steel padlock hooked through the drawer's brass pull, holding it shut, in the upper half of the frame.\nKey details: Scratched lock body, a dent in the brass, the blank card edges just visible through the gap at the top of the drawer.\nCamera and light: 50mm close-up, straight on, soft daylight from the left, shallow depth of field.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty — one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-b2-vertical-9x16",
+      "topic_id": "pd-b2",
+      "campaign": "platform-dependency",
+      "palette": "anchor-take-a",
+      "aspect_ratio": "9:16",
+      "surface": "stories / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "who-owns-your-client-list-booking-app",
+      "started_at": "2026-09-05T12:13:26.857Z",
+      "completed_at": "2026-09-05T12:13:29.539Z",
+      "duration_ms": 2682,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2682
+        }
+      ],
+      "output_file": "platform-dependency/pd-b2-vertical-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 638098,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "2cfdea7ee7d496954c6072cdb6fddb23646806c16ac70985eac5266d31814ad3",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 696,
+        "candidatesTokenCount": 1599,
+        "totalTokenCount": 2295,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 696
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A wall of small wooden filing drawers in an old office, daylight from a side window.\nSubject: One drawer half-pulled in the lower third of the frame with blank cards inside; the drawer fronts above it are plain and unlabelled.\nKey details: Worn varnish, one missing pull replaced with string, dust along the runners.\nCamera and light: 35mm, eye level, straight on, soft overcast daylight.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse.\nReserved negative space (mandatory): the top 50% of the frame stays near-empty — one continuous low-detail surface (wall, sky, ceiling, seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-c1-hero-16x9",
+      "topic_id": "pd-c1",
+      "campaign": "platform-dependency",
+      "palette": "salon",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-price-questions-in-dms-cost-you-bookings",
+      "started_at": "2026-09-05T12:13:26.917Z",
+      "completed_at": "2026-09-05T12:13:29.695Z",
+      "duration_ms": 2774,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2774
+        }
+      ],
+      "output_file": "platform-dependency/pd-c1-hero-16x9.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 596777,
+      "dimensions": {
+        "height": 768,
+        "width": 1376
+      },
+      "sha256": "c5aecaddedf44e7c6491b61ec3ad39e350f87f9537d0cd1113b4097fd49e19dc",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 680,
+        "candidatesTokenCount": 1581,
+        "totalTokenCount": 2261,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 680
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A salon station counter late at night, the room behind unlit, one small bulb at the mirror.\nSubject: A phone lying face-down on the counter on the left, its screen light leaking out around the edges as a thin rose line on the countertop.\nKey details: A cold half-drunk mug beside it, a hair clip, dust visible in the bulb's light, no screen content visible at all.\nCamera and light: 50mm, eye level with the counter, shallow depth of field, one practical bulb, heavy natural grain.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 — a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty — one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-c1-square-1x1",
+      "topic_id": "pd-c1",
+      "campaign": "platform-dependency",
+      "palette": "salon",
+      "aspect_ratio": "1:1",
+      "surface": "instagram / facebook feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-price-questions-in-dms-cost-you-bookings",
+      "started_at": "2026-09-05T12:13:29.228Z",
+      "completed_at": "2026-09-05T12:13:31.769Z",
+      "duration_ms": 2540,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2540
+        }
+      ],
+      "output_file": "platform-dependency/pd-c1-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 558349,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "7871eb49da6ede84de294f43118e5cc168b61fc2eec435fbc7d4b3ed07ca9793",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 651,
+        "candidatesTokenCount": 1512,
+        "totalTokenCount": 2163,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 651
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A bedside table at night, one small lamp, dark wall behind.\nSubject: A phone face-down on the table in the upper half of the frame, glow escaping around its rim, a lamp just out of frame lighting one edge.\nKey details: A hair tie and a set of keys beside it, worn veneer on the table, deep shadow beyond.\nCamera and light: 50mm, eye level with the tabletop, shallow depth of field, single warm practical light.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 — a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty — one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-c1-vertical-9x16",
+      "topic_id": "pd-c1",
+      "campaign": "platform-dependency",
+      "palette": "salon",
+      "aspect_ratio": "9:16",
+      "surface": "stories / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "why-price-questions-in-dms-cost-you-bookings",
+      "started_at": "2026-09-05T12:13:29.513Z",
+      "completed_at": "2026-09-05T12:13:32.143Z",
+      "duration_ms": 2625,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2625
+        }
+      ],
+      "output_file": "platform-dependency/pd-c1-vertical-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 522686,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "81bf4495b50d04cd4779717b38df23f1aa056def652ab527905299a8f3e4fdc2",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 646,
+        "candidatesTokenCount": 1520,
+        "totalTokenCount": 2166,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 646
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A dark bedroom, a single bedside lamp on, the wall above empty.\nSubject: A face-down phone on the bedside table in the lower third of the frame, glow spilling onto the tabletop.\nKey details: Creased bedsheet corner, lamp base with a chipped enamel finish, everything above the lamp falling into plum shadow.\nCamera and light: 35mm, eye level from the bed, one practical lamp, natural grain, no other light.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 — a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast.\nReserved negative space (mandatory): the top 50% of the frame stays near-empty — one continuous low-detail surface (wall, sky, ceiling, seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-c2-hero-16x9",
+      "topic_id": "pd-c2",
+      "campaign": "platform-dependency",
+      "palette": "trades",
+      "aspect_ratio": "16:9",
+      "surface": "blog hero",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "how-a-website-answers-price-questions",
+      "started_at": "2026-09-05T12:13:29.540Z",
+      "completed_at": "2026-09-05T12:13:32.253Z",
+      "duration_ms": 2712,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2712
+        }
+      ],
+      "output_file": "platform-dependency/pd-c2-hero-16x9.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 696194,
+      "dimensions": {
+        "height": 768,
+        "width": 1376
+      },
+      "sha256": "4494a9815440225828d9d989dbf6cea9befe0bded47aedc4ed3ca98844cf0954",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 686,
+        "candidatesTokenCount": 1519,
+        "totalTokenCount": 2205,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 686
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The service counter of a small repair shop, cold overhead light, painted block wall.\nSubject: A wall-mounted black letterboard panel on the right of the counter with completely empty slats — no letters, no numbers, no characters at all — the panel clean and evenly lit.\nKey details: Chipped enamel counter edge, a steel stool, an orange-shaded work lamp clamped nearby throwing the only warm light.\nCamera and light: 35mm, eye level, straight on, cold diffuse shop light with one orange practical, natural grain.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): blue-black ground, #0D1117, cold and industrial. ONE safety-orange accent, #FF7A1A — a work lamp, a hi-vis panel, a painted hazard edge. Everything else cold steel neutral: grey primer, galvanised metal, oil-dark concrete. No warm domestic light, no golden hour, no wood-panelled warmth.\nReserved negative space (mandatory): the right 45% of the frame stays near-empty — one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-c2-square-1x1",
+      "topic_id": "pd-c2",
+      "campaign": "platform-dependency",
+      "palette": "trades",
+      "aspect_ratio": "1:1",
+      "surface": "instagram / facebook feed",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "how-a-website-answers-price-questions",
+      "started_at": "2026-09-05T12:13:29.695Z",
+      "completed_at": "2026-09-05T12:13:32.645Z",
+      "duration_ms": 2949,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2949
+        }
+      ],
+      "output_file": "platform-dependency/pd-c2-square-1x1.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 660159,
+      "dimensions": {
+        "height": 1024,
+        "width": 1024
+      },
+      "sha256": "e23f03bddfd30b4eebf51544db8726deb9dd407fab030076c3489686587eeaeb",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 658,
+        "candidatesTokenCount": 1591,
+        "totalTokenCount": 2249,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 658
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: A steel workbench under a clamped work lamp, concrete floor beyond.\nSubject: A metal clipboard lying on the bench in the upper half of the frame holding a completely blank sheet of paper, held by a worn spring clip.\nKey details: Oil marks on the steel, a pencil stub, the lamp's orange shade catching one edge of the clip.\nCamera and light: 50mm at a low angle across the bench, shallow depth of field, single work lamp.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): blue-black ground, #0D1117, cold and industrial. ONE safety-orange accent, #FF7A1A — a work lamp, a hi-vis panel, a painted hazard edge. Everything else cold steel neutral: grey primer, galvanised metal, oil-dark concrete. No warm domestic light, no golden hour, no wood-panelled warmth.\nReserved negative space (mandatory): the bottom 40% of the frame stays near-empty — one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
+    },
+    {
+      "id": "pd-c2-vertical-9x16",
+      "topic_id": "pd-c2",
+      "campaign": "platform-dependency",
+      "palette": "trades",
+      "aspect_ratio": "9:16",
+      "surface": "stories / reels background",
+      "tier": "2 cheap-multiplier",
+      "blog_post_slug": "how-a-website-answers-price-questions",
+      "started_at": "2026-09-05T12:13:31.769Z",
+      "completed_at": "2026-09-05T12:13:34.684Z",
+      "duration_ms": 2913,
+      "http_status": 200,
+      "ok": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "http_status": 200,
+          "ok": true,
+          "blocked": false,
+          "error": null,
+          "duration_ms": 2913
+        }
+      ],
+      "output_file": "platform-dependency/pd-c2-vertical-9x16.jpg",
+      "mime_type": "image/jpeg",
+      "bytes": 690992,
+      "dimensions": {
+        "height": 1376,
+        "width": 768
+      },
+      "sha256": "7faa19af5913f12efc49a42a32223b300fb6ef94e60f7838ec8868eb402b1e35",
+      "cost_usd": 0.0336,
+      "usage_metadata": {
+        "promptTokenCount": 658,
+        "candidatesTokenCount": 1504,
+        "totalTokenCount": 2162,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 658
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "prompt_sent": "Intended use: a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.\nScene / background: The sidewalk outside a small shop at dusk, cold blue light, wet concrete.\nSubject: A folding A-frame sidewalk sign standing in the lower third of the frame with both panels completely blank — bare painted board, no writing.\nKey details: Scuffed hinge, a rust run down one leg, a single orange shop light glowing behind the glass.\nCamera and light: 35mm, eye level, straight on, blue dusk with one warm practical, natural grain.\nPhotograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.\nColour world (mandatory): blue-black ground, #0D1117, cold and industrial. ONE safety-orange accent, #FF7A1A — a work lamp, a hi-vis panel, a painted hazard edge. Everything else cold steel neutral: grey primer, galvanised metal, oil-dark concrete. No warm domestic light, no golden hour, no wood-panelled warmth.\nReserved negative space (mandatory): the top 50% of the frame stays near-empty — one continuous low-detail surface (wall, sky, ceiling, seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop.\nText rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.\nExclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.\nPreserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else."
     }
   ]
 }

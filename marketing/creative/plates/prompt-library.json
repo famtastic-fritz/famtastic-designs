@@ -1,219 +1,1833 @@
 {
-  "schema": "famtastic.creative-prompt-library.v1",
-  "generated_at": "2026-09-04T22:00:00Z",
-  "purpose": "Reusable Tier-2 (Gemini Flash Lite) and Tier-1 (flagship) prompt set for the platform-dependency blog series and the Ghost Town Ep1 campaign. Every plate is composed to sit UNDER Photoshop-set display type: dark ground, deliberate negative space, zero baked-in text.",
-  "design_dna_ref": {
-    "ground_hex": "#070907",
-    "accent_hex": "#7cfc00",
-    "rule": "single-glow — exactly one lime (#7CFC00) glow/rim-light source per frame; every other light stays neutral or warm-neutral; high contrast; restrained; no clutter"
+  "schema": "famtastic.creative-prompt-library.v2",
+  "generated_at": "2026-09-05T00:00:00Z",
+  "supersedes": {
+    "schema": "famtastic.creative-prompt-library.v1",
+    "generated_at": "2026-09-04T22:00:00Z",
+    "why": "v1 was written before docs/marketing/CAMPAIGN_ART_DIRECTION_V1.md existed and is named in that document's Known Gaps as needing a redo pass. It hardcoded the site identity (#070907 ground + #7CFC00 glow) into every prompt regardless of subject — the exact 'stuck in this damn black and green' failure the art direction corrects — and it used quality adjectives ('cinematic', 'editorial') where the OpenAI image-prompting cookbook calls for photography vocabulary. v1's eight generated plates remain on disk as plate-01..08-*.jpg with their receipt entries intact; they are superseded as art direction, not deleted as evidence."
   },
-  "shared_composition_constraint": "Composition constraint (mandatory, apply in every prompt): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject, texture, or clutter in it — this negative space is reserved for large Photoshop display type added after generation, not for anything in the plate itself. Do not render any text, letters, numbers, words, logos, watermarks, subtitles, captions, or UI copy anywhere in the image. Generated text is always illegible garbage; this plate must arrive completely clean so type can be set over it later in Photoshop.",
-  "shared_lighting_constraint": "Lighting constraint (mandatory, apply in every prompt): follow the single-glow rule — exactly one restrained lime-green (#7CFC00) glow or rim-light source as the only saturated color accent in the frame; every other light source is neutral, cool-neutral, or warm-neutral against a near-black (#070907) ground. High contrast, editorial, restrained. No second or third colored light source, no rainbow gradient, no multiple competing highlights, no oversaturated fill light.",
-  "shared_negative_prompt": "text, letters, numbers, words, typography, captions, subtitles, logos, watermark, signature, UI chrome, readable screen content, readable signage, multiple light sources, colored gels other than lime, rainbow gradient, oversaturated colors, blown highlights, low contrast, flat lighting, muddy midtones, generic stock-photo smile, extra fingers, malformed hands, cloned faces, real brand name, real identifiable person, celebrity, logo mark, clutter, busy background, motion blur artifacts",
-  "series_context": {
-    "series": "Own Website vs. Rented Platforms",
-    "pillar_post": "why-running-business-on-gmail-and-linktree-costs-revenue",
-    "cluster_plan": "marketing/blog/clusters/cluster-own-website-vs-rented-platforms/cluster-plan.json",
-    "companion_campaign": "marketing/campaigns/ghost-town-ep1/manifest.json"
+  "art_direction_ref": "docs/marketing/CAMPAIGN_ART_DIRECTION_V1.md",
+  "palette_source_of_truth": "marketing/creative/templates/famtastic-social-frame.jsx (var PALETTES) — RGB read directly from the shipped template, not restated from memory.",
+  "technique_ref": {
+    "source": "OpenAI Cookbook — gpt-image-1.5 prompting guide, as recorded in CAMPAIGN_ART_DIRECTION_V1.md Rule 4",
+    "applied": [
+      "Prompt order: intended use -> scene/background -> subject -> key details -> camera and light -> colour world -> reserved negative space -> exclusions -> preserve list. Assembled in that order at run time by generate-plates.mjs assemblePrompt().",
+      "Short labelled segments and line breaks rather than one long paragraph.",
+      "State the intended use so the model sets its own level of polish.",
+      "Photography vocabulary for realism (50mm/35mm, eye level, soft diffuse, film grain, real wear) instead of quality adjectives; '8K', 'ultra-detailed' and 'studio polish' are explicitly excluded rather than requested.",
+      "An explicit exclusion list at the end of every prompt.",
+      "A preserve list restated on every prompt so an iteration cannot drift the palette, framing or the no-text rule."
+    ],
+    "not_applied": [
+      "In-image text techniques (quoted literals, ALL CAPS, verbatim-rendering demands). FAMtastic's rule stands: type is set in Photoshop, never generated. Every prompt here carries the opposite instruction.",
+      "Character anchor / input_fidelity workflow. No recurring illustrated brand character exists yet; when one does, the anchor image belongs in this library as its own topic."
+    ]
   },
-  "prompts": [
+  "hard_constraints": [
+    "No baked-in text of any kind, anywhere, in any plate.",
+    "Every plate reserves deliberate negative space for Photoshop-set type, declared per variant in `negative_space`.",
+    "Every plate names exactly one palette, and that palette comes from the campaign's own subject matter — not from the house identity by default."
+  ],
+  "palettes": {
+    "famtastic": {
+      "ground_hex": "#070907",
+      "accent_hex": "#7CFC00",
+      "rgb": {
+        "ground": [
+          7,
+          9,
+          7
+        ],
+        "accent": [
+          124,
+          252,
+          0
+        ]
+      },
+      "use_when": "FAMtastic is talking about FAMtastic — the offer, the system, the price, the product itself.",
+      "prompt_clause": "near-black ground, #070907, a deep neutral black with a faint green cast, filling most of the frame. Exactly ONE saturated accent anywhere in the image: a restrained lime green, #7CFC00, present as a single light source, rim light or reflected edge and nothing more. Every other light is neutral or cool-neutral white. No warm domestic light, no second colour, and no green wash over the whole scene — the lime is an accent, not the ambience."
+    },
+    "ghost-town": {
+      "ground_hex": "#17120D",
+      "accent_hex": "#D9A441",
+      "rgb": {
+        "ground": [
+          23,
+          18,
+          13
+        ],
+        "accent": [
+          217,
+          164,
+          65
+        ]
+      },
+      "use_when": "The argument is absence: a business that exists but cannot be found. Heat, dust, weathering, abandonment.",
+      "prompt_clause": "warm near-black earth ground, #17120D, a dark dusty brown. ONE warm amber accent, #D9A441 — low late sun, a sodium lamp, or dust caught in a single shaft of light. Everything else bleached, dry and desaturated: bone, sand, faded paint, grey weathered timber. No blue, no green, no neon, no cool light anywhere."
+    },
+    "salon": {
+      "ground_hex": "#1A1013",
+      "accent_hex": "#E8B4B8",
+      "rgb": {
+        "ground": [
+          26,
+          16,
+          19
+        ],
+        "accent": [
+          232,
+          180,
+          184
+        ]
+      },
+      "use_when": "Personal-service work — hair, nails, barbering, beauty. Skin-adjacent warmth, close and human.",
+      "prompt_clause": "deep plum-black ground, #1A1013, low and enveloping. ONE dusty rose accent, #E8B4B8 — a warm practical bulb, a mirror light, skin catching light. Soft, close, intimate, slightly underexposed. Never clinical white, never surgical, no cyan, no fluorescent green cast."
+    },
+    "trades": {
+      "ground_hex": "#0D1117",
+      "accent_hex": "#FF7A1A",
+      "rgb": {
+        "ground": [
+          13,
+          17,
+          23
+        ],
+        "accent": [
+          255,
+          122,
+          26
+        ]
+      },
+      "use_when": "Work, not lifestyle — automotive, contractors, repair, mobile service, anything with tools in it.",
+      "prompt_clause": "blue-black ground, #0D1117, cold and industrial. ONE safety-orange accent, #FF7A1A — a work lamp, a hi-vis panel, a painted hazard edge. Everything else cold steel neutral: grey primer, galvanised metal, oil-dark concrete. No warm domestic light, no golden hour, no wood-panelled warmth."
+    },
+    "paper": {
+      "ground_hex": "#F4F1EA",
+      "accent_hex": "#1F6F4A",
+      "rgb": {
+        "ground": [
+          244,
+          241,
+          234
+        ],
+        "accent": [
+          31,
+          111,
+          74
+        ]
+      },
+      "use_when": "Anything that must read sober rather than as an ad — documents, proposals, ownership, credibility, LinkedIn. A light ground is a first-class option, not an exception.",
+      "prompt_clause": "LIGHT ground, not dark. Warm off-white paper, #F4F1EA, fills the frame — daylight, soft and diffuse, gentle low contrast, honest paper and wood texture. ONE deep green ink accent, #1F6F4A, small and printed-looking. This is a daylight photograph: no black background, no glow, no night, no studio seamless sweep, no dramatic side light."
+    },
+    "anchor-take-a": {
+      "ground_hex": "#F4F2EE",
+      "accent_hex": "#7FB449",
+      "rgb": {
+        "ground": [
+          244,
+          242,
+          238
+        ],
+        "accent": [
+          127,
+          180,
+          73
+        ]
+      },
+      "measured_from": "marketing/creative/heygen/renders/take-a-platform-dependency.mp4",
+      "measurement": "5 frames, 113,000 px. Mean luminance 161.9/255. Accent occupies 1.31% of frame area.",
+      "use_when": "A plate must sit next to HeyGen take-a in the same cut. This is the anchor's measured appearance, not a brand specification.",
+      "prompt_clause": "Warm neutral daylight interior. Overall a LIGHT frame - mean luminance around 160 of 255, near-white walls at #FAFDF9, shadows falling to a muted mauve-grey around #33272E. Never a dark or near-black ground. Exactly ONE small olive-green accent object, #7FB449, occupying roughly one to two percent of the frame - a trim detail, a spine, a small object on a desk. Never a lime field, never a green gradient, never a wash. The accent reads olive under this light, not chartreuse."
+    }
+  },
+  "shared": {
+    "use_case_clause": "a background plate for a marketing asset. Display type is set over it afterwards in Photoshop, so this image is the surface, not the finished piece. Set polish accordingly: real and restrained, not advertising-slick.",
+    "photography_clause": "Photograph it, do not illustrate it: real optics, natural depth of field, one dominant light source, visible film grain, and honest material wear — scuffs, dust, fingerprints, faded paint, worn edges, uneven surfaces. Ordinary and unstaged, as if caught in the moment on a working day. Do not render it as 8K, ultra-detailed, hyper-real, studio-polished, cinematic, or heavily retouched.",
+    "no_text_clause": "Text rule (absolute): render zero text. No letters, numerals, words, handwriting, printed copy, signage lettering, screen copy, UI labels, packaging copy, captions, subtitles, watermarks, signatures, logos or brand marks anywhere in the frame — including on paper, screens, clothing, vehicles, tools and boxes. Where the scene would normally carry writing, show that surface blank: blank cards, blank paper, blank sign panels, dark or face-down phones. All type is set in Photoshop afterwards; a plate that arrives with generated lettering is unusable.",
+    "exclusion_clause": "Exclude: a second saturated colour, rainbow gradients, neon signage, lens-flare stars, HDR halos, teal-and-orange grading, blown highlights, low-contrast haze, obvious stock-photo posing, plastic retouched skin, real identifiable people or celebrities, extra or malformed fingers, cloned faces, 3D-render or CGI look, vector or illustration look, dutch tilt, heavy motion blur, collage, borders, frames, device mockup edges, and any object not named above.",
+    "preserve_clause": "Preserve on every revision: the colour world, the reserved empty area, the framing and lens, the single dominant light source, and the complete absence of text. Change only what a revision explicitly asks to change; do not alter anything else.",
+    "negative_space_clauses": {
+      "right-column": "Reserved negative space (mandatory): the right 45% of the frame stays near-empty — one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the left half. That empty band is where large display type lands in Photoshop; anything placed there will be covered or will fight the type.",
+      "left-column": "Reserved negative space (mandatory): the left 45% of the frame stays near-empty — one continuous, low-detail surface with no subject, prop, hard edge, hard shadow or high-contrast texture crossing into it. Compose the subject into the right half. That empty band is where large display type lands in Photoshop.",
+      "lower-third": "Reserved negative space (mandatory): the bottom 40% of the frame stays near-empty — one continuous low-detail surface (floor, counter, ground, wall) carrying no subject, prop or high-contrast texture. Weight everything into the upper two-thirds. That empty band is where display type lands in Photoshop.",
+      "upper-half": "Reserved negative space (mandatory): the top 50% of the frame stays near-empty — one continuous low-detail surface (wall, sky, ceiling, seamless ground) carrying no subject, prop or high-contrast texture. Weight the subject into the lower half. That empty band is where display type lands in Photoshop.",
+      "center-band": "Reserved negative space (mandatory): keep a clean horizontal band across the middle third of the frame empty and low-detail. Subject interest sits above and below it; nothing crosses it. Type is set into that band in Photoshop.",
+      "full-field": "Reserved negative space (mandatory): this is an atmosphere plate, not a picture of a thing. No focal subject, no readable object, no strong compositional anchor anywhere. The whole frame is one even, quiet field with gentle variation only — type will be set across all of it."
+    }
+  },
+  "coverage": {
+    "campaigns": [
+      "platform-dependency (with marketing/blog/clusters/cluster-own-website-vs-rented-platforms — 7 posts)",
+      "ghost-town-ep1",
+      "cost-is-not-the-reason",
+      "55-cents-17-day (all 17 day themes)",
+      "campus-entrepreneurs",
+      "fam-business-email / fam-local-seo / fam-maintenance (add-on SKUs)",
+      "and-if-it-is-rattler-lifers"
+    ],
+    "not_covered": "marketing/video/, marketing/creative/heygen/ and marketing/blog/ are owned by other agents in this working session and were not written to."
+  },
+  "topics": [
     {
-      "id": "p-hero-blog",
-      "topic": "Own Website vs Rented Platforms — Pillar",
+      "topic_id": "pd-p",
+      "campaign": "platform-dependency",
+      "title": "Pillar — Why Gmail and Linktree Cost Your Business Revenue",
       "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
-      "aspect_ratio": "16:9",
-      "surface": "blog hero",
-      "tier": "2 cheap-multiplier",
-      "status": "generated",
-      "output_file": "plate-01-pillar-hero-16x9.jpg",
-      "prompt": "Use case: blog hero image, editorial and conceptual, not literal stock photography.\nAsset type: 16:9 hero image for a pillar article about owning a website instead of renting space on someone else's platform.\nPrimary request: a single small unoccupied shopfront porch light glowing on a vast, otherwise pitch-black empty field at night, with no other structures, fences, or landmarks visible — the shop is a lone lit point on land it does not own.\nScene/backdrop: an empty dark field stretching into soft blackness in every direction; the only detail is a modest, unbranded storefront facade with one working porch lamp. No people, no animals, no vehicles.\nSubject: the storefront facade and its single lamp only.\nStyle/medium: cinematic conceptual architectural photography, 35mm lens, believable materials — weathered wood, painted metal, glass — not illustration, not 3D render.\nComposition/framing: horizontal 16:9, storefront and lamp weighted to the left third of the frame; the entire right two-thirds of the frame is empty near-black ground reserved for large display type.\nLighting/mood: calm, quiet, self-sufficient — the one lamp is doing all the work.\nMaterials/textures: painted clapboard, old glass, dry dirt ground, faint cool moonlight only where the lamp does not reach.\nConstraints: no people, no text, letters, numbers, signage, logos, brand marks, watermark, real identifiable person, or celebrity. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter in it — reserved for Photoshop display type added after generation; render zero text, letters, numbers, words, logos, or captions anywhere in the image; generated text is always illegible garbage. Lighting constraint (mandatory): single-glow rule — exactly one restrained lime-green (#7CFC00) glow (the porch lamp) as the only saturated color accent; every other light stays neutral or cool-neutral against a near-black (#070907) ground; high contrast, editorial, restrained.\nAvoid: multiple light sources, string lights, neon signage, crowd of people, daytime lighting, warm orange lamp color (must read as lime-green, not amber)."
+      "claim": "A free email address and a rented link page quietly cost you credibility and money at the moment a customer decides whether to trust you.",
+      "object": "Two blank business cards: the same business, printed twice, one on good stock and one cheap. The plate supplies the cards; the two addresses are set in Photoshop, which is where the argument actually lands.",
+      "palette": "anchor-take-a",
+      "palette_argument": "Graded to the measured appearance of the campaign's premium anchor so the cheap tier reads as the same piece rather than as a montage. See marketing/creative/heygen/reference-tokens.json.",
+      "variants": [
+        {
+          "id": "pd-p-hero-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "blog hero",
+          "archetype": "standard",
+          "negative_space": "right-column",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-p-hero-16x9.jpg",
+          "scene": "A shop counter of pale oiled oak beside a window on an overcast morning. A pen, a coffee ring, the corner of a receipt pad.",
+          "subject": "Two completely blank, unprinted business cards lying side by side and face up on the counter: one heavy cotton stock with a clean crisp edge, one thin and slightly curled with a bruised corner.",
+          "details": "Wood grain visible under the cards, a fingerprint on the thin card, a soft shadow under the heavy one, dust in the window light.",
+          "camera": "50mm, eye level with the counter surface, shallow depth of field — cards sharp, the room behind falling away."
+        },
+        {
+          "id": "pd-p-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-p-square-1x1.jpg",
+          "scene": "Overhead flat lay on a warm off-white desk blotter, daylight from a window to the left.",
+          "subject": "Two blank unprinted business cards, one thick and one thin, laid slightly apart in the upper half of the frame with a fountain pen between them.",
+          "details": "Blotter fibre, a faint ink smudge on the blotter, the thin card's cut edge fraying, no writing on anything.",
+          "camera": "35mm directly overhead, flat even daylight, gentle contrast."
+        },
+        {
+          "id": "pd-p-vertical-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-p-vertical-9x16.jpg",
+          "scene": "A plain warm-white wall behind a small reception counter in daylight.",
+          "subject": "A single blank business card standing upright in a small brass card holder on the counter, in the lower third of the frame.",
+          "details": "The card is entirely unprinted; brass slightly tarnished; the wall above is empty and evenly lit.",
+          "camera": "50mm at eye level, straight on, soft window light from the left."
+        }
+      ]
     },
     {
-      "id": "p-thumb-youtube",
-      "topic": "Own Website vs Rented Platforms — Pillar",
-      "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
-      "aspect_ratio": "16:9",
-      "surface": "YouTube thumb",
-      "tier": "1 flagship",
-      "status": "planned",
-      "prompt": "Use case: YouTube thumbnail — must read instantly at 320x180 preview size, punchy and high contrast.\nAsset type: 16:9 flagship still, tight and graphic rather than wide and atmospheric.\nPrimary request: an extreme close-up on a single string-light bulb or porch lamp filament glowing lime-green, suspended in total blackness, wire trailing off into the dark at the edge of frame.\nScene/backdrop: pure near-black (#070907) void; no environment detail beyond the single lamp and its wire.\nSubject: the lamp/bulb only — no people.\nStyle/medium: high-contrast product-style macro photography, glass and filament detail crisp, everything else falling to black.\nComposition/framing: bulb positioned in the left half of frame at roughly one-third height; the right half and lower third are pure empty near-black ground reserved for a bold headline word treatment added afterward.\nLighting/mood: dramatic single-source glow, punchy, urgent, isolated.\nMaterials/textures: glass, thin filament or LED strip, faint dust motes catching the glow.\nConstraints: no text, no numbers, no channel logo, no subscribe button, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow as the only saturated color accent in the frame; every other tone stays near-black or cool-neutral; high contrast, restrained.\nAvoid: multiple bulbs, warm amber color cast, lens flare rainbow artifacts, cluttered background detail."
-    },
-    {
-      "id": "p-square-ig",
-      "topic": "Own Website vs Rented Platforms — Pillar",
-      "blog_post_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
-      "aspect_ratio": "1:1",
-      "surface": "IG",
-      "tier": "2 cheap-multiplier",
-      "status": "planned",
-      "prompt": "Use case: Instagram feed still, square, conceptual and quiet rather than busy.\nAsset type: 1:1 square image.\nPrimary request: a single small lantern sitting alone on an otherwise empty dark wooden shelf, the only object on the shelf, in an unlit room.\nScene/backdrop: a plain dark wooden shelf against a near-black wall; no other objects, no books, no decor.\nSubject: the lantern only.\nStyle/medium: still-life editorial photography, tactile material detail, believable shadow falloff.\nComposition/framing: lantern placed left-of-center on the shelf, generous near-black negative space filling the right half and top third of the frame for a caption card added later.\nLighting/mood: single warm-to-lime glow from inside the lantern, calm, self-sufficient, quietly proud.\nMaterials/textures: brushed metal lantern frame, glass panes, worn wood grain shelf.\nConstraints: no text, no labels, no brand marks, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one restrained lime-green (#7CFC00) glow as the only saturated color accent; every other light stays neutral against a near-black (#070907) ground; high contrast, restrained.\nAvoid: multiple lanterns, string lights, colorful shelf decor, daytime window light."
-    },
-    {
-      "id": "a1-hero-blog",
-      "topic": "Linktree vs Real Website",
+      "topic_id": "pd-a1",
+      "campaign": "platform-dependency",
+      "title": "A1 — Linktree vs. a Real Website: What You're Actually Trading Away",
       "blog_post_slug": "linktree-vs-real-website-what-youre-trading-away",
-      "aspect_ratio": "16:9",
-      "surface": "blog hero",
-      "tier": "2 cheap-multiplier",
-      "status": "generated",
-      "output_file": "plate-02-a1-two-doors-16x9.jpg",
-      "prompt": "Use case: blog hero image for a comparison article, conceptual not literal.\nAsset type: 16:9 hero image.\nPrimary request: two doors standing side by side in total darkness — the left door is small, plain, and closed off behind a velvet rope stanchion; the right door is larger, standing open, with a single lime-green glow spilling out from inside.\nScene/backdrop: a featureless near-black corridor or wall; no other doors, no signage, no crowd.\nSubject: the two doors and the single stanchion rope; no people required.\nStyle/medium: cinematic conceptual editorial photography, believable materials — wood grain, brass hardware, worn velvet rope.\nComposition/framing: both doors occupy the left two-thirds of frame, weighted slightly left; the right third of the frame is empty near-black ground reserved for display type.\nLighting/mood: contrast between a roped-off, unlit small door and an open, glowing larger door; quietly makes the comparison without any label.\nMaterials/textures: brass door hardware, velvet rope, painted wood, cool dark stone floor.\nConstraints: no text, no exit signs, no numbers on the doors, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow (from the open door) as the only saturated color accent; every other surface stays neutral or cool-dark; high contrast, restrained.\nAvoid: crowds, queue barriers with readable signs, warm amber glow (must be lime-green), symmetrical center composition."
+      "claim": "A link-in-bio page is a rented slot in someone else's wall. A site is your own door.",
+      "object": "A bank of identical rented post-office boxes versus a house's own letter slot. Renting a numbered slot in a wall you do not own is the whole argument, and it photographs without a single word.",
+      "palette": "anchor-take-a",
+      "palette_argument": "Graded to the measured appearance of the campaign's premium anchor so the cheap tier reads as the same piece rather than as a montage. See marketing/creative/heygen/reference-tokens.json.",
+      "variants": [
+        {
+          "id": "pd-a1-hero-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "blog hero",
+          "archetype": "standard",
+          "negative_space": "right-column",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-a1-hero-16x9.jpg",
+          "scene": "The interior wall of an old small-town post office lobby, daylight through a high window.",
+          "subject": "A bank of identical small brass post-office boxes filling the left half of the frame, every door blank with no numbers or dials rendered, one door hanging slightly open on an empty box.",
+          "details": "Tarnished brass, worn paint on the surrounding woodwork, scuffed terrazzo below, dust in the light.",
+          "camera": "35mm, eye level, straight on to the wall, soft diffuse daylight, slight vignette from the lens."
+        },
+        {
+          "id": "pd-a1-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-a1-square-1x1.jpg",
+          "scene": "Close on the same brass box wall, shallow focus.",
+          "subject": "One small brass door standing open on an empty box in the upper half of the frame, the neighbouring blank doors falling out of focus.",
+          "details": "Fingerprints in the tarnish, a scratch across the hinge, nothing inside the box.",
+          "camera": "50mm close-up, eye level, shallow depth of field, soft daylight."
+        },
+        {
+          "id": "pd-a1-vertical-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-a1-vertical-9x16.jpg",
+          "scene": "The front door of a modest old house in flat daylight, painted timber, a stone step.",
+          "subject": "A brass letter slot set into the lower third of the door, plate blank and unengraved, the door's painted surface filling the frame above it.",
+          "details": "Chipped paint around the slot, a hairline crack in the timber, a worn brass lip where hands have pushed it.",
+          "camera": "50mm straight on, eye level, soft overcast daylight, no direct sun."
+        }
+      ]
     },
     {
-      "id": "a1-x-card",
-      "topic": "Linktree vs Real Website",
-      "blog_post_slug": "linktree-vs-real-website-what-youre-trading-away",
-      "aspect_ratio": "16:9",
-      "surface": "X",
-      "tier": "2 cheap-multiplier",
-      "status": "planned",
-      "prompt": "Use case: X (Twitter) link-card image, needs to read clearly when cropped tight by the platform.\nAsset type: 16:9 image, tighter and simpler than the blog hero variant of the same concept.\nPrimary request: a single closed velvet rope stanchion standing alone in near-total darkness, one lime-green glow crossing it from off-frame, nothing else in the scene.\nScene/backdrop: pure near-black void.\nSubject: the stanchion and rope only.\nStyle/medium: high-contrast studio-still photography, tactile material rendering.\nComposition/framing: stanchion centered-left, generous near-black negative space filling the right half of frame for a headline added later.\nLighting/mood: cool, exclusionary, a single lime rim-light catching the rope fibers.\nMaterials/textures: brushed brass post, velvet rope weave.\nConstraints: no text, no numbers, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow as the only saturated color accent; every other tone stays near-black or cool-neutral; high contrast, restrained.\nAvoid: crowd, queue signage, multiple stanchions, warm color cast."
+      "topic_id": "pd-a2",
+      "campaign": "platform-dependency",
+      "title": "A2 — Why Your Link-in-Bio Page Doesn't Show Up in Google",
+      "blog_post_slug": "why-your-link-in-bio-doesnt-show-up-in-google",
+      "claim": "The page exists. Search cannot find it. Existing and being findable are not the same thing.",
+      "object": "A business that is open but has nothing anyone could search for: an unmarked door, an empty sign bracket, a shopfront with no name on it.",
+      "palette": "ghost-town",
+      "palette_argument": "Invisibility is the subject, and ghost-town is the palette argued from exactly that — a place that exists but cannot be found. Amber dust, no cool light.",
+      "variants": [
+        {
+          "id": "pd-a2-hero-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "blog hero",
+          "archetype": "standard",
+          "negative_space": "right-column",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-a2-hero-16x9.jpg",
+          "scene": "A narrow side alley of sun-bleached stucco in late afternoon, dry dust on the ground, no vehicles, no people.",
+          "subject": "A single plain painted door set flush into the wall on the left, no number, no plate, no handle detail beyond a worn knob — an entrance nobody could name.",
+          "details": "Paint blistered by heat, a dusty threshold, a wedge of low amber sun crossing the wall above the door.",
+          "camera": "35mm, eye level, low late sun raking across the wall, deep natural shadow, visible grain."
+        },
+        {
+          "id": "pd-a2-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-a2-square-1x1.jpg",
+          "scene": "A wide empty main street at dusk, dust hanging in the air, storefronts shuttered on both sides.",
+          "subject": "One shopfront near the centre with its door propped open and a warm light inside — the only open business on a street with no one on it.",
+          "details": "Cracked sidewalk, a dry tumble of litter, faded awning fabric, no signage panels anywhere.",
+          "camera": "35mm, eye level from the middle of the street, low amber sun behind, heavy natural grain."
+        },
+        {
+          "id": "pd-a2-vertical-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-a2-vertical-9x16.jpg",
+          "scene": "The face of a weathered timber shopfront in low sun.",
+          "subject": "An empty wrought-iron sign bracket projecting from the wall in the lower half of the frame with no sign hanging from it, just the bare hook and two loose chain links.",
+          "details": "Rust bleeding down the paint beneath the bracket, a pale rectangle where a board used to hang, dust in the air.",
+          "camera": "50mm, slightly below eye level looking up at the bracket, warm low sun, natural contrast."
+        }
+      ]
     },
     {
-      "id": "a2-hero-blog",
-      "topic": "Link-in-Bio SEO Invisibility",
-      "blog_post_slug": "why-link-in-bio-doesnt-show-up-in-google",
-      "aspect_ratio": "16:9",
-      "surface": "blog hero",
-      "tier": "2 cheap-multiplier",
-      "status": "planned",
-      "prompt": "Use case: blog hero image for an explainer about search invisibility, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a single narrow lime-lit footpath cutting through pure blackness toward a small distant lit doorway; everywhere else in the frame is unmarked, pathless void.\nScene/backdrop: total darkness except the path and the distant doorway; no other structures, no stars, no horizon line.\nSubject: the footpath and distant doorway only; no people required.\nStyle/medium: cinematic conceptual landscape photography, long exposure quality, believable ground texture on the path only.\nComposition/framing: path enters from bottom-left and recedes toward a small glowing doorway in the upper-right third; the remaining lower-right and upper-left areas are empty near-black ground reserved for display type.\nLighting/mood: quiet, exploratory, the only way anyone finds the doorway is by the path being lit at all.\nMaterials/textures: packed dirt or worn stone path catching a faint lime glow, distant doorway glowing the same lime.\nConstraints: no text, no trail markers, no signage, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow source illuminating both the path and the distant doorway consistently; every other tone stays near-black; high contrast, restrained.\nAvoid: multiple paths, stars or moonlight as a second light source, warm color cast, visible horizon."
+      "topic_id": "pd-b1",
+      "campaign": "platform-dependency",
+      "title": "B1 — What Booking App Commissions Actually Cost You in a Year",
+      "blog_post_slug": "what-booking-app-commissions-cost-you-in-a-year",
+      "claim": "A percentage taken off every booking does not feel like anything on the day and is enormous by December.",
+      "object": "Receipts and coins at a salon station — the small repeated subtraction, made physical.",
+      "palette": "salon",
+      "palette_argument": "The people paying these commissions are stylists, barbers and nail techs. The room in the picture should be theirs, warm and low, not a stock office.",
+      "variants": [
+        {
+          "id": "pd-b1-hero-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "blog hero",
+          "archetype": "standard",
+          "negative_space": "right-column",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-b1-hero-16x9.jpg",
+          "scene": "A hair-salon station counter after closing, one warm mirror bulb still on, the rest of the room dark.",
+          "subject": "A long curl of blank thermal receipt paper spilling off the left of the counter and pooling on the floor, entirely unprinted.",
+          "details": "Shears and a comb pushed aside, a smear of product on the counter, the paper catching the bulb along one edge.",
+          "camera": "50mm, eye level with the counter, shallow depth of field, single practical light, visible grain."
+        },
+        {
+          "id": "pd-b1-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-b1-square-1x1.jpg",
+          "scene": "The same station counter, close and low.",
+          "subject": "A glass tip jar in the upper half of the frame, only a shallow layer of coins left in the bottom of it, a warm bulb behind throwing rose light through the glass.",
+          "details": "Fingerprints on the glass, a chipped rim, coins dull and unpolished, no printed labels anywhere.",
+          "camera": "50mm close-up, eye level, shallow depth of field, one practical bulb."
+        },
+        {
+          "id": "pd-b1-vertical-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-b1-vertical-9x16.jpg",
+          "scene": "Looking down into an open cash drawer on a salon reception desk at night.",
+          "subject": "The drawer in the lower half of the frame with most of its coin wells empty and only a few notes in the clip.",
+          "details": "Worn plastic dividers, a hair elastic in one well, one warm bulb overhead, the desk surface above dark and empty.",
+          "camera": "35mm from above and slightly behind, single warm practical light, soft falloff."
+        }
+      ]
     },
     {
-      "id": "a2-fb-square",
-      "topic": "Link-in-Bio SEO Invisibility",
-      "blog_post_slug": "why-link-in-bio-doesnt-show-up-in-google",
-      "aspect_ratio": "1:1",
-      "surface": "FB",
-      "tier": "2 cheap-multiplier",
-      "status": "planned",
-      "prompt": "Use case: Facebook feed still, square, simplified version of the path concept.\nAsset type: 1:1 square image.\nPrimary request: a single lit stepping-stone glowing lime-green, alone on an otherwise dark, featureless floor with no other stones or markings visible.\nScene/backdrop: near-black floor plane fading to void at the edges.\nSubject: the one stepping-stone only.\nStyle/medium: overhead-leaning conceptual still photography, tactile stone texture.\nComposition/framing: stone placed lower-left, generous near-black negative space filling the upper two-thirds of frame for a caption card.\nLighting/mood: isolated, quiet, a single point of visibility in the dark.\nMaterials/textures: rough-cut stone, faint damp sheen catching the glow.\nConstraints: no text, no arrows, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow as the only saturated color accent; every other tone stays near-black; high contrast, restrained.\nAvoid: multiple stones, path lines, warm color cast, visible horizon or sky."
-    },
-    {
-      "id": "b1-hero-blog",
-      "topic": "Booking App Commission Costs",
-      "blog_post_slug": "what-booking-app-commissions-actually-cost-you",
-      "aspect_ratio": "16:9",
-      "surface": "blog hero",
-      "tier": "2 cheap-multiplier",
-      "status": "generated",
-      "output_file": "plate-03-b1-coin-drain-16x9.jpg",
-      "prompt": "Use case: blog hero image for an explainer about recurring commission fees, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a small, tidy stack of plain unmarked coins on a dark table, with one coin caught mid-fall through a narrow slot cut into the table into an unseen dark chute below, that one falling coin rim-lit in lime-green.\nScene/backdrop: a plain dark tabletop and the narrow slot; nothing else on the table.\nSubject: the coin stack and the single falling coin.\nStyle/medium: high-contrast macro-still photography, believable metal texture and reflection.\nComposition/framing: coin stack and slot positioned in the lower-left third of frame; the upper two-thirds and right third are empty near-black ground reserved for display type.\nLighting/mood: quiet, continuous, a small steady loss rather than a dramatic one.\nMaterials/textures: brushed unmarked metal coins, dark wood tabletop, faint dust.\nConstraints: no currency symbols, no numbers, no denominations, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow, on the falling coin only, as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: piles of bills, visible currency symbols or numbers, warm gold lighting, multiple falling coins at once."
-    },
-    {
-      "id": "b1-ig-square",
-      "topic": "Booking App Commission Costs",
-      "blog_post_slug": "what-booking-app-commissions-actually-cost-you",
-      "aspect_ratio": "1:1",
-      "surface": "IG",
-      "tier": "2 cheap-multiplier",
-      "status": "planned",
-      "prompt": "Use case: Instagram feed still, square, simplified version of the commission concept.\nAsset type: 1:1 square image.\nPrimary request: a simple analog balance scale standing alone in near darkness, one side weighted noticeably lower than the other, the fulcrum catching a single lime-green rim-light.\nScene/backdrop: near-black void, no table, no other objects.\nSubject: the balance scale only.\nStyle/medium: still-life conceptual photography, believable brushed-metal material.\nComposition/framing: scale centered-left, generous near-black negative space filling the right half and top third of frame for a caption card.\nLighting/mood: quiet imbalance, matter-of-fact rather than dramatic.\nMaterials/textures: brushed metal arms and pans, fine chain links.\nConstraints: no text, no numbers or measurement marks, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow on the fulcrum as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: coins or bills on the pans, measurement markings, warm gold lighting, symmetrical balance (one side must read visibly heavier)."
-    },
-    {
-      "id": "b2-hero-blog",
-      "topic": "Who Owns Your Client List",
+      "topic_id": "pd-b2",
+      "campaign": "platform-dependency",
+      "title": "B2 — Who Owns Your Client List When You Book Through an App?",
       "blog_post_slug": "who-owns-your-client-list-booking-app",
-      "aspect_ratio": "16:9",
-      "surface": "blog hero",
-      "tier": "2 cheap-multiplier",
-      "status": "generated",
-      "output_file": "plate-04-b2-locked-ledger-16x9.jpg",
-      "prompt": "Use case: blog hero image for an explainer about data ownership, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a closed leather ledger book on a dark table, wrapped shut with a simple hasp and a small padlock, the keyhole of the padlock glowing lime-green from within as if something valuable is lit behind it.\nScene/backdrop: a plain dark tabletop; nothing else visible.\nSubject: the ledger and padlock only.\nStyle/medium: high-contrast still-life editorial photography, tactile leather and metal detail.\nComposition/framing: ledger and padlock positioned in the lower-left third of frame; the upper two-thirds and right third are empty near-black ground reserved for display type.\nLighting/mood: withheld, private, something valuable kept just out of reach.\nMaterials/textures: worn leather cover, brass hasp and padlock, faint dust on the table.\nConstraints: no text, no embossed lettering, no monogram, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow from the keyhole as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: open ledger with visible pages, embossed initials or letters, warm gold lighting, multiple locks."
+      "claim": "If the client list lives in someone else's system, it is not your list — you just have access to it.",
+      "object": "A wooden card-index drawer of blank client cards, with a padlock through the handle. Custody, made literal.",
+      "palette": "anchor-take-a",
+      "palette_argument": "Graded to the measured appearance of the campaign's premium anchor so the cheap tier reads as the same piece rather than as a montage. See marketing/creative/heygen/reference-tokens.json.",
+      "variants": [
+        {
+          "id": "pd-b2-hero-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "blog hero",
+          "archetype": "standard",
+          "negative_space": "right-column",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-b2-hero-16x9.jpg",
+          "scene": "A back-office table of pale worn wood in flat daylight, warm off-white wall behind.",
+          "subject": "An oak card-index drawer pulled open on the left of the frame, packed tight with blank unwritten index cards standing on edge.",
+          "details": "Brass pull tarnished, the cards' top edges soft and thumbed, one card standing slightly proud of the rest, no writing on any of them.",
+          "camera": "50mm, eye level with the tabletop, soft diffuse daylight, shallow depth of field along the row of cards."
+        },
+        {
+          "id": "pd-b2-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-b2-square-1x1.jpg",
+          "scene": "Close on the front of the same card-index drawer.",
+          "subject": "A small steel padlock hooked through the drawer's brass pull, holding it shut, in the upper half of the frame.",
+          "details": "Scratched lock body, a dent in the brass, the blank card edges just visible through the gap at the top of the drawer.",
+          "camera": "50mm close-up, straight on, soft daylight from the left, shallow depth of field."
+        },
+        {
+          "id": "pd-b2-vertical-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-b2-vertical-9x16.jpg",
+          "scene": "A wall of small wooden filing drawers in an old office, daylight from a side window.",
+          "subject": "One drawer half-pulled in the lower third of the frame with blank cards inside; the drawer fronts above it are plain and unlabelled.",
+          "details": "Worn varnish, one missing pull replaced with string, dust along the runners.",
+          "camera": "35mm, eye level, straight on, soft overcast daylight."
+        }
+      ]
     },
     {
-      "id": "b2-x-card",
-      "topic": "Who Owns Your Client List",
-      "blog_post_slug": "who-owns-your-client-list-booking-app",
-      "aspect_ratio": "16:9",
-      "surface": "X",
-      "tier": "2 cheap-multiplier",
-      "status": "planned",
-      "prompt": "Use case: X (Twitter) link-card image, tighter crop of the ownership concept.\nAsset type: 16:9 image.\nPrimary request: a single old rolodex card floating in near-total darkness, the visible half of the card lit by a single lime-green glow while the other half dissolves into fine black particulate, as if fading from view.\nScene/backdrop: pure near-black void.\nSubject: the single card only.\nStyle/medium: high-contrast conceptual macro-still photography, believable paper-fiber texture on the lit half.\nComposition/framing: card centered-left, tilted slightly, generous near-black negative space filling the right half of frame for a headline.\nLighting/mood: partial, precarious — you can see it, but only some of it, and only while someone else lets you.\nMaterials/textures: aged card stock fiber, fine dissolving particulate at the fade edge.\nConstraints: no visible handwriting, no letters, no numbers, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow on the lit half of the card as the only saturated color accent; every other tone stays near-black; high contrast, restrained.\nAvoid: readable handwriting or print, multiple cards, warm color cast, symmetrical even lighting across the whole card."
+      "topic_id": "pd-c1",
+      "campaign": "platform-dependency",
+      "title": "C1 — Why \"How Much Do You Charge?\" in the DMs Costs You Bookings",
+      "blog_post_slug": "why-price-questions-in-dms-cost-you-bookings",
+      "claim": "Answering the same question by hand, after hours, one person at a time, is a job nobody is paying you for.",
+      "object": "A phone face-down on the station at 1am, screen glow leaking around its edges. Face-down is also how a plate shows a phone without generating a word of screen copy.",
+      "palette": "salon",
+      "palette_argument": "This happens in a stylist's own space, late, after the chair is empty. One warm bulb, plum shadow — a late-night room, not a call centre.",
+      "variants": [
+        {
+          "id": "pd-c1-hero-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "blog hero",
+          "archetype": "standard",
+          "negative_space": "right-column",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-c1-hero-16x9.jpg",
+          "scene": "A salon station counter late at night, the room behind unlit, one small bulb at the mirror.",
+          "subject": "A phone lying face-down on the counter on the left, its screen light leaking out around the edges as a thin rose line on the countertop.",
+          "details": "A cold half-drunk mug beside it, a hair clip, dust visible in the bulb's light, no screen content visible at all.",
+          "camera": "50mm, eye level with the counter, shallow depth of field, one practical bulb, heavy natural grain."
+        },
+        {
+          "id": "pd-c1-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-c1-square-1x1.jpg",
+          "scene": "A bedside table at night, one small lamp, dark wall behind.",
+          "subject": "A phone face-down on the table in the upper half of the frame, glow escaping around its rim, a lamp just out of frame lighting one edge.",
+          "details": "A hair tie and a set of keys beside it, worn veneer on the table, deep shadow beyond.",
+          "camera": "50mm, eye level with the tabletop, shallow depth of field, single warm practical light."
+        },
+        {
+          "id": "pd-c1-vertical-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-c1-vertical-9x16.jpg",
+          "scene": "A dark bedroom, a single bedside lamp on, the wall above empty.",
+          "subject": "A face-down phone on the bedside table in the lower third of the frame, glow spilling onto the tabletop.",
+          "details": "Creased bedsheet corner, lamp base with a chipped enamel finish, everything above the lamp falling into plum shadow.",
+          "camera": "35mm, eye level from the bed, one practical lamp, natural grain, no other light."
+        }
+      ]
     },
     {
-      "id": "c1-hero-blog",
-      "topic": "DM Price Questions Cost Bookings",
-      "blog_post_slug": "how-much-do-you-charge-dms-cost-bookings",
-      "aspect_ratio": "16:9",
-      "surface": "blog hero",
-      "tier": "2 cheap-multiplier",
-      "status": "generated",
-      "output_file": "plate-05-c1-message-backlog-16x9.jpg",
-      "prompt": "Use case: blog hero image for an explainer about slow manual DM replies costing bookings, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a phone screen glowing in an otherwise dark room, showing a single blank lime-green message bubble shape pulsing at the top of a short stack of dim, unlit gray blank bubble shapes receding downward into blackness — none of the bubbles contain any text or letters, only plain rounded shapes.\nScene/backdrop: a dark room with only the phone screen providing light; no other furniture visible beyond a soft dark silhouette of a hand or desk edge if needed.\nSubject: the phone screen and its stack of blank bubble shapes.\nStyle/medium: high-contrast conceptual product photography, believable glass and screen glow.\nComposition/framing: phone positioned lower-left, generous near-black negative space filling the right two-thirds and top of frame for display type.\nLighting/mood: mounting, quietly urgent — the backlog is visible without a single word being legible.\nMaterials/textures: glass screen, soft screen bloom, matte phone body.\nConstraints: no legible text or numerals anywhere on the screen, no app logos, no real identifiable person or hand with a visible face reflection. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including on the phone screen itself — bubbles are blank shapes only. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow (the top pulsing bubble and the screen backlight) as the only saturated color accent; every other bubble and surface stays neutral gray or near-black; high contrast, restrained.\nAvoid: any legible chat text, app UI chrome or logos, multiple colored bubbles, warm screen color temperature."
+      "topic_id": "pd-c2",
+      "campaign": "platform-dependency",
+      "title": "C2 — How a Website Answers Price Questions Before They're Asked",
+      "blog_post_slug": "how-a-website-answers-price-questions",
+      "claim": "The answer should already be posted where the customer is looking, not typed again at midnight.",
+      "object": "A blank letterboard price panel above a service counter. It is the concept object and the type space in one — Photoshop sets the real prices into the empty slats.",
+      "palette": "trades",
+      "palette_argument": "Posted prices belong to quote-driven service work — auto, repair, mobile detailing. Cold shop light with one work-lamp orange, no lifestyle warmth.",
+      "variants": [
+        {
+          "id": "pd-c2-hero-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "blog hero",
+          "archetype": "standard",
+          "negative_space": "right-column",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-c2-hero-16x9.jpg",
+          "scene": "The service counter of a small repair shop, cold overhead light, painted block wall.",
+          "subject": "A wall-mounted black letterboard panel on the right of the counter with completely empty slats — no letters, no numbers, no characters at all — the panel clean and evenly lit.",
+          "details": "Chipped enamel counter edge, a steel stool, an orange-shaded work lamp clamped nearby throwing the only warm light.",
+          "camera": "35mm, eye level, straight on, cold diffuse shop light with one orange practical, natural grain."
+        },
+        {
+          "id": "pd-c2-square-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-c2-square-1x1.jpg",
+          "scene": "A steel workbench under a clamped work lamp, concrete floor beyond.",
+          "subject": "A metal clipboard lying on the bench in the upper half of the frame holding a completely blank sheet of paper, held by a worn spring clip.",
+          "details": "Oil marks on the steel, a pencil stub, the lamp's orange shade catching one edge of the clip.",
+          "camera": "50mm at a low angle across the bench, shallow depth of field, single work lamp."
+        },
+        {
+          "id": "pd-c2-vertical-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "platform-dependency/pd-c2-vertical-9x16.jpg",
+          "scene": "The sidewalk outside a small shop at dusk, cold blue light, wet concrete.",
+          "subject": "A folding A-frame sidewalk sign standing in the lower third of the frame with both panels completely blank — bare painted board, no writing.",
+          "details": "Scuffed hinge, a rust run down one leg, a single orange shop light glowing behind the glass.",
+          "camera": "35mm, eye level, straight on, blue dusk with one warm practical, natural grain."
+        }
+      ]
     },
     {
-      "id": "c1-tiktok-vertical",
-      "topic": "DM Price Questions Cost Bookings",
-      "blog_post_slug": "how-much-do-you-charge-dms-cost-bookings",
-      "aspect_ratio": "9:16",
-      "surface": "TikTok",
-      "tier": "2 cheap-multiplier",
-      "status": "planned",
-      "prompt": "Use case: TikTok vertical still/poster frame, needs deep top and bottom negative space for on-screen captions.\nAsset type: 9:16 vertical image.\nPrimary request: an extreme close crop on the single glowing blank lime-green message bubble from the phone-screen concept, isolated against near-total blackness, no visible phone bezel.\nScene/backdrop: pure near-black void.\nSubject: the single bubble shape only.\nStyle/medium: high-contrast macro conceptual still, soft screen-glow bloom.\nComposition/framing: bubble centered horizontally, positioned at the vertical center of frame; the top third and bottom third of frame are pure empty near-black ground reserved for a caption hook and CTA text added later.\nLighting/mood: isolated, urgent, quiet.\nMaterials/textures: soft glass-screen glow bloom only, no visible screen texture or bezel.\nConstraints: no text or letters inside or near the bubble, no app UI, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame (top and bottom combined) as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop/caption type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow as the only saturated color accent; everything else stays near-black; high contrast, restrained.\nAvoid: visible phone bezel or UI chrome, multiple bubbles in frame, warm color cast, centered-square crop (must read as tall vertical)."
+      "topic_id": "gt-invisible",
+      "campaign": "ghost-town-ep1",
+      "title": "Ghost Town Ep1 — the invisible stylist (before)",
+      "claim": "A stylist who exists only inside a marketplace app is a ghost: real work, real chair, nothing anyone can find.",
+      "object": "The salon as a ghost town — empty chair, dead barber pole, blank sign bracket, dust in the light.",
+      "palette": "ghost-town",
+      "palette_argument": "This is the campaign the palette was argued from. Heat, dust and absence carry the 'before' half of every episode.",
+      "variants": [
+        {
+          "id": "gt-hook-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed hook",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "ghost-town-ep1/gt-hook-1x1.jpg",
+          "scene": "A closed one-chair salon in the late afternoon, blinds half drawn, dust hanging in a shaft of low sun.",
+          "subject": "A single empty styling chair in the upper half of the frame, turned slightly away, the mirror behind it dulled with dust.",
+          "details": "A dust sheet slipping off the back of the chair, hairs on the floor, faded vinyl on the armrest, a bleached patch on the wall.",
+          "camera": "35mm, eye level, low amber sun through the blinds, heavy natural grain, deep shadow."
+        },
+        {
+          "id": "gt-hook-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "reels / tiktok background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "ghost-town-ep1/gt-hook-9x16.jpg",
+          "scene": "The same closed salon, looking down the room past the station.",
+          "subject": "The empty chair in the lower third, the wall above it bare and evenly lit by one dusty shaft of sun.",
+          "details": "A comb left on the counter, a cracked floor tile, an unplugged dryer hanging on its hook.",
+          "camera": "35mm, eye level, single low amber light source, natural falloff."
+        },
+        {
+          "id": "gt-street-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "youtube thumbnail / blog hero",
+          "archetype": "standard",
+          "negative_space": "right-column",
+          "status": "queued",
+          "output_file": "ghost-town-ep1/gt-street-16x9.jpg",
+          "scene": "A wide sun-bleached small-town main street at the end of the day, dust in the air, no people, no cars.",
+          "subject": "A single small salon storefront on the left with an empty sign bracket above its door and a dark window.",
+          "details": "Peeling paint, a cracked sidewalk slab, a bleached awning, the road surface dry and pale.",
+          "camera": "35mm, eye level from the middle of the road, low amber sun raking from the left, strong natural grain."
+        },
+        {
+          "id": "gt-pole-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "reels / tiktok background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "ghost-town-ep1/gt-pole-9x16.jpg",
+          "scene": "The exterior wall of a shuttered barbershop in late sun.",
+          "subject": "An unlit barber pole mounted in the lower half of the frame, glass cylinder dusty and still, the stucco wall above it empty.",
+          "details": "Rust at the mounting bracket, a dead insect inside the glass, faded stripes, a pale rectangle on the wall where a sign used to be.",
+          "camera": "50mm, slightly below eye level, low amber sun, shallow depth of field."
+        },
+        {
+          "id": "gt-dust-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "atmosphere plate / lower-third title card",
+          "archetype": "split",
+          "negative_space": "full-field",
+          "status": "queued",
+          "output_file": "ghost-town-ep1/gt-dust-16x9.jpg",
+          "scene": "The interior air of an abandoned room with one shaft of low sun crossing it.",
+          "subject": "No subject at all: only suspended dust and the soft gradient of light across the empty air, the far wall out of focus and featureless.",
+          "details": "Fine dust motes, a slow gradient from warm amber to deep brown shadow, no objects, no edges, no horizon.",
+          "camera": "85mm, focused on the dust in the air, everything else out of focus, heavy grain."
+        }
+      ]
     },
     {
-      "id": "c1-shorts-vertical",
-      "topic": "DM Price Questions Cost Bookings",
-      "blog_post_slug": "how-much-do-you-charge-dms-cost-bookings",
-      "aspect_ratio": "9:16",
-      "surface": "Shorts",
-      "tier": "2 cheap-multiplier",
-      "status": "generated",
-      "output_file": "plate-06-c1-hand-phone-vertical-9x16.jpg",
-      "prompt": "Use case: YouTube Shorts vertical poster frame, needs a strong top-third negative space for a hook headline.\nAsset type: 9:16 vertical image.\nPrimary request: a soft-focus silhouette of a hand hovering just above a dark phone resting on a table, one small lime-green notification-dot glow visible on the phone's edge, everything else unlit.\nScene/backdrop: a dark tabletop and the phone; no other objects, no background detail beyond soft near-black falloff.\nSubject: the hand silhouette and the phone.\nStyle/medium: cinematic conceptual editorial photography, shallow depth of field, believable skin and fabric silhouette (no visible face).\nComposition/framing: hand and phone positioned in the lower half of frame; the entire top third of frame is empty near-black ground reserved for a bold hook headline added later.\nLighting/mood: hesitant, quietly anxious — a decision being delayed.\nMaterials/textures: soft skin silhouette, matte phone body, dark wood table grain.\nConstraints: no visible face, no legible screen content, no app logos, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including on the phone screen. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow (the notification dot) as the only saturated color accent; every other surface stays neutral cool-dark silhouette; high contrast, restrained.\nAvoid: visible face or identifying features, legible screen UI, multiple light sources, warm skin-tone lighting that competes with the lime accent."
+      "topic_id": "gt-found",
+      "campaign": "ghost-town-ep1",
+      "title": "Ghost Town Ep1 — the stylist who can be found (after)",
+      "claim": "The same chair, the same craft — but now there is somewhere a customer can actually arrive.",
+      "object": "The salon alive: warm bulb, tools laid out, a chair that has just been used.",
+      "palette": "salon",
+      "palette_argument": "The 'after' half must change palette, not just brightness. Rose on plum is the same room with the lights and the person back in it.",
+      "variants": [
+        {
+          "id": "gt-found-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "ghost-town-ep1/gt-found-1x1.jpg",
+          "scene": "A working one-chair salon in the evening, mirror bulbs on, the rest of the room low and warm.",
+          "subject": "The styling chair in the upper half of the frame, freshly used — cape folded over the arm, footrest down, chair turned toward the mirror.",
+          "details": "A towel over the headrest, a clean sweep of floor, warm bulb light on the chrome, a soft rose highlight on the mirror frame.",
+          "camera": "50mm, eye level, shallow depth of field, warm practical bulbs only."
+        },
+        {
+          "id": "gt-found-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "reels / tiktok background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "ghost-town-ep1/gt-found-9x16.jpg",
+          "scene": "Looking along a salon station toward a lit mirror in the evening.",
+          "subject": "The station counter in the lower third with shears, clips and a brush laid out in order, the mirror glow above soft and even.",
+          "details": "Product bottles turned label-away so nothing is readable, a folded towel, a rose bulb reflection on the counter.",
+          "camera": "35mm, eye level, warm practical light only, gentle falloff, visible grain."
+        },
+        {
+          "id": "gt-station-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram portrait feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "ghost-town-ep1/gt-station-4x5.jpg",
+          "scene": "Overhead of a stylist's station counter at the end of a shift.",
+          "subject": "Shears, comb, clips and a hand mirror laid in a clean row across the lower half of the frame on a dark counter.",
+          "details": "Fine cut hair on the counter, a smudge of product, worn handles on the shears, one warm bulb off frame.",
+          "camera": "50mm directly overhead, one warm practical light, shallow depth of field."
+        }
+      ]
     },
     {
-      "id": "c2-hero-blog",
-      "topic": "Website Auto-Answers Price Questions",
-      "blog_post_slug": "how-a-website-answers-price-questions-automatically",
-      "aspect_ratio": "16:9",
-      "surface": "blog hero",
-      "tier": "2 cheap-multiplier",
-      "status": "generated",
-      "output_file": "plate-07-c2-concierge-desk-16x9.jpg",
-      "prompt": "Use case: blog hero image for an explainer about automatic quote/response tooling, conceptual.\nAsset type: 16:9 hero image.\nPrimary request: a single small reception-desk lamp glowing lime-green in an otherwise pitch-black lobby, illuminating one closed, blank-covered ledger sitting open just enough to show empty unlined pages, waiting and ready.\nScene/backdrop: a plain dark lobby counter; no other furniture or people needed.\nSubject: the lamp and ledger only.\nStyle/medium: high-contrast still-life editorial photography, believable brass and paper texture.\nComposition/framing: lamp and ledger positioned in the lower-left third of frame; the upper two-thirds and right third are empty near-black ground reserved for display type.\nLighting/mood: calm, always-on, ready before it is asked to be.\nMaterials/textures: brass desk lamp, blank cream paper, dark wood counter.\nConstraints: no text or numbers on the ledger pages, no signage, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including on the ledger pages, which must be blank. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow from the lamp as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: visible handwriting or printed text on the ledger, warm amber lamp color, multiple lamps, daytime lighting."
+      "topic_id": "cinr-beauty",
+      "campaign": "cost-is-not-the-reason",
+      "title": "Cost Is Not The Reason — beauty pros captive to a marketplace app",
+      "claim": "You are paying monthly fees and a cut of every booking to rent access to your own clients.",
+      "object": "A stylist's own station, hers in every way except the booking.",
+      "palette": "salon",
+      "palette_argument": "Same audience as Ghost Town's 'after' frames; the palette keeps the campaigns visually related without repeating a layout.",
+      "variants": [
+        {
+          "id": "cinr-beauty-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-beauty-1x1.jpg",
+          "scene": "A nail technician's desk in the evening, one warm lamp, dark room behind.",
+          "subject": "The desk surface in the upper half of the frame with a hand-rest cushion, files and a small dust extractor, tidy and ready.",
+          "details": "Polish bottles turned so no labels face the camera, a worn cushion seam, rose light on the chrome lamp arm.",
+          "camera": "50mm, eye level with the desk, shallow depth of field, one practical lamp."
+        },
+        {
+          "id": "cinr-beauty-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-beauty-9x16.jpg",
+          "scene": "A barber's chair by a window at dusk, blinds mostly closed, one bulb on.",
+          "subject": "The chair and the edge of the station in the lower third, the wall and mirror above clean and empty.",
+          "details": "Leather worn pale at the armrest, clippers on their hook, a folded neck strip, warm bulb reflection.",
+          "camera": "35mm, eye level, single warm practical light, visible grain."
+        },
+        {
+          "id": "cinr-beauty-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram portrait feed",
+          "archetype": "offer-card",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-beauty-4x5.jpg",
+          "scene": "A salon reception counter at night, one lamp, dark plum wall behind.",
+          "subject": "The counter edge across the lower third with a small card holder, a pen and a folded towel; the wall above completely bare.",
+          "details": "The card holder is empty, the counter marked with ring stains, one soft rose highlight along the counter lip.",
+          "camera": "50mm, eye level, single practical light, shallow depth of field."
+        }
+      ]
     },
     {
-      "id": "c2-fb-square",
-      "topic": "Website Auto-Answers Price Questions",
-      "blog_post_slug": "how-a-website-answers-price-questions-automatically",
-      "aspect_ratio": "1:1",
-      "surface": "FB",
-      "tier": "2 cheap-multiplier",
-      "status": "planned",
-      "prompt": "Use case: Facebook feed still, square, simplified version of the instant-response concept.\nAsset type: 1:1 square image.\nPrimary request: a single analog clock face with a completely blank dial (no numerals, no hands markings beyond the hands themselves) glowing lime-green at its center, floating in near-total darkness, one hand pointing straight up.\nScene/backdrop: pure near-black void.\nSubject: the clock face only.\nStyle/medium: high-contrast conceptual still photography, believable brushed-metal clock hands and glass.\nComposition/framing: clock centered-left, generous near-black negative space filling the right half and lower third of frame for a caption card.\nLighting/mood: precise, instant, calm.\nMaterials/textures: brushed metal hands, glass cover, faint reflective sheen.\nConstraints: no numerals, no text, no brand marks, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including on the clock face, which must be blank apart from its hands. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow at the clock's center as the only saturated color accent; every other surface stays neutral cool-dark; high contrast, restrained.\nAvoid: numerals or tick marks on the dial, warm gold lighting, multiple clocks, visible brand marks."
+      "topic_id": "cinr-auto",
+      "campaign": "cost-is-not-the-reason",
+      "title": "Cost Is Not The Reason — auto repair losing local searches",
+      "claim": "The high-ticket local job goes to whoever the customer can find and verify first.",
+      "object": "A working bay with the tools laid out and no way for a stranger to find it.",
+      "palette": "trades",
+      "palette_argument": "Work, not lifestyle. Cold shop light and one safety-orange lamp is the honest colour of the room this customer actually stands in.",
+      "variants": [
+        {
+          "id": "cinr-auto-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-auto-1x1.jpg",
+          "scene": "A single-bay repair shop at night, roller door half down, cold overhead light.",
+          "subject": "A rolling tool chest with the top drawer open in the upper half of the frame, sockets seated in order.",
+          "details": "Oil-dark concrete, a coiled air hose, an orange work lamp clamped to the chest throwing the only warm light.",
+          "camera": "35mm, eye level, cold diffuse light with one orange practical, natural grain."
+        },
+        {
+          "id": "cinr-auto-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-auto-9x16.jpg",
+          "scene": "Inside a repair bay looking toward the open roller door at dusk.",
+          "subject": "A creeper, a drain pan and a torque wrench laid on the concrete across the lower third; the bay wall above bare painted block.",
+          "details": "Tyre marks on the floor, a chipped hazard stripe along the wall base, cold blue dusk outside the door.",
+          "camera": "35mm, low eye level near the floor, cold light with one orange lamp, visible grain."
+        },
+        {
+          "id": "cinr-auto-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram portrait feed",
+          "archetype": "stat",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-auto-4x5.jpg",
+          "scene": "A steel workbench against a painted block wall under cold light.",
+          "subject": "A row of wrenches hanging in graduated order across the lower third of the frame; the wall above completely empty.",
+          "details": "Grease shadow behind each wrench where it has hung for years, a scuffed bench edge, one orange lamp at the frame edge.",
+          "camera": "50mm, straight on, eye level, cold diffuse light, natural grain."
+        }
+      ]
     },
     {
-      "id": "ghost-ig-hook",
-      "topic": "Ghost Town Ep1 — Invisible Outside the App",
-      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
-      "aspect_ratio": "1:1",
-      "surface": "IG",
-      "tier": "2 cheap-multiplier",
-      "status": "generated",
-      "output_file": "plate-08-ghost-hook-square-1x1.jpg",
-      "prompt": "Use case: Instagram/Facebook feed hook image for a video-episode campaign about businesses invisible outside a single marketplace app. Fills campaign slot CREATIVE-EP1-HAIR-GHOST-01 (marketing/campaigns/ghost-town-ep1/manifest.json), reused here as a Tier-2 plate.\nAsset type: 1:1 square image.\nPrimary request: a faint, semi-transparent human silhouette (generic, non-identifiable, no visible face detail) standing just outside a small lit shopfront window at night, the silhouette itself rendered ghostly and translucent, dissolving into the blackness behind it as if only partly present in this space.\nScene/backdrop: a plain, unbranded small shopfront window glowing lime-green from within; everything beyond the window's light falls to total black.\nSubject: the shopfront window and the single translucent silhouette standing just outside it.\nStyle/medium: cinematic conceptual editorial photography, believable glass and fabric-silhouette rendering, ghostly translucency effect on the figure only.\nComposition/framing: window and silhouette positioned in the lower-left third of frame; the upper two-thirds and right third are empty near-black ground reserved for display type.\nLighting/mood: wistful, unseen, present but unreachable from outside the one lit doorway.\nMaterials/textures: glass storefront window, painted wood frame, soft translucent figure edge.\nConstraints: no text, no shop signage, no readable window lettering, no real identifiable person, no menacing or horror framing — the mood is quiet invisibility, not fear. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow from the shopfront window as the only saturated color accent; every other surface stays near-black; high contrast, restrained.\nAvoid: horror or jump-scare framing, visible face on the silhouette, readable shop signage, multiple windows or figures, warm amber window light."
+      "topic_id": "cinr-gmail",
+      "campaign": "cost-is-not-the-reason",
+      "title": "Cost Is Not The Reason — the free-email credibility gap",
+      "claim": "On a high-ticket quote, a free email address is the detail that makes a customer hesitate.",
+      "object": "A quote handed across a counter on paper — blank, so the type carries it.",
+      "palette": "paper",
+      "palette_argument": "Credibility is decided while someone reads a document in daylight. That is the whole reason the paper palette exists.",
+      "variants": [
+        {
+          "id": "cinr-gmail-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-gmail-1x1.jpg",
+          "scene": "A kitchen table in morning daylight, a mug and a set of keys pushed to one side.",
+          "subject": "A single sheet of blank warm-white paper lying flat in the upper half of the frame, one corner slightly lifted.",
+          "details": "Grain of the paper, a faint fold line, the table's worn finish, no writing anywhere.",
+          "camera": "50mm, high angle over the table, soft window daylight, gentle contrast."
+        },
+        {
+          "id": "cinr-gmail-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-gmail-9x16.jpg",
+          "scene": "A doorstep in flat daylight, a painted timber door behind.",
+          "subject": "A plain unprinted envelope resting on the step in the lower third of the frame, the door surface above it empty.",
+          "details": "A gritty step edge, the envelope's flap unsealed, a chipped paint line on the door.",
+          "camera": "35mm, low eye level, soft overcast daylight, natural grain."
+        },
+        {
+          "id": "cinr-gmail-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram portrait feed",
+          "archetype": "checklist",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-gmail-4x5.jpg",
+          "scene": "A desk of pale wood in daylight, seen from directly above.",
+          "subject": "A blank clipboard sheet across the lower third of the frame with a green-barrelled pen resting on it.",
+          "details": "The pen is the only saturated colour; paper fibre visible; a faint pencil indentation, no writing.",
+          "camera": "50mm directly overhead, soft even daylight, low contrast."
+        }
+      ]
     },
     {
-      "id": "ghost-ig-beforeafter",
-      "topic": "Ghost Town Ep1 — Invisible Outside the App",
-      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
-      "aspect_ratio": "1:1",
-      "surface": "IG",
-      "tier": "2 cheap-multiplier",
-      "status": "planned",
-      "prompt": "Use case: Instagram/Facebook feed before/after concept image for the same campaign. Fills campaign slot CREATIVE-EP1-HAIR-GHOST-02 (marketing/campaigns/ghost-town-ep1/manifest.json), reused here as a Tier-2 plate.\nAsset type: 1:1 square image, split composition.\nPrimary request: a split dark composition — the left half contains a single small blank phone-app-shaped rounded rectangle glowing lime-green, floating alone in blackness (representing the one narrow app where the business is visible); the right half is pure black empty void with only the faintest barely-visible unlit shapes suggesting an entire unlit street or web of paths (representing everywhere else the business does not exist).\nScene/backdrop: total near-black void split conceptually down the center; no literal dividing line should be drawn, the split is compositional only.\nSubject: the single glowing rounded-rectangle shape on the left; nothing rendered on the right beyond near-invisible dark suggestion.\nStyle/medium: high-contrast conceptual still photography, minimal, graphic.\nComposition/framing: glowing shape occupies roughly the left third of frame at vertical center; the remaining two-thirds (center and right) are empty to near-empty near-black ground reserved for a before/after caption treatment added later.\nLighting/mood: stark contrast between one narrow point of visibility and vast surrounding absence.\nMaterials/textures: soft screen-glow bloom on the left shape only; no texture on the right beyond faint film grain.\nConstraints: no text or icons inside the glowing shape, no app logos, no real identifiable person. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image, including inside the glowing shape, which must be blank. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) glow (the left shape) as the only saturated color accent; the right two-thirds of the frame stays near-black with no competing light; high contrast, restrained.\nAvoid: any icon, letter, or logo inside the glowing shape, a literal drawn dividing line, warm color cast, visible cityscape detail on the right side."
+      "topic_id": "cinr-55c",
+      "campaign": "cost-is-not-the-reason",
+      "title": "Cost Is Not The Reason — the 55-cents-a-day objection",
+      "claim": "The price is not the obstacle. Fifty-five cents a day is the obstacle you are telling yourself about.",
+      "object": "Two quarters and a nickel. The number, made of metal, with nothing written on it.",
+      "palette": "famtastic",
+      "palette_argument": "This is FAMtastic talking about FAMtastic's own price, which is exactly what the house palette is for.",
+      "variants": [
+        {
+          "id": "cinr-55c-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "stat",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-55c-1x1.jpg",
+          "scene": "A near-black matte countertop, almost nothing else visible.",
+          "subject": "Three worn coins — two larger, one smaller — lying close together in the upper half of the frame, faces dulled and details worn smooth so nothing on them is legible.",
+          "details": "Milled edges catching a thin lime rim light from one side, a fine scatter of dust on the surface, deep black falloff everywhere else.",
+          "camera": "100mm macro, eye level with the counter, very shallow depth of field, one narrow light source."
+        },
+        {
+          "id": "cinr-55c-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "stat",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-55c-9x16.jpg",
+          "scene": "A dark table surface with a single narrow light grazing it from the left.",
+          "subject": "Three worn coins standing on edge, leaning against each other in the lower third of the frame, all markings rubbed away.",
+          "details": "A thin lime edge-light along the rims, long soft shadows running right, the space above completely black and empty.",
+          "camera": "100mm macro, low eye level, very shallow depth of field."
+        }
+      ]
     },
     {
-      "id": "ghost-vertical-shorts",
-      "topic": "Ghost Town Ep1 — Invisible Outside the App",
-      "blog_post_slug": "why-independent-stylists-are-invisible-outside-the-app",
-      "aspect_ratio": "9:16",
-      "surface": "Shorts",
-      "tier": "1 flagship",
-      "status": "planned",
-      "prompt": "Use case: flagship anchor still for the Ghost Town Ep1 58s video (marketing/campaigns/ghost-town-ep1/video-scripts/EP1_FULL_SCRIPT.md), premium quality — intended for a Tier-1 provider (e.g. Imagen 3 / GPT Image / a HeyGen-adjacent still), not this Tier-2 proof run.\nAsset type: 9:16 vertical cinematic still.\nPrimary request: a full-figure generic human silhouette (no visible face, no identifiable features) standing in a single vertical beam of lime-green light falling from an unseen source directly above, the edges of the silhouette dissolving into fine dark particulate drifting upward like smoke or static, as if the figure is only partly present.\nScene/backdrop: total near-black void; the only light is the single vertical beam.\nSubject: the dissolving silhouette and the light beam only.\nStyle/medium: premium cinematic editorial photography, believable fabric silhouette and particulate simulation, flagship production quality.\nComposition/framing: figure centered horizontally, standing in the lower third of frame; the top two-thirds of frame is vast empty near-black ground reserved for a hook headline and CTA type added later.\nLighting/mood: cinematic, dignified, quietly haunting without horror — presence fading from view rather than being erased violently.\nMaterials/textures: soft fabric silhouette, fine drifting particulate, volumetric light beam.\nConstraints: no visible face, no text, no logos, no real identifiable person, no horror or gore framing. Composition constraint (mandatory): reserve at least one-third of the frame as deliberately empty, low-detail, near-black (#070907) ground with no subject or clutter — reserved for Photoshop display type added after generation; render zero text, letters, numbers, or captions anywhere in the image. Lighting constraint (mandatory): single-glow rule — exactly one lime-green (#7CFC00) volumetric beam as the only saturated color accent; every other surface stays near-black; high contrast, restrained, premium.\nAvoid: visible face, horror framing, multiple light beams, warm color cast, ground-level clutter or props."
+      "topic_id": "cinr-popup",
+      "campaign": "cost-is-not-the-reason",
+      "title": "Cost Is Not The Reason — pop-up and mobile vendors",
+      "claim": "A stall that moves every weekend still needs one fixed address customers can return to.",
+      "object": "A market table at first light: real, temporary, and findable only by whoever walks past.",
+      "palette": "paper",
+      "palette_argument": "Markets happen in daylight. Forcing this into a dark palette would be a lie about the time of day the work is done.",
+      "variants": [
+        {
+          "id": "cinr-popup-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-popup-1x1.jpg",
+          "scene": "An outdoor market at early morning, overcast, canopies going up.",
+          "subject": "A folding trestle table under a plain canopy in the upper half of the frame, covered with a clean cloth and nothing else on it yet.",
+          "details": "Damp asphalt, a folded crate underneath, a green webbing strap on the canopy leg, no signage anywhere.",
+          "camera": "35mm, eye level, soft flat overcast daylight, natural grain."
+        },
+        {
+          "id": "cinr-popup-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram portrait feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "cost-is-not-the-reason/cinr-popup-4x5.jpg",
+          "scene": "The same market stall, closer, from the customer's side.",
+          "subject": "The table edge and a stack of plain brown paper bags across the lower third; the canopy underside above pale and empty.",
+          "details": "Paper bag creases, a rubber band around the stack, a weathered table edge, one green strap visible.",
+          "camera": "50mm, eye level, soft overcast daylight, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d01",
+      "campaign": "55-cents-17-day",
+      "title": "Day 1 — Declaration: what 55 cents a day means",
+      "claim": "A whole first year of web presence, priced at the change in your pocket.",
+      "object": "Coins on black, lit once.",
+      "palette": "famtastic",
+      "palette_argument": "The declaration is FAMtastic's own claim about its own price. House identity is correct here and nowhere else in the run by default.",
+      "variants": [
+        {
+          "id": "c55-d01-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "stat",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d01-9x16.jpg",
+          "scene": "A matte near-black surface, one narrow light from the left, everything else falling to black.",
+          "subject": "A small stack of three worn coins in the lower third of the frame, faces rubbed smooth so no markings are legible.",
+          "details": "Lime rim light along the top coin's edge, a long soft shadow, fine dust on the surface.",
+          "camera": "100mm macro, eye level, very shallow depth of field."
+        },
+        {
+          "id": "c55-d01-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "stat",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d01-4x5.jpg",
+          "scene": "The same dark surface seen from directly above.",
+          "subject": "Three worn coins spread apart in the lower third of the frame, blank and smooth-faced.",
+          "details": "One thin lime highlight crossing the metal, the rest of the frame empty black.",
+          "camera": "100mm macro directly overhead, single narrow light, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d02",
+      "campaign": "55-cents-17-day",
+      "title": "Day 2 — Excuses: why owners delay getting a website",
+      "claim": "The reason it hasn't happened is not money. It is that it has been next week for two years.",
+      "object": "A wall calendar with the same page still up, and a pile of post that never got opened.",
+      "palette": "paper",
+      "palette_argument": "Procrastination is a paperwork subject and it happens in daylight, at a kitchen table, not in a dramatic dark room.",
+      "variants": [
+        {
+          "id": "c55-d02-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d02-9x16.jpg",
+          "scene": "A kitchen wall in flat daylight, warm off-white paint.",
+          "subject": "A tear-off wall calendar hanging in the lower half of the frame, its visible page completely blank — no numbers, no grid, no printing — curled at the corner.",
+          "details": "A thumbtack, a faint pale rectangle where an older page hung, a shadow along the wall.",
+          "camera": "50mm, straight on, eye level, soft window daylight."
+        },
+        {
+          "id": "c55-d02-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d02-4x5.jpg",
+          "scene": "A hallway console table in daylight.",
+          "subject": "A leaning stack of unopened plain envelopes across the lower third of the frame, all blank with no printing or windows.",
+          "details": "Dust on the top envelope, a bent corner, a set of keys beside the stack, the wall above bare.",
+          "camera": "50mm, eye level with the tabletop, soft daylight, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d03",
+      "campaign": "55-cents-17-day",
+      "title": "Day 3 — Domain basics: domain vs website vs hosting",
+      "claim": "The address, the building and the land are three different things you keep being sold as one.",
+      "object": "Three keys on a ring — same ring, different locks.",
+      "palette": "paper",
+      "palette_argument": "This is teaching, not selling. Daylight and honest objects; a glowing dark frame would make a definition look like a pitch.",
+      "variants": [
+        {
+          "id": "c55-d03-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d03-9x16.jpg",
+          "scene": "A pale wooden table in soft daylight.",
+          "subject": "Three different keys on one plain ring lying in the lower third of the frame, clearly three distinct shapes.",
+          "details": "Brass and steel mixed, worn teeth, a green fabric tag on the ring, wood grain beneath.",
+          "camera": "50mm, high angle, soft window daylight, shallow depth of field."
+        },
+        {
+          "id": "c55-d03-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "checklist",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d03-4x5.jpg",
+          "scene": "A gatepost by a path in overcast daylight.",
+          "subject": "A blank cast-metal house-number plate screwed to the post in the lower half of the frame, completely unengraved.",
+          "details": "Two flathead screws, a run of green paint on the post, weathered timber grain.",
+          "camera": "50mm, straight on, eye level, soft overcast daylight."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d04",
+      "campaign": "55-cents-17-day",
+      "title": "Day 4 — Hosting basics: what managed hosting changes",
+      "claim": "Hosting is the utility behind the shop. Managed hosting means someone else is on call when it fails.",
+      "object": "A clean utility panel with one indicator lit.",
+      "palette": "trades",
+      "palette_argument": "Infrastructure is trades work. Cold metal, one orange indicator — this is the plant room, not the storefront.",
+      "variants": [
+        {
+          "id": "c55-d04-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d04-9x16.jpg",
+          "scene": "A small plant room, painted block wall, cold light.",
+          "subject": "A grey steel utility panel in the lower half of the frame with one small orange indicator lamp lit and every other face blank — no dials, no printed markings.",
+          "details": "Conduit running up the wall, a scratched panel door, dust on the top edge, the wall above bare.",
+          "camera": "35mm, straight on, eye level, cold diffuse light with one orange point source."
+        },
+        {
+          "id": "c55-d04-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d04-4x5.jpg",
+          "scene": "A basement corner with neatly dressed conduit and cold overhead light.",
+          "subject": "A run of clean steel conduit and a junction box across the lower third; the block wall above empty and evenly lit.",
+          "details": "Galvanised finish, one orange cable tie, a chalk mark on the block, oil-dark floor.",
+          "camera": "35mm, eye level, cold diffuse light, natural grain."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d05",
+      "campaign": "55-cents-17-day",
+      "title": "Day 5 — One-page anatomy: the jobs a focused page must do",
+      "claim": "One page, doing four jobs properly, beats five pages doing none.",
+      "object": "A single blank sheet on a drafting table with a ruler across it.",
+      "palette": "paper",
+      "palette_argument": "The subject literally is one sheet of paper. Anything other than the paper palette would be a costume.",
+      "variants": [
+        {
+          "id": "c55-d05-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d05-9x16.jpg",
+          "scene": "A drafting table in daylight, warm off-white surface.",
+          "subject": "One blank sheet of paper taped square to the table in the lower half of the frame, a steel ruler laid across its lower edge.",
+          "details": "Two strips of masking tape, a sharpened pencil, faint eraser dust, the sheet entirely unmarked.",
+          "camera": "50mm, high angle, soft even daylight, low contrast."
+        },
+        {
+          "id": "c55-d05-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "checklist",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d05-4x5.jpg",
+          "scene": "The same drafting table seen from directly above.",
+          "subject": "A blank sheet occupying the lower half of the frame with a green pencil resting diagonally on it.",
+          "details": "Paper fibre and a soft deckle edge, the pencil the only saturated colour, table surface pale and even above.",
+          "camera": "50mm directly overhead, flat daylight, no strong shadow."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d06",
+      "campaign": "55-cents-17-day",
+      "title": "Day 6 — Trust: how prospective customers verify a business",
+      "claim": "Before they call, they check. What they find decides whether the call happens.",
+      "object": "A blank card being set down on a counter — the moment of being checked.",
+      "palette": "paper",
+      "palette_argument": "Verification is a document act performed in daylight across a counter. Sober, not atmospheric.",
+      "variants": [
+        {
+          "id": "c55-d06-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d06-9x16.jpg",
+          "scene": "A shop counter in daylight, warm off-white wall behind.",
+          "subject": "A single blank business card lying at an angle on the counter in the lower third of the frame, just set down.",
+          "details": "A soft shadow under one corner, counter grain, a pen just out of focus, the wall above bare.",
+          "camera": "50mm, eye level with the counter, soft daylight, shallow depth of field."
+        },
+        {
+          "id": "c55-d06-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d06-4x5.jpg",
+          "scene": "A reception desk by a window, flat morning light.",
+          "subject": "A small brass card stand in the lower third holding three blank cards; the wall above empty.",
+          "details": "Tarnish in the brass corners, a dust line on the desk, the cards perfectly blank.",
+          "camera": "50mm, straight on, eye level, soft daylight."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d07",
+      "campaign": "55-cents-17-day",
+      "title": "Day 7 — Mobile: the mobile-first customer journey",
+      "claim": "Almost every first look at your business happens on a phone held in one hand.",
+      "object": "A phone at a counter, screen unreadable by design.",
+      "palette": "salon",
+      "palette_argument": "The phone moment in this audience's life happens in a service chair, warm and close, not on a desk.",
+      "variants": [
+        {
+          "id": "c55-d07-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d07-9x16.jpg",
+          "scene": "A salon waiting bench under one warm bulb, dark plum wall behind.",
+          "subject": "A phone lying face-down on the bench in the lower third of the frame, glow leaking around its edge onto the seat.",
+          "details": "Worn vinyl seam, a folded magazine with a blank cover, warm bulb reflection on the phone's back.",
+          "camera": "50mm, eye level with the bench, one practical light, shallow depth of field."
+        },
+        {
+          "id": "c55-d07-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d07-4x5.jpg",
+          "scene": "A dark counter with one small warm lamp at the edge of frame.",
+          "subject": "A phone standing on edge against a small holder in the lower third, screen turned away from the camera so nothing on it is visible.",
+          "details": "A rose highlight along the phone's metal rail, a soft shadow, dust on the counter, the space above black.",
+          "camera": "50mm, eye level, one practical light, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d08",
+      "campaign": "55-cents-17-day",
+      "title": "Day 8 — Fit: who Web Basics fits and who needs more",
+      "claim": "The honest answer includes the businesses this is the wrong size for.",
+      "object": "Graduated wrenches — right tool, right size, and the wrong one is obvious.",
+      "palette": "trades",
+      "palette_argument": "Sizing is a tool question. The trades palette makes 'right size' literal instead of metaphorical.",
+      "variants": [
+        {
+          "id": "c55-d08-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d08-9x16.jpg",
+          "scene": "A steel workbench under cold light, painted block wall behind.",
+          "subject": "Five combination wrenches laid in graduated size order across the lower third of the frame, one pulled slightly forward.",
+          "details": "Grease in the jaws, worn chrome, an orange lamp edge at the frame border, block wall above bare.",
+          "camera": "50mm, high angle over the bench, cold diffuse light, shallow depth of field."
+        },
+        {
+          "id": "c55-d08-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "checklist",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d08-4x5.jpg",
+          "scene": "A pegboard tool wall under cold shop light.",
+          "subject": "A row of hanging tools across the lower third; the pegboard above empty except for its hole grid.",
+          "details": "Grease shadows behind each tool, one orange-handled screwdriver, chipped board paint.",
+          "camera": "35mm, straight on, eye level, cold diffuse light."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d09",
+      "campaign": "55-cents-17-day",
+      "title": "Day 9 — Ecommerce boundary: a store is more than a cart",
+      "claim": "Taking the money is the easy part. Everything after it is the store.",
+      "object": "A packed box, tape gun, and a scale — the part nobody demos.",
+      "palette": "trades",
+      "palette_argument": "Fulfilment is physical work in a back room, not a lifestyle shot of a laptop.",
+      "variants": [
+        {
+          "id": "c55-d09-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d09-9x16.jpg",
+          "scene": "A packing bench in a back room under cold overhead light.",
+          "subject": "A sealed plain cardboard box on a small platform scale in the lower third of the frame, no labels or markings on the box.",
+          "details": "A tape gun beside it, a curl of packing tape, an orange box cutter, scuffed bench top.",
+          "camera": "50mm, eye level with the bench, cold light with one orange object, shallow depth of field."
+        },
+        {
+          "id": "c55-d09-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d09-4x5.jpg",
+          "scene": "The same back room seen from above.",
+          "subject": "Three sealed unmarked boxes in a row across the lower third, tape lines clean, nothing printed on them.",
+          "details": "Concrete floor, a tape roll on its side, an orange strap coiled at the edge.",
+          "camera": "35mm directly overhead, cold diffuse light, natural grain."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d10",
+      "campaign": "55-cents-17-day",
+      "title": "Day 10 — Lead capture: what happens after the form",
+      "claim": "A form that only lands in an inbox is a lead you will lose by Thursday.",
+      "object": "An envelope caught halfway through a mail slot — arrived, not yet handled.",
+      "palette": "famtastic",
+      "palette_argument": "This is the FAMtastic system's own mechanism. House palette, one lime edge, nothing else.",
+      "variants": [
+        {
+          "id": "c55-d10-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d10-9x16.jpg",
+          "scene": "A dark painted door seen from inside, one narrow light source low in the frame.",
+          "subject": "A blank envelope stopped halfway through a brass letter slot in the lower third, held between the flaps.",
+          "details": "A thin lime line of light along the slot's lip, the envelope entirely unprinted, the door surface above black and empty.",
+          "camera": "50mm, eye level with the slot, shallow depth of field, single narrow light."
+        },
+        {
+          "id": "c55-d10-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d10-4x5.jpg",
+          "scene": "A dark floor just inside a door, one thin light spilling from above.",
+          "subject": "A single blank envelope lying face-up on the floor in the lower third of the frame.",
+          "details": "A lime edge of light across one corner, dust on the boards, everything above falling to black.",
+          "camera": "50mm, low angle near the floor, shallow depth of field, one narrow light."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d11",
+      "campaign": "55-cents-17-day",
+      "title": "Day 11 — Follow-up: why inbox-only follow-up loses opportunities",
+      "claim": "The enquiry did not go cold. It went unanswered while you were working.",
+      "object": "A pile of post on a mat, growing.",
+      "palette": "salon",
+      "palette_argument": "The person who never gets to the follow-up is the one who was in the chair all day. Warm, late, tired light.",
+      "variants": [
+        {
+          "id": "c55-d11-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d11-9x16.jpg",
+          "scene": "A hallway floor at night, one warm lamp somewhere off frame.",
+          "subject": "A scattered pile of blank unopened envelopes on the mat in the lower third of the frame.",
+          "details": "A rose highlight along the top envelope, a worn mat edge, the wall above dark and empty.",
+          "camera": "35mm, low eye level, one practical warm light, shallow depth of field."
+        },
+        {
+          "id": "c55-d11-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d11-4x5.jpg",
+          "scene": "A salon reception desk after closing, one warm bulb.",
+          "subject": "A wire in-tray in the lower third of the frame overflowing with blank paper slips.",
+          "details": "Bent wire, a pen with a chewed cap, warm bulb light on the paper edges, dark above.",
+          "camera": "50mm, eye level, one practical light, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d12",
+      "campaign": "55-cents-17-day",
+      "title": "Day 12 — Customer portal: what a useful portal accomplishes",
+      "claim": "A portal is a room your customer can walk into when your shop is closed.",
+      "object": "A reception desk with one lamp still on after hours.",
+      "palette": "famtastic",
+      "palette_argument": "The portal is FAMtastic's own product surface, and Design DNA governs it. House palette is correct.",
+      "variants": [
+        {
+          "id": "c55-d12-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d12-9x16.jpg",
+          "scene": "A dark empty reception area after hours, one small desk lamp on.",
+          "subject": "The desk edge and the lamp in the lower third of the frame, the lamp's shade throwing a narrow cone downward.",
+          "details": "A thin lime cast on the desk surface under the lamp, a closed ledger, deep black above and behind.",
+          "camera": "35mm, eye level, single practical light, heavy falloff, visible grain."
+        },
+        {
+          "id": "c55-d12-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d12-4x5.jpg",
+          "scene": "A dark corridor with one door standing slightly open, light spilling from the gap.",
+          "subject": "The base of the door and the wedge of light on the floor in the lower third of the frame.",
+          "details": "A lime cast in the spilled light, worn floorboards, the corridor above completely dark.",
+          "camera": "35mm, low eye level, single light source, natural grain."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d13",
+      "campaign": "55-cents-17-day",
+      "title": "Day 13 — Support and retention: how support protects trust",
+      "claim": "Trust is not won at the sale. It is kept at the first thing that goes wrong.",
+      "object": "An open toolbox with everything in its place.",
+      "palette": "trades",
+      "palette_argument": "Support is maintenance work. The palette should smell of a workshop, not a helpdesk.",
+      "variants": [
+        {
+          "id": "c55-d13-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d13-9x16.jpg",
+          "scene": "A concrete floor under cold light, a painted block wall behind.",
+          "subject": "An open steel toolbox in the lower third of the frame, cantilever trays fanned out, tools seated in order.",
+          "details": "Chipped orange paint on the box lid, oil marks on the concrete, the wall above bare.",
+          "camera": "35mm, low eye level, cold diffuse light, shallow depth of field."
+        },
+        {
+          "id": "c55-d13-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d13-4x5.jpg",
+          "scene": "A workbench under cold light seen from above.",
+          "subject": "A tool roll unrolled flat across the lower third of the frame with its tools seated in loops.",
+          "details": "Worn canvas, an orange handle among steel ones, bench grain visible above.",
+          "camera": "50mm directly overhead, cold diffuse light, natural grain."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d14",
+      "campaign": "55-cents-17-day",
+      "title": "Day 14 — Analytics: which metrics should change a decision",
+      "claim": "A number that cannot change what you do next week is not a metric, it is decoration.",
+      "object": "A blank adding-machine tape curling off the desk — the shape of measurement, with no numbers on it.",
+      "palette": "paper",
+      "palette_argument": "Measurement here is a records subject, and the tape must be blank, which only reads honestly in daylight on paper.",
+      "variants": [
+        {
+          "id": "c55-d14-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d14-9x16.jpg",
+          "scene": "A desk in flat daylight, warm off-white wall behind.",
+          "subject": "A long curl of narrow blank paper tape spilling from a small machine at the lower edge of the frame, entirely unprinted.",
+          "details": "The tape's soft curl and creases, a green machine key, dust on the desk, the wall above empty.",
+          "camera": "50mm, eye level with the desk, soft daylight, shallow depth of field."
+        },
+        {
+          "id": "c55-d14-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "stat",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d14-4x5.jpg",
+          "scene": "A pale desk surface seen from directly above.",
+          "subject": "A loose spiral of blank paper tape lying in the lower third of the frame, no printing anywhere on it.",
+          "details": "Paper fibre, a faint fold, one green pencil at the edge, even daylight.",
+          "camera": "50mm directly overhead, flat daylight, low contrast."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d15",
+      "campaign": "55-cents-17-day",
+      "title": "Day 15 — Automation: what a small business should automate first",
+      "claim": "Automate the thing you do every day that nobody thanks you for.",
+      "object": "A mechanical timer on a workbench — the smallest possible automation, and the most honest.",
+      "palette": "trades",
+      "palette_argument": "Automation as a mechanism, not a mood. Cold bench, one orange accent, a real device with a spring in it.",
+      "variants": [
+        {
+          "id": "c55-d15-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d15-9x16.jpg",
+          "scene": "A steel workbench under cold light.",
+          "subject": "A small mechanical wind-up timer standing in the lower third of the frame, its dial face completely blank with no numerals or graduations.",
+          "details": "Scratched enamel body, an orange knob, a soft shadow on the bench, wall above bare.",
+          "camera": "50mm, eye level with the bench, cold light with one orange element, shallow depth of field."
+        },
+        {
+          "id": "c55-d15-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d15-4x5.jpg",
+          "scene": "A bench under cold overhead light, seen from a low angle.",
+          "subject": "A row of three identical relay boxes across the lower third of the frame with plain unmarked faces, one small orange lamp lit on the middle box.",
+          "details": "Grey enamel, a cable loop, dust along the top edges, the wall above empty.",
+          "camera": "35mm, low eye level, cold diffuse light, natural grain."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d16",
+      "campaign": "55-cents-17-day",
+      "title": "Day 16 — AI assistance: when a website AI agent is actually useful",
+      "claim": "Useful when it answers the question you would have answered at midnight. Useless the rest of the time.",
+      "object": "One small lamp coming on in a dark office — help arriving, not a spectacle.",
+      "palette": "famtastic",
+      "palette_argument": "This is FAMtastic's own product behaviour, and restraint is the argument. One lime source, nothing else lit.",
+      "variants": [
+        {
+          "id": "c55-d16-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d16-9x16.jpg",
+          "scene": "A dark empty office at night, no other light anywhere.",
+          "subject": "A single small desk lamp switched on in the lower third of the frame, its cone falling on a bare desk.",
+          "details": "A faint lime tint in the light pool, a closed notebook, deep black filling the rest of the frame.",
+          "camera": "35mm, eye level, single practical light, heavy falloff, visible grain."
+        },
+        {
+          "id": "c55-d16-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d16-4x5.jpg",
+          "scene": "A dark room with one small light source at floor level.",
+          "subject": "A pool of light on bare boards in the lower third of the frame with nothing standing in it.",
+          "details": "A thin lime cast at the pool's edge, wood grain and dust, total black above.",
+          "camera": "35mm, low eye level, single light source, natural grain."
+        }
+      ]
+    },
+    {
+      "topic_id": "c55-d17",
+      "campaign": "55-cents-17-day",
+      "title": "Day 17 — Recap: how the complete FAMtastic system connects",
+      "claim": "Address, building, front door, follow-up, support — one set of keys, not five vendors.",
+      "object": "A full set of keys on one ring, laid down together.",
+      "palette": "famtastic",
+      "palette_argument": "The closing frame of a FAMtastic campaign about FAMtastic. House identity, once, at the end.",
+      "variants": [
+        {
+          "id": "c55-d17-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d17-9x16.jpg",
+          "scene": "A matte near-black counter with one narrow light from the left.",
+          "subject": "A full ring of five or six keys laid flat in the lower third of the frame, fanned out.",
+          "details": "One key catching a thin lime edge light, worn brass and steel, long soft shadows, black above.",
+          "camera": "50mm, eye level with the counter, shallow depth of field, single narrow light."
+        },
+        {
+          "id": "c55-d17-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "55-cents-17-day/c55-d17-4x5.jpg",
+          "scene": "The same dark counter seen from directly above.",
+          "subject": "The key ring lying in the lower third of the frame, keys spread in a neat arc.",
+          "details": "A single lime highlight running along the ring, dust on the counter, the space above pure black.",
+          "camera": "50mm directly overhead, one narrow light, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "ce-dorm",
+      "campaign": "campus-entrepreneurs",
+      "title": "Campus Hustle — the dorm-room operation",
+      "claim": "A real business is already running out of that room. It just has nowhere to send anyone.",
+      "object": "A desk that is obviously a workspace, at night, under one clamp lamp.",
+      "palette": "trades",
+      "palette_argument": "A dorm side-hustle is work: boxes, tape, a clamp lamp at 1am. The trades palette is honest about that; a lifestyle palette would flatter it.",
+      "variants": [
+        {
+          "id": "ce-dorm-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "tiktok / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "campus-entrepreneurs/ce-dorm-9x16.jpg",
+          "scene": "A small dorm room at night, cold ambient light from a window, one clamp lamp on the desk.",
+          "subject": "The desk edge in the lower third with a stack of plain unmarked shipping boxes and a tape gun beside it.",
+          "details": "An orange clamp lamp shade, a cable running off the desk, cinder-block wall above bare and cold.",
+          "camera": "35mm, eye level, cold ambient with one orange practical, natural grain."
+        },
+        {
+          "id": "ce-dorm-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "campus-entrepreneurs/ce-dorm-1x1.jpg",
+          "scene": "The same desk seen from a low angle at night.",
+          "subject": "Three sealed blank boxes stacked in the upper half of the frame beside a coil of tape.",
+          "details": "Scuffed box corners, the orange lamp glow on the top edge, cold blue window light behind.",
+          "camera": "50mm, low eye level, cold light with one orange source, shallow depth of field."
+        },
+        {
+          "id": "ce-hustle-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram portrait feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "campus-entrepreneurs/ce-hustle-4x5.jpg",
+          "scene": "A dorm doorway at night, corridor light cold and flat.",
+          "subject": "A shoebox and two sealed mailers stacked by the door in the lower third, ready to go out.",
+          "details": "No printing on any package, a scuffed skirting board, an orange strap on the top mailer.",
+          "camera": "35mm, low eye level, cold corridor light, natural grain."
+        }
+      ]
+    },
+    {
+      "topic_id": "ce-campus",
+      "campaign": "campus-entrepreneurs",
+      "title": "Campus Hustle — the daylight side of it",
+      "claim": "You can sell to the people who walk past. Everyone else needs an address.",
+      "object": "A folding table on a quad, and a notebook that is doing the planning.",
+      "palette": "paper",
+      "palette_argument": "Daytime campus life is a paper palette subject — notebooks, tables, overcast light. It also gives the campaign a second look so the run is not one mood.",
+      "variants": [
+        {
+          "id": "ce-quad-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram portrait feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "campus-entrepreneurs/ce-quad-4x5.jpg",
+          "scene": "A campus lawn on an overcast morning, brick building soft in the background.",
+          "subject": "A folding table set up on the grass in the lower third of the frame with a clean cloth and nothing on it yet.",
+          "details": "Damp grass, a folding chair leaning against a leg, a green webbing strap, no banners or signage.",
+          "camera": "35mm, eye level, flat overcast daylight, natural grain."
+        },
+        {
+          "id": "ce-notebook-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram feed",
+          "archetype": "checklist",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "campus-entrepreneurs/ce-notebook-1x1.jpg",
+          "scene": "A library table by a window in soft daylight.",
+          "subject": "An open spiral notebook in the upper half of the frame with both pages completely blank and unruled.",
+          "details": "A green pen in the spiral, a coffee ring on the table, paper fibre catching the light.",
+          "camera": "50mm, high angle over the table, soft daylight, low contrast."
+        }
+      ]
+    },
+    {
+      "topic_id": "ce-offer",
+      "campaign": "campus-entrepreneurs",
+      "title": "Campus Hustle — the offer frame",
+      "claim": "One year, one price, and it belongs to you when the semester ends.",
+      "object": "A single key on a dark counter.",
+      "palette": "famtastic",
+      "palette_argument": "The offer is FAMtastic speaking as itself. House palette, used once in the run, at the point of the ask.",
+      "variants": [
+        {
+          "id": "ce-offer-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "tiktok / reels background",
+          "archetype": "offer-card",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "campus-entrepreneurs/ce-offer-9x16.jpg",
+          "scene": "A matte near-black surface with one narrow light from the left.",
+          "subject": "A single brass key lying in the lower third of the frame, nothing else in the shot.",
+          "details": "A thin lime edge along the key's shoulder, a long soft shadow, fine dust, black above.",
+          "camera": "100mm macro, eye level, very shallow depth of field, single narrow light."
+        }
+      ]
+    },
+    {
+      "topic_id": "fbe",
+      "campaign": "fam-business-email",
+      "title": "FAM-BUSINESS-EMAIL — email that looks like your business",
+      "claim": "An address at a domain you own is the cheapest credibility you will ever buy.",
+      "object": "A blank name-plate slot on a door and an envelope with an empty return corner.",
+      "palette": "paper",
+      "palette_argument": "Business identity is a document and signage subject in daylight. It has to read sober, because the claim is about being taken seriously.",
+      "variants": [
+        {
+          "id": "fbe-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "add-ons/fbe-4x5.jpg",
+          "scene": "An office corridor in daylight, painted timber door.",
+          "subject": "A brass name-plate holder screwed to the door in the lower half of the frame holding a completely blank card.",
+          "details": "Four small screws, tarnish at the corners, a chip in the door paint, the door above bare.",
+          "camera": "50mm, straight on, eye level, soft daylight."
+        },
+        {
+          "id": "fbe-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "add-ons/fbe-9x16.jpg",
+          "scene": "A desk by a window in morning daylight.",
+          "subject": "A single plain envelope lying in the lower third of the frame with a completely empty return-address corner and no printing anywhere.",
+          "details": "A green ink pen beside it, paper fibre visible, a soft shadow, the desk above empty.",
+          "camera": "50mm, high angle, soft daylight, shallow depth of field."
+        },
+        {
+          "id": "fbe-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "add-ons/fbe-1x1.jpg",
+          "scene": "A counter in daylight, warm off-white wall behind.",
+          "subject": "A blank business card being held upright between two fingers in the upper half of the frame, presented toward the camera.",
+          "details": "One hand only, clearly formed, ordinary skin with visible texture; the card entirely unprinted; soft shadow behind.",
+          "camera": "50mm, eye level, soft window daylight, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "flseo",
+      "campaign": "fam-local-seo",
+      "title": "FAM-LOCAL-SEO — be the business local search finds first",
+      "claim": "On a street where every shop is dark, the one with a light on gets the customer.",
+      "object": "A row of shopfronts at dusk with exactly one lit.",
+      "palette": "trades",
+      "palette_argument": "Blue dusk with one warm shopfront is literally the picture of 'found first', and the cold/warm split is the trades palette's own physics.",
+      "variants": [
+        {
+          "id": "flseo-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "add-ons/flseo-4x5.jpg",
+          "scene": "A small-town street at blue dusk, wet asphalt, no people.",
+          "subject": "A row of shopfronts across the lower third of the frame with every window dark except one, which glows warm orange.",
+          "details": "No signage panels anywhere, reflections on the wet road, a cold blue sky above, empty.",
+          "camera": "35mm, eye level from across the street, blue dusk with one warm practical, natural grain."
+        },
+        {
+          "id": "flseo-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "add-ons/flseo-9x16.jpg",
+          "scene": "A sidewalk at dusk looking along a shopfront wall.",
+          "subject": "One lit doorway in the lower third of the frame throwing an orange wedge of light onto cold wet concrete.",
+          "details": "A blank sign bracket above the door, cold blue shadow, a puddle catching the light.",
+          "camera": "35mm, low eye level, blue dusk with one warm source, visible grain."
+        },
+        {
+          "id": "flseo-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "add-ons/flseo-1x1.jpg",
+          "scene": "A dark street corner at dusk, cold and blue.",
+          "subject": "A single lit shop window in the upper half of the frame, the only warm thing in the picture, its display shelves empty.",
+          "details": "Cold blue reflections in the neighbouring dark glass, a bare bulb inside, no lettering on the window.",
+          "camera": "50mm, eye level, blue dusk with one warm practical, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "fmaint",
+      "campaign": "fam-maintenance",
+      "title": "FAM-MAINTENANCE — kept healthy while you run the business",
+      "claim": "Maintenance is invisible when it works, which is why nobody buys it until it fails.",
+      "object": "A machine that has obviously been looked after, and a service tag with nothing written on it.",
+      "palette": "trades",
+      "palette_argument": "Maintenance is workshop work. The palette should look like a place where someone actually services things.",
+      "variants": [
+        {
+          "id": "fmaint-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "add-ons/fmaint-4x5.jpg",
+          "scene": "A plant room under cold light, painted block wall.",
+          "subject": "A blank paper service tag hanging on a wire from a valve in the lower half of the frame, completely unwritten.",
+          "details": "The tag creased and slightly stained, an orange valve handle behind it, conduit above bare.",
+          "camera": "50mm, eye level, cold diffuse light with one orange element, shallow depth of field."
+        },
+        {
+          "id": "fmaint-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "add-ons/fmaint-9x16.jpg",
+          "scene": "A workshop bench under cold overhead light.",
+          "subject": "An oil can and a torque wrench laid side by side in the lower third of the frame, both clearly used and clean.",
+          "details": "An orange-painted handle, oil sheen on the bench, worn knurling, the wall above empty.",
+          "camera": "50mm, eye level with the bench, cold light, shallow depth of field."
+        },
+        {
+          "id": "fmaint-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram feed",
+          "archetype": "standard",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "add-ons/fmaint-1x1.jpg",
+          "scene": "A machine housing photographed close under cold shop light.",
+          "subject": "A clean inspection panel with an orange grease nipple and a wiped-down seam in the upper half of the frame, all surfaces unmarked.",
+          "details": "Fresh grease at the nipple, a faint wipe pattern in the dust, no plates or stampings anywhere.",
+          "camera": "50mm close-up, eye level, cold diffuse light, shallow depth of field."
+        }
+      ]
+    },
+    {
+      "topic_id": "aiii",
+      "campaign": "and-if-it-is-rattler-lifers",
+      "title": "And If It Is — Rattler Lifers (alumni / reunion)",
+      "claim": "The people are still here. The place is where they agree to meet.",
+      "object": "A closed yearbook, empty bleachers, a locker bank — the physical memory of a shared place.",
+      "palette": "paper",
+      "palette_argument": "Nostalgia here is archival, not atmospheric: bound paper, ink, daylight. One frame moves to ghost-town because an empty stadium at last light is genuinely a place-that-is-empty picture.",
+      "variants": [
+        {
+          "id": "aiii-yearbook-4x5",
+          "aspect_ratio": "4:5",
+          "surface": "facebook / instagram portrait feed",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "and-if-it-is-rattler-lifers/aiii-yearbook-4x5.jpg",
+          "scene": "A table in soft daylight, warm off-white surface.",
+          "subject": "A closed hardbound book lying in the lower third of the frame, its cover cloth-bound and entirely blank with no title, emboss or lettering.",
+          "details": "Worn cloth at the spine corners, a green ribbon marker, a faint water mark on the cover, dust on the table.",
+          "camera": "50mm, high angle over the table, soft daylight, shallow depth of field."
+        },
+        {
+          "id": "aiii-bleachers-16x9",
+          "aspect_ratio": "16:9",
+          "surface": "blog hero / youtube thumbnail",
+          "archetype": "split",
+          "negative_space": "right-column",
+          "palette": "ghost-town",
+          "status": "queued",
+          "output_file": "and-if-it-is-rattler-lifers/aiii-bleachers-16x9.jpg",
+          "scene": "An empty outdoor stadium at the very end of the day, dust in the air, no people.",
+          "subject": "A bank of weathered timber and metal bleachers running across the left half of the frame, empty, low sun raking along the rows.",
+          "details": "Peeling paint on the risers, dry grass at the base, long amber shadows down the steps.",
+          "camera": "35mm, eye level from the field, low amber sun, heavy natural grain."
+        },
+        {
+          "id": "aiii-locker-9x16",
+          "aspect_ratio": "9:16",
+          "surface": "stories / reels background",
+          "archetype": "standard",
+          "negative_space": "upper-half",
+          "status": "queued",
+          "output_file": "and-if-it-is-rattler-lifers/aiii-locker-9x16.jpg",
+          "scene": "A school corridor in flat daylight from a high window.",
+          "subject": "A bank of painted metal lockers filling the lower half of the frame, doors closed, every number plate blank and unstamped.",
+          "details": "Dented door faces, chipped paint at the latches, scuffed terrazzo below, the wall above bare.",
+          "camera": "35mm, straight on, eye level, soft daylight, natural grain."
+        },
+        {
+          "id": "aiii-rollcall-1x1",
+          "aspect_ratio": "1:1",
+          "surface": "instagram / facebook feed",
+          "archetype": "checklist",
+          "negative_space": "lower-third",
+          "status": "queued",
+          "output_file": "and-if-it-is-rattler-lifers/aiii-rollcall-1x1.jpg",
+          "scene": "A desk in soft daylight, seen from above.",
+          "subject": "An open register book in the upper half of the frame with completely blank, unruled, unwritten pages.",
+          "details": "A green pen laid in the gutter, soft paper fibre, a faint thumb smudge, the desk below empty.",
+          "camera": "50mm directly overhead, flat daylight, low contrast."
+        }
+      ]
     }
   ]
 }
