@@ -358,6 +358,27 @@
         "product-onboarding"
       ],
       "status": "published"
+    },
+    {
+      "key": "own-your-online-presence",
+      "title": "The Own Your Online Presence Series",
+      "thesis": "Platforms can help a business get found, but their rules, ranking and reach stay theirs. This series works through what a business actually owns online, what renting it costs, and what owning it involves once you do.",
+      "audience": "Small service businesses whose bookings, messages or customer list currently live inside someone else's app or a link-in-bio page.",
+      "stage": "awareness",
+      "pillar_slug": "why-running-business-on-gmail-and-linktree-costs-revenue",
+      "category": "get-found",
+      "tags": [
+        "small-business",
+        "website-strategy",
+        "domain",
+        "conversion"
+      ],
+      "capabilities": [
+        "seo-sitemap",
+        "website-discovery",
+        "lead-response"
+      ],
+      "status": "published"
     }
   ],
   "faqs": [
