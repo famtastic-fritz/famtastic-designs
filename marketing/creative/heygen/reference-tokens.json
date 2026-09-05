@@ -1,0 +1,42 @@
+{
+  "schema": "famtastic.anchor-reference-tokens.v1",
+  "anchor": "marketing/creative/heygen/renders/take-a-platform-dependency.mp4",
+  "measured_at": "2026-09-05",
+  "method": "Five frames sampled at 1s/5s/9s/13s/17s, downscaled to 200px wide, 113,000 pixels analysed. Darkest and lightest deciles averaged; accent isolated as green-dominant saturated pixels.",
+  "why_this_exists": "CHEAP_PRODUCTION_ECONOMICS_V1 says the premium anchor is the style REFERENCE the cheap tiers are graded against. That was documented and not executed: the plates on disk were generated independently of the anchor. These are the anchor's actual values, so cheap tiers can be graded to it IN THE PROMPT rather than colour-corrected afterwards.",
+
+  "measured": {
+    "accent_as_it_appears": "#7fb449",
+    "ground_darkest_decile": "#33272e",
+    "highlight_lightest_decile": "#fafdf9",
+    "mean_frame": "#a2a2a0",
+    "mean_luminance": 161.9,
+    "accent_area_fraction": 0.0131
+  },
+
+  "findings": [
+    "THE ANCHOR IS A LIGHT FRAME. Mean luminance 161.9 of 255. Grading plates to a near-black ground would NOT match it - they would read as a different piece cut in beside it.",
+    "THE BRAND ACCENT DOES NOT APPEAR AS SPECIFIED. BRAND.md's #7cfc00 renders as #7fb449 in this take's lighting: darker, less saturated, olive rather than chartreuse. Grade cheap tiers to the APPEARANCE (#7fb449), not to the spec (#7cfc00), or they clash with the very asset they are meant to match.",
+    "THE ACCENT IS 1.31% OF FRAME AREA. It is trim on the presenter's jacket, not a field of colour. A plate flooded with lime would overpower the anchor rather than match it.",
+    "The 'paper' palette already chosen for this drop is therefore correct - but it was correct by argument, before anyone measured the take."
+  ],
+
+  "measurement_discipline_note": "ffmpeg palettegen initially reported #00ff00 at full saturation as a dominant colour. That is palettegen's transparency sentinel, not a colour present in the take - every other entry in that palette was muted mauve and cream. Recording it would have graded every cheap asset to a colour that does not exist. Real frames were sampled instead.",
+
+  "grading_directives_for_cheap_tiers": {
+    "ground": "Light, warm-neutral. Target mean luminance 150-175, not a dark ground.",
+    "accent_usage": "A single small accent incident occupying roughly 1-2% of frame. Never a lime field, never a lime gradient.",
+    "accent_value": "#7fb449 as rendered. Reserve #7cfc00 for vector and type, where the value is literal and unlit.",
+    "prompt_fragment": "warm neutral daylight interior, soft diffuse light, near-white walls, muted mauve-grey shadows, one small olive-green accent object occupying a tiny fraction of frame, 50mm, eye-level, shallow depth of field, real material wear, no text of any kind, deliberate empty area for typography"
+  },
+
+  "derived_so_far": [
+    "marketing/creative/templates/famtastic-social-frame.jsx palette 'anchor-take-a'",
+    "marketing/creative/campaign-assets/platform-dependency/derived-from-anchor-story-9x16.png"
+  ],
+
+  "boundaries": [
+    "Measured from ONE take. A second take under different lighting will move these values; re-measure rather than assuming.",
+    "This describes how the anchor LOOKS. It is not a brand specification and does not override BRAND.md or Design DNA v1 for surfaces not being matched to this take."
+  ]
+}

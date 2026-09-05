@@ -98,6 +98,25 @@ var PALETTES = {
     body: [139, 152, 165], hair: [32, 43, 56],
     note: "Safety orange on blue-black. Work, not lifestyle."
   },
+  /*
+   * MEASURED FROM THE PREMIUM ANCHOR, not chosen.
+   *
+   * Sampled from marketing/creative/heygen/renders/take-a-platform-dependency.mp4
+   * across five frames and 113,000 pixels; see
+   * marketing/creative/heygen/reference-tokens.json.
+   *
+   * Two things the measurement changed. The take is a LIGHT frame (mean
+   * luminance 162 of 255), so grading a still to a near-black ground would make
+   * it read as a different piece cut in beside the video. And the brand accent
+   * does not appear as specified: #7cfc00 renders as #7fb449 under this take's
+   * lighting - darker, olive rather than chartreuse - and covers only 1.31% of
+   * frame area. Use this palette when a still must sit next to THIS take.
+   */
+  "anchor-take-a": {
+    ground: [244, 242, 238], accent: [127, 180, 73], head: [51, 39, 46],
+    body: [106, 96, 104], hair: [221, 216, 210],
+    note: "Measured from take-a. Light ground, olive accent as rendered. Match, do not spec."
+  },
   // Daylight. Documents, proposals, LinkedIn, anything that must read as
   // sober rather than as an ad. Proves the system is not a dark-mode trick.
   "paper": {
