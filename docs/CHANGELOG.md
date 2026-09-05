@@ -13,9 +13,10 @@
   sending the same candidate at once; it does not broaden any mail authority.
 - Focused PHP lint and the 91-test/462-assertion unit suite pass. The isolated
   original fresh-install blocker was the inherited PHP 8.5 `$configFactory`
-  collision, now repaired in the booking controllers. The full fresh-install
-  harness still needs a project-local Composer vendor tree; copied vendor trees
-  embed their original Drupal root and cannot serve as a relocation substitute.
+  collision, now repaired in the booking controllers. The harness now mirrors
+  the matching Drupal runtime beside a supplied Composer vendor tree and passes
+  a fresh isolated install, module schema, revenue freshness recovery, offers,
+  and terms check.
 
 ## 2026-09-05 — Verified revenue-loop completion gates tightened
 

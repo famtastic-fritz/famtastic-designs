@@ -3,6 +3,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BACKEND_VENDOR="${FAMTASTIC_BACKEND_VENDOR:-$REPO_ROOT/backend/vendor}"
+BACKEND_RUNTIME_ROOT="${FAMTASTIC_BACKEND_RUNTIME_ROOT:-$(cd "$(dirname "$BACKEND_VENDOR")" && pwd)}"
 SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/famtastic-fresh-install.XXXXXX")"
 cleanup() {
   case "$SANDBOX" in
@@ -25,7 +26,18 @@ chmod -R u+rwX "$SANDBOX/backend/web/sites/default"
 # Drush intentionally redispatches to the Drupal project that owns its vendor
 # directory. A symlink here silently points the test back at the developer
 # site, so copy the installed dependencies and assert the resulting root below.
-cp -R "$BACKEND_VENDOR" "$SANDBOX/backend/vendor"
+test -d "$BACKEND_RUNTIME_ROOT/web/core"
+# Mirror the matching Drupal runtime, not just Composer's vendor directory.
+# Composer and Drush reference the adjacent core/modules/profiles bootstrap.
+rsync -aL "$BACKEND_VENDOR/" "$SANDBOX/backend/vendor/"
+rsync -a "$BACKEND_RUNTIME_ROOT/web/core/" "$SANDBOX/backend/web/core/"
+rsync -a --ignore-existing "$BACKEND_RUNTIME_ROOT/web/modules/" "$SANDBOX/backend/web/modules/"
+rsync -a --ignore-existing "$BACKEND_RUNTIME_ROOT/web/profiles/" "$SANDBOX/backend/web/profiles/"
+rsync -a --ignore-existing "$BACKEND_RUNTIME_ROOT/web/themes/" "$SANDBOX/backend/web/themes/"
+for runtime_file in .ht.router.php .htaccess autoload.php autoload_runtime.php index.php robots.txt update.php; do
+  cp "$BACKEND_RUNTIME_ROOT/web/$runtime_file" "$SANDBOX/backend/web/$runtime_file"
+done
+cp "$BACKEND_RUNTIME_ROOT/web/sites/default/default.settings.php" "$SANDBOX/backend/web/sites/default/default.settings.php"
 mkdir -p "$SANDBOX/backend/web/sites/default/files" "$SANDBOX/backend/private"
 
 (
