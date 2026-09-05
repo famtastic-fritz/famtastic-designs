@@ -2802,6 +2802,8 @@ function famtastic_pipeline_update_8054(&$sandbox) {
     }
   }
   return t('Added durable owner-only revenue freshness tasks and atomic generic outbox claim fields. No customer action was sent.');
+}
+
 /** Adds owner-controlled external payment handoff records without a processor. */
 function famtastic_pipeline_update_8055(&$sandbox) {
   $schema = \Drupal::database()->schema();

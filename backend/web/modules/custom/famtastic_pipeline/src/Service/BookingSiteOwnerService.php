@@ -80,6 +80,8 @@ final class BookingSiteOwnerService {
     return $this->database->select('famtastic_booking_site_owner', 'b')->fields('b')
       ->condition('website_request_id', $websiteRequestId)->condition('status', 'active')
       ->range(0, 1)->execute()->fetchAssoc() ?: NULL;
+  }
+
   /**
    * Requires the public consumer site to retain its exact converted-request
    * binding to the supplied organization. This is representation scope only;
