@@ -1,5 +1,68 @@
 # Product changelog
 
+## 2026-09-04 (later session 4) — Publish pipeline was silently orphaning posts from the series architecture
+
+- Defect: this blog is series-first — `blog_post` carries `field_blog_series`
+  ("Ordered learning journey containing this post") and `field_series_order`
+  ("Position of this post inside its series"), and
+  `frontend/src/pages/BlogPostPage.jsx` depends on both: it filters siblings by
+  series, sorts them by `seriesOrder` for the prev/next `blog-series-nav`, and
+  inserts the series as level 2 of the BreadcrumbList JSON-LD. All 80
+  originally-seeded posts (10 series × 8) have both fields. Neither
+  `scripts/publish-blog-draft.py` nor `backend/scripts/publish-single-blog-post.php`
+  ever set either one, so all three posts ever published through that pipeline
+  — nid 156, 157, 158 — shipped with no series nav and a two-level breadcrumb
+  where every other post has three.
+- `scripts/publish-blog-draft.py`: `DRAFT_CLASSIFICATION` rows now carry
+  `series` (exact `blog_series` term name) and `series_order` (positive int).
+  Both are mandatory and validated **before any SSH contact**, mirroring the
+  dict's existing "this script never guesses a taxonomy assignment" contract; a
+  missing series prints the ten real series names so the operator can pick one.
+  A series name not in `backend/config/famtastic-content-series.json` is
+  rejected unless the row opts in with `"new_series": True`. `--dry-run`
+  remains the default and now also does a read-only lookup of the target
+  series, printing every member and the `series_order` positions already taken,
+  and refuses a colliding order before `--confirm` is ever reachable.
+- `backend/scripts/publish-single-blog-post.php`: `field_blog_series` and
+  `field_series_order` added to the required-field preflight and now written on
+  every publish. The series term is **resolved by name, never created
+  implicitly** — creation requires `allow_create_series` in the payload, emits a
+  loud `SERIES-CREATED` warning on stderr, and reports `series_created: true` in
+  the JSON result. `series_order` is re-checked against every other post in that
+  series and a collision is refused (re-publishing the same post at the order it
+  already holds is excluded by `content_key`). Idempotency by
+  `field_content_key` is unchanged; the JSON result gained `series`,
+  `series_tid`, `series_order`, `series_created`.
+- Backfilled the three orphans with the fixed pipeline itself. Generated
+  `body_html` was confirmed byte-identical to live for all three first
+  (2505/2088/2863 chars), so the write added series metadata and nothing else:
+  - nid 156 `what-does-199-website-include` → The FAMtastic Website Packages
+    Explained Series, order 9. A package-scope article; its nearest sibling is
+    order 2, "What Is Included in the $199 Web Basics Bundle?".
+  - nid 157 `proof-first-website-see-before-you-pay` → same series, order 10.
+    Documents how the packaged offer is actually bought (intake → three proofs
+    → selection → checkout).
+  - nid 158 `why-running-business-on-gmail-and-linktree-costs-revenue` → The
+    Small-Business Website Strategy Series, order 9. Vendor-neutral "why own a
+    site at all", sitting directly in front of that series' order 1.
+- Deliberately NOT assigned to "The 55 Cents a Day Website Series" despite the
+  topical pull: `BlogPostPage.jsx` special-cases that series through
+  `campaignBodyHtml()`, which looks the slug up in a hard-coded eight-entry
+  `CAMPAIGN_ARTICLES` list and falls back to index 0 on a miss — any new member
+  would silently render another article's commissioned artwork under its
+  approved caption, and would also bypass the generated-art engine.
+- Verified live: zero of 83 published posts now lack a series; all three return
+  a real series name and integer order over JSON:API; and a real browser on
+  production renders "Article 9 of 10", "Article 10 of 10" and "Article 9 of 9"
+  with working prev/next and three-level breadcrumbs.
+- The five drafted-but-unpublished posts (`business-email-on-your-own-domain`,
+  `do-you-guarantee-google-rankings`,
+  `how-local-customers-find-your-business-online`,
+  `what-happens-when-first-year-hosting-ends`,
+  `what-website-maintenance-actually-covers`) deliberately carry no series yet
+  and now fail validation with an actionable message. Failing loud is the fix;
+  guessing a series for them would be the same defect in a new costume.
+
 ## 2026-09-04 (later session 3) — Generated SVG body art for blog posts (test, not deployed)
 
 - Added `frontend/src/lib/blogArt.js`: a content-aware art engine that injects

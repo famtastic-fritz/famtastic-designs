@@ -22,6 +22,9 @@
  *   "excerpt": "...",
  *   "category": "get-paid",
  *   "category_label": "Get Paid",
+ *   "series": "The FAMtastic Website Packages Explained Series",
+ *   "series_order": 9,
+ *   "allow_create_series": false,
  *   "tags": [{"key": "pricing", "label": "Pricing"}, ...],
  *   "author_uid": 1,
  *   "meta_title": "...",
@@ -30,14 +33,39 @@
  *   "status": 1
  * }
  *
+ * Series handling (added 2026-09-04 to fix a real defect): this blog is
+ * series-first. blog_post carries field_blog_series ("Ordered learning journey
+ * containing this post") and field_series_order ("Position of this post inside
+ * its series"); frontend/src/pages/BlogPostPage.jsx filters siblings by series,
+ * sorts them by seriesOrder for the prev/next `blog-series-nav`, and puts the
+ * series into the BreadcrumbList JSON-LD. The first version of this script set
+ * neither field, so every post it published (nid 156/157/158) was orphaned from
+ * that architecture while all 80 seeded posts had it. So:
+ *
+ *   - `series` and `series_order` are REQUIRED. A payload missing either is
+ *     rejected before anything is written. Publishing an orphan is not an
+ *     option this script offers.
+ *   - The series term is RESOLVED BY NAME in the blog_series vocabulary. It is
+ *     never created implicitly — the ten real series were seeded by
+ *     seed-demand-content.php and a typo must not spawn a near-duplicate term.
+ *     Creating one requires "allow_create_series": true in the payload, and
+ *     that path prints a loud SERIES-CREATED warning to stderr and reports
+ *     "series_created": true in the JSON result.
+ *   - `series_order` is checked against every OTHER post already in that
+ *     series. A collision is refused, because two posts sharing an order makes
+ *     the prev/next nav ordering non-deterministic. Re-publishing the same
+ *     post at the order it already holds is fine (it is excluded from the
+ *     check by content_key).
+ *
  * Idempotency: looked up by field_content_key first (exact machine key match,
  * same lookup seed-demand-content.php uses), falling back to an exact title
  * match. A second run with the same content_key updates the existing node
  * instead of creating a duplicate — never creates twice.
  *
  * Prints one JSON line to stdout: {"action": "created|updated|deleted|not_found",
- * "nid": ..., "uuid": ..., "path": ...} so the calling Python script can parse
- * the result without scraping Drush's human-readable output.
+ * "nid": ..., "uuid": ..., "path": ..., "series": ..., "series_order": ...} so
+ * the calling Python script can parse the result without scraping Drush's
+ * human-readable output.
  */
 
 use Drupal\node\Entity\Node;
@@ -56,9 +84,9 @@ if (!is_readable($payload_path)) {
 $payload = json_decode((string) file_get_contents($payload_path), TRUE, 512, JSON_THROW_ON_ERROR);
 
 $required_blog_fields = [
-  'field_blog_category', 'field_blog_tags', 'field_author', 'field_excerpt',
-  'field_meta_description', 'field_meta_title', 'field_word_count',
-  'field_content_key',
+  'field_blog_category', 'field_blog_series', 'field_blog_tags', 'field_author',
+  'field_excerpt', 'field_meta_description', 'field_meta_title',
+  'field_series_order', 'field_word_count', 'field_content_key',
 ];
 $field_manager = \Drupal::service('entity_field.manager');
 $blog_fields = $field_manager->getFieldDefinitions('node', 'blog_post');
@@ -122,6 +150,81 @@ elseif ($action === 'publish') {
   $category_term = $upsert_term('blog_categories', $payload['category_label']);
   $tag_terms = array_map(fn ($tag) => $upsert_term('blog_tags', $tag['label']), $payload['tags'] ?? []);
 
+  // --- Series: required, resolved by name, never implicitly created. ---
+  $series_name = $payload['series'] ?? NULL;
+  if (!is_string($series_name) || trim($series_name) === '') {
+    throw new RuntimeException(
+      "Payload for '$content_key' has no 'series'. This blog is series-first: " .
+      'field_blog_series and field_series_order drive the on-page series nav and ' .
+      'the BreadcrumbList JSON-LD. Publishing a series orphan is refused. Add a ' .
+      "series to the draft's DRAFT_CLASSIFICATION row in scripts/publish-blog-draft.py."
+    );
+  }
+  $series_name = trim($series_name);
+
+  $series_order = $payload['series_order'] ?? NULL;
+  if (!is_int($series_order) && !(is_string($series_order) && ctype_digit($series_order))) {
+    throw new RuntimeException(
+      "Payload for '$content_key' has no usable 'series_order' (got " .
+      var_export($series_order, TRUE) . '). Every post needs an explicit integer ' .
+      'position inside its series — the frontend sorts siblings by it.'
+    );
+  }
+  $series_order = (int) $series_order;
+  if ($series_order < 1) {
+    throw new RuntimeException("series_order for '$content_key' must be >= 1, got $series_order.");
+  }
+
+  $series_matches = $term_storage->loadByProperties(['vid' => 'blog_series', 'name' => $series_name]);
+  $series_term = $series_matches ? reset($series_matches) : NULL;
+  $series_created = FALSE;
+  if (!$series_term) {
+    if (empty($payload['allow_create_series'])) {
+      $existing = $term_storage->loadByProperties(['vid' => 'blog_series']);
+      $names = array_map(fn ($t) => $t->label(), $existing);
+      sort($names);
+      throw new RuntimeException(
+        "No blog_series term named '$series_name'. This script never creates a series " .
+        'implicitly — a typo would spawn a near-duplicate alongside a real series. ' .
+        "Fix the name, or set \"new_series\": true on the draft's row to create it " .
+        "deliberately.\nExisting series:\n  - " . implode("\n  - ", $names)
+      );
+    }
+    $series_term = $term_storage->create(['vid' => 'blog_series', 'name' => $series_name]);
+    $series_term->save();
+    $series_created = TRUE;
+    fwrite(STDERR, "SERIES-CREATED: a new blog_series term '$series_name' (tid " .
+      $series_term->id() . ") was created because the payload set allow_create_series. " .
+      "A one-post series renders a degenerate 'Article 1 of 1' nav — confirm this is intended.\n");
+  }
+
+  // Refuse a series_order already held by a DIFFERENT post. Re-publishing this
+  // same post at the order it already holds is excluded by content_key.
+  $siblings = $node_storage->loadByProperties([
+    'type' => 'blog_post',
+    'field_blog_series' => $series_term->id(),
+  ]);
+  $taken = [];
+  foreach ($siblings as $sibling) {
+    $sibling_key = $sibling->get('field_content_key')->value;
+    if ($sibling_key === $content_key) {
+      continue;
+    }
+    $sibling_order = $sibling->get('field_series_order');
+    if (!$sibling_order->isEmpty()) {
+      $taken[(int) $sibling_order->value] = ['nid' => (int) $sibling->id(), 'key' => $sibling_key];
+    }
+  }
+  if (isset($taken[$series_order])) {
+    $holder = $taken[$series_order];
+    $next_free = $taken ? max(array_keys($taken)) + 1 : 1;
+    throw new RuntimeException(
+      "series_order $series_order in '$series_name' is already held by nid{$holder['nid']} " .
+      "({$holder['key']}). Two posts sharing an order makes the prev/next series nav " .
+      "ordering non-deterministic. Pick a free order — next unused is $next_free."
+    );
+  }
+
   $node = $load_by_key($content_key, $payload['title'] ?? '');
   $created = !$node;
   $node = $node ?: Node::create(['type' => 'blog_post']);
@@ -131,6 +234,8 @@ elseif ($action === 'publish') {
   $node->set('body', ['value' => $payload['body_html'], 'format' => 'basic_html']);
   $node->set('field_excerpt', $payload['excerpt']);
   $node->set('field_blog_category', $category_term->id());
+  $node->set('field_blog_series', $series_term->id());
+  $node->set('field_series_order', $series_order);
   $node->set('field_blog_tags', array_map(fn ($term) => ['target_id' => $term->id()], $tag_terms));
   $node->set('field_meta_title', $payload['meta_title']);
   $node->set('field_meta_description', $payload['meta_description']);
@@ -151,6 +256,10 @@ elseif ($action === 'publish') {
     'uuid' => $node->uuid(),
     'status' => (int) $node->isPublished(),
     'path' => '/blog/' . ($payload['slug'] ?? $content_key),
+    'series' => $series_name,
+    'series_tid' => (int) $series_term->id(),
+    'series_order' => $series_order,
+    'series_created' => $series_created,
   ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
 }
 else {

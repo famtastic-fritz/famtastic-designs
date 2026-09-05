@@ -1,5 +1,58 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-04 — A new write path must reproduce the schema the old one established, not just the fields it happens to think about
+
+- Observation: `scripts/publish-blog-draft.py` and
+  `backend/scripts/publish-single-blog-post.php` were written as the
+  single-post companion to `backend/scripts/seed-demand-content.php`, and were
+  proven end-to-end against production (create, update, delete a real test
+  node). They still shipped three real posts broken. The seed script sets
+  `field_blog_series` and `field_series_order` on all 80 posts it creates; the
+  new pair set neither, so nid 156/157/158 went live with no series nav and a
+  two-level BreadcrumbList where all 80 siblings have three. Nothing errored,
+  nothing looked wrong in the publish output, and the posts render fine in
+  isolation — the loss is only visible by comparing a new post against an old
+  one.
+- Root cause: the new script's field list was assembled from the fields the
+  *draft folder* provides (title, body, excerpt, meta, tags, category) rather
+  than from the fields the *content type* requires to be a first-class citizen.
+  The bundle's own field descriptions say it plainly — "Ordered learning
+  journey containing this post", "Position of this post inside its series" —
+  but nobody diffed the two writers.
+- Guidance: when adding a second writer for an entity that already has one,
+  diff the field sets before shipping, and treat every field the incumbent sets
+  as required until proven optional. "It published successfully" is not
+  evidence of correctness; the incumbent's output is the specification. A cheap
+  mechanical check that would have caught this: after any publish, compare the
+  new node's populated-field set against an existing node of the same bundle
+  and fail on a missing field.
+- Guidance: the fix is fail-loud, not best-effort. `DRAFT_CLASSIFICATION` now
+  demands an explicit `series` + `series_order` per slug and refuses to publish
+  without them, the same way it already refused to guess a category. Five
+  drafted-but-unpublished posts are now blocked on a human choosing a series —
+  that is the correct outcome, because a wrong series is worse than a delayed
+  publish and silently no series was worse than both.
+- Gotcha worth knowing before assigning any post to a series: the frontend
+  special-cases "The 55 Cents a Day Website Series". `BlogPostPage.jsx` routes
+  that series through `campaignBodyHtml()`, which does
+  `Math.max(0, CAMPAIGN_ARTICLES.indexOf(post.slug))` against a hard-coded
+  eight-slug list — a slug that isn't in the list scores -1 and clamps to 0, so
+  a ninth member would silently render article one's commissioned artwork under
+  its approved caption. A taxonomy assignment can therefore change rendering,
+  not just navigation. Check for series-specific frontend branches before
+  adding a member to any series.
+- Gotcha: every one of the 10 seeded series is category-homogeneous (all 8
+  posts share the series' category). That is an artifact of the manifest
+  generator, not an enforced rule, and topic fit must win: nid 156 is category
+  `get-paid` inside a `get-customers` series because the only `get-paid` series
+  is about ecommerce checkout and would have been plainly wrong.
+- Measurement note, per the standing discipline: the first browser check of the
+  backfilled pages returned `null` for both the series nav and the breadcrumb.
+  That was an unsettled SPA measured mid-navigation (the tab title had already
+  reverted to the homepage's), not a failure. Re-measured after an explicit
+  settle wait, all three pages rendered correctly. Reporting that first read as
+  a defect would have been a false failure against work that was already right.
+
 ## 2026-09-04 — A staging directory is part of the production boundary
 
 - Observation: GoDaddy removed a dot-prefixed backend staging directory after a release had completed validation and backups but before `rsync` could transfer code. The deployment stopped at exit 23 before the live module/theme swap; no frontend release was attempted. After moving staging to an explicit non-dot private path, the same reviewed release promoted cleanly.
