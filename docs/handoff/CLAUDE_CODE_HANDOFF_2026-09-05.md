@@ -14,6 +14,14 @@ the subscription stopped. Do not recreate those commits or reset the working
 tree; the remaining uncommitted files are intentional continuations of those
 lanes.
 
+The recovery commit is `978cca49` (`Connect reusable campaign video system and
+render proof`). A push of the accumulated commits was attempted twice on
+2026-09-05. Local `git fsck --full` passed, but GitHub rejected both uploads
+while unpacking its received pack (`inflate returned -3`, then `-5`, at
+different offsets). Treat the branch as **committed locally, not pushed** until
+the remote accepts a fresh push; do not rebase, reset, or force-push as a
+workaround.
+
 ## Completed after recovery
 
 - Connected `marketing/video/src/system/` to the Remotion registry through
