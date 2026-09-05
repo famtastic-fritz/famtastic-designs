@@ -1,5 +1,28 @@
 # Product changelog
 
+## 2026-09-04 — Versioned Concierge email templates for proof activation
+
+- A completed account-owned website intake, when the customer explicitly
+  submits it, now queues the pre-existing proof job **and** a distinct
+  `customer_intake_submitted` v1 Concierge receipt. The receipt names the
+  truthful state—Design Review started—links only to the authenticated
+  workspace, makes no proof-ready, research-report, or payment claim, and
+  preserves a plain-text fallback.
+- The existing owner-approved `customer_proof_ready` v1 Studio Review notice
+  remains a separate later event. Both customer templates now have durable
+  `template_id` / `template_version` fields in `famtastic_notification_outbox`
+  (migration 8049), a template header on SMTP sends, and memory-transport
+  capture metadata. Pre-registry rows remain `legacy_unclassified` v0 rather
+  than being misrepresented as a historical template version.
+- Added `docs/templates/TRANSACTIONAL_EMAIL_TEMPLATE_REGISTRY_V1.md` as the
+  customer-email inventory: trigger, recipient, visual treatment, inputs,
+  prohibited claims, and related-system boundary. Commercial lead email stays
+  documented separately in `docs/EMAIL_AUTOMATION.md`.
+- Focused email tests pass 5/5 (19 assertions); PHP syntax, journey-harness
+  syntax, diff hygiene, and 30/30 Portal Design DNA checks pass. No customer
+  state was changed, no email was dispatched, and no production deployment was
+  attempted.
+
 ## 2026-09-04 — Account-owned Studio Review email is locally proven
 
 - Reworked the customer notification sent only after an owner approves a

@@ -1,17 +1,19 @@
 # FAMtastic Designs site learnings
 
-## 2026-09-04 — Transactional proof email identity belongs to the durable outbox key
+## 2026-09-04 — Transactional email identity and version belong in the durable outbox
 
 - Observation: the customer proof-ready path and lead/campaign emails can share
   a transport while requiring materially different presentation, permissions,
   and compliance posture. Selecting a customer template from mutable subject or
-  body copy would let editorial wording accidentally change the delivery class.
-- Guidance: route account-owned proof notices by their durable notification
-  identity, preserve the complete plain-text message as the provider fallback,
-  and capture the rendered HTML only in the local memory transport for QA. Keep
-  the message strictly about the already-agreed proof review; do not say a
-  research report, offer, or new service is ready until its account-owned
-  artifact and access controls exist.
+  body copy would let editorial wording accidentally change the delivery class;
+  inferring a version later would make sent-message history unreliable.
+- Guidance: write the template ID and version with each new durable outbox row,
+  preserve the complete plain-text message as the provider fallback, and capture
+  rendered HTML only in the local memory transport for QA. Narrow key-based
+  fallbacks are only for pre-registry queued rows. Keep the message strictly
+  about the already-agreed proof review; do not say a research report, offer,
+  or new service is ready until its account-owned artifact and access controls
+  exist.
 
 ## 2026-09-04 — "It's just a link" is a production claim — verify it like one
 

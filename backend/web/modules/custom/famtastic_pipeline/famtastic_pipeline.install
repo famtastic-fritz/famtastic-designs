@@ -1421,7 +1421,10 @@ function _famtastic_pipeline_lifecycle_schema(): array {
       'id' => $id, 'notification_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE],
       'category' => $short, 'recipient' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE],
       'subject' => ['type' => 'varchar', 'length' => 512, 'not null' => TRUE],
-      'body' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE], 'status' => $short,
+      'body' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'template_id' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => 'legacy_unclassified'],
+      'template_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'status' => $short,
       'attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
       'max_attempts' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 5],
       'available_at' => $time, 'sent_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
@@ -2651,6 +2654,21 @@ function famtastic_pipeline_update_8048(&$sandbox) {
     ]);
   }
   return t('Added campaign_id to the social record table, backfilled every row from its source manifest, and repointed the unique key at (campaign_id, content_id).');
+}
+
+/** Records the versioned visual template selected for each new outbox notice. */
+function famtastic_pipeline_update_8049(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('famtastic_notification_outbox')) {
+    return t('Notification outbox is not installed; no template metadata to add.');
+  }
+  $fields = _famtastic_pipeline_lifecycle_schema()['famtastic_notification_outbox']['fields'];
+  foreach (['template_id', 'template_version'] as $field) {
+    if (!$schema->fieldExists('famtastic_notification_outbox', $field)) {
+      $schema->addField('famtastic_notification_outbox', $field, $fields[$field]);
+    }
+  }
+  return t('Added immutable template identity and version fields to the notification outbox. Existing notices remain honestly marked legacy_unclassified v0.');
 }
 
 /**

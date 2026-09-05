@@ -358,7 +358,7 @@ final class CustomerPortalService {
     $this->previews->attachClaimedRequest($customerId, $id, $clean['status']);
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
     if ($clean['status'] === 'submitted') {
-      $this->queueWebsiteRequestNotifications($id, $customer, $clean);
+      $this->queueWebsiteRequestNotifications($id, $publicId, $customer, $clean);
       $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
     }
     return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
@@ -481,7 +481,7 @@ final class CustomerPortalService {
         $prospect->save();
       }
       $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
-      $this->queueWebsiteRequestNotifications((int) $row['id'], $customer, $clean);
+      $this->queueWebsiteRequestNotifications((int) $row['id'], (string) $row['public_id'], $customer, $clean);
       $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $clean['intake']);
       $this->activity((int) $row['organization_id'], 'website_request.submitted', 'A website request was submitted for review.');
     }
@@ -999,11 +999,16 @@ final class CustomerPortalService {
       ->condition('website_request_id', $requestId)->condition('status', 'active')->orderBy('created')->execute()->fetchAll(\PDO::FETCH_ASSOC));
   }
 
-  private function queueWebsiteRequestNotifications(int $id, array $customer, array $request): void {
+  private function queueWebsiteRequestNotifications(int $id, string $publicId, array $customer, array $request): void {
     $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
-    $subject = 'Website request received — ' . $request['project_name'];
+    $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+    $workspaceUrl = $base . '/portal/?section=projects&request=' . rawurlencode($publicId);
+    $subject = 'Your FAMtastic design review has started';
     $this->queueNotification("website-request:{$id}:customer", 'transactional', (string) $customer['email'], $subject,
-      "We received your website request for {$request['project_name']}. Fritz will review it within 3 business days. You can continue or review it from your customer portal.");
+      "Hi {$customer['display_name']},\n\nWe received your website intake for {$request['project_name']}. Your FAMtastic Design Review has started.\n\nNext, we review the business context you shared and prepare your proof routine. You will receive a separate Studio Review email after FAMtastic approves concepts for you to view. No payment has been requested at this step.\n\nOpen your workspace:\n{$workspaceUrl}\n\nUse the same verified email address that received this message.",
+      OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED,
+      OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION,
+    );
     $this->queueNotification("website-request:{$id}:staff", 'operational', $admin, 'New portal website request — ' . $request['project_name'],
       "Customer: {$customer['display_name']}\nEmail: {$customer['email']}\nType: {$request['project_type']}\nProof generation has been queued.\nOwner review queue: https://famtasticdesigns.com/web/admin/famtastic/metric/website-requests");
   }
@@ -1118,7 +1123,10 @@ final class CustomerPortalService {
     $setLabel = $count === 6 ? 'six website concepts—including three fully FAMtastic directions—' : 'Safe, Wild, and OMG concepts';
     $reviewUrl = $base . '/portal/?section=projects&request=' . rawurlencode((string) $row['public_id']);
     $this->queueNotification('website-request:' . $requestId . ':proofs:' . (int) $row['proof_campaign_id'] . ':' . $count, 'transactional', (string) $customer['email'],
-      'Your FAMtastic Studio Review is ready', "Hi {$customer['display_name']},\n\nYour {$setLabel} are ready in your private Studio Review. We used the business context you shared to shape each direction.\n\nInside, you can compare every concept, choose the direction that feels most like your business, or send FAMtastic Concierge feedback when you are ready.\n\nOpen your private Studio Review:\n{$reviewUrl}\n\nUse the same verified email address that received this message.");
+      'Your FAMtastic Studio Review is ready', "Hi {$customer['display_name']},\n\nYour {$setLabel} are ready in your private Studio Review. We used the business context you shared to shape each direction.\n\nInside, you can compare every concept, choose the direction that feels most like your business, or send FAMtastic Concierge feedback when you are ready.\n\nOpen your private Studio Review:\n{$reviewUrl}\n\nUse the same verified email address that received this message.",
+      OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY,
+      OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY_VERSION,
+    );
     $this->activity((int) $row['organization_id'], 'website_request.proofs_approved', ucfirst($setLabel) . ' were approved for customer review.');
     return $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc() ?: [];
   }
@@ -1548,14 +1556,21 @@ final class CustomerPortalService {
     if ($email !== '') {
       $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
       $this->queueNotification('project:' . $projectId . ':proofs:' . $campaignId . ':' . $count, 'transactional', $email,
-        'Your FAMtastic website concepts are ready', "Review, compare, and select your {$count} concepts securely in your account:\n{$base}/portal/?section=projects\n\nUse the same email address that received this message.");
+        'Your FAMtastic website concepts are ready', "Review, compare, and select your {$count} concepts securely in your account:\n{$base}/portal/?section=projects\n\nUse the same email address that received this message.",
+        OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY,
+        OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY_VERSION,
+      );
     }
   }
 
-  public function queueNotification(string $key, string $category, string $recipient, string $subject, string $body): void {
+  public function queueNotification(string $key, string $category, string $recipient, string $subject, string $body, string $templateId = OutreachMailer::TEMPLATE_STANDARD, int $templateVersion = OutreachMailer::TEMPLATE_STANDARD_VERSION): void {
+    if (!OutreachMailer::supportsTemplate($templateId, $templateVersion)) {
+      throw new \InvalidArgumentException('Notification template is not supported.');
+    }
     $now = $this->time->getRequestTime();
     $this->database->merge('famtastic_notification_outbox')->key('notification_key', $key)->insertFields([
       'notification_key' => $key, 'category' => $category, 'recipient' => mb_strtolower($recipient), 'subject' => $subject, 'body' => $body,
+      'template_id' => $templateId, 'template_version' => $templateVersion,
       'status' => 'queued', 'attempts' => 0, 'max_attempts' => 5, 'available_at' => $now, 'created' => $now, 'changed' => $now,
     ])->execute();
   }

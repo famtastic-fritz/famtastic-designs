@@ -46,7 +46,8 @@ final class LifecycleOperationsService {
     foreach ($rows as $row) {
       $result['processed']++;
       try {
-        $messageId = $this->mailer->send($row['recipient'], $row['subject'], $row['body'], NULL, $this->notificationTemplate($row));
+        $template = $this->notificationTemplate($row);
+        $messageId = $this->mailer->send($row['recipient'], $row['subject'], $row['body'], NULL, $template['id'], $template['version']);
         $this->database->update('famtastic_notification_outbox')->fields([
           'status' => 'sent', 'attempts' => (int) $row['attempts'] + 1, 'sent_at' => $now,
           'provider_message_id' => $messageId, 'last_error' => NULL, 'changed' => $now,
@@ -75,16 +76,29 @@ final class LifecycleOperationsService {
     return $result;
   }
 
-  /** Selects a visual template from durable delivery identity, never copy. */
-  private function notificationTemplate(array $row): string {
+  /**
+   * Uses the outbox template snapshot. Legacy rows retain a narrow identity
+   * fallback so an upgrade never silently downgrades a queued proof notice.
+   *
+   * @return array{id:string,version:int}
+   */
+  private function notificationTemplate(array $row): array {
+    $id = (string) ($row['template_id'] ?? '');
+    $version = (int) ($row['template_version'] ?? 0);
+    if (OutreachMailer::supportsTemplate($id, $version)) {
+      return ['id' => $id, 'version' => $version];
+    }
     $key = (string) ($row['notification_key'] ?? '');
+    if (preg_match('/^website-request:\d+:customer$/', $key) === 1) {
+      return ['id' => OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED, 'version' => OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION];
+    }
     if (
       preg_match('/^website-request:\d+:proofs:\d+:(?:3|6)$/', $key) === 1
       || preg_match('/^project:\d+:proofs:[^:]+:(?:3|6)$/', $key) === 1
     ) {
-      return OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY;
+      return ['id' => OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY, 'version' => OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY_VERSION];
     }
-    return OutreachMailer::TEMPLATE_STANDARD;
+    return ['id' => OutreachMailer::TEMPLATE_STANDARD, 'version' => OutreachMailer::TEMPLATE_STANDARD_VERSION];
   }
 
   /** Runs bounded durable proof and delivery jobs and records worker health. */

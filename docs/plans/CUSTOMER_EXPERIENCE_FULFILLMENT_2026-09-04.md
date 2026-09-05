@@ -37,6 +37,8 @@ Proof:
 
 **Implemented local improvement (2026-09-04):** the proof-ready outbox notice now selects a dedicated FAMtastic Concierge HTML Studio Review template from its durable notification key. It retains the authenticated account portal link and plain-text fallback, is not used for leads/campaigns, and intentionally does not claim that a research snapshot is available. Focused memory-transport email evidence passed; the full local journey cannot currently start because the checkout's Drupal database is unreachable.
 
+**Activation and template follow-through (2026-09-04):** an explicit customer draft → submitted transition queues exactly one proof job and a separate Concierge “Design Review started” receipt. The subsequent owner-approved proof release remains a distinct Studio Review email. New outbox rows persist template ID/version, and `docs/templates/TRANSACTIONAL_EMAIL_TEMPLATE_REGISTRY_V1.md` is the versioned inventory and copy/claim contract. This has local unit/static evidence only; moving Shay from draft to submitted, sending mail, and releasing a production migration remain intentional owner-authorized actions.
+
 **Implementation order:**
 
 1. Approve the starter-site contract and bounded report schema: sources/date, observed facts, labeled opportunities/hypotheses, constraints, customer decisions, and no growth guarantees.
