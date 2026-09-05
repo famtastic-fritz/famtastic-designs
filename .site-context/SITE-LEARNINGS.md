@@ -1381,3 +1381,20 @@ Permanent rules:
   only its human-readable origin and path in on-frame type.
 - Boundary: local output is not a platform upload, scheduled post, or delivery
   proof. Record each state separately.
+## 2026-09-05 — A prompt library needs provenance and a physical-shot rule
+
+- Observation: a folder of "good prompts" cannot be safely reused when it
+  omits the source of a business claim, provider/model, literal submitted text,
+  inputs, settings, cost, output hash, and human decision. It becomes taste
+  folklore, not a production method.
+- Guidance: keep prompts as structured recipes with a receipt contract. Every
+  model is allowed to make an image; none is allowed to invent a price, scope,
+  CTA, or policy. Keep generated typography out of campaign plates so type and
+  claims remain editable and reviewable in the composition layer.
+- Observation: current image-to-video guidance converges on an important
+  constraint: the reference image establishes appearance, while the text should
+  describe one physical action, one camera behavior, and at most one
+  environmental response. Asking a five-second model for a whole campaign edit
+  produces unstable, unauditable footage.
+- Guidance: make each video generation a single shot. Assemble timing, copy,
+  captions, offer terms, and transitions deterministically afterward.

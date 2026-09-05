@@ -1,0 +1,77 @@
+{
+  "schema": "famtastic.creative-prompt-cookbook.v1",
+  "purpose": "Reusable, source-attributed image and video prompt training with an auditable receipt contract.",
+  "hard_rules": [
+    "Claims, prices, terms, and CTAs come from an authoritative brief or product registry, never from a model.",
+    "Campaign plates contain no generated text, numbers, logos, watermarks, or UI.",
+    "An image-to-video prompt describes one shot and physical motion; it does not write a whole edit.",
+    "Every provider run records the literal prompt, settings, source inputs, output hash, cost or credits, and human QA decision."
+  ],
+  "image_plate_fields": [
+    "intended_use",
+    "aspect_ratio",
+    "scene_background",
+    "subject",
+    "key_details",
+    "camera_light",
+    "colour_world",
+    "negative_space",
+    "constraints",
+    "preserve"
+  ],
+  "image_to_video_fields": [
+    "reference_asset",
+    "subject_motion",
+    "environment_motion",
+    "camera_motion",
+    "timing",
+    "style_stability"
+  ],
+  "provider_routes": {
+    "gemini_flash_lite": {
+      "kind": "cheap_plate_multiplier",
+      "prompt_form": "ordered_labelled_blocks",
+      "receipt": "marketing/creative/plates/generation-receipt.json"
+    },
+    "gpt_image": {
+      "kind": "image_generation_and_editing",
+      "prompt_form": "scene_subject_technical_constraints",
+      "receipt_fields": ["model", "quality", "background", "input_asset_hashes"]
+    },
+    "runway_image_to_video": {
+      "kind": "single_shot_motion",
+      "prompt_form": "subject_motion_camera_motion_scene_motion_style",
+      "receipt_fields": ["model", "duration_seconds", "reference_asset_hash", "camera_motion"]
+    },
+    "heygen_presenter": {
+      "kind": "approved_presenter_insert",
+      "prompt_form": "presenter_delivery_camera_continuity",
+      "receipt_fields": ["avatar_id", "script_hash", "voice_id", "credit_use"]
+    }
+  },
+  "receipt_contract": {
+    "required": [
+      "recipe_id",
+      "campaign",
+      "claim_source",
+      "prompt_literal",
+      "provider",
+      "model",
+      "settings",
+      "input_asset_hashes",
+      "output_file",
+      "output_hash",
+      "cost_or_credits",
+      "human_qa",
+      "decision"
+    ],
+    "decisions": ["accepted", "revise", "rejected"]
+  },
+  "sources": [
+    {"provider": "OpenAI", "url": "https://developers.openai.com/api/docs/models/gpt-image-2", "checked_at": "2026-09-05"},
+    {"provider": "Google Imagen", "url": "https://ai.google.dev/gemini-api/docs/imagen?authuser=2&hl=en", "checked_at": "2026-09-05"},
+    {"provider": "Runway image", "url": "https://help.runwayml.com/hc/en-us/articles/35694045317139-Gen-4-Image-Prompting-Guide", "checked_at": "2026-09-05"},
+    {"provider": "Runway video", "url": "https://help.runwayml.com/hc/en-us/articles/39789879462419-Gen-4-Video-Prompting-Guide", "checked_at": "2026-09-05"},
+    {"provider": "OpenArt", "url": "https://openart.ai/blog/how-to-generate-an-ai-image/", "checked_at": "2026-09-05"}
+  ]
+}

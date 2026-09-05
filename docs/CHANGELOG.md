@@ -1,5 +1,25 @@
 # Product changelog
 
+## 2026-09-05 — Source-attributed image and video prompt cookbook
+
+- **Added `marketing/creative/prompt-cookbook/`**: a durable training library
+  with a reviewable JSON field schema and operator-facing recipes for campaign
+  plates, controlled image edits, transparent image ingredients,
+  image-to-video shots, and approved presenter inserts.
+- **Made prompt work auditable rather than decorative.** Every reusable run now
+  has a stated receipt minimum: literal prompt, claim source, provider/model,
+  settings, source-input hashes, output hash, cost or credits, and a human QA
+  decision. It explicitly forbids model-invented claims and generated type in
+  campaign plates.
+- **Checked current official guidance before codifying patterns.** The cookbook
+  cites current OpenAI GPT Image, Google Imagen/Gemini, Runway image/video, and
+  OpenArt material. It adapts the guidance to FAMtastic's actual production
+  boundary: type is composed later, and an image-to-video prompt controls one
+  physical shot rather than attempting a whole edit.
+- **Validated the expanded Gemini plate worker without spending.** Its syntax
+  check and `--dry-run --status queued` both passed; it assembled 95 queued
+  prompts with a preflight estimate of $3.1920 and made no network generation.
+
 ## 2026-09-05 — Reconnected and locally proved the reusable multi-format campaign-video system
 
 - **Recovered the interrupted creative build instead of starting a second video
