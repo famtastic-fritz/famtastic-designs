@@ -1,4 +1,19 @@
-# Why Running Your Business on @gmail.com and Linktree Is Costing You 30% of Your Revenue
+# Why Gmail and Linktree Cost Your Business Revenue
+
+<!--
+CLAIMS NOTE, 2026-09-04. This draft previously carried three unsourced figures:
+"30% of your revenue" in the title, "over 74% of buyers hesitate", and "up to 40%
+of impulse buyers abandon". None were traceable to a source and all three violate
+BRAND.md's no-invented-statistics rule. They were replaced with the mechanism
+argument, which is VOICE.md's actual signature move and does not require a
+citation to be true.
+
+None of these figures ever reached production. The live post (nid 158) is a
+separate 419-word rewrite that never contained them. This file is the campaign
+source draft and was the propagation risk.
+
+Title aligned to the published title so the two cannot drift.
+-->                                                                            
 
 **Category**: Get Found / Get Customers  
 **Author**: Fritz Medine, Lead Solutions Engineer at FAMtastic Designs  
@@ -22,7 +37,7 @@ Here is the breakdown of what that credibility gap actually costs you—and why 
 ## 1. The 3 Cost Leaks of "Rented Land"
 
 ### Leak #1: The Trust Deficit on High-Ticket Quotes
-Consumer psychology studies consistently show that over **74% of buyers hesitate to hire a contractor, book a high-end service, or send deposits** to generic free email domains. When you email a $1,500 estimate from `elite_autocare24@gmail.com`, prospects subconsciously compare you to companies with verified domains (`quotes@eliteautocare.com`). The result? Price resistance, ghosted quotes, and lower closing rates.
+A free email address gives a customer nothing to check. When a $1,500 estimate arrives from `elite_autocare24@gmail.com`, the address is something anyone could have made in a minute — and a customer about to send a deposit is looking for a reason to feel safe. An address at your own domain (`quotes@eliteautocare.com`) is one small proof that the business exists at a fixed place. That does not close the sale by itself. It removes one reason to hesitate.
 
 ### Leak #2: The Infinite DM Back-and-Forth
 How many hours a week do you spend answering:
@@ -30,7 +45,7 @@ How many hours a week do you spend answering:
 * *"Are you available this Friday?"*
 * *"Where are you located?"*
 
-When you force customers into DMs or text messages to discover pricing and book times, **up to 40% of impulse buyers abandon the process**. A streamlined web hub answers questions instantly and captures the booking or lead 24/7—even while you sleep.
+Every one of those questions is a customer who was ready to buy and now has to wait for you. They asked at 9pm; you answer at 7am. In between, they asked someone else too. A page that states your prices, your service area, and your availability answers all three questions the moment they are asked — including while you sleep. The point is not that a website is faster than you. It is that a website never has to be somewhere else.
 
 ### Leak #3: You Own Zero Customer Data
 If Instagram changes its algorithm tomorrow, or your account gets flagged, how do you contact your past customers? 
