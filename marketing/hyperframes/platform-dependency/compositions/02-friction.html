@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d8d1c2);
+          color: var(--ink, #2a2126);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .band {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 1200px;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #d8d1c2) 0px,
+            var(--paper, #d8d1c2) 820px,
+            rgba(216, 209, 194, 0) 1200px
+          );
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 196px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #5a4f53);
+          opacity: 0;
+        }
+        .rule {
+          position: absolute;
+          left: 84px;
+          top: 254px;
+          width: 200px;
+          height: 12px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 112px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s2-l1 {
+          top: 330px;
+        }
+        #s2-l2 {
+          top: 452px;
+        }
+        #s2-l3 {
+          top: 574px;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 76% at 50% 36%,
+            rgba(51, 39, 46, 0) 38%,
+            rgba(51, 39, 46, 0.09) 68%,
+            rgba(51, 39, 46, 0.28) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="friction" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s2-w2">
+            <img class="plate" src="assets/plates/pd-a2.jpg" alt="" />
+          </div>
+        </div>
+        <div class="band"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="s2-eb">The address</div>
+        <div class="rule" id="s2-rl"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="s2-l1">The place they</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s2-l2">find you isn't</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s2-l3">yours.</div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          var world = document.getElementById("s2-w2");
+          var cam = { scale: 1 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1 },
+            { scale: 1.05, duration: 2.55, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#s2-eb", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.05);
+          tl.fromTo("#s2-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.14);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          /* Scene starts at 3.55; narration sentence 3 lands at 3.70 -> local 0.15. */
+          var a = 0.2;
+          whip("#s2-l1", a, 80, 0.19);
+          var b = a + 0.19 - F;
+          whip("#s2-l2", b, 50, 0.16);
+          var c = b + 0.16 - F;
+          whip("#s2-l3", c, 68, 0.17);
+
+          window.__timelines["friction"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

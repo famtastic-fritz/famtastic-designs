@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Borrowed Land — Platform Dependency</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      /* Design tokens — frame.md is the source of truth. Declared on body so
+         every mounted sub-composition inherits them; each sub-composition also
+         repeats the literal as a var() fallback so it renders standalone. */
+      body {
+        --paper: #d8d1c2;
+        --paper-warm: #cbc3b2;
+        --ink: #2a2126;
+        --ink-soft: #5c5057;
+        --muted: #5a4f53;
+        --shadow: #33272e;
+        --accent: #7fb449;
+        --rule: #b7ad9a;
+        background: var(--paper);
+        font-family: Inter, sans-serif;
+        color: var(--ink);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      /* Untimed base — guarantees no frame is ever transparent, including the
+         seam frames between two scene slots. */
+      #base {
+        position: absolute;
+        inset: 0;
+        background: var(--paper);
+        z-index: 0;
+      }
+      /* Presenter inset. Untimed wrapper (so the framework does not force
+         root-clip layout onto it); the <video> inside carries the timing. */
+      #presenter-frame {
+        position: absolute;
+        inset: 0;
+        z-index: 40;
+      }
+      #presenter-card {
+        position: absolute;
+        left: 120px;
+        top: 1120px;
+        width: 840px;
+        height: 472px;
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+      #presenter {
+        display: block;
+        width: 840px;
+        height: 472px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow:
+          0 2px 0 rgba(51, 39, 46, 0.1),
+          0 26px 60px rgba(51, 39, 46, 0.26);
+      }
+      #presenter-tag {
+        position: absolute;
+        left: 0;
+        top: -46px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 26px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="29"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div id="base"></div>
+
+      <div
+        id="hook"
+        class="clip"
+        data-composition-id="hook"
+        data-composition-src="compositions/01-hook.html"
+        data-start="0"
+        data-duration="3.55"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="friction"
+        class="clip"
+        data-composition-id="friction"
+        data-composition-src="compositions/02-friction.html"
+        data-start="3.55"
+        data-duration="2.6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="mechanism"
+        class="clip"
+        data-composition-id="mechanism"
+        data-composition-src="compositions/03-mechanism.html"
+        data-start="6.15"
+        data-duration="6.4"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="turn"
+        class="clip"
+        data-composition-id="turn"
+        data-composition-src="compositions/04-turn.html"
+        data-start="12.55"
+        data-duration="7.05"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="offer"
+        class="clip"
+        data-composition-id="offer"
+        data-composition-src="compositions/05-offer.html"
+        data-start="19.6"
+        data-duration="5.4"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="close"
+        class="clip"
+        data-composition-id="close"
+        data-composition-src="compositions/06-close.html"
+        data-start="25"
+        data-duration="4"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- The approved presenter take, muted, as a framed inset at the turn.
+           Sound for the whole film comes from the <audio> below, pointed at the
+           same file. data-media-start keeps the lips on the narration:
+           inset opens at 14.9, narration starts at 0.6, so source = 14.3. -->
+      <div id="presenter-frame">
+        <div id="presenter-card">
+          <div id="presenter-tag">FAMtastic</div>
+          <video
+            id="presenter"
+            src="assets/take-a-platform-dependency.mp4"
+            data-start="14.9"
+            data-duration="4.1"
+            data-media-start="14.3"
+            data-track-index="5"
+            muted
+            playsinline
+          ></video>
+        </div>
+      </div>
+
+      <audio
+        id="vo"
+        src="assets/take-a-platform-dependency.mp4"
+        data-start="0.6"
+        data-duration="18.455"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+    </div>
+
+    <script>
+      (function () {
+        var tl = gsap.timeline({ paused: true });
+
+        // Presenter inset: rises into place as it opens, settles out before the
+        // cut to the offer. fromTo with explicit endpoints so any seek is exact.
+        tl.set("#presenter-card", { opacity: 0, y: 0 }, 0);
+        tl.fromTo(
+          "#presenter-card",
+          { opacity: 0, y: 34 },
+          { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" },
+          14.9,
+        );
+        tl.to("#presenter-card", { opacity: 0, duration: 0.34, ease: "power2.in" }, 18.66);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,5 +1,39 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A render that completes is not a render that is correct
+
+Three defects in the Platform Dependency HyperFrames film survived a fully green
+`hyperframes check` — zero lint errors, zero runtime errors, zero layout issues,
+19/19 WCAG AA — and were found only by extracting frames from the delivered MP4
+and looking at them. The grade was 194.8 mean luminance against an anchor
+measured at 162.3. The offer list's `01/02/03` numerals overlapped their own text.
+And `pd-a1-vertical-9x16.jpg` turned out to carry a blown-out flat rectangle over
+half the door that reads as a rendering artifact.
+
+The rule: a static gate audits structure, not appearance. It has no opinion about
+whether a photograph is broken or whether the piece matches the asset it must cut
+against. Every video deliverable needs a measurement pass over the *rendered
+file* — luminance, accent area, and a contact sheet a human or agent actually
+looks at. `marketing/hyperframes/platform-dependency/scripts/verify-render.mjs`
+is that pass for this project and exits non-zero when a second falls outside the
+grading contract.
+
+Second lesson, on grading to a reference: grade to the appearance you measured,
+and re-measure the *output*, not the inputs. Every source plate was inside the
+150-175 band before authoring and the assembled film still landed 33 points high,
+because a near-white paper ground covering half the frame dominates whatever the
+photographs do. Compositing changes the number; only the delivered file tells the
+truth. For contrast, the existing Remotion 9:16 of the same drop measures 212.1
+against the same anchor — the two systems are currently shipping visibly
+different-looking cuts of one campaign, and that needs a decision.
+
+Third: silencing an audit finding requires proving the geometry first. The layout
+audit pads every text rect by roughly 0.25 em, so display headlines with a real
+12 px gap report `content_overlap`. That is a measurement artifact, and the audit's
+own JSON (`check --json`, which carries the measured `rect`) is what proves it
+before `data-layout-allow-overlap` goes on. Reaching for the escape hatch without
+reading the rect would have hidden a real collision just as easily.
+
 ## 2026-09-05 — A texture is a composition ingredient, not a campaign argument
 
 The planned texture-library directory was missing even though the plate worker

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d8d1c2);
+          color: var(--ink, #2a2126);
+        }
+        /* The photograph is now a card ON the paper — ownership has arrived. */
+        .card {
+          position: absolute;
+          left: 84px;
+          top: 176px;
+          width: 912px;
+          height: 608px;
+          overflow: hidden;
+          border-radius: 8px;
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.08),
+            0 22px 52px rgba(51, 39, 46, 0.2);
+          opacity: 0;
+        }
+        .card img {
+          position: absolute;
+          left: -36px;
+          top: -24px;
+          width: 984px;
+          height: 656px;
+          object-fit: cover;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 872px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #5a4f53);
+          opacity: 0;
+        }
+        .price {
+          position: absolute;
+          left: 84px;
+          top: 972px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 172px;
+          line-height: 1;
+          letter-spacing: -0.03em;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .marker {
+          position: absolute;
+          left: 84px;
+          top: 1186px;
+          width: 148px;
+          height: 14px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        .perday {
+          position: absolute;
+          left: 262px;
+          top: 1176px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 32px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--ink-soft, #5c5057);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .item {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 40px;
+          line-height: 1.26;
+          letter-spacing: -0.01em;
+          color: var(--ink, #2a2126);
+          opacity: 0;
+        }
+        .item span {
+          display: inline-block;
+          width: 68px;
+          font-variant-numeric: tabular-nums;
+          color: var(--muted, #5a4f53);
+        }
+        #s5-i1 {
+          top: 1282px;
+        }
+        #s5-i2 {
+          top: 1360px;
+        }
+        #s5-i3 {
+          top: 1438px;
+        }
+        .foot {
+          position: absolute;
+          left: 84px;
+          top: 1562px;
+          width: 912px;
+          padding-top: 30px;
+          border-top: 3px solid var(--rule, #b7ad9a);
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 30px;
+          line-height: 1.4;
+          color: var(--muted, #5a4f53);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 76% at 50% 36%,
+            rgba(51, 39, 46, 0) 30%,
+            rgba(51, 39, 46, 0.19) 64%,
+            rgba(51, 39, 46, 0.48) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="offer" data-width="1080" data-height="1920">
+        <div class="vignette"></div>
+        <div class="card" id="s5-cd" data-layout-allow-overflow="true">
+          <img src="assets/anchor-counter.jpg" alt="" />
+        </div>
+
+        <div class="eyebrow" id="s5-eb">Web Basics Bundle</div>
+        <div class="price" id="s5-pr">$199</div>
+        <div class="marker" id="s5-mk"></div>
+        <div class="perday" id="s5-pd">55 cents a day</div>
+
+        <div class="item" id="s5-i1"><span>01</span>One focused landing-page website</div>
+        <div class="item" id="s5-i2"><span>02</span>One year of managed hosting</div>
+        <div class="item" id="s5-i3"><span>03</span>First-year domain — new, or bring your own</div>
+
+        <div class="foot" id="s5-ft">Business email and maintenance are separate.</div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* The photograph arrives as an object, not a background. */
+          tl.fromTo(
+            "#s5-cd",
+            { opacity: 0, y: 30, scale: 0.985 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.52, ease: "power3.out" },
+            0.06,
+          );
+          tl.fromTo("#s5-eb", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.34);
+
+          /* spring-pop-entrance on the price and its accent marker. */
+          tl.fromTo(
+            "#s5-pr",
+            { opacity: 0, scale: 0.86, y: 18 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.46, ease: "back.out(1.6)" },
+            0.45,
+          );
+          tl.fromTo("#s5-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.74);
+          tl.fromTo("#s5-pd", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.36, ease: "power3.out" }, 0.82);
+
+          /* waterfall-entry on the three included items. */
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 1.5;
+          whip("#s5-i1", a, 44, 0.16);
+          var b = a + 0.16 - F;
+          whip("#s5-i2", b, 44, 0.15);
+          var c = b + 0.15 - F;
+          whip("#s5-i3", c, 44, 0.15);
+
+          /* Said plainly, so nothing above it can be read as including them. */
+          tl.fromTo(
+            "#s5-ft",
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" },
+            3.5,
+          );
+
+          window.__timelines["offer"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

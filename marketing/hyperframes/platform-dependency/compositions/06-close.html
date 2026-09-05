@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d8d1c2);
+          color: var(--ink, #2a2126);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        /* pd-a1 is framed tighter than the other plates: its upper half is a
+           blown-out generation defect, so the crop is placed to keep that
+           region above the paper band and out of the visible frame. */
+        .plate {
+          position: absolute;
+          left: -110px;
+          top: -560px;
+          width: 1395px;
+          height: 2500px;
+          object-fit: cover;
+        }
+        .band {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 1240px;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #d8d1c2) 0px,
+            var(--paper, #d8d1c2) 900px,
+            rgba(216, 209, 194, 0) 1240px
+          );
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 76% at 50% 36%,
+            rgba(51, 39, 46, 0) 38%,
+            rgba(51, 39, 46, 0.09) 68%,
+            rgba(51, 39, 46, 0.28) 100%
+          );
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 196px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #5a4f53);
+          opacity: 0;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 108px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s6-l1 {
+          top: 300px;
+        }
+        #s6-l2 {
+          top: 418px;
+        }
+        .dot {
+          position: absolute;
+          left: 84px;
+          top: 618px;
+          width: 26px;
+          height: 26px;
+          border-radius: 50%;
+          background: var(--accent, #7fb449);
+          transform-origin: 50% 50%;
+        }
+        .url {
+          position: absolute;
+          left: 138px;
+          top: 606px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 46px;
+          letter-spacing: 0.04em;
+          color: var(--ink, #2a2126);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .kicker {
+          position: absolute;
+          left: 84px;
+          top: 730px;
+          width: 912px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 32px;
+          line-height: 1.4;
+          color: var(--ink-soft, #5c5057);
+          opacity: 0;
+        }
+      </style>
+
+      <!-- The film closes on the image it opened with: the same front door,
+           the same blank brass letter slot. The address is the argument, so
+           the last frame is the first frame with the answer written on it.
+           The camera releases (1.05 -> 1.00) instead of pushing, so the film
+           settles rather than accelerating into the end. -->
+      <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s6-w6">
+            <img class="plate" src="assets/plates/pd-a1-tight.jpg" alt="" />
+          </div>
+        </div>
+        <div class="band"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="s6-eb">FAMtastic Designs</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s6-l1">Own the address</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s6-l2">they type.</div>
+        <div class="dot" id="s6-dt"></div>
+        <div class="url" id="s6-ur">famtasticdesigns.com</div>
+        <div class="kicker" id="s6-kk">One page. One year of hosting. One address that's yours.</div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          var world = document.getElementById("s6-w6");
+          var cam = { scale: 1.05 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1.05 },
+            { scale: 1, duration: 3.95, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#s6-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.05);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.18;
+          whip("#s6-l1", a, 82, 0.2);
+          var b = a + 0.2 - F;
+          whip("#s6-l2", b, 56, 0.16);
+
+          /* spring-pop-entrance on the accent dot, then the address it marks. */
+          tl.fromTo(
+            "#s6-dt",
+            { scale: 0, opacity: 1 },
+            { scale: 1, duration: 0.38, ease: "back.out(2.2)" },
+            1.02,
+          );
+          tl.fromTo("#s6-ur", { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 1.14);
+          tl.fromTo("#s6-kk", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 1.62);
+
+          window.__timelines["close"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

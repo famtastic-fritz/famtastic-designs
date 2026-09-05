@@ -1,5 +1,32 @@
 # Product changelog
 
+## 2026-09-05 — Platform Dependency campaign film rendered in HyperFrames
+
+- **Authored and rendered a 29-second 9:16 campaign film from HTML, at $0.**
+  `marketing/hyperframes/platform-dependency/` is a HyperFrames project (six
+  sub-compositions plus a host) that reuses the existing gpt-image-2 anchor, four
+  of the 21 Gemini plates, and the approved HeyGen Take A. No image, voice, video
+  or model call was generated. Delivered `renders/borrowed-land-1080x1920.mp4`
+  (870 frames, 30 fps, h264 + AAC, 14.9 MB, rendered in 31.1 s) and a 4K portrait
+  variant (1 m 29 s). Renders are gitignored and reproducible.
+- **Graded to the anchor's measured appearance rather than the brand spec.**
+  Measured on identical `signalstats` YAVG: the HeyGen take is 162.3, this film
+  is 165.8, and the existing Remotion 9:16 for the same drop is 212.1. All 29
+  seconds sit inside the 150-175 band and the olive accent averages 0.30 % of
+  frame area (peak 1.22 %), inside the 1-2 % budget.
+- **Cuts land inside the narration's own pauses.** `silencedetect` never opens on
+  the take (continuous room tone), so sentence boundaries were measured from a
+  relative RMS envelope; every scene boundary sits in a real gap. The presenter
+  inset is a muted `<video>` with a separate `<audio>` on the same file, verified
+  lip-synced by frame comparison.
+- **Deferred:** the film is portrait only. HyperFrames bakes aspect into the
+  composition and refuses a square render off a portrait one, so 1:1 and 16:9
+  remain Remotion's job. The last 10 s are silent — no licensed bed exists in the
+  repo and no provider spend was authorised.
+- **Found a defective source asset.** `pd-a1-vertical-9x16.jpg` has a blown-out
+  flat rectangle covering the door's upper half; it is framed around here, but
+  should be regenerated before reuse.
+
 ## 2026-09-05 — Deterministic local texture library
 
 - **Completed the missing texture-library lane without creating a new paid
