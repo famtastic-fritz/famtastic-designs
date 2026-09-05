@@ -560,6 +560,42 @@
         "Solves the owner's own dictation, not an agent or production gap. Needs a free Groq API key by default, or an OpenAI-compatible endpoint or local Ollama.",
         "Evaluated 2026-09-05 and deliberately not installed: nothing in the campaign pipeline is blocked by its absence."
       ]
+    },
+    {
+      "id": "gpt_image_2_style_library",
+      "purpose": [
+        "gpt-image-2 prompt templates",
+        "style and scene taxonomy",
+        "reverse-engineering an existing look into a reusable prompt"
+      ],
+      "status": "installed_reference_only",
+      "automation": "agent_skill",
+      "secret_env": [],
+      "access": ".agents/skills/gpt-image-2-style-library (installed 2026-09-05)",
+      "notes": [
+        "Scanned Safe, 0 alerts, Low Risk. bin/install.mjs is a plain file copy; no network, no exec.",
+        "CONTENT IS SMALLER THAN ADVERTISED. The README claims 544 reverse-engineered cases; the installed reference ships 27 template entries in references/style-library.md (659 lines). The 544 cases live on the project website, not in the repo. The 27 are genuinely useful - each carries an id, category, style/scene tags, when-to-use, guidance and pitfalls - but plan around 27, not 544.",
+        "Pairs directly with the proven openai_image route (gpt-image-2 at ~$0.18/image). Relevant categories for FAMtastic: Poster Layout System, Product Commerce Visual, Brand Identity Package, Brand Touchpoint Board, Realistic Photography, Infographic Engine.",
+        "Reference material only. It supplies craft, never FAMtastic audience, positioning, pricing or claims - see AGENTS.md."
+      ]
+    },
+    {
+      "id": "diagram_design",
+      "purpose": [
+        "editorial diagrams as standalone HTML/SVG/PNG",
+        "architecture and flow diagrams",
+        "importing and redrawing Mermaid or draw.io sources"
+      ],
+      "status": "installed_reference_only",
+      "automation": "agent_skill",
+      "secret_env": [],
+      "access": ".agents/skills/diagram-design (installed 2026-09-05)",
+      "notes": [
+        "Scanned Safe, 0 alerts. Audited the three Python scripts directly: stdlib only (argparse, re, sys, Counter, HTMLParser, pathlib, html). No network, no subprocess, no eval.",
+        "39 diagram types, and it can extract brand tokens from a website - which for FAMtastic means the real site rather than invented colours.",
+        "Fills a genuine gap. Diagrams here have been hand-coded as SVG in blogArt.js or composed in Photoshop; neither is the right tool for a Sankey, a Wardley map or a swimlane.",
+        "PNG export needs Playwright; HTML and SVG do not."
+      ]
     }
   ]
 }

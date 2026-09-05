@@ -434,6 +434,12 @@
       "skillPath": "designer-toolkit/skills/design-token-audit/SKILL.md",
       "computedHash": "d2f3a1b665c2eb9499f0d3d2e689f64b3bc659f787c0f0f3072b3206b2ab5c46"
     },
+    "diagram-design": {
+      "source": "cathrynlavery/diagram-design",
+      "sourceType": "github",
+      "skillPath": "skills/diagram-design/SKILL.md",
+      "computedHash": "ae2d24b670bf49478ded2da9098f00256a5b09adc283638abe8ffb5ae69c078d"
+    },
     "diary-study-plan": {
       "source": "owl-listener/designer-skills",
       "sourceType": "github",
@@ -553,6 +559,12 @@
       "sourceType": "github",
       "skillPath": "interaction-design/skills/gesture-patterns/SKILL.md",
       "computedHash": "1254e41fea44e6a389bbcaad865a36279076fcf5d203e082693e2409963efb7b"
+    },
+    "gpt-image-2-style-library": {
+      "source": "freestylefly/awesome-gpt-image-2",
+      "sourceType": "github",
+      "skillPath": "agents/skills/gpt-image-2-style-library/SKILL.md",
+      "computedHash": "63ea52ea699411d33fb4fdd97062322672550a303daf057e0b0ce9af1d621c2f"
     },
     "handoff-spec": {
       "source": "owl-listener/designer-skills",
