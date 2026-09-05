@@ -1,5 +1,40 @@
 # Product changelog
 
+## 2026-09-05 — The films get a home of their own at /watch
+
+- **Published the campaign films on our own domain instead of waiting on
+  channels.** Eight finished films (119 MB) now live at `/watch` and
+  `/watch/<slug>`, served straight from `frontend/public/video/`. YouTube's
+  OAuth token is expired and TikTok is not approved for public posting, so
+  until today the whole rendered library earned nothing. It no longer depends
+  on either: the channels become distribution, not a precondition.
+- **Every film carries a real `VideoObject`.** `name`, `description`,
+  `thumbnailUrl`, `uploadDate`, `duration`, `contentUrl` and `embedUrl` are
+  written into a static `dist/watch/<slug>/index.html` at build time, because a
+  client-rendered SPA's structured data is not reliably read. `duration` is
+  derived from `ffprobe` against the shipped file, never typed by hand.
+- **Four films ship a verbatim transcript; four honestly do not.**
+  `borrowed-land`, `not-a-home-base`, `fifty-five-cents` and
+  `two-different-jobs` have approved scripts in the repo, so their words are on
+  the page and in the schema. `the-sign-that-isnt-there`, `the-dm-trap`,
+  `found-then-kept` and `somebody-elses-app` are narrated (or scored) from
+  sources with no companion text, so they lead with their on-screen copy and
+  claim no transcript. Every film's full on-screen copy is written out either
+  way, so the argument is readable without playing anything.
+- **The library is styled as part of the blog, not as a microsite.** The film
+  body is literally `.v1-panel > .v1-prose`, and the section art comes from the
+  existing `lib/blogArt.js` recipes — `artDayCost` on the price film,
+  `artScopeBoundary` on the business-email film, `artOwnedVsRented` /
+  `artOwnershipMarker` on the platform films, and nothing but a divider on the
+  one film that has not earned a diagram.
+- **Added the two rules that would have made this 404 in production**: `watch`
+  entries in `frontend/public/.htaccess` (the rewrite list is an allowlist with
+  no catch-all) and a `!frontend/public/video/*.mp4` exemption in `.gitignore`,
+  where a repo-wide `*.mp4` rule would otherwise have dropped all eight films
+  from the committed SHA the deploy script builds.
+- Not deployed. Built and verified in `frontend/dist`; production remains an
+  explicit owner decision.
+
 ## 2026-09-05 — Creative production system, 15 posts live, and a delivery cycle that alerts
 
 - **Registered Adobe desktop as a working capability, which it always was.** An

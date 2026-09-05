@@ -42,6 +42,17 @@ export const SEO_PAGES = {
     description:
       'Read practical notes from FAMtastic Designs on agentic AI, custom websites, business applications, digital transformation, and solution engineering.',
   },
+  '/watch': {
+    title: 'Films | Watch the FAMtastic Designs Campaign Library',
+    description:
+      'Watch every FAMtastic Designs campaign film in one place — short pieces on owning your web address, what a $199 one-page website actually includes, and what local search can really read. Each film has its on-screen copy and, where narrated, its transcript.',
+    ogDescription:
+      'Short films from FAMtastic Designs on owning your web address, what the $199 one-page website includes, and what local search can actually read.',
+    twitterDescription:
+      'Short films on owning your web address and what a $199 one-page website actually includes.',
+    keywords:
+      'small business website video, $199 website, own your domain, local search, business email, campaign films',
+  },
   '/faq': {
     title: 'FAQ | FAMtastic Designs Questions Answered',
     description:
@@ -207,6 +218,29 @@ export function blogSeo(post) {
     image: DEFAULT_IMAGE,
     path: `/blog/${post?.slug || ''}`,
     type: 'article',
+  };
+}
+
+/**
+ * A single film page (/watch/:slug).
+ *
+ * `og:type` is `video.other` rather than `website` so a shared link renders as a
+ * video card, and the film's own poster replaces the site-wide OG image — the
+ * default card would otherwise show the studio logo for eight different films.
+ */
+export function filmSeo(film, { title, description } = {}) {
+  const resolvedDescription = description || film?.summary || SEO_PAGES['/watch'].description;
+  return {
+    siteName: SITE_NAME,
+    title: title || `${film?.title || 'Film'} | Films | FAMtastic Designs`,
+    description: resolvedDescription,
+    ogDescription: resolvedDescription,
+    twitterDescription: resolvedDescription,
+    keywords: [...(film?.keywords ?? []), DEFAULT_KEYWORDS].join(', '),
+    canonical: `${SITE_URL}/watch/${film?.slug || ''}/`,
+    image: film?.poster ? `${SITE_URL}${film.poster}` : DEFAULT_IMAGE,
+    path: `/watch/${film?.slug || ''}`,
+    type: 'video.other',
   };
 }
 

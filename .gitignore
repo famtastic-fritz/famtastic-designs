@@ -42,6 +42,15 @@ marketing/runtime/
 *.mp4
 *.zip
 
+# EXEMPTION — the public film library at /watch. These MP4s are not
+# reproducible evidence, they are the deployed artifact: the page serves them
+# straight from the document root, and the deploy script builds a committed SHA
+# in a clean worktree. An untracked film would build fine locally and 404 in
+# production with no error anywhere. Keep this rule below `*.mp4`, and note that
+# Git cannot re-include a file whose parent directory is excluded — so this only
+# works because frontend/public/ is itself tracked.
+!frontend/public/video/*.mp4
+
 # nested app checkouts, and dependency output in the artifact/Drive evidence
 # lanes described by the Build DNA record.
 website-delivery-swarm/pilots/**/assets/
@@ -62,3 +71,7 @@ marketing/*.zip
 # video + voice-over) and frontend/public/brand/ (mark). Regenerate with
 # `npm --prefix marketing/video run prepare:drop06`.
 marketing/video/public/
+
+# Voicebox server state (SQLite DB + generated wavs), created when the
+# local TTS server is started with this repo as cwd. Not campaign content.
+data/
