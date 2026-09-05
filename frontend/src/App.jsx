@@ -40,6 +40,8 @@ import SpecializedIntakePage from './pages/SpecializedIntakePage.jsx';
 import DeepDivePage from './pages/DeepDivePage.jsx';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage.jsx';
 import TermsOfServicePage from './pages/TermsOfServicePage.jsx';
+import WatchHubPage from './pages/WatchHubPage.jsx';
+import WatchFilmPage from './pages/WatchFilmPage.jsx';
 
 export default function App() {
   return (
@@ -74,6 +76,12 @@ export default function App() {
           <Route path="/work/:slug" element={<CaseStudyPage />} />
           <Route path="/blog" element={<BlogHubPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
+          {/* Public film library. The MP4s are served as static files from
+              /video/; these two routes are the indexable pages around them.
+              Both need matching rules in public/.htaccess — the production
+              rewrite list is a narrow allowlist with no catch-all. */}
+          <Route path="/watch" element={<WatchHubPage />} />
+          <Route path="/watch/:slug" element={<WatchFilmPage />} />
           <Route path="/faq" element={<FAQHubPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/start" element={<StartPage />} />

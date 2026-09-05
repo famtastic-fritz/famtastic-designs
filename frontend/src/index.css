@@ -4004,3 +4004,288 @@ a:hover {
 }
 
 
+
+/* ------------------------------------------------------------------ */
+/* Film library (/watch)                                               */
+/*                                                                     */
+/* Three rules govern this block:                                      */
+/*  1. NO GLOW. Same discipline as the generated blog art above — the  */
+/*     one permitted lime glow per screen belongs to the page chrome,  */
+/*     so lime here is flat fill, border and text only.                */
+/*  2. The film page BODY is `.v1-panel > .v1-prose`, i.e. literally   */
+/*     the blog's own prose container. Only the pieces a blog post has */
+/*     no equivalent for (the player, the beat list, the transcript)   */
+/*     get new classes. The library reads as part of the blog because  */
+/*     it mostly *is* the blog.                                        */
+/*  3. Every interactive target clears 44px (Design DNA v1).           */
+/* ------------------------------------------------------------------ */
+
+/* The blog's filter pills are 34px tall, which is fine inside a dense
+   article index but under the 44px floor. Raised only where this page uses
+   them, so the blog hub's existing rhythm is untouched. */
+.watch-filters .blog-filter {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.watch-count {
+  margin: 0 0 1.25rem;
+  color: var(--v1-text-45);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+/* -- index ---------------------------------------------------------- */
+/* Every film is 9:16. A three-up grid of upright posters runs each card
+   past 700px tall and destroys the overview, so a card is horizontal: a
+   narrow poster beside the argument. The poster is the only cropped
+   element on the page. */
+.watch-list {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .watch-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.watch-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--v1-border);
+  border-radius: var(--v1-radius-card);
+  background: var(--v1-surface);
+  transition: border-color 160ms ease;
+}
+
+.watch-card:hover,
+.watch-card:focus-within {
+  border-color: var(--v1-border-strong);
+}
+
+.watch-card__poster {
+  position: relative;
+  background: #070907;
+}
+
+.watch-card__poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* `contain`, not `cover`, and the reason is measurable. The poster column is
+     116x206 on desktop — an aspect of 0.563 against the frame's own 0.5625, so
+     nothing is cropped there either way. But the column STRETCHES to the card's
+     text height, and on a 375px phone that makes it 92x222 (0.414), which
+     `cover` resolves by cutting ~13% off each side. Every film sets its type on
+     an 84px left margin of a 1080px frame, so a 140px-per-side crop reaches
+     into the headline. `contain` mats the frame against its own ground instead
+     of clipping the words the thumbnail exists to show. */
+  object-fit: contain;
+}
+
+.watch-card__time {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 6px;
+  background: rgba(5, 7, 6, 0.82);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.watch-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.1rem 1.15rem;
+}
+
+.watch-card__title {
+  margin: 0;
+  font-family: var(--v1-font-display);
+  font-size: 1.12rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--v1-text);
+}
+
+.watch-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The whole card is the touch target, not the title's own line box. */
+.watch-card__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.watch-card__link:hover,
+.watch-card__link:focus-visible {
+  color: var(--v1-lime);
+}
+
+.watch-card__text {
+  margin: 0;
+  color: var(--v1-text-72);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.watch-card__meta {
+  margin: auto 0 0;
+  padding-top: 0.55rem;
+  color: var(--v1-text-45);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 420px) {
+  .watch-card {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+  .watch-card__body {
+    padding: 0.9rem 0.95rem;
+  }
+}
+
+/* -- the player ----------------------------------------------------- */
+/* `.blog-visual` supplies the frame, radius and figcaption treatment the
+   article masthead uses, so a film sits in the same box a blog hero does.
+   Only the aspect changes: these are 1080x1920, and a 16:9 masthead would
+   letterbox them into a stripe. */
+.watch-stage {
+  background: #070907;
+}
+
+.watch-stage__video {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  margin-inline: auto;
+  background: #000;
+}
+
+/* -- body ----------------------------------------------------------- */
+.v1-prose .watch-note {
+  margin: -0.2rem 0 1rem;
+  color: var(--v1-text-45);
+  font-size: 0.84rem;
+}
+
+/* The words actually spoken. Set as a quotation with a flat lime rule —
+   a rule, not a glow, and the only lime on the page besides links. */
+.v1-prose .watch-transcript {
+  margin: 0 0 1.5rem;
+  padding: 0.15rem 0 0.15rem 1.15rem;
+  border-left: 2px solid var(--v1-lime);
+  color: var(--v1-text);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.v1-prose .watch-transcript p {
+  margin: 0 0 0.55rem;
+}
+
+.v1-prose .watch-transcript p:last-child {
+  margin-bottom: 0;
+}
+
+/* Beat list: numbered by counter rather than by list marker, so the number
+   can sit on the hairline beside the beat name instead of hanging outside a
+   two-line heading. */
+.v1-prose .watch-beats {
+  counter-reset: watch-beat;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.v1-prose .watch-beats > li {
+  counter-increment: watch-beat;
+  padding: 1.05rem 0;
+  border-top: 1px solid var(--v1-border);
+}
+
+.v1-prose .watch-beats > li:first-child {
+  border-top: 0;
+  padding-top: 0.2rem;
+}
+
+.v1-prose .watch-beats > li > h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.55rem;
+  font-size: 0.98rem;
+  letter-spacing: -0.005em;
+}
+
+.v1-prose .watch-beats > li > h3::before {
+  content: counter(watch-beat, decimal-leading-zero);
+  flex: 0 0 auto;
+  color: var(--v1-lime);
+  font-family: var(--v1-font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.v1-prose .watch-beats ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.v1-prose .watch-beats ul li {
+  position: relative;
+  padding-left: 1.05rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.v1-prose .watch-beats ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 6px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* `artScopeBoundary` ships its own frame and ground; it only needs centring. */
+.watch-art-bare {
+  display: flex;
+  justify-content: center;
+  margin: 1.75rem 0;
+}
+
+/* The library's one standing scope statement. Panel-level, not prose-level,
+   so it reads as a fact sheet rather than as another paragraph. */
+.watch-scope h2:first-child {
+  margin-top: 0;
+}
+
+/* The hub's ornamental divider is not inside `.v1-prose`, so it needs the
+   column cap the prose context would otherwise give it. */
+.fam-art-divider-host {
+  max-width: 720px;
+  margin: 2.5rem auto 2rem;
+}

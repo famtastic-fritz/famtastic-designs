@@ -1,5 +1,52 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Two silent gates stand between a working route and a working page
+
+Building the `/watch` film library surfaced two failure modes that a green
+build, a passing test and a correct React route would all have reported as
+fine. Both are structural to this repo and will recur on the next new route
+that ships files.
+
+**1. `.gitignore` has a repo-wide `*.mp4` rule.** It exists for good reason —
+rendered evidence does not belong in Git. But `frontend/public/video/*.mp4` is
+not evidence, it is the deployed artifact: the page serves those files from the
+document root, and `scripts/deploy-frontend-godaddy.sh` builds a *committed SHA*
+in a clean worktree. An unexempted film builds perfectly on this machine and is
+simply absent in production, with no error at any step. The rule now carries an
+explicit `!frontend/public/video/*.mp4` negation. Note the Git constraint that
+makes this work at all: a negation cannot re-include a file whose *parent
+directory* is excluded.
+
+**2. In `.htaccess`, `mod_rewrite` runs before `DirectoryIndex`.** The build
+writes a real `dist/watch/<slug>/index.html` per film carrying that film's
+`VideoObject`. A naive SPA fallback rule — `RewriteRule ^watch/[^/]+/?$
+/index.html [L]` — matches those URLs too, because a directory is not a regular
+file, so `!-f` is true for it. The rule would have quietly served the generic
+app shell in place of every film's structured-data shell: the page would look
+correct to a human and be worthless to a crawler, which is the exact outcome the
+route was built to prevent. Both rules now carry `RewriteCond %{REQUEST_FILENAME}
+!-d` alongside `!-f`. **Rule: any SPA fallback in this file must exclude
+directories, not just files, wherever the build emits per-route shells.**
+
+Two smaller ones from the same session, both caught only by opening the built
+HTML and reading it rather than by any check:
+
+- The shell already emits `twitter:card`, so appending a second one for
+  `player` left two conflicting values in one `<head>` — and the player card
+  needs a `twitter:player` iframe this page does not have. `summary_large_image`
+  with the film's own poster is the accurate card.
+- The build-time shell and the React `useEffect` both injected the same
+  `VideoObject`, giving a hard-loaded page two copies. The page now injects
+  client-side only when the static block for that URL is absent, which is
+  precisely the client-side-navigation case that needs it.
+
+**And one measurement trap.** Three film READMEs state their renders are silent
+and report `Audio: none`. `ffprobe` says every one of them carries an AAC track,
+and `volumedetect` measures real narration in it — they were re-rendered after
+the READMEs were written (see the same day's "Voice is no longer metered"
+entry). Anything a page asserts about a media file must be probed from the file,
+not read from its documentation.
+
 ## 2026-09-05 — Customer proof choice is a decision record, not editable intake data
 
 Research backing a proof direction must survive routine brief edits, and a customer cannot be able to silently replace an already-recorded direction. Keep the proof snapshot separate from mutable intake fields, require an explicit staff reopen before checkout, and scope mobile owner controls to the exact converted customer request. The full lifecycle still needs an initialized isolated Drupal test database before any production claim.
