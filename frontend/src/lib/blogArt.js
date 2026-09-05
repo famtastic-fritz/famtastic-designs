@@ -205,6 +205,23 @@ ${ownedBlocks}
 }
 
 /* ------------------------------------------------------------------ */
+/* Art block: compact ownership marker for wrapped prose              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * This is intentionally a silhouette, not a miniature infographic. It earns
+ * the small footprint needed for prose to flow around it: a provisional,
+ * dashed "rented" arrangement gives way to a settled owned foundation. The
+ * full owned-vs-rented diagram above remains available for a future block use;
+ * this one is the editorial margin figure.
+ */
+export function artOwnershipMarker({ seed = 0 } = {}) {
+  const uid = nextUid(seed);
+  const offset = 4 + (seed % 3) * 3;
+  return `<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="${uid}-t" class="fam-art__svg fam-art__svg--ownership"><title id="${uid}-t">A compact diagram contrasting three loose rented placements with three aligned owned website foundations.</title><defs>${dotGrid(uid, { size: 18, radius: 1, phase: seed % 18 })}</defs><path d="M18 45 C54 ${23 + offset} 88 ${74 - offset} 122 47 S190 20 226 50" class="fam-art__flow"/><rect x="28" y="62" width="68" height="34" rx="8" class="fam-art__dashed" transform="rotate(-7 62 79)"/><rect x="116" y="40" width="68" height="34" rx="8" class="fam-art__dashed" transform="rotate(6 150 57)"/><rect x="204" y="70" width="68" height="34" rx="8" class="fam-art__dashed" transform="rotate(-4 238 87)"/><path d="M38 188 L150 106 L262 188" class="fam-art__ring"/><rect x="58" y="150" width="62" height="38" rx="7" class="fam-art__panel"/><rect x="120" y="124" width="62" height="64" rx="7" class="fam-art__panel-lit"/><rect x="182" y="150" width="62" height="38" rx="7" class="fam-art__panel"/><rect x="120" y="124" width="62" height="5" rx="2.5" class="fam-art__accent-fill"/><rect x="38" y="198" width="224" height="3" rx="1.5" class="fam-art__accent-fill"/><rect width="300" height="220" fill="url(#${uid}-dots)" opacity=".45"/></svg>`;
+}
+
+/* ------------------------------------------------------------------ */
 /* Art block: ordered flow / process spine                             */
 /* ------------------------------------------------------------------ */
 
@@ -408,7 +425,8 @@ const RECIPES = [
       /platform(?:'s)?\s+(?:free tier|policies|layout|changes)/i,
       /belong to (?:your|the) business/i,
     ],
-    build: (ctx) => artOwnedVsRented({ seed: ctx.seed }),
+    layout: 'wrap',
+    build: (ctx) => artOwnershipMarker({ seed: ctx.seed }),
     caption: 'Rented placements follow someone else’s rules. An owned domain sits on ground the business controls.',
   },
   {
@@ -501,8 +519,11 @@ function pickQuote(sections, fromMaxIndex) {
 
 const FLOW_TAGS = new Set(['P', 'UL', 'OL', 'BLOCKQUOTE', 'TABLE']);
 
-function wrapFigure(svg, caption) {
+function wrapFigure(svg, caption, layout = 'block', side = 'left') {
   if (!svg) return '';
+  if (layout === 'wrap') {
+    return `<figure class="article-inline-visual article-inline-visual--art article-inline-visual--wrap article-inline-visual--wrap-${side}"><div class="fam-art">${svg}</div></figure>`;
+  }
   return `<figure class="article-inline-visual article-inline-visual--art"><div class="fam-art">${svg}</div><figcaption><img src="/brand/famtastic-mark.svg" alt="" width="28" height="28">FAMtastic Designs — ${escapeHtml(caption)}</figcaption></figure>`;
 }
 
@@ -551,7 +572,7 @@ export function injectBodyArt(bodyHtml, post = {}) {
   const sections = [];
   blocks.forEach((block, index) => {
     if (block.tagName === 'H2') {
-      sections.push({ heading: toText(block.innerHTML), headingIndex: index, blocks: [] });
+      sections.push({ heading: toText(block.innerHTML), headingElement: block, headingIndex: index, blocks: [] });
     } else if (sections.length) {
       sections[sections.length - 1].blocks.push(block);
     }
@@ -591,7 +612,7 @@ export function injectBodyArt(bodyHtml, post = {}) {
       .filter((entry) => entry.score >= entry.recipe.min)
       .sort((a, b) => b.score - a.score);
 
-    candidates.push({ sectionIndex, anchor, depth, text, listItems, scored });
+    candidates.push({ sectionIndex, headingElement: section.headingElement, anchor, depth, text, listItems, scored });
   });
   if (!candidates.length) return html;
 
@@ -633,7 +654,15 @@ export function injectBodyArt(bodyHtml, post = {}) {
       const svg = entry.recipe.build({ seed: seed + seedOffset, listItems: candidate.listItems, excluded });
       if (!svg) continue;
       used.add(entry.recipe.id);
-      placements.push({ anchor: candidate.anchor, markup: wrapFigure(svg, entry.recipe.caption) });
+      placements.push({
+        anchor: entry.recipe.layout === 'wrap' ? candidate.headingElement : candidate.anchor,
+        markup: wrapFigure(
+          svg,
+          entry.recipe.caption,
+          entry.recipe.layout,
+          placements.length % 2 ? 'right' : 'left',
+        ),
+      });
       return candidate;
     }
     return null;

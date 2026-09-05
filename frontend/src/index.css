@@ -1635,17 +1635,57 @@ a:hover {
 }
 
 /* -- generated hero ------------------------------------------------ */
-/* Shares the .blog-visual box exactly, so a generated hero and a raster */
-/* hero are interchangeable with zero layout shift.                     */
+/* A photographic hero needs a 16:9 field. A generated category motif does
+   not: its low information density turns that field into empty darkness.
+   Keep authored raster visuals untouched and crop only the fallback SVG into a
+   short masthead. */
 .blog-visual--art { background: #070907; }
-.fam-hero-art { display: block; }
-.fam-hero-art__svg { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.blog-visual--art .fam-hero-art { display: block; height: clamp(150px, 18vw, 220px); overflow: hidden; }
+.blog-visual--art .fam-hero-art__svg { display: block; width: 100%; height: 100%; aspect-ratio: auto; }
 .fam-hero-art__word {
   font-family: var(--v1-font-display);
   font-weight: 800;
   letter-spacing: -0.015em;
   fill: #ffffff;
   fill-opacity: 0.93;
+}
+
+/* -- text-integrated editorial figures ----------------------------- */
+/* Decorative ownership figures use the whitespace beside a paragraph instead
+   of stopping the reader with another full-width card. `shape-outside` gives
+   modern browsers a contour; the float remains a deliberate rectangular
+   margin figure where it is unavailable. Data-bearing diagrams remain blocks. */
+@media (min-width: 641px) {
+  .v1-prose .article-inline-visual--wrap {
+    width: min(34%, 250px);
+    margin-top: 0.2rem;
+    margin-bottom: 0.9rem;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    shape-outside: polygon(5% 4%, 92% 4%, 98% 56%, 88% 98%, 12% 98%, 2% 58%);
+    clip-path: polygon(5% 4%, 92% 4%, 98% 56%, 88% 98%, 12% 98%, 2% 58%);
+  }
+  .v1-prose .article-inline-visual--wrap-left { float: left; margin-right: 1.35rem; }
+  .v1-prose .article-inline-visual--wrap-right { float: right; margin-left: 1.35rem; }
+  .v1-prose .article-inline-visual--wrap .fam-art { padding: 0; }
+  .v1-prose h2 { clear: both; }
+}
+
+@media (max-width: 640px) {
+  /* A narrow prose column has no honest space for a side-by-side illustration.
+     The single marker becomes a short, centered interlude rather than making
+     each line of text two words wide. */
+  .v1-prose .article-inline-visual--wrap {
+    width: min(72%, 230px);
+    margin: 1.35rem auto;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .v1-prose .article-inline-visual--wrap .fam-art { padding: 0; }
 }
 
 /* On a phone the prose column is only ~284px wide, so the art gives up its  */
@@ -3962,6 +4002,5 @@ a:hover {
   opacity: 0.35;
   cursor: not-allowed;
 }
-
 
 
