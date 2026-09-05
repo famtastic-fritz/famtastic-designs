@@ -15,6 +15,15 @@
 
 export type RGB = readonly [number, number, number];
 
+/**
+ * The anchor's measured darkest decile, from
+ * marketing/creative/heygen/reference-tokens.json (`ground_darkest_decile`,
+ * "#33272e"). Used to grade the `paper` palette's edge falloff toward the
+ * actual anchor shadow rather than an invented vignette colour — see the
+ * grading fix recorded in VIDEO_SYSTEM.md.
+ */
+export const ANCHOR_SHADOW: RGB = [0x33, 0x27, 0x2e];
+
 export type Palette = {
   /** Canvas ground. */
   ground: RGB;
@@ -71,7 +80,7 @@ export const PALETTES = {
   // Daylight. Documents, proposals, anything that must read sober rather than
   // as an ad. Proves the system is not a dark-mode trick.
   paper: {
-    ground: [244, 241, 234],
+    ground: [216, 209, 194],
     accent: [31, 111, 74],
     head: [20, 18, 15],
     body: [90, 86, 78],
@@ -134,8 +143,17 @@ export const theme = (name: PaletteName): Theme => {
     p,
     light,
     ground: rgb(p.ground),
+    // A light ground is a physical paper surface, not a glowing panel: it
+    // should fall off toward a cast shadow at the edges, not brighten toward
+    // white at the centre. The centre (where headlines and body copy sit)
+    // stays at the base ground tone for text contrast; the outer field falls
+    // off toward the anchor's own measured shadow value (ANCHOR_SHADOW,
+    // #33272e) so a flat-colour scene reads as lit paper rather than a
+    // blown-out card. This replaced a brightening gradient that was the
+    // primary cause of the 212.1 YAVG overshoot documented in
+    // VIDEO_SYSTEM.md — grading directive: mean luminance 150-175.
     groundGradient: light
-      ? `radial-gradient(125% 72% at 50% 8%, ${rgb(mix(p.ground, [255, 255, 255], 0.5))} 0%, ${rgb(p.ground)} 64%)`
+      ? `radial-gradient(104% 80% at 50% 40%, ${rgb(p.ground)} 0%, ${rgb(p.ground)} 26%, ${rgb(mix(p.ground, ANCHOR_SHADOW, 0.30))} 62%, ${rgb(mix(p.ground, ANCHOR_SHADOW, 0.78))} 100%)`
       : `radial-gradient(125% 72% at 50% 10%, ${rgb(mix(p.ground, p.head, 0.045))} 0%, ${rgb(p.ground)} 62%)`,
     accent: rgb(p.accent),
     head: rgb(p.head),

@@ -436,8 +436,11 @@ export const PresenterScene: React.FC<SceneProps<'presenter'>> = ({ scene, lengt
   const { t, f } = useKit();
   const box = safeBox(f);
   const full = scene.full || f.columns === 2;
-  const g = t.p.ground;
-  const ground = `rgb(${g[0]},${g[1]},${g[2]})`;
+  // Use the same edge-falloff ground the shared <Ground/> paints, not a flat
+  // fill — a solid backgroundColor here previously sat on top of (and fully
+  // hid) that gradient, so the presenter scene's own ground ran at the raw,
+  // unfallen-off paper value. See VIDEO_SYSTEM.md for the measured grade.
+  const ground = t.groundGradient;
 
   const video = (
     <OffthreadVideo
@@ -449,7 +452,7 @@ export const PresenterScene: React.FC<SceneProps<'presenter'>> = ({ scene, lengt
 
   if (full) {
     return (
-      <AbsoluteFill style={{ backgroundColor: ground }}>
+      <AbsoluteFill style={{ background: ground }}>
         <AbsoluteFill>{video}</AbsoluteFill>
         {scene.eyebrow ? (
           <div style={{ position: 'absolute', left: box.x, top: box.y }}>
@@ -467,7 +470,7 @@ export const PresenterScene: React.FC<SceneProps<'presenter'>> = ({ scene, lengt
   const headSize = scene.head ? fitLines(scene.head, box.w, Math.round(f.type.head * 0.82)) : 0;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: ground }}>
+    <AbsoluteFill style={{ background: ground }}>
       {scene.eyebrow ? (
         <div style={{ position: 'absolute', left: box.x, top: box.y }}>
           <Eyebrow text={scene.eyebrow} />
