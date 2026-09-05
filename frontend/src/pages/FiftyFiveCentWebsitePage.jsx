@@ -5,13 +5,15 @@ import { Section, CTABanner, FadeUp, Stagger, Item } from '../components/v1/inde
 import { seoForPath } from '../seo.js';
 
 const facts = [
-  ['One focused website', 'A professional, mobile-ready one-page or landing-page website built around one clear customer action.'],
-  ['One year of hosting', 'Basic FAMtastic-managed hosting is included for the first year, then currently renews at $9.99 per month unless canceled.'],
+  ['A focused mobile foundation', 'A professional, mobile-ready website built around one clear customer action, universal contact, and a researched next step.'],
+  ['Research and direction', 'Business and market research is summarized for you in a 90-day growth plan, then informs three proof directions before payment.'],
+  ['Three proofs, clear edits', 'Choose from three research-backed directions, with one direction reset and three edit rounds after a direction is selected.'],
+  ['One year of managed essentials', 'FAMtastic-managed hosting and SSL are included for the first year. Baseline analytics and provider-permitted email forwarding are part of the foundation.'],
   ['A domain path', 'First-year registration of an available new domain when needed, or connection of a domain you already own.'],
 ];
 
 const steps = [
-  ['Choose', 'Read the defined Web Basics scope, then complete research if you are not sure the one-page scope fits.'],
+  ['Choose', 'Read the defined Starter Mobile Business Foundation scope, then complete research if you are not sure it fits.'],
   ['Tell us', 'Complete the website intake so we understand the business, audience, offer, content, and contact path.'],
   ['Build', 'FAMtastic turns the approved scope and supplied information into a focused, branded website.'],
   ['Review', 'You review the work, supply any required missing material, and approve the launch direction.'],
@@ -28,10 +30,10 @@ export default function FiftyFiveCentWebsitePage() {
         <div className="campaign-hero__shade" />
         <div className="v1-container campaign-hero__content">
           <img className="campaign-brand-mark" src="/brand/famtastic-mark.svg" alt="FAMtastic Designs" width="52" height="52" />
-          <p className="v1-eyebrow">The $199 Web Basics offer</p>
+          <p className="v1-eyebrow">The $199 Starter Mobile Business Foundation</p>
           <h1>There may be a hundred reasons your business still doesn’t have a website.</h1>
           <p className="campaign-hero__declaration">Cost is not one of them. Period.</p>
-          <p className="campaign-hero__lede">Get a professional one-page business website for $199—about <strong>55 cents a day</strong> when averaged across one year.</p>
+          <p className="campaign-hero__lede">Get an owned, research-backed mobile business foundation for $199—about <strong>55 cents a day</strong> when averaged across one year.</p>
           <div className="v1-hero__actions">
             <Link className="v1-btn v1-btn--primary" to="/start?option=web-basics">Research the $199 starting point</Link>
             <Link className="v1-btn v1-btn--secondary" to="/website-options">Compare it with the $499 option</Link>
@@ -40,7 +42,7 @@ export default function FiftyFiveCentWebsitePage() {
         </div>
       </header>
 
-      <Section eyebrow="The offer" title="A complete first step—not a mystery price.">
+      <Section eyebrow="The offer" title="A complete business foundation—not a mystery price.">
         <Stagger className="v1-grid v1-grid--3">
           {facts.map(([title, body]) => <Item key={title} className="v1-card"><h2 className="v1-card__title">{title}</h2><p className="v1-card__text">{body}</p></Item>)}
         </Stagger>
@@ -59,7 +61,7 @@ export default function FiftyFiveCentWebsitePage() {
         </div>
       </Section>
 
-      <Section eyebrow="What gets built" title="One page can still do a complete job.">
+      <Section eyebrow="What gets built" title="One focused website can still do a complete job.">
         <div className="campaign-anatomy">
           <img src="/campaigns/one-page-anatomy.webp" alt="Connected sections and systems of a one-page business website" width="1600" height="900" loading="lazy" />
           <div className="v1-panel"><p>A focused business page can establish identity, explain the offer, build trust, answer common questions, show contact details, and move a visitor toward one clear action. It is designed for mobile and connected to a real inquiry path—not treated as a digital flyer.</p><Link to="/blog/parts-of-a-one-page-business-website">See the parts of a one-page website →</Link></div>
@@ -68,7 +70,7 @@ export default function FiftyFiveCentWebsitePage() {
 
       <Section eyebrow="Fit" title="The right offer for the right job.">
         <div className="v1-grid v1-grid--2">
-          <div className="v1-panel"><h2 className="v1-card__title">Web Basics is a strong fit when…</h2><ul className="v1-dot-list"><li>You need a credible first website.</li><li>One page can explain the core business and action.</li><li>You need a domain or want to connect one you own.</li><li>You want a foundation that can grow later.</li></ul></div>
+          <div className="v1-panel"><h2 className="v1-card__title">The Starter Mobile Business Foundation is a strong fit when…</h2><ul className="v1-dot-list"><li>You need a credible first owned business foundation.</li><li>One focused website can explain the core business and action.</li><li>You need a domain or want to connect one you own.</li><li>You want research and a growth plan before deciding what to build next.</li></ul></div>
           <div className="v1-panel v1-panel--soft"><h2 className="v1-card__title">A broader scope may fit when…</h2><ul className="v1-dot-list"><li>You need ecommerce or a product catalog.</li><li>Several services need separate search pages.</li><li>You need customer accounts, integrations, or automation.</li><li>Your content or workflow cannot fit one focused page.</li></ul><Link to="/start">Let the intake shape the recommendation →</Link></div>
         </div>
       </Section>
@@ -80,10 +82,10 @@ export default function FiftyFiveCentWebsitePage() {
       </Section>
 
       <Section eyebrow="Clear terms" title="Know what happens after the included year.">
-        <div className="v1-panel"><ul className="v1-dot-list"><li>The $199 price is paid once for the defined Web Basics build.</li><li>Basic managed hosting is included for one year, then currently renews at $9.99/month unless canceled.</li><li>New-domain registration is conditional on availability and included for the first year when selected.</li><li>Domain renewal is a separate annual prepaid charge disclosed before it is due.</li><li>Existing-domain customers do not receive a new-domain renewal charge.</li><li>Ecommerce, custom applications, extra pages, and complex integrations are assessed and scoped separately.</li></ul></div>
+        <div className="v1-panel"><ul className="v1-dot-list"><li>The $199 price is paid once for the defined Starter Mobile Business Foundation.</li><li>Managed hosting and SSL are included for one year; optional renewal is disclosed and separately authorized before any future charge.</li><li>New-domain registration is conditional on availability and included for the first year when selected.</li><li>Domain renewal is a separate annual prepaid charge disclosed before it is due.</li><li>Existing-domain customers do not receive a new-domain renewal charge.</li><li>Mailboxes, ecommerce, live calendar sync, custom applications, extra pages, and complex integrations are assessed and scoped separately.</li></ul></div>
       </Section>
 
-      <CTABanner title="A focused first website can start at $199." body="Read the scope, compare the $499 Business Website option when you need more than one page, and let research confirm the appropriate path." primaryCta={{ label: 'Research Web Basics', href: '/start?option=web-basics' }} secondaryCta={{ label: 'Compare website options', href: '/website-options' }} />
+      <CTABanner title="A mobile business foundation can start at $199." body="Read the scope, compare the $499 Business Website option when you need more standard pages, and let research confirm the appropriate path." primaryCta={{ label: 'Research the $199 foundation', href: '/start?option=web-basics' }} secondaryCta={{ label: 'Compare website options', href: '/website-options' }} />
     </article>
   );
 }

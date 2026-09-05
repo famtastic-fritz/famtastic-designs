@@ -118,8 +118,8 @@ export default function PurchasePage() {
   return (
     <form className="purchase-shell" onSubmit={checkout}>
       <span>Secure Commerce checkout</span>
-      <h1>{base?.title || 'Web Basics Bundle — $199'}</h1>
-      <p>{base?.summary || 'One focused high-conversion business page with first-year hosting and domain included.'}</p>
+      <h1>{base?.title || 'Starter Mobile Business Foundation — $199'}</h1>
+      <p>{base?.summary || 'An owned, mobile-first business foundation with a focused website, research-backed proof directions, and one year of FAMtastic-managed hosting.'}</p>
       <p className="purchase-context">This payment step is linked to the submitted request and website direction you selected in your portal.</p>
       {requestRecord?.private_offer && (
         <p className="purchase-context">

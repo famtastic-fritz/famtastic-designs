@@ -132,7 +132,7 @@ export default function HomePage() {
 
       <CTABanner
         title="Choose the website starting point that fits the work."
-        body="Compare the defined $199 Web Basics and $499 Business Website scopes, then use the Solution Finder to save research for the option that fits."
+        body="Compare the defined $199 Starter Mobile Business Foundation and $499 Business Website scopes, then use the Solution Finder to save research for the option that fits."
         primaryCta={{ label: 'Compare $199 and $499 options', href: '/website-options' }}
         secondaryCta={{ label: 'Start the Solution Finder', href: '/start' }}
       />

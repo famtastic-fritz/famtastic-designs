@@ -22,7 +22,7 @@ const SERVICE_BRANCHES = [
   {
     id: 'web-basics',
     icon: '⚡',
-    title: 'Web Basics — $199 starting point',
+    title: 'Starter Mobile Business Foundation — $199 starting point',
     q2Prompt: 'For a focused first website, do you have a domain and logo ready, or are you starting from scratch?',
     q2Options: [
       'I have domain & logo ready',

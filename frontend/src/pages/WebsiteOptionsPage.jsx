@@ -7,16 +7,18 @@ import { seoForPath } from '../seo.js';
 const options = [
   {
     id: 'web-basics',
-    eyebrow: 'Starter website',
-    title: 'Web Basics — $199',
-    bestFor: 'A business that can make its first clear online action on one focused page.',
+    eyebrow: 'Starter Mobile Business Foundation',
+    title: 'Starter Mobile Business Foundation — $199',
+    bestFor: 'A business that needs its first owned, mobile-first foundation and one clear customer action.',
     includes: [
-      'One custom, focused single-page or landing-page website',
-      'Customer content and brand setup',
-      'One proof cycle and the revision allowance shown at checkout',
-      'Twelve months of basic managed hosting from launch',
+      'A custom, focused mobile-first website with a universal contact path',
+      'Business and market research plus a customer-safe 90-day growth plan',
+      'Three research-backed proof directions, one direction reset, and three edit rounds after selection',
+      'Twelve months of FAMtastic-managed hosting and SSL from launch',
+      'A domain when one is needed (or connection guidance for one you already control)',
+      'Baseline analytics, email forwarding where the provider/domain permits, and a mobile Owner Desk after verified purchase',
     ],
-    details: 'A new, standard available domain can be registered for the first year when needed; connecting one you already control is the alternative. Ecommerce, extra pages, custom applications, and third-party services are not included.',
+    details: 'The researched action path may be contact, request-to-book, quote/location, or inquiry. A client-owned payment link or QR handoff may be configured, but FAMtastic does not process client payments. Ecommerce, extra pages, custom applications, live calendar sync, mailboxes, and third-party subscriptions are not included.',
     researchHref: '/start?option=web-basics',
   },
   {
@@ -44,10 +46,10 @@ export default function WebsiteOptionsPage() {
     <article>
       <Hero
         eyebrow="Website starting points"
-        title="Compare the $199 starter and the $499 business website."
+        title="Compare the $199 foundation and the $499 business website."
         lede="These are defined starting points, not a promise that either fits every request. Begin with research so the recommendation reflects the work your business actually needs."
         primaryCta={{ label: 'Start the research conversation', href: '/start' }}
-        secondaryCta={{ label: 'Read Web Basics details', href: '/55-cents-a-day-website' }}
+        secondaryCta={{ label: 'Read the $199 foundation details', href: '/55-cents-a-day-website' }}
         bullets={[
           'A saved request comes before any website payment step.',
           'A submitted brief and selected website direction are required before website checkout becomes available.',
@@ -79,7 +81,7 @@ export default function WebsiteOptionsPage() {
       <Section eyebrow="How to choose" title="Start with the work—not the lowest number.">
         <FadeUp className="v1-panel">
           <p className="v1-card__text" style={{ margin: 0 }}>
-            Choose Web Basics when one focused page can do the job. Choose the Business Website when the business needs up to five standard pages and the defined features listed above. If you need ecommerce, accounts, custom integrations, more pages, or a workflow that does not fit either scope, use the research conversation instead of trying to force a package.
+            Choose the Starter Mobile Business Foundation when one focused, owned online action can do the job. Choose the Business Website when the business needs up to five standard pages and the defined features listed above. If you need ecommerce, accounts, custom integrations, more pages, or a workflow that does not fit either scope, use the research conversation instead of trying to force a package.
           </p>
         </FadeUp>
       </Section>
