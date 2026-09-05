@@ -1,0 +1,40 @@
+{
+  "site_id": "tighten-up-your-locs",
+  "recipe_version": "1.0.0",
+  "component_system": {
+    "id": "mobile-command-center",
+    "version": "1.0.0",
+    "ref": "frontend/public/component-systems/mobile-command-center.v1.json"
+  },
+  "pages": [
+    {
+      "page_id": "public-home",
+      "route": "/",
+      "components": [
+        {"instance_id": "nav.brand-home.v1", "definition_id": "navigation.brand-and-actions.v1", "variant": "domain-led", "actions": ["availability", "contact", "directions"]},
+        {"instance_id": "hero.sisterlock-journey.v1", "definition_id": "hero.positioning-and-action.v1", "variant": "journey-led", "media_slot": "hero-portfolio"},
+        {"instance_id": "actions.mobile-quick.v1", "definition_id": "actions.mobile-quick-dock.v1", "variant": "openings-contact-find-owner", "actions": ["availability", "contact", "directions", "owner-desk"]},
+        {"instance_id": "services.stage-path.v1", "definition_id": "services.orientation.v1", "variant": "sisterlock-stage"},
+        {"instance_id": "availability.owner-window.v1", "definition_id": "availability.request-window.v1", "variant": "owner-published-request-not-confirmation"},
+        {"instance_id": "foundation.find-contact-domain.v1", "definition_id": "foundation.location-contact-domain.v1", "variant": "local-service"},
+        {"instance_id": "contact.owner-reviewed-request.v1", "definition_id": "contact.protected-request.v1", "variant": "request-not-confirmation"}
+      ]
+    },
+    {
+      "page_id": "owner-desk",
+      "route": "/owner/",
+      "access": "authenticated-owner-required-at-launch",
+      "components": [
+        {"instance_id": "owner.status.v1", "definition_id": "operations.truthful-setup-status.v1", "variant": "approval-gated"},
+        {"instance_id": "owner.mobile-controls.v1", "definition_id": "operations.mobile-control-cards.v1", "variant": "availability-requests-domain-analytics"},
+        {"instance_id": "owner.next-actions.v1", "definition_id": "operations.next-best-actions.v1", "variant": "launch-sequence"}
+      ]
+    }
+  ],
+  "truth_boundaries": [
+    "The customer journey is self-contained: availability and direct requests remain under Shay’s brand; any calendar provider is a separately approved later integration.",
+    "The contact/request component cannot receive data until the exact site is enabled and deployed.",
+    "The owner desk is not public and cannot show synthetic metrics or invoke mutations without owner confirmation.",
+    "The domain treatment is a proposed brand home, not an availability or registration claim."
+  ]
+}

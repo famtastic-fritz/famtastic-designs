@@ -1,0 +1,32 @@
+{
+  "schema": "famtastic.component-system.v1",
+  "system_id": "mobile-command-center",
+  "version": "1.0.0",
+  "status": "source-controlled proof contract; production adapters remain separately approved",
+  "principle": "A small business site is a branded customer front door paired with a truthful phone-first owner control surface. Every component keeps its identity when the business upgrades.",
+  "identity_contract": {
+    "page": "page_id",
+    "instance": "instance_id",
+    "component": "definition_id",
+    "rule": "IDs originate in the recipe and registry; they are not inferred from rendered markup, layout position, or copy."
+  },
+  "components": [
+    {"id":"navigation.brand-and-actions.v1","category":"customer-front-door","status":"proof-built","fields":["business.name","brand.domain-treatment","navigation.items"],"actions":["availability","contact","directions"]},
+    {"id":"hero.positioning-and-action.v1","category":"customer-front-door","status":"proof-built","fields":["hero.kicker","hero.headline","hero.summary","primary-action","secondary-action"],"slots":["hero-portfolio"],"actions":["availability","contact"]},
+    {"id":"actions.mobile-quick-dock.v1","category":"customer-front-door","status":"proof-built","fields":["action.label","action.icon","action.destination"],"repeaters":["quick-actions"],"actions":["availability","contact","directions","owner-desk"]},
+    {"id":"services.orientation.v1","category":"customer-front-door","status":"proof-built","fields":["section.heading","service.name","service.summary","service.next-step"],"repeaters":["services"],"actions":["service-inquiry"]},
+    {"id":"availability.request-window.v1","category":"business-control","status":"backend-slice-disabled-by-default","fields":["window.label","window.start","window.end","window.status"],"repeaters":["request-windows"],"actions":["request-time"],"truth_boundary":"A visible window invites a request. It is never a confirmed appointment or a connected calendar."},
+    {"id":"foundation.location-contact-domain.v1","category":"customer-front-door","status":"proof-built","fields":["business.location","business.hours","business.contact","brand.domain-treatment"],"actions":["directions","contact"]},
+    {"id":"contact.protected-request.v1","category":"business-control","status":"backend-slice-disabled-by-default","fields":["form.fields","form.disclosure","form.status"],"actions":["submit-request"],"truth_boundary":"The form does not receive data until the exact site is enabled and deployed; a submitted request is not a booked appointment."},
+    {"id":"operations.truthful-setup-status.v1","category":"owner-desk","status":"proof-built","fields":["setup.item","setup.state","setup.next-action"],"repeaters":["setup-items"],"truth_boundary":"Show only recorded state. Never display synthetic bookings, revenue, availability, analytics, or provider connections."},
+    {"id":"operations.mobile-control-cards.v1","category":"owner-desk","status":"proof-built","fields":["control.label","control.current-state","control.next-step"],"repeaters":["controls"],"actions":["publish-window","review-request","edit-hours","domain-task","analytics-task"],"truth_boundary":"Provider, calendar, payment, DNS, and public-publish mutations require their separate authorization gates."},
+    {"id":"operations.next-best-actions.v1","category":"owner-desk","status":"proof-built","fields":["action.priority","action.label","action.reason","action.state"],"repeaters":["next-actions"],"actions":["open-task"]},
+    {"id":"growth.research-plan.v1","category":"growth","status":"proof-built","fields":["research.overview","opportunity.title","opportunity.hypothesis","opportunity.measure"],"repeaters":["market-signals","opportunities"],"actions":["review-growth-step"],"truth_boundary":"Opportunities are labeled hypotheses or measured outcomes, never guaranteed growth."},
+    {"id":"proof.account-owned-review.v1","category":"delivery","status":"implemented-in-portal-source","fields":["research.overview","research.rationale","research.sources","proof.direction","review-terms"],"repeaters":["proofs","market-signals","opportunities"],"actions":["select-direction","request-design-reset","request-edit-round"],"truth_boundary":"Proofs, research, and decisions stay in the authenticated customer workspace; email only notifies."}
+  ],
+  "upgrade_rules": [
+    "Move existing instances between page recipes without changing their instance IDs, business bindings, selected visual direction, or Build DNA lineage.",
+    "A new package may add components or routes, but it may not silently enable provider actions or replace an approved customer flow.",
+    "A component marked disabled-by-default requires exact site enablement and independent authorization before any external effect."
+  ]
+}

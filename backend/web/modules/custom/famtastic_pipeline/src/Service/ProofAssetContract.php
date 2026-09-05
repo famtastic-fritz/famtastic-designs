@@ -13,8 +13,8 @@ namespace Drupal\famtastic_pipeline\Service;
  */
 final class ProofAssetContract {
 
-  /** One rendered source asset may be at most 1.5 MB. */
-  public const MAX_ASSET_BYTES = 1500000;
+  /** One rendered source asset may be at most 2 MB. */
+  public const MAX_ASSET_BYTES = 2000000;
 
   /** A direction may carry a small, intentional image set rather than a dump. */
   public const MAX_ASSETS_PER_VARIANT = 4;

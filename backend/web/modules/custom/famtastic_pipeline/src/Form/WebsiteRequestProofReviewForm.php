@@ -62,7 +62,21 @@ final class WebsiteRequestProofReviewForm extends FormBase {
     $notification = $campaignId && $complete ? $this->database->select('famtastic_notification_outbox', 'n')->fields('n')->condition('notification_key', 'website-request:' . $website_request . ':proofs:' . $campaignId . ':' . $proofCount)->execute()->fetchAssoc() : NULL;
     $form['delivery'] = ['#type' => 'item', '#title' => $this->t('Customer delivery'), '#markup' => '<p>' . ($notification ? 'Notification status: <strong>' . htmlspecialchars((string) $notification['status']) . '</strong>' : '<strong>Not queued.</strong> The customer has not been sent these proofs.') . '</p>'];
     if ($complete && $this->requestRow['proof_review_status'] === 'owner_review') {
-      $form['confirm'] = ['#type' => 'checkbox', '#title' => $this->t('I reviewed all @count working previews and approve showing them in this customer account.', ['@count' => $proofCount]), '#required' => TRUE];
+      $intake = json_decode((string) $this->requestRow['intake_data'], TRUE) ?: [];
+      $research = is_array($intake['proof_research_snapshot'] ?? NULL) ? $intake['proof_research_snapshot'] : [];
+      $rationale = is_array($research['direction_rationale'] ?? NULL) ? $research['direction_rationale'] : [];
+      $lines = static fn(mixed $value): string => is_array($value) ? implode("\n", $value) : '';
+      $form['research'] = ['#type' => 'details', '#title' => $this->t('Research & opportunity snapshot shown with these proofs'), '#open' => TRUE];
+      $form['research']['intro'] = ['#markup' => '<p>This becomes the customer-readable explanation for the directions. Record observed signals and labeled opportunities; do not promise growth results.</p>'];
+      $form['research']['overview'] = ['#type' => 'textarea', '#title' => $this->t('Research overview'), '#required' => TRUE, '#default_value' => (string) ($research['overview'] ?? ''), '#rows' => 3];
+      foreach (['a' => 'Safe', 'b' => 'Wild', 'c' => 'OMG'] as $direction => $label) {
+        $form['research']['rationale_' . $direction] = ['#type' => 'textarea', '#title' => $this->t('@label rationale', ['@label' => $label]), '#required' => TRUE, '#default_value' => (string) ($rationale[$direction] ?? ''), '#rows' => 2];
+      }
+      $form['research']['market_signals'] = ['#type' => 'textarea', '#title' => $this->t('Market signals (one per line)'), '#default_value' => $lines($research['market_signals'] ?? []), '#rows' => 3];
+      $form['research']['opportunities'] = ['#type' => 'textarea', '#title' => $this->t('Growth opportunities this site supports (one per line)'), '#default_value' => $lines($research['opportunities'] ?? []), '#rows' => 3];
+      $form['research']['sources'] = ['#type' => 'textarea', '#title' => $this->t('Research sources or evidence (one per line)'), '#required' => TRUE, '#default_value' => $lines($research['sources'] ?? []), '#rows' => 3];
+      $form['research']['researched_at'] = ['#type' => 'date', '#title' => $this->t('Research date'), '#required' => TRUE, '#default_value' => (string) ($research['researched_at'] ?? '')];
+      $form['confirm'] = ['#type' => 'checkbox', '#title' => $this->t('I reviewed all @count working previews and the research snapshot, and approve showing them in this customer account.', ['@count' => $proofCount]), '#required' => TRUE];
       $form['actions']['#type'] = 'actions';
       $form['actions']['submit'] = ['#type' => 'submit', '#value' => $this->t('Approve and queue customer email'), '#button_type' => 'primary', '#proof_action' => 'approve'];
     }
@@ -94,6 +108,19 @@ final class WebsiteRequestProofReviewForm extends FormBase {
     $trigger = $form_state->getTriggeringElement();
     $action = (string) ($trigger['#proof_action'] ?? 'approve');
     if ($action === 'approve') {
+      $toLines = static fn(string $value): array => array_values(array_filter(array_map('trim', preg_split('/\R/', $value) ?: [])));
+      $this->portal->saveWebsiteRequestProofResearchSnapshot((int) $this->requestRow['id'], (int) $this->account->id(), [
+        'overview' => (string) $form_state->getValue('overview'),
+        'direction_rationale' => [
+          'a' => (string) $form_state->getValue('rationale_a'),
+          'b' => (string) $form_state->getValue('rationale_b'),
+          'c' => (string) $form_state->getValue('rationale_c'),
+        ],
+        'market_signals' => $toLines((string) $form_state->getValue('market_signals')),
+        'opportunities' => $toLines((string) $form_state->getValue('opportunities')),
+        'sources' => $toLines((string) $form_state->getValue('sources')),
+        'researched_at' => (string) $form_state->getValue('researched_at'),
+      ]);
       $this->portal->approveWebsiteRequestProof((int) $this->requestRow['id'], (int) $this->account->id());
       $this->messenger()->addStatus($this->t('Proofs approved and one customer notification queued.'));
     }

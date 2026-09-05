@@ -30,7 +30,10 @@ function famtastic_pipeline_update_8001(&$sandbox) {
  * Implements hook_schema().
  */
 function famtastic_pipeline_schema(): array {
-  return _famtastic_pipeline_automation_schema();
+  return _famtastic_pipeline_automation_schema() + [
+    'famtastic_booking_request' => _famtastic_pipeline_booking_request_schema(),
+    'famtastic_booking_availability' => _famtastic_pipeline_booking_availability_schema(),
+  ];
 }
 
 /**
@@ -2669,6 +2672,83 @@ function famtastic_pipeline_update_8049(&$sandbox) {
     }
   }
   return t('Added immutable template identity and version fields to the notification outbox. Existing notices remain honestly marked legacy_unclassified v0.');
+}
+
+/**
+ * Adds a consented, owner-managed request-to-book ledger.
+ *
+ * No site is enabled by this update. An operator must explicitly add its
+ * exact site key to booking_request_enabled_sites after client approval.
+ */
+function famtastic_pipeline_update_8050(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_booking_request_schema();
+  if (!$schema->tableExists('famtastic_booking_request')) {
+    $schema->createTable('famtastic_booking_request', $definition);
+  }
+  return t('Added the owner-managed request-to-book ledger. No public site was enabled.');
+}
+
+/** Adds owner-published availability windows without a calendar connection. */
+function famtastic_pipeline_update_8051(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('famtastic_booking_availability')) {
+    $schema->createTable('famtastic_booking_availability', _famtastic_pipeline_booking_availability_schema());
+  }
+  return t('Added the owner-published availability ledger. No public site was enabled.');
+}
+
+/** Schema for public request invitations, not appointment confirmations. */
+function _famtastic_pipeline_booking_availability_schema(): array {
+  return [
+    'description' => 'Owner-published availability invitations; not calendar events or confirmed appointments.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+      'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'label' => ['type' => 'varchar', 'length' => 100, 'not null' => TRUE, 'default' => ''],
+      'starts_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'ends_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'service_keys_json' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'draft'],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => ['site_status_starts' => ['site_key', 'status', 'starts_at']],
+  ];
+}
+
+/** Schema for durable request-to-book records. */
+function _famtastic_pipeline_booking_request_schema(): array {
+  return [
+    'description' => 'Owner-managed customer appointment requests; never a calendar or payment record.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+      'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'service_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => 'general'],
+      'customer_name' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE],
+      'email' => ['type' => 'varchar', 'length' => 254, 'not null' => TRUE],
+      'email_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'phone' => ['type' => 'varchar', 'length' => 40, 'not null' => TRUE, 'default' => ''],
+      'requested_window' => ['type' => 'varchar', 'length' => 180, 'not null' => TRUE, 'default' => ''],
+      'message' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE, 'default' => ''],
+      'consent' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+      'status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'new'],
+      'source' => ['type' => 'varchar', 'length' => 120, 'not null' => TRUE, 'default' => 'site'],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => [
+      'site_status' => ['site_key', 'status', 'created'],
+      'site_email' => ['site_key', 'email_hash'],
+      'created' => ['created'],
+    ],
+  ];
 }
 
 /**

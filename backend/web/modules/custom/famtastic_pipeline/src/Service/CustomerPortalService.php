@@ -986,7 +986,105 @@ final class CustomerPortalService {
       'status' => (string) $row['proof_review_status'],
       'selected_variant' => (string) ($row['selected_proof_direction'] ?? ''),
       'variants' => $variants,
+      'research_snapshot' => $this->proofResearchSnapshot($row),
+      'review_terms' => $this->proofReviewTerms($row),
     ] : NULL;
+  }
+
+  /**
+   * Returns the owner-approved research brief that explains the proof set.
+   *
+   * Proofs are deliberately not made customer-visible without this brief. It
+   * keeps the evidence and growth plan next to the concepts rather than
+   * turning the notification email into a second, untracked review surface.
+   */
+  private function proofResearchSnapshot(array $row): ?array {
+    try {
+      $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE, flags: JSON_THROW_ON_ERROR);
+    }
+    catch (\JsonException) {
+      return NULL;
+    }
+    return $this->normalizeProofResearchSnapshot($intake['proof_research_snapshot'] ?? NULL);
+  }
+
+  /** Validates and sanitizes the research brief retained with one proof set. */
+  private function normalizeProofResearchSnapshot(mixed $snapshot): ?array {
+    if (!is_array($snapshot)) {
+      return NULL;
+    }
+    $cleanText = static fn(mixed $value): string => mb_substr(trim(strip_tags((string) $value)), 0, 1200);
+    $overview = $cleanText($snapshot['overview'] ?? '');
+    $rawRationale = is_array($snapshot['direction_rationale'] ?? NULL) ? $snapshot['direction_rationale'] : [];
+    $rationale = [];
+    foreach (['a', 'b', 'c'] as $direction) {
+      $value = $cleanText($rawRationale[$direction] ?? '');
+      if ($value === '') {
+        return NULL;
+      }
+      $rationale[$direction] = $value;
+    }
+    if ($overview === '') {
+      return NULL;
+    }
+    $cleanList = static function (mixed $values) use ($cleanText): array {
+      if (!is_array($values)) return [];
+      $result = [];
+      foreach (array_slice($values, 0, 8) as $value) {
+        $text = $cleanText($value);
+        if ($text !== '') $result[] = $text;
+      }
+      return $result;
+    };
+    $sources = $cleanList($snapshot['sources'] ?? []);
+    $researchedAt = $cleanText($snapshot['researched_at'] ?? '');
+    if (!$sources || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $researchedAt)) {
+      return NULL;
+    }
+    return [
+      'overview' => $overview,
+      'direction_rationale' => $rationale,
+      'market_signals' => $cleanList($snapshot['market_signals'] ?? []),
+      'opportunities' => $cleanList($snapshot['opportunities'] ?? []),
+      'sources' => $sources,
+      'researched_at' => $researchedAt,
+    ];
+  }
+
+  /** Saves the owner-reviewed research brief before the customer proof gate. */
+  public function saveWebsiteRequestProofResearchSnapshot(int $requestId, int $uid, array $input): void {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$row || $row['proof_review_status'] !== 'owner_review' || empty($row['proof_campaign_id'])) {
+      throw new \RuntimeException('Research can only be saved for a proof set awaiting owner review.');
+    }
+    $snapshot = $this->normalizeProofResearchSnapshot($input);
+    if (!$snapshot) {
+      throw new \InvalidArgumentException('Research needs an overview, a rationale for Safe/Wild/OMG, a research date, and at least one source.');
+    }
+    $snapshot['approved_by_uid'] = $uid;
+    $snapshot['approved_at'] = gmdate(DATE_ATOM, $this->time->getRequestTime());
+    $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    $intake['proof_research_snapshot'] = $snapshot;
+    $this->database->update('famtastic_project_request')->fields([
+      'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+      'changed' => $this->time->getRequestTime(),
+    ])->condition('id', $requestId)->execute();
+    $this->activity((int) $row['organization_id'], 'website_request.proof_research_saved', 'Owner-reviewed proof research snapshot saved.');
+  }
+
+  /** Returns the included customer review allowance and its current use. */
+  private function proofReviewTerms(array $row): array {
+    $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE) ?: [];
+    $resets = is_array($intake['proof_design_reset_requests'] ?? NULL) ? $intake['proof_design_reset_requests'] : [];
+    $edits = is_array($intake['proof_edit_round_requests'] ?? NULL) ? $intake['proof_edit_round_requests'] : [];
+    return [
+      'design_reset_included' => 1,
+      'design_reset_used' => count($resets),
+      'design_reset_remaining' => max(0, 1 - count($resets)),
+      'edit_rounds_included' => 3,
+      'edit_rounds_used' => count($edits),
+      'edit_rounds_remaining' => max(0, 3 - count($edits)),
+    ];
   }
 
   /** Returns integrity metadata for request-owned private reference files. */
@@ -1110,6 +1208,7 @@ final class CustomerPortalService {
       array_values($this->entities->getStorage('proof_variant')->loadMultiple($directions)));
     $validSet = $directionValues === ['a', 'b', 'c'] || $directionValues === ['a', 'b', 'c', 'd', 'e', 'f'];
     if (!$campaign || $campaign->get('generation_status')->value !== 'ready' || !in_array($variantCount, [3, 6], TRUE) || !$validSet) throw new \RuntimeException('A complete three- or six-direction proof set is required.');
+    if (!$this->proofResearchSnapshot($row)) throw new \RuntimeException('An owner-approved proof research snapshot with rationale for all three core directions is required.');
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_project_request')->fields([
       'proof_review_status' => 'customer_ready', 'proof_approved_by_uid' => $uid, 'proof_approved_at' => $now, 'changed' => $now,
@@ -1123,7 +1222,7 @@ final class CustomerPortalService {
     $setLabel = $count === 6 ? 'six website concepts—including three fully FAMtastic directions—' : 'Safe, Wild, and OMG concepts';
     $reviewUrl = $base . '/portal/?section=projects&request=' . rawurlencode((string) $row['public_id']);
     $this->queueNotification('website-request:' . $requestId . ':proofs:' . (int) $row['proof_campaign_id'] . ':' . $count, 'transactional', (string) $customer['email'],
-      'Your FAMtastic Studio Review is ready', "Hi {$customer['display_name']},\n\nYour {$setLabel} are ready in your private Studio Review. We used the business context you shared to shape each direction.\n\nInside, you can compare every concept, choose the direction that feels most like your business, or send FAMtastic Concierge feedback when you are ready.\n\nOpen your private Studio Review:\n{$reviewUrl}\n\nUse the same verified email address that received this message.",
+      'Your FAMtastic Studio Review is ready', "Hi {$customer['display_name']},\n\nYour {$setLabel} are ready in your private Studio Review. We used the business context you shared to shape each direction.\n\nInside, you can read the research brief behind the concepts, compare every direction, choose the one that feels most like your business, or send FAMtastic Concierge feedback when you are ready.\n\nOpen your private Studio Review:\n{$reviewUrl}\n\nUse the same verified email address that received this message.",
       OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY,
       OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY_VERSION,
     );
@@ -1189,7 +1288,17 @@ final class CustomerPortalService {
       $notes = mb_substr(trim(strip_tags((string) ($input['notes'] ?? ''))), 0, 5000);
       if ($notes === '') throw new \InvalidArgumentException('Tell us what you want adjusted.');
       $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
-      $intake['proof_revision_request'] = ['notes' => $notes, 'requested_at' => gmdate(DATE_ATOM, $now)];
+      $isEditRound = !empty($row['selected_proof_direction']);
+      $historyKey = $isEditRound ? 'proof_edit_round_requests' : 'proof_design_reset_requests';
+      $limit = $isEditRound ? 3 : 1;
+      $history = is_array($intake[$historyKey] ?? NULL) ? $intake[$historyKey] : [];
+      if (count($history) >= $limit) {
+        throw new \RuntimeException($isEditRound ? 'All included edit rounds have been used. Contact FAMtastic to plan the next change.' : 'Your included design reset has already been requested. Contact FAMtastic to plan the next step.');
+      }
+      $entry = ['notes' => $notes, 'requested_at' => gmdate(DATE_ATOM, $now)];
+      $history[] = $entry;
+      $intake[$historyKey] = $history;
+      $intake['proof_revision_request'] = $entry;
       $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'revision_requested', 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'changed' => $now])->condition('id', $row['id'])->execute();
       $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
       $notesHash = hash('sha256', $notes);

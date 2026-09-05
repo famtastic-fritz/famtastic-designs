@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
+use Drupal\famtastic_pipeline\Service\ProofAssetContract;
 use Drupal\file\FileRepositoryInterface;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -56,7 +57,13 @@ final class WebsiteRequestProofController extends ControllerBase {
 
   public function adminPreview(Request $request, int $website_request, string $direction): Response {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $website_request)->execute()->fetchAssoc();
-    return $row ? $this->artifactResponse($row, $direction) : new Response('Proof not found.', 404);
+    return $row ? $this->artifactResponse($row, $direction, '') : new Response('Proof not found.', 404);
+  }
+
+  /** Serves an owner-review asset using the same frozen manifest as the customer view. */
+  public function adminAsset(Request $request, int $website_request, string $direction, string $asset_path): Response {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $website_request)->execute()->fetchAssoc();
+    return $row ? $this->assetResponse($row, $direction, $asset_path) : new Response('Proof asset not found.', 404);
   }
 
   public function publicShare(Request $request, string $website_request, string $signature): JsonResponse {
@@ -67,7 +74,23 @@ final class WebsiteRequestProofController extends ControllerBase {
 
   public function publicPreview(Request $request, string $website_request, string $signature, string $direction): Response {
     $row = $this->portal->sharedWebsiteRequest($website_request, $signature);
-    return $row ? $this->artifactResponse($row, $direction) : $this->securePublicResponse(new Response('Proof not found.', 404));
+    return $row ? $this->artifactResponse($row, $direction, $signature) : $this->securePublicResponse(new Response('Proof not found.', 404));
+  }
+
+  /** Serves one frozen proof image only to the customer who owns the request. */
+  public function customerAsset(Request $request, string $website_request, string $direction, string $asset_path): Response {
+    $customer = $this->account->isAuthenticated() ? $this->portal->customerForUid((int) $this->account->id()) : NULL;
+    $row = $customer ? $this->portal->ownedWebsiteRequest((int) $customer['id'], $website_request) : NULL;
+    if (!$row || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) {
+      return new Response('Proof asset not found.', 404);
+    }
+    return $this->assetResponse($row, $direction, $asset_path);
+  }
+
+  /** Serves one frozen asset for an explicitly enabled, revocable proof share. */
+  public function publicAsset(Request $request, string $website_request, string $signature, string $direction, string $asset_path): Response {
+    $row = $this->portal->sharedWebsiteRequest($website_request, $signature);
+    return $row ? $this->assetResponse($row, $direction, $asset_path) : $this->securePublicResponse(new Response('Proof asset not found.', 404));
   }
 
   public function uploadAsset(Request $request, string $website_request): JsonResponse {
@@ -110,7 +133,7 @@ final class WebsiteRequestProofController extends ControllerBase {
     return new JsonResponse(['ok' => TRUE, 'duplicate' => FALSE, 'asset' => $this->assetPayload($asset)], 201);
   }
 
-  private function artifactResponse(array $row, string $direction): Response {
+  private function artifactResponse(array $row, string $direction, ?string $shareSignature = NULL): Response {
     $direction = strtolower($direction);
     if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE) || empty($row['proof_campaign_id'])) return new Response('Proof not found.', 404);
     $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
@@ -122,7 +145,8 @@ final class WebsiteRequestProofController extends ControllerBase {
     $real = realpath($path);
     $root = realpath(\Drupal::root() . '/proofs');
     if (!$real || !$root || !str_starts_with($real, $root . DIRECTORY_SEPARATOR) || !is_file($real)) return new Response('Proof artifact unavailable.', 404);
-    $response = new Response((string) file_get_contents($real), 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+    $html = $this->rewriteArtifactAssetUrls((string) file_get_contents($real), $variant, (int) $row['id'], (string) $row['public_id'], $direction, $shareSignature);
+    $response = new Response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
     $response->setPrivate();
     $response->setMaxAge(0);
     $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
@@ -131,6 +155,69 @@ final class WebsiteRequestProofController extends ControllerBase {
     $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'none'; form-action 'none'");
     $response->headers->addCacheControlDirective('no-store', TRUE);
     return $response;
+  }
+
+  /** Safely maps declared callback asset paths into a scoped controller route. */
+  private function rewriteArtifactAssetUrls(string $html, object $variant, int $requestId, string $publicId, string $direction, ?string $shareSignature): string {
+    try {
+      $dna = json_decode((string) $variant->get('design_dna')->value, TRUE, flags: JSON_THROW_ON_ERROR);
+      $assets = ProofAssetContract::normalizeStoredManifest($dna['asset_manifest'] ?? []);
+    }
+    catch (\Throwable) {
+      return $html;
+    }
+    foreach ($assets as $asset) {
+      $encoded = implode('/', array_map('rawurlencode', explode('/', $asset['relative_path'])));
+      $url = $shareSignature === ''
+        ? '/web/admin/famtastic/website-request/' . $requestId . '/proof/' . rawurlencode($direction) . '/assets/' . $encoded
+        : ($shareSignature === NULL
+          ? '/web/api/customer/website-requests/' . rawurlencode($publicId) . '/proofs/' . rawurlencode($direction) . '/assets/' . $encoded
+          : '/web/api/proof-shares/' . rawurlencode($publicId) . '/' . rawurlencode($shareSignature) . '/proofs/' . rawurlencode($direction) . '/assets/' . $encoded);
+      $html = str_replace('assets/' . $asset['relative_path'], $url, $html);
+    }
+    return $html;
+  }
+
+  /** Reads one declared asset without granting filesystem-path access. */
+  private function assetResponse(array $row, string $direction, string $assetPath): Response {
+    $direction = strtolower($direction);
+    if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE) || empty($row['proof_campaign_id'])) {
+      return new Response('Proof asset not found.', 404);
+    }
+    try {
+      $relativePath = ProofAssetContract::normalizeRelativePath($assetPath);
+      $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
+        ->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $direction)->range(0, 1)->execute();
+      $variant = $ids ? $this->entities->getStorage('proof_variant')->load(reset($ids)) : NULL;
+      if (!$variant) return new Response('Proof asset not found.', 404);
+      $dna = json_decode((string) $variant->get('design_dna')->value, TRUE, flags: JSON_THROW_ON_ERROR);
+      $manifest = ProofAssetContract::normalizeStoredManifest($dna['asset_manifest'] ?? []);
+      $asset = NULL;
+      foreach ($manifest as $candidate) {
+        if (hash_equals($candidate['relative_path'], $relativePath)) {
+          $asset = $candidate;
+          break;
+        }
+      }
+      if (!$asset) return new Response('Proof asset not found.', 404);
+      $absolute = dirname(\Drupal::root()) . '/' . ltrim($asset['artifact_path'], '/');
+      $real = realpath($absolute);
+      $root = realpath(\Drupal::root() . '/proofs');
+      if (!$real || !$root || !str_starts_with($real, $root . DIRECTORY_SEPARATOR) || !is_file($real) || !hash_equals($asset['sha256'], (string) hash_file('sha256', $real))) {
+        return new Response('Proof asset unavailable.', 404);
+      }
+      $response = new Response((string) file_get_contents($real), 200, ['Content-Type' => $asset['media_type']]);
+      $response->setPrivate();
+      $response->setMaxAge(0);
+      $response->headers->set('Cache-Control', 'no-store, private');
+      $response->headers->set('X-Content-Type-Options', 'nosniff');
+      $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+      $response->headers->set('Referrer-Policy', 'no-referrer');
+      return $response;
+    }
+    catch (\Throwable) {
+      return new Response('Proof asset not found.', 404);
+    }
   }
 
   private function securePublicResponse(Response $response): Response {

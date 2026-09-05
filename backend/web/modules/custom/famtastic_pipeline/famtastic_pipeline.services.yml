@@ -150,6 +150,14 @@ services:
     class: Drupal\famtastic_pipeline\Service\MicrositeService
     arguments: ['@database', '@datetime.time']
 
+  famtastic_pipeline.booking_requests:
+    class: Drupal\famtastic_pipeline\Service\BookingRequestService
+    arguments: ['@database', '@datetime.time', '@uuid']
+
+  famtastic_pipeline.booking_availability:
+    class: Drupal\famtastic_pipeline\Service\BookingAvailabilityService
+    arguments: ['@database', '@datetime.time', '@uuid']
+
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge']

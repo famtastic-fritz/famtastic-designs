@@ -1056,3 +1056,23 @@ Open follow-up:
   ad-hoc mechanism for campaign-driven posts outside that plan (the gmail/
   linktree post, the 5 add-on-explainer posts) — a draft folder's slug not
   appearing in the plan is expected and not a bug.
+
+## 2026-09-04 — mobile business control is a product boundary, not dashboard decoration
+
+- Observation: a visually strong local-business proof can still fail the owner
+  if it makes a website look like a static brochure or exposes its internal
+  research/concept language to the customer. Shay’s intake makes the real
+  value explicit: Booksy can stay in place, but the branded site must make
+  booking, contact, directions, services, and changing availability easier
+  from a phone.
+- Guidance: preserve the ordinary site foundation first—domain treatment,
+  contact, location/map, services, and a direct booking bridge—then build the
+  authenticated owner desk as a separate mobile surface. It may show only
+  durable facts and honest pending states. Never display fake bookings,
+  revenue, availability, reviews, or analytics; never turn a proposed domain,
+  request form, calendar, or provider connection into a live claim.
+- Observation: in a visual-first small-business site, generated media must
+  support the full operating story, not be limited to a single hero image. A
+  character-led customer journey, owner-at-work moment, and concept-derived
+  graphic can each occupy a named media slot, with prompt/output lineage and
+  an explicit owner replacement/approval requirement.

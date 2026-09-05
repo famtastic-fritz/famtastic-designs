@@ -1,5 +1,42 @@
 # Product changelog
 
+## 2026-09-04 — Tighten Up Your Locs owned mobile business system and review handoff
+
+- Replaced the client-facing proof chooser with a Shay-first self-contained mobile public-site build: branded-domain treatment, services, owner-published availability, protected contact/request boundary, Find Us directions, and a four-action phone dock (Openings, Contact, Find Us, Owner). The site has no client-facing Booksy exit.
+- Added a separate, phone-first Owner Desk for availability windows, request-inbox readiness, launch choices, and a Tech + Grow plan. It reports only actual setup states—no synthetic bookings, revenue, reviews, availability, or analytics—and leaves domain, request intake, calendar, and measurement approval-gated.
+- Added `shay-growth-plan.md`, converting intake and market research into a staged 90-day business plan across discovery, booking/rebooking, client service, and measured growth. Each move is paired with a bounded FAMtastic capability and its evidence/approval boundary.
+- The new `site-recipe.json` records the public and owner page component instances so the selected site can grow into a multi-page service without losing its mobile actions or business bindings. The former temporary Cloudflare review tunnel was stopped on 2026-09-05 because an external static link cannot be a customer proof or selection surface; nothing was production-deployed, enabled, or connected to a calendar or payment provider.
+- Expanded the visual system beyond the hero with a Sisterlock journey character, an owner-on-phone character, and a “care rhythm” graphic integrated as a public visual-story section. All are retained as private generated concept media and must be replaced or expressly approved before launch.
+- Recorded `backend-consolidation.md`: the static Booking Desk, Thirst Trap-specific microsite service, generic FAMtastic lead capture, and new request ledger are not interchangeable. Shay’s live route must consolidate on the durable request ledger with exact account ownership, an authenticated mobile Owner Desk, and approval-gated provider actions.
+- Added the disabled-by-default availability ledger/service/controller and separate public/owner routes. Published windows invite an owner-reviewed request only; they never create a calendar event, charge, or appointment confirmation.
+- Restricted `customer_owner_system_review` v1 to temporary demonstrations only. It cannot deliver design proofs or collect a design choice; those actions now require the authenticated customer workspace.
+- Sent that review notice from `fritz.medine@gmail.com` to `juneyimoms@gmail.com`; Gmail recorded it in Sent as message/thread `1a06f536cc43ac8d`. The email points only to the temporary, non-live review and Owner Desk paths.
+- Corrected the review set to include the actual three design directions—Care Rhythm, Appointment Desk, and Established Archive—with a compare-all hub. Each direction is independently composed and self-contained; no customer-facing Booksy route exists. The owner-authorized proof email was sent to the same recipient as Gmail message/thread `1a06f5d7a32f1f6d`.
+- Corrected a recipient error: production request `12` has the authoritative customer account email `junyeismom@gmail.com`, while `juneyimoms@gmail.com` was supplied from memory and is not the account-of-record. A read-only production join across `famtastic_project_request` and `famtastic_customer` verified the match, and the three-direction proof email was resent to the verified address as Gmail message/thread `1a06fdd3e10079fb`.
+
+## 2026-09-05 — Account-owned proof choice, research rationale, and included review limits
+
+- Corrected the proof-delivery boundary: a notification email is not a proof room. It may notify only; all proof comparison, research rationale, direction selection, design-reset request, and edit-round request live in the customer’s authenticated FAMtastic workspace.
+- Extended the website-proof API payload and portal review UI with an owner-approved research snapshot: research overview, Safe/Wild/OMG rationale, market signals, and growth opportunities. Owner approval now refuses to reveal a proof set until that snapshot exists.
+- Made the starter-site decision terms executable rather than just copy: one concept-level design reset before a choice and three edit rounds after selection. Requests are recorded in account-owned request data and the API refuses attempts beyond those included limits.
+- Withdrew the temporary public review tunnel. Earlier manual messages remain Gmail receipts only; they are not proof delivery, customer selection, or production state evidence.
+
+## 2026-09-05 — Mobile command-center recipe and importable proof candidates
+
+- Added the source-controlled `mobile-command-center.v1` component registry and
+  bound Tighten Up Your Locs’ public and Owner Desk recipe to it. The registry
+  preserves stable component identity and labels proof-built, disabled, and
+  portal-source capability states so a later Site Studio handoff can build on
+  the selected system instead of recreating it.
+- Added a read-only validation lane for Shay’s three customer-specific proof
+  candidates. The protected callback bundle requires an exact generated
+  campaign/job/event binding before it can write a private import payload; it
+  cannot send email or mutate customer state.
+- Added scoped proof-asset delivery for owner review, the owning customer, and
+  an explicitly enabled share. Only manifest-declared, hash-verified images
+  are served; proof HTML receives scoped controller URLs rather than exposing
+  a static proof directory.
+
 ## 2026-09-04 — Concierge intake email v2 visual direction prepared for review
 
 - Added the local review-only mock
