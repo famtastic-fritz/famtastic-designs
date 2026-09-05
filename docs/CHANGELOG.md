@@ -1,5 +1,58 @@
 # Product changelog
 
+## 2026-09-05 — drop-06 rebuilt on the real creative stack; unbranded recut replaced
+
+- **The drop-06 video was rebuilt from scratch and the drop re-staged.** The
+  2026-09-04 recut (`06-gmail-linktree-blog-recut-9x16.mp4`, edge-tts + Pillow
+  PNGs composited by ffmpeg) was rejected on sight by the owner as unbranded.
+  Its replacement is
+  `marketing/campaigns/cost-is-not-the-reason/videos/07-gmail-linktree-branded-9x16.mp4`
+  (1080x1920, h264 + aac 48kHz stereo, 44.05s, 15,015,570 bytes, mean -18.6 dB /
+  max -3.7 dB), built on all three documented tiers instead of only the bottom one.
+- **Tier 1 — HeyGen presenter.** One render of the existing private photo avatar
+  `a7994fb69c394554b62585c1c7235211` ("FAMtastic Guide") with its default voice,
+  16:9 @25fps, carrying the whole 39.63s voice-over. **12 premium credits**
+  (488 -> 476). Its sidecar SRT supplies every beat and caption timing in
+  `marketing/video/src/drop06/script.ts` — no timing in this build is estimated.
+- **Tier 1 — HeyGen brand kit.** Created brand kit `8d249f1d06b4440ea665c539f206ecb7`
+  ("FAMtastic Designs") from `https://famtasticdesigns.com`. It resolved to
+  accent `#7CFC00` with Space Grotesk (title) and Inter (body) — the live site's
+  own tokens — confirming the presenter lane is now branded at source. No logo
+  was detected, matching `BRAND.md`'s note that no final mark exists yet.
+- **Tier 2 — Gemini Flash Lite cinematic plates.** Five 9:16 plates in
+  `marketing/campaigns/cost-is-not-the-reason/images/broll/` at **$0.0336 each,
+  $0.168 total**, brand-graded in the prompt (near-black ground, a single
+  chartreuse practical as the only saturated colour, no text of any kind).
+  Receipt with per-image hashes, prompt hashes and usage in that folder's
+  `receipt.json`.
+- **Tier 3 — Remotion composition `Drop06GmailLinktree`.** New source under
+  `marketing/video/src/drop06/` (`tokens.ts`, `script.ts`, `parts.tsx`,
+  `Drop06.tsx`), registered in `marketing/video/src/root.tsx`, rendered with
+  `npm --prefix marketing/video run render:drop06`. Every word, colour and edge
+  is authored here, so the brand system is deterministic rather than patched on:
+  ground `#070907`, panels `#101310`/`#141814`, borders `#252b25`, single lime
+  accent, one glow per screen, persistent mark + wordmark, and captions held
+  clear of the TikTok right-hand action rail.
+- **Total spend: $0.168 plus 12 HeyGen credits.** Under the $2.00 per-campaign target.
+- **Claims are sourced, not invented.** The script carries no statistic. Price,
+  scope and renewal come from `backend/config/famtastic-products.json`
+  (FAM-FOOT-199 / FAM-HOST-999) and the renewal disclosure appears on screen and
+  in the voice-over. The burned-in CTA `famtasticdesigns.com/packages/199-quick-start`
+  was curled to HTTP 200 before the render, not after.
+- **drop-06 re-staged and re-armed.** Hard-deleted the four QUEUE records, re-added
+  the drop with the new media, and re-armed. **4/4 records verified in QUEUE** for
+  `2026-09-05T13:00:00.000Z` on youtube, tiktok, instagram-standalone and facebook
+  (`cmtnq32rj0000rqvt9a0llbs6`, `cmtnq32s60001rqvtz0x0pjjn`, `cmtnq32sd0002rqvtaxio3u15`,
+  `cmtnq32si0003rqvtbm4mzeoj`). Both copy strings are byte-identical to the previous
+  staging, and the uploaded media's SHA-256 matches the new file exactly
+  (`8f0ad06222cd9be768237edfc3fe3481cdedf748cd3e17f1f2e7ecbdc9e7c4f6`). Drops 01-05
+  reported BLOCKED as in-the-past — the stale-date guard behaving correctly.
+- **Left open:** the drop's own social copy claims "email" is included in the $199
+  package. `famtastic-products.json` shows business email is a separate $99 add-on
+  (`FAM-BUSINESS-EMAIL`). The copy was preserved verbatim as instructed, so this
+  needs an owner decision before the next drop reuses it. The new video does not
+  make the claim.
+
 ## 2026-09-04 (recovery release) — Generated blog art refined and transient YouTube failures made retryable
 
 - **Released frontend commit `a05c7c602aa94c4ec142fe9e14a22f0cc8cac0a2` to GoDaddy.** The generated fallback blog-art hero is now a compact masthead, and the ownership illustration wraps article copy on desktop instead of consuming the article's opening viewport. Author-supplied raster `post.visual` assets are unchanged. The production release marker and real-browser checks passed for both apex and `www`; the reviewed article has no horizontal overflow or console errors.

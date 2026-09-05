@@ -1264,3 +1264,66 @@ Open follow-up:
   ad-hoc mechanism for campaign-driven posts outside that plan (the gmail/
   linktree post, the 5 add-on-explainer posts) — a draft folder's slug not
   appearing in the plan is expected and not a bug.
+
+## 2026-09-05 — Creative-stack capability detection: three documented calls were wrong
+
+Observation:
+
+- `scripts/generate-booked-branded-gemini-reference-images.mjs` posts to
+  `https://generativelanguage.googleapis.com/v1beta/interactions`. That endpoint
+  now returns **HTTP 404 `Requested entity was not found`** for a model that
+  demonstrably exists. `GET /v1beta/models` lists
+  `models/gemini-3.1-flash-lite-image` with `supportedGenerationMethods:
+  ['generateContent', 'countTokens', 'batchGenerateContent']` — `interactions`
+  is not among them. The working call is
+  `POST /v1beta/models/<model>:generateContent` with
+  `generationConfig.responseModalities: ['IMAGE']` and
+  `generationConfig.imageConfig: { aspectRatio, imageSize }`; the image comes
+  back as `candidates[].content.parts[].inlineData.data`, not `output_image`.
+- `imageSize: '2K'` is **rejected** by `gemini-3.1-flash-lite-image`
+  ("Image size 2K is not supported for this model"). `'1K'` succeeds and yields
+  768x1376 for a 9:16 request — below a 1080x1920 canvas, so plan for ~1.4x
+  upscale or route to a non-lite model when native resolution matters.
+- HeyGen's `background: {type: 'color', value: '#070907'}` on a
+  **photo avatar whose source image contains a full illustrated scene** is
+  accepted and then silently ignored — the render came back with the avatar's
+  own office intact. The request does not fail, so a script that trusts the
+  response will believe it got a matte it did not get.
+- `heygen brand kits create` takes **only `--url` and `--name`**. There is no way
+  to hand it explicit hex tokens; it imports colours, fonts and logos by visiting
+  a public site. For FAMtastic that is sufficient and arguably better —
+  `https://famtasticdesigns.com` resolved to accent `#7CFC00` + Space Grotesk +
+  Inter, matching `frontend/src/index.css`'s `--v1-*` block exactly — but a brand
+  whose tokens are not already live on a public page cannot be encoded this way.
+
+Guidance:
+
+- Before using any generative provider from an existing repo script, **list the
+  provider's models/endpoints first** rather than trusting the call shape a
+  previous script used. Two of the three failures above were silent-ish (a 404
+  and an ignored field), and the third produced a wrong-looking render rather
+  than an error.
+- **Treat a provider field that is accepted but has no visible effect as a
+  detection failure, not a success.** Extract frames and look at them before
+  building a composite that assumes the field worked.
+- Re-confirming the 2026-09-04 measurement-discipline entry from a fresh angle:
+  during this build a lime headline was judged low-contrast and about to be
+  "fixed" — sampling one second later showed it was simply mid-animation and
+  settled correctly. Sample a *settled* frame before calling anything a defect.
+
+Permanent rules:
+
+- **ffmpeg on this workstation cannot render text.** `/opt/homebrew/bin/ffmpeg`
+  9.0 has neither `drawtext` nor `subtitles`. Any burned-in word must come from
+  Remotion (`marketing/video/`, `~/Development/FAMtastic/remotion`) or from the
+  provider itself. Compositing Pillow-drawn PNG captions over a gradient is what
+  produced the rejected drop-06 recut; it is not an acceptable fallback.
+- **A URL that will exist only as pixels must be curled before the render, not
+  after.** No text-level QA tool can see a burned-in URL. The correct package URL
+  is `https://famtasticdesigns.com/packages/199-quick-start` (200);
+  `/web/packages/web-basics` 404s.
+- **Postiz uploads media at draft-creation time**, so swapping a drop's video is
+  delete + re-add (or `--edit-drop`, which internally reverts to draft, deletes,
+  and recreates), never an in-place edit. Prove the swap by comparing the
+  SHA-256 of `/uploads/<...>.mp4` inside the `postiz` container against the local
+  file — the manifest path alone does not prove what was uploaded.

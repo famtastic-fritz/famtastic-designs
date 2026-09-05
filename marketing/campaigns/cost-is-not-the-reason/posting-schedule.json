@@ -378,23 +378,23 @@
         "campaign": "cost_is_not_the_reason_eval",
         "content": "drop-06"
       },
-      "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/06-gmail-linktree-blog-recut-9x16.mp4",
+      "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/07-gmail-linktree-branded-9x16.mp4",
       "drop_number": 6,
       "provider_ids": {
-        "postiz_draft_id": "cmtnmp5sc000lo17bs8c2v40i",
-        "postiz_scheduled_id": "cmtnmp5sc000lo17bs8c2v40i",
+        "postiz_draft_id": "cmtnq32rj0000rqvt9a0llbs6",
+        "postiz_scheduled_id": "cmtnq32rj0000rqvt9a0llbs6",
         "postiz_scheduled_group": [
-          "cmtnmp5sc000lo17bs8c2v40i",
-          "cmtnmp5te000mo17bqmqsldx8",
-          "cmtnmp5ug000no17bn70cdtz6",
-          "cmtnmp5vm000oo17bqfqxdtmc"
+          "cmtnq32rj0000rqvt9a0llbs6",
+          "cmtnq32s60001rqvtz0x0pjjn",
+          "cmtnq32sd0002rqvtaxio3u15",
+          "cmtnq32si0003rqvtbm4mzeoj"
         ]
       },
       "evidence": [
         {
           "kind": "postiz_draft_queued",
-          "at": "2026-09-05T00:12:27Z",
-          "postiz_post_id": "cmtnmp5sc000lo17bs8c2v40i",
+          "at": "2026-09-05T01:47:15Z",
+          "postiz_post_id": "cmtnq32rj0000rqvt9a0llbs6",
           "date_utc": "2026-09-05T13:00:00.000Z",
           "integrations": [
             "youtube",

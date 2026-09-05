@@ -56,3 +56,9 @@ website-delivery-swarm/pilots/**/proof-hub/
 
 # Packaged asset bundle — repackages content already tracked in this repo
 marketing/*.zip
+
+# Remotion build workspace for marketing/video: staged copies of assets whose
+# canonical homes are marketing/campaigns/**/images/ (plates), HeyGen (presenter
+# video + voice-over) and frontend/public/brand/ (mark). Regenerate with
+# `npm --prefix marketing/video run prepare:drop06`.
+marketing/video/public/

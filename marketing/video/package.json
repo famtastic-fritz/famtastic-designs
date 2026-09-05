@@ -5,7 +5,9 @@
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "render:proof": "remotion render src/index.ts Famtastic55CentsPortrait out/famtastic-55-cents-remotion.mp4",
-    "still": "remotion still src/index.ts Famtastic55CentsPortrait out/famtastic-55-cents-cover.png --frame=30"
+    "still": "remotion still src/index.ts Famtastic55CentsPortrait out/famtastic-55-cents-cover.png --frame=30",
+    "prepare:drop06": "mkdir -p public/drop06/plates && cp ../campaigns/cost-is-not-the-reason/images/broll/*.jpg public/drop06/plates/ && cp ../../frontend/public/brand/famtastic-mark.svg public/drop06/ && echo 'Now place the HeyGen presenter render as public/drop06/presenter.mp4 and its audio as public/drop06/vo.m4a (see src/drop06/script.ts for the HeyGen video id).'",
+    "render:drop06": "remotion render src/index.ts Drop06GmailLinktree ../campaigns/cost-is-not-the-reason/videos/07-gmail-linktree-branded-9x16.mp4 --codec=h264 --crf=18 --audio-codec=aac"
   },
   "dependencies": {
     "@remotion/cli": "4.0.509",

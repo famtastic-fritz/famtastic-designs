@@ -1,0 +1,148 @@
+{
+  "schema": "famtastic.gemini-flash-lite-broll-receipt.v1",
+  "model": "gemini-3.1-flash-lite-image",
+  "generated_at": "2026-09-05T01:35:22.624Z",
+  "total_cost_usd": 0.168,
+  "plates": [
+    {
+      "id": "01-rented-land",
+      "file": "marketing/campaigns/cost-is-not-the-reason/images/broll/01-rented-land.jpg",
+      "bytes": 693462,
+      "sha256": "57c9c28f2ba4c15483e9bce550b5374e5e510a47041765a90d7fd58f748c771f",
+      "prompt_sha256": "0ec8508e819fbd2a297bed0369969027ae8e8aa234f3c55f6482134e9ea8e880",
+      "provider_response_id": "zHGbat3REMWMqtsP9b720A0",
+      "usage": {
+        "promptTokenCount": 296,
+        "candidatesTokenCount": 1605,
+        "totalTokenCount": 1901,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 296
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "duration_ms": 2994,
+      "cost_usd": 0.0336
+    },
+    {
+      "id": "02-phone-at-night",
+      "file": "marketing/campaigns/cost-is-not-the-reason/images/broll/02-phone-at-night.jpg",
+      "bytes": 611794,
+      "sha256": "847d5b560b0ce50cfdd88a80746e9cd599f647f334a031d8e2bb5414fa2f7ad8",
+      "prompt_sha256": "2b9527766fec87fc0e12e04113ca490ea85b591fbb411eddbeeb1510d8caaeef",
+      "provider_response_id": "z3GbatbLB_P5qtsPhcOMkAw",
+      "usage": {
+        "promptTokenCount": 299,
+        "candidatesTokenCount": 1637,
+        "totalTokenCount": 1936,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 299
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "duration_ms": 2807,
+      "cost_usd": 0.0336
+    },
+    {
+      "id": "03-waiting",
+      "file": "marketing/campaigns/cost-is-not-the-reason/images/broll/03-waiting.jpg",
+      "bytes": 591212,
+      "sha256": "649b16faf0f0fc6d92a327276a4df18b181639896c09cf50747498853123d460",
+      "prompt_sha256": "aa9d2bdfc8a83c0c4edc498cf331a4205fa400664389b30f9a8d6dfdc4fec6f7",
+      "provider_response_id": "0XGbasjPOMuiqtsPj7jqqAY",
+      "usage": {
+        "promptTokenCount": 295,
+        "candidatesTokenCount": 1593,
+        "totalTokenCount": 1888,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 295
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "duration_ms": 3203,
+      "cost_usd": 0.0336
+    },
+    {
+      "id": "04-works-while-you-sleep",
+      "file": "marketing/campaigns/cost-is-not-the-reason/images/broll/04-works-while-you-sleep.jpg",
+      "bytes": 590138,
+      "sha256": "27669bc757566f4eff81509ba1b93d36ac80e8993026800467733aae2740bfc8",
+      "prompt_sha256": "6e69aa405b87d3e5bc6bef4cbaee811267f93dc94a7dfca09f3ecca38c4a1580",
+      "provider_response_id": "1XGbao-DCPCuqtsPlZmGyAk",
+      "usage": {
+        "promptTokenCount": 295,
+        "candidatesTokenCount": 1597,
+        "totalTokenCount": 1892,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 295
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "duration_ms": 2787,
+      "cost_usd": 0.0336
+    },
+    {
+      "id": "05-owner-confident",
+      "file": "marketing/campaigns/cost-is-not-the-reason/images/broll/05-owner-confident.jpg",
+      "bytes": 606693,
+      "sha256": "65bf0b1289b2368829618e99a2ac558da30bef0f007687f1081aa2ab690218e7",
+      "prompt_sha256": "7ed3aecd2137b56395e3b06e35da615b8306580379b22d44b85b3289a93285a7",
+      "provider_response_id": "13GbarqzN_SfqtsP6tucgQM",
+      "usage": {
+        "promptTokenCount": 291,
+        "candidatesTokenCount": 1636,
+        "totalTokenCount": 1927,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 291
+          }
+        ],
+        "candidatesTokensDetails": [
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1120
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "duration_ms": 2827,
+      "cost_usd": 0.0336
+    }
+  ]
+}

@@ -1578,3 +1578,28 @@ queued.
   is a flag requiring owner confirmation, not silent background state.
   Provenance rule unchanged: unknown-provenance work is flagged to Fritz and
   left untouched on disk — never deleted, completed, or committed by CEO.
+
+## 2026-09-05 — Unbranded creative shipped because the stack was never checked
+
+- What happened: drop-06's video was assembled on 2026-09-04 with edge-tts +
+  Pillow-drawn PNGs composited by ffmpeg — the bottom tier of the documented
+  three-tier stack — and armed for four live public accounts. The owner rejected
+  it on sight as unbranded. The full stack (HeyGen presenter with 488 premium
+  credits, Gemini Flash Lite at $0.0336/image, two ready Remotion projects) was
+  available and unused the whole time.
+- Root cause: the build treated "does it encode to 1080x1920 h264+aac" as the
+  acceptance test. It passed every technical gate and had no brand system in it
+  at all — no mark, no type system, no palette discipline, no imagery, no motion.
+  Geometry passing is not the same as looking right, and no automated check in
+  the repo would ever have caught this.
+- The rule that prevents recurrence: **before building any creative artifact,
+  enumerate the available tiers and state which one is being used and why.**
+  Falling back to the $0 tier is a decision that must be recorded, not a default
+  that happens because nobody checked. And **extract frames and look at them
+  before declaring a render good** — the technical probe is necessary, not
+  sufficient.
+- Rebuilt on 2026-09-05 as
+  `marketing/campaigns/cost-is-not-the-reason/videos/07-gmail-linktree-branded-9x16.mp4`
+  using HeyGen (Tier 1, 12 credits), Gemini Flash Lite (Tier 2, $0.168) and
+  Remotion (Tier 3, $0). Detail and provider gotchas in
+  `.site-context/SITE-LEARNINGS.md` (same date) and `docs/CHANGELOG.md`.
