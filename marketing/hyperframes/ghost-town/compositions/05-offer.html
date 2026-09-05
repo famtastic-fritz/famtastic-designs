@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--earth, #17120d);
+          color: var(--bone, #e3d6bb);
+        }
+        /* The photograph is now an object ON the earth, not the ground under it.
+           A different composition from beats 1-4 on purpose: the offer beat is
+           the one asking for the sale, so it is built as an offer card. */
+        .card {
+          position: absolute;
+          left: 84px;
+          top: 176px;
+          width: 912px;
+          height: 600px;
+          overflow: hidden;
+          border-radius: 6px;
+          box-shadow:
+            0 1px 0 rgba(227, 214, 187, 0.06),
+            0 24px 56px rgba(13, 10, 7, 0.55);
+          opacity: 0;
+        }
+        /* Framed on the open drawer of blank index cards, not on the cabinet
+           front above it. The first crop (top: -1084) put two thirds of the
+           card on a closed drawer and squeezed the blank cards into a strip;
+           that only showed up on a rendered frame. */
+        .card img {
+          position: absolute;
+          left: -244px;
+          top: -1299px;
+          width: 1400px;
+          height: 2507px;
+          object-fit: cover;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 850px;
+          font-family: "IBM Plex Mono", monospace;
+          font-weight: 600;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--dust, #8a7c63);
+          opacity: 0;
+        }
+        .price {
+          position: absolute;
+          left: 84px;
+          top: 916px;
+          font-family: "League Gothic", sans-serif;
+          font-weight: 400;
+          font-size: 176px;
+          line-height: 1;
+          letter-spacing: 0.005em;
+          white-space: nowrap;
+          color: var(--bone, #e3d6bb);
+          opacity: 0;
+        }
+        .marker {
+          position: absolute;
+          left: 84px;
+          top: 1128px;
+          width: 148px;
+          height: 12px;
+          background: var(--amber, #d9a441);
+          transform-origin: 0% 50%;
+        }
+        .perday {
+          position: absolute;
+          left: 262px;
+          top: 1116px;
+          font-family: "IBM Plex Mono", monospace;
+          font-weight: 600;
+          font-size: 32px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--sand, #b6a482);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .item {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          font-family: Roboto, sans-serif;
+          font-weight: 400;
+          font-size: 44px;
+          line-height: 1.26;
+          letter-spacing: -0.005em;
+          color: var(--bone, #e3d6bb);
+          opacity: 0;
+        }
+        .item span {
+          display: inline-block;
+          width: 68px;
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 30px;
+          font-variant-numeric: tabular-nums;
+          color: var(--dust, #8a7c63);
+        }
+        #s5-i1 {
+          top: 1236px;
+        }
+        #s5-i2 {
+          top: 1314px;
+        }
+        #s5-i3 {
+          top: 1392px;
+        }
+        .foot {
+          position: absolute;
+          left: 84px;
+          top: 1518px;
+          width: 912px;
+          padding-top: 28px;
+          border-top: 3px solid var(--rule, #3b3125);
+          font-family: Roboto, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--dust, #8a7c63);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            120% 78% at 50% 40%,
+            rgba(13, 10, 7, 0) 30%,
+            rgba(13, 10, 7, 0.24) 66%,
+            rgba(13, 10, 7, 0.6) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="offer" data-width="1080" data-height="1920">
+        <div class="vignette"></div>
+        <div class="card" id="s5-cd" data-layout-allow-overflow="true">
+          <img src="assets/plates/gt-b2.jpg" alt="" />
+        </div>
+
+        <div class="eyebrow" id="s5-eb">Web Basics Bundle</div>
+        <div class="price" id="s5-pr">$199</div>
+        <div class="marker" id="s5-mk"></div>
+        <div class="perday" id="s5-pd">55 cents a day</div>
+
+        <div class="item" id="s5-i1"><span>01</span>One focused landing-page website</div>
+        <div class="item" id="s5-i2"><span>02</span>One year of managed hosting</div>
+        <div class="item" id="s5-i3"><span>03</span>First-year domain &mdash; new, or bring your own</div>
+
+        <div class="foot" id="s5-ft">
+          Then $9.99/mo hosting if you keep it, and only with your authorization.
+          Domain renewal, business email and maintenance are separate.
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          tl.fromTo(
+            "#s5-cd",
+            { opacity: 0, y: 28, scale: 0.986 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.52, ease: "power3.out" },
+            0.06,
+          );
+          tl.fromTo("#s5-eb", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.34);
+
+          /* spring-pop-entrance on the price and its amber marker. */
+          tl.fromTo(
+            "#s5-pr",
+            { opacity: 0, scale: 0.86, y: 18 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.46, ease: "back.out(1.6)" },
+            0.45,
+          );
+          tl.fromTo("#s5-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.76);
+          tl.fromTo("#s5-pd", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.36, ease: "power3.out" }, 0.84);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 1.5;
+          whip("#s5-i1", a, 44, 0.16);
+          var b = a + 0.16 - F;
+          whip("#s5-i2", b, 44, 0.15);
+          var c = b + 0.15 - F;
+          whip("#s5-i3", c, 44, 0.15);
+
+          /* Said plainly and early enough to be read, so nothing above it can
+             be taken as including what it excludes. */
+          tl.fromTo(
+            "#s5-ft",
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" },
+            3.2,
+          );
+
+          window.__timelines["offer"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

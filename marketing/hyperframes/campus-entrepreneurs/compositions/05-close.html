@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #c5bca8);
+          color: var(--ink, #241f1a);
+        }
+        /* The last card is squared to the same left edge and width as every
+           other one, and it is a blank card waiting for a name — the object the
+           whole film has been about. A blank-PAPER close was authored first and
+           measured 201.4 mean luminance against the anchor's 161.9; a
+           paper-only frame simply cannot sit in the band. The accepted
+           platform-dependency film hit the same wall and solved it the same
+           way, by giving the close a photograph instead of an empty card. */
+        .card {
+          position: absolute;
+          left: 84px;
+          top: 176px;
+          width: 912px;
+          height: 720px;
+          overflow: hidden;
+          border-radius: 6px;
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.08),
+            0 24px 54px rgba(51, 39, 46, 0.24);
+          opacity: 0;
+        }
+        /* Framed on the blank card in the brass holder, with the small olive
+           clip beside it — the film's own last image, not a repeat of beat 2's
+           photograph. */
+        .card img {
+          position: absolute;
+          left: -194px;
+          top: -1200px;
+          width: 1300px;
+          height: 2328px;
+          object-fit: cover;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: "Archivo Black", sans-serif;
+          font-weight: 400;
+          font-size: 104px;
+          line-height: 1;
+          letter-spacing: -0.025em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #c5-l1 {
+          top: 984px;
+        }
+        #c5-l2 {
+          top: 1098px;
+        }
+        .marker {
+          position: absolute;
+          left: 84px;
+          top: 1272px;
+          width: 200px;
+          height: 12px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        .url {
+          position: absolute;
+          left: 84px;
+          top: 1340px;
+          font-family: "Space Mono", monospace;
+          font-weight: 700;
+          font-size: 44px;
+          letter-spacing: 0.04em;
+          color: var(--ink, #241f1a);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            124% 82% at 50% 46%,
+            rgba(51, 39, 46, 0) 40%,
+            rgba(51, 39, 46, 0.07) 76%,
+            rgba(51, 39, 46, 0.2) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+        <div class="vignette"></div>
+        <div class="card" id="c5-cd" data-layout-allow-overflow="true">
+          <img id="c5-img" src="assets/plates/cm-card.jpg" alt="" />
+        </div>
+        <div class="hl" data-layout-allow-overlap="true" id="c5-l1">Stop renting.</div>
+        <div class="hl" data-layout-allow-overlap="true" id="c5-l2">Start owning.</div>
+        <div class="marker" id="c5-mk"></div>
+        <div class="url" id="c5-url">famtasticdesigns.com</div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* 2.7 seconds is the whole beat, so the card is already there and only
+             settles — it does not make the viewer wait for it. */
+          tl.fromTo(
+            "#c5-cd",
+            { opacity: 0, y: -14, scale: 1.006 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: "power3.out" },
+            0,
+          );
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.14;
+          whip("#c5-l1", a, 72, 0.19);
+          var b = a + 0.19 - F;
+          whip("#c5-l2", b, 44, 0.15);
+
+          tl.fromTo("#c5-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "power3.out" }, 0.62);
+          tl.fromTo(
+            "#c5-url",
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" },
+            0.78,
+          );
+
+          window.__timelines["close"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

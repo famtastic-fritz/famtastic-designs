@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--earth, #17120d);
+          color: var(--bone, #e3d6bb);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 34%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        /* The band comes from the BOTTOM on this beat, not the top. The frame
+           returns to the photograph that opened the film — the empty bracket and
+           the scrubbed board stay in clear view above the type. */
+        .band {
+          position: absolute;
+          left: 0;
+          top: 1000px;
+          width: 1080px;
+          height: 920px;
+          background: linear-gradient(
+            to bottom,
+            rgba(23, 18, 13, 0) 0px,
+            var(--earth, #17120d) 200px,
+            var(--earth, #17120d) 920px
+          );
+        }
+        .shaft {
+          position: absolute;
+          left: 84px;
+          top: 1298px;
+          width: 300px;
+          height: 4px;
+          background: var(--amber, #d9a441);
+          transform-origin: 0% 50%;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: "League Gothic", sans-serif;
+          font-weight: 400;
+          font-size: 116px;
+          line-height: 0.94;
+          letter-spacing: 0.005em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          color: var(--bone, #e3d6bb);
+          opacity: 0;
+        }
+        #s6-l1 {
+          top: 1350px;
+        }
+        #s6-l2 {
+          top: 1468px;
+        }
+        .url {
+          position: absolute;
+          left: 84px;
+          top: 1622px;
+          font-family: "IBM Plex Mono", monospace;
+          font-weight: 600;
+          font-size: 46px;
+          letter-spacing: 0.06em;
+          color: var(--amber, #d9a441);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 74% at 50% 32%,
+            rgba(13, 10, 7, 0) 30%,
+            rgba(13, 10, 7, 0.24) 66%,
+            rgba(13, 10, 7, 0.62) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s6-w">
+            <img class="plate" src="assets/plates/gt-a2.jpg" alt="" />
+          </div>
+        </div>
+        <div class="band"></div>
+        <div class="vignette"></div>
+
+        <div class="shaft" id="s6-sh"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="s6-l1">Stop being</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s6-l2">a ghost.</div>
+        <div class="url" id="s6-url">famtasticdesigns.com</div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* The film's last move settles rather than pushes: the frame comes to
+             rest on the bracket it opened on. */
+          var world = document.getElementById("s6-w");
+          var cam = { scale: 1.05 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1.05 },
+            { scale: 1.0, duration: 5.6, ease: "power1.out", onUpdate: applyCamera },
+            0,
+          );
+
+          /* Last position of the light shaft: lowest in the film. */
+          tl.fromTo("#s6-sh", { scaleX: 0 }, { scaleX: 1, duration: 0.62, ease: "power3.out" }, 0.16);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.5;
+          whip("#s6-l1", a, 80, 0.2);
+          var b = a + 0.2 - F;
+          whip("#s6-l2", b, 48, 0.16);
+
+          tl.fromTo(
+            "#s6-url",
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" },
+            1.5,
+          );
+
+          window.__timelines["close"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

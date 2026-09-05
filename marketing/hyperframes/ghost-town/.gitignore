@@ -1,0 +1,8 @@
+# Rendered video and its staged source media are reproducible from the repo's
+# own assets: run scripts/stage-assets.sh then npm run render.
+renders/
+assets/
+shorts/*/assets/
+shorts/*/renders/
+verify/*.png
+snapshots/frame-*.png

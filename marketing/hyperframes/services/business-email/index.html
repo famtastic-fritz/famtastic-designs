@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Two Different Jobs — Business Email Setup</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      /* Design tokens — frame.md is the source of truth. --paper is NOT a
+         chosen value: it is the measured ground of the graded presenter
+         composite (#D2C9BE). If they stop matching, the cut-out stops being
+         invisible and she sits in a visible rectangle. */
+      body {
+        --paper: #d2c9be;
+        --paper-edge: #c6bcae;
+        --ink: #33272e;
+        --ink-soft: #57484f;
+        --muted: #625860;
+        --shadow: #33272e;
+        --accent: #7fb449;
+        --rule: #a49a91;
+        background: var(--paper);
+        font-family: Inter, sans-serif;
+        color: var(--ink);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      /* Untimed base — no frame is ever transparent, including the seam frames
+         between two scene slots. */
+      #base {
+        position: absolute;
+        inset: 0;
+        background: var(--paper);
+        z-index: 0;
+      }
+      /* The presenter is host-owned (not inside a sub-composition) so her
+         timing is read against the film clock, and so the beat-1 type can be
+         laid out to clear her rather than fight her z-order. Untimed wrapper;
+         the <video> inside carries the timing. */
+      #presenter-frame {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+      }
+      #presenter-holder {
+        position: absolute;
+        left: 340px;
+        top: 790px;
+        width: 713px;
+        height: 1160px;
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+      #presenter {
+        display: block;
+        width: 713px;
+        height: 1160px;
+        object-fit: cover;
+      }
+      /* One vignette for the whole film, ABOVE the presenter. A scene-owned
+         vignette would sit under her (she is host-owned at z-index 20) and she
+         would read as pasted on instead of lit by the same light. */
+      #vignette {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 40;
+        background: radial-gradient(
+          118% 76% at 50% 36%,
+          rgba(51, 39, 46, 0) 32%,
+          rgba(51, 39, 46, 0.1) 66%,
+          rgba(51, 39, 46, 0.3) 100%
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="31.5"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div id="base"></div>
+
+      <div
+        id="question"
+        class="clip"
+        data-composition-id="question"
+        data-composition-src="compositions/01-question.html"
+        data-start="0"
+        data-duration="9.7"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="basics"
+        class="clip"
+        data-composition-id="basics"
+        data-composition-src="compositions/02-basics.html"
+        data-start="9.7"
+        data-duration="8.52"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="renewal"
+        class="clip"
+        data-composition-id="renewal"
+        data-composition-src="compositions/03-renewal.html"
+        data-start="18.22"
+        data-duration="5.08"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="email"
+        class="clip"
+        data-composition-id="email"
+        data-composition-src="compositions/04-email.html"
+        data-start="23.3"
+        data-duration="3.55"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="close"
+        class="clip"
+        data-composition-id="close"
+        data-composition-src="compositions/05-close.html"
+        data-start="26.85"
+        data-duration="4.65"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- The approved take-b presenter, keyed onto this film's paper ground by
+           scripts/stage-assets.sh, muted. Sound for the whole film comes from
+           the <audio> below pointed at the same file. Both start at 0 with no
+           source offset, so the lips and the narration cannot drift. -->
+      <div id="presenter-frame">
+        <div id="presenter-holder">
+          <video
+            id="presenter"
+            src="assets/presenter.mp4"
+            data-start="0"
+            data-duration="9.7"
+            data-media-start="0"
+            data-track-index="5"
+            muted
+            playsinline
+          ></video>
+        </div>
+      </div>
+
+      <div id="vignette"></div>
+
+      <audio
+        id="vo"
+        src="assets/presenter.mp4"
+        data-start="0"
+        data-duration="29.48"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        var tl = gsap.timeline({ paused: true });
+
+        /* She arrives on the question and leaves before the scope list, so the
+           film hands off from a person to a document. fromTo with explicit
+           endpoints, so a seek to any frame is exact. */
+        tl.set("#presenter-holder", { opacity: 0, y: 0 }, 0);
+        tl.fromTo(
+          "#presenter-holder",
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          0.1,
+        );
+        tl.to("#presenter-holder", { opacity: 0, duration: 0.34, ease: "power2.in" }, 9.36);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d5cebe);
+          color: var(--ink, #211f1a);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -208px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .sheet {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #d5cebe) 0%,
+            var(--paper, #d5cebe) 62%,
+            var(--paper-edge, #c6beac) 100%
+          );
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.1),
+            0 30px 66px rgba(51, 39, 46, 0.32);
+          opacity: 0;
+        }
+        #c5-sh {
+          top: 1100px;
+          height: 600px;
+        }
+        .hl {
+          position: absolute;
+          left: 140px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 104px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #c5-l1 {
+          top: 1156px;
+        }
+        #c5-l2 {
+          top: 1258px;
+        }
+        #c5-mk {
+          position: absolute;
+          left: 140px;
+          top: 1396px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        #c5-url {
+          position: absolute;
+          left: 140px;
+          top: 1448px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 40px;
+          letter-spacing: 0.06em;
+          color: var(--ink, #211f1a);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #c5-ft {
+          position: absolute;
+          left: 140px;
+          top: 1528px;
+          width: 800px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #635c50);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            116% 74% at 50% 34%,
+            rgba(51, 39, 46, 0) 30%,
+            rgba(51, 39, 46, 0.09) 64%,
+            rgba(51, 39, 46, 0.28) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="c5-w">
+            <img class="plate" src="assets/plate-counter.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="sheet" id="c5-sh"></div>
+        <div class="vignette"></div>
+
+        <div class="hl" data-layout-allow-overlap="true" id="c5-l1">Cost is not</div>
+        <div class="hl" data-layout-allow-overlap="true" id="c5-l2">the reason.</div>
+        <div id="c5-mk"></div>
+        <!-- Curled before it was set in type: HTTP 200 on apex and www. -->
+        <div id="c5-url">famtasticdesigns.com/packages</div>
+        <div id="c5-ft">Read the whole scope before you buy anything.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          var world = document.getElementById("c5-w");
+          var cam = { scale: 1 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1 },
+            { scale: 1.04, duration: 4.6, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#c5-sh", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" }, 0);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.32;
+          whip("#c5-l1", a, 74, 0.19);
+          whip("#c5-l2", a + 0.19 - F, 46, 0.15);
+
+          /* spring-pop-entrance on the accent marker, then the address. */
+          tl.fromTo("#c5-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.44, ease: "back.out(1.4)" }, 1.05);
+          tl.fromTo("#c5-url", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 1.28);
+          tl.fromTo("#c5-ft", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.38, ease: "power3.out" }, 1.62);
+
+          window.__timelines["close"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

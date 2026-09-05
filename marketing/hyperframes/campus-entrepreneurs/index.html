@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Somebody Else's App — Campus Entrepreneurs</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      /* Design tokens — frame.md is the source of truth. Declared on body so
+         every mounted sub-composition inherits them; each sub-composition also
+         repeats the literal as a var() fallback so it renders standalone. */
+      body {
+        --paper: #c5bca8;
+        --paper-warm: #b3a996;
+        --ink: #241f1a;
+        --ink-soft: #544b42;
+        --muted: #514839;
+        --shadow: #33272e;
+        --accent: #7fb449;
+        --rule: #b4aa97;
+        background: var(--paper);
+        font-family: Outfit, sans-serif;
+        color: var(--ink);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      /* Untimed base — guarantees no frame is ever transparent, including the
+         seam frames between two scene slots. */
+      #base {
+        position: absolute;
+        inset: 0;
+        background: var(--paper);
+        z-index: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="27.5"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div id="base"></div>
+
+      <div
+        id="hook"
+        class="clip"
+        data-composition-id="hook"
+        data-composition-src="compositions/01-hook.html"
+        data-start="0"
+        data-duration="6.4"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="desk"
+        class="clip"
+        data-composition-id="desk"
+        data-composition-src="compositions/02-desk.html"
+        data-start="6.4"
+        data-duration="6.4"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="address"
+        class="clip"
+        data-composition-id="address"
+        data-composition-src="compositions/03-address.html"
+        data-start="12.8"
+        data-duration="6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="offer"
+        class="clip"
+        data-composition-id="offer"
+        data-composition-src="compositions/04-offer.html"
+        data-start="18.8"
+        data-duration="6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="close"
+        class="clip"
+        data-composition-id="close"
+        data-composition-src="compositions/05-close.html"
+        data-start="24.8"
+        data-duration="2.7"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- The music bed. Sourced from the audio track of this campaign's own
+           attached video (01-campus-dorm-entrepreneur-9x16.mp4), trimmed to the
+           film's length, level-trimmed and faded out during staging. It needs an
+           id: an id-less <audio> is never picked up by the mixer and the render
+           comes out silent with no warning. -->
+      <audio
+        id="bed"
+        src="assets/campus-bed.m4a"
+        data-start="0"
+        data-duration="27.5"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+    </div>
+
+    <script>
+      (function () {
+        // The host owns no animated element of its own: every beat is
+        // self-contained and the runtime auto-nests the registered child
+        // timelines. One paused timeline is still registered, per the contract.
+        window.__timelines["main"] = gsap.timeline({ paused: true });
+      })();
+    </script>
+  </body>
+</html>

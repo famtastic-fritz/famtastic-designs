@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Sub-composition. The runtime clones ONLY <template> contents, so every
+         style, node and script this scene needs lives inside it. Ids are
+         prefixed (c1-) because every sub-composition is inlined into one
+         document and a bare selector would resolve across scenes. -->
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d5cebe);
+          color: var(--ink, #211f1a);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        /* The quote sheet. Four visible edges and a real cast shadow: on a
+           light ground depth is a shadow, not a lit edge (art direction,
+           famElevate). Paper is not a flat value, so it carries its own
+           gradient toward the edge tone. */
+        .sheet {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #d5cebe) 0%,
+            var(--paper, #d5cebe) 62%,
+            var(--paper-edge, #c6beac) 100%
+          );
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.1),
+            0 30px 66px rgba(51, 39, 46, 0.32);
+          opacity: 0;
+        }
+        #c1-sh {
+          top: 1160px;
+          height: 540px;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 140px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #635c50);
+          opacity: 0;
+        }
+        .rule {
+          position: absolute;
+          left: 140px;
+          width: 200px;
+          height: 12px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        .hl {
+          position: absolute;
+          left: 140px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 112px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #c1-eb {
+          top: 1216px;
+        }
+        #c1-rl {
+          top: 1274px;
+        }
+        #c1-l1 {
+          top: 1334px;
+        }
+        #c1-l2 {
+          top: 1444px;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            116% 74% at 50% 34%,
+            rgba(51, 39, 46, 0) 30%,
+            rgba(51, 39, 46, 0.09) 64%,
+            rgba(51, 39, 46, 0.28) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="objection" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="c1-w">
+            <img class="plate" src="assets/plate-owner.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="sheet" id="c1-sh"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="c1-eb">The objection</div>
+        <div class="rule" id="c1-rl"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="c1-l1">Cost is not</div>
+        <div class="hl" data-layout-allow-overlap="true" id="c1-l2">the reason.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* viewport-change. Beats 1-4 are one continuous push across ONE
+             photograph: 1.000 -> 1.022 -> 1.050 -> 1.078 -> 1.098. Each beat
+             starts where the last one ended, so the seam between two scenes is
+             the same frame and the film reads as a single held shot with the
+             quote sheet growing over it. 1.098 is the ceiling: the plate is
+             delivered at 1.10x frame. */
+          var world = document.getElementById("c1-w");
+          var cam = { scale: 1 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1 },
+            { scale: 1.022, duration: 4.6, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          /* The sheet is placed once and never drifts: a document that moves
+             is not a document. */
+          tl.fromTo(
+            "#c1-sh",
+            { opacity: 0, y: 26 },
+            { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" },
+            0.12,
+          );
+
+          tl.fromTo("#c1-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.36, ease: "power3.out" }, 0.42);
+          tl.fromTo("#c1-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "power3.out" }, 0.56);
+
+          /* waterfall-entry: binary 0 -> 1 opacity via tl.set, then whip to
+             rest. The anchor line travels further and settles longer. */
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 1.05;
+          whip("#c1-l1", a, 78, 0.19);
+          whip("#c1-l2", a + 0.19 - F, 46, 0.15);
+
+          window.__timelines["objection"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

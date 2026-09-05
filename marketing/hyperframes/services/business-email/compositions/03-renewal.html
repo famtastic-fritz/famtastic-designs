@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d2c9be);
+          color: var(--ink, #33272e);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .band {
+          position: absolute;
+          left: 0;
+          width: 1080px;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #d2c9be) 0%,
+            var(--paper, #d2c9be) 68%,
+            var(--paper-edge, #c6bcae) 100%
+          );
+          opacity: 0;
+        }
+        /* The band grows as the film takes on more of the frame: 660px in the
+           previous beat, 760px here. The photograph is receding. */
+        #b3-band {
+          top: 400px;
+          height: 820px;
+          clip-path: polygon(0 0, 1080px 0, 1080px 760px, 0 820px);
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 520px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #625860);
+          opacity: 0;
+        }
+        .rule {
+          position: absolute;
+          left: 84px;
+          top: 578px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        #b3-hl {
+          position: absolute;
+          left: 84px;
+          top: 632px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 96px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .hair {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          height: 3px;
+          background: var(--rule, #a49a91);
+          transform-origin: 0% 50%;
+        }
+        #b3-h1 {
+          top: 786px;
+        }
+        #b3-h2 {
+          top: 1042px;
+        }
+        .lab {
+          position: absolute;
+          left: 84px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 40px;
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+          color: var(--ink, #33272e);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .fig {
+          position: absolute;
+          right: 84px;
+          text-align: right;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 38px;
+          line-height: 1.26;
+          letter-spacing: 0.02em;
+          font-variant-numeric: tabular-nums;
+          color: var(--ink-soft, #57484f);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #b3-la1,
+        #b3-fg1 {
+          top: 830px;
+        }
+        #b3-la2,
+        #b3-fg2 {
+          top: 930px;
+        }
+      </style>
+
+      <div id="root" data-composition-id="renewal" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="b3-w">
+            <img class="plate" src="assets/plate-holder.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="band" id="b3-band"></div>
+
+        <div class="eyebrow" id="b3-eb">After the first year</div>
+        <div class="rule" id="b3-rl"></div>
+        <div id="b3-hl">What renews.</div>
+
+        <div class="hair" id="b3-h1"></div>
+        <div class="lab" id="b3-la1">Hosting</div>
+        <div class="fig" id="b3-fg1">$9.99 a month</div>
+        <div class="lab" id="b3-la2">Your domain</div>
+        <div class="fig" id="b3-fg2">renews separately</div>
+        <div class="hair" id="b3-h2"></div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* viewport-change: picks the push up where beat 2 left it (1.040) so
+             the held photograph does not jump at the seam. */
+          var world = document.getElementById("b3-w");
+          var cam = { scale: 1.04 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1.04 },
+            { scale: 1.065, duration: 5.08, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#b3-band", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0);
+          tl.fromTo("#b3-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.32, ease: "power3.out" }, 0.14);
+          tl.fromTo("#b3-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.38, ease: "power3.out" }, 0.26);
+
+          tl.set("#b3-hl", { opacity: 1, y: 70 }, 0.42);
+          tl.to("#b3-hl", { y: 0, duration: 0.19, ease: "power4.out" }, 0.42);
+
+          tl.fromTo("#b3-h1", { scaleX: 0 }, { scaleX: 1, duration: 0.46, ease: "power3.out" }, 0.86);
+
+          /* One row per clause. On the film clock: "hosting is $9.99 a month"
+             19.30-21.17, "and the domain renews separately" 21.36-23.20.
+             Beat-local = film time minus 18.22. */
+          function row(n, t) {
+            tl.set("#b3-la" + n, { opacity: 1, y: 34 }, t);
+            tl.to("#b3-la" + n, { y: 0, duration: 0.17, ease: "power4.out" }, t);
+            tl.set("#b3-fg" + n, { opacity: 1, y: 34 }, t);
+            tl.to("#b3-fg" + n, { y: 0, duration: 0.17, ease: "power4.out" }, t);
+          }
+          row(1, 1.12);
+          row(2, 3.16);
+          tl.fromTo("#b3-h2", { scaleX: 0 }, { scaleX: 1, duration: 0.46, ease: "power3.out" }, 3.5);
+
+          window.__timelines["renewal"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

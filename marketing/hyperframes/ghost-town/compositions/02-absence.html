@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--earth, #17120d);
+          color: var(--bone, #e3d6bb);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 60%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .band {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 1010px;
+          background: linear-gradient(
+            to bottom,
+            var(--earth, #17120d) 0px,
+            var(--earth, #17120d) 830px,
+            rgba(23, 18, 13, 0) 1010px
+          );
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 196px;
+          font-family: "IBM Plex Mono", monospace;
+          font-weight: 600;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--dust, #8a7c63);
+          opacity: 0;
+        }
+        .shaft {
+          position: absolute;
+          left: 84px;
+          top: 254px;
+          width: 232px;
+          height: 4px;
+          background: var(--amber, #d9a441);
+          transform-origin: 0% 50%;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: "League Gothic", sans-serif;
+          font-weight: 400;
+          font-size: 116px;
+          line-height: 0.94;
+          letter-spacing: 0.005em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          color: var(--bone, #e3d6bb);
+          opacity: 0;
+        }
+        #s2-l1 {
+          top: 306px;
+        }
+        #s2-l2 {
+          top: 424px;
+        }
+        #s2-l3 {
+          top: 542px;
+        }
+        .support {
+          position: absolute;
+          left: 84px;
+          top: 712px;
+          width: 860px;
+          font-family: Roboto, sans-serif;
+          font-weight: 400;
+          font-size: 40px;
+          line-height: 1.32;
+          letter-spacing: -0.005em;
+          color: var(--sand, #b6a482);
+          opacity: 0;
+        }
+        .support b {
+          font-weight: 400;
+          color: var(--bone, #e3d6bb);
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            120% 78% at 50% 58%,
+            rgba(13, 10, 7, 0) 30%,
+            rgba(13, 10, 7, 0.24) 66%,
+            rgba(13, 10, 7, 0.64) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="absence" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s2-w">
+            <img class="plate" src="assets/plates/gt-c2.jpg" alt="" />
+          </div>
+        </div>
+        <div class="band"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="s2-eb">Outside the app</div>
+        <div class="shaft" id="s2-sh"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="s2-l1">You exist</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s2-l2">in exactly</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s2-l3">one place.</div>
+        <div class="support" id="s2-sp">
+          To a search engine, to a client who just moved here, to anyone who
+          isn&rsquo;t already following you &mdash; <b>you&rsquo;re a ghost.</b>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          var world = document.getElementById("s2-w");
+          var cam = { scale: 1.05 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          /* This beat pulls BACK rather than in: the frame widens off the blank
+             board to show how much street has nothing on it. */
+          tl.fromTo(
+            cam,
+            { scale: 1.05 },
+            { scale: 1.0, duration: 8, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#s2-eb", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.14);
+          tl.fromTo("#s2-sh", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 0.26);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.72;
+          whip("#s2-l1", a, 80, 0.2);
+          var b = a + 0.2 - F;
+          whip("#s2-l2", b, 48, 0.16);
+          var c = b + 0.16 - F;
+          whip("#s2-l3", c, 48, 0.16);
+
+          tl.fromTo(
+            "#s2-sp",
+            { opacity: 0, y: 22 },
+            { opacity: 1, y: 0, duration: 0.48, ease: "power3.out" },
+            2.4,
+          );
+
+          window.__timelines["absence"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

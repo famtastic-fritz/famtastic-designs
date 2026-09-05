@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d5cebe);
+          color: var(--ink, #211f1a);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .sheet {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #d5cebe) 0%,
+            var(--paper, #d5cebe) 62%,
+            var(--paper-edge, #c6beac) 100%
+          );
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.1),
+            0 30px 66px rgba(51, 39, 46, 0.32);
+          opacity: 0;
+        }
+        #c3-sh {
+          top: 620px;
+          height: 1080px;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 140px;
+          top: 676px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #635c50);
+          opacity: 0;
+        }
+        .rule {
+          position: absolute;
+          left: 140px;
+          top: 734px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        .hl {
+          position: absolute;
+          left: 140px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 96px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #c3-l1 {
+          top: 786px;
+        }
+        #c3-l2 {
+          top: 880px;
+        }
+        #c3-l3 {
+          top: 974px;
+        }
+        .hair {
+          position: absolute;
+          left: 140px;
+          width: 800px;
+          height: 3px;
+          background: var(--rule, #a79e8b);
+          transform-origin: 0% 50%;
+        }
+        #c3-h1 {
+          top: 1112px;
+        }
+        #c3-h2 {
+          top: 1480px;
+        }
+        .mk {
+          position: absolute;
+          left: 140px;
+          width: 16px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          opacity: 0;
+        }
+        .item {
+          position: absolute;
+          left: 190px;
+          width: 750px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 40px;
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+          color: var(--ink, #211f1a);
+          opacity: 0;
+        }
+        #c3-m1 {
+          top: 1170px;
+        }
+        #c3-i1 {
+          top: 1156px;
+        }
+        #c3-m2 {
+          top: 1270px;
+        }
+        #c3-i2 {
+          top: 1256px;
+        }
+        #c3-m3 {
+          top: 1370px;
+        }
+        #c3-i3 {
+          top: 1356px;
+        }
+        #c3-ft {
+          position: absolute;
+          left: 140px;
+          top: 1516px;
+          width: 800px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #635c50);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            116% 74% at 50% 34%,
+            rgba(51, 39, 46, 0) 30%,
+            rgba(51, 39, 46, 0.09) 64%,
+            rgba(51, 39, 46, 0.28) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="scope" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="c3-w">
+            <img class="plate" src="assets/plate-owner.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="sheet" id="c3-sh"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="c3-eb">What the $199 is</div>
+        <div class="rule" id="c3-rl"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="c3-l1">One page,</div>
+        <div class="hl" data-layout-allow-overlap="true" id="c3-l2">one year,</div>
+        <div class="hl" data-layout-allow-overlap="true" id="c3-l3">one address.</div>
+
+        <div class="hair" id="c3-h1"></div>
+        <div class="mk" id="c3-m1"></div>
+        <div class="item" id="c3-i1">One focused landing-page website</div>
+        <div class="mk" id="c3-m2"></div>
+        <div class="item" id="c3-i2">One year of managed hosting</div>
+        <div class="mk" id="c3-m3"></div>
+        <div class="item" id="c3-i3">First-year domain, or connect yours</div>
+        <div class="hair" id="c3-h2"></div>
+
+        <div id="c3-ft">That is the whole bundle. Nothing else is included in it.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* viewport-change: continues the single push. Beat 2 ended at
+             1.050; this beat carries it to 1.078. */
+          var world = document.getElementById("c3-w");
+          var cam = { scale: 1.05 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1.05 },
+            { scale: 1.078, duration: 7, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#c3-sh", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" }, 0);
+          tl.fromTo("#c3-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.24);
+          tl.fromTo("#c3-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.36);
+
+          /* waterfall-entry on the three-line headline. */
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.6;
+          whip("#c3-l1", a, 72, 0.18);
+          var b = a + 0.18 - F;
+          whip("#c3-l2", b, 52, 0.15);
+          var c = b + 0.15 - F;
+          whip("#c3-l3", c, 52, 0.15);
+
+          tl.fromTo("#c3-h1", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 1.62);
+
+          /* waterfall-entry on the scope rows; each accent marker pops with
+             its row rather than drawing attention on its own. */
+          function item(n, t) {
+            tl.set("#c3-i" + n, { opacity: 1, y: 40 }, t);
+            tl.to("#c3-i" + n, { y: 0, duration: 0.16, ease: "power4.out" }, t);
+            tl.fromTo(
+              "#c3-m" + n,
+              { opacity: 0, scale: 0.4 },
+              { opacity: 1, scale: 1, duration: 0.26, ease: "back.out(2)" },
+              t + 0.04,
+            );
+          }
+          var d0 = 1.92;
+          item(1, d0);
+          item(2, d0 + 0.16 - F);
+          item(3, d0 + 0.32 - 2 * F);
+
+          tl.fromTo("#c3-h2", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 2.7);
+          tl.fromTo("#c3-ft", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 2.96);
+
+          window.__timelines["scope"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

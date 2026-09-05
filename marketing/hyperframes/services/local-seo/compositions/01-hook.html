@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Sub-composition. The runtime clones ONLY <template> contents, so every
+         style, node and script this scene needs lives inside it. Ids are
+         prefixed (s1-) because every sub-composition is inlined into one
+         document and a bare selector would resolve across scenes. -->
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #ccc2ac);
+          color: var(--ink, #2a2118);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -208px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        /* The ground. A full-width plane rising from the bottom edge of the
+           frame with a hard horizon where it meets the photograph — a ground,
+           not a card and not a fade. It rises beat by beat as the film has more
+           to say, and the photograph gives way to it. */
+        .ground {
+          position: absolute;
+          left: 0;
+          width: 1080px;
+          bottom: 0;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #ccc2ac) 0%,
+            var(--paper, #ccc2ac) 74%,
+            var(--paper-edge, #beb298) 100%
+          );
+          border-top: 3px solid var(--rule, #9c8e73);
+          opacity: 0;
+        }
+        #s1-gr {
+          top: 1420px;
+        }
+        /* Beat 1 drops the accent rule for a small accent square beside the
+           eyebrow: the ground plane sits low here so the bracket clears it,
+           which leaves room for two lines of display type and nothing else. */
+        #s1-sq {
+          position: absolute;
+          left: 84px;
+          top: 1458px;
+          width: 16px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          opacity: 0;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 130px;
+          top: 1452px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #5c5040);
+          opacity: 0;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 88px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s1-l1 {
+          top: 1516px;
+        }
+        #s1-l2 {
+          top: 1602px;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 76% at 50% 34%,
+            rgba(51, 39, 46, 0) 32%,
+            rgba(51, 39, 46, 0.14) 66%,
+            rgba(51, 39, 46, 0.40) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s1-w">
+            <img class="plate" src="assets/plate-bracket.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="ground" id="s1-gr"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="s1-eb">Get found</div>
+        <div id="s1-sq"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="s1-l1">The shop is open.</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s1-l2">Search finds nothing.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* viewport-change: one continuous push. Beats 1 and 2 share this
+             photograph — all five beats do — so the push is one unbroken move
+             across the whole film: 1.000 -> 1.020 -> 1.045 -> 1.066 -> 1.085
+             -> 1.098. Each beat starts where the last ended, so every seam is
+             the same frame. 1.098 is the ceiling: the plate is delivered at
+             1.10x frame. */
+          var world = document.getElementById("s1-w");
+          var cam = { scale: 1 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1 },
+            { scale: 1.02, duration: 5.6, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#s1-gr", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.46, ease: "power3.out" }, 0.1);
+          tl.fromTo("#s1-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.36, ease: "power3.out" }, 0.4);
+          tl.fromTo("#s1-sq", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 0.54);
+
+          /* waterfall-entry: binary 0 -> 1 opacity via tl.set, then whip to
+             rest. The anchor line travels further and settles longer. With no
+             narration the cascade IS the pacing, so it runs slightly slower
+             than a voiced film would need. */
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 1.05;
+          whip("#s1-l1", a, 70, 0.2);
+          whip("#s1-l2", a + 0.72, 52, 0.17);
+
+          window.__timelines["hook"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #c5bca8);
+          color: var(--ink, #241f1a);
+        }
+        /* Squared up. Same left edge and same width as the type, no rotation —
+           this is the beat the scattered desk has been getting straight for. */
+        .card {
+          position: absolute;
+          left: 84px;
+          top: 176px;
+          width: 912px;
+          height: 660px;
+          overflow: hidden;
+          border-radius: 6px;
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.08),
+            0 24px 54px rgba(51, 39, 46, 0.24);
+          opacity: 0;
+        }
+        .card img {
+          position: absolute;
+          left: -244px;
+          top: -1470px;
+          width: 1400px;
+          height: 2507px;
+          object-fit: cover;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 902px;
+          font-family: "Space Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--muted, #514839);
+          opacity: 0;
+        }
+        .price {
+          position: absolute;
+          left: 84px;
+          top: 966px;
+          font-family: "Archivo Black", sans-serif;
+          font-weight: 400;
+          font-size: 152px;
+          line-height: 1;
+          letter-spacing: -0.035em;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .marker {
+          position: absolute;
+          left: 84px;
+          top: 1160px;
+          width: 148px;
+          height: 12px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        .perday {
+          position: absolute;
+          left: 262px;
+          top: 1148px;
+          font-family: "Space Mono", monospace;
+          font-weight: 700;
+          font-size: 32px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--ink-soft, #544b42);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .item {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          font-family: Outfit, sans-serif;
+          font-weight: 400;
+          font-size: 44px;
+          line-height: 1.24;
+          letter-spacing: -0.005em;
+          color: var(--ink, #241f1a);
+          opacity: 0;
+        }
+        .item span {
+          display: inline-block;
+          width: 68px;
+          font-family: "Space Mono", monospace;
+          font-size: 28px;
+          font-variant-numeric: tabular-nums;
+          color: var(--muted, #514839);
+        }
+        #c4-i1 {
+          top: 1264px;
+        }
+        #c4-i2 {
+          top: 1340px;
+        }
+        #c4-i3 {
+          top: 1416px;
+        }
+        .foot {
+          position: absolute;
+          left: 84px;
+          top: 1538px;
+          width: 912px;
+          padding-top: 28px;
+          border-top: 3px solid var(--rule, #b4aa97);
+          font-family: Outfit, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #514839);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            122% 80% at 50% 44%,
+            rgba(51, 39, 46, 0) 38%,
+            rgba(51, 39, 46, 0.08) 74%,
+            rgba(51, 39, 46, 0.24) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="offer" data-width="1080" data-height="1920">
+        <div class="vignette"></div>
+        <div class="card" id="c4-cd" data-layout-allow-overflow="true">
+          <img src="assets/plates/cm-drawer.jpg" alt="" />
+        </div>
+
+        <div class="eyebrow" id="c4-eb">Web Basics Bundle</div>
+        <div class="price" id="c4-pr">$199</div>
+        <div class="marker" id="c4-mk"></div>
+        <div class="perday" id="c4-pd">55 cents a day</div>
+
+        <div class="item" id="c4-i1"><span>01</span>One focused landing-page website</div>
+        <div class="item" id="c4-i2"><span>02</span>One year of managed hosting</div>
+        <div class="item" id="c4-i3"><span>03</span>First-year domain &mdash; new, or bring your own</div>
+
+        <div class="foot" id="c4-ft">
+          Then $9.99/mo hosting if you keep it, and only with your authorization.
+          Domain renewal, business email and maintenance are separate.
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* The card arrives square, and it arrives first: everything else is
+             hung off its left edge. */
+          tl.fromTo(
+            "#c4-cd",
+            { opacity: 0, y: -22, scale: 1.008 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" },
+            0.06,
+          );
+          tl.fromTo("#c4-eb", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.34);
+
+          /* spring-pop-entrance on the price and its accent marker. */
+          tl.fromTo(
+            "#c4-pr",
+            { opacity: 0, scale: 0.86, y: 18 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.46, ease: "back.out(1.6)" },
+            0.45,
+          );
+          tl.fromTo("#c4-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.76);
+          tl.fromTo("#c4-pd", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.36, ease: "power3.out" }, 0.84);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 1.42;
+          whip("#c4-i1", a, 44, 0.16);
+          var b = a + 0.16 - F;
+          whip("#c4-i2", b, 44, 0.15);
+          var c = b + 0.15 - F;
+          whip("#c4-i3", c, 44, 0.15);
+
+          /* Said plainly and early enough to be read, so nothing above it can be
+             taken as including what it excludes. */
+          tl.fromTo(
+            "#c4-ft",
+            { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" },
+            2.7,
+          );
+
+          window.__timelines["offer"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

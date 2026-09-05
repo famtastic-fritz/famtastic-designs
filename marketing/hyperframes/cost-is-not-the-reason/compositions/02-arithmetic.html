@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d5cebe);
+          color: var(--ink, #211f1a);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .sheet {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #d5cebe) 0%,
+            var(--paper, #d5cebe) 62%,
+            var(--paper-edge, #c6beac) 100%
+          );
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.1),
+            0 30px 66px rgba(51, 39, 46, 0.32);
+          opacity: 0;
+        }
+        #c2-sh {
+          top: 740px;
+          height: 960px;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 140px;
+          top: 796px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #635c50);
+          opacity: 0;
+        }
+        .rule {
+          position: absolute;
+          left: 140px;
+          top: 854px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        /* spring-pop-entrance lands on this figure and its marker. */
+        #c2-hero {
+          position: absolute;
+          left: 140px;
+          top: 902px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 176px;
+          line-height: 1;
+          letter-spacing: -0.03em;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #c2-mk {
+          position: absolute;
+          left: 140px;
+          top: 1108px;
+          width: 268px;
+          height: 18px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        #c2-unit {
+          position: absolute;
+          left: 452px;
+          top: 1024px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 34px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--ink-soft, #4a453c);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .hair {
+          position: absolute;
+          left: 140px;
+          width: 800px;
+          height: 3px;
+          background: var(--rule, #a79e8b);
+          transform-origin: 0% 50%;
+        }
+        #c2-h1 {
+          top: 1178px;
+        }
+        #c2-h2 {
+          top: 1470px;
+        }
+        .lab {
+          position: absolute;
+          left: 140px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 40px;
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+          color: var(--ink-soft, #4a453c);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .fig {
+          position: absolute;
+          right: 140px;
+          text-align: right;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 40px;
+          line-height: 1.2;
+          letter-spacing: 0.02em;
+          font-variant-numeric: tabular-nums;
+          color: var(--ink, #211f1a);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #c2-la1,
+        #c2-fg1 {
+          top: 1222px;
+        }
+        #c2-la2,
+        #c2-fg2 {
+          top: 1302px;
+        }
+        #c2-la3,
+        #c2-fg3 {
+          top: 1382px;
+        }
+        #c2-ft {
+          position: absolute;
+          left: 140px;
+          top: 1504px;
+          width: 800px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #635c50);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            116% 74% at 50% 34%,
+            rgba(51, 39, 46, 0) 30%,
+            rgba(51, 39, 46, 0.09) 64%,
+            rgba(51, 39, 46, 0.28) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="arithmetic" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="c2-w">
+            <img class="plate" src="assets/plate-owner.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="sheet" id="c2-sh"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="c2-eb">The arithmetic</div>
+        <div class="rule" id="c2-rl"></div>
+
+        <div id="c2-hero">55&cent;</div>
+        <div id="c2-mk"></div>
+        <div id="c2-unit">a day</div>
+
+        <div class="hair" id="c2-h1"></div>
+        <div class="lab" id="c2-la1">First year, one time</div>
+        <div class="fig" id="c2-fg1">$199.00</div>
+        <div class="lab" id="c2-la2">Days in the year</div>
+        <div class="fig" id="c2-fg2">365</div>
+        <div class="lab" id="c2-la3">Cost per day</div>
+        <div class="fig" id="c2-fg3">$0.545</div>
+        <div class="hair" id="c2-h2"></div>
+
+        <div id="c2-ft">$0.545 rounds to 55&cent;. That is the whole sum — you can do it yourself.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* viewport-change: picks the push up where beat 1 left it (1.022) so
+             the held photograph does not jump at the seam. */
+          var world = document.getElementById("c2-w");
+          var cam = { scale: 1.022 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1.022 },
+            { scale: 1.05, duration: 6, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#c2-sh", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" }, 0);
+          tl.fromTo("#c2-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.24);
+          tl.fromTo("#c2-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.36);
+
+          /* spring-pop-entrance on the figure, then its accent marker, then
+             the unit. The number arrives before the word it is measured in. */
+          tl.fromTo(
+            "#c2-hero",
+            { opacity: 0, scale: 0.86, y: 20 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.48, ease: "back.out(1.6)" },
+            0.5,
+          );
+          tl.fromTo("#c2-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "power3.out" }, 0.84);
+          tl.fromTo("#c2-unit", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.34, ease: "power3.out" }, 0.92);
+
+          /* The proof. Hairlines draw, then the three rows cascade —
+             waterfall-entry, label and figure entering as one row. */
+          tl.fromTo("#c2-h1", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 1.45);
+
+          function row(n, t) {
+            tl.set("#c2-la" + n, { opacity: 1, y: 34 }, t);
+            tl.to("#c2-la" + n, { y: 0, duration: 0.16, ease: "power4.out" }, t);
+            tl.set("#c2-fg" + n, { opacity: 1, y: 34 }, t);
+            tl.to("#c2-fg" + n, { y: 0, duration: 0.16, ease: "power4.out" }, t);
+          }
+          var a = 1.72;
+          row(1, a);
+          row(2, a + 0.16 - F);
+          row(3, a + 0.32 - 2 * F);
+
+          tl.fromTo("#c2-h2", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 2.42);
+          tl.fromTo("#c2-ft", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 2.7);
+
+          window.__timelines["arithmetic"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

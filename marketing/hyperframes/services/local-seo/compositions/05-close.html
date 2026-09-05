@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #ccc2ac);
+          color: var(--ink, #2a2118);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -208px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        /* The ground drops back down for the close, so the last thing on screen
+           is mostly the place itself rather than mostly type. */
+        .ground {
+          position: absolute;
+          left: 0;
+          width: 1080px;
+          bottom: 0;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #ccc2ac) 0%,
+            var(--paper, #ccc2ac) 74%,
+            var(--paper-edge, #beb298) 100%
+          );
+          border-top: 3px solid var(--rule, #9c8e73);
+          opacity: 0;
+        }
+        #s5-gr {
+          top: 1020px;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 1080px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #5c5040);
+          opacity: 0;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 92px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s5-l1 {
+          top: 1150px;
+        }
+        #s5-l2 {
+          top: 1240px;
+        }
+        #s5-mk {
+          position: absolute;
+          left: 84px;
+          top: 1382px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        #s5-url {
+          position: absolute;
+          left: 84px;
+          top: 1434px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 40px;
+          letter-spacing: 0.06em;
+          color: var(--ink, #2a2118);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s5-ft {
+          position: absolute;
+          left: 84px;
+          top: 1516px;
+          width: 912px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #5c5040);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 76% at 50% 34%,
+            rgba(51, 39, 46, 0) 32%,
+            rgba(51, 39, 46, 0.14) 66%,
+            rgba(51, 39, 46, 0.40) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s5-w">
+            <img class="plate" src="assets/plate-bracket.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="ground" id="s5-gr"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="s5-eb">Two separate products</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s5-l1">Get found.</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s5-l2">Then stay found.</div>
+        <div id="s5-mk"></div>
+        <!-- Curled before it was set in type: HTTP 200 on apex and www. -->
+        <div id="s5-url">famtasticdesigns.com/packages</div>
+        <div id="s5-ft">Neither one is included in the $199 bundle. Ask which you need first.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* viewport-change: the last leg of the film's single unbroken push,
+             landing at 1.098 — the ceiling for a plate delivered at 1.10x. */
+          var world = document.getElementById("s5-w");
+          var cam = { scale: 1.085 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1.085 },
+            { scale: 1.098, duration: 4, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#s5-gr", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" }, 0);
+          tl.fromTo("#s5-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.2);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.46;
+          whip("#s5-l1", a, 70, 0.19);
+          whip("#s5-l2", a + 0.19 - F, 48, 0.15);
+
+          /* spring-pop-entrance on the accent marker, then the address. */
+          tl.fromTo("#s5-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.44, ease: "back.out(1.4)" }, 1.16);
+          tl.fromTo("#s5-url", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 1.38);
+          tl.fromTo("#s5-ft", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.38, ease: "power3.out" }, 1.72);
+
+          window.__timelines["close"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

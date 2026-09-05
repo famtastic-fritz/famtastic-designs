@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--earth, #17120d);
+          color: var(--bone, #e3d6bb);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 46%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .band {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 960px;
+          background: linear-gradient(
+            to bottom,
+            var(--earth, #17120d) 0px,
+            var(--earth, #17120d) 780px,
+            rgba(23, 18, 13, 0) 960px
+          );
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 196px;
+          font-family: "IBM Plex Mono", monospace;
+          font-weight: 600;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--dust, #8a7c63);
+          opacity: 0;
+        }
+        .shaft {
+          position: absolute;
+          left: 84px;
+          top: 254px;
+          width: 232px;
+          height: 4px;
+          background: var(--amber, #d9a441);
+          transform-origin: 0% 50%;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: "League Gothic", sans-serif;
+          font-weight: 400;
+          font-size: 112px;
+          line-height: 0.94;
+          letter-spacing: 0.005em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          color: var(--bone, #e3d6bb);
+          opacity: 0;
+        }
+        #s3-l1 {
+          top: 312px;
+        }
+        #s3-l2 {
+          top: 426px;
+        }
+        .support {
+          position: absolute;
+          left: 84px;
+          top: 596px;
+          width: 848px;
+          font-family: Roboto, sans-serif;
+          font-weight: 400;
+          font-size: 40px;
+          line-height: 1.32;
+          letter-spacing: -0.005em;
+          color: var(--sand, #b6a482);
+          opacity: 0;
+        }
+        .support b {
+          font-weight: 400;
+          color: var(--bone, #e3d6bb);
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 76% at 50% 50%,
+            rgba(13, 10, 7, 0) 28%,
+            rgba(13, 10, 7, 0.26) 64%,
+            rgba(13, 10, 7, 0.66) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="reframe" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s3-w">
+            <img class="plate" src="assets/plates/gt-b1.jpg" alt="" />
+          </div>
+        </div>
+        <div class="band"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="s3-eb">This isn&rsquo;t about fees</div>
+        <div class="shaft" id="s3-sh"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="s3-l1">Even if the</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s3-l2">fees are fine.</div>
+        <div class="support" id="s3-sp">
+          You already know what the app costs you. This is the quieter one:
+          <b>you are still invisible to everyone who isn&rsquo;t already looking for
+          you by name.</b>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          var world = document.getElementById("s3-w");
+          var cam = { scale: 1 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1 },
+            { scale: 1.05, duration: 7.6, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#s3-eb", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.14);
+          tl.fromTo("#s3-sh", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 0.26);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.72;
+          whip("#s3-l1", a, 80, 0.2);
+          var b = a + 0.2 - F;
+          whip("#s3-l2", b, 48, 0.16);
+
+          tl.fromTo(
+            "#s3-sp",
+            { opacity: 0, y: 22 },
+            { opacity: 1, y: 0, duration: 0.48, ease: "power3.out" },
+            2.0,
+          );
+
+          window.__timelines["reframe"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

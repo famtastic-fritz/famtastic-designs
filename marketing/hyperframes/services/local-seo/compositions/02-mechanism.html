@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #ccc2ac);
+          color: var(--ink, #2a2118);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -208px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .ground {
+          position: absolute;
+          left: 0;
+          width: 1080px;
+          bottom: 0;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #ccc2ac) 0%,
+            var(--paper, #ccc2ac) 74%,
+            var(--paper-edge, #beb298) 100%
+          );
+          border-top: 3px solid var(--rule, #9c8e73);
+          opacity: 0;
+        }
+        #s2-gr {
+          top: 900px;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 960px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #5c5040);
+          opacity: 0;
+        }
+        .rule {
+          position: absolute;
+          left: 84px;
+          top: 1018px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 88px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s2-l1 {
+          top: 1070px;
+        }
+        #s2-l2 {
+          top: 1156px;
+        }
+        .hair {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          height: 3px;
+          background: var(--rule, #9c8e73);
+          transform-origin: 0% 50%;
+        }
+        #s2-h1 {
+          top: 1256px;
+        }
+        .mk {
+          position: absolute;
+          left: 84px;
+          width: 14px;
+          height: 14px;
+          background: var(--accent, #7fb449);
+          opacity: 0;
+        }
+        .item {
+          position: absolute;
+          left: 130px;
+          width: 866px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 36px;
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+          color: var(--ink, #2a2118);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s2-m1 {
+          top: 1302px;
+        }
+        #s2-i1 {
+          top: 1290px;
+        }
+        #s2-m2 {
+          top: 1378px;
+        }
+        #s2-i2 {
+          top: 1366px;
+        }
+        #s2-m3 {
+          top: 1454px;
+        }
+        #s2-i3 {
+          top: 1442px;
+        }
+        #s2-m4 {
+          top: 1530px;
+        }
+        #s2-i4 {
+          top: 1518px;
+        }
+        #s2-ft {
+          position: absolute;
+          left: 84px;
+          top: 1606px;
+          width: 912px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #5c5040);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 76% at 50% 34%,
+            rgba(51, 39, 46, 0) 32%,
+            rgba(51, 39, 46, 0.14) 66%,
+            rgba(51, 39, 46, 0.40) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="mechanism" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s2-w">
+            <img class="plate" src="assets/plate-bracket.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="ground" id="s2-gr"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="s2-eb">What local search reads</div>
+        <div class="rule" id="s2-rl"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="s2-l1">It reads facts,</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s2-l2">not adjectives.</div>
+
+        <div class="hair" id="s2-h1"></div>
+        <div class="mk" id="s2-m1"></div>
+        <div class="item" id="s2-i1">Your name, spelled the same way everywhere</div>
+        <div class="mk" id="s2-m2"></div>
+        <div class="item" id="s2-i2">An address that matches your listings</div>
+        <div class="mk" id="s2-m3"></div>
+        <div class="item" id="s2-i3">Opening hours a machine can parse</div>
+        <div class="mk" id="s2-m4"></div>
+        <div class="item" id="s2-i4">The services you actually offer, in words</div>
+
+        <!-- The brand does not promise rankings. Saying so out loud is the
+             honest version of this beat, and it is also the difference the
+             viewer can check. -->
+        <div id="s2-ft">Nobody can promise you a ranking. This is the part that can be done.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* viewport-change: the next leg of the film's single unbroken push
+             across one photograph. */
+          var world = document.getElementById("s2-w");
+          var cam = { scale: 1.02 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1.02 },
+            { scale: 1.045, duration: 7, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#s2-gr", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" }, 0);
+          tl.fromTo("#s2-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.22);
+          tl.fromTo("#s2-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.34);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.6;
+          whip("#s2-l1", a, 68, 0.19);
+          whip("#s2-l2", a + 0.19 - F, 48, 0.15);
+
+          tl.fromTo("#s2-h1", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 1.34);
+
+          /* waterfall-entry on the four things a machine actually reads. The
+             stagger is wider than a narrated film would use, because here the
+             reader sets the pace and there is no voice to keep up with. */
+          function item(n, t) {
+            tl.set("#s2-i" + n, { opacity: 1, y: 36 }, t);
+            tl.to("#s2-i" + n, { y: 0, duration: 0.17, ease: "power4.out" }, t);
+            tl.fromTo(
+              "#s2-m" + n,
+              { opacity: 0, scale: 0.4 },
+              { opacity: 1, scale: 1, duration: 0.26, ease: "back.out(2)" },
+              t + 0.04,
+            );
+          }
+          var d0 = 1.68;
+          item(1, d0);
+          item(2, d0 + 0.62);
+          item(3, d0 + 1.24);
+          item(4, d0 + 1.86);
+
+          tl.fromTo("#s2-ft", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" }, 4.4);
+
+          window.__timelines["mechanism"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

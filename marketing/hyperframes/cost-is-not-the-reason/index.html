@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Fifty-Five Cents — Cost Is Not The Reason</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      /* Design tokens — frame.md is the source of truth. Declared on body so
+         every mounted sub-composition inherits them; each sub-composition also
+         repeats the literal as a var() fallback so it renders standalone. */
+      body {
+        --paper: #d5cebe;
+        --paper-edge: #c6beac;
+        --ink: #211f1a;
+        --ink-soft: #4a453c;
+        --muted: #635c50;
+        --shadow: #33272e;
+        --accent: #7fb449;
+        --rule: #a79e8b;
+        background: var(--paper);
+        font-family: Inter, sans-serif;
+        color: var(--ink);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      /* Untimed base — guarantees no frame is ever transparent, including the
+         seam frames between two scene slots. */
+      #base {
+        position: absolute;
+        inset: 0;
+        background: var(--paper);
+        z-index: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="28"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div id="base"></div>
+
+      <div
+        id="objection"
+        class="clip"
+        data-composition-id="objection"
+        data-composition-src="compositions/01-objection.html"
+        data-start="0"
+        data-duration="4.6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="arithmetic"
+        class="clip"
+        data-composition-id="arithmetic"
+        data-composition-src="compositions/02-arithmetic.html"
+        data-start="4.6"
+        data-duration="6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="scope"
+        class="clip"
+        data-composition-id="scope"
+        data-composition-src="compositions/03-scope.html"
+        data-start="10.6"
+        data-duration="7"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="renewal"
+        class="clip"
+        data-composition-id="renewal"
+        data-composition-src="compositions/04-renewal.html"
+        data-start="17.6"
+        data-duration="5.8"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="close"
+        class="clip"
+        data-composition-id="close"
+        data-composition-src="compositions/05-close.html"
+        data-start="23.4"
+        data-duration="4.6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Narration reused verbatim from the campaign's own 15s commercial and
+           trimmed at 10.45s by scripts/stage-assets.sh. Two complete sentences,
+           both supported by famtastic-products.json and by the live package
+           page. The clause after them ("3 custom design directions in 48
+           hours") is not in either source and is deliberately not carried. -->
+      <audio
+        id="vo"
+        src="assets/vo-cost-open.m4a"
+        data-start="0"
+        data-duration="10.45"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        // The host owns no animated element of its own; every beat animates
+        // inside its sub-composition. An empty registered timeline keeps the
+        // root seekable and explicit rather than implicit.
+        window.__timelines["main"] = gsap.timeline({ paused: true });
+      })();
+    </script>
+  </body>
+</html>

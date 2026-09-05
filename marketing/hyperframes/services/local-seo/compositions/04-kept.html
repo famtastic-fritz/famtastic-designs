@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #ccc2ac);
+          color: var(--ink, #2a2118);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -208px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .ground {
+          position: absolute;
+          left: 0;
+          width: 1080px;
+          bottom: 0;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #ccc2ac) 0%,
+            var(--paper, #ccc2ac) 74%,
+            var(--paper-edge, #beb298) 100%
+          );
+          border-top: 3px solid var(--rule, #9c8e73);
+          opacity: 0;
+        }
+        #s4-gr {
+          top: 820px;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 880px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #5c5040);
+          opacity: 0;
+        }
+        .rule {
+          position: absolute;
+          left: 84px;
+          top: 938px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        #s4-hero {
+          position: absolute;
+          left: 84px;
+          top: 990px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 132px;
+          line-height: 1;
+          letter-spacing: -0.03em;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s4-unit {
+          position: absolute;
+          left: 500px;
+          top: 1076px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 34px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--ink-soft, #4e4234);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s4-mk {
+          position: absolute;
+          left: 84px;
+          top: 1174px;
+          width: 268px;
+          height: 18px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        .mk {
+          position: absolute;
+          left: 84px;
+          width: 14px;
+          height: 14px;
+          background: var(--accent, #7fb449);
+          opacity: 0;
+        }
+        .item {
+          position: absolute;
+          left: 130px;
+          width: 866px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 38px;
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+          color: var(--ink, #2a2118);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #s4-m1 {
+          top: 1262px;
+        }
+        #s4-i1 {
+          top: 1250px;
+        }
+        #s4-m2 {
+          top: 1342px;
+        }
+        #s4-i2 {
+          top: 1330px;
+        }
+        #s4-m3 {
+          top: 1422px;
+        }
+        #s4-i3 {
+          top: 1410px;
+        }
+        #s4-ft {
+          position: absolute;
+          left: 84px;
+          top: 1504px;
+          width: 912px;
+          padding-top: 28px;
+          border-top: 3px solid var(--rule, #9c8e73);
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #5c5040);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 76% at 50% 34%,
+            rgba(51, 39, 46, 0) 32%,
+            rgba(51, 39, 46, 0.14) 66%,
+            rgba(51, 39, 46, 0.40) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="kept" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s4-w">
+            <img class="plate" src="assets/plate-bracket.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="ground" id="s4-gr"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="s4-eb">Website Maintenance</div>
+        <div class="rule" id="s4-rl"></div>
+        <div id="s4-hero">$49.99</div>
+        <div id="s4-unit">a month</div>
+        <div id="s4-mk"></div>
+
+        <div class="mk" id="s4-m1"></div>
+        <div class="item" id="s4-i1">Updates checked, every month</div>
+        <div class="mk" id="s4-m2"></div>
+        <div class="item" id="s4-i2">Backups verified, not just taken</div>
+        <div class="mk" id="s4-m3"></div>
+        <div class="item" id="s4-i3">Small content touches handled for you</div>
+
+        <div id="s4-ft">Cancel any time. Its own product, and not part of the $199 bundle.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* viewport-change: the next leg of the film's single unbroken push
+             across one photograph. */
+          var world = document.getElementById("s4-w");
+          var cam = { scale: 1.066 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1.066 },
+            { scale: 1.085, duration: 5.4, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#s4-gr", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" }, 0);
+          tl.fromTo("#s4-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.22);
+          tl.fromTo("#s4-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.34);
+
+          /* spring-pop-entrance on the price and its accent marker. */
+          tl.fromTo(
+            "#s4-hero",
+            { opacity: 0, scale: 0.86, y: 20 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.48, ease: "back.out(1.6)" },
+            0.5,
+          );
+          tl.fromTo("#s4-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "power3.out" }, 0.84);
+          tl.fromTo("#s4-unit", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.34, ease: "power3.out" }, 0.92);
+
+          function item(n, t) {
+            tl.set("#s4-i" + n, { opacity: 1, y: 38 }, t);
+            tl.to("#s4-i" + n, { y: 0, duration: 0.17, ease: "power4.out" }, t);
+            tl.fromTo(
+              "#s4-m" + n,
+              { opacity: 0, scale: 0.4 },
+              { opacity: 1, scale: 1, duration: 0.26, ease: "back.out(2)" },
+              t + 0.04,
+            );
+          }
+          var d0 = 1.5;
+          item(1, d0);
+          item(2, d0 + 0.58);
+          item(3, d0 + 1.16);
+
+          tl.fromTo("#s4-ft", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" }, 3.3);
+
+          window.__timelines["kept"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d2c9be);
+          color: var(--ink, #33272e);
+        }
+        /* Same card, same position, same scale as the previous beat. The image
+           does not move across the cut; only the words under it change. Two
+           blank cards on a counter is the closing image because it IS the
+           argument: two jobs, two products, one business. */
+        .card {
+          position: absolute;
+          left: 84px;
+          top: 176px;
+          width: 912px;
+          height: 608px;
+          overflow: hidden;
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.08),
+            0 24px 56px rgba(51, 39, 46, 0.26);
+        }
+        .card img {
+          position: absolute;
+          left: -46px;
+          top: -30px;
+          width: 1003px;
+          height: 669px;
+          object-fit: cover;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 104px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #b5-l1 {
+          top: 880px;
+        }
+        #b5-l2 {
+          top: 982px;
+        }
+        .hair {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          height: 3px;
+          background: var(--rule, #a49a91);
+          transform-origin: 0% 50%;
+        }
+        #b5-h1 {
+          top: 1140px;
+        }
+        #b5-h2 {
+          top: 1364px;
+        }
+        .lab {
+          position: absolute;
+          left: 84px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 40px;
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+          color: var(--ink, #33272e);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .fig {
+          position: absolute;
+          right: 84px;
+          text-align: right;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 38px;
+          line-height: 1.26;
+          letter-spacing: 0.02em;
+          font-variant-numeric: tabular-nums;
+          color: var(--ink-soft, #57484f);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #b5-la1,
+        #b5-fg1 {
+          top: 1188px;
+        }
+        #b5-la2,
+        #b5-fg2 {
+          top: 1276px;
+        }
+        #b5-mk {
+          position: absolute;
+          left: 84px;
+          top: 1412px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        #b5-url {
+          position: absolute;
+          left: 84px;
+          top: 1464px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 40px;
+          letter-spacing: 0.06em;
+          color: var(--ink, #33272e);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #b5-ft {
+          position: absolute;
+          left: 84px;
+          top: 1546px;
+          width: 912px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #625860);
+          opacity: 0;
+        }
+      </style>
+
+      <div id="root" data-composition-id="close" data-width="1080" data-height="1920">
+        <div class="card" id="b5-cd" data-layout-allow-overflow="true">
+          <img src="assets/card-two-cards.jpg" alt="" />
+        </div>
+
+        <div class="hl" data-layout-allow-overlap="true" id="b5-l1">Two different</div>
+        <div class="hl" data-layout-allow-overlap="true" id="b5-l2">jobs.</div>
+
+        <!-- Both products, both prices, side by side, so the last thing on
+             screen cannot be read as a bundle. -->
+        <div class="hair" id="b5-h1"></div>
+        <div class="lab" id="b5-la1">Web Basics Bundle</div>
+        <div class="fig" id="b5-fg1">$199 one time</div>
+        <div class="lab" id="b5-la2">Business Email Setup</div>
+        <div class="fig" id="b5-fg2">$99 one time</div>
+        <div class="hair" id="b5-h2"></div>
+
+        <div id="b5-mk"></div>
+        <!-- Curled before it was set in type: HTTP 200 on apex and www. -->
+        <div id="b5-url">famtasticdesigns.com/packages</div>
+        <div id="b5-ft">Ask us which one you need first.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* "Two different jobs." runs 26.99-28.16 on the film clock; this beat
+             starts at 26.85, so 0.14 local. */
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.14;
+          whip("#b5-l1", a, 72, 0.19);
+          whip("#b5-l2", a + 0.19 - F, 46, 0.15);
+
+          tl.fromTo("#b5-h1", { scaleX: 0 }, { scaleX: 1, duration: 0.44, ease: "power3.out" }, 0.6);
+
+          function row(n, t) {
+            tl.set("#b5-la" + n, { opacity: 1, y: 32 }, t);
+            tl.to("#b5-la" + n, { y: 0, duration: 0.16, ease: "power4.out" }, t);
+            tl.set("#b5-fg" + n, { opacity: 1, y: 32 }, t);
+            tl.to("#b5-fg" + n, { y: 0, duration: 0.16, ease: "power4.out" }, t);
+          }
+          row(1, 0.8);
+          row(2, 0.96 - F);
+          tl.fromTo("#b5-h2", { scaleX: 0 }, { scaleX: 1, duration: 0.44, ease: "power3.out" }, 1.24);
+
+          tl.fromTo("#b5-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "back.out(1.4)" }, 1.5);
+          tl.fromTo("#b5-url", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 1.7);
+          /* "Ask us which one you need first." runs 28.16-29.50 on the film
+             clock — 1.31 to 2.65 local. The film then holds for two seconds on
+             a finished frame rather than cutting on the last syllable. */
+          tl.fromTo("#b5-ft", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.38, ease: "power3.out" }, 2.0);
+
+          window.__timelines["close"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

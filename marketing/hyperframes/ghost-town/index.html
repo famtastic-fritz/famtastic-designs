@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>The Sign That Isn't There — Ghost Town Ep.1</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      /* Design tokens — frame.md is the source of truth. Declared on body so
+         every mounted sub-composition inherits them; each sub-composition also
+         repeats the literal as a var() fallback so it renders standalone. */
+      body {
+        --earth: #17120d;
+        --earth-deep: #0d0a07;
+        --bone: #e3d6bb;
+        --sand: #b6a482;
+        --dust: #8a7c63;
+        --amber: #d9a441;
+        --rule: #3b3125;
+        background: var(--earth);
+        font-family: Roboto, sans-serif;
+        color: var(--bone);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--earth);
+      }
+      /* Untimed base — guarantees no frame is ever transparent, including the
+         seam frames between two scene slots. */
+      #base {
+        position: absolute;
+        inset: 0;
+        background: var(--earth);
+        z-index: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="44"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div id="base"></div>
+
+      <div
+        id="hook"
+        class="clip"
+        data-composition-id="hook"
+        data-composition-src="compositions/01-hook.html"
+        data-start="0"
+        data-duration="7.2"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="absence"
+        class="clip"
+        data-composition-id="absence"
+        data-composition-src="compositions/02-absence.html"
+        data-start="7.2"
+        data-duration="8"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="reframe"
+        class="clip"
+        data-composition-id="reframe"
+        data-composition-src="compositions/03-reframe.html"
+        data-start="15.2"
+        data-duration="7.6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="fix"
+        class="clip"
+        data-composition-id="fix"
+        data-composition-src="compositions/04-fix.html"
+        data-start="22.8"
+        data-duration="8"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="offer"
+        class="clip"
+        data-composition-id="offer"
+        data-composition-src="compositions/05-offer.html"
+        data-start="30.8"
+        data-duration="7.6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <div
+        id="close"
+        class="clip"
+        data-composition-id="close"
+        data-composition-src="compositions/06-close.html"
+        data-start="38.4"
+        data-duration="5.6"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+    </div>
+
+    <script>
+      (function () {
+        // The host owns no animated element of its own: every beat is
+        // self-contained and the runtime auto-nests the registered child
+        // timelines. One paused timeline is still registered, per the contract.
+        window.__timelines["main"] = gsap.timeline({ paused: true });
+      })();
+    </script>
+  </body>
+</html>

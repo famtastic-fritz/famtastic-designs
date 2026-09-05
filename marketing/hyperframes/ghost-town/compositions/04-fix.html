@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--earth, #17120d);
+          color: var(--bone, #e3d6bb);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 68%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        /* Deeper band than the earlier beats: this is the beat that carries the
+           list, and the photograph's own subject sits low in frame. */
+        .band {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1080px;
+          height: 1090px;
+          background: linear-gradient(
+            to bottom,
+            var(--earth, #17120d) 0px,
+            var(--earth, #17120d) 930px,
+            rgba(23, 18, 13, 0) 1090px
+          );
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 196px;
+          font-family: "IBM Plex Mono", monospace;
+          font-weight: 600;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--dust, #8a7c63);
+          opacity: 0;
+        }
+        /* No hairline under the eyebrow on this beat — the amber has moved down
+           the frame onto the card, where the light finally lands. */
+        .tick {
+          position: absolute;
+          left: 84px;
+          top: 254px;
+          width: 232px;
+          height: 3px;
+          background: var(--rule, #3b3125);
+          transform-origin: 0% 50%;
+        }
+        .hl {
+          position: absolute;
+          left: 84px;
+          font-family: "League Gothic", sans-serif;
+          font-weight: 400;
+          font-size: 116px;
+          line-height: 0.94;
+          letter-spacing: 0.005em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          color: var(--bone, #e3d6bb);
+          opacity: 0;
+        }
+        #s4-l1 {
+          top: 306px;
+        }
+        #s4-l2 {
+          top: 424px;
+        }
+        #s4-l3 {
+          top: 542px;
+        }
+        .item {
+          position: absolute;
+          left: 84px;
+          width: 900px;
+          font-family: Roboto, sans-serif;
+          font-weight: 400;
+          font-size: 42px;
+          line-height: 1.24;
+          letter-spacing: -0.005em;
+          color: var(--sand, #b6a482);
+          opacity: 0;
+        }
+        .item span {
+          display: inline-block;
+          width: 64px;
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 30px;
+          font-variant-numeric: tabular-nums;
+          color: var(--dust, #8a7c63);
+        }
+        #s4-i1 {
+          top: 706px;
+        }
+        #s4-i2 {
+          top: 778px;
+        }
+        #s4-i3 {
+          top: 850px;
+        }
+        /* The light shaft, now low in the frame and lying along the top edge of
+           the blank card in the photograph — the beat the whole film descends
+           toward. It lives INSIDE .world, not in frame space: the camera pushes
+           1.00 -> 1.05 across this beat, so a shaft positioned in frame
+           coordinates would be aligned to the card for exactly one instant and
+           drifting off it for the other 7.9 seconds. Nested in .world it scales
+           with the photograph and stays on the edge for the whole beat. */
+        .shaft {
+          position: absolute;
+          left: 286px;
+          top: 1246px;
+          width: 512px;
+          height: 4px;
+          background: var(--amber, #d9a441);
+          transform-origin: 0% 50%;
+          z-index: 2;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            118% 74% at 50% 66%,
+            rgba(13, 10, 7, 0) 26%,
+            rgba(13, 10, 7, 0.2) 62%,
+            rgba(13, 10, 7, 0.58) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="fix" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="s4-w">
+            <img class="plate" src="assets/plates/gt-p.jpg" alt="" />
+            <div class="shaft" id="s4-sh"></div>
+          </div>
+        </div>
+        <div class="band"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="s4-eb">The fix isn&rsquo;t complicated</div>
+        <div class="tick" id="s4-tk"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="s4-l1">One page.</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s4-l2">Your own</div>
+        <div class="hl" data-layout-allow-overlap="true" id="s4-l3">address.</div>
+
+        <div class="item" id="s4-i1"><span>01</span>Your work, not a template thumbnail</div>
+        <div class="item" id="s4-i2"><span>02</span>A web address that belongs to you</div>
+        <div class="item" id="s4-i3"><span>03</span>One page a stranger can find and read</div>
+      </div>
+
+      <script>
+        (function () {
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          var world = document.getElementById("s4-w");
+          var cam = { scale: 1 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1 },
+            { scale: 1.05, duration: 8, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#s4-eb", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.14);
+          tl.fromTo("#s4-tk", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 0.26);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.72;
+          whip("#s4-l1", a, 80, 0.2);
+          var b = a + 0.2 - F;
+          whip("#s4-l2", b, 48, 0.16);
+          var c = b + 0.16 - F;
+          whip("#s4-l3", c, 48, 0.16);
+
+          var d = 2.3;
+          whip("#s4-i1", d, 42, 0.17);
+          var e = d + 0.17 - F;
+          whip("#s4-i2", e, 42, 0.16);
+          var f = e + 0.16 - F;
+          whip("#s4-i3", f, 42, 0.16);
+
+          /* The light arrives last and takes its time crossing the card. */
+          tl.fromTo(
+            "#s4-sh",
+            { scaleX: 0 },
+            { scaleX: 1, duration: 1.15, ease: "power2.out" },
+            4.15,
+          );
+
+          window.__timelines["fix"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

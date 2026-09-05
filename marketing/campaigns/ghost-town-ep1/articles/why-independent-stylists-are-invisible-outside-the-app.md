@@ -31,7 +31,7 @@ That's the entire Web Basics Bundle:
 
 * A custom, mobile-first page built around your brand and your work
 * A domain of your own (e.g. `styledbysarah.com`) instead of a shared app subdomain
-* A full first year of hosting and a branded email address included
+* A full first year of managed hosting included
 * $199 total for year one — **~55¢ a day** — then $9.99/mo after your included year, only if you keep it
 
 You keep every booking that comes from search. You keep the client relationship. And the next time someone searches "hair stylist near me," there's finally something for them to find.

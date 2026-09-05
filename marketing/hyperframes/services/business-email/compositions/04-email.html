@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d2c9be);
+          color: var(--ink, #33272e);
+        }
+        /* The photograph stops being a ground and becomes an object: two blank
+           cards, the same business printed twice. The anchor is natively 3:2
+           and this card is 3:2, so nothing is cropped away and both cards stay
+           in frame — which is the whole point of using it here. */
+        .card {
+          position: absolute;
+          left: 84px;
+          top: 176px;
+          width: 912px;
+          height: 608px;
+          overflow: hidden;
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.08),
+            0 24px 56px rgba(51, 39, 46, 0.26);
+          opacity: 0;
+        }
+        .card img {
+          position: absolute;
+          left: -46px;
+          top: -30px;
+          width: 1003px;
+          height: 669px;
+          object-fit: cover;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 84px;
+          top: 936px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #625860);
+          opacity: 0;
+        }
+        .rule {
+          position: absolute;
+          left: 84px;
+          top: 994px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        #b4-hero {
+          position: absolute;
+          left: 84px;
+          top: 1050px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 160px;
+          line-height: 1;
+          letter-spacing: -0.03em;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #b4-unit {
+          position: absolute;
+          left: 404px;
+          top: 1160px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 34px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--ink-soft, #57484f);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #b4-mk {
+          position: absolute;
+          left: 84px;
+          top: 1244px;
+          width: 268px;
+          height: 18px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        #b4-sup {
+          position: absolute;
+          left: 84px;
+          top: 1314px;
+          width: 912px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 40px;
+          line-height: 1.28;
+          letter-spacing: -0.01em;
+          color: var(--ink, #33272e);
+          opacity: 0;
+        }
+        #b4-ft {
+          position: absolute;
+          left: 84px;
+          top: 1444px;
+          width: 912px;
+          padding-top: 28px;
+          border-top: 3px solid var(--rule, #a49a91);
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #625860);
+          opacity: 0;
+        }
+      </style>
+
+      <div id="root" data-composition-id="email" data-width="1080" data-height="1920">
+        <div class="card" id="b4-cd" data-layout-allow-overflow="true">
+          <img src="assets/card-two-cards.jpg" alt="" />
+        </div>
+
+        <div class="eyebrow" id="b4-eb">Business Email Setup</div>
+        <div class="rule" id="b4-rl"></div>
+        <div id="b4-hero">$99</div>
+        <div id="b4-unit">one time</div>
+        <div id="b4-mk"></div>
+        <div id="b4-sup">A separate setup, on the domain you already own.</div>
+        <div id="b4-ft">You keep your own mailbox provider. We never resell mailboxes.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+
+          /* The photograph arrives as an object, not a background. */
+          tl.fromTo(
+            "#b4-cd",
+            { opacity: 0, y: 28, scale: 0.986 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" },
+            0,
+          );
+          tl.fromTo("#b4-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.2);
+          tl.fromTo("#b4-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.36, ease: "power3.out" }, 0.3);
+
+          /* spring-pop-entrance on the price. "$99, one time" runs 25.17-26.71
+             on the film clock; this beat starts at 23.30, so 1.87 local. The
+             number is on screen before the voice reaches it. */
+          tl.fromTo(
+            "#b4-hero",
+            { opacity: 0, scale: 0.86, y: 20 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.46, ease: "back.out(1.6)" },
+            0.44,
+          );
+          tl.fromTo("#b4-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.74);
+          tl.fromTo("#b4-unit", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.32, ease: "power3.out" }, 0.82);
+          tl.fromTo("#b4-sup", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 1.0);
+          tl.fromTo("#b4-ft", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.38, ease: "power3.out" }, 1.34);
+
+          window.__timelines["email"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

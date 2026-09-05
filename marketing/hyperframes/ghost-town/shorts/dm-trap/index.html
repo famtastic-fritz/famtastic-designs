@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>The DM Trap — Ghost Town Ep.1 short cut</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      /* STANDALONE composition — rendered with `render -c shorts/dm-trap.html`,
+         so the root sits directly in <body> with no <template> wrapper and the
+         tokens are declared here rather than inherited from a host. */
+      body {
+        --earth: #17120d;
+        --earth-deep: #0d0a07;
+        --bone: #e3d6bb;
+        --sand: #b6a482;
+        --dust: #8a7c63;
+        --amber: #d9a441;
+        --rule: #3b3125;
+        background: var(--earth);
+        font-family: Roboto, sans-serif;
+        color: var(--bone);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--earth);
+      }
+      .stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      .world {
+        position: absolute;
+        inset: 0;
+        transform-origin: 58% 62%;
+        will-change: transform;
+      }
+      .plate {
+        position: absolute;
+        left: -54px;
+        top: -104px;
+        width: 1188px;
+        height: 2128px;
+        object-fit: cover;
+      }
+      .band {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 940px;
+        background: linear-gradient(
+          to bottom,
+          var(--earth) 0px,
+          var(--earth) 760px,
+          rgba(23, 18, 13, 0) 940px
+        );
+      }
+      .vignette {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          118% 76% at 56% 60%,
+          rgba(13, 10, 7, 0) 28%,
+          rgba(13, 10, 7, 0.26) 64%,
+          rgba(13, 10, 7, 0.66) 100%
+        );
+      }
+      .eyebrow {
+        position: absolute;
+        left: 84px;
+        top: 196px;
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        font-size: 30px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--dust);
+        opacity: 0;
+      }
+      .shaft {
+        position: absolute;
+        left: 84px;
+        top: 254px;
+        width: 232px;
+        height: 4px;
+        background: var(--amber);
+        transform-origin: 0% 50%;
+      }
+      /* The three statements share the same optical position, so each lives in
+         its own group and the groups hand off with autoAlpha. They are not clip
+         elements — only #root carries data-start — so taking over their
+         visibility is allowed here. */
+      .group {
+        position: absolute;
+        inset: 0;
+        visibility: hidden;
+        opacity: 0;
+      }
+      .hl {
+        position: absolute;
+        left: 84px;
+        font-family: "League Gothic", sans-serif;
+        font-weight: 400;
+        font-size: 116px;
+        line-height: 0.94;
+        letter-spacing: 0.005em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        color: var(--bone);
+        opacity: 0;
+      }
+      .r1 {
+        top: 306px;
+      }
+      .r2 {
+        top: 424px;
+      }
+      .r3 {
+        top: 542px;
+      }
+      .marker {
+        position: absolute;
+        left: 84px;
+        top: 592px;
+        width: 148px;
+        height: 12px;
+        background: var(--amber);
+        transform-origin: 0% 50%;
+      }
+      .terms {
+        position: absolute;
+        left: 262px;
+        top: 580px;
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        font-size: 32px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--sand);
+        white-space: nowrap;
+        opacity: 0;
+      }
+      .url {
+        position: absolute;
+        left: 84px;
+        top: 686px;
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        font-size: 46px;
+        letter-spacing: 0.06em;
+        color: var(--amber);
+        white-space: nowrap;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="dmtrap"
+      data-start="0"
+      data-duration="15"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div class="stage" data-layout-allow-overflow="true">
+        <div class="world" id="dt-w">
+          <img class="plate" src="assets/plates/gt-c1.jpg" alt="" />
+        </div>
+      </div>
+      <div class="band"></div>
+      <div class="vignette"></div>
+
+      <div class="eyebrow" id="dt-eb">The DM trap</div>
+      <div class="shaft" id="dt-sh"></div>
+
+      <div class="group" id="dt-g1">
+        <div class="hl r1" data-layout-allow-overlap="true" id="dt-a1">If the only way</div>
+        <div class="hl r2" data-layout-allow-overlap="true" id="dt-a2">to book you</div>
+        <div class="hl r3" data-layout-allow-overlap="true" id="dt-a3">is a DM&hellip;</div>
+      </div>
+
+      <div class="group" id="dt-g2">
+        <div class="hl r1" data-layout-allow-overlap="true" id="dt-b1">&hellip;every new client</div>
+        <div class="hl r2" data-layout-allow-overlap="true" id="dt-b2">is one algorithm</div>
+        <div class="hl r3" data-layout-allow-overlap="true" id="dt-b3">change away.</div>
+      </div>
+
+      <div class="group" id="dt-g3">
+        <div class="hl r1" data-layout-allow-overlap="true" id="dt-c1">One page</div>
+        <div class="hl r2" data-layout-allow-overlap="true" id="dt-c2">you own.</div>
+        <div class="marker" id="dt-mk"></div>
+        <div class="terms" id="dt-tm">$199 first year &middot; 55 cents a day</div>
+        <div class="url" id="dt-url">famtasticdesigns.com</div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var tl = gsap.timeline({ paused: true });
+        var F = 1 / 30;
+
+        /* One move for the whole fifteen seconds. The plate is the argument —
+           a phone face-down beside a lamp — so the camera never cuts, it only
+           closes in on it. */
+        var world = document.getElementById("dt-w");
+        var cam = { scale: 1 };
+        function applyCamera() {
+          world.style.transform = "scale(" + cam.scale + ")";
+        }
+        applyCamera();
+        tl.fromTo(
+          cam,
+          { scale: 1 },
+          { scale: 1.06, duration: 15, ease: "none", onUpdate: applyCamera },
+          0,
+        );
+
+        tl.fromTo("#dt-eb", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.16);
+        tl.fromTo("#dt-sh", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 0.28);
+
+        function whip(sel, t, y, d) {
+          tl.set(sel, { opacity: 1, y: y }, t);
+          tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+        }
+        /* Explicit fromTo endpoints on the group handoff so a seek to any frame
+           resolves to exactly one visible statement. */
+        function group(sel, inAt, outAt) {
+          tl.fromTo(sel, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2, ease: "power2.out" }, inAt);
+          if (outAt !== null) {
+            tl.fromTo(sel, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.26, ease: "power2.in" }, outAt);
+          }
+        }
+
+        group("#dt-g1", 0.6, 5.0);
+        var a = 0.72;
+        whip("#dt-a1", a, 80, 0.2);
+        var b = a + 0.2 - F;
+        whip("#dt-a2", b, 48, 0.16);
+        var c = b + 0.16 - F;
+        whip("#dt-a3", c, 48, 0.16);
+
+        group("#dt-g2", 5.34, 10.0);
+        var d = 5.46;
+        whip("#dt-b1", d, 80, 0.2);
+        var e = d + 0.2 - F;
+        whip("#dt-b2", e, 48, 0.16);
+        var f = e + 0.16 - F;
+        whip("#dt-b3", f, 48, 0.16);
+
+        group("#dt-g3", 10.34, null);
+        var g = 10.46;
+        whip("#dt-c1", g, 80, 0.2);
+        var h = g + 0.2 - F;
+        whip("#dt-c2", h, 48, 0.16);
+        tl.fromTo("#dt-mk", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "power3.out" }, 11.1);
+        tl.fromTo("#dt-tm", { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.36, ease: "power3.out" }, 11.2);
+        tl.fromTo("#dt-url", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" }, 11.9);
+
+        window.__timelines["dmtrap"] = tl;
+      })();
+    </script>
+  </body>
+</html>

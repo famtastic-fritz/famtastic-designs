@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: var(--paper, #d5cebe);
+          color: var(--ink, #211f1a);
+        }
+        .stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .world {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 50%;
+          will-change: transform;
+        }
+        .plate {
+          position: absolute;
+          left: -54px;
+          top: -104px;
+          width: 1188px;
+          height: 2128px;
+          object-fit: cover;
+        }
+        .sheet {
+          position: absolute;
+          left: 84px;
+          width: 912px;
+          background: linear-gradient(
+            to bottom,
+            var(--paper, #d5cebe) 0%,
+            var(--paper, #d5cebe) 62%,
+            var(--paper-edge, #c6beac) 100%
+          );
+          box-shadow:
+            0 2px 0 rgba(51, 39, 46, 0.1),
+            0 30px 66px rgba(51, 39, 46, 0.32);
+          opacity: 0;
+        }
+        #c4-sh {
+          top: 560px;
+          height: 1140px;
+        }
+        .eyebrow {
+          position: absolute;
+          left: 140px;
+          top: 616px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 30px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--muted, #635c50);
+          opacity: 0;
+        }
+        .rule {
+          position: absolute;
+          left: 140px;
+          top: 674px;
+          width: 260px;
+          height: 16px;
+          background: var(--accent, #7fb449);
+          transform-origin: 0% 50%;
+        }
+        .hl {
+          position: absolute;
+          left: 140px;
+          font-family: Oswald, sans-serif;
+          font-weight: 700;
+          font-size: 96px;
+          line-height: 0.98;
+          letter-spacing: -0.02em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #c4-l1 {
+          top: 726px;
+        }
+        #c4-l2 {
+          top: 820px;
+        }
+        #c4-l3 {
+          top: 914px;
+        }
+        .hair {
+          position: absolute;
+          left: 140px;
+          width: 800px;
+          height: 3px;
+          background: var(--rule, #a79e8b);
+          transform-origin: 0% 50%;
+        }
+        #c4-h1 {
+          top: 1048px;
+        }
+        #c4-h2 {
+          top: 1266px;
+        }
+        #c4-h3 {
+          top: 1522px;
+        }
+        .lab {
+          position: absolute;
+          left: 140px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 38px;
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+          color: var(--ink, #211f1a);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        .fig {
+          position: absolute;
+          right: 140px;
+          text-align: right;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 36px;
+          line-height: 1.27;
+          letter-spacing: 0.02em;
+          font-variant-numeric: tabular-nums;
+          color: var(--ink-soft, #4a453c);
+          white-space: nowrap;
+          opacity: 0;
+        }
+        #c4-la1,
+        #c4-fg1 {
+          top: 1090px;
+        }
+        #c4-la2,
+        #c4-fg2 {
+          top: 1178px;
+        }
+        #c4-sep {
+          position: absolute;
+          left: 140px;
+          top: 1296px;
+          font-family: "JetBrains Mono", monospace;
+          font-weight: 700;
+          font-size: 26px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          color: var(--muted, #635c50);
+          opacity: 0;
+        }
+        #c4-la3,
+        #c4-fg3 {
+          top: 1350px;
+        }
+        #c4-la4,
+        #c4-fg4 {
+          top: 1438px;
+        }
+        #c4-ft {
+          position: absolute;
+          left: 140px;
+          top: 1552px;
+          width: 800px;
+          font-family: Inter, sans-serif;
+          font-weight: 400;
+          font-size: 29px;
+          line-height: 1.4;
+          color: var(--muted, #635c50);
+          opacity: 0;
+        }
+        .vignette {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: radial-gradient(
+            116% 74% at 50% 34%,
+            rgba(51, 39, 46, 0) 30%,
+            rgba(51, 39, 46, 0.09) 64%,
+            rgba(51, 39, 46, 0.28) 100%
+          );
+        }
+      </style>
+
+      <div id="root" data-composition-id="renewal" data-width="1080" data-height="1920">
+        <div class="stage" data-layout-allow-overflow="true">
+          <div class="world" id="c4-w">
+            <img class="plate" src="assets/plate-owner.jpg" alt="" />
+          </div>
+        </div>
+
+        <div class="sheet" id="c4-sh"></div>
+        <div class="vignette"></div>
+
+        <div class="eyebrow" id="c4-eb">After the first year</div>
+        <div class="rule" id="c4-rl"></div>
+        <div class="hl" data-layout-allow-overlap="true" id="c4-l1">The part</div>
+        <div class="hl" data-layout-allow-overlap="true" id="c4-l2">most prices</div>
+        <div class="hl" data-layout-allow-overlap="true" id="c4-l3">leave off.</div>
+
+        <div class="hair" id="c4-h1"></div>
+        <div class="lab" id="c4-la1">Hosting, from year two</div>
+        <div class="fig" id="c4-fg1">$9.99 / month</div>
+        <div class="lab" id="c4-la2">Your domain</div>
+        <div class="fig" id="c4-fg2">renews separately</div>
+        <div class="hair" id="c4-h2"></div>
+
+        <div id="c4-sep">Separate products</div>
+        <div class="lab" id="c4-la3">Business email</div>
+        <div class="fig" id="c4-fg3">$99, one time</div>
+        <div class="lab" id="c4-la4">Website maintenance</div>
+        <div class="fig" id="c4-fg4">$49.99 / month</div>
+        <div class="hair" id="c4-h3"></div>
+
+        <div id="c4-ft">Neither one is included in the $199.</div>
+      </div>
+
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+          var F = 1 / 30;
+
+          /* viewport-change: the last leg of the single push, 1.078 -> 1.098,
+             just inside the plate's 1.10x delivered headroom. */
+          var world = document.getElementById("c4-w");
+          var cam = { scale: 1.078 };
+          function applyCamera() {
+            world.style.transform = "scale(" + cam.scale + ")";
+          }
+          applyCamera();
+          tl.fromTo(
+            cam,
+            { scale: 1.078 },
+            { scale: 1.098, duration: 5.8, ease: "none", onUpdate: applyCamera },
+            0,
+          );
+
+          tl.fromTo("#c4-sh", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.44, ease: "power3.out" }, 0);
+          tl.fromTo("#c4-eb", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.34, ease: "power3.out" }, 0.22);
+          tl.fromTo("#c4-rl", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.34);
+
+          function whip(sel, t, y, d) {
+            tl.set(sel, { opacity: 1, y: y }, t);
+            tl.to(sel, { y: 0, duration: d, ease: "power4.out" }, t);
+          }
+          var a = 0.55;
+          whip("#c4-l1", a, 72, 0.18);
+          var b = a + 0.18 - F;
+          whip("#c4-l2", b, 52, 0.15);
+          var c = b + 0.15 - F;
+          whip("#c4-l3", c, 52, 0.15);
+
+          function row(n, t) {
+            tl.set("#c4-la" + n, { opacity: 1, y: 32 }, t);
+            tl.to("#c4-la" + n, { y: 0, duration: 0.16, ease: "power4.out" }, t);
+            tl.set("#c4-fg" + n, { opacity: 1, y: 32 }, t);
+            tl.to("#c4-fg" + n, { y: 0, duration: 0.16, ease: "power4.out" }, t);
+          }
+
+          tl.fromTo("#c4-h1", { scaleX: 0 }, { scaleX: 1, duration: 0.46, ease: "power3.out" }, 1.5);
+          row(1, 1.72);
+          row(2, 1.88 - F);
+          tl.fromTo("#c4-h2", { scaleX: 0 }, { scaleX: 1, duration: 0.46, ease: "power3.out" }, 2.24);
+
+          /* The separateness is announced before the two products it governs,
+             so nothing above it can be read as including them. */
+          tl.fromTo("#c4-sep", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.32, ease: "power3.out" }, 2.46);
+          row(3, 2.7);
+          row(4, 2.86 - F);
+          tl.fromTo("#c4-h3", { scaleX: 0 }, { scaleX: 1, duration: 0.46, ease: "power3.out" }, 3.2);
+          tl.fromTo("#c4-ft", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 3.44);
+
+          window.__timelines["renewal"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
