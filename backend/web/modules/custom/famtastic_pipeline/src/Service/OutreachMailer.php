@@ -20,8 +20,8 @@ class OutreachMailer {
   public const TEMPLATE_CUSTOMER_INTAKE_SUBMITTED = 'customer_intake_submitted';
   public const TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION = 1;
   public const TEMPLATE_CUSTOMER_PROOF_READY = 'customer_proof_ready';
-  public const TEMPLATE_CUSTOMER_PROOF_READY_VERSION = 2;
-  public const TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSION = 1;
+  public const TEMPLATE_CUSTOMER_PROOF_READY_VERSION = 3;
+  public const TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSIONS = [1, 2];
   public const TEMPLATE_CUSTOMER_REVISION_RECEIVED = 'customer_revision_received';
   public const TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION = 1;
 
@@ -144,7 +144,7 @@ class OutreachMailer {
   public static function supportsTemplate(string $template, int $version): bool {
     return ($template === self::TEMPLATE_STANDARD && $version === self::TEMPLATE_STANDARD_VERSION)
       || ($template === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED && $version === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION)
-      || ($template === self::TEMPLATE_CUSTOMER_PROOF_READY && in_array($version, [self::TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSION, self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION], TRUE))
+      || ($template === self::TEMPLATE_CUSTOMER_PROOF_READY && in_array($version, [...self::TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSIONS, self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION], TRUE))
       || ($template === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED && $version === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION);
   }
 
@@ -265,10 +265,10 @@ class OutreachMailer {
     return $this->renderCustomerConciergeMessage(
       $subject,
       $body,
-      'Your Studio Review is ready',
+      'Your proof set is ready',
       'Private concept review · verified workspace',
-      'Review your 3 directions →',
-      'Your concepts stay inside your verified FAMtastic account until you choose to share feedback. FAMtastic Concierge is here when you are ready to talk through a direction.',
+      'Open your proof set →',
+      'Your concepts stay inside your verified FAMtastic account until you choose a direction. Open the research brief, compare the concepts, and reply from there when you are ready.',
     );
   }
 

@@ -4,6 +4,7 @@ import { getNodesRaw } from '../api/drupal.js';
 import { transformPackageNode } from '../lib/drupalAdapter.js';
 import { Hero, Section, PricingCard, CTABanner, Stagger, Item } from '../components/v1/index.js';
 import { trackEvent } from '../lib/googleAnalytics.js';
+import { WEB_BASICS } from '../lib/webBasicsOffer.js';
 
 /**
  * /packages — pricing hub listing every package_page as a v1 PricingCard,
@@ -35,7 +36,7 @@ export default function PackagesHubPage() {
         eyebrow="Packages"
         title="One clear starting point for each kind of need."
         accent="pricing"
-        lede="Web Basics gets a business online. Business Website adds standard pages. Custom Website adds original discovery and design. Growth, campaign, AI, and care systems solve distinct operational needs. Intake confirms the right fit."
+        lede={`${WEB_BASICS.shortLabel} gets a business online. Business Website adds standard pages. Custom Website adds original discovery and design. Growth, campaign, AI, and care systems solve distinct operational needs. Intake confirms the right fit.`}
         primaryCta={{ label: 'See the $199 website offer', href: '/55-cents-a-day-website' }}
         secondaryCta={{ label: 'Find Your Fit', href: '/start' }}
       />
@@ -77,7 +78,7 @@ export default function PackagesHubPage() {
 
       <CTABanner
         title="Need a focused first website? Start at $199."
-        body="Web Basics is a defined one-page website offer—not the default price for every project. Learn what it includes, then use the assessment when your business needs more."
+        body={`The ${WEB_BASICS.title} is a defined one-page website offer - not the default price for every project. Learn what it includes, then use the assessment when your business needs more.`}
         primaryCta={{ label: 'Understand the $199 offer', href: '/55-cents-a-day-website' }}
         secondaryCta={{ label: 'Find the right package', href: '/start' }}
       />

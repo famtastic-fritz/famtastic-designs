@@ -1,3 +1,5 @@
+import { WEB_BASICS } from './lib/webBasicsOffer.js';
+
 const SITE_URL = 'https://famtasticdesigns.com';
 const SITE_NAME = 'FAMtastic Designs';
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`;
@@ -23,12 +25,12 @@ export const SEO_PAGES = {
     description: 'Meet FAMtastic Designs, an engineering-led studio building useful websites, customer systems, automation, commerce, analytics, and AI experiences.',
   },
   '/55-cents-a-day-website': {
-    title: '$199 Website | About 55 Cents a Day | FAMtastic Designs',
-    description: 'Get a professional one-page business website for $199—about 55 cents a day across one year—with first-year basic hosting and a domain path included.',
-    keywords: '$199 website, 55 cents a day website, affordable small business website, domain and hosting included, one page website',
+    title: `${WEB_BASICS.title} | FAMtastic Designs`,
+    description: WEB_BASICS.description,
+    keywords: WEB_BASICS.keywords,
   },
   '/website-options': {
-    title: 'Compare $199 and $499 Website Options | FAMtastic Designs',
+    title: 'Compare Starter Mobile Business Foundation and Business Website Options | FAMtastic Designs',
     description: 'Compare the defined Web Basics and Business Website starting points, then use research to confirm the right scope before any website purchase.',
     keywords: '$199 website, $499 business website, website scope comparison, business website intake',
   },

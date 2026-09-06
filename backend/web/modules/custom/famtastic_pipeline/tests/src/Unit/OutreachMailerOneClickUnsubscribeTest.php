@@ -91,7 +91,7 @@ final class OutreachMailerOneClickUnsubscribeTest extends UnitTestCase {
     $record = json_decode($line, TRUE, 512, JSON_THROW_ON_ERROR);
     $html = (string) ($record['html_body'] ?? '');
     $this->assertStringContainsString('FAMtastic Concierge', $html);
-    $this->assertStringContainsString('Review your 3 directions', $html);
+    $this->assertStringContainsString('Open your proof set', $html);
     $this->assertStringContainsString(str_replace('&', '&amp;', $reviewUrl), $html);
     $this->assertStringNotContainsString('>https://famtasticdesigns.com/portal/', $html);
     $this->assertStringContainsString('&lt;script&gt;never-run()&lt;/script&gt;', $html);

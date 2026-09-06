@@ -1,0 +1,67 @@
+export const WEB_BASICS = {
+  title: 'Starter Mobile Business Foundation (Web Basics)',
+  shortLabel: 'Web Basics',
+  priceLabel: '$199',
+  hero: {
+    eyebrow: 'The $199 Starter Mobile Business Foundation',
+    title: 'There may be a hundred reasons your business still does not have a website.',
+    declaration: 'Cost is not one of them. Period.',
+    lede: 'Get an owned, research-backed mobile business foundation for $199 - about 55 cents a day when averaged across one year.',
+    disclosure: '$199 is a one-time defined scope, not daily billing. Research confirms fit; a saved brief and selected direction are required before website checkout is available.',
+  },
+  summary: 'An owned, mobile-first business foundation with a focused website, business and market research, a customer-safe 90-day growth plan, three proof directions, one direction reset, three edit rounds after selection, managed hosting and SSL for one year, a domain path, baseline analytics, email forwarding where permitted, and a mobile Owner Desk after verified purchase.',
+  compare: {
+    title: 'Compare the $199 foundation and the $499 business website.',
+    lede: 'These are defined starting points, not a promise that either fits every request. Begin with research so the recommendation reflects the work your business actually needs.',
+    body: 'Choose the Starter Mobile Business Foundation (Web Basics) when one focused, owned online action can do the job. Choose the Business Website when the business needs up to five standard pages and the defined features listed above. If you need ecommerce, accounts, custom integrations, more pages, or a workflow that does not fit either scope, use the research conversation instead of trying to force a package.',
+  },
+  facts: [
+    ['A focused mobile foundation', 'A professional, mobile-ready website built around one clear customer action, universal contact, and a researched next step.'],
+    ['Research and direction', 'Business and market research is summarized for you in a 90-day growth plan, then informs three proof directions before payment.'],
+    ['Three proofs, clear edits', 'Choose from three research-backed directions, with one direction reset and three edit rounds after a direction is selected.'],
+    ['One year of managed essentials', 'FAMtastic-managed hosting and SSL are included for the first year. Baseline analytics and provider-permitted email forwarding are part of the foundation.'],
+    ['A domain path', 'First-year registration of an available new domain when needed, or connection of a domain you already own.'],
+  ],
+  steps: [
+    ['Choose', 'Read the defined Starter Mobile Business Foundation (Web Basics) scope, then complete research if you are not sure it fits.'],
+    ['Tell us', 'Complete the website intake so we understand the business, audience, offer, content, and contact path.'],
+    ['Build', 'FAMtastic turns the approved scope and supplied information into a focused, branded website.'],
+    ['Review', 'You review the work, supply any required missing material, and approve the launch direction.'],
+    ['Launch', 'The site goes live on the chosen domain and the service remains visible in your customer portal.'],
+  ],
+  terms: [
+    'The $199 price is paid once for the defined Starter Mobile Business Foundation (Web Basics).',
+    'Managed hosting and SSL are included for one year; optional renewal is disclosed and separately authorized before any future charge.',
+    'New-domain registration is conditional on availability and included for the first year when selected.',
+    'Domain renewal is a separate annual prepaid charge disclosed before it is due.',
+    'Existing-domain customers do not receive a new-domain renewal charge.',
+    'Mailboxes, ecommerce, live calendar sync, custom applications, extra pages, and complex integrations are assessed and scoped separately.',
+  ],
+  videoExamples: [
+    {
+      slug: 'borrowed-land',
+      poster: '/video/borrowed-land.jpg',
+      title: 'Own the address',
+      description: 'Why a domain matters before a rented profile does.',
+    },
+    {
+      slug: 'not-a-home-base',
+      poster: '/video/not-a-home-base.jpg',
+      title: 'What is included',
+      description: 'The page, hosting year, domain path, and separate add-ons.',
+    },
+    {
+      slug: 'the-sign-that-isnt-there',
+      poster: '/video/the-sign-that-isnt-there.jpg',
+      title: 'Be findable',
+      description: 'Customers should find your own address, not only an app listing.',
+    },
+  ],
+  seo: {
+    title: 'Starter Mobile Business Foundation (Web Basics) | $199 | FAMtastic Designs',
+    description: 'Compare the $199 Web Basics starting point: one focused mobile-first website, a 90-day growth plan, three proof directions, first-year managed hosting and SSL, an optional domain path, baseline analytics, and email forwarding where permitted.',
+    keywords: '$199 website, Web Basics, Starter Mobile Business Foundation, mobile-first website, domain and hosting included, one page website',
+  },
+  portalSummary: 'Web Basics ($199) gives you one focused landing page, 1 year of hosting, baseline analytics, email forwarding where permitted, and a domain path. Business Website ($499) delivers up to 5 custom pages, lead capture, foundational SEO, and analytics connection.',
+  solutionFinderTitle: 'Starter Mobile Business Foundation (Web Basics) - $199 starting point',
+};

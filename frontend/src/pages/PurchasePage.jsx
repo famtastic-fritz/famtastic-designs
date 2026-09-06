@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { createCommerceCheckout, customerSession, getCustomerCatalog, getCustomerWorkspace } from '../api/customer.js';
+import { WEB_BASICS } from '../lib/webBasicsOffer.js';
 
 const WEBSITE_BUNDLE_ALIASES = {
   'web-basics': 'FAM-FOOT-199',
@@ -144,8 +145,8 @@ export default function PurchasePage() {
   return (
     <form className="purchase-shell" onSubmit={checkout}>
       <span>Secure Commerce checkout</span>
-      <h1>{base?.title || 'Starter Mobile Business Foundation — $199'}</h1>
-      <p>{base?.summary || 'An owned, mobile-first business foundation with a focused website, research-backed proof directions, and one year of FAMtastic-managed hosting.'}</p>
+      <h1>{base?.title || WEB_BASICS.title}</h1>
+      <p>{base?.summary || WEB_BASICS.summary}</p>
       <p className="purchase-context">
         {websiteCheckout
           ? 'This payment step is linked to the submitted request and website direction you selected in your portal.'

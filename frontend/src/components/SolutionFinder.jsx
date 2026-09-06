@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { AnimatePresence, motion } from 'framer-motion';
 import { collectUtmParams, postIntake } from '../api/pipeline.js';
+import { WEB_BASICS } from '../lib/webBasicsOffer.js';
 
 export function branchForServiceSlug(slug = '') {
   const s = (slug || '').toLowerCase();
@@ -22,7 +23,7 @@ const SERVICE_BRANCHES = [
   {
     id: 'web-basics',
     icon: '⚡',
-    title: 'Starter Mobile Business Foundation — $199 starting point',
+    title: WEB_BASICS.solutionFinderTitle,
     q2Prompt: 'For a focused first website, do you have a domain and logo ready, or are you starting from scratch?',
     q2Options: [
       'I have domain & logo ready',

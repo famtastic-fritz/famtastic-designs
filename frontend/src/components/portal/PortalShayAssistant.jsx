@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Panel } from './PortalShared.jsx';
+import { WEB_BASICS } from '../../lib/webBasicsOffer.js';
 
 export default function PortalShayAssistant({ workspace, go }) {
   const [selectedTopic, setSelectedTopic] = useState('packages');
@@ -7,8 +8,7 @@ export default function PortalShayAssistant({ workspace, go }) {
   const topics = {
     packages: {
       title: 'Compare Web Bundles & Scope',
-      content:
-        'Web Basics ($199) gives you a single high-converting landing page with 1 year of hosting. Business Website ($499) delivers up to 5 custom pages, lead capture, foundational SEO, and analytics connection.',
+      content: `${WEB_BASICS.title} gives you one focused landing page, 1 year of hosting, baseline analytics, email forwarding where permitted, and a domain path. Business Website ($499) delivers up to 5 custom pages, lead capture, foundational SEO, and analytics connection.`,
       action: () => go('services'),
       actionLabel: 'Explore Catalog →',
     },
