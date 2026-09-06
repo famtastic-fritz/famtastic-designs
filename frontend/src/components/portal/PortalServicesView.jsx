@@ -114,6 +114,14 @@ export default function PortalServicesView({ workspace, catalog, go, compact = f
                     <button type="button" onClick={() => go('services')}>
                       Learn more →
                     </button>
+                  ) : item.payment?.mode === 'renewal_authorization_only' ? (
+                    <button type="button" onClick={() => go('billing')}>
+                      Manage renewal →
+                    </button>
+                  ) : item.payment?.mode === 'active_website_project' ? (
+                    <button type="button" onClick={() => go('projects')}>
+                      Add from project →
+                    </button>
                   ) : (
                     <Link
                       to={`/buy?sku=${encodeURIComponent(item.sku)}`}
@@ -128,7 +136,7 @@ export default function PortalServicesView({ workspace, catalog, go, compact = f
                         display: 'inline-block',
                       }}
                     >
-                      Order module →
+                      {item.payment?.mode === 'bundle_or_active_website' ? 'Add to website →' : 'Order module →'}
                     </Link>
                   )}
                 </footer>

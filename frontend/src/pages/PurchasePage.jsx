@@ -2,21 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { createCommerceCheckout, customerSession, getCustomerCatalog, getCustomerWorkspace } from '../api/customer.js';
 
-const BUNDLE_MAP = {
+const WEBSITE_BUNDLE_ALIASES = {
   'web-basics': 'FAM-FOOT-199',
   '199-quick-start': 'FAM-FOOT-199',
   '55-cents': 'FAM-FOOT-199',
   'business-website': 'FAM-BUSINESS-499',
   '499-site-upgrade': 'FAM-BUSINESS-499',
   'site-rebuild': 'FAM-BUSINESS-499',
-  'custom-website': 'FAM-CUSTOM-1999',
-  'custom-dev': 'FAM-CUSTOM-1999',
-  'ecommerce': 'FAM-CUSTOM-1999',
-  'landing-page': 'FAM-LANDING-1499',
-  'business-growth': 'FAM-GROWTH-3999',
-  'client-portal': 'FAM-GROWTH-3999',
-  'premium-ai': 'FAM-AI-6999',
-  'ai-chatbot': 'FAM-AI-6999',
 };
 
 const money = (value) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(value));
@@ -39,21 +31,42 @@ export default function PurchasePage() {
     Promise.all([customerSession().catch(() => null), getCustomerCatalog(), getCustomerWorkspace().catch(() => null)])
       .then(([session, catalog, workspace]) => {
         const request = workspace?.website_requests?.find((item) => item.public_id === websiteRequest);
-        const resolvedSkuFromBundle = BUNDLE_MAP[bundleParam.toLowerCase()] || (catalog.products?.some((p) => p.sku === bundleParam) ? bundleParam : '');
-        const targetSku = request?.recommended_sku || resolvedSkuFromBundle || 'FAM-FOOT-199';
+        const normalizedBundle = bundleParam.toLowerCase();
+        const resolvedSkuFromBundle = WEBSITE_BUNDLE_ALIASES[normalizedBundle]
+          || (catalog.products?.some((p) => p.sku === bundleParam) ? bundleParam : '');
+        const targetSku = request?.recommended_sku || resolvedSkuFromBundle;
         setBaseSku(targetSku);
         setState({ loading: false, session, workspace, products: catalog.products || [], terms: catalog.terms, error: '' });
       })
       .catch((error) => setState({ loading: false, session: null, products: [], terms: null, error: error.message }));
   }, [websiteRequest, bundleParam]);
 
-  const base = state.products.find((item) => item.sku === baseSku) || state.products.find((item) => item.sku === 'FAM-FOOT-199');
+  const base = state.products.find((item) => item.sku === baseSku);
   const requestRecord = state.workspace?.website_requests?.find((item) => item.public_id === websiteRequest);
-  const displayedBasePrice = requestRecord?.private_offer ? requestRecord.private_offer.offered_amount_minor / 100 : Number(base?.price || 199);
-  const addons = state.products.filter((item) => item.type === 'add_on' && item.billing?.kind !== 'recurring');
+  const payment = base?.payment || {};
+  const activeWebsiteEntitlement = (state.workspace?.entitlements || []).some(
+    (item) => item.status === 'active' && ['website_service', 'business_website_service'].includes(item.entitlement_type)
+  );
+  const activeWebsiteProject = (state.workspace?.projects || []).some(
+    (item) => item.delivery_status !== 'cancelled'
+  );
+  const websiteCheckout = Boolean(websiteRequest && requestRecord?.direct_checkout_available && payment.mode === 'proof_selected_website_request');
+  const directAccountCheckout = Boolean(!websiteRequest && payment.mode === 'direct_account');
+  const activeWebsiteCheckout = Boolean(
+    !websiteRequest
+      && activeWebsiteEntitlement
+      && (
+        payment.mode === 'bundle_or_active_website'
+        || (payment.mode === 'active_website_project' && activeWebsiteProject)
+      )
+  );
+  const checkoutEligible = websiteCheckout || directAccountCheckout || activeWebsiteCheckout;
+  const displayedBasePrice = requestRecord?.private_offer ? requestRecord.private_offer.offered_amount_minor / 100 : Number(base?.price || 0);
+  const addons = websiteCheckout
+    ? state.products.filter((item) => item.payment?.mode === 'bundle_or_active_website')
+    : [];
   const total = useMemo(() => displayedBasePrice + addons.filter((item) => selected.includes(item.sku)).reduce((sum, item) => sum + Number(item.price), 0), [displayedBasePrice, addons, selected]);
   const organization = state.session?.organizations?.[0];
-  const checkoutEligible = Boolean(websiteRequest && requestRecord?.direct_checkout_available);
   const portalHref = '/portal?start=website';
 
   async function checkout(event) {
@@ -64,9 +77,9 @@ export default function PurchasePage() {
     try {
       const result = await createCommerceCheckout({
         organization: organization.public_id,
-        website_request: websiteRequest,
-        skus: [baseSku || 'FAM-FOOT-199', ...selected],
-        domain_choice: domainChoice,
+        ...(websiteRequest ? { website_request: websiteRequest } : {}),
+        skus: [baseSku, ...selected],
+        domain_choice: payment.mode === 'proof_selected_website_request' ? domainChoice : 'not_applicable',
         recurring_authorized: renewal,
         accept_terms: terms,
         terms_version: state.terms?.version || '1.0',
@@ -99,20 +112,33 @@ export default function PurchasePage() {
   }
 
   if (!checkoutEligible) {
+    const missingProduct = Boolean(bundleParam && !base);
+    const heading = missingProduct
+      ? 'That service is not available for direct checkout.'
+      : payment.mode === 'renewal_authorization_only'
+        ? 'This is a renewal, not a one-time checkout.'
+        : payment.mode === 'active_website_project'
+          ? 'This add-on needs an active website project.'
+          : 'Complete the request before payment.';
+    const detail = missingProduct
+      ? 'Choose an available service from your portal or begin a website request. We do not substitute a different package when a direct checkout link is unavailable.'
+      : payment.customer_message || 'A website payment step becomes available only from your account-owned request after its full brief is submitted and one available website direction is selected.';
     return (
       <section className="purchase-shell">
-        <span>Website request required</span>
-        <h1>Complete the request before payment.</h1>
-        <p>A website payment step becomes available only from your account-owned request after its full brief is submitted and one available website direction is selected.</p>
+        <span>Purchase path check</span>
+        <h1>{heading}</h1>
+        <p>{detail}</p>
         {websiteRequest && !requestRecord && <p className="purchase-context">We could not find that request in this account. Open your website workspace to choose the correct request.</p>}
         {requestRecord && <p className="purchase-context">This request is not ready for payment yet. Continue it in the portal; scope and selected direction stay connected to the purchase step.</p>}
-        <Link className="btn btn--lime" to={portalHref}>Continue in my website workspace →</Link>
+        <Link className="btn btn--lime" to={payment.mode === 'renewal_authorization_only' ? '/portal?tab=billing' : portalHref}>Open my customer workspace →</Link>
         <Link className="btn btn--secondary" to="/website-options">Compare website starting points →</Link>
       </section>
     );
   }
 
-  const renewalSku = (state.products || []).find((item) => item.sku === (base?.billing?.renewal_sku || ''));
+  const renewalSku = payment.mode === 'proof_selected_website_request'
+    ? (state.products || []).find((item) => item.sku === (base?.billing?.renewal_sku || ''))
+    : null;
   const renewalPrice = renewalSku ? money(renewalSku.price) : '$9.99';
 
   return (
@@ -120,7 +146,11 @@ export default function PurchasePage() {
       <span>Secure Commerce checkout</span>
       <h1>{base?.title || 'Starter Mobile Business Foundation — $199'}</h1>
       <p>{base?.summary || 'An owned, mobile-first business foundation with a focused website, research-backed proof directions, and one year of FAMtastic-managed hosting.'}</p>
-      <p className="purchase-context">This payment step is linked to the submitted request and website direction you selected in your portal.</p>
+      <p className="purchase-context">
+        {websiteCheckout
+          ? 'This payment step is linked to the submitted request and website direction you selected in your portal.'
+          : 'This payment step is attached to your verified FAMtastic account and is fulfilled only after Commerce verifies payment.'}
+      </p>
       {requestRecord?.private_offer && (
         <p className="purchase-context">
           <strong>Your private price: {money(displayedBasePrice)}</strong>
@@ -132,12 +162,12 @@ export default function PurchasePage() {
       {state.error && <div className="alert alert--error" role="alert">{state.error}</div>}
 
       <fieldset>
-        <legend>Website recommendation</legend>
+        <legend>{websiteCheckout ? 'Website recommendation' : 'Purchase scope'}</legend>
         <p><b>{base?.title}</b> — {money(displayedBasePrice)}</p>
-        <small>This package is the recommendation or account-scoped offer linked to the request you completed. To change scope, return to the website workspace.</small>
+        <small>{websiteCheckout ? 'This package is the recommendation or account-scoped offer linked to the request you completed. To change scope, return to the website workspace.' : payment.customer_message}</small>
       </fieldset>
 
-      <fieldset>
+      {payment.mode === 'proof_selected_website_request' && <fieldset>
         <legend>Domain setup</legend>
         <label>
           <input
@@ -160,7 +190,7 @@ export default function PurchasePage() {
           />{' '}
           Connect a domain I already own
         </label>
-      </fieldset>
+      </fieldset>}
 
       {addons.length > 0 && (
         <fieldset>
@@ -197,9 +227,9 @@ export default function PurchasePage() {
         </label>
       </fieldset>
 
-      <label className="purchase-consent">
+      {renewalSku && <label className="purchase-consent">
         <input type="checkbox" checked={renewal} onChange={(e) => setRenewal(e.target.checked)} /> I choose to authorize hosting to renew at {renewalPrice}/month after the included first year. This is optional; leaving it unchecked does not authorize a recurring charge.
-      </label>
+      </label>}
       <label className="purchase-consent">
         <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} required /> I accept the recorded product scope, one-time payment, cancellation, and domain terms. This acceptance does not authorize a recurring hosting charge.
       </label>
@@ -211,7 +241,7 @@ export default function PurchasePage() {
         <span>{grantCode ? 'Before verified grant' : 'Due today'}</span>
         <strong>{money(total)}</strong>
       </div>
-      <button className="btn btn--lime" disabled={busy || !base}>
+      <button className="btn btn--lime" disabled={busy || !base || !checkoutEligible}>
         {busy ? 'Finalizing…' : grantCode ? 'Apply grant and continue' : 'Continue to secure payment'}
       </button>
     </form>

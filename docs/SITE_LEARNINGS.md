@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A price is not a payment path
+
+A catalog item can have a price, a product variation, and an entitlement
+definition while still lacking a safe way to buy it. Treating those facts as a
+checkout invitation let recurring products and project-bound work reach a
+generic order endpoint with insufficient context.
+
+**Guidance.** Every published SKU must carry one canonical payment mode and
+its requirements. The checkout endpoint must enforce that contract itself;
+the customer UI may explain it, but cannot be its only protection. Until a
+separate recurring authorization and sandbox provider lifecycle are proven,
+label recurring services as renewal-only and reject generic checkout attempts.
+
+**Boundary.** A matrix or a sandbox fixture describes evidence still needed. It
+does not create an offer, prove a customer charge, or authorize a provider run.
+
 ## 2026-09-05 — Idempotency markers must be scoped to the thing they identify
 
 Four campaigns were built in parallel and every one numbered its drops

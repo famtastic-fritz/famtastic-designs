@@ -15,10 +15,10 @@ final class RevenueLoopContractTest extends UnitTestCase {
     $this->assertIsString($controller);
     $websiteSkuPosition = strpos($controller, "array_intersect(\$skus, ['FAM-FOOT-199', 'FAM-BUSINESS-499'])");
     $requestGate = strpos($controller, 'if (!$websiteRequest)', $websiteSkuPosition ?: 0);
-    $selectionGate = strpos($controller, "!== 'selected'", $websiteSkuPosition ?: 0);
-    $this->assertIsInt($websiteSkuPosition);
-    $this->assertIsInt($requestGate);
-    $this->assertIsInt($selectionGate);
+    $selectionGate = strpos($controller, "!== 'selected'");
+    $this->assertNotFalse($websiteSkuPosition);
+    $this->assertNotFalse($requestGate);
+    $this->assertNotFalse($selectionGate);
     $this->assertStringContainsString('Start with your business intake and choose an approved website direction before checkout.', $controller);
     $this->assertStringNotContainsString("if (empty(\$data['recurring_authorized']))", $controller);
   }
@@ -30,6 +30,8 @@ final class RevenueLoopContractTest extends UnitTestCase {
     $this->assertStringContainsString("'schema' => 'famtastic.offer-contract.v1'", $controller);
     $this->assertStringContainsString("'offer_contracts' => array_map", $controller);
     $this->assertStringContainsString('$item[\'offer_contract\'] = $this->offerContractSnapshot', $controller);
+    $this->assertStringContainsString('$this->paymentEligibility->evaluateCart', $controller);
+    $this->assertStringContainsString("'payment' => \$this->paymentEligibility->contract", $controller);
     $this->assertStringContainsString("'hash'", $controller);
     $lifecycle = file_get_contents($module . '/src/Service/CommerceLifecycleService.php');
     $this->assertIsString($lifecycle);

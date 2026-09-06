@@ -1,5 +1,24 @@
 # Product changelog
 
+## 2026-09-05 — Catalog payment eligibility now fails closed
+
+- Every one of the 16 published catalog services now declares its payment mode,
+  customer-safe availability message, and server-enforced requirements. The
+  Commerce checkout rejects a website bundle without its selected proof/request,
+  project-only work without an owned active website/project, and all four
+  recurring items from the generic one-time checkout.
+- The customer purchase and portal service surfaces consume the same contract:
+  unavailable direct links no longer silently fall back to a different package,
+  renewal products route to billing rather than an order button, and
+  project-only work routes to its project.
+- Added a no-provider-call Stripe sandbox matrix covering the 12 one-time and
+  four recurring catalog products, shared success/decline/3DS/abandon/replay
+  evidence, and a fresh-runtime-only exact-account/exact-request $1 private
+  offer fixture. It is a proof plan, not an active offer or a payment claim.
+- Local proof: 96 PHP unit tests / 539 assertions, catalog/matrix validation,
+  the disabled provider-run guard, and production frontend build passed. No
+  Stripe API call, charge, send, deployment, or customer record was created.
+
 ## 2026-09-05 — Four-campaign flood queued, a queue-collision bug and a schedule gap fixed
 
 - **Queued 48 posts across four campaigns** (`booked-and-losing`, `already-know-the-game`,

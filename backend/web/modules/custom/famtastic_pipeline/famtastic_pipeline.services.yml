@@ -182,6 +182,9 @@ services:
     class: Drupal\famtastic_pipeline\Service\GrantCodeService
     arguments: ['@database', '@datetime.time', '@uuid']
 
+  famtastic_pipeline.catalog_payment_eligibility:
+    class: Drupal\famtastic_pipeline\Service\CatalogPaymentEligibilityService
+
   famtastic_pipeline.commerce_lifecycle:
     class: Drupal\famtastic_pipeline\Service\CommerceLifecycleService
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@famtastic_pipeline.customer_portal', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.booking_site_owners']

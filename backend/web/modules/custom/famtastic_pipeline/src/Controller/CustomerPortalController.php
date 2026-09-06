@@ -14,6 +14,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
+use Drupal\famtastic_pipeline\Service\CatalogPaymentEligibilityService;
 use Drupal\famtastic_pipeline\Service\CommerceLifecycleService;
 use Drupal\famtastic_pipeline\Service\DeepDiveInvitationService;
 use Drupal\famtastic_pipeline\Service\GrantCodeService;
@@ -40,6 +41,7 @@ final class CustomerPortalController extends ControllerBase {
     private readonly LoggerInterface $logger,
     private readonly Connection $database,
     private readonly GrantCodeService $grantCodes,
+    private readonly CatalogPaymentEligibilityService $paymentEligibility,
     private readonly CommerceLifecycleService $commerceLifecycle,
     private readonly DeepDiveInvitationService $deepDives,
   ) {}
@@ -55,6 +57,7 @@ final class CustomerPortalController extends ControllerBase {
       $container->get('logger.channel.famtastic_pipeline'),
       $container->get('database'),
       $container->get('famtastic_pipeline.grant_codes'),
+      $container->get('famtastic_pipeline.catalog_payment_eligibility'),
       $container->get('famtastic_pipeline.commerce_lifecycle'),
       $container->get('famtastic_pipeline.deep_dive_invitations'),
     );
@@ -240,7 +243,7 @@ final class CustomerPortalController extends ControllerBase {
       if (empty($definition['published'])) continue;
       $item = array_intersect_key($definition, array_flip([
         'sku', 'type', 'title', 'summary', 'price', 'currency', 'billing',
-        'included', 'exclusions', 'entitlements', 'intake_schema', 'fulfillment',
+        'payment', 'included', 'exclusions', 'entitlements', 'intake_schema', 'fulfillment',
         'portal', 'upsells',
       ]));
       $item['offer_contract'] = $this->offerContractSnapshot((string) $definition['sku']);
@@ -297,8 +300,21 @@ final class CustomerPortalController extends ControllerBase {
     $skus = array_values(array_unique(array_filter(array_map('strval', (array) ($data['skus'] ?? [])))));
     if (!$skus || count($skus) > 12) return $this->error('invalid_cart', 422, 'Choose at least one available service.');
     $definitions = $this->productDefinitions();
-    foreach ($skus as $sku) {
-      if (empty($definitions[$sku]['published'])) return $this->error('product_unavailable', 422, 'One selected service is unavailable.');
+    $hasActiveWebsiteEntitlement = $this->hasActiveWebsiteEntitlement((int) $organization['id']);
+    $hasActiveWebsiteProject = $this->hasActiveWebsiteProject((int) $organization['id']);
+    $paymentEligibility = $this->paymentEligibility->evaluateCart(
+      $definitions,
+      $skus,
+      $websiteRequest !== NULL && ($websiteRequest['proof_review_status'] ?? '') === 'selected',
+      $hasActiveWebsiteEntitlement,
+      $hasActiveWebsiteProject,
+    );
+    if (empty($paymentEligibility['allowed'])) {
+      return $this->error(
+        (string) ($paymentEligibility['code'] ?? 'payment_contract_unavailable'),
+        422,
+        (string) ($paymentEligibility['message'] ?? 'This service is not available for checkout.'),
+      );
     }
     if ($websiteRequest && !in_array($recommendedSku, $skus, TRUE)) {
       return $this->error('recommended_package_required', 422, 'The package in this checkout does not match the website recommendation.');
@@ -619,8 +635,33 @@ final class CustomerPortalController extends ControllerBase {
       'eligibility' => array_values((array) ($product['eligibility'] ?? [])),
       'fulfillment' => $product['fulfillment'] ?? [],
       'portal' => array_values((array) ($product['portal'] ?? [])),
+      'payment' => $this->paymentEligibility->contract($product),
     ];
     $snapshot['hash'] = hash('sha256', json_encode($snapshot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
     return $snapshot;
+  }
+
+  /** True only when the current organization owns an active website service. */
+  private function hasActiveWebsiteEntitlement(int $organizationId): bool {
+    return (bool) $this->database->select('famtastic_entitlement', 'e')
+      ->condition('organization_id', $organizationId)
+      ->condition('status', 'active')
+      ->condition('entitlement_type', ['website_service', 'business_website_service'], 'IN')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+  }
+
+  /** True only when the current organization owns a non-cancelled project. */
+  private function hasActiveWebsiteProject(int $organizationId): bool {
+    $query = $this->database->select('famtastic_customer_resource', 'r');
+    $query->join('famtastic_project', 'p', 'p.id = r.resource_id');
+    return (bool) $query
+      ->condition('r.organization_id', $organizationId)
+      ->condition('r.resource_type', 'project')
+      ->condition('p.delivery_status', 'cancelled', '<>')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
   }
 }

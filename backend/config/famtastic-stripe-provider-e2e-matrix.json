@@ -1,0 +1,57 @@
+{
+  "schema": "famtastic.stripe-provider-e2e-matrix.v1",
+  "status": "scaffold_only_no_provider_calls",
+  "canonical_catalog": "backend/config/famtastic-products.json",
+  "execution_boundary": {
+    "environment": "fresh_disposable_runtime_and_stripe_sandbox_only",
+    "requires_explicit_operator_gate": "FAMTASTIC_STRIPE_PROVIDER_E2E=1",
+    "never_use": ["live_keys", "live_mode", "production_customers", "customer_email", "customer_domain", "customer_request"],
+    "evidence_bundle": ["runtime.json", "catalog.json", "provider-events.json", "commerce-orders.json", "webhook-replay.json", "portal-assertions.json", "report.md"],
+    "evidence_rule": "A Stripe object, browser redirect, or test card alone is not payment proof. Every success needs the matching authenticated webhook, Commerce payment/order, immutable offer contract, fulfillment, receipt/outbox record, and portal entitlement."
+  },
+  "shared_scenarios": [
+    "catalog SKU, amount, currency, interval, payment mode, and terms snapshot agree before checkout",
+    "successful sandbox payment creates one matching Commerce payment/order and one fulfillment path",
+    "decline leaves the order unpaid and creates neither entitlement nor fulfillment",
+    "3DS or action-required payment does not fulfill before completion",
+    "abandoned checkout leaves the order recoverable and unfulfilled",
+    "a duplicate signed webhook is idempotent for payment, fulfillment, receipt, and entitlements",
+    "cross-account or cross-request checkout is rejected",
+    "customer-visible receipt and portal state match the server-authoritative payment state"
+  ],
+  "private_offer_fixture": {
+    "status": "scaffold_only_not_created",
+    "sku": "FAM-FOOT-199",
+    "amount_minor": 100,
+    "currency": "USD",
+    "scope": {
+      "customer_id": "generated_in_fresh_runtime_only",
+      "organization_id": "generated_in_fresh_runtime_only",
+      "website_request_id": "generated_in_fresh_runtime_only"
+    },
+    "must_prove": [
+      "the offer is private, active, expiring, and exact-account/exact-request scoped",
+      "the matching selected proof and $199 list price are retained in the immutable offer contract",
+      "the order charges exactly $1.00 in Stripe sandbox and never exposes a public coupon",
+      "the offer cannot be redeemed by a second account, request, order, or renewal"
+    ]
+  },
+  "products": [
+    {"sku":"FAM-FOOT-199","billing_kind":"one_time","payment_mode":"proof_selected_website_request","provider_path":"Commerce checkout after selected proof","expected":"success/decline/3DS/abandon/replay plus private $1 offer fixture"},
+    {"sku":"FAM-BUSINESS-499","billing_kind":"one_time","payment_mode":"proof_selected_website_request","provider_path":"Commerce checkout after selected proof","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-REVISION-75","billing_kind":"one_time","payment_mode":"active_website_project","provider_path":"active project scope confirmation","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-PAGE-EXTRA","billing_kind":"one_time","payment_mode":"bundle_or_active_website","provider_path":"selected website request or active website","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-COPY","billing_kind":"one_time","payment_mode":"bundle_or_active_website","provider_path":"selected website request or active website","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-BRAND","billing_kind":"one_time","payment_mode":"direct_account","provider_path":"verified account checkout","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-SCHEDULING","billing_kind":"one_time","payment_mode":"bundle_or_active_website","provider_path":"selected website request or active website","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-LEAD-AUTOMATION","billing_kind":"one_time","payment_mode":"bundle_or_active_website","provider_path":"selected website request or active website","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-AI-AGENT","billing_kind":"one_time","payment_mode":"bundle_or_active_website","provider_path":"selected website request or active website","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-LOCAL-SEO","billing_kind":"one_time","payment_mode":"bundle_or_active_website","provider_path":"selected website request or active website","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-BUSINESS-EMAIL","billing_kind":"one_time","payment_mode":"direct_account","provider_path":"verified account checkout","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-ECOMMERCE-DISCOVERY","billing_kind":"one_time","payment_mode":"direct_account","provider_path":"verified account checkout","expected":"success/decline/3DS/abandon/replay"},
+    {"sku":"FAM-HOST-999","billing_kind":"recurring","payment_mode":"renewal_authorization_only","provider_path":"separate authorized renewal","expected":"generic checkout rejection; later sandbox authorization/first renewal/decline/retry/cancel/replay"},
+    {"sku":"FAM-HOST-BUSINESS-1999","billing_kind":"recurring","payment_mode":"renewal_authorization_only","provider_path":"separate authorized renewal","expected":"generic checkout rejection; later sandbox authorization/first renewal/decline/retry/cancel/replay"},
+    {"sku":"FAM-ANALYTICS","billing_kind":"recurring","payment_mode":"renewal_authorization_only","provider_path":"separate authorized recurring service","expected":"generic checkout rejection; later sandbox authorization/first renewal/decline/retry/cancel/replay"},
+    {"sku":"FAM-MAINTENANCE","billing_kind":"recurring","payment_mode":"renewal_authorization_only","provider_path":"separate authorized recurring service","expected":"generic checkout rejection; later sandbox authorization/first renewal/decline/retry/cancel/replay"}
+  ]
+}
