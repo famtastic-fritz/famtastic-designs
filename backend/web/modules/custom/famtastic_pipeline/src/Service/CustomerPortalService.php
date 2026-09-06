@@ -1631,6 +1631,10 @@ final class CustomerPortalService {
     if ($reason === '') {
       throw new \InvalidArgumentException('Record why this replacement proof round is being prepared.');
     }
+    // The rejected campaign, request reset, and replacement job are one
+    // durable transition. A production schema failure must not strand the
+    // customer with an expired proof set and no replacement queued.
+    $transaction = $this->database->startTransaction();
     $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE) ?: [];
     $now = $this->time->getRequestTime();
     $oldCampaignId = (int) ($row['proof_campaign_id'] ?? 0);
@@ -1664,7 +1668,10 @@ final class CustomerPortalService {
       'status' => 'submitted',
       'proof_campaign_id' => NULL,
       'proof_review_status' => 'queued',
-      'selected_proof_direction' => NULL,
+      // This field is intentionally non-null with an empty-string default.
+      // Clearing it as NULL works in permissive test schemas but fails on the
+      // canonical production table.
+      'selected_proof_direction' => '',
       'selected_proof_at' => NULL,
       'intake_data' => $intakeJson,
       'changed' => $now,
