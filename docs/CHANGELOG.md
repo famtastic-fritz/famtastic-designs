@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-09-05 — Completed deep dives now enter the three-proof handoff
+
+- A verified, claimed deep dive now advances its linked account-owned website
+  request to `submitted` and queues exactly one proof job for the normalized
+  brief. Existing requests are resumed idempotently with a brief hash, so a
+  stale failed job cannot block the completed customer brief.
+- Added the owner-only `famtastic:deep-dive-proof-resume` command with exact
+  request confirmation. It repairs the request/queue boundary only; proof
+  generation, owner approval, email, payment, and deployment remain separate
+  gates.
+- The customer portal now honors the request UUID in the review link and
+  safely lands on that request's proof room without a missing-session crash.
+- Focused PHP contract tests, PHP lint, frontend production build, portal
+  Design DNA validation, and the three-direction proof package check pass.
+
 ## 2026-09-05 — Catalog payment eligibility now fails closed
 
 - Every one of the 16 published catalog services now declares its payment mode,

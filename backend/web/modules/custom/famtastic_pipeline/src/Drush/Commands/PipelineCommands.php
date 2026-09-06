@@ -83,6 +83,72 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Repairs one exact completed deep-dive request into the proof queue.
+   *
+   * This is an account-state repair only. It does not run the proof worker,
+   * approve proofs, dispatch email, create an offer, charge, or deploy.
+   */
+  #[CLI\Command(name: 'famtastic:deep-dive-proof-resume', aliases: ['fddpr'])]
+  #[CLI\Argument(name: 'requestReference', description: 'Website request numeric id or public UUID.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the request public UUID.')]
+  #[CLI\Usage(name: 'drush fddpr <request-uuid> --confirm=<request-uuid>', description: 'Submit one linked completed deep dive and queue its brief-versioned proof job.')]
+  public function deepDiveProofResume(string $requestReference, array $options = ['confirm' => '']): int {
+    $database = \Drupal::database();
+    $query = $database->select('famtastic_project_request', 'r')->fields('r');
+    ctype_digit($requestReference) ? $query->condition('id', (int) $requestReference) : $query->condition('public_id', $requestReference);
+    $request = $query->range(0, 1)->execute()->fetchAssoc();
+    if (!$request || !hash_equals((string) $request['public_id'], trim((string) $options['confirm']))) {
+      $this->logger()->error('Deep-dive proof resume requires --confirm=<exact-request-public-uuid>.');
+      return self::EXIT_FAILURE;
+    }
+    $deepDive = $database->select('famtastic_deep_dive_invitation', 'i')->fields('i')
+      ->condition('website_request_id', (int) $request['id'])
+      ->condition('customer_id', (int) $request['customer_id'])
+      ->condition('status', 'claimed')
+      ->range(0, 1)->execute()->fetchAssoc();
+    if (!$deepDive) {
+      $this->logger()->error('No claimed completed deep dive is linked to that customer request. Nothing changed.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\CustomerPortalService $portal */
+      $portal = \Drupal::service('famtastic_pipeline.customer_portal');
+      $requestId = $portal->createWebsiteRequestFromDeepDive((int) $request['customer_id'], $deepDive);
+      $updated = $database->select('famtastic_project_request', 'r')->fields('r', ['status', 'proof_review_status', 'proof_campaign_id'])
+        ->condition('id', (int) $requestId)->execute()->fetchAssoc();
+      $job = $database->select('famtastic_job', 'j')->fields('j', ['id', 'job_key', 'status'])
+        ->condition('job_key', 'website_proof.generate.v1:request:' . (int) $requestId . ':brief:%', 'LIKE')
+        ->orderBy('id', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+      if (!$updated || !$job || (string) $updated['status'] !== 'submitted') {
+        throw new \RuntimeException('The request did not reach its submitted, proof-queued state.');
+      }
+      $requeued = FALSE;
+      if ((string) $job['status'] === 'failed') {
+        /** @var \Drupal\famtastic_pipeline\Service\OperationalLedger $ledger */
+        $ledger = \Drupal::service('famtastic_pipeline.operational_ledger');
+        $requeued = $ledger->requeueFailedJob((int) $job['id'], (string) $job['job_key']);
+        $job = $database->select('famtastic_job', 'j')->fields('j', ['id', 'job_key', 'status'])
+          ->condition('id', (int) $job['id'])->execute()->fetchAssoc();
+      }
+      $this->io()->writeln(json_encode([
+        'website_request_id' => (int) $requestId,
+        'website_request_public_id' => (string) $request['public_id'],
+        'request_status' => (string) $updated['status'],
+        'proof_review_status' => (string) $updated['proof_review_status'],
+        'proof_campaign_id' => $updated['proof_campaign_id'] ? (int) $updated['proof_campaign_id'] : NULL,
+        'proof_job' => $job,
+        'exhausted_job_requeued' => $requeued,
+        'side_effects_not_run' => ['proof_worker', 'owner_approval', 'email_dispatch', 'offer', 'payment', 'deployment'],
+      ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
+  /**
    * Prints campaign, source, funnel, revenue, launch, and renewal metrics.
    */
   #[CLI\Command(name: 'famtastic:analytics-report', aliases: ['far'])]

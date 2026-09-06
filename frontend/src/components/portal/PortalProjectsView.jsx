@@ -907,6 +907,7 @@ export default function PortalProjectsView({
   const proofReady = (req) => [3, 6].includes(req?.proofs?.variants?.length);
 
   const activeRequest =
+    requests.find((req) => req.public_id === targetRequest) ||
     requests.find((req) => req.public_id === activeRequestId) ||
     requests.find((req) => ['customer_ready', 'notified'].includes(req.proof_review_status) && proofReady(req)) ||
     requests[0] ||

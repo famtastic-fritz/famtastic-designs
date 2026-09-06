@@ -365,10 +365,11 @@ final class CustomerPortalService {
   }
 
   /**
-   * Turns a verified exact-email deep-dive into a saved portal draft.
+   * Turns a completed, verified exact-email deep dive into a submitted request.
    *
-   * The request intentionally remains a draft and forces owner review before
-   * any proof, offer, payment, Booksy change, or customer notification.
+   * Completion is the customer's explicit brief submission. Proof generation
+   * begins automatically, while proof disclosure, payment, Booksy changes,
+   * domain actions, and deployment remain behind their existing gates.
    */
   public function createWebsiteRequestFromDeepDive(int $customerId, array $deepDive): ?int {
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')
@@ -380,8 +381,11 @@ final class CustomerPortalService {
     if (!$organization) {
       return NULL;
     }
+    if ((string) ($deepDive['status'] ?? '') !== 'claimed') {
+      return NULL;
+    }
     if (!empty($deepDive['website_request_id'])) {
-      return (int) $deepDive['website_request_id'];
+      return $this->submitClaimedDeepDiveRequest($customerId, (int) $deepDive['website_request_id']);
     }
     $prospectId = (int) ($deepDive['prospect_id'] ?? 0);
     if ($prospectId) {
@@ -398,6 +402,7 @@ final class CustomerPortalService {
     }
     $businessName = trim((string) ($answers['business_name'] ?? $deepDive['business_name'] ?? '')) ?: 'My Business';
     $now = $this->time->getRequestTime();
+    $publicId = $this->uuid->generate();
     $intake = [
       'schema_version' => 'website_discovery_v3',
       'source' => 'owner_invited_deep_dive',
@@ -422,9 +427,9 @@ final class CustomerPortalService {
       'local_competitors' => (string) ($answers['local_competitors'] ?? ''),
       'google_business_status' => (string) ($answers['google_business_status'] ?? ''),
       'proof_request' => [
-        'requested_count' => 6,
-        'status' => 'awaiting_owner_review',
-        'rule' => 'Six directions require an explicit owner-approved showcase expansion after a complete core set; this saved request does not generate or deliver proofs automatically.',
+        'requested_count' => 3,
+        'status' => 'queued',
+        'rule' => 'Generate the three core directions first. A showcase expansion remains a separate explicit owner-approved request.',
       ],
       'recommendation' => [
         'review_required' => TRUE,
@@ -433,11 +438,11 @@ final class CustomerPortalService {
       'deep_dive_answers' => $answers,
     ];
     $id = (int) $this->database->insert('famtastic_project_request')->fields([
-      'public_id' => $this->uuid->generate(),
+      'public_id' => $publicId,
       'organization_id' => (int) $organization['id'],
       'customer_id' => $customerId,
       'prospect_id' => $prospectId ?: NULL,
-      'status' => 'draft',
+      'status' => 'submitted',
       'project_name' => $businessName . ' website',
       'business_name' => $businessName,
       'project_type' => 'appointment_business',
@@ -445,15 +450,94 @@ final class CustomerPortalService {
       'existing_domain' => '',
       'recommendation_requested' => 1,
       'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
-      'submitted_at' => NULL,
+      'submitted_at' => $now,
       'created' => $now,
       'changed' => $now,
     ])->execute();
     if ($prospectId) {
       $this->claimResource((int) $organization['id'], 'prospect', $prospectId);
+      $prospect = $this->entities->getStorage('famtastic_prospect')->load($prospectId);
+      if ($prospect) {
+        $prospect->set('status', 'lead');
+        $prospect->save();
+      }
     }
-    $this->activity((int) $organization['id'], 'website_request.deep_dive_claimed', 'Your deeper website interview is saved. FAMtastic will review the next creative and booking decisions with you.');
+    $clean = [
+      'status' => 'submitted',
+      'project_name' => $businessName . ' website',
+      'business_name' => $businessName,
+      'project_type' => 'appointment_business',
+      'domain_choice' => 'undecided',
+      'existing_domain' => '',
+      'recommendation_requested' => TRUE,
+      'intake' => $intake,
+    ];
+    $this->queueWebsiteRequestNotifications($id, $publicId, $customer, $clean);
+    $this->queueWebsiteRequestProofJob($id, $prospectId, $publicId, $intake);
+    $this->activity((int) $organization['id'], 'website_request.deep_dive_submitted', 'Your completed website interview was submitted and the three-direction proof routine was queued.');
     return $id;
+  }
+
+  /** Idempotently repairs or resumes a request already linked to a deep dive. */
+  private function submitClaimedDeepDiveRequest(int $customerId, int $requestId): ?int {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$row || (int) $row['customer_id'] !== $customerId || !$this->isMember($customerId, (int) $row['organization_id'])) {
+      throw new \RuntimeException('The completed interview is linked to a different customer request.');
+    }
+    if (!in_array((string) $row['status'], ['draft', 'submitted'], TRUE)) {
+      return $requestId;
+    }
+    $intake = json_decode((string) $row['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR);
+    $intake['proof_request'] = [
+      'requested_count' => 3,
+      'status' => 'queued',
+      'rule' => 'Generate the three core directions first. A showcase expansion remains a separate explicit owner-approved request.',
+    ];
+    $prospectId = (int) ($row['prospect_id'] ?? 0);
+    if ($prospectId < 1) {
+      throw new \RuntimeException('The completed interview request has no proof prospect.');
+    }
+    $wasDraft = (string) $row['status'] === 'draft';
+    $now = $this->time->getRequestTime();
+    if ($wasDraft) {
+      $this->database->update('famtastic_project_request')->fields([
+        'status' => 'submitted',
+        'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+        'submitted_at' => (int) ($row['submitted_at'] ?? 0) ?: $now,
+        'changed' => $now,
+      ])->condition('id', $requestId)->condition('status', 'draft')->execute();
+      $prospect = $this->entities->getStorage('famtastic_prospect')->load($prospectId);
+      if ($prospect) {
+        $prospect->set('status', 'lead');
+        $prospect->save();
+      }
+      $customer = $this->customerForId($customerId);
+      if ($customer) {
+        $clean = [
+          'status' => 'submitted',
+          'project_name' => (string) $row['project_name'],
+          'business_name' => (string) $row['business_name'],
+          'project_type' => (string) $row['project_type'],
+          'domain_choice' => (string) $row['domain_choice'],
+          'existing_domain' => (string) $row['existing_domain'],
+          'recommendation_requested' => (bool) $row['recommendation_requested'],
+          'intake' => $intake,
+        ];
+        $this->queueWebsiteRequestNotifications($requestId, (string) $row['public_id'], $customer, $clean);
+      }
+      $this->activity((int) $row['organization_id'], 'website_request.deep_dive_submitted', 'Your completed website interview was submitted and the three-direction proof routine was queued.');
+    }
+    elseif (($row['intake_data'] ?? '') !== json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)) {
+      $this->database->update('famtastic_project_request')->fields([
+        'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
+        'changed' => $now,
+      ])->condition('id', $requestId)->condition('status', 'submitted')->execute();
+    }
+    if (empty($row['proof_campaign_id'])) {
+      $this->queueWebsiteRequestProofJob($requestId, $prospectId, (string) $row['public_id'], $intake);
+    }
+    return $requestId;
   }
 
   /** Saves or submits an existing request, enforcing customer and organization ownership. */
@@ -823,8 +907,8 @@ final class CustomerPortalService {
 
     $requestId = (int) ($row['id'] ?? 0);
     $job = $this->database->select('famtastic_job', 'j')->fields('j', ['id', 'status', 'attempts', 'max_attempts'])
-      ->condition('job_key', 'website_proof.generate.v1:request:' . $requestId)
-      ->range(0, 1)->execute()->fetchAssoc();
+      ->condition('job_key', 'website_proof.generate.v1:request:' . $requestId . '%', 'LIKE')
+      ->orderBy('id', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $base = [
       'job_id' => $job ? (int) $job['id'] : NULL,
       'job_status' => $job ? (string) $job['status'] : 'not_queued',
@@ -1209,11 +1293,15 @@ final class CustomerPortalService {
 
   /** Enqueues the canonical pre-purchase proof routine exactly once. */
   private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake): int {
+    $briefJson = json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+    $briefHash = hash('sha256', $briefJson);
     return $this->ledger->enqueue(
-      'website_proof.generate.v1:request:' . $requestId,
+      $this->websiteRequestProofJobKey($requestId, $briefHash),
       'proof.generate',
       [
         'routine' => 'website_proof.generate.v1',
+        'brief_version' => 1,
+        'brief_sha256' => $briefHash,
         'prospect_id' => $prospectId,
         'website_request_id' => $requestId,
         'website_request_public_id' => $publicId,
@@ -1222,6 +1310,14 @@ final class CustomerPortalService {
       ],
       $prospectId,
     );
+  }
+
+  /** Stable job identity for one request and one exact normalized brief. */
+  private function websiteRequestProofJobKey(int $requestId, string $briefHash): string {
+    if ($requestId < 1 || preg_match('/^[a-f0-9]{64}$/', $briefHash) !== 1) {
+      throw new \InvalidArgumentException('A proof job requires a request id and normalized brief hash.');
+    }
+    return 'website_proof.generate.v1:request:' . $requestId . ':brief:' . $briefHash;
   }
 
   /** Returns the current normalized brief for a request-bound proof worker. */

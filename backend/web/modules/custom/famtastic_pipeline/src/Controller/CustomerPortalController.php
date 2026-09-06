@@ -161,14 +161,11 @@ final class CustomerPortalController extends ControllerBase {
     return $this->sessionPayload($customer);
   }
 
-  /** Creates the account-owned draft only after exact-email verification. */
+  /** Creates or advances the account-owned request after exact-email verification. */
   private function claimDeepDive(int $customerId, string $email): void {
     foreach ($this->deepDives->claimForVerifiedCustomer($customerId, $email) as $deepDive) {
-      if (!empty($deepDive['website_request_id'])) {
-        continue;
-      }
       $requestId = $this->portal->createWebsiteRequestFromDeepDive($customerId, $deepDive);
-      if ($requestId) {
+      if ($requestId && empty($deepDive['website_request_id'])) {
         $this->deepDives->attachWebsiteRequest((int) $deepDive['id'], $requestId);
       }
     }

@@ -125,7 +125,7 @@ export default function CustomerPortalDashboard() {
         );
       } else {
         setError(
-          `This proof link is not connected to the account signed in as ${session.customer.email}. Sign out, then sign in with the email address that received the proof-ready message.`
+          `This proof link is not connected to the account signed in as ${session?.customer?.email || 'this account'}. Sign out, then sign in with the email address that received the proof-ready message.`
         );
       }
     } else if (readyProof) {

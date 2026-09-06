@@ -329,6 +329,42 @@ final class OperationalLedger {
     return ['exhausted' => $exhausted, 'attempts' => $attempts, 'retry_at' => $retryAt];
   }
 
+  /** Explicitly rearms one exact exhausted job after operator intervention. */
+  public function requeueFailedJob(int $jobId, string $expectedJobKey): bool {
+    $job = $this->database->select('famtastic_job', 'j')->fields('j')
+      ->condition('id', $jobId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$job || !hash_equals((string) $job['job_key'], $expectedJobKey)) {
+      throw new \InvalidArgumentException('The exact failed job was not found.');
+    }
+    if ((string) $job['status'] !== 'failed') {
+      return FALSE;
+    }
+    $now = $this->time->getRequestTime();
+    $updated = $this->database->update('famtastic_job')->fields([
+      'status' => 'queued',
+      'attempts' => 0,
+      'available_at' => $now,
+      'locked_at' => NULL,
+      'completed_at' => NULL,
+      'changed' => $now,
+    ])->condition('id', $jobId)->condition('status', 'failed')->execute();
+    if ($updated !== 1) {
+      return FALSE;
+    }
+    $this->database->update('famtastic_exception')->fields([
+      'status' => 'resolved',
+      'resolved_at' => $now,
+      'changed' => $now,
+    ])->condition('exception_key', 'job:' . $expectedJobKey)->condition('status', 'open')->execute();
+    $this->recordEvent(
+      'job.requeued:' . $jobId . ':' . $now,
+      'job.requeued',
+      ['job_id' => $jobId, 'job_key' => $expectedJobKey, 'prior_attempts' => (int) $job['attempts']],
+      (int) ($job['prospect_id'] ?? 0) ?: NULL,
+    );
+    return TRUE;
+  }
+
   /**
    * Opens or refreshes a unique actionable exception.
    */

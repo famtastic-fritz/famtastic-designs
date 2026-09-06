@@ -29,7 +29,7 @@ final class DeepDiveInvitationService {
     'subject' => 'A few questions to shape {{business_name}}\'s website',
     'intro' => 'We want to understand {{business_name}} before we design anything. This private interview asks one question at a time about your services, booking, brand, location, photos, payments, and growth goals. It takes about {{duration}}, saves your progress, and does not ask for payment details.',
     'cta' => 'Start your private planning interview:',
-    'next_steps' => 'After you finish and verify your free FAMtastic account with this same email address, your answers will be saved in your private workspace. We will then prepare a six-direction creative plan for owner review; no site, payment flow, or booking change goes live without your approval.',
+    'next_steps' => 'After you finish and verify your free FAMtastic account with this same email address, your completed brief will be submitted and three website directions will enter FAMtastic review. No proof is shared, payment is requested, or site, booking, domain, or payment change goes live without the required approval.',
     'signature' => '— FAMtastic Designs',
     'duration' => '10 minutes',
   ];

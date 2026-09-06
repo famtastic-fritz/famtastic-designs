@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A completed interview must create a durable proof handoff
+
+The claimed Shay deep dive was linked to request 12, but the request remained
+submitted with no campaign while its old job had exhausted retries. The
+customer therefore had a brief but no path to concepts. The repair advances a
+claimed completed deep dive to the submitted state and keys the proof job to a
+SHA-256 of the normalized brief. The owner-only resume command requires the
+exact request UUID and only queues the work; generation, research approval,
+customer visibility, payment, and deployment remain distinct gates.
+
+**Guidance.** Treat a completed intake as an event that must materialize one
+account-owned request and one versioned proof-job identity. Never make the
+customer re-submit a brief because a worker failed, and never call a queued
+job evidence that proofs exist.
+
 ## 2026-09-05 — A price is not a payment path
 
 A catalog item can have a price, a product variation, and an entitlement

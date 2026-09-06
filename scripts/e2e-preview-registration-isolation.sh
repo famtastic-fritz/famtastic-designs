@@ -123,7 +123,7 @@ ordinary_response="$(curl -sS -X POST -H 'Content-Type: application/json' -d "$o
 assert_json "$ordinary_response" '.ok == true and .verification_required == true'
 ordinary_request_id="$(sql_scalar "SELECT id FROM famtastic_project_request WHERE prospect_id = $ordinary_prospect_id ORDER BY id DESC LIMIT 1;")"
 test -n "$ordinary_request_id"
-assert_equals "$(sql_scalar "SELECT COUNT(*) FROM famtastic_job WHERE prospect_id = $ordinary_prospect_id AND job_key = 'website_proof.generate.v1:request:$ordinary_request_id';")" "1" "ordinary discovery registration proof job"
+assert_equals "$(sql_scalar "SELECT COUNT(*) FROM famtastic_job WHERE prospect_id = $ordinary_prospect_id AND job_key LIKE 'website_proof.generate.v1:request:$ordinary_request_id:brief:%';")" "1" "ordinary discovery registration proof job"
 assert_equals "$(sql_scalar "SELECT COUNT(*) FROM famtastic_notification_outbox WHERE notification_key = 'website-request:$ordinary_request_id:customer';")" "1" "ordinary discovery customer notification"
 assert_equals "$(sql_scalar "SELECT COUNT(*) FROM famtastic_notification_outbox WHERE notification_key = 'website-request:$ordinary_request_id:staff';")" "1" "ordinary discovery staff notification"
 
