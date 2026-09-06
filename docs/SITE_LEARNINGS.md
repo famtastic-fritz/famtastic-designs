@@ -1,5 +1,29 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-06 — The $199 offer needs one shared copy source
+
+If the $199 product is described differently on the page, in the portal, in
+checkout, and in the email registry, the customer sees a different offer each
+time. Treat the package name, included items, and CTA as one contract and
+render it from shared data wherever possible.
+
+**Guidance.** Keep proof-ready emails branded and action-oriented. The visible
+CTA should open the proof set inside the authenticated workspace, not expose a
+long bare proof URL or a generic “review” phrase that leaves the customer
+guessing what happens next.
+
+## 2026-09-06 — Attention states need a real destination, not a label
+
+When a project says it needs attention, the owner still needs a concrete
+place to land. A dead summary or plain badge is not enough; the state must
+carry a route into the issue or support surface while keeping the project
+context visible.
+
+**Guidance.** Treat support, proof repair, and customer follow-up as first-
+class workflow destinations. Keep the project identity attached so the owner
+can move from the alert into the exact record without re-searching or
+guessing.
+
 ## 2026-09-05 — A command center needs one owner and one next action
 
 The portal exposed truthful data but still made a mobile customer interpret

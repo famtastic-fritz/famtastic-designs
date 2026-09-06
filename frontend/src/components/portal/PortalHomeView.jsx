@@ -13,6 +13,7 @@ export default function PortalHomeView({
 }) {
   const requests = workspace.website_requests || [];
   const openThreads = workspace.threads.filter((thread) => thread.status === 'open').length;
+  const attentionRequest = requests.find((request) => request.proof_handoff?.state === 'needs_attention');
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
 
@@ -312,6 +313,25 @@ export default function PortalHomeView({
         </Panel>
       </section>
 
+      {attentionRequest && (
+        <Panel
+          eyebrow="Needs attention"
+          title={`${attentionRequest.project_name} needs a closer look`}
+          className="portal-panel"
+        >
+          <p>
+            {attentionRequest.proof_handoff?.detail ||
+              'A proof run stalled and FAMtastic is repairing it. The brief is safe and nothing was lost.'}
+          </p>
+          <div className="portal-form-actions">
+            <button onClick={() => go('support')}>Open issue details →</button>
+            <button className="secondary" onClick={() => go('projects')}>
+              Jump to the project
+            </button>
+          </div>
+        </Panel>
+      )}
+
       <section className="portal-journey" aria-labelledby="portal-journey-title">
         <header>
           <span>How your studio works</span>
@@ -379,18 +399,19 @@ export default function PortalHomeView({
 
         <Panel
           eyebrow="Help When You Need It"
-          title={
-            openThreads
-              ? `${openThreads} open conversation${openThreads === 1 ? '' : 's'}`
-              : `Welcome to ${org?.name || 'your workspace'}`
-          }
+          title={openThreads ? `${openThreads} open conversation${openThreads === 1 ? '' : 's'}` : `Welcome to ${org?.name || 'your workspace'}`}
         >
           <p>
-            Ask a question without repeating your business or project history. Messages stay connected to this workspace.
+            Ask a question without repeating your business or project history. Messages stay connected to this workspace, and the support view is where issues live.
           </p>
-          <button onClick={() => go('messages')}>
-            {openThreads ? 'View messages' : 'Ask FAMtastic'}
-          </button>
+          <div className="portal-form-actions">
+            <button onClick={() => go('messages')}>
+              {openThreads ? 'View messages' : 'Ask FAMtastic'}
+            </button>
+            <button className="secondary" onClick={() => go('support')}>
+              Open support
+            </button>
+          </div>
         </Panel>
       </section>
     </>

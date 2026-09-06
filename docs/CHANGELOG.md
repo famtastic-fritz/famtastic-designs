@@ -1,5 +1,35 @@
 # Product changelog
 
+## 2026-09-06 — Web Basics naming and proof-ready email contract were standardized
+
+- Moved the $199 offer text into a shared `webBasicsOffer.js` copy source so
+  the page, portal, purchase flow, and option selector all say the same thing:
+  `Starter Mobile Business Foundation (Web Basics)`.
+- Added a visible “see it in motion” video section to the $199 page so the
+  offer can explain itself with short films, not only text blocks. The page now
+  treats the offer as a product story with proofs, research, and terms instead
+  of a bare price card.
+- Upgraded the proof-ready customer email registry entry to the new branded
+  CTA contract, and aligned the mailer/test pair with a proof-set-open action
+  instead of a raw “review directions” prompt.
+- Kept the change scoped to design/copy/email presentation. No portal
+  lifecycle, payment, domain, or deployment behavior was changed by this pass.
+
+## 2026-09-06 — Portal projects and admin surfaces got a clearer control plane
+
+- Reworked the customer project experience so the proof-ready state is explicit
+  and the research/growth plan stays visible instead of hiding behind a dead-end
+  summary. The proof email is framed as the doorway; the portal is where the
+  three concepts are actually compared.
+- Added actionable attention routing from the home dashboard and project detail
+  to support/issue resolution, instead of leaving "needs attention" as a static
+  label. Support is now a first-class next step.
+- Gave the staff admin dashboard a dark hero and live summary strip so it reads
+  like the same product family as the customer portal on mobile and desktop.
+- Verified the client-portal DNA, a public-flow smoke, and the production build
+  after the change set. No backend, payment, or production deployment behavior
+  was altered by this UI pass.
+
 ## 2026-09-06 — Tighten Up Your Locs replacement proof set delivered
 
 - Completed the existing request-12 replacement campaign rather than creating

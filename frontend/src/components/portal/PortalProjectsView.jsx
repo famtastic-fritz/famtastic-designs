@@ -26,7 +26,13 @@ export function customerNextStep(request) {
     return { owner: 'famtastic', tone: 'waiting', label: 'FAMtastic is preparing your build offer', detail: 'Your direction is saved. Nothing else is required until your offer is ready.', action: '' };
   }
   if (request.proof_handoff?.state === 'needs_attention') {
-    return { owner: 'famtastic', tone: 'attention', label: 'FAMtastic needs to repair this proof run', detail: 'Your brief is safe. You do not need to submit it again.', action: '' };
+    return {
+      owner: 'famtastic',
+      tone: 'attention',
+      label: 'A proof run needs repair',
+      detail: request.proof_handoff?.detail || 'Open support for the issue details. Your brief is safe and you do not need to submit it again.',
+      action: 'support',
+    };
   }
   return { owner: 'famtastic', tone: 'waiting', label: request.proof_handoff?.label || 'FAMtastic is preparing your concepts', detail: request.proof_handoff?.detail || 'You do not need to do anything right now.', action: '' };
 }
@@ -45,6 +51,13 @@ function ProofDecisionGuide({ request }) {
   const terms = request.proofs?.review_terms || {};
   const signals = research?.market_signals || [];
   const opportunities = research?.opportunities || [];
+  const growthPlan = research?.growth_plan || {};
+  const growthStages = [
+    ['days_30', 'First 30 days'],
+    ['days_60', 'Days 31–60'],
+    ['days_90', 'Days 61–90'],
+  ];
+  const hasGrowthPlan = growthStages.some(([key]) => (growthPlan[key] || []).length > 0);
 
   return (
     <section className="portal-proof-decision-guide" aria-label="Research and review guide">
@@ -53,6 +66,30 @@ function ProofDecisionGuide({ request }) {
         <h3>Why we designed these three directions</h3>
         <p>
           {research?.overview || 'Your research brief will be published with the concepts that FAMtastic approves for review.'}
+        </p>
+        <p className="portal-proof-guidance">
+          The proof-ready email only points you here. This page is where you compare the concepts, read the research, and choose the direction that feels right.
+        </p>
+      </div>
+
+      <div className="portal-proof-rationale">
+        <p>
+          <strong>What we learned</strong>
+          {signals.length > 0
+            ? signals.slice(0, 3).join(' • ')
+            : 'We use your intake, references, and market context to shape each direction.'}
+        </p>
+        <p>
+          <strong>How it shaped the directions</strong>
+          {opportunities.length > 0
+            ? opportunities.slice(0, 3).join(' • ')
+            : 'Each concept is built around a different business strategy, not just a different color scheme.'}
+        </p>
+        <p>
+          <strong>What growth looks like next</strong>
+          {hasGrowthPlan
+            ? 'The 30/60/90 plan below shows practical next steps, not guaranteed outcomes.'
+            : 'We will publish a practical growth plan alongside the approved concepts.'}
         </p>
       </div>
 
@@ -74,6 +111,19 @@ function ProofDecisionGuide({ request }) {
             )}
           </div>
         </details>
+      )}
+
+      {hasGrowthPlan && (
+        <div className="portal-growth-windows" aria-label="30 60 90 day growth plan">
+          {growthStages.map(([key, label]) => (
+            <div key={key}>
+              <strong>{label}</strong>
+              <ul>
+                {(growthPlan[key] || []).map((item) => <li key={item}>{item}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
       )}
 
       {research?.sources?.length > 0 && (
@@ -1079,6 +1129,11 @@ export default function PortalProjectsView({
             {nextStep.action === 'billing' && (
               <button type="button" onClick={() => navigate('/portal?section=billing')}>Open billing →</button>
             )}
+            {nextStep.action === 'support' && (
+              <button type="button" className="secondary" onClick={() => navigate('/portal?section=support')}>
+                Open issue details →
+              </button>
+            )}
           </section>
 
           <Panel
@@ -1115,7 +1170,9 @@ export default function PortalProjectsView({
                 <h3 style={{ margin: '0 0 0.35rem', fontSize: '1.3rem', color: '#fff' }}>
                   Choose one direction
                 </h3>
-                <p className="portal-plain-help">Open each direction. When one feels right for your business, tap its Choose button. You can ask for changes instead of choosing.</p>
+                <p className="portal-plain-help">
+                  The proof-ready email only opens this page. Review the three concepts here, compare the research notes, and choose one or ask for changes.
+                </p>
                 <WebsiteProofReview
                   request={activeRequest}
                   busy={busy}
@@ -1145,6 +1202,16 @@ export default function PortalProjectsView({
                 <p style={{ margin: 0, color: '#b2bcb2', fontSize: '0.88rem', lineHeight: '1.5' }}>
                   {proofHandoff.detail}
                 </p>
+                {proofHandoff.state === 'needs_attention' && (
+                  <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginTop: '0.25rem' }}>
+                    <button type="button" className="secondary" onClick={() => navigate('/portal?section=support')}>
+                      Open issue details →
+                    </button>
+                    <button type="button" onClick={() => setTargetRequest(activeRequest.public_id)}>
+                      Jump back to this project
+                    </button>
+                  </div>
+                )}
                 {proofHandoff.state === 'draft' && (
                   <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginTop: '0.6rem' }}>
                     <button
@@ -1158,7 +1225,7 @@ export default function PortalProjectsView({
               </div>
             )}
 
-            <details id={`plan-${activeRequest.public_id}`} className="portal-project-secondary" style={{ marginTop: '1rem' }}>
+            <details id={`plan-${activeRequest.public_id}`} className="portal-project-secondary" open style={{ marginTop: '1rem' }}>
               <summary>
                 Research &amp; growth plan
                 <span>Why these directions</span>

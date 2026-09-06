@@ -36,6 +36,17 @@ export default function AdminDashboardPage() {
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const dashboardStats = projects.reduce(
+    (acc, project) => {
+      acc.total += 1;
+      if (project.status === 'discovery') acc.discovery += 1;
+      if (project.status === 'active') acc.active += 1;
+      if (project.status === 'review') acc.review += 1;
+      if (project.status === 'complete') acc.complete += 1;
+      return acc;
+    },
+    { total: 0, discovery: 0, active: 0, review: 0, complete: 0 },
+  );
 
   const loadProjects = useCallback(async () => {
     if (!token) return;
@@ -101,12 +112,26 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <section aria-labelledby="admin-heading">
-      <div className="section-heading">
-        <h2 id="admin-heading">Client Projects</h2>
-        <span className="hint">
-          {user?.email ? `Signed in as ${user.email} · ` : ''}JSON:API · node/client_project
-        </span>
+    <section className="admin-dashboard" aria-labelledby="admin-heading">
+      <header className="admin-dashboard__hero">
+        <div>
+          <span className="hint">Owner operations</span>
+          <h2 id="admin-heading">Client Projects</h2>
+          <p>
+            Keep project records, statuses, and delivery ops in one place. This is the staff control plane, not the customer portal.
+          </p>
+        </div>
+        <div className="admin-dashboard__identity">
+          <span>{user?.email ? `Signed in as ${user.email}` : 'Signed in'}</span>
+          <small>JSON:API · node/client_project</small>
+        </div>
+      </header>
+
+      <div className="admin-dashboard__stats" aria-label="Project overview">
+        <article><strong>{dashboardStats.total}</strong><span>Total projects</span></article>
+        <article><strong>{dashboardStats.discovery}</strong><span>Discovery</span></article>
+        <article><strong>{dashboardStats.review}</strong><span>In review</span></article>
+        <article><strong>{dashboardStats.complete}</strong><span>Complete</span></article>
       </div>
 
       <div className="admin-toolbar">
