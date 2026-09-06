@@ -958,6 +958,23 @@ famtastic_pipeline.operations_metric:
     _permission: 'administer famtastic pipeline'
     metric: 'campaigns|prospects|customers|website-requests|proofs-ready|emails-sent|clicks|paid-orders|fulfillment|open-jobs|open-exceptions|support|referrals|services|notifications|workers|grant-codes|replies|support-drafts|social-records'
 
+famtastic_pipeline.operations_attention:
+  path: '/admin/famtastic/attention'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::attention'
+    _title: 'Attention Queue'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+
+famtastic_pipeline.operations_conversation:
+  path: '/admin/famtastic/conversation/{thread}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\OperationsController::conversation'
+    _title: 'Conversation'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    thread: '\d+'
+
 famtastic_pipeline.support_draft_decision:
   path: '/admin/famtastic/support-draft/{id}/decide'
   defaults:

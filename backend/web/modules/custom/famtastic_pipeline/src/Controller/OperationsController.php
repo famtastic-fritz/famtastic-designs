@@ -56,6 +56,7 @@ final class OperationsController extends ControllerBase {
     $published = (int) $this->database->select('node_field_data', 'n')
       ->condition('status', 1)->countQuery()->execute()->fetchField();
     $openSupport = $this->count('famtastic_portal_thread', ['status' => 'open']);
+    $attentionItems = $this->openConversationRecords(3);
     $fulfillmentQueue = $this->fulfillmentQueueCount();
     $cards = [
       ['Website Analytics', !empty($analytics['available']) ? 'Connected · 30-day reporting ready' : 'Connection needs attention', 'Traffic, engagement, top pages, and acquisition channels.', Url::fromRoute('famtastic_pipeline.analytics'), 'analytics'],
@@ -89,7 +90,7 @@ final class OperationsController extends ControllerBase {
     }
     return $this->page([
       'hero' => ['#markup' => '<section class="famtastic-hub__hero"><span>FAMtastic Designs</span><h2>Run the business from one place.</h2><p>Choose the area you need. Website analytics and campaign operations remain focused, separate workspaces.</p></section>'],
-      'attention' => ['#markup' => '<div class="famtastic-hub__attention"><strong>Needs attention</strong><span>' . $openSupport . ' open support conversation' . ($openSupport === 1 ? '' : 's') . '</span></div>'],
+      'attention' => $this->attentionCard($openSupport, $attentionItems),
       'heading' => ['#markup' => '<h2 class="famtastic-hub__heading">Operations</h2>'],
       'cards' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-hub__grid']], 'items' => $cardBuild],
     ], 'Operations Home');
@@ -545,6 +546,90 @@ final class OperationsController extends ControllerBase {
     };
   }
 
+  /**
+   * Gives the owner one phone-first queue for the specific work needing review.
+   */
+  public function attention(): array {
+    $items = $this->openConversationRecords(50);
+    $count = count($items);
+    $cards = [];
+    foreach ($items as $item) {
+      $kind = $this->conversationKindLabel((string) $item['kind']);
+      $case = (string) ($item['case_number'] ?? '');
+      $caseContext = $case !== ''
+        ? 'Case ' . $case . ' · ' . ucfirst(str_replace('_', ' ', (string) ($item['case_status'] ?? 'open')))
+        : 'No support case has been created for this conversation.';
+      $cards[] = [
+        '#type' => 'link',
+        '#title' => [
+          '#markup' => '<span class="famtastic-triage__eyebrow">' . Html::escape($kind) . '</span>'
+            . '<strong>' . Html::escape((string) $item['subject']) . '</strong>'
+            . '<span class="famtastic-triage__context">' . Html::escape($caseContext) . '</span>'
+            . '<span class="famtastic-triage__meta">Updated ' . Html::escape($this->date((int) $item['changed'])) . '</span>'
+            . '<b>Review this conversation →</b>',
+        ],
+        '#url' => Url::fromRoute('famtastic_pipeline.operations_conversation', ['thread' => (int) $item['id']]),
+        '#attributes' => ['class' => ['famtastic-triage__card']],
+      ];
+    }
+
+    return $this->page([
+      'back' => Link::fromTextAndUrl('← Operations home', Url::fromRoute('famtastic_pipeline.operations'))->toRenderable(),
+      'hero' => ['#markup' => '<section class="famtastic-triage__hero"><span>Attention queue</span><h2>' . ($count === 0 ? 'Nothing needs your review right now.' : $count . ' conversation' . ($count === 1 ? '' : 's') . ' need your review.') . '</h2><p>Open one item to see the complete record and decide the next step. This queue only shows open conversations.</p></section>'],
+      'items' => $cards === []
+        ? ['#markup' => '<p class="famtastic-ops__empty">No open conversations require review.</p>']
+        : ['#type' => 'container', '#attributes' => ['class' => ['famtastic-triage__list']], 'items' => $cards],
+    ], 'Attention Queue');
+  }
+
+  /**
+   * Shows one exact portal conversation without forcing a horizontal table.
+   */
+  public function conversation(int $thread): array {
+    $query = $this->database->select('famtastic_portal_thread', 't');
+    $query->leftJoin('famtastic_organization', 'o', 'o.id = t.organization_id');
+    $query->leftJoin('famtastic_support_case', 's', 's.thread_id = t.id');
+    $query->fields('t', ['id', 'kind', 'subject', 'status', 'created', 'changed']);
+    $query->fields('s', ['case_number', 'priority']);
+    $query->addField('s', 'status', 'case_status');
+    $query->addField('o', 'name', 'organization');
+    $record = $query->condition('t.id', $thread)->execute()->fetchAssoc();
+    if (!$record) {
+      throw new NotFoundHttpException('Conversation not found.');
+    }
+
+    $messages = $this->database->select('famtastic_portal_message', 'm')
+      ->fields('m', ['author_type', 'body', 'created'])
+      ->condition('thread_id', $thread)
+      ->orderBy('created', 'ASC')
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+    $messageBuild = [];
+    foreach ($messages as $message) {
+      $author = match ((string) $message['author_type']) {
+        'customer' => 'Customer',
+        'staff' => 'FAMtastic',
+        default => ucfirst((string) $message['author_type']),
+      };
+      $messageBuild[] = ['#markup' => '<article class="famtastic-conversation__message"><div><strong>' . Html::escape($author) . '</strong><time>' . Html::escape($this->date((int) $message['created'])) . '</time></div><p>' . nl2br(Html::escape((string) $message['body'])) . '</p></article>'];
+    }
+    $caseNumber = (string) ($record['case_number'] ?? '');
+    $actions = [
+      Link::fromTextAndUrl('← Back to attention queue', Url::fromRoute('famtastic_pipeline.operations_attention'))->toRenderable(),
+    ];
+    if ($caseNumber !== '') {
+      $actions[] = Link::fromTextAndUrl('Reply to case ' . $caseNumber, Url::fromRoute('famtastic_pipeline.support_reply', ['case_number' => $caseNumber]))->toRenderable();
+    }
+
+    return $this->page([
+      'actions' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions']], 'items' => $actions],
+      'hero' => ['#markup' => '<section class="famtastic-conversation__hero"><span>' . Html::escape($this->conversationKindLabel((string) $record['kind'])) . ' · ' . Html::escape(ucfirst((string) $record['status'])) . '</span><h2>' . Html::escape((string) $record['subject']) . '</h2><p>' . Html::escape((string) ($record['organization'] ?: 'Individual customer')) . ' · Updated ' . Html::escape($this->date((int) $record['changed'])) . '</p></section>'],
+      'case_context' => ['#markup' => '<p class="famtastic-conversation__context">' . Html::escape($caseNumber === '' ? 'This is an open project conversation. It is not a support case yet.' : 'Support case ' . $caseNumber . ' · ' . ucfirst(str_replace('_', ' ', (string) $record['case_status']))) . '</p>'],
+      'heading' => ['#markup' => '<h2 class="famtastic-conversation__heading">Conversation</h2>'],
+      'messages' => $messageBuild === [] ? ['#markup' => '<p class="famtastic-ops__empty">No messages were recorded for this conversation.</p>'] : ['#type' => 'container', '#attributes' => ['class' => ['famtastic-conversation__messages']], 'items' => $messageBuild],
+    ], 'Conversation');
+  }
+
   private function websiteRequestMetric(): array {
     $query = $this->database->select('famtastic_project_request', 'r')->extend(PagerSelectExtender::class);
     $query->leftJoin('famtastic_customer', 'c', 'c.id = r.customer_id');
@@ -600,6 +685,52 @@ final class OperationsController extends ControllerBase {
     return $this->recordsPage('Customer Support', 'Customer-visible cases with ownership, priority, response targets, and conversation history.', ['Case', 'Customer', 'Subject', 'Priority', 'Status', 'Response due', 'Updated', 'Action'], $rows, 'No support conversations have been recorded.');
   }
 
+  /**
+   * Returns the open conversations which are meaningful owner attention items.
+   */
+  private function openConversationRecords(int $limit): array {
+    $query = $this->database->select('famtastic_portal_thread', 't');
+    $query->leftJoin('famtastic_support_case', 's', 's.thread_id = t.id');
+    $query->fields('t', ['id', 'kind', 'subject', 'status', 'created', 'changed']);
+    $query->fields('s', ['case_number', 'priority']);
+    $query->addField('s', 'status', 'case_status');
+    return $query->condition('t.status', 'open')
+      ->orderBy('t.changed', 'DESC')
+      ->range(0, $limit)
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+  }
+
+  /**
+   * Renders the direct route from the operations landing to exact work items.
+   */
+  private function attentionCard(int $count, array $items): array {
+    if ($count === 0) {
+      return ['#markup' => '<div class="famtastic-hub__attention famtastic-hub__attention--clear"><strong>All clear</strong><span>No open conversations need review.</span></div>'];
+    }
+    $subjects = array_map(static fn(array $item): string => (string) $item['subject'], $items);
+    $preview = implode(' · ', $subjects);
+    return [
+      '#type' => 'link',
+      '#title' => [
+        '#markup' => '<span class="famtastic-hub__attention-kicker">Needs attention</span>'
+          . '<strong>' . $count . ' open conversation' . ($count === 1 ? '' : 's') . ' waiting for review</strong>'
+          . '<span>' . Html::escape($preview) . '</span><b>Open attention queue →</b>',
+      ],
+      '#url' => Url::fromRoute('famtastic_pipeline.operations_attention'),
+      '#attributes' => ['class' => ['famtastic-hub__attention']],
+    ];
+  }
+
+  private function conversationKindLabel(string $kind): string {
+    return match ($kind) {
+      'project' => 'Project conversation',
+      'billing' => 'Billing conversation',
+      'support' => 'Support conversation',
+      default => ucfirst(str_replace('_', ' ', $kind)) . ' conversation',
+    };
+  }
+
   private function notificationMetric(): array {
     $rows = [];
     $query = $this->database->select('famtastic_notification_outbox', 'n')->extend(PagerSelectExtender::class);
@@ -629,25 +760,38 @@ final class OperationsController extends ControllerBase {
     foreach ($this->database->select('famtastic_customer', 'c')->fields('c', ['email', 'display_name'])->execute()->fetchAll(\PDO::FETCH_ASSOC) as $customer) {
       $senders[hash('sha256', mb_strtolower((string) $customer['email']))] = trim((string) $customer['display_name']) . ' · ' . $customer['email'];
     }
-    $rows = [];
+    $threadIds = [];
+    foreach ($messages as $message) {
+      if ((string) $message['thread_public_id'] !== '') {
+        $threadIds[] = (string) $message['thread_public_id'];
+      }
+    }
+    $threadMap = [];
+    if ($threadIds !== []) {
+      foreach ($this->database->select('famtastic_portal_thread', 't')->fields('t', ['id', 'public_id'])->condition('public_id', array_unique($threadIds), 'IN')->execute()->fetchAll(\PDO::FETCH_ASSOC) as $thread) {
+        $threadMap[(string) $thread['public_id']] = (int) $thread['id'];
+      }
+    }
+    $cards = [];
     foreach ($messages as $message) {
       $reason = (string) $message['rejection_reason'];
-      $matchCell = $this->badge((string) $message['status']) . ($reason !== '' ? '<br><small>' . Html::escape(str_replace('_', ' ', $reason)) . '</small>' : '');
-      $rows[] = [
-        'sender' => $senders[(string) $message['sender_hash']] ?? ('Unknown sender (' . substr((string) $message['sender_hash'], 0, 12) . '…)'),
-        'subject' => (string) $message['subject'],
-        'match' => ['data' => ['#markup' => $matchCell]],
-        'thread' => (string) ($message['thread_public_id'] ?: '—'),
-        'received' => $this->date((int) $message['received_at']),
+      $sender = $senders[(string) $message['sender_hash']] ?? ('Unknown sender (' . substr((string) $message['sender_hash'], 0, 12) . '…)');
+      $threadPublicId = (string) $message['thread_public_id'];
+      $context = ucfirst(str_replace('_', ' ', (string) $message['status']));
+      if ($reason !== '') {
+        $context .= ' · ' . str_replace('_', ' ', $reason);
+      }
+      $card = [
+        '#markup' => '<article class="famtastic-triage__card famtastic-triage__card--static"><span class="famtastic-triage__eyebrow">Inbound email · ' . Html::escape($context) . '</span><strong>' . Html::escape((string) $message['subject']) . '</strong><span class="famtastic-triage__context">From ' . Html::escape($sender) . '</span><span class="famtastic-triage__meta">Received ' . Html::escape($this->date((int) $message['received_at'])) . '</span>' . ($threadPublicId !== '' && isset($threadMap[$threadPublicId]) ? '<a href="' . Html::escape(Url::fromRoute('famtastic_pipeline.operations_conversation', ['thread' => $threadMap[$threadPublicId]])->toString()) . '">Open matched conversation →</a>' : '<span class="famtastic-triage__unmatched">No portal conversation is linked yet.</span>') . '</article>',
       ];
+      $cards[] = $card;
     }
-    return $this->recordsPage(
-      'Customer Replies',
-      'Every validated inbound customer email with its thread match result, so no reply can be silently lost.',
-      ['Sender', 'Subject', 'Match status', 'Thread', 'Received'],
-      $rows,
-      'No inbound messages have been received.',
-    );
+    return $this->page([
+      'back' => Link::fromTextAndUrl('← Operations home', Url::fromRoute('famtastic_pipeline.operations'))->toRenderable(),
+      'hero' => ['#markup' => '<section class="famtastic-triage__hero"><span>Customer replies</span><h2>Every inbound reply, in a readable queue.</h2><p>Open a matched conversation to see the project context. An unmatched reply stays visible here until it is connected.</p></section>'],
+      'items' => $cards === [] ? ['#markup' => '<p class="famtastic-ops__empty">No inbound messages have been received.</p>'] : ['#type' => 'container', '#attributes' => ['class' => ['famtastic-triage__list']], 'items' => $cards],
+      'pager' => ['#type' => 'pager'],
+    ], 'Customer Replies');
   }
 
   /**

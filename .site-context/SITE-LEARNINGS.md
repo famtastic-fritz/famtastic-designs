@@ -1827,3 +1827,16 @@ Permanent rules:
   Keep public login, registration, and password reset routes on the customer
   theme; do not try to repair the structural theme mismatch by hiding the
   public header with a CSS selector alone.
+
+## 2026-09-06 — An attention count must lead to the exact work
+
+- Observation: “2 open support conversations” was a static Operations Home
+  status with no path to the records, and the destination rendered a wide raw
+  table on a phone. The two live records were actually project conversations
+  without support-case metadata, so the label itself overstated what existed.
+- Guidance: make each attention summary a full-size link to a mobile-first
+  queue that identifies the record type, exact subject, latest update, and one
+  next action. A conversation detail must show the message history and only
+  offer case-reply controls when a durable support case exists. Do not cover a
+  task screen with generic mobile guidance; give the task-specific explanation
+  next to the action instead.

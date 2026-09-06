@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-09-06 — Operations attention is now an actionable mobile queue
+
+- Replaced the static Operations Home “Needs attention” count with a direct,
+  tappable attention queue. It names the live open conversation subjects and
+  opens the exact record instead of leaving the owner at a dead-end summary.
+- Added phone-first attention and conversation views: each record states its
+  real type, current context, update time, complete message history, and a
+  reply action only when a real support case exists. Open project
+  conversations are no longer mislabeled as support cases.
+- Reworked Customer Replies from a horizontally overflowing raw table into
+  readable inbound-email cards. Matched replies link to their conversation;
+  unmatched replies clearly remain in the queue for connection.
+- Removed the generic “desktop is safer” mobile tutorial from Operations. Each
+  task screen now supplies its own concise context ahead of its actual action.
+
 ## 2026-09-06 — Profile routes use the administrative theme
 
 - Marked the canonical authenticated user profile as an administrative route
