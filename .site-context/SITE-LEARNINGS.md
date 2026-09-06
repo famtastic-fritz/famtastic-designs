@@ -1820,7 +1820,9 @@ Permanent rules:
   public customer theme creates competing mobile navigation beneath Drupal's
   admin toolbar and makes email-based display names collapse into an unusable
   column.
-- Guidance: use `hook_custom_theme()` to select `famtastic_admin` for canonical
-  user view/edit/cancel routes. Keep public login, registration, and password
-  reset routes on the customer theme; do not try to repair the structural theme
-  mismatch by hiding the public header with a CSS selector alone.
+- Guidance: mark `entity.user.canonical` with `_admin_route` through
+  `hook_route_alter()` so Drupal's native administrator-theme negotiator selects
+  `famtastic_admin`; user edit/cancel routes already carry that option in core.
+  Keep public login, registration, and password reset routes on the customer
+  theme; do not try to repair the structural theme mismatch by hiding the
+  public header with a CSS selector alone.

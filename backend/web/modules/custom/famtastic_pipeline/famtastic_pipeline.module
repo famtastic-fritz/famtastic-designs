@@ -92,23 +92,17 @@ function famtastic_pipeline_page_attachments(array &$attachments): void {
 }
 
 /**
- * Implements hook_custom_theme().
+ * Implements hook_route_alter().
  *
- * A user profile is an authenticated account-management surface, not a public
- * marketing page. Rendering it through the public Olivero customer theme
- * leaves that site's full header underneath the Drupal toolbar on mobile.
- * Select the purpose-built admin theme for profile viewing and editing so
- * this route gets one navigation system and the same responsive form/layout
- * rules as the rest of Drupal administration. Public sign-in, registration,
- * and password-reset routes deliberately retain the customer theme.
+ * Core already marks user edit/cancel routes as administrative, but the
+ * canonical authenticated profile route is left public by default. Marking it
+ * as an admin route lets Drupal's native admin-theme negotiator select
+ * `famtastic_admin` before any page markup or public-theme assets render.
  */
-function famtastic_pipeline_custom_theme(): ?string {
-  $routeName = (string) \Drupal::routeMatch()->getRouteName();
-  return in_array($routeName, [
-    'entity.user.canonical',
-    'entity.user.edit_form',
-    'entity.user.cancel_form',
-  ], TRUE) ? 'famtastic_admin' : NULL;
+function famtastic_pipeline_route_alter(\Symfony\Component\Routing\RouteCollection $collection): void {
+  if ($route = $collection->get('entity.user.canonical')) {
+    $route->setOption('_admin_route', TRUE);
+  }
 }
 
 /**
