@@ -427,6 +427,7 @@ export default function CustomerPortalDashboard() {
             activeRequestId={activeRequestId}
             setActiveRequestId={setActiveRequestId}
             targetRequest={targetRequest}
+            setTargetRequest={setTargetRequest}
             busy={busy}
             onSaveWebsiteRequest={saveWebsiteRequest}
             onUploadAsset={uploadReference}

@@ -945,6 +945,7 @@ export default function PortalProjectsView({
   activeRequestId,
   setActiveRequestId,
   targetRequest,
+  setTargetRequest,
   busy,
   onSaveWebsiteRequest,
   onUploadAsset,
@@ -1010,7 +1011,16 @@ export default function PortalProjectsView({
           </p>
         </div>
         {showingProject ? (
-          <button className="quiet" type="button" onClick={() => setActiveRequestId(null)}>← All projects</button>
+          <button
+            className="quiet"
+            type="button"
+            onClick={() => {
+              setActiveRequestId(null);
+              setTargetRequest('');
+            }}
+          >
+            ← All projects
+          </button>
         ) : (
           <button onClick={() => setEditingRequest({})}>+ Start a new website</button>
         )}
