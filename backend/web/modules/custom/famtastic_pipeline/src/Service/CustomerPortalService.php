@@ -393,7 +393,7 @@ final class CustomerPortalService {
         ->condition('organization_id', (int) $organization['id'])
         ->condition('prospect_id', $prospectId)->range(0, 1)->execute()->fetchField();
       if ($existing) {
-        return (int) $existing;
+        return $this->submitClaimedDeepDiveRequest($customerId, (int) $existing);
       }
     }
     $answers = json_decode((string) ($deepDive['answers'] ?? ''), TRUE);
@@ -964,6 +964,29 @@ final class CustomerPortalService {
           'detail' => 'The complete proof set is ready for owner review. It is not visible to your account until that review is approved.',
         ];
       }
+      if ($generation === 'ready' && in_array((string) ($row['proof_review_status'] ?? ''), ['customer_ready', 'notified'], TRUE)) {
+        return $base + [
+          'state' => 'choose_direction',
+          'label' => 'Choose one of your three website directions',
+          'detail' => 'Your research summary and three working directions are ready here. Open each one, compare them, then choose the direction FAMtastic should finish.',
+        ];
+      }
+      if ($generation === 'ready' && (string) ($row['proof_review_status'] ?? '') === 'selected') {
+        return $base + [
+          'state' => 'direction_selected',
+          'label' => 'Your website direction is selected',
+          'detail' => !empty($row['commerce_order_id'])
+            ? 'Your selection and order are recorded. FAMtastic can continue into the build and edit stages.'
+            : 'Your selection is recorded. Complete the approved offer or checkout shown with this project to begin the build.',
+        ];
+      }
+      if ($generation === 'ready' && (string) ($row['proof_review_status'] ?? '') === 'revision_requested') {
+        return $base + [
+          'state' => 'revision_requested',
+          'label' => 'Your change request is with FAMtastic',
+          'detail' => 'Your notes are recorded with this proof set. FAMtastic must review them and return the next proof update here.',
+        ];
+      }
     }
     if ($job['status'] === 'running') {
       return $base + [
@@ -1205,7 +1228,7 @@ final class CustomerPortalService {
     $snapshot['approved_at'] = gmdate(DATE_ATOM, $this->time->getRequestTime());
     $now = $this->time->getRequestTime();
     $snapshotJson = json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
-    $this->database->merge('famtastic_website_proof_research_snapshot')->key(['website_request_id' => $requestId])->insertFields([
+    $this->database->merge('famtastic_website_proof_research_snapshot')->key('website_request_id', $requestId)->insertFields([
       'website_request_id' => $requestId,
       'proof_campaign_id' => (int) $row['proof_campaign_id'],
       'snapshot_json' => $snapshotJson,

@@ -15,6 +15,12 @@ account-owned request and one versioned proof-job identity. Never make the
 customer re-submit a brief because a worker failed, and never call a queued
 job evidence that proofs exist.
 
+**Proof contract.** The recovery test must exhaust the exact proof job first,
+resume it through the owner-confirmed command, run local proof generation,
+record research and owner approval, expose exactly three customer directions,
+and persist one selection. A source assertion or queued job alone does not
+prove the handoff.
+
 ## 2026-09-05 — A price is not a payment path
 
 A catalog item can have a price, a product variation, and an entitlement

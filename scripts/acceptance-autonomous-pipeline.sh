@@ -20,6 +20,7 @@ scripts/e2e-lead-import.sh
 scripts/e2e-site-studio-callback.sh
 scripts/e2e-local-proof-promotion.sh
 MODE=refresh scripts/e2e-local-proof-promotion.sh
+scripts/e2e-deep-dive-proof-handoff.sh
 scripts/e2e-email-campaign.sh
 PORT=8899 scripts/e2e-proof.sh
 PORT=8900 PACKAGE=business_499 EXPECTED_AMOUNT=49900 EXPECTED_REVISIONS=2 scripts/e2e-proof.sh

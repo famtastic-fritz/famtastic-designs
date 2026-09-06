@@ -22,7 +22,11 @@ final class DeepDiveProofHandoffContractTest extends UnitTestCase {
     $this->assertStringContainsString("'status' => 'submitted'", $portal);
     $this->assertStringContainsString("'requested_count' => 3", $portal);
     $this->assertStringContainsString('submitClaimedDeepDiveRequest', $portal);
+    $this->assertStringContainsString('return $this->submitClaimedDeepDiveRequest($customerId, (int) $existing);', $portal);
     $this->assertStringContainsString('queueWebsiteRequestProofJob($requestId', $portal);
+    $this->assertStringContainsString("->key('website_request_id', \$requestId)", $portal);
+    $this->assertStringContainsString("'state' => 'choose_direction'", $portal);
+    $this->assertStringContainsString("'state' => 'direction_selected'", $portal);
     $this->assertStringNotContainsString("if (!empty(\$deepDive['website_request_id'])) {\n        continue;", $controller);
     $this->assertStringContainsString('three website directions will enter FAMtastic review', $deepDive);
   }

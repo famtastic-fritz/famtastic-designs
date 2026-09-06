@@ -14,6 +14,10 @@
   safely lands on that request's proof room without a missing-session crash.
 - Focused PHP contract tests, PHP lint, frontend production build, portal
   Design DNA validation, and the three-direction proof package check pass.
+- Added `scripts/e2e-deep-dive-proof-handoff.sh` to the canonical acceptance
+  suite. In a local Drupal runtime it proves completed brief -> submitted
+  account request -> exhausted-job recovery -> three owner-approved directions
+  -> customer selection, without dispatching email, charging, or deploying.
 
 ## 2026-09-05 — Catalog payment eligibility now fails closed
 
