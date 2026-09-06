@@ -4,8 +4,9 @@
 This validator treats posting-schedule.json as a source plan, not proof that
 Postiz currently agrees with it. It has no network, credential, scheduler, or
 write path. Pending source/provider reconciliations are reported as operator
-work, while duplicate provider IDs, duplicate planned timestamps, and open
-publish gates are failures.
+work, while duplicate provider IDs and duplicate planned timestamps remain
+failures. A publish gate may be opened only by an explicit owner_override on
+an armed flood schedule.
 """
 
 from __future__ import annotations
@@ -44,6 +45,7 @@ def main() -> int:
     pending: list[str] = []
     checked = 0
     target_drop_count = 0
+    open_gate_count = 0
 
     for slug, path, schedule in schedules():
         drops = schedule.get("drops", [])
@@ -76,8 +78,18 @@ def main() -> int:
                 continue
             target_drop_count += 1
             approval = drop.get("approval", {})
-            if not isinstance(approval, dict) or approval.get("publish") is not False:
-                errors.append(f"{owner}: approval.publish must remain false")
+            armed_override = (
+                schedule.get("status") == "armed_for_scheduling"
+                and isinstance(schedule.get("publish_arming"), dict)
+                and schedule["publish_arming"].get("owner_override") is True
+            )
+            publish_approved = isinstance(approval, dict) and approval.get("publish") is True
+            if publish_approved and not armed_override:
+                errors.append(f"{owner}: approval.publish=true requires status=armed_for_scheduling and publish_arming.owner_override=true")
+            elif not publish_approved and not (isinstance(approval, dict) and approval.get("publish") is False):
+                errors.append(f"{owner}: approval.publish must be boolean")
+            if publish_approved:
+                open_gate_count += 1
             reconciliation = drop.get("provider_reconciliation")
             if reconciliation and reconciliation.get("status") != "reconciled":
                 pending.append(f"{owner}: {reconciliation.get('status', 'unresolved')}")
@@ -97,7 +109,7 @@ def main() -> int:
 
     print(
         "PASS: campaign schedule hygiene — "
-        f"{checked} drops checked; {target_drop_count} target drops have approval.publish=false; "
+        f"{checked} drops checked; {target_drop_count} target drops, {open_gate_count} publish gates open; "
         "planned timestamps and recorded provider IDs are globally unique."
     )
     if pending:

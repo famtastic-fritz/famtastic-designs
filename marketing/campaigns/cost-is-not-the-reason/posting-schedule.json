@@ -404,6 +404,86 @@
           ]
         }
       ]
+    },
+    {
+      "drop_id": "drop-06-backfill-facebook",
+      "content_id": "drop-06-backfill-facebook",
+      "scheduled_time": "2026-09-06T04:15:00-04:00",
+      "channels": [
+        "facebook"
+      ],
+      "copy": {
+        "facebook_instagram": "Your business card, Instagram bio, and invoices point to a Gmail address and a Linktree page. That is rented land. When a customer has to message for your price instead of seeing it, some wait and some book with whoever answered first. FAMtastic Web Basics is a one-time $199 with your first year of hosting and domain included. See the full breakdown at famtasticdesigns.com/packages/199-quick-start."
+      },
+      "state": "media_ready",
+      "utm": {
+        "source": "social",
+        "medium": "social",
+        "campaign": "cost_is_not_the_reason_eval",
+        "content": "drop-06-backfill-facebook"
+      },
+      "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/07-gmail-linktree-branded-9x16.mp4",
+      "label": "Sep 5 backfill \u2014 Facebook \u2014 4:15 AM ET",
+      "headline": "Your business needs an address it owns.",
+      "drop_number": 7,
+      "provider_ids": {
+        "postiz_draft_id": "cmtpikaoe001grqvt7w8jhsj2",
+        "postiz_scheduled_id": "cmtpikaoe001grqvt7w8jhsj2",
+        "postiz_scheduled_group": [
+          "cmtpikaoe001grqvt7w8jhsj2"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-06T07:52:14Z",
+          "postiz_post_id": "cmtpikaoe001grqvt7w8jhsj2",
+          "date_utc": "2026-09-06T08:15:00.000Z",
+          "integrations": [
+            "facebook"
+          ]
+        }
+      ]
+    },
+    {
+      "drop_id": "drop-06-backfill-instagram",
+      "content_id": "drop-06-backfill-instagram",
+      "scheduled_time": "2026-09-06T04:45:00-04:00",
+      "channels": [
+        "instagram"
+      ],
+      "copy": {
+        "facebook_instagram": "Your business card, Instagram bio, and invoices point to a Gmail address and a Linktree page. That is rented land. When a customer has to message for your price instead of seeing it, some wait and some book with whoever answered first. FAMtastic Web Basics is a one-time $199 with your first year of hosting and domain included. See the full breakdown at famtasticdesigns.com/packages/199-quick-start."
+      },
+      "state": "media_ready",
+      "utm": {
+        "source": "social",
+        "medium": "social",
+        "campaign": "cost_is_not_the_reason_eval",
+        "content": "drop-06-backfill-instagram"
+      },
+      "primary_media": "marketing/campaigns/cost-is-not-the-reason/videos/07-gmail-linktree-branded-9x16.mp4",
+      "label": "Sep 5 backfill \u2014 Instagram \u2014 4:45 AM ET",
+      "headline": "Your business needs an address it owns.",
+      "drop_number": 8,
+      "provider_ids": {
+        "postiz_draft_id": "cmtpikfxy001hrqvtf9esxsf6",
+        "postiz_scheduled_id": "cmtpikfxy001hrqvtf9esxsf6",
+        "postiz_scheduled_group": [
+          "cmtpikfxy001hrqvtf9esxsf6"
+        ]
+      },
+      "evidence": [
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-06T07:52:21Z",
+          "postiz_post_id": "cmtpikfxy001hrqvtf9esxsf6",
+          "date_utc": "2026-09-06T08:45:00.000Z",
+          "integrations": [
+            "instagram-standalone"
+          ]
+        }
+      ]
     }
   ],
   "cadence": {

@@ -54,7 +54,7 @@ import re
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 CAMPAIGNS_ROOT = REPO_ROOT / "marketing/campaigns"
@@ -142,6 +142,7 @@ ARGS = sys.argv[1:]
 DO_SCHEDULE = "--schedule" in ARGS
 DRY_RUN = "--dry-run" in ARGS
 ARMED = os.environ.get("FAMTASTIC_MARKETING_PUBLISH") == "true"
+OVERRIDE_RECONCILIATION = "--override-reconciliation" in ARGS
 
 # --requeue <drop_id> --at <ISO8601 with offset>
 # Moves a drop to a new time. A stored post keeps its date through every status
@@ -277,6 +278,14 @@ if DO_SCHEDULE and not ARMED:
     )
     sys.exit(2)
 
+if OVERRIDE_RECONCILIATION and (not DO_SCHEDULE or not ARMED or not CONFIRM):
+    sys.stderr.write(
+        "REFUSED: --override-reconciliation requires --schedule, "
+        "FAMTASTIC_MARKETING_PUBLISH=true, and --confirm.\n"
+        "Nothing was read, sent, or changed.\n"
+    )
+    sys.exit(2)
+
 # --requeue deletes and recreates real provider records. Make the deliberately
 # chosen reconciliation path just as explicit as --add/--edit/--delete, before
 # reading credentials or contacting Postiz.
@@ -366,6 +375,8 @@ def upload(path: pathlib.Path) -> dict:
 
 drops = schedule["drops"]
 LANDING = schedule.get("landing_url", DEFAULT_LANDING)
+if OVERRIDE_RECONCILIATION:
+    print("OWNER OVERRIDE: unresolved source/provider retimes will be scheduled as recorded; duplicate or stale timing risk accepted.")
 # A campaign may extend or override the shared maps without touching this code.
 CHANNEL_TO_INTEGRATION.update(schedule.get("channel_map", {}))
 for ident, keys in schedule.get("copy_preference", {}).items():
@@ -412,7 +423,7 @@ def reconciliation_block(drop: dict) -> dict | None:
     reconciliation = drop.get("provider_reconciliation")
     if not isinstance(reconciliation, dict):
         return None
-    if reconciliation.get("status") == "reconciled":
+    if reconciliation.get("status") == "reconciled" or OVERRIDE_RECONCILIATION:
         return None
     return reconciliation
 
@@ -548,8 +559,8 @@ def apply_set_args(drop: dict, set_args: list[str]) -> None:
 # campaign and any date range, with slack on both ends for adoption.
 _times = [datetime.fromisoformat(d["scheduled_time"]).astimezone(timezone.utc) for d in drops]
 WINDOW = (
-    f"?startDate={min(_times).strftime('%Y-%m-%dT00:00:00.000Z')}"
-    f"&endDate={max(_times).strftime('%Y-%m-%dT23:59:59.000Z')}"
+    f"?startDate={(min(_times) - timedelta(days=2)).strftime('%Y-%m-%dT00:00:00.000Z')}"
+    f"&endDate={(max(_times) + timedelta(days=2)).strftime('%Y-%m-%dT23:59:59.000Z')}"
 )
 
 # ---------------------------------------------------------------------------
@@ -632,8 +643,8 @@ if REQUEUE:
           f"-> {target['scheduled_time']}; it will be recreated below\n")
     # Recompute the listing window so the new time is inside it.
     _times = [datetime.fromisoformat(d["scheduled_time"]).astimezone(timezone.utc) for d in drops]
-    WINDOW = (f"?startDate={min(_times).strftime('%Y-%m-%dT00:00:00.000Z')}"
-              f"&endDate={max(_times).strftime('%Y-%m-%dT23:59:59.000Z')}")
+    WINDOW = (f"?startDate={(min(_times) - timedelta(days=2)).strftime('%Y-%m-%dT00:00:00.000Z')}"
+              f"&endDate={(max(_times) + timedelta(days=2)).strftime('%Y-%m-%dT23:59:59.000Z')}")
 
 # ---------------------------------------------------------------------------
 # --add-drop / --edit-drop / --delete-drop: mutate exactly ONE drop, never
@@ -1009,14 +1020,20 @@ if DO_SCHEDULE and not DRY_RUN:
     # Postiz creates ONE post record PER INTEGRATION and returns them as a
     # group; POST /posts hands back only the first id. Converting just that id
     # schedules a single channel and silently leaves the siblings as DRAFT, so
-    # a five-channel drop would publish to one. Siblings share the drop's exact
-    # publishDate, which is unique per drop, so re-list and group by it.
+    # a multi-channel drop would publish to one. Group by the exact UTM campaign
+    # and content marker instead of publishDate: source/provider retimes can
+    # leave a provider row at the old time, and timestamp grouping can pull an
+    # unrelated campaign's row into this drop (the original flood bug).
     siblings: dict[str, list[str]] = {}
     listing = api(f"/posts{WINDOW}")
     for post in (listing.get("posts", []) if isinstance(listing, dict) else []):
-        stamp = str(post.get("publishDate") or post.get("date") or "")
-        if stamp and post.get("state") in {"DRAFT", "QUEUE"}:
-            siblings.setdefault(stamp[:19], []).append(str(post.get("id")))
+        if post.get("state") not in {"DRAFT", "QUEUE"}:
+            continue
+        body = str(post.get("content", ""))
+        camp = re.search(r"utm_campaign=([a-zA-Z0-9_-]+)", body)
+        content = re.search(r"utm_content=([a-zA-Z0-9_-]+)", body)
+        if camp and content:
+            siblings.setdefault(f"{camp.group(1)}|{content.group(1)}", []).append(str(post.get("id")))
 
     for entry in results:
         pid = entry.get("postiz_draft_id")
@@ -1031,15 +1048,25 @@ if DO_SCHEDULE and not DRY_RUN:
                             "scheduled_time": entry["scheduled_time"]})
             print(f"BLOCKED: {entry['content_id']} — {entry['scheduled_time']} is in the past; would fire immediately")
             continue
-        group = siblings.get(when.strftime("%Y-%m-%dT%H:%M:%S"), [])
-        ids = [pid] + [i for i in group if i != pid]
+        drop = next(d for d in drops if d["content_id"] == entry["content_id"])
+        utm = drop.get("utm", {})
+        marker_key = f"{utm.get('campaign', '?')}|{utm.get('content', entry['content_id'])}"
+        group = siblings.get(marker_key, [])
+        # If the root record already published at a stale provider time, do
+        # not PUT it back through the scheduler. The marker-scoped active
+        # siblings are the only records that still need scheduling. Keep the
+        # root in the source ledger below for evidence, but never reschedule a
+        # PUBLISHED record.
+        ids = list(dict.fromkeys(group or [pid]))
         for one in ids:
             api(f"/posts/{one}/status", method="PUT", data={"status": "schedule"})
         entry["schedule_action"] = "converted"
         entry["scheduled_ids"] = ids
-        drop = next(d for d in drops if d["content_id"] == entry["content_id"])
         drop["provider_ids"]["postiz_scheduled_id"] = pid
-        drop["provider_ids"]["postiz_scheduled_group"] = ids
+        recorded = drop["provider_ids"].get("postiz_scheduled_group", [])
+        if not isinstance(recorded, list):
+            recorded = []
+        drop["provider_ids"]["postiz_scheduled_group"] = list(dict.fromkeys(recorded + ids))
         print(f"SCHEDULED: {entry['content_id']} -> {len(ids)} post record(s) "
               f"({', '.join(i[:12] for i in ids)})")
 

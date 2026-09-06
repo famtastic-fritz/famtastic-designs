@@ -5,8 +5,8 @@
   "series_id": "already-know-the-game",
   "campaign_name": "Already Know The Game",
   "created_at": "2026-09-05T00:00:00-04:00",
-  "status": "ready_for_evaluation",
-  "queue_note": "This lane deliberately did NOT run scripts/queue-campaign-drops.py. A later step in plans/four-campaign-flood/plan.md owns queueing. Every drop below carries approval.publish=false so an accidental armed run cannot publish it.",
+  "status": "armed_for_scheduling",
+  "queue_note": "Owner-approved flood lane. The existing provider records were adopted and read back; approval.publish=true is intentional for this batch. Reruns still require the environment arming switch and confirmation.",
   "schedule_type": "eight_day_argument_arc",
   "time_zone": "America/New_York",
   "landing_url": "https://famtasticdesigns.com/buy/?sku=FAM-FOOT-199",
@@ -47,7 +47,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -105,7 +105,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -163,7 +163,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -221,7 +221,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -279,7 +279,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -337,7 +337,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -376,7 +376,8 @@
   "publish_arming": {
     "mode": "single_env_switch",
     "env": "FAMTASTIC_MARKETING_PUBLISH",
-    "note": "Queue script creates DRAFTS unarmed. This lane has not queued anything. approval.publish is false on every drop."
+    "owner_override": true,
+    "note": "Owner-approved flood run for the September 6\u201313 batch. approval.publish is true on this batch; duplicate or stale timing risk is accepted. Live conversion still requires FAMTASTIC_MARKETING_PUBLISH=true and --confirm."
   },
   "media_resolution": {
     "policy": "resolve_at_runtime_fail_loud",

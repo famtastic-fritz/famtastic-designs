@@ -5,7 +5,7 @@
   "series_id": "booking-app-to-owned-page",
   "campaign_name": "Booked and Losing",
   "created_at": "2026-09-05",
-  "status": "ready_for_evaluation",
+  "status": "armed_for_scheduling",
   "schedule_type": "eight_day_argument_arc",
   "time_zone": "America/New_York",
   "landing_url": "https://famtasticdesigns.com/packages/199-quick-start/?sku=FAM-FOOT-199",
@@ -19,7 +19,8 @@
   "publish_arming": {
     "mode": "single_env_switch",
     "env": "FAMTASTIC_MARKETING_PUBLISH",
-    "note": "Provider IDs in this source file are recorded draft evidence, not a fresh live-provider read-back. scripts/queue-campaign-drops.py --campaign booked-and-losing creates drafts; --schedule with FAMTASTIC_MARKETING_PUBLISH=true converts them. Every drop carries approval.publish=false until the owner approves the batch and any provider reconciliation is resolved."
+    "owner_override": true,
+    "note": "Owner-approved flood run for the September 6\u201313 batch. Provider IDs are recorded evidence and four source/provider retimes remain unresolved; duplicate or stale timing risk is accepted. Live conversion requires FAMTASTIC_MARKETING_PUBLISH=true, --confirm, and the explicit --override-reconciliation flag."
   },
   "media_resolution": {
     "policy": "resolve_at_runtime_fail_loud",
@@ -60,7 +61,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "source_blog_post": "https://famtasticdesigns.com/blog/do-you-have-to-leave-the-booking-app/",
       "surface_assets": {
@@ -129,7 +130,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "source_blog_post": "https://famtasticdesigns.com/blog/why-independent-stylists-are-invisible-outside-the-app/",
       "surface_assets": {
@@ -192,7 +193,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "source_blog_post": "https://famtasticdesigns.com/blog/does-google-index-your-booking-app-profile/",
       "surface_assets": {
@@ -255,7 +256,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "source_blog_post": "https://famtasticdesigns.com/blog/how-much-do-you-charge-dms-costs-bookings/",
       "surface_assets": {
@@ -318,7 +319,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "source_blog_post": "https://famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/",
       "surface_assets": {
@@ -381,7 +382,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "source_blog_post": "https://famtasticdesigns.com/blog/what-a-bookable-page-actually-needs/",
       "surface_assets": {
@@ -392,7 +393,8 @@
       "provider_ids": {
         "postiz_scheduled_id": "cmtoyitmc0012rqvtzzpn70r7",
         "postiz_scheduled_group": [
-          "cmtoyitmc0012rqvtzzpn70r7"
+          "cmtoyitmc0012rqvtzzpn70r7",
+          "cmtoyitn10013rqvtxi89d5gn"
         ],
         "postiz_draft_id": "cmtoyitmc0012rqvtzzpn70r7"
       },

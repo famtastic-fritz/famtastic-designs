@@ -5,7 +5,7 @@
   "series_id": "objection-films",
   "campaign_name": "I've Managed Fine \u2014 Six Objections, Six Films",
   "created_at": "2026-09-05T18:40:00-04:00",
-  "status": "ready_for_evaluation",
+  "status": "armed_for_scheduling",
   "schedule_type": "one_film_per_objection_over_eight_days",
   "time_zone": "America/New_York",
   "landing_url": "https://famtasticdesigns.com/onboarding?sku=FAM-FOOT-199",
@@ -18,7 +18,8 @@
   "publish_arming": {
     "mode": "single_env_switch",
     "env": "FAMTASTIC_MARKETING_PUBLISH",
-    "note": "Queue script creates DRAFTS unarmed. Conversion to a live schedule requires FAMTASTIC_MARKETING_PUBLISH=true on the operator host. Provider IDs in this source file are recorded draft evidence, not a fresh live-provider read-back; every drop remains approval.publish=false and any reconciliation block must be resolved before a later owner review."
+    "owner_override": true,
+    "note": "Owner-approved flood run for the September 6\u201313 batch. approval.publish is true on this batch and two source/provider retimes remain unresolved; duplicate or stale timing risk is accepted. Live conversion requires FAMTASTIC_MARKETING_PUBLISH=true, --confirm, and the explicit --override-reconciliation flag."
   },
   "media_resolution": {
     "policy": "resolve_at_runtime_fail_loud",
@@ -59,7 +60,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -117,7 +118,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -175,7 +176,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -239,7 +240,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -297,7 +298,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {
@@ -355,7 +356,7 @@
       "approval": {
         "content": true,
         "media": true,
-        "publish": false
+        "publish": true
       },
       "state": "media_ready",
       "provider_ids": {

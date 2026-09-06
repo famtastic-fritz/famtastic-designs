@@ -49,7 +49,11 @@
       "properties": {
         "mode": { "type": "string" },
         "env": { "type": "string" },
-        "note": { "type": "string" }
+        "note": { "type": "string" },
+        "owner_override": {
+          "type": "boolean",
+          "description": "Explicit owner authorization for a controlled flood run. The runner still requires the environment arming switch and confirmation."
+        }
       }
     },
     "media_resolution": {

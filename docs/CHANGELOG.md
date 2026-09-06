@@ -1,5 +1,24 @@
 # Product changelog
 
+## 2026-09-06 — Owner-authorized flood arm and Sep 5 backfill
+
+- Opened the four September 6–13 campaign gates under an explicit
+  `publish_arming.owner_override` after the owner accepted duplicate/stale-time
+  risk. The live Postiz read-back adopted the existing 24 drops without
+  creating a second copy; the four lanes contain 48 channel placements in the
+  source plan.
+- Added two one-channel Sep 5 backfill retries for the failed Cost Is Not The
+  Reason drop, spaced at 04:15 and 04:45 ET. Facebook and Instagram accepted
+  the retries; the original YouTube and TikTok misses remain blocked by an
+  expired YouTube token and TikTok public-posting approval.
+- Fixed the scheduler's sibling read-back to group by the exact UTM campaign
+  and content marker, not timestamp. A retimed provider row can retain its old
+  timestamp, and timestamp grouping previously risked scheduling an unrelated
+  campaign's channel. The read window now includes two days of slack for
+  deliberate provider/source retimes.
+- This is a real provider action: Postiz records were read and scheduled; no
+  customer email, checkout, domain, or deployment action was involved.
+
 ## 2026-09-05 — Campaign schedule ownership and lifecycle clocks made explicit
 
 - Corrected the four September 6–13 campaign source schedules without making a
