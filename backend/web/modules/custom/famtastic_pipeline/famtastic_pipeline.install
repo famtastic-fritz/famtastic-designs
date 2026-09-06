@@ -2798,7 +2798,12 @@ function famtastic_pipeline_update_8054(&$sandbox) {
       }
     }
     if (!$schema->indexExists('famtastic_notification_outbox', 'claim')) {
-      $schema->addIndex('famtastic_notification_outbox', 'claim', $lifecycle['famtastic_notification_outbox']['indexes']['claim']);
+      $schema->addIndex(
+        'famtastic_notification_outbox',
+        'claim',
+        $lifecycle['famtastic_notification_outbox']['indexes']['claim'],
+        $lifecycle['famtastic_notification_outbox'],
+      );
     }
   }
   return t('Added durable owner-only revenue freshness tasks and atomic generic outbox claim fields. No customer action was sent.');
