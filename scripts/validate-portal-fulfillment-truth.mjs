@@ -29,4 +29,13 @@ assert.equal(webBasics.hasDomain, false);
 assert.match(webBasics.domainLabel, /still required/);
 assert.equal(webBasics.hasLiveSite, false);
 
+const prePurchaseRequest = derivePortalFulfillmentState({
+  orders: [],
+  entitlements: [],
+  website_requests: [{ public_id: 'draft-request-1', status: 'draft' }],
+  projects: [],
+});
+assert.equal(prePurchaseRequest.show, false);
+assert.equal(prePurchaseRequest.hasProofWork, true);
+
 console.log('PASS: portal fulfillment claims are entitlement- and project-scoped.');

@@ -27,7 +27,10 @@ export function derivePortalFulfillmentState(workspace = {}) {
   const hasWebsiteService = [...WEBSITE_SERVICE_ENTITLEMENTS].some((type) => entitlementTypes.has(type));
   const hasHosting = [...HOSTING_ENTITLEMENTS].some((type) => entitlementTypes.has(type));
   const hasDomain = [...DOMAIN_ENTITLEMENTS].some((type) => entitlementTypes.has(type));
-  const hasWebsiteWork = hasWebsiteService || websiteRequests.length > 0 || projects.length > 0;
+  // Pre-purchase requests and drafts belong in Projects, not in an order
+  // fulfillment banner. The homepage may claim provisioning only after the
+  // durable website-service entitlement exists.
+  const hasWebsiteWork = hasWebsiteService;
 
   return {
     show: hasWebsiteWork,
