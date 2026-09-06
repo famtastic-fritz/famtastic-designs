@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-06 — Final integration contract repair and fresh-runtime proof
+
+- Updated the synthetic customer journey to assert the versioned branded
+  `customer_proof_ready` v3 template instead of the retired v1 contract.
+- Preserved the established public Solution Finder discovery fields in the
+  short conversational flow and carried the derived values into the saved
+  account brief payload.
+- Re-ran the isolated SQLite customer journey against the final source: the
+  catalog, exactly three proofs, proof selection, payment handoff, account and
+  portal ownership, fulfillment, support, and lifecycle renewal assertions all
+  passed. No provider, customer-email, payment, domain, or deployment side
+  effect was triggered.
+
 ## 2026-09-06 — Web Basics naming and proof-ready email contract were standardized
 
 - Moved the $199 offer text into a shared `webBasicsOffer.js` copy source so

@@ -1,5 +1,27 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-06 — Versioned email templates must update the journey contract
+
+The branded proof-ready message moved to v3, but the synthetic customer
+journey still asserted the retired v1 notification. That made the fresh runtime
+fail even though the mailer and registry were internally consistent.
+
+**Guidance.** Treat a template version as a contract across the registry,
+mailer, outbox assertions, and captured-email checks. When a version changes,
+update the canonical journey in the same change and rerun it against a fresh
+runtime before release.
+
+## 2026-09-06 — Keep the short public intake and the durable brief compatible
+
+The conversational Solution Finder was simplified for mobile, but its first
+rewrite dropped established discovery fields used by scenario validation and
+downstream research. The repair keeps the chat short while carrying the
+canonical field names (brand, domain, email, references, hosting, repository,
+and custom needs) into the account brief for completion after registration.
+
+**Guidance.** Simplify the questions, not the data contract. Preserve field
+names and payload semantics when changing the public intake interaction.
+
 ## 2026-09-06 — The $199 offer needs one shared copy source
 
 If the $199 product is described differently on the page, in the portal, in
