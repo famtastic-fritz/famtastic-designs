@@ -170,6 +170,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge']
 
+  famtastic_pipeline.character_assets:
+    class: Drupal\famtastic_pipeline\Service\CharacterAssetService
+    arguments: ['@database', '@datetime.time', '@uuid']
+
   famtastic_pipeline.deep_dive_invitations:
     class: Drupal\famtastic_pipeline\Service\DeepDiveInvitationService
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid']

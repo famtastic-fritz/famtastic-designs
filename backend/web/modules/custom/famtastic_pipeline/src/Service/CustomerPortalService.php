@@ -1328,9 +1328,13 @@ final class CustomerPortalService {
   /** Returns integrity metadata for request-owned private reference files. */
   private function requestAssets(int $requestId): array {
     return array_map(static fn(array $row): array => [
-      'public_id' => $row['public_id'], 'kind' => $row['kind'], 'name' => $row['original_name'],
+      'public_id' => $row['public_id'], 'kind' => $row['kind'], 'role' => $row['role'] ?? $row['kind'], 'name' => $row['original_name'],
       'mime_type' => $row['mime_type'], 'size_bytes' => (int) $row['size_bytes'],
       'ownership_confirmed' => (bool) $row['ownership_confirmed'], 'ai_use_consent' => (bool) $row['ai_use_consent'],
+      'likeness_consent_version' => (string) ($row['likeness_consent_version'] ?? ''),
+      'likeness_consent_at' => !empty($row['likeness_consent_at']) ? (int) $row['likeness_consent_at'] : NULL,
+      'subject_permission_confirmed' => (bool) ($row['subject_permission_confirmed'] ?? FALSE),
+      'ai_transformation_consent' => (bool) ($row['ai_transformation_consent'] ?? $row['ai_use_consent'] ?? FALSE),
     ], $this->database->select('famtastic_request_asset', 'a')->fields('a')
       ->condition('website_request_id', $requestId)->condition('status', 'active')->orderBy('created')->execute()->fetchAll(\PDO::FETCH_ASSOC));
   }

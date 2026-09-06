@@ -1714,6 +1714,10 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'prospect_id' => $entity, 'commerce_order_id' => $entity, 'intake_id' => $entity, 'project_id' => $entity,
       'proof_campaign_id' => $entity,
+      'character_run_id' => $entity,
+      'character_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_started'],
+      'character_clarification' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE],
+      'character_changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'proof_review_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_started'],
       'proof_approved_by_uid' => $entity,
       'proof_approved_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
@@ -1774,18 +1778,65 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'file_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'kind' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'reference'],
+      'role' => ['type' => 'varchar', 'length' => 48, 'not null' => TRUE, 'default' => 'other'],
       'original_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
       'mime_type' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
       'size_bytes' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
       'ownership_confirmed' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
       'ai_use_consent' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+      'likeness_consent_version' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'likeness_consent_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'subject_permission_confirmed' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+      'ai_transformation_consent' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
       'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'active'],
       'created' => $time, 'changed' => $time,
     ],
     'primary key' => ['id'],
     'unique keys' => ['public_id' => ['public_id'], 'request_hash' => ['website_request_id', 'sha256']],
     'indexes' => ['request_status' => ['website_request_id', 'status'], 'customer' => ['customer_id', 'created']],
+  ];
+  $tables['famtastic_character_run'] = [
+    'description' => 'Request-owned illustrated character jobs with consent-gated source lineage.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'website_request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'waiting_for_assets'],
+      'style_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => 'illustrated_realism'],
+      'recipe_version' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => 'shay-likeness-v1'],
+      'source_asset_ids' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+      'prompt_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'accepted_asset_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'clarification_reason' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE],
+      'created_by_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'created' => $time, 'changed' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => ['request_status' => ['website_request_id', 'status'], 'customer' => ['customer_id', 'created']],
+  ];
+  $tables['famtastic_character_receipt'] = [
+    'description' => 'Append-only provider, QA, and clarification receipts for a character run.',
+    'fields' => [
+      'id' => $id, 'public_id' => $public,
+      'character_run_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'event_type' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'provider' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'model' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''],
+      'prompt_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'input_hashes' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+      'output_hashes' => ['type' => 'text', 'size' => 'normal', 'not null' => TRUE],
+      'settings_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'qa_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'cost_minor' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'duration_ms' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'decision' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''],
+      'reviewer_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'created' => $time,
+    ],
+    'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id']],
+    'indexes' => ['run_created' => ['character_run_id', 'created'], 'status' => ['status', 'created']],
   ];
   $tables['famtastic_grant_code'] = [
     'description' => 'Hashed, account- and request-scoped service grants and promotions.',
@@ -2841,6 +2892,30 @@ function famtastic_pipeline_update_8056(&$sandbox) {
     );
   }
   return t('Added reversible customer project archiving. No request, proof, payment, or workflow status was changed.');
+}
+
+/** Adds the consented likeness-character asset and append-only receipt ledger. */
+function famtastic_pipeline_update_8057(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $customerPortal = _famtastic_pipeline_customer_portal_schema();
+  $assetFields = $customerPortal['famtastic_request_asset']['fields'];
+  $requestFields = $customerPortal['famtastic_project_request']['fields'];
+  foreach (['character_run_id', 'character_status', 'character_clarification', 'character_changed'] as $field) {
+    if (!$schema->fieldExists('famtastic_project_request', $field)) {
+      $schema->addField('famtastic_project_request', $field, $requestFields[$field]);
+    }
+  }
+  foreach (['role', 'likeness_consent_version', 'likeness_consent_at', 'subject_permission_confirmed', 'ai_transformation_consent'] as $field) {
+    if (!$schema->fieldExists('famtastic_request_asset', $field)) {
+      $schema->addField('famtastic_request_asset', $field, $assetFields[$field]);
+    }
+  }
+  foreach (['famtastic_character_run', 'famtastic_character_receipt'] as $table) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $customerPortal[$table]);
+    }
+  }
+  return t('Added consented likeness-character asset, run, and append-only receipt records. No provider generation was started.');
 }
 
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */

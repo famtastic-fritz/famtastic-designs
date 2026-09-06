@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
+use Drupal\famtastic_pipeline\Service\CharacterAssetService;
 use Drupal\famtastic_pipeline\Service\ProofAssetContract;
 use Drupal\file\FileRepositoryInterface;
 use Drupal\file\FileUsage\FileUsageInterface;
@@ -31,6 +32,7 @@ final class WebsiteRequestProofController extends ControllerBase {
     private readonly FileRepositoryInterface $fileRepository,
     private readonly FileUsageInterface $fileUsage,
     private readonly UuidInterface $uuid,
+    private readonly CharacterAssetService $characterAssets,
   ) {}
 
   public static function create(ContainerInterface $container): self {
@@ -43,6 +45,7 @@ final class WebsiteRequestProofController extends ControllerBase {
       $container->get('file.repository'),
       $container->get('file.usage'),
       $container->get('uuid'),
+      $container->get('famtastic_pipeline.character_assets'),
     );
   }
 
@@ -100,6 +103,17 @@ final class WebsiteRequestProofController extends ControllerBase {
     if (!$request->request->getBoolean('ownership_confirmed')) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'ownership_required', 'message' => 'Confirm that you own or may share this reference file.'], 422);
     }
+    $roleInput = strtolower(trim((string) $request->request->get('asset_role', '')));
+    $role = $roleInput === '' ? 'other' : CharacterAssetService::normalizeRole($roleInput);
+    if ($roleInput !== '' && !in_array($roleInput, CharacterAssetService::allowedRoles(), TRUE)) {
+      return new JsonResponse(['ok' => FALSE, 'error' => 'asset_role', 'message' => 'Choose a supported reference role.'], 422);
+    }
+    $isLikeness = in_array($role, CharacterAssetService::requiredLikenessRoles(), TRUE);
+    $subjectPermission = $request->request->getBoolean('subject_permission_confirmed');
+    $aiTransformationConsent = $request->request->getBoolean('ai_transformation_consent') || $request->request->getBoolean('ai_use_consent');
+    if ($isLikeness && (!$subjectPermission || !$aiTransformationConsent)) {
+      return new JsonResponse(['ok' => FALSE, 'error' => 'likeness_consent_required', 'message' => 'Confirm that you are the person shown or have permission, and allow FAMtastic to transform the image into project artwork.'], 422);
+    }
     $upload = $request->files->get('asset');
     if (!$upload || !$upload->isValid()) return new JsonResponse(['ok' => FALSE, 'error' => 'asset_required', 'message' => 'Choose a valid reference file.'], 422);
     $size = (int) $upload->getSize();
@@ -125,9 +139,15 @@ final class WebsiteRequestProofController extends ControllerBase {
     $now = time();
     $id = (int) $this->database->insert('famtastic_request_asset')->fields([
       'public_id' => $this->uuid->generate(), 'website_request_id' => (int) $row['id'], 'customer_id' => (int) $customer['id'],
-      'file_id' => (int) $file->id(), 'kind' => 'reference', 'original_name' => $original, 'mime_type' => $mime,
+      'file_id' => (int) $file->id(), 'original_name' => $original, 'mime_type' => $mime,
       'size_bytes' => $size, 'sha256' => $sha, 'ownership_confirmed' => 1,
-      'ai_use_consent' => $request->request->getBoolean('ai_use_consent') ? 1 : 0, 'status' => 'active', 'created' => $now, 'changed' => $now,
+      'kind' => $role === 'other' ? 'reference' : $role, 'role' => $role,
+      'ai_use_consent' => $aiTransformationConsent ? 1 : 0,
+      'likeness_consent_version' => $isLikeness ? mb_substr(trim((string) $request->request->get('likeness_consent_version', 'likeness-v1')), 0, 64) : '',
+      'likeness_consent_at' => $isLikeness ? $now : NULL,
+      'subject_permission_confirmed' => $subjectPermission ? 1 : 0,
+      'ai_transformation_consent' => $aiTransformationConsent ? 1 : 0,
+      'status' => 'active', 'created' => $now, 'changed' => $now,
     ])->execute();
     $asset = $this->database->select('famtastic_request_asset', 'a')->fields('a')->condition('id', $id)->execute()->fetchAssoc();
     return new JsonResponse(['ok' => TRUE, 'duplicate' => FALSE, 'asset' => $this->assetPayload($asset)], 201);
@@ -235,6 +255,11 @@ final class WebsiteRequestProofController extends ControllerBase {
       'public_id' => (string) $row['public_id'], 'kind' => (string) $row['kind'], 'name' => (string) $row['original_name'],
       'mime_type' => (string) $row['mime_type'], 'size_bytes' => (int) $row['size_bytes'],
       'ownership_confirmed' => (bool) $row['ownership_confirmed'], 'ai_use_consent' => (bool) $row['ai_use_consent'],
+      'role' => (string) ($row['role'] ?? $row['kind'] ?? 'other'),
+      'likeness_consent_version' => (string) ($row['likeness_consent_version'] ?? ''),
+      'likeness_consent_at' => !empty($row['likeness_consent_at']) ? (int) $row['likeness_consent_at'] : NULL,
+      'subject_permission_confirmed' => (bool) ($row['subject_permission_confirmed'] ?? FALSE),
+      'ai_transformation_consent' => (bool) ($row['ai_transformation_consent'] ?? $row['ai_use_consent'] ?? FALSE),
     ];
   }
 

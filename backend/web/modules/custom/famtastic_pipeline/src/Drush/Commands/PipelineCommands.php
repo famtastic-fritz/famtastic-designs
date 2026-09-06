@@ -491,10 +491,15 @@ class PipelineCommands extends DrushCommands {
         $file = $fileStorage->load((int) $asset['file_id']);
         $assetManifest[] = [
           'name' => (string) $asset['original_name'],
+          'role' => (string) ($asset['role'] ?? $asset['kind'] ?? 'other'),
           'mime_type' => (string) $asset['mime_type'],
           'size_bytes' => (int) $asset['size_bytes'],
           'sha256' => (string) $asset['sha256'],
           'ai_use_consent' => (bool) $asset['ai_use_consent'],
+          'likeness_consent_version' => (string) ($asset['likeness_consent_version'] ?? ''),
+          'likeness_consent_at' => !empty($asset['likeness_consent_at']) ? (int) $asset['likeness_consent_at'] : NULL,
+          'subject_permission_confirmed' => (bool) ($asset['subject_permission_confirmed'] ?? FALSE),
+          'ai_transformation_consent' => (bool) ($asset['ai_transformation_consent'] ?? $asset['ai_use_consent'] ?? FALSE),
           'private_uri' => $file ? (string) $file->getFileUri() : '',
         ];
       }
