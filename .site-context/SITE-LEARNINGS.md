@@ -1,5 +1,63 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — Idempotency markers must be scoped to the thing they identify
+
+Four campaigns were built in parallel and every one numbered its drops
+drop-01..drop-06. The queue runner adopts a prior record by its `utm_content`
+marker alone. The second campaign to run matched the FIRST campaign's live
+Postiz records, queued nothing of its own, and printed `PASS — adopted=6`. Its
+own verification said `6/6 VERIFIED`. The assets were never scheduled, and
+nothing about the output looked wrong.
+
+Caught only by reading the queue back from Postgres and noticing every row
+carried the first campaign's copy. Fixed at the source in
+`scripts/queue-campaign-drops.py`: adoption is now keyed on
+`utm_campaign` + `utm_content`, not `utm_content` alone.
+
+**Guidance.** A marker that is unique within one run but not across the whole
+system it identifies against is not an idempotency marker — it is a silent
+overwrite waiting for two things to collide. Scope the key to match the scope
+of what could run concurrently, and verify a "PASS" against the destination
+system's own state, not the tool's own report.
+
+## 2026-09-05 — A large git push can fail on the network, not the repo
+
+Two commits (49.7 MB, then 119.8 MB of new MP4 for the /watch film library)
+failed to push repeatedly with `inflate: data stream error` at a different
+byte offset each time. `git fsck --full` was clean. Switching the remote to
+HTTPS surfaced the real signal: `LibreSSL SSL_read: bad record mac` — a TLS
+integrity failure, meaning bits were being corrupted in transit on this
+network path for large transfers specifically. Small commits (0 MB, a few KB)
+pushed on the first try throughout.
+
+**Guidance.** When a push fails with inflate/pack-corruption errors at varying
+offsets and `git fsck` is clean, suspect the network path before the repo.
+`git repack -a -d -f` fixed one commit; splitting a stubborn large commit into
+several small ones (each well under whatever threshold is failing) worked
+every time it was tried. Never force-push or rewrite history as a first
+response — the objects are very likely fine.
+
+## 2026-09-05 — A campaign spread over 8 days must still post on day one
+
+Four campaigns were scheduled across an 8-day window as requested, but every
+campaign's first drop landed the next morning — nothing was scheduled to post
+on the day the campaigns were built. The last real publish before that was
+13:00 that day; the next one was not due until the following afternoon, over
+24 hours later. The owner caught it from the outside ("this isn't a flood,
+this is a trickle") before it was caught from the inside.
+
+Fixed by pulling one drop from each of the four campaigns forward to fire
+within the same evening, staggered roughly 35 minutes apart, via a direct
+`publishDate` update on the already-verified Postiz rows (safe because
+Postiz's own scheduler polls the same table the verification step reads).
+
+**Guidance.** "Spread across N days" is not the same instruction as "starts
+now." When building a multi-day schedule, check the gap between last
+real-world delivery and the new schedule's first fire — if that gap exceeds
+the cadence the rest of the schedule assumes, the schedule has a hole at the
+front regardless of how full the following days look.
+
+
 ## 2026-09-05 — A captured checkout contract must outlive the catalog
 
 - Observation: a checkout can save the exact offer contract it displayed while

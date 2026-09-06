@@ -1,5 +1,26 @@
 # Product changelog
 
+## 2026-09-05 — Four-campaign flood queued, a queue-collision bug and a schedule gap fixed
+
+- **Queued 48 posts across four campaigns** (`booked-and-losing`, `already-know-the-game`,
+  `see-it-first`, `ive-managed-fine`) spanning 2026-09-06 through 09-13 on Facebook
+  and Instagram, verified by reading the Postiz database directly rather than
+  trusting `queue-campaign-drops.py`'s own report.
+- **Found and fixed a real bug in that script**: it adopted a prior draft by its
+  `utm_content` marker alone. All four campaigns numbered their drops
+  `drop-01..drop-06`, so the second campaign queued silently adopted the
+  first's live records and reported `PASS — adopted=6` while scheduling
+  nothing of its own. Adoption is now scoped to `utm_campaign` + `utm_content`.
+- **Found and fixed a schedule gap**: every campaign's first drop was scheduled
+  for the next morning, leaving a 24+ hour silent gap after the last real
+  publish. One drop per campaign was pulled forward to fire the same evening.
+- Two shared-template bugs fixed upstream during the build, both of which
+  would have hit every campaign lane: `famChip` ignored its own letter
+  tracking (rendering "WEB BASIC|S"), and concept objects could clip the
+  canvas edge.
+- Whole-flood measured spend: `booked-and-losing` $0.504, `already-know-the-game`
+  $0.3024, `see-it-first` $0.00, `ive-managed-fine` $0.00.
+
 ## 2026-09-05 — Durable owner-only revenue freshness controls prepared
 
 - Added migration `8054` and the `famtastic_revenue_freshness` ledger. It records a stable task key, source state, deadline, severity, current/open-or-recovered status, and recovery evidence for submitted requests, held proof states, selected-but-unpaid requests, stale projects, and missing release receipts. Reconciliation is owner-task-only: it does not send mail, start proof work, create checkout, charge, publish, or change the source request/project.
