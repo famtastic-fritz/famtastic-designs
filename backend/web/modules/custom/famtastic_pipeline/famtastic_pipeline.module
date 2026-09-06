@@ -92,20 +92,6 @@ function famtastic_pipeline_page_attachments(array &$attachments): void {
 }
 
 /**
- * Implements hook_route_alter().
- *
- * Core already marks user edit/cancel routes as administrative, but the
- * canonical authenticated profile route is left public by default. Marking it
- * as an admin route lets Drupal's native admin-theme negotiator select
- * `famtastic_admin` before any page markup or public-theme assets render.
- */
-function famtastic_pipeline_route_alter(\Symfony\Component\Routing\RouteCollection $collection): void {
-  if ($route = $collection->get('entity.user.canonical')) {
-    $route->setOption('_admin_route', TRUE);
-  }
-}
-
-/**
  * Implements hook_user_insert().
  *
  * Every registered user becomes a FAMtastic customer. If a prospect already

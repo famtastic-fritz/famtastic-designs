@@ -2,9 +2,10 @@
 
 ## 2026-09-06 — Profile routes use the administrative theme
 
-- Marked the canonical authenticated user profile as an administrative route.
-  Drupal's native theme negotiator now selects `famtastic_admin` for profile
-  view/edit/cancel pages rather than the public Olivero customer theme. This
+- Marked the canonical authenticated user profile as an administrative route
+  using a Drupal route subscriber. Drupal's native theme negotiator now selects
+  `famtastic_admin` for profile view/edit/cancel pages rather than the public
+  Olivero customer theme. This
   removes the duplicate public header beneath the toolbar on mobile and gives
   account-management pages the same dark, responsive admin surface as the rest
   of Drupal administration. Public sign-in, registration, and reset pages keep

@@ -222,6 +222,11 @@ services:
     tags:
       - { name: event_subscriber }
 
+  famtastic_pipeline.user_profile_admin_route:
+    class: Drupal\famtastic_pipeline\EventSubscriber\UserProfileAdminRouteSubscriber
+    tags:
+      - { name: event_subscriber }
+
   famtastic_pipeline.ai_solution_advisor:
     class: Drupal\famtastic_pipeline\Service\AiSolutionAdvisorService
     arguments: ['@database', '@logger.factory', '@?ai.provider']
