@@ -1840,3 +1840,20 @@ Permanent rules:
   offer case-reply controls when a durable support case exists. Do not cover a
   task screen with generic mobile guidance; give the task-specific explanation
   next to the action instead.
+
+## 2026-09-06 — A replacement proof round is a new, evidence-backed set
+
+- Observation: campaign 47 correctly existed for the Tighten Up Your Locs
+  revision but was stalled at `waiting_callback`; no artifacts, research
+  snapshot, or customer-ready email existed. A status label alone cannot move
+  a client toward selection.
+- Guidance: retain the rejected proof history, then use the recorded feedback
+  as a first-class input to new research, distinct Design DNA, signed visual
+  assets, and three working mobile proofs. Before notifying the customer,
+  verify the exact campaign has three variants, the research/growth snapshot is
+  saved, the authenticated portal owns the request, and the email recipient's
+  display name is human-readable.
+- Guard: never use a general outbox dispatch to send a time-sensitive proof
+  notice when it could also send unrelated queued mail. Claim and record the
+  exact notification, retain the provider acceptance receipt, and state only
+  SMTP acceptance—not inbox delivery—as verified.

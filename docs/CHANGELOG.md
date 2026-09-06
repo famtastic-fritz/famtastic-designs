@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-09-06 — Tighten Up Your Locs replacement proof set delivered
+
+- Completed the existing request-12 replacement campaign rather than creating
+  another campaign: three new, mobile-checked directions—Your Loc Journey,
+  The Open Chair, and Royal Roots—are now attached to campaign 47.
+- Saved the fresh customer-readable research snapshot, feedback lesson, source
+  list, and 30/60/90-day growth path before customer delivery. The directions
+  explicitly replace the rejected analytical experience with a warm,
+  plain-language, self-contained care-request path; they do not link back to
+  Booksy or claim a live calendar.
+- Confirmed the authoritative customer recipient, corrected the account display
+  name from an email address to Shay, and recorded an SMTP acceptance receipt
+  for the versioned Concierge proof-ready notification. This is proof-review
+  delivery only: no payment, domain, deployment, or booking action occurred.
+
 ## 2026-09-06 — Operations attention is now an actionable mobile queue
 
 - Replaced the static Operations Home “Needs attention” count with a direct,
