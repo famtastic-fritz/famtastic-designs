@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-06 — Portal fulfillment claims now follow durable entitlements
+
+- Removed the homepage assumption that any order means hosting, domain, SSL,
+  proofs, and launch are active. Standalone add-ons such as Logo and Brand
+  Starter now remain purchase records without a false website-provisioning
+  banner.
+- Website fulfillment cards now derive their milestones from active website,
+  hosting, domain, request, project, and live-site records.
+- Added regression coverage for a paid FAM-BRAND order and a paid Web Basics
+  order before the portal can claim domain or launch completion.
+
 ## 2026-09-06 — Final integration contract repair and fresh-runtime proof
 
 - Updated the synthetic customer journey to assert the versioned branded

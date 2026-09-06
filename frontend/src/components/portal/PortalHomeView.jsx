@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Panel, Empty, date } from './PortalShared.jsx';
 import PortalServicesView from './PortalServicesView.jsx';
+import { derivePortalFulfillmentState } from '../../lib/portalFulfillment.js';
 
 export default function PortalHomeView({
   workspace,
@@ -14,6 +15,7 @@ export default function PortalHomeView({
   const requests = workspace.website_requests || [];
   const openThreads = workspace.threads.filter((thread) => thread.status === 'open').length;
   const attentionRequest = requests.find((request) => request.proof_handoff?.state === 'needs_attention');
+  const fulfillment = derivePortalFulfillmentState(workspace);
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
 
@@ -87,7 +89,7 @@ export default function PortalHomeView({
         </article>
       </section>
 
-      {workspace.orders.length > 0 && (
+      {fulfillment.show && (
         <section
           className="portal-fulfillment-banner"
           style={{
@@ -120,10 +122,10 @@ export default function PortalHomeView({
                 ⚡ Active Order Fulfillment
               </span>
               <h3 style={{ margin: '0.35rem 0', fontSize: '1.35rem' }}>
-                {workspace.orders[0]?.package || 'Website & Hosting Package'} · Provisioned
+                {fulfillment.packageName} · {fulfillment.hasWebsiteService ? 'Website provisioning active' : 'Project work active'}
               </h3>
               <p style={{ margin: 0, color: '#c2ccc2', fontSize: '0.9rem' }}>
-                Hosting &amp; Domain entitlements active · Website architecture &amp; interactive concept design in progress.
+                {fulfillment.hostingLabel} · {fulfillment.domainLabel}.
               </p>
             </div>
             <button
@@ -152,10 +154,10 @@ export default function PortalHomeView({
               }}
             >
               <strong style={{ display: 'block', color: '#7cfc00', fontSize: '0.82rem' }}>
-                ✓ 1. Payment &amp; Provisioning
+                {fulfillment.paymentConfirmed ? '✓' : '○'} 1. Payment &amp; Provisioning
               </strong>
               <span style={{ fontSize: '0.8rem', color: '#aab2aa' }}>
-                Order confirmed · Entitlements unlocked
+                {fulfillment.paymentConfirmed ? 'Order confirmed · Entitlements unlocked' : 'Awaiting payment confirmation'}
               </span>
             </div>
             <div
@@ -167,10 +169,10 @@ export default function PortalHomeView({
               }}
             >
               <strong style={{ display: 'block', color: '#7cfc00', fontSize: '0.82rem' }}>
-                ✓ 2. Cloud Hosting &amp; Domain
+                {fulfillment.hasHosting ? '✓' : '○'} 2. Cloud Hosting &amp; Domain
               </strong>
               <span style={{ fontSize: '0.8rem', color: '#aab2aa' }}>
-                1-Yr SSD Hosting &amp; Domain included
+                {fulfillment.hostingLabel} · {fulfillment.domainLabel}
               </span>
             </div>
             <div
@@ -182,10 +184,10 @@ export default function PortalHomeView({
               }}
             >
               <strong style={{ display: 'block', color: '#7cfc00', fontSize: '0.82rem' }}>
-                ⚙ 3. Working Proof Concepts
+                {fulfillment.hasProofWork ? '⚙' : '○'} 3. Working Proof Concepts
               </strong>
               <span style={{ fontSize: '0.8rem', color: '#fff' }}>
-                Interactive preview designs in build
+                {fulfillment.hasProofWork ? 'Open your project to review the current proof state' : 'Website proof work starts after the brief is submitted'}
               </span>
             </div>
             <div
@@ -197,10 +199,10 @@ export default function PortalHomeView({
               }}
             >
               <strong style={{ display: 'block', color: '#8e988e', fontSize: '0.82rem' }}>
-                ○ 4. Approval &amp; Live Launch
+                {fulfillment.hasLiveSite ? '✓' : '○'} 4. Approval &amp; Live Launch
               </strong>
               <span style={{ fontSize: '0.8rem', color: '#687268' }}>
-                Domain connected · SSL live
+                {fulfillment.hasLiveSite ? 'Live site recorded' : 'Approval, domain connection, and SSL are not complete yet'}
               </span>
             </div>
           </div>

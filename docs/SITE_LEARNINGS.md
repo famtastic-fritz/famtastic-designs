@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-06 — An order is not a website entitlement
+
+The portal homepage treated `orders.length > 0` as proof that hosting, domain,
+SSL, proof work, and launch were active. That was false for direct-account
+add-ons such as Logo and Brand Starter.
+
+**Guidance.** Derive each customer-facing milestone from its durable record:
+active entitlement type, account-owned request, project state, domain record,
+or live URL. A purchase receipt can confirm a purchase; it cannot silently
+upgrade the customer into a website state.
+
 ## 2026-09-06 — Versioned email templates must update the journey contract
 
 The branded proof-ready message moved to v3, but the synthetic customer
