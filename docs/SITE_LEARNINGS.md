@@ -1929,3 +1929,14 @@ queued.
   using HeyGen (Tier 1, 12 credits), Gemini Flash Lite (Tier 2, $0.168) and
   Remotion (Tier 3, $0). Detail and provider gotchas in
   `.site-context/SITE-LEARNINGS.md` (same date) and `docs/CHANGELOG.md`.
+
+## 2026-09-05 — Separate source scheduling from provider delivery
+
+- A campaign schedule is a source plan. A stored Postiz ID is not a live
+  scheduled-post receipt. Corrected times require an explicit reconciliation
+  state and a later reviewed provider retime; no UI should silently collapse
+  those two facts into “scheduled.”
+- Campaign measurement must preserve the distinction too: staged/queued/sent/
+  paid are local ledger facts, while inbound mail with no campaign relationship
+  is “not campaign-attributable,” not a zero-reply claim. The full rule and
+  validator are recorded in `.site-context/SITE-LEARNINGS.md`.

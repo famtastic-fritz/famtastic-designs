@@ -277,6 +277,31 @@ if DO_SCHEDULE and not ARMED:
     )
     sys.exit(2)
 
+# --requeue deletes and recreates real provider records. Make the deliberately
+# chosen reconciliation path just as explicit as --add/--edit/--delete, before
+# reading credentials or contacting Postiz.
+if REQUEUE and not CONFIRM:
+    sys.stderr.write(
+        "REFUSED: --requeue changes real provider records. Pass --confirm only "
+        "after reviewing the target and its publish gate. Nothing was read, sent, or changed.\n"
+    )
+    sys.exit(2)
+
+# An unresolved source/provider difference cannot safely pass through the
+# generic edit/delete paths: those paths can retire provider records before
+# the normal queue loop sees the reconciliation block. Retime it intentionally
+# with --requeue --confirm, or resolve it in the provider UI first.
+if EDIT_DROP or DELETE_DROP:
+    _mutation_drop = next((d for d in schedule["drops"] if d["content_id"] == MUTATION_CONTENT_ID), None)
+    _reconciliation = (_mutation_drop or {}).get("provider_reconciliation")
+    if isinstance(_reconciliation, dict) and _reconciliation.get("status") != "reconciled":
+        sys.stderr.write(
+            f"REFUSED: {MUTATION_CONTENT_ID} has unresolved provider reconciliation "
+            f"({_reconciliation.get('status')}). Use a reviewed --requeue --confirm "
+            "or reconcile the provider record first. Nothing was read, sent, or changed.\n"
+        )
+        sys.exit(2)
+
 ART = REPO_ROOT / f".artifacts/postiz-queue/{CAMPAIGN}/{int(time.time())}"
 ART.mkdir(parents=True, exist_ok=True)
 
@@ -373,6 +398,23 @@ else:
 results: list[dict] = []
 failures: list[dict] = []
 blocked: list[dict] = []
+
+
+def reconciliation_block(drop: dict) -> dict | None:
+    """Return an unresolved source/provider reconciliation record, if any.
+
+    A posting schedule can be corrected locally without changing a provider
+    draft. Treating that corrected timestamp as if Postiz had already been
+    updated is the exact cross-campaign failure this runner must avoid. The
+    only safe next step is a deliberately reviewed provider retime; until
+    then, this runner refuses to adopt, create, or schedule the affected drop.
+    """
+    reconciliation = drop.get("provider_reconciliation")
+    if not isinstance(reconciliation, dict):
+        return None
+    if reconciliation.get("status") == "reconciled":
+        return None
+    return reconciliation
 
 
 def media_for(drop: dict) -> tuple[list[pathlib.Path], list[str]]:
@@ -576,6 +618,10 @@ if REQUEUE:
         print(f"  removed {pid[:12]} ({state})")
 
     target["provider_ids"] = {}
+    # The recorded provider records were deliberately retired above. There is
+    # no longer a source/provider time mismatch; the normal queue path below
+    # will create one fresh draft at the corrected source time.
+    target.pop("provider_reconciliation", None)
     if REQUEUE_AT:
         target["scheduled_time"] = REQUEUE_AT
         when = datetime.fromisoformat(REQUEUE_AT)
@@ -781,6 +827,22 @@ for drop in drops:
     cid = drop["content_id"]
     entry = {"content_id": cid, "scheduled_time": drop["scheduled_time"]}
 
+    reconciliation = reconciliation_block(drop)
+    if reconciliation:
+        entry["action"] = "blocked_reconciliation"
+        entry["provider_reconciliation"] = reconciliation.get("status", "unresolved")
+        blocked.append({
+            "content_id": cid,
+            "reason": "source schedule differs from recorded provider draft",
+            "provider_reconciliation": reconciliation,
+        })
+        results.append(entry)
+        print(
+            f"BLOCKED: {cid} — source schedule correction is not reconciled "
+            "with the recorded provider draft; no adoption, queue, or schedule action was attempted"
+        )
+        continue
+
     idents: list[str] = []
     unconnected: list[str] = []
     for channel in drop.get("channels", []):
@@ -938,7 +1000,10 @@ for drop in drops:
 # ---------------------------------------------------------------------------
 # Stage 2: convert drafts to a live schedule (armed runs only).
 # ---------------------------------------------------------------------------
-if DO_SCHEDULE:
+if DO_SCHEDULE and DRY_RUN:
+    print("DRY RUN: live schedule conversion and provider read-back skipped; no Postiz contact")
+
+if DO_SCHEDULE and not DRY_RUN:
     now = datetime.now(timezone.utc)
 
     # Postiz creates ONE post record PER INTEGRATION and returns them as a

@@ -1758,3 +1758,22 @@ Permanent rules:
   produces unstable, unauditable footage.
 - Guidance: make each video generation a single shot. Assemble timing, copy,
   captions, offer terms, and transitions deterministically afterward.
+
+## 2026-09-05 — A stored provider ID is not a scheduled-post receipt
+
+- Observation: four campaign schedules shared six recorded Postiz IDs across
+  three identical timestamps. A runner that treated the schedule file's ID or
+  timestamp as ownership could adopt or convert another campaign's draft.
+- Rule: the source plan and provider state are two facts. A source-only time
+  correction must carry an explicit reconciliation block until an operator
+  intentionally retimes or recreates the provider draft and obtains a read-back.
+  Never relabel the JSON file as “scheduled” merely because it contains an ID.
+- Guard: `scripts/validate-campaign-schedule-hygiene.py` has no credential,
+  network, provider, or write path. It must pass before review; its pending
+  reconciliation report is an operator task, not evidence that the provider
+  changed. `scripts/queue-campaign-drops.py` refuses ordinary adoption/queue/
+  schedule operations for an unresolved drop.
+- Measurement rule: the campaign dashboard may show staged messages, queued
+  jobs, sent records, explicit reply events, and fulfilled Commerce. Inbound
+  support messages do not contain a campaign relation today, so they must be
+  displayed as “not campaign-attributable,” never as zero replies.

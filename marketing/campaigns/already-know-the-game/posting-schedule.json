@@ -5,7 +5,7 @@
   "series_id": "already-know-the-game",
   "campaign_name": "Already Know The Game",
   "created_at": "2026-09-05T00:00:00-04:00",
-  "status": "built_not_queued",
+  "status": "ready_for_evaluation",
   "queue_note": "This lane deliberately did NOT run scripts/queue-campaign-drops.py. A later step in plans/four-campaign-flood/plan.md owns queueing. Every drop below carries approval.publish=false so an accidental armed run cannot publish it.",
   "schedule_type": "eight_day_argument_arc",
   "time_zone": "America/New_York",

@@ -80,6 +80,10 @@ def _validate_by_hand(manifest: dict, schema: dict) -> list[str]:
     if "schema_version" in manifest and manifest["schema_version"] != 2:
         errors.append("schema_version must be 2")
 
+    allowed_statuses = {"draft", "ready_for_evaluation", "armed_for_scheduling", "completed", "archived"}
+    if "status" in manifest and manifest["status"] not in allowed_statuses:
+        errors.append("status must be one of: " + ", ".join(sorted(allowed_statuses)))
+
     for key in ("campaign_id", "program_id", "time_zone"):
         if key in manifest and not isinstance(manifest[key], str):
             errors.append(f"{key} must be a string")
@@ -117,6 +121,16 @@ def _validate_by_hand(manifest: dict, schema: dict) -> list[str]:
             errors.append(f"{label}: channels must be a non-empty array")
         if "copy" in drop and (not isinstance(drop["copy"], dict) or not drop["copy"]):
             errors.append(f"{label}: copy must be a non-empty object")
+        reconciliation = drop.get("provider_reconciliation")
+        if reconciliation is not None:
+            if not isinstance(reconciliation, dict):
+                errors.append(f"{label}: provider_reconciliation must be an object")
+            else:
+                for key in ("status", "provider_recorded_time", "source_schedule_changed_at", "reason"):
+                    if not isinstance(reconciliation.get(key), str) or not reconciliation[key]:
+                        errors.append(f"{label}: provider_reconciliation.{key} must be a non-empty string")
+                if reconciliation.get("status") not in {"draft_retime_required", "reconciled"}:
+                    errors.append(f"{label}: provider_reconciliation.status must be draft_retime_required or reconciled")
 
     return errors
 

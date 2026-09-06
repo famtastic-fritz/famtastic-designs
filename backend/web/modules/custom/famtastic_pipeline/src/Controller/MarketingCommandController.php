@@ -438,6 +438,7 @@ final class MarketingCommandController extends ControllerBase {
         mb_strimwidth((string) ($drop['theme'] ?? ''), 0, 60, '…'),
         implode(', ', array_map('strval', (array) ($drop['channels'] ?? []))),
         ['data' => ['#markup' => $this->badge((string) ($drop['state'] ?? 'idea'))]],
+        ['data' => ['#markup' => $this->badge($this->dropDeliveryClock($drop))]],
         (string) count($known),
         // '#type' => 'link' render arrays (not Link::toRenderable(), which
         // carries no class) so these get the theme's .button styling —
@@ -460,13 +461,17 @@ final class MarketingCommandController extends ControllerBase {
 
     $page = $this->table(
       'Postiz drops — ' . $selected,
-      'Per-drop live Postiz record control, read directly from posting-schedule.json. Edit sets every known record for a drop to draft or scheduled; delete soft-deletes all of them. Copy, media, channels, and schedule time stay the CLI\'s job (scripts/queue-campaign-drops.py --edit-drop), never rewritten here from a live request.',
-      ['Content ID', 'Scheduled', 'Theme', 'Channels', 'State', 'Known Postiz records', '', ''],
+      'Source plan and recorded provider IDs, read from posting-schedule.json. A recorded ID is not proof of current provider state. “Draft retime required” means the source plan was intentionally corrected but no provider call was made; it must be reconciled before any publish approval. Copy, media, channels, and schedule time stay the CLI\'s job (scripts/queue-campaign-drops.py --edit-drop), never rewritten here from a live request.',
+      ['Content ID', 'Planned source time', 'Theme', 'Channels', 'Creative state', 'Delivery clock', 'Recorded provider IDs', '', ''],
       $rows,
       'No drops in this campaign schedule.',
     );
     $page['campaigns'] = $pillsBuild;
     $page['campaigns']['#weight'] = -30;
+    $page['cadence'] = [
+      '#markup' => '<p class="famtastic-ops__lede"><strong>Cadence truth:</strong> ' . Html::escape($this->scheduleCadenceSummary($schedule)) . '</p>',
+      '#weight' => -28,
+    ];
     $page['scorecard_link'] = [
       '#type' => 'link',
       '#title' => $this->t('View scorecard for @s →', ['@s' => $selected]),
@@ -556,6 +561,13 @@ final class MarketingCommandController extends ControllerBase {
       ];
     }
     return [
+      'lifecycle_clock' => $this->table(
+        'Campaign lifecycle clocks',
+        'One local operational ledger per campaign: draft/staged, queued jobs, sent mail, reply evidence, and fulfilled Commerce. “Replies not campaign-attributable” is deliberate: inbound support mail has no campaign join, so this screen will not invent a reply count. Sent means a recorded outbound send, not inbox placement.',
+        ['Campaign', 'Data lane', 'Draft / staged', 'Queued', 'Sent', 'Replied', 'Paid', 'Last ledger change'],
+        $this->campaignLifecycleClockRows(),
+        'No campaign ledger records yet.',
+      ),
       'content_grain' => $this->table(
         'Leads & attribution — content grain',
         'Social content ID → leads whose captured utm_content matches it → website requests → paid revenue. Live join over prospect attribution snapshots (utm persisted at capture since update 8036); zero-lead rows show exactly which posts produced nothing.',
@@ -571,6 +583,117 @@ final class MarketingCommandController extends ControllerBase {
         'No attributed leads recorded yet.',
       ),
     ];
+  }
+
+  /**
+   * Returns a delivery state without treating a stored Postiz ID as live proof.
+   */
+  private function dropDeliveryClock(array $drop): string {
+    $reconciliation = $drop['provider_reconciliation'] ?? NULL;
+    if (is_array($reconciliation) && ($reconciliation['status'] ?? '') !== 'reconciled') {
+      return 'Draft retime required';
+    }
+    $publishApproved = (bool) (($drop['approval'] ?? [])['publish'] ?? FALSE);
+    $known = CampaignFileLocator::knownProviderIds($drop);
+    if (!$publishApproved && $known) {
+      return 'Draft recorded / publish closed';
+    }
+    if (!$publishApproved) {
+      return 'Not queued / publish closed';
+    }
+    return $known ? 'Provider read-back required' : 'Not queued';
+  }
+
+  /**
+   * Summarizes a source schedule without claiming live scheduler state.
+   */
+  private function scheduleCadenceSummary(array $schedule): string {
+    $drops = array_values(array_filter((array) ($schedule['drops'] ?? []), 'is_array'));
+    if ($drops === []) {
+      return 'No source drops are recorded.';
+    }
+    $times = array_values(array_filter(array_map(static fn (array $drop): string => (string) ($drop['scheduled_time'] ?? ''), $drops)));
+    sort($times, SORT_STRING);
+    $closed = count(array_filter($drops, static fn (array $drop): bool => (($drop['approval'] ?? [])['publish'] ?? FALSE) === FALSE));
+    $reconciliation = count(array_filter($drops, static fn (array $drop): bool => is_array($drop['provider_reconciliation'] ?? NULL) && (($drop['provider_reconciliation']['status'] ?? '') !== 'reconciled')));
+    $window = $times ? $times[0] . ' → ' . $times[count($times) - 1] : 'no planned timestamps';
+    return count($drops) . ' source drops across ' . $window . '; ' . $closed . ' publish gate(s) closed; ' . $reconciliation . ' provider reconciliation block(s).';
+  }
+
+  /**
+   * Campaign-level outreach clocks from durable local facts only.
+   */
+  private function campaignLifecycleClockRows(): array {
+    $rows = [];
+    $campaigns = $this->database->select('famtastic_campaign', 'c')
+      ->fields('c', ['id', 'campaign_key', 'status', 'changed'])
+      ->orderBy('changed', 'DESC')
+      ->range(0, 50)
+      ->execute()
+      ->fetchAll(\PDO::FETCH_ASSOC);
+
+    foreach ($campaigns as $campaign) {
+      $campaignId = (int) $campaign['id'];
+      $campaignKey = (string) $campaign['campaign_key'];
+      $staged = 0;
+      $sent = 0;
+      $lastChange = (int) $campaign['changed'];
+      foreach ($this->database->select('famtastic_email_message', 'm')
+        ->fields('m', ['status', 'sent_at', 'changed'])
+        ->condition('campaign_id', $campaignId)
+        ->execute()
+        ->fetchAll(\PDO::FETCH_ASSOC) as $message) {
+        $staged += $message['status'] === 'staged' ? 1 : 0;
+        $sent += (int) $message['sent_at'] > 0 ? 1 : 0;
+        $lastChange = max($lastChange, (int) $message['changed']);
+      }
+
+      $queuedQuery = $this->database->select('famtastic_job', 'j');
+      $queuedQuery->join('famtastic_prospect', 'p', 'p.id = j.prospect_id');
+      $queued = (int) $queuedQuery
+        ->condition('j.job_type', 'outreach.send')
+        ->condition('j.status', 'queued')
+        ->condition('p.campaign', $campaignKey)
+        ->countQuery()->execute()->fetchField();
+
+      $paidQuery = $this->database->select('famtastic_commerce_fulfillment', 'f');
+      $paidQuery->join('famtastic_prospect', 'p', 'p.id = f.prospect_id');
+      $paidQuery->addExpression('COUNT(f.id)', 'orders');
+      $paidQuery->addExpression('SUM(f.amount_minor)', 'amount');
+      $paid = $paidQuery
+        ->condition('f.status', 'fulfilled')
+        ->condition('p.campaign', $campaignKey)
+        ->execute()->fetchAssoc() ?: ['orders' => 0, 'amount' => 0];
+
+      // The inbound-mail ledger is intentionally linked to a portal thread,
+      // not a campaign. Count only an explicit event if one is ever added;
+      // otherwise state the attribution gap rather than presenting a false 0.
+      $replied = (int) $this->database->select('famtastic_event', 'e')
+        ->condition('campaign_id', $campaignId)
+        ->condition('event_type', 'email.replied')
+        ->countQuery()->execute()->fetchField();
+      $paidOrders = (int) $paid['orders'];
+      $paidAmount = (int) $paid['amount'];
+      $draftDisplay = $staged > 0 ? $staged . ' staged' : ((string) $campaign['status'] === 'draft' ? 'Campaign draft' : '—');
+      $replyDisplay = $replied > 0 ? (string) $replied : 'Not campaign-attributable';
+      $paidDisplay = $paidOrders > 0 ? $paidOrders . ' / $' . number_format($paidAmount / 100, 2) : '—';
+      $dataLane = $this->isFixtureCampaign($campaignKey) ? 'Fixture / smoke' : 'Operational record';
+      $rows[] = [
+        Html::escape($campaignKey),
+        $dataLane,
+        $draftDisplay,
+        $queued ?: '—',
+        $sent ?: '—',
+        $replyDisplay,
+        $paidDisplay,
+        $this->date($lastChange),
+      ];
+    }
+    return $rows;
+  }
+
+  private function isFixtureCampaign(string $campaignKey): bool {
+    return (bool) preg_match('/(?:^|[-_])(e2e|fixture|smoke|test|journey)(?:[-_]|$)/i', $campaignKey);
   }
 
   /**

@@ -1,5 +1,29 @@
 # Product changelog
 
+## 2026-09-05 — Campaign schedule ownership and lifecycle clocks made explicit
+
+- Corrected the four September 6–13 campaign source schedules without making a
+  Postiz request: six cross-campaign recorded-provider-ID collisions and three
+  exact planned-time collisions are now removed from source. All 24 target
+  drops retain `approval.publish=false`.
+- Four corrected drops carry `provider_reconciliation: draft_retime_required`.
+  This is intentionally not a provider-state claim: it says the source plan
+  changed and a reviewed provider-draft retime is still required. The generic
+  queue runner now refuses to adopt, queue, or schedule those drops; its
+  explicit retime path also requires `--confirm` before it can touch a provider.
+- Added the no-network `scripts/validate-campaign-schedule-hygiene.py` guard.
+  It checks provider-ID ownership, exact timestamp uniqueness, closed publish
+  gates, and reports pending provider reconciliation separately from a pass.
+- Marketing Command Center now labels the social source plan as a source plan,
+  not a live scheduler read-back, and adds per-campaign local-ledger clocks for
+  draft/staged, queued, sent, replied, and paid. Fixture/smoke campaigns are
+  labelled. Unlinked inbound support mail is shown as not campaign-attributable
+  rather than as a fabricated zero replies.
+- Local verification passed the four schema validations, schedule-hygiene
+  validator, queue-runner dry run (no Postiz contact), PHP lint, Python compile,
+  and whitespace check. No outreach email, social publication, scheduler state,
+  provider record, or production system was changed.
+
 ## 2026-09-05 — Completed deep dives now enter the three-proof handoff
 
 - A verified, claimed deep dive now advances its linked account-owned website

@@ -5,7 +5,7 @@
   "series_id": "objection-films",
   "campaign_name": "I've Managed Fine \u2014 Six Objections, Six Films",
   "created_at": "2026-09-05T18:40:00-04:00",
-  "status": "armed_for_scheduling",
+  "status": "ready_for_evaluation",
   "schedule_type": "one_film_per_objection_over_eight_days",
   "time_zone": "America/New_York",
   "landing_url": "https://famtasticdesigns.com/onboarding?sku=FAM-FOOT-199",
@@ -18,7 +18,7 @@
   "publish_arming": {
     "mode": "single_env_switch",
     "env": "FAMTASTIC_MARKETING_PUBLISH",
-    "note": "Queue script creates DRAFTS unarmed. Conversion to a live schedule requires FAMTASTIC_MARKETING_PUBLISH=true on the operator host. This campaign has NOT been queued by the agent that built it."
+    "note": "Queue script creates DRAFTS unarmed. Conversion to a live schedule requires FAMTASTIC_MARKETING_PUBLISH=true on the operator host. Provider IDs in this source file are recorded draft evidence, not a fresh live-provider read-back; every drop remains approval.publish=false and any reconciliation block must be resolved before a later owner review."
   },
   "media_resolution": {
     "policy": "resolve_at_runtime_fail_loud",
@@ -145,8 +145,8 @@
       "drop_number": 3,
       "drop_id": "drop-03",
       "content_id": "drop-03",
-      "scheduled_time": "2026-09-09T08:30:00-04:00",
-      "label": "Drop 3 \u2014 Tue 8:30 AM ET: \"I'm not technical.\"",
+      "scheduled_time": "2026-09-09T08:40:00-04:00",
+      "label": "Drop 3 \u2014 Tue 8:40 AM ET: \"I'm not technical.\"",
       "theme": "Objection 3 \u2014 you will not touch it, and neither does anyone else who has one",
       "headline": "You are not technical. You will not need to be.",
       "channels": [
@@ -183,10 +183,14 @@
         "postiz_scheduled_id": "cmtozyntl0018rqvtu25e86b5",
         "postiz_scheduled_group": [
           "cmtozyntl0018rqvtu25e86b5",
-          "cmtoyhkuq000lrqvtw3bs7d4s",
-          "cmtozynts0019rqvtpi23itd6",
-          "cmtoyhkub000krqvtpi6mdogg"
+          "cmtozynts0019rqvtpi23itd6"
         ]
+      },
+      "provider_reconciliation": {
+        "status": "draft_retime_required",
+        "provider_recorded_time": "2026-09-09T08:30:00-04:00",
+        "source_schedule_changed_at": "2026-09-05T23:52:16-04:00",
+        "reason": "The source plan was moved ten minutes to remove a cross-campaign timestamp collision. No Postiz call was made; an owner-reviewed provider draft retime is still required before any publish approval."
       },
       "evidence": [
         {
@@ -321,8 +325,8 @@
       "drop_number": 6,
       "drop_id": "drop-06",
       "content_id": "drop-06",
-      "scheduled_time": "2026-09-13T10:00:00-04:00",
-      "label": "Drop 6 \u2014 Sun 10:00 AM ET: \"I'm too close to retiring.\"",
+      "scheduled_time": "2026-09-13T10:20:00-04:00",
+      "label": "Drop 6 \u2014 Sun 10:20 AM ET: \"I'm too close to retiring.\"",
       "theme": "Objection 6 \u2014 a buyer buys what transfers",
       "headline": "Whoever buys this business buys what transfers. A domain transfers.",
       "channels": [
@@ -359,10 +363,14 @@
         "postiz_scheduled_id": "cmtozyxlx001erqvt3yg44c4c",
         "postiz_scheduled_group": [
           "cmtozyxlx001erqvt3yg44c4c",
-          "cmtoyitn10013rqvtxi89d5gn",
-          "cmtozyxm5001frqvtnypboay8",
-          "cmtoyitmc0012rqvtzzpn70r7"
+          "cmtozyxm5001frqvtnypboay8"
         ]
+      },
+      "provider_reconciliation": {
+        "status": "draft_retime_required",
+        "provider_recorded_time": "2026-09-13T10:00:00-04:00",
+        "source_schedule_changed_at": "2026-09-05T23:52:16-04:00",
+        "reason": "The source plan was moved twenty minutes to remove a cross-campaign timestamp collision. No Postiz call was made; an owner-reviewed provider draft retime is still required before any publish approval."
       },
       "evidence": [
         {

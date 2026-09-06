@@ -150,6 +150,17 @@
               "postiz_scheduled_id": { "type": "string" }
             }
           },
+          "provider_reconciliation": {
+            "type": "object",
+            "description": "A source-plan correction that has not been reconciled against the provider. draft_retime_required is a hard local safety block: the queue runner will not adopt, queue, or schedule that drop until the provider record is deliberately reconciled.",
+            "required": ["status", "provider_recorded_time", "source_schedule_changed_at", "reason"],
+            "properties": {
+              "status": { "type": "string", "enum": ["draft_retime_required", "reconciled"] },
+              "provider_recorded_time": { "type": "string" },
+              "source_schedule_changed_at": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          },
           "evidence": {
             "type": "array",
             "items": {
