@@ -27,6 +27,9 @@
   assertions), frontend production build, Portal Design DNA 30/30, and the
   portal link/crawl audit. This entry is not a production deployment or a new
   customer proof/email receipt.
+- Hardened the frontend deployer to install its required Vite build tooling
+  with `npm ci --include=dev`; a host production-mode npm setting otherwise
+  omitted Vite and correctly stopped the promotion before public files changed.
 
 ## 2026-09-06 — Owner-authorized flood arm and Sep 5 backfill
 

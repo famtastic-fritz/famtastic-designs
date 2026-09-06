@@ -166,7 +166,10 @@ nvm install
 nvm use
 set -u
 
-npm --prefix "$frontend_dir" ci
+# The host can export production-mode npm configuration. The frontend build is
+# a release-time operation and Vite lives in devDependencies, so explicitly
+# retain build tooling instead of relying on the server environment.
+npm --prefix "$frontend_dir" ci --include=dev
 npm --prefix "$frontend_dir" run build
 
 [[ -f "$dist_dir/index.html" ]] || {
