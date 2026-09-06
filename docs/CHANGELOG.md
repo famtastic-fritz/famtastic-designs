@@ -10,6 +10,9 @@
   hosting, domain, request, project, and live-site records.
 - Added regression coverage for a paid FAM-BRAND order and a paid Web Basics
   order before the portal can claim domain or launch completion.
+- Kept pre-purchase website drafts in the Projects flow without showing an
+  order-fulfillment banner until the durable website-service entitlement is
+  present.
 
 ## 2026-09-06 — Final integration contract repair and fresh-runtime proof
 

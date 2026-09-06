@@ -11,6 +11,11 @@ active entitlement type, account-owned request, project state, domain record,
 or live URL. A purchase receipt can confirm a purchase; it cannot silently
 upgrade the customer into a website state.
 
+Pre-purchase requests are durable work records too, but they are not
+fulfillment records. Keep their next action in Projects and do not render
+hosting, domain, SSL, proof-build, or launch language until the website-service
+entitlement is active.
+
 ## 2026-09-06 — Versioned email templates must update the journey contract
 
 The branded proof-ready message moved to v3, but the synthetic customer
