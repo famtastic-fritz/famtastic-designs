@@ -1,5 +1,17 @@
 # Product changelog
 
+## 2026-09-06 — Profile routes use the administrative theme
+
+- Routed authenticated user profile view, edit, and cancellation pages through
+  `famtastic_admin` rather than the public Olivero customer theme. This removes
+  the duplicate public header beneath the Drupal toolbar on mobile and gives
+  account-management pages the same dark, responsive admin surface as the rest
+  of Drupal administration. Public sign-in, registration, and reset pages keep
+  the customer theme.
+- Added mobile-safe account-title sizing/wrapping in the admin theme so an
+  email-based display name stays readable rather than creating a narrow,
+  broken column.
+
 ## 2026-09-06 — Client proof revision, portal focus, and Concierge template standard
 
 - Added root `design.md` as the shared FAMtastic Experience System. It now

@@ -1813,3 +1813,14 @@ Permanent rules:
   templates. Put the signed workspace destination behind one named graphic CTA;
   keep the raw fallback in the durable plain-text outbox rather than visibly
   printing an opaque URL in the HTML email.
+
+## 2026-09-06 — User profiles are administrative routes, not public-site pages
+
+- Observation: rendering authenticated `/user/*` account pages through the
+  public customer theme creates competing mobile navigation beneath Drupal's
+  admin toolbar and makes email-based display names collapse into an unusable
+  column.
+- Guidance: use `hook_custom_theme()` to select `famtastic_admin` for canonical
+  user view/edit/cancel routes. Keep public login, registration, and password
+  reset routes on the customer theme; do not try to repair the structural theme
+  mismatch by hiding the public header with a CSS selector alone.
