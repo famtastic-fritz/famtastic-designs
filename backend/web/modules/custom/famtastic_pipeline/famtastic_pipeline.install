@@ -1731,6 +1731,7 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'existing_domain' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
       'recommendation_requested' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
       'intake_data' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'customer_archived_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'submitted_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'created' => $time, 'changed' => $time,
     ],
@@ -2825,6 +2826,20 @@ function famtastic_pipeline_update_8055(&$sandbox) {
   return t('Added owner-controlled external payment handoff storage (@tables). No merchant credentials, charges, or payment verification were added.', [
     '@tables' => $created ? implode(', ', $created) : 'already present',
   ]);
+}
+
+/** Adds a reversible customer view preference without changing request state. */
+function famtastic_pipeline_update_8056(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->fieldExists('famtastic_project_request', 'customer_archived_at')) {
+    $definition = _famtastic_pipeline_customer_portal_schema()['famtastic_project_request'];
+    $schema->addField(
+      'famtastic_project_request',
+      'customer_archived_at',
+      $definition['fields']['customer_archived_at'],
+    );
+  }
+  return t('Added reversible customer project archiving. No request, proof, payment, or workflow status was changed.');
 }
 
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */

@@ -582,6 +582,39 @@ final class CustomerPortalService {
     return $this->serializeWebsiteRequest($updated);
   }
 
+  /** Hides or restores one owned request without deleting or stopping its work. */
+  public function setWebsiteRequestArchiveState(int $customerId, string $publicId, string $action): array {
+    $row = $this->ownedWebsiteRequest($customerId, $publicId);
+    if (!$row) {
+      throw new \RuntimeException('Website request not found.');
+    }
+    if (!in_array($action, ['archive', 'restore'], TRUE)) {
+      throw new \InvalidArgumentException('Choose archive or restore.');
+    }
+
+    $currentlyArchived = !empty($row['customer_archived_at']);
+    $shouldArchive = $action === 'archive';
+    if ($currentlyArchived === $shouldArchive) {
+      return $this->serializeWebsiteRequest($row);
+    }
+
+    $now = $this->time->getRequestTime();
+    $this->database->update('famtastic_project_request')->fields([
+      'customer_archived_at' => $shouldArchive ? $now : NULL,
+      'changed' => $now,
+    ])->condition('id', (int) $row['id'])->execute();
+    $this->activity(
+      (int) $row['organization_id'],
+      $shouldArchive ? 'website_request.customer_archived' : 'website_request.customer_restored',
+      $shouldArchive
+        ? 'A website request was moved out of the active project list. Its record and work were retained.'
+        : 'A website request was restored to the active project list.',
+    );
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', (int) $row['id'])->execute()->fetchAssoc();
+    return $this->serializeWebsiteRequest($updated ?: $row);
+  }
+
   /**
    * Creates a submitted website request from a prospect's discovery notes.
    *
@@ -867,6 +900,8 @@ final class CustomerPortalService {
 
   private function serializeWebsiteRequest(array $row): array {
     $row['intake'] = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    $row['customer_archived_at'] = (int) ($row['customer_archived_at'] ?? 0) ?: NULL;
+    $row['customer_archived'] = $row['customer_archived_at'] !== NULL;
     $recommendation = (array) ($row['intake']['recommendation'] ?? []);
     $offer = $this->database->select('famtastic_private_offer', 'o')->fields('o', ['public_id', 'sku', 'list_amount_minor', 'offered_amount_minor', 'currency', 'reason', 'expires_at'])
       ->condition('website_request_id', (int) $row['id'])->condition('status', 'active')

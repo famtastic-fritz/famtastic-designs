@@ -14,6 +14,7 @@ import {
   updateCustomerPreferences,
   updateCustomerProfile,
   updateWebsiteRequest,
+  updateWebsiteRequestArchive,
   updateWebsiteRequestProofShare,
   uploadWebsiteRequestAsset,
 } from '../api/customer.js';
@@ -97,9 +98,10 @@ export default function CustomerPortalDashboard() {
       ? workspace.website_requests?.find((request) => request.public_id === requestId)
       : null;
     const requestedProofReady =
-      requestedProof && [3, 6].includes(requestedProof.proofs?.variants?.length);
+      requestedProof && !requestedProof.customer_archived && [3, 6].includes(requestedProof.proofs?.variants?.length);
     const readyProof = workspace.website_requests?.find(
       (request) =>
+        !request.customer_archived &&
         ['customer_ready', 'notified'].includes(request.proof_review_status) &&
         [3, 6].includes(request.proofs?.variants?.length)
     );
@@ -119,6 +121,8 @@ export default function CustomerPortalDashboard() {
         setNotice(
           `Your ${count} website concepts are ready below. Compare each direction and choose when you are ready.`
         );
+      } else if (requestedProof?.customer_archived) {
+        setError('This project is in Archive. Open Archive below and restore it to review the concepts again.');
       } else if (requestedProof) {
         setError(
           'This website request belongs to your account, but its concepts are not available for customer review yet. FAMtastic will email you when the complete set is approved.'
@@ -352,6 +356,18 @@ export default function CustomerPortalDashboard() {
     return result.ok;
   };
 
+  const archiveWebsiteRequest = async (requestId, action) => {
+    const result = await act(async () => {
+      await updateWebsiteRequestArchive(requestId, action);
+      if (requestId === activeRequestId) setActiveRequestId(null);
+      if (requestId === targetRequest) setTargetRequest('');
+      await refresh();
+    }, action === 'archive'
+      ? 'Project moved to Archive. Nothing was deleted or cancelled.'
+      : 'Project restored to your active list.');
+    return result.ok;
+  };
+
   return (
     <div className={`portal-app ${menu ? 'menu-open' : ''}`}>
       <PortalNav
@@ -416,6 +432,7 @@ export default function CustomerPortalDashboard() {
             onUploadAsset={uploadReference}
             onDecideProof={decideProof}
             onShareProof={shareProof}
+            onArchiveRequest={archiveWebsiteRequest}
             navigate={navigate}
           />
         )}

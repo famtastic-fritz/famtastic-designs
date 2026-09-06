@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-05 — A command center needs one owner and one next action
+
+The portal exposed truthful data but still made a mobile customer interpret
+internal words such as submitted, proof review, and Build DNA while scrolling
+past domain controls, files, sharing, and every concept. Truthful is not the
+same as understandable.
+
+**Guidance.** Derive one plain-language next step per project and name who owns
+it: the customer or FAMtastic. Keep research and secondary controls available
+through progressive disclosure. Treat proof selection, payment, and build as
+separate gates; never make a purchase button imply the build already started.
+
+**Guidance.** Clearing a crowded workspace is a view preference, not deletion.
+Store a reversible customer archive marker without changing the request's
+workflow status, and say explicitly that nothing was deleted or cancelled.
+
 ## 2026-09-05 — A completed interview must create a durable proof handoff
 
 The claimed Shay deep dive was linked to request 12, but the request remained

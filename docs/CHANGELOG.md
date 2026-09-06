@@ -24,6 +24,23 @@
   and whitespace check. No outreach email, social publication, scheduler state,
   provider record, or production system was changed.
 
+## 2026-09-05 — Mobile project handoff now names the next owner and action
+
+- Reworked the customer Projects surface around one question: “What do I do
+  next?” Every request now says `Your turn` or `FAMtastic's turn`, with a
+  single state-derived action for finishing the brief, choosing a direction,
+  paying, or waiting for the studio.
+- Research remains attached to the proof set but opens progressively; each
+  direction carries its own research rationale. On phones, the three concepts
+  use a swipeable snap rail while domain/hosting, files, sharing, and Build DNA
+  stay available behind plain-language disclosures.
+- Added customer-controlled Archive and Restore for unwanted request cards.
+  Archiving retains the brief, research, proofs, files, selection, payment
+  history, and workflow status; no record is deleted or work cancelled.
+- Selection, payment, and build are now explicit separate gates. Email remains
+  notification only and no customer message, charge, deployment, or selection
+  was triggered by this change.
+
 ## 2026-09-05 — Completed deep dives now enter the three-proof handoff
 
 - A verified, claimed deep dive now advances its linked account-owned website

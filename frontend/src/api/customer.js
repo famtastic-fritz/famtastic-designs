@@ -35,6 +35,7 @@ export const getPaymentHandoff = (organization) => request(`/payment-handoff?org
 export const savePaymentHandoff = (payload) => request('/payment-handoff', { method: 'PUT', csrf: true, body: JSON.stringify(payload) });
 export const createWebsiteRequest = (payload) => request('/website-requests', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const updateWebsiteRequest = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}`, { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
+export const updateWebsiteRequestArchive = (id, action) => request(`/website-requests/${encodeURIComponent(id)}/archive`, { method: 'POST', csrf: true, body: JSON.stringify({ action }) });
 export const decideWebsiteRequestProof = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}/proof-decision`, { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const updateWebsiteRequestProofShare = (id, action) => request(`/website-requests/${encodeURIComponent(id)}/proof-share`, { method: 'POST', csrf: true, body: JSON.stringify({ action }) });
 export const sendWebsiteRequestToSiteStudio = (id) => request(`/website-requests/${encodeURIComponent(id)}/send-to-site-studio`, { method: 'POST', csrf: true });

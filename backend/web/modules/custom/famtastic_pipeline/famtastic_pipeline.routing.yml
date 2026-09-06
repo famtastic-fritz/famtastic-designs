@@ -429,6 +429,18 @@ famtastic_pipeline.customer_website_request:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.customer_website_request_archive:
+  path: '/api/customer/website-requests/{website_request}/archive'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerPortalController::websiteRequestArchive'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    website_request: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_website_request_proof_decision:
   path: '/api/customer/website-requests/{website_request}/proof-decision'
   defaults:

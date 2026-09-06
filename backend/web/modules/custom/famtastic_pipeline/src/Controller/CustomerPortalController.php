@@ -453,6 +453,23 @@ final class CustomerPortalController extends ControllerBase {
     catch (\RuntimeException) { return $this->error('website_request_not_found', 404, 'Website request not found.'); }
   }
 
+  public function websiteRequestArchive(Request $request, string $website_request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    try {
+      return $this->noStore(new JsonResponse([
+        'ok' => TRUE,
+        'website_request' => $this->portal->setWebsiteRequestArchiveState(
+          (int) $customer['id'],
+          $website_request,
+          (string) ($this->body($request)['action'] ?? ''),
+        ),
+      ]));
+    }
+    catch (\InvalidArgumentException $error) { return $this->error('invalid_archive_action', 422, $error->getMessage()); }
+    catch (\RuntimeException) { return $this->error('website_request_not_found', 404, 'Website request not found.'); }
+  }
+
   public function websiteProofDecision(Request $request, string $website_request): JsonResponse {
     $customer = $this->currentCustomer();
     if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');

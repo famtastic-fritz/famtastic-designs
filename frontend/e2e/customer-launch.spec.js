@@ -3,6 +3,15 @@ import { expect, test } from '@playwright/test';
 const email = process.env.FAMTASTIC_E2E_CUSTOMER_EMAIL;
 const password = process.env.FAMTASTIC_E2E_CUSTOMER_PASSWORD;
 
+const emptyWorkspace = (websiteRequests = []) => ({
+  organization: { public_id: 'org-proof', name: 'Tighten Up Your Locs', role: 'owner' },
+  organizations: [], projects: [], orders: [], entitlements: [], website_requests: websiteRequests,
+  threads: [], activity: [], members: [], referrals: [], articles: [], faqs: [], offers: [],
+  analytics: { entitled: false },
+  preferences: { project_email: true, support_email: true, billing_email: true, product_education: true, deals_promotions: true, analytics_digest: 'monthly', topics: [] },
+  topics: {},
+});
+
 async function assertNoHorizontalOverflow(page) {
   await expect.poll(() => page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
@@ -39,7 +48,14 @@ async function mockProofReviewPortal(page) {
     public_id: 'request-proof-review', project_name: 'Tighten Up Your Locs website', status: 'submitted', proof_review_status: 'notified', changed: 1787020000,
     intake: { recommendation: { label: 'Web Basics Bundle', reasons: ['A focused website is the smallest useful path.'] } }, direct_checkout_available: false,
     proof_share: { enabled: false, url: '', changed_at: null },
-    proofs: { campaign_id: 'campaign-proof-review', generation_status: 'ready', selected_variant: '', variants: [
+    proofs: { campaign_id: 'campaign-proof-review', generation_status: 'ready', selected_variant: '', research_snapshot: {
+      overview: 'Port St. Lucie clients need a faster path from style discovery to a booking request.',
+      direction_rationale: { a: 'A familiar service-first path.', b: 'A visual portfolio path.', c: 'A bold mobile booking path.' },
+      market_signals: ['Mobile visitors need services and availability quickly.'],
+      opportunities: ['Turn portfolio views into first-party booking requests.'],
+      sources: ['Customer interview', 'Local market review'],
+      researched_at: '2026-09-05',
+    }, review_terms: { design_reset_remaining: 1, edit_rounds_remaining: 3 }, variants: [
       { direction_id: 'a', direction_name: 'Safe', preview_url: 'https://example.test/proofs/a' },
       { direction_id: 'b', direction_name: 'Wild', preview_url: 'https://example.test/proofs/b' },
       { direction_id: 'c', direction_name: 'OMG', preview_url: 'https://example.test/proofs/c' },
@@ -82,19 +98,23 @@ test('portal home makes the website-and-proofs revenue journey unmistakable', as
   await expect(page.getByText('Website launch in seven easy steps')).toBeVisible();
   await page.getByRole('button', { name: 'Close website walkthrough' }).click();
   await expect(page.getByRole('heading', { name: 'From brief to business system' })).toBeVisible();
-  await expect(page.getByText('FAMtastic AI solutions studio', { exact: true })).toBeVisible();
+  await expect(page.getByText('FAMtastic AI Solutions Studio', { exact: true })).toBeVisible();
   await assertNoHorizontalOverflow(page);
   await page.screenshot({ path: testInfo.outputPath('portal-ai-studio-home.png'), fullPage: true });
   await page.getByRole('button', { name: 'Start my website & proofs', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Projects', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'My Projects', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: '+ Start a new website', exact: true })).toBeVisible();
 });
 
-test('proof selection is unmistakable and Make changes opens a working revision flow', async ({ page }, testInfo) => {
+test('research-led proof selection makes the payment boundary unmistakable', async ({ page }, testInfo) => {
   await mockProofReviewPortal(page);
   await page.goto('/portal');
-  await expect(page.getByRole('heading', { name: 'Projects', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'My Projects', exact: true })).toBeVisible();
   await expect(page.getByRole('status')).toContainText('Your 3 website concepts are ready below.');
+  await expect(page.getByRole('heading', { name: 'Why we designed these three directions' })).toBeVisible();
+  await page.getByText('See the research and growth opportunities').click();
+  await expect(page.getByText('Turn portfolio views into first-party booking requests.')).toBeVisible();
+  await expect(page.getByText('A visual portfolio path.')).toBeVisible();
   await page.getByRole('button', { name: 'Choose Wild', exact: true }).click();
 
   const selected = page.locator('[data-proof-direction="b"]');
@@ -103,8 +123,11 @@ test('proof selection is unmistakable and Make changes opens a working revision 
   await expect(page.locator('[data-proof-direction="a"]')).toHaveClass(/dimmed/);
   await expect(page.getByRole('heading', { name: 'Wild is your selected direction' })).toBeVisible();
   await expect(page.locator('.portal-proof-next')).toBeFocused();
+  await expect(page.getByRole('heading', { name: 'Complete payment to start the build' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Continue to secure payment →', exact: true })).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('mobile-selection-to-payment.png'), fullPage: true });
 
-  await page.getByRole('button', { name: 'Make changes', exact: true }).click();
+  await page.getByRole('button', { name: 'Request an edit round', exact: true }).click();
   const notes = page.getByLabel('Your change notes');
   await expect(notes).toBeVisible();
   await expect(notes).toBeFocused();
@@ -116,10 +139,65 @@ test('proof selection is unmistakable and Make changes opens a working revision 
   await page.screenshot({ path: testInfo.outputPath('proof-selection-and-revision.png'), fullPage: true });
 });
 
+test('multiple projects show whose turn it is and archive without deleting', async ({ page }, testInfo) => {
+  let requests = [
+    {
+      public_id: 'ready-project', project_name: 'Tighten Up Your Locs website', status: 'submitted',
+      proof_review_status: 'notified', customer_archived: false, changed: 1787021000,
+      selected_proof_direction: '', direct_checkout_available: false, intake: {}, assets: [],
+      proof_handoff: { state: 'choose_direction', label: 'Choose one direction', detail: 'Three directions are ready.' },
+      proofs: { variants: [
+        { direction_id: 'a', direction_name: 'Safe', preview_url: 'https://example.test/a' },
+        { direction_id: 'b', direction_name: 'Wild', preview_url: 'https://example.test/b' },
+        { direction_id: 'c', direction_name: 'OMG', preview_url: 'https://example.test/c' },
+      ], research_snapshot: { overview: 'Research summary.', direction_rationale: {}, market_signals: [], opportunities: [], sources: ['Interview'], researched_at: '2026-09-05' } },
+    },
+    {
+      public_id: 'draft-project', project_name: 'Holiday campaign page', status: 'draft',
+      proof_review_status: 'not_started', customer_archived: false, changed: 1787020000,
+      direct_checkout_available: false, intake: {}, assets: [], proofs: { variants: [] },
+      proof_handoff: { state: 'draft', label: 'Finish and submit your brief', detail: 'Finish the brief before proof work begins.' },
+    },
+    {
+      public_id: 'old-project', project_name: 'Old menu idea', status: 'draft',
+      proof_review_status: 'not_started', customer_archived: true, changed: 1787010000,
+      direct_checkout_available: false, intake: {}, assets: [], proofs: { variants: [] },
+      proof_handoff: { state: 'draft', label: 'Finish and submit your brief', detail: 'Saved.' },
+    },
+  ];
+  const workspace = () => emptyWorkspace(requests);
+  await page.route('**/api/customer/session', (route) => route.fulfill({ json: { customer: { display_name: 'Shay', email: 'shay@example.test' } } }));
+  await page.route('**/api/customer/catalog', (route) => route.fulfill({ json: { products: [] } }));
+  await page.route('**/session/token', (route) => route.fulfill({ body: 'mock-csrf-token' }));
+  await page.route('**/api/customer/website-requests/*/archive', async (route) => {
+    const id = route.request().url().split('/').at(-2);
+    const { action } = route.request().postDataJSON();
+    requests = requests.map((request) => request.public_id === id ? { ...request, customer_archived: action === 'archive' } : request);
+    await route.fulfill({ json: { ok: true, website_request: requests.find((request) => request.public_id === id) } });
+  });
+  await page.route('**/api/customer/workspace*', (route) => route.fulfill({ json: workspace() }));
+
+  await page.goto('/portal?section=projects');
+  await expect(page.getByRole('heading', { name: 'Choose one website direction' })).toBeVisible();
+  await expect(page.getByRole('tab', { name: /Holiday campaign page.*Your turn.*Finish your website brief/ })).toBeVisible();
+  await page.getByRole('tab', { name: /Holiday campaign page/ }).click();
+  await expect(page.getByRole('heading', { name: 'Finish your website brief' })).toBeVisible();
+  await page.getByRole('button', { name: 'Move project to Archive' }).click();
+  await expect(page.getByRole('alertdialog')).toContainText('Nothing is deleted or cancelled.');
+  await page.getByRole('button', { name: 'Yes, move to Archive' }).click();
+  await expect(page.getByRole('status')).toContainText('Nothing was deleted or cancelled.');
+  await page.getByRole('button', { name: 'Archive (2)' }).click();
+  await expect(page.getByText('Holiday campaign page')).toBeVisible();
+  await expect(page.getByText('Saved—not deleted', { exact: false }).first()).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('mobile-multiple-projects-and-archive.png'), fullPage: true });
+  await page.getByRole('button', { name: 'Restore project' }).first().click();
+  await expect(page.getByRole('status')).toContainText('Project restored to your active list.');
+});
+
 test('proof email deep link opens the exact request and identifies a wrong signed-in account', async ({ page }) => {
   await mockProofReviewPortal(page);
   await page.goto('/portal/?section=projects&request=request-proof-review');
-  await expect(page.getByRole('heading', { name: 'Projects', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'My Projects', exact: true })).toBeVisible();
   await expect(page.locator('#website-request-request-proof-review')).toHaveClass(/portal-request-target/);
   await expect(page.getByRole('status')).toContainText('Your 3 website concepts are ready below. Compare each direction and choose when you are ready.');
   await expect(page.getByRole('button', { name: 'Choose Safe', exact: true })).toBeVisible();
@@ -134,6 +212,7 @@ test('proof email deep link opens the exact request and identifies a wrong signe
 test('proof owner can create, replace, and revoke a view-only share link', async ({ page }) => {
   await mockProofReviewPortal(page);
   await page.goto('/portal/?section=projects&request=request-proof-review');
+  await page.getByText('Share concepts with someone else', { exact: false }).click();
   const sharing = page.getByRole('switch', { name: 'Sharing off' });
   await expect(sharing).toHaveAttribute('aria-checked', 'false');
   await sharing.click();
@@ -142,6 +221,7 @@ test('proof owner can create, replace, and revoke a view-only share link', async
   await page.getByRole('button', { name: 'Create a new link' }).click();
   await expect(page.getByLabel('Unlisted link')).toHaveValue(/new-signature$/);
   await page.getByRole('switch', { name: 'Sharing on' }).click();
+  await page.getByText('Share concepts with someone else', { exact: false }).click();
   await expect(page.getByRole('switch', { name: 'Sharing off' })).toHaveAttribute('aria-checked', 'false');
   await expect(page.getByLabel('Unlisted link')).toHaveCount(0);
 });
@@ -176,7 +256,7 @@ test('public preview room is a private decision aid with one workspace handoff',
     ],
   } } }));
   await page.goto('/proofs/preview/preview-pit/public-signature');
-  await expect(page.getByRole('heading', { name: 'Three exploratory directions for Pros In Training' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '3 exploratory directions for Pros In Training' })).toBeVisible();
   await expect(page.getByText('Private review concept · Not yet published.')).toBeVisible();
   await expect(page.getByRole('link', { name: /Open working concept/ })).toHaveCount(3);
   await expect(page.getByText('No selection, price, checkout, or publishing happens here')).toBeVisible();
@@ -196,7 +276,7 @@ test('customer account, portal, project, and purchase UI are mobile-safe', async
   await signIn(page);
   await expect(page.getByRole('button', { name: 'Start my website & proofs', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Start my website & proofs', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Projects', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'My Projects', exact: true })).toBeVisible();
   for (const section of ['Services', 'Messages', 'Projects']) {
     const menu = page.getByRole('button', { name: 'Menu', exact: true });
     if (await menu.isVisible()) await menu.click();

@@ -1,49 +1,70 @@
 import { useEffect, useRef, useState } from 'react';
-import { Panel, Empty, title, money, date } from './PortalShared.jsx';
+import { Panel, title, date } from './PortalShared.jsx';
 import { collectUtmParams } from '../../api/pipeline.js';
+
+export function customerNextStep(request) {
+  if (!request) return null;
+  if (request.status === 'draft') {
+    return { owner: 'you', tone: 'action', label: 'Finish your website brief', detail: 'Tell us what the business sells and what the site needs to accomplish.', action: 'brief' };
+  }
+  if (['customer_ready', 'notified'].includes(request.proof_review_status) && !request.selected_proof_direction) {
+    return { owner: 'you', tone: 'action', label: 'Choose one website direction', detail: 'Review the research and open all three concepts before choosing one.', action: 'proofs' };
+  }
+  if (request.proof_review_status === 'revision_requested') {
+    return { owner: 'famtastic', tone: 'waiting', label: 'FAMtastic is working on your changes', detail: 'Your notes are saved. You do not need to do anything right now.', action: '' };
+  }
+  if (request.proof_review_status === 'selected' && request.direct_checkout_available) {
+    return { owner: 'you', tone: 'action', label: 'Complete payment to start the build', detail: 'Your direction is saved. Secure checkout is the next separate step.', action: 'payment' };
+  }
+  if (request.status === 'checkout_started') {
+    return { owner: 'you', tone: 'action', label: 'Finish secure checkout', detail: 'Your direction is saved, but payment is not recorded yet.', action: 'billing' };
+  }
+  if (request.status === 'converted') {
+    return { owner: 'famtastic', tone: 'waiting', label: 'Your build is underway', detail: 'Payment is recorded. FAMtastic owns the next build update.', action: '' };
+  }
+  if (request.proof_review_status === 'selected') {
+    return { owner: 'famtastic', tone: 'waiting', label: 'FAMtastic is preparing your build offer', detail: 'Your direction is saved. Nothing else is required until your offer is ready.', action: '' };
+  }
+  if (request.proof_handoff?.state === 'needs_attention') {
+    return { owner: 'famtastic', tone: 'attention', label: 'FAMtastic needs to repair this proof run', detail: 'Your brief is safe. You do not need to submit it again.', action: '' };
+  }
+  return { owner: 'famtastic', tone: 'waiting', label: request.proof_handoff?.label || 'FAMtastic is preparing your concepts', detail: request.proof_handoff?.detail || 'You do not need to do anything right now.', action: '' };
+}
 
 function ProofDecisionGuide({ request }) {
   const research = request.proofs?.research_snapshot;
   const terms = request.proofs?.review_terms || {};
   const signals = research?.market_signals || [];
   const opportunities = research?.opportunities || [];
-  const directions = research?.direction_rationale || {};
 
   return (
     <section className="portal-proof-decision-guide" aria-label="Research and review guide">
       <div>
-        <span className="eyebrow">Why these directions</span>
-        <h3>Built from your business research—not a template swap.</h3>
+        <span className="eyebrow">Start here</span>
+        <h3>Why we designed these three directions</h3>
         <p>
           {research?.overview || 'Your research brief will be published with the concepts that FAMtastic approves for review.'}
         </p>
       </div>
 
-      {Object.keys(directions).length > 0 && (
-        <div className="portal-proof-rationale" aria-label="Direction rationale">
-          {Object.entries(directions).map(([direction, rationale]) => (
-            <p key={direction}>
-              <strong>{direction.toUpperCase()}:</strong> {rationale}
-            </p>
-          ))}
-        </div>
-      )}
-
       {(signals.length > 0 || opportunities.length > 0) && (
-        <div className="portal-proof-research-list">
-          {signals.length > 0 && (
-            <div>
-              <strong>What we found</strong>
-              <ul>{signals.map((signal) => <li key={signal}>{signal}</li>)}</ul>
-            </div>
-          )}
-          {opportunities.length > 0 && (
-            <div>
-              <strong>Growth moves this site supports</strong>
-              <ul>{opportunities.map((opportunity) => <li key={opportunity}>{opportunity}</li>)}</ul>
-            </div>
-          )}
-        </div>
+        <details className="portal-proof-research-details">
+          <summary>See the research and growth opportunities</summary>
+          <div className="portal-proof-research-list">
+            {signals.length > 0 && (
+              <div>
+                <strong>What we found</strong>
+                <ul>{signals.map((signal) => <li key={signal}>{signal}</li>)}</ul>
+              </div>
+            )}
+            {opportunities.length > 0 && (
+              <div>
+                <strong>Ways this site can help you grow</strong>
+                <ul>{opportunities.map((opportunity) => <li key={opportunity}>{opportunity}</li>)}</ul>
+              </div>
+            )}
+          </div>
+        </details>
       )}
 
       {research?.sources?.length > 0 && (
@@ -54,16 +75,17 @@ function ProofDecisionGuide({ request }) {
       )}
 
       <div className="portal-proof-terms">
-        <strong>Your included review path</strong>
-        <span>3 concepts to compare</span>
-        <span>{terms.design_reset_remaining ?? 1} design reset remaining</span>
-        <span>{terms.edit_rounds_remaining ?? 3} edit rounds after you choose</span>
+        <strong>What happens next</strong>
+        <span>1. Open all 3</span>
+        <span>2. Choose one</span>
+        <span>3. Pay to start the build</span>
       </div>
+      <small className="portal-proof-included">Included: {terms.design_reset_remaining ?? 1} full design reset before selection and {terms.edit_rounds_remaining ?? 3} edit rounds after selection.</small>
     </section>
   );
 }
 
-export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
+export function WebsiteProofReview({ request, busy, onDecision, onShare, onContinue }) {
   const [revisionOpen, setRevisionOpen] = useState(false);
   const [savingDirection, setSavingDirection] = useState('');
   const [copied, setCopied] = useState(false);
@@ -77,6 +99,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
   const revisionPending = request.proof_review_status === 'revision_requested';
   const proofShare = request.proof_share || { enabled: false, url: '' };
   const terms = request.proofs?.review_terms || {};
+  const directionRationale = request.proofs?.research_snapshot?.direction_rationale || {};
   const changesRemaining = selectedDirection
     ? (terms.edit_rounds_remaining ?? 3)
     : (terms.design_reset_remaining ?? 1);
@@ -129,6 +152,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
       aria-label={`Review concepts for ${request.project_name}`}
     >
       <ProofDecisionGuide request={request} />
+      <p className="portal-proof-swipe-hint">Swipe sideways to compare all three directions.</p>
       <div className={`portal-proof-grid${selectedDirection ? ' has-selection' : ''}`}>
         {variants.map((proof) => {
           const selected = selectedDirection === proof.direction_id;
@@ -161,6 +185,9 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
                 <b>{proof.direction_name}</b>
                 <span>Open working concept ↗</span>
               </a>
+              {directionRationale[proof.direction_id] && (
+                <p className="portal-proof-card-rationale">{directionRationale[proof.direction_id]}</p>
+              )}
               <button
                 type="button"
                 aria-pressed={selected}
@@ -196,12 +223,21 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
           <p>
             {revisionPending
               ? 'Fritz has your notes. This request will stay visible while the next proof round is prepared.'
-              : 'Review it again, request changes, or continue when you are comfortable with the direction.'}
+              : request.status === 'converted'
+              ? 'Payment is recorded and your build has started. FAMtastic owns the next update.'
+              : request.direct_checkout_available
+              ? 'Your choice is saved. Payment is the next separate step and starts the build.'
+              : 'Your choice is saved. FAMtastic is preparing the approved offer or next build step.'}
           </p>
           <div className="portal-proof-next__actions">
             <a href={selectedProof.preview_url} target="_blank" rel="noreferrer">
               Open selected proof ↗
             </a>
+            {!revisionPending && request.direct_checkout_available && (
+              <button type="button" onClick={() => onContinue(request.public_id)}>
+                Continue to secure payment →
+              </button>
+            )}
             <button
               className="quiet"
               type="button"
@@ -276,19 +312,21 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
         </form>
       )}
 
-      <section
-        className={`portal-proof-share${proofShare.enabled ? ' is-enabled' : ''}`}
-        aria-labelledby={`proof-share-title-${request.public_id}`}
-      >
+      <details className="portal-project-secondary portal-proof-sharing" open={proofShare.enabled || undefined}>
+        <summary>Share concepts with someone else <span>Optional</span></summary>
+        <section
+          className={`portal-proof-share${proofShare.enabled ? ' is-enabled' : ''}`}
+          aria-labelledby={`proof-share-title-${request.public_id}`}
+        >
         <div>
           <span>Optional sharing</span>
           <h3 id={`proof-share-title-${request.public_id}`}>
-            Share these proofs without requiring sign-in
+            Create a view-only link
           </h3>
           <p>
             {proofShare.enabled
-              ? 'Anyone with this unlisted link can view the working concepts. They cannot choose a design, request changes, purchase, or see your account details.'
-              : 'Create a revocable, unlisted link when you want a colleague or decision-maker to compare the concepts.'}
+              ? 'Anyone with this unlisted link can view the concepts. They cannot choose, request changes, purchase, or see account details.'
+              : 'Use this only when a colleague or decision-maker should compare the concepts.'}
           </p>
         </div>
         <button
@@ -327,7 +365,8 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare }) {
             <small>Creating a new link immediately revokes this one.</small>
           </div>
         )}
-      </section>
+        </section>
+      </details>
     </section>
   );
 }
@@ -900,18 +939,24 @@ export default function PortalProjectsView({
   onUploadAsset,
   onDecideProof,
   onShareProof,
+  onArchiveRequest,
   navigate,
 }) {
   const [dnaOpen, setDnaOpen] = useState(false);
+  const [showArchive, setShowArchive] = useState(false);
+  const [archiveConfirmId, setArchiveConfirmId] = useState('');
   const requests = workspace.website_requests || [];
+  const activeRequests = requests.filter((request) => !request.customer_archived);
+  const archivedRequests = requests.filter((request) => request.customer_archived);
   const proofReady = (req) => [3, 6].includes(req?.proofs?.variants?.length);
 
   const activeRequest =
-    requests.find((req) => req.public_id === targetRequest) ||
-    requests.find((req) => req.public_id === activeRequestId) ||
-    requests.find((req) => ['customer_ready', 'notified'].includes(req.proof_review_status) && proofReady(req)) ||
-    requests[0] ||
+    activeRequests.find((req) => req.public_id === activeRequestId) ||
+    activeRequests.find((req) => req.public_id === targetRequest) ||
+    activeRequests.find((req) => ['customer_ready', 'notified'].includes(req.proof_review_status) && proofReady(req)) ||
+    activeRequests[0] ||
     null;
+  const nextStep = customerNextStep(activeRequest);
   const proofHandoff = activeRequest?.proof_handoff || {
     state: activeRequest?.status === 'draft' ? 'draft' : 'queued',
     label: activeRequest?.status === 'draft' ? 'Finish and submit your brief' : 'Proof request queued',
@@ -921,9 +966,11 @@ export default function PortalProjectsView({
   };
 
   const requestChips =
-    requests.length > 1 ? (
-      <div className="portal-request-chips" role="tablist" aria-label="Website requests">
-        {requests.map((request) => (
+    activeRequests.length > 1 ? (
+      <div className="portal-request-chips" role="tablist" aria-label="Active website projects">
+        {activeRequests.map((request) => {
+          const step = customerNextStep(request);
+          return (
           <button
             key={request.public_id}
             role="tab"
@@ -933,11 +980,11 @@ export default function PortalProjectsView({
           >
             <strong>{request.project_name}</strong>
             <small>
-              {title(request.status)}
-              {proofReady(request) ? ' · concepts ready' : ''}
+              {step.owner === 'you' ? 'Your turn' : 'FAMtastic’s turn'} · {step.label}
             </small>
           </button>
-        ))}
+          );
+        })}
       </div>
     ) : null;
 
@@ -948,7 +995,7 @@ export default function PortalProjectsView({
           <span>One account. Every website.</span>
           <h2>Your Website Project Command Center</h2>
           <p>
-            Save a private brief, submit it for FAMtastic review, and compare working concepts only after the complete proof set is ready.
+            Choose a project below. We will always show whose turn it is and the one thing that happens next.
           </p>
         </div>
         <button onClick={() => setEditingRequest({})}>+ Start a new website</button>
@@ -969,6 +1016,26 @@ export default function PortalProjectsView({
       {!editingRequest && activeRequest && (
         <section className="portal-request-list">
           {requestChips}
+
+          <section className={`portal-project-next-step is-${nextStep.tone}`} aria-label="Your next project step">
+            <span>{nextStep.owner === 'you' ? 'Your turn' : 'FAMtastic’s turn'}</span>
+            <div>
+              <h3>{nextStep.label}</h3>
+              <p>{nextStep.detail}</p>
+            </div>
+            {nextStep.action === 'brief' && (
+              <button type="button" onClick={() => setEditingRequest(activeRequest)}>Finish brief →</button>
+            )}
+            {nextStep.action === 'proofs' && (
+              <a href={`#proof-review-${activeRequest.public_id}`}>Review 3 directions ↓</a>
+            )}
+            {nextStep.action === 'payment' && (
+              <button type="button" onClick={() => navigate(`/buy?request=${encodeURIComponent(activeRequest.public_id)}`)}>Continue to payment →</button>
+            )}
+            {nextStep.action === 'billing' && (
+              <button type="button" onClick={() => navigate('/portal?section=billing')}>Open billing →</button>
+            )}
+          </section>
 
           <Panel
             key={activeRequest.public_id}
@@ -996,71 +1063,17 @@ export default function PortalProjectsView({
               </div>
             </dl>
 
-            {/* DOMAIN & CLOUD PROVISIONING MANAGER */}
-            <ProjectDomainHostingManager
-              request={activeRequest}
-              busy={busy}
-              onSave={onSaveWebsiteRequest}
-            />
-
-            {/* PRIVATE SPECIAL OFFER IF ACTIVE */}
-            {activeRequest.private_offer && (
-              <div
-                className="portal-private-offer-card"
-                style={{
-                  margin: '1.25rem 0',
-                  padding: '1.15rem',
-                  border: '1px solid #7cfc00',
-                  borderRadius: '14px',
-                  background: 'rgba(124,252,0,0.08)',
-                }}
-              >
-                <span
-                  style={{
-                    color: '#7cfc00',
-                    fontSize: '0.75rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    fontWeight: '800',
-                  }}
-                >
-                  ⚡ Exclusive Private Offer Active
-                </span>
-                <h3 style={{ margin: '0.4rem 0 0.2rem', fontSize: '1.25rem', color: '#fff' }}>
-                  {activeRequest.private_offer.reason || 'Special Approved Package Price'}
-                </h3>
-                <p style={{ margin: '0.25rem 0 0.85rem', color: '#c2ccc2' }}>
-                  Offered Rate:{' '}
-                  <strong style={{ color: '#7cfc00', fontSize: '1.2rem' }}>
-                    {money(activeRequest.private_offer.offered_amount_minor)}
-                  </strong>
-                  {activeRequest.private_offer.list_amount_minor >
-                    activeRequest.private_offer.offered_amount_minor && (
-                    <span
-                      style={{
-                        textDecoration: 'line-through',
-                        opacity: 0.6,
-                        marginLeft: '0.65rem',
-                      }}
-                    >
-                      {money(activeRequest.private_offer.list_amount_minor)} list
-                    </span>
-                  )}
-                </p>
-                <button
-                  type="button"
-                  onClick={() =>
-                    navigate(`/buy?request=${encodeURIComponent(activeRequest.public_id)}`)
-                  }
-                >
-                  Accept Offer &amp; Purchase →
-                </button>
-              </div>
-            )}
+            <details className="portal-project-secondary">
+              <summary>
+                Domain and hosting
+                <span>{activeRequest.existing_domain || activeRequest.intake?.desired_domains || 'Choose later'}</span>
+              </summary>
+              <ProjectDomainHostingManager request={activeRequest} busy={busy} onSave={onSaveWebsiteRequest} />
+            </details>
 
             {/* CONCEPT PROOFS OR DURABLE HANDOFF STATUS */}
             {proofReady(activeRequest) ? (
-              <div style={{ marginTop: '1.5rem' }}>
+              <div id={`proof-review-${activeRequest.public_id}`} style={{ marginTop: '1.5rem', scrollMarginTop: '5rem' }}>
                 <h3 style={{ margin: '0 0 0.75rem', fontSize: '1.3rem', color: '#fff' }}>
                   Review Your Interactive Concepts
                 </h3>
@@ -1069,6 +1082,7 @@ export default function PortalProjectsView({
                   busy={busy}
                   onDecision={onDecideProof}
                   onShare={onShareProof}
+                  onContinue={(requestId) => navigate(`/buy?request=${encodeURIComponent(requestId)}`)}
                 />
               </div>
             ) : (
@@ -1105,8 +1119,9 @@ export default function PortalProjectsView({
               </div>
             )}
 
-            {/* ASSETS SECTION */}
-            <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--p-line)' }}>
+            <details className="portal-project-secondary" style={{ marginTop: '1rem' }}>
+              <summary>Project files <span>{activeRequest.assets?.length || 0} attached</span></summary>
+              <div style={{ paddingTop: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                 <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#fff' }}>Project Assets &amp; Files</h4>
                 <small style={{ color: '#8e998e' }}>{activeRequest.assets?.length || 0} attached</small>
@@ -1137,24 +1152,14 @@ export default function PortalProjectsView({
                   No logos or reference files attached yet. Add files via the brief editor anytime.
                 </p>
               )}
-            </div>
+              </div>
+            </details>
 
             {/* ACTION TOOLBAR */}
             <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
               <button type="button" onClick={() => setEditingRequest(activeRequest)}>
                 Edit Full Brief 📝
               </button>
-              {activeRequest.direct_checkout_available && (
-                <button
-                  type="button"
-                  className="secondary"
-                  onClick={() =>
-                    navigate(`/buy?request=${encodeURIComponent(activeRequest.public_id)}`)
-                  }
-                >
-                  Purchase Package →
-                </button>
-              )}
               <button
                 type="button"
                 className="quiet"
@@ -1162,7 +1167,29 @@ export default function PortalProjectsView({
               >
                 {dnaOpen ? 'Hide Build DNA ▴' : 'Inspect Build DNA ▾'}
               </button>
+              <button
+                type="button"
+                className="quiet"
+                onClick={() => setArchiveConfirmId(activeRequest.public_id)}
+              >
+                Move project to Archive
+              </button>
             </div>
+
+            {archiveConfirmId === activeRequest.public_id && (
+              <section className="portal-archive-confirm" role="alertdialog" aria-labelledby={`archive-title-${activeRequest.public_id}`}>
+                <div>
+                  <h3 id={`archive-title-${activeRequest.public_id}`}>Hide this project from your active list?</h3>
+                  <p>Nothing is deleted or cancelled. Its brief, research, proofs, files, selection, and payment history stay saved, and you can restore it anytime.</p>
+                </div>
+                <div>
+                  <button type="button" disabled={busy} onClick={async () => {
+                    if (await onArchiveRequest(activeRequest.public_id, 'archive')) setArchiveConfirmId('');
+                  }}>Yes, move to Archive</button>
+                  <button type="button" className="quiet" onClick={() => setArchiveConfirmId('')}>Keep it active</button>
+                </div>
+              </section>
+            )}
 
             {/* BUILD DNA VIEWER */}
             {dnaOpen && (
@@ -1215,15 +1242,38 @@ export default function PortalProjectsView({
       )}
 
       {/* If no requests exist */}
-      {!editingRequest && !activeRequest && (
-        <Panel eyebrow="Projects" title="No website requests yet">
+      {!editingRequest && !activeRequest && activeRequests.length === 0 && (
+        <Panel eyebrow="Projects" title={archivedRequests.length > 0 ? 'No active projects' : 'No website requests yet'}>
           <p>
-            Start with a short, reusable brief. Your domain name, 1-year fast cloud hosting instance, reference files, and 3 working concepts will live here.
+            {archivedRequests.length > 0
+              ? 'Your active list is clear. Restore an archived project below, or start something new.'
+              : 'Start with a short, reusable brief. Your domain, reference files, research, and three working concepts will live here.'}
           </p>
           <button type="button" onClick={() => setEditingRequest({})}>
             + Start your first website request
           </button>
         </Panel>
+      )}
+
+      {!editingRequest && archivedRequests.length > 0 && (
+        <section className="portal-archive">
+          <button type="button" className="quiet portal-archive-toggle" aria-expanded={showArchive} onClick={() => setShowArchive((open) => !open)}>
+            {showArchive ? 'Hide Archive' : `Archive (${archivedRequests.length})`}
+          </button>
+          {showArchive && (
+            <div className="portal-archive-list">
+              {archivedRequests.map((request) => (
+                <article key={request.public_id}>
+                  <div>
+                    <strong>{request.project_name}</strong>
+                    <span>Saved—not deleted · {title(request.status)}</span>
+                  </div>
+                  <button type="button" className="quiet" disabled={busy} onClick={() => onArchiveRequest(request.public_id, 'restore')}>Restore project</button>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       )}
 
       {/* Active purchased projects if any */}
