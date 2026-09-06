@@ -73,6 +73,7 @@ mkdir -p "$SANDBOX/backend/web/sites/default/files" "$SANDBOX/backend/private"
       "famtastic_lead_import",
       "famtastic_email_message",
       "famtastic_build_run",
+      "famtastic_proof_version",
       "famtastic_revenue_freshness",
     ] as $table) {
       assert($schema->tableExists($table), $table);

@@ -2,17 +2,26 @@
 
 ## Canonical proof command
 
-Run `scripts/run-customer-proof-agent.sh`. It validates the idempotent Commerce
-catalog, then exercises a correlated synthetic customer from imported lead
-through proof, consent, stub payment, intake, add-on, approval, isolated deploy,
-domain fixture, hosting lifecycle, verified account login, portal data,
-preferences, support acknowledgement, and evidence generation.
+Run `scripts/run-customer-proof-agent.sh`. By default it creates a disposable
+Drupal + SQLite runtime, then validates the idempotent Commerce catalog. Its
+inner runner only starts after that fresh runtime is ready. It exercises a correlated synthetic
+customer from imported lead and research through exactly three proofs, account
+selection, contract-bound checkout and signed synthetic webhook, fulfillment,
+isolated deploy, domain fixture, hosting lifecycle, verified account login,
+portal/Owner Desk data, preferences, support acknowledgement, and evidence
+generation.
 
-The runner deliberately uses memory email, a signed stub payment webhook,
-fixture DNS, and a temporary deployment root. It does not prove Stripe TEST
-Checkout, real mailbox delivery, DNS purchase, or production renewal billing.
-Evidence is written under `.artifacts/proof-runs/<run-id>/`. Synthetic database
-records are preserved for now; strict run-ID cleanup remains a launch gate.
+The runner deliberately uses memory email, a signed synthetic webhook, fixture
+DNS, and a temporary deployment root. It never reuses the worktree database or
+any configured provider account. Retained, redacted evidence is written under
+`.artifacts/fresh-customer-proof/<run-id>/evidence.json`; its schema records
+the source SHA, local-only safety profile, the customer-journey evidence, and
+the lifecycle evidence. The temporary Drupal database and runtime are deleted
+after the run.
+
+It does not prove Stripe TEST Checkout, real mailbox delivery, DNS purchase, or
+production renewal billing. Those remain separately authorized provider or
+production-smoke gates.
 
 ## Implemented and locally proven
 

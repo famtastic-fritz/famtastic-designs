@@ -281,7 +281,6 @@ class PipelineController extends ControllerBase {
       return $this->error('revision_addon_checkout_pending', 409, 'A revision add-on checkout is already pending.');
     }
     $contact = (string) ($prospect->get('contact_value')->value ?: $prospect->get('public_email')->value);
-    $renewalDeal = $this->ledger->dealSnapshotForSkus(['FAM-HOST-999']);
     $acceptanceId = $this->ledger->recordConsent(
       $contact,
       'accepted',
@@ -354,6 +353,14 @@ class PipelineController extends ControllerBase {
     return in_array($host, ['localhost', '127.0.0.1'], TRUE);
   }
 
+  /** Converts a catalog dollar price to minor units without float rounding. */
+  private function catalogPriceMinor(string $price): int {
+    if (!preg_match('/^(?<dollars>0|[1-9][0-9]*)(?:\\.(?<cents>[0-9]{1,2}))?$/', $price, $matches)) {
+      throw new \RuntimeException('invalid_catalog_price');
+    }
+    return ((int) $matches['dollars'] * 100) + (int) str_pad((string) ($matches['cents'] ?? ''), 2, '0');
+  }
+
   /**
    * POST /api/pipeline/hosting-renewal — separately authorize month-13 billing.
    */
@@ -377,6 +384,29 @@ class PipelineController extends ControllerBase {
     }
     $amountMinor = (int) (getenv('FAMTASTIC_HOSTING_MONTHLY_AMOUNT') ?: Settings::get('famtastic_hosting_monthly_amount', 0));
     if ($amountMinor <= 0) {
+      return $this->error('renewal_pricing_unavailable', 503, 'Monthly hosting renewal is not available yet.');
+    }
+    // The later recurring agreement must inherit the launch tier's exact
+    // catalog promise. Reject configuration that would authorize a price not
+    // backed by that immutable offer contract.
+    $order = $project->get('order_ref')->entity;
+    $renewalSku = match ((string) ($order?->get('package')->value ?? '')) {
+      'essential_199', 'basic_199' => 'FAM-HOST-999',
+      'business_499' => 'FAM-HOST-BUSINESS-1999',
+      default => '',
+    };
+    if ($renewalSku === '') {
+      return $this->error('renewal_contract_unavailable', 503, 'The hosting renewal contract is unavailable.');
+    }
+    try {
+      $renewalDeal = $this->ledger->dealSnapshotForSkus([$renewalSku]);
+      $contractAmountMinor = $this->catalogPriceMinor((string) ($renewalDeal['items'][0]['product']['price'] ?? ''));
+    }
+    catch (\Throwable $e) {
+      $this->getLogger('famtastic_pipeline')->error('Hosting renewal contract unavailable: @m', ['@m' => $e->getMessage()]);
+      return $this->error('renewal_contract_unavailable', 503, 'The hosting renewal contract is unavailable.');
+    }
+    if ($contractAmountMinor !== $amountMinor) {
       return $this->error('renewal_pricing_unavailable', 503, 'Monthly hosting renewal is not available yet.');
     }
     $data = $this->jsonBody($request);

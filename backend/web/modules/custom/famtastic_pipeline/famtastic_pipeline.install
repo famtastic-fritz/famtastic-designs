@@ -31,6 +31,7 @@ function famtastic_pipeline_update_8001(&$sandbox) {
  */
 function famtastic_pipeline_schema(): array {
   return _famtastic_pipeline_automation_schema() + [
+    'famtastic_proof_version' => _famtastic_pipeline_proof_version_schema(),
     'famtastic_website_proof_research_snapshot' => _famtastic_pipeline_website_proof_research_snapshot_schema(),
     'famtastic_booking_site_owner' => _famtastic_pipeline_booking_site_owner_schema(),
     'famtastic_booking_request' => _famtastic_pipeline_booking_request_schema(),
@@ -2755,7 +2756,7 @@ function famtastic_pipeline_update_8052(&$sandbox) {
       continue;
     }
     $now = \Drupal::time()->getRequestTime();
-    $database->merge('famtastic_website_proof_research_snapshot')->key(['website_request_id' => (int) $row['id']])->fields([
+    $database->merge('famtastic_website_proof_research_snapshot')->key('website_request_id', (int) $row['id'])->fields([
       'proof_campaign_id' => (int) $row['proof_campaign_id'],
       'snapshot_json' => json_encode($snapshot, JSON_UNESCAPED_SLASHES),
       'snapshot_hash' => hash('sha256', json_encode($snapshot, JSON_UNESCAPED_SLASHES)),

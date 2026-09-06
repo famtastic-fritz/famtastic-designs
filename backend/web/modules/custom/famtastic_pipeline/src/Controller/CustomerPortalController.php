@@ -392,7 +392,9 @@ final class CustomerPortalController extends ControllerBase {
       'recurring_authorized' => !empty($data['recurring_authorized']),
       'marketing_opt_in' => !empty($data['marketing_opt_in']),
       'selected_skus' => $skus,
-      'offer_contracts' => array_map(fn(string $sku): array => $this->offerContractSnapshot($sku), $skus),
+      // Preserve the checkout contract by SKU. Fulfillment reads this exact
+      // keyed snapshot and must never fall back to today's catalog.
+      'offer_contracts' => array_combine($skus, array_map(fn(string $sku): array => $this->offerContractSnapshot($sku), $skus)),
       'website_request_public_id' => $websiteRequest['public_id'] ?? '',
       'private_offer' => $privateOffer ? ['public_id' => $privateOffer['public_id'], 'sku' => $privateOffer['sku'], 'list_amount_minor' => (int) $privateOffer['list_amount_minor'], 'offered_amount_minor' => (int) $privateOffer['offered_amount_minor'], 'reason' => $privateOffer['reason']] : NULL,
       'grant' => $grantQuote ? array_diff_key($grantQuote, ['id' => TRUE]) : NULL,

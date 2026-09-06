@@ -2,7 +2,8 @@
 set -euo pipefail
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 run_id="${FAMTASTIC_SYNTHETIC_RUN_ID:-$(date +%s)-$$}"
-evidence_dir="$repo_root/.artifacts/lifecycle-runs/$run_id"
+evidence_root="${FAMTASTIC_LIFECYCLE_EVIDENCE_ROOT:-$repo_root/.artifacts/lifecycle-runs}"
+evidence_dir="$evidence_root/$run_id"
 capture="$evidence_dir/mail.jsonl"
 mkdir -p "$evidence_dir"
 FAMTASTIC_SYNTHETIC_RUN_ID="$run_id" \

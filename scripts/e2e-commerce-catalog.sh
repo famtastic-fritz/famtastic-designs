@@ -13,9 +13,17 @@ count_before="$($DRUSH --root="$REPO_ROOT/backend/web" sqlq "SELECT COUNT(*) FRO
 count_after="$($DRUSH --root="$REPO_ROOT/backend/web" sqlq "SELECT COUNT(*) FROM commerce_product_variation_field_data;")"
 test "$count_before" = "$count_after"
 
+FAMTASTIC_PRODUCT_EXPECTATIONS="$(jq -c '.products' "$REPO_ROOT/backend/config/famtastic-products.json")" \
 "$DRUSH" --root="$REPO_ROOT/backend/web" php:eval '
   $storage = \Drupal::entityTypeManager()->getStorage("commerce_product_variation");
-  $assert = static function (string $sku, string $title, string $amount, bool $published, array $entitlements) use ($storage): void {
+  $catalog = json_decode((string) getenv("FAMTASTIC_PRODUCT_EXPECTATIONS"), TRUE, 512, JSON_THROW_ON_ERROR);
+  assert(is_array($catalog) && count($catalog) === 16, "catalog contract");
+  $assert = static function (array $definition) use ($storage): void {
+    $sku = (string) $definition["sku"];
+    $title = (string) $definition["title"];
+    $amount = (string) $definition["price"];
+    $published = (bool) $definition["published"];
+    $entitlements = (array) ($definition["entitlements"] ?? []);
     $matches = $storage->loadByProperties(["sku" => $sku]);
     assert(count($matches) === 1, "$sku must exist exactly once");
     $variation = reset($matches);
@@ -24,22 +32,9 @@ test "$count_before" = "$count_after"
     assert($variation->isPublished() === $published, "$sku publication status");
     assert(array_column($variation->get("field_entitlement_keys")->getValue(), "value") === $entitlements, "$sku entitlements");
   };
-  $assert("FAM-FOOT-199", "Web Basics Bundle — Website Launch", "199.00", TRUE, ["website_service", "hosting_included_year", "domain_choice"]);
-  $assert("FAM-BUSINESS-499", "Business Website Bundle — Growth Launch", "499.00", TRUE, ["business_website_service", "hosting_business_included_year", "domain_choice", "lead_capture", "foundational_seo", "analytics_connection"]);
-  $assert("FAM-HOST-999", "Basic Managed Hosting — Monthly Renewal", "9.99", TRUE, ["hosting_recurring"]);
-  $assert("FAM-HOST-BUSINESS-1999", "Business Managed Hosting — Monthly Renewal", "19.99", TRUE, ["hosting_business_recurring"]);
-  $assert("FAM-REVISION-75", "Additional Revision Round", "75.00", TRUE, ["revision_round"]);
-  $assert("FAM-PAGE-EXTRA", "Additional Website Page", "149.00", TRUE, ["additional_page"]);
-  $assert("FAM-COPY", "Copywriting Assistance", "199.00", TRUE, ["copywriting"]);
-  $assert("FAM-BRAND", "Logo and Brand Starter", "249.00", TRUE, ["brand_starter"]);
-  $assert("FAM-SCHEDULING", "Appointment Scheduling", "149.00", TRUE, ["appointment_scheduling"]);
-  $assert("FAM-LEAD-AUTOMATION", "Lead Automation", "299.00", TRUE, ["lead_automation"]);
-  $assert("FAM-AI-AGENT", "AI Website Agent Setup", "499.00", TRUE, ["ai_site_agent"]);
-  $assert("FAM-ANALYTICS", "Growth Analytics — Monthly", "29.99", TRUE, ["customer_analytics"]);
-  $assert("FAM-LOCAL-SEO", "Local SEO Setup", "299.00", TRUE, ["local_seo"]);
-  $assert("FAM-MAINTENANCE", "Website Maintenance — Monthly", "49.99", TRUE, ["maintenance"]);
-  $assert("FAM-BUSINESS-EMAIL", "Business Email Setup", "99.00", TRUE, ["business_email"]);
-  $assert("FAM-ECOMMERCE-DISCOVERY", "Ecommerce Discovery", "149.00", TRUE, ["ecommerce_discovery"]);
+  foreach ($catalog as $definition) {
+    $assert($definition);
+  }
 '
 
-echo "PASS: Commerce catalog is idempotent and every launch product has the expected price, publication state, and entitlement."
+echo "PASS: Commerce catalog is idempotent and every configured product has the expected title, price, publication state, and entitlement."

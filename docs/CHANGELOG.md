@@ -99,6 +99,23 @@
   canvas edge.
 - Whole-flood measured spend: `booked-and-losing` $0.504, `already-know-the-game`
   $0.3024, `see-it-first` $0.00, `ive-managed-fine` $0.00.
+## 2026-09-06 — Canonical customer proof now runs from a fresh Drupal runtime
+
+- The canonical customer-proof entry point now delegates to a disposable
+  Drupal/SQLite runtime by default. It copies only the needed source and a
+  matching vendor runtime, proves the full synthetic intake → research → three
+  proofs → selection → signed checkout contract/webhook → fulfillment →
+  portal/Owner Desk path, then removes the runtime.
+- Each passing run retains a redacted `famtastic.fresh-customer-journey.v1`
+  evidence bundle under `.artifacts/fresh-customer-proof/`, with the source SHA,
+  safety profile, and linked journey/lifecycle evidence. The wrapper refuses
+  live provider/transport values; no email, booking, charge, domain mutation,
+  deployment, or production database is used.
+- Fresh-install coverage now includes the proof-version table and catches
+  catalog/contract drift. The checkout contract map is keyed by SKU, website
+  discovery registration includes its public request identifier, and hosting
+  renewal consent is tied to the original launch tier’s immutable renewal
+  contract and price.
 
 ## 2026-09-05 — Durable owner-only revenue freshness controls prepared
 

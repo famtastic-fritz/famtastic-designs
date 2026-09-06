@@ -50,6 +50,9 @@ receipts, or any customer state stronger than its durable evidence.
 ## Commands
 
 Run `scripts/revenue-loop-signoff.sh <repo>` for static validation. Set
-`FAMTASTIC_REVENUE_SIGNOFF_FULL=1` only against the isolated synthetic
-environment; it must never be pointed at production. Production smoke, live
-payments, customer sends, domains, and deployment remain separately authorized.
+`FAMTASTIC_REVENUE_SIGNOFF_FULL=1` to add the canonical fresh-runtime synthetic
+journey. The journey wrapper creates its own temporary Drupal + SQLite runtime,
+records a retained redacted evidence bundle, and deletes that runtime after the
+run; it must never be repointed at production. Stripe TEST Checkout, production
+smoke, live payments, customer sends, domains, and deployment remain separately
+authorized.

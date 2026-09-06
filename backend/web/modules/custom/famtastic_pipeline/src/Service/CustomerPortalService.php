@@ -743,7 +743,7 @@ final class CustomerPortalService {
       'recommendation_requested' => TRUE,
       'intake' => $intake,
     ];
-    $this->queueWebsiteRequestNotifications($id, $customer, $clean);
+    $this->queueWebsiteRequestNotifications($id, $publicId, $customer, $clean);
     $this->queueWebsiteRequestProofJob($id, $prospectId, $publicId, $intake);
 
     return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
@@ -833,9 +833,9 @@ final class CustomerPortalService {
   /** Creates an explainable recommendation without turning every intake into $199. */
   public function recommendWebsitePackage(string $type, array $intake): array {
     $features = mb_strtolower(implode(' ', [
-      $intake['required_features'], $intake['integrations'], $intake['ecommerce_details'],
-      $intake['booking_details'], $intake['ai_agent_goals'],
-      $intake['custom_needs'],
+      $intake['required_features'] ?? '', $intake['integrations'] ?? '', $intake['ecommerce_details'] ?? '',
+      $intake['booking_details'] ?? '', $intake['ai_agent_goals'] ?? '',
+      $intake['custom_needs'] ?? '',
     ]));
     $complexTerms = ['shop', 'cart', 'checkout', 'ecommerce', 'membership', 'portal', 'custom api', 'hipaa', 'inventory', 'subscription'];
     $complex = $type === 'online_store';
@@ -850,12 +850,12 @@ final class CustomerPortalService {
     $score = $pages > 1 ? 35 : 0;
     if ($type === 'redesign') $score += 20;
     foreach (['lead', 'quote', 'form', 'gallery', 'analytics', 'seo'] as $term) if (str_contains($features, $term)) $score += 8;
-    if ($intake['content_status'] === 'help_needed' || $intake['copywriting_needs'] !== '') $addons[] = 'FAM-COPY';
-    if ($intake['brand_status'] === 'help_needed') $addons[] = 'FAM-BRAND';
-    if ($intake['business_email_needs'] !== '') $addons[] = 'FAM-BUSINESS-EMAIL';
-    if ($intake['ai_agent_goals'] !== '') $addons[] = 'FAM-AI-AGENT';
-    if ($intake['booking_details'] !== '') $addons[] = 'FAM-SCHEDULING';
-    if ($intake['custom_needs'] !== '') {
+    if (($intake['content_status'] ?? '') === 'help_needed' || ($intake['copywriting_needs'] ?? '') !== '') $addons[] = 'FAM-COPY';
+    if (($intake['brand_status'] ?? '') === 'help_needed') $addons[] = 'FAM-BRAND';
+    if (($intake['business_email_needs'] ?? '') !== '') $addons[] = 'FAM-BUSINESS-EMAIL';
+    if (($intake['ai_agent_goals'] ?? '') !== '') $addons[] = 'FAM-AI-AGENT';
+    if (($intake['booking_details'] ?? '') !== '') $addons[] = 'FAM-SCHEDULING';
+    if (($intake['custom_needs'] ?? '') !== '') {
       $reasons[] = 'An unlisted product, service, or workflow request needs human scope review.';
       return ['recommended_sku' => '', 'label' => 'Custom scope review', 'complexity_score' => 100, 'review_required' => TRUE, 'reasons' => $reasons, 'suggested_addon_skus' => array_values(array_unique($addons))];
     }

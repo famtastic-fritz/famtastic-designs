@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 
 # This acceptance fixture intentionally exercises the deterministic local
 # placeholder path. Customer outreach remains blocked unless a test opts in.
@@ -12,7 +12,7 @@ PACKAGE="${PACKAGE:-essential_199}"
 EXPECTED_AMOUNT="${EXPECTED_AMOUNT:-19900}"
 EXPECTED_REVISIONS="${EXPECTED_REVISIONS:-1}"
 SECRET="${STRIPE_WEBHOOK_SECRET:-whsec_local_dev_secret}"
-export FAMTASTIC_HOSTING_MONTHLY_AMOUNT="${FAMTASTIC_HOSTING_MONTHLY_AMOUNT:-2900}"
+export FAMTASTIC_HOSTING_MONTHLY_AMOUNT="${FAMTASTIC_HOSTING_MONTHLY_AMOUNT:-999}"
 export FAMTASTIC_HOSTING_BILLING_PROVIDER="${FAMTASTIC_HOSTING_BILLING_PROVIDER:-memory}"
 BASE="http://127.0.0.1:$PORT"
 run_id="$(date +%s)-$$"
@@ -25,6 +25,7 @@ csv="$sandbox/lead.csv"
 import_json="$sandbox/import.json"
 headers="$sandbox/click.headers"
 server_log="$sandbox/server.log"
+diagnostic_dir="${FAMTASTIC_E2E_DIAGNOSTIC_DIR:-}"
 mail_capture="$sandbox/transactional-email.jsonl"
 cookie_jar="$sandbox/customer.cookies"
 customer_password="Synthetic-${run_id}-Pass!"
@@ -37,12 +38,21 @@ cleanup() {
     kill "$server_pid" 2>/dev/null || true
     wait "$server_pid" 2>/dev/null || true
   fi
+  if test -n "$diagnostic_dir" && test -f "$server_log"; then
+    mkdir -p "$diagnostic_dir"
+    cp "$server_log" "$diagnostic_dir/autonomous-drupal-$run_id.log"
+  fi
+  if test -n "$diagnostic_dir" && test -f "$mail_capture"; then
+    mkdir -p "$diagnostic_dir"
+    cp "$mail_capture" "$diagnostic_dir/autonomous-mail-$run_id.jsonl"
+  fi
   case "$sandbox" in
     "${TMPDIR:-/tmp}"/famtastic-journey.*) rm -rf "$sandbox" ;;
     *) echo "Refusing to remove unexpected sandbox: $sandbox" >&2 ;;
   esac
 }
 trap cleanup EXIT
+trap 'status=$?; echo "ERROR: customer journey failed at line $LINENO: $BASH_COMMAND" >&2; exit "$status"' ERR
 
 http_code() {
   curl -s -o /dev/null -w '%{http_code}' "$@"
@@ -50,7 +60,11 @@ http_code() {
 assert_json() {
   local json="$1"
   shift
-  jq -e "$@" <<<"$json" >/dev/null
+  if ! jq -e "$@" <<<"$json" >/dev/null; then
+    echo "ERROR: customer-journey JSON assertion failed: $*" >&2
+    printf '%s\n' "$json" >&2
+    return 1
+  fi
 }
 
 mkdir -p "$sandbox/releases" "$sandbox/sites"
@@ -114,6 +128,7 @@ checkout="$(curl -s -X POST "${TH[@]}" "${JH[@]}" \
   -d "{\"terms_accepted\":true,\"terms_checksum\":\"$terms_checksum\"}" \
   "$BASE/api/pipeline/checkout")"
 checkout_session="$(jq -r '.session_id' <<<"$checkout")"
+assert_json "$checkout" '.gateway_mode == "stub"'
 test -n "$checkout_session"
 ts="$(date +%s)"
 payload="$(printf '{"id":"evt_journey_%s","type":"checkout.session.completed","data":{"object":{"id":"%s","payment_intent":"pi_journey","payment_status":"paid","amount_total":%s,"currency":"usd","metadata":{"campaign_id":"%s"}}}}' "$run_id" "$checkout_session" "$EXPECTED_AMOUNT" "$campaign_id")"
@@ -154,7 +169,7 @@ addon="$(curl -s -X POST "${TH[@]}" "${JH[@]}" \
   -d "{\"terms_accepted\":true,\"terms_checksum\":\"$terms_checksum\"}" \
   "$BASE/api/pipeline/revision-checkout")"
 addon_session="$(jq -r '.session_id' <<<"$addon")"
-assert_json "$addon" '.amount == 7500'
+assert_json "$addon" '.amount == 7500 and .gateway_mode == "stub"'
 pending_code="$(http_code -X POST "${TH[@]}" "${JH[@]}" \
   -d "{\"terms_accepted\":true,\"terms_checksum\":\"$terms_checksum\"}" \
   "$BASE/api/pipeline/revision-checkout")"
@@ -303,7 +318,7 @@ test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website
 "$DRUSH" eval "\$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); \$portal = \Drupal::service('famtastic_pipeline.customer_portal'); \$portal->saveWebsiteRequestProofResearchSnapshot((int) \$request['id'], 1, ['overview' => 'Synthetic research snapshot', 'direction_rationale' => ['a' => 'Safe rationale', 'b' => 'Wild rationale', 'c' => 'OMG rationale'], 'market_signals' => ['Synthetic signal'], 'opportunities' => ['Synthetic opportunity'], 'sources' => ['Synthetic fixture'], 'researched_at' => '2026-09-05']); \$portal->approveWebsiteRequestProof((int) \$request['id'], 1); \$pending = \$db->select('famtastic_notification_outbox', 'n')->condition('notification_key', 'website-request:' . \$request['id'] . ':owner-proof-review:%', 'LIKE')->condition('status', ['queued', 'retry'], 'IN')->countQuery()->execute()->fetchField(); assert((int) \$pending === 0); \$notice = \$db->select('famtastic_notification_outbox', 'n')->fields('n', ['body', 'template_id', 'template_version'])->condition('notification_key', 'website-request:' . \$request['id'] . ':proofs:%', 'LIKE')->execute()->fetchAssoc(); assert(str_contains((string) \$notice['body'], '/portal/?section=projects&request=$website_request_id')); assert(\$notice['template_id'] === 'customer_proof_ready'); assert((int) \$notice['template_version'] === 1);"
 FAMTASTIC_TRANSACTIONAL_EMAIL_CAPTURE="$mail_capture" FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT=memory "$DRUSH" php:eval '\Drupal::service("famtastic_pipeline.lifecycle_operations")->dispatchNotifications(100);' >/dev/null
 "$DRUSH" eval "\$db = \Drupal::database(); \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$website_request_id')->execute()->fetchAssoc(); assert(\$request['proof_review_status'] === 'notified');"
-test "$(jq -rs --arg email "$email" '[.[] | select(.to == $email and .subject == "Your FAMtastic design review has started" and .template_id == "customer_intake_submitted" and .template_version == 1 and (.html_body | contains("Your design review has started")))] | length == 1' "$mail_capture")" = "true"
+test "$(jq -rs --arg email "$email" --arg request "$website_request_id" '[.[] | select(.to == $email and .subject == "Your FAMtastic design review has started" and .template_id == "customer_intake_submitted" and .template_version == 1 and (.html_body | contains("Your design review has started")) and (.html_body | contains($request)))] | length == 1' "$mail_capture")" = "true"
 test "$(jq -rs --arg email "$email" '[.[] | select(.to == $email and .subject == "Your FAMtastic Studio Review is ready" and (.html_body | contains("FAMtastic Concierge")))] | length == 1' "$mail_capture")" = "true"
 test "$(http_code -b "$cookie_jar" "$BASE/api/customer/website-requests/$website_request_id/proofs/a")" = "200"
 research_safe_update="$(curl -s -b "$cookie_jar" -X PATCH "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
