@@ -1235,7 +1235,6 @@ packet). Continuation of the campaign-system-v2 work below.
   credentials or payment data.
 - Fixed the local Drupal image to install PHP `bcmath`, required by the locked
   Drupal Commerce dependency set before a local backend runtime can boot.
-=======
 ## 2026-09-02 — Full Campaign Prelaunch Buildout, Muxed Audio Sync & Universal Prompt Architect Plugin
 
 - Muxed full high-fidelity voice track into `00-hyperframes-branded-recut-commercial-9x16.mp4` via FFmpeg, synchronizing Shay's speech with the kinetic HUD calculation graphics and `#7CFC00` single-glow token.
@@ -1278,7 +1277,6 @@ packet). Continuation of the campaign-system-v2 work below.
 - Enforced zero external link leakage across authenticated portal modules: recommended services and growth offers route directly to in-portal actions or `/buy?sku=...` checkout.
 - Enforced strict brand tokens across all portal surfaces: charcoal `#070907` background, glassmorphism `#101310`–`#141814` panels with 1px `#252b25` borders, signature lime `#7cfc00`, single glowing action card (`box-shadow: 0 0 24px rgba(124,252,0,.35)`), and 44px minimum touch targets.
 - Embedded Client Portal Design DNA v1 compliance into `AGENTS.md` and `docs/AGENT_OPERATING_CONTRACT.md` as mandatory rules for all agent sessions.
->>>>>>> 63be81d7 (feat(campaign): ship Cost Is Not The Reason multi-tier social campaign and 4-drop evaluation sequence)
 
 ## 2026-08-28 — Modular Customer Portal Architecture, My Products Hub, Guided Project Provisioning Wizard, and Site Studio Dispatch
 
