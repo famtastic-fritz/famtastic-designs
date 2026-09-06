@@ -20,7 +20,10 @@ class OutreachMailer {
   public const TEMPLATE_CUSTOMER_INTAKE_SUBMITTED = 'customer_intake_submitted';
   public const TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION = 1;
   public const TEMPLATE_CUSTOMER_PROOF_READY = 'customer_proof_ready';
-  public const TEMPLATE_CUSTOMER_PROOF_READY_VERSION = 1;
+  public const TEMPLATE_CUSTOMER_PROOF_READY_VERSION = 2;
+  public const TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSION = 1;
+  public const TEMPLATE_CUSTOMER_REVISION_RECEIVED = 'customer_revision_received';
+  public const TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION = 1;
 
   public function __construct(
     protected ConfigFactoryInterface $configFactory,
@@ -45,10 +48,11 @@ class OutreachMailer {
    * The campaign boundary uses PHPMailer directly so a provider message id is
    * returned and an SMTP rejection cannot be mistaken for successful delivery.
    */
-  public function send(string $to, string $subject, string $body, ?string $oneClickUnsubscribeUrl = NULL, string $template = self::TEMPLATE_STANDARD, int $templateVersion = self::TEMPLATE_STANDARD_VERSION): string {
+  public function send(string $to, string $subject, string $body, ?string $oneClickUnsubscribeUrl = NULL, string $template = self::TEMPLATE_STANDARD, int $templateVersion = 0): string {
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
       throw new RuntimeException('notification_recipient_invalid');
     }
+    $templateVersion = $templateVersion ?: self::currentTemplateVersion($template);
     if (!self::supportsTemplate($template, $templateVersion)) {
       throw new RuntimeException('notification_template_invalid');
     }
@@ -140,7 +144,18 @@ class OutreachMailer {
   public static function supportsTemplate(string $template, int $version): bool {
     return ($template === self::TEMPLATE_STANDARD && $version === self::TEMPLATE_STANDARD_VERSION)
       || ($template === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED && $version === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION)
-      || ($template === self::TEMPLATE_CUSTOMER_PROOF_READY && $version === self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION);
+      || ($template === self::TEMPLATE_CUSTOMER_PROOF_READY && in_array($version, [self::TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSION, self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION], TRUE))
+      || ($template === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED && $version === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION);
+  }
+
+  /** Selects the current template version for direct, versionless callers. */
+  private static function currentTemplateVersion(string $template): int {
+    return match ($template) {
+      self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED => self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION,
+      self::TEMPLATE_CUSTOMER_PROOF_READY => self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION,
+      self::TEMPLATE_CUSTOMER_REVISION_RECEIVED => self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION,
+      default => self::TEMPLATE_STANDARD_VERSION,
+    };
   }
 
   /**
@@ -192,6 +207,9 @@ class OutreachMailer {
     }
     if ($template === self::TEMPLATE_CUSTOMER_PROOF_READY) {
       return $this->renderCustomerProofReadyMessage($subject, $body);
+    }
+    if ($template === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED) {
+      return $this->renderCustomerRevisionReceivedMessage($subject, $body);
     }
     $paragraphs = preg_split('/\R{2,}/', trim($body)) ?: [];
     $content = '';
@@ -249,8 +267,20 @@ class OutreachMailer {
       $body,
       'Your Studio Review is ready',
       'Private concept review · verified workspace',
-      'Open your Studio Review →',
+      'Review your 3 directions →',
       'Your concepts stay inside your verified FAMtastic account until you choose to share feedback. FAMtastic Concierge is here when you are ready to talk through a direction.',
+    );
+  }
+
+  /** Renders a human, branded receipt for feedback—not a generic worker note. */
+  private function renderCustomerRevisionReceivedMessage(string $subject, string $body): string {
+    return $this->renderCustomerConciergeMessage(
+      $subject,
+      $body,
+      'We heard you',
+      'Feedback saved · next proof round',
+      'Open your project →',
+      'Your feedback is saved with this project. FAMtastic will only send a new review when the replacement directions are complete and approved.',
     );
   }
 
@@ -273,27 +303,11 @@ class OutreachMailer {
     $safeBadge = htmlspecialchars($badge, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $safeCtaLabel = htmlspecialchars($ctaLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $safeAssurance = htmlspecialchars($assurance, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    [$body, $reviewUrl] = $this->extractConciergeCta($body);
     $paragraphs = preg_split('/\R{2,}/', trim($body)) ?: [];
     $content = '';
-    $reviewUrl = '';
     foreach ($paragraphs as $paragraph) {
       $escaped = htmlspecialchars(trim($paragraph), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-      $escaped = preg_replace_callback(
-        '#(https?://[^\s]+)#i',
-        static function (array $match) use (&$reviewUrl): string {
-          $url = $match[1];
-          $trailing = '';
-          if (preg_match('#[),.;:!?"\']+$#', $url, $m)) {
-            $trailing = $m[0];
-            $url = substr($url, 0, strlen($url) - strlen($trailing));
-          }
-          if ($reviewUrl === '' && filter_var($url, FILTER_VALIDATE_URL)) {
-            $reviewUrl = $url;
-          }
-          return '<a href="' . $url . '" style="color:#114b31;font-weight:800;word-break:break-word">' . $url . '</a>' . $trailing;
-        },
-        $escaped,
-      ) ?? $escaped;
       $content .= '<p style="margin:0 0 15px;color:#26372c;font:16px/1.6 Arial,Helvetica,sans-serif">'
         . nl2br($escaped, FALSE)
         . '</p>';
@@ -304,8 +318,9 @@ class OutreachMailer {
 
     $cta = '';
     if ($reviewUrl !== '') {
+      $safeReviewUrl = htmlspecialchars($reviewUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
       $cta = '<table role="presentation" cellspacing="0" cellpadding="0" style="margin:22px 0 26px"><tr><td style="border-radius:8px;background:#7cfc00">'
-        . '<a href="' . $reviewUrl . '" style="display:inline-block;padding:14px 20px;border-radius:8px;color:#102a1c;font:800 15px/1 Arial,Helvetica,sans-serif;text-decoration:none">' . $safeCtaLabel . '</a>'
+        . '<a href="' . $safeReviewUrl . '" style="display:inline-block;padding:14px 20px;border-radius:8px;color:#102a1c;font:800 15px/1 Arial,Helvetica,sans-serif;text-decoration:none">' . $safeCtaLabel . '</a>'
         . '</td></tr></table>';
     }
 
@@ -323,6 +338,31 @@ class OutreachMailer {
       . '<div style="margin-top:8px;padding:16px;border:1px solid #d8e8d6;border-radius:12px;background:#ffffff;color:#526356;font:14px/1.5 Arial,Helvetica,sans-serif">' . $safeAssurance . '</div>'
       . '<p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #d8e0d8;color:#66736a;font:13px/1.45 Arial,Helvetica,sans-serif">FAMtastic Designs · 1729 NW St. Lucie West Blvd #1181 · Port Saint Lucie, FL 34986</p>'
       . '</td></tr></table></td></tr></table></body></html>';
+  }
+
+  /**
+   * Pulls the one trusted workspace URL out of the visible Concierge body.
+   *
+   * The durable plain-text outbox still contains the exact fallback. The HTML
+   * presentation deliberately renders it only as a named button, so a long
+   * authenticated portal URL never becomes the visual call to action.
+   *
+   * @return array{0:string,1:string}
+   */
+  private function extractConciergeCta(string $body): array {
+    $url = '';
+    $clean = preg_replace_callback('#https?://[^\s]+#i', static function (array $match) use (&$url): string {
+      $candidate = rtrim($match[0], '),.;:!?\"\'');
+      if ($url === '' && filter_var($candidate, FILTER_VALIDATE_URL)) {
+        $url = $candidate;
+      }
+      return '';
+    }, $body) ?? $body;
+    // Remove the label that introduced the now-button-only URL, without
+    // altering a customer-written sentence elsewhere in the receipt.
+    $clean = preg_replace('/^\s*(Open (your )?(private )?(Studio Review|workspace|project)|Review (your )?(private )?(Studio Review|project))\s*:?\s*$/mi', '', $clean) ?? $clean;
+    $clean = preg_replace('/\n{3,}/', "\n\n", trim($clean)) ?? trim($clean);
+    return [$clean, $url];
   }
 
   /**

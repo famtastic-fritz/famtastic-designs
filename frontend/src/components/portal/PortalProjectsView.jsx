@@ -31,6 +31,15 @@ export function customerNextStep(request) {
   return { owner: 'famtastic', tone: 'waiting', label: request.proof_handoff?.label || 'FAMtastic is preparing your concepts', detail: request.proof_handoff?.detail || 'You do not need to do anything right now.', action: '' };
 }
 
+function customerStage(request) {
+  if (request.proof_review_status === 'revision_requested') return 'We are making a new set from your feedback';
+  if (['customer_ready', 'notified'].includes(request.proof_review_status)) return 'Your 3 directions are ready to review';
+  if (request.proof_review_status === 'selected') return request.direct_checkout_available ? 'Your direction is saved — payment is next' : 'Your direction is saved — FAMtastic is preparing the next step';
+  if (request.status === 'draft') return 'Your brief needs a few more details';
+  if (request.status === 'converted') return 'Your website build is underway';
+  return 'FAMtastic is preparing your directions';
+}
+
 function ProofDecisionGuide({ request }) {
   const research = request.proofs?.research_snapshot;
   const terms = request.proofs?.review_terms || {};
@@ -191,13 +200,15 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare, onConti
               <button
                 type="button"
                 aria-pressed={selected}
-                disabled={busy || Boolean(selectedDirection)}
+                disabled={busy || Boolean(selectedDirection) || revisionPending}
                 onClick={() => choose(proof.direction_id)}
               >
                 {savingDirection === proof.direction_id
                   ? 'Saving selection…'
                   : selected
                   ? `${proof.direction_name} selected ✓`
+                  : revisionPending
+                  ? 'New directions are being prepared'
                   : selectedDirection
                   ? 'Choice locked for review'
                   : `Choose ${proof.direction_name}`}
@@ -942,7 +953,6 @@ export default function PortalProjectsView({
   onArchiveRequest,
   navigate,
 }) {
-  const [dnaOpen, setDnaOpen] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
   const [archiveConfirmId, setArchiveConfirmId] = useState('');
   const requests = workspace.website_requests || [];
@@ -951,11 +961,12 @@ export default function PortalProjectsView({
   const proofReady = (req) => [3, 6].includes(req?.proofs?.variants?.length);
 
   const activeRequest =
-    activeRequests.find((req) => req.public_id === activeRequestId) ||
     activeRequests.find((req) => req.public_id === targetRequest) ||
+    activeRequests.find((req) => req.public_id === activeRequestId) ||
     activeRequests.find((req) => ['customer_ready', 'notified'].includes(req.proof_review_status) && proofReady(req)) ||
     activeRequests[0] ||
     null;
+  const showingProject = Boolean(targetRequest || activeRequestId);
   const nextStep = customerNextStep(activeRequest);
   const proofHandoff = activeRequest?.proof_handoff || {
     state: activeRequest?.status === 'draft' ? 'draft' : 'queued',
@@ -990,15 +1001,19 @@ export default function PortalProjectsView({
 
   return (
     <>
-      <section className="portal-project-hero">
+      <section className="portal-projects-heading">
         <div>
-          <span>One account. Every website.</span>
-          <h2>Your Website Project Command Center</h2>
+          <span>My projects</span>
+          <h2>{showingProject ? activeRequest?.project_name || 'Website project' : 'Your website projects'}</h2>
           <p>
-            Choose a project below. We will always show whose turn it is and the one thing that happens next.
+            {showingProject ? 'We will show one clear next step at a time.' : 'Open a project to see exactly what is happening and what comes next.'}
           </p>
         </div>
-        <button onClick={() => setEditingRequest({})}>+ Start a new website</button>
+        {showingProject ? (
+          <button className="quiet" type="button" onClick={() => setActiveRequestId(null)}>← All projects</button>
+        ) : (
+          <button onClick={() => setEditingRequest({})}>+ Start a new website</button>
+        )}
       </section>
 
       {/* When editing a brief */}
@@ -1012,8 +1027,27 @@ export default function PortalProjectsView({
         />
       )}
 
-      {/* Main Active Project Overview */}
-      {!editingRequest && activeRequest && (
+      {/* The landing stays a list. Details are intentionally a separate focus. */}
+      {!editingRequest && !showingProject && activeRequests.length > 0 && (
+        <section className="portal-project-listing" aria-label="Your active website projects">
+          {activeRequests.map((request) => {
+            const step = customerNextStep(request);
+            return (
+              <article key={request.public_id}>
+                <div>
+                  <span>{step.owner === 'you' ? 'Your turn' : 'FAMtastic is working'}</span>
+                  <h3>{request.project_name}</h3>
+                  <p>{customerStage(request)}</p>
+                </div>
+                <button type="button" onClick={() => setActiveRequestId(request.public_id)}>Open project →</button>
+              </article>
+            );
+          })}
+        </section>
+      )}
+
+      {/* One project at a time: Today, Concepts, Plan, then Setup/More. */}
+      {!editingRequest && activeRequest && showingProject && (
         <section className="portal-request-list">
           {requestChips}
 
@@ -1045,38 +1079,33 @@ export default function PortalProjectsView({
             eyebrow={activeRequest.status === 'converted' ? 'Purchased Project' : 'Active Website Request'}
             title={activeRequest.project_name}
           >
+            <nav className="portal-project-tabs" aria-label="Project sections">
+              <a href={`#today-${activeRequest.public_id}`}>Today</a>
+              <a href={`#concepts-${activeRequest.public_id}`}>Concepts</a>
+              <a href={`#plan-${activeRequest.public_id}`}>Plan</a>
+              <a href={`#setup-${activeRequest.public_id}`}>Setup</a>
+            </nav>
             {/* High-level status row */}
-            <dl>
+            <dl id={`today-${activeRequest.public_id}`}>
               <div>
-                <dt>Project Status</dt>
+                <dt>What is happening</dt>
                 <dd>
-                  <strong style={{ color: 'var(--p-lime)' }}>{title(activeRequest.status)}</strong>
+                  <strong style={{ color: 'var(--p-lime)' }}>{customerStage(activeRequest)}</strong>
                 </dd>
               </div>
               <div>
-                <dt>Concept Proofs</dt>
-                <dd>{title(activeRequest.proof_review_status)}</dd>
-              </div>
-              <div>
-                <dt>Last Updated</dt>
+                <dt>Last updated</dt>
                 <dd>{date(activeRequest.changed)}</dd>
               </div>
             </dl>
 
-            <details className="portal-project-secondary">
-              <summary>
-                Domain and hosting
-                <span>{activeRequest.existing_domain || activeRequest.intake?.desired_domains || 'Choose later'}</span>
-              </summary>
-              <ProjectDomainHostingManager request={activeRequest} busy={busy} onSave={onSaveWebsiteRequest} />
-            </details>
-
             {/* CONCEPT PROOFS OR DURABLE HANDOFF STATUS */}
-            {proofReady(activeRequest) ? (
-              <div id={`proof-review-${activeRequest.public_id}`} style={{ marginTop: '1.5rem', scrollMarginTop: '5rem' }}>
-                <h3 style={{ margin: '0 0 0.75rem', fontSize: '1.3rem', color: '#fff' }}>
-                  Review Your Interactive Concepts
+            {proofReady(activeRequest) && activeRequest.proof_review_status !== 'revision_requested' ? (
+              <div id={`concepts-${activeRequest.public_id}`} style={{ marginTop: '1.5rem', scrollMarginTop: '5rem' }}>
+                <h3 style={{ margin: '0 0 0.35rem', fontSize: '1.3rem', color: '#fff' }}>
+                  Choose one direction
                 </h3>
+                <p className="portal-plain-help">Open each direction. When one feels right for your business, tap its Choose button. You can ask for changes instead of choosing.</p>
                 <WebsiteProofReview
                   request={activeRequest}
                   busy={busy}
@@ -1086,7 +1115,7 @@ export default function PortalProjectsView({
                 />
               </div>
             ) : (
-              <div
+              <div id={`concepts-${activeRequest.public_id}`}
                 style={{
                   margin: '1.5rem 0',
                   padding: '1.4rem',
@@ -1119,8 +1148,45 @@ export default function PortalProjectsView({
               </div>
             )}
 
+            <details id={`plan-${activeRequest.public_id}`} className="portal-project-secondary" style={{ marginTop: '1rem' }}>
+              <summary>
+                Research &amp; growth plan
+                <span>Why these directions</span>
+              </summary>
+              <div className="portal-project-simple-section">
+                <h3>What we learned</h3>
+                <p>{activeRequest.proofs?.research_snapshot?.overview || 'We will add the research summary when the next proof set is ready.'}</p>
+                {activeRequest.proofs?.research_snapshot?.growth_plan && (
+                  <div className="portal-growth-windows">
+                    {[
+                      ['days_30', 'First 30 days'],
+                      ['days_60', 'Days 31–60'],
+                      ['days_90', 'Days 61–90'],
+                    ].map(([key, label]) => (
+                      <div key={key}>
+                        <strong>{label}</strong>
+                        <ul>{(activeRequest.proofs.research_snapshot.growth_plan[key] || []).map((item) => <li key={item}>{item}</li>)}</ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <small>These are practical opportunities based on your brief and research, not promised results.</small>
+              </div>
+            </details>
+
+            <details id={`setup-${activeRequest.public_id}`} className="portal-project-secondary">
+              <summary>
+                Your website address
+                <span>{activeRequest.existing_domain || activeRequest.intake?.desired_domains || `${String(activeRequest.project_name || '').toLowerCase().replace(/[^a-z0-9]+/g, '')}.com (confirm)`}</span>
+              </summary>
+              <div className="portal-project-simple-section">
+                <p>We saved this from your intake as the proposed website address. You can correct it here before any domain is registered or connected.</p>
+                <ProjectDomainHostingManager request={activeRequest} busy={busy} onSave={onSaveWebsiteRequest} />
+              </div>
+            </details>
+
             <details className="portal-project-secondary" style={{ marginTop: '1rem' }}>
-              <summary>Project files <span>{activeRequest.assets?.length || 0} attached</span></summary>
+              <summary>More options <span>Files, brief, archive</span></summary>
               <div style={{ paddingTop: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                 <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#fff' }}>Project Assets &amp; Files</h4>
@@ -1155,17 +1221,9 @@ export default function PortalProjectsView({
               </div>
             </details>
 
-            {/* ACTION TOOLBAR */}
-            <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
               <button type="button" onClick={() => setEditingRequest(activeRequest)}>
-                Edit Full Brief 📝
-              </button>
-              <button
-                type="button"
-                className="quiet"
-                onClick={() => setDnaOpen((open) => !open)}
-              >
-                {dnaOpen ? 'Hide Build DNA ▴' : 'Inspect Build DNA ▾'}
+                Update my brief
               </button>
               <button
                 type="button"
@@ -1191,52 +1249,6 @@ export default function PortalProjectsView({
               </section>
             )}
 
-            {/* BUILD DNA VIEWER */}
-            {dnaOpen && (
-              <div
-                className="portal-dna-viewer"
-                style={{
-                  marginTop: '1.25rem',
-                  padding: '1.15rem',
-                  border: '1px solid rgba(124,252,0,0.3)',
-                  borderRadius: '14px',
-                  background: '#090d09',
-                }}
-              >
-                <span
-                  style={{
-                    color: '#7cfc00',
-                    fontSize: '0.72rem',
-                    fontWeight: '800',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  🧬 Build DNA Provenance &amp; Verification
-                </span>
-                <p style={{ fontSize: '0.85rem', color: '#aab2aa', margin: '0.4rem 0 0.85rem' }}>
-                  Standard `famtastic.build-dna.v1`. Every stage, research packet, and concept variant is
-                  journaled with exact hashes and QA gates.
-                </p>
-                <dl style={{ fontSize: '0.82rem', margin: 0 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    <dt style={{ color: '#8e998e' }}>Request ID</dt>
-                    <dd>{activeRequest.public_id}</dd>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    <dt style={{ color: '#8e998e' }}>Creative Intensity</dt>
-                    <dd>{activeRequest.intake?.famtastic_level ?? 5} / 10</dd>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    <dt style={{ color: '#8e998e' }}>AI Research Mode</dt>
-                    <dd>{activeRequest.intake?.ai_enrichment_mode || 'Managed'}</dd>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.35rem 0' }}>
-                    <dt style={{ color: '#8e998e' }}>Verification Gate</dt>
-                    <dd style={{ color: '#7cfc00' }}>✓ Schema &amp; Security Verified</dd>
-                  </div>
-                </dl>
-              </div>
-            )}
           </Panel>
         </section>
       )}

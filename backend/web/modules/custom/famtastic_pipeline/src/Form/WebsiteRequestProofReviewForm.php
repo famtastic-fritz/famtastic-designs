@@ -73,6 +73,11 @@ final class WebsiteRequestProofReviewForm extends FormBase {
       }
       $form['research']['market_signals'] = ['#type' => 'textarea', '#title' => $this->t('Market signals (one per line)'), '#default_value' => $lines($research['market_signals'] ?? []), '#rows' => 3];
       $form['research']['opportunities'] = ['#type' => 'textarea', '#title' => $this->t('Growth opportunities this site supports (one per line)'), '#default_value' => $lines($research['opportunities'] ?? []), '#rows' => 3];
+      $growth = is_array($research['growth_plan'] ?? NULL) ? $research['growth_plan'] : [];
+      $form['research']['growth_30'] = ['#type' => 'textarea', '#title' => $this->t('First 30 days — customer growth plan (one action per line)'), '#default_value' => $lines($growth['days_30'] ?? []), '#rows' => 3];
+      $form['research']['growth_60'] = ['#type' => 'textarea', '#title' => $this->t('Days 31–60 — customer growth plan (one action per line)'), '#default_value' => $lines($growth['days_60'] ?? []), '#rows' => 3];
+      $form['research']['growth_90'] = ['#type' => 'textarea', '#title' => $this->t('Days 61–90 — customer growth plan (one action per line)'), '#default_value' => $lines($growth['days_90'] ?? []), '#rows' => 3];
+      $form['research']['research_lesson'] = ['#type' => 'textarea', '#title' => $this->t('Customer-feedback lesson carried into this proof set'), '#default_value' => (string) ($research['research_lesson'] ?? ''), '#rows' => 2];
       $form['research']['sources'] = ['#type' => 'textarea', '#title' => $this->t('Research sources or evidence (one per line)'), '#required' => TRUE, '#default_value' => $lines($research['sources'] ?? []), '#rows' => 3];
       $form['research']['researched_at'] = ['#type' => 'date', '#title' => $this->t('Research date'), '#required' => TRUE, '#default_value' => (string) ($research['researched_at'] ?? '')];
       $form['confirm'] = ['#type' => 'checkbox', '#title' => $this->t('I reviewed all @count working previews and the research snapshot, and approve showing them in this customer account.', ['@count' => $proofCount]), '#required' => TRUE];
@@ -109,6 +114,15 @@ final class WebsiteRequestProofReviewForm extends FormBase {
           '#proof_action' => 'reopen_selection',
           '#limit_validation_errors' => [],
         ];
+        if ($this->requestRow['proof_review_status'] === 'revision_requested') {
+          $form['selection']['rebuild_reason'] = ['#type' => 'textarea', '#title' => $this->t('Why this replacement proof round is needed'), '#required' => TRUE, '#default_value' => $this->t('Use the customer feedback to make the next directions warmer, simpler, and less analytical.')];
+          $form['selection']['actions']['rebuild'] = [
+            '#type' => 'submit',
+            '#value' => $this->t('Reset allowance and start replacement proof round'),
+            '#button_type' => 'primary',
+            '#proof_action' => 'rebuild_revision',
+          ];
+        }
       }
     }
     return $form;
@@ -128,6 +142,12 @@ final class WebsiteRequestProofReviewForm extends FormBase {
         ],
         'market_signals' => $toLines((string) $form_state->getValue('market_signals')),
         'opportunities' => $toLines((string) $form_state->getValue('opportunities')),
+        'growth_plan' => [
+          'days_30' => $toLines((string) $form_state->getValue('growth_30')),
+          'days_60' => $toLines((string) $form_state->getValue('growth_60')),
+          'days_90' => $toLines((string) $form_state->getValue('growth_90')),
+        ],
+        'research_lesson' => (string) $form_state->getValue('research_lesson'),
         'sources' => $toLines((string) $form_state->getValue('sources')),
         'researched_at' => (string) $form_state->getValue('researched_at'),
       ]);
@@ -137,6 +157,14 @@ final class WebsiteRequestProofReviewForm extends FormBase {
     elseif ($action === 'reopen_selection') {
       $this->portal->reopenWebsiteRequestProofSelection((int) $this->requestRow['id'], (int) $this->account->id());
       $this->messenger()->addStatus($this->t('The customer proof choice was reopened. No checkout or provider action was changed.'));
+    }
+    elseif ($action === 'rebuild_revision') {
+      $this->portal->prepareWebsiteRequestRevisionRebuild(
+        (int) $this->requestRow['id'],
+        (int) $this->account->id(),
+        (string) $form_state->getValue('rebuild_reason'),
+      );
+      $this->messenger()->addStatus($this->t('Replacement proof round queued. The rejected set is retained for audit; no customer email was sent.'));
     }
     else {
       $share = $this->portal->manageWebsiteProofShare((int) $this->requestRow['id'], $action, (int) $this->account->id());

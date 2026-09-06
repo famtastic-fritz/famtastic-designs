@@ -401,6 +401,7 @@ final class CustomerPortalService {
       return NULL;
     }
     $businessName = trim((string) ($answers['business_name'] ?? $deepDive['business_name'] ?? '')) ?: 'My Business';
+    $proposedDomain = $this->proposedDomainFromBusinessName($businessName);
     $now = $this->time->getRequestTime();
     $publicId = $this->uuid->generate();
     $intake = [
@@ -419,6 +420,7 @@ final class CustomerPortalService {
       'colors_to_avoid' => (string) ($answers['colors_to_avoid'] ?? ''),
       'desired_feeling' => (string) ($answers['brand_start'] ?? ''),
       'reference_sites' => (string) ($answers['reference_links'] ?? ''),
+      'desired_domains' => $proposedDomain,
       'famtastic_level' => (int) ($answers['creative_intensity'] ?? 5),
       'required_features' => 'Booksy bridge or request-to-book only; payment display remains customer-owned and approval-gated.',
       'notes' => trim('Portfolio: ' . (string) ($answers['portfolio_story'] ?? '') . "\nPolicies: " . (string) ($answers['policies'] ?? '') . "\nReviews: " . (string) ($answers['reviews_and_proof'] ?? '') . "\nGrowth questions: " . (string) ($answers['content_growth'] ?? '')),
@@ -812,6 +814,10 @@ final class CustomerPortalService {
        'preferred_colors', 'colors_to_avoid', 'desired_feeling', 'styles_to_avoid',
        'visual_reference_notes', 'ai_context_notes',
     ] as $key) $intake[$key] = $text($key);
+    $businessName = $text('business_name', 255);
+    if ($intake['desired_domains'] === '' && $businessName !== '') {
+      $intake['desired_domains'] = $this->proposedDomainFromBusinessName($businessName);
+    }
     $intake['page_count'] = max(1, min(100, (int) ($input['page_count'] ?? 1)));
     $intake['famtastic_level'] = max(0, min(10, (int) ($input['famtastic_level'] ?? 5)));
     $intake['allow_bolder_direction'] = !empty($input['allow_bolder_direction']);
@@ -824,10 +830,17 @@ final class CustomerPortalService {
     $intake['action_path_recommendation'] = $this->recommendActionPath($intake);
     if ($status === 'submitted' && ($intake['primary_goal'] === '' || $intake['products_services'] === '')) throw new \InvalidArgumentException('Add the primary goal and what the business sells before submitting.');
     return [
-      'status' => $status, 'project_name' => $projectName, 'business_name' => $text('business_name', 255),
+      'status' => $status, 'project_name' => $projectName, 'business_name' => $businessName,
       'project_type' => $type, 'domain_choice' => $domain, 'existing_domain' => $text('existing_domain', 255),
       'recommendation_requested' => !empty($input['recommendation_requested']) ? 1 : 0, 'intake' => $intake,
     ];
+  }
+
+  /** Returns a transparent, unreserved .com candidate from an intake name. */
+  private function proposedDomainFromBusinessName(string $businessName): string {
+    $candidate = mb_strtolower($businessName);
+    $candidate = preg_replace('/[^a-z0-9]+/', '', $candidate) ?? '';
+    return $candidate === '' ? '' : mb_substr($candidate, 0, 55) . '.com';
   }
 
   /** Creates an explainable recommendation without turning every intake into $199. */
@@ -1239,11 +1252,18 @@ final class CustomerPortalService {
     if (!$sources || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $researchedAt)) {
       return NULL;
     }
+    $rawGrowthPlan = is_array($snapshot['growth_plan'] ?? NULL) ? $snapshot['growth_plan'] : [];
+    $growthPlan = [];
+    foreach (['days_30', 'days_60', 'days_90'] as $window) {
+      $growthPlan[$window] = $cleanList($rawGrowthPlan[$window] ?? []);
+    }
     return [
       'overview' => $overview,
       'direction_rationale' => $rationale,
       'market_signals' => $cleanList($snapshot['market_signals'] ?? []),
       'opportunities' => $cleanList($snapshot['opportunities'] ?? []),
+      'growth_plan' => $growthPlan,
+      'research_lesson' => $cleanText($snapshot['research_lesson'] ?? ''),
       'sources' => $sources,
       'researched_at' => $researchedAt,
     ];
@@ -1473,7 +1493,17 @@ final class CustomerPortalService {
       throw new \RuntimeException('Proof campaign does not belong to this website request.');
     }
     if (!empty($row['proof_campaign_id']) && (int) $row['proof_campaign_id'] !== (int) $campaign->id()) {
-      throw new \RuntimeException('Proof campaign does not match the campaign bound to this website request.');
+      // A fresh campaign may replace a prior campaign only after the customer
+      // has explicitly requested a revision. Pre-purchase requests mark that
+      // state directly; paid projects retain it on the Project record.
+      $isRevisionReproof = (string) ($row['proof_review_status'] ?? '') === 'revision_requested';
+      if (!$isRevisionReproof && !empty($row['project_id'])) {
+        $project = $this->entities->getStorage('famtastic_project')->load((int) $row['project_id']);
+        $isRevisionReproof = $project && (string) $project->get('approval_status')->value === 'revision_requested';
+      }
+      if (!$isRevisionReproof) {
+        throw new \RuntimeException('Proof campaign does not match the campaign bound to this website request.');
+      }
     }
     $directions = [];
     foreach ($variants as $variant) {
@@ -1549,7 +1579,10 @@ final class CustomerPortalService {
       if ($customer['email'] !== '') {
         $this->queueNotification('website-request:' . $row['id'] . ':customer-revision-ack:' . $notesHash, 'transactional', $customer['email'],
           'We received your website revision request',
-          "Hi {$customer['display_name']},\n\nFAMtastic Concierge has your revision notes for {$row['project_name']}. Fritz will review them and follow up with the next step.\n" . $this->portalLink((string) $row['public_id']) . "\n\n— FAMtastic Concierge");
+          "Hi {$customer['display_name']},\n\nFAMtastic Concierge saved your feedback for {$row['project_name']}. We are using it to prepare a new set of directions. You do not need to choose from the old set.\n\nOpen your project:\n" . $this->portalLink((string) $row['public_id']) . "\n\n— FAMtastic Concierge",
+          OutreachMailer::TEMPLATE_CUSTOMER_REVISION_RECEIVED,
+          OutreachMailer::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION,
+        );
       }
     }
     else {
@@ -1579,6 +1612,71 @@ final class CustomerPortalService {
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
     return $this->serializeWebsiteRequest($updated);
+  }
+
+  /**
+   * Owner-only reset for a pre-purchase proof revision.
+   *
+   * This preserves the rejected campaign, exact customer feedback, and prior
+   * allowance history. It never touches the Commerce project revision counter,
+   * does not send mail, charge, register a domain, or release a proof.
+   */
+  public function prepareWebsiteRequestRevisionRebuild(int $requestId, int $uid, string $reason): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$row || (string) $row['proof_review_status'] !== 'revision_requested' || !empty($row['commerce_order_id'])) {
+      throw new \RuntimeException('Only a pre-purchase website proof revision can be rebuilt.');
+    }
+    $reason = mb_substr(trim(strip_tags($reason)), 0, 1200);
+    if ($reason === '') {
+      throw new \InvalidArgumentException('Record why this replacement proof round is being prepared.');
+    }
+    $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE) ?: [];
+    $now = $this->time->getRequestTime();
+    $oldCampaignId = (int) ($row['proof_campaign_id'] ?? 0);
+    $oldCampaign = $oldCampaignId ? $this->entities->getStorage('proof_campaign')->load($oldCampaignId) : NULL;
+    if ($oldCampaign) {
+      $oldCampaign->set('status', 'expired')->set('expires_at', $now)->save();
+    }
+    $audit = is_array($intake['proof_revision_reset_audit'] ?? NULL) ? $intake['proof_revision_reset_audit'] : [];
+    $audit[] = [
+      'reset_by_uid' => $uid,
+      'reset_at' => gmdate(DATE_ATOM, $now),
+      'reason' => $reason,
+      'prior_campaign_entity_id' => $oldCampaignId ?: NULL,
+      'prior_campaign_id' => $oldCampaign ? (string) $oldCampaign->get('campaign_id')->value : '',
+      'prior_design_reset_requests' => $intake['proof_design_reset_requests'] ?? [],
+    ];
+    $intake['proof_revision_reset_audit'] = $audit;
+    $intake['proof_design_reset_requests'] = [];
+    $intake['proof_research_requirements'] = [
+      'customer_feedback' => (string) (($intake['proof_revision_request']['notes'] ?? '') ?: ''),
+      'required_lesson' => 'Explain the research as a welcoming, customer-friendly reason for the design. Do not lead with analytical operations language or assume the customer understands the proof process.',
+      'growth_plan_required' => TRUE,
+      'prepared_at' => gmdate(DATE_ATOM, $now),
+    ];
+    $intake['proof_revision_rebuild_pending'] = [
+      'reason' => $reason,
+      'prepared_at' => gmdate(DATE_ATOM, $now),
+    ];
+    $intakeJson = json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+    $this->database->update('famtastic_project_request')->fields([
+      'status' => 'submitted',
+      'proof_campaign_id' => NULL,
+      'proof_review_status' => 'queued',
+      'selected_proof_direction' => NULL,
+      'selected_proof_at' => NULL,
+      'intake_data' => $intakeJson,
+      'changed' => $now,
+    ])->condition('id', $requestId)->condition('proof_review_status', 'revision_requested')->execute();
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if (!$updated || (string) $updated['proof_review_status'] !== 'queued' || !empty($updated['proof_campaign_id'])) {
+      throw new \RuntimeException('The revision rebuild could not acquire a fresh proof slot.');
+    }
+    $jobId = $this->queueWebsiteRequestProofJob($requestId, (int) $updated['prospect_id'], (string) $updated['public_id'], $intake);
+    $this->activity((int) $updated['organization_id'], 'website_request.proof_revision_rebuild_queued', 'FAMtastic started a new proof round from the customer feedback.');
+    return ['website_request' => $this->serializeWebsiteRequest($updated), 'job_id' => $jobId, 'prior_campaign_id' => $oldCampaignId ?: NULL];
   }
 
   /**

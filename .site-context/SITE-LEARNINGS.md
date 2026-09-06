@@ -1793,3 +1793,23 @@ Permanent rules:
   jobs, sent records, explicit reply events, and fulfilled Commerce. Inbound
   support messages do not contain a campaign relation today, so they must be
   displayed as “not campaign-attributable,” never as zero replies.
+## 2026-09-06 — A proof room must explain one decision, not expose an operating console
+
+- Observation: a client who has completed an intake can still be blocked from
+  choosing a design when the portal mixes raw lifecycle statuses, technical
+  domain setup, research, files, provenance, and archive controls into one
+  screen. In the revision state, it is especially harmful to render a Choose
+  button that the server will refuse.
+- Guidance: use `design.md` before any customer-facing design or recurring
+  email. Start Projects with a list, open one project at a time, and sequence
+  Today → Concepts → Research & growth plan → Setup → More. Plain language and
+  progressive disclosure are the primary help system; tooltips only support
+  them. Customer screens show no Build DNA/QA internals.
+- Guidance: a pre-purchase proof rebuild must retain the rejected campaign and
+  feedback, reset only the request-level allowance explicitly authorized by the
+  owner, and queue a fresh proof job. It does not alter the paid Project
+  revision counter, charge a customer, register a domain, or announce proofs.
+- Guidance: transactional proof and feedback emails are versioned Concierge
+  templates. Put the signed workspace destination behind one named graphic CTA;
+  keep the raw fallback in the durable plain-text outbox rather than visibly
+  printing an opaque URL in the HTML email.

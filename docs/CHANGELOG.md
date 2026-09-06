@@ -1,5 +1,33 @@
 # Product changelog
 
+## 2026-09-06 — Client proof revision, portal focus, and Concierge template standard
+
+- Added root `design.md` as the shared FAMtastic Experience System. It now
+  governs customer portal, proof, Site Studio, and transactional-email work
+  alongside the specialized Design DNA and component contracts.
+- Reworked the authenticated Projects experience from an all-in-one command
+  center into a projects list and one-project detail with Today, Concepts,
+  Research & growth plan, Setup, and More. Internal Build DNA is no longer a
+  customer-path control; revision state cannot expose a selectable proof action
+  that the server will reject.
+- Added an owner-confirmed, auditable pre-purchase proof rebuild action and
+  `famtastic:website-request-proof-rebuild`. It retains the rejected campaign,
+  resets only the request-level design-reset allowance, records the reason and
+  customer feedback, and queues a new proof job without email, payment, domain,
+  or deployment side effects.
+- Extended proof research snapshots with a customer-facing 30/60/90-day growth
+  plan and feedback lesson. New intakes receive an unreserved proposed domain
+  candidate from the business name, which customers can confirm or edit before
+  any registration/connection action.
+- Added Concierge `customer_revision_received` v1 and upgraded
+  `customer_proof_ready` to v2. Both use a named graphical CTA and omit opaque
+  portal URLs from the visible HTML body while retaining the plain-text outbox
+  receipt and template version.
+- Local verification passed PHP lint, focused 9-test PHPUnit set (61
+  assertions), frontend production build, Portal Design DNA 30/30, and the
+  portal link/crawl audit. This entry is not a production deployment or a new
+  customer proof/email receipt.
+
 ## 2026-09-06 — Owner-authorized flood arm and Sep 5 backfill
 
 - Opened the four September 6–13 campaign gates under an explicit

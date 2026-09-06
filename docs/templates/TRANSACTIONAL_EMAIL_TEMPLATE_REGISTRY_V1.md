@@ -30,7 +30,8 @@ customer-state transition, offer, charge, or launch.
 | ID / version | Trigger and durable key | Recipient / purpose | Brand and CTA | Required truth boundary |
 | --- | --- | --- | --- | --- |
 | `customer_intake_submitted` v1 | First `draft → submitted`; `website-request:{id}:customer` | Verified customer; acknowledges that the Design Review and proof routine have started | FAMtastic Concierge, dark green/lime, “Intake received · verified workspace,” **Open your workspace** | No proof is claimed ready; no payment is requested; exact authenticated portal URL only. |
-| `customer_proof_ready` v1 | Owner approves a complete 3- or 6-direction campaign; `website-request:{id}:proofs:{campaign}:{count}` or legacy project proof key | Verified customer; delivers access to the approved Studio Review | FAMtastic Concierge, dark green/lime, “Private concept review · verified workspace,” **Open your Studio Review** | No promotion, price, or research report claim; customer sees only owner-approved account-owned concepts. |
+| `customer_proof_ready` v2 | Owner approves a complete 3- or 6-direction campaign; `website-request:{id}:proofs:{campaign}:{count}` or legacy project proof key | Verified customer; delivers access to the approved Studio Review | FAMtastic Concierge, dark green/lime, “Private concept review · verified workspace,” **Review your 3 directions** | One job, one graphical CTA, no visible opaque portal URL. No promotion, price, or research-report claim; customer sees only owner-approved account-owned concepts. |
+| `customer_revision_received` v1 | Customer submits permitted proof feedback; `website-request:{id}:customer-revision-ack:{notes-hash}` | Verified customer; confirms feedback is being used and keeps them in their workspace | FAMtastic Concierge, dark green/lime, “Feedback saved · next proof round,” **Open your project** | Never claim revised proofs are ready. It says FAMtastic is building the next set and leaves the prior URL out of visible body copy. |
 | `customer_owner_system_review` v1 | Restricted demonstration notice only; external send receipt is retained with the review URL | Customer invited to a temporary, non-live demonstration of a branded client path and mobile Owner Desk | FAMtastic Concierge, dark forest/lime/warm paper, **Review your business system** | Never use for a proof set or selection. Proof delivery, research review, feedback, and choice stay in the authenticated workspace via `customer_proof_ready`. |
 | `standard` v1 | Operational or transactional outbox row without a specialized customer-template assignment | Customer or operator, depending on the row | Neutral FAMtastic operational shell | Must not borrow customer-proof language or make a commercial claim. |
 
@@ -47,7 +48,7 @@ customer-state transition, offer, charge, or launch.
 - Forbidden: a delivery date guarantee, “proofs are ready,” payment request,
   price, research-summary claim, domain action, or public/bearer URL.
 
-### `customer_proof_ready` v1
+### `customer_proof_ready` v2
 
 - Subject: `Your FAMtastic Studio Review is ready`
 - Inputs: verified display name, configured concept-set label, authenticated

@@ -67,6 +67,12 @@ bindings, and Build DNA. FAMtastic owns the approved recipe and customer truth;
 Site Studio consumes that immutable context and returns truthful continuation
 evidence rather than silently redesigning or rerunning it.
 
+Before creating a design, proof, customer portal surface, or recurring
+transactional email, agents must read and apply the repository-root
+`design.md` Experience System. It is the shared presentation and information
+architecture contract; specialist Design DNA, component, proof, and email
+contracts remain mandatory.
+
 ## Client portal design doctrine
 
 All customer portal (`/portal`), token-scoped workspace (`/portal/:token`), and

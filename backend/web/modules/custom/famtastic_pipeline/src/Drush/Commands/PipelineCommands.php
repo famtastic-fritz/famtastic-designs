@@ -526,6 +526,50 @@ class PipelineCommands extends DrushCommands {
   }
 
   /**
+   * Starts one owner-authorized replacement proof round after customer feedback.
+   *
+   * The command resets only the request-level pre-selection allowance, retains
+   * the rejected campaign/audit history, and queues a new proof job. It never
+   * sends email, approves concepts, changes Commerce, or registers a domain.
+   */
+  #[CLI\Command(name: 'famtastic:website-request-proof-rebuild', aliases: ['fwrpr'])]
+  #[CLI\Argument(name: 'requestReference', description: 'Website request numeric id or public UUID.')]
+  #[CLI\Option(name: 'confirm', description: 'Must exactly repeat the request public UUID.')]
+  #[CLI\Option(name: 'reason', description: 'Owner-recorded reason for the replacement proof round.')]
+  #[CLI\Usage(name: 'drush fwrpr <request-uuid> --confirm=<request-uuid> --reason="Use feedback to make the directions warmer and simpler"', description: 'Queue one fresh, pre-purchase replacement proof round without sending customer mail.')]
+  public function websiteRequestProofRebuild(string $requestReference, array $options = ['confirm' => '', 'reason' => '']): int {
+    $database = \Drupal::database();
+    $query = $database->select('famtastic_project_request', 'r')->fields('r', ['id', 'public_id']);
+    ctype_digit($requestReference) ? $query->condition('id', (int) $requestReference) : $query->condition('public_id', $requestReference);
+    $request = $query->range(0, 1)->execute()->fetchAssoc();
+    if (!$request || !hash_equals((string) $request['public_id'], trim((string) $options['confirm']))) {
+      $this->logger()->error('Proof rebuild requires --confirm=<exact-request-public-uuid>.');
+      return self::EXIT_FAILURE;
+    }
+    try {
+      /** @var \Drupal\famtastic_pipeline\Service\CustomerPortalService $portal */
+      $portal = \Drupal::service('famtastic_pipeline.customer_portal');
+      $result = $portal->prepareWebsiteRequestRevisionRebuild(
+        (int) $request['id'],
+        (int) \Drupal::currentUser()->id(),
+        (string) $options['reason'],
+      );
+      $this->io()->writeln(json_encode([
+        'website_request_id' => (int) $request['id'],
+        'website_request_public_id' => (string) $request['public_id'],
+        'prior_campaign_id' => $result['prior_campaign_id'],
+        'proof_job_id' => $result['job_id'],
+        'side_effects_not_run' => ['proof_worker', 'owner_approval', 'customer_email', 'payment', 'domain_registration', 'deployment'],
+      ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+      return self::EXIT_SUCCESS;
+    }
+    catch (\Throwable $error) {
+      $this->logger()->error($error->getMessage());
+      return self::EXIT_FAILURE;
+    }
+  }
+
+  /**
    * Exports an optional three-direction FAMtastic showcase expansion.
    */
   #[CLI\Command(name: 'famtastic:website-request-proof-showcase-export', aliases: ['fwrpse'])]
