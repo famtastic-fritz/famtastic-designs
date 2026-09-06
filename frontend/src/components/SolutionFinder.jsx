@@ -141,11 +141,57 @@ const SERVICE_BRANCHES = [
   },
 ];
 
+// The public chat stays intentionally short. These are the canonical field
+// names carried forward into the account brief so a customer never has to
+// repeat the basics after registration. Detailed values can be completed in
+// the authenticated intake; the first pass derives only what the chat knows.
+const WEBSITE_DISCOVERY_FIELDS = [
+  { name: 'industry', label: 'Industry', type: 'text' },
+  { name: 'location', label: 'Location', type: 'text' },
+  { name: 'businessModel', label: 'How the business makes money today?', type: 'textarea' },
+  {
+    name: 'brandStatus', label: 'Logo and brand status · Logo and Brand Starter add-on', type: 'select', options: [
+      { value: 'ready', label: 'I have a logo / brand assets' },
+      { value: 'no_logo_no_help', label: 'No logo, and I do not want one' },
+      { value: 'help_needed', label: 'No logo, and I want help creating one' },
+      { value: 'partial', label: 'I have some brand pieces' },
+    ],
+  },
+  {
+    name: 'domainChoice', label: 'Domain situation', type: 'select', options: [
+      { value: 'new_domain', label: 'I need a new domain' },
+      { value: 'existing_domain', label: 'I already own a domain' },
+      { value: 'undecided', label: 'I am not sure' },
+    ],
+  },
+  { name: 'domainDetails', label: 'Domain, hosting, email, or repository details', type: 'textarea' },
+  { name: 'businessEmailNeeds', label: 'Custom business email needs · Business Email Setup add-on', type: 'textarea' },
+  { name: 'referenceSites', label: 'Sites you like or dislike—and why', type: 'textarea' },
+  { name: 'hosting', label: 'Hosting details', type: 'text' },
+  { name: 'repository', label: 'Repository details', type: 'text' },
+  { name: 'customNeeds', label: 'Anything else you need—even if we do not list it?', type: 'textarea' },
+];
+
+const WEB_BASICS_DISCOVERY_DEFAULTS = Object.fromEntries(WEBSITE_DISCOVERY_FIELDS.map(({ name }) => [name, '']));
+
+function normalizeWebsiteDiscovery(q2Answer = '', q3Answer = '') {
+  const q2 = q2Answer.toLowerCase();
+  return {
+    ...WEB_BASICS_DISCOVERY_DEFAULTS,
+    industry: 'business website',
+    businessModel: q3Answer,
+    domainChoice: q2.includes('starting') ? 'new_domain' : q2.includes('domain') ? 'existing_domain' : 'undecided',
+    brandStatus: q2.includes('logo') && q2.includes('need') ? 'help_needed' : q2.includes('logo') ? 'ready' : 'partial',
+    domainDetails: q3Answer,
+  };
+}
+
 export default function SolutionFinder({ initialBranch = null }) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1); // 1: Pick Service -> 2: Branch Specific Q2 -> 3: Branch Specific Q3 -> 4: Timeline -> 5: Scope Reveal & Email
   const [selectedBranch, setSelectedBranch] = useState(null);
   const [answers, setAnswers] = useState({
+    ...WEB_BASICS_DISCOVERY_DEFAULTS,
     branchId: '',
     branchTitle: '',
     q2Answer: '',
@@ -289,7 +335,12 @@ export default function SolutionFinder({ initialBranch = null }) {
 
   function handleQ3Select(branch, optionText) {
     appendUserMsg(optionText);
-    setAnswers((prev) => ({ ...prev, q3Answer: optionText, businessName: optionText }));
+    setAnswers((prev) => ({
+      ...prev,
+      q3Answer: optionText,
+      businessName: optionText,
+      ...(branch.id === 'web-basics' ? normalizeWebsiteDiscovery(prev.q2Answer, optionText) : {}),
+    }));
     setChips([]);
     setStep(4);
     setIsTyping(true);
@@ -471,6 +522,7 @@ export default function SolutionFinder({ initialBranch = null }) {
         businessName: finalAnswers.businessName,
         email: finalAnswers.email,
         phone: finalAnswers.phone,
+        ...finalAnswers,
         conversationTranscript: transcript,
         recommendedStartingPoint: branch?.title,
       },
