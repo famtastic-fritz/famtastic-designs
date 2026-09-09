@@ -26,6 +26,17 @@
   card uses the existing durable workspace next-action state without inventing
   progress or analytics.
 
+## 2026-09-09 — Navigation/action inventory and admin-shell safeguards
+
+- Added a static navigation/action inventory validator for customer portal
+  sources and Drupal staff links. It blocks empty/placeholder navigation and
+  form actions, missing React or FAMtastic Drupal routes, inert buttons, and
+  unsupported customer claims of publishing, deployment, charging, payment
+  confirmation, or Site Studio execution. Focused fixtures cover each failure.
+- Hardened the reusable admin shell: preserve Drupal `page.pre_content`, route
+  login/password reset through the FAMtastic administration theme, and use a
+  desktop left rail plus a 44px-target mobile thumb-zone bottom navigation.
+
 ## 2026-09-09 — Reusable FAMtastic Drupal administration system
 
 - Rebuilt the native Drupal administration presentation as the reusable

@@ -1882,11 +1882,21 @@ body.path-user .views-exposed-form .form-item { flex: 1 1 13rem; margin: 0; }
 body.path-admin .views-exposed-form .form-actions,
 body.path-user .views-exposed-form .form-actions { margin: 0; }
 
+@media (min-width: 783px) {
+  .famtastic-admin-shell__frame { display: grid; grid-template-columns: 14rem minmax(0, 1fr); }
+  .famtastic-admin-shell__header { position: sticky; top: 0; grid-row: 1 / span 2; flex-direction: column; align-items: stretch; min-height: 100vh; padding: 1.1rem .75rem; border-right: 1px solid var(--fam-ops-line); border-bottom: 0; }
+  .famtastic-admin-shell__brand { padding: .35rem .5rem 1.2rem; border-bottom: 1px solid var(--fam-ops-line); }
+  .famtastic-admin-nav { display: grid; flex: 0 1 auto; gap: .25rem; margin-top: 1rem; overflow: visible; }
+  .famtastic-admin-nav__link { min-height: 40px; padding-inline: .75rem; }
+  .famtastic-admin-shell__body { grid-column: 2; width: min(100%, 76rem); margin: 0; }
+}
+
 @media (max-width: 782px) {
   .famtastic-admin-shell__header { align-items: stretch; flex-wrap: wrap; padding: .75rem 1rem; }
   .famtastic-admin-shell__brand { width: 100%; }
-  .famtastic-admin-nav { order: 3; width: 100%; }
-  .famtastic-admin-shell__body { padding: 1rem 1rem 2.5rem; }
+  .famtastic-admin-nav { position: fixed; z-index: 100; right: .5rem; bottom: max(.5rem, env(safe-area-inset-bottom)); left: .5rem; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .15rem; padding: .35rem; overflow: hidden; background: rgba(16, 19, 16, .96); border: 1px solid var(--fam-ops-line); border-radius: 16px; box-shadow: 0 12px 35px rgba(0, 0, 0, .42); }
+  .famtastic-admin-nav__link { min-width: 0; min-height: 44px; padding: .25rem .15rem; justify-content: center; font-size: clamp(.56rem, 2.5vw, .68rem); line-height: 1.08; text-align: center; white-space: normal; }
+  .famtastic-admin-shell__body { padding: 1rem 1rem calc(5.5rem + env(safe-area-inset-bottom)); }
   body.path-admin .tabs__link,
   body.path-user .tabs__link,
   body.path-admin .local-tasks a,

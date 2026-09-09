@@ -11,6 +11,20 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\user\UserInterface;
 
 /**
+ * Implements hook_custom_theme().
+ *
+ * Authentication and recovery need the same trusted staff visual system as
+ * the administration routes, even before a user has an authenticated session.
+ * Keep this narrow: customer portal routes remain on the customer theme.
+ */
+function famtastic_pipeline_custom_theme(): ?string {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  return in_array($route_name, ['user.login', 'user.pass', 'user.reset'], TRUE)
+    ? 'famtastic_admin'
+    : NULL;
+}
+
+/**
  * Implements hook_metatags_alter().
  *
  * Drupal's own document root is served publicly under "/web" (see

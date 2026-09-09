@@ -13,7 +13,9 @@ treatment.
    site with Claro available.
 2. Enable it and select it as the administration theme.
 3. Clear Drupal caches. Native routes marked `_admin_route: TRUE` automatically
-   receive the shell; no per-route CSS registration is required.
+   receive the shell; no per-route CSS registration is required. The companion
+   `famtastic_pipeline_custom_theme()` hook also selects this theme for Drupal
+   staff login, password request, and password reset routes.
 4. For an operational module, attach its records with ordinary Drupal render
    arrays, forms, tables, messages, local tasks, and pager elements. The theme
    styles those primitives globally. Use a semantic, module-prefixed class only
@@ -42,8 +44,8 @@ documentation remain connected.
 
 ## Accessibility and safety
 
-The theme maintains 44px touch targets on handheld layouts, visible keyboard
-focus, reduced-motion support, readable semantic status colors, and no page
-horizontal overflow. It only presents existing Drupal routes and actions; it
-does not create a publishing, payment, customer-message, provider, or deploy
-authority.
+The theme maintains a desktop left rail and a fixed mobile thumb-zone bottom
+navigation with 44px targets, plus visible keyboard focus, reduced-motion
+support, readable semantic status colors, and no page horizontal overflow. It
+only presents existing Drupal routes and actions; it does not create a
+publishing, payment, customer-message, provider, or deploy authority.

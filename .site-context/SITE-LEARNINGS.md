@@ -2043,7 +2043,6 @@ Permanent rules:
   surfaces). Document a narrow Twig/class override path for proprietary markup
   rather than claiming universal compatibility. Validate the theme contract
   with a representative future-module fixture before calling the work ready.
-
 ## 2026-09-09 — Customer lifecycle safety hardening
 
 - New customer marketing and portal promotional defaults require explicit opt-in; the update preserves existing consent history.
@@ -2063,3 +2062,17 @@ Permanent rules:
   and restore keyboard focus when they close.
 
 - Proof selection is now a durable staging transition: selected artifact identity, project, packet, and job are linked before checkout; payment must reuse the same project.
+
+## 2026-09-09 — A visible action needs a source-level contract before browser QA
+
+- Observation: route-backed views can still expose a placeholder, a dead
+  button, an unregistered source target, or customer copy that claims a
+  consequential operation without durable evidence. Visual review alone does
+  not catch these affordance defects reliably.
+- Guidance: statically inventory customer portal and staff navigation against
+  their route maps; fail closed for empty/`#` targets, FAMtastic route typos,
+  inert buttons, and prohibited customer action claims. Keep the check honest:
+  dynamic routes, access checks, API success, and provider delivery still need
+  runtime proof. For the admin shell, preserve every Drupal region (including
+  `page.pre_content`) and explicitly select the theme for pre-auth recovery
+  routes; CSS selectors alone cannot prove either condition.

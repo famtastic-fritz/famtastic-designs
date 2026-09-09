@@ -3,15 +3,15 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="../../css/famtastic-admin.css"><title>Future module primitive fixture</title></head>
 <body class="path-admin famtastic-admin-shell">
 <div class="famtastic-admin-shell__frame">
-  <header class="famtastic-admin-shell__header"><nav class="famtastic-admin-nav" aria-label="FAMtastic staff navigation"><a class="famtastic-admin-nav__link" href="#">Inventory</a></nav></header>
+  <header class="famtastic-admin-shell__header"><nav class="famtastic-admin-nav" aria-label="FAMtastic staff navigation"><a class="famtastic-admin-nav__link" href="/admin/famtastic">Inventory</a></nav></header>
   <main class="famtastic-admin-shell__main">
     <h1 class="page-title">Inventory review</h1>
-    <ul class="tabs primary"><li class="tabs__tab is-active"><a class="tabs__link" href="#">Overview</a></li><li class="tabs__tab"><a class="tabs__link" href="#">History</a></li></ul>
+    <ul class="tabs primary"><li class="tabs__tab is-active"><a class="tabs__link" href="/admin/famtastic">Overview</a></li><li class="tabs__tab"><a class="tabs__link" href="/admin/famtastic/attention">History</a></li></ul>
     <div role="status" class="messages messages--status">Inventory sync is current.</div>
-    <form class="views-exposed-form"><div class="form-item"><label for="filter">Find a record</label><input id="filter" type="search" placeholder="SKU or title"></div><div class="form-actions"><button class="button button--primary" type="submit">Apply filters</button></div></form>
+    <form class="views-exposed-form" action="/admin/famtastic"><div class="form-item"><label for="filter">Find a record</label><input id="filter" type="search" placeholder="SKU or title"></div><div class="form-actions"><button class="button button--primary" type="submit">Apply filters</button></div></form>
     <details class="claro-details"><summary>Recovery details</summary><p>Use the native Drupal recovery flow.</p></details>
     <div class="famtastic-ops__table-scroll"><table class="views-table responsive-enabled"><thead><tr><th>SKU</th><th>State</th><th>Updated</th></tr></thead><tbody><tr><td>SKU-100</td><td><span class="famtastic-ops__badge famtastic-ops__badge--pending">Pending</span></td><td>Unknown</td></tr></tbody></table></div>
-    <nav class="pager" aria-label="Pagination"><ul class="pager__items"><li class="pager__item is-active"><a href="#">1</a></li><li class="pager__item"><a href="#">2</a></li></ul></nav>
+    <nav class="pager" aria-label="Pagination"><ul class="pager__items"><li class="pager__item is-active"><a href="/admin/famtastic">1</a></li><li class="pager__item"><a href="/admin/famtastic?page=1">2</a></li></ul></nav>
   </main>
 </div>
 </body>
