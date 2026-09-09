@@ -22,6 +22,7 @@ final class AutomationWorker {
     private readonly CustomerPortalService $portal,
     private readonly PublicPreviewDeliveryService $previews,
     private readonly PilotExactDispatchLock $pilotExactDispatchLock,
+    private readonly SiteStudioStagingClient $stagingClient,
   ) {}
 
   /**
@@ -87,7 +88,7 @@ final class AutomationWorker {
     if ($packet['schema'] !== 'famtastic.site-studio.build-packet.v1' || $packet['build_class'] !== 'prepayment_selected_direction_staging') {
       throw new \RuntimeException('Selected staging packet failed its fail-closed boundary validation.');
     }
-    throw new \RuntimeException('Site Studio staging dispatch is unavailable until the authenticated endpoint is explicitly configured.');
+    return $this->stagingClient->dispatch($packet);
   }
 
   /**

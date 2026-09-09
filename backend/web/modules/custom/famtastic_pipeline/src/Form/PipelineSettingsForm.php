@@ -39,6 +39,12 @@ final class PipelineSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Alert Fritz when a lead misses its response deadline'),
       '#default_value' => $config->get('sla_alerts_enabled') ?? TRUE,
     ];
+    $form['site_studio_staging_url'] = [
+      '#type' => 'url',
+      '#title' => $this->t('Site Studio staging acceptance URL'),
+      '#default_value' => $config->get('site_studio_staging_url') ?: '',
+      '#description' => $this->t('Exact Site Studio Next /api/pipeline/staging/accept endpoint. Leave empty to fail closed. The signing secret is never stored in configuration.'),
+    ];
     return parent::buildForm($form, $form_state);
   }
 
@@ -47,6 +53,7 @@ final class PipelineSettingsForm extends ConfigFormBase {
       ->set('notification_to_email', mb_strtolower(trim((string) $form_state->getValue('notification_to_email'))))
       ->set('lead_response_sla_days', (int) $form_state->getValue('lead_response_sla_days'))
       ->set('sla_alerts_enabled', (bool) $form_state->getValue('sla_alerts_enabled'))
+      ->set('site_studio_staging_url', trim((string) $form_state->getValue('site_studio_staging_url')))
       ->save();
     parent::submitForm($form, $form_state);
   }

@@ -31,8 +31,9 @@ final class PrepaymentStagingContractTest extends UnitTestCase {
     $this->assertStringContainsString("\$row['proof_review_status'] !== 'selected'", $receipt);
     $this->assertStringContainsString("'site_studio.staging_deployed'", $receipt);
     $this->assertStringContainsString('@famtastic_pipeline.site_studio_build_packets', $services);
+    $this->assertStringContainsString('@famtastic_pipeline.site_studio_staging_client', $services);
     $this->assertStringContainsString("'site_studio_staging_prepare'", $worker);
-    $this->assertStringContainsString('dispatch is unavailable until the authenticated endpoint is explicitly configured', $worker);
+    $this->assertStringContainsString('$this->stagingClient->dispatch($packet)', $worker);
   }
 
   public function testCheckoutSerializationRequiresDeployedStaging(): void {

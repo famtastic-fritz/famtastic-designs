@@ -24,6 +24,9 @@ booking_request_enabled_sites: []
 booking_availability_enabled_sites: []
 # Site Studio proof generation endpoint. Empty = built-in stub generator.
 studio_url: ''
+# Exact Site Studio Next selected-staging acceptance endpoint. Empty keeps the
+# worker fail-closed. Its HMAC secret belongs in settings.php or the environment.
+site_studio_staging_url: ''
 # Public base URL for proof previews (scheme+host+path prefix, no trailing
 # slash). Empty = {request scheme+host}/web/proofs.
 proofs_base_url: ''

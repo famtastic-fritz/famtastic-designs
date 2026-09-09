@@ -41,6 +41,9 @@ famtastic_pipeline.settings:
       sequence:
         type: string
         label: 'Microsite key'
+    site_studio_staging_url:
+      type: string
+      label: 'Site Studio selected-staging acceptance URL'
     package:
       type: mapping
       label: 'Offer package'

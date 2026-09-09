@@ -1,5 +1,17 @@
 # Product changelog
 
+## 2026-09-09 — Authenticated selected-staging dispatch
+
+- Added a configurable Drupal client for Site Studio Next's exact selected-
+  staging acceptance endpoint. The HMAC secret remains environment/settings
+  only; an empty endpoint or secret fails closed.
+- Bound the exact serialized request bytes to the HMAC signature and required
+  a 202 `accepted_waiting_callback` receipt with matching packet and
+  idempotency identity. Acceptance cannot be mistaken for a build or deploy.
+- Proved the real PHP-to-Node request over an isolated loopback server and
+  reconciled both website product contracts so payment requires a verified
+  staging receipt and durable customer staging acceptance.
+
 ## 2026-09-09 — Prior-48-hour completion audit and lifecycle doctrine reconciliation
 
 - Added one evidence-backed retrospective covering FAMtastic Designs, Site

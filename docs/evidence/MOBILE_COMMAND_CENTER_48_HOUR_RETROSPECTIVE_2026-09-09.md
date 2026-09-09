@@ -192,11 +192,10 @@ superseded selection-to-checkout section in
 `docs/plans/CUSTOMER_EXPERIENCE_FULFILLMENT_2026-09-04.md` is explicitly marked
 non-executable.
 
-One source-contract mismatch remains for implementation review:
-`backend/config/famtastic-products.json` describes staging review in customer
-copy and milestones, but its `payment.requires` arrays do not enumerate the
-staging receipt and staging-acceptance facts enforced by checkout. This audit
-did not edit source configuration.
+The source-contract mismatch identified during this audit is now closed by a
+separate implementation change: both website products enumerate
+`verified_staging_receipt` and `customer_staging_acceptance` in
+`payment.requires`, matching the checkout gate.
 
 ## Candidate reusable procedures after proof
 

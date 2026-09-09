@@ -57,11 +57,12 @@ acceptance, and the checkout gate. Relevant integration commits are
 `935d3c95`, `d9edd1b9`, `eda5fd3c`, `ccfcc50e`, `96168979`, `9e68e451`,
 `b209c565`, `54b5a88c`, `e97e88e6`, and `728c75d6`.
 
-This does **not** complete the unchecked acceptance tasks. At the retrospective
-checkpoint, committed HEAD deliberately fails closed because no approved
-authenticated Site Studio destination is configured; concurrent uncommitted
-client wiring remains implementation-in-progress. Protected runtime creation, real
-cross-repository dispatch, standalone-repository/staging evidence, running
+This does **not** complete the unchecked acceptance tasks. The Drupal client
+and Site Studio Next acceptance route now pass an actual HMAC-authenticated
+PHP-to-Node loopback dispatch using the same immutable multi-file packet
+contract. An empty runtime endpoint or secret still fails closed, and
+acceptance returns only a waiting-for-callback receipt rather than claiming a
+build or deploy. Protected runtime creation, standalone-repository/staging evidence, running
 Drupal route/theme coverage, full responsive/accessibility/browser evidence,
 mockup comparison, independent review, clean push, protected staging smoke, and
 owner notification remain unproven.

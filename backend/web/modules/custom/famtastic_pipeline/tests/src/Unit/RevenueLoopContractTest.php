@@ -62,6 +62,10 @@ final class RevenueLoopContractTest extends UnitTestCase {
     $this->assertStringContainsString("'payment.fulfillment_started'", $lifecycle);
     $this->assertStringContainsString("'customer_gate' => 'payment_succeeded'", $lifecycle);
     $this->assertFalse(in_array('domain_choice', $catalog['products'][0]['payment']['requires'], TRUE));
+    $this->assertContains('verified_staging_receipt', $catalog['products'][0]['payment']['requires']);
+    $this->assertContains('customer_staging_acceptance', $catalog['products'][0]['payment']['requires']);
+    $this->assertContains('verified_staging_receipt', $catalog['products'][1]['payment']['requires']);
+    $this->assertContains('customer_staging_acceptance', $catalog['products'][1]['payment']['requires']);
     $this->assertFalse(in_array('domain_choice', $terms['deals']['FAM-FOOT-199']['required_consents'], TRUE));
     $this->assertFalse($terms['deals']['FAM-FOOT-199']['domain_choice_required']);
   }
