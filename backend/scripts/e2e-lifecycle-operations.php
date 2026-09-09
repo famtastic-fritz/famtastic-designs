@@ -25,6 +25,13 @@ $storeIds = \Drupal::entityQuery('commerce_store')->accessCheck(FALSE)->range(0,
 $item = OrderItem::create(['type' => 'default', 'purchased_entity' => $variation, 'quantity' => 1, 'unit_price' => $variation->getPrice(), 'title' => $variation->getTitle()]);
 $item->save();
 $order = Order::create(['type' => 'default', 'store_id' => reset($storeIds), 'uid' => $user->id(), 'mail' => $email, 'order_items' => [$item], 'state' => 'draft']);
+$order->setData('famtastic_checkout', [
+  // This lifecycle fixture intentionally proves the existing-domain branch.
+  // The customer-journey suite separately proves that an undecided domain no
+  // longer blocks the shared-hosting payment and fulfillment flow.
+  'domain_choice' => 'existing_domain',
+  'terms_version' => 'customer_terms_v4_approved',
+]);
 $order->save();
 $order->set('state', 'completed');
 $order->setPlacedTime($now);

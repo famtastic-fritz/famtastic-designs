@@ -67,6 +67,44 @@ assert_json() {
   fi
 }
 
+# Completes the local/test-provider side of the selected-proof staging contract.
+# The canonical journey must exercise the same durable receipt gate that blocks
+# checkout in production; it may not skip directly from selection to payment.
+complete_test_staging() {
+  local request_public_id="$1"
+  "$DRUSH" eval "
+    \$db = \\Drupal::database();
+    \$request = \$db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', '$request_public_id')->execute()->fetchAssoc();
+    assert(\$request && \$request['proof_review_status'] === 'selected' && \$request['staging_status'] === 'queued');
+    \$project = \\Drupal::entityTypeManager()->getStorage('famtastic_project')->load((int) \$request['project_id']);
+    assert(\$project);
+    \$studio = json_decode((string) \$project->get('studio_json')->value, TRUE);
+    \$packet = \$studio['site_studio_build_packet'] ?? NULL;
+    assert(is_array(\$packet));
+    \$receipt = [
+      'schema' => 'famtastic.site-studio.staging-receipt.v1',
+      'status' => 'deployed',
+      'event_id' => 'fixture-staging:' . \$packet['packet_id'],
+      'packet_id' => \$packet['packet_id'],
+      'idempotency_key' => \$packet['idempotency_key'],
+      'website_request_id' => (int) \$request['id'],
+      'project_id' => (int) \$request['project_id'],
+      'staging_url' => 'https://staging.example.test/' . rawurlencode('$request_public_id') . '/',
+      'artifact_sha256' => hash('sha256', json_encode(\$packet['artifacts'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)),
+      'completed_at' => gmdate(DATE_ATOM, \\Drupal::time()->getRequestTime()),
+      'target_path' => '/isolated-test-staging/' . '$request_public_id',
+      'remote_subdirectory' => 'customer-sites/' . '$request_public_id',
+      'repository' => ['mode' => 'isolated_test_fixture', 'branch' => 'main'],
+      'qa' => [
+        ['name' => 'selected artifact integrity', 'status' => 'passed'],
+        ['name' => 'account and project binding', 'status' => 'passed'],
+      ],
+    ];
+    \$result = \\Drupal::service('famtastic_pipeline.staging_receipts')->accept(\$receipt);
+    assert(\$result['newly_processed'] === TRUE);
+  " >/dev/null
+}
+
 mkdir -p "$sandbox/releases" "$sandbox/sites"
 mkdir -p "$evidence_dir"
 printf 'source_record_id,business_name,email,website_url,website_quality\n' > "$csv"
@@ -345,7 +383,9 @@ proof_share_disabled="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-T
 assert_json "$proof_share_disabled" '.website_request.proof_share.enabled == false and .website_request.proof_share.url == "" and .website_request.proof_share.changed_at > 0'
 test "$(http_code "$BASE/api/proof-shares/$website_request_id/$new_proof_share_signature")" = "404"
 proof_decision="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"a"}' "$BASE/api/customer/website-requests/$website_request_id/proof-decision")"
-assert_json "$proof_decision" '.website_request.proof_review_status == "selected" and .website_request.direct_checkout_available == true and (.website_request.proofs.variants | length) == 3'
+assert_json "$proof_decision" '.website_request.proof_review_status == "selected" and .website_request.staging_status == "queued" and .website_request.direct_checkout_available == false and (.website_request.proofs.variants | length) == 3'
+complete_test_staging "$website_request_id"
+assert_json "$(curl -s -b "$cookie_jar" "$BASE/api/customer/workspace")" --arg request "$website_request_id" '([.website_requests[] | select(.public_id == $request and .staging_status == "deployed" and .direct_checkout_available == true and (.staging_preview.url | startswith("https://staging.example.test/")))] | length) == 1'
 test "$(http_code -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"b"}' "$BASE/api/customer/website-requests/$website_request_id/proof-decision")" = "404"
 second_request="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{
   \"organization\":\"$organization_id\",\"project_name\":\"Second independent site $run_id\",\"business_name\":\"Second Business\",\"project_type\":\"new_website\",\"primary_goal\":\"Generate leads\",\"products_services\":\"Consulting\",\"action\":\"save\"
@@ -369,7 +409,8 @@ business_request_id="$(jq -r '.website_request.public_id' <<<"$business_request"
   \$portal->approveWebsiteRequestProof((int) \$request['id'], 1);
   \$db->insert('famtastic_private_offer')->fields(['public_id' => \Drupal::service('uuid')->generate(), 'website_request_id' => \$request['id'], 'organization_id' => \$request['organization_id'], 'customer_id' => \$request['customer_id'], 'sku' => 'FAM-BUSINESS-499', 'list_amount_minor' => 49900, 'offered_amount_minor' => 19900, 'currency' => 'usd', 'reason' => 'Approved friend launch price', 'status' => 'active', 'expires_at' => \$now + 86400, 'created_by_uid' => 1, 'created' => \$now, 'changed' => \$now])->execute();
 "
-assert_json "$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"b"}' "$BASE/api/customer/website-requests/$business_request_id/proof-decision")" '.website_request.proof_review_status == "selected" and .website_request.direct_checkout_available == true'
+assert_json "$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"b"}' "$BASE/api/customer/website-requests/$business_request_id/proof-decision")" '.website_request.proof_review_status == "selected" and .website_request.staging_status == "queued" and .website_request.direct_checkout_available == false'
+complete_test_staging "$business_request_id"
 business_checkout="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"website_request\":\"$business_request_id\",\"skus\":[\"FAM-BUSINESS-499\"],\"domain_choice\":\"existing_domain\",\"recurring_authorized\":true,\"accept_terms\":true,\"terms_version\":\"customer_terms_v4_approved\"}" "$BASE/api/customer/checkout")"
 assert_json "$business_checkout" '.ok == true and .order_id > 0'
 business_order_id="$(jq -r '.order_id' <<<"$business_checkout")"
@@ -388,6 +429,7 @@ grant_code="$("$DRUSH" eval "
 " | tr -d '\r\n')"
 test -n "$grant_code"
 assert_json "$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d '{"action":"select","direction":"c"}' "$BASE/api/customer/website-requests/$grant_request_id/proof-decision")" '.website_request.proof_review_status == "selected"'
+complete_test_staging "$grant_request_id"
 grant_checkout="$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" -d "{\"organization\":\"$organization_id\",\"website_request\":\"$grant_request_id\",\"skus\":[\"FAM-FOOT-199\"],\"domain_choice\":\"existing_domain\",\"recurring_authorized\":true,\"accept_terms\":true,\"terms_version\":\"customer_terms_v4_approved\",\"grant_code\":\"$grant_code\"}" "$BASE/api/customer/checkout")"
 assert_json "$grant_checkout" '.ok == true and .completed == true and .order_id > 0 and (.checkout_url | contains("grant=applied"))'
 grant_order_id="$(jq -r '.order_id' <<<"$grant_checkout")"

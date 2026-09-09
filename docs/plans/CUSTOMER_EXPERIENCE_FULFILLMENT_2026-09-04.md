@@ -24,7 +24,7 @@ Tasks:
 - [x] Correct the recipient evidence using the authoritative production account record: request `12` belongs to `junyeismom@gmail.com`. Prior manual emails are out-of-system notices, not the account-owned proof delivery. The temporary public review tunnel was withdrawn on 2026-09-05.
 - [x] Map the next client and operator portal architecture: Shay’s account needs Today, My Website, Owner Desk, Growth Plan, Files, Messages, and Account; Fritz needs Client 360, proof/delivery controls, and exception recovery. See `CLIENT_AND_OPERATOR_PORTAL_ARCHITECTURE_V1.md`.
 
-Status: payment_gate_ready
+Status: superseded_by_staging_first_lifecycle
 Started: 2026-09-04 00:00 America/New_York
 Ended:
 Execution: parallel research plus one controlled release lane
@@ -33,7 +33,34 @@ Review: yes — customer journey proof, deployment preflight, exact live-record 
 Skills: prove-famtastic-customer-journey
 Blocked By: none
 
-## Current closeout state — 2026-09-09
+## Superseding lifecycle correction — 2026-09-09
+
+The earlier selection-to-checkout closeout below is retained only as historical
+evidence. It is **not** the current customer lifecycle and must not drive UI,
+automation, tests, or agent decisions.
+
+The authoritative lifecycle is now:
+
+1. The customer selects and locks an approved proof.
+2. FAMtastic creates the standalone site repository and dispatches the exact
+   immutable approved artifact to an isolated FAMtastic Inc staging target.
+3. Site Studio returns an authenticated, account-bound receipt that proves the
+   packet, artifact manifest, repository, staging URL, and staging QA.
+4. The customer receives the staging-ready notice and explicitly accepts the
+   working staging site.
+5. Checkout becomes available only after that durable staging acceptance.
+6. Verified payment queues fulfillment exactly once.
+7. Production domain purchase/connection, DNS, SSL, email, and launch remain
+   later operator-owned actions with their own receipts.
+
+Shay is a pilot exception because her sequence began before this doctrine was
+complete. Her evidence must be reconciled honestly; the exception does not
+change the standard lifecycle.
+
+No synthetic receipt, selected-proof status, URL parameter, or fixture copy may
+be treated as customer staging acceptance or as permission to open checkout.
+
+## Historical closeout state — 2026-09-09
 
 The customer-side path is now intentionally clean for the shared-hosting
 starter offer:

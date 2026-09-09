@@ -23,10 +23,10 @@ final class PrepaymentStagingContractTest extends UnitTestCase {
     $this->assertStringContainsString('prepareSelectedProofStaging', $portal);
     $this->assertStringContainsString("'prepayment_selected_direction_staging'", $portal);
     $this->assertStringContainsString("'site_studio_staging_prepare'", $portal);
-    $this->assertStringContainsString("'selected_direction_ids' => ['direction-' . $direction]", $portal);
+    $this->assertStringContainsString("'selected_direction_ids' => ['direction-' . \$direction]", $portal);
     $this->assertStringContainsString("'staging_status' => 'queued'", $portal);
     $this->assertStringContainsString('$project = $projectStorage->load((int) $request[\'project_id\']);', $commerce);
-    $this->assertStringContainsString("'proof_review_status' => 'selected'", $receipt);
+    $this->assertStringContainsString("\$row['proof_review_status'] !== 'selected'", $receipt);
     $this->assertStringContainsString("'site_studio.staging_deployed'", $receipt);
     $this->assertStringContainsString('@famtastic_pipeline.site_studio_build_packets', $services);
   }
