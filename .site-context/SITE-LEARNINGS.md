@@ -2043,3 +2043,9 @@ Permanent rules:
   surfaces). Document a narrow Twig/class override path for proprietary markup
   rather than claiming universal compatibility. Validate the theme contract
   with a representative future-module fixture before calling the work ready.
+
+## 2026-09-09 — Customer lifecycle safety hardening
+
+- New customer marketing and portal promotional defaults require explicit opt-in; the update preserves existing consent history.
+- Support replies and reviewed drafts commit durable message/case state with their notification outbox row, including immutable template metadata.
+- Notification retry actions fail closed for non-failed rows.

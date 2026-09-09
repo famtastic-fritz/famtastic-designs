@@ -255,12 +255,14 @@ final class LifecycleOperationsService {
     $clean = trim(strip_tags($body));
     if ($clean === '') throw new \InvalidArgumentException('support_reply_required');
     $now = $this->time->getRequestTime();
+    $transaction = $this->database->startTransaction();
     $messageId = (int) $this->database->insert('famtastic_portal_message')->fields([
       'thread_id' => $thread['id'], 'author_uid' => $uid, 'author_type' => 'staff', 'body' => $clean, 'created' => $now,
     ])->execute();
     $this->database->update('famtastic_support_case')->fields(['status' => 'waiting_on_customer', 'responded_at' => $now, 'changed' => $now])
       ->condition('id', $case['id'])->execute();
     $this->queue("support:{$case['id']}:reply:{$messageId}", $customer['email'], "Reply to support case {$caseNumber}", $clean . "\n\nReply to support+{$thread['public_id']}@famtasticdesigns.com");
+    unset($transaction);
     return ['case_number' => $caseNumber, 'status' => 'waiting_on_customer', 'message_id' => $messageId];
   }
 

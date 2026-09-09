@@ -2898,6 +2898,12 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 - Execution-truth banner on every tab (receipts required; Antigravity not headless; MuAPI needs approved direction; no state is publish/send/charge/launch approval)
 - Attribution honest at campaign grain; content-ID join lands with UTM persistence (queued)
 
+## 2026-09-09 — Customer lifecycle safety hardening
+
+- New customer marketing and portal promotional defaults now require explicit opt-in; the update changes schema defaults without rewriting existing consent history.
+- Support replies and reviewed support drafts now commit their durable message/case state together with the notification outbox row, with immutable supported template metadata.
+- Notification retry forms now fail closed for non-failed rows and safely escape subject/recipient context.
+
 ## 2026-08-25 — Gate links fixed; branded customer theme shipped
 
 - Social-record gate route had double-brace params ({{gate}}/{{direction}}) — every approval link 404'd. Fixed; gate form verified 200; audit extended to gate routes, email inspect, Build DNA detail.

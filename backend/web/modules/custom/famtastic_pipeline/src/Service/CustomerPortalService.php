@@ -134,7 +134,10 @@ final class CustomerPortalService {
       'display_name' => trim((string) ($input['name'] ?? $user->getDisplayName())) ?: $email,
       'email' => $email, 'phone' => trim((string) ($input['phone'] ?? '')),
       'acquisition_source' => preg_replace('/[^a-z0-9_.-]/', '', strtolower((string) ($input['source'] ?? 'direct'))) ?: 'direct',
-      'marketing_status' => !empty($input['marketing_opt_out']) ? 'unsubscribed' : 'subscribed',
+      // Marketing is opt-in under the current product terms. Keep the
+      // explicit opt-out input for compatibility, but never subscribe a new
+      // account merely because the field was omitted.
+      'marketing_status' => !empty($input['marketing_opt_in']) && empty($input['marketing_opt_out']) ? 'subscribed' : 'unsubscribed',
       'created' => $now, 'changed' => $now,
     ])->execute();
     $business = trim((string) ($input['business_name'] ?? ''));
@@ -1749,7 +1752,7 @@ final class CustomerPortalService {
     $defaults = [
       'project_email' => 1, 'support_email' => 1, 'billing_email' => 1,
       'analytics_digest' => 'monthly', 'product_education' => 1,
-      'deals_promotions' => 1, 'topic_keys' => '[]', 'consent_version' => 'portal-v1',
+      'deals_promotions' => 0, 'topic_keys' => '[]', 'consent_version' => 'portal-v1',
     ];
     $row = $this->database->select('famtastic_portal_preference', 'p')->fields('p')
       ->condition('customer_id', $customerId)->execute()->fetchAssoc() ?: [];

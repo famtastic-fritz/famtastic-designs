@@ -63,6 +63,7 @@ final class SupportDraftService {
     [$templateId, $body] = self::TEMPLATES[$result['intent']];
 
     $now = $this->time->getRequestTime();
+    $transaction = $this->database->startTransaction();
     $id = (int) $this->database->insert('famtastic_support_draft')->fields([
       'message_id' => $messageId,
       'thread_public_id' => (string) $message['thread_public_id'],
@@ -98,6 +99,7 @@ final class SupportDraftService {
     }
 
     $now = $this->time->getRequestTime();
+    $transaction = $this->database->startTransaction();
     $this->database->update('famtastic_support_draft')
       ->fields([
         'status' => $approve ? 'approved' : 'rejected',
@@ -122,6 +124,8 @@ final class SupportDraftService {
             'subject' => 'Support draft approved but sender unresolved',
             'body' => 'Draft #' . $draftId . ' (thread ' . $draft['thread_public_id'] . ') could not be matched to a customer email. Resolve manually before sending.',
             'status' => 'queued', 'attempts' => 0, 'max_attempts' => 5,
+            'template_id' => OutreachMailer::TEMPLATE_STANDARD,
+            'template_version' => OutreachMailer::TEMPLATE_STANDARD_VERSION,
             'available_at' => $now, 'created' => $now, 'changed' => $now,
           ])
           ->execute();
@@ -135,11 +139,14 @@ final class SupportDraftService {
           'recipient' => mb_strtolower($recipient),
           'subject' => 'Re: your FAMtastic message',
           'body' => $editedBody !== '' ? $editedBody : (string) $draft['body'],
+          'template_id' => OutreachMailer::TEMPLATE_STANDARD,
+          'template_version' => OutreachMailer::TEMPLATE_STANDARD_VERSION,
           'status' => 'queued', 'attempts' => 0, 'max_attempts' => 5,
           'available_at' => $now, 'created' => $now, 'changed' => $now,
         ])
         ->execute();
     }
+    unset($transaction);
     return TRUE;
   }
 

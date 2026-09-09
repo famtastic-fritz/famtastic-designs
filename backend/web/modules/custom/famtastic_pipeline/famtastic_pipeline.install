@@ -1579,7 +1579,7 @@ function _famtastic_pipeline_portal_engagement_schema(): array {
       'billing_email' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
       'analytics_digest' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => 'monthly'],
       'product_education' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
-      'deals_promotions' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      'deals_promotions' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
       'topic_keys' => ['type' => 'text', 'size' => 'normal', 'not null' => FALSE],
       'consent_version' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'portal-v1'],
       'created' => $time, 'changed' => $time,
@@ -1628,7 +1628,7 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'email' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE],
       'phone' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
       'acquisition_source' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => 'direct'],
-      'marketing_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'subscribed'],
+      'marketing_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'unsubscribed'],
       'verified_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'created' => $time, 'changed' => $time,
     ],
@@ -2933,6 +2933,16 @@ function famtastic_pipeline_update_8058(&$sandbox) {
     }
   }
   return t('Added the account-bound Site Studio staging receipt gate. No payment, deployment, or customer state was changed.');
+}
+
+/** Aligns new portal rows with explicit opt-in terms without rewriting history. */
+function famtastic_pipeline_update_8059(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $definition = _famtastic_pipeline_portal_engagement_schema()['famtastic_portal_preference']['fields']['deals_promotions'];
+  if ($schema->fieldExists('famtastic_portal_preference', 'deals_promotions') && method_exists($schema, 'changeField')) {
+    $schema->changeField('famtastic_portal_preference', 'deals_promotions', 'deals_promotions', $definition);
+  }
+  return t('Aligned new promotional preference defaults with explicit opt-in terms. Existing consent history was preserved.');
 }
 
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */

@@ -6,6 +6,7 @@ namespace Drupal\famtastic_pipeline\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -42,6 +43,10 @@ final class NotificationRetryForm extends ConfirmFormBase {
       $form['missing'] = ['#markup' => '<p>' . $this->t('Notification #@id not found.', ['@id' => $id]) . '</p>'];
       return $form;
     }
+    if (!in_array((string) ($this->row['status'] ?? ''), ['failed', 'retry', 'dead_letter'], TRUE)) {
+      $form['missing'] = ['#markup' => '<p>' . $this->t('Only failed notifications can be requeued.') . '</p>'];
+      return $form;
+    }
     $form['context'] = [
       '#markup' => '<p><strong>' . Html::escape((string) $this->row['subject']) . '</strong><br>'
         . Html::escape((string) $this->row['recipient']) . '<br><small>'
@@ -67,6 +72,7 @@ final class NotificationRetryForm extends ConfirmFormBase {
     $this->database->update('famtastic_notification_outbox')
       ->fields(['status' => 'queued', 'attempts' => 0, 'available_at' => $now, 'last_error' => NULL, 'changed' => $now])
       ->condition('id', (int) $this->row['id'])
+      ->condition('status', ['failed', 'retry', 'dead_letter'], 'IN')
       ->execute();
     $this->messenger()->addStatus($this->t('Notification #@id requeued for the next dispatch cycle.', ['@id' => $this->row['id']]));
     $form_state->setRedirect('famtastic_pipeline.operations_metric', ['metric' => 'notifications']);
