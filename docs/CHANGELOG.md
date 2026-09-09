@@ -26,6 +26,20 @@
   card uses the existing durable workspace next-action state without inventing
   progress or analytics.
 
+## 2026-09-09 — Site Studio packet-bound staging review before checkout
+
+- Hardened the signed staging receipt boundary to require the exact registered
+  packet, idempotency key, request/project identity, selected direction,
+  selected source artifact digest, and full immutable packet-file manifest
+  digest. Generated staging-output checksums remain distinct from selected
+  source checksums.
+- Added an account-owned, durable staging-review acceptance action and schema
+  migration. A deployed staging callback only queues an idempotent review-ready
+  outbox item; portal availability and the checkout endpoint both require that
+  acceptance before payment can proceed.
+- Updated the three proof-selection activity/notification messages to say
+  staging is being prepared and checkout remains closed until staging review.
+
 ## 2026-09-09 — Navigation/action inventory and admin-shell safeguards
 
 - Added a static navigation/action inventory validator for customer portal

@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-09 — A deployed staging callback is evidence, not acceptance
+
+The Site Studio callback must correlate to the exact packet retained on the
+owned Drupal project, including the selected source artifact and a canonical
+per-file manifest digest. Its generated-output checksum is separate evidence.
+A callback can queue review-ready notification work, but it cannot open
+checkout; the authenticated account owner must persist staging acceptance and
+the payment boundary rechecks it.
+
+**Guidance.** Keep packet source bytes, staging output bytes, review acceptance,
+and payment as separate durable facts. Add a schema migration when extending
+the request lifecycle rather than treating a presentation flag as consent.
+
 ## 2026-09-09 — Accepted proof locks staging before payment
 
 The standard website path is now explicit: proof selection is followed by a

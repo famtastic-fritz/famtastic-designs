@@ -296,7 +296,7 @@ final class CustomerPortalController extends ControllerBase {
         return $this->error('website_proof_selection_required', 422, 'Choose one of your approved website concepts before purchasing.');
       }
       if (!$this->stagingReceipts->isReady((int) $websiteRequest['id'])) {
-        return $this->error('website_staging_receipt_required', 422, 'Your selected website is being prepared for review. Checkout opens after the staging preview is ready.');
+        return $this->error('website_staging_receipt_required', 422, 'Your selected website is being prepared for review. Checkout opens only after the account owner accepts the staging preview.');
       }
     }
 
@@ -489,6 +489,20 @@ final class CustomerPortalController extends ControllerBase {
     }
     catch (\InvalidArgumentException $error) { return $this->error('invalid_proof_decision', 422, $error->getMessage()); }
     catch (\RuntimeException) { return $this->error('website_proofs_not_found', 404, 'Website proofs are not available.'); }
+  }
+
+  /** Records an authenticated account owner's staging review acceptance. */
+  public function websiteStagingReviewAccept(Request $request, string $website_request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    try {
+      return $this->noStore(new JsonResponse([
+        'ok' => TRUE,
+        'website_request' => $this->portal->acceptWebsiteStagingReview((int) $customer['id'], $website_request),
+      ]));
+    }
+    catch (\InvalidArgumentException $error) { return $this->error('staging_review_not_ready', 422, $error->getMessage()); }
+    catch (\RuntimeException $error) { return $this->error('staging_review_not_found', 404, $error->getMessage()); }
   }
 
   public function websiteProofShare(Request $request, string $website_request): JsonResponse {

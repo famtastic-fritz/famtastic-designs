@@ -134,6 +134,24 @@ def artifact_record(root: pathlib.Path, path: pathlib.Path, role: str) -> dict:
     }
 
 
+def artifact_manifest_digest(records: list[dict]) -> str:
+    """Return the immutable packet-source manifest digest.
+
+    This covers every packet file as a role/path/byte-count/source-checksum
+    tuple. It is not the checksum of a generated staging output artifact.
+    """
+    manifest = [
+        {
+            "bytes": record["bytes"],
+            "path": record["path"],
+            "role": record["role"],
+            "sha256": record["sha256"],
+        }
+        for record in sorted(records, key=lambda record: record["path"])
+    ]
+    return hashlib.sha256(canonical(manifest)).hexdigest()
+
+
 def preflight(build_class: str, golden_replay: bool) -> dict:
     classes = load(CONFIG / "build-classes.v1.json")["classes"]
     routes = load(CONFIG / "capability-routes.v1.json")
@@ -445,6 +463,22 @@ def prepare(args) -> pathlib.Path:
                 role = "render_evidence"
             records.append(artifact_record(output, path, role))
 
+    selected_artifacts = []
+    for direction_id in selected:
+        source_path = f"packet-files/reference-previews/{direction_id}/index.html"
+        matches = [
+            record for record in records
+            if record["role"] == "selected_preview" and record["path"] == source_path
+        ]
+        require(len(matches) == 1, f"Selected direction {direction_id} must have one immutable index.html source artifact")
+        source = matches[0]
+        selected_artifacts.append({
+            "direction_id": direction_id,
+            "source_artifact_path": source["path"],
+            "source_artifact_sha256": source["sha256"],
+            "source_artifact_bytes": source["bytes"],
+        })
+
     packet = {
         "schema": "famtastic.site-studio.build-packet.v1",
         "packet_id": packet_id,
@@ -461,6 +495,8 @@ def prepare(args) -> pathlib.Path:
         "research": load(artifact / "research.json"),
         "direction_contracts": [item for item in verified["directions"] if item["id"] in selected],
         "artifacts": records,
+        "artifact_manifest_sha256": artifact_manifest_digest(records),
+        "selected_artifacts": selected_artifacts,
         "stage_ledger": ledger,
         "build_dna": {
             "schema": "famtastic.build-dna.v1",

@@ -50,6 +50,17 @@ class VerifiedColdRunContextTest(unittest.TestCase):
         with self.assertRaises(PIPELINE.ContractError):
             PIPELINE.normalize_build_dna_run_context(invalid)
 
+    def test_packet_source_manifest_digest_is_order_independent_and_byte_bound(self):
+        records = [
+            {"role": "selected_preview", "path": "packet-files/reference-previews/direction-a/index.html", "sha256": "a" * 64, "bytes": 128},
+            {"role": "source_material", "path": "packet-files/brief.json", "sha256": "b" * 64, "bytes": 64},
+        ]
+        digest = PIPELINE.artifact_manifest_digest(records)
+        self.assertEqual(digest, PIPELINE.artifact_manifest_digest(list(reversed(records))))
+        changed = [dict(record) for record in records]
+        changed[0]["bytes"] = 129
+        self.assertNotEqual(digest, PIPELINE.artifact_manifest_digest(changed))
+
 
 if __name__ == "__main__":
     unittest.main()

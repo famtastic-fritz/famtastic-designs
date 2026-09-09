@@ -69,6 +69,26 @@ The following must match exactly in both directions:
 
 The returned direction set must equal the one-or-two direction selection in the outbound packet. FAMtastic rejects a success packet with a different project, request, packet, idempotency key, or direction set.
 
+### Pre-payment staging receipt and review gate
+
+The signed `famtastic.site-studio.staging-receipt.v1` callback must also match
+the exact packet persisted on that project: the four correlation IDs above,
+one selected direction, that direction's `selected_artifact_sha256`, and the
+packet's `artifact_manifest_sha256`. The manifest is a canonical SHA-256 of
+each source file's role, path, byte count, and source checksum. This preserves
+byte-parity evidence for Site Studio input files rather than relying only on a
+preview path or Build DNA pointer.
+
+The receipt's `artifact_sha256` remains the generated/deployed staging output
+checksum. It must never be treated as the selected source digest. A staging
+receipt queues one idempotent staging-review-ready outbox notification, but it
+does not open checkout. The authenticated account owner must call the durable
+staging-review acceptance action for that request; both portal availability
+and the payment boundary recheck that acceptance before checkout can proceed.
+Standard Drupal/Site Studio adapters must include these fields. A proprietary
+module with a custom packet format needs an explicit adapter/override; it is
+not implicitly compatible.
+
 ## Security and authority
 
 - Transport signature: HMAC-SHA256 over the exact raw JSON body.

@@ -1729,6 +1729,8 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'proof_share_changed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'proof_share_changed_by_uid' => $entity,
       'staging_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_started'],
+      'staging_review_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_started'],
+      'staging_reviewed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'staging_receipt_json' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
       'staging_receipt_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
       'staging_locked_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
@@ -2943,6 +2945,18 @@ function famtastic_pipeline_update_8059(&$sandbox) {
     $schema->changeField('famtastic_portal_preference', 'deals_promotions', 'deals_promotions', $definition);
   }
   return t('Aligned new promotional preference defaults with explicit opt-in terms. Existing consent history was preserved.');
+}
+
+/** Adds the account-owned staging review acceptance required before checkout. */
+function famtastic_pipeline_update_8060(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $fields = _famtastic_pipeline_customer_portal_schema()['famtastic_project_request']['fields'];
+  foreach (['staging_review_status', 'staging_reviewed_at'] as $field) {
+    if (!$schema->fieldExists('famtastic_project_request', $field)) {
+      $schema->addField('famtastic_project_request', $field, $fields[$field]);
+    }
+  }
+  return t('Added account-owned staging review acceptance before checkout. No payment, notification delivery, or deployment was performed.');
 }
 
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */

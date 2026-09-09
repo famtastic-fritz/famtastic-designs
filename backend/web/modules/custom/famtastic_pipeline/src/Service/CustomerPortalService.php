@@ -950,7 +950,9 @@ final class CustomerPortalService {
     ];
     $row['direct_checkout_available'] = $row['status'] === 'submitted'
       && $row['proof_review_status'] === 'selected'
-      && ($row['staging_status'] ?? '') === 'deployed'
+      && (string) ($row['staging_status'] ?? '') === 'deployed'
+      && (string) ($row['staging_review_status'] ?? '') === 'accepted'
+      && trim((string) ($row['staging_receipt_hash'] ?? '')) !== ''
       && (
         !empty($offer)
         || (empty($recommendation['review_required']) && in_array($row['recommended_sku'], $supportedDirectSkus, TRUE))
@@ -1618,10 +1620,22 @@ final class CustomerPortalService {
       $variant = $variantIds ? $this->entities->getStorage('proof_variant')->load((int) reset($variantIds)) : NULL;
       if (!$campaign || !$variant) throw new \RuntimeException('The selected proof artifact is unavailable.');
       $transaction = $this->database->startTransaction();
-      $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'selected', 'selected_proof_direction' => $direction, 'selected_proof_at' => $now, 'staging_status' => 'queued', 'changed' => $now])->condition('id', $row['id'])->execute();
+      $this->database->update('famtastic_project_request')->fields([
+        'proof_review_status' => 'selected',
+        'selected_proof_direction' => $direction,
+        'selected_proof_at' => $now,
+        'staging_status' => 'queued',
+        'staging_review_status' => 'not_started',
+        'staging_reviewed_at' => NULL,
+        'staging_receipt_json' => NULL,
+        'staging_receipt_hash' => '',
+        'staging_locked_at' => NULL,
+        'staging_deployed_at' => NULL,
+        'changed' => $now,
+      ])->condition('id', $row['id'])->execute();
       if ($campaign) $campaign->set('selected_variant', $direction)->set('selected_at', $now)->save();
       $this->prepareSelectedProofStaging($row, $variant, $direction);
-      $this->activity((int) $row['organization_id'], 'website_request.proof_selected', 'A website concept was selected and is ready for purchase.');
+      $this->activity((int) $row['organization_id'], 'website_request.proof_selected', 'A website concept was selected. Staging is being prepared; checkout opens only after staging review is accepted.');
       $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
       $customer = $this->customerContact((int) $row['customer_id']);
       foreach (['owner-proof-selected', 'customer-proof-selected'] as $supersedeKey) {
@@ -1631,11 +1645,11 @@ final class CustomerPortalService {
       }
       $this->queueNotification('website-request:' . $row['id'] . ':owner-proof-selected:' . $direction, 'operational', $admin,
         'Customer selected proof ' . strtoupper($direction) . ' — ' . $row['project_name'],
-        "Customer: {$customer['display_name']} ({$customer['email']})\nSelected direction: " . strtoupper($direction) . "\nNext step: confirm the selection, then prepare the private offer or checkout.\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
+        "Customer: {$customer['display_name']} ({$customer['email']})\nSelected direction: " . strtoupper($direction) . "\nNext step: prepare staging for review. Checkout remains closed until the account owner accepts the staging review.\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
       if ($customer['email'] !== '') {
         $this->queueNotification('website-request:' . $row['id'] . ':customer-proof-selected:' . $direction, 'transactional', $customer['email'],
           'We received your website direction choice',
-          "Hi {$customer['display_name']},\n\nThanks for choosing direction " . strtoupper($direction) . " for {$row['project_name']}. FAMtastic Concierge recorded your choice and Fritz will follow up with the next step.\n" . $this->portalLink((string) $row['public_id']) . "\n\n— FAMtastic Concierge");
+          "Hi {$customer['display_name']},\n\nThanks for choosing direction " . strtoupper($direction) . " for {$row['project_name']}. FAMtastic Concierge is preparing staging for your review. Checkout opens only after you review and accept that staging preview.\n" . $this->portalLink((string) $row['public_id']) . "\n\n— FAMtastic Concierge");
       }
       unset($transaction);
     }
@@ -1687,6 +1701,43 @@ final class CustomerPortalService {
       (int) $row['prospect_id'],
     );
     return ['project_id' => (int) $project->id(), 'job_id' => $jobId, 'packet_id' => $packetId];
+  }
+
+  /**
+   * Records the account owner's explicit acceptance of the deployed staging
+   * preview. This is idempotent and never charges, emails, or deploys.
+   */
+  public function acceptWebsiteStagingReview(int $customerId, string $publicId): array {
+    $row = $this->ownedWebsiteRequest($customerId, $publicId);
+    if (!$row) {
+      throw new \RuntimeException('Website staging preview is not available.');
+    }
+    if ((string) ($row['proof_review_status'] ?? '') !== 'selected'
+      || (string) ($row['staging_status'] ?? '') !== 'deployed'
+      || trim((string) ($row['staging_receipt_hash'] ?? '')) === '') {
+      throw new \InvalidArgumentException('Your staging preview is not ready for review yet.');
+    }
+    if ((string) ($row['staging_review_status'] ?? '') !== 'accepted') {
+      $now = $this->time->getRequestTime();
+      $updated = $this->database->update('famtastic_project_request')->fields([
+        'staging_review_status' => 'accepted',
+        'staging_reviewed_at' => $now,
+        'changed' => $now,
+      ])->condition('id', (int) $row['id'])
+        ->condition('customer_id', $customerId)
+        ->condition('staging_status', 'deployed')
+        ->condition('staging_review_status', 'accepted', '<>')
+        ->execute();
+      if ((int) $updated !== 1) {
+        throw new \RuntimeException('The staging review changed before it could be accepted. Refresh and try again.');
+      }
+      $this->activity((int) $row['organization_id'], 'website_request.staging_review_accepted', 'Staging review was accepted. Checkout eligibility can now be evaluated for this selected request.');
+    }
+    $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', (int) $row['id'])->range(0, 1)->execute()->fetchAssoc();
+    if (!$updated) {
+      throw new \RuntimeException('Website staging preview is not available.');
+    }
+    return $this->serializeWebsiteRequest($updated);
   }
 
   /**

@@ -185,6 +185,80 @@ final class SiteStudioBuildPacketService {
     if (!is_array($packet['artifacts'] ?? NULL) || !$packet['artifacts']) {
       throw new \InvalidArgumentException('Build packet artifact manifest is required.');
     }
+    foreach (['artifact_manifest_sha256', 'selected_artifacts'] as $field) {
+      if (empty($packet[$field])) {
+        throw new \InvalidArgumentException(sprintf('Build packet %s is required.', $field));
+      }
+    }
+    if (!preg_match('/^[a-f0-9]{64}$/', (string) $packet['artifact_manifest_sha256'])) {
+      throw new \InvalidArgumentException('Build packet artifact_manifest_sha256 must be a SHA-256 digest.');
+    }
+    $paths = [];
+    foreach ($packet['artifacts'] as $artifact) {
+      if (!is_array($artifact)
+        || !in_array((string) ($artifact['role'] ?? ''), ['source_material', 'selected_preview', 'render_evidence'], TRUE)
+        || !is_string($artifact['path'] ?? NULL)
+        || trim((string) $artifact['path']) === ''
+        || str_starts_with((string) $artifact['path'], '/')
+        || str_contains((string) $artifact['path'], '..')
+        || !preg_match('/^[a-f0-9]{64}$/', (string) ($artifact['sha256'] ?? ''))
+        || !is_int($artifact['bytes'] ?? NULL)
+        || $artifact['bytes'] < 0
+        || isset($paths[(string) $artifact['path']])) {
+        throw new \InvalidArgumentException('Build packet contains an invalid immutable artifact record.');
+      }
+      $paths[(string) $artifact['path']] = TRUE;
+    }
+    if (!hash_equals((string) $packet['artifact_manifest_sha256'], self::artifactManifestDigest($packet['artifacts']))) {
+      throw new \InvalidArgumentException('Build packet artifact manifest digest does not match its file records.');
+    }
+    if (!is_array($packet['selected_artifacts']) || count($packet['selected_artifacts']) !== count($directions)) {
+      throw new \InvalidArgumentException('Build packet must bind one source artifact to each selected direction.');
+    }
+    $boundDirections = [];
+    foreach ($packet['selected_artifacts'] as $selected) {
+      if (!is_array($selected)
+        || !in_array((string) ($selected['direction_id'] ?? ''), $directions, TRUE)
+        || isset($boundDirections[(string) ($selected['direction_id'] ?? '')])
+        || !isset($paths[(string) ($selected['source_artifact_path'] ?? '')])
+        || !preg_match('/^[a-f0-9]{64}$/', (string) ($selected['source_artifact_sha256'] ?? ''))
+        || !is_int($selected['source_artifact_bytes'] ?? NULL)) {
+        throw new \InvalidArgumentException('Build packet selected artifact binding is invalid.');
+      }
+      $matches = array_values(array_filter($packet['artifacts'], static fn (array $artifact): bool =>
+        (string) $artifact['role'] === 'selected_preview'
+        && (string) $artifact['path'] === (string) $selected['source_artifact_path']
+        && (string) $artifact['sha256'] === (string) $selected['source_artifact_sha256']
+        && (int) $artifact['bytes'] === (int) $selected['source_artifact_bytes']
+      ));
+      if (count($matches) !== 1) {
+        throw new \InvalidArgumentException('Build packet selected artifact does not match its immutable manifest.');
+      }
+      $boundDirections[(string) $selected['direction_id']] = TRUE;
+    }
+  }
+
+  /**
+   * Canonical digest for the complete source-file manifest.
+   *
+   * Key sorting mirrors autonomous_pipeline.py's canonical() helper. It is
+   * intentionally distinct from a generated output artifact checksum.
+   */
+  public static function artifactManifestDigest(array $artifacts): string {
+    $manifest = [];
+    foreach ($artifacts as $artifact) {
+      if (!is_array($artifact)) {
+        throw new \InvalidArgumentException('Artifact manifest must contain objects.');
+      }
+      $manifest[] = [
+        'bytes' => (int) ($artifact['bytes'] ?? -1),
+        'path' => (string) ($artifact['path'] ?? ''),
+        'role' => (string) ($artifact['role'] ?? ''),
+        'sha256' => (string) ($artifact['sha256'] ?? ''),
+      ];
+    }
+    usort($manifest, static fn (array $left, array $right): int => $left['path'] <=> $right['path']);
+    return hash('sha256', json_encode($manifest, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
   }
 
   /**
