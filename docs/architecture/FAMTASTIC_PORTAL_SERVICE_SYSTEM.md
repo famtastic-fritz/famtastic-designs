@@ -11,9 +11,19 @@ communication, and acceptance test.
 
 ## Shared lifecycle
 
-Every product follows one durable lifecycle, with irrelevant stages skipped:
+Every product follows a versioned durable lifecycle from its catalog contract;
+irrelevant stages may be skipped only when that contract says so. A conventional
+service may use:
 
 `discover -> recommend -> purchase -> entitlement -> intake -> work -> customer decision -> delivery -> measurement -> renewal/expansion`
+
+Proof-first websites use a different payment boundary:
+
+`discover -> intake -> proofs -> selection -> immutable packet -> standalone repository -> staging -> staging review and acceptance -> purchase -> production cutover -> measurement -> renewal/expansion`
+
+Neither the portal nor a generic lifecycle component may collapse staging
+deployment, customer acceptance, payment, fulfillment, and production into one
+status.
 
 The portal derives its modules from four durable records:
 
@@ -30,7 +40,7 @@ The customer portal frontend is organized into 14 dedicated components under `fr
 
 | Module | Navigation Key | Customer Job | System Source & Logic |
 |---|---|---|---|
-| **Home / Command Center** | `home` | Pulse overview, Next Best Action, active order fulfillment timeline (Payment → Hosting/DNS → 3/6 Proof Concepts → Approval & Live Launch). | Orders, projects, entitlements, threads, activity feed. |
+| **Home / Command Center** | `home` | Pulse overview, Next Best Action, and a contract-derived lifecycle timeline. For proof-first websites this is Brief → Proofs → Selection → Staging → Staging acceptance → Payment → Production, with domain/DNS/SSL/email shown as separate operator work. | Website requests, staging receipts and acceptance, orders, projects, entitlements, threads, activity feed. |
 | **Projects & Requests** | `projects` | Guided 6-step brief interview (Goals, Business, Content, Brand 0-10 Creative Scale, Domains, AI Enrichment, Store), 3/6 Proof Review Room with live sandboxed iframes, direction selection, revision submission, unlisted sharing, and Build DNA provenance inspection. | `famtastic_project_request`, `famtastic_project`, proof variants, `famtastic.build-dna.v1`. |
 | **My Services & Marketplace** | `services` | Owned capabilities with renewal dates, plus full studio SKU catalog (Web bundles, Hosting, AI Chatbots, Automation, SEO, Maintenance) and Specialized Intake Hub link. | Entitlements, SKU catalog, `/intake` routes. |
 | **Files & Assets** | `files` | Managed organization files, uploads with ownership/AI-consent validation, downloadable deliverables, brand kits, and verified Build DNA packages. | `famtastic_customer_resource`, managed files. |

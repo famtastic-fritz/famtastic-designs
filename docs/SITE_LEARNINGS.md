@@ -1,5 +1,23 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-09 — Retrospectives must reconcile executable doctrine, not only list incidents
+
+The prior-48-hour review found that the staging-first implementation had
+advanced faster than several active operating documents. Some surfaces still
+described selection-to-checkout or payment-before-proofs even after packet-bound
+staging and customer acceptance became the enforced lifecycle. Historical
+documents were also easy to mistake for current instructions.
+
+**Guidance.** A completion review must compare code, tests, capability claims,
+operating contracts, recipes, and plans against one lifecycle. Correct active
+doctrine in the same change, label historical status explicitly, and keep every
+external capability at its actual evidence level. A local injected transport or
+synthetic receipt is contract proof, not protected-staging or provider proof.
+
+**Guidance.** Nominate reusable skills only after the procedure passes the
+protected integration gate and a second unrelated site or module class. Until
+then, record it as a candidate with its failure behavior and privacy boundary.
+
 ## 2026-09-09 — Tightening a consumer contract requires updating its producer
 
 The staging receipt boundary was correctly hardened to require a canonical

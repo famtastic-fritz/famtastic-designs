@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-09 — A completion audit must close document drift
+
+- Observation: the staging-first code and packet/receipt contract advanced
+  while active proof, portal, acceptance, signoff, Shay, and Lead-to-Launch
+  documents still exposed older selection-to-checkout or payment-before-proof
+  sequences. Historical text was not always unmistakably historical.
+- Guidance: compare every executable contract and capability claim with the
+  current runtime gate during closeout. Correct active doctrine immediately,
+  preserve old incident records as labeled history, and do not promote local
+  fixture evidence into an external staging, provider, customer, or production
+  claim.
+- Guidance: a reusable skill is a post-proof promotion. Require protected
+  integration evidence, a second unrelated site or module class, redaction,
+  documented failure behavior, and owner review before extracting one.
+
 ## 2026-09-05 — A command center needs one owner and one next action
 
 The portal exposed truthful data but still made a mobile customer interpret

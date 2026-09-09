@@ -6,7 +6,8 @@ Run `scripts/run-customer-proof-agent.sh`. By default it creates a disposable
 Drupal + SQLite runtime, then validates the idempotent Commerce catalog. Its
 inner runner only starts after that fresh runtime is ready. It exercises a correlated synthetic
 customer from imported lead and research through exactly three proofs, account
-selection, contract-bound checkout and signed synthetic webhook, fulfillment,
+selection, immutable staging packet, signed packet-bound staging receipt,
+durable staging acceptance, contract-bound checkout and signed synthetic webhook, fulfillment,
 isolated deploy, domain fixture, hosting lifecycle, verified account login,
 portal/Owner Desk data, preferences, support acknowledgement, and evidence
 generation.
@@ -19,9 +20,11 @@ the source SHA, local-only safety profile, the customer-journey evidence, and
 the lifecycle evidence. The temporary Drupal database and runtime are deleted
 after the run.
 
-It does not prove Stripe TEST Checkout, real mailbox delivery, DNS purchase, or
-production renewal billing. Those remain separately authorized provider or
-production-smoke gates.
+The isolated receipt fixture does not prove a real Site Studio dispatch,
+standalone remote repository, protected FAMtastic Inc staging host, or external
+callback. It also does not prove Stripe TEST Checkout, real mailbox delivery,
+DNS purchase, or production renewal billing. Those remain separately authorized
+provider, protected-staging, or production-smoke gates.
 
 ## Implemented and locally proven
 

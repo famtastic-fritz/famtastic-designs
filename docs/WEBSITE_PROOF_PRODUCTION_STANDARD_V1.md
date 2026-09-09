@@ -21,8 +21,10 @@ The customer promise is simple:
    When explicitly commissioned, compare three additional maximum-FAMtastic
    concepts in the same private review, for six total.
 4. Select a direction and request refinements.
-5. Confirm scope and payment.
-6. FAMtastic deploys the approved release.
+5. Review and accept the exact working staging build.
+6. Confirm scope and payment.
+7. FAMtastic promotes the accepted build through the separately authorized
+   production-domain, DNS, SSL, email, and launch gates.
 
 ## Canonical journeys
 
@@ -39,9 +41,12 @@ Verified account
   -> proof-ready account notification
   -> customer selection or revision request
   -> deterministic scope and price
+  -> immutable selected-artifact packet
+  -> standalone repository and isolated staging
+  -> authenticated packet-bound staging receipt
+  -> customer staging review and durable acceptance
   -> payment or scoped grant redemption
-  -> refinement and approval
-  -> isolated deployment
+  -> production fulfillment and cutover
 ```
 
 ### Public lead
@@ -58,8 +63,12 @@ Public lead
   -> account-to-lead association
   -> detailed portal intake
   -> selection and refinement
+  -> immutable selected-artifact packet
+  -> standalone repository and isolated staging
+  -> authenticated packet-bound staging receipt
+  -> customer staging review and durable acceptance
   -> payment
-  -> isolated deployment
+  -> production fulfillment and cutover
 ```
 
 The public-lead adapter may begin from a lead id, but every continued run must

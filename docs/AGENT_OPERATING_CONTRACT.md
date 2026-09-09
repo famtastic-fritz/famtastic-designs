@@ -37,17 +37,23 @@ new purchases. Stripe holds payment credentials; Drupal must not store cards.
    An explicit showcase request may append exactly three maximum-FAMtastic
    directions (`d/e/f`) to that complete core set. The six-direction result
    returns to owner review and must not trigger customer delivery by itself.
-5. The customer selects an owner-approved direction before checkout. Staff may
-   override the package and create a one-account, one-request private offer.
-   Never implement a private price as a public/shareable coupon.
-6. Private service grants use explicit classes, hashed raw codes, exact account
+5. The customer selects an owner-approved direction. That selection locks one
+   immutable Site Studio packet, creates or reuses the standalone customer-site
+   project, and queues the pre-payment staging build. An authenticated callback
+   must match the stored packet, selected source artifact, file-manifest digest,
+   request, and project. Deployment of staging is not customer acceptance.
+6. The account owner reviews and explicitly accepts the working staging site
+   before checkout opens. Staff may override the package and create a
+   one-account, one-request private offer. Never implement a private price as a
+   public/shareable coupon.
+7. Private service grants use explicit classes, hashed raw codes, exact account
    and request scope where required, atomic redemption, and Commerce orders.
    A fully sponsored order completes as a real zero-dollar Commerce order; it
    never bypasses fulfillment through a fake paid flag.
-7. Checkout must validate ownership, proof selection, recommendation/private
-   offer, grant scope, terms, domain branch, and renewal authorization
-   server-side.
-8. Completed Commerce orders create SKU-driven intake, project, entitlements,
+8. Checkout must validate ownership, proof selection, exact deployed staging
+   receipt, durable staging acceptance, recommendation/private offer, grant
+   scope, terms, domain branch, and renewal authorization server-side.
+9. Completed Commerce orders create SKU-driven intake, project, entitlements,
    communications, renewal records, and portal history idempotently.
 
 The complete proof and intake contract is versioned in

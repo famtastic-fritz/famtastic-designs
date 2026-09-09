@@ -1,8 +1,9 @@
 # Tighten Up Your Locs — discovery and growth plan
 
-Status: implementation-ready private interview; no production invitation,
-customer account, booking integration, payment setup, proof, or publication has
-been executed.
+Status: historical discovery plan; superseded for lifecycle execution by the
+staging-first contract adopted 2026-09-09. Retain its customer research and
+growth boundaries, but do not use its original payment/build ordering as an
+operational recipe.
 
 ## Customer path
 
@@ -14,7 +15,13 @@ Owner-reviewed exact-email invitation
   -> account-owned website request draft
   -> owner scope/proof review
   -> core three proofs + explicit optional three-direction expansion
-  -> selected direction, scoped offer, payment, build, approval, launch
+  -> selected direction and scoped offer
+  -> immutable Site Studio packet
+  -> standalone repository and isolated staging
+  -> authenticated staging receipt
+  -> customer staging review and acceptance
+  -> payment
+  -> production domain/DNS/SSL/email and launch
 ```
 
 The invitation cannot trigger the right-hand stages. Account verification only

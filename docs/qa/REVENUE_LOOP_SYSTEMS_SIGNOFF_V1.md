@@ -6,8 +6,9 @@ before FAMtastic represents a revenue loop as ready.
 ## Claim under review
 
 An attributed customer can complete the same production-shaped path from
-discovery through authenticated research and proof selection, verified payment,
-fulfilled project, mobile Owner Desk, and launch evidence. The reviewer issues
+discovery through authenticated research and proof selection, immutable
+staging handoff, packet-bound staging receipt, customer staging acceptance,
+verified payment, fulfilled project, mobile Owner Desk, and launch evidence. The reviewer issues
 only one classification: `locally_proven`, `test_provider_proven`,
 `production_smoke_tested`, or `launch_blocked`.
 
@@ -16,7 +17,8 @@ only one classification: `locally_proven`, `test_provider_proven`,
 - Public CTAs stay in the branded app at desktop and 390px mobile widths.
 - Catalog, terms, comparison, intake recommendation, proof, checkout, receipt,
   fulfillment, and portal show the same offer-contract version/hash.
-- Website checkout rejects missing request, missing selection, wrong owner,
+- Website checkout rejects missing request, missing selection, missing or
+  mismatched staging receipt, missing customer staging acceptance, wrong owner,
   wrong package, stale contract, and unsupported SKU.
 - Every proof-first request has immutable research and exactly three directions;
   any reset/edit allowance and selection are durable and account-scoped.
@@ -30,6 +32,9 @@ only one classification: `locally_proven`, `test_provider_proven`,
   one actionable owner record rather than automated outreach.
 - Customer and cross-account tests cover portal, proof, Owner Desk, files,
   payment handoff, and booking controls.
+- Staging receipt replay is idempotent; wrong packet, request/project, selected
+  artifact, or manifest identity is rejected before customer review. Staging
+  deployment never counts as customer acceptance.
 - A paid conversion provisions an Owner Desk binding without publishing booking
   or payment behavior by itself.
 

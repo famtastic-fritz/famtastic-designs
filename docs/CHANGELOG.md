@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-09-09 — Prior-48-hour completion audit and lifecycle doctrine reconciliation
+
+- Added one evidence-backed retrospective covering FAMtastic Designs, Site
+  Studio Next, platform continuity, FAMtastic Inc/Hosting, Tighten Up Your Locs,
+  and MBSH work from the prior 48 hours. It separates committed/local proof,
+  external or protected-staging gaps, rework causes, and conditional reusable
+  procedure candidates.
+- Reconciled active operating, proof, portal, acceptance, signoff, Shay, and
+  Lead-to-Launch documents to the staging-first website sequence: selected
+  artifact, standalone repository, staging receipt, customer acceptance,
+  checkout, payment, then production cutover.
+- Recorded that the future one-time 48-hour post-staging review remains
+  unscheduled until protected staging serves the exact reviewed commit and the
+  owner notification has a provider receipt.
+
 ## 2026-09-09 — Portal truth, recovery, and staging-first guidance
 
 - Replaced query-string success claims with account-owned Commerce order

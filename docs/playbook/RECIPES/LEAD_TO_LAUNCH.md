@@ -3,9 +3,33 @@
 **Outcome**: A stranger becomes a paying customer with a launched website, then a retained, growing account — without Fritz touching the middle.
 **Trigger**: Lead captured (public intake, `/start`, campaign landing page, or imported prospect).
 **Owner**: CEO (fam-ceo)
-**Last verified**: 2026-08-22 (seeded from `docs/AUTONOMOUS_LEAD_TO_LAUNCH_PLAN.md`; statuses are claims until evidence attached)
+**Last verified**: 2026-09-09 for lifecycle ordering; individual status claims
+below retain their own evidence dates.
 
-## Steps
+## Authoritative proof-first website sequence — 2026-09-09
+
+The older status matrix below is retained as historical implementation evidence;
+its numeric order is not the current website lifecycle. For proof-first website
+products, every agent and UI must use:
+
+1. lawful lead capture, account verification, discovery, and deterministic scope;
+2. exactly three proofs, owner review, and account-owned proof notification;
+3. customer selection or explicit revision;
+4. immutable selected-artifact packet and standalone site repository;
+5. isolated FAMtastic Inc staging and authenticated packet-bound receipt;
+6. customer staging review and durable acceptance;
+7. checkout and verified payment or scoped grant;
+8. exactly-once fulfillment using the same project and accepted artifact;
+9. separately authorized production domain, DNS, SSL, email, launch, and
+   customer confirmation;
+10. measurement, support, renewal, and expansion.
+
+Staging deployment is not customer acceptance. Payment must not precede the
+accepted staging build for this product class. A test receipt, fixture webhook,
+or historical status row cannot authorize customer email, charging, domain
+work, or production.
+
+## Historical implementation status by capability
 
 | # | Step | Owner | Definition of done | Evidence required | Status |
 |---|------|-------|--------------------|-------------------|--------|
