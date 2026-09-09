@@ -28,6 +28,10 @@
 
 ## 2026-09-09 — Site Studio packet-bound staging review before checkout
 
+- Replaced the selection producer's metadata-only handoff with the immutable
+  HTML and protected-asset file manifest required by the receipt validator;
+  the complete isolated customer journey now proves selection, receipt,
+  customer staging acceptance, checkout, and idempotent fulfillment in order.
 - Hardened the signed staging receipt boundary to require the exact registered
   packet, idempotency key, request/project identity, selected direction,
   selected source artifact digest, and full immutable packet-file manifest

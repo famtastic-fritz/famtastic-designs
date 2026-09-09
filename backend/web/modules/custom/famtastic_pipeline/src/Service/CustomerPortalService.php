@@ -1675,6 +1675,43 @@ final class CustomerPortalService {
       ])->condition('id', (int) $row['id'])->execute();
     }
     $packetId = 'staging-packet:request:' . (int) $row['id'] . ':direction:' . $direction;
+    $sourcePath = trim((string) $variant->get('artifact_path')->value);
+    if ($sourcePath === '' || str_starts_with($sourcePath, '/') || str_contains($sourcePath, '..')) {
+      throw new \RuntimeException('The selected proof artifact path is unsafe.');
+    }
+    $sourceAbsolute = dirname(\Drupal::root()) . '/' . $sourcePath;
+    $sourceHash = is_file($sourceAbsolute) ? hash_file('sha256', $sourceAbsolute) : FALSE;
+    $sourceBytes = is_file($sourceAbsolute) ? filesize($sourceAbsolute) : FALSE;
+    if ($sourceHash === FALSE || $sourceBytes === FALSE) {
+      throw new \RuntimeException('The selected proof artifact is missing from protected storage.');
+    }
+    $artifacts = [[
+      'role' => 'selected_preview',
+      'path' => $sourcePath,
+      'sha256' => $sourceHash,
+      'bytes' => (int) $sourceBytes,
+    ]];
+    $designDna = json_decode((string) $variant->get('design_dna')->value ?: '{}', TRUE);
+    foreach (ProofAssetContract::normalizeStoredManifest(is_array($designDna) ? ($designDna['asset_manifest'] ?? []) : []) as $asset) {
+      $assetPath = (string) $asset['artifact_path'];
+      if (str_starts_with($assetPath, '/') || str_contains($assetPath, '..')) {
+        throw new \RuntimeException('The selected proof asset path is unsafe.');
+      }
+      $assetAbsolute = dirname(\Drupal::root()) . '/' . $assetPath;
+      $assetHash = is_file($assetAbsolute) ? hash_file('sha256', $assetAbsolute) : FALSE;
+      $assetBytes = is_file($assetAbsolute) ? filesize($assetAbsolute) : FALSE;
+      if ($assetHash === FALSE || $assetBytes === FALSE
+        || !hash_equals((string) $asset['sha256'], $assetHash)
+        || (int) $asset['size_bytes'] !== (int) $assetBytes) {
+        throw new \RuntimeException('A selected proof asset does not match its protected manifest.');
+      }
+      $artifacts[] = [
+        'role' => 'source_material',
+        'path' => $assetPath,
+        'sha256' => $assetHash,
+        'bytes' => (int) $assetBytes,
+      ];
+    }
     $packet = [
       'schema' => 'famtastic.site-studio.build-packet.v1',
       'packet_id' => $packetId,
@@ -1683,14 +1720,16 @@ final class CustomerPortalService {
       'project_id' => (string) $project->id(),
       'build_class' => 'prepayment_selected_direction_staging',
       'selected_direction_ids' => ['direction-' . $direction],
-      'artifacts' => [[
+      'artifacts' => $artifacts,
+      'artifact_manifest_sha256' => SiteStudioBuildPacketService::artifactManifestDigest($artifacts),
+      'selected_artifacts' => [[
         'direction_id' => 'direction-' . $direction,
-        'variant_id' => (int) $variant->id(),
-        'variant_uuid' => (string) $variant->uuid(),
-        'source_path' => (string) $variant->get('artifact_path')->value,
-        'source_preview_url' => (string) $variant->get('preview_url')->value,
-        'design_dna_sha256' => hash('sha256', (string) $variant->get('design_dna')->value),
+        'source_artifact_path' => $sourcePath,
+        'source_artifact_sha256' => $sourceHash,
+        'source_artifact_bytes' => (int) $sourceBytes,
       ]],
+      'source_preview_url' => (string) $variant->get('preview_url')->value,
+      'design_dna_sha256' => hash('sha256', (string) $variant->get('design_dna')->value),
       'created_at' => gmdate(DATE_ATOM, $this->time->getRequestTime()),
     ];
     $this->siteStudioPackets->registerPacket($packet);

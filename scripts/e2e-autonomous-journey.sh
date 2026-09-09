@@ -87,8 +87,12 @@ complete_test_staging() {
       'event_id' => 'fixture-staging:' . \$packet['packet_id'],
       'packet_id' => \$packet['packet_id'],
       'idempotency_key' => \$packet['idempotency_key'],
+      'request_id' => \$packet['request_id'],
       'website_request_id' => (int) \$request['id'],
       'project_id' => (int) \$request['project_id'],
+      'selected_direction_id' => \$packet['selected_direction_ids'][0],
+      'selected_artifact_sha256' => \$packet['selected_artifacts'][0]['source_artifact_sha256'],
+      'artifact_manifest_sha256' => \$packet['artifact_manifest_sha256'],
       'staging_url' => 'https://staging.example.test/' . rawurlencode('$request_public_id') . '/',
       'artifact_sha256' => hash('sha256', json_encode(\$packet['artifacts'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)),
       'completed_at' => gmdate(DATE_ATOM, \\Drupal::time()->getRequestTime()),
@@ -103,6 +107,8 @@ complete_test_staging() {
     \$result = \\Drupal::service('famtastic_pipeline.staging_receipts')->accept(\$receipt);
     assert(\$result['newly_processed'] === TRUE);
   " >/dev/null
+  assert_json "$(curl -s -b "$cookie_jar" "$BASE/api/customer/workspace")" --arg request "$request_public_id" '([.website_requests[] | select(.public_id == $request and .staging_status == "deployed" and .staging_review_status == "pending" and .direct_checkout_available == false)] | length) == 1'
+  assert_json "$(curl -s -b "$cookie_jar" -X POST "${JH[@]}" -H "X-CSRF-Token: $csrf" "$BASE/api/customer/website-requests/$request_public_id/staging-review/accept")" '.website_request.staging_status == "deployed" and .website_request.staging_review_status == "accepted" and .website_request.direct_checkout_available == true'
 }
 
 mkdir -p "$sandbox/releases" "$sandbox/sites"

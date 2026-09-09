@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-09 — Tightening a consumer contract requires updating its producer
+
+The staging receipt boundary was correctly hardened to require a canonical
+file manifest, but the proof-selection producer still emitted the previous
+metadata-only shape. Focused consumer tests passed while the real selection
+path would have failed at packet registration.
+
+**Guidance.** Every contract expansion must exercise the actual producer and
+consumer in one fresh journey. Validate the immutable source files when the
+packet is created, then prove receipt identity, customer review acceptance,
+checkout, and fulfillment in sequence.
+
 ## 2026-09-09 — A deployed staging callback is evidence, not acceptance
 
 The Site Studio callback must correlate to the exact packet retained on the
