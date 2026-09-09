@@ -1728,6 +1728,11 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'proof_share_version' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 1],
       'proof_share_changed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'proof_share_changed_by_uid' => $entity,
+      'staging_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_started'],
+      'staging_receipt_json' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+      'staging_receipt_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'staging_locked_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'staging_deployed_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
       'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'draft'],
       'project_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
       'business_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
@@ -2916,6 +2921,18 @@ function famtastic_pipeline_update_8057(&$sandbox) {
     }
   }
   return t('Added consented likeness-character asset, run, and append-only receipt records. No provider generation was started.');
+}
+
+/** Adds an account-bound, pre-payment Site Studio staging receipt gate. */
+function famtastic_pipeline_update_8058(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $fields = _famtastic_pipeline_customer_portal_schema()['famtastic_project_request']['fields'];
+  foreach (['staging_status', 'staging_receipt_json', 'staging_receipt_hash', 'staging_locked_at', 'staging_deployed_at'] as $field) {
+    if (!$schema->fieldExists('famtastic_project_request', $field)) {
+      $schema->addField('famtastic_project_request', $field, $fields[$field]);
+    }
+  }
+  return t('Added the account-bound Site Studio staging receipt gate. No payment, deployment, or customer state was changed.');
 }
 
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */

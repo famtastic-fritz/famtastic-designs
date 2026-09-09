@@ -9,6 +9,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Service\ProofAssetContract;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService;
+use Drupal\famtastic_pipeline\Service\StagingReceiptService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,7 @@ final class SiteStudioCallbackController extends ControllerBase {
   public function __construct(
     private readonly ProofCampaignService $proofCampaigns,
     private readonly SiteStudioBuildPacketService $buildPackets,
+    private readonly StagingReceiptService $stagingReceipts,
   ) {}
 
   /**
@@ -33,6 +35,7 @@ final class SiteStudioCallbackController extends ControllerBase {
     return new static(
       $container->get('famtastic_pipeline.proof_campaign_service'),
       $container->get('famtastic_pipeline.site_studio_build_packets'),
+      $container->get('famtastic_pipeline.staging_receipts'),
     );
   }
 
@@ -77,6 +80,16 @@ final class SiteStudioCallbackController extends ControllerBase {
           'newly_processed' => $result['newly_processed'],
           'project_id' => (int) $result['project']->id(),
           'status' => 'site_studio_build_succeeded',
+        ]);
+      }
+      if (($data['schema'] ?? '') === 'famtastic.site-studio.staging-receipt.v1') {
+        $result = $this->stagingReceipts->accept($data);
+        return new JsonResponse([
+          'ok' => TRUE,
+          'newly_processed' => $result['newly_processed'],
+          'website_request_id' => $result['request_id'],
+          'staging_url' => $result['staging_url'],
+          'status' => 'site_studio_staging_deployed',
         ]);
       }
       $result = $this->proofCampaigns->acceptCallback(

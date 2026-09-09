@@ -19,6 +19,7 @@ use Drupal\famtastic_pipeline\Service\CommerceLifecycleService;
 use Drupal\famtastic_pipeline\Service\DeepDiveInvitationService;
 use Drupal\famtastic_pipeline\Service\GrantCodeService;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
+use Drupal\famtastic_pipeline\Service\StagingReceiptService;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
 use Psr\Log\LoggerInterface;
@@ -44,6 +45,7 @@ final class CustomerPortalController extends ControllerBase {
     private readonly CatalogPaymentEligibilityService $paymentEligibility,
     private readonly CommerceLifecycleService $commerceLifecycle,
     private readonly DeepDiveInvitationService $deepDives,
+    private readonly StagingReceiptService $stagingReceipts,
   ) {}
 
   public static function create(ContainerInterface $container): self {
@@ -60,6 +62,7 @@ final class CustomerPortalController extends ControllerBase {
       $container->get('famtastic_pipeline.catalog_payment_eligibility'),
       $container->get('famtastic_pipeline.commerce_lifecycle'),
       $container->get('famtastic_pipeline.deep_dive_invitations'),
+      $container->get('famtastic_pipeline.staging_receipts'),
     );
   }
 
@@ -291,6 +294,9 @@ final class CustomerPortalController extends ControllerBase {
       }
       if (($websiteRequest['proof_review_status'] ?? '') !== 'selected') {
         return $this->error('website_proof_selection_required', 422, 'Choose one of your approved website concepts before purchasing.');
+      }
+      if (!$this->stagingReceipts->isReady((int) $websiteRequest['id'])) {
+        return $this->error('website_staging_receipt_required', 422, 'Your selected website is being prepared for review. Checkout opens after the staging preview is ready.');
       }
     }
 

@@ -66,4 +66,24 @@ final class RevenueLoopContractTest extends UnitTestCase {
     $this->assertFalse($terms['deals']['FAM-FOOT-199']['domain_choice_required']);
   }
 
+  public function testWebsiteCheckoutRequiresAnAccountBoundStagingReceipt(): void {
+    $module = dirname(__DIR__, 3);
+    $controller = file_get_contents($module . '/src/Controller/CustomerPortalController.php');
+    $callback = file_get_contents($module . '/src/Controller/SiteStudioCallbackController.php');
+    $service = file_get_contents($module . '/src/Service/StagingReceiptService.php');
+    $install = file_get_contents($module . '/famtastic_pipeline.install');
+    $this->assertIsString($controller);
+    $this->assertIsString($callback);
+    $this->assertIsString($service);
+    $this->assertIsString($install);
+    $this->assertStringContainsString("'website_staging_receipt_required'", $controller);
+    $this->assertStringContainsString('$this->stagingReceipts->isReady((int) $websiteRequest[\'id\'])', $controller);
+    $this->assertStringContainsString("famtastic.site-studio.staging-receipt.v1", $callback);
+    $this->assertStringContainsString("staging_deployed", $service);
+    $this->assertStringContainsString("'target_path'", $service);
+    $this->assertStringContainsString("'repository'", $service);
+    $this->assertStringContainsString('function famtastic_pipeline_update_8058', $install);
+    $this->assertStringContainsString("'staging_receipt_json'", $install);
+  }
+
 }
