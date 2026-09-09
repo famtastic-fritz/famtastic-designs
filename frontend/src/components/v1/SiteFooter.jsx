@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import SocialSignal from './SocialSignal.jsx';
 
 const CONTACT_EMAIL = 'hello@famtasticdesigns.com';
 
@@ -57,6 +58,10 @@ export default function SiteFooter({ services = [], packages = [] }) {
           <Link to="/contact">Contact</Link>
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </nav>
+      </div>
+
+      <div className="v1-container">
+        <SocialSignal />
       </div>
 
       <div className="v1-container v1-footer__bottom">

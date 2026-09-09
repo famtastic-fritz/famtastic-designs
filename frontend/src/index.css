@@ -1536,6 +1536,18 @@ a:hover {
 .v1-prose .article-inline-visual > img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
 .v1-prose .article-inline-visual figcaption { display: flex; align-items: center; gap: .7rem; margin: 0; padding: .85rem 1rem; color: var(--v1-text-72); font-size: .82rem; line-height: 1.45; }
 .v1-prose .article-inline-visual figcaption img { flex: 0 0 auto; width: 28px; height: 28px; }
+
+/* Film gallery figure (lib/filmLibrary.js campaignFilmGalleryHtml) — a
+   horizontally-scrollable strip of poster cards, one per film, embedded in
+   a UGC-flood campaign's companion blog post. Unlike the raster figures
+   above, this figure's own background/border are turned off because the
+   strip supplies its own card frames. */
+.v1-prose .article-inline-visual--films { background: transparent; border: none; margin: 1.75rem 0; }
+.film-strip { display: flex; gap: .85rem; overflow-x: auto; padding: .25rem .1rem .6rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.film-strip__card { flex: 0 0 auto; width: 118px; display: flex; flex-direction: column; gap: .35rem; text-decoration: none; scroll-snap-align: start; }
+.film-strip__card img { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 14px; border: 1px solid var(--v1-border); background: #0d0d0d; }
+.film-strip__title { font-size: .78rem; line-height: 1.32; color: var(--v1-text); font-weight: 600; }
+.film-strip__runtime { font-size: .72rem; color: var(--v1-text-72); }
 @media (min-width: 800px) { .campaign-explainer-grid { grid-template-columns: 1fr 1fr; } .campaign-anatomy { grid-template-columns: 1.35fr .65fr; align-items: center; } }
 
 /* ------------------------------------------------------------------ */
@@ -2915,6 +2927,198 @@ a:hover {
 
 .v1-footer__col a:hover {
   color: var(--v1-lime);
+}
+
+/* Animated owned-social rail. The orbit is decorative; every node remains a
+   normal keyboard/focusable link and collapses to a clear tap target on small
+   screens. */
+.v1-social-signal {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(22rem, 1.15fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 2.8rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid rgba(124, 252, 0, .22);
+  border-radius: 1.5rem;
+  background: radial-gradient(circle at 70% 44%, rgba(124, 252, 0, .11), transparent 30%), linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+  isolation: isolate;
+}
+
+.v1-social-signal::before,
+.v1-social-signal::after {
+  position: absolute;
+  content: '';
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+.v1-social-signal::before {
+  width: 13rem;
+  height: 13rem;
+  top: -8rem;
+  right: 9%;
+  background: rgba(124, 252, 0, .12);
+  filter: blur(35px);
+}
+
+.v1-social-signal::after {
+  width: 7rem;
+  height: 7rem;
+  bottom: -4rem;
+  left: 20%;
+  background: rgba(255, 78, 205, .1);
+  filter: blur(28px);
+}
+
+.v1-social-signal__copy,
+.v1-social-signal__orbit {
+  position: relative;
+  z-index: 1;
+}
+
+.v1-social-signal__copy h2 {
+  max-width: 22rem;
+  margin: .45rem 0 .7rem;
+  color: var(--v1-text);
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: -.035em;
+}
+
+.v1-social-signal__copy > p:last-child {
+  max-width: 24rem;
+  margin: 0;
+  color: var(--v1-text-62);
+  font-size: .9rem;
+  line-height: 1.7;
+}
+
+.v1-social-signal__orbit {
+  min-height: 16rem;
+  display: grid;
+  place-items: center;
+}
+
+.v1-social-signal__ring {
+  position: absolute;
+  width: 13.5rem;
+  height: 7.5rem;
+  border: 1px solid rgba(124, 252, 0, .28);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+  animation: v1-social-orbit 12s linear infinite;
+}
+
+.v1-social-signal__ring--two {
+  width: 15rem;
+  height: 8.5rem;
+  border-color: rgba(255, 78, 205, .22);
+  transform: rotate(38deg);
+  animation-direction: reverse;
+  animation-duration: 16s;
+}
+
+.v1-social-signal__core {
+  display: grid;
+  place-items: center;
+  width: 5.7rem;
+  height: 5.7rem;
+  border: 1px solid rgba(124, 252, 0, .55);
+  border-radius: 50%;
+  background: rgba(5, 10, 5, .78);
+  box-shadow: 0 0 0 8px rgba(124, 252, 0, .04), 0 0 2.5rem rgba(124, 252, 0, .25);
+  color: var(--v1-lime);
+  font-size: .9rem;
+  font-weight: 800;
+  letter-spacing: .18em;
+}
+
+.v1-social-signal__core small {
+  margin-top: -.5rem;
+  color: var(--v1-text-45);
+  font-size: .45rem;
+  letter-spacing: .2em;
+}
+
+.v1-social-signal__node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  min-width: 8.6rem;
+  padding: .5rem .7rem;
+  border: 1px solid color-mix(in srgb, var(--social-accent) 45%, transparent);
+  border-radius: 999px;
+  background: rgba(5, 8, 6, .86);
+  box-shadow: 0 0 1.4rem color-mix(in srgb, var(--social-accent) 22%, transparent);
+  color: var(--v1-text);
+  text-decoration: none;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+  animation: v1-social-node-float 5s ease-in-out infinite;
+  animation-delay: var(--social-delay);
+}
+
+.v1-social-signal__node:hover,
+.v1-social-signal__node:focus-visible {
+  border-color: var(--social-accent);
+  box-shadow: 0 0 1.8rem color-mix(in srgb, var(--social-accent) 45%, transparent);
+  transform: translateY(-3px) scale(1.03);
+}
+
+.v1-social-signal__node--instagram { top: 9%; left: 7%; }
+.v1-social-signal__node--facebook { right: 4%; bottom: 10%; }
+
+.v1-social-signal__icon {
+  display: grid;
+  flex: 0 0 2rem;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--social-accent) 16%, transparent);
+  color: var(--social-accent);
+}
+
+.v1-social-signal__icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+.v1-social-signal__icon-fill { fill: currentColor; stroke: none; }
+.v1-social-signal__node-label { display: grid; gap: .05rem; min-width: 0; }
+.v1-social-signal__node-label strong { font-size: .72rem; }
+.v1-social-signal__node-label small { color: var(--v1-text-45); font-size: .63rem; white-space: nowrap; }
+
+@keyframes v1-social-orbit { to { transform: rotate(342deg); } }
+@keyframes v1-social-node-float { 0%, 100% { margin-top: 0; } 50% { margin-top: -6px; } }
+
+@media (max-width: 760px) {
+  .v1-social-signal { grid-template-columns: 1fr; gap: 1.5rem; }
+  .v1-social-signal__copy { text-align: center; }
+  .v1-social-signal__copy h2,
+  .v1-social-signal__copy > p:last-child { margin-left: auto; margin-right: auto; }
+  .v1-social-signal__orbit { min-height: 15rem; }
+}
+
+@media (max-width: 450px) {
+  .v1-social-signal { padding: 1.2rem 1rem; }
+  .v1-social-signal__orbit { min-height: 14rem; transform: scale(.86); }
+  .v1-social-signal__node--instagram { left: 0; }
+  .v1-social-signal__node--facebook { right: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v1-social-signal__ring,
+  .v1-social-signal__node { animation: none; }
+  .v1-social-signal__node:hover,
+  .v1-social-signal__node:focus-visible { transform: none; }
 }
 
 @media (max-width: 639px) {
