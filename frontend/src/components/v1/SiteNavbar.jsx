@@ -82,6 +82,17 @@ function Dropdown({ label, to, items, basePath }) {
 export default function SiteNavbar({ menuItems = [], services = [], packages = [], authSlot = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // A menu overlay must own the touch gesture. Lock the document behind it so
+  // a swipe cannot scroll the page while the user is trying to browse links.
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
   // Normalize menu items from any source (Drupal menu or stub fallback):
   // drop "Pages" entries, rename legacy "Articles" → "Blogs", and map legacy
   // /content/* URLs to their clean routes.
@@ -104,8 +115,13 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
     ? normalized
     : (() => {
         const blogItem = { id: 'canonical-blog-link', title: 'Blogs', url: '/blog', weight: 50 };
-        // Keep the content hub in the short, visible top-level part of the
-        // mobile menu instead of burying it under every service/package child.
+        // Preserve Drupal's canonical order. If Drupal has not published a
+        // Blogs item yet, keep the fallback beside the other top-level
+        // content links by placing it directly after Work (or About).
+        const workIndex = normalized.findIndex((item) => item.url === '/work');
+        if (workIndex >= 0) {
+          return [...normalized.slice(0, workIndex + 1), blogItem, ...normalized.slice(workIndex + 1)];
+        }
         const aboutIndex = normalized.findIndex((item) => item.url === '/about');
         if (aboutIndex >= 0) {
           return [...normalized.slice(0, aboutIndex + 1), blogItem, ...normalized.slice(aboutIndex + 1)];
