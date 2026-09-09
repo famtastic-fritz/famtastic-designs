@@ -53,6 +53,16 @@
   card uses the existing durable workspace next-action state without inventing
   progress or analytics.
 
+## 2026-09-09 — Isolated command-center runtime verification harness
+
+- Added a reusable Playwright harness for a caller-provided isolated Drupal
+  backend and frontend runtime. It checks native login/reset and staff routes
+  when Drupal HTTP is available, and verifies portal focus, touch target,
+  contrast, overflow, visible action, and 390/768/1280 screenshot coverage.
+- Recorded the current evidence honestly: empty-workspace portal browser proof
+  passed, while the fresh local Drupal HTTP process fails before page markup
+  with a `block_page` display-variant bootstrap inconsistency.
+
 ## 2026-09-09 — Site Studio packet-bound staging review before checkout
 
 - Replaced the selection producer's metadata-only handoff with the immutable

@@ -30,6 +30,18 @@ consumer in one fresh journey. Validate the immutable source files when the
 packet is created, then prove receipt identity, customer review acceptance,
 checkout, and fulfillment in sequence.
 
+## 2026-09-09 — Drush bootstrap is not HTTP rendering proof
+
+A fresh SQLite install reported a successful Drush bootstrap, enabled
+`famtastic_admin`, and enumerated the core `block_page` display variant, while
+the PHP HTTP server still failed before rendering with that plugin reported as
+missing.
+
+**Guidance.** Treat CLI/bootstrap success as setup evidence only. Require an
+actual HTTP/browser response before claiming login, themed native primitives,
+or staff-route presentation works; keep portal mock proof labeled separately
+from account-lifecycle proof.
+
 ## 2026-09-09 — A deployed staging callback is evidence, not acceptance
 
 The Site Studio callback must correlate to the exact packet retained on the
