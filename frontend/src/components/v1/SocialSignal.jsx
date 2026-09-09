@@ -19,7 +19,7 @@ const SOCIAL_PROFILES = [
     id: 'facebook',
     label: 'Facebook',
     handle: 'FAMtastic Designs',
-    href: 'https://www.facebook.com/1718361399453192',
+    href: 'https://www.facebook.com/people/FAMTastic-Designs/100038380452647/',
     accent: '#49a4ff',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">

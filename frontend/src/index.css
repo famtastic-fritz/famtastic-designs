@@ -2939,11 +2939,8 @@ a:hover {
   gap: clamp(2rem, 6vw, 5rem);
   align-items: center;
   overflow: hidden;
-  margin-bottom: 2.8rem;
-  padding: clamp(1.5rem, 4vw, 3rem);
-  border: 1px solid rgba(124, 252, 0, .22);
-  border-radius: 1.5rem;
-  background: radial-gradient(circle at 70% 44%, rgba(124, 252, 0, .11), transparent 30%), linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+  margin: .4rem 0 2.8rem;
+  padding: clamp(2.2rem, 5vw, 4rem) 0 clamp(1.8rem, 4vw, 3rem);
   isolation: isolate;
 }
 
@@ -2957,21 +2954,21 @@ a:hover {
 }
 
 .v1-social-signal::before {
-  width: 13rem;
-  height: 13rem;
-  top: -8rem;
-  right: 9%;
-  background: rgba(124, 252, 0, .12);
-  filter: blur(35px);
+  inset: 0 8% auto;
+  width: auto;
+  height: 1px;
+  border-radius: 0;
+  background: linear-gradient(90deg, transparent, rgba(124, 252, 0, .72) 28%, rgba(255, 78, 205, .48) 72%, transparent);
+  filter: none;
 }
 
 .v1-social-signal::after {
-  width: 7rem;
-  height: 7rem;
-  bottom: -4rem;
-  left: 20%;
-  background: rgba(255, 78, 205, .1);
-  filter: blur(28px);
+  width: 16rem;
+  height: 16rem;
+  top: 18%;
+  right: 18%;
+  background: rgba(124, 252, 0, .09);
+  filter: blur(46px);
 }
 
 .v1-social-signal__copy,
@@ -2984,7 +2981,7 @@ a:hover {
   max-width: 22rem;
   margin: .45rem 0 .7rem;
   color: var(--v1-text);
-  font-size: clamp(1.45rem, 3vw, 2.2rem);
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
   line-height: 1.05;
   letter-spacing: -.035em;
 }
@@ -3001,6 +2998,7 @@ a:hover {
   min-height: 16rem;
   display: grid;
   place-items: center;
+  transform: translateX(2%);
 }
 
 .v1-social-signal__ring {
@@ -3050,10 +3048,10 @@ a:hover {
   align-items: center;
   gap: .55rem;
   min-width: 8.6rem;
-  padding: .5rem .7rem;
+  padding: .42rem .65rem .42rem .42rem;
   border: 1px solid color-mix(in srgb, var(--social-accent) 45%, transparent);
   border-radius: 999px;
-  background: rgba(5, 8, 6, .86);
+  background: rgba(5, 8, 6, .72);
   box-shadow: 0 0 1.4rem color-mix(in srgb, var(--social-accent) 22%, transparent);
   color: var(--v1-text);
   text-decoration: none;
@@ -3104,11 +3102,11 @@ a:hover {
   .v1-social-signal__copy { text-align: center; }
   .v1-social-signal__copy h2,
   .v1-social-signal__copy > p:last-child { margin-left: auto; margin-right: auto; }
-  .v1-social-signal__orbit { min-height: 15rem; }
+  .v1-social-signal__orbit { min-height: 15rem; transform: none; }
 }
 
 @media (max-width: 450px) {
-  .v1-social-signal { padding: 1.2rem 1rem; }
+  .v1-social-signal { padding: 1.8rem 0 1.2rem; }
   .v1-social-signal__orbit { min-height: 14rem; transform: scale(.86); }
   .v1-social-signal__node--instagram { left: 0; }
   .v1-social-signal__node--facebook { right: 0; }
