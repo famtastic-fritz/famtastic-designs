@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-09 — Accepted proof locks staging before payment
+
+The standard website path is now explicit: proof selection is followed by a
+lock-in step that creates the standalone site repository, immutable manifest,
+and FAMtastic Inc staging subdirectory/subdomain. The customer or owner can
+review that working staging site before payment. Verified payment promotes the
+same staged artifact into production, where domain, DNS, SSL, and email are
+completed as the cutover step.
+
+**Guidance.** Never rebuild a visually different site after payment, and never
+infer payment from a staging receipt. Shay's earlier build is a documented
+pilot exception; new customer flows must record `proof.selected`,
+`staging.locked`, `staging.deployed`, `payment.confirmed`, and
+`launch.completed` as separate lifecycle evidence.
+
 ## 2026-09-06 — An order is not a website entitlement
 
 The portal homepage treated `orders.length > 0` as proof that hosting, domain,

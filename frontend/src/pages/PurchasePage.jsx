@@ -170,7 +170,7 @@ export default function PurchasePage() {
 
       {payment.mode === 'proof_selected_website_request' && <fieldset>
         <legend>Domain setup</legend>
-        <p className="purchase-context">You can decide this after payment. Your site can enter fulfillment on the shared FAMtastic Inc. host while domain, DNS, SSL, and email are completed as an operator step.</p>
+        <p className="purchase-context">After you choose a direction, FAMtastic prepares a working staging site on the shared FAMtastic Inc. host for review. Payment promotes that reviewed staging build into production; domain, DNS, SSL, and email are completed as an operator step.</p>
         <label>
           <input
             type="radio"
