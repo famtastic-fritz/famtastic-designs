@@ -1,0 +1,56 @@
+{
+  "slug": "the-secret-is-a-page-of-your-own",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "The Secret Is a Page of Your Own",
+  "title_length": 33,
+  "meta_description": "The 'secret' a peer seems to have found isn't a result, it's a product: one page, one year of hosting, the domain, for $199. What that actually costs.",
+  "meta_description_length": 152,
+  "h1_count": 1,
+  "question_headings": [],
+  "series": "The FAMtastic Website Packages Explained Series",
+  "series_order": 14,
+  "internal_links": [
+    "https://famtasticdesigns.com/blog/linktree-vs-real-website-what-you-trade-away/",
+    "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/",
+    "https://famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/",
+    "https://famtasticdesigns.com/blog/proof-first-website-see-before-you-pay/",
+    "https://famtasticdesigns.com/start"
+  ],
+  "internal_link_count": 5,
+  "external_links": [],
+  "link_verification": {
+    "method": "curl -s -o /dev/null -w %{http_code} -L",
+    "verified_on": "2026-09-07",
+    "all_returned_200": true,
+    "note": "Every internal link in this draft was confirmed HTTP 200 before it was written into the body."
+  },
+  "claims_verified_against_live_sources": true,
+  "statistics_used": false,
+  "schema_recommended": [
+    "BlogPosting",
+    "VideoObject"
+  ],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": [
+    "No catch, no hidden tier",
+    "What we don't claim"
+  ],
+  "checks": {
+    "title_under_60": true,
+    "meta_140_160": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "no_unsourced_claims": true,
+    "answers_intent_first_screen": true,
+    "links_to_packages_pages": true,
+    "renewal_terms_disclosed": true,
+    "no_named_competitor_claims": true,
+    "all_internal_links_http_200": true,
+    "no_web_prefixed_urls": true,
+    "word_count_700_1000": true,
+    "no_fabricated_outcome": true,
+    "character_disclosure_stated_in_prose": true
+  },
+  "pass": true,
+  "generated_at": "2026-09-07T03:45:00Z"
+}

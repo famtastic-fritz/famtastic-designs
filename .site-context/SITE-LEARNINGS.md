@@ -1857,3 +1857,165 @@ Permanent rules:
   notice when it could also send unrelated queued mail. Claim and record the
   exact notification, retain the provider acceptance receipt, and state only
   SMTP acceptance—not inbox delivery—as verified.
+
+## 2026-09-07 — A film's real on-screen text lives in the HyperFrames source, not the campaign README
+
+- Observation: writing `filmLibrary.js` entries for 24 new UGC-campaign films
+  (T7, `plans/ugc-character-flood/plan.md`) from README prose alone would have
+  meant paraphrasing the on-screen copy — exactly the "inventing the words"
+  mistake the file's own header warns against. The real, verbatim burned-in
+  text exists as data one layer deeper: `marketing/hyperframes/<campaign>/
+  rows.json` (headline/subline/price_line or captionA/captionB, the literal
+  HyperFrames render input) for signal-and-static and whats-your-secret, and
+  `marketing/hyperframes/<campaign>/variants/drop-0N/{hook,close,main}.html`
+  for front-desk (per-drop composition files with no shared rows.json).
+  `narration/lines.json` (when a campaign keeps one) is separately the
+  verbatim TTS script, not the same thing as the on-screen caption.
+- Guidance: before writing any `onScreen`/`transcript` field for a new film,
+  check the HyperFrames project directory for `rows.json` or `variants/*/
+  {hook,close,main}.html` first — that IS the render input, not a summary of
+  it. Only mark `transcript` non-null when a file is explicitly labeled as the
+  verbatim spoken script (e.g. a `narration/lines.json` with a "kept in-repo
+  so the spoken words are auditable" note); a campaign with no such file
+  (front-desk, this session) gets `transcript: null` even though its answer
+  captions are known, because a caption is not proof it matches the recorded
+  audio word-for-word.
+
+## 2026-09-07 — curl needs `-g` (globoff) for a literal JSON:API `filter[...]` query
+
+- Observation: `curl -o /dev/null -w '%{http_code}' "https://.../jsonapi/node/
+  blog_post?filter[status]=1&page[limit]=5"` failed with `curl: (3) bad range
+  in URL position 64` and no HTTP request was ever sent — every prior
+  reference to this exact JSON:API filter syntax in this repo's docs and
+  scripts assumes it just works.
+- Guidance: curl's default globbing parses unescaped `[`/`]` in a URL as a
+  glob/range expression. Any ad-hoc `curl` against this repo's `filter[...]`
+  or `page[...]` JSON:API query syntax needs `-g`/`--globoff`, or the brackets
+  need URL-encoding (`%5B`/`%5D`, as `scripts/generate-seo-shells.mjs`'s own
+  `dynamicRoutes()` already does). A silent curl exit code 1 with empty output
+  against a JSON:API URL is this bug, not a dead endpoint — check for brackets
+  before concluding the API is down.
+
+## 2026-09-07 — A new blog post's `/blog/<slug>/` 404s until the next frontend build+deploy
+
+- Observation: publishing a node via `scripts/publish-blog-draft.py --confirm`
+  makes it live in Drupal/JSON:API immediately, but curling its public
+  `/blog/<slug>/` URL still 404s at the Apache layer. `frontend/public/
+  .htaccess` is an allowlist-only rewrite set with no generic `^blog/[^/]+/?$`
+  fallback to `index.html` — every `/blog/<slug>/` and `/watch/<slug>/` request
+  resolves only because `generate-seo-shells.mjs`'s `dynamicRoutes()` already
+  wrote a real `dist/blog/<slug>/index.html` file at the last build, fetched
+  live from JSON:API at build time.
+- Guidance: publishing a Drupal node is necessary but not sufficient to make
+  its URL resolve in production. The order is: publish the node, run
+  `npm --prefix frontend run build` (which re-fetches JSON:API and writes the
+  static shell), then deploy via `scripts/deploy-frontend-godaddy.sh --apply`.
+  A post that is "live" by JSON:API but pre-deploy will 404 publicly — this is
+  expected, not a defect, and is not evidence the publish failed.
+
+## 2026-09-07 — muapi CLI is present, authenticated, and billed in real USD — a stale registry claimed the opposite
+
+- Observation: `marketing/providers.json`'s muapi row said "CLI binary absent;
+  call REST directly" and named no cost-measurement path. Both were wrong.
+  `muapi` CLI 0.2.7 is installed (`which muapi`), authenticated from the
+  macOS Keychain (service `muapi-cli`, account `api-key`) with no key ever
+  touching an env var or a file, and `muapi account balance` returns the
+  real live USD balance on demand. `GET /api/v1/models` returns an exact
+  `cost` (USD) and `estimate_endpoint` per model — pricing is knowable in
+  advance, not merely estimated, and `muapi run <model> -i k=v --dry-run`
+  proves a request will succeed before it is sent, for $0.
+- Guidance: before writing off a CLI as absent, check `which <binary>` and the
+  Keychain (`security find-generic-password -s <service>`) — a working local
+  CLI proven by prior use in this same repo (`plans/ugc-character-flood/
+  plan.md`) can sit undocumented in `providers.json` for weeks. Corrected in
+  `marketing/providers.json` and `docs/CAPABILITY_REGISTRY.md` 2026-09-07.
+
+## 2026-09-07 — muapi's "credits" in skill docs are not the account's real unit; the account is billed in USD
+
+- Observation: several installed skill files (`muapi-photo-pack-generator`,
+  `muapi-seedance-2`, and others) describe generation cost in a "~250
+  credits" framing. This account has no credits balance to check against —
+  `muapi account balance` returns a plain USD figure ($16.7020 opening,
+  2026-09-06), and every generation response carries a real `cost` field in
+  USD. Trusting the skill's credit numbers instead of the live `cost` field
+  or the CLI's own per-call response would have produced a completely wrong
+  budget picture.
+- Guidance: for this specific muapi account, always read cost from the live
+  API response or `GET /api/v1/models`'s `cost` field, in USD, never from a
+  skill file's "credits" language. Separately — and this bit even when USD
+  was read correctly — **muapi prices move during the same day**:
+  `pixverse-v5.5-i2v` (9:16, 1080p, duration 8, style none) and
+  `seedance-2-mini-omni-reference` were both quoted from `/models` at $0.10
+  and $0.15 respectively, but every real call to either endpoint across four
+  independent campaign lanes billed $1.20 — 12x and 8x the quoted price,
+  consistently, not a one-off. Every other model used in the same plan
+  (`nano-banana` $0.03, `nano-banana-edit` $0.03, `nano-banana-pro-edit`
+  $0.12, `seedance-2-omni-reference-train` $0.50, `openai-sora-2-image-to-
+  video` $0.80) billed exactly its quoted price with zero drift. Re-pull
+  `cost` from `/models` immediately before spending on these two endpoints
+  specifically — a quote from earlier the same session is not reliable.
+
+## 2026-09-07 — `utm_content` is the idempotency key across the WHOLE Postiz account, not just within one campaign
+
+- Observation: `scripts/queue-campaign-drops.py`'s adoption logic keys on
+  `utm_campaign|utm_content` to decide whether a drop already has live Postiz
+  records. `utm_content` is only guaranteed unique if every campaign's
+  `content_id` values are campaign-prefixed (`fd-drop-01`, `sas-drop-01`,
+  `wys-drop-01`, not a bare `drop-01`). This precedent already cost a real
+  campaign once (2026-09-05, three campaigns sharing bare `drop-01..06`
+  content ids: the second and third campaigns silently adopted the first's
+  live records and queued nothing of their own while printing `PASS —
+  adopted=6`). The three UGC-flood campaigns queued in T8
+  (`front-desk`/`fd-`, `signal-and-static`/`sas-`, `whats-your-secret`/`wys-`)
+  followed the campaign-prefix rule and queued cleanly — 24 distinct
+  `utm_content` values, 2 provider rows each (facebook + instagram-standalone),
+  state `QUEUE`, verified by direct Postgres read (`select ... from "Post"`),
+  never by trusting the script's own `PASS` line.
+- Guidance: `content_id` (the schema field) and `utm_content` (the tracking
+  parameter derived from it) are the same string by convention here, but the
+  rule that matters is about scope: `utm_content` must be unique across
+  **every campaign in the repo**, not just within one campaign's own
+  `posting-schedule.json` — the schema has no cross-campaign uniqueness
+  check, so this is an authoring discipline, not a validator guarantee.
+  Always campaign-prefix `content_id`, and always verify queued state by a
+  live DB read (query in `plans/ugc-character-flood/plan.md` §B), never by
+  the queue script's console `PASS`/`adopted=N` output alone.
+
+## 2026-09-07 — `queue-campaign-drops.py` silently drops X from `channels_posted` when copy ends in a bare URL
+
+- Observation: found while DB-verifying T8's 24 queued UGC-flood drops. All
+  three campaigns (`front-desk`, `signal-and-static`, `whats-your-secret`)
+  write an `x_post` copy variant per drop, and all three end that copy with
+  a plain, non-tracked blog URL (by campaign-copy convention, not a bug in
+  the copy itself). `queue-campaign-drops.py`'s `copy_for()` only appends the
+  UTM-tracked compact link to a platform's copy when that copy does **not**
+  already contain the literal substring `"http"` — so no tracked link is
+  ever appended for these X variants. Postiz does create the X draft (state
+  `DRAFT`, correct `publishDate`), but the `--schedule` stage locates a
+  drop's sibling provider records by regex-matching
+  `utm_campaign=...&utm_content=...` inside `content` — a string the
+  untracked X draft never contains — so the X draft is invisible to that
+  lookup and is never PUT to `schedule`. The script's own console output and
+  `evidence.json` nonetheless reported `channels_posted` as including `x` for
+  every one of these 24 drops — a false positive, reproduced identically
+  across all three campaigns (24 X drafts total, all stuck `DRAFT`).
+- Guidance: this is not Postiz's known "Unknown Error" flakiness — it is a
+  100%-reproducible content/grouping-logic interaction specific to copy that
+  ends in a bare (non-UTM-tracked) URL. Never trust `channels_posted` in this
+  script's own output for X; verify with a live DB query
+  (`select i."providerIdentifier", count(*) ... group by 1`) after every
+  `--schedule` run. Two real fixes, neither applied yet (flagged, not fixed,
+  in T10 — a docs/registry closeout task, not a code-fix task): always route
+  `x_post` copy through the tracked short link instead of a bare URL, or key
+  the sibling lookup off the creation call's own returned `group`/`postId`
+  rather than a content regex.
+# 2026-09-09 — Shared-hosting payment gate
+
+- For the $199 shared-hosting path, domain work is not a customer-side blocker.
+  Checkout must preserve the customer's optional choice (`new_domain`,
+  `existing_domain`, or `undecided`) and let verified payment start the
+  fulfillment records. The operator can then purchase/map the domain and
+  finish DNS, SSL, and email without mislabeling those steps as unpaid work.
+- A Commerce completion must leave a durable, idempotent ledger fact linking
+  payment, order, project, request, and fulfillment stage. The fact must state
+  when an external deploy has *not* happened; status copy is not evidence.

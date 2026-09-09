@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { SEO_PAGES, seoForPath } from '../src/seo.js';
 import {
   FILMS,
+  campaignForBlogSlug,
+  injectCampaignFilmGallery,
   filmCanonical,
   filmMetaDescription,
   filmSeoTitle,
@@ -376,9 +378,18 @@ function renderWatchHubShell() {
   });
 }
 
-function fieldMarkup(attributes, contentType) {
+function fieldMarkup(attributes, contentType, path) {
   if (contentType === 'blog_post' || contentType === 'case_study') {
-    return attributes.body?.processed || attributes.body?.value || '';
+    const body = attributes.body?.processed || attributes.body?.value || '';
+    // T7 (plans/ugc-character-flood/plan.md): a UGC-flood campaign's one
+    // companion blog post embeds that campaign's own film gallery. This is
+    // the SAME injectCampaignFilmGallery string transform BlogPostPage.jsx
+    // applies client-side, run here at build time so the gallery is present
+    // in the prerendered shell too — otherwise a crawler that never executes
+    // React would see none of it.
+    const slug = path ? path.replace(/^\/blog\//, '').replace(/\/$/, '') : '';
+    const filmCampaign = contentType === 'blog_post' ? campaignForBlogSlug(slug) : null;
+    return filmCampaign ? injectCampaignFilmGallery(body, filmCampaign) : body;
   }
   const sections = [
     ['Overview', attributes.field_hero_subheadline],
@@ -416,7 +427,7 @@ async function dynamicRoutes() {
           description: attributes.field_meta_description || `Learn about ${attributes.title || 'this solution'} from FAMtastic Designs.`,
           lastmod: attributes.changed?.slice(0, 10) || '',
           contentType: type,
-          body: fieldMarkup(attributes, type),
+          body: fieldMarkup(attributes, type, path),
         });
       }
       next = payload.links?.next?.href || '';

@@ -1,5 +1,126 @@
 # Product changelog
 
+## 2026-09-09 — Payment is the customer gate; domain remains operator work
+
+- The account-owned website checkout now accepts `undecided` for domain setup.
+  New-domain registration and existing-domain connection remain available, but
+  neither blocks payment. This matches the shared FAMtastic Inc. hosting model:
+  payment starts fulfillment, while domain purchase, DNS, SSL, and email are
+  operator-controlled follow-up work.
+- Commerce fulfillment now records one idempotent
+  `payment.fulfillment_started` ledger event after verified completion, with
+  order/project/request references, the immutable checkout domain choice, and
+  an explicit `external_deploy: false` boundary. It is evidence of the
+  payment-to-fulfillment transition, not a claim that a site is live.
+- The portal's post-payment domain copy now distinguishes an operator-pending
+  domain from a missing customer action.
+
+## 2026-09-07 — UGC Character Flood: pilot, cast, three campaigns, queue, closeout (T1-T2, T3-T6, T8-T10)
+
+- Ran the cost + identity pilot (T1, `marketing/campaigns/_pilot/`): compared
+  a still-chain-plus-motion route against a trained-persistent-character
+  route on real, receipted muapi calls. Still-chain identity-lock (anchor →
+  scene still) held perfectly; motion held with `pixverse-v5.5-i2v style:
+  none` but broke under `style: cyberpunk`; the trained-character route
+  (`seedance-2-omni-reference-train` → `seedance-2-mini-omni-reference`)
+  failed identity outright and rendered an unrelated real trademark onto the
+  wardrobe. The free `gemini-omni-character` probe billed $0.00 but returned
+  the input image unmodified. Two of five priced models billed 8-12x their
+  documented cost on every real call (dynamic pricing) — flagged before any
+  further spend, not discovered after the fact.
+- Built the cast bible and brand-asset deposit (T2,
+  `marketing/creative/cast/cast-bible.json`, `anchor-tokens.json`): 6
+  characters, each with a locked anchor + sha256, an identity-locked
+  4-panel reference sheet, and a third confirmation still in a distinct
+  scene. Bought one premium hero (`openai-sora-2-image-to-video`, $0.80,
+  billed exactly as quoted) for the `whats-your-secret` 2-hander and mined
+  it into measured grade tokens and extracted plates per the premium-anchor
+  rule.
+- Produced three of the four planned UGC campaigns end to end — 24 films
+  total, 8 drops each: `signal-and-static` (futuristic-grunge, `shutter`
+  palette, C2's motion clip rejected for identity/palette drift and
+  replaced with a $0 HyperFrames Ken-Burns treatment over the verified-good
+  scene still), `whats-your-secret` (two-version 2-hander, disclosure line
+  + `representation: synthetic_illustrative` on every drop per plan §F),
+  and `front-desk` (recurring host, reused the T2 scene still for its one
+  paid motion call). **`every-reason` (C1) was not built** — the fourth
+  campaign lane did not complete; no directory, films, or drops exist for
+  it. This is the plan's single incomplete task and is called out below,
+  not hidden in a "done" checkbox.
+- Queued 24 drops (T8) for Facebook + Instagram (`FAMTASTIC_MARKETING_
+  PUBLISH=true python3 scripts/queue-campaign-drops.py --campaign <slug>
+  --schedule`), verified by direct Postgres read-back — 24 distinct,
+  campaign-prefixed `utm_content` values (`fd-`, `sas-`, `wys-`), each with
+  exactly 2 provider rows in state `QUEUE`, spread Sept 7-9. Each campaign's
+  `x_post` copy was also submitted but a distinct, newly-found bug
+  (see `docs/CAPABILITY_REGISTRY.md` and `.site-context/SITE-LEARNINGS.md`)
+  leaves all 24 X drafts stuck in `DRAFT`, never scheduled — flagged, not
+  fixed, as a T10 docs-only task.
+- Built and held 48 TikTok/YouTube drop records (T9,
+  `marketing/campaigns/{front-desk,signal-and-static,whats-your-secret}-
+  {tiktok,youtube}/held-posting-schedule.json`, `approval.publish: false`)
+  plus the one-command unblock-day replay procedure at
+  `marketing/campaigns/_shared/UNBLOCK-REPLAY.md`. Confirmed live 2026-09-07
+  that TikTok/YouTube integrations are still `disabled` in Postiz, so this
+  stays inert until app review/re-auth clears.
+- Closeout (T10): aggregated every `cost-ledger.jsonl` written this session
+  (5 files, 39 rows) to a total real spend of **$8.4700** against the
+  $16.7020 opening balance, reconciling exactly to the live closing balance
+  of **$8.2320 USD** (confirmed via `muapi account balance`, 2026-09-07) —
+  well inside the plan's $12.00 ceiling. Corrected `marketing/providers.json`'s
+  muapi row (CLI present and authenticated, not absent; billed in USD) and
+  `docs/CAPABILITY_REGISTRY.md`'s stale "no post confirmed live" claim,
+  replacing it with real Facebook/Instagram/X `releaseURL`s read live from
+  the Postiz database (12 Facebook, 11 Instagram, 3 X posts published
+  2026-09-03 through 2026-09-06), and added a muapi capability row scoped
+  to exactly what this session's receipts support. `plans/ugc-character-
+  flood/plan.md`'s task checkboxes were updated to reflect what actually
+  completed — every task except T3 (`every-reason`).
+- **Not done, by design or by gap:** `every-reason` (C1) was never built —
+  a real gap, not a deferred choice, and the reason the plan's 32-film /
+  32-drop goal landed at 24/24. Neither `plans/ugc-character-flood/plan.md`
+  nor `plans/owner-dashboard/plan.md` has actually been committed to git —
+  both exist as untracked files in this worktree despite T0's own "done
+  when" criterion being "both files exist on `main`"; this session
+  committed them as part of closeout (see the commit this entry ships in).
+  The X-scheduling bug above is filed, not fixed. Production deployment of
+  the T7 frontend build remains a separate, explicitly-authorized step.
+
+## 2026-09-07 — Film library + video-blog SEO capture for the UGC character flood (T7)
+
+- Added all 24 films from the three ready-to-distribute UGC campaigns
+  (`signal-and-static`, `whats-your-secret`, `front-desk`) to
+  `frontend/src/lib/filmLibrary.js` (32 films total), every duration/
+  dimension/byte-size field re-derived from `ffprobe` against the copied
+  files in `frontend/public/video/`, never copied from a campaign README.
+- Extended `BlogPostPage.jsx`'s `campaignBodyHtml` precedent with a
+  slug-keyed film-gallery embed (`injectCampaignFilmGallery` /
+  `campaignFilmGalleryHtml` / `CAMPAIGN_BLOG_SLUGS`, all in
+  `filmLibrary.js`) and mirrored the same injection in
+  `generate-seo-shells.mjs`'s `fieldMarkup()` so the gallery is present in
+  the prerendered blog shell a crawler sees, not only after hydration.
+- Published one companion blog post per campaign via
+  `scripts/publish-blog-draft.py` (dry-run then `--confirm`): nid 174
+  `/blog/own-your-signal-not-a-rented-one/` (The Small-Business Website
+  Strategy Series, order 19), nid 175 `/blog/the-secret-is-a-page-of-your-own/`
+  (The FAMtastic Website Packages Explained Series, order 14), nid 176
+  `/blog/real-answers-to-the-questions-we-actually-get/` (The Website
+  Lead-Capture Series, order 11). Registered all three in
+  `DRAFT_CLASSIFICATION`.
+- `every-reason` (C1) was NOT distributed — the dispatch marked it not
+  ready, so no film for that campaign was added and no fourth post exists.
+- `npm --prefix frontend run build` confirmed `dist/watch/<slug>/index.html`
+  for all 32 films (24 new, verified 24/24 against `ffprobe`) and
+  `dist/blog/<slug>/index.html` for all 3 new posts, each carrying all 8 of
+  its campaign's film cards in the prerendered body.
+- **Not done in this session, by design:** production deployment
+  (`scripts/deploy-frontend-godaddy.sh --apply`). The three blog posts are
+  live in Drupal (JSON:API-confirmed) but their public `/blog/<slug>/` and
+  the new `/watch/<slug>/` shells are not yet on `famtasticdesigns.com` —
+  the dispatch asked to build and verify, not to deploy; deployment is
+  deliberately a separate, explicitly-authorized step per
+  `docs/FRONTEND_DEPLOYMENT.md`.
+
 ## 2026-09-06 — Portal fulfillment claims now follow durable entitlements
 
 - Removed the homepage assumption that any order means hosting, domain, SSL,

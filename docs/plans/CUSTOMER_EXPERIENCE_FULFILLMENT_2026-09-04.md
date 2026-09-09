@@ -24,7 +24,7 @@ Tasks:
 - [x] Correct the recipient evidence using the authoritative production account record: request `12` belongs to `junyeismom@gmail.com`. Prior manual emails are out-of-system notices, not the account-owned proof delivery. The temporary public review tunnel was withdrawn on 2026-09-05.
 - [x] Map the next client and operator portal architecture: Shay’s account needs Today, My Website, Owner Desk, Growth Plan, Files, Messages, and Account; Fritz needs Client 360, proof/delivery controls, and exception recovery. See `CLIENT_AND_OPERATOR_PORTAL_ARCHITECTURE_V1.md`.
 
-Status: in_progress
+Status: payment_gate_ready
 Started: 2026-09-04 00:00 America/New_York
 Ended:
 Execution: parallel research plus one controlled release lane
@@ -32,6 +32,32 @@ Research: yes — docs/AGENT_OPERATING_CONTRACT.md; docs/WEBSITE_PROOF_PRODUCTIO
 Review: yes — customer journey proof, deployment preflight, exact live-record inspection, and browser acceptance
 Skills: prove-famtastic-customer-journey
 Blocked By: none
+
+## Current closeout state — 2026-09-09
+
+The customer-side path is now intentionally clean for the shared-hosting
+starter offer:
+
+1. A submitted request with an owner-approved proof selection is eligible for
+   checkout after the account, offer, and terms checks pass.
+2. Domain purchase or connection may be recorded at checkout, but is no longer
+   a customer payment gate. `undecided` is a truthful option because the
+   operator may purchase the domain, map DNS, configure SSL, and set up email
+   after payment.
+3. Verified Commerce completion creates the durable customer, intake, project,
+   entitlement, and selected-proof records and records one idempotent
+   `payment.fulfillment_started` ledger event. That event is the handoff into
+   fulfillment; it does not claim that an external Site Studio build or DNS
+   cutover has happened.
+4. The remaining customer-side action for Tighten Up Your Locs is payment.
+   After payment, the operator-owned work is fulfillment/build verification,
+   then the manual domain/DNS/SSL/email step and production cutover.
+
+This distinction is deliberate: no payment, customer email, domain purchase,
+DNS action, external repository push, or production deploy was performed by
+this closeout. The event and checkout snapshot are the evidence that will let
+the webhook path start fulfillment without pretending those later operator
+steps are complete.
 
 Proof:
 - A versioned starter-site contract with explicit inclusions, limits, conditions, renewal treatment, and customer-facing terms that do not overclaim provider capability.

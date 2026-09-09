@@ -280,14 +280,22 @@
       "purpose": [
         "ui/ux mockups",
         "design-direction generation",
-        "creative variations"
+        "creative variations",
+        "identity-locked character stills and reference sheets",
+        "character-consistent short-form video generation (UGC campaign lane)"
       ],
-      "status": "connected_local_keychain",
-      "automation": "api",
-      "secret_env": [
-        "MUAPI_API_KEY"
-      ],
-      "notes": "Key in OS keychain (service: muapi-cli, account: api-key) - never committed. CLI binary absent; call REST directly: POST https://api.muapi.ai/api/v1/flux-schnell-image (x-api-key header), poll /predictions/{id}/result. Image dims must be multiples of 64 (128-2048). Generator: scripts/muapi-generate-mockups.sh. AI text renders as gibberish - use outputs as layout comps only."
+      "status": "authenticated_proven_cost_measured",
+      "automation": "cli",
+      "secret_env": [],
+      "access": "muapi CLI 0.2.7 (`which muapi`). `muapi account balance` for live USD balance. `muapi run <model> -i k=v --dry-run` prints the request and costs nothing. `muapi run <endpoint> -p \"<prompt>\" -i k=v --wait --download <dir> --output-json` executes for real. `GET /api/v1/models` returns the live `cost` (USD) and `estimate_endpoint` per model - re-read it at the start of every paid task, not from this file or the skill docs, because pricing moves (see notes).",
+      "credential": "macOS Keychain, service 'muapi-cli', account 'api-key' - resolved by the CLI itself, never an env var, never committed.",
+      "proof": "Corrects a 2026-09-06 registry error that read 'CLI binary absent; call REST directly.' The CLI is installed and was used for dozens of real, receipted paid calls across the UGC Character Flood plan (`plans/ugc-character-flood/plan.md`, T1/T2 pilot + cast bible + three campaigns, 2026-09-06/07): opening balance $16.7020 USD, closing balance $8.2320 USD, total real spend $8.4700 across 39 ledger rows in `marketing/campaigns/_pilot/evidence/cost-ledger.jsonl`, `marketing/creative/cast/evidence/cost-ledger.jsonl`, and `marketing/campaigns/{signal-and-static,whats-your-secret,front-desk}/evidence/cost-ledger.jsonl` - the balance delta reconciles to the ledger sum exactly ($16.7020 - $8.4700 = $8.2320, confirmed live via `muapi account balance` on 2026-09-07).",
+      "notes": [
+        "CREDITS-VS-USD TRAP: this account is billed in real USD, not in the 'credits' several installed skill files (`muapi-photo-pack-generator`, `muapi-seedance-2`, etc.) describe costs in. Trusting a skill's '~250 credits' framing instead of `GET /api/v1/models`'s `cost` field, or instead of the CLI's own real per-call response, is the mistake to avoid - it happened once already at plan-authoring time (see the dynamic-pricing gotcha below) and the plan's own anti-pattern list now names it explicitly.",
+        "DYNAMIC PRICING is real and large, not a rounding difference: `pixverse-v5.5-i2v` (9:16, 1080p, duration 8, style none) and `seedance-2-mini-omni-reference` were both documented in the plan at $0.10 and $0.15 respectively from a same-day `/models` pull, but every real call to either endpoint billed $1.20 - 12x and 8x the documented price - reproducibly, across five independent calls in three different campaign lanes (T1 pilot, signal-and-static, whats-your-secret, front-desk). Every other model used (`nano-banana` $0.03, `nano-banana-edit` $0.03, `nano-banana-pro-edit` $0.12, `seedance-2-omni-reference-train` $0.50, `openai-sora-2-image-to-video` $0.80) billed exactly its documented price with no drift. Re-pull `cost` from `/models` immediately before any paid call on these two endpoints specifically; do not reuse a price quoted earlier the same day.",
+        "IDENTITY-LOCK RESULTS, measured not assumed: the still-image chain (`nano-banana` anchor to `nano-banana-edit` scene stills, `images_list` referencing the locked anchor, no re-description of the face) held identity correctly in every one of ~20 real generations across 6 characters. `pixverse-v5.5-i2v` with `style: none` held identity correctly (used in production for signal-and-static, whats-your-secret, front-desk). `pixverse-v5.5-i2v` with `style: cyberpunk` broke identity (added a facial scar, altered ear shape and skin tone) and replaced the brief's own palette with a generic neon aesthetic in its one real test - rejected, not used in any shipped film (`marketing/campaigns/signal-and-static/evidence/cost-ledger.jsonl`). `seedance-2-mini-omni-reference` against a trained `@omni-character:<id>` FAILED identity outright in its one real test (different face/skin tone/hairstyle, an unrelated real third-party trademark rendered on the wardrobe) - Route B (the trained-persistent-character route) is not used in production; Route A (still-chain) is. `gemini-omni-character` is genuinely billed $0.00 (confirmed via the response's own `cost.amount_usd` and an unchanged account balance) but, as tested with a single reference image, returns the input image byte-identical rather than generating the requested new scene - free but not currently a working substitute for the paid scene-still step.",
+        "Image dims for `flux-schnell-image` must be multiples of 64 (128-2048). Generator: scripts/muapi-generate-mockups.sh. AI text renders as gibberish - use outputs as layout comps only; type is set in Photoshop, never burned in by a generation model."
+      ]
     },
     {
       "id": "gemini_image",

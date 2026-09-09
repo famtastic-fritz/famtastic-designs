@@ -322,8 +322,11 @@ final class CustomerPortalController extends ControllerBase {
       if (!$websiteRequest) {
         return $this->error('website_proof_selection_required', 422, 'Start with your business intake and choose an approved website direction before checkout.');
       }
-      if (!in_array((string) ($data['domain_choice'] ?? ''), ['new_domain', 'existing_domain'], TRUE)) {
-        return $this->error('domain_choice_required', 422, 'Choose a new domain or connect an existing domain.');
+      // Domain purchase/connection is an operator step for the shared-hosting
+      // offer. Customers may choose now, or leave it for FAMtastic to confirm
+      // after payment; it must not block the paid fulfillment path.
+      if (!in_array((string) ($data['domain_choice'] ?? 'undecided'), ['new_domain', 'existing_domain', 'undecided'], TRUE)) {
+        return $this->error('domain_choice_invalid', 422, 'Choose a new domain, connect an existing domain, or let FAMtastic confirm it after payment.');
       }
     }
     $terms = $this->dealRegistry();
@@ -387,7 +390,7 @@ final class CustomerPortalController extends ControllerBase {
     ]);
     $order->setData('famtastic_checkout', [
       'organization_public_id' => $organizationPublicId,
-      'domain_choice' => (string) ($data['domain_choice'] ?? 'not_applicable'),
+      'domain_choice' => (string) ($data['domain_choice'] ?? ($websiteRequest ? 'undecided' : 'not_applicable')),
       'terms_version' => (string) $terms['policy']['version'],
       'recurring_authorized' => !empty($data['recurring_authorized']),
       'marketing_opt_in' => !empty($data['marketing_opt_in']),

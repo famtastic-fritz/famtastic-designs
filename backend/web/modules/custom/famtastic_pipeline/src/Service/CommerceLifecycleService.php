@@ -56,9 +56,10 @@ final class CommerceLifecycleService {
     }
     $organizationId = (int) $organization['id'];
     if ($existing && $existing['status'] === 'fulfilled') {
-      $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing);
-      $this->enqueueProjectProofs($order, $operations, (array) ($order->getData('famtastic_checkout') ?? []));
-      return ['fulfilled' => TRUE, 'existing' => TRUE, 'record' => $existing, 'operations' => $operations];
+        $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing);
+        $this->enqueueProjectProofs($order, $operations, (array) ($order->getData('famtastic_checkout') ?? []));
+        $this->recordPaymentFulfillmentStarted($order, $operations, (array) ($order->getData('famtastic_checkout') ?? []));
+        return ['fulfilled' => TRUE, 'existing' => TRUE, 'record' => $existing, 'operations' => $operations];
     }
     $profile = $order->getBillingProfile();
     if ($profile) {
@@ -80,7 +81,15 @@ final class CommerceLifecycleService {
       $intakeSchemas[] = $definition['intake_schema'];
       foreach ($definition['entitlements'] as $type) {
         if ($type === 'domain_choice') {
-          $type = ($checkout['domain_choice'] ?? '') === 'new_domain' ? 'domain_registration' : 'domain_connection';
+          $domainChoice = (string) ($checkout['domain_choice'] ?? 'undecided');
+          if ($domainChoice === 'undecided' || $domainChoice === '') {
+            // The shared-hosting offer can start fulfillment before the
+            // operator purchases/maps a domain. Keep the choice in the
+            // immutable checkout snapshot and do not create a false active
+            // domain entitlement.
+            continue;
+          }
+          $type = $domainChoice === 'new_domain' ? 'domain_registration' : 'domain_connection';
         }
         $grants[$type] = $definition;
       }
@@ -118,6 +127,7 @@ final class CommerceLifecycleService {
 
     $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing ?: []);
     $this->enqueueProjectProofs($order, $operations, $checkout);
+    $this->recordPaymentFulfillmentStarted($order, $operations, $checkout);
 
     $this->portal->activity($organizationId, 'commerce.fulfilled', 'Your purchase is confirmed and your services are ready for intake.');
     $this->queueNotifications($order, $customer, $skus, array_values(array_unique($intakeSchemas)));
@@ -295,6 +305,31 @@ final class CommerceLifecycleService {
       'notification_key' => $key, 'category' => $category, 'recipient' => mb_strtolower($recipient), 'subject' => $subject, 'body' => $body,
       'status' => 'queued', 'attempts' => 0, 'max_attempts' => 5, 'available_at' => $now, 'created' => $now, 'changed' => $now,
     ])->execute();
+  }
+
+  /** Records the verified payment-to-fulfillment transition exactly once. */
+  private function recordPaymentFulfillmentStarted(OrderInterface $order, array $operations, array $checkout): void {
+    $domainChoice = (string) ($checkout['domain_choice'] ?? 'undecided');
+    $this->ledger->recordEvent(
+      'commerce:' . (int) $order->id() . ':payment:fulfillment_started',
+      'payment.fulfillment_started',
+      [
+        'commerce_order_id' => (int) $order->id(),
+        'project_id' => (int) ($operations['project_id'] ?? 0),
+        'website_request_public_id' => (string) ($checkout['website_request_public_id'] ?? ''),
+        'fulfillment_stage' => 'customer_records_created',
+        'domain_choice' => $domainChoice,
+        'domain_status' => in_array($domainChoice, ['new_domain', 'existing_domain'], TRUE) ? 'recorded_for_operator' : 'operator_pending',
+        'customer_gate' => 'payment_succeeded',
+        'external_deploy' => FALSE,
+      ],
+      (int) ($operations['prospect_id'] ?? 0) ?: NULL,
+      NULL,
+      (int) $order->id(),
+      (int) ($operations['project_id'] ?? 0) ?: NULL,
+      'commerce',
+      (string) $order->id(),
+    );
   }
 
   private function definitions(): array {

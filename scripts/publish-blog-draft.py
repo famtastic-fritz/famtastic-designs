@@ -487,6 +487,67 @@ DRAFT_CLASSIFICATION = {
         "category_label": "Get Paid",
         "tags": ["Hosting", "Domain Renewal", "Web Basics"],
     },
+    # ------------------------------------------------------------------
+    # UGC Character Flood (plans/ugc-character-flood/plan.md), Task T7 —
+    # one companion blog post per successfully-built campaign, each
+    # embedding that campaign's own 8 films via
+    # frontend/src/lib/filmLibrary.js's CAMPAIGN_BLOG_SLUGS map. Every
+    # series_order below is one past the highest order already registered
+    # for that series anywhere in this file as of 2026-09-07 — re-run
+    # --dry-run before --confirm; it reads the LIVE series state and will
+    # report a free order if production has since moved.
+    # ------------------------------------------------------------------
+    "own-your-signal-not-a-rented-one": {
+        # Companion post for the `signal-and-static` campaign. Continues the
+        # platform-dependency arc this series already carries (orders 9,
+        # 13-18) as its synthesis, then embeds the 8 films built to
+        # dramatize it.
+        "category": "get-found",
+        "category_label": "Get Found",
+        "tags": ["Owned Domain", "SEO", "Small Business"],
+        "series": "The Small-Business Website Strategy Series",
+        "series_order": 19,
+        "primary_keyword": "linktree vs website for small business",
+        "secondary_keywords": [
+            "do i need a website if i have a booking app",
+            "who owns client list booking app",
+        ],
+        "search_intent": "informational-comparison",
+    },
+    "the-secret-is-a-page-of-your-own": {
+        # Companion post for the `whats-your-secret` campaign — the plan's
+        # own highest-risk campaign (plan §F). This article states plainly,
+        # in prose, that the films it embeds are dramatizations and imply
+        # no outcome, matching plan §F rule 4's disclosure requirement.
+        "category": "get-customers",
+        "category_label": "Get Customers",
+        "tags": ["Web Basics", "Website Packages", "Small Business"],
+        "series": "The FAMtastic Website Packages Explained Series",
+        "series_order": 14,
+        "primary_keyword": "what does a $199 website include",
+        "secondary_keywords": [
+            "linktree vs website for small business",
+            "who owns client list booking app",
+        ],
+        "search_intent": "commercial-investigation",
+    },
+    "real-answers-to-the-questions-we-actually-get": {
+        # Companion post for the `front-desk` campaign (the recurring-host
+        # FAQ format). Continues this series' own lead-capture thesis
+        # (orders 9-10) by writing out, in full, the same 8 real questions
+        # the campaign's films answer on camera.
+        "category": "get-customers",
+        "category_label": "Get Customers",
+        "tags": ["Lead Capture", "Customer Experience", "Small Business"],
+        "series": "The Website Lead-Capture Series",
+        "series_order": 11,
+        "primary_keyword": "do i need a website if i use a booking app",
+        "secondary_keywords": [
+            "do you guarantee google rankings",
+            "what does a $199 website include",
+        ],
+        "search_intent": "informational",
+    },
 }
 
 # The blog_series vocabulary was seeded from this manifest by

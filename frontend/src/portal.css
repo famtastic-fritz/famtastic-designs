@@ -245,8 +245,11 @@
   position: relative;
 }
 .portal-proof-preview iframe {
-  width: 1280px;
-  height: 860px;
+  /* Size the source viewport from the card, then scale it into the frame.
+     A fixed 1280px source viewport was wider than most cards, so the 0.34
+     transform clipped the iframe to roughly its left third. */
+  width: calc(100% / 0.34);
+  height: calc(100% / 0.34);
   border: 0;
   transform: scale(0.34);
   transform-origin: 0 0;

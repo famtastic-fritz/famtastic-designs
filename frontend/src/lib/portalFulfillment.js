@@ -42,6 +42,10 @@ export function derivePortalFulfillmentState(workspace = {}) {
     hasProofWork: websiteRequests.length > 0 || projects.length > 0,
     hasLiveSite: projects.some((item) => Boolean(item.live_url)),
     hostingLabel: hasHosting ? 'Managed hosting entitlement active' : 'Hosting is not included in this purchase',
-    domainLabel: hasDomain ? 'Domain choice recorded' : 'Domain choice still required',
+    domainLabel: hasDomain
+      ? 'Domain choice recorded'
+      : paidOrder?.payment_status === 'paid'
+        ? 'Domain purchase or connection remains an operator step'
+        : 'Domain can be confirmed after payment',
   };
 }

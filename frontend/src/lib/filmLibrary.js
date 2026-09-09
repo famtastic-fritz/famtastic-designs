@@ -635,6 +635,838 @@ export const FILMS = [
     art: null,
     keywords: ['local seo', 'local search', 'google business profile', 'website maintenance'],
   },
+
+  /**
+   * ------------------------------------------------------------------
+   * UGC Character Flood (plans/ugc-character-flood/plan.md, Task T7) —
+   * 24 films across three campaigns: signal-and-static (sas-), whats-
+   * your-secret (wys-), front-desk (fd-). `campaign` on each entry is
+   * what CAMPAIGN_BLOG_SLUGS and campaignFilms() below key off of.
+   *
+   * Sourcing, so every field traces to a real repo artifact rather than
+   * a guess: `onScreen` for signal-and-static is the verbatim
+   * headline/subline/price_line from marketing/hyperframes/signal-and-
+   * static/rows.json (the actual HyperFrames render input); for
+   * whats-your-secret it is rows.json's captionA/captionB plus the
+   * disclosure and close-card text read directly out of that project's
+   * index.html; for front-desk it is the literal text pulled from each
+   * drop's own hook.html/main.html/close.html. `transcript` is set only
+   * for signal-and-static (marketing/hyperframes/signal-and-static/
+   * narration/lines.json — an explicitly-verbatim kept script) and
+   * whats-your-secret (marketing/campaigns/whats-your-secret/evidence/
+   * narration-scripts/wys-drop-0N.txt, also verbatim). front-desk has no
+   * verbatim narration-script file in repo, so per this file's own rule
+   * its transcript is null rather than reconstructed from the answer
+   * captions.
+   * ------------------------------------------------------------------
+   */
+  {
+    slug: 'sas-drop-01',
+    title: 'A borrowed inbox is not your signal',
+    eyebrow: 'Own the address',
+    series: 'Own the address',
+    tagline: 'A rented sign is not your signal.',
+    summary: 'A 15-second film in the Signal and Static series — a Gmail address and a link-in-bio page still run through somebody else’s platform.',
+    argument: [
+      'Theo opens on the two tools almost every small business already uses to be reachable — a Gmail inbox and a link-in-bio page — and names what they actually are: a borrowed inbox and a borrowed shelf, both running through somebody else’s platform.',
+      'The film does not say either tool is broken. It says they work fine right up until the platform changes its rules or its price, and that a business reachable only through them has no address of its own to fall back on.',
+    ],
+    audience: 'For a business whose entire public presence is a Gmail address and a link-in-bio page, and has never had a reason to ask what happens if either one changes.',
+    file: '/video/sas-drop-01.mp4',
+    poster: '/video/sas-drop-01.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 15.0,
+    bytes: 13071800,
+    uploadDate: '2026-09-06',
+    sound: 'Narrated throughout (Voicebox), AAC 48kHz stereo.',
+    transcript: [
+      'A Gmail address and a link-in-bio page still run through somebody else’s platform, not yours.',
+    ],
+    onScreen: [
+      { beat: 'The headline', lines: ['A borrowed inbox is not your signal.'] },
+      { beat: 'The subline', lines: ['A Gmail address and a link-in-bio page still run through somebody else’s platform.'] },
+      { beat: 'The close', lines: ['FAMTASTIC', 'A rented sign is not your signal.', 'famtasticdesigns.com', 'famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue/'] },
+    ],
+    art: 'ownedVsRented',
+    keywords: ['gmail business address', 'link in bio', 'own your domain', 'small business website'],
+    campaign: 'signal-and-static',
+  },
+
+  {
+    slug: 'sas-drop-02',
+    title: 'A link page is a rented signal',
+    eyebrow: 'Own the address',
+    series: 'Own the address',
+    tagline: 'A link page is a rented signal.',
+    summary: 'A 15-second film in the Signal and Static series — it works until the platform changes what it lets you say.',
+    argument: [
+      'The argument narrows to one specific tool: a link-in-bio page. It routes people somewhere, and does that one job cleanly — but it is a frequency you are borrowing, not one you hold.',
+      'Theo’s line is structural, not alarmist: the layout, the rules about what you can say, and whether the page shows up at all belong to the platform, and can change without you being asked first.',
+    ],
+    audience: 'For a business using a link-in-bio page as its whole online presence, weighing whether it is enough or just convenient.',
+    file: '/video/sas-drop-02.mp4',
+    poster: '/video/sas-drop-02.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 15.0,
+    bytes: 13022197,
+    uploadDate: '2026-09-06',
+    sound: 'Narrated throughout (Voicebox), AAC 48kHz stereo.',
+    transcript: [
+      'A link-in-bio page works right up until the platform changes what it lets you say.',
+    ],
+    onScreen: [
+      { beat: 'The headline', lines: ['A link page is a rented signal.'] },
+      { beat: 'The subline', lines: ['It works until the platform changes what it lets you say.'] },
+      { beat: 'The close', lines: ['FAMTASTIC', 'A link page is a rented signal.', 'famtasticdesigns.com', 'famtasticdesigns.com/blog/linktree-vs-real-website-what-you-trade-away/'] },
+    ],
+    art: 'ownedVsRented',
+    keywords: ['linktree alternative', 'link in bio page', 'rented platform', 'own website'],
+    campaign: 'signal-and-static',
+  },
+
+  {
+    slug: 'sas-drop-03',
+    title: 'Keep the app. Add your own signal',
+    eyebrow: 'Own the address',
+    series: 'Own the address',
+    tagline: 'Keep the app. Add your own signal.',
+    summary: 'A 15-second film in the Signal and Static series — you don’t have to leave a booking app to also have a page that’s yours.',
+    argument: [
+      'This drop heads off the false choice directly: keeping a booking app and having a page of your own are not in competition. The app is good at demand it created for itself; a page of your own is good at demand you created yourself.',
+      'Theo states it as an addition, not a replacement — the app stays exactly as it is, and one address the platform doesn’t control sits alongside it.',
+    ],
+    audience: 'For a business booked entirely through a marketplace app, worried that having a website of their own would mean giving up what already works.',
+    file: '/video/sas-drop-03.mp4',
+    poster: '/video/sas-drop-03.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 15.0,
+    bytes: 13008299,
+    uploadDate: '2026-09-06',
+    sound: 'Narrated throughout (Voicebox), AAC 48kHz stereo.',
+    transcript: [
+      'You do not have to leave the booking app. You just need one address the app doesn’t control.',
+    ],
+    onScreen: [
+      { beat: 'The headline', lines: ['Keep the app. Add your own signal.'] },
+      { beat: 'The subline', lines: ['You don’t have to leave a booking app to also have a page that’s yours.'] },
+      { beat: 'The close', lines: ['FAMTASTIC', 'Keep the app. Add your own signal.', 'famtasticdesigns.com', 'famtasticdesigns.com/blog/do-you-have-to-leave-the-booking-app/'] },
+    ],
+    art: null,
+    keywords: ['booking app', 'do i need a website', 'keep booking app', 'own domain'],
+    campaign: 'signal-and-static',
+  },
+
+  {
+    slug: 'sas-drop-04',
+    title: 'Who’s actually holding your client list?',
+    eyebrow: 'Own the address',
+    series: 'Own the address',
+    tagline: 'Who’s actually holding your client list?',
+    summary: 'A 15-second film in the Signal and Static series — a platform directory is not the same thing as a list you own.',
+    argument: [
+      'The question turns from the page itself to what sits behind it: the client list. Theo draws the line between being able to see your clients inside a platform’s directory and actually owning that list yourself.',
+      'If the account changes terms, raises its cut, or disappears, a directory entry goes with it — a list you hold does not.',
+    ],
+    audience: 'For a business that has never separated “can I see my clients in this app” from “do I actually own this list.”',
+    file: '/video/sas-drop-04.mp4',
+    poster: '/video/sas-drop-04.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 15.0,
+    bytes: 12904278,
+    uploadDate: '2026-09-06',
+    sound: 'Narrated throughout (Voicebox), AAC 48kHz stereo.',
+    transcript: [
+      'A platform’s directory is not the same thing as a client list you own.',
+    ],
+    onScreen: [
+      { beat: 'The headline', lines: ['Who’s actually holding your client list?'] },
+      { beat: 'The subline', lines: ['A platform directory is not the same thing as a list you own.'] },
+      { beat: 'The close', lines: ['FAMTASTIC', 'Who’s actually holding your client list?', 'famtasticdesigns.com', 'famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/'] },
+    ],
+    art: 'ownershipMarker',
+    keywords: ['who owns client list', 'booking app data', 'client list ownership', 'own your customers'],
+    campaign: 'signal-and-static',
+  },
+
+  {
+    slug: 'sas-drop-05',
+    title: 'One page. One signal. Yours',
+    eyebrow: 'Own the address',
+    series: 'Own the address',
+    tagline: 'One page. One signal. Yours.',
+    summary: 'A 15-second film in the Signal and Static series — one page, one year of hosting, a domain that’s yours — the whole bundle.',
+    argument: [
+      'Price appears for the first time in the campaign, stated as the whole bundle rather than a teaser: one page, one year of managed hosting, and a domain that’s yours — new, or one you already own — for $199 one time.',
+      'The same card discloses what happens after: $9.99 a month from year two, plus the separate cost of renewing the domain. Nothing above the fold implies otherwise.',
+    ],
+    audience: 'For anyone who has followed the argument this far and now wants the number and the scope on one screen.',
+    file: '/video/sas-drop-05.mp4',
+    poster: '/video/sas-drop-05.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 15.0,
+    bytes: 13223039,
+    uploadDate: '2026-09-06',
+    sound: 'Narrated throughout (Voicebox), AAC 48kHz stereo.',
+    transcript: [
+      'One hundred ninety-nine dollars. One page, one year of hosting, a domain that’s yours. That’s the whole bundle.',
+    ],
+    onScreen: [
+      { beat: 'The headline', lines: ['One page. One signal. Yours.'] },
+      { beat: 'The subline', lines: ['One page, one year of hosting, a domain that’s yours — the whole bundle.'] },
+      { beat: 'Price card', lines: ['$199 one-time: one page, one year hosting, first-year domain. Then $9.99/mo, plus the domain.'] },
+      { beat: 'The close', lines: ['FAMTASTIC', 'One page. One signal. Yours.', 'famtasticdesigns.com', 'famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/'] },
+    ],
+    art: 'scopeBoundary',
+    scope: {
+      included: ['One focused landing-page website', 'One year of managed hosting', 'First-year domain — new, or connect one you already own'],
+      excluded: ['Business email', 'Maintenance'],
+    },
+    keywords: ['$199 website', 'web basics bundle', 'what does 199 include', 'website cost'],
+    campaign: 'signal-and-static',
+  },
+
+  {
+    slug: 'sas-drop-06',
+    title: 'The signal doesn’t cut off in year two',
+    eyebrow: 'Own the address',
+    series: 'Own the address',
+    tagline: 'The signal doesn’t cut off in year two.',
+    summary: 'A 15-second film in the Signal and Static series — the terms for what happens after year one, in writing, up front.',
+    argument: [
+      'The renewal terms get their own drop rather than a footnote: first year $199, then $9.99 a month if you keep the hosting, plus whatever the domain itself costs to renew.',
+      'Theo’s point is that none of this should arrive as a surprise email a year later — it’s disclosed at the same time as the price, not after it.',
+    ],
+    audience: 'For anyone deciding whether to buy who wants to know what happens after year one before, not after, they pay anything.',
+    file: '/video/sas-drop-06.mp4',
+    poster: '/video/sas-drop-06.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 15.0,
+    bytes: 13073020,
+    uploadDate: '2026-09-06',
+    sound: 'Narrated throughout (Voicebox), AAC 48kHz stereo.',
+    transcript: [
+      'First year is one hundred ninety-nine dollars. After that, nine dollars and ninety-nine cents a month, plus the domain.',
+    ],
+    onScreen: [
+      { beat: 'The headline', lines: ['The signal doesn’t cut off in year two.'] },
+      { beat: 'The subline', lines: ['The terms for what happens after year one, in writing, up front.'] },
+      { beat: 'Price card', lines: ['First year $199, then $9.99/mo, plus renewing the domain. No surprise renewal.'] },
+      { beat: 'The close', lines: ['FAMTASTIC', 'The signal doesn’t cut off in year two.', 'famtasticdesigns.com', 'famtasticdesigns.com/blog/what-happens-when-first-year-hosting-ends/'] },
+    ],
+    art: null,
+    keywords: ['hosting renewal cost', 'what happens after first year hosting', 'domain renewal', 'website subscription'],
+    campaign: 'signal-and-static',
+  },
+
+  {
+    slug: 'sas-drop-07',
+    title: 'A rented sign doesn’t reach Google',
+    eyebrow: 'Own the address',
+    series: 'Own the address',
+    tagline: 'A rented sign doesn’t reach Google.',
+    summary: 'A 15-second film in the Signal and Static series — a link-in-bio page is often invisible to search entirely.',
+    argument: [
+      'The argument moves from ownership to visibility: a link-in-bio page is frequently invisible to a search engine entirely, because it was built to be linked to from one place, not to be found on its own.',
+      'Theo does not promise a ranking — only that a page built to be found is a structurally different thing than one built only to redirect.',
+    ],
+    audience: 'For a business relying on a link-in-bio page who has never checked whether it shows up in a search for their own name.',
+    file: '/video/sas-drop-07.mp4',
+    poster: '/video/sas-drop-07.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 15.0,
+    bytes: 12912776,
+    uploadDate: '2026-09-06',
+    sound: 'Narrated throughout (Voicebox), AAC 48kHz stereo.',
+    transcript: [
+      'A link-in-bio page is often invisible to search entirely. It was never built to be found.',
+    ],
+    onScreen: [
+      { beat: 'The headline', lines: ['A rented sign doesn’t reach Google.'] },
+      { beat: 'The subline', lines: ['A link-in-bio page is often invisible to search entirely.'] },
+      { beat: 'The close', lines: ['FAMTASTIC', 'A rented sign doesn’t reach Google.', 'famtasticdesigns.com', 'famtasticdesigns.com/blog/why-link-in-bio-page-doesnt-show-up-in-google/'] },
+    ],
+    art: null,
+    keywords: ['does linktree show up on google', 'link in bio seo', 'website search visibility', 'small business seo'],
+    campaign: 'signal-and-static',
+  },
+
+  {
+    slug: 'sas-drop-08',
+    title: 'See your signal before you pay for it',
+    eyebrow: 'Own the address',
+    series: 'Own the address',
+    tagline: 'See your signal before you pay for it.',
+    summary: 'A 15-second film in the Signal and Static series — a real preview, built before you commit to anything.',
+    argument: [
+      'The campaign closes on process rather than argument: a real preview of the page gets built before any commitment, which Theo frames as proof rather than a sales promise.',
+      'It is the practical answer to everything the first seven drops raised — you do not have to take the mechanism on faith before seeing what your own page would actually look like.',
+    ],
+    audience: 'For anyone who agrees with the argument but wants to see their own page before deciding anything.',
+    file: '/video/sas-drop-08.mp4',
+    poster: '/video/sas-drop-08.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 15.0,
+    bytes: 12855354,
+    uploadDate: '2026-09-06',
+    sound: 'Narrated throughout (Voicebox), AAC 48kHz stereo.',
+    transcript: [
+      'See it built before you pay for it. That’s proof, not a promise.',
+    ],
+    onScreen: [
+      { beat: 'The headline', lines: ['See your signal before you pay for it.'] },
+      { beat: 'The subline', lines: ['A real preview, built before you commit to anything.'] },
+      { beat: 'The close', lines: ['FAMTASTIC', 'See your signal before you pay for it.', 'famtasticdesigns.com', 'famtasticdesigns.com/blog/proof-first-website-see-before-you-pay/'] },
+    ],
+    art: null,
+    keywords: ['see website before you pay', 'proof first website', 'website preview', 'try before you buy website'],
+    campaign: 'signal-and-static',
+  },
+
+  {
+    slug: 'wys-drop-01',
+    title: 'Corey: “Since when do you have a website?”',
+    eyebrow: 'What’s Your Secret',
+    series: 'What the price is',
+    tagline: 'Corey: “Since when do you have a website?” Malik: “Couple months. Why?”',
+    summary: 'A 13.5-second dramatization of Corey and Malik at a gym floor at dusk — one notices a website, the other explains it, plainly.',
+    argument: [
+      'Malik mentions, almost in passing, that he has had a website for a couple of months. Corey’s question is not about results — it is simple notice that something changed, which is the only kind of observation this campaign ever makes.',
+      'Nothing is claimed about what the page has done for Malik’s business. The film’s whole premise is the presence of an owned address, never a performance behind it.',
+    ],
+    audience: 'For a reader who relates to Malik’s position — has the page already — or to Corey’s — is only now noticing everyone around them seems to have one.',
+    file: '/video/wys-drop-01.mp4',
+    poster: '/video/wys-drop-01.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 13.5,
+    bytes: 9450903,
+    uploadDate: '2026-09-06',
+    sound: 'Dialogue captioned on screen (Corey asks / Malik answers), voiced by a single shared narrator reading both parts; no lip-sync.',
+    transcript: [
+      'Corey: Since when do you have a website?',
+      'Malik: Couple months. Why?',
+    ],
+    onScreen: [
+      { beat: 'Corey asks', lines: ['Since when do you have a website?'] },
+      { beat: 'Malik answers', lines: ['Couple months. Why?'] },
+      { beat: 'Disclosure', lines: ['Dramatization. Characters are illustrative — not real customers.'] },
+      { beat: 'The close', lines: ['FAMtastic', 'One page · one year hosting · the domain', 'First year only. Then $9.99/mo, plus the domain’s own renewal cost.', 'see what’s included'] },
+    ],
+    art: null,
+    keywords: ['what does 199 include', 'website vs linktree', 'small business website dramatization', 'own website ownership'],
+    campaign: 'whats-your-secret',
+  },
+
+  {
+    slug: 'wys-drop-02',
+    title: 'Corey: “What’s it even for?”',
+    eyebrow: 'What’s Your Secret',
+    series: 'What the price is',
+    tagline: 'Corey: “What’s it even for?” Malik: “It’s my own spot online. FAMtastic built it.”',
+    summary: 'A 13.5-second dramatization of Corey and Malik at a gym floor at dusk — one notices a website, the other explains it, plainly.',
+    argument: [
+      'Malik’s answer names the thing plainly: a spot online that is his, not a bigger story than that. It is a page he owns, sitting at an address that belongs to him, instead of a profile he is renting from somebody else’s app.',
+      'FAMtastic is named as who built it, not as the source of any outcome — the distinction §F rule 1 requires this campaign to hold in every drop.',
+    ],
+    audience: 'For a reader who relates to Malik’s position — has the page already — or to Corey’s — is only now noticing everyone around them seems to have one.',
+    file: '/video/wys-drop-02.mp4',
+    poster: '/video/wys-drop-02.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 13.5,
+    bytes: 9479991,
+    uploadDate: '2026-09-06',
+    sound: 'Dialogue captioned on screen (Corey asks / Malik answers), voiced by a single shared narrator reading both parts; no lip-sync.',
+    transcript: [
+      'Corey: What’s it even for?',
+      'Malik: It’s my own spot online. FAMtastic built it.',
+    ],
+    onScreen: [
+      { beat: 'Corey asks', lines: ['What’s it even for?'] },
+      { beat: 'Malik answers', lines: ['It’s my own spot online. FAMtastic built it.'] },
+      { beat: 'Disclosure', lines: ['Dramatization. Characters are illustrative — not real customers.'] },
+      { beat: 'The close', lines: ['FAMtastic', 'One page · one year hosting · the domain', 'First year only. Then $9.99/mo, plus the domain’s own renewal cost.', 'see what’s included'] },
+    ],
+    art: 'ownedVsRented',
+    keywords: ['what does 199 include', 'website vs linktree', 'small business website dramatization', 'own website ownership'],
+    campaign: 'whats-your-secret',
+  },
+
+  {
+    slug: 'wys-drop-03',
+    title: 'Corey: “Isn’t that just a Linktree?”',
+    eyebrow: 'What’s Your Secret',
+    series: 'What the price is',
+    tagline: 'Corey: “Isn’t that just a Linktree?” Malik: “No — it’s a real site. An address, not a link list.”',
+    summary: 'A 13.5-second dramatization of Corey and Malik at a gym floor at dusk — one notices a website, the other explains it, plainly.',
+    argument: [
+      'Corey asks the question a lot of people would actually ask: isn’t a website just a fancier link-in-bio page? Malik’s answer draws the real distinction — a link-in-bio page points at other people’s platforms, a site is a page he controls that a search engine can actually index.',
+      'It sits at a domain with his name on it, which a list of links never does.',
+    ],
+    audience: 'For a reader who relates to Malik’s position — has the page already — or to Corey’s — is only now noticing everyone around them seems to have one.',
+    file: '/video/wys-drop-03.mp4',
+    poster: '/video/wys-drop-03.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 13.5,
+    bytes: 10664893,
+    uploadDate: '2026-09-06',
+    sound: 'Dialogue captioned on screen (Corey asks / Malik answers), voiced by a single shared narrator reading both parts; no lip-sync.',
+    transcript: [
+      'Corey: Isn’t that just a Linktree?',
+      'Malik: No — it’s a real site. An address, not a link list.',
+    ],
+    onScreen: [
+      { beat: 'Corey asks', lines: ['Isn’t that just a Linktree?'] },
+      { beat: 'Malik answers', lines: ['No — it’s a real site. An address, not a link list.'] },
+      { beat: 'Disclosure', lines: ['Dramatization. Characters are illustrative — not real customers.'] },
+      { beat: 'The close', lines: ['FAMtastic', 'One page · one year hosting · the domain', 'First year only. Then $9.99/mo, plus the domain’s own renewal cost.', 'linktree vs. a real site'] },
+    ],
+    art: 'ownershipMarker',
+    keywords: ['what does 199 include', 'website vs linktree', 'small business website dramatization', 'own website ownership'],
+    campaign: 'whats-your-secret',
+  },
+
+  {
+    slug: 'wys-drop-04',
+    title: 'Corey: “So what’s the catch?”',
+    eyebrow: 'What’s Your Secret',
+    series: 'What the price is',
+    tagline: 'Corey: “So what’s the catch?” Malik: “No catch. One page, a year hosted, the domain. $199.”',
+    summary: 'A 13.5-second dramatization of Corey and Malik at a gym floor at dusk — one notices a website, the other explains it, plainly.',
+    argument: [
+      'The scene ends where every honest pricing conversation should: with the whole scope on the table. Malik states it as a flat list — one page, a year of hosting, the domain — for $199, with no hidden tier and nothing bundled in that wasn’t asked for.',
+      'It is the entire pitch, stated plainly rather than qualified.',
+    ],
+    audience: 'For a reader who relates to Malik’s position — has the page already — or to Corey’s — is only now noticing everyone around them seems to have one.',
+    file: '/video/wys-drop-04.mp4',
+    poster: '/video/wys-drop-04.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 13.5,
+    bytes: 10723017,
+    uploadDate: '2026-09-06',
+    sound: 'Dialogue captioned on screen (Corey asks / Malik answers), voiced by a single shared narrator reading both parts; no lip-sync.',
+    transcript: [
+      'Corey: So what’s the catch?',
+      'Malik: No catch. One page, a year hosted, the domain. $199.',
+    ],
+    onScreen: [
+      { beat: 'Corey asks', lines: ['So what’s the catch?'] },
+      { beat: 'Malik answers', lines: ['No catch. One page, a year hosted, the domain. $199.'] },
+      { beat: 'Disclosure', lines: ['Dramatization. Characters are illustrative — not real customers.'] },
+      { beat: 'The close', lines: ['FAMtastic', 'One page · one year hosting · the domain', 'First year only. Then $9.99/mo, plus the domain’s own renewal cost.', 'start your own page'] },
+    ],
+    art: 'scopeBoundary',
+    scope: {
+      included: ['One focused landing-page website', 'One year of managed hosting', 'First-year domain — new, or connect one you already own'],
+      excluded: ['Business email', 'Maintenance'],
+    },
+    keywords: ['what does 199 include', 'website vs linktree', 'small business website dramatization', 'own website ownership'],
+    campaign: 'whats-your-secret',
+  },
+
+  {
+    slug: 'wys-drop-05',
+    title: 'Dale: “Wait, you have a website now?”',
+    eyebrow: 'What’s Your Secret',
+    series: 'What the price is',
+    tagline: 'Dale: “Wait, you have a website now?” Wyatt: “Yeah. Got it a few months back.”',
+    summary: 'A 13.5-second dramatization of Dale and Wyatt at a truck tailgate at golden hour, end of shift — one notices a website, the other explains it, plainly.',
+    argument: [
+      'The same notice beat, rewritten for a different trade and a different idiom entirely — end of shift, a truck tailgate, golden hour. Dale’s surprise is the same shape as Corey’s, but the words and the setting are specific to two people who work with their hands.',
+      'Nothing about the exchange implies a result. It is a fact being noticed, nothing more.',
+    ],
+    audience: 'For a reader who relates to Wyatt’s position — has the page already — or to Dale’s — is only now noticing everyone around them seems to have one.',
+    file: '/video/wys-drop-05.mp4',
+    poster: '/video/wys-drop-05.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 13.5,
+    bytes: 14105009,
+    uploadDate: '2026-09-06',
+    sound: 'Dialogue captioned on screen (Dale asks / Wyatt answers), voiced by a single shared narrator reading both parts; no lip-sync.',
+    transcript: [
+      'Dale: Wait, you have a website now?',
+      'Wyatt: Yeah. Got it a few months back.',
+    ],
+    onScreen: [
+      { beat: 'Dale asks', lines: ['Wait, you have a website now?'] },
+      { beat: 'Wyatt answers', lines: ['Yeah. Got it a few months back.'] },
+      { beat: 'Disclosure', lines: ['Dramatization. Characters are illustrative — not real customers.'] },
+      { beat: 'The close', lines: ['FAMtastic', 'One page · one year hosting · the domain', 'First year only. Then $9.99/mo, plus the domain’s own renewal cost.', 'see what’s included'] },
+    ],
+    art: null,
+    keywords: ['what does 199 include', 'website vs linktree', 'small business website dramatization', 'own website ownership'],
+    campaign: 'whats-your-secret',
+  },
+
+  {
+    slug: 'wys-drop-06',
+    title: 'Dale: “What’s it actually do?”',
+    eyebrow: 'What’s Your Secret',
+    series: 'What the price is',
+    tagline: 'Dale: “What’s it actually do?” Wyatt: “It’s my own page. FAMtastic built it, one flat price.”',
+    summary: 'A 13.5-second dramatization of Dale and Wyatt at a truck tailgate at golden hour, end of shift — one notices a website, the other explains it, plainly.',
+    argument: [
+      'Wyatt’s answer is deliberately plainer than Malik’s — “my own page, one flat price” — matching the idiom of a contractor rather than restating the gym-floor version with the trade swapped out.',
+      'It is a place people land when they look him up, belonging to him and not to anyone else’s platform.',
+    ],
+    audience: 'For a reader who relates to Wyatt’s position — has the page already — or to Dale’s — is only now noticing everyone around them seems to have one.',
+    file: '/video/wys-drop-06.mp4',
+    poster: '/video/wys-drop-06.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 13.5,
+    bytes: 14165154,
+    uploadDate: '2026-09-06',
+    sound: 'Dialogue captioned on screen (Dale asks / Wyatt answers), voiced by a single shared narrator reading both parts; no lip-sync.',
+    transcript: [
+      'Dale: What’s it actually do?',
+      'Wyatt: It’s my own page. FAMtastic built it, one flat price.',
+    ],
+    onScreen: [
+      { beat: 'Dale asks', lines: ['What’s it actually do?'] },
+      { beat: 'Wyatt answers', lines: ['It’s my own page. FAMtastic built it, one flat price.'] },
+      { beat: 'Disclosure', lines: ['Dramatization. Characters are illustrative — not real customers.'] },
+      { beat: 'The close', lines: ['FAMtastic', 'One page · one year hosting · the domain', 'First year only. Then $9.99/mo, plus the domain’s own renewal cost.', 'see what’s included'] },
+    ],
+    art: 'ownedVsRented',
+    keywords: ['what does 199 include', 'website vs linktree', 'small business website dramatization', 'own website ownership'],
+    campaign: 'whats-your-secret',
+  },
+
+  {
+    slug: 'wys-drop-07',
+    title: 'Dale: “Isn’t that what the booking app already gives me?”',
+    eyebrow: 'What’s Your Secret',
+    series: 'What the price is',
+    tagline: 'Dale: “Isn’t that what the booking app already gives me?” Wyatt: “The app’s not yours. This page is.”',
+    summary: 'A 13.5-second dramatization of Dale and Wyatt at a truck tailgate at golden hour, end of shift — one notices a website, the other explains it, plainly.',
+    argument: [
+      'Dale raises the objection this whole flood keeps circling back to from a different angle: doesn’t a booking app already cover this? Wyatt’s answer is the shortest, sharpest version of the ownership argument in the entire campaign — the app hands you access as long as you keep using it, the page is yours whether you keep the app or not.',
+    ],
+    audience: 'For a reader who relates to Wyatt’s position — has the page already — or to Dale’s — is only now noticing everyone around them seems to have one.',
+    file: '/video/wys-drop-07.mp4',
+    poster: '/video/wys-drop-07.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 13.5,
+    bytes: 14189034,
+    uploadDate: '2026-09-06',
+    sound: 'Dialogue captioned on screen (Dale asks / Wyatt answers), voiced by a single shared narrator reading both parts; no lip-sync.',
+    transcript: [
+      'Dale: Isn’t that what the booking app already gives me?',
+      'Wyatt: The app’s not yours. This page is.',
+    ],
+    onScreen: [
+      { beat: 'Dale asks', lines: ['Isn’t that what the booking app already gives me?'] },
+      { beat: 'Wyatt answers', lines: ['The app’s not yours. This page is.'] },
+      { beat: 'Disclosure', lines: ['Dramatization. Characters are illustrative — not real customers.'] },
+      { beat: 'The close', lines: ['FAMtastic', 'One page · one year hosting · the domain', 'First year only. Then $9.99/mo, plus the domain’s own renewal cost.', 'who owns your client list'] },
+    ],
+    art: 'ownershipMarker',
+    keywords: ['what does 199 include', 'website vs linktree', 'small business website dramatization', 'own website ownership'],
+    campaign: 'whats-your-secret',
+  },
+
+  {
+    slug: 'wys-drop-08',
+    title: 'Dale: “What’s it run you?”',
+    eyebrow: 'What’s Your Secret',
+    series: 'What the price is',
+    tagline: 'Dale: “What’s it run you?” Wyatt: “$199. Site, hosting, the domain — one year.”',
+    summary: 'A 13.5-second dramatization of Dale and Wyatt at a truck tailgate at golden hour, end of shift — one notices a website, the other explains it, plainly.',
+    argument: [
+      'The v2 pair lands on the same close as v1: the whole bundle, stated plainly. One focused page, a year of hosting, and the domain, for $199 up front — no different a number for a different trade, no upsell folded into the answer.',
+    ],
+    audience: 'For a reader who relates to Wyatt’s position — has the page already — or to Dale’s — is only now noticing everyone around them seems to have one.',
+    file: '/video/wys-drop-08.mp4',
+    poster: '/video/wys-drop-08.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 13.5,
+    bytes: 14169072,
+    uploadDate: '2026-09-06',
+    sound: 'Dialogue captioned on screen (Dale asks / Wyatt answers), voiced by a single shared narrator reading both parts; no lip-sync.',
+    transcript: [
+      'Dale: What’s it run you?',
+      'Wyatt: $199. Site, hosting, the domain — one year.',
+    ],
+    onScreen: [
+      { beat: 'Dale asks', lines: ['What’s it run you?'] },
+      { beat: 'Wyatt answers', lines: ['$199. Site, hosting, the domain — one year.'] },
+      { beat: 'Disclosure', lines: ['Dramatization. Characters are illustrative — not real customers.'] },
+      { beat: 'The close', lines: ['FAMtastic', 'One page · one year hosting · the domain', 'First year only. Then $9.99/mo, plus the domain’s own renewal cost.', 'start your own page'] },
+    ],
+    art: 'scopeBoundary',
+    scope: {
+      included: ['One focused landing-page website', 'One year of managed hosting', 'First-year domain — new, or connect one you already own'],
+      excluded: ['Business email', 'Maintenance'],
+    },
+    keywords: ['what does 199 include', 'website vs linktree', 'small business website dramatization', 'own website ownership'],
+    campaign: 'whats-your-secret',
+  },
+
+  {
+    slug: 'fd-drop-01',
+    title: 'Do I have to leave my booking app?',
+    eyebrow: 'Front Desk',
+    series: 'Front Desk FAQ',
+    tagline: 'She’s filling your calendar. That’s the job. The real question is what happens if it stops.',
+    summary: 'A 19-second Front Desk drop: Priya answers “Do I have to leave my booking app?” in one direct take.',
+    argument: [
+      'Priya answers the objection at the front of this whole flood: no, you do not have to leave your booking app. If it is filling your calendar, it is doing its job, and a channel that brings paying work is not a problem to be solved.',
+      'The real question, she says, is what happens if it ever stops — a policy change, a billing lapse, a category reshuffle — and what is left standing is only what you own outside it.',
+    ],
+    audience: 'For a business booked through an app or working from a Gmail/Linktree setup who has this exact question and has never had it answered on camera.',
+    file: '/video/fd-drop-01.mp4',
+    poster: '/video/fd-drop-01.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 19.0,
+    bytes: 12821552,
+    uploadDate: '2026-09-06',
+    sound: 'Hook and close cards are silent; the answer beat carries a Voicebox voiceover over progressive captions, AAC 48kHz stereo.',
+    transcript: null,
+    onScreen: [
+      { beat: 'Front Desk · FAQ', lines: ['Do I have to leave my booking app?'] },
+      { beat: 'The answer', lines: ['She’s filling your calendar. That’s the job.', 'The real question is what happens if it stops.'] },
+      { beat: 'The close', lines: ['Read the full answer', 'The address you’d still own.', 'famtasticdesigns.com/blog/do-you-have-to-leave-the-booking-app/', 'FAMtastic Web Basics: $199 first year (site + hosting + domain), then $9.99/mo hosting, plus domain renewal.'] },
+    ],
+    art: null,
+    keywords: ['front desk faq', 'do you have to leave the booking app', 'small business website questions', 'famtastic web basics'],
+    campaign: 'front-desk',
+  },
+
+  {
+    slug: 'fd-drop-02',
+    title: 'Who actually owns my client list?',
+    eyebrow: 'Front Desk',
+    series: 'Front Desk FAQ',
+    tagline: 'You can see it, often export some of it. But access is a permission the platform grants — not ownership.',
+    summary: 'A 19-second Front Desk drop: Priya answers “Who actually owns my client list?” in one direct take.',
+    argument: [
+      'Priya draws a distinction most people booking through an app have never had reason to make: being able to see your client list, and export some of it, is not the same thing as owning it.',
+      'What any specific platform actually lets you do is set by the agreement you accepted — and the only reliable way to know yours, she says, is to read it.',
+    ],
+    audience: 'For a business booked through an app or working from a Gmail/Linktree setup who has this exact question and has never had it answered on camera.',
+    file: '/video/fd-drop-02.mp4',
+    poster: '/video/fd-drop-02.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 19.0,
+    bytes: 12874136,
+    uploadDate: '2026-09-06',
+    sound: 'Hook and close cards are silent; the answer beat carries a Voicebox voiceover over progressive captions, AAC 48kHz stereo.',
+    transcript: null,
+    onScreen: [
+      { beat: 'Front Desk · FAQ', lines: ['Who actually owns my client list?'] },
+      { beat: 'The answer', lines: ['You can see it, often export some of it.', 'But access is a permission the platform grants — not ownership.'] },
+      { beat: 'The close', lines: ['Read the full answer', 'Access isn’t ownership.', 'famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/', 'FAMtastic Web Basics: websites start at $199. Renewal terms disclosed before anything renews.'] },
+    ],
+    art: 'ownershipMarker',
+    keywords: ['front desk faq', 'who owns your client list booking app', 'small business website questions', 'famtastic web basics'],
+    campaign: 'front-desk',
+  },
+
+  {
+    slug: 'fd-drop-03',
+    title: 'Do you guarantee Google rankings?',
+    eyebrow: 'Front Desk',
+    series: 'Front Desk FAQ',
+    tagline: 'No. Nobody honest does. We build the technical foundation — and show you proof.',
+    summary: 'A 19-second Front Desk drop: Priya answers “Do you guarantee Google rankings?” in one direct take.',
+    argument: [
+      'Asked the question directly, Priya answers directly: no. Nobody honest guarantees a Google ranking, because no outside vendor controls the algorithm that decides it, and a vendor who promises a specific position is either promising something outside their control or quietly narrowing that promise later.',
+      'What can actually be built is the real technical foundation a search engine needs to evaluate a site at all — and shown as proof, not asserted as a promise.',
+    ],
+    audience: 'For a business booked through an app or working from a Gmail/Linktree setup who has this exact question and has never had it answered on camera.',
+    file: '/video/fd-drop-03.mp4',
+    poster: '/video/fd-drop-03.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 19.0,
+    bytes: 12817730,
+    uploadDate: '2026-09-06',
+    sound: 'Hook and close cards are silent; the answer beat carries a Voicebox voiceover over progressive captions, AAC 48kHz stereo.',
+    transcript: null,
+    onScreen: [
+      { beat: 'Front Desk · FAQ', lines: ['Do you guarantee Google rankings?'] },
+      { beat: 'The answer', lines: ['No. Nobody honest does.', 'We build the technical foundation — and show you proof.'] },
+      { beat: 'The close', lines: ['Read the full answer', 'Proof, not a promise.', 'famtasticdesigns.com/blog/do-you-guarantee-google-rankings/', 'FAMtastic Web Basics: websites start at $199. Renewal terms disclosed before anything renews.'] },
+    ],
+    art: null,
+    keywords: ['front desk faq', 'do you guarantee google rankings', 'small business website questions', 'famtastic web basics'],
+    campaign: 'front-desk',
+  },
+
+  {
+    slug: 'fd-drop-04',
+    title: 'What does the $199 actually include?',
+    eyebrow: 'Front Desk',
+    series: 'Front Desk FAQ',
+    tagline: 'One website, first-year hosting, and your domain. That’s the whole bundle — nothing hidden after.',
+    summary: 'A 19-second Front Desk drop: Priya answers “What does the $199 actually include?” in one direct take.',
+    argument: [
+      'Priya states the scope of the $199 offer as a flat list rather than a pitch: one focused website, first-year hosting, and a domain — new, or one already owned. That is the whole bundle.',
+      'After year one, hosting is $9.99 a month, and only starts once the customer separately approves it; the domain renews on its own line, at whatever the registrar actually charges.',
+    ],
+    audience: 'For a business booked through an app or working from a Gmail/Linktree setup who has this exact question and has never had it answered on camera.',
+    file: '/video/fd-drop-04.mp4',
+    poster: '/video/fd-drop-04.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 19.0,
+    bytes: 12899456,
+    uploadDate: '2026-09-06',
+    sound: 'Hook and close cards are silent; the answer beat carries a Voicebox voiceover over progressive captions, AAC 48kHz stereo.',
+    transcript: null,
+    onScreen: [
+      { beat: 'Front Desk · FAQ', lines: ['What does the $199 actually include?'] },
+      { beat: 'The answer', lines: ['One website, first-year hosting, and your domain.', 'That’s the whole bundle — nothing hidden after.'] },
+      { beat: 'The close', lines: ['Read the full answer', 'The whole bundle, in writing.', 'famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/', '$199 first year: the site, hosting, and the domain. Then $9.99/mo hosting, plus domain renewal — disclosed before anything renews.'] },
+    ],
+    art: 'scopeBoundary',
+    scope: {
+      included: ['One focused landing-page website', 'One year of managed hosting', 'First-year domain — new, or connect one you already own'],
+      excluded: ['Business email', 'Maintenance'],
+    },
+    keywords: ['front desk faq', '199 website inclusions and boundaries', 'small business website questions', 'famtastic web basics'],
+    campaign: 'front-desk',
+  },
+
+  {
+    slug: 'fd-drop-05',
+    title: 'What happens after my first year of hosting?',
+    eyebrow: 'Front Desk',
+    series: 'Front Desk FAQ',
+    tagline: 'Nothing charges automatically. Nothing. Hosting renews only after you separately approve it.',
+    summary: 'A 19-second Front Desk drop: Priya answers “What happens after my first year of hosting?” in one direct take.',
+    argument: [
+      'Priya answers a question every prepaid-first-year offer eventually earns: nothing charges automatically, and nothing gets billed without explicit, separate say-so first.',
+      'At month thirteen, hosting becomes $9.99 a month for Web Basics sites — but only after the customer approves it — and the domain renews on its own line, disclosed before payment, at whatever the registrar charges.',
+    ],
+    audience: 'For a business booked through an app or working from a Gmail/Linktree setup who has this exact question and has never had it answered on camera.',
+    file: '/video/fd-drop-05.mp4',
+    poster: '/video/fd-drop-05.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 19.0,
+    bytes: 12941776,
+    uploadDate: '2026-09-06',
+    sound: 'Hook and close cards are silent; the answer beat carries a Voicebox voiceover over progressive captions, AAC 48kHz stereo.',
+    transcript: null,
+    onScreen: [
+      { beat: 'Front Desk · FAQ', lines: ['What happens after my first year of hosting?'] },
+      { beat: 'The answer', lines: ['Nothing charges automatically. Nothing.', 'Hosting renews only after you separately approve it.'] },
+      { beat: 'The close', lines: ['Read the full answer', 'Nothing renews without your say-so.', 'famtasticdesigns.com/blog/what-happens-when-first-year-hosting-ends/', 'Hosting: $9.99/mo starting month 13, only with your approval. Domain renewal billed separately, at the registrar’s cost.'] },
+    ],
+    art: null,
+    keywords: ['front desk faq', 'what happens when first year hosting ends', 'small business website questions', 'famtastic web basics'],
+    campaign: 'front-desk',
+  },
+
+  {
+    slug: 'fd-drop-06',
+    title: 'Why does “DM me for pricing” cost me bookings?',
+    eyebrow: 'Front Desk',
+    series: 'Front Desk FAQ',
+    tagline: 'Picture a shop with no price tags. Every stranger who has to ask first is a chance to lose the booking.',
+    summary: 'A 19-second Front Desk drop: Priya answers why “DM me for pricing” costs bookings, in one direct take.',
+    argument: [
+      'Priya reaches for a physical image rather than a statistic: a shop with no price tags, where everything is good and the owner knows the stock cold, but learning what anything costs means finding the owner and asking out loud in front of strangers.',
+      'Some people will do it. Most will pick it up, put it back, and leave without speaking — and a profile that says “DM for pricing” is exactly that shop.',
+    ],
+    audience: 'For a business booked through an app or working from a Gmail/Linktree setup who has this exact question and has never had it answered on camera.',
+    file: '/video/fd-drop-06.mp4',
+    poster: '/video/fd-drop-06.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 19.0,
+    bytes: 12961139,
+    uploadDate: '2026-09-06',
+    sound: 'Hook and close cards are silent; the answer beat carries a Voicebox voiceover over progressive captions, AAC 48kHz stereo.',
+    transcript: null,
+    onScreen: [
+      { beat: 'Front Desk · FAQ', lines: ['Why does “DM me for pricing” cost me bookings?'] },
+      { beat: 'The answer', lines: ['Picture a shop with no price tags.', 'Every stranger who has to ask first is a chance to lose the booking.'] },
+      { beat: 'The close', lines: ['Read the full answer', 'Answer it before they ask.', 'famtasticdesigns.com/blog/how-much-do-you-charge-dms-costs-bookings/', 'FAMtastic Web Basics: websites start at $199. Renewal terms disclosed before anything renews.'] },
+    ],
+    art: null,
+    keywords: ['front desk faq', 'how much do you charge dms costs bookings', 'small business website questions', 'famtastic web basics'],
+    campaign: 'front-desk',
+  },
+
+  {
+    slug: 'fd-drop-07',
+    title: 'What’s actually wrong with just using Linktree?',
+    eyebrow: 'Front Desk',
+    series: 'Front Desk FAQ',
+    tagline: 'Nothing, if it’s routing people somewhere. But it’s a hallway — it has nothing for them once they arrive.',
+    summary: 'A 19-second Front Desk drop: Priya answers “What’s actually wrong with just using Linktree?” in one direct take.',
+    argument: [
+      'Priya gives Linktree real credit before drawing the line: nothing is wrong with it if it is routing people somewhere — it is fast, free, and solves the one-link problem cleanly, and it is fine to keep using it if it currently works.',
+      'But it is a hallway, not a room. It moves people in the right direction and then has nothing for them once they arrive — no prices, no proof, no address that is actually theirs.',
+    ],
+    audience: 'For a business booked through an app or working from a Gmail/Linktree setup who has this exact question and has never had it answered on camera.',
+    file: '/video/fd-drop-07.mp4',
+    poster: '/video/fd-drop-07.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 19.0,
+    bytes: 12879365,
+    uploadDate: '2026-09-06',
+    sound: 'Hook and close cards are silent; the answer beat carries a Voicebox voiceover over progressive captions, AAC 48kHz stereo.',
+    transcript: null,
+    onScreen: [
+      { beat: 'Front Desk · FAQ', lines: ['What’s actually wrong with just using Linktree?'] },
+      { beat: 'The answer', lines: ['Nothing, if it’s routing people somewhere.', 'But it’s a hallway — it has nothing for them once they arrive.'] },
+      { beat: 'The close', lines: ['Read the full answer', 'A room, not a hallway.', 'famtasticdesigns.com/blog/linktree-vs-real-website-what-you-trade-away/', 'FAMtastic Web Basics: websites start at $199. Renewal terms disclosed before anything renews.'] },
+    ],
+    art: 'ownershipMarker',
+    keywords: ['front desk faq', 'linktree vs real website what you trade away', 'small business website questions', 'famtastic web basics'],
+    campaign: 'front-desk',
+  },
+
+  {
+    slug: 'fd-drop-08',
+    title: 'Why is my Gmail address costing me business?',
+    eyebrow: 'Front Desk',
+    series: 'Front Desk FAQ',
+    tagline: 'A Gmail address and a Linktree page both work. Neither one is yours — and that costs bookings.',
+    summary: 'A 19-second Front Desk drop: Priya answers “Why is my Gmail address costing me business?” in one direct take.',
+    argument: [
+      'The closing drop ties the whole campaign’s argument to the two tools almost everyone starts with: a Gmail address and a Linktree page both genuinely work, and neither one is owned by the business using it.',
+      'When someone has to message first just to ask what something costs, Priya notes, some of them will book with whoever answers first — and that has nothing to do with whose work is better.',
+    ],
+    audience: 'For a business booked through an app or working from a Gmail/Linktree setup who has this exact question and has never had it answered on camera.',
+    file: '/video/fd-drop-08.mp4',
+    poster: '/video/fd-drop-08.jpg',
+    width: 1080,
+    height: 1920,
+    durationSeconds: 19.0,
+    bytes: 12935995,
+    uploadDate: '2026-09-06',
+    sound: 'Hook and close cards are silent; the answer beat carries a Voicebox voiceover over progressive captions, AAC 48kHz stereo.',
+    transcript: null,
+    onScreen: [
+      { beat: 'Front Desk · FAQ', lines: ['Why is my Gmail address costing me business?'] },
+      { beat: 'The answer', lines: ['A Gmail address and a Linktree page both work.', 'Neither one is yours — and that costs bookings.'] },
+      { beat: 'The close', lines: ['Read the full answer', 'An address that’s actually yours.', 'famtasticdesigns.com/blog/why-running-business-on-gmail-and-linktree-costs-revenue/', 'FAMtastic Web Basics: websites start at $199. Renewal terms disclosed before anything renews.'] },
+    ],
+    art: 'ownedVsRented',
+    keywords: ['front desk faq', 'why running business on gmail and linktree costs revenue', 'small business website questions', 'famtastic web basics'],
+    campaign: 'front-desk',
+  },
 ];
 
 export const FILM_SERIES = [...new Set(FILMS.map((film) => film.series))];
@@ -717,4 +1549,101 @@ export function watchItemList() {
       name: film.title,
     })),
   };
+}
+
+/**
+ * ------------------------------------------------------------------
+ * Campaign film embeds (T7, plans/ugc-character-flood/plan.md).
+ *
+ * Each of the three successful UGC-flood campaigns gets exactly one
+ * companion blog post that embeds its own 8 films as a gallery. This
+ * mirrors BlogPostPage.jsx's pre-existing `campaignBodyHtml` precedent
+ * for the '55 Cents a Day' series (a fixed figure injected after a
+ * specific paragraph) but is written here, in the plain-data module,
+ * so BOTH consumers render byte-identical markup:
+ *   1. BlogPostPage.jsx (client) — via dangerouslySetInnerHTML.
+ *   2. scripts/generate-seo-shells.mjs (Node, build time) — via its
+ *      blog_post body path (fieldMarkup()), so the gallery is present
+ *      in the prerendered shell a crawler sees, not only after
+ *      hydration.
+ * ------------------------------------------------------------------
+ */
+export const CAMPAIGN_BLOG_SLUGS = {
+  'signal-and-static': 'own-your-signal-not-a-rented-one',
+  'whats-your-secret': 'the-secret-is-a-page-of-your-own',
+  'front-desk': 'real-answers-to-the-questions-we-actually-get',
+};
+
+const BLOG_SLUG_TO_CAMPAIGN = Object.fromEntries(
+  Object.entries(CAMPAIGN_BLOG_SLUGS).map(([campaign, slug]) => [slug, campaign]),
+);
+
+/** Which campaign (if any) a blog post slug is the companion article for. */
+export function campaignForBlogSlug(slug) {
+  return BLOG_SLUG_TO_CAMPAIGN[slug] || null;
+}
+
+/** Every film belonging to one campaign, in the order they were shot. */
+export function campaignFilms(campaignId) {
+  return FILMS.filter((film) => film.campaign === campaignId);
+}
+
+function escapeAttr(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+}
+
+/**
+ * The film-gallery `<figure>` embedded into a campaign's companion post.
+ * Pure string building (no DOM, no JSX) so it works identically from a
+ * Node build script and from React's dangerouslySetInnerHTML.
+ */
+export function campaignFilmGalleryHtml(campaignId) {
+  const films = campaignFilms(campaignId);
+  if (!films.length) return '';
+  const cards = films
+    .map(
+      (film) =>
+        `<a class="film-strip__card" href="${WATCH_BASE}/${film.slug}/">` +
+        `<img src="${film.poster}" alt="${escapeAttr(film.title)}" width="270" height="480" loading="lazy">` +
+        `<span class="film-strip__title">${escapeAttr(film.title)}</span>` +
+        `<span class="film-strip__runtime">${escapeAttr(runningTime(film.durationSeconds))}</span>` +
+        `</a>`,
+    )
+    .join('');
+  return (
+    `<figure class="article-inline-visual article-inline-visual--films">` +
+    `<div class="film-strip">${cards}</div>` +
+    `<figcaption><img src="/brand/famtastic-mark.svg" alt="" width="28" height="28">` +
+    `FAMtastic Designs — watch all ${films.length} short films made for this series at ` +
+    `<a href="${WATCH_BASE}">${WATCH_BASE}</a>.</figcaption>` +
+    `</figure>`
+  );
+}
+
+/**
+ * Insert a campaign's film gallery into a blog post's body HTML, after the
+ * second paragraph (or appended at the end for a body with fewer than two).
+ * Pure string transform — shared verbatim by BlogPostPage.jsx (client render)
+ * and scripts/generate-seo-shells.mjs (prerendered shell body), which is the
+ * whole point: a crawler and a browser must see byte-identical markup.
+ */
+export function injectCampaignFilmGallery(bodyHtml, campaignId) {
+  if (!bodyHtml) return bodyHtml || '';
+  const gallery = campaignFilmGalleryHtml(campaignId);
+  if (!gallery) return bodyHtml;
+  let paragraph = 0;
+  let injected = false;
+  const withGallery = bodyHtml.replace(/<\/p>/g, (closing) => {
+    paragraph += 1;
+    if (!injected && paragraph === 2) {
+      injected = true;
+      return closing + gallery;
+    }
+    return closing;
+  });
+  return injected ? withGallery : withGallery + gallery;
 }

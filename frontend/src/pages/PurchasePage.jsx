@@ -21,7 +21,7 @@ export default function PurchasePage() {
   const [state, setState] = useState({ loading: true, session: null, workspace: null, products: [], terms: null, error: '' });
   const [baseSku, setBaseSku] = useState('');
   const [selected, setSelected] = useState([]);
-  const [domainChoice, setDomainChoice] = useState('new_domain');
+  const [domainChoice, setDomainChoice] = useState('undecided');
   const [renewal, setRenewal] = useState(false);
   const [terms, setTerms] = useState(false);
   const [marketing, setMarketing] = useState(false);
@@ -170,6 +170,17 @@ export default function PurchasePage() {
 
       {payment.mode === 'proof_selected_website_request' && <fieldset>
         <legend>Domain setup</legend>
+        <p className="purchase-context">You can decide this after payment. Your site can enter fulfillment on the shared FAMtastic Inc. host while domain, DNS, SSL, and email are completed as an operator step.</p>
+        <label>
+          <input
+            type="radio"
+            name="domain"
+            value="undecided"
+            checked={domainChoice === 'undecided'}
+            onChange={(e) => setDomainChoice(e.target.value)}
+          />{' '}
+          Let FAMtastic confirm the domain after payment (recommended)
+        </label>
         <label>
           <input
             type="radio"
@@ -177,7 +188,6 @@ export default function PurchasePage() {
             value="new_domain"
             checked={domainChoice === 'new_domain'}
             onChange={(e) => setDomainChoice(e.target.value)}
-            required
           />{' '}
           Register a new customer-owned domain for the included first year
         </label>

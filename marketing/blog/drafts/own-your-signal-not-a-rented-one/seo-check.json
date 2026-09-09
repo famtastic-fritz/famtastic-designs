@@ -1,0 +1,55 @@
+{
+  "slug": "own-your-signal-not-a-rented-one",
+  "schema": "famtastic.blog-seo-check.v1",
+  "title": "Own Your Signal, Not a Rented One",
+  "title_length": 35,
+  "meta_description": "A Gmail address, a link-in-bio page, and a booking app's client list all work fine until the platform changes. What owning one page instead actually means.",
+  "meta_description_length": 158,
+  "h1_count": 1,
+  "question_headings": [],
+  "series": "The Small-Business Website Strategy Series",
+  "series_order": 19,
+  "internal_links": [
+    "https://famtasticdesigns.com/blog/who-owns-your-client-list-booking-app/",
+    "https://famtasticdesigns.com/blog/linktree-vs-real-website-what-you-trade-away/",
+    "https://famtasticdesigns.com/blog/199-website-inclusions-and-boundaries/",
+    "https://famtasticdesigns.com/blog/what-happens-when-first-year-hosting-ends/",
+    "https://famtasticdesigns.com/blog/proof-first-website-see-before-you-pay/",
+    "https://famtasticdesigns.com/start"
+  ],
+  "internal_link_count": 6,
+  "external_links": [],
+  "link_verification": {
+    "method": "curl -s -o /dev/null -w %{http_code} -L",
+    "verified_on": "2026-09-07",
+    "all_returned_200": true,
+    "note": "Every internal link in this draft was confirmed HTTP 200 before it was written into the body. No link points at an unpublished sibling."
+  },
+  "claims_verified_against_live_sources": true,
+  "statistics_used": false,
+  "schema_recommended": [
+    "BlogPosting",
+    "VideoObject"
+  ],
+  "geo_answer_first": true,
+  "ai_citation_ready_sections": [
+    "What a rented signal actually is",
+    "The part search engines can't see"
+  ],
+  "checks": {
+    "title_under_60": true,
+    "meta_140_160": true,
+    "single_h1": true,
+    "internal_links_gte_3": true,
+    "no_unsourced_claims": true,
+    "answers_intent_first_screen": true,
+    "links_to_packages_pages": true,
+    "renewal_terms_disclosed": true,
+    "no_named_competitor_claims": true,
+    "all_internal_links_http_200": true,
+    "no_web_prefixed_urls": true,
+    "word_count_700_1000": true
+  },
+  "pass": true,
+  "generated_at": "2026-09-07T03:36:00Z"
+}

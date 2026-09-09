@@ -8,6 +8,7 @@ import { blogSeo } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp, FAQAccordion } from '../components/v1/index.js';
 import SocialShareButtons from '../components/SocialShareButtons.jsx';
 import { heroArtFor, injectBodyArt } from '../lib/blogArt.js';
+import { campaignForBlogSlug, injectCampaignFilmGallery } from '../lib/filmLibrary.js';
 
 const CAMPAIGN_ARTICLES = [
   'professional-website-55-cents-a-day', 'what-is-a-domain-name', 'what-is-website-hosting',
@@ -46,12 +47,18 @@ function campaignBodyHtml(post) {
  *
  * A campaign post keeps its curated raster figures and never reaches the
  * generated-art engine — the early return guarantees byte-identical output for
- * that series. Every other post goes through the content-aware SVG placement in
+ * that series. A UGC-flood companion post (T7, plans/ugc-character-flood/
+ * plan.md) embeds that campaign's own film gallery instead, via the SAME
+ * `injectCampaignFilmGallery` string transform scripts/generate-seo-shells.mjs
+ * uses for the prerendered shell — so a crawler and a browser see identical
+ * markup. Every other post goes through the content-aware SVG placement in
  * lib/blogArt.js, which itself no-ops on posts too short to carry art.
  */
 function articleBodyHtml(post) {
   if (!post?.bodyHtml) return '';
   if (post.series?.includes('55 Cents a Day')) return campaignBodyHtml(post);
+  const filmCampaign = campaignForBlogSlug(post.slug);
+  if (filmCampaign) return injectCampaignFilmGallery(post.bodyHtml, filmCampaign);
   return injectBodyArt(post.bodyHtml, post);
 }
 
