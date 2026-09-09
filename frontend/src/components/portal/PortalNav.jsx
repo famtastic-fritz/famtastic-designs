@@ -11,6 +11,14 @@ export default function PortalNav({
   openThreadsCount,
   onSignOut,
 }) {
+  const mobileItems = [
+    ['home', 'Home', '⌂'],
+    ['projects', 'Projects', '▦'],
+    ['messages', 'Messages', '✉'],
+    ['billing', 'Billing', '$'],
+    ['account', 'Account', '○'],
+  ];
+
   return (
     <>
       <button
@@ -89,6 +97,24 @@ export default function PortalNav({
           Sign out
         </button>
       </aside>
+
+      <nav className="portal-mobile-nav" aria-label="Primary customer navigation">
+        {mobileItems.map(([id, label, icon]) => (
+          <button
+            key={id}
+            type="button"
+            aria-current={section === id ? 'page' : undefined}
+            className={section === id ? 'active' : ''}
+            onClick={() => go(id)}
+          >
+            <span aria-hidden="true">{icon}</span>
+            <small>{label}</small>
+            {id === 'messages' && openThreadsCount > 0 && (
+              <b aria-label={`${openThreadsCount} open messages`}>{openThreadsCount}</b>
+            )}
+          </button>
+        ))}
+      </nav>
     </>
   );
 }

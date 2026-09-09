@@ -2019,3 +2019,13 @@ Permanent rules:
 - A Commerce completion must leave a durable, idempotent ledger fact linking
   payment, order, project, request, and fulfillment stage. The fact must state
   when an external deploy has *not* happened; status copy is not evidence.
+# 2026-09-09 — Customer portal thumb-zone navigation
+
+- Observation: the customer portal already had a complete durable-record
+  workspace, but mobile navigation was hidden behind a drawer and the first
+  home-screen action was a broad studio hero. This made the next customer
+  decision less immediate on a phone.
+- Guidance: keep the full sidebar/drawer for secondary destinations, add a
+  persistent five-item mobile rail for the most common customer tasks, and put
+  one real record-derived next-action card before explanatory content. Do not
+  substitute fixture counts or optimistic fulfillment claims.

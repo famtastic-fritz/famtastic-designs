@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-09 — Customer portal mobile command center
+
+- Added a persistent five-destination mobile navigation bar for Home, Projects,
+  Messages, Billing, and Account while retaining the full desktop sidebar and
+  drawer navigation for the remaining workspace areas.
+- Added a record-derived next-decision card to Portal Home. Proof-ready
+  requests surface their real concept count and project name; otherwise the
+  card uses the existing durable workspace next-action state without inventing
+  progress or analytics.
+
 ## 2026-09-09 — Payment is the customer gate; domain remains operator work
 
 - The account-owned website checkout now accepts `undecided` for domain setup.

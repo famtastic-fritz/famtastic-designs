@@ -15,6 +15,12 @@ export default function PortalHomeView({
   const requests = workspace.website_requests || [];
   const openThreads = workspace.threads.filter((thread) => thread.status === 'open').length;
   const attentionRequest = requests.find((request) => request.proof_handoff?.state === 'needs_attention');
+  const readyProof = requests.find(
+    (request) =>
+      !request.customer_archived &&
+      ['customer_ready', 'notified'].includes(request.proof_review_status) &&
+      [3, 6].includes(request.proofs?.variants?.length)
+  );
   const fulfillment = derivePortalFulfillmentState(workspace);
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
@@ -40,6 +46,27 @@ export default function PortalHomeView({
 
   return (
     <>
+      <section className="portal-next-action" aria-labelledby="portal-next-action-title">
+        <div>
+          <span className="portal-eyebrow">Your next decision</span>
+          <h2 id="portal-next-action-title">
+            {readyProof
+              ? `${readyProof.proofs.variants.length} website concepts are ready to review`
+              : nextAction}
+          </h2>
+          <p>
+            {readyProof
+              ? `${readyProof.project_name || 'Your website project'} has an owner-approved set ready in Projects.`
+              : order
+              ? 'Your workspace keeps the next decision visible until the project can move forward.'
+              : 'Start with a guided brief. Your saved answers become the project record.'}
+          </p>
+        </div>
+        <button type="button" onClick={() => go('projects')}>
+          {readyProof ? 'Review concepts' : 'Open Projects'}
+        </button>
+      </section>
+
       <section className="portal-home-intro">
         <section className="portal-ai-hero">
           <div className="portal-ai-hero__content">
