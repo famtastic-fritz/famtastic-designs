@@ -2029,3 +2029,17 @@ Permanent rules:
   persistent five-item mobile rail for the most common customer tasks, and put
   one real record-derived next-action card before explanatory content. Do not
   substitute fixture counts or optimistic fulfillment claims.
+
+## 2026-09-09 — A branded Drupal admin system must target primitives, not a route inventory
+
+- Observation: the staff controllers already exposed real, permission-gated
+  Drupal routes and durable-record render arrays, but their `famtastic-*`
+  classes had no corresponding visual system. Styling only those pages would
+  make the next content type, configuration form, View, or standards-compliant
+  module regress into an unrelated admin interface.
+- Guidance: keep Claro as the stable behavior base, own FAMtastic tokens and
+  an admin-route shell in the custom theme, and style native Drupal primitives
+  globally (forms, tables, messages, details, tasks, pagers, Views, and entity
+  surfaces). Document a narrow Twig/class override path for proprietary markup
+  rather than claiming universal compatibility. Validate the theme contract
+  with a representative future-module fixture before calling the work ready.

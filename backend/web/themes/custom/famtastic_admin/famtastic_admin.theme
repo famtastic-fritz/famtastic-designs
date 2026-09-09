@@ -22,6 +22,71 @@ declare(strict_types=1);
  */
 function famtastic_admin_preprocess_page(array &$variables): void {
   $variables['#attached']['library'][] = 'famtastic_admin/global-styling';
+
+  $route = \Drupal::routeMatch()->getRouteObject();
+  if (!$route || !$route->getOption('_admin_route')) {
+    return;
+  }
+
+  // Keep the navigation native: these are existing, permission-protected
+  // Drupal routes, not JavaScript destinations or implied operational actions.
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if (!str_starts_with($route_name, 'famtastic_pipeline.')) {
+    return;
+  }
+  $links = [
+    'operations' => ['Operations', 'famtastic_pipeline.operations'],
+    'attention' => ['Attention', 'famtastic_pipeline.operations_attention'],
+    'campaigns' => ['Campaigns', 'famtastic_pipeline.campaign_operations'],
+    'marketing' => ['Marketing', 'famtastic_pipeline.marketing'],
+    'analytics' => ['Analytics', 'famtastic_pipeline.analytics'],
+    'settings' => ['Settings', 'famtastic_pipeline.settings'],
+  ];
+  $items = [];
+  foreach ($links as $key => [$label, $destination]) {
+    $items[$key] = [
+      '#type' => 'link',
+      '#title' => $label,
+      '#url' => \Drupal\Core\Url::fromRoute($destination),
+      '#attributes' => [
+        'class' => ['famtastic-admin-nav__link'],
+        'aria-current' => $route_name === $destination ? 'page' : NULL,
+      ],
+    ];
+  }
+  $variables['famtastic_admin_navigation'] = [
+    '#type' => 'container',
+    '#attributes' => ['class' => ['famtastic-admin-nav'], 'aria-label' => 'FAMtastic staff navigation'],
+  ] + $items;
+}
+
+/**
+ * Implements hook_preprocess_html().
+ *
+ * Applies an explicit shell class to all standard Drupal administration
+ * routes. This is deliberately route-metadata based, so future native admin
+ * forms, lists, and configuration pages inherit the system without a route
+ * allowlist.
+ */
+function famtastic_admin_preprocess_html(array &$variables): void {
+  $route = \Drupal::routeMatch()->getRouteObject();
+  if ($route && $route->getOption('_admin_route')) {
+    $variables['attributes']['class'][] = 'famtastic-admin-shell';
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_page_alter().
+ *
+ * The shell template preserves standard Drupal regions and render primitives;
+ * it is selected for all native administration routes, including future
+ * standards-compliant modules.
+ */
+function famtastic_admin_theme_suggestions_page_alter(array &$suggestions, array $variables): void {
+  $route = \Drupal::routeMatch()->getRouteObject();
+  if ($route && $route->getOption('_admin_route')) {
+    $suggestions[] = 'page__famtastic_admin';
+  }
 }
 
 /*

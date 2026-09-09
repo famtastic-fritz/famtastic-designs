@@ -1347,3 +1347,550 @@ body .page-content .admin-item__link::before {
     min-height: 44px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * 19. Staff command center
+ *
+ * The operational pages are deliberately native Drupal render arrays, rather
+ * than a parallel dashboard application.  This layer gives every depth of the
+ * staff journey (hub -> queue -> record -> decision form) one compact,
+ * keyboard-safe visual language while retaining the existing route, access,
+ * CSRF, and form behaviour.
+ * ------------------------------------------------------------------------ */
+
+:root {
+  --fam-ops-bg: #070907;
+  --fam-ops-panel: linear-gradient(160deg, rgba(20, 24, 20, .92), rgba(16, 19, 16, .82));
+  --fam-ops-line: #252b25;
+  --fam-ops-ink: #e9efe7;
+  --fam-ops-muted: #aab5a7;
+  --fam-ops-dim: #758174;
+  --fam-ops-amber: #ffb020;
+  --fam-ops-red: #ff5f57;
+  --fam-ops-blue: #5aa9ff;
+  --fam-ops-radius: 19px;
+}
+
+body.path-admin,
+body.path-user {
+  background:
+    radial-gradient(150% 70% at 50% -12%, #10160f 0%, rgba(16, 22, 15, 0) 46%),
+    var(--fam-ops-bg);
+  color: var(--fam-ops-ink);
+  overflow-x: clip;
+}
+
+body.path-admin .layout-container,
+body.path-user .layout-container {
+  max-width: 1440px;
+  padding-inline: clamp(1rem, 3vw, 2rem);
+}
+
+body.path-admin .page-title,
+body.path-user .page-title {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  overflow-wrap: anywhere;
+}
+
+body.path-admin .page-content,
+body.path-user .page-content {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+/* Shared staff action and recovery controls.  Keep native inputs/buttons so
+ * Drupal's validation, token handling, and permission gates remain intact. */
+body.path-admin input:not([type="checkbox"]):not([type="radio"]),
+body.path-admin select,
+body.path-admin textarea,
+body.path-user input:not([type="checkbox"]):not([type="radio"]),
+body.path-user select,
+body.path-user textarea {
+  min-height: 44px;
+  max-width: 100%;
+  color: var(--fam-ops-ink);
+  background: #101310;
+  border: 1px solid var(--fam-ops-line);
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+body.path-admin textarea,
+body.path-user textarea { min-height: 9rem; padding: .75rem; }
+
+body.path-admin input::placeholder,
+body.path-user input::placeholder { color: var(--fam-ops-dim); }
+
+body.path-admin .form-item,
+body.path-user .form-item { max-width: 56rem; margin-block: 1rem; }
+
+body.path-admin .form-item label,
+body.path-user .form-item label {
+  color: var(--fam-ops-ink);
+  font-size: .875rem;
+  font-weight: 700;
+}
+
+body.path-admin .form-item .description,
+body.path-user .form-item .description {
+  color: var(--fam-ops-muted);
+  line-height: 1.5;
+}
+
+body.path-admin .form-actions,
+body.path-user .form-actions,
+.famtastic-ops__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  align-items: center;
+  margin-block: 1.25rem;
+}
+
+body.path-admin .button,
+body.path-admin .action-link,
+body.path-user .button,
+body.path-user .action-link,
+.famtastic-ops__actions a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+body.path-admin .button--primary,
+body.path-user .button--primary {
+  box-shadow: 0 0 24px rgba(124, 252, 0, .22);
+}
+
+body.path-admin :focus-visible,
+body.path-user :focus-visible,
+.famtastic-ops :focus-visible {
+  outline: 3px solid var(--fam-lime);
+  outline-offset: 3px;
+}
+
+/* Login, password recovery, and reset remain recognisably Drupal forms but
+ * get a calm, single-column recovery surface on the same staff theme. */
+body.path-user .user-login-form,
+body.path-user .user-pass,
+body.path-user .user-pass-reset {
+  max-width: 34rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  margin: clamp(1rem, 7vh, 4rem) auto;
+  background: var(--fam-ops-panel);
+  border: 1px solid var(--fam-ops-line);
+  border-radius: var(--fam-ops-radius);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .28);
+}
+
+body.path-user .user-login-form::before,
+body.path-user .user-pass::before,
+body.path-user .user-pass-reset::before {
+  content: 'FAMtastic Designs · staff access';
+  display: block;
+  margin-bottom: 1.25rem;
+  color: var(--fam-ops-dim);
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.famtastic-ops {
+  max-width: 1260px;
+  margin: 0 auto;
+  color: var(--fam-ops-ink);
+}
+
+.famtastic-ops > * + * { margin-top: 1.25rem; }
+
+.famtastic-hub__hero,
+.famtastic-command__hero,
+.famtastic-triage__hero,
+.famtastic-conversation__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: end;
+  padding: clamp(1.3rem, 4vw, 2.4rem);
+  background: var(--fam-ops-panel);
+  border: 1px solid var(--fam-ops-line);
+  border-radius: var(--fam-ops-radius);
+}
+
+.famtastic-hub__hero > span,
+.famtastic-command__hero > div > span,
+.famtastic-triage__hero > span,
+.famtastic-conversation__hero > span,
+.famtastic-command__section-heading > div > span,
+.famtastic-triage__eyebrow {
+  display: block;
+  color: var(--fam-ops-dim);
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.famtastic-hub__hero h2,
+.famtastic-command__hero h2,
+.famtastic-triage__hero h2,
+.famtastic-conversation__hero h2 {
+  max-width: 22ch;
+  margin: .45rem 0;
+  font-size: clamp(1.65rem, 4vw, 2.6rem);
+  line-height: 1.04;
+  letter-spacing: -.03em;
+}
+
+.famtastic-hub__hero p,
+.famtastic-command__hero p,
+.famtastic-triage__hero p,
+.famtastic-conversation__hero p,
+.famtastic-ops__lede {
+  max-width: 66ch;
+  color: var(--fam-ops-muted);
+  line-height: 1.6;
+}
+
+.famtastic-command__hero-status {
+  max-width: 16rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 176, 32, .35);
+  border-radius: 14px;
+  background: rgba(255, 176, 32, .06);
+}
+.famtastic-command__hero-status b,
+.famtastic-command__hero-status small { display: block; color: var(--fam-ops-muted); }
+.famtastic-command__hero-status strong { display: block; margin: .3rem 0; color: var(--fam-ops-amber); font-size: .78rem; letter-spacing: .06em; }
+
+.famtastic-hub__heading,
+.famtastic-conversation__heading { margin: 1.75rem 0 .75rem; font-size: 1.25rem; }
+
+.famtastic-hub__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: .8rem;
+}
+
+.famtastic-hub__card,
+.famtastic-ops__metric,
+.famtastic-triage__card {
+  display: block;
+  min-width: 0;
+  padding: 1rem;
+  color: var(--fam-ops-ink);
+  background: var(--fam-ops-panel);
+  border: 1px solid var(--fam-ops-line);
+  border-radius: var(--fam-ops-radius);
+  text-decoration: none;
+  transition: border-color .15s ease, transform .15s ease, background .15s ease;
+}
+
+.famtastic-hub__card:hover,
+.famtastic-hub__card:focus-visible,
+.famtastic-ops__metric--link:hover,
+.famtastic-ops__metric--link:focus-visible,
+.famtastic-triage__card:hover,
+.famtastic-triage__card:focus-visible {
+  color: var(--fam-ops-ink);
+  border-color: #485648;
+  background: linear-gradient(160deg, rgba(27, 33, 27, .96), rgba(16, 19, 16, .9));
+  transform: translateY(-2px);
+}
+
+.famtastic-hub__copy { display: grid; gap: .35rem; }
+.famtastic-hub__copy strong,
+.famtastic-triage__card strong { font-size: 1rem; }
+.famtastic-hub__copy em { color: var(--fam-lime); font-size: .78rem; font-style: normal; font-weight: 750; }
+.famtastic-hub__copy span,
+.famtastic-triage__context,
+.famtastic-triage__meta { color: var(--fam-ops-muted); font-size: .82rem; line-height: 1.45; }
+.famtastic-hub__copy b,
+.famtastic-triage__card b { margin-top: .3rem; color: var(--fam-lime); font-size: .8rem; }
+.famtastic-hub__icon { display: none; }
+
+.famtastic-hub__attention,
+.famtastic-ops__attention-banner {
+  display: grid;
+  gap: .35rem;
+  padding: 1rem 1.1rem;
+  color: var(--fam-ops-ink);
+  background: rgba(255, 176, 32, .07);
+  border: 1px solid rgba(255, 176, 32, .38);
+  border-radius: 15px;
+  text-decoration: none;
+}
+.famtastic-hub__attention:hover,
+.famtastic-hub__attention:focus-visible { color: var(--fam-ops-ink); border-color: var(--fam-ops-amber); }
+.famtastic-hub__attention-kicker,
+.famtastic-ops__attention-banner strong { color: var(--fam-ops-amber); font-size: .68rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+.famtastic-hub__attention span,
+.famtastic-ops__attention-banner span { color: var(--fam-ops-muted); font-size: .85rem; }
+.famtastic-hub__attention b,
+.famtastic-ops__attention-banner a { color: var(--fam-lime); font-size: .82rem; }
+.famtastic-hub__attention--clear { border-color: rgba(124, 252, 0, .28); background: rgba(124, 252, 0, .05); }
+
+.famtastic-ops__metrics,
+.famtastic-command__pulse {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: .75rem;
+}
+
+.famtastic-ops__metric { display: grid; min-height: 8.5rem; align-content: start; gap: .3rem; }
+.famtastic-ops__metric strong,
+.famtastic-command__pulse-card strong { color: var(--fam-ops-ink); font-size: clamp(1.55rem, 3vw, 2rem); font-variant-numeric: tabular-nums; letter-spacing: -.04em; }
+.famtastic-ops__metric > span:not(.famtastic-ops__metric-action),
+.famtastic-command__pulse-card > span { color: var(--fam-ops-muted); font-size: .8rem; font-weight: 700; }
+.famtastic-ops__metric-action { margin-top: auto; color: var(--fam-lime); font-size: .76rem; font-weight: 750; }
+
+.famtastic-command__pulse-card {
+  min-width: 0;
+  padding: 1rem;
+  background: var(--fam-ops-panel);
+  border: 1px solid var(--fam-ops-line);
+  border-radius: var(--fam-ops-radius);
+}
+.famtastic-command__pulse-card p { margin: .45rem 0 0; color: var(--fam-ops-muted); font-size: .77rem; line-height: 1.45; }
+.famtastic-command__pulse-card--attention strong { color: var(--fam-ops-amber); }
+.famtastic-command__pulse-card--danger strong { color: var(--fam-ops-red); }
+.famtastic-command__pulse-card--good strong { color: var(--fam-lime); }
+
+.famtastic-command__section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-top: 2rem; }
+.famtastic-command__section-heading h2 { margin: .28rem 0 0; font-size: 1.3rem; }
+.famtastic-command__section-heading p { margin: 0; color: var(--fam-ops-muted); font-size: .82rem; }
+
+.famtastic-command__attention-list,
+.famtastic-triage__list,
+.famtastic-conversation__messages { display: grid; gap: .75rem; }
+.famtastic-command__attention-item,
+.famtastic-conversation__message,
+.famtastic-conversation__context {
+  padding: 1rem;
+  background: var(--fam-ops-panel);
+  border: 1px solid var(--fam-ops-line);
+  border-radius: var(--fam-ops-radius);
+}
+.famtastic-command__attention-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.famtastic-command__attention-item > div { display: flex; min-width: 0; gap: .75rem; }
+.famtastic-command__attention-item > div > span { display: grid; flex: 0 0 1.65rem; place-items: center; width: 1.65rem; height: 1.65rem; color: var(--fam-ops-red); border: 1px solid rgba(255, 95, 87, .35); border-radius: 50%; }
+.famtastic-command__attention-item p { margin: .22rem 0 0; color: var(--fam-ops-muted); font-size: .84rem; line-height: 1.45; }
+.famtastic-command__attention-action { color: var(--fam-lime); font-size: .84rem; font-weight: 750; white-space: nowrap; }
+
+.famtastic-triage__card { display: grid; gap: .35rem; }
+.famtastic-triage__card a { color: var(--fam-lime); font-size: .82rem; font-weight: 750; }
+.famtastic-triage__meta { font-size: .74rem; }
+.famtastic-triage__unmatched { color: var(--fam-ops-amber); font-size: .8rem; }
+
+.famtastic-conversation__message > div { display: flex; justify-content: space-between; gap: 1rem; }
+.famtastic-conversation__message time { color: var(--fam-ops-dim); font-size: .76rem; }
+.famtastic-conversation__message p { margin: .6rem 0 0; color: var(--fam-ops-muted); line-height: 1.55; overflow-wrap: anywhere; }
+.famtastic-conversation__context { color: var(--fam-ops-muted); }
+
+.famtastic-ops__table-scroll { overflow-x: auto; max-width: 100%; border: 1px solid var(--fam-ops-line); border-radius: var(--fam-ops-radius); background: #0d100d; }
+.famtastic-ops__table { width: 100%; margin: 0; border-collapse: collapse; }
+.famtastic-ops__table th { color: var(--fam-ops-dim); background: #111511; font-size: .68rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.famtastic-ops__table th,
+.famtastic-ops__table td { padding: .85rem .9rem; border: 0; border-bottom: 1px solid var(--fam-ops-line); color: var(--fam-ops-ink); vertical-align: top; overflow-wrap: anywhere; }
+.famtastic-ops__table tbody tr:last-child td { border-bottom: 0; }
+.famtastic-ops__table tbody tr:hover { background: rgba(124, 252, 0, .035); }
+
+.famtastic-ops__badge { display: inline-flex; align-items: center; min-height: 1.55rem; padding: .15rem .5rem; color: var(--fam-ops-muted); border: 1px solid var(--fam-ops-line); border-radius: 999px; font-size: .65rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.famtastic-ops__badge--good,
+.famtastic-ops__badge--approved,
+.famtastic-ops__badge--ready { color: var(--fam-lime); border-color: rgba(124, 252, 0, .4); background: rgba(124, 252, 0, .08); }
+.famtastic-ops__badge--partial,
+.famtastic-ops__badge--pending,
+.famtastic-ops__badge--queued { color: var(--fam-ops-amber); border-color: rgba(255, 176, 32, .4); background: rgba(255, 176, 32, .08); }
+.famtastic-ops__badge--off,
+.famtastic-ops__badge--failed,
+.famtastic-ops__badge--error { color: var(--fam-ops-red); border-color: rgba(255, 95, 87, .4); background: rgba(255, 95, 87, .08); }
+
+.famtastic-command__calendar { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: .75rem; }
+.famtastic-command__calendar-day article { display: grid; grid-template-columns: auto 1fr; gap: .85rem; height: 100%; padding: 1rem; background: var(--fam-ops-panel); border: 1px solid var(--fam-ops-line); border-radius: var(--fam-ops-radius); }
+.famtastic-command__calendar-day h3 { margin: .3rem 0; font-size: .96rem; }
+.famtastic-command__calendar-day p { margin: 0; color: var(--fam-ops-muted); font-size: .78rem; line-height: 1.5; }
+.famtastic-command__calendar-day em { grid-column: 2; color: var(--fam-lime); font-size: .78rem; font-style: normal; font-weight: 750; }
+.famtastic-command__day { min-width: 2.6rem; text-align: center; }
+.famtastic-command__day span { display: block; color: var(--fam-ops-dim); font-size: .58rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.famtastic-command__day strong { color: var(--fam-lime); font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+.famtastic-command__calendar-day.is-unknown article { border-style: dashed; }
+.famtastic-ops__empty { padding: 1rem; color: var(--fam-ops-muted); background: var(--fam-ops-panel); border: 1px dashed var(--fam-ops-line); border-radius: var(--fam-ops-radius); }
+
+@media (max-width: 782px) {
+  body.path-admin .layout-container,
+  body.path-user .layout-container { padding-inline: 1rem; }
+  .famtastic-hub__hero,
+  .famtastic-command__hero,
+  .famtastic-triage__hero,
+  .famtastic-conversation__hero { grid-template-columns: 1fr; padding: 1.2rem; }
+  .famtastic-command__hero-status { max-width: none; }
+  .famtastic-command__section-heading { align-items: start; flex-direction: column; }
+  .famtastic-command__attention-item { align-items: start; flex-direction: column; }
+  .famtastic-ops__table-scroll { border-radius: 14px; }
+  .famtastic-ops__table { min-width: 42rem; }
+  .famtastic-ops__table th,
+  .famtastic-ops__table td { padding: .75rem; }
+  .famtastic-ops__table th:first-child,
+  .famtastic-ops__table td:first-child { position: sticky; left: 0; z-index: 1; background: #101310; box-shadow: 1px 0 var(--fam-ops-line); }
+  body.path-admin .form-actions,
+  body.path-user .form-actions,
+  .famtastic-ops__actions { display: grid; grid-template-columns: 1fr; }
+  body.path-admin .form-actions .button,
+  body.path-user .form-actions .button,
+  .famtastic-ops__actions a { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* Generic native-administration shell and primitives. These selectors are
+ * intentionally Drupal-oriented rather than module-oriented: an ordinary
+ * future content type, View, configuration form, or standards-compliant
+ * contrib module inherits this layer without a route-specific patch. */
+.famtastic-admin-shell__frame { min-height: 100vh; }
+.famtastic-admin-shell__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 4.25rem;
+  padding: .65rem clamp(1rem, 3vw, 2rem);
+  background: rgba(10, 13, 10, .94);
+  border-bottom: 1px solid var(--fam-ops-line);
+}
+.famtastic-admin-shell__brand { display: grid; flex: 0 0 auto; gap: .08rem; }
+.famtastic-admin-shell__brand a { color: var(--fam-ops-ink); font-size: 1rem; font-weight: 850; letter-spacing: -.02em; text-decoration: none; }
+.famtastic-admin-shell__brand a::first-letter { color: var(--fam-lime); }
+.famtastic-admin-shell__brand span { color: var(--fam-ops-dim); font-size: .62rem; font-weight: 750; letter-spacing: .11em; text-transform: uppercase; }
+.famtastic-admin-nav { display: flex; flex: 1 1 auto; gap: .25rem; overflow-x: auto; scrollbar-width: none; }
+.famtastic-admin-nav__link { display: inline-flex; align-items: center; min-height: 38px; padding: 0 .7rem; color: var(--fam-ops-muted); border-radius: 10px; font-size: .8rem; font-weight: 750; text-decoration: none; white-space: nowrap; }
+.famtastic-admin-nav__link:hover,
+.famtastic-admin-nav__link:focus-visible { color: var(--fam-lime); background: rgba(124, 252, 0, .08); }
+.famtastic-admin-nav__link[aria-current="page"] { color: var(--fam-lime); background: rgba(124, 252, 0, .1); box-shadow: inset 0 -2px 0 var(--fam-lime); }
+.famtastic-admin-shell__body { max-width: 1440px; margin: 0 auto; padding: 1.25rem clamp(1rem, 3vw, 2rem) 3rem; }
+.famtastic-admin-shell__breadcrumb { margin-bottom: .75rem; }
+.famtastic-admin-shell__main { min-width: 0; }
+.famtastic-admin-shell__main > .page-title { margin: .4rem 0 1.25rem; }
+.famtastic-admin-shell__sidebar { margin-top: 1rem; }
+
+body.path-admin .messages,
+body.path-user .messages,
+body.path-admin [role="alert"],
+body.path-user [role="alert"] {
+  max-width: 70rem;
+  padding: .9rem 1rem;
+  color: var(--fam-ops-ink);
+  background: rgba(90, 169, 255, .08);
+  border: 1px solid rgba(90, 169, 255, .4);
+  border-radius: 14px;
+  box-shadow: none;
+}
+body.path-admin .messages--error,
+body.path-user .messages--error { background: rgba(255, 95, 87, .08); border-color: rgba(255, 95, 87, .45); }
+body.path-admin .messages--warning,
+body.path-user .messages--warning { background: rgba(255, 176, 32, .08); border-color: rgba(255, 176, 32, .45); }
+body.path-admin .messages--status,
+body.path-user .messages--status { background: rgba(124, 252, 0, .06); border-color: rgba(124, 252, 0, .35); }
+
+body.path-admin .tabs,
+body.path-user .tabs,
+body.path-admin .local-tasks,
+body.path-user .local-tasks {
+  display: flex;
+  gap: .4rem;
+  max-width: 100%;
+  margin: 0 0 1rem;
+  padding: .35rem;
+  overflow-x: auto;
+  background: #101310;
+  border: 1px solid var(--fam-ops-line);
+  border-radius: 14px;
+  list-style: none;
+}
+body.path-admin .tabs__tab,
+body.path-user .tabs__tab { margin: 0; }
+body.path-admin .tabs__link,
+body.path-user .tabs__link,
+body.path-admin .local-tasks a,
+body.path-user .local-tasks a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 .8rem;
+  color: var(--fam-ops-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: .82rem;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+}
+body.path-admin .tabs__tab.is-active .tabs__link,
+body.path-user .tabs__tab.is-active .tabs__link,
+body.path-admin .tabs__link[aria-current="page"],
+body.path-user .tabs__link[aria-current="page"] { color: var(--fam-lime); background: rgba(124, 252, 0, .08); border-color: rgba(124, 252, 0, .28); box-shadow: inset 0 -2px 0 var(--fam-lime); }
+
+body.path-admin details,
+body.path-user details,
+body.path-admin .claro-details,
+body.path-user .claro-details,
+body.path-admin fieldset,
+body.path-user fieldset {
+  max-width: 70rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--fam-ops-panel);
+  border: 1px solid var(--fam-ops-line);
+  border-radius: 15px;
+}
+body.path-admin summary,
+body.path-user summary { min-height: 32px; color: var(--fam-ops-ink); cursor: pointer; font-weight: 800; }
+body.path-admin details > *:not(summary),
+body.path-user details > *:not(summary) { color: var(--fam-ops-muted); line-height: 1.55; }
+body.path-admin legend,
+body.path-user legend { padding: 0 .35rem; color: var(--fam-ops-ink); font-size: .9rem; font-weight: 800; }
+
+body.path-admin .action-links,
+body.path-user .action-links { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; padding: 0; list-style: none; }
+body.path-admin .action-links a,
+body.path-user .action-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .9rem; color: #0a1403; background: var(--fam-lime); border: 1px solid var(--fam-lime); border-radius: 13px; font-weight: 800; text-decoration: none; }
+
+body.path-admin .pager,
+body.path-user .pager { margin: 1.25rem 0; }
+body.path-admin .pager__items,
+body.path-user .pager__items { display: flex; flex-wrap: wrap; gap: .35rem; padding: 0; list-style: none; }
+body.path-admin .pager__item a,
+body.path-user .pager__item a { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: .35rem .6rem; color: var(--fam-ops-muted); background: #101310; border: 1px solid var(--fam-ops-line); border-radius: 11px; font-weight: 750; text-decoration: none; }
+body.path-admin .pager__item.is-active a,
+body.path-user .pager__item.is-active a { color: #0a1403; background: var(--fam-lime); border-color: var(--fam-lime); }
+
+body.path-admin .views-exposed-form,
+body.path-user .views-exposed-form { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem 1rem; max-width: 70rem; padding: 1rem; background: var(--fam-ops-panel); border: 1px solid var(--fam-ops-line); border-radius: var(--fam-ops-radius); }
+body.path-admin .views-exposed-form .form-item,
+body.path-user .views-exposed-form .form-item { flex: 1 1 13rem; margin: 0; }
+body.path-admin .views-exposed-form .form-actions,
+body.path-user .views-exposed-form .form-actions { margin: 0; }
+
+@media (max-width: 782px) {
+  .famtastic-admin-shell__header { align-items: stretch; flex-wrap: wrap; padding: .75rem 1rem; }
+  .famtastic-admin-shell__brand { width: 100%; }
+  .famtastic-admin-nav { order: 3; width: 100%; }
+  .famtastic-admin-shell__body { padding: 1rem 1rem 2.5rem; }
+  body.path-admin .tabs__link,
+  body.path-user .tabs__link,
+  body.path-admin .local-tasks a,
+  body.path-user .local-tasks a { min-height: 44px; }
+  body.path-admin .views-exposed-form,
+  body.path-user .views-exposed-form { display: grid; grid-template-columns: 1fr; }
+}

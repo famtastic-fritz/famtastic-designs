@@ -1,0 +1,43 @@
+{#
+/**
+ * @file
+ * FAMtastic shell for native Drupal administration routes.
+ *
+ * This retains Drupal's regular regions, messages, title-prefix/suffix, and
+ * content render array. Modules therefore keep their access checks, forms,
+ * CSRF tokens, local tasks, and structured output while inheriting the visual
+ * shell through the theme's global primitive styles.
+ */
+#}
+<div class="famtastic-admin-shell__frame">
+  <header class="famtastic-admin-shell__header" role="banner">
+    <div class="famtastic-admin-shell__brand">
+      <a href="{{ path('famtastic_pipeline.operations') }}">FAMtastic</a>
+      <span>Internal staff workspace</span>
+    </div>
+    {% if famtastic_admin_navigation %}
+      {{ famtastic_admin_navigation }}
+    {% endif %}
+    {{ page.header }}
+  </header>
+
+  <div class="famtastic-admin-shell__body">
+    {% if page.breadcrumb %}
+      <nav class="famtastic-admin-shell__breadcrumb" aria-label="Breadcrumb">{{ page.breadcrumb }}</nav>
+    {% endif %}
+    {{ page.highlighted }}
+    {{ page.help }}
+    <main class="famtastic-admin-shell__main" role="main">
+      <a id="main-content" tabindex="-1"></a>
+      {{ title_prefix }}
+      {% if title %}
+        <h1 class="page-title">{{ title }}</h1>
+      {% endif %}
+      {{ title_suffix }}
+      {{ page.content }}
+    </main>
+    {% if page.sidebar_first %}
+      <aside class="famtastic-admin-shell__sidebar" role="complementary">{{ page.sidebar_first }}</aside>
+    {% endif %}
+  </div>
+</div>

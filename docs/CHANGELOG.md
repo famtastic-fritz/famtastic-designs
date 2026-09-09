@@ -10,6 +10,23 @@
   card uses the existing durable workspace next-action state without inventing
   progress or analytics.
 
+## 2026-09-09 — Reusable FAMtastic Drupal administration system
+
+- Rebuilt the native Drupal administration presentation as the reusable
+  `famtastic_admin` theme system: dark/lime tokens, an accessible staff shell,
+  route-backed staff navigation, mobile-first command-center layouts, and
+  semantic status/recovery states now cover the existing operations hub,
+  queues, records, campaign surfaces, and decision forms without introducing
+  mock actions or new operational authority.
+- Extended the theme globally across standard Drupal primitives—forms,
+  fieldsets/details, validation messages, local tasks/tabs, action links,
+  pagers, Views filters/tables, and entity administration surfaces—so future
+  standards-compliant modules inherit the system. The theme README documents
+  the honest boundary and Twig/component override path for proprietary markup.
+- Added a representative future-module primitive fixture and a no-dependency
+  theme contract validator. This is local source and presentation validation;
+  it is not staging or production evidence.
+
 ## 2026-09-09 — Payment is the customer gate; domain remains operator work
 
 - The account-owned website checkout now accepts `undecided` for domain setup.
