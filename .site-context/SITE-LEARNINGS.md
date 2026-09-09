@@ -2062,6 +2062,10 @@ Permanent rules:
   and restore keyboard focus when they close.
 
 - Proof selection is now a durable staging transition: selected artifact identity, project, packet, and job are linked before checkout; payment must reuse the same project.
+- The Site Studio Next acceptance route is hermetically proven, but Drupal must
+  not dispatch customer-derived packets to an unapproved configured
+  destination; the worker reports unavailable and preserves retry evidence
+  until that boundary is explicitly authorized.
 
 ## 2026-09-09 — A visible action needs a source-level contract before browser QA
 

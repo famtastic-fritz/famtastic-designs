@@ -14,10 +14,12 @@ final class PrepaymentStagingContractTest extends UnitTestCase {
     $portal = file_get_contents($module . '/src/Service/CustomerPortalService.php');
     $commerce = file_get_contents($module . '/src/Service/CommerceLifecycleService.php');
     $receipt = file_get_contents($module . '/src/Service/StagingReceiptService.php');
+    $worker = file_get_contents($module . '/src/Service/AutomationWorker.php');
     $services = file_get_contents($module . '/famtastic_pipeline.services.yml');
     $this->assertIsString($portal);
     $this->assertIsString($commerce);
     $this->assertIsString($receipt);
+    $this->assertIsString($worker);
     $this->assertIsString($services);
 
     $this->assertStringContainsString('prepareSelectedProofStaging', $portal);
@@ -29,6 +31,8 @@ final class PrepaymentStagingContractTest extends UnitTestCase {
     $this->assertStringContainsString("\$row['proof_review_status'] !== 'selected'", $receipt);
     $this->assertStringContainsString("'site_studio.staging_deployed'", $receipt);
     $this->assertStringContainsString('@famtastic_pipeline.site_studio_build_packets', $services);
+    $this->assertStringContainsString("'site_studio_staging_prepare'", $worker);
+    $this->assertStringContainsString('dispatch is unavailable until the authenticated endpoint is explicitly configured', $worker);
   }
 
   public function testCheckoutSerializationRequiresDeployedStaging(): void {

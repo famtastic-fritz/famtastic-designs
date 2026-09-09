@@ -2931,6 +2931,7 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 - Support replies and reviewed support drafts now commit their durable message/case state together with the notification outbox row, with immutable supported template metadata.
 - Notification retry forms now fail closed for non-failed rows and safely escape subject/recipient context.
 - Proof selection now creates one account-bound pre-payment project, immutable selected-artifact staging packet, and idempotent staging job; Commerce reuses that project after payment and checkout remains closed until a deployed receipt is recorded.
+- Site Studio Next now accepts signed selected-staging packets into an idempotent `accepted_waiting_callback` journal/event state without claiming deployment; Drupal recognizes the job but remains fail-closed until the authenticated cross-repo dispatch destination is owner-approved and configured.
 
 ## 2026-08-25 — Gate links fixed; branded customer theme shipped
 

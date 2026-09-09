@@ -69,8 +69,25 @@ final class AutomationWorker {
       'deployment.apply' => $this->applyDeployment($job),
       'domain.verify' => $this->verifyDomain($job),
       'hosting.activate' => $this->activateHosting($job),
+      // The selected staging packet is recognized explicitly, but this branch
+      // remains fail-closed until an owner-approved authenticated dispatch
+      // boundary is configured for the Site Studio Next endpoint.
+      'site_studio_staging_prepare' => $this->prepareSiteStudioStaging($job),
       default => throw new \RuntimeException('Unsupported job type: ' . $job['job_type']),
     };
+  }
+
+  private function prepareSiteStudioStaging(array $job): array {
+    $packet = (array) (($job['payload'] ?? [])['packet'] ?? []);
+    foreach (['schema', 'packet_id', 'idempotency_key', 'request_id', 'project_id', 'build_class'] as $field) {
+      if (trim((string) ($packet[$field] ?? '')) === '') {
+        throw new \RuntimeException('Selected staging packet is missing its immutable ' . $field . '.');
+      }
+    }
+    if ($packet['schema'] !== 'famtastic.site-studio.build-packet.v1' || $packet['build_class'] !== 'prepayment_selected_direction_staging') {
+      throw new \RuntimeException('Selected staging packet failed its fail-closed boundary validation.');
+    }
+    throw new \RuntimeException('Site Studio staging dispatch is unavailable until the authenticated endpoint is explicitly configured.');
   }
 
   /**
