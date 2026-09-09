@@ -95,9 +95,18 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
     })
     .filter(Boolean);
 
+  // Blogs is a first-class frontend route, not an optional Drupal menu item.
+  // Keep it visible even when the live menu has been edited or the backend's
+  // menu endpoint returns a partial tree; otherwise the content hub silently
+  // disappears from both desktop and mobile navigation.
+  const hasBlogLink = normalized.some((item) => item.url === '/blog');
+  const canonicalItems = hasBlogLink
+    ? normalized
+    : [...normalized, { id: 'canonical-blog-link', title: 'Blogs', url: '/blog', weight: 50 }];
+
   // Drupal owns top-level presence, label, and order. Service/package child
   // links are represented by the richer dropdown data and are not duplicated.
-  const primaryItems = normalized.filter((item) => {
+  const primaryItems = canonicalItems.filter((item) => {
     if (item.parent) return false;
     if (item.url.startsWith('/services/') || item.url.startsWith('/packages/')) return false;
     return !['/login', '/admin'].includes(item.url);
