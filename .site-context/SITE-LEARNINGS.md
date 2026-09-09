@@ -2080,3 +2080,8 @@ Permanent rules:
   runtime proof. For the admin shell, preserve every Drupal region (including
   `page.pre_content`) and explicitly select the theme for pre-auth recovery
   routes; CSS selectors alone cannot prove either condition.
+
+## 2026-09-09 — Protected staging release boundary
+
+- Observation: existing GoDaddy deploy scripts are production-oriented and can reach `public_html`, remote SSH, schedulers, and live runtime state.
+- Guidance: protected staging must use a separate isolated host/docroot/database/config/private root, exact commit identity, disabled transports and schedulers, and immutable release/rollback evidence. This lane prepares a local plan only; it does not prove remote staging deployment.

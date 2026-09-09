@@ -2956,3 +2956,8 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 - Social-record gate route had double-brace params ({{gate}}/{{direction}}) — every approval link 404'd. Fixed; gate form verified 200; audit extended to gate routes, email inspect, Build DNA detail.
 - famtastic_customer theme (Olivero subtheme, dark/lime brand) is now the default for customer surfaces (checkout, user pages); admin keeps famtastic_admin. Backend deploy promotes it with backup/rollback symmetry.
 - Ops: prod disk-quota squeeze had silently killed cron (workers stale Aug 24–25); 8.4G freed (32 stale releases + duplicate backups); deploy retention now automatic; cron verified running again.
+
+## 2026-09-09 — Protected staging release primitive
+
+- Added a non-deploying, hermetic protected-staging preflight requiring exact matching HEAD/pushed/observed SHA values, a dedicated non-production host and docroot, isolated database/config/private paths, disabled transports/schedulers, and immutable release plus rollback evidence.
+- The primitive rejects `public_html`, production roots, SSH targets, remote/DNS mutation, and apply/deploy modes; it archives only the exact reviewed commit into an isolated temporary release workspace.
