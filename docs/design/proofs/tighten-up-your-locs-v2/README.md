@@ -16,6 +16,11 @@ The generated photographs are clearly **private concept visuals**. They are not 
 
 The internal [business growth plan](shay-growth-plan.md) turns the research into a staged “tech + grow” plan and maps each move to a FAMtastic capability. The exact build and backend boundary are in [build-dna.json](build-dna.json).
 
+## Shay revision candidate — 2026-09-08
+
+Shay’s requested correction is recorded as a hybrid candidate at
+[`proofs/appointment-desk-hybrid/index.html`](proofs/appointment-desk-hybrid/index.html): keep Direction 2’s appointment-led flow and layout, then apply Direction 3’s cocoa/cream/ruby/gold palette and editorial concept imagery. This is a revision candidate, not a fourth choice and not yet imported into the account-owned campaign. Her feedback must be captured through the portal’s visible “Request a design change” action before the next customer proof set is packaged.
+
 ## Functional boundary
 
 The visual request form validates on the client and is wired to the new `/api/booking-request/tighten-up-your-locs` backend contract only when a separately approved deployed API is configured. The endpoint is opt-in: no site is enabled by code or migration. A request is stored for owner review; it never creates a calendar event or takes payment. The public availability layer is likewise disabled until the authenticated Owner Desk and launch configuration are approved.

@@ -70,6 +70,9 @@ function ProofDecisionGuide({ request }) {
         <p className="portal-proof-guidance">
           The proof-ready email only points you here. This page is where you compare the concepts, read the research, and choose the direction that feels right.
         </p>
+        <p className="portal-proof-guidance portal-proof-guidance--action">
+          Love parts of more than one? Don’t choose yet. Use <strong>Request a design change</strong> below and tell us what to combine.
+        </p>
       </div>
 
       <div className="portal-proof-rationale">
@@ -211,6 +214,21 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare, onConti
       aria-label={`Review concepts for ${request.project_name}`}
     >
       <ProofDecisionGuide request={request} />
+      <div className="portal-proof-feedback-callout" role="note">
+        <div>
+          <span className="eyebrow">Need a change?</span>
+          <strong>You can tell us exactly what to keep, change, or combine.</strong>
+          <p>For example: “I love direction 2’s layout and direction 3’s colors and images.”</p>
+        </div>
+        <button
+          type="button"
+          className="quiet"
+          disabled={changesRemaining < 1 || revisionPending}
+          onClick={() => setRevisionOpen(true)}
+        >
+          {revisionPending ? 'Changes are being prepared' : changesRemaining < 1 ? 'Included changes used' : 'Request a design change'}
+        </button>
+      </div>
       <p className="portal-proof-swipe-hint">Swipe sideways to compare all three directions.</p>
       <div className={`portal-proof-grid${selectedDirection ? ' has-selection' : ''}`}>
         {variants.map((proof) => {
@@ -349,7 +367,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare, onConti
             <p>
               {selectedProof
                 ? 'Use one of your included edit rounds for specific changes to the direction you chose.'
-                : 'Use your included design reset when all three directions miss the mark. Tell us what should change at the concept level.'}
+                : 'Use your included design reset when the directions need a different mix. Tell us what to keep, change, or combine before choosing.'}
             </p>
           </div>
           <label htmlFor={`proof-revision-notes-${request.public_id}`}>
@@ -358,7 +376,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare, onConti
               id={`proof-revision-notes-${request.public_id}`}
               name="notes"
               required
-              placeholder="Example: Keep this layout, but use royal blue and warmer photography."
+              placeholder="Example: I love direction 2’s layout and direction 3’s colors and images."
               defaultValue={request.intake?.proof_revision_request?.notes || ''}
             />
           </label>
