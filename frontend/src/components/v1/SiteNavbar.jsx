@@ -102,7 +102,16 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
   const hasBlogLink = normalized.some((item) => item.url === '/blog');
   const canonicalItems = hasBlogLink
     ? normalized
-    : [...normalized, { id: 'canonical-blog-link', title: 'Blogs', url: '/blog', weight: 50 }];
+    : (() => {
+        const blogItem = { id: 'canonical-blog-link', title: 'Blogs', url: '/blog', weight: 50 };
+        // Keep the content hub in the short, visible top-level part of the
+        // mobile menu instead of burying it under every service/package child.
+        const aboutIndex = normalized.findIndex((item) => item.url === '/about');
+        if (aboutIndex >= 0) {
+          return [...normalized.slice(0, aboutIndex + 1), blogItem, ...normalized.slice(aboutIndex + 1)];
+        }
+        return [blogItem, ...normalized];
+      })();
 
   // Drupal owns top-level presence, label, and order. Service/package child
   // links are represented by the richer dropdown data and are not duplicated.
