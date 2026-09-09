@@ -261,7 +261,9 @@ final class CustomerPortalService {
     ]);
     foreach ($this->entities->getStorage('commerce_order')->loadMultiple($resourceIds('commerce_order')) as $commerceOrder) {
       $orders[] = [
+        'id' => (int) $commerceOrder->id(),
         'uuid' => $commerceOrder->uuid(),
+        'order_number' => (string) $commerceOrder->getOrderNumber(),
         'label' => 'Order ' . $commerceOrder->getOrderNumber(),
         'package' => implode(', ', array_map(static fn($item): string => $item->getTitle(), $commerceOrder->getItems())),
         'amount' => (int) round((float) $commerceOrder->getTotalPrice()->getNumber() * 100),

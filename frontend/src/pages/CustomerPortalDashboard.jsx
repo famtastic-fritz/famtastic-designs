@@ -57,6 +57,7 @@ export default function CustomerPortalDashboard() {
   const [workspace, setWorkspace] = useState(null);
   const [catalog, setCatalog] = useState(null);
   const [state, setState] = useState('loading');
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [menu, setMenu] = useState(false);
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
@@ -69,6 +70,8 @@ export default function CustomerPortalDashboard() {
   const proofIntentHandled = useRef(false);
 
   useEffect(() => {
+    setState('loading');
+    setError('');
     Promise.all([customerSession(), getCustomerWorkspace(), getCustomerCatalog()])
       .then(([s, w, c]) => {
         setSession(s);
@@ -76,20 +79,42 @@ export default function CustomerPortalDashboard() {
         setCatalog(c);
         setState('ready');
       })
-      .catch(() => navigate('/login', { replace: true }));
-  }, [navigate]);
+      .catch((exception) => {
+        if ([401, 403].includes(exception?.status)) {
+          navigate('/login', { replace: true });
+          return;
+        }
+        setError('Your command center could not connect. Your saved work is unchanged. Check your connection and try again.');
+        setState('error');
+      });
+  }, [navigate, loadAttempt]);
 
   useEffect(() => {
     if (!workspace || !session || proofIntentHandled.current) return;
     proofIntentHandled.current = true;
     const params = new URLSearchParams(window.location.search);
     const requestedSection = params.get('tab') || params.get('section');
-    if (params.get('order') && params.get('grant') === 'applied') {
-      setNotice('Your sponsored order is complete — everything is activated in your workspace. Welcome aboard!');
-    } else if (params.get('order') && params.get('completed') === '1') {
-      setNotice('Payment received — thank you! Your services are live in this workspace and your receipt is on its way.');
-    } else if (params.get('order')) {
-      setNotice('Purchase complete. Your services are active in this workspace.');
+    const returnedOrderReference = params.get('order');
+    if (returnedOrderReference) {
+      const returnedOrder = (workspace.orders || []).find((candidate) =>
+        [candidate.id, candidate.uuid, candidate.order_number]
+          .filter((value) => value !== undefined && value !== null && value !== '')
+          .some((value) => String(value) === returnedOrderReference)
+      );
+      if (!returnedOrder) {
+        setError('This return link does not match an order in your account. No payment or activation is being claimed. Open Billing or contact FAMtastic Support for help.');
+      }
+      else if (returnedOrder.payment_status === 'paid') {
+        setNotice(
+          params.get('grant') === 'applied'
+            ? 'Your sponsored order is confirmed. Follow its fulfillment status in Projects.'
+            : 'Payment is confirmed on your account. Follow fulfillment in Projects and open Billing for the recorded order.'
+        );
+      }
+      else {
+        setSection('billing');
+        setNotice('Your order is recorded, but payment is not confirmed yet. Billing shows the current saved status.');
+      }
     }
 
     const requestId = params.get('request') || '';
@@ -174,6 +199,18 @@ export default function CustomerPortalDashboard() {
     return (
       <div className="portal-state">
         <i />Opening your customer command center…
+      </div>
+    );
+  }
+
+  if (state === 'error') {
+    return (
+      <div className="portal-state portal-state--error" role="alert">
+        <strong>We could not open your command center.</strong>
+        <p>{error}</p>
+        <button type="button" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>
+          Try again
+        </button>
       </div>
     );
   }
@@ -338,7 +375,9 @@ export default function CustomerPortalDashboard() {
       const decision = await decideWebsiteRequestProof(requestId, payload);
       await refresh();
       return decision;
-    }, payload.action === 'revision' ? 'Changes requested. Fritz has your notes.' : 'Selection saved. Your chosen direction is highlighted below.');
+    }, payload.action === 'revision'
+      ? 'Changes requested. FAMtastic has your notes.'
+      : 'Selection saved. Your staging build is the next recorded step; checkout stays closed until that review is ready.');
     return result.ok;
   };
 

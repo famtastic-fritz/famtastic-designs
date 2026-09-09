@@ -104,6 +104,31 @@ if (fs.existsSync(dashboardPath) && contractJson) {
     allPortalCode.includes('ownership_confirmed') && allPortalCode.includes('ai_use_consent'),
     'File upload includes explicit asset ownership and AI-use consent checks'
   );
+
+  assert(
+    dashboardCode.includes('returnedOrder') && dashboardCode.includes("payment_status === 'paid'") &&
+      !dashboardCode.includes('Your services are live in this workspace'),
+    'Payment return messaging is derived from an account-owned order instead of URL claims'
+  );
+  assert(
+    dashboardCode.includes("setState('error')") && dashboardCode.includes('Try again') &&
+      dashboardCode.includes('[401, 403].includes'),
+    'Initial connection failures are recoverable while authentication failures return to login'
+  );
+
+  const homeViewPath = path.join(portalComponentsDir, 'PortalHomeView.jsx');
+  const homeViewCode = fs.existsSync(homeViewPath) ? fs.readFileSync(homeViewPath, 'utf8') : '';
+  const stagingIndex = homeViewCode.indexOf("['Build staging'");
+  const reviewIndex = homeViewCode.indexOf("['Review staging'");
+  const paymentIndex = homeViewCode.indexOf("['Pay securely'");
+  assert(
+    stagingIndex > -1 && reviewIndex > stagingIndex && paymentIndex > reviewIndex,
+    'Tutorial preserves selection -> staging -> review -> payment order'
+  );
+  assert(
+    !/\bautoPlay\b/.test(homeViewCode) && !/\bloop\b/.test(homeViewCode),
+    'Optional tutorial media never auto-plays or loops'
+  );
 }
 
 // 4. Token-Scoped Client Portal Integrity

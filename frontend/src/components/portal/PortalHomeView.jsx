@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Panel, Empty, date } from './PortalShared.jsx';
 import PortalServicesView from './PortalServicesView.jsx';
 import { derivePortalFulfillmentState } from '../../lib/portalFulfillment.js';
@@ -24,6 +24,9 @@ export default function PortalHomeView({
   const fulfillment = derivePortalFulfillmentState(workspace);
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [tutorialStep, setTutorialStep] = useState(0);
+  const tutorialTriggerRef = useRef(null);
+  const tutorialDialogRef = useRef(null);
+  const tutorialCloseRef = useRef(null);
 
   const tutorialSteps = [
     ['Register', 'Create your secure customer workspace.'],
@@ -31,18 +34,46 @@ export default function PortalHomeView({
     ['Fill out the form', 'Tell us about the business and desired outcome.'],
     ['View three proofs', 'Compare genuinely different visual directions.'],
     ['Select', 'Choose the direction that feels right.'],
-    ['Pay securely', 'Complete the approved package through Commerce.'],
-    ['That’s it', 'Follow the build, approval, and launch from your account.'],
+    ['Build staging', 'FAMtastic turns your selected direction into a working private site.'],
+    ['Review staging', 'Open the working site and confirm it before payment.'],
+    ['Pay securely', 'Complete the approved package after staging is ready.'],
+    ['Launch', 'Follow domain, SSL, email, and launch progress from your account.'],
   ];
 
   useEffect(() => {
     if (!tutorialOpen) return undefined;
-    const timer = window.setInterval(
-      () => setTutorialStep((step) => (step + 1) % tutorialSteps.length),
-      1700
-    );
-    return () => window.clearInterval(timer);
-  }, [tutorialOpen, tutorialSteps.length]);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.requestAnimationFrame(() => tutorialCloseRef.current?.focus());
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setTutorialOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab' || !tutorialDialogRef.current) return;
+      const focusable = Array.from(
+        tutorialDialogRef.current.querySelectorAll('a[href], button:not([disabled]), video[controls], [tabindex]:not([tabindex="-1"])')
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      }
+      else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      tutorialTriggerRef.current?.focus();
+    };
+  }, [tutorialOpen]);
 
   return (
     <>
@@ -67,53 +98,22 @@ export default function PortalHomeView({
         </button>
       </section>
 
-      <section className="portal-home-intro">
-        <section className="portal-ai-hero">
-          <div className="portal-ai-hero__content">
-            <span>FAMtastic AI Solutions Studio</span>
-            <h2>Your business systems, all in one place.</h2>
-            <p>
-              Start a website, manage every active service, and discover the next useful AI or
-              automation module.
-            </p>
-            <div className="portal-ai-hero__actions">
-              <button onClick={() => go('projects')}>
-                {requests.length ? 'Continue my website' : 'Start my website & proofs'}
-              </button>
-              <div className="portal-tutorial-trigger">
-                <button
-                  className="secondary"
-                  onClick={() => {
-                    setTutorialStep(0);
-                    setTutorialOpen(true);
-                  }}
-                >
-                  Play tutorial
-                </button>
-                <span role="tooltip">New here? Watch the 20-second website walkthrough.</span>
-              </div>
-            </div>
-            <small>No technical language required. Save progress and return anytime.</small>
-          </div>
-          <div className="portal-ai-hero__signal" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </div>
-        </section>
-
-        <article className="portal-inline-tutorial" aria-label="Start-to-launch website tutorial">
-          <video
-            src="/portal/website-journey-clay-v2.mp4"
-            poster="/portal/website-journey-clay-v2.png"
-            autoPlay
-            muted
-            loop
-            playsInline
-            controls
-            aria-label="Animated website process tutorial with readable step-by-step instructions"
-          />
-        </article>
+      <section className="portal-guidance-strip" aria-label="Website process help">
+        <div>
+          <span className="portal-eyebrow">Need the process explained?</span>
+          <strong>See every step from brief to launch.</strong>
+          <small>The walkthrough is optional, controlled by you, and never hides your project status.</small>
+        </div>
+        <button
+          ref={tutorialTriggerRef}
+          type="button"
+          onClick={() => {
+            setTutorialStep(0);
+            setTutorialOpen(true);
+          }}
+        >
+          Open walkthrough
+        </button>
       </section>
 
       {fulfillment.show && (
@@ -245,12 +245,14 @@ export default function PortalHomeView({
           }}
         >
           <section
+            ref={tutorialDialogRef}
             className="portal-tutorial"
             role="dialog"
             aria-modal="true"
             aria-labelledby="portal-tutorial-title"
           >
             <button
+              ref={tutorialCloseRef}
               className="portal-tutorial__close"
               aria-label="Close website walkthrough"
               onClick={() => setTutorialOpen(false)}
@@ -259,7 +261,7 @@ export default function PortalHomeView({
             </button>
             <div
               className="portal-tutorial__visual"
-              style={{ '--tutorial-position': `${tutorialStep * 16.666}%` }}
+              style={{ '--tutorial-position': `${tutorialStep * (100 / (tutorialSteps.length - 1))}%` }}
             >
               <img
                 className="portal-tutorial__poster"
@@ -269,16 +271,15 @@ export default function PortalHomeView({
               <video
                 src="/portal/website-journey-clay-v2.mp4"
                 poster="/portal/website-journey-clay-v2.png"
-                autoPlay
                 muted
-                loop
                 playsInline
-                aria-label="Clay animation with text showing how to register, complete a website brief, review proofs, select a design, pay, and launch"
+                controls
+                aria-label="Clay animation introducing the website journey; the written steps provide the authoritative current process"
               />
               <i aria-hidden="true" />
             </div>
             <div className="portal-tutorial__copy">
-              <span>Website launch in seven easy steps</span>
+              <span>Website launch in eight clear steps</span>
               <h2 id="portal-tutorial-title">{tutorialSteps[tutorialStep][0]}</h2>
               <p>{tutorialSteps[tutorialStep][1]}</p>
               <ol aria-label="Tutorial progress">
@@ -321,13 +322,14 @@ export default function PortalHomeView({
       )}
 
       <section className="portal-command-grid">
-        <Panel eyebrow="Next Action" title={nextAction} className="lime">
+        <Panel eyebrow="Website Strategy" title="Know what to do after launch">
           <p>
-            {!order
-              ? 'Answer the guided questions once. Your responses become the project brief, recommendation, and delivery record.'
-              : 'Your account keeps the next decision visible until the project can move forward.'}
+            Open practical guidance for improving your site, attracting customers, and choosing the next useful service without guessing.
           </p>
-          <button onClick={() => go('projects')}>Continue</button>
+          <div className="portal-form-actions">
+            <button onClick={() => go('grow')}>Open growth guidance</button>
+            <button className="secondary" onClick={() => go('faq')}>Read FAQs</button>
+          </div>
         </Panel>
         <Panel
           eyebrow="Your Studio"
@@ -392,15 +394,22 @@ export default function PortalHomeView({
           <li className={project?.proof_url ? 'active' : ''}>
             <b>3</b>
             <div>
-              <strong>Review visual proofs</strong>
-              <small>Compare distinct design directions, ask questions, and choose what feels right.</small>
+              <strong>Review and select a direction</strong>
+              <small>Compare distinct visual directions, ask questions, and lock in what feels right.</small>
             </div>
           </li>
-          <li className={project?.approval_status === 'approved' ? 'complete' : ''}>
+          <li className={requests.some((request) => request.staging_status === 'deployed') ? 'complete' : ''}>
             <b>4</b>
             <div>
-              <strong>Approve, build, and grow</strong>
-              <small>Your decision, delivery, support, and future AI solutions stay connected to this workspace.</small>
+              <strong>Review the working site</strong>
+              <small>Your chosen direction becomes a private staging site before checkout opens.</small>
+            </div>
+          </li>
+          <li className={order?.payment_status === 'paid' ? 'complete' : ''}>
+            <b>5</b>
+            <div>
+              <strong>Pay, launch, and grow</strong>
+              <small>Payment starts production fulfillment; domain, SSL, email, support, and growth stay connected here.</small>
             </div>
           </li>
         </ol>

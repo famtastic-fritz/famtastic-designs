@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-09-09 — Portal truth, recovery, and staging-first guidance
+
+- Replaced query-string success claims with account-owned Commerce order
+  verification. Unknown return links state that no payment or activation was
+  confirmed; recorded unpaid orders stay visibly unpaid; completed orders
+  confirm payment without claiming that services are already live.
+- Kept connection failures inside a recoverable command-center state with an
+  explicit retry, while actual authentication failures still return to login.
+- Reordered the website walkthrough to selection, staging build, staging
+  review, payment, and launch; removed automatic and looping tutorial playback,
+  reduced the education block below the record-derived next action, and added
+  keyboard focus containment, Escape handling, scroll lock, and focus return
+  for the mobile drawer and walkthrough dialog.
+- Added source-contract checks for saved-order truth, recoverable loading,
+  staging-before-payment guidance, and user-controlled tutorial media.
+
 ## 2026-09-09 — Customer portal mobile command center
 
 - Added a persistent five-destination mobile navigation bar for Home, Projects,

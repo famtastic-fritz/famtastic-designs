@@ -2049,3 +2049,15 @@ Permanent rules:
 - New customer marketing and portal promotional defaults require explicit opt-in; the update preserves existing consent history.
 - Support replies and reviewed drafts commit durable message/case state with their notification outbox row, including immutable template metadata.
 - Notification retry actions fail closed for non-failed rows.
+
+## 2026-09-09 — Customer command centers must verify returns and subordinate education
+
+- A browser return parameter is navigation context, not proof of payment,
+  activation, delivery, or entitlement. Resolve it against an account-owned
+  durable order and describe only the state that record proves.
+- Network trouble is not an authentication failure. Preserve the customer's
+  place and offer retry unless the server actually returns an authentication or
+  authorization status.
+- The customer's current decision belongs above optional education. Tutorials
+  must be user-controlled, follow the real staging-before-payment lifecycle,
+  and restore keyboard focus when they close.
