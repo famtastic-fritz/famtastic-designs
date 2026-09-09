@@ -2061,3 +2061,5 @@ Permanent rules:
 - The customer's current decision belongs above optional education. Tutorials
   must be user-controlled, follow the real staging-before-payment lifecycle,
   and restore keyboard focus when they close.
+
+- Proof selection is now a durable staging transition: selected artifact identity, project, packet, and job are linked before checkout; payment must reuse the same project.

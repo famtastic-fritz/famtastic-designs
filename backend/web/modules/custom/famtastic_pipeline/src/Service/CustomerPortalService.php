@@ -38,6 +38,7 @@ final class CustomerPortalService {
     private readonly UuidInterface $uuid,
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
+    private readonly SiteStudioBuildPacketService $siteStudioPackets,
     private readonly AttributionService $attribution,
     private readonly PublicPreviewDeliveryService $previews,
     private readonly ?WebformIntakeBridgeService $webformBridge = NULL,
@@ -925,6 +926,15 @@ final class CustomerPortalService {
       ->condition('website_request_id', (int) $row['id'])->condition('status', 'active')
       ->condition('expires_at', $this->time->getRequestTime(), '>')->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $row['private_offer'] = $offer ?: NULL;
+    $stagingReceipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
+    $row['staging_preview'] = ($row['staging_status'] ?? '') === 'deployed' && is_array($stagingReceipt)
+      ? [
+        'status' => 'deployed',
+        'url' => (string) ($stagingReceipt['staging_url'] ?? ''),
+        'artifact_sha256' => (string) ($stagingReceipt['artifact_sha256'] ?? ''),
+        'completed_at' => (string) ($stagingReceipt['completed_at'] ?? ''),
+      ]
+      : NULL;
     $row['proofs'] = $this->serializeRequestProof($row);
     $row['proof_share'] = $this->proofSharePayload($row);
     $row['proof_handoff'] = $this->proofHandoff($row);
@@ -940,6 +950,7 @@ final class CustomerPortalService {
     ];
     $row['direct_checkout_available'] = $row['status'] === 'submitted'
       && $row['proof_review_status'] === 'selected'
+      && ($row['staging_status'] ?? '') === 'deployed'
       && (
         !empty($offer)
         || (empty($recommendation['review_required']) && in_array($row['recommended_sku'], $supportedDirectSkus, TRUE))
@@ -1030,7 +1041,9 @@ final class CustomerPortalService {
           'label' => 'Your website direction is selected',
           'detail' => !empty($row['commerce_order_id'])
             ? 'Your selection and order are recorded. FAMtastic can continue into the build and edit stages.'
-            : 'Your selection is recorded. Complete the approved offer or checkout shown with this project to begin the build.',
+            : (($row['staging_status'] ?? '') === 'deployed'
+              ? 'Your selected direction has a recorded staging preview. Review it, then use the approved offer or checkout to begin the paid build.'
+              : 'Your selection is recorded. FAMtastic is preparing the staging preview required before checkout opens.'),
         ];
       }
       if ($generation === 'ready' && (string) ($row['proof_review_status'] ?? '') === 'revision_requested') {
@@ -1599,9 +1612,15 @@ final class CustomerPortalService {
       if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE)) throw new \InvalidArgumentException('Choose one available website direction.');
       $exists = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $direction)->count()->execute();
       if ((int) $exists !== 1) throw new \InvalidArgumentException('That proof direction is unavailable.');
-      $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'selected', 'selected_proof_direction' => $direction, 'selected_proof_at' => $now, 'changed' => $now])->condition('id', $row['id'])->execute();
       $campaign = $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']);
+      $variantIds = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
+        ->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $direction)->range(0, 1)->execute();
+      $variant = $variantIds ? $this->entities->getStorage('proof_variant')->load((int) reset($variantIds)) : NULL;
+      if (!$campaign || !$variant) throw new \RuntimeException('The selected proof artifact is unavailable.');
+      $transaction = $this->database->startTransaction();
+      $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'selected', 'selected_proof_direction' => $direction, 'selected_proof_at' => $now, 'staging_status' => 'queued', 'changed' => $now])->condition('id', $row['id'])->execute();
       if ($campaign) $campaign->set('selected_variant', $direction)->set('selected_at', $now)->save();
+      $this->prepareSelectedProofStaging($row, $variant, $direction);
       $this->activity((int) $row['organization_id'], 'website_request.proof_selected', 'A website concept was selected and is ready for purchase.');
       $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
       $customer = $this->customerContact((int) $row['customer_id']);
@@ -1618,9 +1637,56 @@ final class CustomerPortalService {
           'We received your website direction choice',
           "Hi {$customer['display_name']},\n\nThanks for choosing direction " . strtoupper($direction) . " for {$row['project_name']}. FAMtastic Concierge recorded your choice and Fritz will follow up with the next step.\n" . $this->portalLink((string) $row['public_id']) . "\n\n— FAMtastic Concierge");
       }
+      unset($transaction);
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
     return $this->serializeWebsiteRequest($updated);
+  }
+
+  /** Creates the account-bound pre-payment project, packet, and durable job. */
+  private function prepareSelectedProofStaging(array $row, object $variant, string $direction): array {
+    $projectStorage = $this->entities->getStorage('famtastic_project');
+    $project = !empty($row['project_id']) ? $projectStorage->load((int) $row['project_id']) : NULL;
+    if (!$project) {
+      $project = $projectStorage->create([
+        'prospect_ref' => (int) $row['prospect_id'],
+        'delivery_status' => 'staging_pending',
+        'approval_status' => 'pending',
+        'revision_limit' => 1,
+      ]);
+      $project->save();
+      $this->claimResource((int) $row['organization_id'], 'project', (int) $project->id());
+      $this->database->update('famtastic_project_request')->fields([
+        'project_id' => (int) $project->id(), 'changed' => $this->time->getRequestTime(),
+      ])->condition('id', (int) $row['id'])->execute();
+    }
+    $packetId = 'staging-packet:request:' . (int) $row['id'] . ':direction:' . $direction;
+    $packet = [
+      'schema' => 'famtastic.site-studio.build-packet.v1',
+      'packet_id' => $packetId,
+      'idempotency_key' => $packetId,
+      'request_id' => (string) $row['public_id'],
+      'project_id' => (string) $project->id(),
+      'build_class' => 'prepayment_selected_direction_staging',
+      'selected_direction_ids' => ['direction-' . $direction],
+      'artifacts' => [[
+        'direction_id' => 'direction-' . $direction,
+        'variant_id' => (int) $variant->id(),
+        'variant_uuid' => (string) $variant->uuid(),
+        'source_path' => (string) $variant->get('artifact_path')->value,
+        'source_preview_url' => (string) $variant->get('preview_url')->value,
+        'design_dna_sha256' => hash('sha256', (string) $variant->get('design_dna')->value),
+      ]],
+      'created_at' => gmdate(DATE_ATOM, $this->time->getRequestTime()),
+    ];
+    $this->siteStudioPackets->registerPacket($packet);
+    $jobId = $this->ledger->enqueue(
+      'site-studio.staging:request:' . (int) $row['id'] . ':direction:' . $direction,
+      'site_studio_staging_prepare',
+      ['packet' => $packet, 'website_request_id' => (int) $row['id'], 'project_id' => (int) $project->id()],
+      (int) $row['prospect_id'],
+    );
+    return ['project_id' => (int) $project->id(), 'job_id' => $jobId, 'packet_id' => $packetId];
   }
 
   /**

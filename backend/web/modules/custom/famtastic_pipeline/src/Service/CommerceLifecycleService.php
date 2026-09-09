@@ -194,6 +194,9 @@ final class CommerceLifecycleService {
 
     $projectStorage = $this->entities->getStorage('famtastic_project');
     $project = !empty($fulfillment['project_id']) ? $projectStorage->load((int) $fulfillment['project_id']) : NULL;
+    if (!$project && $request && !empty($request['project_id'])) {
+      $project = $projectStorage->load((int) $request['project_id']);
+    }
     if (!$project) {
       $revisionLimit = (in_array('FAM-BUSINESS-499', (array) ($checkout['selected_skus'] ?? []), TRUE) ? 2 : 1)
         + (in_array('FAM-REVISION-75', (array) ($checkout['selected_skus'] ?? []), TRUE) ? 1 : 0);
@@ -202,6 +205,11 @@ final class CommerceLifecycleService {
         'delivery_status' => 'intake_pending', 'approval_status' => 'pending', 'revision_limit' => $revisionLimit,
       ]);
       $project->save();
+    }
+    else {
+      // A selected proof creates the pre-payment project. Payment must reuse
+      // that exact project rather than silently creating a duplicate.
+      $project->set('intake_ref', $intake->id())->save();
     }
     $this->portal->claimResource($organizationId, 'prospect', (int) $prospect->id());
     $this->portal->claimResource($organizationId, 'project', (int) $project->id());

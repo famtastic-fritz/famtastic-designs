@@ -2919,6 +2919,7 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 - New customer marketing and portal promotional defaults now require explicit opt-in; the update changes schema defaults without rewriting existing consent history.
 - Support replies and reviewed support drafts now commit their durable message/case state together with the notification outbox row, with immutable supported template metadata.
 - Notification retry forms now fail closed for non-failed rows and safely escape subject/recipient context.
+- Proof selection now creates one account-bound pre-payment project, immutable selected-artifact staging packet, and idempotent staging job; Commerce reuses that project after payment and checkout remains closed until a deployed receipt is recorded.
 
 ## 2026-08-25 — Gate links fixed; branded customer theme shipped
 
