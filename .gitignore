@@ -23,6 +23,7 @@ directus/uploads/
 .eslintcache
 .netlify
 .artifacts/
+.protected-staging/
 # Local proof runs, screenshots, signed packets, and browser evidence are
 # retained outside Git. Curated manifests may be copied into docs/qa when a
 # release needs durable repository evidence.
