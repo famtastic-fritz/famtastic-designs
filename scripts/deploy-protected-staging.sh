@@ -151,7 +151,7 @@ values = {
     "STAGING_DB_PORT": str(data.get("port") or "3306"),
     "STAGING_HASH_SALT": salt_path.read_text().strip(),
 }
-target.write_text("".join(f"{key}={shlex.quote(str(value))}\\n" for key, value in values.items()))
+target.write_text("".join(f"{key}={shlex.quote(str(value))}\n" for key, value in values.items()))
 target.chmod(0o600)
 PY
 chmod 600 "$hash_salt_file" "$admin_password_file" "$database_env"
