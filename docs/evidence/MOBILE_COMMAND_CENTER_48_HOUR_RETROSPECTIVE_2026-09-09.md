@@ -220,3 +220,12 @@ prior 48 hours. A separate one-time review 48 hours after protected staging is
 complete remains required but **unscheduled**. Its clock begins only after the
 protected staging URL, exact commit, smoke evidence, and owner notification
 receipt exist.
+
+## Superseding continuity note — 2026-09-09
+
+The historical findings above remain unchanged. Subsequent integration commits
+`35d2634a`, `bc39ca9c`, `cdbb039d`, `2cfa6609`, and `ce72eaae` closed the local
+authenticated staging-dispatch, runtime browser, mockup-parity, integrated
+command-center, and application-level staging-safety gaps. Remote protected
+staging, hosted side-effect probes, owner notification, and the future
+post-staging review still require their own evidence.

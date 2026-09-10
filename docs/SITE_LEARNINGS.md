@@ -2103,3 +2103,16 @@ queued.
   paid are local ledger facts, while inbound mail with no campaign relationship
   is “not campaign-attributable,” not a zero-reply claim. The full rule and
   validator are recorded in `.site-context/SITE-LEARNINGS.md`.
+
+## 2026-09-09 — Protected staging safety belongs inside the application
+
+- Shell environment flags are not a sufficient safety boundary. Native routes,
+  custom routes, payment gateways, Drupal mail, direct mailers, and cron each
+  need a fail-closed application guard.
+- A staging environment uses a fresh isolated database and private storage; it
+  does not copy production customer data or inherit production provider
+  configuration. Mail evidence stores only hashes, never message content or
+  recipient data.
+- Local tests and source inspection are not hosted-staging proof. The release
+  claim begins only after the exact pushed commit passes authenticated browser,
+  side-effect, TLS, access-control, and rollback checks on the staging host.

@@ -52,6 +52,13 @@ payment shortcut, missing research/proof evidence, cross-account access,
 unverified payment handoff, unknown worker/queue state, incompatible release
 receipts, or any customer state stronger than its durable evidence.
 
+Protected staging is also `launch_blocked` if any native or custom checkout,
+simulation, webhook, mail, cron, provider, DNS, hosting, or deployment path can
+produce an external effect; if the active payment gateway is not disabled; if
+mail capture contains recipient, subject, or body content instead of digests;
+or if the host cannot prove the exact pushed SHA, isolated data boundary, TLS,
+access control, and rollback receipt.
+
 ## Commands
 
 Run `scripts/revenue-loop-signoff.sh <repo>` for static validation. Set

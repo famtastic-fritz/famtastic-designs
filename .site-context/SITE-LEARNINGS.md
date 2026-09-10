@@ -2100,3 +2100,14 @@ Permanent rules:
 
 - Observation: existing GoDaddy deploy scripts are production-oriented and can reach `public_html`, remote SSH, schedulers, and live runtime state.
 - Guidance: protected staging must use a separate isolated host/docroot/database/config/private root, exact commit identity, disabled transports and schedulers, and immutable release/rollback evidence. This lane prepares a local plan only; it does not prove remote staging deployment.
+
+## 2026-09-09 — Protected staging requires layered runtime refusal
+
+- Observation: disabling one configured transport leaves alternate paths such
+  as native Commerce checkout, webhooks, direct PHPMailer calls, Drupal mail,
+  and cron available unless each is guarded.
+- Guidance: protected staging must refuse consequential routes before controller
+  execution, select a disabled gateway, globally blackhole Drupal mail, capture
+  only digests from direct mail, and stop cron before lifecycle/provider work.
+  Use a fresh isolated database and exact pushed SHA; never treat a local test
+  as remote deployment evidence.

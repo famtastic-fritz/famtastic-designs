@@ -7,17 +7,17 @@ Tasks:
 - [x] Re-anchor on the current FAMtastic Designs source and isolate production work
 - [x] Create one integration worktree and three non-overlapping worker worktrees
 - [x] Audit the prior 48 hours of cross-repository work and record confirmed outcomes, rework, contract drift, remaining evidence gaps, and conditional skill candidates
-- [ ] Reconcile the approved mockups and repository Design DNA into one shared token, component, navigation, and interaction contract
-- [ ] Rebuild the authenticated customer portal around durable next actions, projects, proofs, staging review, billing, services, messages, support, growth, and account settings
-- [ ] Rebuild the staff mobile command center and native Drupal theme so login, forms, queues, records, email, support, products, and lifecycle screens share one coherent system
-- [ ] Close producer-to-consumer workflow gaps for consent, notifications, support, email history, proof selection, staging receipts, checkout, and paid fulfillment
-- [ ] Add honest unavailable, empty, permission, stale, network-failure, retry, and recovery states for every supported action
-- [ ] Create an isolated integration runtime with separate Drupal database, files, mail capture, Stripe test mode, and disabled production jobs/transports
-- [ ] Run contract, unit, kernel, integration, accessibility, responsive, visual, and browser journey tests at mobile, tablet, and desktop widths
-- [ ] Inventory every customer/staff link and action; prove a reachable route, durable result plus confirmation, or an honest unavailable state with recovery
-- [ ] Compare the integrated mobile/desktop renders to the supplied Kimmy/Kimi references and record every match, intentional improvement, unacceptable drift, and missing state
-- [ ] Run the canonical synthetic customer journey and verify every evidence assertion
-- [ ] Complete independent cross-lane review, reconcile defects, and repeat gates until clean
+- [x] Reconcile the approved mockups and repository Design DNA into one shared token, component, navigation, and interaction contract
+- [x] Rebuild the authenticated customer portal around durable next actions, projects, proofs, staging review, billing, services, messages, support, growth, and account settings
+- [x] Rebuild the staff mobile command center and native Drupal theme so login, forms, queues, records, email, support, products, and lifecycle screens share one coherent system
+- [x] Close producer-to-consumer workflow gaps for consent, notifications, support, email history, proof selection, staging receipts, checkout, and paid fulfillment
+- [x] Add honest unavailable, empty, permission, stale, network-failure, retry, and recovery states for every supported action
+- [x] Create an isolated integration runtime with separate Drupal database, files, mail capture, disabled payments, and disabled production jobs/transports
+- [x] Run contract, unit, kernel, integration, accessibility, responsive, visual, and browser journey tests at mobile, tablet, and desktop widths
+- [x] Inventory every customer/staff link and action; prove a reachable route, durable result plus confirmation, or an honest unavailable state with recovery
+- [x] Compare the integrated mobile/desktop renders to the supplied Kimmy/Kimi references and record every match, intentional improvement, unacceptable drift, and missing state
+- [x] Run the canonical synthetic customer journey and verify every evidence assertion
+- [x] Complete independent cross-lane review, reconcile defects, and repeat gates until clean
 - [ ] Commit and push the integrated source with changelog, capability evidence, site learnings, review, and resumable closeout records
 - [ ] Create and verify a protected FAMtastic Designs staging deployment from the exact reviewed commit
 - [ ] Notify Fritz in the Codex task and at the authoritative owner email with the staging link and evidence summary
@@ -70,3 +70,11 @@ owner notification remain unproven.
 The future one-time 48-hour post-staging review is intentionally unscheduled.
 Schedule it only after protected staging serves the exact reviewed commit and
 the owner notification has a provider receipt.
+
+## Superseding checkpoint — 2026-09-09
+
+Commits through `ce72eaae` close the local portal, reusable Drupal theme,
+lifecycle, staging-receipt, browser, and application-level side-effect gates.
+The prior-48-hour retrospective remains complete and unchanged. Protected
+staging deployment, hosted role/action verification, owner notification, and
+the later post-staging review remain open until supported by remote evidence.

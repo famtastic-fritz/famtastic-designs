@@ -88,3 +88,14 @@ copies and run `frontend/playwright.runtime.config.js`. Do not point either
 variable at production or at a customer-bearing local database. Do not use
 `FAMTASTIC_RUNTIME_SKIP_DRUPAL` for release evidence; that switch remains useful
 only for isolated portal development.
+
+## Protected-staging safety checkpoint
+
+Commit `ce72eaae` adds runtime-level refusal for native Commerce checkout,
+custom and revision checkout, simulation, Stripe webhook, cron, direct
+outreach, and Drupal mail. The focused PHPUnit safety contract and the full
+suite pass locally. This is application evidence, not hosted-staging evidence.
+The hosted run must repeat the payment refusal and row-count checks, exercise
+both mail entry points and confirm digest-only capture, run cron and confirm no
+outbox/lifecycle changes, inspect all disabled runtime settings, and prove the
+exact pushed SHA before this document calls protected staging verified.

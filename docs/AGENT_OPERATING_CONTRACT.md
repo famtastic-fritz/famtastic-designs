@@ -141,6 +141,14 @@ and renewal/cancellation treatment.
 
 ## Safety and proof
 
+- Protected staging is a separate environment, not a production mode flag. It
+  must use its own host, document root, database, files, private storage, and
+  secrets. It serves one exact pushed SHA behind TLS and access control.
+- In protected staging, every payment and webhook entry point must refuse at
+  the request boundary, the active gateway must be disabled, all Drupal and
+  direct mail must terminate in digest-only capture, cron must perform no
+  lifecycle/provider work, and deployment, DNS, hosting, and customer
+  transports must be empty or disabled. Any failed assertion blocks release.
 - Sandbox and live are separate launch decisions. Never interpret a stub,
   handcrafted webhook, or Stripe test card as proof of live charging.
 - Never enable live charging with test credentials or without validating the

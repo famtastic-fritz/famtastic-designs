@@ -1,5 +1,19 @@
 # Product changelog
 
+## 2026-09-09 — Protected-staging side-effect isolation
+
+- Added a disabled payment gateway plus request-level refusal for native
+  Commerce checkout, custom and revision checkout, payment simulation, and
+  Stripe webhook routes whenever protected staging is active.
+- Added a global Drupal mail blackhole and made direct outreach capture a
+  digest-only record before transport lookup. Protected-staging cron now exits
+  before lifecycle, outbox, SLA, or provider work.
+- Added a guarded cPanel staging deployer that requires an exact pushed commit,
+  a dedicated subdomain and docroot outside `public_html`, a server-private
+  isolated database receipt, verified TLS, Basic Auth, and release/rollback
+  evidence. It does not own production deployment, DNS credentials, customer
+  data, provider transports, or scheduler changes.
+
 ## 2026-09-09 — Full isolated Drupal and portal browser proof
 
 - Added a reusable theme negotiator so login, password reset, native Drupal
