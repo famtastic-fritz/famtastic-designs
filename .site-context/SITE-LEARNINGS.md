@@ -1,5 +1,26 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-10 — Verify interrupted releases from server markers
+
+- Observation: the backend SSH session went quiet after the shared host had
+  already completed the release. The authoritative `.backend-release` marker,
+  Drupal bootstrap, database-update status, live routes, and zero post-release
+  error count proved success; the local connection transcript did not.
+- Guidance: after a transport interruption, inspect those authoritative facts
+  before retrying a deployment or database update.
+- Observation: repeated deployment archives had grown the backup directory to
+  7.7 GB and contributed to the shared account's 250,000-entry ceiling.
+- Guidance: integrity-check and retain the current release's rollback set,
+  remove superseded deployment archives and inactive release checkouts after
+  acceptance, and record the before/after entry count. This cutover retained
+  eight current rollback files, reduced backups to 321 MB, and reduced account
+  entries from approximately 248,974 at failure to 199,630.
+- Observation: Shay's selected direction and completed USD 1.00 Commerce order
+  survived the schema deployment, while new staging fields initialized to
+  `not_started`.
+- Guidance: reconcile historical paid requests explicitly; schema presence is
+  never authority to invent a staging receipt or launch fulfillment.
+
 ## 2026-09-10 — Protected-staging hosted constraints
 
 - Observation: the protected environment used a dedicated host, database,

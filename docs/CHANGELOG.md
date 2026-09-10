@@ -1,5 +1,30 @@
 # Product changelog
 
+## 2026-09-10 — Production command-center cutover and shared-host cleanup
+
+- Promoted exact Git commit `911bda114db2bc99f727a4b8a8b3e95e970beb31`
+  to GitHub `main`, the production Drupal backend, and the production React
+  frontend through the checked-in GoDaddy deployment scripts.
+- Verified successful Drupal 11.4.5 bootstrap and database connectivity, no
+  pending database updates, the FAMtastic admin/customer themes, the apex and
+  `www` sites in a real browser, the production login/registration entry, live
+  API routes, and TLS coverage. No new Drupal errors were recorded after the
+  backend or frontend release markers.
+- Reconfirmed from authoritative production records that Shay's request 12 has
+  direction B selected and Commerce order 19 is completed with USD 1.00 paid
+  and a zero balance. Its new staging fields remain `not_started`; no staging
+  receipt, fulfillment, domain, email, DNS, or launch state was fabricated or
+  triggered during the release.
+- Recovered from the host's file-count ceiling by removing one inactive
+  protected-staging release, 826 superseded FAMtastic deployment backups, and
+  the obsolete prior production release checkout. Backup storage fell from
+  7.7 GB to 321 MB and account entries fell from approximately 248,974 at the
+  original failure point to 199,630. The eight archives for the exact current
+  release were integrity-checked and retained as the active rollback set.
+- The fresh synthetic customer journey passed against the exact source before
+  release. That is local contract proof; Shay's real post-payment fulfillment
+  remains a separate production exercise.
+
 ## 2026-09-10 — One-account portal and Drupal administration bridge
 
 - Connected the authenticated Client Portal session to Drupal's exact

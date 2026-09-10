@@ -1,5 +1,39 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-10 — A dropped deployment session is not the deployment result
+
+The production backend deploy appeared to stall after the shared host dropped
+the long SSH session, but the server had already completed the release and
+written the exact commit, timestamp, backups, and runtime facts to
+`.backend-release`. Retrying blindly could have created another full set of
+archives and repeated database work.
+
+**Guidance.** After any interrupted deploy, inspect the server's authoritative
+release marker, Drupal bootstrap, database-update status, live routes, and
+post-marker error count before retrying. Treat the terminal connection as a
+transport observation, not as deployment truth.
+
+The file-count failure also showed that automatic per-deploy archives were
+accumulating without a retention pass. Source history belongs in Git; the live
+host needs only the exact current rollback set during acceptance plus an
+intentional database-retention policy. For this cutover, 826 superseded
+deployment files and obsolete release checkouts were removed only after the
+current eight-file rollback set passed archive integrity checks. The account
+fell from approximately 248,974 entries at failure to 199,630.
+
+**Guidance.** Make retention part of a successful release: keep the exact
+current checksummed code/config/database rollback set through acceptance,
+retire superseded deploy archives, never delete customer uploads or canonical
+Git repositories, and record before/after storage and inode evidence.
+
+Finally, a schema migration can add the staging lifecycle to an existing paid
+request without manufacturing history. Shay's selected and paid records were
+preserved while the new staging fields correctly initialized to `not_started`.
+
+**Guidance.** Historical paid requests need an explicit, audited reconciliation
+run. Never backfill a staging receipt or trigger fulfillment merely because the
+new fields exist.
+
 ## 2026-09-10 — A protected-staging release is a hosted systems test
 
 The dedicated staging host, database, files, private storage, and secrets kept
