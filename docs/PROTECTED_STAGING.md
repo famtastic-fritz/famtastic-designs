@@ -18,6 +18,10 @@ data, payment, mail, scheduler, DNS, hosting, or deployment providers.
 - Access: valid TLS followed by Basic Auth; ACME challenges remain reachable
 - Release: immutable SHA directory plus atomic `current` symlink and rollback
   receipt
+- Scope: the command-center application and Drupal runtime. Large public film,
+  showcase, and campaign-creative libraries are production marketing assets,
+  not command-center dependencies, and are excluded from this capacity-limited
+  protected environment rather than linked to production storage.
 
 ## Application safety matrix
 

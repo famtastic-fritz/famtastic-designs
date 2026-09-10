@@ -13,6 +13,9 @@
   isolated database receipt, verified TLS, Basic Auth, and release/rollback
   evidence. It does not own production deployment, DNS credentials, customer
   data, provider transports, or scheduler changes.
+- Limited protected-staging transfer scope to the command-center application;
+  unrelated large public film, showcase, and campaign-creative libraries are
+  neither duplicated nor linked back to production storage.
 
 ## 2026-09-09 — Full isolated Drupal and portal browser proof
 

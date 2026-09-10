@@ -115,8 +115,14 @@ printf '%s\n' "$BASIC_AUTH_PASSWORD" | ssh -T "$SSH_TARGET" "set -e; umask 077; 
 ssh -T "$SSH_TARGET" "set -e; mkdir -p '$STAGING_ROOT/releases/$HEAD_SHA/source' '$STAGING_ROOT/releases/$HEAD_SHA/public'"
 rsync_exact() {
   local source_path="$1" destination_path="$2" label="$3" attempt
+  local -a scope_excludes=()
+  if [[ "$label" == backend ]]; then
+    scope_excludes+=(--exclude '/web/modules/custom/famtastic_pipeline/assets/campaign/')
+  else
+    scope_excludes+=(--exclude '/video/' --exclude '/showcase/')
+  fi
   for attempt in 1 2 3 4 5; do
-    if rsync --archive --checksum --delete --partial --delay-updates --timeout=60 -e 'ssh -T' "$source_path" "$SSH_TARGET:$destination_path"; then
+    if rsync --archive --checksum --delete --partial --delay-updates --timeout=60 "${scope_excludes[@]}" -e 'ssh -T' "$source_path" "$SSH_TARGET:$destination_path"; then
       return 0
     fi
     echo "protected-staging: $label transfer attempt $attempt failed; resuming the exact artifact" >&2
@@ -181,6 +187,9 @@ STAGING_ADMIN_PASSWORD="$(tr -d '\r\n' < "$admin_password_file")"
 release="$root/releases/$sha"; source_dir="$release/source"
 test -f "$source_dir/backend/composer.lock" || fail "exact Git-archived backend is absent"
 test -f "$release/public/index.html" || fail "exact locally built frontend artifact is absent"
+test ! -e "$source_dir/backend/web/modules/custom/famtastic_pipeline/assets/campaign" || fail "unrelated campaign media must not consume command-center staging quota"
+test ! -e "$release/public/video" || fail "unrelated public film media must not consume command-center staging quota"
+test ! -e "$release/public/showcase" || fail "unrelated public showcase media must not consume command-center staging quota"
 test -f "$source_dir/backend/web/modules/custom/famtastic_pipeline/src/Service/DisabledPaymentGateway.php" || fail "disabled payment gateway absent in release"
 test -f "$source_dir/backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.module" || fail "protected staging mail hook absent in release"
 test -f "$source_dir/backend/web/modules/custom/famtastic_pipeline/src/EventSubscriber/ProtectedStagingRequestSubscriber.php" || fail "payment route guard absent in release"
