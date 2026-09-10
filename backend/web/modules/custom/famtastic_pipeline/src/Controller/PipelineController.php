@@ -120,6 +120,9 @@ class PipelineController extends ControllerBase {
    * POST /api/pipeline/checkout — create a Stripe test Checkout Session.
    */
   public function checkout(Request $request): JsonResponse {
+    if (Settings::get('famtastic_payment_mode') === 'disabled') {
+      return $this->error('payment_disabled', 503, 'Payment is disabled in this protected review environment.');
+    }
     $prospect = $this->resolveProspect($request);
     if (!$prospect) {
       return $this->error('invalid_or_expired_token', 404);
@@ -237,6 +240,9 @@ class PipelineController extends ControllerBase {
    * POST /api/pipeline/revision-checkout — purchase one additional revision.
    */
   public function revisionCheckout(Request $request): JsonResponse {
+    if (Settings::get('famtastic_payment_mode') === 'disabled') {
+      return $this->error('payment_disabled', 503, 'Payment is disabled in this protected review environment.');
+    }
     $prospect = $this->resolveProspect($request);
     if (!$prospect) {
       return $this->error('invalid_or_expired_token', 404);

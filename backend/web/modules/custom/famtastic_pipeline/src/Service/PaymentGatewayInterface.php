@@ -9,10 +9,8 @@ use Drupal\famtastic_pipeline\Entity\Order;
 /**
  * Boundary for creating and reading a checkout session.
  *
- * Two implementations exist: StripeGateway (real, test-mode, used when a Stripe
- * secret key is present) and StubGateway (deterministic, used for the local
- * proof when no key is configured). Webhook signature verification is identical
- * regardless of which gateway created the session.
+ * Implementations include StripeGateway, the deterministic local StubGateway,
+ * and a fail-closed DisabledPaymentGateway for protected environments.
  */
 interface PaymentGatewayInterface {
 
@@ -38,7 +36,7 @@ interface PaymentGatewayInterface {
   public function retrieveSession(string $sessionId): array;
 
   /**
-   * Returns 'stripe' or 'stub'.
+   * Returns 'stripe', 'stub', or 'disabled'.
    */
   public function getMode(): string;
 

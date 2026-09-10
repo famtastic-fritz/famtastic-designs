@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\famtastic_pipeline\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Service\FulfillmentService;
 use Drupal\famtastic_pipeline\Service\WebhookVerifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,6 +36,9 @@ class StripeWebhookController extends ControllerBase {
    * POST /api/pipeline/stripe/webhook.
    */
   public function handle(Request $request): JsonResponse {
+    if (Settings::get('famtastic_payment_mode') === 'disabled') {
+      return new JsonResponse(['error' => 'payment_disabled'], 503);
+    }
     $payload = $request->getContent();
     if (strlen($payload) > 1024 * 1024) {
       return new JsonResponse(['error' => 'request_too_large'], 413);

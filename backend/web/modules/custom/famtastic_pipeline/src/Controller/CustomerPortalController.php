@@ -13,6 +13,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Drupal\famtastic_pipeline\Service\CatalogPaymentEligibilityService;
 use Drupal\famtastic_pipeline\Service\CommerceLifecycleService;
@@ -258,6 +259,9 @@ final class CustomerPortalController extends ControllerBase {
 
   /** Creates an account-owned Commerce order and hands off to Commerce checkout. */
   public function commerceCheckout(Request $request): JsonResponse {
+    if (Settings::get('famtastic_payment_mode') === 'disabled') {
+      return $this->error('payment_disabled', 503, 'Payment is disabled in this protected review environment.');
+    }
     $customer = $this->currentCustomer();
     if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
     if (empty($customer['verified_at'])) return $this->error('verification_required', 403, 'Verify your email before purchasing.');

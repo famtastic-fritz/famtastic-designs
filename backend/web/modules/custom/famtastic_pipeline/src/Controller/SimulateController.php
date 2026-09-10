@@ -46,6 +46,9 @@ class SimulateController extends ControllerBase {
    * POST /api/pipeline/stripe/simulate.
    */
   public function handle(Request $request): JsonResponse {
+    if (Settings::get('famtastic_payment_mode') === 'disabled') {
+      return new JsonResponse(['ok' => FALSE, 'error' => 'payment_disabled', 'message' => 'Payment is disabled in this protected review environment.'], 503);
+    }
     $simulationAllowed = filter_var(
       getenv('FAMTASTIC_ALLOW_PAYMENT_SIMULATION') ?: Settings::get('famtastic_allow_payment_simulation', FALSE),
       FILTER_VALIDATE_BOOL,

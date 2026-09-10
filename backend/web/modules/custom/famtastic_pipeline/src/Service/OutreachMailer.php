@@ -56,6 +56,9 @@ class OutreachMailer {
     if (!self::supportsTemplate($template, $templateVersion)) {
       throw new RuntimeException('notification_template_invalid');
     }
+    if (Settings::get('famtastic_protected_staging', FALSE)) {
+      return $this->captureProtectedStagingMessage($to, $subject, $body, $template, $templateVersion);
+    }
     $oneClickHeaders = $this->oneClickUnsubscribeHeaders($oneClickUnsubscribeUrl);
     $htmlBody = $this->renderHtmlMessage($subject, $body, $template);
 
@@ -396,6 +399,39 @@ class OutreachMailer {
     $this->logger->info('TRANSACTIONAL TEST EMAIL captured for @to: @subject [@message_id]', [
       '@to' => $to,
       '@subject' => $subject,
+      '@message_id' => $messageId,
+    ]);
+    return $messageId;
+  }
+
+  /**
+   * Records only message metadata and digests in protected staging.
+   *
+   * This guard runs before transport selection and SMTP configuration reads,
+   * so a copied environment value can never turn a review action into a send.
+   */
+  private function captureProtectedStagingMessage(string $to, string $subject, string $body, string $template, int $templateVersion): string {
+    $path = trim((string) Settings::get('famtastic_staging_mail_capture', ''));
+    if ($path === '' || !is_dir(dirname($path)) || !is_writable(dirname($path))) {
+      throw new RuntimeException('notification_capture_path_invalid');
+    }
+    $messageId = sprintf('<famtastic-staging-%s@blackhole.invalid>', bin2hex(random_bytes(16)));
+    $record = json_encode([
+      'schema' => 'famtastic.protected-staging-mail.v1',
+      'captured_at' => gmdate(DATE_ATOM),
+      'message_id' => $messageId,
+      'channel' => 'outreach_mailer',
+      'to_sha256' => hash('sha256', mb_strtolower(trim($to))),
+      'subject_sha256' => hash('sha256', $subject),
+      'body_sha256' => hash('sha256', $body),
+      'template_id' => $template,
+      'template_version' => $templateVersion,
+      'transport' => 'blackhole',
+    ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . "\n";
+    if (file_put_contents($path, $record, FILE_APPEND | LOCK_EX) === FALSE) {
+      throw new RuntimeException('notification_capture_failed');
+    }
+    $this->logger->info('PROTECTED STAGING EMAIL captured without transport [@message_id]', [
       '@message_id' => $messageId,
     ]);
     return $messageId;

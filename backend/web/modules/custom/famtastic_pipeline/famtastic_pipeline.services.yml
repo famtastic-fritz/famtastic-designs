@@ -118,9 +118,12 @@ services:
   famtastic_pipeline.stub_gateway:
     class: Drupal\famtastic_pipeline\Service\StubGateway
 
+  famtastic_pipeline.disabled_gateway:
+    class: Drupal\famtastic_pipeline\Service\DisabledPaymentGateway
+
   famtastic_pipeline.gateway_manager:
     class: Drupal\famtastic_pipeline\Service\PaymentGatewayManager
-    arguments: ['@famtastic_pipeline.stripe_gateway', '@famtastic_pipeline.stub_gateway']
+    arguments: ['@famtastic_pipeline.stripe_gateway', '@famtastic_pipeline.stub_gateway', '@famtastic_pipeline.disabled_gateway']
 
   famtastic_pipeline.webhook_verifier:
     class: Drupal\famtastic_pipeline\Service\WebhookVerifier
@@ -237,6 +240,11 @@ services:
 
   famtastic_pipeline.checkout_complete_redirect:
     class: Drupal\famtastic_pipeline\EventSubscriber\CheckoutCompleteRedirectSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  famtastic_pipeline.protected_staging_request:
+    class: Drupal\famtastic_pipeline\EventSubscriber\ProtectedStagingRequestSubscriber
     tags:
       - { name: event_subscriber }
 

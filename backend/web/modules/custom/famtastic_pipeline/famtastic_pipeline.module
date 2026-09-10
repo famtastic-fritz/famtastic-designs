@@ -8,6 +8,7 @@
 declare(strict_types=1);
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\user\UserInterface;
 
 /**
@@ -226,11 +227,50 @@ function famtastic_pipeline_mail(string $key, array &$message, array $params): v
 }
 
 /**
+ * Implements hook_mail_alter().
+ *
+ * Protected staging must never fall through to Drupal's default PHP mailer or
+ * an enabled SMTP module. Record only metadata and content digests locally so
+ * reviewers can prove that a message would have been produced without sending
+ * or retaining its body.
+ */
+function famtastic_pipeline_mail_alter(array &$message): void {
+  if (!Settings::get('famtastic_protected_staging', FALSE)) {
+    return;
+  }
+
+  $message['send'] = FALSE;
+  $capture = (string) Settings::get('famtastic_staging_mail_capture', '');
+  if ($capture === '') {
+    return;
+  }
+
+  $directory = dirname($capture);
+  if (!is_dir($directory)) {
+    @mkdir($directory, 0700, TRUE);
+  }
+  $entry = [
+    'schema' => 'famtastic.protected-staging-mail.v1',
+    'captured_at' => gmdate(DATE_ATOM),
+    'module' => (string) ($message['module'] ?? ''),
+    'key' => (string) ($message['key'] ?? ''),
+    'to_sha256' => hash('sha256', strtolower(trim((string) ($message['to'] ?? '')))),
+    'subject_sha256' => hash('sha256', (string) ($message['subject'] ?? '')),
+    'body_sha256' => hash('sha256', implode("\n", array_map('strval', (array) ($message['body'] ?? [])))),
+  ];
+  @file_put_contents($capture, json_encode($entry, JSON_UNESCAPED_SLASHES) . PHP_EOL, FILE_APPEND | LOCK_EX);
+}
+
+/**
  * Implements hook_cron().
  *
  * Sends one durable alert when a public lead misses its first-response SLA.
  */
 function famtastic_pipeline_cron(): void {
+  if (Settings::get('famtastic_protected_staging', FALSE)) {
+    \Drupal::logger('famtastic_pipeline')->warning('Protected staging is active; hook_cron skipped all automation, outbox, SLA, provider, and delivery work.');
+    return;
+  }
   /** @var \Drupal\famtastic_pipeline\Service\PilotExactDispatchLock $pilotLock */
   $pilotLock = \Drupal::service('famtastic_pipeline.pilot_exact_dispatch_lock');
   if ($pilotLock->isActive()) {
