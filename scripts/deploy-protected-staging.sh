@@ -55,7 +55,7 @@ case "$MODE" in --preflight|--dry-run|--apply) ;; *) usage >&2; exit 2 ;; esac
 [[ "$STAGING_REF" =~ ^refs/heads/[A-Za-z0-9._/-]+$ ]] || fail "FAMTASTIC_STAGING_REF must be one pushed branch ref"
 [[ -n "$REPOSITORY_URL" ]] || fail "staging repository URL is required"
 
-for command in git awk tar; do command -v "$command" >/dev/null || fail "missing local prerequisite: $command"; done
+for command in git awk tar npm node; do command -v "$command" >/dev/null || fail "missing local prerequisite: $command"; done
 cd "$REPO_ROOT"
 [[ -z "$(git status --porcelain)" ]] || fail "refusing a dirty worktree"
 HEAD_SHA="$(git rev-parse HEAD)"
@@ -100,7 +100,13 @@ for command in ssh openssl; do command -v "$command" >/dev/null || fail "missing
 [[ "$STAGING_ADDRESS" =~ ^[A-Za-z0-9.:-]+$ ]] || fail "staging address is malformed"
 TLS_SAN="$(printf '' | openssl s_client -connect "$STAGING_ADDRESS:443" -servername "$STAGING_HOST" 2>/dev/null | openssl x509 -noout -ext subjectAltName 2>/dev/null)" || fail "TLS certificate cannot be read for staging host"
 grep -F "DNS:$STAGING_HOST" <<<"$TLS_SAN" >/dev/null || fail "TLS certificate does not cover the staging host"
+VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' npm --prefix "$TMP_ROOT/frontend" ci --include=dev
+VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' npm --prefix "$TMP_ROOT/frontend" run build
+! grep -R -E 'pk_live_|https://famtasticdesigns\.com/web|G-T2ENFBZR4K' "$TMP_ROOT/frontend/dist" >/dev/null || fail "staging build contains a production provider/API identifier"
 printf '%s\n' "$BASIC_AUTH_PASSWORD" | ssh -T "$SSH_TARGET" "set -e; umask 077; mkdir -p '$STAGING_ROOT/secrets'; read -r password; hash=\$(printf '%s' \"\$password\" | openssl passwd -apr1 -stdin); printf '%s:%s\\n' '$BASIC_AUTH_USER' \"\$hash\" > '$STAGING_ROOT/secrets/staging.htpasswd'; chmod 600 '$STAGING_ROOT/secrets/staging.htpasswd'"
+ssh -T "$SSH_TARGET" "set -e; mkdir -p '$STAGING_ROOT/releases/$HEAD_SHA/source' '$STAGING_ROOT/releases/$HEAD_SHA/public'"
+git archive --format=tar "$HEAD_SHA" backend | ssh -T "$SSH_TARGET" "tar -xf - -C '$STAGING_ROOT/releases/$HEAD_SHA/source'"
+tar -cf - -C "$TMP_ROOT/frontend/dist" . | ssh -T "$SSH_TARGET" "tar -xf - -C '$STAGING_ROOT/releases/$HEAD_SHA/public'"
 ssh -T "$SSH_TARGET" bash -s -- "$CPANEL_HOME" "$STAGING_ROOT" "$DOCROOT" "$DB_CREDENTIAL_FILE" "$REPOSITORY_URL" "$STAGING_REF" "$HEAD_SHA" "$STAGING_HOST" "$RELEASE_ID" <<'REMOTE'
 set -euo pipefail
 home="$1"; root="$2"; docroot="$3"; db_file="$4"; repository="$5"; ref="$6"; sha="$7"; host="$8"; release_id="$9"
@@ -108,12 +114,7 @@ fail() { echo "protected-staging remote: $*" >&2; exit 2; }
 [[ "$home" == /home/* && "$root" == "$home"/* && "$docroot" == "$root/current/public" && "$docroot" != *'/public_html'* ]] || fail "unsafe remote paths"
 [[ -f "$db_file" ]] || fail "isolated DB credential file missing"
 [[ "$(stat -c '%a' "$db_file" 2>/dev/null || stat -f '%Lp' "$db_file")" == 600 ]] || fail "DB credential file must be mode 0600"
-for command in git composer php mysql mysqldump gzip openssl python3 uapi; do command -v "$command" >/dev/null || fail "missing cPanel prerequisite: $command"; done
-if [[ -f "$home/.nvm/nvm.sh" ]]; then
-  # shellcheck disable=SC1090
-  source "$home/.nvm/nvm.sh"
-fi
-for command in npm node; do command -v "$command" >/dev/null || fail "missing cPanel prerequisite: $command"; done
+for command in composer php mysql mysqldump gzip openssl python3 uapi; do command -v "$command" >/dev/null || fail "missing cPanel prerequisite: $command"; done
 if crontab -l 2>/dev/null | grep -F -- "$root" >/dev/null; then fail "a cPanel cron already targets staging; this deployer never edits cron"; fi
 uapi --output=json DomainInfo domains_data format=list | python3 -c '
 import json, sys
@@ -159,10 +160,9 @@ chmod 600 "$hash_salt_file" "$admin_password_file" "$database_env"
 source "$database_env"
 [[ "${STAGING_DB_NAME:-}" == *fdstg* && -n "${STAGING_DB_USER:-}" && -n "${STAGING_DB_PASSWORD:-}" && -n "${STAGING_HASH_SALT:-}" ]] || fail "fresh staging DB credentials are invalid"
 STAGING_ADMIN_PASSWORD="$(tr -d '\r\n' < "$admin_password_file")"
-mirror="$root/repository.git"; release="$root/releases/$sha"; source_dir="$release/source"
-if [[ ! -d "$mirror" ]]; then git clone --mirror "$repository" "$mirror"; else git --git-dir="$mirror" fetch --prune origin; fi
-[[ "$(git --git-dir="$mirror" rev-parse "$ref")" == "$sha" ]] || fail "cPanel mirror did not resolve the exact pushed SHA"
-if [[ ! -d "$source_dir" ]]; then mkdir -p "$release"; git --git-dir="$mirror" worktree add --detach "$source_dir" "$sha"; fi
+release="$root/releases/$sha"; source_dir="$release/source"
+test -f "$source_dir/backend/composer.lock" || fail "exact Git-archived backend is absent"
+test -f "$release/public/index.html" || fail "exact locally built frontend artifact is absent"
 test -f "$source_dir/backend/web/modules/custom/famtastic_pipeline/src/Service/DisabledPaymentGateway.php" || fail "disabled payment gateway absent in release"
 test -f "$source_dir/backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.module" || fail "protected staging mail hook absent in release"
 test -f "$source_dir/backend/web/modules/custom/famtastic_pipeline/src/EventSubscriber/ProtectedStagingRequestSubscriber.php" || fail "payment route guard absent in release"
@@ -191,11 +191,7 @@ if [[ ! -L "$files_dir" ]]; then
   ln -s "$root/state/files" "$files_dir"
 fi
 cd "$source_dir/backend"; composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
-VITE_DRUPAL_BASE_URL="https://${host}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' npm --prefix "$source_dir/frontend" ci --include=dev
-VITE_DRUPAL_BASE_URL="https://${host}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' npm --prefix "$source_dir/frontend" run build
-! grep -R -E 'pk_live_|https://famtasticdesigns\.com/web|G-T2ENFBZR4K' "$source_dir/frontend/dist" >/dev/null || fail "staging build contains a production provider/API identifier"
 mkdir -p "$release/public/.well-known/acme-challenge"
-cp -a "$source_dir/frontend/dist/." "$release/public/"
 ln -sfn ../source/backend/web "$release/public/web"
 cat > "$release/public/.htaccess" <<HTACCESS
 Header always set X-Robots-Tag "noindex, nofollow, noarchive"
