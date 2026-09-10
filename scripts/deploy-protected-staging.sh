@@ -100,7 +100,7 @@ echo "Rollback evidence: $ROLLBACK"
 [[ "$CPANEL_HOME" == /home/* && "$STAGING_ROOT" == "$CPANEL_HOME"/* ]] || fail "staging root must be beneath the cPanel home"
 [[ "$DOCROOT" == "$STAGING_ROOT/current/public" && "$DOCROOT" != *'/public_html'* ]] || fail "docroot must be isolated current/public, never public_html"
 [[ "$BASIC_AUTH_USER" =~ ^[A-Za-z0-9._-]{3,64}$ && ${#BASIC_AUTH_PASSWORD} -ge 20 ]] || fail "a new stage-only Basic Auth user and 20+ character password are required"
-for command in ssh openssl; do command -v "$command" >/dev/null || fail "missing local prerequisite: $command"; done
+for command in ssh openssl rsync; do command -v "$command" >/dev/null || fail "missing local prerequisite: $command"; done
 
 # DNS and TLS are preconditions. DNS is intentionally provisioned through the
 # authoritative GoDaddy API, never through cPanel's non-authoritative zone.
@@ -114,7 +114,15 @@ VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VIT
 printf '%s\n' "$BASIC_AUTH_PASSWORD" | ssh -T "$SSH_TARGET" "set -e; umask 077; mkdir -p '$STAGING_ROOT/secrets'; read -r password; hash=\$(printf '%s' \"\$password\" | openssl passwd -apr1 -stdin); printf '%s:%s\\n' '$BASIC_AUTH_USER' \"\$hash\" > '$STAGING_ROOT/secrets/staging.htpasswd'; chmod 600 '$STAGING_ROOT/secrets/staging.htpasswd'"
 ssh -T "$SSH_TARGET" "set -e; mkdir -p '$STAGING_ROOT/releases/$HEAD_SHA/source' '$STAGING_ROOT/releases/$HEAD_SHA/public'"
 git archive --format=tar "$HEAD_SHA" backend | ssh -T "$SSH_TARGET" "tar -xf - -C '$STAGING_ROOT/releases/$HEAD_SHA/source'"
-tar -cf - -C "$TMP_ROOT/frontend/dist" . | ssh -T "$SSH_TARGET" "tar -xf - -C '$STAGING_ROOT/releases/$HEAD_SHA/public'"
+RSYNC_OK=0
+for attempt in 1 2 3 4 5; do
+  if rsync --archive --checksum --delete --partial --delay-updates --timeout=60 -e 'ssh -T' "$TMP_ROOT/frontend/dist/" "$SSH_TARGET:$STAGING_ROOT/releases/$HEAD_SHA/public/"; then
+    RSYNC_OK=1
+    break
+  fi
+  echo "protected-staging: frontend transfer attempt $attempt failed; resuming the exact artifact" >&2
+done
+[[ "$RSYNC_OK" == 1 ]] || fail "frontend artifact transfer failed after five resumable attempts"
 ssh -T "$SSH_TARGET" bash -s -- "$CPANEL_HOME" "$STAGING_ROOT" "$DOCROOT" "$DB_CREDENTIAL_FILE" "$REPOSITORY_URL" "$STAGING_REF" "$HEAD_SHA" "$STAGING_HOST" "$RELEASE_ID" <<'REMOTE'
 set -euo pipefail
 home="$1"; root="$2"; docroot="$3"; db_file="$4"; repository="$5"; ref="$6"; sha="$7"; host="$8"; release_id="$9"
