@@ -113,16 +113,18 @@ VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VIT
 ! grep -R -F 'https://famtasticdesigns.com/web' "$TMP_ROOT/frontend/dist/assets" >/dev/null || fail "staging JavaScript/CSS bundle contains the production Drupal API base"
 printf '%s\n' "$BASIC_AUTH_PASSWORD" | ssh -T "$SSH_TARGET" "set -e; umask 077; mkdir -p '$STAGING_ROOT/secrets'; read -r password; hash=\$(printf '%s' \"\$password\" | openssl passwd -apr1 -stdin); printf '%s:%s\\n' '$BASIC_AUTH_USER' \"\$hash\" > '$STAGING_ROOT/secrets/staging.htpasswd'; chmod 600 '$STAGING_ROOT/secrets/staging.htpasswd'"
 ssh -T "$SSH_TARGET" "set -e; mkdir -p '$STAGING_ROOT/releases/$HEAD_SHA/source' '$STAGING_ROOT/releases/$HEAD_SHA/public'"
-git archive --format=tar "$HEAD_SHA" backend | ssh -T "$SSH_TARGET" "tar -xf - -C '$STAGING_ROOT/releases/$HEAD_SHA/source'"
-RSYNC_OK=0
-for attempt in 1 2 3 4 5; do
-  if rsync --archive --checksum --delete --partial --delay-updates --timeout=60 -e 'ssh -T' "$TMP_ROOT/frontend/dist/" "$SSH_TARGET:$STAGING_ROOT/releases/$HEAD_SHA/public/"; then
-    RSYNC_OK=1
-    break
-  fi
-  echo "protected-staging: frontend transfer attempt $attempt failed; resuming the exact artifact" >&2
-done
-[[ "$RSYNC_OK" == 1 ]] || fail "frontend artifact transfer failed after five resumable attempts"
+rsync_exact() {
+  local source_path="$1" destination_path="$2" label="$3" attempt
+  for attempt in 1 2 3 4 5; do
+    if rsync --archive --checksum --delete --partial --delay-updates --timeout=60 -e 'ssh -T' "$source_path" "$SSH_TARGET:$destination_path"; then
+      return 0
+    fi
+    echo "protected-staging: $label transfer attempt $attempt failed; resuming the exact artifact" >&2
+  done
+  fail "$label artifact transfer failed after five resumable attempts"
+}
+rsync_exact "$TMP_ROOT/backend/" "$STAGING_ROOT/releases/$HEAD_SHA/source/backend/" backend
+rsync_exact "$TMP_ROOT/frontend/dist/" "$STAGING_ROOT/releases/$HEAD_SHA/public/" frontend
 ssh -T "$SSH_TARGET" bash -s -- "$CPANEL_HOME" "$STAGING_ROOT" "$DOCROOT" "$DB_CREDENTIAL_FILE" "$REPOSITORY_URL" "$STAGING_REF" "$HEAD_SHA" "$STAGING_HOST" "$RELEASE_ID" <<'REMOTE'
 set -euo pipefail
 home="$1"; root="$2"; docroot="$3"; db_file="$4"; repository="$5"; ref="$6"; sha="$7"; host="$8"; release_id="$9"
