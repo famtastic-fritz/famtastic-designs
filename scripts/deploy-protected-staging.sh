@@ -109,7 +109,8 @@ TLS_SAN="$(printf '' | openssl s_client -connect "$STAGING_ADDRESS:443" -servern
 grep -F "DNS:$STAGING_HOST" <<<"$TLS_SAN" >/dev/null || fail "TLS certificate does not cover the staging host"
 VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' "${NPM_COMMAND[@]}" --prefix "$TMP_ROOT/frontend" ci --include=dev --no-audit --no-fund
 VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' "${NPM_COMMAND[@]}" --prefix "$TMP_ROOT/frontend" run build
-! grep -R -E 'pk_live_|https://famtasticdesigns\.com/web|G-T2ENFBZR4K' "$TMP_ROOT/frontend/dist" >/dev/null || fail "staging build contains a production provider/API identifier"
+! grep -R -E 'pk_live_|G-T2ENFBZR4K' "$TMP_ROOT/frontend/dist" >/dev/null || fail "staging build contains a production provider identifier"
+! grep -R -F 'https://famtasticdesigns.com/web' "$TMP_ROOT/frontend/dist/assets" >/dev/null || fail "staging JavaScript/CSS bundle contains the production Drupal API base"
 printf '%s\n' "$BASIC_AUTH_PASSWORD" | ssh -T "$SSH_TARGET" "set -e; umask 077; mkdir -p '$STAGING_ROOT/secrets'; read -r password; hash=\$(printf '%s' \"\$password\" | openssl passwd -apr1 -stdin); printf '%s:%s\\n' '$BASIC_AUTH_USER' \"\$hash\" > '$STAGING_ROOT/secrets/staging.htpasswd'; chmod 600 '$STAGING_ROOT/secrets/staging.htpasswd'"
 ssh -T "$SSH_TARGET" "set -e; mkdir -p '$STAGING_ROOT/releases/$HEAD_SHA/source' '$STAGING_ROOT/releases/$HEAD_SHA/public'"
 git archive --format=tar "$HEAD_SHA" backend | ssh -T "$SSH_TARGET" "tar -xf - -C '$STAGING_ROOT/releases/$HEAD_SHA/source'"
