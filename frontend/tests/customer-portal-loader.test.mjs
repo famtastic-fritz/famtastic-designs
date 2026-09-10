@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { loadCustomerPortal } from '../src/pages/customerPortalLoader.js';
+import {
+  getStaffCommandCenterLink,
+  loadCustomerPortal,
+} from '../src/pages/customerPortalLoader.js';
 
 function deferred() {
   let resolve;
@@ -72,4 +75,32 @@ test('waits for an authenticated session, then loads workspace and catalog in pa
   catalogGate.resolve(catalog);
 
   assert.deepEqual(await loading, { session, workspace, catalog });
+});
+
+test('exposes the staff command center link only for the authorized capability', () => {
+  assert.deepEqual(getStaffCommandCenterLink({
+    staff: {
+      can_access_command_center: true,
+      command_center_url: '/web/admin/famtastic',
+    },
+  }), {
+    href: '/web/admin/famtastic',
+    label: 'Staff Command Center',
+  });
+});
+
+test('ordinary customers and untrusted destinations receive no staff link', () => {
+  assert.equal(getStaffCommandCenterLink({ customer: { verified: true } }), null);
+  assert.equal(getStaffCommandCenterLink({
+    staff: {
+      can_access_command_center: false,
+      command_center_url: '/web/admin/famtastic',
+    },
+  }), null);
+  assert.equal(getStaffCommandCenterLink({
+    staff: {
+      can_access_command_center: true,
+      command_center_url: 'https://example.test/not-the-command-center',
+    },
+  }), null);
 });

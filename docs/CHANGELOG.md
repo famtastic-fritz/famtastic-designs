@@ -1,5 +1,23 @@
 # Product changelog
 
+## 2026-09-10 — One-account portal and Drupal administration bridge
+
+- Connected the authenticated Client Portal session to Drupal's exact
+  `administer famtastic pipeline` permission. Authorized staff receive one
+  trusted same-origin Staff Command Center destination; ordinary customers
+  receive no staff capability or control.
+- Added a mobile-friendly Staff Command Center entry and client-side refusal
+  for altered or external destinations. The portal remains the daily mobile
+  workspace while Drupal remains the full configuration surface.
+- Corrected the staging fixture boundary: a Drupal administrator without a
+  verified portal customer/organization record is an incomplete fixture, not
+  an intentional second identity. The isolated staging owner now uses one
+  verified identity for both login paths; production identity data was not
+  changed.
+- Made the extra HTTP Basic Auth shield configurable and disabled by default
+  for ordinary owner review. Application logins, TLS, noindex, CSP, payment
+  isolation, and mail isolation remain required.
+
 ## 2026-09-10 — Protected-staging incident and verification checkpoint
 
 - Provisioned `staging.famtasticdesigns.com` with a dedicated document root,

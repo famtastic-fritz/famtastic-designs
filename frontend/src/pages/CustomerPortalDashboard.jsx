@@ -38,7 +38,7 @@ import PortalReferralsView from '../components/portal/PortalReferralsView.jsx';
 import PortalBillingView from '../components/portal/PortalBillingView.jsx';
 import PortalAccountView from '../components/portal/PortalAccountView.jsx';
 import PortalSettingsView from '../components/portal/PortalSettingsView.jsx';
-import { loadCustomerPortal } from './customerPortalLoader.js';
+import { getStaffCommandCenterLink, loadCustomerPortal } from './customerPortalLoader.js';
 
 export default function CustomerPortalDashboard() {
   const navigate = useNavigate();
@@ -184,6 +184,7 @@ export default function CustomerPortalDashboard() {
   const openThreadsCount = (workspace?.threads || []).filter(
     (thread) => thread.status === 'open'
   ).length;
+  const staffCommandCenter = getStaffCommandCenterLink(session);
 
   const nextAction = useMemo(() => {
     if (!order) return 'Tell us what your business needs next';
@@ -432,6 +433,13 @@ export default function CustomerPortalDashboard() {
 
       <main className="portal-main">
         <PortalHeader section={section} customer={session.customer} org={org} />
+
+        {staffCommandCenter && (
+          <a className="portal-staff-command-center" href={staffCommandCenter.href}>
+            <span aria-hidden="true">↗</span>
+            {staffCommandCenter.label}
+          </a>
+        )}
 
         {notice && (
           <div className="portal-notice" role="status">

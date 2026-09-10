@@ -34,6 +34,22 @@ one-page → multi-page or starter → growth-system upgrade. New capabilities a
 to the recipe. They do not replace the client’s chosen site with unrelated SaaS
 chrome or force a fresh website build.
 
+## One identity, two authorized surfaces
+
+The verified Drupal identity is the account authority for both experiences:
+
+- the Client Portal is the mobile-first daily workspace;
+- the Drupal Command Center is the full administration and configuration
+  surface.
+
+An account granted the exact `administer famtastic pipeline` permission may
+receive a minimal Staff Command Center capability in its authenticated portal
+session. The portal renders the trusted same-origin destination only when that
+server-side capability is present. Ordinary customers receive neither the
+capability nor the control. A Drupal administrator record without a verified
+portal customer/organization record is an incomplete environment fixture, not
+a supported third identity or an intentional restriction to Drupal-only work.
+
 ## Shay as the first implementation
 
 Tighten Up Your Locs uses the registry as a client-specific recipe: branded

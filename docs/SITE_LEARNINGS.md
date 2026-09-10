@@ -2142,3 +2142,35 @@ queued.
 - Local tests and source inspection are not hosted-staging proof. The release
   claim begins only after the exact pushed commit passes authenticated browser,
   side-effect, TLS, access-control, and rollback checks on the staging host.
+
+## 2026-09-10 — A Drupal user is not automatically a complete portal identity
+
+- The protected-staging owner could authenticate to Drupal but the Client
+  Portal refused access because the isolated database lacked the related
+  verified `famtastic_customer`, organization, and owner-membership records.
+  Resetting the Drupal password cannot repair that relationship.
+- Environment provisioning must create or reconcile one verified identity
+  across Drupal authentication and portal ownership, then test both entry
+  points. Staff navigation is disclosed only from the exact server-side
+  `administer famtastic pipeline` permission; a frontend-only role flag is not
+  authority.
+- The portal and Drupal surfaces are complementary, not competing replacements:
+  the portal is the mobile daily workspace and Drupal is the complete system
+  administration surface. Ordinary customers must never receive the staff
+  bridge.
+
+## 2026-09-10 — Owner-review access and shared-host backups are explicit choices
+
+- An extra HTTP Basic Auth shield can prevent a legitimate owner from reaching
+  the application login and can be mistaken for a changed application
+  password. Keep it configurable. For ordinary no-sensitive-data owner review,
+  default to TLS plus application authentication and noindex; opt into the
+  extra shield only for a rehearsal that needs it.
+- On the shared host, a 250,000-inode ceiling matters more than raw disk size.
+  Expanded server-side full-site backups consumed tens of thousands of inodes
+  and blocked deployment. Application source belongs in Git; retain only
+  short-lived, checksummed database rollback backups on the host and remove
+  expanded deployment archives after verification.
+- Long SSH sessions to the host reset unpredictably. Split scoped release
+  archives into small chunks, verify each chunk and the reassembled digest,
+  and resume missing chunks instead of restarting the whole upload.

@@ -53,6 +53,7 @@
 
 /* Customer operating hub navigation and engagement surfaces. */
 .portal-menu-toggle,.portal-scrim,.portal-nav-head>button{display:none}
+.portal-staff-command-center{min-height:44px;margin:-1rem 0 1rem auto;padding:.65rem .9rem;display:flex;align-items:center;gap:.55rem;width:max-content;max-width:100%;border:1px solid rgba(124,252,0,.4);border-radius:10px;background:rgba(124,252,0,.08);color:#dfffc8;font-weight:800;text-decoration:none}.portal-staff-command-center:hover,.portal-staff-command-center:focus-visible{border-color:var(--p-lime);background:rgba(124,252,0,.14)}
 .portal-mobile-nav{display:none}
 .portal-nav-head{display:flex;align-items:center;justify-content:space-between}
 .portal-nav nav{gap:.85rem;padding-bottom:1rem}
@@ -92,6 +93,7 @@
   .portal-nav nav button{width:100%;white-space:normal;flex:auto;scroll-snap-align:none}
   .portal-signout{position:static;margin-top:auto;width:100%}
   .portal-main{padding:1rem 1rem 6.5rem}.portal-main>header{min-height:62px}
+  .portal-staff-command-center{margin:-.5rem 0 1rem;width:100%;justify-content:center}
   .portal-support-choices{grid-template-columns:minmax(0,1fr)}
   .portal-mobile-nav{position:fixed;z-index:58;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));min-height:64px;padding:6px max(6px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-right));border-top:1px solid var(--p-line);background:rgba(8,10,8,.98);backdrop-filter:blur(14px)}
   .portal-mobile-nav button{position:relative;min-width:44px;min-height:52px;display:grid;place-items:center;gap:2px;border:0;border-radius:10px;background:transparent;color:#8e998e;font:inherit;cursor:pointer}

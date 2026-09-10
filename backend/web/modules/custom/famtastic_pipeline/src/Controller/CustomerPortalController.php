@@ -14,6 +14,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\famtastic_pipeline\Portal\StaffCommandCenterBridge;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Drupal\famtastic_pipeline\Service\CatalogPaymentEligibilityService;
 use Drupal\famtastic_pipeline\Service\CommerceLifecycleService;
@@ -601,12 +602,26 @@ final class CustomerPortalController extends ControllerBase {
     return $this->account->isAuthenticated() ? $this->portal->customerForUid((int) $this->account->id()) : NULL;
   }
 
+  /**
+   * Builds the account session and conditionally discloses staff navigation.
+   */
   private function sessionPayload(array $customer): JsonResponse {
-    return $this->noStore(new JsonResponse(['ok' => TRUE, 'customer' => [
-      'public_id' => $customer['public_id'], 'display_name' => $customer['display_name'],
-      'email' => $customer['email'], 'phone' => $customer['phone'],
-      'marketing_status' => $customer['marketing_status'], 'verified' => !empty($customer['verified_at']),
-    ], 'organizations' => array_map(fn(array $o): array => array_diff_key($o, ['id' => TRUE]), $this->portal->organizations((int) $customer['id']))]));
+    $payload = [
+      'ok' => TRUE,
+      'customer' => [
+        'public_id' => $customer['public_id'],
+        'display_name' => $customer['display_name'],
+        'email' => $customer['email'],
+        'phone' => $customer['phone'],
+        'marketing_status' => $customer['marketing_status'],
+        'verified' => !empty($customer['verified_at']),
+      ],
+      'organizations' => array_map(
+        fn(array $organization): array => array_diff_key($organization, ['id' => TRUE]),
+        $this->portal->organizations((int) $customer['id']),
+      ),
+    ];
+    return $this->noStore(new JsonResponse(StaffCommandCenterBridge::enrichSession($this->account, $payload)));
   }
 
   private function sendVerification(Request $request, array $customer, ?string $previewDelivery = NULL): void {

@@ -21,6 +21,7 @@ EVIDENCE_ROOT="${FAMTASTIC_STAGING_EVIDENCE_ROOT:-$REPO_ROOT/.protected-staging/
 APPLY_CONFIRM="${FAMTASTIC_STAGING_APPLY_CONFIRM:-}"
 BASIC_AUTH_USER="${FAMTASTIC_STAGING_BASIC_AUTH_USER:-}"
 BASIC_AUTH_PASSWORD="${FAMTASTIC_STAGING_BASIC_AUTH_PASSWORD:-}"
+REQUIRE_BASIC_AUTH="${FAMTASTIC_STAGING_REQUIRE_BASIC_AUTH:-0}"
 INODE_LIMIT="${FAMTASTIC_STAGING_INODE_LIMIT:-250000}"
 MIN_INODE_HEADROOM="${FAMTASTIC_STAGING_MIN_INODE_HEADROOM:-30000}"
 
@@ -41,8 +42,9 @@ Required only for --apply:
   FAMTASTIC_STAGING_ROOT=/home/<cpanel-user>/famtastic-staging
   FAMTASTIC_STAGING_DOCROOT=/home/<cpanel-user>/famtastic-staging/current/public
   FAMTASTIC_STAGING_DB_CREDENTIAL_FILE=/home/<cpanel-user>/famtastic-staging/secrets/db-provision.json
-  FAMTASTIC_STAGING_BASIC_AUTH_USER=<new-stage-only-user>
-  FAMTASTIC_STAGING_BASIC_AUTH_PASSWORD=<new-stage-only-password>
+  FAMTASTIC_STAGING_REQUIRE_BASIC_AUTH=0|1 (default: 0)
+  FAMTASTIC_STAGING_BASIC_AUTH_USER=<required only when Basic Auth is enabled>
+  FAMTASTIC_STAGING_BASIC_AUTH_PASSWORD=<required only when Basic Auth is enabled>
   FAMTASTIC_STAGING_ADDRESS=<verified server IP, optional during DNS propagation>
 
 Before --apply, provision the staging subdomain at this docroot, create the
@@ -101,7 +103,10 @@ echo "Rollback evidence: $ROLLBACK"
 [[ -n "$SSH_TARGET" && -n "$CPANEL_HOME" && -n "$STAGING_ROOT" && -n "$DOCROOT" && -n "$DB_CREDENTIAL_FILE" ]] || fail "cPanel target, root, docroot, and isolated DB credential file are required"
 [[ "$CPANEL_HOME" == /home/* && "$STAGING_ROOT" == "$CPANEL_HOME"/* ]] || fail "staging root must be beneath the cPanel home"
 [[ "$DOCROOT" == "$STAGING_ROOT/current/public" && "$DOCROOT" != *'/public_html'* ]] || fail "docroot must be isolated current/public, never public_html"
-[[ "$BASIC_AUTH_USER" =~ ^[A-Za-z0-9._-]{3,64}$ && ${#BASIC_AUTH_PASSWORD} -ge 20 ]] || fail "a new stage-only Basic Auth user and 20+ character password are required"
+[[ "$REQUIRE_BASIC_AUTH" =~ ^[01]$ ]] || fail "FAMTASTIC_STAGING_REQUIRE_BASIC_AUTH must be 0 or 1"
+if [[ "$REQUIRE_BASIC_AUTH" == 1 ]]; then
+  [[ "$BASIC_AUTH_USER" =~ ^[A-Za-z0-9._-]{3,64}$ && ${#BASIC_AUTH_PASSWORD} -ge 20 ]] || fail "Basic Auth requires a stage-only user and a 20+ character password"
+fi
 [[ "$SSH_TARGET" =~ ^[A-Za-z0-9._-]+@[A-Za-z0-9.-]+$ ]] || fail "staging SSH target is malformed"
 [[ "$CPANEL_HOME" =~ ^/home/[A-Za-z0-9._-]+$ ]] || fail "cPanel home contains unsafe characters"
 [[ "$STAGING_ROOT" =~ ^/home/[A-Za-z0-9._-]+/[A-Za-z0-9._/-]+$ ]] || fail "staging root contains unsafe characters"
@@ -131,7 +136,9 @@ check_inode_headroom() {
 }
 
 check_inode_headroom upload
-printf '%s\n' "$BASIC_AUTH_PASSWORD" | ssh -T "$SSH_TARGET" "set -e; umask 077; mkdir -p '$STAGING_ROOT/secrets' '$STAGING_ROOT/auth'; chmod 700 '$STAGING_ROOT/secrets'; chmod 711 '$STAGING_ROOT/auth'; read -r password; hash=\$(printf '%s' \"\$password\" | php -r 'echo password_hash(rtrim(stream_get_contents(STDIN)), PASSWORD_BCRYPT, [\"cost\" => 12]);'); printf '%s:%s\\n' '$BASIC_AUTH_USER' \"\$hash\" > '$STAGING_ROOT/auth/staging.htpasswd'; chmod 644 '$STAGING_ROOT/auth/staging.htpasswd'"
+if [[ "$REQUIRE_BASIC_AUTH" == 1 ]]; then
+  printf '%s\n' "$BASIC_AUTH_PASSWORD" | ssh -T "$SSH_TARGET" "set -e; umask 077; mkdir -p '$STAGING_ROOT/secrets' '$STAGING_ROOT/auth'; chmod 700 '$STAGING_ROOT/secrets'; chmod 711 '$STAGING_ROOT/auth'; read -r password; hash=\$(printf '%s' \"\$password\" | php -r 'echo password_hash(rtrim(stream_get_contents(STDIN)), PASSWORD_BCRYPT, [\"cost\" => 12]);'); printf '%s:%s\\n' '$BASIC_AUTH_USER' \"\$hash\" > '$STAGING_ROOT/auth/staging.htpasswd'; chmod 644 '$STAGING_ROOT/auth/staging.htpasswd'"
+fi
 ssh -T "$SSH_TARGET" "set -e; test ! -e '$STAGING_ROOT/releases/$HEAD_SHA' || { echo 'sealed release already exists' >&2; exit 2; }; mkdir -p '$STAGING_ROOT/incoming/$HEAD_SHA/source/backend' '$STAGING_ROOT/incoming/$HEAD_SHA/public'"
 
 upload_scoped_archive() {
@@ -166,9 +173,9 @@ upload_scoped_archive() {
 upload_scoped_archive "$TMP_ROOT/backend" "$STAGING_ROOT/incoming/$HEAD_SHA/source/backend" backend
 upload_scoped_archive "$TMP_ROOT/frontend/dist" "$STAGING_ROOT/incoming/$HEAD_SHA/public" frontend
 check_inode_headroom composer
-ssh -T "$SSH_TARGET" bash -s -- "$CPANEL_HOME" "$STAGING_ROOT" "$DOCROOT" "$DB_CREDENTIAL_FILE" "$REPOSITORY_URL" "$STAGING_REF" "$HEAD_SHA" "$STAGING_HOST" "$RELEASE_ID" <<'REMOTE'
+ssh -T "$SSH_TARGET" bash -s -- "$CPANEL_HOME" "$STAGING_ROOT" "$DOCROOT" "$DB_CREDENTIAL_FILE" "$REPOSITORY_URL" "$STAGING_REF" "$HEAD_SHA" "$STAGING_HOST" "$RELEASE_ID" "$REQUIRE_BASIC_AUTH" <<'REMOTE'
 set -euo pipefail
-home="$1"; root="$2"; docroot="$3"; db_file="$4"; repository="$5"; ref="$6"; sha="$7"; host="$8"; release_id="$9"
+home="$1"; root="$2"; docroot="$3"; db_file="$4"; repository="$5"; ref="$6"; sha="$7"; host="$8"; release_id="$9"; require_basic_auth="${10}"
 fail() { echo "protected-staging remote: $*" >&2; exit 2; }
 [[ "$home" == /home/* && "$root" == "$home"/* && "$docroot" == "$root/current/public" && "$docroot" != *'/public_html'* ]] || fail "unsafe remote paths"
 [[ -f "$db_file" ]] || fail "isolated DB credential file missing"
@@ -176,7 +183,9 @@ fail() { echo "protected-staging remote: $*" >&2; exit 2; }
 for command in composer php mysql mysqldump gzip openssl python3 uapi; do command -v "$command" >/dev/null || fail "missing cPanel prerequisite: $command"; done
 if crontab -l 2>/dev/null | grep -F -- "$root" >/dev/null; then fail "a cPanel cron already targets staging; this deployer never edits cron"; fi
 mkdir -p "$root/state"
-chmod 700 "$root/state"
+# Apache must be able to traverse the shared state root to serve Drupal's
+# public files symlink. Sensitive children remain individually mode 0700.
+chmod 711 "$root/state"
 lock="$root/state/deploy.lock"
 mkdir "$lock" 2>/dev/null || fail "another protected-staging deployment is active"
 status_file="$root/state/deploy-$sha.status"
@@ -272,6 +281,7 @@ if [[ ! -L "$files_dir" ]]; then
   fi
   ln -s "$root/state/files" "$files_dir"
 fi
+chmod 755 "$root/state/files"
 printf 'memory_limit=512M\nmax_execution_time=120\n' > "$release/public/.user.ini"
 printf 'memory_limit=512M\nmax_execution_time=120\n' > "$source_dir/backend/web/.user.ini"
 cd "$source_dir/backend"; COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
@@ -289,6 +299,9 @@ RewriteCond %{REQUEST_URI} !^/web(?:/|$)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ /index.html [L]
+HTACCESS
+if [[ "$require_basic_auth" == 1 ]]; then
+  cat >> "$release/public/.htaccess" <<HTACCESS
 AuthType Basic
 AuthName "FAMtastic protected staging"
 AuthUserFile ${root}/auth/staging.htpasswd
@@ -298,6 +311,7 @@ SetEnvIf Request_URI "^/\.well-known/acme-challenge/" allow_acme=1
   Require valid-user
 </RequireAny>
 HTACCESS
+fi
 
 table_count="$(MYSQL_PWD="$STAGING_DB_PASSWORD" mysql -h "$STAGING_DB_HOST" -P "$STAGING_DB_PORT" -u "$STAGING_DB_USER" -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${STAGING_DB_NAME}'")"
 [[ "$table_count" =~ ^[0-9]+$ ]] || fail "could not inspect the staging database"

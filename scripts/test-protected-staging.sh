@@ -54,6 +54,8 @@ echo 'protected staging tests passed'
 
 grep -F 'payload.get("data") or (payload.get("result") or {}).get("data")' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
 grep -F 'FAMTASTIC_STAGING_MIN_INODE_HEADROOM' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'FAMTASTIC_STAGING_REQUIRE_BASIC_AUTH' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'if [[ "$REQUIRE_BASIC_AUTH" == 1 ]]' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
 grep -F 'staging root contains unsafe characters' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
 grep -F 'auth/staging.htpasswd' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
 grep -F 'password_hash' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
@@ -65,5 +67,7 @@ grep -F 'RewriteRule ^ /index.html [L]' "$ROOT/repo/scripts/deploy-protected-sta
 grep -F 'split -b 512k' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
 grep -F 'releases are immutable' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
 grep -F 'another protected-staging deployment is active' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'chmod 711 "$root/state"' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'chmod 755 "$root/state/files"' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
 grep -F 'gzip -t "$backup"' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
 grep -F 'phase activated' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null

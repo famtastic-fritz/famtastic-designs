@@ -2,7 +2,9 @@
 
 This environment is a private rehearsal of the complete FAMtastic Designs
 command center. It is not production and it never uses production customer
-data, payment, mail, scheduler, DNS, hosting, or deployment providers.
+data, payment, mail, scheduler, or production deployment providers. Its
+isolated cPanel host and authoritative GoDaddy staging DNS are infrastructure,
+not permission to operate on production.
 
 ## Infrastructure contract
 
@@ -15,7 +17,9 @@ data, payment, mail, scheduler, DNS, hosting, or deployment providers.
 - Storage: dedicated files, private, mail-capture, secrets, backup, and release
   directories
 - DNS: authoritative GoDaddy record; cPanel zone data is not authority
-- Access: valid TLS followed by Basic Auth; ACME challenges remain reachable
+- Access: valid TLS; optional HTTP Basic Auth is configurable for sensitive
+  rehearsals, but the owner-review default is no extra browser-level password.
+  Drupal and customer accounts keep their normal application authentication.
 - Release: immutable SHA directory plus atomic `current` symlink and rollback
   receipt
 - Scope: the command-center application and Drupal runtime. Large public film,
@@ -74,7 +78,8 @@ release-verified and the capability registry must not be upgraded.
 2. Create or verify the authoritative GoDaddy A record.
 3. Publish an isolated ACME webroot, issue/install TLS, and verify the hostname
    appears in the certificate SAN.
-4. Create stage-only Basic Auth credentials and keep them outside Git.
+4. For a sensitive rehearsal, opt into stage-only Basic Auth and keep its
+   credentials outside Git. Leave it disabled for ordinary owner review.
 5. Push the reviewed integration commit.
 6. Run `scripts/deploy-protected-staging.sh --preflight` against that exact ref.
 7. Run `--apply` only with `DEPLOY_PROTECTED_STAGING:<exact-SHA>` and all explicit
