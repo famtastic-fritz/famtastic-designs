@@ -1,4 +1,10 @@
 services:
+  famtastic_pipeline.famtastic_admin_theme_negotiator:
+    class: Drupal\famtastic_pipeline\Theme\FamtasticAdminThemeNegotiator
+    arguments: ['@theme_handler']
+    tags:
+      - { name: theme_negotiator, priority: 1000 }
+
   logger.channel.famtastic_pipeline:
     parent: logger.channel_base
     arguments: ['famtastic_pipeline']

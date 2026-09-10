@@ -7,3 +7,9 @@ dependencies:
   - drupal:system
   - drupal:user
   - drupal:file
+  - drupal:node
+  - drupal:views
+  - commerce:commerce_order
+  - commerce:commerce_product
+  - commerce:commerce_payment
+  - webform:webform

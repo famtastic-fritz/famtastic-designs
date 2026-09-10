@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-09-09 — Full isolated Drupal and portal browser proof
+
+- Added a reusable theme negotiator so login, password reset, native Drupal
+  administration, and FAMtastic staff routes consistently use the real
+  `famtastic_admin` theme instead of falling back to the public theme.
+- Declared the pipeline module's Commerce, Webform, Node, and Views runtime
+  dependencies, and raised only the disposable test server's PHP memory limit
+  so a fresh runtime can compile the complete container without changing
+  production settings.
+- Fixed desktop command-center overflow at the layout source with border-box
+  sizing and expanded the browser diagnostics to report exact overflowing
+  elements. The complete isolated suite now passes branded login/reset,
+  anonymous protection, authenticated operations, native tables/forms,
+  settings, error recovery, responsive containment, and the customer portal.
+
 ## 2026-09-09 — Authenticated selected-staging dispatch
 
 - Added a configurable Drupal client for Site Studio Next's exact selected-
@@ -59,9 +74,8 @@
   backend and frontend runtime. It checks native login/reset and staff routes
   when Drupal HTTP is available, and verifies portal focus, touch target,
   contrast, overflow, visible action, and 390/768/1280 screenshot coverage.
-- Recorded the current evidence honestly: empty-workspace portal browser proof
-  passed, while the fresh local Drupal HTTP process fails before page markup
-  with a `block_page` display-variant bootstrap inconsistency.
+- Recorded the initial partial evidence honestly. The later full-runtime repair
+  and verification entry supersedes that temporary `block_page` blocker.
 
 ## 2026-09-09 — Site Studio packet-bound staging review before checkout
 

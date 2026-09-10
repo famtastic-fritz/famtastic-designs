@@ -2,7 +2,7 @@
 
 ## Scope and isolation
 
-The source under test was the clean integration worktree on
+The source under test was the integration source snapshot on
 `codex/fd-command-center-integration`. A disposable copy was created under
 `/private/tmp/fd-command-center-runtime.zhmA9J`; Composer dependencies and a
 fresh SQLite database were installed there only. The runtime enabled
@@ -14,12 +14,16 @@ resource was used.
 
 The reusable `frontend/playwright.runtime.config.js` and
 `frontend/e2e/isolated-command-center-runtime.spec.js` harness started the
-integration frontend locally and used route-local mock responses with an empty
-workspace. The following command passed:
+integration frontend and the disposable Drupal runtime locally. The customer
+portal used route-local mock responses with an empty workspace; Drupal used the
+fresh SQLite runtime. The following complete command passed:
 
 ```text
-FAMTASTIC_RUNTIME_SKIP_DRUPAL=1 ... playwright test --config=playwright.runtime.config.js --grep 'customer portal mocked runtime'
-1 passed (2.7s)
+FAMTASTIC_RUNTIME_BACKEND_DIR=/private/tmp/fd-command-center-runtime.zhmA9J/backend \
+FAMTASTIC_RUNTIME_FRONTEND_DIR=/private/tmp/fd-command-center-runtime.zhmA9J/frontend \
+FAMTASTIC_RUNTIME_BACKEND_URL=http://127.0.0.1:18081 \
+npx playwright test --config=playwright.runtime.config.js --reporter=dot
+3 passed (20.4s)
 ```
 
 At 390, 768, and 1280px the customer portal asserted the real visible `Open
@@ -34,38 +38,53 @@ artifacts, not product fixtures:
 | 768 | `b5bac1aabb88719df51fdea2a08d61fe3fa481d1eb2d1d1378a07f46e9a95dd4` |
 | 1280 | `0873be0ff59a49be84bb7170cac7569a17875e80d0bef16a8a0d8fc2caa96461` |
 
-`node scripts/validate-client-portal-design-dna.mjs` also passed all 30 checks.
 The portal result is deliberately mock-backed because this run was forbidden
 from using customer data; it proves the rendered client behavior, not a
 customer-account lifecycle.
 
-## Drupal HTTP blocker
+## Drupal runtime evidence
 
-The new SQLite runtime installed and bootstrapped successfully through Drush,
-including the FAMtastic admin theme and the custom pipeline routes. Browser
-rendering could not begin because the PHP built-in HTTP runtime throws before
-any page markup is emitted:
+The fresh runtime proved the FAMtastic theme on login and password reset at 390,
+768, and 1280px; anonymous staff-route protection; authenticated Operations
+Home; all fourteen live-count record-list destinations; Attention; native
+Drupal content tables and node forms; FAMtastic settings; visible focus;
+minimum input sizing; invalid-login recovery; placeholder-link absence; and
+user-visible horizontal containment. The runtime exposed and the implementation
+repaired four integration defects before the passing run:
 
-```text
-Drupal\Component\Plugin\Exception\PluginNotFoundException:
-The "block_page" plugin does not exist.
-```
+- the custom pipeline module used Commerce, Webform, Node, and Views APIs
+  without declaring their module dependencies;
+- login, reset, and non-custom administration routes had no reusable theme
+  negotiator and could fall back to the public theme;
+- the desktop command-center body used content-box sizing, which made its own
+  padding overflow a 1280px viewport by 64px.
+- wide custom record tables could still widen a 390px page after drill-in; the
+  theme now wraps every Drupal render-array table in a keyboard-focusable,
+  touch-scrollable boundary while the page and navigation remain fixed.
 
-The same database reports the `block` module enabled and Drush can enumerate
-`block_page` and `simple_page` from `plugin.manager.display_variant`. This is
-therefore an HTTP/bootstrap inconsistency in this local PHP 8.5 runtime, not
-evidence that the theme is working. Login/reset, native Drupal forms/tables,
-status messages, staff permissions, and custom staff-route screenshots remain
-**unproven** until that local HTTP issue is repaired or the test is run in the
-supported container runtime. Docker could not be used here because its local
-daemon socket was unavailable and the installed client has no Compose plugin.
+The `block_page` bootstrap failure observed during setup did not recur after the
+dependency declarations, module installation, and cache rebuild. The final
+browser run used PHP with a 512MB memory limit because Webform container
+compilation exhausted the default 128MB limit in the disposable environment.
+
+| Drupal surface | Viewport | SHA-256 |
+| --- | ---: | --- |
+| Login | 390 | `437808ed7c273cf8fce86be63812d3be95e40c0a64e33c7e15ecd7b673de7998` |
+| Login | 768 | `1939a79cc12368f64a36ce2fe469819f47e7d93d7a7dfbd219742850e4813ad1` |
+| Login | 1280 | `f85351f8bdfbd21384cb915c8c7899b2b6f109d21586c23a798dd66459fbd955` |
+| Operations Home | 390 | `3503bb146f8eaefd6ca46468fd65c0a19bf61f93cb2235a3d6e6893d886f6f4f` |
+| Operations Home | 768 | `2d729657cc621fc5ddc8761109784295e37881712b3b15bbbe7f750fb5ea7f1f` |
+| Operations Home | 1280 | `7574acad5d1043f72da4f98b29424aef0157716c21f9f2089acc13af21d1e5d5` |
+| Native node form | 390 | `2ab8bddd3b91149d9b34c2e5cf5e916e785d97684000b5d4227b323d4a1acfe5` |
+| Native node form | 768 | `6defcf583e4f656047fdde5822740c41f9374fdb016939e72d5be95321bfaee3` |
+| Native node form | 1280 | `c8021baa51c209d529d90a9e585155228fc69fc64d752c9460e34f965f1346da` |
 
 ## Re-run contract
 
-Prepare a fresh isolated backend/database first, then set
+Prepare a fresh isolated backend/database first, including the dependencies
+declared by `famtastic_pipeline.info.yml`; then set
 `FAMTASTIC_RUNTIME_BACKEND_DIR` and `FAMTASTIC_RUNTIME_FRONTEND_DIR` to those
 copies and run `frontend/playwright.runtime.config.js`. Do not point either
-variable at production or at a customer-bearing local database. Run without
-`FAMTASTIC_RUNTIME_SKIP_DRUPAL` to require the Drupal login/reset, staff
-permission, native primitive, and custom-route assertions after the HTTP
-bootstrap problem is resolved.
+variable at production or at a customer-bearing local database. Do not use
+`FAMTASTIC_RUNTIME_SKIP_DRUPAL` for release evidence; that switch remains useful
+only for isolated portal development.

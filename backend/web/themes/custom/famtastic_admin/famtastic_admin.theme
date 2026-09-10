@@ -23,6 +23,12 @@ declare(strict_types=1);
 function famtastic_admin_preprocess_page(array &$variables): void {
   $variables['#attached']['library'][] = 'famtastic_admin/global-styling';
 
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if (in_array($route_name, ['user.login', 'user.pass', 'user.reset', 'user.reset.login'], TRUE)) {
+    $variables['famtastic_auth_home_url'] = \Drupal\Core\Url::fromRoute('<front>')->toString();
+    $variables['famtastic_auth_logo_url'] = $variables['base_path'] . $variables['directory'] . '/logo.svg';
+  }
+
   $route = \Drupal::routeMatch()->getRouteObject();
   if (!$route || !$route->getOption('_admin_route')) {
     return;
@@ -30,7 +36,6 @@ function famtastic_admin_preprocess_page(array &$variables): void {
 
   // Keep the navigation native: these are existing, permission-protected
   // Drupal routes, not JavaScript destinations or implied operational actions.
-  $route_name = \Drupal::routeMatch()->getRouteName();
   if (!str_starts_with($route_name, 'famtastic_pipeline.')) {
     return;
   }
@@ -69,6 +74,10 @@ function famtastic_admin_preprocess_page(array &$variables): void {
  * allowlist.
  */
 function famtastic_admin_preprocess_html(array &$variables): void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if (in_array($route_name, ['user.login', 'user.pass', 'user.reset', 'user.reset.login'], TRUE)) {
+    $variables['attributes']['class'][] = 'famtastic-auth-page';
+  }
   $route = \Drupal::routeMatch()->getRouteObject();
   if ($route && $route->getOption('_admin_route')) {
     $variables['attributes']['class'][] = 'famtastic-admin-shell';
@@ -83,6 +92,10 @@ function famtastic_admin_preprocess_html(array &$variables): void {
  * standards-compliant modules.
  */
 function famtastic_admin_theme_suggestions_page_alter(array &$suggestions, array $variables): void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if (in_array($route_name, ['user.login', 'user.pass', 'user.reset', 'user.reset.login'], TRUE)) {
+    $suggestions[] = 'page__famtastic_auth';
+  }
   $route = \Drupal::routeMatch()->getRouteObject();
   if ($route && $route->getOption('_admin_route')) {
     $suggestions[] = 'page__famtastic_admin';

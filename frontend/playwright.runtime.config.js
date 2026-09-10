@@ -22,7 +22,7 @@ if (process.env.FAMTASTIC_RUNTIME_SKIP_DRUPAL !== '1') {
   webServer.unshift({
     // Drupal service definitions may contain docroot-relative paths, so the
     // built-in server must run from web/ rather than backend/.
-    command: 'php -S 127.0.0.1:18081 .ht.router.php',
+    command: 'php -d memory_limit=512M -S 127.0.0.1:18081 .ht.router.php',
     cwd: `${backendDir}/web`,
     url: `${backendUrl}/user/login`,
     reuseExistingServer: false,

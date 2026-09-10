@@ -58,27 +58,29 @@ final class OperationsController extends ControllerBase {
     $openSupport = $this->count('famtastic_portal_thread', ['status' => 'open']);
     $attentionItems = $this->openConversationRecords(3);
     $fulfillmentQueue = $this->fulfillmentQueueCount();
+    $liveCounts = [
+      'campaigns' => ['label' => 'Campaigns', 'value' => $this->count('famtastic_campaign')],
+      'prospects' => ['label' => 'Prospects', 'value' => $this->count('famtastic_prospect')],
+      'customers' => ['label' => 'Customers', 'value' => $this->count('famtastic_customer')],
+      'website-requests' => ['label' => 'Website Requests', 'value' => $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started'])],
+      'proofs-ready' => ['label' => 'Proofs Ready', 'value' => $this->count('proof_campaign', ['generation_status' => 'ready'])],
+      'emails-sent' => ['label' => 'Emails Sent', 'value' => $this->count('famtastic_event', ['event_type' => 'email.sent'])],
+      'clicks' => ['label' => 'Clicks', 'value' => $this->count('famtastic_event', ['event_type' => 'email.clicked'])],
+      'paid-orders' => ['label' => 'Paid Orders', 'value' => $this->count('famtastic_order', ['payment_status' => 'paid'])],
+      'fulfillment' => ['label' => 'Fulfillment', 'value' => $fulfillmentQueue],
+      'open-jobs' => ['label' => 'Open Jobs', 'value' => $this->countIn('famtastic_job', 'status', ['queued', 'retry', 'running'])],
+      'open-exceptions' => ['label' => 'Open Exceptions', 'value' => $this->countIn('famtastic_exception', 'status', ['open', 'retry'])],
+      'support' => ['label' => 'Support', 'value' => $openSupport],
+      'referrals' => ['label' => 'Referrals', 'value' => $this->count('famtastic_referral')],
+      'social-records' => ['label' => 'Social Records', 'value' => $this->count('famtastic_social_record')],
+    ];
     $cards = [
+      ['Website Delivery', $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started']) . ' active requests', 'Briefs, proof review, staging, checkout, and fulfillment.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), 'prospects'],
+      ['Customer Care', $openSupport . ' open conversations', 'Customer messages, support cases, drafts, and replies.', Url::fromRoute('famtastic_pipeline.operations_attention'), 'support'],
+      ['Marketing Command Center', $this->count('famtastic_social_record') . ' records under gates', 'Queue, calendar, channel health, attribution, creative, and Build DNA.', Url::fromRoute('famtastic_pipeline.marketing'), 'campaigns'],
+      ['Content & Offers', $published . ' published items', 'Pages, articles, FAQs, services, offers, and reusable guidance.', Url::fromRoute('system.admin_content'), 'content'],
+      ['Business Control', '$' . number_format($this->revenueLast30Days() / 100, 2) . ' revenue in 30 days', 'Launch approval, grants, notifications, workers, renewals, and service records.', Url::fromRoute('famtastic_pipeline.launch_approval'), 'commerce'],
       ['Website Analytics', !empty($analytics['available']) ? 'Connected · 30-day reporting ready' : 'Connection needs attention', 'Traffic, engagement, top pages, and acquisition channels.', Url::fromRoute('famtastic_pipeline.analytics'), 'analytics'],
-      ['Customers', $this->count('famtastic_customer') . ' customer accounts', 'Customer identity, contact details, consent, and business workspaces.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'customers']), 'customers'],
-      ['Website Requests', $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started']) . ' active requests', 'Pre-purchase interviews, recommendations, private-offer candidates, and Commerce conversion.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), 'prospects'],
-      ['Fulfillment Queue', $fulfillmentQueue . ' paid project' . ($fulfillmentQueue === 1 ? '' : 's') . ' need a next step', 'Completed Commerce orders, provisioning, project stage, and the next owner action.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'fulfillment']), 'commerce'],
-      ['Support', $openSupport . ' open conversations', 'Customer requests, project questions, replies, and service issues.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support']), 'support'],
-      ['Notifications', $this->countIn('famtastic_notification_outbox', 'status', ['queued', 'retry', 'dead_letter']) . ' need attention', 'Receipts, acknowledgments, reminders, delivery attempts, and failures.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'notifications']), 'emails-sent'],
-      ['Automation', $this->count('famtastic_worker_heartbeat') . ' monitored workers', 'Scheduled protection, last runs, retries, and worker health.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'workers']), 'open-jobs'],
-      ['Grant Codes', $this->count('famtastic_grant_code', ['status' => 'active']) . ' active private grants', 'Owner comps, named customer grants, credits, partner benefits, redemption scope, and audit.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'grant-codes']), 'commerce'],
-      ['Launch Approval', 'Owner decision record', 'Review exact product promises, provisional terms, Stripe evidence, and activation gates.', Url::fromRoute('famtastic_pipeline.launch_approval'), 'commerce'],
-      ['Content', $published . ' published items', 'Website pages, articles, FAQs, services, and packages.', Url::fromRoute('system.admin_content'), 'content'],
-      ['Services', $this->count('famtastic_entitlement', ['status' => 'active']) . ' active entitlements', 'Hosting, domains, analytics, websites, and customer capabilities.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'services']), 'services'],
-      ['Referrals', $this->count('famtastic_referral') . ' customer referrals', 'Introductions, privacy-safe status, and reward readiness.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'referrals']), 'referrals'],
-      ['Marketing Command Center', $this->count('famtastic_social_record') . ' records under gates', 'One staff workspace over the campaign manifest: queue, calendar, channels, attribution, email, creative, Build DNA.', Url::fromRoute('famtastic_pipeline.marketing'), 'campaigns'],
-      ['Campaign Operations', $this->count('famtastic_campaign') . ' campaigns', 'Prospects, proof builds, outreach, clicks, and campaign sales.', Url::fromRoute('famtastic_pipeline.campaign_operations'), 'campaigns'],
-      ['Proof QA Queue', $this->count('proof_campaign', ['generation_status' => 'ready']) . ' ready for review', 'Quality gate before a customer ever sees concepts.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'proofs-ready']), 'proofs'],
-      ['Campaign Gates', $this->count('famtastic_social_record') . ' records tracked', 'Content/media/publish approvals for the 17-day campaign.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'social-records']), 'campaigns'],
-      ['Support Drafts', $this->countIn('famtastic_support_draft', 'status', ['pending']) . ' awaiting decision', 'L0 drafted replies - approve or reject, nothing auto-sends.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support-drafts']), 'support'],
-      ['Customer Replies', $this->count('famtastic_inbound_message') . ' inbound messages', 'Every validated customer email with match status.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'replies']), 'emails-sent'],
-      ['Renewals Due 30d', $this->renewalsDueCount() . ' services renewing', 'Recurring revenue coming due - act before the date.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'services']), 'services'],
-      ['Revenue 30d', '$' . number_format($this->revenueLast30Days() / 100, 2), 'Paid Commerce order totals in the last 30 days.', Url::fromRoute('famtastic_pipeline.campaign_operations'), 'commerce'],
     ];
     $cardBuild = [];
     foreach ($cards as [$title, $status, $description, $url, $icon]) {
@@ -89,9 +91,11 @@ final class OperationsController extends ControllerBase {
       ];
     }
     return $this->page([
-      'hero' => ['#markup' => '<section class="famtastic-hub__hero"><span>FAMtastic Designs</span><h2>Run the business from one place.</h2><p>Choose the area you need. Website analytics and campaign operations remain focused, separate workspaces.</p></section>'],
+      'hero' => ['#markup' => '<section class="famtastic-hub__hero"><span>FAMtastic Designs · internal</span><h2>Operations Hub</h2><p>Live counts open the exact records behind them. Workspaces keep delivery, care, marketing, content, and results focused.</p></section>'],
       'attention' => $this->attentionCard($openSupport, $attentionItems),
-      'heading' => ['#markup' => '<h2 class="famtastic-hub__heading">Operations</h2>'],
+      'counts_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>At a glance</span><h2>Live counts</h2></div><p>Every count opens its permission-checked record list.</p></div>'],
+      'counts' => $this->metricCards($liveCounts),
+      'heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Command center</span><h2>Workspaces</h2></div><p>Open the focused area for the job you need to do.</p></div>'],
       'cards' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-hub__grid']], 'items' => $cardBuild],
     ], 'Operations Home');
   }

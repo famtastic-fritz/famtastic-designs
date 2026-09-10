@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Dedicated account-entry shell for login and password recovery.
+ *
+ * Drupal continues to own the form, CSRF, validation, status messages, and
+ * route access. The theme owns the complete visible presentation.
+ */
+#}
+<div class="famtastic-auth">
+  <header class="famtastic-auth__header">
+    <a class="famtastic-auth__brand" href="{{ famtastic_auth_home_url }}" aria-label="FAMtastic Designs home">
+      <img src="{{ famtastic_auth_logo_url }}" width="44" height="44" alt="">
+      <span>
+        <strong>FAMtastic</strong>
+        <small>Designs</small>
+      </span>
+    </a>
+    <span class="famtastic-auth__secure">Secure account access</span>
+  </header>
+
+  <main class="famtastic-auth__main" role="main">
+    <section class="famtastic-auth__card" aria-labelledby="famtastic-auth-title">
+      <p class="famtastic-auth__eyebrow">FAMtastic Designs</p>
+      {{ title_prefix }}
+      {% if title %}
+        <h1 id="famtastic-auth-title" class="famtastic-auth__title">{{ title }}</h1>
+      {% endif %}
+      {{ title_suffix }}
+      <p class="famtastic-auth__intro">Access your projects, messages, services, and next steps from one secure workspace.</p>
+      {{ page.highlighted }}
+      {{ page.help }}
+      {{ page.pre_content }}
+      <div class="famtastic-auth__content">
+        <a id="main-content" tabindex="-1"></a>
+        {{ page.content }}
+      </div>
+    </section>
+  </main>
+
+  {{ page.page_bottom }}
+</div>

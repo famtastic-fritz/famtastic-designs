@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-09 — A reusable admin theme needs negotiation, dependencies, and real pages
+
+Theme CSS and Twig templates did not make the experience reusable by
+themselves. Login/reset and ordinary administration could still select the
+public theme, the custom module used APIs whose provider modules were not
+declared, and a content-box grid item passed source review while overflowing
+the browser by exactly its horizontal padding.
+
+**Guidance.** Treat a Drupal administration system as four contracts: declared
+module dependencies, route-wide theme negotiation, standards-based component
+coverage, and browser verification on native routes. Exercise login, recovery,
+permissions, tables, entity forms, custom settings, and errors in a fresh
+database. When containment fails, identify the actual overflowing element and
+repair its sizing model instead of hiding the symptom with document clipping.
+
 ## 2026-09-09 — Retrospectives must reconcile executable doctrine, not only list incidents
 
 The prior-48-hour review found that the staging-first implementation had

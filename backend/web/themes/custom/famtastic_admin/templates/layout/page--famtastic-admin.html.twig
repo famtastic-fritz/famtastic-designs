@@ -18,7 +18,6 @@
     {% if famtastic_admin_navigation %}
       {{ famtastic_admin_navigation }}
     {% endif %}
-    {{ page.header }}
   </header>
 
   <div class="famtastic-admin-shell__body">
@@ -31,9 +30,8 @@
     <main class="famtastic-admin-shell__main" role="main">
       <a id="main-content" tabindex="-1"></a>
       {{ title_prefix }}
-      {% if title %}
-        <h1 class="page-title">{{ title }}</h1>
-      {% endif %}
+      {{ page.header.famtastic_admin_page_title }}
+      {{ page.header.famtastic_admin_help }}
       {{ title_suffix }}
       {{ page.content }}
     </main>

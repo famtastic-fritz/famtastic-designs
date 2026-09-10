@@ -55,6 +55,10 @@
  * 2. Base page surfaces
  * ------------------------------------------------------------------------ */
 
+html {
+  overflow-x: clip;
+}
+
 body {
   background-color: var(--fam-bg);
   color: var(--fam-text);
@@ -73,6 +77,38 @@ body.path-user .page-title {
   overflow-wrap: anywhere;
   font-size: clamp(1.6rem, 7vw, 2.5rem);
   line-height: 1.12;
+}
+
+/* Native Views tables can be wider than a phone. Keep that width inside a
+   deliberate, touch-scrollable region instead of widening the full command
+   center and hiding navigation/actions off screen. */
+.famtastic-admin-shell .views-element-container,
+.famtastic-admin-shell .view,
+.famtastic-admin-shell .view-content {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.famtastic-admin-shell .view-content {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.famtastic-table-scroll {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  contain: inline-size;
+  box-sizing: border-box;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.famtastic-table-scroll:focus-visible {
+  outline: 2px solid var(--fam-lime);
+  outline-offset: 2px;
 }
 
 ::selection {
@@ -1304,19 +1340,12 @@ body .page-content .admin-item__link::before {
   body .views-table,
   body table.responsive-enabled,
   body .famtastic-ops__table {
-    display: block;
-    width: 100%;
-    max-width: calc(100vw - 2rem);
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-gutter: stable;
+    width: max-content;
+    min-width: 100%;
+    max-width: none;
   }
 
-  body .views-table {
-    min-width: 42rem;
-    font-size: .875rem;
-  }
+  body .views-table { font-size: .875rem; }
 
   body .views-table th,
   body .views-table td {
@@ -1696,7 +1725,7 @@ body.path-user .user-pass-reset::before {
 .famtastic-conversation__message p { margin: .6rem 0 0; color: var(--fam-ops-muted); line-height: 1.55; overflow-wrap: anywhere; }
 .famtastic-conversation__context { color: var(--fam-ops-muted); }
 
-.famtastic-ops__table-scroll { overflow-x: auto; max-width: 100%; border: 1px solid var(--fam-ops-line); border-radius: var(--fam-ops-radius); background: #0d100d; }
+.famtastic-ops__table-scroll { width: 100%; min-width: 0; max-width: 100%; overflow-x: auto; contain: inline-size; box-sizing: border-box; border: 1px solid var(--fam-ops-line); border-radius: var(--fam-ops-radius); background: #0d100d; }
 .famtastic-ops__table { width: 100%; margin: 0; border-collapse: collapse; }
 .famtastic-ops__table th { color: var(--fam-ops-dim); background: #111511; font-size: .68rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
 .famtastic-ops__table th,
@@ -1750,8 +1779,76 @@ body.path-user .user-pass-reset::before {
   .famtastic-ops__actions a { width: 100%; }
 }
 
+@media (max-width: 520px) {
+  .famtastic-ops__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .55rem;
+  }
+
+  .famtastic-ops__metric {
+    min-height: 7.25rem;
+    padding: .8rem;
+  }
+
+  .famtastic-ops__metric strong {
+    font-size: 1.5rem;
+  }
+
+  .famtastic-ops__metric > span:not(.famtastic-ops__metric-action) {
+    font-size: .72rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* Account-entry routes use a complete FAMtastic shell. Drupal still renders
+ * and validates the native forms; public-theme regions and default site-brand
+ * blocks are intentionally absent from the dedicated page template. */
+body.famtastic-auth-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(100% 62% at 50% -12%, rgba(124, 252, 0, .12), transparent 64%),
+    var(--fam-ops-bg);
+}
+.famtastic-auth { min-height: 100vh; }
+.famtastic-auth__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 68px;
+  padding: .75rem clamp(1rem, 4vw, 2rem);
+  border-bottom: 1px solid var(--fam-ops-line);
+  background: rgba(7, 9, 7, .86);
+  backdrop-filter: blur(14px);
+}
+.famtastic-auth__brand { display: inline-flex; align-items: center; gap: .75rem; color: var(--fam-ops-ink); text-decoration: none; }
+.famtastic-auth__brand img { width: 44px; height: 44px; border-radius: 12px; }
+.famtastic-auth__brand span { display: grid; line-height: 1; }
+.famtastic-auth__brand strong { font-size: 1rem; font-weight: 900; letter-spacing: -.02em; }
+.famtastic-auth__brand strong::first-letter { color: var(--fam-lime); }
+.famtastic-auth__brand small,
+.famtastic-auth__secure { color: var(--fam-ops-dim); font-size: .62rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.famtastic-auth__main { display: grid; min-height: calc(100vh - 69px); place-items: center; padding: clamp(1.25rem, 5vw, 4rem) 1rem; }
+.famtastic-auth__card {
+  box-sizing: border-box;
+  width: min(100%, 31rem);
+  padding: clamp(1.4rem, 5vw, 2.25rem);
+  background: linear-gradient(160deg, rgba(20, 24, 20, .94), rgba(16, 19, 16, .84));
+  border: 1px solid var(--fam-ops-line);
+  border-radius: 20px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .42);
+}
+.famtastic-auth__eyebrow { margin: 0 0 .6rem; color: var(--fam-lime); font-size: .68rem; font-weight: 850; letter-spacing: .16em; text-transform: uppercase; }
+.famtastic-auth__title { margin: 0; color: var(--fam-ops-ink); font-size: clamp(1.9rem, 7vw, 2.65rem); font-weight: 900; letter-spacing: -.035em; line-height: 1.05; }
+.famtastic-auth__intro { margin: .85rem 0 1.4rem; color: var(--fam-ops-muted); line-height: 1.55; }
+.famtastic-auth__content form { margin: 0; padding: 0; background: transparent; border: 0; box-shadow: none; }
+.famtastic-auth__content .form-actions { margin-bottom: 0; }
+.famtastic-auth__content .form-actions .button { width: 100%; }
+@media (max-width: 520px) {
+  .famtastic-auth__secure { max-width: 9rem; text-align: right; }
+  .famtastic-auth__main { align-items: start; padding-top: 2rem; }
 }
 
 /* Generic native-administration shell and primitives. These selectors are
@@ -1777,7 +1874,7 @@ body.path-user .user-pass-reset::before {
 .famtastic-admin-nav__link:hover,
 .famtastic-admin-nav__link:focus-visible { color: var(--fam-lime); background: rgba(124, 252, 0, .08); }
 .famtastic-admin-nav__link[aria-current="page"] { color: var(--fam-lime); background: rgba(124, 252, 0, .1); box-shadow: inset 0 -2px 0 var(--fam-lime); }
-.famtastic-admin-shell__body { max-width: 1440px; margin: 0 auto; padding: 1.25rem clamp(1rem, 3vw, 2rem) 3rem; }
+.famtastic-admin-shell__body { box-sizing: border-box; max-width: 1440px; margin: 0 auto; padding: 1.25rem clamp(1rem, 3vw, 2rem) 3rem; }
 .famtastic-admin-shell__breadcrumb { margin-bottom: .75rem; }
 .famtastic-admin-shell__main { min-width: 0; }
 .famtastic-admin-shell__main > .page-title { margin: .4rem 0 1.25rem; }

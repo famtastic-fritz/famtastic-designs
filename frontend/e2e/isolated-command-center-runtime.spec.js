@@ -3,11 +3,56 @@ import { expect, test } from '@playwright/test';
 const ADMIN = process.env.FAMTASTIC_RUNTIME_BACKEND_URL || 'http://127.0.0.1:18081';
 
 async function noHorizontalOverflow(page) {
-  const size = await page.evaluate(() => ({
-    viewport: document.documentElement.clientWidth,
-    content: document.documentElement.scrollWidth,
-  }));
-  expect(size.content, `horizontal overflow: ${JSON.stringify(size)}`).toBeLessThanOrEqual(size.viewport + 1);
+  const size = await page.evaluate(() => {
+    const viewport = document.documentElement.clientWidth;
+    const offenders = [...document.querySelectorAll('*')]
+      .map(element => {
+        const rect = element.getBoundingClientRect();
+        return {
+          selector: `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}${[...element.classList].slice(0, 3).map(name => `.${name}`).join('')}`,
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width),
+          scrollWidth: element.scrollWidth,
+          containedBy: element.closest('.famtastic-table-scroll, .famtastic-ops__table-scroll, .view-content')?.className || null,
+        };
+      })
+      .filter(item => item.right > viewport + 1)
+      .sort((first, second) => second.right - first.right)
+      .slice(0, 12);
+    return {
+      viewport,
+      content: document.documentElement.scrollWidth,
+      layout: [document.documentElement, document.body, document.querySelector('.famtastic-admin-shell__frame'), document.querySelector('.famtastic-admin-shell__body'), document.querySelector('.region-content'), document.querySelector('.famtastic-ops__table-scroll'), document.querySelector('.famtastic-table-scroll')]
+        .filter(Boolean)
+        .map(element => {
+          const rect = element.getBoundingClientRect();
+          const style = getComputedStyle(element);
+          return {
+            selector: element.tagName.toLowerCase() + (element.className ? `.${String(element.className).trim().split(/\s+/).join('.')}` : ''),
+            left: Math.round(rect.left),
+            right: Math.round(rect.right),
+            width: Math.round(rect.width),
+            marginLeft: style.marginLeft,
+            marginRight: style.marginRight,
+            paddingLeft: style.paddingLeft,
+            paddingRight: style.paddingRight,
+            position: style.position,
+          };
+        }),
+      offenders,
+    };
+  });
+  const scrollX = await page.evaluate(async () => {
+    window.scrollTo(document.documentElement.scrollWidth, 0);
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    const value = window.scrollX;
+    window.scrollTo(0, 0);
+    return value;
+  });
+  const uncontained = size.offenders.filter(item => !item.containedBy);
+  expect(scrollX, `page can scroll horizontally: ${JSON.stringify(size)}`).toBe(0);
+  expect(uncontained, `uncontained overflow: ${JSON.stringify(size)}`).toEqual([]);
 }
 
 function luminance([red, green, blue]) {
@@ -26,6 +71,7 @@ function contrastRatio(foreground, background) {
 }
 
 async function signIn(page, username = 'admin', password = 'admin') {
+  await page.context().clearCookies();
   await page.goto(`${ADMIN}/user/login`);
   await page.getByLabel('Username').fill(username);
   await page.getByLabel('Password').fill(password);
@@ -39,47 +85,75 @@ test('fresh Drupal runtime renders branded login/reset and protects staff routes
     await page.goto(`${ADMIN}/user/login`);
     await expect(page.getByLabel('Username')).toBeVisible();
     await expect(page.getByLabel('Password')).toBeVisible();
-    await expect(page.locator('link[href*="famtastic_admin"]')).toHaveCount(1);
+    await expect(page.locator('img[src*="/themes/custom/famtastic_admin/logo.svg"]')).toHaveCount(1);
+    await expect(page.locator('body')).toHaveClass(/famtastic-auth-page/);
+    await expect(page.getByText('Powered by Drupal')).toHaveCount(0);
     await noHorizontalOverflow(page);
     await page.screenshot({ path: testInfo.outputPath(`drupal-login-${width}.png`), fullPage: true });
   }
 
   await page.goto(`${ADMIN}/user/password`);
   await expect(page.getByLabel('Username or email address')).toBeVisible();
-  await expect(page.locator('link[href*="famtastic_admin"]')).toHaveCount(1);
+  await expect(page.locator('img[src*="/themes/custom/famtastic_admin/logo.svg"]')).toHaveCount(1);
   await noHorizontalOverflow(page);
 
-  await page.goto(`${ADMIN}/admin/famtastic`);
-  await expect(page).toHaveURL(/user\/login/);
+  const protectedResponse = await page.goto(`${ADMIN}/admin/famtastic`);
+  expect(protectedResponse?.status()).toBe(403);
+  await expect(page.getByRole('heading', { name: 'Access denied' })).toBeVisible();
 });
 
 test('native forms, tables, status states, focus, and custom operations render in the FAMtastic theme', async ({ page }, testInfo) => {
-  await page.setViewportSize({ width: 1280, height: 900 });
   await signIn(page);
-  await page.goto(`${ADMIN}/admin/famtastic`);
-  await expect(page.getByRole('heading', { name: 'FAMtastic Operations' })).toBeVisible();
-  await expect(page.locator('body')).toHaveClass(/famtastic-admin-shell/);
-  await expect(page.locator('a[href="#"]')).toHaveCount(0);
-  await noHorizontalOverflow(page);
-  await page.screenshot({ path: testInfo.outputPath('operations-1280.png'), fullPage: true });
+  for (const width of [390, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`${ADMIN}/admin/famtastic`);
+    await expect(page.getByRole('heading', { name: 'Operations Home' })).toBeVisible();
+    await expect(page.locator('body')).toHaveClass(/famtastic-admin-shell/);
+    await expect(page.locator('a[href="#"]')).toHaveCount(0);
+    await noHorizontalOverflow(page);
+    await page.screenshot({ path: testInfo.outputPath(`operations-${width}.png`), fullPage: true });
 
-  await page.goto(`${ADMIN}/admin/content`);
-  await expect(page.locator('table')).toBeVisible();
-  await expect(page.locator('th')).not.toHaveCount(0);
-  await noHorizontalOverflow(page);
+    if (width === 390) {
+      const recordLinks = await page.locator('.famtastic-admin-shell__body a[href*="/admin/famtastic/metric/"]').evaluateAll(links =>
+        [...new Set(links.map(link => link.href))],
+      );
+      expect(recordLinks).toHaveLength(14);
+      for (const href of recordLinks) {
+        const response = await page.goto(href);
+        expect(response?.status(), `record link failed: ${href}`).toBeLessThan(400);
+        await expect(page.locator('body')).toHaveClass(/famtastic-admin-shell/);
+        await expect(page.locator('a[href="#"]')).toHaveCount(0);
+        await noHorizontalOverflow(page);
+      }
 
-  await page.goto(`${ADMIN}/node/add/article`);
-  await expect(page.getByLabel('Title')).toBeVisible();
-  await page.getByLabel('Title').focus();
-  await expect(page.getByLabel('Title')).toBeFocused();
-  await expect(page.getByLabel('Title')).toHaveCSS('min-height', /4[4-9]px|[5-9]\dpx/);
-  await page.screenshot({ path: testInfo.outputPath('core-form-1280.png'), fullPage: true });
+      const attentionResponse = await page.goto(`${ADMIN}/admin/famtastic/attention`);
+      expect(attentionResponse?.status()).toBeLessThan(400);
+      await expect(page.getByRole('heading', { name: 'Attention Queue' })).toBeVisible();
+      await noHorizontalOverflow(page);
+    }
 
-  await page.goto(`${ADMIN}/admin/famtastic/settings`);
-  await expect(page.getByRole('heading', { name: 'FAMtastic notification settings' })).toBeVisible();
-  await expect(page.locator('form')).toBeVisible();
-  await noHorizontalOverflow(page);
+    await page.goto(`${ADMIN}/admin/content`);
+    await expect(page.locator('table')).toBeVisible();
+    await expect(page.locator('th')).not.toHaveCount(0);
+    await noHorizontalOverflow(page);
 
+    await page.goto(`${ADMIN}/node/add/article`);
+    const title = page.getByRole('textbox', { name: /^Title \*/ });
+    await expect(title).toBeVisible();
+    await expect(page.locator('body')).toHaveClass(/famtastic-admin-shell/);
+    await title.focus();
+    await expect(title).toBeFocused();
+    await expect(title).toHaveCSS('min-height', /4[4-9]px|[5-9]\dpx/);
+    await noHorizontalOverflow(page);
+    await page.screenshot({ path: testInfo.outputPath(`core-form-${width}.png`), fullPage: true });
+
+    await page.goto(`${ADMIN}/admin/famtastic/settings`);
+    await expect(page.getByRole('heading', { name: 'FAMtastic notification settings' })).toBeVisible();
+    await expect(page.locator('form')).toBeVisible();
+    await noHorizontalOverflow(page);
+  }
+
+  await page.context().clearCookies();
   await page.goto(`${ADMIN}/user/login`);
   await page.getByLabel('Username').fill('not-a-user');
   await page.getByLabel('Password').fill('wrong-password');
@@ -98,6 +172,22 @@ test('customer portal mocked runtime keeps reachable actions, focus, touch sizin
   await page.route('**/api/customer/catalog', route => route.fulfill({ json: { products: [] } }));
   await page.route('**/api/customer/workspace*', route => route.fulfill({ json: workspace }));
 
+  const sections = {
+    projects: 'My Projects',
+    services: 'Services & Add-ons',
+    files: 'Files & Assets',
+    results: 'Growth & Analytics',
+    messages: 'Messages',
+    shay: 'Shay AI Advisor',
+    support: 'Support',
+    faq: 'Knowledge & FAQs',
+    grow: 'Growth Ideas',
+    referrals: 'Referrals',
+    billing: 'Billing & Orders',
+    settings: 'Settings & Alerts',
+    account: 'Profile & Team',
+  };
+
   for (const width of [390, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/portal');
@@ -114,5 +204,16 @@ test('customer portal mocked runtime keeps reachable actions, focus, touch sizin
     await expect(target).toBeFocused();
     await noHorizontalOverflow(page);
     await page.screenshot({ path: testInfo.outputPath(`portal-${width}.png`), fullPage: true });
+
+    for (const [section, label] of Object.entries(sections)) {
+      await page.goto(`/portal?section=${section}`);
+      await expect(page.getByRole('heading', { name: label, exact: true, level: 1 })).toBeVisible();
+      await expect(page.locator('a[href="#"]')).toHaveCount(0);
+      await noHorizontalOverflow(page);
+    }
+
+    await page.goto('/portal');
+    await page.getByRole('button', { name: 'Open Projects', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'My Projects', exact: true, level: 1 })).toBeVisible();
   }
 });
