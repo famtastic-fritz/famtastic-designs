@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-10 — A chair-side proof can be fast without inventing the business
+
+The Noise Cuts interview established a Spanish-first independent-barber brand
+around streetwear, skateboarding, hip-hop, fashion, and broad clientele. The
+spoken Instagram handle returned a public not-found page, while the FAMtastic
+owner explicitly authorized reuse of only the shop location from the approved
+Alex prototype.
+
+**Guidance.** Deliver the first complete direction before expanding to the
+other two, preserve one Build DNA lineage, and do not replace unavailable
+social media with unrelated photos or claims. Durable booking capture must be
+consented and described as a request; an appointment, calendar hold, charge,
+email, text, or automatic confirmation requires its own proven integration.
+
 ## 2026-09-10 — A protected-staging release is a hosted systems test
 
 The dedicated staging host, database, files, private storage, and secrets kept

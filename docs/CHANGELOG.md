@@ -1,5 +1,23 @@
 # Product changelog
 
+## 2026-09-10 — Noise Cuts Spanish-first functional proof 01
+
+- Added a distinct, mobile-first Noise Cuts proof shaped from an in-person
+  Spanish interview around streetwear, skateboarding, hip-hop, fashion, and an
+  inclusive independent-barber audience. It reuses only the explicitly
+  requested shared shop location from the Alex prototype.
+- Added a consented request-to-book form backed by the existing durable Drupal
+  booking-request contract and enabled only for the exact `noise-cuts` site
+  key. A request is not an appointment, payment, calendar event, email, text,
+  or automatic confirmation.
+- Added a Spanish mobile owner proof that reads the authenticated Drupal inbox
+  when authorized and otherwise shows unmistakable demonstration data. Every
+  visible navigation item resolves to a real section or return route.
+- Verified the public and owner surfaces at 390 pixels with a browser-driven
+  booking success fixture, no horizontal overflow, and no dead owner
+  navigation. The supplied Instagram handle remained publicly unavailable, so
+  no unrelated social images or unsupported profile facts were used.
+
 ## 2026-09-10 — One-account portal and Drupal administration bridge
 
 - Connected the authenticated Client Portal session to Drupal's exact

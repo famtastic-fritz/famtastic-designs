@@ -2959,6 +2959,19 @@ function famtastic_pipeline_update_8060(&$sandbox) {
   return t('Added account-owned staging review acceptance before checkout. No payment, notification delivery, or deployment was performed.');
 }
 
+/** Enables durable request-to-book capture for the owner-approved Noise Cuts proof. */
+function famtastic_pipeline_update_8061(&$sandbox) {
+  $config = \Drupal::configFactory()->getEditable('famtastic_pipeline.settings');
+  $enabled = $config->get('booking_request_enabled_sites') ?: [];
+  $enabled = is_array($enabled) ? $enabled : [];
+  if (!in_array('noise-cuts', $enabled, TRUE)) {
+    $enabled[] = 'noise-cuts';
+    sort($enabled);
+    $config->set('booking_request_enabled_sites', array_values($enabled))->save(TRUE);
+  }
+  return t('Enabled consented request-to-book capture for the Noise Cuts proof. No appointment, calendar event, payment, or outbound message was created.');
+}
+
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */
 function _famtastic_pipeline_website_proof_research_snapshot_schema(): array {
   return [

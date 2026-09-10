@@ -1,0 +1,91 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "noise-cuts-street-signal-01-20260910",
+  "classification": "real-subject-owner-requested-functional-proof",
+  "created_at": "2026-09-10T18:50:00Z",
+  "repository": {
+    "name": "FAMtastic Designs",
+    "revision": "911bda114db2bc99f727a4b8a8b3e95e970beb31",
+    "worktree_state": "source_revision_before_artifact_commit"
+  },
+  "recipe": {
+    "routine": "website_proof.generate.v1",
+    "version": "noise-cuts-street-signal.01",
+    "build_class": "chair-side-original-direction",
+    "parent_prototype": "../alex-touch-prototype/",
+    "page_recipe": ["hero", "services", "culture", "location-booking"],
+    "component_system_ref": "../component-system.json"
+  },
+  "stages": [
+    {
+      "stage_id": "in-person-intake",
+      "attempt": 1,
+      "capability": "spanish-chair-side-brand-direction",
+      "execution": {
+        "provider": {"id": "famtastic-owner-interview"},
+        "model": {"status": "not_applicable"},
+        "timing": {"status": "not_metered"},
+        "cost": {"status": "not_applicable", "amount_usd": 0}
+      },
+      "result": {
+        "status": "completed",
+        "verified_inputs": ["Noise Cuts", "noise.cuts", "Spanish-first", "streetwear", "skateboard", "hip-hop", "fashion", "broad clientele"],
+        "instagram_public_lookup": "not_found"
+      }
+    },
+    {
+      "stage_id": "original-hero-art",
+      "attempt": 1,
+      "capability": "barber-editorial-image-generation",
+      "execution": {
+        "provider": {"id": "openai_builtin_image_generation"},
+        "model": {"status": "not_disclosed_by_runtime"},
+        "timing": {"status": "not_metered"},
+        "cost": {"status": "provider_did_not_report"},
+        "input": {"prompt_location": "prototype-manifest.json"}
+      },
+      "result": {"status": "completed", "identity_representation": false, "generated_text": false}
+    },
+    {
+      "stage_id": "booking-contract",
+      "attempt": 1,
+      "capability": "consented-request-to-book-persistence",
+      "execution": {
+        "provider": {"id": "famtastic-drupal-booking-request"},
+        "model": {"status": "not_applicable"},
+        "timing": {"status": "not_metered"},
+        "cost": {"status": "not_applicable", "amount_usd": 0}
+      },
+      "result": {"status": "completed", "site_key": "noise-cuts", "calendar": false, "appointment_confirmation": false, "payment": false, "outbound_message": false}
+    },
+    {
+      "stage_id": "browser-qa",
+      "attempt": 1,
+      "capability": "mobile-public-owner-booking-proof",
+      "execution": {
+        "provider": {"id": "playwright-local-chromium"},
+        "model": {"status": "not_applicable"},
+        "timing": {"status": "completed_at", "completed_at": "2026-09-10T18:50:00Z"},
+        "cost": {"status": "not_applicable", "amount_usd": 0}
+      },
+      "result": {"status": "completed", "viewports": ["390x844", "desktop"], "horizontal_overflow": 0, "booking_success_fixture": "passed", "owner_portal": "passed", "dead_navigation": 0}
+    }
+  ],
+  "artifacts": [
+    {"role": "public-page", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/index.html", "sha256": "3d1e8466f1be0182a1810626b69a666481f0bbfdb340104fa671e76ef12c196c"},
+    {"role": "owner-page", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/owner/index.html", "sha256": "ca522d7c0ce6e2c26424d0db35e6d248fb09fc60ec30e905e57caae5eb14553b"},
+    {"role": "visual-system", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/noise.css", "sha256": "0353f83fcb7c3a6cbf3d303d96295e868cd69bac1488890e4d31809f94138381"},
+    {"role": "interaction-system", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/noise.js", "sha256": "470d653ca36a9c235ae94afb911ce3f7eeb44cc9a9cab3878f32b0ecf314aae9"},
+    {"role": "prototype-manifest", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/prototype-manifest.json", "sha256": "9a5f152b48cafc1a8c6b1f2aa17147314630a4c2c6e57f91c54f9b1a0c40db0d"},
+    {"role": "generated-hero", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/assets/concept-a.png", "sha256": "47f3eae1d3d13fd5309dbc7af1f3afb934e7918d644e91384ca529e5adc462dd"},
+    {"role": "source-contract-test", "path": "frontend/scripts/test-noise-cuts-proof.mjs", "sha256": "bb44f742fff819fadc6375280a690ef009bbaed4836f42bc855fb04bd11bfa58"},
+    {"role": "browser-journey-test", "path": "frontend/scripts/test-noise-cuts-browser.mjs", "sha256": "0ca2efd6ea4591f18a1f33cb00b0981340ce951fdf68db724dc143d0ff6c5ae5"},
+    {"role": "booking-site-enable-update", "path": "backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.install", "sha256": "40a9cea55c7f90bbf69647aef0da1b3831bc6c22b7ff1024e061185d0b63cf1b"}
+  ],
+  "retrieval": {
+    "filesystem": {"status": "available", "root": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/"},
+    "database": {"status": "booking_request_site_key_declared", "site_key": "noise-cuts"},
+    "site_studio": {"status": "not_handed_off", "reason": "proof selection has not occurred"}
+  },
+  "integrity": {"artifact_hash_algorithm": "sha256", "parent_alex_prototype_modified": false}
+}

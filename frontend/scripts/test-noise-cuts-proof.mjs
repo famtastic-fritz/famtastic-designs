@@ -1,0 +1,14 @@
+import assert from "node:assert/strict";
+import {readFile,stat} from "node:fs/promises";
+import {fileURLToPath} from "node:url";
+import path from "node:path";
+const here=path.dirname(fileURLToPath(import.meta.url));
+const root=path.resolve(here,"../public/showcase/booked-and-branded-pilot/noise-cuts-proof");
+const [html,css,js,owner]=await Promise.all([readFile(path.join(root,"index.html"),"utf8"),readFile(path.join(root,"noise.css"),"utf8"),readFile(path.join(root,"noise.js"),"utf8"),readFile(path.join(root,"owner/index.html"),"utf8")]);
+assert.equal((html.match(/<section/g)||[]).length,4);
+assert.match(html,/lang="es"/);assert.match(html,/TU CORTE/);assert.match(html,/@noise\.cuts/);assert.match(html,/1542 SE Floresta Dr/);
+assert.match(html,/id="booking-form"/);assert.match(html,/name="consent"/);assert.match(js,/\/web\/api\/booking-request\/noise-cuts/);assert.match(js,/fetch\(API/);
+assert.match(owner,/NOISE CONTROL/);assert.match(owner,/Vista de demostración/);assert.match(owner,/booking-request\/noise-cuts\/owner/);
+assert.match(css,/@media\(max-width:760px\)/);assert.ok((await stat(path.join(root,"assets/concept-a.png"))).size>1000000);
+assert.doesNotMatch(html,/price|\$[0-9]/i);assert.doesNotMatch(js,/stripe|twilio|smtp/i);
+console.log("PASS Noise Cuts proof 01: Spanish public site, responsive owner portal, booking request API, shared location, no price or payment claims.");

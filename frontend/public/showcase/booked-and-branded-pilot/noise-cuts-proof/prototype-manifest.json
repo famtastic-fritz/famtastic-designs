@@ -1,0 +1,60 @@
+{
+  "schema_version": "famtastic.functional-sales-prototype.v1",
+  "prototype_id": "noise-cuts-port-st-lucie-proof-01",
+  "parent_prototype_id": "alex-touch-port-st-lucie",
+  "design_direction": "street-signal-01",
+  "status": "owner-requested-functional-proof",
+  "subject": {
+    "display_name": "Noise Cuts",
+    "public_handle": "noise.cuts",
+    "public_handle_status": "provided_in_person_but_public_url_unavailable",
+    "role": "independent_barber",
+    "location": "Port St. Lucie, Florida",
+    "ownership_claim": "not_claimed"
+  },
+  "experience": {
+    "language": "es",
+    "public_sections": ["hero", "services", "culture", "location-and-booking"],
+    "public_components": ["signal-ticker", "service-cards", "location", "booking-request-dialog", "owner-console-link"],
+    "owner_panels": ["request-inbox", "hours", "settings"],
+    "storage": "drupal-booking-request-when-enabled",
+    "site_key": "noise-cuts",
+    "external_effects": ["consented-booking-request-record-only"],
+    "explicitly_excluded": ["calendar-reservation", "payment", "outbound-email", "outbound-sms", "automatic-confirmation"]
+  },
+  "sources": [
+    {
+      "type": "in_person_owner_description",
+      "use": "professional name, streetwear, skateboard, hip-hop, fashion, broad clientele, Spanish-first direction"
+    },
+    {
+      "type": "approved_parent_prototype",
+      "path": "../alex-touch-prototype/",
+      "use": "shared shop location only, by explicit FAMtastic owner instruction"
+    }
+  ],
+  "creative_assets": [
+    {
+      "path": "assets/concept-a.png",
+      "class": "generated_concept",
+      "prompt_summary": "Wide editorial barber action scene with streetwear, skate, cyan and acid-yellow signal styling; no identifiable face or text",
+      "identity_representation": false
+    }
+  ],
+  "generation_receipt": {
+    "provider": "openai_builtin_image_generation",
+    "model_status": "not_disclosed_by_runtime",
+    "image_count": 1,
+    "reported_cost_usd": null,
+    "cost_status": "provider_did_not_report"
+  },
+  "launch_requirements": [
+    "Noise Cuts approval",
+    "working public Instagram URL or supplied media",
+    "approved services, durations, and prices",
+    "approved hours",
+    "approved contact and notification destination",
+    "confirmed chair and arrival details",
+    "authenticated Noise Cuts owner binding"
+  ]
+}

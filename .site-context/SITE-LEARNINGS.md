@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-10 — A chair-side proof can be fast without inventing the business
+
+- Observation: an in-person Spanish interview supplied a strong creative
+  direction and professional handle, but the spoken Instagram URL returned a
+  public not-found page. The owner requested the location from an approved
+  related prototype and a working booking backend.
+- Guidance: ship one complete direction first, keep later directions on the
+  same evidence lineage, reuse only the specifically authorized location, and
+  never substitute another profile's media. A working proof may persist a
+  consented booking request, but it must call that record a request until the
+  barber personally confirms it; calendar, payment, and messaging remain
+  separate integrations.
+
 ## 2026-09-10 — Protected-staging hosted constraints
 
 - Observation: the protected environment used a dedicated host, database,
