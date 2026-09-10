@@ -9,6 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 MODE="${1:-}"
 STAGING_HOST="${FAMTASTIC_STAGING_HOST:-staging.famtasticdesigns.com}"
+STAGING_ADDRESS="${FAMTASTIC_STAGING_ADDRESS:-$STAGING_HOST}"
 STAGING_REF="${FAMTASTIC_STAGING_REF:-}"
 REPOSITORY_URL="${FAMTASTIC_STAGING_REPOSITORY_URL:-$(git -C "$REPO_ROOT" remote get-url origin 2>/dev/null || true)}"
 SSH_TARGET="${FAMTASTIC_STAGING_SSH_TARGET:-}"
@@ -40,6 +41,7 @@ Required only for --apply:
   FAMTASTIC_STAGING_DB_CREDENTIAL_FILE=/home/<cpanel-user>/famtastic-staging/secrets/db-provision.json
   FAMTASTIC_STAGING_BASIC_AUTH_USER=<new-stage-only-user>
   FAMTASTIC_STAGING_BASIC_AUTH_PASSWORD=<new-stage-only-password>
+  FAMTASTIC_STAGING_ADDRESS=<verified server IP, optional during DNS propagation>
 
 Before --apply, provision the staging subdomain at this docroot, create the
 GoDaddy DNS record, and install TLS. The credential JSON must be the mode-0600
@@ -95,7 +97,8 @@ for command in ssh openssl; do command -v "$command" >/dev/null || fail "missing
 
 # DNS and TLS are preconditions. DNS is intentionally provisioned through the
 # authoritative GoDaddy API, never through cPanel's non-authoritative zone.
-TLS_SAN="$(printf '' | openssl s_client -connect "$STAGING_HOST:443" -servername "$STAGING_HOST" 2>/dev/null | openssl x509 -noout -ext subjectAltName 2>/dev/null)" || fail "TLS certificate cannot be read for staging host"
+[[ "$STAGING_ADDRESS" =~ ^[A-Za-z0-9.:-]+$ ]] || fail "staging address is malformed"
+TLS_SAN="$(printf '' | openssl s_client -connect "$STAGING_ADDRESS:443" -servername "$STAGING_HOST" 2>/dev/null | openssl x509 -noout -ext subjectAltName 2>/dev/null)" || fail "TLS certificate cannot be read for staging host"
 grep -F "DNS:$STAGING_HOST" <<<"$TLS_SAN" >/dev/null || fail "TLS certificate does not cover the staging host"
 printf '%s\n' "$BASIC_AUTH_PASSWORD" | ssh -T "$SSH_TARGET" "set -e; umask 077; mkdir -p '$STAGING_ROOT/secrets'; read -r password; hash=\$(printf '%s' \"\$password\" | openssl passwd -apr1 -stdin); printf '%s:%s\\n' '$BASIC_AUTH_USER' \"\$hash\" > '$STAGING_ROOT/secrets/staging.htpasswd'; chmod 600 '$STAGING_ROOT/secrets/staging.htpasswd'"
 ssh -T "$SSH_TARGET" bash -s -- "$CPANEL_HOME" "$STAGING_ROOT" "$DOCROOT" "$DB_CREDENTIAL_FILE" "$REPOSITORY_URL" "$STAGING_REF" "$HEAD_SHA" "$STAGING_HOST" "$RELEASE_ID" <<'REMOTE'
