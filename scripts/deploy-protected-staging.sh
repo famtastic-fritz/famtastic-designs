@@ -56,6 +56,13 @@ case "$MODE" in --preflight|--dry-run|--apply) ;; *) usage >&2; exit 2 ;; esac
 [[ -n "$REPOSITORY_URL" ]] || fail "staging repository URL is required"
 
 for command in git awk tar npm node; do command -v "$command" >/dev/null || fail "missing local prerequisite: $command"; done
+NPM_COMMAND=(npm)
+NODE_MAJOR="$(node -p 'process.versions.node.split(".")[0]')"
+if [[ "$NODE_MAJOR" != 22 ]]; then
+  command -v fnm >/dev/null || fail "Node 22 is required; install it or make fnm available"
+  fnm exec --using=22 node -e 'if (Number(process.versions.node.split(".")[0]) !== 22) process.exit(1)' || fail "fnm could not select Node 22"
+  NPM_COMMAND=(fnm exec --using=22 npm)
+fi
 cd "$REPO_ROOT"
 [[ -z "$(git status --porcelain)" ]] || fail "refusing a dirty worktree"
 HEAD_SHA="$(git rev-parse HEAD)"
@@ -100,8 +107,8 @@ for command in ssh openssl; do command -v "$command" >/dev/null || fail "missing
 [[ "$STAGING_ADDRESS" =~ ^[A-Za-z0-9.:-]+$ ]] || fail "staging address is malformed"
 TLS_SAN="$(printf '' | openssl s_client -connect "$STAGING_ADDRESS:443" -servername "$STAGING_HOST" 2>/dev/null | openssl x509 -noout -ext subjectAltName 2>/dev/null)" || fail "TLS certificate cannot be read for staging host"
 grep -F "DNS:$STAGING_HOST" <<<"$TLS_SAN" >/dev/null || fail "TLS certificate does not cover the staging host"
-VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' npm --prefix "$TMP_ROOT/frontend" ci --include=dev
-VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' npm --prefix "$TMP_ROOT/frontend" run build
+VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' "${NPM_COMMAND[@]}" --prefix "$TMP_ROOT/frontend" ci --include=dev --no-audit --no-fund
+VITE_DRUPAL_BASE_URL="https://${STAGING_HOST}/web" VITE_STRIPE_PUBLIC_KEY='' VITE_GA_MEASUREMENT_ID='' "${NPM_COMMAND[@]}" --prefix "$TMP_ROOT/frontend" run build
 ! grep -R -E 'pk_live_|https://famtasticdesigns\.com/web|G-T2ENFBZR4K' "$TMP_ROOT/frontend/dist" >/dev/null || fail "staging build contains a production provider/API identifier"
 printf '%s\n' "$BASIC_AUTH_PASSWORD" | ssh -T "$SSH_TARGET" "set -e; umask 077; mkdir -p '$STAGING_ROOT/secrets'; read -r password; hash=\$(printf '%s' \"\$password\" | openssl passwd -apr1 -stdin); printf '%s:%s\\n' '$BASIC_AUTH_USER' \"\$hash\" > '$STAGING_ROOT/secrets/staging.htpasswd'; chmod 600 '$STAGING_ROOT/secrets/staging.htpasswd'"
 ssh -T "$SSH_TARGET" "set -e; mkdir -p '$STAGING_ROOT/releases/$HEAD_SHA/source' '$STAGING_ROOT/releases/$HEAD_SHA/public'"
