@@ -21,5 +21,15 @@ await page.getByText("Vista de demostración").waitFor();
 assert.ok(await page.locator("body").evaluate(node=>node.scrollWidth<=node.clientWidth),"owner page must not overflow horizontally");
 const navTargets=await page.locator(".mobile-nav a").evaluateAll(nodes=>nodes.map(node=>node.getAttribute("href")));
 assert.deepEqual(navTargets,["#requests","#hours","#settings","../"]);
+for(const [route,title] of [["concept-02/","Noise Cuts — Concepto 02"],["concept-03/","Noise Cuts — Concepto 03"]]){
+  await page.goto(new URL(route,base).href,{waitUntil:"networkidle"});
+  assert.equal(await page.title(),title);
+  assert.ok(await page.locator("body").evaluate(node=>node.scrollWidth<=node.clientWidth),`${title} must not overflow horizontally`);
+  await page.locator("[data-open-booking]").first().click();
+  await page.locator("#booking-dialog").waitFor({state:"visible"});
+  await page.locator("[data-close-booking]").click();
+  await page.locator('a[href="../owner/"]').first().click();
+  await page.getByText("Vista de demostración").waitFor();
+}
 await browser.close();
-console.log("PASS Noise Cuts mobile browser journey: public proof, persisted-request success, owner portal, no horizontal overflow, no dead navigation.");
+console.log("PASS Noise Cuts mobile browser journey: three public proofs, persisted-request success, shared owner portal, no horizontal overflow, no dead navigation.");

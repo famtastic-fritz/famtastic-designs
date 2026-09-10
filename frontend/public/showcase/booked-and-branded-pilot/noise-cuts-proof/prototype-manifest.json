@@ -2,7 +2,7 @@
   "schema_version": "famtastic.functional-sales-prototype.v1",
   "prototype_id": "noise-cuts-port-st-lucie-proof-01",
   "parent_prototype_id": "alex-touch-port-st-lucie",
-  "design_direction": "street-signal-01",
+  "design_directions": ["street-signal-01", "cut-paper-street-editorial-02", "after-hours-redline-03"],
   "status": "owner-requested-functional-proof",
   "subject": {
     "display_name": "Noise Cuts",
@@ -15,7 +15,7 @@
   "experience": {
     "language": "es",
     "public_sections": ["hero", "services", "culture", "location-and-booking"],
-    "public_components": ["signal-ticker", "service-cards", "location", "booking-request-dialog", "owner-console-link"],
+    "public_components": ["three-distinct-visual-directions", "service-cards", "location", "booking-request-dialog", "owner-console-link"],
     "owner_panels": ["request-inbox", "hours", "settings"],
     "storage": "drupal-booking-request-when-enabled",
     "site_key": "noise-cuts",
@@ -39,12 +39,24 @@
       "class": "generated_concept",
       "prompt_summary": "Wide editorial barber action scene with streetwear, skate, cyan and acid-yellow signal styling; no identifiable face or text",
       "identity_representation": false
+    },
+    {
+      "path": "assets/concept-b.png",
+      "class": "generated_concept",
+      "prompt_summary": "Bright editorial barber scene with streetwear, skate decks, cobalt-blue and orange print styling; no supplied identity or text",
+      "identity_representation": false
+    },
+    {
+      "path": "assets/concept-c.png",
+      "class": "generated_concept",
+      "prompt_summary": "Black-and-white after-hours barber scene with restrained red lighting and negative space; no supplied identity or text",
+      "identity_representation": false
     }
   ],
   "generation_receipt": {
     "provider": "openai_builtin_image_generation",
     "model_status": "not_disclosed_by_runtime",
-    "image_count": 1,
+    "image_count": 3,
     "reported_cost_usd": null,
     "cost_status": "provider_did_not_report"
   },

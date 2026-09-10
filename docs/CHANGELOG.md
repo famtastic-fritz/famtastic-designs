@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-10 — Noise Cuts three-direction proof set
+
+- Completed two additional Spanish-first visual directions for Noise Cuts: a
+  bright streetwear editorial and a cinematic after-hours hip-hop treatment.
+- Reused the same durable request-to-book contract and mobile owner portal
+  across all three concepts, so visual choice does not create parallel
+  backends or weaker behavior.
+- Added mobile browser coverage for every direction, including booking-dialog
+  access, owner-portal handoff, and horizontal-overflow rejection.
+
 ## 2026-09-10 — Noise Cuts Spanish-first functional proof 01
 
 - Added a distinct, mobile-first Noise Cuts proof shaped from an in-person

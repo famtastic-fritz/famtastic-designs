@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-10 — Separate creative variation from functional variation
+
+A three-concept sales proof should vary typography, composition, color,
+rhythm, and imagery while keeping one tested behavioral contract underneath.
+Reusing the same booking-request endpoint and owner inbox makes concepts
+faster to compare and prevents a selected design from accidentally selecting a
+weaker backend. Mobile proof acceptance must exercise every concept route, not
+only the first direction or the shared API.
+
 ## 2026-09-10 — A chair-side proof can be fast without inventing the business
 
 The Noise Cuts interview established a Spanish-first independent-barber brand

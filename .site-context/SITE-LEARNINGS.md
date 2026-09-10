@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-10 — Noise Cuts concept-set contract
+
+- Public proof set: `noise-cuts-proof/`, `noise-cuts-proof/concept-02/`, and
+  `noise-cuts-proof/concept-03/`.
+- All three concepts intentionally share site key `noise-cuts`, the durable
+  request-to-book API, and `noise-cuts-proof/owner/`.
+- Do not fork booking persistence per visual concept. A visual selection
+  changes presentation; it does not create a new customer record model.
+
 ## 2026-09-10 — A chair-side proof can be fast without inventing the business
 
 - Observation: an in-person Spanish interview supplied a strong creative

@@ -1,6 +1,6 @@
 {
   "schema": "famtastic.build-dna.v1",
-  "build_id": "noise-cuts-street-signal-01-20260910",
+  "build_id": "noise-cuts-three-direction-proof-set-20260910",
   "classification": "real-subject-owner-requested-functional-proof",
   "created_at": "2026-09-10T18:50:00Z",
   "repository": {
@@ -10,10 +10,10 @@
   },
   "recipe": {
     "routine": "website_proof.generate.v1",
-    "version": "noise-cuts-street-signal.01",
+    "version": "noise-cuts-concept-set.03",
     "build_class": "chair-side-original-direction",
     "parent_prototype": "../alex-touch-prototype/",
-    "page_recipe": ["hero", "services", "culture", "location-booking"],
+    "page_recipe": ["three-distinct-visual-directions", "services", "culture", "location-booking", "shared-owner-console"],
     "component_system_ref": "../component-system.json"
   },
   "stages": [
@@ -44,7 +44,7 @@
         "cost": {"status": "provider_did_not_report"},
         "input": {"prompt_location": "prototype-manifest.json"}
       },
-      "result": {"status": "completed", "identity_representation": false, "generated_text": false}
+      "result": {"status": "completed", "image_count": 3, "identity_representation": false, "generated_text": false}
     },
     {
       "stage_id": "booking-contract",
@@ -65,10 +65,10 @@
       "execution": {
         "provider": {"id": "playwright-local-chromium"},
         "model": {"status": "not_applicable"},
-        "timing": {"status": "completed_at", "completed_at": "2026-09-10T18:50:00Z"},
+        "timing": {"status": "completed_at", "completed_at": "2026-09-10T19:28:00Z"},
         "cost": {"status": "not_applicable", "amount_usd": 0}
       },
-      "result": {"status": "completed", "viewports": ["390x844", "desktop"], "horizontal_overflow": 0, "booking_success_fixture": "passed", "owner_portal": "passed", "dead_navigation": 0}
+      "result": {"status": "completed", "concept_routes": 3, "viewports": ["390x844", "desktop"], "horizontal_overflow": 0, "booking_success_fixture": "passed", "owner_portal": "passed", "dead_navigation": 0}
     }
   ],
   "artifacts": [
@@ -76,10 +76,16 @@
     {"role": "owner-page", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/owner/index.html", "sha256": "ca522d7c0ce6e2c26424d0db35e6d248fb09fc60ec30e905e57caae5eb14553b"},
     {"role": "visual-system", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/noise.css", "sha256": "0353f83fcb7c3a6cbf3d303d96295e868cd69bac1488890e4d31809f94138381"},
     {"role": "interaction-system", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/noise.js", "sha256": "470d653ca36a9c235ae94afb911ce3f7eeb44cc9a9cab3878f32b0ecf314aae9"},
-    {"role": "prototype-manifest", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/prototype-manifest.json", "sha256": "9a5f152b48cafc1a8c6b1f2aa17147314630a4c2c6e57f91c54f9b1a0c40db0d"},
+    {"role": "prototype-manifest", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/prototype-manifest.json", "sha256": "42439c5734cf7b6baa3d7058fea5411638907e611207c1d9b5ac771066c82a34"},
     {"role": "generated-hero", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/assets/concept-a.png", "sha256": "47f3eae1d3d13fd5309dbc7af1f3afb934e7918d644e91384ca529e5adc462dd"},
-    {"role": "source-contract-test", "path": "frontend/scripts/test-noise-cuts-proof.mjs", "sha256": "bb44f742fff819fadc6375280a690ef009bbaed4836f42bc855fb04bd11bfa58"},
-    {"role": "browser-journey-test", "path": "frontend/scripts/test-noise-cuts-browser.mjs", "sha256": "0ca2efd6ea4591f18a1f33cb00b0981340ce951fdf68db724dc143d0ff6c5ae5"},
+    {"role": "concept-02-page", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/concept-02/index.html", "sha256": "3b4e2dbc3a16f87c26a124371549bab66054859ff723ee3a854e2bdddea61db2"},
+    {"role": "concept-02-visual-system", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/concept-02/concept.css", "sha256": "aafc87e9e6e3bef479ecfe652fa2824c88d4042c1e51e7defdec7dbb8b2ef5c4"},
+    {"role": "generated-hero-02", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/assets/concept-b.png", "sha256": "fa5d160c4a1dc5ac15e7b229f8840ae549c69e54f272a10d504b280355a3f72e"},
+    {"role": "concept-03-page", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/concept-03/index.html", "sha256": "6951329be7beb24ba059a869726a177e76cd6061fa41d658c6f4fcde29e7c1fa"},
+    {"role": "concept-03-visual-system", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/concept-03/concept.css", "sha256": "27525d46b49cbef929dd9efa87a6784a0ac278ec001140e0cfe595edca69f953"},
+    {"role": "generated-hero-03", "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/assets/concept-c.png", "sha256": "cb39492ef8dc154004ce617b8f2b86d3ba79db0b428c01dc0452f780a999b7cd"},
+    {"role": "source-contract-test", "path": "frontend/scripts/test-noise-cuts-proof.mjs", "sha256": "2174fd5044909df6375472cf717d4687da132f61466764f7c7b579b608762181"},
+    {"role": "browser-journey-test", "path": "frontend/scripts/test-noise-cuts-browser.mjs", "sha256": "554290d5be4f0c1840a9da8a2d9bbb3085dc00e59d354460b905a4c52f80411a"},
     {"role": "booking-site-enable-update", "path": "backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.install", "sha256": "40a9cea55c7f90bbf69647aef0da1b3831bc6c22b7ff1024e061185d0b63cf1b"}
   ],
   "retrieval": {

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noise Cuts — Concepto 03</title>
+  <meta name="description" content="Tercer concepto funcional en español para Noise Cuts: barbería cinematográfica inspirada en el hip-hop nocturno.">
+  <meta name="robots" content="noindex,nofollow,noarchive,noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Oswald:wght@500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./concept.css">
+</head>
+<body>
+  <div class="proof-bar"><b>FAMTASTIC PROOF 03</b><span>Dirección: After Hours / Redline</span></div>
+  <header class="nav">
+    <a class="logo" href="#inicio" aria-label="Noise Cuts, inicio"><span>N</span> NOISE CUTS</a>
+    <nav aria-label="Navegación principal"><a href="#servicios">Servicios</a><a href="#codigo">Código</a><a href="#cita">Cita</a></nav>
+    <button class="button compact" type="button" data-open-booking>Pedir cita</button>
+  </header>
+
+  <main>
+    <section id="inicio" class="hero" aria-labelledby="hero-title">
+      <img src="../assets/concept-c.png" alt="Concepto nocturno de un barbero creando un fade bajo luz roja" width="1792" height="896">
+      <div class="hero-copy"><p class="eyebrow">PORT ST. LUCIE · EST. 24</p><h1 id="hero-title">EL DETALLE<br><em>SE ESCUCHA.</em></h1><p>Cortes limpios. Energía cruda. Una experiencia de barbería influenciada por el hip-hop, el fashion y la noche.</p><button class="button" type="button" data-open-booking>Entrar a la lista ↗</button></div>
+      <div class="soundline" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </section>
+
+    <section id="servicios" class="services section" aria-labelledby="services-title">
+      <div class="section-head"><p class="eyebrow">TRACK 01 · SERVICIOS</p><h2 id="services-title">PRECISIÓN<br>SIN RUIDO.</h2></div>
+      <div class="tracks">
+        <article><span>01</span><div><h3>Corte personalizado</h3><p>Consulta, forma y acabado para tu estilo real.</p></div><b>PLAY</b></article>
+        <article><span>02</span><div><h3>Fade + textura</h3><p>Transiciones controladas y detalle donde importa.</p></div><b>PLAY</b></article>
+        <article><span>03</span><div><h3>Barba + detalles</h3><p>Líneas y balance para completar el look.</p></div><b>PLAY</b></article>
+      </div>
+      <p class="fine-print">Servicios, duración, precios y disponibilidad finales requieren confirmación de Noise Cuts.</p>
+    </section>
+
+    <section id="codigo" class="code" aria-labelledby="code-title"><div class="code-mark">NC<br>24</div><div><p class="eyebrow">TRACK 02 · EL CÓDIGO</p><h2 id="code-title">CUALQUIER CABELLO.<br><em>TU PROPIA SEÑAL.</em></h2><p>Noise Cuts trabaja con todo tipo de clientes. La referencia puede venir de una tabla, una canción, una pieza de ropa o una idea que todavía no tiene nombre.</p><blockquote>“Me gusta cortar cualquier tipo de cliente.”</blockquote></div></section>
+
+    <section id="cita" class="booking section" aria-labelledby="booking-title">
+      <div class="address"><p class="eyebrow">TRACK 03 · LA SILLA</p><h2 id="booking-title">PORT ST.<br>LUCIE.</h2><address>Floresta Centre<br>1542 SE Floresta Dr<br>Port St. Lucie, FL 34983</address><a href="https://www.google.com/maps/search/?api=1&amp;query=1542+SE+Floresta+Dr+Port+St+Lucie+FL+34983" rel="noreferrer">Abrir mapa ↗</a></div>
+      <div class="request"><p class="eyebrow">REQUEST TO BOOK</p><h2>¿CUÁNDO<br>TE CORTAS?</h2><p>Envía tu día y hora preferidos. Noise Cuts revisa y confirma personalmente. No hay cobro ni reserva automática.</p><button class="button light" type="button" data-open-booking>Enviar preferencia ↗</button><a href="../owner/">Abrir Noise Control ↗</a></div>
+    </section>
+  </main>
+
+  <footer><a class="logo" href="#inicio"><span>N</span> NOISE CUTS</a><p>@noise.cuts · enlace pendiente de verificación</p><a href="../concept-02/">Ver Concepto 02</a></footer>
+
+  <dialog id="booking-dialog" class="booking-dialog">
+    <form id="booking-form">
+      <button class="close" type="button" data-close-booking aria-label="Cerrar">×</button>
+      <p class="eyebrow">SOLICITUD DE CITA</p><h2>ENTRA A<br>LA LISTA.</h2><p>Noise Cuts revisará tu solicitud. No se cobra ni se reserva automáticamente.</p>
+      <label>Nombre<input name="name" required autocomplete="name" maxlength="120"></label>
+      <div class="pair"><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Teléfono<input name="phone" inputmode="tel" autocomplete="tel" maxlength="40"></label></div>
+      <label>Servicio<select name="service_key"><option value="custom-cut">Corte personalizado</option><option value="fade-texture">Fade + textura</option><option value="beard-detail">Barba + detalles</option><option value="general">No estoy seguro</option></select></label>
+      <div class="pair"><label>Día preferido<input name="day" type="date" required></label><label>Hora preferida<select name="time"><option>Mañana</option><option>Mediodía</option><option>Después de las 3</option><option>Noche</option></select></label></div>
+      <label>Notas<textarea name="message" rows="3" maxlength="1000" placeholder="Tipo de corte, largo, ocasión o pregunta…"></textarea></label>
+      <label class="consent"><input name="consent" type="checkbox" required> Acepto que FAMtastic Designs guarde esta solicitud para que Noise Cuts pueda responder.</label>
+      <label class="website" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      <button class="button" type="submit">Enviar solicitud ↗</button><p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
+  <script src="../noise.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noise Cuts — Concepto 02</title>
+  <meta name="description" content="Segundo concepto funcional en español para Noise Cuts: una revista de streetwear convertida en barbería móvil.">
+  <meta name="robots" content="noindex,nofollow,noarchive,noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./concept.css">
+</head>
+<body>
+  <div class="proof-bar"><b>FAMTASTIC PROOF 02</b><span>Dirección: Cut Paper / Street Editorial</span></div>
+  <header class="masthead">
+    <a href="#inicio" class="logo" aria-label="Noise Cuts, inicio">NOISE<span>.</span>CUTS</a>
+    <nav aria-label="Navegación principal"><a href="#cortes">Cortes</a><a href="#historia">Historia</a><a href="#visita">Visita</a></nav>
+    <button class="button small" type="button" data-open-booking>Reservar*</button>
+  </header>
+
+  <main>
+    <section id="inicio" class="hero" aria-labelledby="hero-title">
+      <img src="../assets/concept-b.png" alt="Concepto editorial de un corte en un estudio con patinetas y ropa urbana" width="1792" height="896">
+      <div class="hero-copy">
+        <p class="issue">VOL. 24 · PORT ST. LUCIE</p>
+        <h1 id="hero-title">BUEN<br>CORTE.<br><em>CERO POSE.</em></h1>
+        <p class="dek">Barbería para gente que construye su estilo desde la música, la calle y lo que se pone cada mañana.</p>
+        <button class="button" type="button" data-open-booking>Pedir una cita ↗</button>
+      </div>
+      <div class="stamp" aria-hidden="true">ALL<br>HAIR<br>WELCOME</div>
+    </section>
+
+    <section id="cortes" class="services section" aria-labelledby="services-title">
+      <div class="section-number">01</div>
+      <div class="intro"><p class="kicker">THE CUT LIST</p><h2 id="services-title">LO TUYO,<br>BIEN HECHO.</h2><p>El punto de partida es tu cabello, tu rutina y cómo quieres verte. No una plantilla.</p></div>
+      <div class="service-list">
+        <article><span>01</span><h3>Corte personalizado</h3><p>Forma y acabado alineados con tu estilo.</p></article>
+        <article><span>02</span><h3>Fade + textura</h3><p>Transición limpia, detalle y movimiento.</p></article>
+        <article><span>03</span><h3>Barba + líneas</h3><p>Balance y terminación para cerrar el look.</p></article>
+      </div>
+      <p class="fine-print">*Servicios, duración, precios y disponibilidad requieren confirmación de Noise Cuts.</p>
+    </section>
+
+    <section id="historia" class="manifesto" aria-labelledby="manifesto-title">
+      <div class="manifesto-copy"><p class="kicker">NOISE IS IDENTITY</p><h2 id="manifesto-title">LA SILLA TAMBIÉN ES CULTURA.</h2><p>Streetwear. Skateboard. Hip-hop. Fashion. Noise Cuts convierte esas referencias en una experiencia relajada, directa y abierta a cualquier cliente.</p></div>
+      <blockquote>“Me gusta cortar cualquier tipo de cliente.”<cite>— Noise Cuts</cite></blockquote>
+    </section>
+
+    <section id="visita" class="visit section" aria-labelledby="visit-title">
+      <div><p class="kicker">PORT ST. LUCIE</p><h2 id="visit-title">VEN POR<br>EL CORTE.</h2><address>Floresta Centre<br>1542 SE Floresta Dr<br>Port St. Lucie, FL 34983</address><a class="map" href="https://www.google.com/maps/search/?api=1&amp;query=1542+SE+Floresta+Dr+Port+St+Lucie+FL+34983" rel="noreferrer">Abrir mapa ↗</a></div>
+      <div class="request-card"><p class="kicker">REQUEST TO BOOK</p><h2>ELIGE TU<br>MOMENTO.</h2><p>Envía tu preferencia. Noise Cuts revisa la solicitud antes de confirmar. No hay cobro ni reserva automática.</p><button class="button inverse" type="button" data-open-booking>Comenzar solicitud ↗</button><a href="../owner/">Ver panel del barbero ↗</a></div>
+    </section>
+  </main>
+
+  <footer><a class="logo" href="#inicio">NOISE<span>.</span>CUTS</a><p>@noise.cuts · enlace pendiente de verificación</p><a href="../">Ver Concepto 01</a></footer>
+
+  <dialog id="booking-dialog" class="booking-dialog">
+    <form id="booking-form">
+      <button class="close" type="button" data-close-booking aria-label="Cerrar">×</button>
+      <p class="kicker">SOLICITUD DE CITA</p><h2>¿CUÁNDO<br>TE CORTAS?</h2>
+      <p>Noise Cuts revisará tu solicitud. No se cobra ni se reserva automáticamente.</p>
+      <label>Nombre<input name="name" required autocomplete="name" maxlength="120"></label>
+      <div class="pair"><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Teléfono<input name="phone" inputmode="tel" autocomplete="tel" maxlength="40"></label></div>
+      <label>Servicio<select name="service_key"><option value="custom-cut">Corte personalizado</option><option value="fade-texture">Fade + textura</option><option value="beard-detail">Barba + detalles</option><option value="general">No estoy seguro</option></select></label>
+      <div class="pair"><label>Día preferido<input name="day" type="date" required></label><label>Hora preferida<select name="time"><option>Mañana</option><option>Mediodía</option><option>Después de las 3</option><option>Noche</option></select></label></div>
+      <label>Notas<textarea name="message" rows="3" maxlength="1000" placeholder="Tipo de corte, largo, ocasión o pregunta…"></textarea></label>
+      <label class="consent"><input name="consent" type="checkbox" required> Acepto que FAMtastic Designs guarde esta solicitud para que Noise Cuts pueda responder.</label>
+      <label class="website" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      <button class="button" type="submit">Enviar solicitud ↗</button><p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
+  <script src="../noise.js"></script>
+</body>
+</html>
