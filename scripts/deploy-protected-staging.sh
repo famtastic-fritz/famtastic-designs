@@ -137,7 +137,7 @@ python3 - "$db_file" "$database_env" "$hash_salt_file" <<'PY'
 import json, pathlib, shlex, sys
 source, target, salt_path = map(pathlib.Path, sys.argv[1:])
 payload = json.loads(source.read_text())
-data = payload.get("data", payload)
+data = payload.get("data") or (payload.get("result") or {}).get("data") or payload
 required = {"database", "database_user", "database_user_password"}
 if not required.issubset(data):
     raise SystemExit("protected-staging remote: cPanel database receipt is incomplete")

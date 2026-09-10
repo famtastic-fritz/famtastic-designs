@@ -50,3 +50,5 @@ if (
 fi
 
 echo 'protected staging tests passed'
+
+grep -F 'payload.get("data") or (payload.get("result") or {}).get("data")' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
