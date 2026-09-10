@@ -32,6 +32,14 @@ export const fixtures = {
     output: 'internal React target is not registered',
     files: {[route]: 'export default () => <Route path="/portal" />;', [portal]: 'export default () => <Link to="/missing">Missing</Link>;'},
   },
+  portalPublicIntakeLeak: {
+    status: 1,
+    output: 'authenticated portal target leaks into a public lead/intake route',
+    files: {
+      [route]: 'export default () => <><Route path="/portal" /><Route path="/intake" /></>;',
+      [portal]: 'export default () => <Link to="/intake">Leave the workspace</Link>;',
+    },
+  },
   button: {
     status: 1,
     output: 'button has no handler',

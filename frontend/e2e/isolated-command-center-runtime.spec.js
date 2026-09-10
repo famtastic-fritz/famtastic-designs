@@ -14,7 +14,7 @@ async function noHorizontalOverflow(page) {
           right: Math.round(rect.right),
           width: Math.round(rect.width),
           scrollWidth: element.scrollWidth,
-          containedBy: element.closest('.famtastic-table-scroll, .famtastic-ops__table-scroll, .view-content')?.className || null,
+          containedBy: element.closest('.famtastic-table-scroll, .famtastic-ops__table-scroll, .view-content, .portal-proof-grid')?.className || null,
         };
       })
       .filter(item => item.right > viewport + 1)
@@ -209,6 +209,12 @@ test('customer portal mocked runtime keeps reachable actions, focus, touch sizin
       await page.goto(`/portal?section=${section}`);
       await expect(page.getByRole('heading', { name: label, exact: true, level: 1 })).toBeVisible();
       await expect(page.locator('a[href="#"]')).toHaveCount(0);
+      if (section === 'services') {
+        await expect(page.locator('.portal-service-hub a[href="/intake"]')).toHaveCount(0);
+        await page.getByRole('button', { name: 'Open project briefs →', exact: true }).click();
+        await expect(page.getByRole('heading', { name: 'My Projects', exact: true, level: 1 })).toBeVisible();
+        expect(new URL(page.url()).pathname).toBe('/portal');
+      }
       await noHorizontalOverflow(page);
     }
 
@@ -216,4 +222,58 @@ test('customer portal mocked runtime keeps reachable actions, focus, touch sizin
     await page.getByRole('button', { name: 'Open Projects', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'My Projects', exact: true, level: 1 })).toBeVisible();
   }
+});
+
+test('proof cards use a readable mobile viewport instead of a shrunken desktop strip', async ({ page }, testInfo) => {
+  const proofUrl = 'http://127.0.0.1:18173/proofs/readable-a';
+  const workspace = {
+    organization: { public_id: 'proof-org', name: 'Proof Studio', role: 'owner' },
+    organizations: [], projects: [], orders: [], entitlements: [],
+    website_requests: [{
+      public_id: 'request-readable-proof',
+      project_name: 'Readable proof project',
+      status: 'submitted',
+      proof_review_status: 'notified',
+      customer_archived: false,
+      direct_checkout_available: false,
+      intake: {},
+      proofs: {
+        selected_variant: '',
+        review_terms: { design_reset_remaining: 1, edit_rounds_remaining: 3 },
+        variants: [
+          { direction_id: 'a', direction_name: 'Safe', preview_url: proofUrl },
+          { direction_id: 'b', direction_name: 'Wild', preview_url: `${proofUrl}-b` },
+          { direction_id: 'c', direction_name: 'OMG', preview_url: `${proofUrl}-c` },
+        ],
+      },
+    }],
+    threads: [], activity: [], members: [], referrals: [], articles: [], faqs: [], offers: [],
+    analytics: { entitled: false },
+    preferences: { project_email: true, support_email: true, billing_email: true, product_education: true, deals_promotions: true, analytics_digest: 'monthly', topics: [] },
+    topics: {},
+  };
+  await page.route('**/api/customer/session', route => route.fulfill({ json: { customer: { display_name: 'Proof Reviewer', email: 'proof@example.test' } } }));
+  await page.route('**/api/customer/catalog', route => route.fulfill({ json: { products: [] } }));
+  await page.route('**/api/customer/workspace*', route => route.fulfill({ json: workspace }));
+  await page.route('**/proofs/readable-a*', route => route.fulfill({
+    contentType: 'text/html',
+    body: '<!doctype html><meta name="viewport" content="width=device-width"><style>body{margin:0;background:#28152d;color:white;font:24px system-ui}header{padding:28px;background:#fff;color:#111}main{min-height:650px;padding:28px;background:linear-gradient(135deg,#28152d,#7b2147)}h1{font-size:42px}</style><header>Readable concept navigation</header><main><h1>Full mobile concept</h1><p>The approved design fills this card.</p></main>',
+  }));
+
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.goto('/portal?section=projects&request=request-readable-proof');
+  const preview = page.locator('[data-proof-direction="a"] .portal-proof-preview');
+  await expect(preview).toBeVisible();
+  await expect(page.frameLocator('[data-proof-direction="a"] iframe').getByRole('heading', { name: 'Full mobile concept' })).toBeVisible();
+  const previewBox = await preview.boundingBox();
+  const frame = preview.locator('iframe');
+  const frameBox = await frame.boundingBox();
+  const sourceViewportWidth = await frame.evaluate(element => element.contentDocument.documentElement.clientWidth);
+  expect(previewBox?.height).toBeGreaterThanOrEqual(390);
+  expect(Math.abs((previewBox?.width || 0) - (frameBox?.width || 0))).toBeLessThanOrEqual(2);
+  expect(sourceViewportWidth).toBeGreaterThanOrEqual(280);
+  expect(sourceViewportWidth).toBeLessThanOrEqual(390);
+  await expect(frame).toHaveCSS('transform', 'none');
+  await noHorizontalOverflow(page);
+  await page.screenshot({ path: testInfo.outputPath('portal-proof-readable-mobile.png'), fullPage: true });
 });

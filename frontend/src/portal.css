@@ -253,28 +253,27 @@
 }
 
 /* Proof cards must SHOW the concept, not just name it (proof-first). */
-.portal-proof-preview {
+.portal-proof-grid a.portal-proof-preview {
   display: block;
-  height: 170px;
+  height: clamp(340px, 46vw, 460px);
+  padding: 0;
   overflow: hidden;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, .12);
   background: #0b0e0b;
   position: relative;
 }
-.portal-proof-preview iframe {
-  /* Size the source viewport from the card, then scale it into the frame.
-     A fixed 1280px source viewport was wider than most cards, so the 0.34
-     transform clipped the iframe to roughly its left third. */
-  width: calc(100% / 0.34);
-  height: calc(100% / 0.34);
+.portal-proof-grid .portal-proof-preview iframe {
+  /* Render the concept at the card's real responsive width. Shrinking a
+     desktop viewport made text unreadable and showed only a shallow strip. */
+  width: 100%;
+  height: 100%;
   border: 0;
-  transform: scale(0.34);
-  transform-origin: 0 0;
+  transform: none;
   pointer-events: none;
   background: #fff;
 }
-.portal-proof-preview::after {
+.portal-proof-grid .portal-proof-preview::after {
   content: "Live preview — click to open full concept";
   position: absolute;
   left: 0; right: 0; bottom: 0;
@@ -286,6 +285,7 @@
   background: rgba(7, 10, 7, .82);
 }
 .portal-proof-grid a { min-height: 0; }
+@media(max-width:700px){.portal-proof-grid a.portal-proof-preview{height:min(62svh,520px);min-height:390px}}
 
 /* Checkout completion lands here - celebrate, then orient. */
 
@@ -446,7 +446,7 @@
 .portal-project-listing{display:grid;gap:.75rem;max-width:780px}.portal-project-listing article{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1rem;padding:1.1rem;border:1px solid var(--p-line);border-radius:16px;background:#101310}.portal-project-listing span{color:var(--p-lime);font-size:.7rem;font-weight:900;letter-spacing:.11em;text-transform:uppercase}.portal-project-listing h3{margin:.35rem 0;font-size:1.2rem}.portal-project-listing p{margin:0;color:#b6c0b6;line-height:1.45}.portal-project-listing button{min-height:44px;margin:0;white-space:nowrap}
 .portal-project-tabs{display:flex;gap:.5rem;overflow-x:auto;margin:0 0 1rem;padding:0 0 .75rem;border-bottom:1px solid var(--p-line);scrollbar-width:thin}.portal-project-tabs a{min-height:44px;margin:0!important;padding:.65rem .8rem;display:inline-flex;align-items:center;border:1px solid var(--p-line);border-radius:999px;color:#e6ede6!important;background:#0b0e0b;font-size:.82rem;font-weight:800;text-decoration:none;white-space:nowrap}.portal-project-tabs a:first-child{border-color:rgba(124,252,0,.55);color:var(--p-lime)!important}.portal-plain-help{margin:.15rem 0 .85rem!important;color:#c5cec5!important;line-height:1.5}.portal-project-simple-section{padding:1rem}.portal-project-simple-section h3{margin:0 0 .35rem;font-size:1.05rem}.portal-project-simple-section p{margin:.2rem 0 1rem;color:#b5beb5;line-height:1.55}.portal-project-simple-section small{display:block;margin-top:1rem;color:#9aa49a;line-height:1.45}.portal-growth-windows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}.portal-growth-windows>div{min-width:0;padding:.75rem;border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.025)}.portal-growth-windows strong{color:var(--p-lime);font-size:.78rem}.portal-growth-windows ul{margin:.5rem 0 0;padding-left:1.1rem;color:#c5cec5;font-size:.84rem;line-height:1.45}
 @media(max-width:700px){.portal-projects-heading{align-items:stretch;display:grid}.portal-projects-heading button{width:100%}.portal-project-listing article{grid-template-columns:1fr}.portal-project-listing button{width:100%}.portal-growth-windows{grid-template-columns:1fr}.portal-project-tabs{margin-right:-.2rem}.portal-project-secondary>summary{align-items:flex-start}.portal-project-secondary>summary span{text-align:right;overflow-wrap:anywhere}}
-@media(max-width:700px){.portal-proof-swipe-hint{display:block;margin:0;padding:.6rem .75rem;border-radius:9px;background:rgba(124,252,0,.07);color:#d6dfd6;font-size:.8rem}.portal-proof-grid{display:grid!important;grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:min(88%,330px);overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;padding:.2rem .15rem .75rem;scrollbar-color:var(--p-lime) #151a15}.portal-proof-grid article{scroll-snap-align:start}.portal-proof-grid.has-selection article.dimmed{display:none}.portal-project-secondary>summary{align-items:flex-start}.portal-project-secondary>summary span{text-align:right;overflow-wrap:anywhere}}
+@media(max-width:700px){.portal-proof-swipe-hint{display:block;margin:0;padding:.6rem .75rem;border-radius:9px;background:rgba(124,252,0,.07);color:#d6dfd6;font-size:.8rem}.portal-proof-grid{display:grid!important;grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:min(96%,430px);overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;padding:.2rem .15rem .75rem;scrollbar-color:var(--p-lime) #151a15}.portal-proof-grid article{scroll-snap-align:start}.portal-proof-grid.has-selection article.dimmed{display:none}.portal-project-secondary>summary{align-items:flex-start}.portal-project-secondary>summary span{text-align:right;overflow-wrap:anywhere}}
 
 /* All modal step controls remain operable by touch, not merely visible. */
 .portal-tutorial__copy li button{width:44px;height:44px}

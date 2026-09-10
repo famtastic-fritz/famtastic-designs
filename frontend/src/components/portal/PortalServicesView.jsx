@@ -172,17 +172,18 @@ export default function PortalServicesView({ workspace, catalog, go, compact = f
                 letterSpacing: '0.1em',
               }}
             >
-              ⚡ Direct Project Intakes
+              ⚡ Project brief
             </span>
             <h4 style={{ margin: '0.2rem 0', fontSize: '1.05rem', color: '#fff' }}>
-              Need to share a specialized intake form with a partner or team?
+              Keep every project brief inside your workspace.
             </h4>
             <p style={{ margin: 0, color: '#9da79d', fontSize: '0.84rem' }}>
-              Share tailored intake forms for Hosting Setup, AI Chatbots, Custom Portals, or Ongoing Site Care.
+              Start a website request or update an existing brief without leaving your account.
             </p>
           </div>
-          <Link
-            to="/intake"
+          <button
+            type="button"
+            onClick={() => go('projects')}
             style={{
               padding: '0.65rem 1.25rem',
               borderRadius: '9px',
@@ -193,8 +194,8 @@ export default function PortalServicesView({ workspace, catalog, go, compact = f
               fontSize: '0.85rem',
             }}
           >
-            Open Intake Hub →
-          </Link>
+            Open project briefs →
+          </button>
         </section>
       )}
 

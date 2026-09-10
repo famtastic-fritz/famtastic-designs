@@ -50,6 +50,7 @@ function validateReactFile(path) {
     const target = match[2].trim();
     if (!target || target === '#') fail(path, `empty or placeholder navigation target ${JSON.stringify(match[2])}`);
     else if (target.startsWith('/') && !matchesReactRoute(target)) fail(path, `internal React target is not registered: ${target}`);
+    else if (/^\/(?:contact|start|intake)(?:[/?#]|$)/.test(target)) fail(path, `authenticated portal target leaks into a public lead/intake route: ${target}`);
   }
   for (const match of staticMatches(text, /<button\b([^>]*)>/gs)) {
     const attrs = match[1];

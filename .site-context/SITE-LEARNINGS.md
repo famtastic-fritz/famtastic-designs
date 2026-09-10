@@ -2130,3 +2130,13 @@ Permanent rules:
   only digests from direct mail, and stop cron before lifecycle/provider work.
   Use a fresh isolated database and exact pushed SHA; never treat a local test
   as remote deployment evidence.
+
+## 2026-09-10 — Portal route correctness includes context, not only HTTP reachability
+
+- Observation: a registered `/intake` destination still broke the customer journey because it moved an authenticated customer into the public lead funnel and discarded the account-bound workspace context.
+- Guidance: customer portal actions must stay inside `/portal`, use an account-bound API, or display an honest unavailable state. Reject public `/contact`, `/start`, and `/intake` targets during source inventory and click the route in browser acceptance.
+
+## 2026-09-10 — Proof previews must be decision-readable at phone width
+
+- Observation: a 170px iframe scaled to 34% technically rendered the site but made its typography and composition too small to evaluate on mobile.
+- Guidance: use the card’s real responsive viewport, nearly the full carousel width, and at least 390px preview height on phones. Verify the iframe viewport width, screenshot the result, and treat “present but unreadable” as a failed proof experience.

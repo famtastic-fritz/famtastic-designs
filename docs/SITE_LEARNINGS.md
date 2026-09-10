@@ -2174,3 +2174,15 @@ queued.
 - Long SSH sessions to the host reset unpredictably. Split scoped release
   archives into small chunks, verify each chunk and the reassembled digest,
   and resume missing chunks instead of restarting the whole upload.
+
+## 2026-09-10 — Authenticated intake cannot fall back to the public funnel
+
+- Observation: the customer Services screen linked its “Direct Project Intakes” action to the public `/intake` hub. That route was registered and technically reachable, so ordinary broken-link checks passed even though the customer was removed from the authenticated workspace and its durable account context.
+- Root cause: route existence was treated as destination correctness. The portal already owns reusable, account-bound website briefs in Projects, but a promotional service card reused a public lead-generation link.
+- Prevention: authenticated portal actions must resolve to an in-portal section, an account-bound API action, or a truthful unavailable state. The source validator now rejects portal links to `/contact`, `/start`, and `/intake`, and browser QA clicks the project-brief CTA and proves the URL remains `/portal`.
+
+## 2026-09-10 — A scaled desktop iframe is not a useful proof thumbnail
+
+- Observation: proof cards used a 170px frame and scaled a much larger iframe to 34%. On a phone this reduced the concept to tiny text and a shallow header strip inside a mostly empty card.
+- Root cause: the implementation optimized for fitting a desktop canvas into three cards rather than for a customer making a visual decision on a mobile device. A lower-specificity preview rule also inherited generic link padding from the card grid.
+- Prevention: render each concept at the card’s actual responsive width, give mobile previews a 390px minimum height, let each carousel card use almost all available width, and override the generic link-card padding explicitly. Browser acceptance must inspect the iframe’s source viewport and screenshot the 390px experience, not just assert that an iframe exists.

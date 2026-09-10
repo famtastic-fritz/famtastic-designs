@@ -113,7 +113,7 @@ test('research-led proof selection makes the payment boundary unmistakable', asy
   await expect(page.getByRole('status')).toContainText('Your 3 website concepts are ready below.');
   await expect(page.getByRole('heading', { name: 'Why we designed these three directions' })).toBeVisible();
   await page.getByText('See the research and growth opportunities').click();
-  await expect(page.getByText('Turn portfolio views into first-party booking requests.')).toBeVisible();
+  await expect(page.getByText('Turn portfolio views into first-party booking requests.', { exact: true })).toBeVisible();
   await expect(page.getByText('A visual portfolio path.')).toBeVisible();
   await page.getByRole('button', { name: 'Choose Wild', exact: true }).click();
 
@@ -133,9 +133,9 @@ test('research-led proof selection makes the payment boundary unmistakable', asy
   await expect(notes).toBeFocused();
   await notes.fill('Keep the layout, but use royal blue and warmer photography.');
   await page.getByRole('button', { name: 'Send changes to Fritz', exact: true }).click();
-  await expect(page.getByText('Changes requested. Fritz has your notes.')).toBeVisible();
-  await expect(page.getByText('Changes requested ✓', { exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'We received your changes for Wild' })).toBeVisible();
+  await expect(page.getByText('Changes requested. FAMtastic has your notes.')).toBeVisible();
+  await expect(page.getByText('We are making a new set from your feedback', { exact: true })).toBeVisible();
+  await expect(page.getByText('Proof request queued', { exact: true })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('proof-selection-and-revision.png'), fullPage: true });
 });
 

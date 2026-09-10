@@ -3083,3 +3083,11 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 
 - Added a non-deploying, hermetic protected-staging preflight requiring exact matching HEAD/pushed/observed SHA values, a dedicated non-production host and docroot, isolated database/config/private paths, disabled transports/schedulers, and immutable release plus rollback evidence.
 - The primitive rejects `public_html`, production roots, SSH targets, remote/DNS mutation, and apply/deploy modes; it archives only the exact reviewed commit into an isolated temporary release workspace.
+
+## 2026-09-10 — Portal-contained intake and readable mobile proofs
+
+- Removed the customer Services link that sent authenticated customers to the public `/intake` hub; project briefs now open inside the authenticated Projects workspace.
+- Added a navigation-inventory failure for any future customer-portal link to public lead routes (`/contact`, `/start`, or `/intake`).
+- Replaced the 170px, 34%-scaled proof iframe with a nearly full-width responsive mobile viewport and a 390px minimum preview height on phones.
+- Added browser assertions for in-portal intake routing, readable proof dimensions, real iframe viewport width, touch-safe containment, and the 390/768/1280 layouts.
+- The focused browser suite, Design DNA validator, navigation validator and fixtures, Node 22 production build, and fresh synthetic customer-journey evidence passed. No production or customer state changed.
