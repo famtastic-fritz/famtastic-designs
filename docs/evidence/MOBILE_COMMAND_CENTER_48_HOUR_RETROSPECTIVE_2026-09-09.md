@@ -229,3 +229,38 @@ authenticated staging-dispatch, runtime browser, mockup-parity, integrated
 command-center, and application-level staging-safety gaps. Remote protected
 staging, hosted side-effect probes, owner notification, and the future
 post-staging review still require their own evidence.
+
+## Superseding protected-staging checkpoint — 2026-09-10
+
+This append-only checkpoint does not rewrite the prior-48-hour findings. A
+dedicated protected host/document root, fresh database, files, private storage,
+and staging-only secrets were established, and production remained untouched.
+The hosted work converted previously abstract gaps into observed incidents:
+
+- repeated SSH session resets interrupted larger transfers, leading to a
+  resumable 512 KiB chunk protocol with SHA-256 verification per chunk and for
+  each reassembled scoped archive;
+- the shared account's 250,000-inode limit required an explicit headroom check
+  and archive-before-delete boundary;
+- the 128 MB PHP default was insufficient for the fresh Drupal/Webform runtime,
+  which required 512 MB;
+- Apache could not traverse the original Basic Auth file path even though the
+  credential itself existed;
+- hosted CSP blocked the observed
+  `sha256-CaN42Zi+a+oATitdYvGRVlyS6mCZIxrLFXhTbgp6HCI=` inline Drupal script,
+  inline application styles, `https://fonts.googleapis.com` styles, and
+  `https://fonts.gstatic.com`/`data:` fonts until those sources were declared;
+- direct frontend SPA routes needed a non-file, non-directory, non-`/web`
+  fallback to `index.html`;
+- a clean install exposed that `famtastic_pipeline` had not declared its
+  `commerce_checkout` dependency.
+
+The sanitized customer API plus authenticated browser evidence at
+`.protected-staging/evidence/live-browser-20260910-r5/browser-evidence.json`
+passed login, Operations Home, and Portal at 390, 768, and 1280 pixels with no
+broken images, placeholder links, overflow, or console errors. That result is
+not the final release: the current repairs still need a clean exact-source
+redeploy, hosted runtime side-effect verification, and rollback rehearsal.
+Accordingly, protected staging remains incomplete, the capability registry is
+unchanged, owner notification is still gated, and the separate one-time
+48-hour post-staging review remains unscheduled.

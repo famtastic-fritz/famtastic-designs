@@ -24,8 +24,25 @@ final class ProtectedStagingRequestSubscriber implements EventSubscriberInterfac
   ];
 
   public static function getSubscribedEvents(): array {
-    // Routing has run by priority 32. Stop before controller or form execution.
-    return [KernelEvents::REQUEST => ['blockPaymentRoutes', 31]];
+    return [KernelEvents::REQUEST => [
+      // Native Commerce can deny or convert an order while routing. Refuse its
+      // public checkout path one priority earlier so no access checker, form,
+      // or controller can become the first staging-side payment boundary.
+      ['blockNativeCheckoutPath', 33],
+      // Routing has run by priority 32. Stop named provider routes before
+      // controller or form execution.
+      ['blockPaymentRoutes', 31],
+    ]];
+  }
+
+  public function blockNativeCheckoutPath(RequestEvent $event): void {
+    if (!$event->isMainRequest() || Settings::get('famtastic_payment_mode') !== 'disabled') {
+      return;
+    }
+    if (preg_match('#^/checkout(?:/|$)#', $event->getRequest()->getPathInfo()) !== 1) {
+      return;
+    }
+    $event->setResponse($this->paymentDisabledResponse());
   }
 
   public function blockPaymentRoutes(RequestEvent $event): void {
@@ -36,10 +53,14 @@ final class ProtectedStagingRequestSubscriber implements EventSubscriberInterfac
     if (!in_array($route, self::BLOCKED_ROUTES, TRUE)) {
       return;
     }
-    $event->setResponse(new JsonResponse([
+    $event->setResponse($this->paymentDisabledResponse());
+  }
+
+  private function paymentDisabledResponse(): JsonResponse {
+    return new JsonResponse([
       'error' => 'payment_disabled',
       'message' => 'Payment is disabled in this protected review environment.',
-    ], 503));
+    ], 503);
   }
 
 }

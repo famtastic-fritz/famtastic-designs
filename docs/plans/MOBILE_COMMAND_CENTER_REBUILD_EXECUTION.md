@@ -78,3 +78,36 @@ lifecycle, staging-receipt, browser, and application-level side-effect gates.
 The prior-48-hour retrospective remains complete and unchanged. Protected
 staging deployment, hosted role/action verification, owner notification, and
 the later post-staging review remain open until supported by remote evidence.
+
+## Superseding protected-staging checkpoint — 2026-09-10
+
+The protected environment is now physically separate: dedicated
+`staging.famtasticdesigns.com` host/document root, fresh database, files,
+private storage, and staging-only secrets. Production remained untouched.
+
+Hosted attempts exposed and bounded seven release defects:
+
+1. SSH resets interrupted large transfers; the current repair uses resumable,
+   SHA-256-verified 512 KiB chunks.
+2. The shared account enforces a 250,000-inode limit; the current preflight
+   checks headroom before upload and Composer work, with archive-before-delete
+   as the recovery boundary.
+3. Drupal/Webform container work exceeded the 128 MB PHP default; the isolated
+   stage requires 512 MB.
+4. Apache could not traverse the original Basic Auth secrets directory; the
+   auth file now has a dedicated traversable path while the password source
+   remains private.
+5. Hosted CSP blocked an exact inline Drupal script plus required application
+   and Google font styles/files; the policy now names those observed sources.
+6. Direct frontend SPA routes required a non-file, non-`/web` fallback to
+   `index.html`.
+7. A clean install exposed the missing `commerce_checkout` dependency in the
+   custom pipeline module.
+
+A sanitized customer API and authenticated browser run passed login,
+Operations Home, and Portal at 390, 768, and 1280 pixels without broken images,
+placeholder links, overflow, or console errors. The completion tasks remain
+unchecked: the current repairs still require one final exact-source redeploy,
+hosted runtime side-effect verification, and a staging rollback rehearsal.
+Owner notification and the separate one-time 48-hour post-staging review remain
+unscheduled until those gates pass.

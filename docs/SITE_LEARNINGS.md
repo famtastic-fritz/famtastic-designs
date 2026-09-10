@@ -1,5 +1,31 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-10 — A protected-staging release is a hosted systems test
+
+The dedicated staging host, database, files, private storage, and secrets kept
+production untouched, but the first hosted passes found constraints that the
+local harness did not exercise. SSH reset larger transfers, the shared account
+has a 250,000-inode ceiling, Drupal/Webform exhausted PHP's 128 MB default,
+Apache could not traverse the original auth-file path, CSP blocked an exact
+inline Drupal script plus application/font styles, direct frontend routes
+needed an SPA fallback, and a clean install exposed the missing
+`commerce_checkout` module dependency.
+
+**Guidance.** Treat the shared host as an explicit release target. Transfer
+scoped archives in independently SHA-256-verified 512 KiB chunks; check inode
+headroom before upload and dependency installation; archive retained material
+before deletion; set the isolated Drupal runtime to 512 MB; keep the auth file
+on an Apache-traversable path without exposing its password source; derive CSP
+from observed script hashes, styles, and font origins; verify direct SPA routes;
+and install from a fresh database so undeclared module dependencies fail before
+activation.
+
+The sanitized customer API and authenticated browser proof passed the login,
+Operations Home, and Portal surfaces at 390, 768, and 1280 pixels. That result
+does not complete the release: a final exact-source redeploy, hosted
+side-effect checks, and rollback rehearsal were still pending at this
+checkpoint, so no capability claim was promoted.
+
 ## 2026-09-09 — A reusable admin theme needs negotiation, dependencies, and real pages
 
 Theme CSS and Twig templates did not make the experience reusable by

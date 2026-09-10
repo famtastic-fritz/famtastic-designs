@@ -48,7 +48,8 @@ final class ProtectedStagingSafetyContractTest extends TestCase {
     self::assertStringContainsString("Settings::get('famtastic_payment_mode') === 'disabled'", $webhook);
     self::assertStringContainsString("'commerce_checkout.checkout'", $subscriber);
     self::assertStringContainsString("'commerce_checkout.form'", $subscriber);
-    self::assertStringContainsString("KernelEvents::REQUEST => ['blockPaymentRoutes', 31]", $subscriber);
+    self::assertStringContainsString("['blockNativeCheckoutPath', 33]", $subscriber);
+    self::assertStringContainsString("['blockPaymentRoutes', 31]", $subscriber);
   }
 
   public function testProtectedStagingGloballyBlackholesDrupalMail(): void {
@@ -84,11 +85,28 @@ final class ProtectedStagingSafetyContractTest extends TestCase {
         $request,
         HttpKernelInterface::MAIN_REQUEST,
       );
-      (new ProtectedStagingRequestSubscriber())->blockPaymentRoutes($event);
+      (new ProtectedStagingRequestSubscriber())->blockNativeCheckoutPath($event);
 
       self::assertTrue($event->hasResponse());
       self::assertSame(503, $event->getResponse()->getStatusCode());
       self::assertStringContainsString('payment_disabled', (string) $event->getResponse()->getContent());
+    }
+    finally {
+      new Settings([]);
+    }
+  }
+
+  public function testProtectedStagingDoesNotBlockNonCheckoutPathsBeforeRouting(): void {
+    new Settings(['famtastic_payment_mode' => 'disabled']);
+    try {
+      $request = Request::create('/api/customer/session');
+      $event = new RequestEvent(
+        $this->createMock(HttpKernelInterface::class),
+        $request,
+        HttpKernelInterface::MAIN_REQUEST,
+      );
+      (new ProtectedStagingRequestSubscriber())->blockNativeCheckoutPath($event);
+      self::assertFalse($event->hasResponse());
     }
     finally {
       new Settings([]);

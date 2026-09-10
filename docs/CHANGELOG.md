@@ -1,5 +1,41 @@
 # Product changelog
 
+## 2026-09-10 — Protected-staging incident and verification checkpoint
+
+- Provisioned `staging.famtasticdesigns.com` with a dedicated document root,
+  database, files, private storage, and staging-only secrets. Production code,
+  data, customer activity, mail, payment, DNS cutover, and scheduled work were
+  not changed by this protected-staging run.
+- Repeated SSH session resets interrupted larger artifact transfers. The
+  current release repair packages only the scoped backend and frontend,
+  divides each archive into 512 KiB chunks, verifies every chunk and the
+  reassembled archive by SHA-256, and resumes only missing or mismatched
+  chunks.
+- The shared host's 250,000-inode cap became a release constraint. The current
+  preflight measures inode headroom before upload and dependency installation;
+  retained material is archived before any deletion is considered.
+- The hosted Drupal install exhausted the 128 MB PHP default and required a
+  512 MB stage-only runtime limit. Apache also could not read an auth file
+  beneath a non-traversable secrets path, so the current repair separates the
+  password source from the bcrypt auth file and gives Apache only the directory
+  traversal and file-read permissions it needs.
+- Browser runs exposed CSP blocks for one exact inline Drupal script hash,
+  inline application styles, and Google font styles/files, plus a missing
+  direct-route fallback for frontend SPA paths. The current repair declares
+  those exact CSP sources and sends non-file, non-`/web` routes to
+  `index.html`.
+- A clean Drupal install exposed an undeclared `commerce_checkout` dependency
+  in `famtastic_pipeline`; the current repair declares and verifies that
+  module before the custom module is enabled.
+- A sanitized customer API fixture and authenticated browser run passed login,
+  Operations Home, and Portal at 390, 768, and 1280 pixels with no broken
+  images, placeholder links, overflow, or console errors. This is hosted
+  browser evidence, not final release proof.
+- At this checkpoint the final exact-source redeploy, hosted runtime
+  side-effect verification, and rollback rehearsal are still pending.
+  Protected staging remains release-blocked, and no capability classification
+  was changed.
+
 ## 2026-09-09 — Protected-staging side-effect isolation
 
 - Added a disabled payment gateway plus request-level refusal for native

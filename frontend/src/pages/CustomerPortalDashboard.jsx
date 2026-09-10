@@ -38,6 +38,7 @@ import PortalReferralsView from '../components/portal/PortalReferralsView.jsx';
 import PortalBillingView from '../components/portal/PortalBillingView.jsx';
 import PortalAccountView from '../components/portal/PortalAccountView.jsx';
 import PortalSettingsView from '../components/portal/PortalSettingsView.jsx';
+import { loadCustomerPortal } from './customerPortalLoader.js';
 
 export default function CustomerPortalDashboard() {
   const navigate = useNavigate();
@@ -72,11 +73,15 @@ export default function CustomerPortalDashboard() {
   useEffect(() => {
     setState('loading');
     setError('');
-    Promise.all([customerSession(), getCustomerWorkspace(), getCustomerCatalog()])
-      .then(([s, w, c]) => {
-        setSession(s);
-        setWorkspace(w);
-        setCatalog(c);
+    loadCustomerPortal({
+      getSession: customerSession,
+      getWorkspace: getCustomerWorkspace,
+      getCatalog: getCustomerCatalog,
+    })
+      .then(({ session: nextSession, workspace: nextWorkspace, catalog: nextCatalog }) => {
+        setSession(nextSession);
+        setWorkspace(nextWorkspace);
+        setCatalog(nextCatalog);
         setState('ready');
       })
       .catch((exception) => {

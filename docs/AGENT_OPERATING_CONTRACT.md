@@ -164,6 +164,28 @@ and renewal/cancellation treatment.
 - Append material decisions and evidence to `docs/SITE_LEARNINGS.md`,
   `docs/CHANGELOG.md`, and the FAMtastic Drive decision log.
 
+### Protected-staging hosted checkpoint — 2026-09-10
+
+The first dedicated-host exercise kept production untouched and established
+separate staging database, files, private storage, and secrets. It also proved
+that local application safety is not the whole release contract: the shared
+host reset larger SSH transfers, enforced a 250,000-inode cap, defaulted PHP to
+128 MB when the fresh Drupal/Webform runtime needed 512 MB, denied Apache
+traversal to the initial auth-file location, enforced CSP against undeclared
+script/style/font sources, did not serve direct SPA routes without an explicit
+fallback, and exposed the missing `commerce_checkout` dependency on clean
+install.
+
+For this environment, the current release mechanism therefore uses scoped
+archives split into independently hashed 512 KiB chunks, inode headroom checks
+and archive-before-delete recovery, a stage-only 512 MB PHP limit, a dedicated
+Apache-traversable auth path, an observed-source CSP, a non-file/non-`/web` SPA
+fallback, and an explicit Commerce Checkout install check. These mechanisms
+remain release candidates until the exact current source is redeployed and the
+hosted no-side-effect and rollback gates pass. Sanitized 390/768/1280 browser
+proof does not authorize a capability upgrade, customer notice, or production
+action by itself.
+
 ## Shay
 
 Shay is an orchestrator, not an alternate source of truth. Shay must use these

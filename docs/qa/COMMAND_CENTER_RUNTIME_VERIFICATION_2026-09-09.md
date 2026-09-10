@@ -99,3 +99,32 @@ The hosted run must repeat the payment refusal and row-count checks, exercise
 both mail entry points and confirm digest-only capture, run cron and confirm no
 outbox/lifecycle changes, inspect all disabled runtime settings, and prove the
 exact pushed SHA before this document calls protected staging verified.
+
+## Superseding hosted checkpoint — 2026-09-10
+
+Protected staging used its own host/document root, database, files, private
+storage, and secrets. Production remained untouched. Hosted installation and
+browser attempts found release-specific failures not covered by the earlier
+local run: SSH resets, a 250,000-inode account cap, the 128 MB PHP limit,
+Apache traversal of the Basic Auth file path, CSP script/style/font blocks,
+missing direct SPA-route fallback, and an undeclared `commerce_checkout`
+dependency on a clean install.
+
+The current repair uses SHA-256-verified 512 KiB transfer chunks, inode
+headroom checks with archive-before-delete recovery, a stage-only 512 MB PHP
+limit, a dedicated Apache-traversable bcrypt auth-file path, the observed
+`sha256-CaN42Zi+a+oATitdYvGRVlyS6mCZIxrLFXhTbgp6HCI=` script hash,
+`https://fonts.googleapis.com` styles, `https://fonts.gstatic.com`/`data:`
+fonts, the required inline application style allowance, a non-file/non-`/web`
+SPA fallback, and an explicit Commerce Checkout dependency/install check.
+
+The sanitized customer API and authenticated browser evidence at
+`.protected-staging/evidence/live-browser-20260910-r5/browser-evidence.json`
+passed all nine recorded combinations: login, Operations Home, and Portal at
+390, 768, and 1280 pixels. Every result was HTTP 200 with viewport width equal
+to document width, no broken images, no placeholder links, and no console
+errors. The test used sanitized customer data and did not use production.
+
+This checkpoint remains `launch_blocked`. One final deploy of the exact current
+source, the hosted payment/mail/cron/provider no-side-effect assertions, and a
+rollback rehearsal were still pending when this note was written.

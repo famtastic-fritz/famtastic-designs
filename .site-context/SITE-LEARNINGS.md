@@ -1,5 +1,24 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-10 — Protected-staging hosted constraints
+
+- Observation: the protected environment used a dedicated host, database,
+  files, private storage, and staging-only secrets; production remained
+  untouched. Hosted execution nevertheless exposed SSH resets, the shared
+  host's 250,000-inode cap, PHP's insufficient 128 MB default, Apache
+  traversal failure for the first auth-file location, CSP blocks, direct SPA
+  route failure, and a missing clean-install `commerce_checkout` dependency.
+- Guidance: use scoped gzip artifacts split into SHA-256-verified 512 KiB
+  chunks, check inode headroom before upload and Composer work, archive before
+  deletion, run the isolated Drupal stage with 512 MB, keep the bcrypt auth
+  file on an Apache-traversable path, declare the observed CSP script hash and
+  required style/font sources, route non-file/non-`/web` requests to the SPA
+  shell, and prove all module dependencies from a clean database.
+- Evidence boundary: sanitized customer API plus authenticated browser checks
+  passed login, Operations Home, and Portal at 390, 768, and 1280 pixels. The
+  final exact-source redeploy, hosted runtime safety assertions, and rollback
+  rehearsal remained pending, so protected staging was not promoted.
+
 ## 2026-09-09 — A completion audit must close document drift
 
 - Observation: the staging-first code and packet/receipt contract advanced

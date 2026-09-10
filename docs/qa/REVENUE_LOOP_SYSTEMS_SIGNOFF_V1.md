@@ -68,3 +68,22 @@ records a retained redacted evidence bundle, and deletes that runtime after the
 run; it must never be repointed at production. Stripe TEST Checkout, production
 smoke, live payments, customer sends, domains, and deployment remain separately
 authorized.
+
+## Protected-staging checkpoint — 2026-09-10
+
+The dedicated staging host, database, files, private storage, and secrets were
+kept separate from production, and production remained untouched. Hosted work
+exposed SSH resets, the 250,000-inode cap, insufficient 128 MB PHP memory,
+Apache auth-file traversal, CSP script/style/font blocks, direct SPA-route
+fallback, and a missing clean-install `commerce_checkout` dependency. The
+current release repair addresses those conditions with SHA-256-verified 512 KiB
+chunks, inode headroom and archive-before-delete handling, 512 MB stage-only
+PHP, a traversable bcrypt auth-file path, exact observed CSP sources, an SPA
+fallback, and explicit Commerce Checkout verification.
+
+The sanitized customer API and authenticated browser run passed login,
+Operations Home, and Portal at 390, 768, and 1280 pixels. This signoff remains
+`launch_blocked`: the exact current source has not yet completed its final
+redeploy, hosted payment/mail/cron/provider safety assertions, and rollback
+rehearsal. Do not promote the capability registry from this intermediate
+browser result.

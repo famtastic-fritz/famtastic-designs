@@ -9,7 +9,8 @@ chmod +x "$ROOT/repo/scripts/deploy-protected-staging.sh"
 touch "$ROOT/repo/backend/composer.lock"
 touch "$ROOT/repo/backend/web/modules/custom/famtastic_pipeline/src/Service/DisabledPaymentGateway.php"
 touch "$ROOT/repo/backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.module"
-touch "$ROOT/repo/backend/web/modules/custom/famtastic_pipeline/src/EventSubscriber/ProtectedStagingRequestSubscriber.php"
+cp "$(dirname "$0")/../backend/web/modules/custom/famtastic_pipeline/src/EventSubscriber/ProtectedStagingRequestSubscriber.php" "$ROOT/repo/backend/web/modules/custom/famtastic_pipeline/src/EventSubscriber/ProtectedStagingRequestSubscriber.php"
+grep -F 'blockNativeCheckoutPath' "$ROOT/repo/backend/web/modules/custom/famtastic_pipeline/src/EventSubscriber/ProtectedStagingRequestSubscriber.php" >/dev/null
 touch "$ROOT/repo/backend/web/modules/custom/famtastic_pipeline/src/Plugin/Mail/FamtasticBlackholeMail.php"
 printf 'fixture\n' > "$ROOT/repo/README.md"
 git -C "$ROOT/repo" init -q
@@ -52,3 +53,17 @@ fi
 echo 'protected staging tests passed'
 
 grep -F 'payload.get("data") or (payload.get("result") or {}).get("data")' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'FAMTASTIC_STAGING_MIN_INODE_HEADROOM' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'staging root contains unsafe characters' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'auth/staging.htpasswd' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'password_hash' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'memory_limit=512M' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'commerce_checkout' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'required table missing' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'sha256-CaN42Zi+a+oATitdYvGRVlyS6mCZIxrLFXhTbgp6HCI=' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'RewriteRule ^ /index.html [L]' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'split -b 512k' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'releases are immutable' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'another protected-staging deployment is active' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'gzip -t "$backup"' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null
+grep -F 'phase activated' "$ROOT/repo/scripts/deploy-protected-staging.sh" >/dev/null

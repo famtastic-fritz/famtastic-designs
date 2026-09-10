@@ -38,6 +38,36 @@ Protected staging must assert all of the following before review:
 - cron exits before lifecycle, outbox, SLA, or provider work; no staging cron is
   installed
 
+## Hosted incident checkpoint — 2026-09-10
+
+The dedicated host/document root, database, files, private storage, and
+staging-only secrets were created without touching production. The first
+hosted passes established these additional release constraints:
+
+- repeated SSH resets require scoped gzip artifacts split into 512 KiB chunks,
+  SHA-256 verification for each chunk and the reassembled archive, and resume
+  of missing or mismatched chunks only;
+- the account has a 250,000-inode cap, so the deployer checks headroom before
+  upload and Composer work, and retained material is archived before deletion;
+- the fresh Drupal/Webform runtime requires a stage-only 512 MB PHP limit
+  rather than the host's 128 MB default;
+- Apache must be able to traverse the directory containing the bcrypt Basic
+  Auth file; the password source remains in private staging secrets;
+- CSP must include the observed inline Drupal script hash
+  `sha256-CaN42Zi+a+oATitdYvGRVlyS6mCZIxrLFXhTbgp6HCI=`, the required inline
+  application style allowance, `https://fonts.googleapis.com` for styles, and
+  `https://fonts.gstatic.com` plus `data:` for fonts;
+- non-file, non-directory frontend routes outside `/web` must fall back to
+  `/index.html` so direct SPA entry works;
+- clean installation must install and verify `commerce_checkout` before
+  enabling `famtastic_pipeline`.
+
+Sanitized customer API and authenticated browser evidence passed login,
+Operations Home, and Portal at 390, 768, and 1280 pixels. At the time of this
+checkpoint, the final exact-source redeploy, hosted runtime no-side-effect
+checks, and rollback rehearsal were still pending. The environment is not yet
+release-verified and the capability registry must not be upgraded.
+
 ## Release procedure
 
 1. Provision and verify the cPanel subdomain at the exact protected docroot.

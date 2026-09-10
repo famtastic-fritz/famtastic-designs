@@ -12,4 +12,5 @@ dependencies:
   - commerce:commerce_order
   - commerce:commerce_product
   - commerce:commerce_payment
+  - commerce:commerce_checkout
   - webform:webform
