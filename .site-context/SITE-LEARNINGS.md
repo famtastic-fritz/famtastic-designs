@@ -2153,3 +2153,16 @@ Permanent rules:
 
 - Observation: a 170px iframe scaled to 34% technically rendered the site but made its typography and composition too small to evaluate on mobile.
 - Guidance: use the card’s real responsive viewport, nearly the full carousel width, and at least 390px preview height on phones. Verify the iframe viewport width, screenshot the result, and treat “present but unreadable” as a failed proof experience.
+
+## 2026-09-12 — Generic "minimal code" rulesets need an explicit precedence line
+
+- Observation: ponytail's always-on ruleset says "fewest files possible" and
+  "no boilerplate nobody asked for". Read literally by an agent, that argues
+  against the mandatory changelog, learnings, and Build DNA entries this repo
+  requires on every session.
+- Guidance: any imported coding-style ruleset is installed with a one-paragraph
+  precedence statement that scopes it to code shape and names the repository
+  contracts that win. Install skills through `npx skills add` so they land in
+  `.agents/skills/` and `skills-lock.json` like every other vendored skill; the
+  CLI also creates a gitignored `.claude/skills/` symlink set and an empty root
+  `agent/` directory (Eve) that should be removed before committing.

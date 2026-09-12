@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-12 — Ponytail lazy-senior-dev mode for all agents
+
+- Vendored the six `dietrichgebert/ponytail` skills (`ponytail`,
+  `ponytail-review`, `ponytail-audit`, `ponytail-debt`, `ponytail-gain`,
+  `ponytail-help`) into `.agents/skills/` via the skills CLI and pinned them in
+  `skills-lock.json`, the same path as the other vendored skill libraries.
+- Added the ponytail ruleset as an always-on section of `AGENTS.md` and
+  `CLAUDE.md` so Codex, Claude Code, OpenCode, Shay, and any other CLI agent
+  load it from the repo with no per-machine plugin install.
+- Scoped it explicitly: ponytail governs code shape only; the four-surface
+  documentation sync, Build DNA, capability registry, portal Design DNA,
+  accessibility, and approval gates override it wherever they conflict.
+
 ## 2026-09-10 — Noise Cuts Spanish-first functional proof 01
 
 - Added a distinct, mobile-first Noise Cuts proof shaped from an in-person
