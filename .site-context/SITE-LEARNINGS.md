@@ -2164,5 +2164,5 @@ Permanent rules:
   precedence statement that scopes it to code shape and names the repository
   contracts that win. Install skills through `npx skills add` so they land in
   `.agents/skills/` and `skills-lock.json` like every other vendored skill; the
-  CLI also creates a gitignored `.claude/skills/` symlink set and an empty root
-  `agent/` directory (Eve) that should be removed before committing.
+  CLI also creates a gitignored `.claude/skills/` symlink set and an untracked root
+  `agent/skills/` copy (Eve) that should be deleted before committing.
