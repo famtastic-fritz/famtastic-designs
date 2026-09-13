@@ -1,4 +1,8 @@
 services:
+  http_middleware.famtastic_booking_cors:
+    class: Drupal\famtastic_pipeline\StackMiddleware\BookingCors
+    tags:
+      - { name: http_middleware, priority: 260 }
   famtastic_pipeline.famtastic_admin_theme_negotiator:
     class: Drupal\famtastic_pipeline\Theme\FamtasticAdminThemeNegotiator
     arguments: ['@theme_handler']

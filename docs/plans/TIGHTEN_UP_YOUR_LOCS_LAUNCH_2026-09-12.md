@@ -208,6 +208,21 @@ instead of repeating unchanged owner-email polls.
 
 ## Started
 
+### September13 resumed owner-authorized completion
+
+Fritz explicitly authorized setting the registrant and notifying him afterward.
+Registrar save and reload now show Shalique Channer/Tighten Up Your Locs and her
+verified Commerce billing address. Existing FAMtastic management phone/email
+and privacy remain. The old approval question is closed; no new purchase.
+Mailbox hello@tightenupyourlocs.com created; strict TLS SMTP/IMAP authentication
+passes on the hosting provider hostname. DNS and real delivery remain next.
+
+Exact public Locs CORS middleware and guarded enable/inspect script are ready;
+4PHP tests/20assertions plus5Node22 tests passed independently. Candidate now
+points to the existing binding's canonical public APIs; live enable and public
+artifact promotion follow middleware deployment. Exact artifact publisher passed
+13PHP/2Node tests independently, with scoped managed-file rollback.
+
 2026-09-12.
 
 ## Ended

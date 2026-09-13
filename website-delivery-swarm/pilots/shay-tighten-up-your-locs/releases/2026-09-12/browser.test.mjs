@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, mkdtemp } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { resolve, extname } from "node:path";
 import { createRequire } from "node:module";
 import assert from "node:assert/strict";
@@ -7,6 +8,7 @@ const root=process.argv[2]; if(!root) throw Error("Pass repository root");
 const require=createRequire(resolve(root,"frontend/package.json"));
 const {chromium}=require("playwright");
 const dir=import.meta.dirname;
+const screenshotDir=await mkdtemp(resolve(tmpdir(),"locs-booking-qa-"));
 const server=createServer(async(req,res)=>{try{const url=new URL(req.url,"http://localhost");const path=resolve(dir,"."+url.pathname+(url.pathname.endsWith("/")?"index.html":""));if(!path.startsWith(dir+"/"))throw Error();res.setHeader("Content-Type",({".html":"text/html",".js":"text/javascript",".css":"text/css",".png":"image/png"})[extname(path)]||"application/octet-stream");res.end(await readFile(path));}catch{res.statusCode=404;res.end();}});
 await new Promise(r=>server.listen(0,"127.0.0.1",r));
 const base="http://127.0.0.1:"+server.address().port;
@@ -18,10 +20,10 @@ try{
   const page=await context.newPage(); const external=[];
   await page.route("https://**",route=>{external.push(route.request().url());return route.abort();});
   await page.goto(base+"/"); await page.waitForTimeout(100);
-  assert.equal(await page.locator("#send-request").isDisabled(),true);
+  assert.equal(await page.locator("#send-request").isDisabled(),false);
   assert.equal(external.some(url=>url.includes("googletagmanager")),false);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);
-  await page.screenshot({path:resolve(dir,"qa-"+width+".png"),fullPage:true});
+  await page.screenshot({path:resolve(screenshotDir,"qa-"+width+".png"),fullPage:true});
   await page.locator("#analytics-allow").click();
   await page.waitForTimeout(100);
   assert.equal(await page.locator("#locs-analytics").count(),1, await page.locator("#analytics-status").textContent());
@@ -31,7 +33,7 @@ try{
   assert.equal(config[2].send_page_view,false);
   await page.locator("#analytics-decline").click();
   assert.equal(await page.evaluate(()=>window["ga-disable-G-V8M437DWV0"]),true);
-  results.push("disabled-safe, consent and no-overflow "+width);await context.close();
+  results.push("production endpoint configured, consent and no-overflow "+width);await context.close();
  }
  const context=await browser.newContext({viewport:{width:390,height:844}});
  const page=await context.newPage(); let submissions=0, responseMode="saved";
@@ -59,5 +61,5 @@ try{
  assert.equal(await page.locator('[name="name"]').inputValue(),"Local QA Fixture");
  assert.equal(await page.evaluate(()=>JSON.stringify(window.dataLayer||[]).includes("Local QA Fixture")),false);
  results.push("mock rejected input permits correction without false receipt");
- await context.close();console.log(JSON.stringify({classification:"LOCAL ONLY; network mocks, no provider writes",passed:results},null,2));
+ await context.close();console.log(JSON.stringify({classification:"LOCAL ONLY; network mocks, no provider writes",screenshotDir,passed:results},null,2));
 }finally{await browser.close();await new Promise(r=>server.close(r));}
