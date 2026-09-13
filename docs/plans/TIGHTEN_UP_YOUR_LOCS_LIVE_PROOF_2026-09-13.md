@@ -2,7 +2,10 @@
 
 Public site: https://tightenupyourlocs.com/
 
-Status: approved customer site launch verified; notices accepted by live SMTP.
+Status: public customer site launch verified; notices accepted by live SMTP.
+The dedicated Owner Desk and appointment acceptance/calendar/rescheduling are
+NOT delivered by the shared portal status-update proof below. See
+[the scope correction and continuation](TIGHTEN_UP_YOUR_LOCS_OWNER_DESK_CONTINUATION_2026-09-13.md).
 Remaining customer activation and mail reputation caveats are listed below.
 
 ## Verified production work

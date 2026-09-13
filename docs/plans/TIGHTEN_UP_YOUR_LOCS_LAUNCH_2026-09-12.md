@@ -14,7 +14,10 @@ customer ownership, and Drupal/Commerce records distinct.
 
 ## Tasks
 
-Current closeout: the approved customer launch is verified September13.
+Scope correction September13: the public launch is verified, but the intended
+dedicated Owner Desk and appointment lifecycle remain incomplete. See
+[the mandatory continuation](TIGHTEN_UP_YOUR_LOCS_OWNER_DESK_CONTINUATION_2026-09-13.md).
+The checked items below prove only their stated subset, not whole delivery.
 The evidence and remaining non-launch follow-ups are in
 [the live proof record](TIGHTEN_UP_YOUR_LOCS_LIVE_PROOF_2026-09-13.md).
 Historical checkpoints below are retained as history, not current blockers.

@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Preserve promised owner operations through release
+
+Observation: campaign50's selected artifact includes an Owner Desk decision flow,
+but the static release excludes the desk and only proves shared inbox statuses.
+Guidance: keep authentication, dedicated UI, calendar reservation, confirmation
+and rescheduling as explicit unfinished gates. Do not call a request status PATCH
+an appointment acceptance test. See the September13 Owner Desk continuation plan.
+
 ## 2026-09-13 — Missing management feature is not missing DNS material
 
 Observation: EmailAuth was unavailable, but DNS/parse_zone contained the existing

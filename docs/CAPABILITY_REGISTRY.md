@@ -1,5 +1,11 @@
 # FAMtastic Designs capability registry
 
+September13 scope correction: Locs public capture, scoped portal status updates
+and alerts are production-proven; the promised dedicated Owner Desk, appointment
+acceptance, rescheduling and calendar are NOT. Earlier “Owner Desk PATCH” wording
+describes the shared portal status route, not the retained customer owner design.
+See `docs/plans/TIGHTEN_UP_YOUR_LOCS_OWNER_DESK_CONTINUATION_2026-09-13.md`.
+
 This registry records what FAMtastic can responsibly demonstrate and sell. A
 capability is not “proven” merely because code exists.
 

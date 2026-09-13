@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Public launch is not complete owner delivery
+
+The selected Ruby Signal artifact promised Owner Desk confirmation and alternate
+times, while the release recipe withheld that page and only shipped public
+capture/shared inbox. Root cause: the narrowed infrastructure checklist lost
+the intended owner workflow. Keep each presented workflow as a completion gate;
+preview disclaimers explain execution status, not permission to omit delivery.
+Canonical continuation: `docs/plans/TIGHTEN_UP_YOUR_LOCS_OWNER_DESK_CONTINUATION_2026-09-13.md`.
+
 Further mail check: the existing DKIM public key was recovered from cPanel's
 local DNS zone and published on both authoritative nameservers. A single
 corrective email still arrived unsigned/in Gmail spam despite SPF/DMARC pass.

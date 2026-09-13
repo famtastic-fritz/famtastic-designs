@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-13 — Locs owner-delivery scope correction (documentation only)
+
+- Verified campaign50 selected Ruby Signal artifact against production: it
+  explicitly presents owner review, confirmation and alternative-time handling.
+- Recorded why the release withheld the Owner Desk and reopened the completion
+  gate for authenticated owner UI, durable appointments and calendar workflows.
+- No application, payment, mail, DNS or deployment changes in this investigation.
+
 ## 2026-09-13 — Locs mail-authentication follow-up
 
 - Published the existing provider RSA2048 DKIM public key at the exact selector,
