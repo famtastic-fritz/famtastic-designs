@@ -1,5 +1,23 @@
 # Product changelog
 
+## 2026-09-13 — Locs live artifact and final workflow repair
+
+- Approved Ruby Signal artifact now serves HTTP200 on apex/www with trusted TLS.
+  Real 390/768/1280 public QA, one labeled saved request, and GA4 Realtime
+  collection verified. Mailbox SMTP/IMAP and a real two-way exchange verified;
+  native email-only password invitation accepted by provider.
+- Registrant name, organization and address updated under Fritz's explicit
+  approval; operator contact retained where customer contact is absent.
+- Fixed two double-escaped numeric Owner Desk routes. Actual-YAML Symfony
+  regression proof:3tests42assertions. Production status PATCH retest pending.
+- Final public metadata removes the staging noindex, aligns form limits with
+  the backend, and supplies the now-created hello mailbox as a fallback.
+- Added guarded post-payment external receipt recording with strict-TLS public
+  file hashes. No fabricated staging acceptance or payment changes.
+- Mail delivery is transport-proven, not guaranteed inbox placement: the Gmail
+  test landed in spam despite SPF/DMARC passing. Customer invitation activation
+  and final launch notice are separate checks.
+
 ## 2026-09-13 — Platform booking slice deployed; Locs launch still open
 
 - Deployed backend and frontend48cc88ce through canonical exact-main scripts;

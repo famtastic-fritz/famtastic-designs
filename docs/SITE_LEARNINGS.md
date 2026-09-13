@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Public launch proof is layered
+
+Locs now has actual public HTTP/TLS, mobile request persistence, GA4 Realtime,
+and mailbox round-trip evidence. These supersede earlier empty-root notes.
+Keep owner status mutation, worker delivery, customer credential activation,
+and customer launch notice separate. A provider-accepted mail can still land
+in spam. Record already-paid external deployments honestly, without inventing
+earlier staging records or changing financial history.
+
 ## 2026-09-13 — Keep source promotion distinct from customer launch
 
 Platform48cc88ce deployed with backups and browser smoke proof; the isolated

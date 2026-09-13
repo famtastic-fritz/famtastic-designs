@@ -3,6 +3,13 @@
 This registry records what FAMtastic can responsibly demonstrate and sell. A
 capability is not “proven” merely because code exists.
 
+September13 Locs evidence update: approved static artifact is live on customer
+apex/www with renewable, provider-tested TLS; public mobile/desktop request
+capture and GA4 Realtime collection are proven. Dedicated mailbox round-trip
+and provider-native email-only credential invitation are proven. Owner Desk
+status route repair and final notification delivery are still being closed;
+this is not yet a claim of the whole lifecycle passing.
+
 | Capability | Current evidence level | Reusable service value |
 |---|---|---|
 | Specialist agent registry and bounded local-model routing | Locally verified roster and runtime; cloud subscription authority remains unproven | The active workforce registry is `docs/playbook/ROSTER.md` plus 13 `.opencode/agent/` role definitions. `marketing/local-models.json` routes the locally installed Ollama models (`qwen3:8b`, `glm4:9b`, `gemma3:4b`) to bounded drafting/review roles; `marketing/providers.json` exposes them in evidence-first copy comparisons. OpenCode Go is an owner-reported subscription with a local CLI but no current Go-auth receipt; Piece has not been identified precisely enough to route. None of these agents/models can approve claims, spend, upload, or publish. |

@@ -114,7 +114,7 @@ export function initSite(win = window, doc = document) {
       button.textContent = "Request saved";
     } catch {
       uncertain = true;
-      status.textContent = "We could not confirm whether your request was saved. Please do not submit it again yet. Your details remain here; contact Shay through your existing contact method to check.";
+      status.textContent = "We could not confirm whether your request was saved. Please do not submit it again yet. Your details remain here; email hello@tightenupyourlocs.com to check.";
       button.textContent = "Confirmation unavailable";
     } finally {
       sending = false; button.disabled = uncertain;

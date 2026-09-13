@@ -51,7 +51,11 @@ final class LifecycleOperationsService {
     private readonly PilotExactDispatchLock $pilotExactDispatchLock,
   ) {}
 
-  public function dispatchNotifications(int $limit = 25): array {
+  public function dispatchNotifications(int $limit = 25, ?array $notificationKeys = NULL): array {
+    $notificationKeys = $this->validateNotificationKeys($notificationKeys);
+    if ($notificationKeys === []) {
+      return ['processed' => 0, 'sent' => 0, 'failed' => 0, 'retried' => 0, 'skipped' => 'empty_exact_scope'];
+    }
     // This is the shared outbox boundary. Do not claim it during an exact-ID
     // pilot; targeted preview delivery uses PublicPreviewDeliveryService and
     // therefore remains separately owner-gated. Drupal account/auth mail and
@@ -60,10 +64,14 @@ final class LifecycleOperationsService {
       return ['processed' => 0, 'sent' => 0, 'failed' => 0, 'retried' => 0, 'skipped' => 'pilot_exact_dispatch_lock'];
     }
     $now = $this->time->getRequestTime();
-    $recoveredClaims = $this->releaseExpiredNotificationClaims($now);
-    $rows = $this->database->select('famtastic_notification_outbox', 'n')->fields('n')
+    $recoveredClaims = $this->releaseExpiredNotificationClaims($now, $notificationKeys);
+    $query = $this->database->select('famtastic_notification_outbox', 'n')->fields('n')
       ->condition('status', ['queued', 'retry'], 'IN')->condition('available_at', $now, '<=')
-      ->orderBy('created')->range(0, max(1, min(100, $limit)))->execute()->fetchAll(\PDO::FETCH_ASSOC);
+      ->orderBy('created')->range(0, max(1, min(100, $limit)));
+    if ($notificationKeys !== NULL) {
+      $query->condition('notification_key', $notificationKeys, 'IN');
+    }
+    $rows = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
     $result = ['processed' => 0, 'claimed' => 0, 'sent' => 0, 'failed' => 0, 'retried' => 0, 'recovered_claims' => $recoveredClaims];
     foreach ($rows as $row) {
       $claim = $this->claimNotification($row, $now);
@@ -106,15 +114,15 @@ final class LifecycleOperationsService {
         }
       }
     }
-    $this->heartbeat('notification_dispatch', $result, $now + 300);
+    $this->heartbeat($notificationKeys === NULL ? 'notification_dispatch' : 'notification_dispatch_exact', $result, $now + 300);
     return $result;
   }
 
   /**
    * Releases only abandoned generic claims; no provider call happens here.
    */
-  private function releaseExpiredNotificationClaims(int $now): int {
-    return $this->database->update('famtastic_notification_outbox')->fields([
+  private function releaseExpiredNotificationClaims(int $now, ?array $notificationKeys = NULL): int {
+    $query = $this->database->update('famtastic_notification_outbox')->fields([
       'status' => 'retry',
       'available_at' => $now,
       'claim_token' => '',
@@ -122,8 +130,23 @@ final class LifecycleOperationsService {
       'last_error' => 'notification_dispatch_claim_expired',
       'changed' => $now,
     ])->condition('status', 'dispatching')
-      ->condition('claimed_at', $now - self::OUTBOX_CLAIM_TIMEOUT_SECONDS, '<=')
-      ->execute();
+      ->condition('claimed_at', $now - self::OUTBOX_CLAIM_TIMEOUT_SECONDS, '<=');
+    if ($notificationKeys !== NULL) {
+      $query->condition('notification_key', $notificationKeys, 'IN');
+    }
+    return $query->execute();
+  }
+
+  /** NULL preserves the general worker; an explicit empty list never broadens. */
+  private function validateNotificationKeys(?array $keys): ?array {
+    if ($keys === NULL) return NULL;
+    if (count($keys) > 100) throw new \InvalidArgumentException('Exact notification scope exceeds 100 keys.');
+    foreach ($keys as $key) {
+      if (!is_string($key) || !preg_match('/^[a-zA-Z0-9][a-zA-Z0-9:._-]{0,254}$/D', $key)) {
+        throw new \InvalidArgumentException('Invalid exact notification key.');
+      }
+    }
+    return array_values(array_unique($keys));
   }
 
   /**

@@ -85,7 +85,7 @@
     {
       "role": "index.html",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/index.html",
-      "sha256": "d51291e8bb2b351204b87a5fe8f644977edfb3cd8127257c28378b56215ad23a",
+      "sha256": "cf9a28172f5cd726e4f75bee170eac6c0b8b2909e9f142fd061bcae1c216b528",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -134,7 +134,7 @@
     {
       "role": "site.js",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site.js",
-      "sha256": "74b8d87c5652daa2b57d6d6192f97b7ffeba56743708ab4075579859806da9ea",
+      "sha256": "8483cbb3873cdde47a433270a3a5b0246ce90e4f1362caea95e2a0e206b23c8e",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },

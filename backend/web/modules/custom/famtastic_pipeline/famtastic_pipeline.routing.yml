@@ -510,7 +510,7 @@ famtastic_pipeline.customer_booking_owner_request:
     _access: 'TRUE'
     _csrf_request_header_token: 'TRUE'
     site_key: '[a-z0-9-]{3,64}'
-    request_id: '\\d+'
+    request_id: '[0-9]+'
   options:
     no_cache: 'TRUE'
 
@@ -546,7 +546,7 @@ famtastic_pipeline.customer_booking_owner_availability_window:
     _access: 'TRUE'
     _csrf_request_header_token: 'TRUE'
     site_key: '[a-z0-9-]{3,64}'
-    window_id: '\\d+'
+    window_id: '[0-9]+'
   options:
     no_cache: 'TRUE'
 

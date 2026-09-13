@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Test actual routes and cron interpreter
+
+A controller unit test cannot catch YAML regex escaping: single-quoted
+double-backslash d-plus rejected normal numeric IDs. Parse the real routing
+file with Symfony and test accepted IDs, rejected values, methods and CSRF.
+Cron's minimal PATH can select CGI PHP while interactive SSH selects CLI:
+pin the verified CLI interpreter and retain bounded logs. Never unblock a
+broad outbox merely to prove one customer message.
+
 ## 2026-09-13 — Renewal reload and deployment truth
 
 - Observation: private HTTP API reload works where jailed uapi fails.
