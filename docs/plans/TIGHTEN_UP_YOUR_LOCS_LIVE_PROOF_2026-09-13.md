@@ -69,10 +69,14 @@ the earlier Locs business-mail spam-placement caveat; neither claim is erased.
 - The site captures requests, not appointments. Status changes do not send a
   reply, reserve time, charge money, or create calendar events. The owner uses
   the visitor's email/phone to agree on a time. No invented availability windows.
-- Business-mail test passed SPF/DMARC but Gmail classified it as spam. DKIM
-  configuration is unavailable on this shared-hosting account. Sending and
-  receiving are proven; guaranteed inbox placement is not. Improving this may
-  require provider support or a separately approved mail service.
+- Initial business-mail test passed SPF/DMARC but Gmail classified it as spam.
+  A further read-only local-zone check recovered the provider's existing RSA2048
+  DKIM public key despite the EmailAuth management interface being unavailable.
+  The exact default._domainkey TXT was added to authoritative DNS and verified
+  on both nameservers. One corrective test (Gmail1a099effccb71aed) still had no
+  DKIM signature and landed in spam, with SPF/DMARC passing. Outbound signing is
+  a provider-side unresolved issue; public DNS is no longer the missing piece.
+  Sending/receiving work, but business-mail inbox readiness is not claimed.
 - Mailbox password invitation expires September15; customer activation and
   opening either notice cannot be observed from the operator's account.
 - Generic platform cron has an independently identified PHP-PATH defect. This

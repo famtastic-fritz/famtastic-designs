@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-13 — Locs mail-authentication follow-up
+
+- Published the existing provider RSA2048 DKIM public key at the exact selector,
+  preserving all other DNS. Both nameservers verified.
+- One corrective test still arrived without DKIM signature and in Gmail spam.
+  Recorded the remaining provider-signing issue; no claim of inbox readiness.
+  Site request alerts and launch notices use the separate authenticated Designs
+  sender; Fritz's actual completion email is verified in Gmail INBOX.
+
 ## 2026-09-13 — Locs launch verified and customer notified
 
 - Backend a92b4ae1 deployed08:31UTC; live Owner Desk PATCH200 persists after

@@ -3,6 +3,12 @@
 This registry records what FAMtastic can responsibly demonstrate and sell. A
 capability is not “proven” merely because code exists.
 
+Locs business-mail qualification: SMTP/IMAP and round trip are provider-proven,
+but outbound DKIM signing/inbox readiness are NOT proven. The existing public
+key is now published and verified; the corrective message remained unsigned
+and spam-classified. This does not downgrade the separately proven Designs
+sender, real site request capture, owner portal or scheduled alerts.
+
 September13 Locs evidence update: approved static artifact is live on customer
 apex/www with renewable, provider-tested TLS; public mobile/desktop request
 capture and GA4 Realtime collection are proven. Dedicated mailbox round-trip

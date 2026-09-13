@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Missing management feature is not missing DNS material
+
+Observation: EmailAuth was unavailable, but DNS/parse_zone contained the existing
+RSA2048 public DKIM key. Guidance: inspect only public zone data before claiming
+DKIM impossible; publish only the verified provider key. Then verify a real
+outgoing signature. Locs still sends unsigned through the provider after DNS
+correction, so signing/inbox readiness remains unresolved, not silently passed.
+
 ## 2026-09-13 — Close with real scheduled delivery and durable source
 
 Observation: an exact-key worker delivered the real Locs alert on the actual

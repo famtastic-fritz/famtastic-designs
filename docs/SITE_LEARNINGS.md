@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+Further mail check: the existing DKIM public key was recovered from cPanel's
+local DNS zone and published on both authoritative nameservers. A single
+corrective email still arrived unsigned/in Gmail spam despite SPF/DMARC pass.
+The remaining issue is outbound provider signing; do not confuse this with
+the fully authenticated FAMtastic Designs customer/owner alert sender.
+
 ## 2026-09-13 — Final Locs closeout
 
 Owner route persistence and actual scheduled owner-alert delivery are now
