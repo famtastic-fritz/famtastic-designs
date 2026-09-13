@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Final Locs closeout
+
+Owner route persistence and actual scheduled owner-alert delivery are now
+verified; exact customer/Fritz notices were accepted once each. Project5 holds
+the real external release URL/hash. See the canonical live-proof document.
+Do not reopen the completed registrant question, repurchase the domain, or
+invent staging history. Preserve the disclosed Gmail-spam and customer-password
+activation caveats and keep global-worker work separate.
+
 ## 2026-09-13 — Public launch proof is layered
 
 Locs now has actual public HTTP/TLS, mobile request persistence, GA4 Realtime,

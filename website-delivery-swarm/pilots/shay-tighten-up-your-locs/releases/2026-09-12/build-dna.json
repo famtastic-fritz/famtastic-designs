@@ -1,12 +1,12 @@
 {
   "schema": "famtastic.build-dna.v1",
   "build_id": "tighten-up-your-locs-ruby-release-candidate-20260912",
-  "classification": "local-only approved-direction technical adaptation; launch gated",
+  "classification": "approved artifact deployed and public workflow verified; see latest production stage and launch evidence",
   "created_at": "2026-09-12T21:55:01Z",
   "repository": {
     "name": "famtastic-designs",
     "revision": "ffcd2650b5db43fd96881e8a579c2e7a1edf6281",
-    "worktree_state": "isolated; local uncommitted",
+    "worktree_state": "production artifact source pinned to a92b4ae1b69a6469ab27463ecb60b1e0d6b5c3bf; historical adaptation revision retained",
     "parent_build_id": "tighten-up-your-locs-private-proof-v2-20260905"
   },
   "recipe": {
@@ -60,6 +60,17 @@
       }
     }
   ],
+  "production_release": {
+    "source_sha": "a92b4ae1b69a6469ab27463ecb60b1e0d6b5c3bf",
+    "package_sha256": "f51435771fc75abbb9843832e598c14c428635f2b40ec879c3f143d3fea90394",
+    "url": "https://tightenupyourlocs.com/",
+    "status": "public_hashes_verified_and_post_payment_project_receipt_recorded",
+    "verification": "Strict TLS and five public file hashes; 390/768/1280 real browser QA; durable request and owner PATCH persistence; GA4 Realtime; SMTP/IMAP round trip. Scheduled alert and final notices are tracked in the final launch evidence, not inferred here.",
+    "provider_model": {"provider":"openai-codex","model_id":null,"status":"not_disclosed_by_runtime"},
+    "cost": {"status":"runtime_did_not_report","amount":null},
+    "timing": {"status":"partial","backend_deployed_at":"2026-09-13T08:31:02Z","duration_ms":null},
+    "approval": "Fritz explicitly confirmed the Locs design was final and authorized launch and registrant update; not a fabricated portal acceptance."
+  },
   "artifacts": [
     {
       "role": "README.md",

@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Close with real scheduled delivery and durable source
+
+Observation: an exact-key worker delivered the real Locs alert on the actual
+five-minute cron schedule after pinning CLI PHP. Guidance: test a scheduled
+run, not only a manual invocation, and keep the checked-in private worker
+outside release directories subject to pruning. Record provider acceptance
+separately from inbox placement and customer opening/activation.
+
 ## 2026-09-13 — Test actual routes and cron interpreter
 
 A controller unit test cannot catch YAML regex escaping: single-quoted

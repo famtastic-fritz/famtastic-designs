@@ -14,27 +14,32 @@ customer ownership, and Drupal/Commerce records distinct.
 
 ## Tasks
 
+Current closeout: the approved customer launch is verified September13.
+The evidence and remaining non-launch follow-ups are in
+[the live proof record](TIGHTEN_UP_YOUR_LOCS_LIVE_PROOF_2026-09-13.md).
+Historical checkpoints below are retained as history, not current blockers.
+
 - [x] Locate a usable reseller storefront and existing discounted shopper.
 - [x] Refresh production request linkage rather than trust the old draft notes.
 - [x] Verify cPanel API authentication and locate the existing Locs subdomain.
 - [x] Confirm the authorized domain purchase with the provider receipt.
-- [x] Create a dedicated GA4 property and web stream (collection not yet proven).
+- [x] Create a dedicated GA4 property and web stream; live collection and Realtime proven.
 - [x] Run and inspect the canonical fresh synthetic journey evidence.
 - [x] Prepare and locally test the approved design's release candidate without publishing review copy.
-- [ ] Complete the live booking, owner-inbox and notification integration before enabling the candidate.
-- [ ] Verify the selected artifact, order/payment or grant, project, and existing deployment.
-- [ ] Reconcile any existing deployment with the current staging/acceptance contract.
-- [ ] Confirm the exact domain, registrant, total cost, payment source, and purchase authorization.
-- [ ] Obtain or verify the domain; record the provider receipt and customer ownership.
-- [ ] Implement a resumable, secret-safe cPanel provisioning workflow and tests.
+- [x] Complete the live request, owner-inbox and scoped notification integration.
+- [x] Verify selected artifact, existing order/payment linkage, project and deployment.
+- [x] Reconcile post-payment deployment honestly without fabricated pre-payment staging.
+- [x] Confirm exact domain, registrant, total cost, payment source and purchase authorization.
+- [x] Verify domain; record provider receipt and customer registrant update.
+- [x] Implement resumable, secret-safe cPanel provisioning and artifact publishing with tests.
 - [x] Provision domain/document root without altering neighboring sites.
-- [ ] Deploy the exact approved artifact; verify domain and DNS routing.
-- [ ] Provision customer email, authentication records, and delivery proof.
-- [ ] Install TLS, verify HTTPS, and configure/verify the renewal mechanism.
-- [ ] Configure the correct GA4 property/stream and prove collection.
-- [ ] Browser-test mobile/desktop and customer-facing actions.
-- [ ] Reconcile production receipts with Drupal and the customer portal.
-- [ ] Update canonical changelog, capabilities, learnings, and Drive mirror.
+- [x] Deploy exact approved artifact; verify domain and DNS routing.
+- [x] Provision customer email, authentication records, round-trip proof and native invitation.
+- [x] Install TLS, verify HTTPS and provider-test the scheduled renewal install hook.
+- [x] Configure correct GA4 property/stream and prove collection.
+- [x] Browser-test mobile/desktop and real request/owner actions.
+- [x] Record verified external release against Drupal project and existing order.
+- [x] Update canonical changelog, capabilities, learnings and Drive mirror.
 
 ## Status
 

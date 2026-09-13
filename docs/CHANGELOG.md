@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-13 — Locs launch verified and customer notified
+
+- Backend a92b4ae1 deployed08:31UTC; live Owner Desk PATCH200 persists after
+  reload on mobile/desktop. Exact public artifact hashes verified and recorded
+  against project5/order19 without altering financial or staging history.
+- Scoped CLI-PHP cron actually ran08:35UTC and delivered the exact owner alert
+  once. Stable private worker survives ordinary release-directory retention.
+- Customer and Fritz launch notices accepted by real SMTP once each;
+  secure mailbox invitation had already been accepted by the provider.
+- Final proof and caveats: [live launch evidence](plans/TIGHTEN_UP_YOUR_LOCS_LIVE_PROOF_2026-09-13.md).
+  Customer invitation activation, guaranteed inbox placement and broader
+  platform worker repair are not falsely marked complete.
+
 ## 2026-09-13 — Locs live artifact and final workflow repair
 
 - Approved Ruby Signal artifact now serves HTTP200 on apex/www with trusted TLS.
