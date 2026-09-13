@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — An owner inbox becomes operational only with durable commands
+
+Observation: a saved request and editable status can prove receipt without
+giving the business owner a real appointment system. Guidance: reserve exact
+site/time records under a persistent lock, record each command idempotently,
+enforce revisions and overlap rules, and persist before queuing a notice.
+Customer proposal links must be expiring, replay-safe and stripped of owner-only
+contact fields. A local Owner Desk still does not prove production deployment,
+provider delivery, external calendar synchronization or payment.
+
 ## 2026-09-13 — Preserve promised owner operations through release
 
 Observation: campaign50's selected artifact includes an Owner Desk decision flow,

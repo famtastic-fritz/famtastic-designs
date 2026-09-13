@@ -44,6 +44,7 @@ import WatchHubPage from './pages/WatchHubPage.jsx';
 import WatchFilmPage from './pages/WatchFilmPage.jsx';
 import WebsiteOptionsPage from './pages/WebsiteOptionsPage.jsx';
 import PaymentHandoffPage from './pages/PaymentHandoffPage.jsx';
+import AppointmentProposalPage from './pages/AppointmentProposalPage.jsx';
 
 export default function App() {
   return (
@@ -65,6 +66,7 @@ export default function App() {
         <Route path="/proofs/share/:requestId/:signature" element={<ProofSharePage />} />
         <Route path="/proofs/preview/:previewDelivery/:signature" element={<PublicPreviewRoomPage />} />
         <Route path="/deep-dive/:invitation" element={<DeepDivePage />} />
+        <Route path="/appointment/:appointment" element={<AppointmentProposalPage />} />
 
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />

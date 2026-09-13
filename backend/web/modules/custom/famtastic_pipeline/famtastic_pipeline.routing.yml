@@ -550,6 +550,53 @@ famtastic_pipeline.customer_booking_owner_availability_window:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.customer_booking_owner_appointments:
+  path: '/api/customer/owner-sites/{site_key}/appointments'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerBookingOwnerController::appointments'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
+# Mutating owner commands use this separate CSRF-protected route name while
+# retaining the same URL and controller as the read-only snapshot.
+famtastic_pipeline.customer_booking_owner_appointment_command:
+  path: '/api/customer/owner-sites/{site_key}/appointments'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\CustomerBookingOwnerController::appointments'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    site_key: '[a-z0-9-]{3,64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.booking_appointment_proposal_response:
+  path: '/api/booking-appointment/{appointment}/respond'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\BookingAppointmentController::respond'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    appointment: '[0-9a-fA-F-]{36}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.booking_appointment_proposal:
+  path: '/api/booking-appointment/{appointment}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\BookingAppointmentController::proposal'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    appointment: '[0-9a-fA-F-]{36}'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_website_request_proof_share:
   path: '/api/customer/website-requests/{website_request}/proof-share'
   defaults:

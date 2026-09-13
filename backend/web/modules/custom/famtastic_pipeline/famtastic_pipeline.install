@@ -36,6 +36,8 @@ function famtastic_pipeline_schema(): array {
     'famtastic_booking_site_owner' => _famtastic_pipeline_booking_site_owner_schema(),
     'famtastic_booking_request' => _famtastic_pipeline_booking_request_schema(),
     'famtastic_booking_availability' => _famtastic_pipeline_booking_availability_schema(),
+    'famtastic_booking_appointment' => _famtastic_pipeline_booking_appointment_schema(),
+    'famtastic_booking_appointment_event' => _famtastic_pipeline_booking_appointment_event_schema(),
     'famtastic_payment_handoff' => _famtastic_pipeline_payment_handoff_schema(),
     'famtastic_payment_handoff_event' => _famtastic_pipeline_payment_handoff_event_schema(),
   ];
@@ -2972,6 +2974,24 @@ function famtastic_pipeline_update_8061(&$sandbox) {
   return t('Enabled consented request-to-book capture for the Noise Cuts proof. No appointment, calendar event, payment, or outbound message was created.');
 }
 
+/** Adds durable owner-managed appointments and their append-only audit trail. */
+function famtastic_pipeline_update_8062(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $created = [];
+  foreach ([
+    'famtastic_booking_appointment' => _famtastic_pipeline_booking_appointment_schema(),
+    'famtastic_booking_appointment_event' => _famtastic_pipeline_booking_appointment_event_schema(),
+  ] as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+      $created[] = $table;
+    }
+  }
+  return t('Added durable appointment and audit records (@tables). No appointment, notification, calendar event, or payment was created.', [
+    '@tables' => $created ? implode(', ', $created) : 'already present',
+  ]);
+}
+
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */
 function _famtastic_pipeline_website_proof_research_snapshot_schema(): array {
   return [
@@ -3101,6 +3121,66 @@ function _famtastic_pipeline_booking_request_schema(): array {
       'site_status' => ['site_key', 'status', 'created'],
       'site_email' => ['site_key', 'email_hash'],
       'created' => ['created'],
+    ],
+  ];
+}
+
+/** Durable appointment state owned by one exact branded site. */
+function _famtastic_pipeline_booking_appointment_schema(): array {
+  return [
+    'description' => 'Owner-managed appointments and proposed changes for one branded site.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+      'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'availability_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'service_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => 'general'],
+      'starts_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'ends_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'proposed_starts_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'proposed_ends_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'timezone' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => 'America/New_York'],
+      'status' => ['type' => 'varchar', 'length' => 24, 'not null' => TRUE, 'default' => 'confirmed'],
+      'revision' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 1],
+      'proposal_token_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'proposal_expires_at' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'created_by_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'changed' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'public_id' => ['public_id'],
+      'site_request' => ['site_key', 'request_id'],
+    ],
+    'indexes' => [
+      'site_status_time' => ['site_key', 'status', 'starts_at'],
+      'site_proposal_time' => ['site_key', 'status', 'proposed_starts_at'],
+    ],
+  ];
+}
+
+/** Append-only idempotent appointment commands and state-change evidence. */
+function _famtastic_pipeline_booking_appointment_event_schema(): array {
+  return [
+    'description' => 'Append-only appointment command ledger with idempotency keys.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+      'appointment_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'site_key' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+      'request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'event_type' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE],
+      'idempotency_key' => ['type' => 'varchar', 'length' => 96, 'not null' => TRUE],
+      'actor_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'payload_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'created' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => ['idempotency_key' => ['idempotency_key']],
+    'indexes' => [
+      'appointment_time' => ['appointment_id', 'created'],
+      'site_time' => ['site_key', 'created'],
     ],
   ];
 }

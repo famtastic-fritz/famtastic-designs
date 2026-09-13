@@ -8,7 +8,7 @@ export const GROUPS = [
   ]],
   ['Communications & AI', [
     ['messages', 'Messages'],
-    ['booking', 'Website requests'],
+    ['booking', 'Owner Desk'],
     ['shay', 'Shay AI Advisor'],
     ['support', 'Support'],
   ]],

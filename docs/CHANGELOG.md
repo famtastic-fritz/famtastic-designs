@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-09-13 — Durable Locs Owner Desk implementation (local, not deployed)
+
+- Replaced the request-status-only booking view with an exact-site Owner Desk
+  for Today, Openings and Requests, including confirmed appointments, proposed
+  times, rescheduling, cancellation and completion.
+- Added durable appointment and append-only event tables, site-scoped locks,
+  optimistic revisions, overlap refusal, idempotent commands, expiring
+  customer response tokens and transactional customer notices.
+- Added a token-scoped customer accept/decline page that exposes no owner-only
+  contact data and explicitly does not charge or claim external calendar sync.
+- Four appointment lifecycle tests (16 assertions), seven prior booking/outbox
+  tests (22 assertions), PHP lint/standards, frontend build, 34 Design DNA
+  checks, navigation inventory and 390/1280 browser proof pass locally. No
+  production data, message, payment, provider or deployment action occurred.
+
 ## 2026-09-13 — Locs owner-delivery scope correction (documentation only)
 
 - Verified campaign50 selected Ruby Signal artifact against production: it

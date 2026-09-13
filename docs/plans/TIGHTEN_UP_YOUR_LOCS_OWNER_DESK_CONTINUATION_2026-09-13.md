@@ -2,11 +2,19 @@
 
 ## Status and correction
 
-Investigation and continuation plan only; no owner application changes deployed.
-The public site is live, but the complete intended business operating experience
-is NOT delivered. Request capture, a shared portal inbox and workflow status
-updates are not a substitute for Shay's dedicated Owner Desk and appointments.
-Keep the analytics-consent/footer correction as a separate narrow release.
+The public site is live. The dedicated owner application is now implemented and
+locally proven, but no owner application changes are deployed. Request capture,
+a shared portal inbox and workflow status updates remain distinct from the new
+durable appointment lifecycle. Keep the analytics-consent/footer correction as
+a separate narrow release.
+
+Local source now includes Today/Openings/Requests owner views, durable
+appointments and append-only events, site-scoped locks, idempotency, optimistic
+revisions, overlap protection, owner confirmation/proposals/rescheduling/
+cancellation/completion, and expiring token-scoped customer acceptance. Local
+unit, lint, design-contract, build and 390/1280 browser checks pass. Production
+schema update, exact release, live login, real owner data and real outbox
+delivery are still required before this plan can be closed.
 
 ## Authoritative approval evidence
 

@@ -31,6 +31,27 @@ export const resetCustomerPassword = (token, password) => request('/reset-passwo
 export const getCustomerWorkspace = (organization = '') => request(`/workspace${organization ? `?organization=${encodeURIComponent(organization)}` : ''}`);
 export const getBookingRequests = (site) => request(`/owner-sites/${encodeURIComponent(site)}/booking-requests`);
 export const updateBookingRequest = (site, id, status) => request(`/owner-sites/${encodeURIComponent(site)}/booking-requests/${encodeURIComponent(id)}`, { method: 'PATCH', csrf: true, body: JSON.stringify({ status }) });
+export const getBookingAvailability = (site) => request(`/owner-sites/${encodeURIComponent(site)}/availability`);
+export const createBookingAvailability = (site, payload) => request(`/owner-sites/${encodeURIComponent(site)}/availability`, { method: 'POST', csrf: true, body: JSON.stringify(payload) });
+export const updateBookingAvailability = (site, id, payload) => request(`/owner-sites/${encodeURIComponent(site)}/availability/${encodeURIComponent(id)}`, { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
+export const getBookingAppointments = (site) => request(`/owner-sites/${encodeURIComponent(site)}/appointments`);
+export const commandBookingAppointment = (site, payload) => request(`/owner-sites/${encodeURIComponent(site)}/appointments`, { method: 'POST', csrf: true, body: JSON.stringify(payload) });
+
+export async function respondBookingProposal(appointment, token, decision) {
+  const response = await fetch(`${WEB_PREFIX}/api/booking-appointment/${encodeURIComponent(appointment)}/respond`, {
+    method: 'POST', credentials: 'omit', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ token, decision }),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new CustomerApiError('This appointment proposal could not be updated.', response.status, payload.error);
+  return payload;
+}
+
+export async function getBookingProposal(appointment, token) {
+  const response = await fetch(`${WEB_PREFIX}/api/booking-appointment/${encodeURIComponent(appointment)}?token=${encodeURIComponent(token)}`, { credentials: 'omit', headers: { Accept: 'application/json' } });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new CustomerApiError('This appointment proposal is unavailable.', response.status, payload.error);
+  return payload;
+}
 export const getCustomerCatalog = () => request('/catalog');
 export const createCommerceCheckout = (payload) => request('/checkout', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const getPaymentHandoff = (organization) => request(`/payment-handoff?organization=${encodeURIComponent(organization)}`);

@@ -183,6 +183,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\BookingAvailabilityService
     arguments: ['@database', '@datetime.time', '@uuid']
 
+  famtastic_pipeline.booking_appointments:
+    class: Drupal\famtastic_pipeline\Service\BookingAppointmentService
+    arguments: ['@database', '@datetime.time', '@uuid', '@lock.persistent', '@famtastic_pipeline.customer_portal']
+
   famtastic_pipeline.booking_site_owners:
     class: Drupal\famtastic_pipeline\Service\BookingSiteOwnerService
     arguments: ['@database', '@datetime.time']
