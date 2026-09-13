@@ -1,0 +1,28 @@
+{
+  "runtime": "Node 24.19.0",
+  "status": "local_passed_live_gated",
+  "unit_tests": 5,
+  "browser_viewports": [
+    390,
+    768,
+    1280
+  ],
+  "checks": [
+    "default capture disabled",
+    "no GA script before consent",
+    "GA config sanitized",
+    "consent revoked disable flag",
+    "no horizontal overflow",
+    "mock durable reference success",
+    "duplicate-submit disabled",
+    "ambiguous network outcome blocks retry"
+  ],
+  "limits": [
+    "external fonts blocked; fallback rendering",
+    "request endpoint mocked",
+    "no provider writes",
+    "no real analytics collected",
+    "no Node22 execution",
+    "no independent visual approval"
+  ]
+}

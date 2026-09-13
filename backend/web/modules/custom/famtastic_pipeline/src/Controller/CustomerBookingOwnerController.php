@@ -98,7 +98,9 @@ final class CustomerBookingOwnerController extends ControllerBase {
 
   private function authorize(string $siteKey): void {
     $customer = $this->account->isAuthenticated() ? $this->portal->customerForUid((int) $this->account->id()) : NULL;
-    if (!$customer) {
+    // Match the portal's verification gate before reading any owner binding
+    // or customer contact data. A Drupal session alone is not verification.
+    if (!$customer || empty($customer['verified_at'])) {
       throw new \RuntimeException('booking_owner_access_denied');
     }
     $this->owners->requireCustomerOwner((int) $customer['id'], $siteKey);

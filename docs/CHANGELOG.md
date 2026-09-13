@@ -1,5 +1,49 @@
 # Product changelog
 
+## 2026-09-13 — Locs hosting/DNS/TLS progress; not launched
+
+- Separated verified technical domain control from pending customer registrant
+  ownership, retaining explicit operation approval and 18 safeguard tests.
+- Provisioned the isolated cPanel domain/root and changed only its apex DNS A
+  record to the verified vhost IP. Installed free apex/www certificate; origin
+  TLS passes, DNS caches and actual website deployment remain outstanding.
+- Added a local verified-account gate for booking owner data; four behavioral
+  tests/66 assertions pass. This source correction is not deployed.
+- Added a scoped customer booking inbox and transactional bound-owner outbox
+  insertion, with capture rollback if the alert cannot be queued. Eleven
+  behavioral tests/88 assertions and the fresh synthetic suite pass; no live
+  enablement, message, calendar event or appointment is claimed.
+- Identified renewal deployment gap: existing ACME cron/client work, but jailed
+  uapi is broken; HTTP API renewal installation still requires implementation.
+
+## 2026-09-12 — Locs launch reconciliation and hosting preflight (not deployed)
+
+- Prepared the faithful local Ruby Signal release candidate; five unit tests,
+  mocked mobile/desktop browser checks and 15 artifact checksums pass. Capture
+  stays disabled until real backend/owner/notification integration is verified.
+- Refreshed the synthetic journey successfully during the 23:08 UTC follow-up;
+  provider calls remain false. The existing ownership email has no reply;
+  no duplicate alert or live mutation was performed.
+- Added a resumable Locs launch brief grounded in current production customer,
+  request, selected proof, Commerce payment, project and cPanel observations.
+- Corrected stale draft-status assumptions and distinguished the older hosted
+  preview from the selected **Open Chair / Ruby Signal** artifact. Fritz
+  confirms Locs is approved; the unfinished design is the Hosting storefront.
+- Verified the recovered discounted reseller shopper, then completed Fritz's
+  explicitly authorized one-year domain-only purchase: USD 11.79 with provider
+  receipt. Registrar contacts are still FAMtastic, not the intended customer;
+  the exact owner-confirmation request was sent to Fritz and appears in Gmail.
+- Created the dedicated Tighten Up Your Locs GA4 property/web stream with
+  enhanced measurement off. Tag installation and collection remain unproven.
+- Re-ran the canonical fresh isolated customer-journey suite and verified all
+  recorded assertions. This is synthetic/local proof, not a live-site launch.
+- Found that the selected artifact is a static revision presentation and the
+  generic deployment renderer does not preserve it. Production Locs capture
+  and availability are disabled; no DNS, mailbox, TLS or deployment change.
+- Added cross-repository documentation for the isolated Hosting provisioning
+  CLI: 16 local safeguards pass; cPanel read-only preflight is provider-proven;
+  provider mutations, unattended orchestration and completed launch are not.
+
 ## 2026-09-10 — Noise Cuts Spanish-first functional proof 01
 
 - Added a distinct, mobile-first Noise Cuts proof shaped from an in-person

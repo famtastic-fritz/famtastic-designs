@@ -29,6 +29,8 @@ export const verifyCustomerEmail = (token) => request('/verify', { method: 'POST
 export const forgotCustomerPassword = (email) => request('/forgot-password', { method: 'POST', body: JSON.stringify({ email }) });
 export const resetCustomerPassword = (token, password) => request('/reset-password', { method: 'POST', body: JSON.stringify({ token, password }) });
 export const getCustomerWorkspace = (organization = '') => request(`/workspace${organization ? `?organization=${encodeURIComponent(organization)}` : ''}`);
+export const getBookingRequests = (site) => request(`/owner-sites/${encodeURIComponent(site)}/booking-requests`);
+export const updateBookingRequest = (site, id, status) => request(`/owner-sites/${encodeURIComponent(site)}/booking-requests/${encodeURIComponent(id)}`, { method: 'PATCH', csrf: true, body: JSON.stringify({ status }) });
 export const getCustomerCatalog = () => request('/catalog');
 export const createCommerceCheckout = (payload) => request('/checkout', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const getPaymentHandoff = (organization) => request(`/payment-handoff?organization=${encodeURIComponent(organization)}`);

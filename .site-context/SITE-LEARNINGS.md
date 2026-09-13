@@ -1,5 +1,53 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Avoid false dependencies during launch
+
+- Observation: a stored booking record without a usable owner inbox/alert can
+  lose requests. Guidance: make bound-owner alert enqueue atomic with capture,
+  verify owner identity/membership, preserve unbound-site compatibility, and
+  label manual follow-up accurately instead of claiming sent replies.
+- Observation: conflating operator domain control and customer registrant
+  identity stalled independent hosting work. Guidance: preserve the unresolved
+  ownership gate while allowing explicitly authorized, evidence-bound technical
+  setup. A technical control check must never upgrade customer ownership.
+- Observation: SSH hostname IP differed from cPanel's customer virtual-host IP.
+  Guidance: use exact DomainInfo vhost evidence for DNS. Existing ACME cron is
+  not renewal-installation proof; the jailed uapi deploy helper can be broken.
+
+## 2026-09-12 — Locs launch and shared-hosting boundaries
+
+- Observation: the faithful release candidate passes local responsive and
+  mocked submission tests while live availability remains disabled. Guidance:
+  keep capture off until the real owner inbox and notification path work;
+  artifact checksums and synthetic lifecycle success are not live acceptance.
+- Observation: the final purchase receipt and DNS control proved acquisition,
+  but domain Contact Info defaulted to the payer's FAMtastic identity. Guidance:
+  verify actual registrant contacts separately and obtain direction before an
+  ownership/contact change; a saved card does not identify the customer owner.
+- Observation: the selected approved visual file is still a review presentation;
+  the generic customer-deployment renderer does not deploy that selected file.
+  Guidance: compare release bytes and working actions to the approved source,
+  not just a deployment status or successful synthetic journey.
+- Observation: the customer booking binding already exists under its generated
+  site key, while public capture/availability remain disabled. Guidance: reuse
+  the authoritative binding and prove capture, owner access and notifications
+  individually; do not invent a second site key to make a form appear wired.
+
+- Observation: current Drupal proof/order/project state differs from old notes;
+  an existing cPanel preview is not the selected artifact and its subdomain
+  lacks a public DNS answer. Fritz's unfinished-design remark referred to the
+  Hosting storefront, not the approved Locs site.
+- Guidance: recheck exact customer/project and named design before claiming
+  draft, approved, paid or deployed. Keep source approval, hosting presence,
+  DNS, mail, TLS and analytics evidence distinct.
+- Observation: the existing recovered shopper already has Discount Shopper and
+  a saved-payment entry. The domain cart defaulted to five years.
+- Guidance: preserve existing accounts; prepare only the requested one-year
+  domain and obtain exact transaction/registrant/renewal agreement before
+  charge. Do not purchase extra hosting: use the FAMtastic Inc account.
+- Evidence: `docs/plans/TIGHTEN_UP_YOUR_LOCS_LAUNCH_2026-09-12.md`. The Hosting
+  CLI has local tests and live inventory proof only, not provisioned services.
+
 ## 2026-09-10 — A chair-side proof can be fast without inventing the business
 
 - Observation: an in-person Spanish interview supplied a strong creative

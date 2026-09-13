@@ -173,7 +173,7 @@ services:
 
   famtastic_pipeline.booking_requests:
     class: Drupal\famtastic_pipeline\Service\BookingRequestService
-    arguments: ['@database', '@datetime.time', '@uuid']
+    arguments: ['@database', '@datetime.time', '@uuid', '@famtastic_pipeline.customer_portal']
 
   famtastic_pipeline.booking_availability:
     class: Drupal\famtastic_pipeline\Service\BookingAvailabilityService

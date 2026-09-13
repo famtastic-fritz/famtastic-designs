@@ -1,5 +1,63 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Separate technical control, customer ownership and launch proof
+
+The provisioning gate incorrectly made customer registrant confirmation a
+prerequisite for all authorized technical work. Fresh scoped domain-control
+evidence now permits hosting with explicit user approval; customer ownership
+still remains unresolved. Avoid endless quiet polling when independent work is
+available. The resumed run provisioned hosting, DNS and origin TLS without a
+registrant change, transfer, extra purchase or completed-launch claim.
+
+Use cPanel's exact vhost IP, not the SSH machine IP. A present ACME cron and a
+newly issued cert do not prove renewal installation: this jail's uapi executable
+is broken. Also require customer email verification on owner-booking APIs, not
+just an authenticated Drupal session and binding.
+
+## 2026-09-12 — Purchased is not customer-owned, selected is not deployed
+
+The later local candidate passes responsive browser, failure-state and artifact
+integrity checks, but its capture remains disabled. An unavailable live booking
+route and an unproven owner-notification workflow must not be hidden behind a
+mocked success. Preserve this distinction in each resumed launch checkpoint.
+
+The purchased domain's real Contact Info retained the payer's FAMtastic
+identity. A registrar receipt and editable DNS prove acquisition/control, not
+the intended customer's registrant identity. Obtain explicit direction before
+changing it; never silently claim a payer-owned registration is customer-owned.
+
+The approved hybrid proof is a static revision presentation, and the generic
+deployment service emits unrelated markup. Preserve the approved visual source,
+finish its functional implementation, and compare the actual release bytes.
+The production customer booking binding already exists under a generated site
+key; capture and availability are independently disabled. Reuse that binding
+and verify owner access and notifications instead of treating a form or an
+all-green synthetic fixture as live provider proof.
+
+The fresh synthetic runner also requires both a matching Drupal vendor runtime
+and frontend dependencies in the isolated worktree. A successful retry proved
+its recorded local assertions, not customer mail, DNS, TLS or real deployment.
+
+## 2026-09-12 — Reconcile customer, provider and spoken-design scope separately
+
+An older note called the Locs request a draft. Production now has a converted
+request, selected direction, linked project and completed live-mode Commerce
+payment. Meanwhile, cPanel contains an older multi-direction preview under a
+subdomain without a public DNS answer. None of those alone proves deployment
+of the selected build. A spoken remark about an unfinished Hosting storefront
+was also misapplied to the Locs design; Fritz clarified that Locs is approved.
+
+**Guidance.** Resolve the exact subject of design corrections; query the current
+request/order/project before asserting status; compare the selected artifact's
+checksum with hosting content before release. Separate reseller shopper login,
+saved-payment presence, quoted price, purchase authorization, provider receipt,
+domain registrant, cPanel setup, authoritative DNS, mail delivery and live TLS.
+The valid reseller storefront can be used independently of a broken branded
+front door. Discount Shopper was verified; the meaning of the Inactive label
+was not. Successful password recovery showed that label was not sufficient
+evidence to discard the existing account. Never use a default multi-year cart
+or create a duplicate shopper merely because of a status label.
+
 ## 2026-09-10 — A chair-side proof can be fast without inventing the business
 
 The Noise Cuts interview established a Spanish-first independent-barber brand

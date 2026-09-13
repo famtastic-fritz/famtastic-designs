@@ -11,6 +11,7 @@ export default function PortalNav({
   customer,
   openThreadsCount,
   onSignOut,
+  hasBookingSites = false,
 }) {
   const toggleRef = useRef(null);
   const drawerRef = useRef(null);
@@ -107,7 +108,7 @@ export default function PortalNav({
           {GROUPS.map(([group, items]) => (
             <section key={group}>
               <h2>{group}</h2>
-              {items.map(([id, label]) => {
+              {items.filter(([id]) => id !== 'booking' || hasBookingSites).map(([id, label]) => {
                 const isActive = section === id;
                 return (
                   <button

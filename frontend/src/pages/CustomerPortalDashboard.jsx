@@ -23,6 +23,7 @@ import '../portal.css';
 
 import { LABELS } from '../components/portal/PortalShared.jsx';
 import PortalNav from '../components/portal/PortalNav.jsx';
+import PortalBookingRequestsView from '../components/portal/PortalBookingRequestsView.jsx';
 import PortalHeader from '../components/portal/PortalHeader.jsx';
 import PortalHomeView from '../components/portal/PortalHomeView.jsx';
 import PortalProjectsView from '../components/portal/PortalProjectsView.jsx';
@@ -416,6 +417,7 @@ export default function CustomerPortalDashboard() {
   return (
     <div className={`portal-app ${menu ? 'menu-open' : ''}`}>
       <PortalNav
+        hasBookingSites={Boolean(workspace.booking_sites?.length)}
         section={section}
         go={go}
         menu={menu}
@@ -489,6 +491,8 @@ export default function CustomerPortalDashboard() {
             navigate={navigate}
           />
         )}
+
+        {section === 'booking' && <PortalBookingRequestsView key={org.public_id} sites={workspace.booking_sites || []} />}
 
         {section === 'services' && (
           <PortalServicesView

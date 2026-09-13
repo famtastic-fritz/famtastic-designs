@@ -308,6 +308,7 @@ final class CustomerPortalService {
       'organizations' => array_map(fn(array $o): array => array_diff_key($o, ['id' => TRUE]), $organizations),
       'orders' => $orders, 'projects' => $projects, 'entitlements' => $entitlements,
       'website_requests' => $this->websiteRequests($customerId, $organizationId),
+      'booking_sites' => $this->bookingSites($customerId, $organizationId),
       'threads' => $threads, 'activity' => $activity, 'members' => $members,
       'analytics' => ['entitled' => (bool) $analytics],
       'offers' => $this->contextualOffers($entitlements, $projects),
@@ -2208,6 +2209,19 @@ final class CustomerPortalService {
         OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY_VERSION,
       );
     }
+  }
+
+  /** Exact-owned site discovery for the authenticated inbox, not enablement. */
+  public function bookingSites(int $customerId, int $organizationId): array {
+    $customer = $this->customerForId($customerId);
+    if (!$customer || empty($customer['verified_at'])) return [];
+    $query = $this->database->select('famtastic_booking_site_owner', 'b');
+    $query->join('famtastic_membership', 'm', 'm.customer_id = b.customer_id AND m.organization_id = b.organization_id');
+    $query->join('famtastic_project_request', 'r', 'r.id = b.website_request_id AND r.customer_id = b.customer_id AND r.organization_id = b.organization_id');
+    return $query->fields('b', ['site_key'])->fields('r', ['business_name'])
+      ->condition('b.customer_id', $customerId)->condition('b.organization_id', $organizationId)
+      ->condition('b.status', 'active')->condition('m.status', 'active')->condition('r.status', 'converted')
+      ->distinct()->execute()->fetchAll(\Drupal\Core\Database\Statement\FetchAs::Associative);
   }
 
   public function queueNotification(string $key, string $category, string $recipient, string $subject, string $body, string $templateId = OutreachMailer::TEMPLATE_STANDARD, int $templateVersion = OutreachMailer::TEMPLATE_STANDARD_VERSION): void {

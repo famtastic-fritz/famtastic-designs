@@ -22,6 +22,7 @@ final class BookingRequestService {
     private readonly Connection $database,
     private readonly TimeInterface $time,
     private readonly UuidInterface $uuid,
+    private readonly ?CustomerPortalService $portal = NULL,
   ) {}
 
   /** Creates a validated request and returns its non-sensitive reference. */
@@ -47,28 +48,70 @@ final class BookingRequestService {
 
     $now = $this->time->getRequestTime();
     $publicId = $this->uuid->generate();
-    $this->database->insert('famtastic_booking_request')->fields([
-      'public_id' => $publicId,
-      'site_key' => $siteKey,
-      'service_key' => $serviceKey,
-      'customer_name' => $name,
-      'email' => $email,
-      'email_hash' => hash('sha256', $email),
-      'phone' => $phone,
-      'requested_window' => $window,
-      'message' => $message,
-      'consent' => 1,
-      'status' => 'new',
-      'source' => $this->text($source, 120),
-      'created' => $now,
-      'changed' => $now,
-    ])->execute();
+    $transaction = $this->database->startTransaction();
+    try {
+      $this->database->insert('famtastic_booking_request')->fields([
+        'public_id' => $publicId,
+        'site_key' => $siteKey,
+        'service_key' => $serviceKey,
+        'customer_name' => $name,
+        'email' => $email,
+        'email_hash' => hash('sha256', $email),
+        'phone' => $phone,
+        'requested_window' => $window,
+        'message' => $message,
+        'consent' => 1,
+        'status' => 'new',
+        'source' => $this->text($source, 120),
+        'created' => $now,
+        'changed' => $now,
+      ])->execute();
+      $this->queueBoundOwnerAlert($siteKey, $publicId);
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+    unset($transaction);
 
     return [
       'status' => 'received',
       'reference' => $publicId,
       'next_step' => 'owner_review_required',
     ];
+  }
+
+  /** One exact-owner alert; legacy unbound sites keep their existing capture. */
+  private function queueBoundOwnerAlert(string $siteKey, string $reference): void {
+    $binding = $this->database->select('famtastic_booking_site_owner', 'b')->fields('b')
+      ->condition('site_key', $siteKey)->execute()->fetchAssoc();
+    if (!$binding) {
+      return;
+    }
+    if (!$this->portal || $binding['status'] !== 'active') {
+      throw new \RuntimeException('booking_owner_notification_unavailable');
+    }
+    $customer = $this->portal->customerForId((int) $binding['customer_id']);
+    $membership = $this->database->select('famtastic_membership', 'm')->fields('m', ['customer_id'])
+      ->condition('customer_id', (int) $binding['customer_id'])
+      ->condition('organization_id', (int) $binding['organization_id'])
+      ->condition('status', 'active')->execute()->fetchField();
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r', ['id'])
+      ->condition('id', (int) $binding['website_request_id'])
+      ->condition('customer_id', (int) $binding['customer_id'])
+      ->condition('organization_id', (int) $binding['organization_id'])
+      ->condition('status', 'converted')->execute()->fetchField();
+    if (!$customer || empty($customer['verified_at']) || !filter_var($customer['email'] ?? '', FILTER_VALIDATE_EMAIL) || $membership === FALSE || $request === FALSE) {
+      throw new \RuntimeException('booking_owner_notification_unavailable');
+    }
+    // No customer form content in email. The authenticated inbox owns access.
+    $this->portal->queueNotification(
+      'booking-request:' . $reference . ':owner',
+      'transactional',
+      (string) $customer['email'],
+      'A new website request needs your review',
+      "A visitor sent a request through your website. Open your customer workspace and choose Website requests to review it.\n\nhttps://famtasticdesigns.com/portal/?section=booking\n\nA request is not an appointment confirmation. No reply, calendar event or payment has been created.",
+    );
   }
 
   /** Returns records for an authorized operator; callers enforce access. */
