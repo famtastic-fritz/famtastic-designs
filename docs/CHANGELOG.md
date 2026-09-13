@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-13 — Platform booking slice deployed; Locs launch still open
+
+- Deployed backend and frontend48cc88ce through canonical exact-main scripts;
+  platform apex portal and www login render. Real Locs booking delivery remains
+  unproven and capture is not enabled.
+- Installed and provider-tested the private HTTP API TLS renewal reload hook
+  on existing hosting;19 local safety tests pass. Apex/www public TLS validates.
+  Future scheduled renewal has not occurred, and the customer root remains empty.
+- Identified the missing exact-artifact publisher and post-payment receipt
+  path; no generic replacement or fabricated pre-payment staging history.
+
 ## 2026-09-13 — Locs hosting/DNS/TLS progress; not launched
 
 - Separated verified technical domain control from pending customer registrant

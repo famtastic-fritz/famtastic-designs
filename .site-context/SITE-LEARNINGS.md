@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Renewal reload and deployment truth
+
+- Observation: private HTTP API reload works where jailed uapi fails.
+  Guidance: validate exact domain, certificate/key/chain, filesystem permissions
+  and configuration before provider install; distinguish tested reload from a
+  future successful renewal cycle.
+- Observation: platform deployment does not publish a customer artifact, and
+  an already-paid request cannot receive its first pre-payment staging receipt.
+  Guidance: preserve approved bytes and order history; implement an explicit
+  post-payment deployment receipt instead of clearing order links or inventing
+  callbacks. Public403 with valid TLS proves routing, not a launched website.
+
 ## 2026-09-13 — Avoid false dependencies during launch
 
 - Observation: a stored booking record without a usable owner inbox/alert can

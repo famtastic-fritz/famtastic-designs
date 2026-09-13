@@ -177,6 +177,35 @@ status does not send a reply or create an appointment. Per-reference owner
 outbox deduplication is tested, but public capture retry idempotency is not
 claimed. All backend/frontend changes remain local until exact-SHA deployment.
 
+## Deployment checkpoint — September 13, 07:28 UTC
+
+Backend and frontend canonical deployment commands both completed successfully
+for pushed main commit `48cc88ceb12627f5f96eb2896cd6ff7e71d372cf`, with scoped
+rollback backups. Backend initial cold-start update warning was followed by an
+authoritative no-pending-updates check and successful completion. Existing
+normal scheduler lock remained false; no extra customer send was requested.
+Browser checks render the existing Fritz portal on apex and the public login
+on www. This is platform smoke proof, not Shay's authenticated inbox proof.
+
+Hosting source `8257da5` includes a private HTTP API certificate reload hook:
+19 local safety tests pass. Remote configuration/check made no network calls;
+the ACME install-cert reload then received provider acceptance at07:24UTC.
+Stable cert/key/chain files and configuration are outside the webroot with
+private permissions; the existing daily ACME cron is unchanged. Certificate
+expires2026-12-12; scheduled ARI renewal is2026-11-11T23:53:33Z. Future renewal
+has not yet occurred. Public apex and www both validate TLS after reload,
+but return403 from the empty isolated root: the customer site is NOT live.
+
+Artifact deployment inspection found no safe existing publisher for these
+exact approved files. The generic customer renderer must not replace the
+design. Request12 already has order19, so a first pre-payment staging callback
+would be invalid: do not clear the order or manufacture staging history.
+A scoped checksummed artifact publisher and truthful post-payment deployment
+receipt are required. Mailbox/authentication, booking capture and actual owner
+alert, GA collection, customer flow, registrant decision and launch notice
+remain open. Follow-up now explicitly continues independent technical work
+instead of repeating unchanged owner-email polls.
+
 ## Started
 
 2026-09-12.

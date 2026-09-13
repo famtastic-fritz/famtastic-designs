@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Keep source promotion distinct from customer launch
+
+Platform48cc88ce deployed with backups and browser smoke proof; the isolated
+customer domain still serves403. A private HTTP API ACME reload is now
+provider-tested, not merely configured, but future calendar renewal remains
+unobserved. Do not invent pre-payment staging for request12/order19 to bypass
+the missing approved-artifact publisher. Preserve payment history and record
+actual post-payment deployment evidence separately.
+
 ## 2026-09-13 — Separate technical control, customer ownership and launch proof
 
 The provisioning gate incorrectly made customer registrant confirmation a
