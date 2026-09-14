@@ -15,19 +15,21 @@ Deliver Kesline's complete working proof set to the verified customer, make cont
 - [x] Reuse durable conversation records for contact intake, staff inbox, read state and client replies.
 - [x] Implement portal inbox, unread/needs-reply states and order/project/proof context.
 - [x] Add server-side search/status/date filters and repair desktop width/readability.
-- [ ] Audit current Drupal dependency/security state and apply verified fixes through the canonical release.
+- [x] Audit current Drupal dependency/security state and apply verified fixes through the canonical release.
 - [x] Run focused security, lifecycle, responsive/browser and build checks.
-- [ ] Commit, integrate and deploy reviewed changes; verify live admin and portal behavior.
-- [ ] Update source truth, operational lessons and Drive status mirror with exact evidence.
+- [x] Commit, integrate and deploy reviewed changes; verify live admin and portal behavior.
+- [x] Update source truth, operational lessons and Drive status mirror with exact evidence.
+- [x] Inspect the other Kesline request and send one authorized clarification for the unresolved second-website scope.
+- [x] Record the Shay/Shay-Shay signing convention in shared agent guidance and cross-session memory.
 
 ## Status
-active
+complete
 
 ## Started
 2026-09-14
 
 ## Ended
-Pending.
+2026-09-14
 
 ## Execution
 Branch: codex/client-messaging-proof-rescue. Worktree: /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue. Base: origin/main 598aa8ff. Parent owns integration, admin filters, security audit, documentation and independent proof review. Parallel agents own Kesline proof rescue, messaging backend, and portal UI respectively. Release to main through reviewed exact SHA and canonical deployment scripts.
@@ -57,3 +59,23 @@ Locked security fixes are limited to drupal/ai1.4.6→1.4.8 and composer/compose
 Source4599a22be878a6c7c9a4e4109b2fb2787703580a reached main and the canonical backend deployment completed at2026-09-14T20:49:28Z. Production migration8063 imported15 existing public requests without sending notifications. Frontend deployment and final browser acceptance remain pending.
 
 Follow-up source correction: the existing reversible archive uses customer_archived_at while retaining workflow status. Website Requests now excludes both archive representations in active filters and exposes them through the explicit Archived option. The full disposable HTTP smoke passed40/40 assertions, including actual default/Submitted/Archived rendering, at .artifacts/client-messaging/inbox-20260914T204840Z-11033/http-results.json. No saved request was deleted.
+
+## Final production acceptance
+
+The earlier pending checkpoints above are superseded by `release.md`. Both
+runtime release markers equal `fea57649a781bfc8440131327f980bd08a388315`:
+frontend deployed at 20:54:11Z and backend at 20:57:05Z. Live signed-in admin and
+portal display the original Kesline message, saved clarification and SMTP
+acceptance. Actual desktop/mobile rendering and active/Archived filtering
+passed. Production dependency audit has zero advisories/abandoned packages;
+database updates are complete and Drupal's stale security banner is cleared.
+
+The additional website scope was ambiguous because the original contact asked
+for two websites. One branded clarification was SMTP-accepted at 20:53:46Z
+through exact outbox 634 and is visible in the same account conversation.
+Future agent messages follow the shared Shay/Shay-Shay convention. The
+already-sent clarification predates that instruction and remains unchanged.
+
+This completes the scoped rescue and messaging release. The pre-existing
+unconfigured unattended creative-worker connection remains a documented
+separate limitation; exact Kesline proof delivery is complete.

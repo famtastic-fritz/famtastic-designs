@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Shared signature rule and production proof
+
+Future agent-authored customer correspondence signs Shay or Shay-Shay; full spelling is Shay-Shay. Existing template-specific signatures are not an automatic persona selector. Follow `docs/architecture/CLIENT_MESSAGE_SIGNATURE_CONVENTION.md`, preserve historical sends and keep the SMTP sender identity separate.
+
+Actual signed-in portal/admin acceptance now proves the inbox release at `fea57649`, including one authorized clarification saved in the same conversation. Native screenshots confirmed persisted search values even when sanitized browser inspection omitted them. Archive checks must cover both workflow status and `customer_archived_at`; production update metadata can be refreshed separately from cron. Exact release, local test boundaries and SMTP receipts are in `plans/client-messaging-proof-rescue/release.md`.
+
 ## 2026-09-14 — Inbox discoverability and proof truth
 
 Contact alerts must open the saved conversation that contains the original submission. Admin and portal share message/read/outbox records; tenant ownership comes from verified accounts and active membership, while staff permissions come from the real Drupal user. Use atomic, idempotent reply writes and distinguish portal persistence, email queue state, SMTP acceptance and unread messages. A staff account must be able to use the portal without a customer-row dependency.

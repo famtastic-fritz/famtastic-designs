@@ -4,6 +4,20 @@ This file is the common operating context for Codex, Claude Code, Shay, and any
 future CLI agent. Read it before changing customer, product, Commerce, mail,
 deployment, or proof behavior.
 
+## Customer message signatures
+
+Fritz's September 14, 2026 instruction applies to every agent/session: sign
+future agent-authored customer correspondence **Shay** or **Shay-Shay**. The
+full spelling is **Shay-Shay**. Follow the approved template's existing short
+or full form, or use either permitted form for a new message. No shared
+automatic formal/casual selector exists in the current implementation.
+
+FAMtastic Concierge remains the communication brand. The body sign-off is
+separate from the configured SMTP sender name/address. Do not silently rewrite
+an operator's authored text, edit delivered history, or resend an email to
+correct an old signature. See
+`docs/architecture/CLIENT_MESSAGE_SIGNATURE_CONVENTION.md` for source references.
+
 ## Business model and customer promise
 
 FAMtastic removes the price objection with an intentionally narrow $199 Web

@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Live acceptance and consistent customer signatures
+
+Observation: an archived request retains its workflow status and records its archive time separately. Guidance: active filters must exclude both archive representations; the explicit Archived option must retrieve either. Verify native screenshots as well as sanitized browser snapshots: a snapshot can omit an input value while the visible search field correctly retains it.
+
+Observation: customer signatures are currently template-specific, including legacy Shay variants. Guidance: future agent-authored messages sign Shay or Shay-Shay, following `docs/architecture/CLIENT_MESSAGE_SIGNATURE_CONVENTION.md`. Keep that instruction in every agent entry point through shared AGENTS/operating guidance and cross-session memory. Body sign-offs are separate from SMTP identity; preserve delivered history.
+
+Production acceptance for this release includes the real owner portal and admin, the same saved conversation and SMTP receipt, responsive rendering, archived request retrieval and a clean production dependency audit. Refresh Drupal's update metadata after security fixes without triggering unrelated cron jobs. The exact final runtime and evidence are recorded in `plans/client-messaging-proof-rescue/release.md`.
+
 ## 2026-09-14 — A contact alert needs a readable conversation
 
 The contact form saved the original body in intake.about but its alert linked to a separate Website Requests table. Import that original submission once into the same durable conversation used by admin and portal, and deep-link the alert to it. A verified matching email may claim an unowned inquiry; a browser-supplied customer or organization ID must never grant access. Staff portal sign-in must authenticate the real Drupal account without requiring a synthetic customer record. Keep saved reply, queued email, SMTP acceptance, unread state and next actor distinct.

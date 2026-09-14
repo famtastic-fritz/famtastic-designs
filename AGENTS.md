@@ -42,6 +42,12 @@ updated, say so explicitly in the session report rather than skipping silently.
 
 ## Required operating context
 
+- Sign future agent-authored customer correspondence as **Shay** or **Shay-Shay**.
+  The canonical full spelling is **Shay-Shay**. Preserve an approved template's
+  short or full form; do not invent an automatic formal/casual switching rule.
+  FAMtastic Concierge may remain the brand, but is not a substitute for the
+  personal sign-off. Read `docs/architecture/CLIENT_MESSAGE_SIGNATURE_CONVENTION.md`.
+  This applies across Codex, Claude, Gemini, Shay and delegated sessions.
 - Read `docs/AGENT_OPERATING_CONTRACT.md` before product, customer, Commerce,
   intake, mail, proof, or deployment work. It applies equally to Codex, Claude,
   Shay, and every other CLI agent.

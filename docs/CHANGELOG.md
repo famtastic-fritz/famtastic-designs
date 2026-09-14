@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-14 — Client inbox released and shared Shay signing convention
+
+- Deployed frontend and backend `fea57649` through the canonical scripts; verified the live admin inbox, owner portal, desktop/mobile conversation view, and active/Archived request filters. Migration 8063 recovered 15 existing inquiries without sending notifications. See `plans/client-messaging-proof-rescue/release.md`.
+- Verified production dependency audit with zero advisories/abandoned packages and no pending database updates; refreshed update metadata to clear the stale Drupal security warning.
+- Sent one authorized second-website clarification to Kesline through exact outbox 634 at 20:53:46Z and verified its saved portal conversation and SMTP acceptance.
+- Established Shay or Shay-Shay as the sign-off for future agent-authored customer messages in shared agent/operating guidance and cross-session memory. Existing sent history and SMTP sender identity are unchanged.
+
 ## 2026-09-14 — Client inbox, readable operations records, and Kesline proof rescue
 
 - Recovered and delivered Kesline's three account-owned concepts for request14 through exact outbox633 at 20:27:27Z. SMTP acceptance, scoped proof/media access and reversible duplicate13 archive are recorded in `plans/client-messaging-proof-rescue/kesline-proof-delivery.md`.
