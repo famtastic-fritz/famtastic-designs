@@ -1,5 +1,7 @@
 # FAMtastic Designs capability registry
 
+Gallery release acceptance: `53071d32` is live on Locs, with apex/www source-hash checks and browser autoplay/pause/manual navigation proof. No change to Owner Desk or analytics capability claims.
+
 Locs hero gallery: native four-image rotation with controls, reduced-motion default pause, keyboard-focus pause and original-image no-JS fallback. Existing generated media is explicitly illustration, not client transformation evidence. Reusable behavior is captured in the public release hero-gallery.js and site recipe; publication proof belongs to the pilot release log.
 
 Final September14 public maintenance status: source `d17ea279` deployed; apex/www source hashes and browser checks pass for the homepage and separate Privacy Policy/Website Terms. Footer branding, booking navigation and typography are live. GA4 tag initialization in denied-storage mode is observed; new-mode Realtime/modeling results are not claimed. See Locs pilot `SITE-LEARNINGS.md` for exact release receipts and limits. This supersedes intermediate source-only descriptions below.

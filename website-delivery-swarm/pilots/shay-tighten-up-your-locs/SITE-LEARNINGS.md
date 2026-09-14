@@ -6,6 +6,8 @@ User authorized public reuse of previously created Shay media. Original care ima
 
 Native six-second rotation includes pause/play, previous/next, keyboard-focus pause, hover/hidden-page suspension, reduced-motion default pause and broken-image skipping. Existing original image is the no-JS fallback. Production receipt and verification follow after publication.
 
+Published source `53071d32dca726aedb899340c0411d710a91c70e`, package `0ec72da062fc6eca46fe7d97a078b881e961e43faf69718ec60da64d5cbbf7b4`. Receipt/rollback directory: `/home/nineoo/customer-sites/tighten-up-your-locs/.artifact-releases/0ec72da062fc6eca46fe7d97a078b881e961e43faf69718ec60da64d5cbbf7b4-1825870d/`. Seven managed files installed. All seven plus unchanged Privacy/Terms return HTTP200 and exact source hashes on apex and www. All22 artifact hashes and22 focused tests pass. Real Chrome confirmed all four images loaded, automatic progression, pointer pause and manual wrap from4 to1; mobile390 and desktop1280 screenshots inspected, 768 layout checked, no overflow. Local390/768/1280 screenshots also inspected. Reduced-motion behavior unit-tested, not OS-setting/browser emulation proof. No customer form submission or new analytics reporting acceptance claimed.
+
 ## 2026-09-13 — One business backend, reusable presentation
 
 The customer pilot and Owner Desk implementation are part of FAMtastic Designs. No separate customer Git repository was found; do not create a competing backend merely to satisfy an assumed repository name. Reusable presentation is captured in Component Studio, with Shay's brand in an explicit instance adapter.

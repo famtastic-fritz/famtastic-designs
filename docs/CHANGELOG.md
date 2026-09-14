@@ -2,6 +2,8 @@
 
 ## 2026-09-14 — Locs four-image hero gallery
 
+- Published source `53071d32`; apex/www exact-file hashes, live autoplay/pause/manual navigation, loaded images and responsive layout verified. All22 focused tests pass. Managed rollback receipt retained in pilot log.
+
 - Reused existing generated care, loc updo, styled portrait and journey assets in a native six-second slideshow. Original image remains first; pause/play, previous/next, reduced-motion and failed-image handling included.
 - Booking, measurement and policy behavior unchanged. Source tests and public deployment acceptance recorded in the Locs pilot log.
 
