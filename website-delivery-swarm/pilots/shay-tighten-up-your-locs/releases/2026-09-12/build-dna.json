@@ -23,6 +23,14 @@
   },
   "stages": [
     {
+      "stage_id": "independent-application-20260914",
+      "capability": "same-origin-independent-business-runtime",
+      "architecture": "docs/architecture/LOCS_STANDALONE_APPLICATION_V1.md",
+      "application": "customer-apps/tighten-up-your-locs",
+      "status": "locally_verified_pending_cutover",
+      "legacy_records_preserved": true
+    },
+    {
       "stage_id": "hero-gallery-20260914",
       "capability": "existing-media-native-slideshow",
       "result": {
@@ -169,7 +177,7 @@
     {
       "role": "privacy-policy",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/privacy/index.html",
-      "sha256": "228997459aa0ad723a49701de6f0230659350ab48486db182839c56539149108",
+      "sha256": "0585c53d33636936fba8d3aebc2fd30f9c2bf63d2c824b1e940167ff78355f6c",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -197,14 +205,14 @@
     {
       "role": "config.js",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/config.js",
-      "sha256": "d6be92e2a17aff21a8c3065bf227ea7754d65c8eba2a0ebcfb4cd272d9447a20",
+      "sha256": "e83a8d7e4b1b30d8c09ac311de389d480bfc90b8b79ca73c2837eae3b04038dd",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
     {
       "role": "index.html",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/index.html",
-      "sha256": "d2f22ef9e7a96cbd6f886ecc24cc213fb6be9adb7bd21f85c53ae62dcc214f1e",
+      "sha256": "00eb2774da3a718b52c44fb373bac9add1214873da55bc6d4ae676d003cdadcb",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -253,14 +261,14 @@
     {
       "role": "site.js",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site.js",
-      "sha256": "f5e1eb6b726877a6f47e05eea2c4954b91ccca7996f8278d911fa46aa40ba78f",
+      "sha256": "5fafedff05b036d172bfd339680055438a8e5389d7f8d461a8d65781fceede6d",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
     {
       "role": "site.test.mjs",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site.test.mjs",
-      "sha256": "d10c8e69542d1c3db82f1091b0d9a634a7c7a72b8933140321f8cec44f798550",
+      "sha256": "4b86177f95dd80d6f7ef7aab094e941bee1744b156d20869a645ddf36be6b393",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },

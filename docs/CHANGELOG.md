@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-14 — Independent Locs architecture correction (candidate)
+
+- Replaced the rejected agency-portal architecture with an independently deployable Locs Laravel application candidate: same-domain admin, dedicated database/user provisioning, owner auth/reset, booking conflict authority, outbox and backup/release/migration scripts. Public candidate config now uses same-origin endpoints; not yet production cut over.
+- Existing source/media design preserved. Tests and browser proof are recorded separately from pending hosted deployment and one-record migration.
+
 ## 2026-09-14 — Locs four-image hero gallery
 
 - Published source `53071d32`; apex/www exact-file hashes, live autoplay/pause/manual navigation, loaded images and responsive layout verified. All22 focused tests pass. Managed rollback receipt retained in pilot log.

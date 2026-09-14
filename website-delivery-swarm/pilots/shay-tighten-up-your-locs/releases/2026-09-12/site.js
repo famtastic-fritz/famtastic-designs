@@ -5,8 +5,8 @@ export function canonicalEndpoint(value, kind, origin) {
   try {
     const url = new URL(value, origin);
     const expected = kind === "request" ? "/api/booking-request/" + SITE_KEY : "/api/booking-availability/" + SITE_KEY;
-    if (url.username || url.password || url.search || url.hash || ![expected, "/web" + expected].includes(url.pathname)) return "";
-    if (url.origin !== origin && url.origin !== "https://famtasticdesigns.com") return "";
+    if (url.username || url.password || url.search || url.hash || url.pathname !== expected) return "";
+    if (url.origin !== origin) return "";
     if (url.protocol !== "https:" && !/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(url.origin)) return "";
     return url.href;
   } catch { return ""; }
@@ -86,6 +86,7 @@ export function initSite(win = window, doc = document) {
     event("request_start");
     const data = Object.fromEntries(new FormData(form));
     data.source = "tighten-up-your-locs-site";
+    data.idempotency_key = win.crypto.randomUUID();
     try {
       const response = await win.fetch(config.request, {
         method: "POST", credentials: "omit", redirect: "error", cache: "no-store",

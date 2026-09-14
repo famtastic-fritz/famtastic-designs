@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Do not confuse customer provisioning with the customer's runtime
+
+Root cause: reused agency Drupal identity and records for client operations without agreeing that hosting model. Passing tenant-isolation tests proved the wrong architecture. Rule: document the client's independent deployment, database, owner access and provider boundaries first. Shared agency project records may describe delivery; they must not become an unintended required login/database/API for the client's business. Validate public gateways under real nested SCRIPT_NAME, not only artisan's development server.
+
 ## 2026-09-14 — Gallery focus and playback
 
 Pointerdown precedes focusin: preserve the user's pause intent across the focus event so the first Pause click does not accidentally restart playback. Keyboard focus stops rotation until explicit Play. Skip unloaded images and retain the original hero without JavaScript. Generated styles are not customer transformation evidence.

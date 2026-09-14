@@ -2,8 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { canonicalEndpoint, settings, isDurableReceipt, safeAnalyticsParameters, publicWindows, SITE_KEY } from "./site.js";
 test("only exact bound-site canonical HTTPS endpoints are accepted", () => {
-  const path = "/web/api/booking-request/" + SITE_KEY;
-  assert.equal(canonicalEndpoint("https://famtasticdesigns.com" + path, "request", "https://tightenupyourlocs.com"), "https://famtasticdesigns.com" + path);
+  const path = "/api/booking-request/" + SITE_KEY;
+  assert.equal(canonicalEndpoint(path, "request", "https://tightenupyourlocs.com"), "https://tightenupyourlocs.com" + path);
+  assert.equal(canonicalEndpoint("https://famtasticdesigns.com" + path, "request", "https://tightenupyourlocs.com"), "");
   for (const value of ["https://evil.test"+path,"https://famtasticdesigns.com"+path+"?email=secret","https://famtasticdesigns.com"+path+"#secret","https://famtasticdesigns.com/api/booking-request/tighten-up-your-locs","http://famtasticdesigns.com"+path]) assert.equal(canonicalEndpoint(value,"request","https://tightenupyourlocs.com"), "");
 });
 test("explicit enable required and invalid analytics rejected", () => {

@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Business independence is an architectural requirement
+
+Observation: implementation treated Shay's booking system as a FAMtastic customer-portal feature, despite the business being its own entity. Guidance: resolve deployment, database, identity and operational ownership before implementation; reusable presentation does not authorize shared runtime dependency. A branded skin or tenant row is not an independent application. The correction requires same-domain admin, own database credentials/tables, same-origin public intake, own auth/outbox/backups, and preserved-record cutover.
+
 ## 2026-09-14 — Existing media should support the site
 
 Use approved existing media beyond a single static hero when requested. Keep provenance and illustration disclosure; do not recast generated styles as real before-and-after results. Native galleries need manual/pause controls, reduced-motion default pause and a no-JS image fallback.

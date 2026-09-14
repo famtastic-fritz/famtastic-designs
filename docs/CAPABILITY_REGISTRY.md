@@ -1,5 +1,7 @@
 # FAMtastic Designs capability registry
 
+Owner correction September14: the agency-hosted Locs Owner Desk was deployed but architecturally rejected. It must not be described as satisfying the independent-business requirement. `customer-apps/tighten-up-your-locs/` is the standalone application candidate; hosted acceptance and cutover remain separate gates. Customer ownership is not merely an agency tenant binding.
+
 Gallery release acceptance: `53071d32` is live on Locs, with apex/www source-hash checks and browser autoplay/pause/manual navigation proof. No change to Owner Desk or analytics capability claims.
 
 Locs hero gallery: native four-image rotation with controls, reduced-motion default pause, keyboard-focus pause and original-image no-JS fallback. Existing generated media is explicitly illustration, not client transformation evidence. Reusable behavior is captured in the public release hero-gallery.js and site recipe; publication proof belongs to the pilot release log.
