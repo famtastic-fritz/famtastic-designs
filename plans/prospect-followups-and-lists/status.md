@@ -9,15 +9,15 @@ Fritz requested branded follow-ups for his son, DTravelAddics and Valerie, each 
 - Son: website request 8 belongs to prospect 21. The existing conversation now asks for business name, services/area, preferred customer action and assets. Message 22 / exact outbox 635 was SMTP-accepted once on September 14, with no broad queue drain.
 - Valerie / Pros In Training: website request 9 belongs to prospect 30. Three customer-visible concepts were ready with no selected direction. Message 23 / exact outbox 636 was SMTP-accepted once and points to her existing conversation and linked proofs.
 - Both messages say Fritz personally selected the project for special discounted pricing, with a scoped quote confirmed before payment, and end with Shay / FAMtastic Designs. Delivery to the recipient inbox or a customer read is not claimed.
-- DTravelAddics: no confirmed match in Drupal prospects, customer requests/intakes, repository records, Gmail or 271 older hello-mailbox files. A name/email/site clarification is pending; no message has been sent to an inferred address.
+- DTravelAddics: no confirmed match in Drupal prospects, customer requests/intakes, older webform submissions, repository records, Gmail or 271 older hello-mailbox files. A name/email/site clarification is pending; no message has been sent to an inferred address.
 
 Private raw recipient records, exact previews and provider receipts are in ignored `.artifacts/outreach-20260914/`. No private mailbox dump is committed.
 
-## Staff list implementation — locally proven
+## Staff list implementation — released
 
 Separate Active, Completed, Archived and All tabs preserve the original workflow status. Native staff confirmation forms archive, complete and restore with permission checks, CSRF and an auditable compare-and-set transition. Search/status/date filters apply before pagination. Only active prospects participate in staff first-response/follow-up reminders. Customer messages, project status, proof selections, pricing and payments do not change when moving a lead.
 
-Database update 8064 installs the three staff-placement fields and initializes prior leads to Active. No real prospect has been archived/completed by this task. Production release and acceptance remain pending this checkpoint.
+Database update 8064 installs the three staff-placement fields and initializes prior leads to Active. No real prospect has been archived/completed by this task. Production source and acceptance are recorded below.
 
 ## Exact mail receipts
 
@@ -41,3 +41,17 @@ Local runtime reconstruction must include Drupal's `autoload_runtime.php` and st
 ## Native form concurrency lesson
 
 Drupal does not preserve ordinary form state on GET, and explicitly enabling that cache on a safe method is rejected. Keep the original list in a session-bound signed form snapshot (record + target + original state), validate it on POST, and compare-and-set in the database. A stale or tampered form cannot overwrite a newer list move. These are real authenticated HTTP assertions, not source-string checks.
+
+## Production release and acceptance
+
+Source branch: `codex/prospect-outreach-lifecycle`. Implementation `ff18b916b32104492c6b95b0c310d0f31bcd7049` was pushed atomically to its feature branch and GitHub main, then deployed from a clean checkout through `scripts/deploy-backend-godaddy.sh`. Preflight and apply completed with canonical code/dependency/config/database backups. The production backend marker is this exact SHA at **2026-09-14T22:24:51Z**, PHP 8.3.32. Update 8064 and all three staff-placement fields are installed; authoritative pending-update status is clear. The deployer handled a cold-start Drush exit by verifying that authoritative update status before continuing.
+
+The frontend remains at `fea57649a781bfc8440131327f980bd08a388315` (20:54:11Z); its source tree is unchanged by this release. The prior backend marker was `e68b89f26e315e7232521f6acd6332ac04337bd0`. Source lineage and both component markers were reconciled before and after release. Final documentation is a later docs-only commit, not a second runtime deployment.
+
+Live owner-browser checks passed for both prospect entry points, Active/Completed/Archived/All tabs, search for both recipients, empty historical lists, native confirmation tokens, Cancel returning to an unchanged Active record, and recorded first responses. The 1920px desktop uses a 1615px table with 44px row actions. At 390px, the document is 375px wide with a 343px contained table scroller and 76px list buttons. The native Drupal Manage tray was closed for the mobile inspection, then desktop dimensions and the original toolbar state were restored. Apex and www homepages also rendered correctly.
+
+Authoritative live counts are Active 296 / Completed 0 / Archived 0 / All 296; staff list audit count remains 0. Prospects 21/30 remain Active/acknowledged, with their first-response timestamps matching the email acceptance. Requests 8/9 remain submitted, with their original proof stages and no selected direction or customer archive. Both exact mail receipts still show sent/one attempt. No real prospect was moved and no follow-up was resent during verification. Native state-changing form submissions were proven in the isolated fixture, not performed against customer records.
+
+Sanitized reusable evidence is committed in `verification.json`. Detailed deployment backups/receipts and exact mail previews remain in ignored private evidence. Repository changelog, capability registry, both learning files and the dated Google Drive mirror are updated. The Drive file was written and read back locally in the synced folder; cloud-upload completion is not separately asserted.
+
+Only the DTravelAddics send remains pending contact identification; the branded draft is in `dtravel-followup-draft.md`. No discount amount or offer has been invented.

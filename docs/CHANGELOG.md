@@ -4,7 +4,7 @@
 
 - Sent two owner-authorized branded messages once through the existing conversation/outbox: request 8/prospect 21 onboarding follow-up and request 9/prospect 30 proof-selection reminder. Outbox 635/636 were SMTP-accepted at 21:58:59Z; both carry special discounted-pricing language and a Shay sign-off. DTravelAddics remains unsent pending a confirmed recipient.
 - Added Active, Completed, Archived and All prospect lists, shared by both staff entry points, with search/status/date filters, reversible native confirmation forms and actor/time audit history. Staff list placement preserves commercial/project state and excludes inactive leads from new staff follow-up reminders.
-- Database update 8064 preserves existing leads as Active. Local verification passes 217 unit tests/1,129 assertions, 66 real HTTP assertions, 14 data/audit invariants and 34 Design DNA checks. Production verification is tracked in `plans/prospect-followups-and-lists/status.md`.
+- Database update 8064 preserves existing leads as Active. Local verification passes 217 unit tests/1,129 assertions, 66 real HTTP assertions, 14 data/audit invariants and 34 Design DNA checks. Backend `ff18b916` deployed at 22:24:51Z; live list/search/confirmation/browser checks passed, update 8064 is complete and all 296 leads remain Active. Exact evidence: `plans/prospect-followups-and-lists/status.md`.
 
 ## 2026-09-14 — Client inbox released and shared Shay signing convention
 

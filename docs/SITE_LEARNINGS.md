@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Prospect list release acceptance
+
+Production acceptance: backend `ff18b916` at 22:24:51Z installs update 8064 and preserves all 296 leads as Active. Live search, both staff list entry points, confirmation/Cancel and contained desktop/mobile controls passed. The real customer records were never moved during verification; exact evidence and the outstanding DTravelAddics recipient are in `plans/prospect-followups-and-lists/status.md`.
+
 ## 2026-09-14 — Resolve request identities and preserve prospect history
 
 Requests 8/9 mapped to prospects 21/30, so email recipients and continuation links were verified through Drupal rather than inferred from the remembered number. Both authorized follow-ups are saved in the original portal conversations and SMTP-accepted once; unknown DTravelAddics contact identity stays pending. Use Shay/Shay-Shay and confirm the actual scoped discounted quote later without inventing an amount.

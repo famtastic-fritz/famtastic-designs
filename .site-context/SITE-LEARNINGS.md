@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Prospect list release acceptance
+
+Production acceptance: backend `ff18b916` at 22:24:51Z installs update 8064 and preserves all 296 leads as Active. Live search, both staff list entry points, confirmation/Cancel and contained desktop/mobile controls passed. The real customer records were never moved during verification; exact evidence and the outstanding DTravelAddics recipient are in `plans/prospect-followups-and-lists/status.md`.
+
 ## 2026-09-14 — Prospect identity, staff completion and safe stale forms
 
 Observation: the owner's remembered numbers 8/9 were website requests, while the matching prospects were21/30. Guidance: resolve recipient identity through authoritative request/customer/prospect links before sending; retain the same conversation. Special discounted-pricing wording authorized by the owner does not establish an amount, coupon, paid state or completed project.
