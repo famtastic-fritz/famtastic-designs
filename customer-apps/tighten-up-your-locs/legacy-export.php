@@ -127,7 +127,9 @@ try {
             ->condition('site_key', $site)->condition('customer_id', 11)->condition('organization_id', 11)->execute();
         foreach ($guards as $guard) {
             if (!$guardState($guard)) {
-                $db->query('CREATE TRIGGER `'.$guard['name'].'` BEFORE '.$guard['event'].' ON `'.$guard['table'].'` FOR EACH ROW '.$guard['body']);
+                // This is one fixed CREATE TRIGGER statement with an internal BEGIN/END
+                // body, not multiple SQL commands. Drupal requires this per-query option.
+                $db->query('CREATE TRIGGER `'.$guard['name'].'` BEFORE '.$guard['event'].' ON `'.$guard['table'].'` FOR EACH ROW '.$guard['body'], [], ['allow_delimiter_in_query' => true]);
             }
             $require($guardState($guard), 'retirement_guard_not_verified');
         }
