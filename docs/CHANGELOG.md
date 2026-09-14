@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-14 — Locs four-image hero gallery
+
+- Reused existing generated care, loc updo, styled portrait and journey assets in a native six-second slideshow. Original image remains first; pause/play, previous/next, reduced-motion and failed-image handling included.
+- Booking, measurement and policy behavior unchanged. Source tests and public deployment acceptance recorded in the Locs pilot log.
+
 ## 2026-09-14 — Dedicated Locs policy pages
 
 - Published `d17ea279` through managed artifact release; verified apex/www HTTP200/source hashes, footer policy links and mobile policy rendering. All15 focused tests and17 artifact checksums pass.

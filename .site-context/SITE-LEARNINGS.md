@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Existing media should support the site
+
+Use approved existing media beyond a single static hero when requested. Keep provenance and illustration disclosure; do not recast generated styles as real before-and-after results. Native galleries need manual/pause controls, reduced-motion default pause and a no-JS image fallback.
+
 ## 2026-09-14 — Policy placement
 
 Observation: a privacy explainer cluttered the customer homepage. Guidance: link dedicated branded policy pages from the footer and form; keep homepage focused on service and booking. Write from actual code/provider behavior rather than generic or unsupported privacy promises.

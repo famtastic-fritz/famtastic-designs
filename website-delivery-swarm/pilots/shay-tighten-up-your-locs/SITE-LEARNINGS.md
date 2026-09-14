@@ -1,5 +1,11 @@
 # Tighten Up Your Locs site learnings
 
+## 2026-09-14 — Four-image hero gallery
+
+User authorized public reuse of previously created Shay media. Original care image retained first; added ledger-private-concept (loc updo), room-private-concept (styled portrait), story/journey-character (loose-loc portrait) from the v2 proof assets. All are generated editorial imagery, not real transformations. No new generation expense, customer requests, email, backend or analytics changes.
+
+Native six-second rotation includes pause/play, previous/next, keyboard-focus pause, hover/hidden-page suspension, reduced-motion default pause and broken-image skipping. Existing original image is the no-JS fallback. Production receipt and verification follow after publication.
+
 ## 2026-09-13 — One business backend, reusable presentation
 
 The customer pilot and Owner Desk implementation are part of FAMtastic Designs. No separate customer Git repository was found; do not create a competing backend merely to satisfy an assumed repository name. Reusable presentation is captured in Component Studio, with Shay's brand in an explicit instance adapter.

@@ -23,13 +23,36 @@
   },
   "stages": [
     {
+      "stage_id": "hero-gallery-20260914",
+      "capability": "existing-media-native-slideshow",
+      "result": {
+        "status": "22_tests_passed_local_browser_390_768_1280_pending_release",
+        "backend_changed": false,
+        "analytics_changed": false
+      }
+    },
+    {
       "stage_id": "standalone-policies-20260914",
       "capability": "move-policy-component-to-dedicated-pages",
       "source_parent": "a42d7b6682f1fdfe3439607269de0798619f1db1",
-      "changed_public_files": ["index.html", "styles.css", "privacy/index.html", "terms/index.html"],
-      "result": {"status": "15_local_tests_passed_pending_release", "backend_changed": false, "analytics_changed": false},
+      "changed_public_files": [
+        "index.html",
+        "styles.css",
+        "privacy/index.html",
+        "terms/index.html"
+      ],
+      "result": {
+        "status": "15_local_tests_passed_pending_release",
+        "backend_changed": false,
+        "analytics_changed": false
+      },
       "approval": "Fritz requested immediate removal of homepage policy explanation and dedicated policy pages.",
-      "execution": {"provider": "openai-codex", "model_status": "not_disclosed_by_runtime", "cost_status": "runtime_did_not_report", "duration_status": "not_measured"},
+      "execution": {
+        "provider": "openai-codex",
+        "model_status": "not_disclosed_by_runtime",
+        "cost_status": "runtime_did_not_report",
+        "duration_status": "not_measured"
+      },
       "evidence_ref": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/SITE-LEARNINGS.md"
     },
     {
@@ -37,19 +60,48 @@
       "capability": "approved-ruby-maintenance",
       "source_parent": "adf48dde575922750d99dfe842a9d308532b9269",
       "design_contract": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/design.md",
-      "changed_public_files": ["index.html", "styles.css", "site.js"],
-      "result": {"status": "13_local_tests_and_CUA_responsive_checks_passed_pending_release", "new_media": false, "backend_changed": false, "analytics": "denied_storage_pings_with_prior_refusal_DNT_GPC_suppression"},
+      "changed_public_files": [
+        "index.html",
+        "styles.css",
+        "site.js"
+      ],
+      "result": {
+        "status": "13_local_tests_and_CUA_responsive_checks_passed_pending_release",
+        "new_media": false,
+        "backend_changed": false,
+        "analytics": "denied_storage_pings_with_prior_refusal_DNT_GPC_suppression"
+      },
       "approval": "Fritz explicitly requested layout/booking/analytics correction, commit and live publication September14.",
-      "execution": {"provider": "openai-codex", "model_status": "not_disclosed_by_runtime", "cost_status": "runtime_did_not_report", "duration_status": "not_measured"},
+      "execution": {
+        "provider": "openai-codex",
+        "model_status": "not_disclosed_by_runtime",
+        "cost_status": "runtime_did_not_report",
+        "duration_status": "not_measured"
+      },
       "evidence_ref": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/SITE-LEARNINGS.md"
     },
     {
       "stage_id": "public-footer-correction-20260914",
       "capability": "preserve-direction-correct-copyright-credit-and-privacy-copy",
       "source_parent": "17185b29",
-      "component_instances": ["foundation.find-contact-domain.v1", "privacy.request-analytics.v1"],
-      "result": {"status": "seven_local_tests_passed_pending_publication", "changed_public_files": ["index.html"], "analytics_behavior": "unchanged_opt_in", "new_media": false},
-      "execution": {"provider": "openai-codex", "model_status": "not_disclosed_by_runtime", "cost_status": "runtime_did_not_report", "duration_status": "not_measured"},
+      "component_instances": [
+        "foundation.find-contact-domain.v1",
+        "privacy.request-analytics.v1"
+      ],
+      "result": {
+        "status": "seven_local_tests_passed_pending_publication",
+        "changed_public_files": [
+          "index.html"
+        ],
+        "analytics_behavior": "unchanged_opt_in",
+        "new_media": false
+      },
+      "execution": {
+        "provider": "openai-codex",
+        "model_status": "not_disclosed_by_runtime",
+        "cost_status": "runtime_did_not_report",
+        "duration_status": "not_measured"
+      },
       "approval": "Fritz requested the missing copyright and FAMtastic Designs credit; changing visitor-consent policy remains separate.",
       "evidence_ref": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/SITE-LEARNINGS.md"
     },
@@ -97,14 +149,37 @@
     "url": "https://tightenupyourlocs.com/",
     "status": "public_hashes_verified_and_post_payment_project_receipt_recorded",
     "verification": "Strict TLS and five public file hashes; 390/768/1280 real browser QA; durable request and owner PATCH persistence; GA4 Realtime; SMTP/IMAP round trip. Scheduled alert and final notices are tracked in the final launch evidence, not inferred here.",
-    "provider_model": {"provider":"openai-codex","model_id":null,"status":"not_disclosed_by_runtime"},
-    "cost": {"status":"runtime_did_not_report","amount":null},
-    "timing": {"status":"partial","backend_deployed_at":"2026-09-13T08:31:02Z","duration_ms":null},
+    "provider_model": {
+      "provider": "openai-codex",
+      "model_id": null,
+      "status": "not_disclosed_by_runtime"
+    },
+    "cost": {
+      "status": "runtime_did_not_report",
+      "amount": null
+    },
+    "timing": {
+      "status": "partial",
+      "backend_deployed_at": "2026-09-13T08:31:02Z",
+      "duration_ms": null
+    },
     "approval": "Fritz explicitly confirmed the Locs design was final and authorized launch and registrant update; not a fabricated portal acceptance."
   },
   "artifacts": [
-    {"role":"privacy-policy","path":"website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/privacy/index.html","sha256":"228997459aa0ad723a49701de6f0230659350ab48486db182839c56539149108","rights_status":"repository_owned_source","retention_status":"retain_with_build"},
-    {"role":"website-terms","path":"website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/terms/index.html","sha256":"0c2cb4b0ecf5499d94e5dd8f4c57d65ef22b71eeb71234d42c882407d1849e44","rights_status":"repository_owned_source","retention_status":"retain_with_build"},
+    {
+      "role": "privacy-policy",
+      "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/privacy/index.html",
+      "sha256": "228997459aa0ad723a49701de6f0230659350ab48486db182839c56539149108",
+      "rights_status": "repository_owned_source",
+      "retention_status": "retain_with_build"
+    },
+    {
+      "role": "website-terms",
+      "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/terms/index.html",
+      "sha256": "0c2cb4b0ecf5499d94e5dd8f4c57d65ef22b71eeb71234d42c882407d1849e44",
+      "rights_status": "repository_owned_source",
+      "retention_status": "retain_with_build"
+    },
     {
       "role": "README.md",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/README.md",
@@ -129,7 +204,7 @@
     {
       "role": "index.html",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/index.html",
-      "sha256": "99b6d2ad9159d78a4297f4901de73605b888be4a47d23e225f621fd5bd5afd4d",
+      "sha256": "d2f22ef9e7a96cbd6f886ecc24cc213fb6be9adb7bd21f85c53ae62dcc214f1e",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -171,14 +246,14 @@
     {
       "role": "site-recipe.json",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site-recipe.json",
-      "sha256": "6e1307bf6f588ae924bb68dd2662c492ab8f1728e3a42384e5d292b72f851860",
+      "sha256": "05d64d2e019c29d720b698d9e900145f251286689ec625750accb87f8755dd44",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
     {
       "role": "site.js",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site.js",
-      "sha256": "4d5db0f65dc3867e6e675bd45f86c1e934c191a814591b91886038da36b5beaf",
+      "sha256": "f5e1eb6b726877a6f47e05eea2c4954b91ccca7996f8278d911fa46aa40ba78f",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -192,7 +267,7 @@
     {
       "role": "styles.css",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/styles.css",
-      "sha256": "dadf45465249ae6c0023e27721920a21c86aed38913b343aba732c107c1d535c",
+      "sha256": "4e738f1930a887cd5f4189bf98a55770528451787399d227025953ab7cda18be",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -208,6 +283,41 @@
       "path": "docs/design/proofs/tighten-up-your-locs-v2/proofs/appointment-desk-hybrid/index.html",
       "sha256": "98d6cd16bf5a0f2b643f09b248d764f29fda597d8be349d29c8b451554e6b5a0",
       "rights_status": "repository_owned_source",
+      "retention_status": "retain_with_build"
+    },
+    {
+      "role": "gallery-source",
+      "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/hero-gallery.js",
+      "sha256": "18151d70029bb2a2683f47f15db273502000edde07f4e6b834cf14ae1bbd94b6",
+      "rights_status": "repository_owned_source",
+      "retention_status": "retain_with_build"
+    },
+    {
+      "role": "gallery-source",
+      "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/hero-gallery.test.mjs",
+      "sha256": "52f065f21eeb877270a0842cd0dd5c5686f7b1df4a7d0d8a164960acf5bb7efa",
+      "rights_status": "repository_owned_source",
+      "retention_status": "retain_with_build"
+    },
+    {
+      "role": "generated-editorial-illustration",
+      "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/assets/loc-updo-concept.png",
+      "sha256": "45379348d27d553fee44a876111b719a2de3f0bc566258b36fa46ae41d87f408",
+      "rights_status": "generated_concept_user_authorized_publication",
+      "retention_status": "retain_with_build"
+    },
+    {
+      "role": "generated-editorial-illustration",
+      "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/assets/styled-locs-concept.png",
+      "sha256": "32d69e602ebacc191b51748dfc22172895df7381181615c678ffe60abbe0225a",
+      "rights_status": "generated_concept_user_authorized_publication",
+      "retention_status": "retain_with_build"
+    },
+    {
+      "role": "generated-editorial-illustration",
+      "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/assets/loc-journey-concept.png",
+      "sha256": "152c0081210452bd75a58ae980e7eb97eefac9539fb4fe0e3afb3c8cbdd6e568",
+      "rights_status": "generated_concept_user_authorized_publication",
       "retention_status": "retain_with_build"
     }
   ],

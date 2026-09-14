@@ -1,6 +1,6 @@
 {
   "site_id": "tighten-up-your-locs",
-  "recipe_version": "1.2.0-booking-public-maintenance",
+  "recipe_version": "1.3.0-hero-gallery",
   "design_contract": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/design.md",
   "source_recipe": "docs/design/proofs/tighten-up-your-locs-v2/site-recipe.json",
   "source_direction": "docs/design/proofs/tighten-up-your-locs-v2/proofs/appointment-desk-hybrid/index.html",
@@ -72,7 +72,11 @@
       "slot": "hero-portfolio",
       "asset": "assets/archive-private-concept.png",
       "role": "illustration_not_portfolio",
-      "publication": "gated_pending_public_use_approval"
+      "publication": "user_authorized_existing_illustrations_20260914",
+      "gallery_assets": ["assets/archive-private-concept.png", "assets/loc-updo-concept.png", "assets/styled-locs-concept.png", "assets/loc-journey-concept.png"],
+      "provenance": "docs/design/proofs/tighten-up-your-locs-v2/build-dna.json",
+      "behavior": "six_second_rotation_pause_manual_navigation_reduced_motion",
+      "truth_boundary": "Generated editorial illustrations, not client work or before-and-after results"
     }
   ],
   "constraints": [

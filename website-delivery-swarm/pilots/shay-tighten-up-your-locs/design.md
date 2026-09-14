@@ -1,5 +1,7 @@
 # Tighten Up Your Locs — Ruby Signal experience contract
 
+Hero gallery maintenance: retain original care image first, rotate existing approved-for-publication concept assets at six-second intervals. Provide previous/next and pause/play, stop on keyboard focus, suspend on hover/hidden page, start paused for reduced motion. Keep original visible without JavaScript; skip unloaded/broken alternatives. Maintain illustration disclosure, never call generated images real client transformations. Preserve the hero component instance. Accessibility reference: https://www.w3.org/WAI/tutorials/carousels/animations/.
+
 Established September14,2026 for maintenance of the approved Open Chair / Ruby Signal public site. This is not a claim that this site-specific file existed at original generation. The repository-root `design.md` and page/component doctrine also apply; the approved customer palette takes precedence over the agency portal palette.
 
 - Preserve cream #efe6d4, cocoa #311f1a, ruby #8f1831, gold #d6ae62; DM Sans body, Libre Baskerville display, DM Mono labels. Preserve existing approved illustration and its not-client-work label.

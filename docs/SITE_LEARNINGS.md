@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Gallery focus and playback
+
+Pointerdown precedes focusin: preserve the user's pause intent across the focus event so the first Pause click does not accidentally restart playback. Keyboard focus stops rotation until explicit Play. Skip unloaded images and retain the original hero without JavaScript. Generated styles are not customer transformation evidence.
+
 ## 2026-09-14 — Put policies in policy pages
 
 Observation: replacing optional analytics controls with a long homepage privacy explanation still violated the intended professional page hierarchy. Guidance: dedicated branded Privacy Policy and Website Terms pages, brief form acknowledgement and footer links. Explain actual voluntary form submission separately from measurement; no false claim that a booking form receives no personal information. Preserve stable privacy component identity when moving it off the home recipe.
