@@ -149,6 +149,18 @@ final class CustomerPortalController extends ControllerBase {
       return $this->error('invalid_credentials', 403, 'The email or password was not accepted.');
     }
     $uid = $this->userAuth->authenticate($email, (string) ($data['password'] ?? ''));
+    if (!$uid && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      // Staff Drupal usernames may predate the email-based portal. Resolve
+      // only an exact email match with actual staff permission, then still
+      // authenticate its stored username and supplied password normally.
+      $matches = $this->entityTypeManager()->getStorage('user')->loadByProperties(['mail' => $email]);
+      if (count($matches) === 1) {
+        $candidate = reset($matches);
+        if ($candidate->isActive() && $candidate->hasPermission('administer famtastic pipeline')) {
+          $uid = $this->userAuth->authenticate($candidate->getAccountName(), (string) ($data['password'] ?? ''));
+        }
+      }
+    }
     if (!$uid) {
       $this->flood->register('famtastic_portal_login', 900, $identifier);
       return $this->error('invalid_credentials', 403, 'The email or password was not accepted.');
@@ -156,14 +168,20 @@ final class CustomerPortalController extends ControllerBase {
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->entityTypeManager()->getStorage('user')->load($uid);
     $customer = $this->portal->customerForUid((int) $uid);
-    if (!$user || !$customer || empty($customer['verified_at'])) {
+    if (!$user || !$user->isActive()) {
+      return $this->error('invalid_credentials', 403, 'The email or password was not accepted.');
+    }
+    $staff = $user->hasPermission('administer famtastic pipeline');
+    if (!$staff && (!$customer || empty($customer['verified_at']))) {
       return $this->error('verification_required', 403, 'Verify your email before opening the portal.');
     }
-    $this->portal->claimPreviewsForVerifiedCustomer((int) $customer['id']);
-    $this->claimDeepDive((int) $customer['id'], (string) $customer['email']);
+    if ($customer && !empty($customer['verified_at'])) {
+      $this->portal->claimPreviewsForVerifiedCustomer((int) $customer['id']);
+      $this->claimDeepDive((int) $customer['id'], (string) $customer['email']);
+    }
     user_login_finalize($user);
     $this->flood->clear('famtastic_portal_login', $identifier);
-    return $this->sessionPayload($customer);
+    return $this->session($request);
   }
 
   /** Creates or advances the account-owned request after exact-email verification. */
@@ -212,6 +230,13 @@ final class CustomerPortalController extends ControllerBase {
 
   public function session(Request $request): JsonResponse {
     $customer = $this->currentCustomer();
+    if (!$customer && $this->account->isAuthenticated() && $this->account->hasPermission('administer famtastic pipeline')) {
+      $payload = StaffCommandCenterBridge::enrichSession($this->account, [
+        'ok' => TRUE, 'customer' => NULL, 'organizations' => [], 'can_manage_messages' => TRUE,
+      ]);
+      $payload['staff'] += ['display_name' => $this->account->getDisplayName(), 'email' => $this->account->getEmail()];
+      return $this->noStore(new JsonResponse($payload));
+    }
     return $customer ? $this->sessionPayload($customer) : $this->error('authentication_required', 401, 'Sign in to continue.');
   }
 
@@ -608,6 +633,7 @@ final class CustomerPortalController extends ControllerBase {
   private function sessionPayload(array $customer): JsonResponse {
     $payload = [
       'ok' => TRUE,
+      'can_manage_messages' => $this->account->hasPermission('administer famtastic pipeline'),
       'customer' => [
         'public_id' => $customer['public_id'],
         'display_name' => $customer['display_name'],

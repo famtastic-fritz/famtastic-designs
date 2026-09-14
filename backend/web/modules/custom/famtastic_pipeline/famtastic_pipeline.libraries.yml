@@ -1,3 +1,8 @@
+client_messages:
+  css:
+    theme:
+      css/client-messages.css: {}
+
 operations:
   css:
     theme:

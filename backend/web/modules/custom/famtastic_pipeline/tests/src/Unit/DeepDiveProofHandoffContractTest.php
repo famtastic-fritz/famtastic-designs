@@ -37,8 +37,6 @@ final class DeepDiveProofHandoffContractTest extends UnitTestCase {
     $this->assertIsString($portal);
     $this->assertStringContainsString('websiteRequestProofJobKey($requestId, $briefHash)', $portal);
     $this->assertStringContainsString("'brief_sha256' => \$briefHash", $portal);
-    $this->assertStringContainsString("->condition('job_key', 'website_proof.generate.v1:request:' . \$requestId . '%', 'LIKE')", $portal);
-
     $service = (new \ReflectionClass(CustomerPortalService::class))->newInstanceWithoutConstructor();
     $method = new \ReflectionMethod($service, 'websiteRequestProofJobKey');
     $hash = hash('sha256', '{"schema_version":"website_discovery_v3"}');

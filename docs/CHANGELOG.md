@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-14 — Client inbox, readable operations records, and Kesline proof rescue
+
+- Recovered and delivered Kesline's three account-owned concepts for request14 through exact outbox633 at 20:27:27Z. SMTP acceptance, scoped proof/media access and reversible duplicate13 archive are recorded in `plans/client-messaging-proof-rescue/kesline-proof-delivery.md`.
+- Added one durable conversation source for contact intake, Drupal staff replies and the signed-in portal. Migration8063 imports prior contact/quote inquiries without sending alerts. Unread, needs reply, waiting, queued email and provider acceptance stay distinct; tenant checks, bounded read markers and retry idempotency are tested.
+- Implemented the owner-approved inbox mockup using `design.md`, with responsive conversation/detail views, account navigation counts and request/proof context before purchase. Existing staff credentials can enter through the portal without a fabricated customer record.
+- Added database search, status and date filters before pagination on Website Requests and related records. Removed the desktop 76rem cap, reduced request rows to five readable columns and moved full briefs into disclosure controls.
+- Locked Drupal AI1.4.8 and Composer2.10.3 to resolve the current dependency audit findings; zero advisories remain in the local locked set. Release and live acceptance are tracked in the task brief; this entry records the implementation checkpoint.
+
 ## 2026-09-14 — Locs source ownership reconciled after release proof
 
 - Added curated root conversation decisions and the verified owner-only Drive archive references, exact hashes and source cutoff; hidden reasoning/tool output/code blocks/secrets are excluded.

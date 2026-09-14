@@ -232,6 +232,9 @@ async function main() {
 
     // Messages with an open thread.
     await goSection(page, 'messages');
+    // A new customer message is waiting for FAMtastic, so it is not a
+    // customer "Needs reply" item. Open the complete durable inbox.
+    await page.getByRole('button', { name: /^All\s*\d/ }).click();
     const threadButton = page.locator('.portal-thread-list button').first();
     if (await threadButton.count()) {
       await threadButton.click();

@@ -962,6 +962,13 @@ final class CustomerPortalService {
     return $row;
   }
 
+  /** Read-only handoff evidence for the staff-authorized request review form. */
+  public function websiteRequestProofHandoff(int $requestId): ?array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    return $row ? $this->proofHandoff($row) : NULL;
+  }
+
   /** Returns customer-safe evidence of the request-to-proof lifecycle. */
   private function proofHandoff(array $row): array {
     if ((string) ($row['status'] ?? '') === 'draft') {
@@ -973,8 +980,14 @@ final class CustomerPortalService {
     }
 
     $requestId = (int) ($row['id'] ?? 0);
-    $job = $this->database->select('famtastic_job', 'j')->fields('j', ['id', 'status', 'attempts', 'max_attempts'])
-      ->condition('job_key', 'website_proof.generate.v1:request:' . $requestId . '%', 'LIKE')
+    $jobKey = 'website_proof.generate.v1:request:' . $requestId;
+    $query = $this->database->select('famtastic_job', 'j')->fields('j', ['id', 'status', 'attempts', 'max_attempts']);
+    // Preserve the legacy exact key and current versioned keys without letting
+    // request 14 read request 140's job or another routine's status.
+    $scope = $query->orConditionGroup()
+      ->condition('job_key', $jobKey)
+      ->condition('job_key', $this->database->escapeLike($jobKey . ':brief:') . '%', 'LIKE');
+    $job = $query->condition($scope)->condition('job_type', 'proof.generate')
       ->orderBy('id', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $base = [
       'job_id' => $job ? (int) $job['id'] : NULL,
@@ -1007,8 +1020,8 @@ final class CustomerPortalService {
         if (str_starts_with($studioJob, 'local-')) {
           return $base + [
             'state' => 'waiting_for_provider',
-            'label' => 'Proof generation is waiting for a creative provider',
-            'detail' => 'Your brief and proof record are saved. FAMtastic must restore the configured creative-provider route before working concepts can be generated.',
+            'label' => 'Proof generation needs FAMtastic attention',
+            'detail' => 'Your brief is saved, but working concepts have not been returned. FAMtastic needs to start or restore the creative-provider run. You do not need to submit your brief again.',
           ];
         }
         if ($studioJob !== '') {
@@ -1056,6 +1069,13 @@ final class CustomerPortalService {
           'detail' => 'Your notes are recorded with this proof set. FAMtastic must review them and return the next proof update here.',
         ];
       }
+    }
+    if ($job['status'] === 'completed') {
+      return $base + [
+        'state' => 'needs_attention',
+        'label' => 'Proof run needs FAMtastic attention',
+        'detail' => 'The workflow job ended without a complete proof set or a confirmed provider handoff. Your brief is saved and FAMtastic needs to recover this run.',
+      ];
     }
     if ($job['status'] === 'running') {
       return $base + [

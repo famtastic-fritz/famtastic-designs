@@ -32,10 +32,23 @@ customer-state transition, offer, charge, or launch.
 | `customer_intake_submitted` v1 | First `draft → submitted`; `website-request:{id}:customer` | Verified customer; acknowledges that the Design Review and proof routine have started | FAMtastic Concierge, dark green/lime, “Intake received · verified workspace,” **Open your workspace** | No proof is claimed ready; no payment is requested; exact authenticated portal URL only. |
 | `customer_proof_ready` v3 | Owner approves a complete 3- or 6-direction campaign; `website-request:{id}:proofs:{campaign}:{count}` or legacy project proof key | Verified customer; delivers access to the approved Studio Review and the research behind the concepts | FAMtastic Concierge, dark green/lime, “Private concept review · verified workspace,” **Open your proof set** | One job, one graphical CTA, no visible opaque portal URL. No promotion, price, or research-report claim outside the approved proof room; customer sees only owner-approved account-owned concepts. |
 | `customer_revision_received` v1 | Customer submits permitted proof feedback; `website-request:{id}:customer-revision-ack:{notes-hash}` | Verified customer; confirms feedback is being used and keeps them in their workspace | FAMtastic Concierge, dark green/lime, “Feedback saved · next proof round,” **Open your project** | Never claim revised proofs are ready. It says FAMtastic is building the next set and leaves the prior URL out of visible body copy. |
+| `customer_message_reply` v1 | Staff saves a reply; `client-message:{message_id}:customer` | Original contact address or account-owned conversation recipient; conveys the saved reply | FAMtastic Concierge, dark green/lime, **Open your conversation** | Saved portal content and queued email are separate states. Only a provider receipt establishes SMTP acceptance; no inbox, read, proof-ready or launch claim is inferred. CTA returns to the authenticated conversation. |
 | `customer_owner_system_review` v1 | Restricted demonstration notice only; external send receipt is retained with the review URL | Customer invited to a temporary, non-live demonstration of a branded client path and mobile Owner Desk | FAMtastic Concierge, dark forest/lime/warm paper, **Review your business system** | Never use for a proof set or selection. Proof delivery, research review, feedback, and choice stay in the authenticated workspace via `customer_proof_ready`. |
 | `standard` v1 | Operational or transactional outbox row without a specialized customer-template assignment | Customer or operator, depending on the row | Neutral FAMtastic operational shell | Must not borrow customer-proof language or make a commercial claim. |
 
 ## Current customer copy contracts
+
+### `customer_message_reply` v1
+
+- Subject: `FAMtastic Concierge — [conversation subject]`.
+- Inputs: escaped conversation subject, exact saved staff reply, authenticated
+  portal conversation URL. The recipient comes from the existing conversation,
+  never a browser-supplied email address.
+- Customer promise: a reply is available in the conversation. Contact submissions
+  can be linked only after the recipient verifies ownership of the matching email.
+- Retry idempotency is scoped to conversation, staff account and request ID. A
+  retry cannot create a second saved reply or notification.
+- Email acceptance is reported separately from portal persistence and unread state.
 
 ### `customer_intake_submitted` v1
 

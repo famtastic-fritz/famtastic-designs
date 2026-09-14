@@ -284,6 +284,8 @@ final class LifecycleOperationsService {
     ])->execute();
     $this->database->update('famtastic_support_case')->fields(['status' => 'waiting_on_customer', 'responded_at' => $now, 'changed' => $now])
       ->condition('id', $case['id'])->execute();
+    $this->database->update('famtastic_portal_thread')->fields(['status' => 'open', 'changed' => $now])
+      ->condition('id', $thread['id'])->execute();
     $this->queue("support:{$case['id']}:reply:{$messageId}", $customer['email'], "Reply to support case {$caseNumber}", $clean . "\n\nReply to support+{$thread['public_id']}@famtasticdesigns.com");
     unset($transaction);
     return ['case_number' => $caseNumber, 'status' => 'waiting_on_customer', 'message_id' => $messageId];

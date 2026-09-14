@@ -1,9 +1,9 @@
 .famtastic-ops {
-  --ops-lime: #5ee500;
+  --ops-lime: #7cfc00;
   --ops-ink: #f4f7f4;
   --ops-muted: #c3cbc3;
   --ops-border: #3a463a;
-  max-width: 1480px;
+  max-width: none;
   margin: 0 auto;
 }
 

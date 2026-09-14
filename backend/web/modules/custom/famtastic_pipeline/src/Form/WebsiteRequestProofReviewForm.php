@@ -43,10 +43,30 @@ final class WebsiteRequestProofReviewForm extends FormBase {
     $this->requestRow = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $website_request)->execute()->fetchAssoc() ?: [];
     if (!$this->requestRow) return ['missing' => ['#markup' => '<p>Website request not found.</p>']];
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', (int) $this->requestRow['customer_id'])->execute()->fetchAssoc();
+    $handoff = $this->portal->websiteRequestProofHandoff((int) $this->requestRow['id']) ?? [];
+    $reviewStatus = (string) $this->requestRow['proof_review_status'];
+    $statusLabel = $reviewStatus === 'not_started' && !empty($handoff['label'])
+      ? (string) $handoff['label']
+      : str_replace('_', ' ', $reviewStatus);
     $form['summary'] = [
-      '#type' => 'item', '#title' => $this->t('@project — @status', ['@project' => $this->requestRow['project_name'], '@status' => str_replace('_', ' ', $this->requestRow['proof_review_status'])]),
+      '#type' => 'item', '#title' => $this->t('@project — @status', ['@project' => $this->requestRow['project_name'], '@status' => $statusLabel]),
       '#markup' => '<p><strong>Customer:</strong> ' . htmlspecialchars((string) ($customer['display_name'] ?? 'Unknown')) . ' · ' . htmlspecialchars((string) ($customer['email'] ?? '')) . '</p><p>This page is the customer-send gate. Reviewing previews does not notify the customer.</p>',
     ];
+    if ($handoff) {
+      $needsAttention = in_array($handoff['state'] ?? '', ['needs_attention', 'waiting_for_provider'], TRUE);
+      $form['handoff'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['messages', $needsAttention ? 'messages--warning' : 'messages--status']],
+        'status' => [
+          '#type' => 'item',
+          '#title' => $this->t('Proof generation'),
+          '#markup' => '<p><strong>' . htmlspecialchars((string) ($handoff['label'] ?? '')) . '</strong></p><p>' . htmlspecialchars((string) ($handoff['detail'] ?? '')) . '</p>',
+        ],
+      ];
+      if (!empty($handoff['job_id'])) {
+        $form['handoff']['job'] = ['#plain_text' => (string) $this->t('Workflow job #@id. Customer delivery is tracked separately below.', ['@id' => (int) $handoff['job_id']])];
+      }
+    }
     $campaignId = (int) ($this->requestRow['proof_campaign_id'] ?? 0);
     $ids = $campaignId ? $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', $campaignId)->sort('direction_id')->execute() : [];
     $items = [];

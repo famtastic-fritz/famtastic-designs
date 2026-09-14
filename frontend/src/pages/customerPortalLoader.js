@@ -4,6 +4,9 @@
  */
 export async function loadCustomerPortal({ getSession, getWorkspace, getCatalog }) {
   const session = await getSession();
+  if (session.can_manage_messages === true && (!session.customer || session.organizations?.length === 0)) {
+    return { session, workspace: null, catalog: null };
+  }
   const [workspace, catalog] = await Promise.all([getWorkspace(), getCatalog()]);
 
   return { session, workspace, catalog };

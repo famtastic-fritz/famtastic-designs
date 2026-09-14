@@ -84,7 +84,7 @@ final class SupportReplyForm extends ConfirmFormBase {
         trim((string) $form_state->getValue('body')),
         (int) $this->currentUser()->id(),
       );
-      $this->messenger()->addStatus($this->t('Reply sent on @case — customer notified, case now @status.', [
+      $this->messenger()->addStatus($this->t('Reply saved on @case — customer email queued, case now @status.', [
         '@case' => $result['case_number'], '@status' => $result['status'],
       ]));
     }

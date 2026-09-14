@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Inbox discoverability and proof truth
+
+Contact alerts must open the saved conversation that contains the original submission. Admin and portal share message/read/outbox records; tenant ownership comes from verified accounts and active membership, while staff permissions come from the real Drupal user. Use atomic, idempotent reply writes and distinguish portal persistence, email queue state, SMTP acceptance and unread messages. A staff account must be able to use the portal without a customer-row dependency.
+
+Database filters must apply before pagination and match the displayed field. Explicit historical job/exception filters must override the default active scope. On desktop, nested width caps and excessive columns can waste space while crushing content: use a full-width shell and expandable brief. Test Drupal's rendered form controls, because raw #markup strips form/input/select tags.
+
+Kesline's completed job was only a waiting local callback handoff. Her correct detailed request14 was recovered with three actual concepts, scoped protected-file checks, independent responsive review and exact SMTP receipt; duplicate13 was archived reversibly. Completion claims require artifact and recipient correlation. A waiting-state label does not by itself fix unattended generation.
+
 ## 2026-09-14 — Runtime independence is not source portability
 
 Observation: Locs had its own runtime/database but its app and public source still lived

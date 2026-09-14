@@ -9,18 +9,23 @@ export default function PortalNav({
   setMenu,
   org,
   customer,
-  openThreadsCount,
+  unreadMessagesCount = 0,
+  needsReplyCount = 0,
+  staffOnly = false,
   onSignOut,
   hasBookingSites = false,
 }) {
   const toggleRef = useRef(null);
   const drawerRef = useRef(null);
   const closeRef = useRef(null);
+  const messageBadge = unreadMessagesCount || needsReplyCount;
+  const messageBadgeLabel = `${unreadMessagesCount} unread messages, ${needsReplyCount} conversations need your reply`;
+  const groups = staffOnly ? [['Operations', [['messages', 'Client messages'], ['billing', 'Client orders']]]] : GROUPS;
   const mobileItems = [
     ['home', 'Home', '⌂'],
     ['projects', 'Projects', '▦'],
     ['messages', 'Messages', '✉'],
-    ['billing', 'Billing', '$'],
+    ['billing', staffOnly ? 'Client orders' : 'Billing', '$'],
     ['account', 'Account', '○'],
   ];
 
@@ -98,14 +103,14 @@ export default function PortalNav({
         </div>
 
         <div className="portal-workspace">
-          <small>Customer workspace</small>
-          <strong>{org?.name || 'Your Workspace'}</strong>
+          <small>{staffOnly ? 'Staff account' : 'Customer workspace'}</small>
+          <strong>{staffOnly ? 'FAMtastic Operations' : org?.name || 'Your Workspace'}</strong>
           <span>{customer?.email}</span>
-          <em>{org?.role || 'Member'}</em>
+          <em>{staffOnly ? 'Authorized staff' : org?.role || 'Member'}</em>
         </div>
 
         <nav aria-label="Customer portal">
-          {GROUPS.map(([group, items]) => (
+          {groups.map(([group, items]) => (
             <section key={group}>
               <h2>{group}</h2>
               {items.filter(([id]) => id !== 'booking' || hasBookingSites).map(([id, label]) => {
@@ -119,9 +124,9 @@ export default function PortalNav({
                     onClick={() => go(id)}
                   >
                     <span>{label}</span>
-                    {id === 'messages' && openThreadsCount > 0 && (
-                      <b aria-label={`${openThreadsCount} open messages`}>
-                        {openThreadsCount}
+                    {id === 'messages' && messageBadge > 0 && (
+                      <b aria-label={messageBadgeLabel} title={messageBadgeLabel}>
+                        {messageBadge}
                       </b>
                     )}
                   </button>
@@ -140,8 +145,8 @@ export default function PortalNav({
         </button>
       </aside>
 
-      <nav className="portal-mobile-nav" aria-label="Primary customer navigation">
-        {mobileItems.map(([id, label, icon]) => (
+      <nav className={`portal-mobile-nav${staffOnly ? ' is-staff-only' : ''}`} aria-label="Primary customer navigation">
+        {mobileItems.filter(([id]) => !staffOnly || ['messages', 'billing'].includes(id)).map(([id, label, icon]) => (
           <button
             key={id}
             type="button"
@@ -151,8 +156,8 @@ export default function PortalNav({
           >
             <span aria-hidden="true">{icon}</span>
             <small>{label}</small>
-            {id === 'messages' && openThreadsCount > 0 && (
-              <b aria-label={`${openThreadsCount} open messages`}>{openThreadsCount}</b>
+            {id === 'messages' && messageBadge > 0 && (
+              <b aria-label={messageBadgeLabel}>{messageBadge}</b>
             )}
           </button>
         ))}

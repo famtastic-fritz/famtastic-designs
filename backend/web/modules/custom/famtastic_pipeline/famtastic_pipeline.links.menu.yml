@@ -11,6 +11,13 @@ famtastic_pipeline.operations:
   parent: famtastic_pipeline.admin
   weight: -20
 
+famtastic_pipeline.client_messages_admin:
+  title: 'Messages'
+  description: 'Contact forms, unread messages, and clients waiting for a reply.'
+  route_name: famtastic_pipeline.client_messages_admin
+  parent: famtastic_pipeline.admin
+  weight: -19
+
 famtastic_pipeline.settings:
   title: 'Notification Settings'
   description: 'Configure Fritz alerts and lead response deadlines.'

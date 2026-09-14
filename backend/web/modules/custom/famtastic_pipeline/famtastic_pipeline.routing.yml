@@ -730,6 +730,74 @@ famtastic_pipeline.customer_referral:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.client_messages:
+  path: '/api/customer/messages'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ClientMessagesController::inbox'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.client_message_detail:
+  path: '/api/customer/messages/{thread}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ClientMessagesController::detail'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    thread: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.client_message_reply:
+  path: '/api/customer/messages/{thread}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ClientMessagesController::reply'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    thread: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.client_message_read:
+  path: '/api/customer/messages/{thread}/read'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ClientMessagesController::read'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    thread: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.client_messages_admin:
+  path: '/admin/famtastic/messages'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\ClientMessagesController::admin'
+    _title: 'Messages'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+  options:
+    _admin_route: TRUE
+    no_cache: 'TRUE'
+
+famtastic_pipeline.client_messages_admin_thread:
+  path: '/admin/famtastic/messages/{thread}'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\ClientMessageReplyForm'
+    _title: 'Client conversation'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    thread: '[0-9a-f-]{36}'
+  options:
+    _admin_route: TRUE
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_threads:
   path: '/api/customer/threads'
   defaults:

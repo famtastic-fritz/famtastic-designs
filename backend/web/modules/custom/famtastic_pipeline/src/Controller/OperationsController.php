@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
@@ -16,6 +17,7 @@ use Drupal\Core\Url;
 use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\GoogleAnalyticsReportingService;
 use Drupal\famtastic_pipeline\Service\PostizChannelsService;
+use Drupal\famtastic_pipeline\Service\OperationsRecordFilter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -23,6 +25,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Operator-first campaign, message, proof, job, and build telemetry pages.
  */
 final class OperationsController extends ControllerBase {
+
+  /** Server-side filters for the current paginated records view. */
+  private array $recordFilterBuild = [];
 
   /** Queue age in seconds after which the notification banner demands attention. */
   private const NOTIFICATION_QUEUE_ATTENTION_SECONDS = 1800;
@@ -76,7 +81,7 @@ final class OperationsController extends ControllerBase {
     ];
     $cards = [
       ['Website Delivery', $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started']) . ' active requests', 'Briefs, proof review, staging, checkout, and fulfillment.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), 'prospects'],
-      ['Customer Care', $openSupport . ' open conversations', 'Customer messages, support cases, drafts, and replies.', Url::fromRoute('famtastic_pipeline.operations_attention'), 'support'],
+      ['Messages', $openSupport . ' open conversations', 'Contact inquiries, unread messages, customer replies, and delivery status.', Url::fromRoute('famtastic_pipeline.client_messages_admin'), 'support'],
       ['Marketing Command Center', $this->count('famtastic_social_record') . ' records under gates', 'Queue, calendar, channel health, attribution, creative, and Build DNA.', Url::fromRoute('famtastic_pipeline.marketing'), 'campaigns'],
       ['Content & Offers', $published . ' published items', 'Pages, articles, FAQs, services, offers, and reusable guidance.', Url::fromRoute('system.admin_content'), 'content'],
       ['Business Control', '$' . number_format($this->revenueLast30Days() / 100, 2) . ' revenue in 30 days', 'Launch approval, grants, notifications, workers, renewals, and service records.', Url::fromRoute('famtastic_pipeline.launch_approval'), 'commerce'],
@@ -642,6 +647,7 @@ final class OperationsController extends ControllerBase {
     $query->addField('c', 'display_name', 'customer_name');
     $query->addField('c', 'email', 'customer_email');
     $query->addField('o', 'name', 'organization_name');
+    $this->filterRecords($query, ['r.project_name', 'r.business_name', 'c.display_name', 'c.email', 'o.name'], 'famtastic_project_request', 'r', 'status', 'changed', 'proof_review_status');
     $rows = [];
     foreach ($query->orderBy('r.changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
       $intake = json_decode((string) $record['intake_data'], TRUE) ?: [];
@@ -652,23 +658,35 @@ final class OperationsController extends ControllerBase {
         'Timing: ' . ($intake['launch_timing'] ?? ''),
         'Notes: ' . ($intake['notes'] ?? ''),
       ], static fn(string $line): bool => !str_ends_with($line, ': '));
-      $briefText = Html::escape(implode(' · ', $summary));
-      if (mb_strlen($briefText) > 180) {
-        $briefText = mb_substr($briefText, 0, 177) . '…';
+      $briefText = Html::escape(implode("\n\n", $summary));
+      $business = (string) ($record['business_name'] ?: $record['organization_name']);
+      $email = (string) $record['customer_email'];
+      $name = (string) $record['customer_name'];
+      $identity = '<strong>' . Html::escape((string) $record['project_name']) . '</strong>'
+        . '<small>#' . (int) $record['id'] . ' · ' . Html::escape(ucwords(str_replace('_', ' ', $record['project_type']))) . '</small>';
+      if ($business !== '' && $business !== $email && $business !== $record['project_name']) {
+        $identity .= '<small>' . Html::escape($business) . '</small>';
       }
-      $prospect = $record['prospect_id'] ? $this->linkCell(Link::fromTextAndUrl('#' . $record['prospect_id'], Url::fromRoute('entity.famtastic_prospect.edit_form', ['famtastic_prospect' => $record['prospect_id']]))) : ['#markup' => '—'];
+      $identity .= '<details class="famtastic-request-brief"><summary>View brief</summary><p>' . ($briefText ?: 'Draft details not added yet.') . '</p></details>';
+      $customer = ($name !== '' && strcasecmp($name, $email) !== 0 ? '<strong>' . Html::escape($name) . '</strong>' : '') . '<span>' . Html::escape($email) . '</span>';
+      $actions = [
+        Link::fromTextAndUrl('Open proofs', Url::fromRoute('famtastic_pipeline.website_request_proof_review', ['website_request' => $record['id']]))->toRenderable(),
+        Link::fromTextAndUrl('Package / price', Url::fromRoute('famtastic_pipeline.website_request_offer', ['website_request' => $record['id']]))->toRenderable(),
+      ];
+      if ($record['prospect_id']) {
+        $actions[] = Link::fromTextAndUrl('Lead #' . $record['prospect_id'], Url::fromRoute('entity.famtastic_prospect.edit_form', ['famtastic_prospect' => $record['prospect_id']]))->toRenderable();
+      }
       $rows[] = [
-        $record['project_name'], $record['organization_name'] ?: $record['business_name'],
-        $record['customer_name'] . ' · ' . $record['customer_email'], ucwords(str_replace('_', ' ', $record['project_type'])),
-        ['data' => ['#markup' => $this->badge($record['status']) . ' ' . $this->badge($record['proof_review_status'])]],
-        ['data' => ['#theme' => 'item_list', '#items' => [
-          $this->linkCell(Link::fromTextAndUrl('Proof review', Url::fromRoute('famtastic_pipeline.website_request_proof_review', ['website_request' => $record['id']]))),
-          $this->linkCell(Link::fromTextAndUrl('Package / special price', Url::fromRoute('famtastic_pipeline.website_request_offer', ['website_request' => $record['id']]))),
-        ]]],
-        ['data' => $prospect], ['data' => ['#markup' => $briefText ?: 'Draft details not added yet']], $this->date((int) $record['changed']),
+        ['data' => ['#markup' => $identity], 'class' => ['famtastic-request-identity']],
+        ['data' => ['#markup' => $customer], 'class' => ['famtastic-request-customer']],
+        ['data' => ['#markup' => '<div class="famtastic-request-stage">' . $this->badge(str_replace('_', ' ', $record['status'])) . $this->badge('Proofs: ' . str_replace('_', ' ', $record['proof_review_status'])) . '</div>']],
+        ['data' => ['#theme' => 'item_list', '#items' => $actions], 'class' => ['famtastic-request-actions']],
+        $this->date((int) $record['changed']),
       ];
     }
-    return $this->recordsPage('Website Requests', 'Customer-owned, resumable website interviews. Proofs remain owner-only until the explicit customer-send gate is approved.', ['Request', 'Business', 'Customer', 'Type', 'Status', 'Actions', 'Lead', 'Brief', 'Updated'], $rows, 'No website requests have been recorded.');
+    $page = $this->recordsPage('Website Requests', 'Find the customer, review the saved brief, and open the next proof action. Proof readiness and customer delivery are tracked separately.', ['Request & brief', 'Customer', 'Stage', 'Actions', 'Updated'], $rows, 'No website requests match these filters.');
+    $page['content']['records']['table']['#attributes']['class'][] = 'famtastic-requests-table';
+    return $page;
   }
 
   private function supportMetric(): array {
@@ -676,9 +694,11 @@ final class OperationsController extends ControllerBase {
     $query->leftJoin('famtastic_organization', 'o', 'o.id = t.organization_id');
     $query->leftJoin('famtastic_support_case', 's', 's.thread_id = t.id');
     $query->fields('t', ['kind', 'subject', 'created', 'changed'])->fields('s', ['case_number', 'priority', 'status', 'response_due'])->addField('o', 'name', 'organization');
+    $query->addField('t', 'status', 'thread_status');
+    $this->filterRecords($query, ['t.subject', 'o.name', 's.case_number'], 'famtastic_portal_thread', 't', 'status', 'changed');
     $rows = [];
     foreach ($query->orderBy('t.changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
-      $rows[] = [$record['case_number'] ?: 'Legacy', $record['organization'] ?: 'Individual', $record['subject'], ['data' => ['#markup' => $this->badge($record['priority'] ?: $record['kind'])]], ['data' => ['#markup' => $this->badge($record['status'] ?: 'open')]], $this->date((int) $record['response_due']), $this->date((int) $record['changed'])];
+      $rows[] = [$record['case_number'] ?: 'Legacy', $record['organization'] ?: 'Individual', $record['subject'], ['data' => ['#markup' => $this->badge($record['priority'] ?: $record['kind'])]], ['data' => ['#markup' => $this->badge($record['thread_status'])]], $this->date((int) $record['response_due']), $this->date((int) $record['changed'])];
     }
     foreach ($rows as $i => $row) {
       $caseNumber = (string) $row[0];
@@ -738,6 +758,7 @@ final class OperationsController extends ControllerBase {
   private function notificationMetric(): array {
     $rows = [];
     $query = $this->database->select('famtastic_notification_outbox', 'n')->extend(PagerSelectExtender::class);
+    $this->filterRecords($query, ['n.recipient', 'n.subject', 'n.category', 'n.last_error'], 'famtastic_notification_outbox', 'n', 'status', 'changed');
     foreach ($query->fields('n', ['id', 'category', 'recipient', 'subject', 'status', 'attempts', 'last_error', 'changed'])->orderBy('changed', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
       $age = max(0, \Drupal::time()->getRequestTime() - (int) $record['changed']);
       $retryable = in_array($record['status'], ['dead_letter', 'retry', 'failed'], TRUE);
@@ -1105,9 +1126,9 @@ final class OperationsController extends ControllerBase {
    * Renders the campaign records behind the dashboard total.
    */
   private function campaignMetric(): array {
-    $records = $this->database->select('famtastic_campaign', 'c')
-      ->extend(PagerSelectExtender::class)
-      ->fields('c')
+    $query = $this->database->select('famtastic_campaign', 'c')->extend(PagerSelectExtender::class);
+    $this->filterRecords($query, ['c.campaign_key', 'c.source_filter'], 'famtastic_campaign', 'c', 'status', 'created');
+    $records = $query->fields('c')
       ->orderBy('created', 'DESC')
       ->limit(50)
       ->execute()
@@ -1291,6 +1312,7 @@ final class OperationsController extends ControllerBase {
     $query->fields('c', ['display_name', 'email', 'phone', 'acquisition_source', 'marketing_status', 'verified_at', 'created']);
     $query->addField('o', 'name', 'organization_name');
     $query->addField('m', 'role');
+    $this->filterRecords($query, ['c.display_name', 'c.email', 'c.phone', 'o.name', 'c.acquisition_source'], 'famtastic_customer', 'c', 'marketing_status', 'created');
     $records = $query->orderBy('c.created', 'DESC')->limit(50)->execute()->fetchAll(\PDO::FETCH_ASSOC);
     $rows = [];
     foreach ($records as $record) {
@@ -1304,7 +1326,7 @@ final class OperationsController extends ControllerBase {
     }
     return $this->recordsPage(
       'Customers',
-      'Durable customer accounts and their business workspaces, searchable by the browser table filter.',
+      'Customer accounts and business workspaces. Search and filters include every page of records.',
       ['Customer', 'Business', 'Email', 'Phone', 'Role', 'Source', 'Identity', 'Marketing', 'Created'],
       $rows,
       'No customer accounts have been created.',
@@ -1530,10 +1552,12 @@ final class OperationsController extends ControllerBase {
    * Renders jobs that still need processing.
    */
   private function jobMetric(): array {
-    $jobs = $this->database->select('famtastic_job', 'j')
-      ->extend(PagerSelectExtender::class)
-      ->fields('j')
-      ->condition('status', ['queued', 'retry', 'running'], 'IN')
+    $query = $this->database->select('famtastic_job', 'j')->extend(PagerSelectExtender::class);
+    $this->filterRecords($query, ['j.job_key', 'j.job_type', 'j.last_error'], 'famtastic_job', 'j', 'status', 'changed');
+    if (OperationsRecordFilter::values(\Drupal::request()->query->all())['status'] === '') {
+      $query->condition('j.status', ['queued', 'retry', 'running'], 'IN');
+    }
+    $jobs = $query->fields('j')
       ->orderBy('changed', 'DESC')
       ->limit(50)
       ->execute()
@@ -1565,10 +1589,12 @@ final class OperationsController extends ControllerBase {
    * Renders actionable exceptions that are still open.
    */
   private function exceptionMetric(): array {
-    $exceptions = $this->database->select('famtastic_exception', 'e')
-      ->extend(PagerSelectExtender::class)
-      ->fields('e')
-      ->condition('status', ['open', 'retry'], 'IN')
+    $query = $this->database->select('famtastic_exception', 'e')->extend(PagerSelectExtender::class);
+    $this->filterRecords($query, ['e.category', 'e.summary'], 'famtastic_exception', 'e', 'status', 'created');
+    if (OperationsRecordFilter::values(\Drupal::request()->query->all())['status'] === '') {
+      $query->condition('e.status', ['open', 'retry'], 'IN');
+    }
+    $exceptions = $query->fields('e')
       ->orderBy('severity', 'DESC')
       ->orderBy('created', 'DESC')
       ->limit(50)
@@ -1604,6 +1630,7 @@ final class OperationsController extends ControllerBase {
     return $this->page([
       'back' => Link::fromTextAndUrl('← Operations Dashboard', Url::fromRoute('famtastic_pipeline.operations'))->toRenderable(),
       'intro' => ['#markup' => '<p class="famtastic-ops__lede">' . Html::escape($description) . '</p>'],
+      'filters' => $this->recordFilterBuild,
       'records' => [
         '#type' => 'container',
         '#attributes' => ['class' => ['famtastic-ops__table-scroll', 'famtastic-ops__table-scroll--wide']],
@@ -1619,6 +1646,41 @@ final class OperationsController extends ControllerBase {
     ], $title);
   }
 
+  /** Builds GET filters and applies them before pagination, including counts. */
+  private function filterRecords(SelectInterface $query, array $searchFields, string $table, string $alias, string $statusField, string $dateField, ?string $proofField = NULL): void {
+    $values = OperationsRecordFilter::values(\Drupal::request()->query->all());
+    $exactFields = ['status' => $alias . '.' . $statusField];
+    if ($proofField !== NULL) {
+      $exactFields['proof'] = $alias . '.' . $proofField;
+    }
+    OperationsRecordFilter::apply($query, $this->database, $values, $searchFields, $exactFields, $alias . '.' . $dateField);
+    if ($table === 'famtastic_project_request' && $values['status'] === '') {
+      $query->condition($alias . '.status', 'archived', '<>');
+    }
+    $action = Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => \Drupal::routeMatch()->getParameter('metric')])->toString();
+    $html = '<form class="famtastic-record-filters" method="get" action="' . Html::escape($action) . '" aria-label="Filter records">'
+      . '<label class="famtastic-record-filters__search" for="record-search">Search all records<input id="record-search" type="search" name="q" maxlength="160" value="' . Html::escape($values['q']) . '" placeholder="Name, email, or keyword"></label>';
+    foreach ($exactFields as $key => $field) {
+      $column = $key === 'proof' ? $proofField : $statusField;
+      $options = $this->database->select($table, 'filter_options')->fields('filter_options', [$column])->distinct()->orderBy($column)->range(0, 100)->execute()->fetchCol();
+      $label = $key === 'proof' ? 'Proof stage' : ($statusField === 'marketing_status' ? 'Marketing status' : 'Status');
+      $allLabel = in_array($table, ['famtastic_project_request', 'famtastic_job', 'famtastic_exception'], TRUE) && $key === 'status' ? 'All active' : 'All';
+      $html .= '<label for="record-' . $key . '">' . $label . '<select id="record-' . $key . '" name="' . $key . '"><option value="">' . $allLabel . '</option>';
+      foreach ($options as $option) {
+        if ($option === NULL || $option === '') {
+          continue;
+        }
+        $html .= '<option value="' . Html::escape((string) $option) . '"' . ($values[$key] === (string) $option ? ' selected' : '') . '>' . Html::escape(ucfirst(str_replace('_', ' ', (string) $option))) . '</option>';
+      }
+      $html .= '</select></label>';
+    }
+    foreach (['from' => 'From date', 'to' => 'Through date'] as $key => $label) {
+      $html .= '<label for="record-' . $key . '">' . $label . '<input id="record-' . $key . '" type="date" name="' . $key . '" value="' . Html::escape($values[$key]) . '"></label>';
+    }
+    $html .= '<div class="famtastic-record-filters__actions"><button type="submit" class="button button--primary">Apply filters</button><a class="button" href="' . Html::escape($action) . '">Reset</a></div></form>';
+    $this->recordFilterBuild = ['#type' => 'inline_template', '#template' => '{{ filters|raw }}', '#context' => ['filters' => $html]];
+  }
+
   /**
    * Wraps operator content in the shared page presentation.
    */
@@ -1626,6 +1688,7 @@ final class OperationsController extends ControllerBase {
     $banner = $this->notificationAttentionBanner();
     return [
       '#title' => $title,
+      '#cache' => ['max-age' => 0],
       '#attached' => ['library' => ['famtastic_pipeline/operations']],
       'content' => [
         '#type' => 'container',

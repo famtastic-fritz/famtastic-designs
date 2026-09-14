@@ -1,12 +1,12 @@
 import { LABELS } from './PortalShared.jsx';
 
-export default function PortalHeader({ section, customer, org }) {
+export default function PortalHeader({ section, customer, org, isStaff = false }) {
   const initial = (customer?.display_name || customer?.email || 'U').slice(0, 1).toUpperCase();
 
   return (
     <header className="portal-main-header">
       <div>
-        <span>FAMtastic Customer Portal</span>
+        <span>{isStaff ? 'FAMtastic Operations' : 'FAMtastic Customer Portal'}</span>
         <h1>{LABELS[section] || 'Command Center'}</h1>
       </div>
       <div className="portal-user">

@@ -11,9 +11,11 @@ export default function PortalHomeView({
   nextAction,
   go,
   catalog,
+  inbox,
 }) {
   const requests = workspace.website_requests || [];
-  const openThreads = workspace.threads.filter((thread) => thread.status === 'open').length;
+  const unreadMessages = inbox?.unread_count || 0;
+  const needsReply = inbox?.needs_reply_count || 0;
   const attentionRequest = requests.find((request) => request.proof_handoff?.state === 'needs_attention');
   const readyProof = requests.find(
     (request) =>
@@ -77,6 +79,12 @@ export default function PortalHomeView({
 
   return (
     <>
+      {(unreadMessages > 0 || needsReply > 0) && (
+        <button type="button" className="portal-inbox-attention" onClick={() => go('messages')}>
+          <span><strong>{unreadMessages > 0 ? `${unreadMessages} unread message${unreadMessages === 1 ? '' : 's'}` : 'A conversation needs your reply'}</strong><small>{needsReply > 0 ? `${needsReply} conversation${needsReply === 1 ? '' : 's'} waiting for you` : 'Open your inbox to read the latest update.'}</small></span>
+          <b>Open messages →</b>
+        </button>
+      )}
       <section className="portal-next-action" aria-labelledby="portal-next-action-title">
         <div>
           <span className="portal-eyebrow">Your next decision</span>
@@ -437,14 +445,14 @@ export default function PortalHomeView({
 
         <Panel
           eyebrow="Help When You Need It"
-          title={openThreads ? `${openThreads} open conversation${openThreads === 1 ? '' : 's'}` : `Welcome to ${org?.name || 'your workspace'}`}
+          title={unreadMessages ? `${unreadMessages} unread message${unreadMessages === 1 ? '' : 's'}` : needsReply ? 'Your reply is needed' : 'Your conversations'}
         >
           <p>
             Ask a question without repeating your business or project history. Messages stay connected to this workspace, and the support view is where issues live.
           </p>
           <div className="portal-form-actions">
             <button onClick={() => go('messages')}>
-              {openThreads ? 'View messages' : 'Ask FAMtastic'}
+              View messages
             </button>
             <button className="secondary" onClick={() => go('support')}>
               Open support

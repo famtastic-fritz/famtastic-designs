@@ -1894,13 +1894,18 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'id' => $id, 'public_id' => $public,
       'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
       'project_id' => $entity,
+      'source_key' => ['type' => 'varchar', 'length' => 128, 'not null' => FALSE],
+      'source_intake_id' => $entity,
+      'prospect_id' => $entity,
+      'contact_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+      'contact_email' => ['type' => 'varchar', 'length' => 320, 'not null' => TRUE, 'default' => ''],
       'kind' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'support'],
       'subject' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
       'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'open'],
       'created_by' => $entity, 'created' => $time, 'changed' => $time,
     ],
-    'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id']],
-    'indexes' => ['organization_status' => ['organization_id', 'status']],
+    'primary key' => ['id'], 'unique keys' => ['public_id' => ['public_id'], 'source_key' => ['source_key']],
+    'indexes' => ['organization_status' => ['organization_id', 'status'], 'contact_claim' => ['contact_email', 'organization_id']],
   ];
   $tables['famtastic_portal_message'] = [
     'description' => 'Persistent messages attached to a portal thread.',
@@ -1910,9 +1915,21 @@ function _famtastic_pipeline_customer_portal_schema(): array {
       'author_uid' => $entity,
       'author_type' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => 'customer'],
       'body' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+      'client_key' => ['type' => 'varchar', 'length' => 64, 'not null' => FALSE],
+      'notification_key' => ['type' => 'varchar', 'length' => 191, 'not null' => TRUE, 'default' => ''],
       'created' => $time,
     ],
-    'primary key' => ['id'], 'indexes' => ['thread_time' => ['thread_id', 'created']],
+    'primary key' => ['id'], 'unique keys' => ['client_key' => ['client_key']], 'indexes' => ['thread_time' => ['thread_id', 'created']],
+  ];
+  $tables['famtastic_portal_read'] = [
+    'description' => 'Per-account message read watermarks; never a reply or delivery receipt.',
+    'fields' => [
+      'thread_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'last_message_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'changed' => $time,
+    ],
+    'primary key' => ['thread_id', 'uid'],
   ];
   $tables['famtastic_portal_activity'] = [
     'description' => 'Customer-visible lifecycle activity.',
@@ -2990,6 +3007,41 @@ function famtastic_pipeline_update_8062(&$sandbox) {
   return t('Added durable appointment and audit records (@tables). No appointment, notification, calendar event, or payment was created.', [
     '@tables' => $created ? implode(', ', $created) : 'already present',
   ]);
+}
+
+/** Adds durable contact conversations, read marks, and idempotent replies. */
+function famtastic_pipeline_update_8063(&$sandbox) {
+  $database = \Drupal::database();
+  $schema = $database->schema();
+  $definitions = _famtastic_pipeline_customer_portal_schema();
+  if (empty($sandbox['initialized'])) {
+    foreach ([
+      'famtastic_portal_thread' => ['source_key', 'source_intake_id', 'prospect_id', 'contact_name', 'contact_email'],
+      'famtastic_portal_message' => ['client_key', 'notification_key'],
+    ] as $table => $fields) {
+      foreach ($fields as $field) {
+        if (!$schema->fieldExists($table, $field)) $schema->addField($table, $field, $definitions[$table]['fields'][$field]);
+      }
+    }
+    foreach (['famtastic_portal_thread' => 'source_key', 'famtastic_portal_message' => 'client_key'] as $table => $field) {
+      if (!$schema->indexExists($table, $field)) $schema->addUniqueKey($table, $field, [$field]);
+    }
+    if (!$schema->indexExists('famtastic_portal_thread', 'contact_claim')) $schema->addIndex('famtastic_portal_thread', 'contact_claim', ['contact_email', 'organization_id'], $definitions['famtastic_portal_thread']);
+    if (!$schema->tableExists('famtastic_portal_read')) $schema->createTable('famtastic_portal_read', $definitions['famtastic_portal_read']);
+    $sandbox['initialized'] = TRUE;
+    $sandbox['last_id'] = 0;
+    $sandbox['imported'] = 0;
+  }
+  $ids = $database->select('famtastic_intake', 'i')->fields('i', ['id'])
+    ->condition('primary_goal', ['Public contact request', 'Public quote request from Solution Finder'], 'IN')
+    ->condition('id', $sandbox['last_id'], '>')->orderBy('id')->range(0, 50)->execute()->fetchCol();
+  $messages = new \Drupal\famtastic_pipeline\Service\ClientMessagingService($database, \Drupal::time(), \Drupal::service('uuid'), \Drupal::configFactory(), \Drupal::lock());
+  foreach ($ids as $id) {
+    if ($messages->importIntake((int) $id)) $sandbox['imported']++;
+    $sandbox['last_id'] = (int) $id;
+  }
+  $sandbox['#finished'] = count($ids) < 50 ? 1 : 0.5;
+  return t('Added the shared client inbox and imported @count public requests. No customer messages or notifications were sent.', ['@count' => $sandbox['imported']]);
 }
 
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */

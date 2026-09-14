@@ -1,4 +1,8 @@
 services:
+  famtastic_pipeline.client_messages:
+    class: Drupal\famtastic_pipeline\Service\ClientMessagingService
+    arguments: ['@database', '@datetime.time', '@uuid', '@config.factory', '@lock']
+
   http_middleware.famtastic_booking_cors:
     class: Drupal\famtastic_pipeline\StackMiddleware\BookingCors
     tags:

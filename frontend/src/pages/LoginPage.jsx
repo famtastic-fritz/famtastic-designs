@@ -15,7 +15,11 @@ export default function LoginPage() {
     event.preventDefault(); setError(''); setNotice(''); setBusy(true);
     const data = Object.fromEntries(new FormData(event.currentTarget));
     try {
-      if (mode === 'login') { await customerLogin(data.email, data.password); navigate(portalReturn(searchParams.get('redirect'))); }
+      if (mode === 'login') {
+        const session = await customerLogin(data.email, data.password);
+        const destination = portalReturn(searchParams.get('redirect'));
+        navigate(session.can_manage_messages === true && destination === '/portal' ? '/portal?tab=messages' : destination);
+      }
       else if (mode === 'recover') { const result = await forgotCustomerPassword(data.email); setNotice(result.message); }
       else { await customerRegister(data); sessionStorage.removeItem('famtastic.deep_dive_continuation'); setNotice('Check your email to verify your free account. Your saved request will be waiting in the portal after you sign in.'); setMode('login'); }
     } catch (e) { setError(e.message); } finally { setBusy(false); }
@@ -33,7 +37,7 @@ export default function LoginPage() {
       {mode === 'register' && deepDiveContinuation && <input type="hidden" name="deep_dive_continuation" value={deepDiveContinuation} />}
       {mode === 'register' && <><div className="form__field"><label className="form__label" htmlFor="portal-name">Your name</label><input id="portal-name" className="form__input" name="name" required autoComplete="name" /></div><div className="form__field"><label className="form__label" htmlFor="portal-business">Business name <small>(optional)</small></label><input id="portal-business" className="form__input" name="business_name" defaultValue={searchParams.get('business') || ''} autoComplete="organization" /></div></>}
       <div className="form__field"><label className="form__label" htmlFor="portal-email">Email</label><input id="portal-email" className="form__input" name="email" type="email" inputMode="email" defaultValue={searchParams.get('email') || ''} required autoComplete="email" /></div>
-      {mode !== 'recover' && <div className="form__field"><label className="form__label" htmlFor="portal-password">Password</label><input id="portal-password" className="form__input" name="password" type="password" minLength="12" required autoComplete={mode === 'login' ? 'current-password' : 'new-password'} /></div>}
+      {mode !== 'recover' && <div className="form__field"><label className="form__label" htmlFor="portal-password">Password</label><input id="portal-password" className="form__input" name="password" type="password" minLength={mode === 'register' ? 12 : undefined} required autoComplete={mode === 'login' ? 'current-password' : 'new-password'} /></div>}
       {mode === 'register' && <label className="portal-consent"><input type="checkbox" name="marketing_opt_out" value="1" /> Transactional messages only; do not send relevant product news and offers.</label>}
       <button className="btn btn--lime" disabled={busy}>{busy ? 'Please wait…' : mode === 'login' ? 'Open my portal' : mode === 'recover' ? 'Send recovery email' : 'Create my account'}</button>
       {mode === 'login' && <button className="login-recover" type="button" onClick={() => { setMode('recover'); setError(''); setNotice(''); }}>Forgot password?</button>}

@@ -24,6 +24,8 @@ class OutreachMailer {
   public const TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSIONS = [1, 2];
   public const TEMPLATE_CUSTOMER_REVISION_RECEIVED = 'customer_revision_received';
   public const TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION = 1;
+  public const TEMPLATE_CUSTOMER_MESSAGE_REPLY = 'customer_message_reply';
+  public const TEMPLATE_CUSTOMER_MESSAGE_REPLY_VERSION = 1;
 
   public function __construct(
     protected ConfigFactoryInterface $configFactory,
@@ -148,7 +150,8 @@ class OutreachMailer {
     return ($template === self::TEMPLATE_STANDARD && $version === self::TEMPLATE_STANDARD_VERSION)
       || ($template === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED && $version === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION)
       || ($template === self::TEMPLATE_CUSTOMER_PROOF_READY && in_array($version, [...self::TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSIONS, self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION], TRUE))
-      || ($template === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED && $version === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION);
+      || ($template === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED && $version === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION)
+      || ($template === self::TEMPLATE_CUSTOMER_MESSAGE_REPLY && $version === self::TEMPLATE_CUSTOMER_MESSAGE_REPLY_VERSION);
   }
 
   /** Selects the current template version for direct, versionless callers. */
@@ -157,6 +160,7 @@ class OutreachMailer {
       self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED => self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION,
       self::TEMPLATE_CUSTOMER_PROOF_READY => self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION,
       self::TEMPLATE_CUSTOMER_REVISION_RECEIVED => self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION,
+      self::TEMPLATE_CUSTOMER_MESSAGE_REPLY => self::TEMPLATE_CUSTOMER_MESSAGE_REPLY_VERSION,
       default => self::TEMPLATE_STANDARD_VERSION,
     };
   }
@@ -205,6 +209,16 @@ class OutreachMailer {
    * and only http(s) links become anchors after escaping.
    */
   private function renderHtmlMessage(string $subject, string $body, string $template = self::TEMPLATE_STANDARD): string {
+    if ($template === self::TEMPLATE_CUSTOMER_MESSAGE_REPLY) {
+      // Only the system-appended destination is a CTA. A customer/staff URL
+      // inside the reply must never replace the conversation button.
+      $url = '';
+      if (preg_match('/\n\nOpen your workspace:\n(https?:\/\/[^\s]+\/portal\?section=messages&thread=[0-9a-f-]{36})\n\nSign in with the email address that received this message to continue the conversation\.\s*$/', $body, $match)) {
+        $url = $match[1];
+        $body = substr($body, 0, -strlen($match[0]));
+      }
+      return $this->renderCustomerConciergeMessage($subject, $body, 'A reply from FAMtastic', 'Your conversation', 'Open your conversation →', 'Sign in with the email address that received this message to read the full conversation and reply.', $url);
+    }
     if ($template === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED) {
       return $this->renderCustomerIntakeSubmittedMessage($subject, $body);
     }
@@ -300,13 +314,14 @@ class OutreachMailer {
   }
 
   /** Shared visual system for account-owned Concierge transactional notices. */
-  private function renderCustomerConciergeMessage(string $subject, string $body, string $headline, string $badge, string $ctaLabel, string $assurance): string {
+  private function renderCustomerConciergeMessage(string $subject, string $body, string $headline, string $badge, string $ctaLabel, string $assurance, ?string $explicitCtaUrl = NULL): string {
     $safeSubject = htmlspecialchars($subject, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $safeHeadline = htmlspecialchars($headline, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $safeBadge = htmlspecialchars($badge, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $safeCtaLabel = htmlspecialchars($ctaLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $safeAssurance = htmlspecialchars($assurance, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    [$body, $reviewUrl] = $this->extractConciergeCta($body);
+    if ($explicitCtaUrl === NULL) [$body, $reviewUrl] = $this->extractConciergeCta($body);
+    else $reviewUrl = $explicitCtaUrl;
     $paragraphs = preg_split('/\R{2,}/', trim($body)) ?: [];
     $content = '';
     foreach ($paragraphs as $paragraph) {

@@ -77,6 +77,10 @@ export const createCustomerReferral = (payload) => request('/referrals', { metho
 export const createCustomerThread = (payload) => request('/threads', { method: 'POST', csrf: true, body: JSON.stringify(payload) });
 export const getCustomerThread = (id) => request(`/threads/${encodeURIComponent(id)}`);
 export const replyCustomerThread = (id, body) => request(`/threads/${encodeURIComponent(id)}`, { method: 'POST', csrf: true, body: JSON.stringify({ body }) });
+export const getCustomerMessages = () => request('/messages');
+export const getMessageThread = (id) => request(`/messages/${encodeURIComponent(id)}`);
+export const readMessageThread = (id, lastMessageId) => request(`/messages/${encodeURIComponent(id)}/read`, { method: 'POST', csrf: true, body: JSON.stringify({ last_message_id: lastMessageId }) });
+export const replyMessageThread = (id, body, clientMessageId) => request(`/messages/${encodeURIComponent(id)}`, { method: 'POST', csrf: true, body: JSON.stringify({ body, client_message_id: clientMessageId }) });
 
 async function deepDiveRequest(invitation, secret, path = '', options = {}) {
   const response = await fetch(`${WEB_PREFIX}/api/deep-dive/${encodeURIComponent(invitation)}${path}`, {

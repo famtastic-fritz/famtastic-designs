@@ -12,6 +12,7 @@ use Drupal\Core\Flood\FloodInterface;
 use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\AttributionService;
 use Drupal\famtastic_pipeline\Service\ConciergeWebhookService;
+use Drupal\famtastic_pipeline\Service\ClientMessagingService;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService;
@@ -38,6 +39,7 @@ class PublicRequestController extends ControllerBase {
     protected LoggerInterface $logger,
     protected FloodInterface $flood,
     protected AttributionService $attribution,
+    protected ?ClientMessagingService $messages = NULL,
   ) {}
 
   /**
@@ -56,6 +58,7 @@ class PublicRequestController extends ControllerBase {
       $container->get('logger.channel.famtastic_pipeline'),
       $container->get('flood'),
       $container->get('famtastic_pipeline.attribution'),
+      $container->get('famtastic_pipeline.client_messages'),
     );
   }
 
@@ -140,6 +143,9 @@ class PublicRequestController extends ControllerBase {
     }
 
     $intake = $this->saveRequest($prospect, $data, $answers, $type);
+    // Save the conversation before proof/provider work can fail. Public
+    // intake and account-owned Website Requests are different records.
+    $this->messages?->importIntake((int) $intake->id());
     $previewDelivery = $this->previews->createForPublicLead((int) $prospect->id(), (int) $intake->id());
     // Public intake uses the same delivery-scoped campaign binding as a
     // verified cold lead. The dedicated job must never create a generic
@@ -328,11 +334,12 @@ class PublicRequestController extends ControllerBase {
       }
     }
     $base = rtrim((string) (getenv('FRONTEND_BASE_URL') ?: $this->pipelineConfigFactory->get('famtastic_pipeline.settings')->get('frontend_base_url')), '/');
-    $operationsUrl = $base !== '' ? $base . '/web/admin/famtastic/metric/website-requests' : '';
+    $conversation = $this->messages?->importIntake((int) $intake->id());
+    $operationsUrl = $base !== '' ? $base . '/web/admin/famtastic/messages' . ($conversation ? '/' . $conversation : '') : '';
     $lines[] = '';
     $lines[] = 'Request ID: ' . $intake->id() . ' · Prospect ID: ' . $prospect->id();
     if ($operationsUrl !== '') {
-      $lines[] = 'Open Website Requests: ' . $operationsUrl;
+      $lines[] = 'Open the contact conversation: ' . $operationsUrl;
     }
     $lines[] = 'Your complete submitted intake is saved to your secure request record; raw data dumps are never emailed.';
     return implode("\n", $lines);

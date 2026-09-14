@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — A contact alert needs a readable conversation
+
+The contact form saved the original body in intake.about but its alert linked to a separate Website Requests table. Import that original submission once into the same durable conversation used by admin and portal, and deep-link the alert to it. A verified matching email may claim an unowned inquiry; a browser-supplied customer or organization ID must never grant access. Staff portal sign-in must authenticate the real Drupal account without requiring a synthetic customer record. Keep saved reply, queued email, SMTP acceptance, unread state and next actor distinct.
+
+The desktop 76rem shell cap plus nine fixed-width columns squeezed email addresses and briefs into tall rows. Remove the inner cap, use five task-relevant columns and disclosure for the original brief, and apply database filters before pagination. Drupal sanitizes raw markup controls: render real form elements or an escaped inline template and test the actual rendered output. Validate the whole customer lifecycle in a disposable runtime with memory mail; mock UI fixtures do not prove customer persistence.
+
+Proof dispatch returned waiting_callback while its job said completed and request status still said not_started. Trace exact request/campaign/provider records and validate actual artifacts before reporting readiness. The correct detailed request14, not registration duplicate13, received Kesline's exact three-concept send. Preserve duplicate data through reversible archive. A code status correction alone does not establish an unattended creative worker.
+
 ## 2026-09-14 — Customer source ownership and independent-clone proof
 
 Observation: a dedicated business database did not make agency-nested source portable;

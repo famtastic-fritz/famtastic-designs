@@ -1,5 +1,11 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-14 — Contact-to-portal messaging and proof recovery
+
+The client inbox reuses Drupal conversation/message records, with exact verified-email contact claims, staff permissions, tenant-scoped client access, unread/needs-reply state, bounded read acknowledgments and atomic retry-safe reply/outbox writes. Admin and portal presentation implement the approved mockup. Search/status/date filters operate before record pagination; desktop request rows use the available space. Source, database-backed tests and responsive browser checks are complete; production acceptance follows the exact-SHA release in `plans/client-messaging-proof-rescue/brief.md`.
+
+Kesline request14's three concepts are separately production-proven: protected account delivery plus one SMTP-accepted notice, exact outbox633, 2026-09-14T20:27:27Z. This is not recipient-read or customer-launch evidence. The worker had returned a local callback handoff with no generated variants; a completed dispatch row did not establish creative completion. See `plans/client-messaging-proof-rescue/kesline-proof-delivery.md` for exact evidence and the remaining unattended-worker boundary.
+
 ## 2026-09-14 — Independent Locs source and release verified
 
 Current canonical private source is `https://github.com/famtastic-fritz/site-tighten-up-your-locs`, not an agency app/pilot directory. Customer source `e25f7f1a92cdae2093a760481d100ea0b32a111e` is live; fresh-clone tests/build, exact runtime/public hash parity, guarded code rollback/restoration and live responsive/routes checks pass. The site owns complete portable source, locks, tests, foundation 1.0.0, agent/design/research/learning records and release tooling. Proven duplicate agency working source is removed; historical delivery records remain. GitHub hosted CI is blocked before start by an account billing lock, not claimed passing. Evidence and preserved-history mapping: `docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md`.

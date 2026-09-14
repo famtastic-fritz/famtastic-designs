@@ -89,6 +89,20 @@ test('exposes the staff command center link only for the authorized capability',
   });
 });
 
+test('an authorized staff account opens messaging without inventing a customer workspace', async () => {
+  const session = { customer: null, staff: { display_name: 'Staff' }, can_manage_messages: true };
+  const forbidden = async () => { throw new Error('Staff-only accounts have no customer workspace.'); };
+  assert.deepEqual(await loadCustomerPortal({ getSession: async () => session, getWorkspace: forbidden, getCatalog: forbidden }), {
+    session, workspace: null, catalog: null,
+  });
+});
+
+test('an existing staff profile without memberships can still open the client inbox', async () => {
+  const session = { customer: { email: 'staff@example.test' }, organizations: [], can_manage_messages: true };
+  const forbidden = async () => { throw new Error('No organization belongs to this staff profile.'); };
+  assert.equal((await loadCustomerPortal({ getSession: async () => session, getWorkspace: forbidden, getCatalog: forbidden })).workspace, null);
+});
+
 test('ordinary customers and untrusted destinations receive no staff link', () => {
   assert.equal(getStaffCommandCenterLink({ customer: { verified: true } }), null);
   assert.equal(getStaffCommandCenterLink({

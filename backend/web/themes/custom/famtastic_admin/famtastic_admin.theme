@@ -39,8 +39,18 @@ function famtastic_admin_preprocess_page(array &$variables): void {
   if (!str_starts_with($route_name, 'famtastic_pipeline.')) {
     return;
   }
+  $message_label = 'Messages';
+  if (\Drupal::currentUser()->hasPermission('administer famtastic pipeline')
+    && \Drupal::hasService('famtastic_pipeline.client_messages')
+    && \Drupal::database()->schema()->tableExists('famtastic_portal_read')) {
+    $unread = \Drupal::service('famtastic_pipeline.client_messages')->unreadCount(\Drupal::currentUser());
+    if ($unread > 0) {
+      $message_label .= ' (' . $unread . ')';
+    }
+  }
   $links = [
     'operations' => ['Operations', 'famtastic_pipeline.operations'],
+    'messages' => [$message_label, 'famtastic_pipeline.client_messages_admin'],
     'attention' => ['Attention', 'famtastic_pipeline.operations_attention'],
     'campaigns' => ['Campaigns', 'famtastic_pipeline.campaign_operations'],
     'marketing' => ['Marketing', 'famtastic_pipeline.marketing'],
@@ -61,6 +71,7 @@ function famtastic_admin_preprocess_page(array &$variables): void {
   }
   $variables['famtastic_admin_navigation'] = [
     '#type' => 'container',
+    '#cache' => ['max-age' => 0, 'contexts' => ['user']],
     '#attributes' => ['class' => ['famtastic-admin-nav'], 'aria-label' => 'FAMtastic staff navigation'],
   ] + $items;
 }

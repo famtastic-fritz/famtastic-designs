@@ -2,15 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import {
   createCustomerReferral,
-  createCustomerThread,
   createWebsiteRequest,
   customerLogout,
   customerSession,
   decideWebsiteRequestProof,
   getCustomerCatalog,
-  getCustomerThread,
   getCustomerWorkspace,
-  replyCustomerThread,
   updateCustomerPreferences,
   updateCustomerProfile,
   updateWebsiteRequest,
@@ -31,6 +28,7 @@ import PortalServicesView from '../components/portal/PortalServicesView.jsx';
 import PortalFilesView from '../components/portal/PortalFilesView.jsx';
 import PortalAnalyticsView from '../components/portal/PortalAnalyticsView.jsx';
 import PortalMessagesView from '../components/portal/PortalMessagesView.jsx';
+import usePortalInbox from '../components/portal/usePortalInbox.js';
 import PortalShayAssistant from '../components/portal/PortalShayAssistant.jsx';
 import PortalSupportView from '../components/portal/PortalSupportView.jsx';
 import PortalFAQView from '../components/portal/PortalFAQView.jsx';
@@ -64,13 +62,14 @@ export default function CustomerPortalDashboard() {
   const [menu, setMenu] = useState(false);
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
-  const [activeThread, setActiveThread] = useState(null);
   const [faqSearch, setFaqSearch] = useState('');
   const [busy, setBusy] = useState(false);
   const [editingRequest, setEditingRequest] = useState(continuingWebsiteLead ? {} : null);
   const [activeRequestId, setActiveRequestId] = useState(null);
   const [targetRequest, setTargetRequest] = useState('');
   const proofIntentHandled = useRef(false);
+  const messageIntentHandled = useRef('');
+  const messages = usePortalInbox({ enabled: state === 'ready', isViewing: section === 'messages', organization: workspace?.organization?.public_id });
 
   useEffect(() => {
     setState('loading');
@@ -84,6 +83,9 @@ export default function CustomerPortalDashboard() {
         setSession(nextSession);
         setWorkspace(nextWorkspace);
         setCatalog(nextCatalog);
+        if (!nextWorkspace && nextSession.can_manage_messages === true) {
+          setSection(['messages', 'billing'].includes(requestedTab) ? requestedTab : 'messages');
+        }
         setState('ready');
       })
       .catch((exception) => {
@@ -96,6 +98,14 @@ export default function CustomerPortalDashboard() {
         setState('error');
       });
   }, [navigate, loadAttempt]);
+
+  useEffect(() => {
+    const thread = searchParams.get('thread');
+    if (state !== 'ready' || !thread || messageIntentHandled.current === thread) return;
+    messageIntentHandled.current = thread;
+    setSection('messages');
+    messages.loadThread(thread);
+  }, [state, searchParams, messages.loadThread]);
 
   useEffect(() => {
     if (!workspace || !session || proofIntentHandled.current) return;
@@ -186,9 +196,9 @@ export default function CustomerPortalDashboard() {
   const org = workspace?.organization;
   const project = workspace?.projects?.[0];
   const order = workspace?.orders?.[0];
-  const openThreadsCount = (workspace?.threads || []).filter(
-    (thread) => thread.status === 'open'
-  ).length;
+  const unreadMessagesCount = messages.inbox?.unread_count || 0;
+  const needsReplyCount = messages.inbox?.needs_reply_count || 0;
+  const staffOnly = !workspace && session?.can_manage_messages === true;
   const staffCommandCenter = getStaffCommandCenterLink(session);
 
   const nextAction = useMemo(() => {
@@ -227,9 +237,11 @@ export default function CustomerPortalDashboard() {
   }
 
   const go = (id) => {
+    if (staffOnly && !['messages', 'billing'].includes(id)) return;
     setSection(id);
     setNotice('');
     setMenu(false);
+    navigate(`/portal?tab=${encodeURIComponent(id)}`, { replace: true });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -275,36 +287,6 @@ export default function CustomerPortalDashboard() {
         },
       }));
     }, 'Communication preferences saved.');
-  };
-
-  const openThread = (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    act(async () => {
-      await createCustomerThread({
-        ...Object.fromEntries(new FormData(form)),
-        organization: org.public_id,
-      });
-      await refresh();
-      form.reset();
-    }, 'Your request was sent.');
-  };
-
-  const viewThread = (id) =>
-    act(async () => {
-      const threadData = await getCustomerThread(id);
-      setActiveThread(threadData);
-    });
-
-  const replyThread = (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    act(async () => {
-      await replyCustomerThread(activeThread.thread.public_id, new FormData(form).get('body'));
-      const updated = await getCustomerThread(activeThread.thread.public_id);
-      setActiveThread(updated);
-      form.reset();
-    }, 'Reply sent.');
   };
 
   const refer = (event) => {
@@ -419,16 +401,18 @@ export default function CustomerPortalDashboard() {
   };
 
   return (
-    <div className={`portal-app ${menu ? 'menu-open' : ''}`}>
+    <div className={`portal-app ${menu ? 'menu-open' : ''} ${section === 'messages' ? 'is-messaging' : ''}`}>
       <PortalNav
-        hasBookingSites={Boolean(workspace.booking_sites?.length)}
+        hasBookingSites={Boolean(workspace?.booking_sites?.length)}
         section={section}
         go={go}
         menu={menu}
         setMenu={setMenu}
         org={org}
-        customer={session.customer}
-        openThreadsCount={openThreadsCount}
+        customer={session.customer || session.staff}
+        unreadMessagesCount={unreadMessagesCount}
+        needsReplyCount={needsReplyCount}
+        staffOnly={staffOnly}
         onSignOut={() =>
           act(async () => {
             await customerLogout();
@@ -438,13 +422,19 @@ export default function CustomerPortalDashboard() {
       />
 
       <main className="portal-main">
-        <PortalHeader section={section} customer={session.customer} org={org} />
+        <PortalHeader section={section} customer={session.customer || session.staff} org={org} isStaff={staffOnly || (section === 'messages' && messages.inbox?.is_staff)} />
 
         {staffCommandCenter && (
           <a className="portal-staff-command-center" href={staffCommandCenter.href}>
             <span aria-hidden="true">↗</span>
             {staffCommandCenter.label}
           </a>
+        )}
+
+        {section !== 'messages' && messages.error && (
+          <div className="portal-inbox-feedback" role="status">
+            Messages need attention. <button type="button" onClick={() => go('messages')}>Open inbox</button>
+          </div>
         )}
 
         {notice && (
@@ -473,6 +463,7 @@ export default function CustomerPortalDashboard() {
             nextAction={nextAction}
             go={go}
             catalog={catalog}
+            inbox={messages.inbox}
           />
         )}
 
@@ -526,13 +517,7 @@ export default function CustomerPortalDashboard() {
         {section === 'messages' && (
           <PortalMessagesView
             workspace={workspace}
-            org={org}
-            activeThread={activeThread}
-            setActiveThread={setActiveThread}
-            viewThread={viewThread}
-            onReplyThread={replyThread}
-            onOpenThread={openThread}
-            busy={busy}
+            messages={messages}
           />
         )}
 
@@ -578,6 +563,8 @@ export default function CustomerPortalDashboard() {
         {section === 'billing' && (
           <PortalBillingView
             workspace={workspace}
+            inbox={messages.inbox}
+            go={go}
           />
         )}
 
