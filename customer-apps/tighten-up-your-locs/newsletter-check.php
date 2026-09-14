@@ -22,6 +22,7 @@ if($d['action']==='dispatch'){
     if(!$row||($receipt['subscriber_id']??null)!==$row->id)throw new RuntimeException('bound_fixture_required');
     $notice=DB::table('newsletter_outbox')->where('subscriber_id',$row->id)->first();
     if($notice?->status==='sent'){echo json_encode(['status'=>'already_accepted']);exit;}
+    if($notice?->status==='sending'){echo json_encode(['status'=>'scheduler_in_progress']);exit;}
     if($notice?->status!=='queued'||DB::table('newsletter_outbox')->where('status','queued')->count()!==1)throw new RuntimeException('fixture_not_the_only_queued_notice');
     echo json_encode(app(App\Services\NewsletterDispatcher::class)->dispatch(1));exit;
 }

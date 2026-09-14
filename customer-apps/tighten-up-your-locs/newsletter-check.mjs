@@ -15,7 +15,9 @@ try{
  let r=await post();assert.equal(r.status,200);assert.equal((await r.json()).status,'pending');let data=probe('read');assert.equal(data.status,'pending');assert.equal(data.outbox_count,1);
  r=await post();assert.equal(r.status,200);assert.equal(probe('read').outbox_count,1);
  probe('dispatch');
- data=probe('read');assert.equal(data.outbox_status,'sent');assert.ok(data.provider_message_id);
+ data=probe('read');
+ for(let i=0;data.outbox_status==='sending'&&i<12;i++){await new Promise(resolve=>setTimeout(resolve,1500));data=probe('read');}
+ assert.equal(data.outbox_status,'sent');assert.ok(data.provider_message_id);
  for(const url of Object.values(data.links))assert.equal(new URL(url).origin,'https://tightenupyourlocs.com');
  const confirm=new URL(data.links.confirmation_url).pathname,leave=new URL(data.links.unsubscribe_url).pathname;
  r=await request(confirm);assert.equal(r.status,200);let html=await r.text();assert.equal(probe('read').status,'pending');let csrf=/name="_token" value="([^"]+)"/.exec(html)?.[1];assert.ok(csrf);
