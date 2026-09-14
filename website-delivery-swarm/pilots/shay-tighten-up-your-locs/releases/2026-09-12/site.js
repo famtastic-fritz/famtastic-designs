@@ -1,4 +1,4 @@
-import { initHeroGallery } from './hero-gallery.js?v=20260914-letter';
+import { initHeroGallery } from './hero-gallery.js?v=20260914-loop2';
 import { initNewsletter } from './newsletter.js?v=20260914-letter';
 export const SITE_KEY = "site-dffd4cb9c3aa47fd";
 export function canonicalEndpoint(value, kind, origin) {

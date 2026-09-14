@@ -12,12 +12,12 @@ export function initHeroGallery(doc = document, win = window) {
   const toggle = root.querySelector('[data-rotation]');
   const announcement = root.querySelector('[data-gallery-status]');
   const motion = win.matchMedia('(prefers-reduced-motion: reduce)');
-  let index = 0, paused = motion.matches, hovered = false, focused = false, timer, pointer;
+  let index = 0, paused = motion.matches, focused = false, timer, pointer;
   function schedule() {
     win.clearTimeout(timer);
     toggle.textContent = paused ? 'Resume slideshow' : 'Pause slideshow';
     toggle.setAttribute('aria-pressed', String(paused));
-    if (!paused && !hovered && !focused && !pointer && !doc.hidden) timer = win.setTimeout(() => { move(1); schedule(); }, GALLERY_INTERVAL);
+    if (!paused && !focused && !pointer && !doc.hidden) timer = win.setTimeout(() => { move(1); schedule(); }, GALLERY_INTERVAL);
   }
   function show(next, manual = false) {
     const image = slides[next]?.querySelector('img');
@@ -41,8 +41,6 @@ export function initHeroGallery(doc = document, win = window) {
   });
   root.addEventListener('focusin', event => { focused = event.target.matches(':focus-visible'); schedule(); });
   root.addEventListener('focusout', event => { if (!root.contains(event.relatedTarget)) { focused = false; schedule(); } });
-  root.addEventListener('mouseenter', () => { hovered = true; schedule(); });
-  root.addEventListener('mouseleave', () => { hovered = false; schedule(); });
   root.addEventListener('pointerdown', event => {
     if (event.isPrimary === false || (event.button !== undefined && event.button !== 0) || event.target.closest('button')) return;
     pointer = { id: event.pointerId, x: event.clientX, y: event.clientY }; schedule();

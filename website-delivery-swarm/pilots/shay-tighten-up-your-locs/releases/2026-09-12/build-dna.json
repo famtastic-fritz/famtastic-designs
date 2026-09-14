@@ -27,9 +27,11 @@
       "capability": "business-owned-newsletter-and-editorial-local-site",
       "attempt": 1,
       "result": {
-        "status": "63_application_tests_36_public_tests_11_admin_tests_and_responsive_QA_passed_pending_newsletter_release",
+        "status": "newsletter_and_local_SEO_deployed_hosted_lifecycle_passed_continuous_hover_followup_pending",
         "seo": "local_metadata_canonical_structured_data_robots_sitemap",
-        "campaign_sending": false
+        "campaign_sending": false,
+        "newsletter_provider_message_id": "1x66OA-00000002wiy-1814",
+        "public_package_sha256": "52fde9721e21dedac5fd10eb88c48f43c81a7845b786b26169395ca81471b2aa"
       },
       "evidence_ref": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/SEO-AND-PUBLIC-UX-EVIDENCE-2026-09-14.md",
       "execution": {
@@ -310,7 +312,7 @@
     {
       "role": "index.html",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/index.html",
-      "sha256": "1f0f64ed246689fd8e04b51ed53eaa70249befa05638d2f9b7d99e59affb6f8a",
+      "sha256": "b7c800149e3286aa3e2af488d714663f4e55d1a31541ccd4b3f382c69dafbbf2",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -359,7 +361,7 @@
     {
       "role": "site.js",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site.js",
-      "sha256": "5cd85c9d72c626b203085ffb2ebc69868053e5c80a0451cbe4035130cc77cd4c",
+      "sha256": "54734ac4d3b8841f71269b04f3c8457501bf31ba01215864c871b1fe72e1e4b0",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -394,14 +396,14 @@
     {
       "role": "gallery-source",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/hero-gallery.js",
-      "sha256": "1c3f9984c005752c66f197a6176ac64c3c3c91c85d025de3820084c34cac3a69",
+      "sha256": "a488e3ddf0dfdcd0f7efb85667f9545cd3b4ac5cd79daa793b355d4cdd5e878a",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
     {
       "role": "gallery-source",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/hero-gallery.test.mjs",
-      "sha256": "9db952423b9f43c01a08e094d4b13f77e7859d47bf761dc31c38edea7ac10da7",
+      "sha256": "33bc68158e734ca829834dd9b3ac9db9ec9a9f72f1570576ba3c6b093c6944aa",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -466,7 +468,7 @@
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/SEO-AND-PUBLIC-UX-EVIDENCE-2026-09-14.md",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build",
-      "sha256": "96e08cb084ad451a5228a33521e97477b5af1de8c00f3d99af6d3384da681ef1"
+      "sha256": "3a8e2c8aaceaa183e56d7762d228226a54477f437a5e9c83130d80d1956ffd23"
     }
   ],
   "retrieval": {

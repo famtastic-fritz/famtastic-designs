@@ -1,5 +1,7 @@
 # FAMtastic Designs capability registry
 
+Locs newsletter addition: standalone18-table runtime includes explicit double opt-in, suppression/unsubscribe and private reader view. Hosted own-mailbox lifecycle/SMTP acceptance passed; fixture removed. No campaign sending. Public local-SEO foundations are published but search indexing/rankings/GBP are not verified. Reusable recipe requires business-owned runtime; Component Studio capture remains source/discovery, not automatic Laravel import. Source/proof: `customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md`.
+
 Owner correction September14: the agency-hosted Locs Owner Desk was deployed but architecturally rejected. It must not be described as satisfying the independent-business requirement. `customer-apps/tighten-up-your-locs/` is now deployed and cut over: same-domain admin, dedicated database/users, independent auth/sessions, booking API/outbox/scheduler/backups. Hosted acceptance passed and the one legacy request was reconciled without alerts; old Locs authority is retired. Exact evidence and remaining personal-sign-in/inbox/restore limits are in its `RELEASE-2026-09-14.md`. Customer ownership is not merely an agency tenant binding. The older portal evidence below is historical, not the current Locs architecture.
 
 Gallery release acceptance: `53071d32` is live on Locs, with apex/www source-hash checks and browser autoplay/pause/manual navigation proof. No change to Owner Desk or analytics capability claims.

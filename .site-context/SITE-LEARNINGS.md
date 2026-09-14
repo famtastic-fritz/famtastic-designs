@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Newsletter delivery and continuous motion
+
+Do not put a provider send inside an automatically retried database transaction: acceptance followed by a deadlock can duplicate mail. Database-only transactions may retry; SMTP-bearing transactions attempt once and preserve uncertain state for explicit review. Confirm this outside nested test transactions. Newsletter consent is separate from booking, and a confirmation GET is read-only. Continuous galleries must not stick paused after touch-emulated hover; retain keyboard/reduced-motion pause without hover suspension. Local SEO must use verified facts and real HTTP/canonical checks, not guessed addresses or ranking promises.
+
 ## 2026-09-14 — Preserve records while changing ownership boundaries
 
 Live correction: independent Locs auth/DB/API and public cutover are verified; the existing request retained its UUID and mapped fields, with no duplicate alert. Disable legacy entry points and drain/block stale writers before export; verify exact-site guard definitions and immutable inventory, then reconcile the target. Keep the original records and private backups. Test hosted PHP directory redirects separately from the development server, and keep visitor/owner test cookie jars separate. A source commit, migration, SMTP acceptance, personal sign-in and inbox receipt are distinct evidence.

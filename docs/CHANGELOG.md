@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-14 — The Locs Letter and local search foundations
+
+Independent double-opt-in signup, persistent unsubscribe, private owner readership view and one-attempt/uncertain SMTP delivery are deployed and hosted-tested. No campaign sender or automatic booking enrollment. Public Ruby Signal newsletter panel, dot/swipe slideshow, Sisterlocks/Port St. Lucie metadata, canonical/social/schema/robots/sitemap are published. Exact release receipts and pending final gateway/hover follow-up: `customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md`. The independently reproduced SMTP retry issue was fixed before release.
+
 ## 2026-09-14 — Independent Locs booking cutover verified
 
 - Own-domain admin and Laravel runtime, dedicated MySQL database/users, sessions, mail queue and scheduler now live. One legacy request preserved and reconciled field-by-field; old Locs authority and worker retired without deleting its original record.

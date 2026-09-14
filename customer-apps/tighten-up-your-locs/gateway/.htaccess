@@ -1,6 +1,11 @@
 Options -Indexes -MultiViews
 DirectoryIndex index.php
 RewriteEngine On
+# Child rewrite contexts do not inherit the public root's canonical rules.
+RewriteCond %{HTTP_HOST} ^(?:www\.)?tightenupyourlocs\.com(?::[0-9]+)?$ [NC]
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} ^www\.tightenupyourlocs\.com(?::[0-9]+)?$ [NC]
+RewriteRule ^ https://tightenupyourlocs.com%{REQUEST_URI} [R=308,L,NE]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [L]

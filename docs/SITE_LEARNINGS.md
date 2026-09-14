@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Provider boundaries and real hosting context
+
+Newsletter review reproduced a duplicate SMTP send caused by a retrying DB helper; the isolated root-transaction regression now proves one attempt, uncertain status and no automatic resend. Signup, confirmation, unsubscribe and owner visibility belong to the client's own runtime. Apache child rewrite contexts need explicit canonical HTTPS rules; checking only the homepage misses admin/API behavior. Public SEO metadata/schema are source improvements, not proof of Google indexing or map visibility. Prefer continuous dot/swipe autoplay without touch-emulated hover stalls, while respecting keyboard focus and reduced motion.
+
 ## 2026-09-14 — Independent runtime acceptance is now deployed
 
 Locs' own domain, database credentials/tables, owner auth, public API, queue and scheduler replaced the rejected agency runtime. Hosted tests and field reconciliation passed with synthetic records removed and original legacy data retained read-only. A trigger body is one stored SQL statement but Drupal needs its delimiter option explicitly; verify real runtime behavior before cutover. Separate HTTP test sessions must model separate visitor/owner actors. Record SMTP acceptance without calling it inbox delivery, and keep backup creation distinct from a restore drill.
