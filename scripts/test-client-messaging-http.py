@@ -68,11 +68,18 @@ for metric in ['website-requests', 'support', 'notifications', 'customers', 'cam
     (evidence / ('metric-' + metric + '.html')).write_text(html if isinstance(html, str) else json.dumps(html))
     check('metric_' + metric + '_renders', code == 200 and 'An unexpected error' not in html and 'Filter' in html)
     if metric == 'website-requests':
+        check('website_requests_default_excludes_customer_archived', 'Inbox Fixture Website' in html and 'Customer Archived Duplicate Fixture' not in html)
+        check('website_requests_archived_option_without_legacy_status', '<option value="archived">Archived</option>' in html)
         check('website_requests_brief_details_survive_render', '<details class="famtastic-request-brief"' in html and '<summary>View brief</summary>' in html)
         head = re.search(r'<thead>(.*?)</thead>', html, re.S)
         check('website_requests_five_columns', head is not None and len(re.findall(r'<th(?:\s|>)', head.group(1))) == 5)
 code, html, _ = call(staff, '/admin/famtastic/metric/website-requests?q=Inbox&status=submitted')
 check('website_requests_filter_values_preserved', code == 200 and 'value="Inbox"' in html and 'value="submitted" selected' in html and 'Inbox Fixture Website' in html)
+code, html, _ = call(staff, '/admin/famtastic/metric/website-requests?status=submitted')
+check('website_requests_normal_status_excludes_customer_archived', code == 200 and 'Inbox Fixture Website' in html and 'Customer Archived Duplicate Fixture' not in html)
+code, html, _ = call(staff, '/admin/famtastic/metric/website-requests?status=archived')
+(evidence / 'metric-website-requests-archived.html').write_text(html if isinstance(html, str) else json.dumps(html))
+check('website_requests_explicit_archive_returns_customer_archived', code == 200 and 'Customer Archived Duplicate Fixture' in html and 'Inbox Fixture Website' not in html and 'value="archived" selected' in html)
 code, _, _ = call(staff, '/api/customer/messages/' + thread, {'body': 'Our reply is saved here.', 'client_message_id': 'http-staff-reply-0001'})
 check('staff_reply_without_csrf_denied', code == 403)
 csrf = call(staff, '/session/token')[1]

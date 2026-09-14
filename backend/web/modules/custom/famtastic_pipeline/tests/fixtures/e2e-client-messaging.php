@@ -10,7 +10,7 @@ $db = \Drupal::database();
 $now = \Drupal::time()->getRequestTime();
 $users = \Drupal::entityTypeManager()->getStorage('user');
 $role = \Drupal\user\Entity\Role::create(['id' => 'inbox_staff', 'label' => 'Inbox fixture staff']);
-$role->grantPermission('administer famtastic pipeline')->grantPermission('access administration pages')->grantPermission('access toolbar')->save();
+$role->grantPermission('administer famtastic pipeline')->grantPermission('access administration pages')->save();
 $accounts = [];
 foreach (['staff', 'customer', 'foreign', 'unverified'] as $kind) {
   $email = $kind . '-inbox@example.test';
@@ -38,7 +38,12 @@ $requestId = (int) $db->insert('famtastic_project_request')->fields([
   'public_id' => \Drupal::service('uuid')->generate(), 'organization_id' => $organization, 'customer_id' => $accounts['customer']['customer_id'], 'prospect_id' => (int) $prospect->id(),
   'intake_id' => (int) $intake->id(), 'project_name' => 'Inbox Fixture Website', 'business_name' => 'Inbox Proof Fixture', 'status' => 'submitted', 'intake_data' => '{}', 'created' => $now, 'changed' => $now,
 ])->execute();
+$archivedRequestId = (int) $db->insert('famtastic_project_request')->fields([
+  'public_id' => \Drupal::service('uuid')->generate(), 'organization_id' => $organization, 'customer_id' => $accounts['customer']['customer_id'], 'prospect_id' => (int) $prospect->id(),
+  'project_name' => 'Customer Archived Duplicate Fixture', 'business_name' => 'Inbox Proof Fixture', 'status' => 'submitted',
+  'customer_archived_at' => $now, 'intake_data' => '{}', 'created' => $now, 'changed' => $now + 1,
+])->execute();
 \Drupal::configFactory()->getEditable('system.mail')->set('interface.default', 'test_mail_collector')->save();
 \Drupal::configFactory()->getEditable('famtastic_pipeline.settings')->set('frontend_base_url', 'https://famtasticdesigns.com')->set('notification_to_email', 'staff-inbox@example.test')->save();
-$state = ['accounts' => $accounts, 'intake_id' => (int) $intake->id(), 'request_id' => $requestId, 'initial_outbox_count' => (int) $db->select('famtastic_notification_outbox', 'n')->countQuery()->execute()->fetchField()];
+$state = ['accounts' => $accounts, 'intake_id' => (int) $intake->id(), 'request_id' => $requestId, 'archived_request_id' => $archivedRequestId, 'initial_outbox_count' => (int) $db->select('famtastic_notification_outbox', 'n')->countQuery()->execute()->fetchField()];
 file_put_contents((string) getenv('FAMTASTIC_INBOX_STATE'), json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));

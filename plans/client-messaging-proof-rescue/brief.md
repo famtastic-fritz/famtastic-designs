@@ -51,3 +51,9 @@ Final backend module unit suite: 203 tests / 1078 assertions. Disposable Drupal 
 Frontend build, Portal DNA34/34, loader/redirect8/8 and 11 responsive inbox browser checks passed at390/768/1280. These browser tests use mocked API responses. Staff with and without a customer workspace and fresh portal sign-in are covered. Fresh isolated customer lifecycle separately passed, including exactly three proofs, account ownership, commerce binding and all lifecycle assertions; evidence is .artifacts/fresh-customer-proof/fresh-customer-proof-20260914T203448Z-4518/evidence.json. Its source_sha is the base HEAD while reviewed changes were uncommitted, not a deployed source claim.
 
 Locked security fixes are limited to drupal/ai1.4.6→1.4.8 and composer/composer2.10.2→2.10.3; Composer validation/audit pass with zero advisories. Publication and live checks remain pending at this implementation checkpoint.
+
+## Release checkpoint — 20:49Z
+
+Source4599a22be878a6c7c9a4e4109b2fb2787703580a reached main and the canonical backend deployment completed at2026-09-14T20:49:28Z. Production migration8063 imported15 existing public requests without sending notifications. Frontend deployment and final browser acceptance remain pending.
+
+Follow-up source correction: the existing reversible archive uses customer_archived_at while retaining workflow status. Website Requests now excludes both archive representations in active filters and exposes them through the explicit Archived option. The full disposable HTTP smoke passed40/40 assertions, including actual default/Submitted/Archived rendering, at .artifacts/client-messaging/inbox-20260914T204840Z-11033/http-results.json. No saved request was deleted.

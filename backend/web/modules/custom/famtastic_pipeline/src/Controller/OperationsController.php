@@ -1653,16 +1653,31 @@ final class OperationsController extends ControllerBase {
     if ($proofField !== NULL) {
       $exactFields['proof'] = $alias . '.' . $proofField;
     }
-    OperationsRecordFilter::apply($query, $this->database, $values, $searchFields, $exactFields, $alias . '.' . $dateField);
-    if ($table === 'famtastic_project_request' && $values['status'] === '') {
-      $query->condition($alias . '.status', 'archived', '<>');
+    $queryValues = $values;
+    if ($table === 'famtastic_project_request') {
+      // Customer archive is a reversible visibility field; it deliberately
+      // preserves the underlying workflow status (for example submitted).
+      if ($values['status'] === 'archived') {
+        $queryValues['status'] = '';
+        $query->condition($query->orConditionGroup()
+          ->condition($alias . '.status', 'archived')
+          ->isNotNull($alias . '.customer_archived_at'));
+      }
+      else {
+        $query->condition($alias . '.status', 'archived', '<>')->isNull($alias . '.customer_archived_at');
+      }
     }
+    OperationsRecordFilter::apply($query, $this->database, $queryValues, $searchFields, $exactFields, $alias . '.' . $dateField);
     $action = Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => \Drupal::routeMatch()->getParameter('metric')])->toString();
     $html = '<form class="famtastic-record-filters" method="get" action="' . Html::escape($action) . '" aria-label="Filter records">'
       . '<label class="famtastic-record-filters__search" for="record-search">Search all records<input id="record-search" type="search" name="q" maxlength="160" value="' . Html::escape($values['q']) . '" placeholder="Name, email, or keyword"></label>';
     foreach ($exactFields as $key => $field) {
       $column = $key === 'proof' ? $proofField : $statusField;
       $options = $this->database->select($table, 'filter_options')->fields('filter_options', [$column])->distinct()->orderBy($column)->range(0, 100)->execute()->fetchCol();
+      if ($table === 'famtastic_project_request' && $key === 'status' && !in_array('archived', $options, TRUE)) {
+        $options[] = 'archived';
+        sort($options);
+      }
       $label = $key === 'proof' ? 'Proof stage' : ($statusField === 'marketing_status' ? 'Marketing status' : 'Status');
       $allLabel = in_array($table, ['famtastic_project_request', 'famtastic_job', 'famtastic_exception'], TRUE) && $key === 'status' ? 'All active' : 'All';
       $html .= '<label for="record-' . $key . '">' . $label . '<select id="record-' . $key . '" name="' . $key . '"><option value="">' . $allLabel . '</option>';
