@@ -2264,6 +2264,8 @@ Permanent rules:
 - Guidance: use the card’s real responsive viewport, nearly the full carousel width, and at least 390px preview height on phones. Verify the iframe viewport width, screenshot the result, and treat “present but unreadable” as a failed proof experience.
 ## 2026-09-14 — Production keys are not fixture slugs
 
+Navigation observation: an incidental ready-proof record could override an explicit booking destination. Guidance: explicit task links take precedence over default “next action” routing; fixtures must include mixed-account work, not just an empty project list.
+
 Observation: the booking fixture used a readable business slug, but the real customer binding and public booking artifact use a generated site key. The real owner was already bound; the narrow brand adapter missed it.
 
 Guidance: verify account, organization, request and exact site key from Drupal before release. Bind presentation to that key without granting access or adding a duplicate site. Recheck generated-key behavior, not only friendly demo fixtures.

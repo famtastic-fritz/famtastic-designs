@@ -3236,5 +3236,6 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 - The focused browser suite, Design DNA validator, navigation validator and fixtures, Node 22 production build, and fresh synthetic customer-journey evidence passed. No production or customer state changed.
 ## 2026-09-14 — Owner Desk production release and authoritative brand binding
 
+- Preserve explicit Owner Desk links when an account also has ready website proofs; keep proof-specific links and default proof routing intact. Added ready-proof browser regression at390/768/1280.
 - Integrated reviewed Owner Desk source into main under explicit deployment authorization; production proof is recorded separately in `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`.
 - Corrected Ruby Signal presentation mapping to the existing generated production site key, retaining tenant-independent reusable source and adding two focused tests.

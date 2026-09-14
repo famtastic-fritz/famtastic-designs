@@ -139,14 +139,16 @@ export default function CustomerPortalDashboard() {
         [3, 6].includes(request.proofs?.variants?.length)
     );
 
-    if (requestedSection && Object.hasOwn(LABELS, requestedSection)) {
+    const hasRequestedSection = requestedSection && Object.hasOwn(LABELS, requestedSection);
+    const showDefaultReadyProof = readyProof && !hasRequestedSection && !startWebsite;
+    if (hasRequestedSection) {
       setSection(requestedSection);
     }
     if (startWebsite) {
       setSection('projects');
       setEditingRequest((current) => current || {});
     }
-    if (requestId || readyProof) setSection('projects');
+    if (requestId || showDefaultReadyProof) setSection('projects');
     if (requestId) {
       setTargetRequest(requestId);
       if (requestedProofReady) {
@@ -165,7 +167,7 @@ export default function CustomerPortalDashboard() {
           `This proof link is not connected to the account signed in as ${session?.customer?.email || 'this account'}. Sign out, then sign in with the email address that received the proof-ready message.`
         );
       }
-    } else if (readyProof) {
+    } else if (showDefaultReadyProof) {
       setTargetRequest(readyProof.public_id);
       setNotice(`Your ${readyProof.proofs.variants.length} website concepts are ready below.`);
     }

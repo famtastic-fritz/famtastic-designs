@@ -59,7 +59,7 @@ try {
 						},
 						{ site_key: "other-business", business_name: "Other Business" },
 					],
-					website_requests: [],
+					website_requests: [{ public_id: 'ready-proof-fixture', proof_review_status: 'customer_ready', customer_archived: false, proofs: { variants: [{ id: 'a' }, { id: 'b' }, { id: 'c' }] } }],
 					threads: [],
 				};
 			else if (path.endsWith("/catalog")) payload = { products: [] };
@@ -141,6 +141,7 @@ try {
 
 		await page.goto(url + "portal/?section=booking");
 		await page.locator(".owner-desk").waitFor();
+		assert.equal(await page.getByText('Your 3 website concepts are ready below.', { exact: true }).count(), 0, 'explicit booking entry must not be replaced by a ready proof');
 		await page.getByLabel("Calendar timezone").selectOption("America/New_York");
 		assert.equal(
 			await page.locator(".owner-desk").getAttribute("data-brand"),
