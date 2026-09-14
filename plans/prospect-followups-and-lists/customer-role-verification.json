@@ -1,0 +1,178 @@
+{
+  "schema": "famtastic.customer-role-audit.v1",
+  "date": "2026-09-14",
+  "registered_user_count": 12,
+  "role_definition_count": 6,
+  "membership_count": 12,
+  "administrators": [
+    1
+  ],
+  "pipeline_staff": [
+    1
+  ],
+  "limited_proof_reviewers": [
+    7
+  ],
+  "agency_organization_id": 3,
+  "agency_member_uids": [
+    1
+  ],
+  "access_probes": {
+    "agency_organization_id": 3,
+    "registered_users": [
+      {
+        "uid": 1,
+        "routes": {
+          "famtastic_pipeline.operations": true,
+          "famtastic_pipeline.client_messages_admin": true,
+          "entity.user.collection": true,
+          "entity.user_role.collection": true
+        },
+        "agency_workspace_member": true,
+        "travel_conversation_access": true,
+        "is_staff": true,
+        "delivery": "sent"
+      },
+      {
+        "uid": 2,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      },
+      {
+        "uid": 3,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      },
+      {
+        "uid": 4,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      },
+      {
+        "uid": 5,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      },
+      {
+        "uid": 6,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": true,
+        "is_staff": false,
+        "delivery": "sent"
+      },
+      {
+        "uid": 7,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      },
+      {
+        "uid": 8,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      },
+      {
+        "uid": 9,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      },
+      {
+        "uid": 10,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      },
+      {
+        "uid": 11,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      },
+      {
+        "uid": 12,
+        "routes": {
+          "famtastic_pipeline.operations": false,
+          "famtastic_pipeline.client_messages_admin": false,
+          "entity.user.collection": false,
+          "entity.user_role.collection": false
+        },
+        "agency_workspace_member": false,
+        "travel_conversation_access": false
+      }
+    ],
+    "read_only_probes_rolled_back": true
+  },
+  "outreach": {
+    "customer_id": 6,
+    "uid": 6,
+    "organization_id": 6,
+    "prospect_id": null,
+    "message_id": 24,
+    "thread_id": 19,
+    "outbox_id": 637,
+    "sent_at": "2026-09-14T22:43:31Z",
+    "attempts": 1,
+    "smtp_accepted": true,
+    "customer_scoped_visibility": true,
+    "live_admin_render_verified": true
+  },
+  "permissions_changed": false,
+  "memberships_changed": false
+}

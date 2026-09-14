@@ -1,8 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Search customers independently; qualify the owner role
+
+Observation: Travel Addicts had a verified customer and Drupal login but no prospect. A prospect-led lookup missed Tarian Lee's account and caused an incorrect no-match conclusion. Guidance: search registered users, customers and organization names independently of prospects; a NULL prospect_id is valid and must not exclude a customer. Personalize from the actual saved business (courier express), not an assumed travel agency.
+
+Observation: all 12 customer memberships say owner, but only user 1 belongs to FAMtastic Designs organization 3 and has administrative permissions. Guidance: distinguish customer workspace ownership, limited proof-review permission and agency administration. Verify assigned roles, role admin flags, effective permissions, actual route gates and tenant membership together. Keep the shared portal staff capability tied to `administer famtastic pipeline`; do not promote an organization owner to staff. No permission changes were needed in this audit.
+
 ## 2026-09-14 — Prospect list release acceptance
 
-Production acceptance: backend `ff18b916` at 22:24:51Z installs update 8064 and preserves all 296 leads as Active. Live search, both staff list entry points, confirmation/Cancel and contained desktop/mobile controls passed. The real customer records were never moved during verification; exact evidence and the outstanding DTravelAddics recipient are in `plans/prospect-followups-and-lists/status.md`.
+Production acceptance: backend `ff18b916` at 22:24:51Z installs update 8064 and preserves all 296 leads as Active. Live search, both staff list entry points, confirmation/Cancel and contained desktop/mobile controls passed. The real customer records were never moved during verification; exact evidence and the resolved Travel Addicts follow-up are in `plans/prospect-followups-and-lists/status.md`.
 
 ## 2026-09-14 — Prospect identity, staff completion and safe stale forms
 

@@ -1,8 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-14 — Customer-only lookup and effective agency access
+
+All three selected-project emails are now SMTP-accepted and saved in scoped portal conversations. Travel Addicts was verified customer/user 6 with no prospect, correcting the incomplete initial lookup; exact outbox 637/message 24 was accepted once at 2026-09-14T22:43:31Z. The live staff view and customer-scoped service confirm the saved correspondence. Recipient inbox/read is not claimed.
+
+Production audit covers all 12 registered users, all 6 role definitions and all 12 memberships. Only user 1 has full FAMtastic staff/administration and agency-organization access; user 7 has limited proof-review permission. Customer `owner` is an organization membership role. All four staff route gates, agency ownership and the new conversation's staff/customer boundary were checked against actual accounts with rollback-only read probes. No roles were changed. Exact evidence: `plans/prospect-followups-and-lists/customer-role-verification.json`.
+
 ## 2026-09-14 — Prospect follow-ups and staff list organization
 
-Two exact owner-authorized selected-project messages are saved in the original customer conversations and SMTP-accepted once (messages 22/23, outbox 635/636, 21:58:59Z). Customer-scoped checks verified saved sent-state and correct request links without changing read markers. This proves provider acceptance and portal persistence, not recipient reads. DTravelAddics has no verified recipient yet; its prepared follow-up remains unsent.
+Two exact owner-authorized selected-project messages are saved in the original customer conversations and SMTP-accepted once (messages 22/23, outbox 635/636, 21:58:59Z). Customer-scoped checks verified saved sent-state and correct request links without changing read markers. This proves provider acceptance and portal persistence, not recipient reads. The initial third-recipient gap is resolved in the subsequent customer-only lookup and exact outbox 637 send below.
 
 Reversible Active/Completed/Archived/All staff prospect lists are deployed at backend `ff18b916b32104492c6b95b0c310d0f31bcd7049` (22:24:51Z), with live staff list/search/confirmation/browser checks and migration 8064 verified. The isolated runtime proves native form CSRF, permission checks, signed stale-form snapshots, atomic audited transitions, filtering before pagination and preservation of original prospect/project data. Update 8064 initializes old leads as Active. Evidence: 217 unit tests/1,129 assertions, 66 HTTP checks and 14 data/audit invariants. No real lead was moved by this task. Live counts are Active 296 / Completed 0 / Archived 0 / All 296, with no staff move events. Exact local and production boundaries are recorded in `plans/prospect-followups-and-lists/status.md` and `plans/prospect-followups-and-lists/verification.json`.
 

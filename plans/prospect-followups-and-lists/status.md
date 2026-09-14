@@ -9,7 +9,7 @@ Fritz requested branded follow-ups for his son, DTravelAddics and Valerie, each 
 - Son: website request 8 belongs to prospect 21. The existing conversation now asks for business name, services/area, preferred customer action and assets. Message 22 / exact outbox 635 was SMTP-accepted once on September 14, with no broad queue drain.
 - Valerie / Pros In Training: website request 9 belongs to prospect 30. Three customer-visible concepts were ready with no selected direction. Message 23 / exact outbox 636 was SMTP-accepted once and points to her existing conversation and linked proofs.
 - Both messages say Fritz personally selected the project for special discounted pricing, with a scoped quote confirmed before payment, and end with Shay / FAMtastic Designs. Delivery to the recipient inbox or a customer read is not claimed.
-- DTravelAddics: no confirmed match in Drupal prospects, customer requests/intakes, older webform submissions, repository records, Gmail or 271 older hello-mailbox files. A name/email/site clarification is pending; no message has been sent to an inferred address.
+- Travel Addicts: resolved by checking registered users and customers independently. Tarian Lee / Travel Addicts Courier Express is verified customer 6 with no prospect; message 24 / exact outbox 637 was SMTP-accepted once. See `customer-role-audit.md`.
 
 Private raw recipient records, exact previews and provider receipts are in ignored `.artifacts/outreach-20260914/`. No private mailbox dump is committed.
 
@@ -54,4 +54,6 @@ Authoritative live counts are Active 296 / Completed 0 / Archived 0 / All 296; s
 
 Sanitized reusable evidence is committed in `verification.json`. Detailed deployment backups/receipts and exact mail previews remain in ignored private evidence. Repository changelog, capability registry, both learning files and the dated Google Drive mirror are updated. The Drive file was written and read back locally in the synced folder; cloud-upload completion is not separately asserted.
 
-Only the DTravelAddics send remains pending contact identification; the branded draft is in `dtravel-followup-draft.md`. No discount amount or offer has been invented.
+All three authorized emails are now SMTP-accepted. The Travel Addicts customer-only record was resolved and its personalized sent body is in `travel-addicts-followup.md`. The complete registered-user/agency-role audit is in `customer-role-audit.md`; no customer has agency administrator access. No discount amount or offer has been invented.
+
+Travel Addicts follow-up completed at 2026-09-14T22:43:31Z through exact outbox 637. The independent customer/user lookup corrected the initial prospect-led search limitation. All 12 registered accounts passed agency-role and customer-conversation access checks; only user 1 has FAMtastic administration. Source/permission behavior required no change.

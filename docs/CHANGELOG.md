@@ -1,8 +1,13 @@
 # Product changelog
 
+## 2026-09-14 — Travel Addicts follow-up completed; agency access verified
+
+- Found Tarian Lee / Travel Addicts Courier Express in verified customer/user 6 with no linked prospect. Sent the third authorized branded discounted-project follow-up once through outbox 637 at 2026-09-14T22:43:31Z, signed Shay; saved staff message 24 is visible in the correct customer conversation.
+- Audited all 12 registered accounts, six role definitions and all 12 memberships. Only user 1 has FAMtastic administration or membership in the agency organization. Customer owner roles remain confined to their own workspaces; user 7 has limited proof-review permission only. Actual route/tenant/conversation access checks passed. No roles or runtime code changed. See `plans/prospect-followups-and-lists/customer-role-audit.md`.
+
 ## 2026-09-14 — Selected-project follow-ups and reversible prospect lists
 
-- Sent two owner-authorized branded messages once through the existing conversation/outbox: request 8/prospect 21 onboarding follow-up and request 9/prospect 30 proof-selection reminder. Outbox 635/636 were SMTP-accepted at 21:58:59Z; both carry special discounted-pricing language and a Shay sign-off. DTravelAddics remains unsent pending a confirmed recipient.
+- Sent two owner-authorized branded messages once through the existing conversation/outbox: request 8/prospect 21 onboarding follow-up and request 9/prospect 30 proof-selection reminder. Outbox 635/636 were SMTP-accepted at 21:58:59Z; both carry special discounted-pricing language and a Shay sign-off. The third recipient was subsequently found in customer/user 6 and sent exact outbox 637; see the completed follow-up entry.
 - Added Active, Completed, Archived and All prospect lists, shared by both staff entry points, with search/status/date filters, reversible native confirmation forms and actor/time audit history. Staff list placement preserves commercial/project state and excludes inactive leads from new staff follow-up reminders.
 - Database update 8064 preserves existing leads as Active. Local verification passes 217 unit tests/1,129 assertions, 66 real HTTP assertions, 14 data/audit invariants and 34 Design DNA checks. Backend `ff18b916` deployed at 22:24:51Z; live list/search/confirmation/browser checks passed, update 8064 is complete and all 296 leads remain Active. Exact evidence: `plans/prospect-followups-and-lists/status.md`.
 
