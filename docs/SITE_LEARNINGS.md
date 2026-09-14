@@ -2308,3 +2308,6 @@ queued.
 - Observation: proof cards used a 170px frame and scaled a much larger iframe to 34%. On a phone this reduced the concept to tiny text and a shallow header strip inside a mostly empty card.
 - Root cause: the implementation optimized for fitting a desktop canvas into three cards rather than for a customer making a visual decision on a mobile device. A lower-specificity preview rule also inherited generic link padding from the card grid.
 - Prevention: render each concept at the card’s actual responsive width, give mobile previews a 390px minimum height, let each carousel card use almost all available width, and override the generic link-card padding explicitly. Browser acceptance must inspect the iframe’s source viewport and screenshot the 390px experience, not just assert that an iframe exists.
+## 2026-09-14 — Verify authoritative site keys before branded release
+
+The generated Locs site key differs from the earlier friendly test slug. Reuse the existing authoritative owner binding and test the real key in the brand adapter; never create a duplicate binding to make fixtures appear valid. Local tests and committed source are not deployment evidence. The production release checklist records both markers, owner-scope checks and email receipts separately.
