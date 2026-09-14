@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-14 — Owner Desk deployed and instructions sent
+
+- Released backend `0cd25c48` with migration8062 and frontend `d1b939f6`; verified live markers, apex/www assets and mobile private entry.
+- Preserved explicit booking entry even when a ready design proof exists; bound Ruby Signal presentation to the verified production site key.
+- Passed 30 rollback-only production diagnostic assertions and five synthetic cross-process lock checks without real customer mutations or provider dispatch.
+- Sent separate usage emails to Shay and Fritz; Gmail accepted both. Personal owner sign-in remains recipient acceptance. Release details and limitations are in `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`.
+
 ## 2026-09-13 — Owner Desk review, reusable capture and private entry
 
 - Continued the existing appointment implementation with scoped retry, expiry, transactional outbox and availability corrections; added failure-path regression coverage.

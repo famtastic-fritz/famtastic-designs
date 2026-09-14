@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Owner Desk release acceptance is layered
+
+The dedicated desk is now deployed, superseding September13 source-only status. Preserve explicit booking entry over default proof navigation; bind branding to the authoritative generated site key. A negative account-isolation browser check and rollback-only backend smoke do not impersonate the owner or prove her password sign-in. Provider SENT is not a read receipt. See `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md` for exact live SHAs and evidence limits.
+
 ## 2026-09-13 — Component capture follows tested operation
 
 Observation: Owner Desk source already existed on a separate Designs lane. Its first review exposed lost-notice retry, expiring-hold and private entry-point gaps. Guidance: re-anchor source before implementation, test failure paths before capture, preserve exact vendor-copy hashes, and keep business identity in the adapter. A reusable React component does not grant a tenant access or execute the backend in Site Studio.

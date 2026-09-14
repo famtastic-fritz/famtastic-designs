@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-14 — Owner Desk production release (supersedes September13 local-only status)
+
+Backend `0cd25c48` and frontend `d1b939f6` are deployed. Verified production schema, owner binding, safe rollback-only lifecycle/authorization checks, synthetic separate-process lock exclusion, public-site regression, and private entry/login-return checks. Instruction emails to Shay and Fritz have provider SENT receipts. Shay's personal password sign-in and a real customer appointment/notification lifecycle are not yet recipient-accepted proof. No external calendar sync, payment or teaching enrollment is claimed. See `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`.
+
 ## Owner Desk implementation and reusable capture — 2026-09-13
 
 The `codex/locs-owner-desk` source now includes reviewed booking lifecycle and reusable adapter-backed owner presentation. Evidence and release limits are in `docs/evidence/owner-desk-implementation/` and `docs/research/OWNER_DESK_IMPLEMENTATION_AND_REUSE_2026-09-13.md`. Component Studio captures the presentation, while Site Studio's read-only recipe discovery preserves negative production flags. Neither library discovery nor browser fixtures establish live booking, real owner credentials, teaching enrollment or provider delivery.
@@ -129,3 +133,8 @@ template until a second unrelated brand reproduces the quality and timing.
 
 Update this table only when evidence changes. Link durable proof in the release
 or acceptance report; do not upgrade a classification from confidence alone.
+## 2026-09-14 — Owner Desk deployed; production smoke evidence
+
+Backend `0cd25c48` is production-deployed with update8062 and no pending updates. Final frontend `d1b939f6` is deployed, including explicit-entry routing; see `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`. The live generated site key resolves to the existing verified Shay account, active membership and converted request. Thirty production diagnostic assertions passed (owner/cross-account controller reads and rollback-only appointment lifecycle); five separate-process synthetic-lock assertions passed. No customer or test appointment rows were committed by QA and no test customer notifications were sent.
+
+Classification: production-deployed and production smoke-tested, NOT a claim that Shay's personal password sign-in, real customer acceptance/email delivery, simultaneous business transactions or external calendar integration were proven. Two requested owner instruction emails have Gmail SENT receipts. Quick start: `docs/OWNER_DESK_QUICK_START.md`.

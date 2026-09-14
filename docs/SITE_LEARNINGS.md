@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Release evidence must distinguish access from personal acceptance
+
+An explicit Owner Desk destination must outrank a default ready-proof redirect. Test mixed-state accounts and reload, not only empty fixtures. A generated production site key must drive presentation without changing ownership bindings. Record deployment markers, rollback-only authorization/lifecycle proof, provider SENT receipts and the owner's personal password sign-in as separate facts; one does not establish all the others.
+
 ## 2026-09-13 — Review the working lifecycle before extracting a component
 
 Observation: the retained owner implementation existed on `codex/locs-owner-desk`, while the research lane still described it as future work. Source re-anchoring prevented a competing backend. Review then found retry/outbox/expiry edge cases and private-route/login gaps.
