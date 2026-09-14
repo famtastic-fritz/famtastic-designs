@@ -1,5 +1,7 @@
 # FAMtastic Designs capability registry
 
+Final September14 public maintenance status: source `d17ea279` deployed; apex/www source hashes and browser checks pass for the homepage and separate Privacy Policy/Website Terms. Footer branding, booking navigation and typography are live. GA4 tag initialization in denied-storage mode is observed; new-mode Realtime/modeling results are not claimed. See Locs pilot `SITE-LEARNINGS.md` for exact release receipts and limits. This supersedes intermediate source-only descriptions below.
+
 September14 policy follow-up: Locs public policy content now has distinct /privacy/ and /terms/ source pages, not a homepage explainer. Actual release hashes, HTTP/browser checks and limitations are recorded in the pilot log. No new backend behavior or legal-compliance certification is implied.
 
 September14 follow-up supersedes the opt-in UI description below: current Locs maintenance source uses default-denied-storage GA4 pings, suppresses previous refusals/DNT/GPC, and removes the large choice panel. This is not consent-based full-session reporting or a new Realtime/modeling proof. Booking gains public navigation and clearer typography, not a second appointment backend. Pilot log records exact published artifact and browser evidence.
