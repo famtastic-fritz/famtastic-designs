@@ -1,5 +1,11 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-14 — Prospect follow-ups and staff list organization
+
+Two exact owner-authorized selected-project messages are saved in the original customer conversations and SMTP-accepted once (messages 22/23, outbox 635/636, 21:58:59Z). Customer-scoped checks verified saved sent-state and correct request links without changing read markers. This proves provider acceptance and portal persistence, not recipient reads. DTravelAddics has no verified recipient yet; its prepared follow-up remains unsent.
+
+Reversible Active/Completed/Archived/All staff prospect lists are locally proven with native form CSRF, permission checks, signed stale-form snapshots, atomic audited transitions, filtering before pagination and preservation of original prospect/project data. Update 8064 initializes old leads as Active. Evidence: 217 unit tests/1,129 assertions, 66 HTTP checks and 14 data/audit invariants. No real lead was moved by this task. The release checkpoint in `plans/prospect-followups-and-lists/status.md` records the subsequent production result separately.
+
 ## 2026-09-14 — Contact-to-portal messaging and proof recovery
 
 The client inbox reuses Drupal conversation/message records, with exact verified-email contact claims, staff permissions, tenant-scoped client access, unread/needs-reply state, bounded read acknowledgments and atomic retry-safe reply/outbox writes. Admin and portal presentation implement the approved mockup. Search/status/date filters operate before record pagination; desktop request rows use the available space. Frontend source `fea57649a781bfc8440131327f980bd08a388315` and backend source `e68b89f26e315e7232521f6acd6332ac04337bd0` are production-deployed; their frontend source trees are identical. Actual signed-in admin/portal conversation, desktop/mobile layout and active/Archived filtering passed, alongside 217 final unit tests and the original release's 40 disposable HTTP assertions. The final live Orders check also confirms ready/selected proof stages remain visible despite failed legacy jobs. See `plans/client-messaging-proof-rescue/release.md` for separate local and live evidence.

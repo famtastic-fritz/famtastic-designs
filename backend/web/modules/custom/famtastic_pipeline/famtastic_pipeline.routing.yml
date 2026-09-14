@@ -1120,6 +1120,21 @@ famtastic_pipeline.prospect_workspace:
     _permission: 'administer famtastic pipeline'
     famtastic_prospect: '\d+'
 
+famtastic_pipeline.prospect_list_move:
+  path: '/admin/famtastic/prospect/{famtastic_prospect}/list/{list_state}'
+  defaults:
+    _form: '\Drupal\famtastic_pipeline\Form\ProspectListMoveForm'
+    _title: 'Move prospect'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    famtastic_prospect: '\d+'
+    list_state: 'active|completed|archived'
+  options:
+    _admin_route: TRUE
+    parameters:
+      famtastic_prospect:
+        type: 'entity:famtastic_prospect'
+
 famtastic_pipeline.launch_approval:
   path: '/admin/famtastic/launch-approval'
   defaults:

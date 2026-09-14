@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Prospect identity, staff completion and safe stale forms
+
+Observation: the owner's remembered numbers 8/9 were website requests, while the matching prospects were21/30. Guidance: resolve recipient identity through authoritative request/customer/prospect links before sending; retain the same conversation. Special discounted-pricing wording authorized by the owner does not establish an amount, coupon, paid state or completed project.
+
+Observation: staff needs to retire follow-ups without rewriting customer project progress. Guidance: keep list placement separate from workflow status, preserve all history, provide restore and All views, and exclude inactive leads from new staff reminders. Do not choose real records to archive merely because the controls were requested.
+
+Observation: Drupal ordinary form state is rebuilt on POST and GET form-state caching is disallowed. Guidance: sign the original list snapshot against the staff session, record and target, validate it on POST and compare-and-set the database row. Test stale submissions, tampering, permission/CSRF rejection, audit history and unchanged project/message/payment data through real HTTP. Local test fixtures need the complete Drupal scaffold, including `autoload_runtime.php`; the inbox harness can omit unrelated campaign artwork to reduce disk usage.
+
 ## 2026-09-14 — Live acceptance and consistent customer signatures
 
 Observation: old delivered proofs can have ready campaign artifacts and valid review state without a surviving worker job. Guidance: prioritize that completed campaign evidence before missing/failed legacy job warnings; a bare notified/selected field on an incomplete campaign is not sufficient. Orders and Projects must agree on actual customer progress.

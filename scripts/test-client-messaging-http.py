@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """HTTP assertions against the disposable SQLite fixture, never a live host."""
 import http.cookiejar
+from html.parser import HTMLParser
+import urllib.parse
 import json
 import pathlib
 import re
@@ -63,7 +65,7 @@ check('real_drupal_inbox_controls_render', code == 200 and '<input type="search"
 code, html, _ = call(staff, '/admin/famtastic/messages/' + thread)
 (evidence / 'admin-conversation.html').write_text(html if isinstance(html, str) else json.dumps(html))
 check('real_drupal_reply_form_and_original_message', code == 200 and 'Send reply' in html and 'original contact form message' in html and 'form_token' in html)
-for metric in ['website-requests', 'support', 'notifications', 'customers', 'campaigns', 'open-jobs', 'open-exceptions']:
+for metric in ['prospects', 'website-requests', 'support', 'notifications', 'customers', 'campaigns', 'open-jobs', 'open-exceptions']:
     code, html, _ = call(staff, '/admin/famtastic/metric/' + metric)
     (evidence / ('metric-' + metric + '.html')).write_text(html if isinstance(html, str) else json.dumps(html))
     check('metric_' + metric + '_renders', code == 200 and 'An unexpected error' not in html and 'Filter' in html)
@@ -105,4 +107,77 @@ check('foreign_account_admin_denied', call(foreign, '/admin/famtastic/messages')
 code, final, _ = call(staff, '/api/customer/messages/' + thread)
 check('staff_sees_customer_reply_and_needs_reply', code == 200 and len(final['messages']) == 3 and final['thread']['needs_reply'] is True and final['thread']['unread_count'] == 1)
 (evidence / 'final-conversation.json').write_text(json.dumps(final, indent=2))
+# Native Form API proof: access, CSRF, reversible transitions and stale forms.
+class Inputs(HTMLParser):
+    def __init__(self, html):
+        super().__init__()
+        self.values = {}
+        self.feed(html)
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == 'input' and a.get('name'):
+            self.values[a['name']] = a.get('value', '')
+
+def form(path):
+    code, html, _ = call(staff, path)
+    if code != 200:
+        (evidence / 'form-error.html').write_text(html)
+    check('form_renders_' + path.rsplit('/', 1)[-1], code == 200 and 'form_token' in html)
+    return Inputs(html).values
+
+def post_form(path, values):
+    request = urllib.request.Request(base + path, headers={'Content-Type': 'application/x-www-form-urlencoded'}, data=urllib.parse.urlencode(values).encode())
+    try:
+        response = staff.open(request)
+    except urllib.error.HTTPError as error:
+        response = error
+    return response.status, response.read().decode()
+
+list_path = '/admin/famtastic/metric/prospects'
+move_path = '/admin/famtastic/prospect/' + str(state['prospect_id']) + '/list/'
+fixture_name = 'Inbox Proof Fixture'
+def in_list(name):
+    code, html, _ = call(staff, list_path + '?list=' + name + '&q=Inbox')
+    check('list_renders_' + name, code == 200)
+    return fixture_name in html
+
+migration = json.loads((evidence / 'migration.json').read_text())
+check('8064_migrates_existing_prospects_to_active', migration['schema'] == 8064 and migration['list_state'] == 'active')
+check('active_list_preserves_legacy_prospect', in_list('active'))
+check('empty_completed_and_archived_are_honest', not in_list('completed') and not in_list('archived'))
+check('all_list_includes_legacy_prospect', in_list('all'))
+code, html, _ = call(staff, '/admin/famtastic/prospect')
+check('entity_collection_uses_same_lists', code == 200 and 'Prospect lists' in html and 'Mark completed' in html)
+code, html, _ = call(staff, list_path + '?q=NoMatchingBusinessFixture')
+check('prospect_search_excludes_nonmatch', code == 200 and fixture_name not in html)
+code, html, _ = call(staff, list_path + '?list=completed&status=lead&q=Inbox')
+check('prospect_filters_preserve_current_list', code == 200 and 'name="list" value="completed"' in html and 'value="lead" selected' in html and 'value="Inbox"' in html)
+check('anonymous_cannot_move_prospect', call(client(), move_path + 'archived')[0] == 403)
+check('customer_cannot_move_prospect', call(customer, move_path + 'archived')[0] == 403)
+check('invalid_list_route_rejected', call(staff, move_path + 'deleted')[0] == 404)
+fields = form(move_path + 'completed')
+check('viewing_confirmation_keeps_active', in_list('active'))
+without_token = {k:v for k,v in fields.items() if k != 'form_token'}
+post_form(move_path + 'completed', without_token)
+check('missing_form_csrf_does_not_move_prospect', in_list('active') and not in_list('completed'))
+fields = form(move_path + 'completed')
+code, html = post_form(move_path + 'completed', fields)
+(evidence / 'prospect-completed.html').write_text(html)
+check('valid_form_moves_to_completed', code == 200 and in_list('completed') and not in_list('active'))
+tampered = form(move_path + 'archived')
+tampered['original_list'] = 'active'
+post_form(move_path + 'archived', tampered)
+check('tampered_original_list_rejected', in_list('completed') and not in_list('archived'))
+code, html = post_form(move_path + 'archived', form(move_path + 'archived'))
+(evidence / 'prospect-archived.html').write_text(html)
+check('archive_moves_record_out_of_completed', code == 200 and in_list('archived') and not in_list('completed'))
+code, html = post_form(move_path + 'active', form(move_path + 'active'))
+check('restore_returns_record_to_active', code == 200 and in_list('active') and not in_list('archived'))
+stale = form(move_path + 'archived')
+post_form(move_path + 'completed', form(move_path + 'completed'))
+code, html = post_form(move_path + 'archived', stale)
+(evidence / 'prospect-stale-form.html').write_text(html)
+check('stale_form_does_not_overwrite_newer_move', code == 200 and 'Reload the record' in html and in_list('completed') and not in_list('archived'))
+post_form(move_path + 'active', form(move_path + 'active'))
+check('final_restore_and_all_list_agree', in_list('active') and in_list('all') and not in_list('completed') and not in_list('archived'))
 print('PASS:', len(results), 'real HTTP assertions')

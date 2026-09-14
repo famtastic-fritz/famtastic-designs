@@ -45,5 +45,5 @@ $archivedRequestId = (int) $db->insert('famtastic_project_request')->fields([
 ])->execute();
 \Drupal::configFactory()->getEditable('system.mail')->set('interface.default', 'test_mail_collector')->save();
 \Drupal::configFactory()->getEditable('famtastic_pipeline.settings')->set('frontend_base_url', 'https://famtasticdesigns.com')->set('notification_to_email', 'staff-inbox@example.test')->save();
-$state = ['accounts' => $accounts, 'intake_id' => (int) $intake->id(), 'request_id' => $requestId, 'archived_request_id' => $archivedRequestId, 'initial_outbox_count' => (int) $db->select('famtastic_notification_outbox', 'n')->countQuery()->execute()->fetchField()];
+$state = ['prospect_id' => (int) $prospect->id(), 'prospect_before' => $db->select('famtastic_prospect', 'p')->fields('p')->condition('id', (int) $prospect->id())->execute()->fetchAssoc(), 'accounts' => $accounts, 'intake_id' => (int) $intake->id(), 'request_id' => $requestId, 'archived_request_id' => $archivedRequestId, 'initial_outbox_count' => (int) $db->select('famtastic_notification_outbox', 'n')->countQuery()->execute()->fetchField()];
 file_put_contents((string) getenv('FAMTASTIC_INBOX_STATE'), json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));

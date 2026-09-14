@@ -417,3 +417,12 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+/* Prospect lists preserve readable actions and the currently selected list. */
+.famtastic-ops__actions a[aria-current="page"] { border-color:var(--ops-lime); color:var(--ops-lime); }
+.famtastic-prospect-contact { margin-top:.4rem; color:var(--ops-muted); overflow-wrap:anywhere; }
+.famtastic-prospect-actions { display:flex; flex-wrap:wrap; gap:.3rem 1rem; margin:.4rem 0 0; padding:0; list-style:none; }
+.famtastic-prospect-actions a { display:inline-flex; align-items:center; min-height:44px; }
+
+.famtastic-ops__table--prospects td:first-child { min-width:220px; white-space:normal; }
+.famtastic-ops__table--prospects td:nth-child(4) { min-width:260px; }

@@ -3044,6 +3044,21 @@ function famtastic_pipeline_update_8063(&$sandbox) {
   return t('Added the shared client inbox and imported @count public requests. No customer messages or notifications were sent.', ['@count' => $sandbox['imported']]);
 }
 
+/** Adds reversible staff prospect lists without changing project or commercial state. */
+function famtastic_pipeline_update_8064(&$sandbox) {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entityType = \Drupal::entityTypeManager()->getDefinition('famtastic_prospect');
+  $definitions = $entityType->getClass()::baseFieldDefinitions($entityType);
+  foreach (['staff_list_state', 'staff_list_changed_at', 'staff_list_changed_by'] as $field) {
+    if (!$manager->getFieldStorageDefinition($field, 'famtastic_prospect')) {
+      $manager->installFieldStorageDefinition($field, 'famtastic_prospect', 'famtastic_pipeline', $definitions[$field]);
+    }
+  }
+  \Drupal::database()->update('famtastic_prospect')->fields(['staff_list_state' => 'active'])
+    ->where("staff_list_state IS NULL OR staff_list_state = ''")->execute();
+  return t('Added Active, Completed and Archived prospect lists. Existing prospects remain active; no project, payment or notification was changed.');
+}
+
 /** One immutable owner-reviewed research snapshot for the current proof campaign. */
 function _famtastic_pipeline_website_proof_research_snapshot_schema(): array {
   return [

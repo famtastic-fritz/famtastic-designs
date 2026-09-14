@@ -17,7 +17,8 @@ cleanup() {
 }
 trap cleanup EXIT
 mkdir -p "$sandbox/backend" "$evidence"
-rsync -a --exclude vendor --exclude private --exclude 'web/sites/default' "$repo_root/backend/" "$sandbox/backend/"
+# Inbox/list fixtures do not use the 200 MB campaign artwork library.
+rsync -a --exclude vendor --exclude private --exclude 'web/sites/default' --exclude 'web/modules/custom/famtastic_pipeline/assets/campaign' "$repo_root/backend/" "$sandbox/backend/"
 rsync -aL "$repo_root/backend/vendor/" "$sandbox/backend/vendor/"
 mkdir -p "$sandbox/backend/web/sites/default/files" "$sandbox/backend/private"
 cp "$repo_root/backend/web/sites/default/default.settings.php" "$sandbox/backend/web/sites/default/default.settings.php"
@@ -31,11 +32,13 @@ drush=(php -d memory_limit=512M "$sandbox/backend/vendor/drush/drush/drush.php" 
 "${drush[@]}" en -y famtastic_pipeline >>"$evidence/install.log" 2>&1
 "${drush[@]}" config:set system.mail interface.default test_mail_collector -y >>"$evidence/install.log" 2>&1
 FAMTASTIC_INBOX_STATE="$sandbox/state.json" "${drush[@]}" php:script "$sandbox/backend/web/modules/custom/famtastic_pipeline/tests/fixtures/e2e-client-messaging.php" >>"$evidence/install.log" 2>&1
+# Rehearse a pre-8064 entity schema, preserving the existing prospect record.
+"${drush[@]}" php:eval '$manager=\Drupal::entityDefinitionUpdateManager(); foreach (["staff_list_state","staff_list_changed_at","staff_list_changed_by"] as $name) $manager->uninstallFieldStorageDefinition($manager->getFieldStorageDefinition($name,"famtastic_prospect"));' >>"$evidence/install.log" 2>&1
 # Prove the existing-site upgrade as well as the fresh-install schema.
 "${drush[@]}" php:eval '$s=\Drupal::database()->schema(); $s->dropTable("famtastic_portal_read"); $s->dropUniqueKey("famtastic_portal_thread","source_key"); $s->dropIndex("famtastic_portal_thread","contact_claim"); foreach(["source_key","source_intake_id","prospect_id","contact_name","contact_email"] as $f) $s->dropField("famtastic_portal_thread",$f); $s->dropUniqueKey("famtastic_portal_message","client_key"); foreach(["client_key","notification_key"] as $f) $s->dropField("famtastic_portal_message",$f); \Drupal::keyValue("system.schema")->set("famtastic_pipeline",8062);' >>"$evidence/install.log" 2>&1
 "${drush[@]}" updatedb -y >"$evidence/update.log" 2>&1
 "${drush[@]}" cr >>"$evidence/update.log" 2>&1
-"${drush[@]}" php:eval 'print json_encode(["schema"=>\Drupal::keyValue("system.schema")->get("famtastic_pipeline"),"threads"=>(int)\Drupal::database()->select("famtastic_portal_thread","t")->countQuery()->execute()->fetchField(),"outbox"=>(int)\Drupal::database()->select("famtastic_notification_outbox","n")->countQuery()->execute()->fetchField()]);' >"$evidence/migration.json"
+"${drush[@]}" php:eval 'print json_encode(["schema"=>\Drupal::keyValue("system.schema")->get("famtastic_pipeline"),"list_state"=>\Drupal::database()->select("famtastic_prospect","p")->fields("p",["staff_list_state"])->execute()->fetchField(),"threads"=>(int)\Drupal::database()->select("famtastic_portal_thread","t")->countQuery()->execute()->fetchField(),"outbox"=>(int)\Drupal::database()->select("famtastic_notification_outbox","n")->countQuery()->execute()->fetchField()]);' >"$evidence/migration.json"
 (
   cd "$sandbox/backend"
   exec "${drush[@]}" runserver "127.0.0.1:$port" >"$sandbox/drupal.log" 2>&1
@@ -44,4 +47,5 @@ server_pid=$!
 for _ in $(seq 1 100); do curl -sf "http://127.0.0.1:$port/robots.txt" >/dev/null 2>&1 && break; sleep 0.2; done
 python3 "$repo_root/scripts/test-client-messaging-http.py" "http://127.0.0.1:$port" "$sandbox/state.json" "$evidence"
 "${drush[@]}" php:eval 'print json_encode(["messages"=>(int)\Drupal::database()->select("famtastic_portal_message","m")->countQuery()->execute()->fetchField(),"outbox"=>\Drupal::database()->select("famtastic_notification_outbox","n")->fields("n",["notification_key","status","category","template_id"])->execute()->fetchAll(\PDO::FETCH_ASSOC)]);' >"$evidence/outbox.json"
-echo "PASS: full Drupal messaging install, 8063 upgrade, HTTP auth/CSRF, inbox/render/reply/read/isolation proof. Evidence: $evidence"
+FAMTASTIC_INBOX_STATE="$sandbox/state.json" "${drush[@]}" php:script "$sandbox/backend/web/modules/custom/famtastic_pipeline/tests/fixtures/assert-prospect-lists.php" >"$evidence/prospect-invariants.json"
+echo "PASS: full Drupal messaging install, 8063/8064 upgrades and prospect list transitions, HTTP auth/CSRF, inbox/render/reply/read/isolation proof. Evidence: $evidence"

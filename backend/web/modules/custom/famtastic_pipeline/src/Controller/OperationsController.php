@@ -18,6 +18,7 @@ use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\GoogleAnalyticsReportingService;
 use Drupal\famtastic_pipeline\Service\PostizChannelsService;
 use Drupal\famtastic_pipeline\Service\OperationsRecordFilter;
+use Drupal\famtastic_pipeline\Service\ProspectListService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -1157,41 +1158,49 @@ final class OperationsController extends ControllerBase {
    * Renders the prospect records behind the dashboard total.
    */
   private function prospectMetric(): array {
+    $input = \Drupal::request()->query->all()['list'] ?? 'active';
+    $list = $input === 'all' ? 'all' : ProspectListService::state($input);
+    $query = $this->database->select('famtastic_prospect', 'p')->extend(PagerSelectExtender::class)->fields('p', ['id']);
+    if ($list !== 'all') $query->where("COALESCE(NULLIF(p.staff_list_state, ''), 'active') = :prospect_list", [':prospect_list' => $list]);
+    $this->filterRecords($query, ['p.business_name', 'p.public_email', 'p.contact_name', 'p.contact_value', 'p.campaign'], 'famtastic_prospect', 'p', 'status', 'created', hidden: ['list' => $list]);
+    $ids = $query->orderBy('p.created', 'DESC')->orderBy('p.id', 'DESC')->limit(50)->execute()->fetchCol();
     $storage = $this->pipelineEntityTypeManager->getStorage('famtastic_prospect');
-    $ids = $storage->getQuery()
-      ->accessCheck(FALSE)
-      ->sort('created', 'DESC')
-      ->pager(50)
-      ->execute();
     $rows = [];
     foreach ($storage->loadMultiple($ids) as $prospect) {
       $workspace = Url::fromRoute('famtastic_pipeline.prospect_workspace', ['famtastic_prospect' => $prospect->id()]);
-      $needsReply = $this->prospectNeedsHumanReply($prospect);
+      $placement = ProspectListService::state($prospect->get('staff_list_state')->value);
+      $actions = [Link::fromTextAndUrl('Open workspace', $workspace)->toRenderable()];
+      foreach (['completed' => 'Mark completed', 'archived' => 'Archive', 'active' => 'Restore to active'] as $target => $label) {
+        if ($placement === $target) continue;
+        $actions[] = Link::fromTextAndUrl($label, Url::fromRoute('famtastic_pipeline.prospect_list_move', ['famtastic_prospect' => $prospect->id(), 'list_state' => $target]))->toRenderable();
+      }
       $rows[] = [
-        'business' => $this->linkCell(Link::fromTextAndUrl($prospect->label() ?: '(no name)', $workspace)),
-        'status' => ['data' => ['#markup' => $this->badge((string) $prospect->get('status')->value)]],
-        'campaign' => $this->campaignLinkCell((string) $prospect->get('campaign')->value),
-        'category' => (string) ($prospect->get('business_category')->value ?: '—'),
-        'email' => (string) ($prospect->get('public_email')->value ?: '—'),
-        'next_action' => $needsReply
-          ? ['data' => ['#markup' => '<strong>Review today</strong><br><small>Prepare a specific next step</small>']]
-          : ['data' => ['#markup' => '<strong>Open workspace</strong><br><small>Review the lead record</small>']],
-        'actions' => ['data' => Link::fromTextAndUrl('Open lead workspace', $workspace)->toRenderable()],
-        'created' => $this->date((int) $prospect->get('created')->value),
+        ['data' => ['name' => Link::fromTextAndUrl($prospect->label() ?: '(no name)', $workspace)->toRenderable(), 'contact' => ['#markup' => '<div class="famtastic-prospect-contact">#' . (int) $prospect->id() . ' · ' . Html::escape((string) ($prospect->get('public_email')->value ?: 'No email recorded')) . '</div>']]],
+        ['data' => ['#markup' => $this->badge((string) $prospect->get('status')->value) . '<br><small>' . ProspectListService::LABELS[$placement] . ' list</small>']],
+        $this->campaignLinkCell((string) $prospect->get('campaign')->value),
+        ['data' => ['next' => ['#markup' => '<strong>' . ($this->prospectNeedsHumanReply($prospect) ? 'Needs your response' : ($placement === 'completed' ? 'Staff follow-up completed' : ($placement === 'archived' ? 'Archived for reference' : 'Review lead progress'))) . '</strong>'], 'links' => ['#theme' => 'item_list', '#items' => $actions, '#attributes' => ['class' => ['famtastic-prospect-actions']]]]],
+        $this->date((int) ($prospect->get('staff_list_changed_at')->value ?: $prospect->get('changed')->value)),
       ];
     }
-    $replyCount = $this->countProspectsNeedingHumanReply();
+    $counts = array_fill_keys(array_keys(ProspectListService::LABELS), 0);
+    $countQuery = $this->database->select('famtastic_prospect', 'p')->fields('p', ['staff_list_state'])->groupBy('staff_list_state');
+    $countQuery->addExpression('COUNT(*)', 'total');
+    foreach ($countQuery->execute()->fetchAll(\PDO::FETCH_ASSOC) as $count) $counts[ProspectListService::state($count['staff_list_state'])] += (int) $count['total'];
+    $tabs = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions'], 'role' => 'navigation', 'aria-label' => 'Prospect lists']];
+    foreach (ProspectListService::LABELS + ['all' => 'All'] as $key => $label) {
+      $tabs[$key] = Link::fromTextAndUrl($label . ' (' . ($key === 'all' ? array_sum($counts) : $counts[$key]) . ')', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'prospects'], ['query' => ['list' => $key]]))->toRenderable();
+      $tabs[$key]['#attributes'] = ['class' => ['button'], 'aria-current' => $list === $key ? 'page' : 'false'];
+    }
     return $this->page([
       'back' => Link::fromTextAndUrl('← Operations Dashboard', Url::fromRoute('famtastic_pipeline.operations'))->toRenderable(),
-      'intro' => ['#markup' => '<p class="famtastic-ops__lede">Open a lead workspace to see the request, facts, history, related customer work, and the next owner-approved move. Acknowledgment is not a sales reply; no message, price, proof, domain, or deployment is sent automatically.</p>'],
-      'priority' => ['#markup' => '<section class="famtastic-leads__priority"><div><span>Needs a human response</span><strong>' . $replyCount . '</strong><p>Public quote requests with no recorded first response.</p></div><div><span>How this queue works</span><p>AI may organize facts and prepare a draft. A person approves the message, scope, price, proof, and launch.</p></div></section>'],
-      'records' => [
-        '#type' => 'table',
-        '#header' => ['Business', 'Status', 'Campaign', 'Category', 'Public Email', 'Next action', 'Open', 'Created'],
-        '#rows' => $rows,
-        '#empty' => $this->t('No prospects have been recorded.'),
-        '#attributes' => ['class' => ['famtastic-ops__table', 'famtastic-leads__table']],
-      ],
+      'intro' => ['#markup' => '<p class="famtastic-ops__lede">Keep current follow-ups in Active. Move finished follow-ups to Completed and older leads to Archived. Every list keeps the full lead and project history.</p>'],
+      'lists' => $tabs,
+      'priority' => ['#markup' => '<p><strong>' . $this->countProspectsNeedingHumanReply() . ' active leads need a first response.</strong></p>'],
+      'filters' => $this->recordFilterBuild,
+      'records' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__table-scroll', 'famtastic-ops__table-scroll--wide']], 'table' => [
+        '#type' => 'table', '#header' => ['Business & contact', 'Stage', 'Campaign', 'Next step & actions', 'Updated'], '#rows' => $rows,
+        '#empty' => $this->t('No prospects match this list and these filters.'), '#attributes' => ['class' => ['famtastic-ops__table', 'famtastic-ops__table--readable', 'famtastic-ops__table--prospects']],
+      ]],
       'pager' => ['#type' => 'pager'],
     ], 'Prospects');
   }
@@ -1227,6 +1236,12 @@ final class OperationsController extends ControllerBase {
     $business = $prospect->label() ?: '(no name)';
     $status = (string) $prospect->get('status')->value;
     $firstResponse = (int) $prospect->get('first_responded_at')->value;
+    $placement = ProspectListService::state($prospect->get('staff_list_state')->value);
+    $listActions = [];
+    foreach (['completed' => 'Mark completed', 'archived' => 'Archive', 'active' => 'Restore to active'] as $target => $label) {
+      if ($placement === $target) continue;
+      $listActions[$target] = ['#type' => 'link', '#title' => $label, '#url' => Url::fromRoute('famtastic_pipeline.prospect_list_move', ['famtastic_prospect' => $prospectId, 'list_state' => $target]), '#attributes' => ['class' => ['button']]];
+    }
     $nextAction = $this->prospectNeedsHumanReply($prospect)
       ? ['Review the lead and prepare a tailored first reply.', 'The automated acknowledgment is not the sales conversation. Confirm the request, then approve a helpful next step.']
       : ['Review the lead record and keep the next action current.', 'Use this workspace to confirm what happened before advancing the relationship.'];
@@ -1273,6 +1288,8 @@ final class OperationsController extends ControllerBase {
         'edit' => ['#type' => 'link', '#title' => $this->t('Edit lead facts'), '#url' => $prospect->toUrl('edit-form'), '#attributes' => ['class' => ['button', 'button--primary']]],
         'request' => ['#type' => 'link', '#title' => $this->t('View website requests'), '#url' => Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), '#attributes' => ['class' => ['button']]],
       ],
+      'list_label' => ['#markup' => '<p>Prospect list: <strong>' . ProspectListService::LABELS[$placement] . '</strong></p>'],
+      'list_actions' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions']]] + $listActions,
       'facts_heading' => ['#markup' => '<h3>What we know</h3>'],
       'facts' => ['#type' => 'table', '#header' => ['Field', 'Value'], '#rows' => $factRows, '#empty' => $this->t('No usable lead details have been recorded yet.'), '#attributes' => ['class' => ['famtastic-ops__table']]],
       'request_heading' => ['#markup' => '<h3>Customer continuation</h3>'],
@@ -1287,19 +1304,18 @@ final class OperationsController extends ControllerBase {
   private function prospectNeedsHumanReply(Prospect $prospect): bool {
     $campaign = (string) $prospect->get('campaign')->value;
     $status = (string) $prospect->get('status')->value;
-    return $campaign === 'public_quote'
+    return ProspectListService::state($prospect->get('staff_list_state')->value) === 'active'
+      && $campaign === 'public_quote'
       && (int) $prospect->get('first_responded_at')->value === 0
       && !in_array($status, ['lost', 'paid', 'launched'], TRUE);
   }
 
   /** Counts the public quote leads that still need a human first response. */
   private function countProspectsNeedingHumanReply(): int {
-    $ids = $this->pipelineEntityTypeManager->getStorage('famtastic_prospect')->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('campaign', 'public_quote')
-      ->notExists('first_responded_at')
-      ->execute();
-    return count($ids);
+    return (int) $this->database->select('famtastic_prospect', 'p')->condition('campaign', 'public_quote')
+      ->condition('status', ['lost', 'paid', 'launched'], 'NOT IN')
+      ->where("COALESCE(NULLIF(staff_list_state, ''), 'active') = 'active'")
+      ->where('COALESCE(first_responded_at, 0) = 0')->countQuery()->execute()->fetchField();
   }
 
   /**
@@ -1647,7 +1663,7 @@ final class OperationsController extends ControllerBase {
   }
 
   /** Builds GET filters and applies them before pagination, including counts. */
-  private function filterRecords(SelectInterface $query, array $searchFields, string $table, string $alias, string $statusField, string $dateField, ?string $proofField = NULL): void {
+  private function filterRecords(SelectInterface $query, array $searchFields, string $table, string $alias, string $statusField, string $dateField, ?string $proofField = NULL, array $hidden = []): void {
     $values = OperationsRecordFilter::values(\Drupal::request()->query->all());
     $exactFields = ['status' => $alias . '.' . $statusField];
     if ($proofField !== NULL) {
@@ -1668,9 +1684,10 @@ final class OperationsController extends ControllerBase {
       }
     }
     OperationsRecordFilter::apply($query, $this->database, $queryValues, $searchFields, $exactFields, $alias . '.' . $dateField);
-    $action = Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => \Drupal::routeMatch()->getParameter('metric')])->toString();
+    $action = Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => \Drupal::routeMatch()->getParameter('metric') ?: 'prospects'])->toString();
     $html = '<form class="famtastic-record-filters" method="get" action="' . Html::escape($action) . '" aria-label="Filter records">'
       . '<label class="famtastic-record-filters__search" for="record-search">Search all records<input id="record-search" type="search" name="q" maxlength="160" value="' . Html::escape($values['q']) . '" placeholder="Name, email, or keyword"></label>';
+    foreach ($hidden as $key => $value) $html .= '<input type="hidden" name="' . Html::escape($key) . '" value="' . Html::escape($value) . '">';
     foreach ($exactFields as $key => $field) {
       $column = $key === 'proof' ? $proofField : $statusField;
       $options = $this->database->select($table, 'filter_options')->fields('filter_options', [$column])->distinct()->orderBy($column)->range(0, 100)->execute()->fetchCol();

@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Resolve request identities and preserve prospect history
+
+Requests 8/9 mapped to prospects 21/30, so email recipients and continuation links were verified through Drupal rather than inferred from the remembered number. Both authorized follow-ups are saved in the original portal conversations and SMTP-accepted once; unknown DTravelAddics contact identity stays pending. Use Shay/Shay-Shay and confirm the actual scoped discounted quote later without inventing an amount.
+
+Completed/Archived now describe staff list placement, separately from project and payment progress. Preserve history, expose restore and All views, and do not automatically move real leads while installing the feature. Apply filters before pagination and exclude inactive prospects from new staff reminder queries.
+
+Native Drupal GET forms do not retain custom form state; attempting to cache safe-method form state is rejected. Preserve the observed list with a session-bound signed snapshot and a database compare-and-set. The real HTTP regression rejects both tampered and stale forms. Full runtime fixtures must include the current Drupal scaffold; CLI bootstrap alone missed `autoload_runtime.php`, and unnecessary campaign artwork caused local disk pressure. The final fixture excludes only that unrelated artwork.
+
 ## 2026-09-14 — Shared signature rule and production proof
 
 Live Orders acceptance caught missing legacy jobs incorrectly overriding ready campaign review state. Preserve the completed campaign's actual stage, while keeping incomplete runs visibly blocked. Regressions cover both sides of that precedence rather than merely checking a label.

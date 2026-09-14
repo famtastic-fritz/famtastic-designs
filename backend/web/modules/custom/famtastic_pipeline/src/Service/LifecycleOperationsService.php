@@ -306,7 +306,7 @@ final class LifecycleOperationsService {
     }
     $processed = count($overdue);
     $followups = $this->database->select('famtastic_prospect', 'p')->fields('p', ['id', 'business_name', 'status', 'next_followup_due'])
-      ->condition('status', ['contacted', 'qualified', 'proposal', 'nurture'], 'IN')->condition('next_followup_due', 0, '>')->condition('next_followup_due', $now, '<=')->execute()->fetchAll(\PDO::FETCH_ASSOC);
+      ->where("COALESCE(NULLIF(p.staff_list_state, ''), 'active') = 'active'")->condition('status', ['contacted', 'qualified', 'proposal', 'nurture'], 'IN')->condition('next_followup_due', 0, '>')->condition('next_followup_due', $now, '<=')->execute()->fetchAll(\PDO::FETCH_ASSOC);
     foreach ($followups as $lead) {
       $this->queue("lead:{$lead['id']}:followup:" . gmdate('Ymd', $now), $admin, "Lead follow-up due — {$lead['business_name']}", "Stage: {$lead['status']}\nFollow-up deadline has passed.\nOpen: https://famtasticdesigns.com/web/admin/famtastic/prospect/{$lead['id']}/edit");
     }

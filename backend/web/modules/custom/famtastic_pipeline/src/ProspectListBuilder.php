@@ -12,6 +12,10 @@ use Drupal\Core\Entity\EntityListBuilder;
  */
 class ProspectListBuilder extends EntityListBuilder {
 
+  public function render(): array {
+    return \Drupal\famtastic_pipeline\Controller\OperationsController::create(\Drupal::getContainer())->metric('prospects');
+  }
+
   /**
    * {@inheritdoc}
    */

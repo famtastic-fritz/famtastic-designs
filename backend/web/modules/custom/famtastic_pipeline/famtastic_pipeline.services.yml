@@ -29,6 +29,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\OperationalLedger
     arguments: ['@database', '@datetime.time']
 
+  famtastic_pipeline.prospect_lists:
+    class: Drupal\famtastic_pipeline\Service\ProspectListService
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@famtastic_pipeline.operational_ledger']
+
   famtastic_pipeline.lead_ingestion:
     class: Drupal\famtastic_pipeline\Service\LeadIngestionService
     arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@datetime.time']

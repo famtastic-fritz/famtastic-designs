@@ -146,6 +146,14 @@ class Prospect extends ContentEntityBase {
       ->setDescription(t('Map of which business fields the owner confirmed/corrected.'));
 
     // Lifecycle.
+    // Staff list organization is separate from commercial/project progress.
+    $fields['staff_list_state'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Staff list'))->setSetting('max_length', 16)
+      ->setDefaultValue('active')->setReadOnly(TRUE);
+    $fields['staff_list_changed_at'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel(t('Staff list changed at'))->setReadOnly(TRUE);
+    $fields['staff_list_changed_by'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Staff list changed by user'))->setReadOnly(TRUE);
     $fields['status'] = $string('Status')
       ->setDefaultValue('new')
       ->setDescription(t('new, viewed, confirmed, lead, paid, intake_started, intake_complete, submitted_to_studio, proof_ready, revision_requested, approved, launched.'));

@@ -299,6 +299,7 @@ function famtastic_pipeline_cron(): void {
   $storage = \Drupal::entityTypeManager()->getStorage('famtastic_prospect');
   $ids = $storage->getQuery()->accessCheck(FALSE)
     ->condition('status', 'lead')
+    ->condition('staff_list_state', 'active')
     ->condition('first_response_due', 0, '>')
     ->condition('first_response_due', $now, '<=')
     ->notExists('first_responded_at')
