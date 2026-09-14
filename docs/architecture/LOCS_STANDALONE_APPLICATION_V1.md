@@ -8,10 +8,15 @@ Owner correction supersedes the earlier FAMtastic-portal runtime decision. Tight
 - Dedicated MySQL database and least-scoped database user on the existing Locs hosting account. No Drupal tables, identities, sessions, APIs, queues or availability dependency at runtime.
 - Independent password authentication, CSRF protection, secure host-only session cookies, throttled login/reset, owner-only authorization. No copied agency passwords and no public owner registration.
 - Dedicated requests, appointments, openings, owner accounts, sessions, reset tokens, audit and notification tables. Atomic conflict authority and replay protection. Failed rescheduling preserves the original appointment.
-- Separate versioned deployable application under `customer-apps/tighten-up-your-locs/`; reusable components may be shared at build time. Existing static public design remains in place. Agency footer attribution is not a runtime dependency.
+- Separate private source repository `https://github.com/famtastic-fritz/site-tighten-up-your-locs`, with `application/`, `gateway/`, `public/` and `ops/` at its root; reusable components may be shared as pinned build-time packages. The old agency `customer-apps/tighten-up-your-locs/` location is retired and contains only a pointer. Existing public design remains in place. Agency footer attribution is not a runtime dependency.
 - Framework: Laravel 12 (PHP 8.3 compatible), Composer-pinned dependencies and audit. Dedicated configuration/secrets/storage outside public document root. No customer data or credentials in Git.
 
 ## Migration and acceptance
+
+Current source ownership and release evidence are in
+`docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md`. The September 14
+repository-only release changed no database, owner, credentials, scheduler or URLs;
+the runtime/data cutover described below is historical and must not be repeated.
 
 Read-only production inventory found one Locs request and zero appointments, appointment events or openings on September14. Recheck at cutover, preserve records and identifiers, reconcile count/hash evidence, and retain a recoverable source archive. Never delete agency-side records as an implementation shortcut.
 

@@ -2,7 +2,8 @@
 
 ## Decision
 
-FAMtastic Designs has one supported application stack:
+FAMtastic Designs has one supported **agency** application stack. This does not mean
+one repository or shared operational database for customer businesses:
 
 | Responsibility | Canonical path | Generated or deployed form |
 | --- | --- | --- |
@@ -16,6 +17,21 @@ FAMtastic Designs has one supported application stack:
 | Repository agent skills | `agent-skills/` | versioned callable procedures |
 | Operational guidance | `docs/` | repository documentation |
 
+Customer application source belongs to a private independent Git root and actual verified
+remote outside agency/platform roots. Agency customer-delivery records retain repository,
+release and evidence references; they are not copies of the customer application. Tighten
+Up Your Locs is canonical at `https://github.com/famtastic-fritz/site-tighten-up-your-locs`.
+See `docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md`. Historical prototypes and
+Build DNA remain evidence only; their dated source paths are not current build targets.
+
+Every new site/rebuild must consume the versioned site-repository contract/scaffold and
+validate its independent root, exact remote, complete source/lockfiles/tests and authored
+agent/design/research/learning records. An artifact-only deployment package must never
+delete-and-copy over a source repository. `local_only`, `remote_verified` and deployed
+are distinct states with independent evidence. A reusable library dependency must be
+version-pinned and portable; a sibling checkout or Drive download is not a production
+runtime dependency. Client-restricted asset rights do not transfer with reusable code.
+
 The canonical reusable-site composition contract is
 `docs/architecture/FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1.md`. Industry or
 campaign component registries are implementations and evidence; they do not
@@ -26,7 +42,8 @@ The target Shay specialist-agent architecture for website intake, research,
 commercial analysis, proofs, contracts, implementation, QA, provider failover,
 monitoring, and governed learning is
 `docs/architecture/SHAY_WEBSITE_DELIVERY_SWARM.md`. Drupal remains the customer,
-product, Commerce, approval, and evidence source of truth; agent outputs become
+product, Commerce, approval, and evidence source of truth **for the agency**; independent
+customer runtime identities and business records belong to their own systems. Agent outputs become
 authoritative only through the documented validation and approval boundaries.
 
 The former root Nuxt/AgencyOS application and local Directus prototype are

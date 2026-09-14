@@ -1,5 +1,23 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Runtime independence is not source portability
+
+Observation: Locs had its own runtime/database but its app and public source still lived
+inside the agency repository. Its browser harness imported agency Playwright, and PHP
+tests relied on a local environment/key. Guidance: prove a clean remote clone in an
+unrelated directory with its own lockfiles, safe test bootstrap, design/research/agent
+records and release tooling before deleting any old source. Preserve scoped commit/path
+maps and old delivery evidence; change release source identity without reprovisioning an
+already independent business database. Actual code rollback and a database restore are
+different proofs. A minute scheduler can advance its mutex during read-only verification;
+compare business data separately and report the observation rather than resetting state.
+
+Locs canonical source is now `famtastic-fritz/site-tighten-up-your-locs`, deployed at
+`e25f7f1a92cdae2093a760481d100ea0b32a111e`. Former agency source is retired after clone
+and live proof; the migration ledger records exact recoverable paths and limitations.
+Keep customer facts in the site repo, reusable packages in libraries and universal rules
+in FAMtastic. A CI job blocked by account billing is not a passing hosted test.
+
 ## 2026-09-14 — Provider boundaries and real hosting context
 
 Newsletter review reproduced a duplicate SMTP send caused by a retrying DB helper; the isolated root-transaction regression now proves one attempt, uncertain status and no automatic resend. Signup, confirmation, unsubscribe and owner visibility belong to the client's own runtime. Apache child rewrite contexts need explicit canonical HTTPS rules; checking only the homepage misses admin/API behavior. Public SEO metadata/schema are source improvements, not proof of Google indexing or map visibility. Prefer continuous dot/swipe autoplay without touch-emulated hover stalls, while respecting keyboard focus and reduced motion.

@@ -1,13 +1,21 @@
 # Product changelog
 
+## 2026-09-14 — Locs source ownership reconciled after release proof
+
+- Added curated root conversation decisions and the verified owner-only Drive archive references, exact hashes and source cutoff; hidden reasoning/tool output/code blocks/secrets are excluded.
+- Published the independent private `famtastic-fritz/site-tighten-up-your-locs` repository with scoped history, source/lockfiles/tests, design and learning records, approved assets and portable guarded release tooling. Fresh-clone verification passed 62 Node tests and 63 PHP tests / 383 assertions plus responsive browser QA.
+- Released customer source `e25f7f1a92cdae2093a760481d100ea0b32a111e` to the same existing host with unchanged runtime/public bytes, database, credentials, owner, storage and cron. Actual code rollback/restoration and live hashes/routes passed. GitHub CI could not start because of an account billing lock; no billing change or new email was attempted.
+- Removed 148 proven duplicate tracked working files from the agency app/pilot release, replaced two READMEs with canonical pointers, preserved historical proof/research and original commit mappings, and made the old Locs proof packager read-only. Agency frontend/backend runtime is unchanged. See `docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md` for recovery and evidence.
+- Clarified independent customer-repository rules in AGENTS/CLAUDE, GEMINI, operating/source contracts and learning/capability records. Agency delivery records do not own customer application source or business identities/data.
+
 ## 2026-09-14 — The Locs Letter and local search foundations
 
-Independent double-opt-in signup, persistent unsubscribe, private owner readership view and one-attempt/uncertain SMTP delivery are deployed and hosted-tested. No campaign sender or automatic booking enrollment. Public Ruby Signal newsletter panel, dot/swipe slideshow, Sisterlocks/Port St. Lucie metadata, canonical/social/schema/robots/sitemap are published. Final source `576b190a` removes hover stalls and verifies HTTP/www redirects for nested admin/API/appointment routes. Exact receipts: `customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md`. The independently reproduced SMTP retry issue was fixed before release.
+Independent double-opt-in signup, persistent unsubscribe, private owner readership view and one-attempt/uncertain SMTP delivery are deployed and hosted-tested. No campaign sender or automatic booking enrollment. Public Ruby Signal newsletter panel, dot/swipe slideshow, Sisterlocks/Port St. Lucie metadata, canonical/social/schema/robots/sitemap are published. Final source `576b190a` removes hover stalls and verifies HTTP/www redirects for nested admin/API/appointment routes. [Preserved original runtime receipts](https://github.com/famtastic-fritz/site-tighten-up-your-locs/blob/c0a20f5566996d19301854c05985bf79f676e463/docs/evidence/RELEASE-2026-09-14.md). The independently reproduced SMTP retry issue was fixed before release.
 
 ## 2026-09-14 — Independent Locs booking cutover verified
 
 - Own-domain admin and Laravel runtime, dedicated MySQL database/users, sessions, mail queue and scheduler now live. One legacy request preserved and reconciled field-by-field; old Locs authority and worker retired without deleting its original record.
-- Hosted auth/request/confirmation/conflict/replay/logout and rollback-only MySQL checks passed; fixture account/data cleaned. Public apex/www use own API. Corrected password-setup/instructions SMTP-accepted for Shay and Fritz. See `customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md` for exact hashes and limits. Personal owner sign-in, inbox delivery and restore drill remain unclaimed.
+- Hosted auth/request/confirmation/conflict/replay/logout and rollback-only MySQL checks passed; fixture account/data cleaned. Public apex/www use own API. Corrected password-setup/instructions SMTP-accepted for Shay and Fritz. See the [preserved runtime release record](https://github.com/famtastic-fritz/site-tighten-up-your-locs/blob/c0a20f5566996d19301854c05985bf79f676e463/docs/evidence/RELEASE-2026-09-14.md) for exact hashes and limits. Personal owner sign-in, inbox delivery and restore drill remain unclaimed.
 
 ## 2026-09-14 — Independent Locs architecture correction (candidate)
 

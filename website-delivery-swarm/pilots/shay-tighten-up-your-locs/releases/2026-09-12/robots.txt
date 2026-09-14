@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /admin
-Disallow: /api/
-Disallow: /appointment/
-
-Sitemap: https://tightenupyourlocs.com/sitemap.xml

@@ -1,5 +1,29 @@
 # Agent Instructions
 
+## Repository ownership: agency and customer businesses are separate
+
+This repository owns the FAMtastic Designs agency website, portal, CRM/Commerce and
+customer-delivery records. Every customer website/application must have its own private
+Git root and verified remote outside agency/platform Git roots. An agency project row,
+pilot directory or branded portal view is not the customer's canonical source or runtime.
+Never silently replace a target remote, overwrite authored source with a flattened artifact,
+or recreate a customer application inside `customer-apps/` or a pilot directory.
+
+Before a new build or rebuild, consume the versioned site-repository scaffold/contract,
+verify the actual Git root and remote, and retain `README.md`, `AGENTS.md`, `CLAUDE.md`,
+`GEMINI.md`, substantive `design.md`, `CHANGELOG.md`, `SITE-LEARNINGS.md`, research/source
+records, `CONVERSATIONS.md`, the site manifest, lockfiles, tests, safe environment examples,
+deployment/rollback instructions, policy/crawler metadata and asset provenance. Preserve
+authored documentation and backend source on retries. Distinguish `local_only`,
+`remote_verified` and deployed evidence; do not invent a repository URL.
+
+Tighten Up Your Locs now lives in the private `famtastic-fritz/site-tighten-up-your-locs`
+repository. Its source-only release preserves the existing independent business runtime.
+See `docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md` for exact source/evidence.
+Customer facts belong there, reusable packages in Component Studio, rights/provenance in
+Media Studio and universal standards in FAMtastic. Agency Drupal remains authoritative for
+agency commercial and delivery records, not the customer's bookings, identity or business DB.
+
 ## Standing rule: documentation sync (mandatory before session close)
 
 After any meaningful work session, update ALL FOUR surfaces — no exceptions:

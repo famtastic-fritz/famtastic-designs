@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Customer source ownership and independent-clone proof
+
+Observation: a dedicated business database did not make agency-nested source portable;
+the original test commands borrowed adjacent agency dependencies/environment. Guidance:
+each customer needs a private independent Git root/verified remote, complete source and
+lockfiles, substantive agent/design/research/learning records and source-safe rebuilds.
+Validate a clean unrelated clone, then release its exact pushed SHA without resetting
+the existing business state. Only remove duplicated source after clone/live/rollback
+proof, preserving original commit/path mappings and agency delivery history.
+
+Tighten Up Your Locs is canonical at `https://github.com/famtastic-fritz/site-tighten-up-your-locs`;
+live source `e25f7f1a92cdae2093a760481d100ea0b32a111e`. See
+`docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md`. The old agency portal/source
+instructions below are dated history, not current architecture. Existing scheduler lock
+version movement is not a new customer record; hosted CI blocked by billing is not a pass.
+
 ## 2026-09-14 — Newsletter delivery and continuous motion
 
 Do not put a provider send inside an automatically retried database transaction: acceptance followed by a deadlock can duplicate mail. Database-only transactions may retry; SMTP-bearing transactions attempt once and preserve uncertain state for explicit review. Confirm this outside nested test transactions. Newsletter consent is separate from booking, and a confirmation GET is read-only. Continuous galleries must not stick paused after touch-emulated hover; retain keyboard/reduced-motion pause without hover suspension. Local SEO must use verified facts and real HTTP/canonical checks, not guessed addresses or ranking promises.
@@ -36,7 +52,7 @@ The dedicated desk is now deployed, superseding September13 source-only status. 
 
 Observation: Owner Desk source already existed on a separate Designs lane. Its first review exposed lost-notice retry, expiring-hold and private entry-point gaps. Guidance: re-anchor source before implementation, test failure paths before capture, preserve exact vendor-copy hashes, and keep business identity in the adapter. A reusable React component does not grant a tenant access or execute the backend in Site Studio.
 
-Private entry after release: `/portal?section=booking`, with login-return continuity. This change does not create a live deployment or credentials. The Locs pilot shares the Designs repository rather than owning a second appointment backend.
+Historical September 13 entry was `/portal?section=booking`, with login-return continuity. That agency-hosted architecture and shared source were subsequently rejected and replaced by the independent customer runtime/repository; do not use this dated implementation note as current ownership or login guidance.
 
 ## 2026-09-13 — An owner inbox becomes operational only with durable commands
 

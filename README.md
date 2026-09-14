@@ -2,6 +2,12 @@
 
 This repository is the canonical source for the live FAMtastic Designs platform.
 
+It is not the source container for customer websites. Each customer business owns an
+independent repository and runtime. Tighten Up Your Locs now lives in the private
+[site-tighten-up-your-locs repository](https://github.com/famtastic-fritz/site-tighten-up-your-locs).
+See [the migration ledger](docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md)
+for verified source, deployment and preserved-history mappings.
+
 ## Architecture
 
 ```text

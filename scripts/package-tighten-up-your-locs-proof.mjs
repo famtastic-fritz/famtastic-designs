@@ -1,6 +1,11 @@
-import { readFile, writeFile } from 'node:fs/promises';
-import { basename, resolve } from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
+
+// Historical agency evidence only; reject every output/write mode before any I/O.
+if (process.argv.length !== 3 || process.argv[2] !== '--check') {
+  throw new Error('RETIRED_WRITE_PATH: Locs source is https://github.com/famtastic-fritz/site-tighten-up-your-locs. This historical agency checker permits only --check; it cannot write or deliver a new proof.');
+}
 
 const root = resolve(import.meta.dirname, '..');
 const proofRoot = resolve(root, 'docs/design/proofs/tighten-up-your-locs-v2');
@@ -28,13 +33,6 @@ const config = [
     assets: [{ asset_id: 'owner-phone-character', source: 'assets/story/owner-phone-character.png', output: 'owner-phone-character.png' }],
   },
 ];
-
-const option = (name) => {
-  const index = process.argv.indexOf(name);
-  if (index !== -1) return String(process.argv[index + 1] || '').trim();
-  const inline = process.argv.find((value) => value.startsWith(`${name}=`));
-  return inline ? inline.slice(name.length + 1).trim() : '';
-};
 
 const normalizeHtml = (html, direction) => {
   let result = html;
@@ -81,19 +79,4 @@ const buildVariant = async (direction) => {
 };
 
 const variants = await Promise.all(config.map(buildVariant));
-if (process.argv.includes('--check')) {
-  console.log(`PASS: ${variants.length} protected callback variants are packageable (${variants.map((variant) => variant.direction_id).join(', ')}).`);
-  process.exit(0);
-}
-
-const campaignId = option('--campaign');
-const jobId = option('--job');
-const eventId = option('--event');
-const output = option('--output');
-if (!/^pc-[a-z0-9-]+$/.test(campaignId) || jobId === '' || eventId === '' || output === '') {
-  throw new Error('Usage: node scripts/package-tighten-up-your-locs-proof.mjs --campaign=<exact campaign id> --job=<exact job id> --event=<unique callback event> --output=<private callback json>; use --check for read-only validation.');
-}
-const payload = JSON.stringify({ schema_version: 1, event_id: eventId, campaign_id: campaignId, job_id: jobId, variants }, null, 2);
-if (Buffer.byteLength(payload) > 24 * 1024 * 1024) throw new Error('Callback payload exceeds the protected import limit.');
-await writeFile(resolve(output), payload);
-console.log(`Wrote ${basename(output)}. SHA-256: ${createHash('sha256').update(payload).digest('hex')}`);
+console.log(`PASS: ${variants.length} historical protected callback variants remain readable (${variants.map((variant) => variant.direction_id).join(', ')}). No package written; current source is https://github.com/famtastic-fritz/site-tighten-up-your-locs.`);

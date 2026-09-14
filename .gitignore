@@ -76,3 +76,10 @@ marketing/video/public/
 # Voicebox server state (SQLite DB + generated wavs), created when the
 # local TTS server is started with this repo as cwd. Not campaign content.
 data/
+
+# Locs source moved to its independent private repository. Retain only pointers;
+# do not accidentally add old ignored test state or recreate customer source here.
+/customer-apps/tighten-up-your-locs/*
+!/customer-apps/tighten-up-your-locs/README.md
+/website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/*
+!/website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/README.md

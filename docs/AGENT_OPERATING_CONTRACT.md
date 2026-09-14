@@ -16,6 +16,15 @@ Drupal is the operational system of record and staff GUI. React is the branded
 customer experience. Drupal Commerce is the financial source of truth for all
 new purchases. Stripe holds payment credentials; Drupal must not store cards.
 
+These statements govern the agency's commercial/delivery system, not each customer's
+operating business. Every customer site must have its own private source repository,
+independent verified Git root/remote, complete portable build and substantive agent/design/
+research/learning records. Never make the agency portal, agency account or agency database
+an unapproved dependency of customer operations. Rebuilds must preserve authored backend
+source and documentation, and artifact-only sync must not write into source repositories.
+Tighten Up Your Locs is already separated: read
+`docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md` for its canonical repository.
+
 ## Intake to purchase decision
 
 1. A customer owns reusable website requests inside their workspace.

@@ -1,12 +1,21 @@
 # Tighten Up Your Locs site learnings
 
+## 2026-09-14 — Historical agency record; current source moved
+
+Current private source is `https://github.com/famtastic-fritz/site-tighten-up-your-locs`,
+deployed at `e25f7f1a92cdae2093a760481d100ea0b32a111e`. These retained dated notes are
+agency delivery history, not instructions to recreate a customer build here. Current
+site learning, design, research, source and release tooling belong to the customer repo.
+See `docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md` at the agency root for
+the independent-clone/live/rollback proof and original commit/path recovery mapping.
+
 ## 2026-09-14 — Independent business, continuous gallery and The Locs Letter live
 
 This supersedes the agency-backend instruction and earlier gallery controls below. Final application/public source `576b190ab28d8cef15b82982c4429055880058e1` is deployed: own `/admin/`, dedicated18-table MySQL database/users/auth/sessions/outbox/scheduler; original request reconciled, old authority retired without deleting legacy data. Private `/admin/newsletter` shows confirmed/pending/unsubscribed readers, not campaign sending. Hosted auth/booking and a controlled own-mailbox signup/confirmation/unsubscribe passed; temporary fixtures removed. Corrected setup/instructions were SMTP-accepted for Shay and Fritz.
 
 Public newsletter/SEO package `52fde9721e21dedac5fd10eb88c48f43c81a7845b786b26169395ca81471b2aa` installed8files; final continuous-loop package `54e8aea3acdcdc8bff426e1cc9b18e8a75c922a62383f9e9f045637bbd3b0f3a` installed3. Exact hashes checked on apex/www. Browser shows four44x44dot targets, autoplay, no visible control bar, no overflow, and the Ruby/gold newsletter panel on desktop/mobile. Swipe logic is unit-covered; physical touch/OS-motion testing is not claimed. Hover no longer pauses, avoiding mobile-emulated hover stalls. Keyboard, explicit accessible pause, hidden tab and reduced-motion protections remain.
 
-Sisterlocks/Port St. Lucie title/description, canonical, social metadata, factual Organization/WebSite/Service schema, robots and sitemap are live. HTTP/www redirects now include the nested admin/API/appointment routes, not just the homepage. Google indexing/rankings/GBP/Search Console and restore drill are not verified. SMTP acceptance is not inbox/read proof; Shay still chooses her personal password. See `customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md` for exact application/backup/provider receipts and remaining limits.
+Sisterlocks/Port St. Lucie title/description, canonical, social metadata, factual Organization/WebSite/Service schema, robots and sitemap are live. HTTP/www redirects now include the nested admin/API/appointment routes, not just the homepage. Google indexing/rankings/GBP/Search Console and restore drill are not verified. SMTP acceptance is not inbox/read proof; Shay still chooses her personal password. See the [preserved runtime release record](https://github.com/famtastic-fritz/site-tighten-up-your-locs/blob/c0a20f5566996d19301854c05985bf79f676e463/docs/evidence/RELEASE-2026-09-14.md) for exact application/backup/provider receipts and remaining limits.
 
 Reuse lessons: business-owned runtime is mandatory unless expressly agreed otherwise; component sharing is build-time reuse. Never wrap SMTP acceptance in an automatically retried DB transaction. Newsletter confirmation is explicit and separate from booking. `design.md` was updated before public changes. Canonical Component/Studio recipe-awareness commits exist; automatic Laravel import remains unproven.
 

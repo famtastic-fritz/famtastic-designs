@@ -1,5 +1,12 @@
 # Tighten Up Your Locs — client-specific proof set v2
 
+Historical agency delivery evidence only. The current customer source is the private
+[site-tighten-up-your-locs repository](https://github.com/famtastic-fritz/site-tighten-up-your-locs),
+live at `e25f7f1a92cdae2093a760481d100ea0b32a111e`. The original descriptions below
+record the proof stage, not today's operational capability or build target. The agency
+proof packager is now read-only; do not use these prototypes to replace the live site.
+See `docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md` at the repository root.
+
 **Private owner build. Not published. Nothing here connects a calendar, collects payment, registers a domain, or changes the client record.**
 
 The root page is now a Shay-first, mobile public-site build. It keeps the normal website foundation visible—branded domain treatment, book, contact, find-us, services, and a phone quick-action dock—while the owner command center is a separate, honest surface.

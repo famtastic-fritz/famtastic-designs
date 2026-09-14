@@ -1,6 +1,18 @@
 # Owner Desk implementation and reuse
 
-## Source ownership
+## Historical research — current ownership correction
+
+The September 13 implementation below records the earlier agency-hosted approach; it
+is not current architecture or login guidance. That model was rejected and superseded
+by an independent Locs application, then the private
+[site-tighten-up-your-locs repository](https://github.com/famtastic-fritz/site-tighten-up-your-locs).
+The current same-domain owner entry is `https://tightenupyourlocs.com/admin/`.
+Live source is `e25f7f1a92cdae2093a760481d100ea0b32a111e`; see
+`docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md` for exact evidence.
+Retain the dated findings below as provenance, not as permission to restore an agency
+login, business-data dependency or old customer build target.
+
+## Source ownership observed September 13 (superseded)
 
 The operating backend for Tighten Up Your Locs belongs to the FAMtastic Designs repository. The implementation lane is `codex/locs-owner-desk`, worktree `/private/tmp/famtastic-locs-owner-desk`, continuing the existing `f3467f46` appointment implementation. A bounded repository search found no separate Tighten Up Your Locs Git repository. The customer pilot lives under `website-delivery-swarm/pilots/shay-tighten-up-your-locs`; hosting provisioning is a separate FAMtastic Hosting concern, not a duplicate appointment backend.
 
