@@ -7,3 +7,6 @@ The customer pilot and Owner Desk implementation are part of FAMtastic Designs. 
 Public request capture, appointment confirmation, customer delivery and teaching enrollment are different completion gates. The reviewed source adds calendar and appointment operation locally, but production stays unchanged until the exact committed release is deployed and tested. Customer-facing receipt copy must say queued rather than sent when only an outbox row exists.
 
 Do not infer official teaching qualifications, prices or merchant ownership from the site brand. Keep future classes and online learning modular; do not expose unavailable features as working navigation.
+# September14 public footer correction
+
+Copyright and linked FAMtastic Designs credit were omitted from the public artifact despite the separate Owner Desk release. Updated only index.html, including neutral analytics description instead of contradictory static off-until-allow copy. GA4 config/site.js are unchanged; visitor opt-in remains pending the owner's separate tracking-policy decision. Seven focused static/unit tests pass. Live evidence follows below after the managed-file publisher succeeds.

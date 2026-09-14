@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Public footer and analytics scope
+
+Observation: Owner Desk deployment did not ship the customer site's pending footer. Guidance: verify the exact public artifact, copyright and agency link separately. Keep tracking configuration and visitor-consent decisions separate; do not auto-grant analytics to resolve a copy complaint.
+
 ## 2026-09-14 — Owner Desk release acceptance is layered
 
 The dedicated desk is now deployed, superseding September13 source-only status. Preserve explicit booking entry over default proof navigation; bind branding to the authoritative generated site key. A negative account-isolation browser check and rollback-only backend smoke do not impersonate the owner or prove her password sign-in. Provider SENT is not a read receipt. See `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md` for exact live SHAs and evidence limits.

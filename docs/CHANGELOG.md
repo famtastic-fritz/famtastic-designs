@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-14 — Locs public footer correction
+
+- Added customer copyright and linked Website by FAMtastic Designs credit to the actual public artifact, not the separate Owner Desk bundle.
+- Removed contradictory static analytics-off wording; retained configured GA4 and visitor controls pending a distinct consent-policy decision. Seven focused tests pass. Live publication evidence is recorded in the Locs pilot learning log after deployment.
+
 ## 2026-09-14 — Owner Desk deployed and instructions sent
 
 - Released backend `0cd25c48` with migration8062 and frontend `d1b939f6`; verified live markers, apex/www assets and mobile private entry.

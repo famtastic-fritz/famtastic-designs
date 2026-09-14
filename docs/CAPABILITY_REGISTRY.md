@@ -1,5 +1,7 @@
 # FAMtastic Designs capability registry
 
+September14 public-site correction: the deployed Locs configuration still identifies GA4 `G-V8M437DWV0`, with opt-in tag loading. Required analytics as a business deliverable is separate from visitor consent. Footer copyright/agency-credit source and regression tests now exist; deployment acceptance belongs to the public static artifact, not the Owner Desk release marker.
+
 ## 2026-09-14 — Owner Desk production release (supersedes September13 local-only status)
 
 Backend `0cd25c48` and frontend `d1b939f6` are deployed. Verified production schema, owner binding, safe rollback-only lifecycle/authorization checks, synthetic separate-process lock exclusion, public-site regression, and private entry/login-return checks. Instruction emails to Shay and Fritz have provider SENT receipts. Shay's personal password sign-in and a real customer appointment/notification lifecycle are not yet recipient-accepted proof. No external calendar sync, payment or teaching enrollment is claimed. See `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`.

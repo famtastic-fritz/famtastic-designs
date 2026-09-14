@@ -23,6 +23,16 @@
   },
   "stages": [
     {
+      "stage_id": "public-footer-correction-20260914",
+      "capability": "preserve-direction-correct-copyright-credit-and-privacy-copy",
+      "source_parent": "17185b29",
+      "component_instances": ["foundation.find-contact-domain.v1", "privacy.request-analytics.v1"],
+      "result": {"status": "seven_local_tests_passed_pending_publication", "changed_public_files": ["index.html"], "analytics_behavior": "unchanged_opt_in", "new_media": false},
+      "execution": {"provider": "openai-codex", "model_status": "not_disclosed_by_runtime", "cost_status": "runtime_did_not_report", "duration_status": "not_measured"},
+      "approval": "Fritz requested the missing copyright and FAMtastic Designs credit; changing visitor-consent policy remains separate.",
+      "evidence_ref": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/SITE-LEARNINGS.md"
+    },
+    {
       "stage_id": "release-adaptation",
       "attempt": 1,
       "capability": "preserve-approved-design-and-wire-gated-request-interface",
@@ -96,7 +106,7 @@
     {
       "role": "index.html",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/index.html",
-      "sha256": "cf9a28172f5cd726e4f75bee170eac6c0b8b2909e9f142fd061bcae1c216b528",
+      "sha256": "b54a375b19a5da2a0c0c1065550b149367fd48ce81829ec4420511643caa92cb",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
