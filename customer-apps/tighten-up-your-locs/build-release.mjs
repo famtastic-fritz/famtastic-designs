@@ -3,7 +3,7 @@ import {mkdtempSync,readFileSync,writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {createHash} from 'node:crypto';
-const run=(args,cwd=process.cwd())=>execFileSync(args[0],args.slice(1),{cwd,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
+const run=(args,cwd=process.cwd())=>execFileSync(args[0],args.slice(1),{cwd,env:{...process.env,COPYFILE_DISABLE:'1'},encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
 const repo=run(['git','rev-parse','--show-toplevel']);
 if(run(['git','status','--porcelain'],repo))throw Error('clean_worktree_required');
 run(['git','fetch','origin'],repo);
