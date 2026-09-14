@@ -8,7 +8,8 @@ const booking=enabled=>execFileSync('ssh',['-o','BatchMode=yes','-o','StrictHost
 const cookies=new Map();const checks=[];
 async function request(path,options={}) {
  const r=await fetch('https://tightenupyourlocs.com'+path,{redirect:'manual',signal:AbortSignal.timeout(25000),...options,headers:{Accept:'text/html',Cookie:[...cookies].map(([k,v])=>k+'='+v).join('; '),...options.headers}});
- for(const c of r.headers.getSetCookie()){const pair=c.split(';')[0],i=pair.indexOf('=');cookies.set(pair.slice(0,i),pair.slice(i+1));}
+ // Public visitor requests must not replace the separately authenticated owner session.
+ if(options.headers?.Cookie!=='')for(const c of r.headers.getSetCookie()){const pair=c.split(';')[0],i=pair.indexOf('=');cookies.set(pair.slice(0,i),pair.slice(i+1));}
  return r;
 }
 try {
