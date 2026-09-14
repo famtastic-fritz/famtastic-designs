@@ -14,6 +14,7 @@ use Drupal\famtastic_pipeline\Form\WebsiteRequestProofReviewForm;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /** Exercises the actual query against isolated in-memory SQLite rows. */
 final class WebsiteRequestProofHandoffTest extends UnitTestCase {
@@ -58,12 +59,66 @@ final class WebsiteRequestProofHandoffTest extends UnitTestCase {
   }
 
   private function localHandoff(): void {
-    $this->database->update('famtastic_project_request')->fields(['proof_campaign_id' => 53])->condition('id', 14)->execute();
+    $this->campaign('waiting_callback', 'not_started', 'local-1234567890abcdef1234567890abcdef');
+  }
+
+  private function campaign(string $generation, string $reviewStatus = 'not_started', string $studioJob = ''): void {
+    $this->database->update('famtastic_project_request')->fields(['proof_campaign_id' => 53, 'proof_review_status' => $reviewStatus])->condition('id', 14)->execute();
     $campaign = $this->createMock(ProofCampaign::class);
     $campaign->method('get')->willReturnCallback(static fn(string $field) => (object) ['value' => [
-      'generation_status' => 'waiting_callback', 'studio_job_id' => 'local-1234567890abcdef1234567890abcdef',
+      'generation_status' => $generation, 'studio_job_id' => $studioJob,
     ][$field] ?? NULL]);
     $this->campaigns->method('load')->with(53)->willReturn($campaign);
+  }
+
+  #[DataProvider('readyReviewStages')]
+  public function testReadyCampaignRetainsReviewStageWithoutSuccessfulLegacyJob(string $reviewStatus, string $state, ?string $jobStatus): void {
+    if ($jobStatus !== NULL) {
+      $this->job(1, 'website_proof.generate.v1:request:14:brief:valid', $jobStatus);
+    }
+    $this->campaign('ready', $reviewStatus);
+    $handoff = $this->portal->websiteRequestProofHandoff(14);
+    $this->assertSame($state, $handoff['state']);
+    // Reporting completed proof evidence must not rewrite the old queue record.
+    $this->assertSame($jobStatus ?? 'not_queued', $handoff['job_status']);
+    $this->assertSame($jobStatus === NULL ? NULL : 1, $handoff['job_id']);
+  }
+
+  public static function readyReviewStages(): iterable {
+    foreach (['customer_ready' => 'choose_direction', 'notified' => 'choose_direction', 'selected' => 'direction_selected', 'owner_review' => 'owner_review', 'revision_requested' => 'revision_requested'] as $reviewStatus => $state) {
+      foreach ([NULL, 'failed'] as $jobStatus) {
+        yield $reviewStatus . '-' . ($jobStatus ?? 'missing') => [$reviewStatus, $state, $jobStatus];
+      }
+    }
+  }
+
+  public function testReviewStatusAloneCannotMakeIncompleteMissingJobLookReady(): void {
+    $this->campaign('waiting_callback', 'notified', 'studio-real-job');
+    $handoff = $this->portal->websiteRequestProofHandoff(14);
+    $this->assertSame('needs_attention', $handoff['state']);
+    $this->assertStringContainsString('no proof job is recorded', $handoff['detail']);
+  }
+
+  public function testReviewStatusAloneCannotHideFailedIncompleteJob(): void {
+    $this->job(1, 'website_proof.generate.v1:request:14:brief:valid', 'failed');
+    $this->campaign('waiting_callback', 'selected', 'studio-real-job');
+    $handoff = $this->portal->websiteRequestProofHandoff(14);
+    $this->assertSame('needs_attention', $handoff['state']);
+    $this->assertStringContainsString('team review before concepts can be prepared', $handoff['detail']);
+  }
+
+  public function testCompletedProviderHandoffStillWaitsForSiteStudio(): void {
+    $this->job(1, 'website_proof.generate.v1:request:14:brief:valid', 'completed');
+    $this->campaign('waiting_callback', 'not_started', 'studio-real-job');
+    $this->assertSame('waiting_for_site_studio', $this->portal->websiteRequestProofHandoff(14)['state']);
+  }
+
+  public function testCompletedHandoffWithoutProviderIdentityNeedsAttention(): void {
+    $this->job(1, 'website_proof.generate.v1:request:14:brief:valid', 'completed');
+    $this->campaign('waiting_callback');
+    $handoff = $this->portal->websiteRequestProofHandoff(14);
+    $this->assertSame('needs_attention', $handoff['state']);
+    $this->assertStringContainsString('without a recorded provider job', $handoff['detail']);
   }
 
   public function testRequestFourteenNeverReadsRequestOneHundredFortyJob(): void {

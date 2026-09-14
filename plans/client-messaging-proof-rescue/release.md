@@ -121,3 +121,19 @@ The required Drive status file is
 `2026-09-14-client-messaging-production-release.md` under the existing
 `My Drive/FAMtastic/famtasticdesigns.com/` mirror. The local mirror copy is
 verified; remote Drive synchronization is not separately attested.
+
+## Orders status follow-up
+
+Final live Orders review identified a pre-existing handoff precedence defect:
+ready/notified campaigns for requests 2 and 3 appeared to need attention when
+their legacy workflow job was absent. Production campaign readiness was
+verified directly before changing the calculation. The service now returns
+the actual ready campaign's review stage before missing/failed-job warnings;
+bare review status on an incomplete campaign still cannot imply readiness.
+
+Ten new regressions failed before the correction. The focused handoff suite
+now passes 23 tests / 74 assertions, and the full module suite passes 217 tests
+/ 1,129 assertions with the same 66 existing PHPUnit deprecations. The exact
+request job query and waiting-provider behavior remain covered. No frontend
+files changed. Canonical backend deployment and live Orders recheck are pending
+at this follow-up implementation checkpoint.

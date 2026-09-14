@@ -995,48 +995,13 @@ final class CustomerPortalService {
       'attempts' => $job ? (int) $job['attempts'] : 0,
       'max_attempts' => $job ? (int) $job['max_attempts'] : 0,
     ];
-    if (!$job) {
-      return $base + [
-        'state' => 'needs_attention',
-        'label' => 'Proof run needs FAMtastic attention',
-        'detail' => 'Your submitted brief is saved, but no proof job is recorded yet. You do not need to submit it again.',
-      ];
-    }
-    if ($job['status'] === 'failed') {
-      return $base + [
-        'state' => 'needs_attention',
-        'label' => 'Proof run needs FAMtastic attention',
-        'detail' => 'The proof routine needs a team review before concepts can be prepared. Your saved brief is unchanged.',
-      ];
-    }
-
     $campaign = !empty($row['proof_campaign_id'])
       ? $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id'])
       : NULL;
+    // A completed campaign is stronger evidence than an absent or failed legacy
+    // workflow job. Review status alone must never imply generated proofs.
     if ($campaign) {
       $generation = (string) $campaign->get('generation_status')->value;
-      $studioJob = (string) $campaign->get('studio_job_id')->value;
-      if ($generation === 'waiting_callback') {
-        if (str_starts_with($studioJob, 'local-')) {
-          return $base + [
-            'state' => 'waiting_for_provider',
-            'label' => 'Proof generation needs FAMtastic attention',
-            'detail' => 'Your brief is saved, but working concepts have not been returned. FAMtastic needs to start or restore the creative-provider run. You do not need to submit your brief again.',
-          ];
-        }
-        if ($studioJob !== '') {
-          return $base + [
-            'state' => 'waiting_for_site_studio',
-            'label' => 'Site Studio request accepted',
-            'detail' => 'Site Studio has a recorded proof job and is expected to return working concepts for FAMtastic review.',
-          ];
-        }
-        return $base + [
-          'state' => 'needs_attention',
-          'label' => 'Proof handoff needs FAMtastic attention',
-          'detail' => 'Your proof record is waiting without a recorded provider job. Your saved brief is unchanged.',
-        ];
-      }
       if ($generation === 'ready' && (string) ($row['proof_review_status'] ?? '') === 'owner_review') {
         return $base + [
           'state' => 'owner_review',
@@ -1069,6 +1034,42 @@ final class CustomerPortalService {
           'detail' => 'Your notes are recorded with this proof set. FAMtastic must review them and return the next proof update here.',
         ];
       }
+    }
+    if (!$job) {
+      return $base + [
+        'state' => 'needs_attention',
+        'label' => 'Proof run needs FAMtastic attention',
+        'detail' => 'Your submitted brief is saved, but no proof job is recorded yet. You do not need to submit it again.',
+      ];
+    }
+    if ($job['status'] === 'failed') {
+      return $base + [
+        'state' => 'needs_attention',
+        'label' => 'Proof run needs FAMtastic attention',
+        'detail' => 'The proof routine needs a team review before concepts can be prepared. Your saved brief is unchanged.',
+      ];
+    }
+    if ($campaign && $generation === 'waiting_callback') {
+      $studioJob = (string) $campaign->get('studio_job_id')->value;
+      if (str_starts_with($studioJob, 'local-')) {
+        return $base + [
+          'state' => 'waiting_for_provider',
+          'label' => 'Proof generation needs FAMtastic attention',
+          'detail' => 'Your brief is saved, but working concepts have not been returned. FAMtastic needs to start or restore the creative-provider run. You do not need to submit your brief again.',
+        ];
+      }
+      if ($studioJob !== '') {
+        return $base + [
+          'state' => 'waiting_for_site_studio',
+          'label' => 'Site Studio request accepted',
+          'detail' => 'Site Studio has a recorded proof job and is expected to return working concepts for FAMtastic review.',
+        ];
+      }
+      return $base + [
+        'state' => 'needs_attention',
+        'label' => 'Proof handoff needs FAMtastic attention',
+        'detail' => 'Your proof record is waiting without a recorded provider job. Your saved brief is unchanged.',
+      ];
     }
     if ($job['status'] === 'completed') {
       return $base + [

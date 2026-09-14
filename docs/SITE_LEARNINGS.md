@@ -2,6 +2,8 @@
 
 ## 2026-09-14 — Shared signature rule and production proof
 
+Live Orders acceptance caught missing legacy jobs incorrectly overriding ready campaign review state. Preserve the completed campaign's actual stage, while keeping incomplete runs visibly blocked. Regressions cover both sides of that precedence rather than merely checking a label.
+
 Future agent-authored customer correspondence signs Shay or Shay-Shay; full spelling is Shay-Shay. Existing template-specific signatures are not an automatic persona selector. Follow `docs/architecture/CLIENT_MESSAGE_SIGNATURE_CONVENTION.md`, preserve historical sends and keep the SMTP sender identity separate.
 
 Actual signed-in portal/admin acceptance now proves the inbox release at `fea57649`, including one authorized clarification saved in the same conversation. Native screenshots confirmed persisted search values even when sanitized browser inspection omitted them. Archive checks must cover both workflow status and `customer_archived_at`; production update metadata can be refreshed separately from cron. Exact release, local test boundaries and SMTP receipts are in `plans/client-messaging-proof-rescue/release.md`.

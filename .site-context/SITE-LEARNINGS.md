@@ -2,6 +2,8 @@
 
 ## 2026-09-14 — Live acceptance and consistent customer signatures
 
+Observation: old delivered proofs can have ready campaign artifacts and valid review state without a surviving worker job. Guidance: prioritize that completed campaign evidence before missing/failed legacy job warnings; a bare notified/selected field on an incomplete campaign is not sufficient. Orders and Projects must agree on actual customer progress.
+
 Observation: an archived request retains its workflow status and records its archive time separately. Guidance: active filters must exclude both archive representations; the explicit Archived option must retrieve either. Verify native screenshots as well as sanitized browser snapshots: a snapshot can omit an input value while the visible search field correctly retains it.
 
 Observation: customer signatures are currently template-specific, including legacy Shay variants. Guidance: future agent-authored messages sign Shay or Shay-Shay, following `docs/architecture/CLIENT_MESSAGE_SIGNATURE_CONVENTION.md`. Keep that instruction in every agent entry point through shared AGENTS/operating guidance and cross-session memory. Body sign-offs are separate from SMTP identity; preserve delivered history.

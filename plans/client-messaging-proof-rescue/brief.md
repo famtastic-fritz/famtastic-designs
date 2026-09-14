@@ -21,9 +21,10 @@ Deliver Kesline's complete working proof set to the verified customer, make cont
 - [x] Update source truth, operational lessons and Drive status mirror with exact evidence.
 - [x] Inspect the other Kesline request and send one authorized clarification for the unresolved second-website scope.
 - [x] Record the Shay/Shay-Shay signing convention in shared agent guidance and cross-session memory.
+- [ ] Verify the final Orders proof-status correction after canonical backend deployment.
 
 ## Status
-complete
+active — final Orders status correction under release verification
 
 ## Started
 2026-09-14
@@ -79,3 +80,8 @@ already-sent clarification predates that instruction and remains unchanged.
 This completes the scoped rescue and messaging release. The pre-existing
 unconfigured unattended creative-worker connection remains a documented
 separate limitation; exact Kesline proof delivery is complete.
+
+Live Orders follow-up: ready/notified historical campaigns were hidden by the
+missing-legacy-job guard. The correction now passes 217 module tests / 1,129
+assertions, including readiness and incomplete-run regressions. Final backend
+release/recheck is tracked in `release.md`.
