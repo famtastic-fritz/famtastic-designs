@@ -15,3 +15,4 @@ Route::middleware('guest')->group(function() {
 Route::post('/admin/logout',[AuthController::class,'logout'])->middleware('auth');
 Route::get('/admin',fn()=>view('admin'))->middleware(['auth','owner'])->name('admin');
 if (is_file(__DIR__.'/booking.php')) require __DIR__.'/booking.php';
+require __DIR__.'/newsletter.php';

@@ -1,6 +1,6 @@
 # FAMtastic Designs capability registry
 
-Owner correction September14: the agency-hosted Locs Owner Desk was deployed but architecturally rejected. It must not be described as satisfying the independent-business requirement. `customer-apps/tighten-up-your-locs/` is the standalone application candidate; hosted acceptance and cutover remain separate gates. Customer ownership is not merely an agency tenant binding.
+Owner correction September14: the agency-hosted Locs Owner Desk was deployed but architecturally rejected. It must not be described as satisfying the independent-business requirement. `customer-apps/tighten-up-your-locs/` is now deployed and cut over: same-domain admin, dedicated database/users, independent auth/sessions, booking API/outbox/scheduler/backups. Hosted acceptance passed and the one legacy request was reconciled without alerts; old Locs authority is retired. Exact evidence and remaining personal-sign-in/inbox/restore limits are in its `RELEASE-2026-09-14.md`. Customer ownership is not merely an agency tenant binding. The older portal evidence below is historical, not the current Locs architecture.
 
 Gallery release acceptance: `53071d32` is live on Locs, with apex/www source-hash checks and browser autoplay/pause/manual navigation proof. No change to Owner Desk or analytics capability claims.
 

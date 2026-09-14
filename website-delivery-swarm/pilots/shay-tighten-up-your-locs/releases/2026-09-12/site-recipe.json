@@ -1,6 +1,6 @@
 {
   "site_id": "tighten-up-your-locs",
-  "recipe_version": "1.3.0-hero-gallery",
+  "recipe_version": "1.4.0-independent-locs-letter",
   "design_contract": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/design.md",
   "source_recipe": "docs/design/proofs/tighten-up-your-locs-v2/site-recipe.json",
   "source_direction": "docs/design/proofs/tighten-up-your-locs-v2/proofs/appointment-desk-hybrid/index.html",
@@ -38,7 +38,7 @@
         {
           "instance_id": "availability.owner-window.v1",
           "definition_id": "availability.request-window.v1",
-          "variant": "disabled-until-provider-proof"
+          "variant": "independent-published-openings-or-empty"
         },
         {
           "instance_id": "flow.request-steps.v1",
@@ -51,19 +51,44 @@
           "variant": "request-not-confirmation"
         },
         {
+          "instance_id": "newsletter.locs-letter.v1",
+          "definition_id": "newsletter.independent-double-opt-in.v1",
+          "variant": "ruby-editorial-envelope"
+        },
+        {
           "instance_id": "foundation.find-contact-domain.v1",
           "definition_id": "foundation.location-contact-domain.v1",
           "variant": "verified-city-only"
         }
       ]
     },
-    {"page_id":"privacy-policy","route":"/privacy/","components":[{"instance_id":"privacy.request-analytics.v1","definition_id":"privacy.consent.v1","variant":"standalone-policy"}]},
-    {"page_id":"website-terms","route":"/terms/","components":[{"instance_id":"terms.website-use.v1","definition_id":"terms.website-use.v1","variant":"request-workflow-terms"}]}
+    {
+      "page_id": "privacy-policy",
+      "route": "/privacy/",
+      "components": [
+        {
+          "instance_id": "privacy.request-analytics.v1",
+          "definition_id": "privacy.consent.v1",
+          "variant": "standalone-policy"
+        }
+      ]
+    },
+    {
+      "page_id": "website-terms",
+      "route": "/terms/",
+      "components": [
+        {
+          "instance_id": "terms.website-use.v1",
+          "definition_id": "terms.website-use.v1",
+          "variant": "request-workflow-terms"
+        }
+      ]
+    }
   ],
   "withheld_components": [
     {
-      "page_id": "owner-desk",
-      "reason": "No proven authenticated public release; static mock excluded"
+      "page_id": "historical-static-owner-prototype",
+      "reason": "Mock excluded; real private /admin is supplied by the independent application, never regenerated as a static page."
     }
   ],
   "media_bindings": [
@@ -73,16 +98,31 @@
       "asset": "assets/archive-private-concept.png",
       "role": "illustration_not_portfolio",
       "publication": "user_authorized_existing_illustrations_20260914",
-      "gallery_assets": ["assets/archive-private-concept.png", "assets/loc-updo-concept.png", "assets/styled-locs-concept.png", "assets/loc-journey-concept.png"],
+      "gallery_assets": [
+        "assets/archive-private-concept.png",
+        "assets/loc-updo-concept.png",
+        "assets/styled-locs-concept.png",
+        "assets/loc-journey-concept.png"
+      ],
       "provenance": "docs/design/proofs/tighten-up-your-locs-v2/build-dna.json",
-      "behavior": "six_second_rotation_pause_manual_navigation_reduced_motion",
+      "behavior": "six_second_autoplay_loop_dots_swipe_keyboard_and_reduced_motion",
       "truth_boundary": "Generated editorial illustrations, not client work or before-and-after results"
     }
   ],
   "constraints": [
     "No new design direction",
-    "No live provider assertions",
+    "Provider behavior requires explicit deployment evidence; never infer it from a static recipe",
     "Site binding site-dffd4cb9c3aa47fd is authoritative",
     "Recipe declared from structured source, not inferred from DOM"
-  ]
+  ],
+  "independent_application": {
+    "source": "customer-apps/tighten-up-your-locs/application",
+    "private_routes": [
+      "/admin/",
+      "/admin/newsletter"
+    ],
+    "database": "business-owned",
+    "agency_runtime_dependency": false,
+    "evidence": "customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md"
+  }
 }

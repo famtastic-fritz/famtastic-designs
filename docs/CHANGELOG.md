@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-14 — Independent Locs booking cutover verified
+
+- Own-domain admin and Laravel runtime, dedicated MySQL database/users, sessions, mail queue and scheduler now live. One legacy request preserved and reconciled field-by-field; old Locs authority and worker retired without deleting its original record.
+- Hosted auth/request/confirmation/conflict/replay/logout and rollback-only MySQL checks passed; fixture account/data cleaned. Public apex/www use own API. Corrected password-setup/instructions SMTP-accepted for Shay and Fritz. See `customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md` for exact hashes and limits. Personal owner sign-in, inbox delivery and restore drill remain unclaimed.
+
 ## 2026-09-14 — Independent Locs architecture correction (candidate)
 
 - Replaced the rejected agency-portal architecture with an independently deployable Locs Laravel application candidate: same-domain admin, dedicated database/user provisioning, owner auth/reset, booking conflict authority, outbox and backup/release/migration scripts. Public candidate config now uses same-origin endpoints; not yet production cut over.

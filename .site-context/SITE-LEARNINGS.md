@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Preserve records while changing ownership boundaries
+
+Live correction: independent Locs auth/DB/API and public cutover are verified; the existing request retained its UUID and mapped fields, with no duplicate alert. Disable legacy entry points and drain/block stale writers before export; verify exact-site guard definitions and immutable inventory, then reconcile the target. Keep the original records and private backups. Test hosted PHP directory redirects separately from the development server, and keep visitor/owner test cookie jars separate. A source commit, migration, SMTP acceptance, personal sign-in and inbox receipt are distinct evidence.
+
 ## 2026-09-14 — Business independence is an architectural requirement
 
 Observation: implementation treated Shay's booking system as a FAMtastic customer-portal feature, despite the business being its own entity. Guidance: resolve deployment, database, identity and operational ownership before implementation; reusable presentation does not authorize shared runtime dependency. A branded skin or tenant row is not an independent application. The correction requires same-domain admin, own database credentials/tables, same-origin public intake, own auth/outbox/backups, and preserved-record cutover.

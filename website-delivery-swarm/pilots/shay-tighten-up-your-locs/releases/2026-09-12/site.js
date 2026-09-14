@@ -1,4 +1,5 @@
-import { initHeroGallery } from './hero-gallery.js';
+import { initHeroGallery } from './hero-gallery.js?v=20260914-letter';
+import { initNewsletter } from './newsletter.js?v=20260914-letter';
 export const SITE_KEY = "site-dffd4cb9c3aa47fd";
 export function canonicalEndpoint(value, kind, origin) {
   if (!value) return "";
@@ -66,6 +67,7 @@ export function initAnalytics(win, doc, measurement) {
 }
 export function initSite(win = window, doc = document) {
   initHeroGallery(doc, win);
+  initNewsletter(doc, win);
   const config = settings(win.LOCS_CONFIG || {}, win.location.origin);
   const form = doc.getElementById("contact-form"), button = doc.getElementById("send-request");
   const status = doc.getElementById("status"), info = doc.getElementById("request-availability");

@@ -30,6 +30,7 @@
             <button type="button" data-section="calendar">Calendar</button>
             <button type="button" data-section="openings">Openings</button>
         </nav>
+        <a class="button button-quiet" href="/admin/newsletter">The Locs Letter</a>
         <button id="refresh-desk" class="button button-quiet" type="button">Refresh</button>
     </div>
     <div id="desk-notice" class="notice" role="status" hidden></div>

@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\PrivateHeaders::class);
         $middleware->redirectGuestsTo('/admin/login');
         $middleware->redirectUsersTo('/admin');
-        $middleware->validateCsrfTokens(except: ['api/booking-request/site-dffd4cb9c3aa47fd']);
+        $middleware->validateCsrfTokens(except: ['api/booking-request/site-dffd4cb9c3aa47fd', 'api/newsletter/signup']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

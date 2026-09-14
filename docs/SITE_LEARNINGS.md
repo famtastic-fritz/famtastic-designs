@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Independent runtime acceptance is now deployed
+
+Locs' own domain, database credentials/tables, owner auth, public API, queue and scheduler replaced the rejected agency runtime. Hosted tests and field reconciliation passed with synthetic records removed and original legacy data retained read-only. A trigger body is one stored SQL statement but Drupal needs its delimiter option explicitly; verify real runtime behavior before cutover. Separate HTTP test sessions must model separate visitor/owner actors. Record SMTP acceptance without calling it inbox delivery, and keep backup creation distinct from a restore drill.
+
 ## 2026-09-14 — Do not confuse customer provisioning with the customer's runtime
 
 Root cause: reused agency Drupal identity and records for client operations without agreeing that hosting model. Passing tenant-isolation tests proved the wrong architecture. Rule: document the client's independent deployment, database, owner access and provider boundaries first. Shared agency project records may describe delivery; they must not become an unintended required login/database/API for the client's business. Validate public gateways under real nested SCRIPT_NAME, not only artisan's development server.
