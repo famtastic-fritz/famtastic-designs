@@ -503,5 +503,5 @@ await writeFile(
 
 await writeFile(
   join(distDir, 'robots.txt'),
-  `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /login\nDisallow: /portal\nDisallow: /p/\nDisallow: /reset-password\nDisallow: /verify-email\nDisallow: /web/admin\n\nSitemap: https://famtasticdesigns.com/sitemap.xml\n`,
+  `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /login\nDisallow: /portal\nDisallow: /p/\nDisallow: /appointment/\nDisallow: /reset-password\nDisallow: /verify-email\nDisallow: /web/admin\n\nSitemap: https://famtasticdesigns.com/sitemap.xml\n`,
 );

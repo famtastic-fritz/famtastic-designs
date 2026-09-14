@@ -11,7 +11,7 @@ export default function GoogleAnalytics() {
   useEffect(() => {
     // Signed proof URLs are bearer links. Do not initialize or send an
     // analytics page event that could retain either kind of signature.
-    if (location.pathname.startsWith('/proofs/share/') || location.pathname.startsWith('/proofs/preview/')) return;
+    if (location.pathname.startsWith('/proofs/share/') || location.pathname.startsWith('/proofs/preview/') || location.pathname.startsWith('/appointment/')) return;
     if (path === lastTrackedPath) return;
     lastTrackedPath = path;
     trackPageView(path);

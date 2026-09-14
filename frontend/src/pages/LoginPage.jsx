@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { customerLogin, customerRegister, forgotCustomerPassword } from '../api/customer.js';
+import { portalReturn } from './portalReturn.js';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function LoginPage() {
     event.preventDefault(); setError(''); setNotice(''); setBusy(true);
     const data = Object.fromEntries(new FormData(event.currentTarget));
     try {
-      if (mode === 'login') { await customerLogin(data.email, data.password); navigate(searchParams.get('redirect') || '/portal'); }
+      if (mode === 'login') { await customerLogin(data.email, data.password); navigate(portalReturn(searchParams.get('redirect'))); }
       else if (mode === 'recover') { const result = await forgotCustomerPassword(data.email); setNotice(result.message); }
       else { await customerRegister(data); sessionStorage.removeItem('famtastic.deep_dive_continuation'); setNotice('Check your email to verify your free account. Your saved request will be waiting in the portal after you sign in.'); setMode('login'); }
     } catch (e) { setError(e.message); } finally { setBusy(false); }

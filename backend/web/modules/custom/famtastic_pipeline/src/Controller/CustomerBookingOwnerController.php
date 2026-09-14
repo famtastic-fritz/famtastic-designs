@@ -96,7 +96,10 @@ final class CustomerBookingOwnerController extends ControllerBase {
     catch (\InvalidArgumentException $error) {
       return $this->response(['ok' => FALSE, 'error' => $error->getMessage()], 422);
     }
-    catch (\RuntimeException) {
+    catch (\RuntimeException $error) {
+      if ($error->getMessage() === 'availability_idempotency_conflict') {
+        return $this->response(['ok' => FALSE, 'error' => 'availability_idempotency_conflict'], 409);
+      }
       return $this->response(['ok' => FALSE, 'error' => 'booking_owner_access_denied'], 404);
     }
   }
@@ -150,11 +153,12 @@ final class CustomerBookingOwnerController extends ControllerBase {
         'appointment_request_already_active', 'appointment_revision_conflict',
         'appointment_terminal', 'appointment_not_confirmed',
         'appointment_slot_conflict', 'appointment_busy',
+        'appointment_idempotency_conflict', 'appointment_availability_invalid',
       ];
       $code = in_array($error->getMessage(), $known, TRUE)
         ? $error->getMessage()
         : 'booking_owner_access_denied';
-      $conflicts = ['appointment_revision_conflict', 'appointment_slot_conflict', 'appointment_busy'];
+      $conflicts = ['appointment_revision_conflict', 'appointment_slot_conflict', 'appointment_busy', 'appointment_idempotency_conflict', 'appointment_availability_invalid'];
       return $this->response(
         ['ok' => FALSE, 'error' => $code],
         in_array($error->getMessage(), $conflicts, TRUE) ? 409 : 404,

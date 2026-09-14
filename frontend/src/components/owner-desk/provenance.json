@@ -1,0 +1,21 @@
+{
+  "component_id": "service-business-owner-desk.react",
+  "version": "1.0.0",
+  "canonical_repository": "component-studio",
+  "canonical_directory": "components/owner-desk",
+  "files": [
+    {
+      "path": "OwnerDesk.jsx",
+      "sha256": "2253d1b9eb71da1b0f8c940a227ba9879ea84362aa7b8fe8b97fe7f5e63fae55"
+    },
+    {
+      "path": "ownerDeskTime.js",
+      "sha256": "6bfc2189e01b0c7f742230996cb3aa9419db2f1465dec94957f42346d69c84cd"
+    },
+    {
+      "path": "owner-desk.css",
+      "sha256": "3061b7bb44c4591ba2ad440fb690ea4dba3c7e8404b789e9687141ccd15c0c06"
+    }
+  ],
+  "classification": "Exact vendored copy; local fixture UI proof, production unproven"
+}

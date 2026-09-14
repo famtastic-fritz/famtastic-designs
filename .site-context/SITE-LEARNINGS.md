@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Component capture follows tested operation
+
+Observation: Owner Desk source already existed on a separate Designs lane. Its first review exposed lost-notice retry, expiring-hold and private entry-point gaps. Guidance: re-anchor source before implementation, test failure paths before capture, preserve exact vendor-copy hashes, and keep business identity in the adapter. A reusable React component does not grant a tenant access or execute the backend in Site Studio.
+
+Private entry after release: `/portal?section=booking`, with login-return continuity. This change does not create a live deployment or credentials. The Locs pilot shares the Designs repository rather than owning a second appointment backend.
+
 ## 2026-09-13 — An owner inbox becomes operational only with durable commands
 
 Observation: a saved request and editable status can prove receipt without

@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## Owner Desk implementation and reusable capture — 2026-09-13
+
+The `codex/locs-owner-desk` source now includes reviewed booking lifecycle and reusable adapter-backed owner presentation. Evidence and release limits are in `docs/evidence/owner-desk-implementation/` and `docs/research/OWNER_DESK_IMPLEMENTATION_AND_REUSE_2026-09-13.md`. Component Studio captures the presentation, while Site Studio's read-only recipe discovery preserves negative production flags. Neither library discovery nor browser fixtures establish live booking, real owner credentials, teaching enrollment or provider delivery.
+
 September13 scope correction: Locs public capture, scoped portal status updates
 and alerts are production-proven. The dedicated Owner Desk and durable
 appointment lifecycle are now locally proven but NOT deployed. Earlier “Owner

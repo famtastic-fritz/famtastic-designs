@@ -29,20 +29,40 @@ final class BookingAppointmentService {
    * Returns appointments plus the append-only timeline for the owner desk. */
   public function ownerSnapshot(string $siteKey): array {
     $siteKey = $this->siteKey($siteKey);
-    $rows = $this->database->select('famtastic_booking_appointment', 'appointment')
+    $query = $this->database->select('famtastic_booking_appointment', 'appointment');
+    $now = $this->time->getRequestTime();
+    $future = $query->orConditionGroup()->condition('ends_at', $now, '>')
+      ->condition($query->andConditionGroup()->condition('proposed_ends_at', $now, '>')->condition('proposal_expires_at', $now, '>'));
+    $rows = $query
       ->fields('appointment')
       ->condition('site_key', $siteKey)
+      ->condition('status', self::ACTIVE, 'IN')
+      ->condition($future)
       ->orderBy('starts_at', 'ASC')
       ->orderBy('proposed_starts_at', 'ASC')
-      ->range(0, 200)
+      ->range(0, 201)
       ->execute()
       ->fetchAll(FetchAs::Associative);
+    $hasMore = count($rows) > 200;
+    $rows = array_slice($rows, 0, 200);
+    // Future work wins over old history. Return a bounded recent-history tail
+    // and disclose truncation instead of silently hiding the next appointment.
+    if (!$hasMore) {
+      $history = $this->database->select('famtastic_booking_appointment', 'appointment')->fields('appointment')
+        ->condition('site_key', $siteKey)->orderBy('changed', 'DESC')->orderBy('id', 'DESC')->range(0, 201 - count($rows));
+      if ($rows) {
+        $history->condition('id', array_column($rows, 'id'), 'NOT IN');
+      }
+      $tail = $history->execute()->fetchAll(FetchAs::Associative);
+      $hasMore = count($tail) > 200 - count($rows);
+      $rows = array_merge($rows, array_slice($tail, 0, 200 - count($rows)));
+    }
     $appointments = [];
     foreach ($rows as $row) {
       $request = $this->request($siteKey, (int) $row['request_id'], FALSE);
       $appointments[] = $this->normalize($row, $request ?: []);
     }
-    return ['site_key' => $siteKey, 'appointments' => $appointments];
+    return ['site_key' => $siteKey, 'appointments' => $appointments, 'has_more' => $hasMore, 'limit' => 200];
   }
 
   /**
@@ -56,7 +76,12 @@ final class BookingAppointmentService {
     if (!in_array($action, ['confirm', 'propose', 'reschedule', 'cancel', 'complete'], TRUE)) {
       throw new \InvalidArgumentException('appointment_action_invalid');
     }
-    $idempotency = $this->idempotency((string) ($input['idempotency_key'] ?? ''));
+    $key = $this->idempotency((string) ($input['idempotency_key'] ?? ''));
+    // A caller's key is private to its authenticated actor and exact site.
+    $idempotency = 'owner:' . hash('sha256', $siteKey . ':' . $actorUid . ':' . $key);
+    unset($input['idempotency_key']);
+    ksort($input);
+    $commandHash = hash('sha256', json_encode($input, JSON_THROW_ON_ERROR));
     $lockName = 'famtastic:appointment:' . $siteKey;
     if (!$this->lock->acquire($lockName, 15.0)) {
       throw new \RuntimeException('appointment_busy');
@@ -64,20 +89,28 @@ final class BookingAppointmentService {
 
     try {
       $prior = $this->database->select('famtastic_booking_appointment_event', 'event')
-        ->fields('event', ['appointment_id'])
+        ->fields('event', ['appointment_id', 'payload_json'])
+        ->condition('site_key', $siteKey)
         ->condition('idempotency_key', $idempotency)
         ->execute()
-        ->fetchField();
+        ->fetchAssoc();
       if ($prior !== FALSE) {
-        return $this->load((int) $prior, $siteKey);
+        $receipt = json_decode((string) $prior['payload_json'], TRUE, 512, JSON_THROW_ON_ERROR);
+        if (!hash_equals((string) ($receipt['command_hash'] ?? ''), $commandHash)) {
+          throw new \RuntimeException('appointment_idempotency_conflict');
+        }
+        return $receipt['result'];
       }
 
       $transaction = $this->database->startTransaction();
       try {
         $result = match ($action) {
-          'confirm', 'propose' => $this->createFromRequest($siteKey, $action, $input, $actorUid, $idempotency),
-          'reschedule', 'cancel', 'complete' => $this->changeExisting($siteKey, $action, $input, $actorUid, $idempotency),
+          'confirm', 'propose' => $this->createFromRequest($siteKey, $action, $input, $actorUid, $idempotency, $commandHash),
+          'reschedule', 'cancel', 'complete' => $this->changeExisting($siteKey, $action, $input, $actorUid, $idempotency, $commandHash),
         };
+        // Outbox insert uses this same connection/transaction. A failed queue
+        // write must roll back the command, so a retry can safely try again.
+        $this->queueCustomerNotice($result, $action);
       }
       catch (\Throwable $error) {
         $transaction->rollBack();
@@ -85,7 +118,7 @@ final class BookingAppointmentService {
       }
       unset($transaction);
 
-      $this->queueCustomerNotice($result, $action);
+      unset($result['proposal_token']);
       return $result;
     }
     finally {
@@ -107,25 +140,33 @@ final class BookingAppointmentService {
     if (!$row || empty($row['proposal_token_hash']) || !hash_equals((string) $row['proposal_token_hash'], hash('sha256', $token))) {
       throw new \RuntimeException('appointment_proposal_not_found');
     }
-    $now = $this->time->getRequestTime();
-    if ((int) $row['proposal_expires_at'] < $now) {
-      throw new \RuntimeException('appointment_proposal_expired');
-    }
-    $responseKey = 'proposal:' . hash('sha256', $token . ':' . $decision);
-    $prior = $this->database->select('famtastic_booking_appointment_event', 'event')
-      ->fields('event', ['appointment_id'])->condition('idempotency_key', $responseKey)->execute()->fetchField();
-    if ($prior !== FALSE) {
-      return $this->publicResponse($this->load((int) $prior, (string) $row['site_key']));
-    }
-    if ((int) $row['proposed_starts_at'] <= 0 || (int) $row['proposed_ends_at'] <= 0) {
-      throw new \RuntimeException('appointment_proposal_not_found');
-    }
     $siteKey = (string) $row['site_key'];
     $lockName = 'famtastic:appointment:' . $siteKey;
     if (!$this->lock->acquire($lockName, 15.0)) {
       throw new \RuntimeException('appointment_busy');
     }
     try {
+      // The first read only discovers the lock. All authorization/state checks
+      // must use a fresh row after acquiring it (the owner may have cancelled).
+      $row = $this->database->select('famtastic_booking_appointment', 'appointment')
+        ->fields('appointment')->condition('public_id', $publicId)->condition('site_key', $siteKey)->execute()->fetchAssoc();
+      if (!$row || empty($row['proposal_token_hash']) || !hash_equals((string) $row['proposal_token_hash'], hash('sha256', $token)) || in_array($row['status'], ['cancelled', 'completed'], TRUE)) {
+        throw new \RuntimeException('appointment_proposal_not_found');
+      }
+      $now = $this->time->getRequestTime();
+      if ((int) $row['proposal_expires_at'] <= $now) {
+        throw new \RuntimeException('appointment_proposal_expired');
+      }
+      $responseKey = 'proposal:' . hash('sha256', $publicId . ':' . $token . ':' . $decision);
+      $prior = $this->database->select('famtastic_booking_appointment_event', 'event')
+        ->fields('event', ['payload_json'])->condition('site_key', $siteKey)->condition('appointment_id', (int) $row['id'])
+        ->condition('idempotency_key', $responseKey)->execute()->fetchField();
+      if ($prior !== FALSE) {
+        return json_decode((string) $prior, TRUE, 512, JSON_THROW_ON_ERROR)['result'];
+      }
+      if ($row['status'] !== 'proposal_pending' || (int) $row['proposed_starts_at'] <= $now || (int) $row['proposed_ends_at'] <= (int) $row['proposed_starts_at']) {
+        throw new \RuntimeException('appointment_proposal_not_found');
+      }
       $transaction = $this->database->startTransaction();
       try {
         $fields = ['changed' => $now, 'revision' => (int) $row['revision'] + 1];
@@ -154,14 +195,22 @@ final class BookingAppointmentService {
           throw new \RuntimeException('appointment_revision_conflict');
         }
         $eventType = $decision === 'accept' ? 'proposal_accepted' : 'proposal_declined';
-        $this->event((int) $row['id'], $siteKey, (int) $row['request_id'], $eventType, $responseKey, 0, $fields);
+        $saved = $this->load((int) $row['id'], $siteKey);
+        $result = $this->publicResponse($saved);
+        $this->event((int) $row['id'], $siteKey, (int) $row['request_id'], $eventType, $responseKey, 0, ['result' => $result]);
+        if ($decision === 'accept') {
+          $this->queueCustomerNotice($saved, 'confirm');
+        }
+        else {
+          $this->supersedePendingNotices((string) $saved['public_id']);
+        }
       }
       catch (\Throwable $error) {
         $transaction->rollBack();
         throw $error;
       }
       unset($transaction);
-      return $this->publicResponse($this->load((int) $row['id'], $siteKey));
+      return $result;
     }
     finally {
       $this->lock->release($lockName);
@@ -179,7 +228,10 @@ final class BookingAppointmentService {
     if (!$row || empty($row['proposal_token_hash']) || !hash_equals((string) $row['proposal_token_hash'], hash('sha256', $token))) {
       throw new \RuntimeException('appointment_proposal_not_found');
     }
-    if ((int) $row['proposal_expires_at'] < $this->time->getRequestTime()) {
+    if (in_array($row['status'], ['cancelled', 'completed'], TRUE)) {
+      throw new \RuntimeException('appointment_proposal_not_found');
+    }
+    if ((int) $row['proposal_expires_at'] <= $this->time->getRequestTime()) {
       throw new \RuntimeException('appointment_proposal_expired');
     }
     return [
@@ -189,13 +241,16 @@ final class BookingAppointmentService {
       'proposed_ends_at' => (int) $row['proposed_ends_at'],
       'timezone' => (string) $row['timezone'],
       'expires_at' => (int) $row['proposal_expires_at'],
+      'starts_at' => (int) $row['starts_at'],
+      'ends_at' => (int) $row['ends_at'],
+      'proposal_available' => $row['status'] === 'proposal_pending' && (int) $row['proposed_starts_at'] > $this->time->getRequestTime(),
     ];
   }
 
   /**
    * Creates an appointment from one exact booking request.
    */
-  private function createFromRequest(string $siteKey, string $action, array $input, int $actorUid, string $idempotency): array {
+  private function createFromRequest(string $siteKey, string $action, array $input, int $actorUid, string $idempotency, string $commandHash): array {
     $requestId = (int) ($input['request_id'] ?? 0);
     $request = $this->request($siteKey, $requestId);
     $existing = $this->database->select('famtastic_booking_appointment', 'appointment')
@@ -204,6 +259,7 @@ final class BookingAppointmentService {
       throw new \RuntimeException('appointment_request_already_active');
     }
     [$start, $end, $timezone] = $this->slot($input);
+    $this->assertAvailability($siteKey, (int) ($input['availability_id'] ?? 0), (string) $request['service_key'], $start, $end);
     $this->assertSlotFree($siteKey, $start, $end);
     $now = $this->time->getRequestTime();
     $publicId = $this->uuid->generate();
@@ -230,8 +286,8 @@ final class BookingAppointmentService {
     $id = (int) $this->database->insert('famtastic_booking_appointment')->fields($fields)->execute();
     $this->database->update('famtastic_booking_request')->fields(['status' => 'responded', 'changed' => $now])
       ->condition('id', $requestId)->condition('site_key', $siteKey)->execute();
-    $this->event($id, $siteKey, $requestId, $action === 'confirm' ? 'confirmed' : 'proposed', $idempotency, $actorUid, $fields);
     $result = $this->load($id, $siteKey);
+    $this->event($id, $siteKey, $requestId, $action === 'confirm' ? 'confirmed' : 'proposed', $idempotency, $actorUid, ['command_hash' => $commandHash, 'result' => $result]);
     if ($token !== '') {
       $result['proposal_token'] = $token;
     }
@@ -241,7 +297,7 @@ final class BookingAppointmentService {
   /**
    * Changes an existing appointment using optimistic concurrency.
    */
-  private function changeExisting(string $siteKey, string $action, array $input, int $actorUid, string $idempotency): array {
+  private function changeExisting(string $siteKey, string $action, array $input, int $actorUid, string $idempotency, string $commandHash): array {
     $id = (int) ($input['appointment_id'] ?? 0);
     $row = $this->database->select('famtastic_booking_appointment', 'appointment')->fields('appointment')
       ->condition('id', $id)->condition('site_key', $siteKey)->execute()->fetchAssoc();
@@ -260,6 +316,7 @@ final class BookingAppointmentService {
     $token = '';
     if ($action === 'reschedule') {
       [$start, $end, $timezone] = $this->slot($input);
+      $this->assertAvailability($siteKey, (int) ($input['availability_id'] ?? 0), (string) $row['service_key'], $start, $end);
       $this->assertSlotFree($siteKey, $start, $end, $id);
       $token = $this->token();
       $fields += [
@@ -272,13 +329,13 @@ final class BookingAppointmentService {
       ];
     }
     elseif ($action === 'cancel') {
-      $fields += ['status' => 'cancelled', 'proposed_starts_at' => 0, 'proposed_ends_at' => 0];
+      $fields += ['status' => 'cancelled', 'proposed_starts_at' => 0, 'proposed_ends_at' => 0, 'proposal_token_hash' => '', 'proposal_expires_at' => 0];
     }
     else {
       if ((string) $row['status'] !== 'confirmed') {
         throw new \RuntimeException('appointment_not_confirmed');
       }
-      $fields += ['status' => 'completed'];
+      $fields += ['status' => 'completed', 'proposal_token_hash' => '', 'proposal_expires_at' => 0];
     }
     $updated = $this->database->update('famtastic_booking_appointment')->fields($fields)
       ->condition('id', $id)->condition('site_key', $siteKey)->condition('revision', $expected)->execute();
@@ -290,8 +347,8 @@ final class BookingAppointmentService {
       'cancel' => 'cancelled',
       default => 'completed',
     };
-    $this->event($id, $siteKey, (int) $row['request_id'], $eventType, $idempotency, $actorUid, $fields);
     $result = $this->load($id, $siteKey);
+    $this->event($id, $siteKey, (int) $row['request_id'], $eventType, $idempotency, $actorUid, ['command_hash' => $commandHash, 'result' => $result]);
     if ($token !== '') {
       $result['proposal_token'] = $token;
     }
@@ -303,7 +360,7 @@ final class BookingAppointmentService {
    */
   private function assertSlotFree(string $siteKey, int $start, int $end, int $excludeId = 0): void {
     $rows = $this->database->select('famtastic_booking_appointment', 'appointment')->fields('appointment', [
-      'id', 'status', 'starts_at', 'ends_at', 'proposed_starts_at', 'proposed_ends_at',
+      'id', 'status', 'starts_at', 'ends_at', 'proposed_starts_at', 'proposed_ends_at', 'proposal_expires_at',
     ])->condition('site_key', $siteKey)->condition('status', self::ACTIVE, 'IN')->execute()->fetchAll(FetchAs::Associative);
     foreach ($rows as $row) {
       if ((int) $row['id'] === $excludeId) {
@@ -311,7 +368,7 @@ final class BookingAppointmentService {
       }
       $occupied = [
         [(int) $row['starts_at'], (int) $row['ends_at']],
-        [(int) $row['proposed_starts_at'], (int) $row['proposed_ends_at']],
+        [(int) $row['proposal_expires_at'] > $this->time->getRequestTime() ? (int) $row['proposed_starts_at'] : 0, (int) $row['proposed_ends_at']],
       ];
       foreach ($occupied as [$usedStart, $usedEnd]) {
         if ($usedStart > 0 && $start < $usedEnd && $end > $usedStart) {
@@ -321,10 +378,24 @@ final class BookingAppointmentService {
     }
   }
 
+  /** An optional published opening is evidence, never an arbitrary foreign ID. */
+  private function assertAvailability(string $siteKey, int $id, string $service, int $start, int $end): void {
+    if ($id === 0) {
+      return;
+    }
+    $row = $this->database->select('famtastic_booking_availability', 'window')->fields('window')
+      ->condition('id', $id)->condition('site_key', $siteKey)->condition('status', 'published')->execute()->fetchAssoc();
+    $services = $row ? json_decode((string) $row['service_keys_json'], TRUE) : [];
+    if (!$row || $start < (int) $row['starts_at'] || $end > (int) $row['ends_at'] || ($services && !in_array($service, $services, TRUE))) {
+      throw new \RuntimeException('appointment_availability_invalid');
+    }
+  }
+
   /**
    * Queues a transactional customer notice after persistence succeeds.
    */
   private function queueCustomerNotice(array $appointment, string $action): void {
+    $this->supersedePendingNotices((string) $appointment['public_id']);
     if ($action === 'complete') {
       return;
     }
@@ -333,21 +404,30 @@ final class BookingAppointmentService {
       return;
     }
     $publicId = (string) $appointment['public_id'];
-    $when = $this->when(
+    $when = (int) $appointment['starts_at'] === 0 && (int) $appointment['proposed_starts_at'] === 0 ? '' : $this->when(
       $appointment,
       $action === 'propose' || $action === 'reschedule' || (int) ($appointment['starts_at'] ?? 0) === 0,
     );
     if (in_array($action, ['propose', 'reschedule'], TRUE)) {
       $token = (string) ($appointment['proposal_token'] ?? '');
-      $link = 'https://famtasticdesigns.com/appointment/' . rawurlencode($publicId) . '?token=' . rawurlencode($token);
-      $subject = 'Shay proposed a time for your appointment request';
-      $body = "Shay proposed {$when}. Review and accept or decline it here:\n\n{$link}\n\nThis link expires in 48 hours. No payment was taken.";
+      $link = 'https://famtasticdesigns.com/appointment/' . rawurlencode($publicId) . '#token=' . rawurlencode($token);
+      $subject = 'A time was proposed for your appointment request';
+      $body = "Your service provider proposed {$when}. Review and accept or decline it here:\n\n{$link}\n\nThis link expires in 48 hours. No payment was taken.";
     }
     else {
       $subject = $action === 'cancel' ? 'Your appointment was cancelled' : 'Your appointment request was confirmed';
-      $body = $action === 'cancel' ? "Your appointment scheduled for {$when} was cancelled. Contact Shay if you need another time." : "Shay confirmed your appointment for {$when}. No payment was taken by this confirmation.";
+      $body = $action === 'cancel'
+        ? ($when === '' ? 'Your proposed appointment was cancelled. Contact your service provider if you need another time.' : "Your appointment scheduled for {$when} was cancelled. Contact your service provider if you need another time.")
+        : "Your appointment is confirmed for {$when}. No payment was taken by this confirmation.";
     }
     $this->portal->queueNotification('booking-appointment:' . $publicId . ':' . (int) $appointment['revision'], 'transactional', $recipient, $subject, $body);
+  }
+
+  /** Obsolete queued/retry notices must not be dispatched after newer state. */
+  private function supersedePendingNotices(string $publicId): void {
+    $this->database->update('famtastic_notification_outbox')->fields(['status' => 'superseded', 'changed' => $this->time->getRequestTime()])
+      ->condition('notification_key', $this->database->escapeLike('booking-appointment:' . $publicId . ':') . '%', 'LIKE')
+      ->condition('status', ['queued', 'retry'], 'IN')->execute();
   }
 
   /**
@@ -406,6 +486,7 @@ final class BookingAppointmentService {
       }
     }
     unset($row['proposal_token_hash']);
+    $row['proposal_available'] = $row['status'] === 'proposal_pending' && (int) $row['proposed_starts_at'] > $this->time->getRequestTime() && (int) $row['proposal_expires_at'] > $this->time->getRequestTime();
     $row['customer'] = [
       'name' => (string) ($request['customer_name'] ?? ''),
       'email' => (string) ($request['email'] ?? ''),
@@ -437,14 +518,17 @@ final class BookingAppointmentService {
   private function slot(array $input): array {
     $start = $this->timestamp($input['starts_at'] ?? NULL);
     $end = $this->timestamp($input['ends_at'] ?? NULL);
-    $timezone = trim((string) ($input['timezone'] ?? 'America/New_York'));
+    $timezone = trim((string) ($input['timezone'] ?? ''));
+    if (!in_array($timezone, \DateTimeZone::listIdentifiers(), TRUE)) {
+      throw new \InvalidArgumentException('appointment_timezone_invalid');
+    }
     try {
       new \DateTimeZone($timezone);
     }
     catch (\Throwable) {
       throw new \InvalidArgumentException('appointment_timezone_invalid');
     }
-    if ($start <= 0 || $end <= $start || $end - $start > 43200) {
+    if ($start <= $this->time->getRequestTime() || $end <= $start || $end - $start > 43200) {
       throw new \InvalidArgumentException('appointment_time_invalid');
     }
     return [$start, $end, $timezone];

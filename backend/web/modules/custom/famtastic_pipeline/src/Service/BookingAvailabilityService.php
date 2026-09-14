@@ -7,6 +7,8 @@ namespace Drupal\famtastic_pipeline\Service;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
+use Drupal\Core\Database\Statement\FetchAs;
 
 /** Owner-published request windows, deliberately separate from calendars. */
 final class BookingAvailabilityService {
@@ -29,10 +31,29 @@ final class BookingAvailabilityService {
       ->condition('status', 'published')
       ->condition('ends_at', $now, '>')
       ->orderBy('starts_at', 'ASC')
-      ->range(0, 12)
       ->execute()
-      ->fetchAll(\PDO::FETCH_ASSOC);
-    return ['site_key' => $siteKey, 'windows' => array_map([$this, 'normalizeRow'], $rows)];
+      ->fetchAll(FetchAs::Associative);
+    // Invitations must not advertise a window already held by the appointment
+    // authority. Conservatively hide overlapping windows; do not invent slots.
+    if ($this->database->schema()->tableExists('famtastic_booking_appointment')) {
+      $occupied = $this->database->select('famtastic_booking_appointment', 'a')->fields('a')
+        ->condition('site_key', $siteKey)->condition('status', ['confirmed', 'proposal_pending'], 'IN')->execute()->fetchAll(FetchAs::Associative);
+      $rows = array_values(array_filter($rows, static function (array $window) use ($occupied, $now): bool {
+        foreach ($occupied as $appointment) {
+          $intervals = [[(int) $appointment['starts_at'], (int) $appointment['ends_at']]];
+          if ((int) $appointment['proposal_expires_at'] > $now) {
+            $intervals[] = [(int) $appointment['proposed_starts_at'], (int) $appointment['proposed_ends_at']];
+          }
+          foreach ($intervals as [$start, $end]) {
+            if ($start > 0 && (int) $window['starts_at'] < $end && (int) $window['ends_at'] > $start) {
+              return FALSE;
+            }
+          }
+        }
+        return TRUE;
+      }));
+    }
+    return ['site_key' => $siteKey, 'windows' => array_map([$this, 'normalizeRow'], array_slice($rows, 0, 12))];
   }
 
   /** Returns every window to the authorized owner route. */
@@ -44,7 +65,7 @@ final class BookingAvailabilityService {
       ->orderBy('starts_at', 'ASC')
       ->range(0, 100)
       ->execute()
-      ->fetchAll(\PDO::FETCH_ASSOC);
+      ->fetchAll(FetchAs::Associative);
     return ['site_key' => $siteKey, 'windows' => array_map([$this, 'normalizeRow'], $rows)];
   }
 
@@ -54,7 +75,19 @@ final class BookingAvailabilityService {
     $window = $this->validated($input);
     $now = $this->time->getRequestTime();
     $publicId = $this->uuid->generate();
-    $id = $this->database->insert('famtastic_booking_availability')->fields([
+    if (isset($input['idempotency_key'])) {
+      if (!is_string($input['idempotency_key']) || !preg_match('/^[A-Za-z0-9:_-]{12,96}$/', $input['idempotency_key'])) {
+        throw new \InvalidArgumentException('availability_idempotency_invalid');
+      }
+      $hash = hash('sha256', $siteKey . ':' . $input['idempotency_key']);
+      $publicId = substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-5' . substr($hash, 13, 3) . '-a' . substr($hash, 17, 3) . '-' . substr($hash, 20, 12);
+      $prior = $this->existingCreation($siteKey, $publicId, $window);
+      if ($prior !== NULL) {
+        return $prior;
+      }
+    }
+    try {
+      $id = $this->database->insert('famtastic_booking_availability')->fields([
       'public_id' => $publicId,
       'site_key' => $siteKey,
       'label' => $window['label'],
@@ -64,8 +97,32 @@ final class BookingAvailabilityService {
       'status' => $window['status'],
       'created' => $now,
       'changed' => $now,
-    ])->execute();
+      ])->execute();
+    }
+    catch (IntegrityConstraintViolationException $error) {
+      $prior = $this->existingCreation($siteKey, $publicId, $window);
+      if ($prior === NULL) {
+        throw $error;
+      }
+      return $prior;
+    }
     return ['id' => (int) $id, 'public_id' => $publicId] + $window;
+  }
+
+  /** Reconcile an ambiguous create; changed input never creates a duplicate. */
+  private function existingCreation(string $siteKey, string $publicId, array $window): ?array {
+    $row = $this->database->select('famtastic_booking_availability', 'window')->fields('window')
+      ->condition('site_key', $siteKey)->condition('public_id', $publicId)->execute()->fetchAssoc();
+    if (!$row) {
+      return NULL;
+    }
+    $prior = $this->normalizeRow($row);
+    foreach ($window as $key => $value) {
+      if ($prior[$key] !== $value) {
+        throw new \RuntimeException('availability_idempotency_conflict');
+      }
+    }
+    return ['id' => $prior['id'], 'public_id' => $prior['public_id']] + $window;
   }
 
   /** Changes the window fields or visibility; never changes an external calendar. */

@@ -47,7 +47,7 @@ export async function respondBookingProposal(appointment, token, decision) {
 }
 
 export async function getBookingProposal(appointment, token) {
-  const response = await fetch(`${WEB_PREFIX}/api/booking-appointment/${encodeURIComponent(appointment)}?token=${encodeURIComponent(token)}`, { credentials: 'omit', headers: { Accept: 'application/json' } });
+  const response = await fetch(`${WEB_PREFIX}/api/booking-appointment/${encodeURIComponent(appointment)}`, { credentials: 'omit', headers: { Accept: 'application/json', 'X-Appointment-Token': token } });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new CustomerApiError('This appointment proposal is unavailable.', response.status, payload.error);
   return payload;

@@ -1,0 +1,105 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "locs-owner-desk-component-capture-20260913",
+  "classification": "booking-owner-implementation-local",
+  "created_at": "2026-09-14T00:18:20Z",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "f3467f46f186d9d5dd0181c6767e8112b93dd08c",
+    "worktree_state": "reviewed delta from base revision; captured in containing commit"
+  },
+  "recipe": {
+    "routine": "service-business-owner-desk",
+    "version": "1",
+    "build_class": "selected-direction-implementation",
+    "component_definition_id": "service-business-owner-desk",
+    "component_instance_id": "tighten-up-your-locs-owner-desk",
+    "page_id": "owner-desk",
+    "selected_direction": "Ruby Signal / Open Chair",
+    "scope": "booking first; teaching and LMS deferred"
+  },
+  "stages": [
+    {
+      "stage_id": "implementation-and-review",
+      "attempt": 1,
+      "capability": "durable-appointments-and-component-extraction",
+      "execution": {
+        "provider": {
+          "id": "openai-codex"
+        },
+        "model": {
+          "status": "not_disclosed_by_runtime"
+        },
+        "timing": {
+          "status": "partial",
+          "started_at": "2026-09-14T00:18:20Z"
+        },
+        "cost": {
+          "status": "provider_did_not_report"
+        },
+        "prompt": {
+          "text": "Now implement and capute the component afterwards. Commit. And update our learning docs and change logs fir famtasticdesigns.com the site studio. And tighten up your pics repos"
+        },
+        "input": {
+          "parent_implementation_commit": "f3467f46",
+          "research_package_commit": "cf79f64"
+        }
+      },
+      "result": {
+        "status": "passed_local_implementation",
+        "proof": "docs/evidence/owner-desk-implementation/README.md",
+        "component_capture_commit": "da67533",
+        "site_studio_discovery_commit": "e847743",
+        "platform_documentation_commit": "9eeddb3",
+        "production_deployed": false
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "implementation-plan",
+      "path": "docs/plans/OWNER_DESK_IMPLEMENTATION_CAPTURE_2026-09-13.md",
+      "sha256": "cc49527ab096845379e2471e4bdad1bf914baf5b3f852b45c47174783becb6c1",
+      "rights": "owner_workspace",
+      "retention": "source_control"
+    },
+    {
+      "role": "verification-report",
+      "path": "docs/evidence/owner-desk-implementation/README.md",
+      "sha256": "ea7975431005a9768e9eea4f8430b85d4ce78ae74926959345089e9141012aa1",
+      "rights": "owner_workspace",
+      "retention": "source_control"
+    },
+    {
+      "role": "captured-react-component",
+      "path": "frontend/src/components/owner-desk/OwnerDesk.jsx",
+      "sha256": "2253d1b9eb71da1b0f8c940a227ba9879ea84362aa7b8fe8b97fe7f5e63fae55",
+      "rights": "owner_workspace",
+      "retention": "source_control"
+    },
+    {
+      "role": "component-provenance",
+      "path": "frontend/src/components/owner-desk/provenance.json",
+      "sha256": "0a289815f5d1c79d29331e0726b368d31ef761fc4e57a16f421164df0ece9733",
+      "rights": "owner_workspace",
+      "retention": "source_control"
+    }
+  ],
+  "retrieval": {
+    "filesystem": {
+      "status": "available",
+      "root": "docs/evidence/owner-desk-implementation/"
+    },
+    "database": {
+      "status": "not_registered",
+      "reason": "local implementation; no operational database mutation authorized"
+    },
+    "site_studio": {
+      "status": "not_handed_off",
+      "reason": "discovery registration is separate from immutable build execution"
+    }
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256"
+  }
+}

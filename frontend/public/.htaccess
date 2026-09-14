@@ -33,6 +33,10 @@
   RewriteRule ^proofs/share/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]
   RewriteRule ^proofs/preview/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]
 
+  # Private appointment responses must resolve on a direct email-link visit.
+  # Tokens are fragments in newly issued links, never part of this route.
+  RewriteRule ^appointment/[0-9a-f-]{36}/?$ /index.html [L]
+
   # Token-scoped prospect pipeline routes (ProofHub, payment return, intake, status).
   RewriteRule ^p/[^/]+/?$ /index.html [L]
 

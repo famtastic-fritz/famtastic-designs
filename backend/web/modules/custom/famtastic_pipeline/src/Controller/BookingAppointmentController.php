@@ -32,10 +32,11 @@ final class BookingAppointmentController extends ControllerBase {
    * Saves one token-authorized proposal response.
    */
   public function respond(Request $request, string $appointment): JsonResponse {
-    $key = 'appointment-proposal:' . hash('sha256', $appointment . ':' . ($request->getClientIp() ?: 'unknown'));
+    $key = 'appointment-proposal:' . hash('sha256', $request->getClientIp() ?: 'unknown');
     if (!$this->flood->isAllowed('famtastic_booking_proposal', 10, 3600, $key)) {
       return $this->response(['ok' => FALSE, 'error' => 'rate_limited'], 429);
     }
+    $this->flood->register('famtastic_booking_proposal', 3600, $key);
     $input = json_decode($request->getContent(), TRUE);
     $input = is_array($input) ? $input : [];
     try {
@@ -44,14 +45,16 @@ final class BookingAppointmentController extends ControllerBase {
         (string) ($input['token'] ?? ''),
         (string) ($input['decision'] ?? ''),
       );
-      $this->flood->register('famtastic_booking_proposal', 3600, $key);
       return $this->response(['ok' => TRUE, 'appointment' => $result]);
     }
     catch (\InvalidArgumentException $error) {
       return $this->response(['ok' => FALSE, 'error' => $error->getMessage()], 422);
     }
     catch (\RuntimeException $error) {
-      $status = $error->getMessage() === 'appointment_slot_conflict' ? 409 : 404;
+      if (!in_array($error->getMessage(), ['appointment_slot_conflict', 'appointment_revision_conflict', 'appointment_busy', 'appointment_proposal_not_found', 'appointment_proposal_expired'], TRUE)) {
+        return $this->response(['ok' => FALSE, 'error' => 'appointment_unavailable'], 503);
+      }
+      $status = in_array($error->getMessage(), ['appointment_slot_conflict', 'appointment_revision_conflict', 'appointment_busy'], TRUE) ? 409 : 404;
       return $this->response(['ok' => FALSE, 'error' => $error->getMessage()], $status);
     }
   }
@@ -60,16 +63,24 @@ final class BookingAppointmentController extends ControllerBase {
    * Returns minimum proposal details after token verification.
    */
   public function proposal(Request $request, string $appointment): JsonResponse {
+    $key = 'appointment-proposal-read:' . hash('sha256', $request->getClientIp() ?: 'unknown');
+    if (!$this->flood->isAllowed('famtastic_booking_proposal_read', 60, 3600, $key)) {
+      return $this->response(['ok' => FALSE, 'error' => 'rate_limited'], 429);
+    }
+    $this->flood->register('famtastic_booking_proposal_read', 3600, $key);
     try {
       return $this->response([
         'ok' => TRUE,
-        'appointment' => $this->appointments->proposalSnapshot($appointment, (string) $request->query->get('token', '')),
+        'appointment' => $this->appointments->proposalSnapshot($appointment, (string) $request->headers->get('X-Appointment-Token', (string) $request->query->get('token', ''))),
       ]);
     }
     catch (\InvalidArgumentException $error) {
       return $this->response(['ok' => FALSE, 'error' => $error->getMessage()], 422);
     }
     catch (\RuntimeException $error) {
+      if (!in_array($error->getMessage(), ['appointment_proposal_not_found', 'appointment_proposal_expired'], TRUE)) {
+        return $this->response(['ok' => FALSE, 'error' => 'appointment_unavailable'], 503);
+      }
       return $this->response(['ok' => FALSE, 'error' => $error->getMessage()], 404);
     }
   }
@@ -81,6 +92,7 @@ final class BookingAppointmentController extends ControllerBase {
     $response = new JsonResponse($payload, $status);
     $response->headers->set('Cache-Control', 'private, no-store');
     $response->headers->set('X-Content-Type-Options', 'nosniff');
+    $response->headers->set('Referrer-Policy', 'no-referrer');
     return $response;
   }
 

@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-13 — Owner Desk review, reusable capture and private entry
+
+- Continued the existing appointment implementation with scoped retry, expiry, transactional outbox and availability corrections; added failure-path regression coverage.
+- Extracted the brand-neutral React owner calendar/request/opening view behind a persistence adapter; Tighten Up Your Locs retains its selected Ruby Signal presentation.
+- Preserved the booking section through login, restricted return destinations, added the private appointment SPA route and excluded bearer pages from indexing/referrers and page analytics.
+- Captured component provenance and separate local/database/browser evidence; linked Site Studio recipe discovery and updated the Locs pilot change record. No production deployment, customer send, payment or LMS activation performed.
+
 ## 2026-09-13 — Durable Locs Owner Desk implementation (local, not deployed)
 
 - Replaced the request-status-only booking view with an exact-site Owner Desk

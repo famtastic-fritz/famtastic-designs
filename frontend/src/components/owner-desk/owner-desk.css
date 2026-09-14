@@ -1,0 +1,122 @@
+.owner-desk {
+	--od-bg: #070907;
+	--od-panel: #101310;
+	--od-ink: #f6f8f6;
+	--od-line: #252b25;
+	--od-accent: #7cfc00;
+	--od-button-ink: #070907;
+	background: var(--od-bg);
+	color: var(--od-ink);
+	padding: clamp(12px, 3vw, 24px);
+	border-radius: 20px;
+	min-width: 0;
+	overflow-x: clip;
+	font-family: Inter, system-ui, sans-serif;
+}
+.owner-desk * {
+	box-sizing: border-box;
+}
+.owner-desk .od-card {
+	background: var(--od-panel);
+	border: 1px solid var(--od-line);
+	border-radius: 18px;
+	padding: clamp(16px, 3vw, 24px);
+	margin-bottom: 16px;
+	overflow-wrap: anywhere;
+}
+.owner-desk h2,
+.owner-desk h3 {
+	color: inherit;
+	margin: 0 0 12px;
+}
+.owner-desk .od-eyebrow {
+	color: var(--od-accent);
+	font-weight: 700;
+	letter-spacing: 0.08em;
+}
+.owner-desk button,
+.owner-desk input,
+.owner-desk select,
+.owner-desk summary {
+	min-height: 44px;
+	max-width: 100%;
+	font: inherit;
+	padding: 10px 14px;
+	border: 1px solid var(--od-line);
+	border-radius: 8px;
+}
+.owner-desk input,
+.owner-desk select {
+	display: block;
+	width: 100%;
+	color: var(--od-ink);
+	background: var(--od-bg);
+	margin-top: 6px;
+}
+.owner-desk button {
+	background: var(--od-panel);
+	color: var(--od-ink);
+	cursor: pointer;
+}
+.owner-desk button[aria-pressed="true"],
+.owner-desk form button {
+	background: var(--od-accent);
+	color: var(--od-button-ink);
+}
+.owner-desk button:disabled {
+	opacity: 0.55;
+	cursor: wait;
+}
+.owner-desk :focus-visible {
+	outline: 3px solid var(--od-accent);
+	outline-offset: 3px;
+}
+.owner-desk .od-tabs,
+.owner-desk .od-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 16px 0;
+	align-items: end;
+}
+.owner-desk .od-tabs button {
+	flex: 1 0 auto;
+	white-space: nowrap;
+	padding-inline: 8px;
+	font-size: 0.875rem;
+}
+.owner-desk .od-form {
+	display: grid;
+	gap: 14px;
+	margin-top: 16px;
+}
+.owner-desk .od-row label {
+	flex: 1;
+	min-width: 160px;
+}
+.owner-desk summary {
+	cursor: pointer;
+	margin: 12px 0;
+}
+.owner-desk .od-check {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-height: 44px;
+}
+.owner-desk .od-check input {
+	width: 22px;
+	min-height: 22px;
+	margin: 0;
+}
+.owner-desk .od-message {
+	white-space: pre-wrap;
+}
+.owner-desk small {
+	display: block;
+	margin-top: 8px;
+}
+.owner-desk [role="alert"] {
+	border-left: 3px solid var(--od-accent);
+	padding-left: 12px;
+}

@@ -1,0 +1,22 @@
+{
+  "classification": "locally_proven_synthetic_regression",
+  "run_id": "fresh-customer-proof-20260914T002322Z-17737",
+  "source_revision": "f3467f46",
+  "source_state": "working-tree snapshot during implementation; final appointment changes validated separately",
+  "status": "passed",
+  "provider_calls": false,
+  "runtime": "fresh_sqlite_sandbox",
+  "email": "memory",
+  "payment": "signed_synthetic_webhook",
+  "deployment": "local_sandbox",
+  "assertions": {
+    "research_and_exactly_three_proofs": true,
+    "selected_proof_enables_bound_checkout": true,
+    "account_and_portal_ownership": true,
+    "lifecycle_operations": true,
+    "all_customer_journey_booleans_true": true,
+    "all_lifecycle_booleans_true": true
+  },
+  "retained_evidence": ".artifacts/fresh-customer-proof/fresh-customer-proof-20260914T002322Z-17737/evidence.json",
+  "limitations": ["Does not prove live providers", "Does not prove real owner login or production booking", "Not a final-source deployment receipt"]
+}

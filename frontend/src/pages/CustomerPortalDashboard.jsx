@@ -40,6 +40,7 @@ import PortalBillingView from '../components/portal/PortalBillingView.jsx';
 import PortalAccountView from '../components/portal/PortalAccountView.jsx';
 import PortalSettingsView from '../components/portal/PortalSettingsView.jsx';
 import { getStaffCommandCenterLink, loadCustomerPortal } from './customerPortalLoader.js';
+import { portalReturn } from './portalReturn.js';
 
 export default function CustomerPortalDashboard() {
   const navigate = useNavigate();
@@ -87,7 +88,8 @@ export default function CustomerPortalDashboard() {
       })
       .catch((exception) => {
         if ([401, 403].includes(exception?.status)) {
-          navigate('/login', { replace: true });
+          const destination = portalReturn(window.location.pathname + window.location.search);
+          navigate('/login?redirect=' + encodeURIComponent(destination), { replace: true });
           return;
         }
         setError('Your command center could not connect. Your saved work is unchanged. Check your connection and try again.');

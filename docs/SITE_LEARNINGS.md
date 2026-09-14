@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-13 — Review the working lifecycle before extracting a component
+
+Observation: the retained owner implementation existed on `codex/locs-owner-desk`, while the research lane still described it as future work. Source re-anchoring prevented a competing backend. Review then found retry/outbox/expiry edge cases and private-route/login gaps.
+
+Guidance: capture the actual tested implementation, not the earlier mockup. Keep generic presentation separate from account authorization, providers and customer branding. Check appointments and queued notices in one transaction, expiry and replay under the same resource lock, and direct private-link loading. Record local database proof, browser fixtures and live delivery separately.
+
+See `docs/research/OWNER_DESK_IMPLEMENTATION_AND_REUSE_2026-09-13.md` and `docs/evidence/owner-desk-implementation/`.
+
 ## 2026-09-13 — Public launch is not complete owner delivery
 
 The selected Ruby Signal artifact promised Owner Desk confirmation and alternate

@@ -127,6 +127,21 @@ export function normalizePath(pathname = '/') {
 }
 
 export function seoForPath(pathname = '/') {
+  if (pathname.startsWith('/appointment/')) {
+    return {
+      siteName: SITE_NAME,
+      title: 'Private appointment response | FAMtastic Designs',
+      description: 'Review a private appointment proposal.',
+      ogDescription: 'Private appointment response.',
+      twitterDescription: 'Private appointment response.',
+      keywords: '',
+      canonical: `${SITE_URL}/appointment/`,
+      image: DEFAULT_IMAGE,
+      path: '/appointment',
+      robots: 'noindex, nofollow, noarchive',
+      referrer: 'no-referrer',
+    };
+  }
   if (pathname.startsWith('/deep-dive/')) {
     const description = 'Private, token-scoped website planning interview.';
     return {

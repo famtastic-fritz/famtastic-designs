@@ -36,6 +36,7 @@ function cleanPathname(pathname) {
   return pathname
     .replace(/^\/proofs\/share\/[^/]+\/[^/]+/, '/proofs/share/unlisted')
     .replace(/^\/proofs\/preview\/[^/]+\/[^/]+/, '/proofs/preview/unlisted')
+    .replace(/^\/appointment\/[^/]+/, '/appointment/private')
     .replace(/^\/portal\/[^/]+/, '/portal/personalized')
     .replace(/^\/p\/[^/]+/, '/p/personalized');
 }
