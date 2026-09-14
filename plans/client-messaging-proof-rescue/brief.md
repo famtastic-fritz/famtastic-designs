@@ -21,10 +21,10 @@ Deliver Kesline's complete working proof set to the verified customer, make cont
 - [x] Update source truth, operational lessons and Drive status mirror with exact evidence.
 - [x] Inspect the other Kesline request and send one authorized clarification for the unresolved second-website scope.
 - [x] Record the Shay/Shay-Shay signing convention in shared agent guidance and cross-session memory.
-- [ ] Verify the final Orders proof-status correction after canonical backend deployment.
+- [x] Verify the final Orders proof-status correction after canonical backend deployment.
 
 ## Status
-active — final Orders status correction under release verification
+complete
 
 ## Started
 2026-09-14
@@ -63,9 +63,9 @@ Follow-up source correction: the existing reversible archive uses customer_archi
 
 ## Final production acceptance
 
-The earlier pending checkpoints above are superseded by `release.md`. Both
-runtime release markers equal `fea57649a781bfc8440131327f980bd08a388315`:
-frontend deployed at 20:54:11Z and backend at 20:57:05Z. Live signed-in admin and
+The earlier pending checkpoints above are superseded by `release.md`. The
+frontend marker is `fea57649a781bfc8440131327f980bd08a388315` at 20:54:11Z; the
+final backend marker is `e68b89f26e315e7232521f6acd6332ac04337bd0` at 21:19:55Z. Live signed-in admin and
 portal display the original Kesline message, saved clarification and SMTP
 acceptance. Actual desktop/mobile rendering and active/Archived filtering
 passed. Production dependency audit has zero advisories/abandoned packages;
@@ -82,6 +82,6 @@ unconfigured unattended creative-worker connection remains a documented
 separate limitation; exact Kesline proof delivery is complete.
 
 Live Orders follow-up: ready/notified historical campaigns were hidden by the
-missing-legacy-job guard. The correction now passes 217 module tests / 1,129
+missing/failed-legacy-job guards. The correction passes 217 module tests / 1,129
 assertions, including readiness and incomplete-run regressions. Final backend
-release/recheck is tracked in `release.md`.
+release and live Orders recheck passed; exact evidence is in `release.md`.

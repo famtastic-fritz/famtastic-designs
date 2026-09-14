@@ -2,7 +2,7 @@
 
 ## 2026-09-14 — Client inbox released and shared Shay signing convention
 
-- Corrected Orders proof-status precedence after live review found ready campaigns hidden by absent legacy jobs. Actual ready campaign/review state now takes precedence; incomplete runs still show their warning. Full module suite: 217 tests / 1,129 assertions. Follow-up deployment is tracked in the release record.
+- Corrected Orders proof-status precedence after live review found ready campaigns hidden by failed legacy jobs. Actual ready campaign/review state now takes precedence; incomplete runs still show their warning. Full module suite: 217 tests / 1,129 assertions. Backend `e68b89f2` deployed at 21:19:55Z; live Orders shows the corrected ready/selected stages. Exact evidence is in the release record.
 - Deployed frontend and backend `fea57649` through the canonical scripts; verified the live admin inbox, owner portal, desktop/mobile conversation view, and active/Archived request filters. Migration 8063 recovered 15 existing inquiries without sending notifications. See `plans/client-messaging-proof-rescue/release.md`.
 - Verified production dependency audit with zero advisories/abandoned packages and no pending database updates; refreshed update metadata to clear the stale Drupal security warning.
 - Sent one authorized second-website clarification to Kesline through exact outbox 634 at 20:53:46Z and verified its saved portal conversation and SMTP acceptance.

@@ -20,16 +20,17 @@
 
 Worktree: `codex/client-messaging-proof-rescue`, based on main `598aa8ff`.
 Implementation commit: `4599a22be878a6c7c9a4e4109b2fb2787703580a`.
-Archive correction and final runtime source:
-`fea57649a781bfc8440131327f980bd08a388315`.
-Both were integrated through normal fast-forward pushes to main.
+Archive correction and frontend source:
+`fea57649a781bfc8440131327f980bd08a388315`. Final backend proof-status correction:
+`e68b89f26e315e7232521f6acd6332ac04337bd0`.
+These were integrated through normal fast-forward pushes to main.
 
 Canonical checked-in deployment scripts installed the exact reviewed source:
 
 | Component | Source | Release marker time (UTC) |
 | --- | --- | --- |
 | Frontend | `fea57649a781bfc8440131327f980bd08a388315` | 2026-09-14T20:54:11Z |
-| Backend | `fea57649a781bfc8440131327f980bd08a388315` | 2026-09-14T20:57:05Z |
+| Backend | `e68b89f26e315e7232521f6acd6332ac04337bd0` | 2026-09-14T21:19:55Z |
 
 Migration 8063 imported 15 existing public requests without sending notifications.
 The final database update check reports no pending updates. Production PHP is
@@ -38,9 +39,11 @@ read back from the host after deployment. Canonical backups and database dump
 paths are retained in the private deployment receipts. Broad cron/outbox
 processing was not used for this release or either customer send.
 
-Final documentation/signature guidance is a later docs-only checkpoint. It
-changes no runtime source; the deployed markers remain the exact runtime SHA
-above. Do not interpret the documentation commit as another deployment.
+The frontend tree is identical between its deployed SHA and the final backend
+SHA; the later runtime correction changes only the backend proof-state service.
+Final documentation is a later docs-only checkpoint. It changes no runtime
+source; the deployed markers remain the exact component SHAs above. Do not
+interpret the documentation commit as another deployment.
 
 ## Customer communication receipts
 
@@ -72,7 +75,7 @@ No already-sent message was edited or resent.
 
 ## Validation
 
-- Backend module: 203 unit tests, 1,078 assertions; existing PHPUnit docblock
+- Final backend module: 217 unit tests, 1,129 assertions; existing PHPUnit docblock
   deprecations remain. Full disposable Drupal HTTP smoke: 40/40 checks,
   including migration 8062→8063, real staff credentials, CSRF, tenant denials,
   idempotent reply/outbox, all seven rendered filters and archived visibility.
@@ -125,8 +128,8 @@ verified; remote Drive synchronization is not separately attested.
 ## Orders status follow-up
 
 Final live Orders review identified a pre-existing handoff precedence defect:
-ready/notified campaigns for requests 2 and 3 appeared to need attention when
-their legacy workflow job was absent. Production campaign readiness was
+ready/notified campaigns for requests 2 and 3 appeared to need attention due
+to failed legacy workflow jobs. Production campaign readiness was
 verified directly before changing the calculation. The service now returns
 the actual ready campaign's review stage before missing/failed-job warnings;
 bare review status on an incomplete campaign still cannot imply readiness.
@@ -135,5 +138,12 @@ Ten new regressions failed before the correction. The focused handoff suite
 now passes 23 tests / 74 assertions, and the full module suite passes 217 tests
 / 1,129 assertions with the same 66 existing PHPUnit deprecations. The exact
 request job query and waiting-provider behavior remain covered. No frontend
-files changed. Canonical backend deployment and live Orders recheck are pending
-at this follow-up implementation checkpoint.
+files changed. Canonical backend deployment completed at 21:19:55Z from
+`e68b89f26e315e7232521f6acd6332ac04337bd0`. Read-only live projections for requests
+2, 3 and 14 now return choose_direction while retaining the original job status.
+The actual signed-in Billing & Orders page was reloaded and visually reviewed:
+ready concepts ask for a direction, selected concepts show the saved selection,
+and drafts still ask for the brief. No horizontal overflow or customer mutation
+was introduced. Private before/after evidence is in
+`.artifacts/billing-proof-state-before.json`, `billing-proof-state-after.json`,
+`backend-proof-stage-deploy.log` and `final-proof-state-module-unit.log`.
