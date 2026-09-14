@@ -1,5 +1,7 @@
 # FAMtastic Designs capability registry
 
+September14 policy follow-up: Locs public policy content now has distinct /privacy/ and /terms/ source pages, not a homepage explainer. Actual release hashes, HTTP/browser checks and limitations are recorded in the pilot log. No new backend behavior or legal-compliance certification is implied.
+
 September14 follow-up supersedes the opt-in UI description below: current Locs maintenance source uses default-denied-storage GA4 pings, suppresses previous refusals/DNT/GPC, and removes the large choice panel. This is not consent-based full-session reporting or a new Realtime/modeling proof. Booking gains public navigation and clearer typography, not a second appointment backend. Pilot log records exact published artifact and browser evidence.
 
 September14 public-site correction: the deployed Locs configuration still identifies GA4 `G-V8M437DWV0`, with opt-in tag loading. Required analytics as a business deliverable is separate from visitor consent. Footer copyright/agency-credit source and regression tests now exist; deployment acceptance belongs to the public static artifact, not the Owner Desk release marker.

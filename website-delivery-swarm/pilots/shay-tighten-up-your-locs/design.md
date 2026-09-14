@@ -4,6 +4,7 @@ Established September14,2026 for maintenance of the approved Open Chair / Ruby S
 
 - Preserve cream #efe6d4, cocoa #311f1a, ruby #8f1831, gold #d6ae62; DM Sans body, Libre Baskerville display, DM Mono labels. Preserve existing approved illustration and its not-client-work label.
 - Header wordmark and navigation are not underlined by default. Body/privacy links remain identifiable; keyboard focus stays visible. All controls have at least44px targets.
+- Privacy explanation belongs on /privacy/ and website terms on /terms/, linked from footer and form. Do not place legal/analytics policy paragraphs in a homepage section. Describe the actual submitted-request and measurement behavior; do not claim the site collects no data, invent retention deadlines or introduce unapproved appointment fees.
 - Display headlines need breathing room: line-height at least1.08, tracking no tighter than-.045em. Do not restore the earlier .88 line-height/-.08em combination. Inspect actual font rendering at390,768 and1280 widths; no horizontal overflow or clipped lettering.
 - Header Booking and hero appointment CTA target #booking. Booking contains the existing durable request form and owner-published request windows. Preserve #request as a backwards-compatible anchor. No instant reservation, payment or external calendar synchronization claim.
 - Footer: ©2026 Tighten Up Your Locs. All rights reserved.; Website by FAMtastic Designs linked to https://famtasticdesigns.com/; Privacy link. Wrap cleanly on mobile.

@@ -51,17 +51,14 @@
           "variant": "request-not-confirmation"
         },
         {
-          "instance_id": "privacy.request-analytics.v1",
-          "definition_id": "privacy.consent.v1",
-          "variant": "cookieless-measurement-disclosure"
-        },
-        {
           "instance_id": "foundation.find-contact-domain.v1",
           "definition_id": "foundation.location-contact-domain.v1",
           "variant": "verified-city-only"
         }
       ]
-    }
+    },
+    {"page_id":"privacy-policy","route":"/privacy/","components":[{"instance_id":"privacy.request-analytics.v1","definition_id":"privacy.consent.v1","variant":"standalone-policy"}]},
+    {"page_id":"website-terms","route":"/terms/","components":[{"instance_id":"terms.website-use.v1","definition_id":"terms.website-use.v1","variant":"request-workflow-terms"}]}
   ],
   "withheld_components": [
     {

@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-14 — Dedicated Locs policy pages
+
+- Removed the homepage privacy explainer. Added branded /privacy/ and /terms/ pages, linked from the footer and request form; preserved the #privacy anchor at the footer for old links.
+- Policies describe actual submitted-request handling, abuse prevention and denied-storage measurement without inventing payment, cancellation or retention guarantees. This is source-grounded operational copy, not a legal-compliance certification.
+
 ## 2026-09-14 — Locs booking, typography and measurement maintenance
 
 - Versioned CSS/JS URLs prevent a cached legacy analytics script from targeting removed controls after publication.

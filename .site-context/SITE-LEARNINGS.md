@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Policy placement
+
+Observation: a privacy explainer cluttered the customer homepage. Guidance: link dedicated branded policy pages from the footer and form; keep homepage focused on service and booking. Write from actual code/provider behavior rather than generic or unsupported privacy promises.
+
 ## 2026-09-14 — Public experience maintenance
 
 Observation: logo underlining, compressed headings and unnamed booking entry escaped launch QA. Guidance: site-specific design.md is mandatory before new builds; inspect actual responsive typography, primary navigation and footer. Cookie-free GA4 mode is distinct from the old opt-in implementation and from full cookie-based reporting; retain explicit refusals and do not claim unobserved provider reporting.

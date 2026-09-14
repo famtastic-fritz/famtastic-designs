@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Put policies in policy pages
+
+Observation: replacing optional analytics controls with a long homepage privacy explanation still violated the intended professional page hierarchy. Guidance: dedicated branded Privacy Policy and Website Terms pages, brief form acknowledgement and footer links. Explain actual voluntary form submission separately from measurement; no false claim that a booking form receives no personal information. Preserve stable privacy component identity when moving it off the home recipe.
+
 ## 2026-09-14 — Explicit design contracts and distinct measurement modes
 
 Observation: the Locs header inherited link underlines and display text used .88 line-height with -.08em tracking; the user also expected named Booking navigation and included analytics. Guidance: require a site-specific design.md before every new build, preserve approved branding, test actual fonts at390/768/1280, and make request-versus-confirmation clear. Included measurement can use denied-storage pings without manufacturing visitor consent. Preserve prior refusals and browser privacy signals; do not claim cookieless transport proves legal compliance or full-session reports.

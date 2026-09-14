@@ -23,6 +23,16 @@
   },
   "stages": [
     {
+      "stage_id": "standalone-policies-20260914",
+      "capability": "move-policy-component-to-dedicated-pages",
+      "source_parent": "a42d7b6682f1fdfe3439607269de0798619f1db1",
+      "changed_public_files": ["index.html", "styles.css", "privacy/index.html", "terms/index.html"],
+      "result": {"status": "15_local_tests_passed_pending_release", "backend_changed": false, "analytics_changed": false},
+      "approval": "Fritz requested immediate removal of homepage policy explanation and dedicated policy pages.",
+      "execution": {"provider": "openai-codex", "model_status": "not_disclosed_by_runtime", "cost_status": "runtime_did_not_report", "duration_status": "not_measured"},
+      "evidence_ref": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/SITE-LEARNINGS.md"
+    },
+    {
       "stage_id": "booking-layout-cookieless-20260914",
       "capability": "approved-ruby-maintenance",
       "source_parent": "adf48dde575922750d99dfe842a9d308532b9269",
@@ -93,6 +103,8 @@
     "approval": "Fritz explicitly confirmed the Locs design was final and authorized launch and registrant update; not a fabricated portal acceptance."
   },
   "artifacts": [
+    {"role":"privacy-policy","path":"website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/privacy/index.html","sha256":"228997459aa0ad723a49701de6f0230659350ab48486db182839c56539149108","rights_status":"repository_owned_source","retention_status":"retain_with_build"},
+    {"role":"website-terms","path":"website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/terms/index.html","sha256":"0c2cb4b0ecf5499d94e5dd8f4c57d65ef22b71eeb71234d42c882407d1849e44","rights_status":"repository_owned_source","retention_status":"retain_with_build"},
     {
       "role": "README.md",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/README.md",
@@ -117,7 +129,7 @@
     {
       "role": "index.html",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/index.html",
-      "sha256": "141da4a009bdd91bf7f30921a6b6f77a92a28aa9fd627762555008176bd3c028",
+      "sha256": "99b6d2ad9159d78a4297f4901de73605b888be4a47d23e225f621fd5bd5afd4d",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -159,7 +171,7 @@
     {
       "role": "site-recipe.json",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site-recipe.json",
-      "sha256": "fef1675aaf1e8f7da22009bb902003b8e2c458c97c8ed4a8c8268486f2594f29",
+      "sha256": "6e1307bf6f588ae924bb68dd2662c492ab8f1728e3a42384e5d292b72f851860",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -180,7 +192,7 @@
     {
       "role": "styles.css",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/styles.css",
-      "sha256": "0e3ada106f41ad80216c397f349c73d3aa2e70f02bdc081562573e68f27250e7",
+      "sha256": "dadf45465249ae6c0023e27721920a21c86aed38913b343aba732c107c1d535c",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
