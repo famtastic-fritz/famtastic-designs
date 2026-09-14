@@ -23,6 +23,17 @@
   },
   "stages": [
     {
+      "stage_id": "booking-layout-cookieless-20260914",
+      "capability": "approved-ruby-maintenance",
+      "source_parent": "adf48dde575922750d99dfe842a9d308532b9269",
+      "design_contract": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/design.md",
+      "changed_public_files": ["index.html", "styles.css", "site.js"],
+      "result": {"status": "13_local_tests_and_CUA_responsive_checks_passed_pending_release", "new_media": false, "backend_changed": false, "analytics": "denied_storage_pings_with_prior_refusal_DNT_GPC_suppression"},
+      "approval": "Fritz explicitly requested layout/booking/analytics correction, commit and live publication September14.",
+      "execution": {"provider": "openai-codex", "model_status": "not_disclosed_by_runtime", "cost_status": "runtime_did_not_report", "duration_status": "not_measured"},
+      "evidence_ref": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/SITE-LEARNINGS.md"
+    },
+    {
       "stage_id": "public-footer-correction-20260914",
       "capability": "preserve-direction-correct-copyright-credit-and-privacy-copy",
       "source_parent": "17185b29",
@@ -85,14 +96,14 @@
     {
       "role": "README.md",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/README.md",
-      "sha256": "101b2ef17615cec20000033559090e5c3d9093388f7fa74d1023b7dafa68ec24",
+      "sha256": "1abf87904b59e90d589a76544bd83ebe0c0a129b36107cd03127e379f8c75368",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
     {
       "role": "browser.test.mjs",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/browser.test.mjs",
-      "sha256": "c4c2e08488a38f10a79ca53fd00e31b80a88190bf0d5d4a24b86ed6b1d6e9fef",
+      "sha256": "7cf748cfe88202c7c422aff3351722f3402ff0ac0008173a988937c54b043274",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -106,7 +117,7 @@
     {
       "role": "index.html",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/index.html",
-      "sha256": "b54a375b19a5da2a0c0c1065550b149367fd48ce81829ec4420511643caa92cb",
+      "sha256": "7c89f8436da36b4e65242c148c16ad9449544dfeda55c4c3496bae840119f8b2",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
@@ -148,28 +159,28 @@
     {
       "role": "site-recipe.json",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site-recipe.json",
-      "sha256": "d16033757e3c1187b585231eeb5f6d91b7d8c7d6e456b209f71c40b502d7716b",
+      "sha256": "fef1675aaf1e8f7da22009bb902003b8e2c458c97c8ed4a8c8268486f2594f29",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
     {
       "role": "site.js",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site.js",
-      "sha256": "8483cbb3873cdde47a433270a3a5b0246ce90e4f1362caea95e2a0e206b23c8e",
+      "sha256": "4d5db0f65dc3867e6e675bd45f86c1e934c191a814591b91886038da36b5beaf",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
     {
       "role": "site.test.mjs",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/site.test.mjs",
-      "sha256": "890190ca35f57938625d1b426e94591e573e6ff50a2210a1b37109173e748ad7",
+      "sha256": "d10c8e69542d1c3db82f1091b0d9a634a7c7a72b8933140321f8cec44f798550",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },
     {
       "role": "styles.css",
       "path": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/styles.css",
-      "sha256": "c2887571c4dbe87d8a9ef5daf3520840a5837515e6f892b182e8c2c58af8adef",
+      "sha256": "0e3ada106f41ad80216c397f349c73d3aa2e70f02bdc081562573e68f27250e7",
       "rights_status": "repository_owned_source",
       "retention_status": "retain_with_build"
     },

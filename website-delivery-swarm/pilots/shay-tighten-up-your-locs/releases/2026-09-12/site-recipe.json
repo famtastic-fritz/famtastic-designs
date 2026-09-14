@@ -1,6 +1,7 @@
 {
   "site_id": "tighten-up-your-locs",
-  "recipe_version": "1.1.0-candidate",
+  "recipe_version": "1.2.0-booking-public-maintenance",
+  "design_contract": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/design.md",
   "source_recipe": "docs/design/proofs/tighten-up-your-locs-v2/site-recipe.json",
   "source_direction": "docs/design/proofs/tighten-up-your-locs-v2/proofs/appointment-desk-hybrid/index.html",
   "source_commit": "c894ca31",
@@ -52,7 +53,7 @@
         {
           "instance_id": "privacy.request-analytics.v1",
           "definition_id": "privacy.consent.v1",
-          "variant": "default-deny"
+          "variant": "cookieless-measurement-disclosure"
         },
         {
           "instance_id": "foundation.find-contact-domain.v1",

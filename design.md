@@ -1,5 +1,7 @@
 # FAMtastic Experience System v1
 
+Owner rule, September14,2026: every new customer build must include a site-specific `design.md` before implementation. Reference this shared contract, the approved customer direction, responsive/type rules, component boundaries and acceptance evidence. A file added during maintenance must disclose that timing rather than imply it governed the original generation.
+
 This is the required, reusable design contract for every customer-facing
 FAMtastic surface: `famtasticdesigns.com`, Client Portal, proof rooms, Site
 Studio handoffs, transactional email, and industry recipes. It does not replace

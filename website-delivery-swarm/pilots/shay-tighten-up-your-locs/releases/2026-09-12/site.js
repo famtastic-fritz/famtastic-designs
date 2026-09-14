@@ -14,7 +14,7 @@ export function settings(raw, origin) {
   return {
     request: raw.requestsEnabled === true ? canonicalEndpoint(raw.requestEndpoint, "request", origin) : "",
     availability: canonicalEndpoint(raw.availabilityEndpoint, "availability", origin),
-    measurement: /^G-[A-Z0-9]{6,20}$/.test(raw.gaMeasurementId || "") ? raw.gaMeasurementId : "",
+    measurement: ["https://tightenupyourlocs.com", "https://www.tightenupyourlocs.com"].includes(origin) && /^G-[A-Z0-9]{6,20}$/.test(raw.gaMeasurementId || "") ? raw.gaMeasurementId : "",
     zone: raw.siteTimeZone === "America/New_York" ? raw.siteTimeZone : ""
   };
 }
@@ -29,54 +29,46 @@ export function publicWindows(payload, now = Date.now()) {
   if (payload.windows.some(item => !item || typeof item.label !== "string" || !Number.isFinite(Number(item.starts_at)) || !Number.isFinite(Number(item.ends_at)) || Number(item.ends_at) <= Number(item.starts_at))) throw new Error("invalid_windows");
   return payload.windows.filter(item => Number(item.ends_at) * 1000 > now).slice(0, 12);
 }
+export function initAnalytics(win, doc, measurement) {
+  const noop = () => {};
+  if (!measurement || doc.getElementById("locs-analytics")) return noop;
+  // Migrate away from cookie-based measurement without overriding prior refusals.
+  for (const cookie of doc.cookie.split(";")) {
+    const name = cookie.split("=")[0].trim();
+    if (!/^_ga(?:_|$)/.test(name)) continue;
+    const domains = new Set(["", win.location.hostname, "." + win.location.hostname]);
+    if (/^(www\.)?tightenupyourlocs\.com$/.test(win.location.hostname)) domains.add(".tightenupyourlocs.com");
+    for (const domain of domains) doc.cookie = name + "=; Max-Age=0; path=/" + (domain ? "; domain=" + domain : "") + "; SameSite=Lax";
+  }
+  let refused = win.navigator?.globalPrivacyControl === true || win.navigator?.doNotTrack === "1";
+  try { refused ||= win.localStorage.getItem("locs.analytics-choice.v1") === "deny"; } catch {}
+  win["ga-disable-" + measurement] = refused;
+  if (refused) return noop;
+  win.dataLayer = win.dataLayer || [];
+  win.gtag = function () { win.dataLayer.push(arguments); };
+  // Set BEFORE loading Google: no analytics/ad cookies, no inferred visitor grant.
+  win.gtag("consent", "default", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+  win.gtag("set", "ads_data_redaction", true);
+  win.gtag("set", "url_passthrough", false);
+  win.gtag("js", new Date());
+  win.gtag("config", measurement, safeAnalyticsParameters(win.location.origin));
+  const script = doc.createElement("script");
+  script.async = true; script.id = "locs-analytics"; script.referrerPolicy = "no-referrer";
+  script.src = "https://www.googletagmanager.com/gtag/js?id=" + measurement;
+  doc.head.append(script);
+  const event = name => {
+    if (!["page_view", "request_start", "request_saved"].includes(name)) return;
+    win.gtag("event", name, { send_to: measurement, ...safeAnalyticsParameters(win.location.origin) });
+  };
+  event("page_view");
+  return event;
+}
 export function initSite(win = window, doc = document) {
   const config = settings(win.LOCS_CONFIG || {}, win.location.origin);
   const form = doc.getElementById("contact-form"), button = doc.getElementById("send-request");
   const status = doc.getElementById("status"), info = doc.getElementById("request-availability");
-  let sending = false, uncertain = false, consent = false, loaded = false;
-  const analyticsStatus = doc.getElementById("analytics-status");
-  const privacyKey = "locs.analytics-choice.v1";
-  const remember = value => { try { win.localStorage.setItem(privacyKey, value); } catch {} };
-  const event = name => {
-    if (!consent || !loaded || !config.measurement) return;
-    win.gtag("event", name, { send_to: config.measurement, ...safeAnalyticsParameters(win.location.origin) });
-  };
-  function allowAnalytics() {
-    if (!config.measurement) { analyticsStatus.textContent = "Optional analytics are not configured. No tracking has started."; return; }
-    consent = true; remember("allow"); win["ga-disable-" + config.measurement] = false;
-    if (!loaded) {
-      win.dataLayer = win.dataLayer || [];
-      win.gtag = function () { win.dataLayer.push(arguments); };
-      win.gtag("consent", "default", { analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
-      win.gtag("js", new Date());
-      win.gtag("config", config.measurement, safeAnalyticsParameters(win.location.origin));
-      const script = doc.createElement("script");
-      script.async = true; script.id = "locs-analytics"; script.referrerPolicy = "no-referrer";
-      script.src = "https://www.googletagmanager.com/gtag/js?id=" + config.measurement;
-      script.onerror = () => { analyticsStatus.textContent = "Your choice is saved, but analytics could not load."; };
-      doc.head.append(script); loaded = true;
-      event("page_view");
-    }
-    analyticsStatus.textContent = "Optional analytics are allowed. Form contents are not included.";
-  }
-  function declineAnalytics() {
-    consent = false; remember("deny");
-    if (config.measurement) win["ga-disable-" + config.measurement] = true;
-    doc.getElementById("locs-analytics")?.remove();
-    // Remove only GA cookies for this site. Never touch authentication or other cookies.
-    for (const cookie of doc.cookie.split(";")) {
-      const name = cookie.split("=")[0].trim();
-      if (!/^_ga(?:_|$)/.test(name)) continue;
-      for (const domain of ["", "; domain=" + win.location.hostname, "; domain=." + win.location.hostname]) {
-        doc.cookie = name + "=; Max-Age=0; path=/" + domain + "; SameSite=Lax";
-      }
-    }
-    analyticsStatus.textContent = "Optional analytics are off. Previously sent measurements cannot be recalled.";
-  }
-  doc.getElementById("analytics-allow").addEventListener("click", allowAnalytics);
-  doc.getElementById("analytics-decline").addEventListener("click", declineAnalytics);
-  // Consent is the only local-storage value. No request details are persisted.
-  try { if (win.localStorage.getItem(privacyKey) === "allow") allowAnalytics(); } catch {}
+  let sending = false, uncertain = false;
+  const event = initAnalytics(win, doc, config.measurement);
   if (config.request) {
     button.disabled = false;
     info.textContent = "Send a request for review. You will see a reference only after it is saved.";

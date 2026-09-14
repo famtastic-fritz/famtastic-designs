@@ -24,16 +24,12 @@ try{
   assert.equal(external.some(url=>url.includes("googletagmanager")),false);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);
   await page.screenshot({path:resolve(screenshotDir,"qa-"+width+".png"),fullPage:true});
-  await page.locator("#analytics-allow").click();
-  await page.waitForTimeout(100);
-  assert.equal(await page.locator("#locs-analytics").count(),1, await page.locator("#analytics-status").textContent());
-  const queue=await page.evaluate(()=>window.dataLayer.map(args=>Array.from(args)));
-  const config=queue.find(args=>args[0]==="config");
-  assert.equal(config[2].page_location,base+"/");assert.equal(config[2].page_referrer,"");
-  assert.equal(config[2].send_page_view,false);
-  await page.locator("#analytics-decline").click();
-  assert.equal(await page.evaluate(()=>window["ga-disable-G-V8M437DWV0"]),true);
-  results.push("production endpoint configured, consent and no-overflow "+width);await context.close();
+  assert.equal(await page.locator("#analytics-allow").count(),0);
+  assert.equal(await page.locator("#locs-analytics").count(),0); // Local previews never pollute production analytics.
+  await page.getByRole('link',{name:'Booking',exact:true}).click();
+  assert.equal(new URL(page.url()).hash,'#booking');
+  assert.equal(await page.locator('.brand').evaluate(el=>getComputedStyle(el).textDecorationLine),'none');
+  results.push("booking navigation, local analytics suppression and no-overflow "+width);await context.close();
  }
  const context=await browser.newContext({viewport:{width:390,height:844}});
  const page=await context.newPage(); let submissions=0, responseMode="saved";

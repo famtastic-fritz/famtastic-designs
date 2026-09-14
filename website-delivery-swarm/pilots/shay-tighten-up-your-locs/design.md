@@ -1,0 +1,11 @@
+# Tighten Up Your Locs — Ruby Signal experience contract
+
+Established September14,2026 for maintenance of the approved Open Chair / Ruby Signal public site. This is not a claim that this site-specific file existed at original generation. The repository-root `design.md` and page/component doctrine also apply; the approved customer palette takes precedence over the agency portal palette.
+
+- Preserve cream #efe6d4, cocoa #311f1a, ruby #8f1831, gold #d6ae62; DM Sans body, Libre Baskerville display, DM Mono labels. Preserve existing approved illustration and its not-client-work label.
+- Header wordmark and navigation are not underlined by default. Body/privacy links remain identifiable; keyboard focus stays visible. All controls have at least44px targets.
+- Display headlines need breathing room: line-height at least1.08, tracking no tighter than-.045em. Do not restore the earlier .88 line-height/-.08em combination. Inspect actual font rendering at390,768 and1280 widths; no horizontal overflow or clipped lettering.
+- Header Booking and hero appointment CTA target #booking. Booking contains the existing durable request form and owner-published request windows. Preserve #request as a backwards-compatible anchor. No instant reservation, payment or external calendar synchronization claim.
+- Footer: ©2026 Tighten Up Your Locs. All rights reserved.; Website by FAMtastic Designs linked to https://famtasticdesigns.com/; Privacy link. Wrap cleanly on mobile.
+- Analytics is an included business capability. No large optional-analytics panel. Existing GA4 G-V8M437DWV0 uses default denied analytics/ad storage and cookie-free pings; previous explicit refusals and DNT/GPC suppress loading. No form contents, query strings, response tokens or client identifiers in event parameters. No new visitor consent grant inferred from the package purchase. Cookieless does not mean zero data transfer or a blanket legal-compliance certification.
+- Keep stable component instance IDs and record changed public-file hashes in Build DNA. Commit and push source; publish only allowlisted files through Hosting's managed artifact publisher; compare apex/www hashes and rendered mobile/desktop views before reporting live.

@@ -9,6 +9,8 @@ test("only exact bound-site canonical HTTPS endpoints are accepted", () => {
 test("explicit enable required and invalid analytics rejected", () => {
  assert.equal(settings({requestEndpoint:"/api/booking-request/"+SITE_KEY}, "https://tightenupyourlocs.com").request, "");
  assert.equal(settings({gaMeasurementId:"G-123456<script>"}, "https://tightenupyourlocs.com").measurement, "");
+ assert.equal(settings({gaMeasurementId:"G-V8M437DWV0"}, "http://127.0.0.1:8767").measurement, "");
+ assert.equal(settings({gaMeasurementId:"G-V8M437DWV0"}, "https://www.tightenupyourlocs.com").measurement, "G-V8M437DWV0");
 });
 test("only real backend reference response counts as saved", () => {
  assert.equal(isDurableReceipt({ok:true,status:"received"}), false);

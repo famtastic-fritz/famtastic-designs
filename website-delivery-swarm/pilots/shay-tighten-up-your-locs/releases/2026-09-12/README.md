@@ -1,5 +1,11 @@
 # Tighten Up Your Locs — LOCAL release candidate
 
+## September14 maintenance (supersedes historical candidate/analytics status below)
+
+Public launch and dedicated Owner Desk are deployed; see Designs release plans for exact evidence. Site-specific rules now live at `../../design.md`. The current maintenance source removes logo underlining, relaxes headline spacing, supplies #booking navigation and a named request section, and preserves the existing owner-reviewed booking backend. #request remains compatible.
+
+The large analytics-choice panel is replaced by a concise disclosure. Existing GA4 G-V8M437DWV0 loads on the exact production apex/www with all analytics/ad storage denied, ads redaction enabled and no URL passthrough. Default cookie-free measurements are not a visitor consent grant or legal-compliance certification. Prior explicit refusal, DNT and GPC block loading. Old GA cookies are removed; no new preference writes. Local previews cannot emit production analytics. Events remain allowlisted and sanitized. Cookie-free pings do not promise full cookie-based session/user reporting or eligibility for GA behavioral modeling. Official reference: https://developers.google.com/tag-platform/security/concepts/consent-mode . Live acceptance is recorded separately from local tests.
+
 This is a technical adaptation of the owner-approved Open Chair / Ruby Signal direction, not a deployed site. No provider writes, emails, charges or live request submissions were performed. Production publication is blocked.
 
 ## Package and provenance

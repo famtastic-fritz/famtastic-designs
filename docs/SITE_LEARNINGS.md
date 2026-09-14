@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Explicit design contracts and distinct measurement modes
+
+Observation: the Locs header inherited link underlines and display text used .88 line-height with -.08em tracking; the user also expected named Booking navigation and included analytics. Guidance: require a site-specific design.md before every new build, preserve approved branding, test actual fonts at390/768/1280, and make request-versus-confirmation clear. Included measurement can use denied-storage pings without manufacturing visitor consent. Preserve prior refusals and browser privacy signals; do not claim cookieless transport proves legal compliance or full-session reports.
+
 ## 2026-09-14 — A portal release cannot close a public-footer task
 
 Observation: copyright/agency credit were requested earlier but the dedicated Owner Desk deployment left the separately hosted public artifact unchanged. Guidance: track each public domain/file deliverable explicitly and verify its rendered footer. Never equate required business analytics with permission to bypass visitor consent. Live GA4 remains configured; neutral privacy copy must not contradict its dynamic allowed/declined state.

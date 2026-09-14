@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-14 — Public experience maintenance
+
+Observation: logo underlining, compressed headings and unnamed booking entry escaped launch QA. Guidance: site-specific design.md is mandatory before new builds; inspect actual responsive typography, primary navigation and footer. Cookie-free GA4 mode is distinct from the old opt-in implementation and from full cookie-based reporting; retain explicit refusals and do not claim unobserved provider reporting.
+
 ## 2026-09-14 — Public footer and analytics scope
 
 Observation: Owner Desk deployment did not ship the customer site's pending footer. Guidance: verify the exact public artifact, copyright and agency link separately. Keep tracking configuration and visitor-consent decisions separate; do not auto-grant analytics to resolve a copy complaint.
