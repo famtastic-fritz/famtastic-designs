@@ -2,6 +2,8 @@
 
 ## 2026-09-14 — Locs booking, typography and measurement maintenance
 
+- Versioned CSS/JS URLs prevent a cached legacy analytics script from targeting removed controls after publication.
+
 - Removed header logo/navigation underlines, increased display line-height and spacing, and added Booking navigation with a named appointment-request section and published windows.
 - Replaced the large optional-analytics panel with a privacy disclosure; retained the existing GA4 ID with cookie storage denied, no inferred visitor grant, prior-refusal/DNT/GPC suppression and production-host-only loading.
 - Added the site's design.md and the shared rule requiring it before future builds. Local13 tests and real-browser390/768/1280 layout/navigation checks passed; production acceptance follows in the pilot log.
