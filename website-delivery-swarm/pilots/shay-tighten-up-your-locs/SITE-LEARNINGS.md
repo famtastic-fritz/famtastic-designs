@@ -1,5 +1,15 @@
 # Tighten Up Your Locs site learnings
 
+## 2026-09-14 — Independent business, continuous gallery and The Locs Letter live
+
+This supersedes the agency-backend instruction and earlier gallery controls below. Final application/public source `576b190ab28d8cef15b82982c4429055880058e1` is deployed: own `/admin/`, dedicated18-table MySQL database/users/auth/sessions/outbox/scheduler; original request reconciled, old authority retired without deleting legacy data. Private `/admin/newsletter` shows confirmed/pending/unsubscribed readers, not campaign sending. Hosted auth/booking and a controlled own-mailbox signup/confirmation/unsubscribe passed; temporary fixtures removed. Corrected setup/instructions were SMTP-accepted for Shay and Fritz.
+
+Public newsletter/SEO package `52fde9721e21dedac5fd10eb88c48f43c81a7845b786b26169395ca81471b2aa` installed8files; final continuous-loop package `54e8aea3acdcdc8bff426e1cc9b18e8a75c922a62383f9e9f045637bbd3b0f3a` installed3. Exact hashes checked on apex/www. Browser shows four44x44dot targets, autoplay, no visible control bar, no overflow, and the Ruby/gold newsletter panel on desktop/mobile. Swipe logic is unit-covered; physical touch/OS-motion testing is not claimed. Hover no longer pauses, avoiding mobile-emulated hover stalls. Keyboard, explicit accessible pause, hidden tab and reduced-motion protections remain.
+
+Sisterlocks/Port St. Lucie title/description, canonical, social metadata, factual Organization/WebSite/Service schema, robots and sitemap are live. HTTP/www redirects now include the nested admin/API/appointment routes, not just the homepage. Google indexing/rankings/GBP/Search Console and restore drill are not verified. SMTP acceptance is not inbox/read proof; Shay still chooses her personal password. See `customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md` for exact application/backup/provider receipts and remaining limits.
+
+Reuse lessons: business-owned runtime is mandatory unless expressly agreed otherwise; component sharing is build-time reuse. Never wrap SMTP acceptance in an automatically retried DB transaction. Newsletter confirmation is explicit and separate from booking. `design.md` was updated before public changes. Canonical Component/Studio recipe-awareness commits exist; automatic Laravel import remains unproven.
+
 ## 2026-09-14 — Four-image hero gallery
 
 User authorized public reuse of previously created Shay media. Original care image retained first; added ledger-private-concept (loc updo), room-private-concept (styled portrait), story/journey-character (loose-loc portrait) from the v2 proof assets. All are generated editorial imagery, not real transformations. No new generation expense, customer requests, email, backend or analytics changes.
@@ -10,7 +20,7 @@ Published source `53071d32dca726aedb899340c0411d710a91c70e`, package `0ec72da062
 
 ## 2026-09-13 — One business backend, reusable presentation
 
-The customer pilot and Owner Desk implementation are part of FAMtastic Designs. No separate customer Git repository was found; do not create a competing backend merely to satisfy an assumed repository name. Reusable presentation is captured in Component Studio, with Shay's brand in an explicit instance adapter.
+Historical September13 assumption, rejected by the owner's explicit September14 correction: the pilot used the agency backend. That architecture must not be recreated. A shared source repository does not require a shared runtime; the now-deployed Locs business application owns its database and identity. Reusable presentation may be captured separately in Component Studio.
 
 Public request capture, appointment confirmation, customer delivery and teaching enrollment are different completion gates. The reviewed source adds calendar and appointment operation locally, but production stays unchanged until the exact committed release is deployed and tested. Customer-facing receipt copy must say queued rather than sent when only an outbox row exists.
 

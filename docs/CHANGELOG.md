@@ -2,7 +2,7 @@
 
 ## 2026-09-14 — The Locs Letter and local search foundations
 
-Independent double-opt-in signup, persistent unsubscribe, private owner readership view and one-attempt/uncertain SMTP delivery are deployed and hosted-tested. No campaign sender or automatic booking enrollment. Public Ruby Signal newsletter panel, dot/swipe slideshow, Sisterlocks/Port St. Lucie metadata, canonical/social/schema/robots/sitemap are published. Exact release receipts and pending final gateway/hover follow-up: `customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md`. The independently reproduced SMTP retry issue was fixed before release.
+Independent double-opt-in signup, persistent unsubscribe, private owner readership view and one-attempt/uncertain SMTP delivery are deployed and hosted-tested. No campaign sender or automatic booking enrollment. Public Ruby Signal newsletter panel, dot/swipe slideshow, Sisterlocks/Port St. Lucie metadata, canonical/social/schema/robots/sitemap are published. Final source `576b190a` removes hover stalls and verifies HTTP/www redirects for nested admin/API/appointment routes. Exact receipts: `customer-apps/tighten-up-your-locs/RELEASE-2026-09-14.md`. The independently reproduced SMTP retry issue was fixed before release.
 
 ## 2026-09-14 — Independent Locs booking cutover verified
 

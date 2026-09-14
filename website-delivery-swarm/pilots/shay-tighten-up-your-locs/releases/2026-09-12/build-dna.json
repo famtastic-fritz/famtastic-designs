@@ -27,11 +27,14 @@
       "capability": "business-owned-newsletter-and-editorial-local-site",
       "attempt": 1,
       "result": {
-        "status": "newsletter_and_local_SEO_deployed_hosted_lifecycle_passed_continuous_hover_followup_pending",
+        "status": "deployed_hosted_lifecycle_hashes_and_browser_verified",
         "seo": "local_metadata_canonical_structured_data_robots_sitemap",
         "campaign_sending": false,
         "newsletter_provider_message_id": "1x66OA-00000002wiy-1814",
-        "public_package_sha256": "52fde9721e21dedac5fd10eb88c48f43c81a7845b786b26169395ca81471b2aa"
+        "public_package_sha256": "52fde9721e21dedac5fd10eb88c48f43c81a7845b786b26169395ca81471b2aa",
+        "final_source_commit": "576b190ab28d8cef15b82982c4429055880058e1",
+        "final_public_package_sha256": "54e8aea3acdcdc8bff426e1cc9b18e8a75c922a62383f9e9f045637bbd3b0f3a",
+        "secure_canonical_private_routes_verified": true
       },
       "evidence_ref": "website-delivery-swarm/pilots/shay-tighten-up-your-locs/releases/2026-09-12/SEO-AND-PUBLIC-UX-EVIDENCE-2026-09-14.md",
       "execution": {
