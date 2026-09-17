@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Reuse authority records without upgrading their meaning
+
+Selection intent can reuse intake_data and request-asset consent automatically.
+AI-use consent does not establish ownership, likeness permission or transformation
+authority; selected proof bytes do not establish completed scope. Keep these
+statements separate and report the specific blocked stage.
+
 ## 2026-09-17 — Release completion is a separate proof stage
 
 Observation: reviewed content visuals, GitHub main and the live frontend became

@@ -1813,6 +1813,14 @@ final class CustomerPortalService {
       $artifacts[] = ['role' => 'source_material', 'path' => $path, 'sha256' => $file['sha256'], 'bytes' => $file['bytes']];
     }
     $dnaJson = (string) $variant->get('design_dna')->value;
+    $intent = SelectedSourceIntent::create($row, (string) $project->id(), (int) $variant->id(), $direction, $revision,
+      gmdate(DATE_ATOM, $this->time->getRequestTime()), $artifacts, is_array($designDna) ? $designDna : [],
+      $this->requestAssets((int) $row['id']), $revisionNotes);
+    $studio['selected_source_intent'] = $intent;
+    $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+    if (!is_array($designDna['selected_build_continuation'] ?? NULL)) {
+      throw new \InvalidArgumentException('selected_continuation_blocked: ' . json_encode($intent['issues'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+    }
     if ($revisionNotes !== NULL) {
       $revisionDna = json_decode($dnaJson, TRUE, 512, JSON_THROW_ON_ERROR);
       if (!is_array($revisionDna['selected_build_continuation'] ?? NULL)) throw new \InvalidArgumentException('selected_continuation_evidence_required: selected revision has no executable source contract.');

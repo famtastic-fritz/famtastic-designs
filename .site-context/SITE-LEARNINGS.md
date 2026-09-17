@@ -2472,6 +2472,11 @@ the direction is recorded separately from expanded review and production release
 
 ## 2026-09-17 — selected revision identity
 
+Selected-source follow-on: normal portal selection now records inherited source
+and intake before stage-specific exceptions. Do not equate media AI consent with
+rights or concept byte identity with scope completion. Two real-service seam
+cases pass using synthetic filesystem/entity adapters; full Drupal is unproven.
+
 Observation: original packet/job identity used request+direction and the registry rejected any different packet; selecting/revising the same direction could not express a new immutable build. Guidance: serialize per-request revisions under a DB lock, preserve prior packet/receipt/acceptance, reject changed same-revision payloads and stale callbacks, and invalidate acceptance before new work. Adapter proof is not live Drupal concurrency proof.
 
 - September 17 local continuation correction: preserve selected intent as a durable operational exception when complete metadata is missing; explicit legacy reconciliation binds unchanged source/project; completed-review UI/API now requires displayed receipt hash and clears acceptance after stale refresh. Forty PHP assertions, three API-flow tests and synthetic React browser checks at 320/390/768/1280 passed. No production activation.

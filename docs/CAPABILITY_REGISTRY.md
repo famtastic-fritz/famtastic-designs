@@ -1,5 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Selected-source intent, local source proof
+
+Normal portal selection records inherited bytes/DNA, requested scope, pending
+edits and separate asset statements with stage-specific unresolved issues.
+Two synthetic persistence cases exercise the actual service seam. This is
+intent production, not completed-site production or runtime activation.
+
 ## 2026-09-17 — Content experience production evidence
 
 Production-presentation-smoke-tested at `71620bf1`: 17 existing content routes,

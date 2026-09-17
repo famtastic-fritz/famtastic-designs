@@ -3442,6 +3442,17 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 - Integrated reviewed Owner Desk source into main under explicit deployment authorization; production proof is recorded separately in `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`.
 - Corrected Ruby Signal presentation mapping to the existing generated production site key, retaining tenant-independent reusable source and adding two focused tests.
 
+## 2026-09-17 — selected source intent (isolated, unreleased)
+
+- Normal CustomerPortalService selection now persists a versioned intent from
+  existing request/source/asset records before reporting stage-specific blockers.
+  The actual private selection seam passes two synthetic cases preserving
+  original bytes/DNA, pending edits and distinct AI/ownership consent. No new
+  complete-site authority or rights approval is inferred. Full Drupal runtime,
+  executable concept continuation and production bindings remain unproven.
+- Drive mirror omitted because this increment is restricted to local changes
+  inside the two isolated worktrees; no external synchronized write authorized.
+
 ## 2026-09-17 — selected staging contract (isolated, unreleased)
 
 - Added evidence-bound selected packet serialization, monotonic same-tenant revision registration/history, selected-site edit continuation, signed failure receipt handling and exact-receipt acceptance guard. Local synthetic tests only; see `docs/plans/SELECTED_STAGING_CONTINUATION_LOCAL_2026-09-17.md`.
