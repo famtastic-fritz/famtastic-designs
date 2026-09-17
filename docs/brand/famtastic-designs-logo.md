@@ -42,6 +42,11 @@ removed crown, invented SVG, distortion or generated replacements.
 
 ## Implementation
 
+Social-profile exception approved September17: use the complete lockup where it
+reads well; use an original-pixel FAM plus canonical crown composite for small
+avatars. This does not replace the crown-only website favicon or authorize a new
+master/redraw. See [social profile kit](SOCIAL-PROFILE-KIT.md) for exports/provenance.
+
 React: `frontend/src/components/BrandLogo.jsx` and `frontend/src/lib/brand.js`.
 Use the component rather than page-specific logo copies. No fake variants API.
 `decorative` is only for a link/container with an explicit equivalent accessible

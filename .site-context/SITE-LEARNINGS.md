@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Social profiles need an optical crop check
+
+Observation: complete landscape logo fits a circle, but fine descriptors are not
+readable at32/48px. Guidance: preserve the full master and supply an explicitly
+authorized compact FAM+crown derivative, not an AI redraw. Check actual circle
+geometry at small sizes, keep upload files square/opaque, and distinguish social
+exports from an account update. Crown-only favicon is a separate purpose.
+
 ## 2026-09-17 — Cursive is an explicit editorial accent
 
 Owner approved cursive public H1/H2 fragments, not all headings. Preserve CMS text

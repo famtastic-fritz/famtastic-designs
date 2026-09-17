@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-17 — Social-profile export kit (local assets)
+
+- Prepared full-logo and original-derived FAM+crown variants for nine social
+  destinations, plus1080/2048 masters:22 PNGs. No image generation or account update.
+- Added portable circle/small-size preview, provenance, source extraction and
+  checks for dimensions, opacity, circular safety, file sizes and download links.
+- Original logo, website/favicon and email remain unchanged. Downloads ZIP is for
+  owner review/manual upload; no social account ownership/availability is implied.
+
 ## 2026-09-17 — Cursive heading extension (local review only)
 
 - Added opt-in public H1/H2 cursive phrases, preserving homepage wording and

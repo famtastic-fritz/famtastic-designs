@@ -1,5 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Social identity exports
+
+Local-asset-tested: deterministic full-logo/FAM+crown square PNG export builder,
+nine destination presets, circle/small-size preview and22-file QA receipt.
+Not a profile publishing integration, account connection, banner generator or
+new canonical logo. Website favicon stays crown-only. See docs/brand/SOCIAL-PROFILE-KIT.md.
+
 ## 2026-09-17 — Selective cursive heading consumer
 
 Local review implementation: SignatureHeading preserves text while emphasizing

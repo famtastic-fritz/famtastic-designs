@@ -121,6 +121,11 @@ routine status messages or their semantics. None is added to fabricated live dat
 
 ## Favicon family
 
+Social-profile use is separate: owner prefers full logo where readable and allows
+original-pixel FAM + the canonical crown for small avatars. See
+`../brand/SOCIAL-PROFILE-KIT.md`. This exception does not change the crown-only
+website favicon or permit regeneration of the master artwork.
+
 Canonical lime crown on #070907; no letters. ICO (16/32/48), SVG raster container,
 16/32/48 PNG, 180 Apple, 192/512 Android. At 16/32: flat, no grain/glow; optical
 weight compensation only. At 48: flat; at 180+: restrained glow. Manifest declares
