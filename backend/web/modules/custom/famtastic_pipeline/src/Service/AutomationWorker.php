@@ -88,6 +88,7 @@ final class AutomationWorker {
     if ($packet['schema'] !== 'famtastic.site-studio.build-packet.v1' || $packet['build_class'] !== 'prepayment_selected_direction_staging') {
       throw new \RuntimeException('Selected staging packet failed its fail-closed boundary validation.');
     }
+    $this->portal->assertCurrentSelectedStagingPacket($packet);
     return $this->stagingClient->dispatch($packet);
   }
 

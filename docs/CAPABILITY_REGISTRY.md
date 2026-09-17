@@ -290,3 +290,7 @@ customer acceptance, payment or production-launch proof. The selected-site plan
 records the remaining automation gates. Registration-alert scheduler failure was
 reproduced under cron's PHP path; recurring delivery is not repaired by backlog
 dispatch. See `docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md`.
+
+## 2026-09-17 — selected staging continuation local evidence
+
+Actual PHP producer/registry/receipt service verified with synthetic adapters (40 assertions); portal structural validator 34/0. Classification: locally implemented and adapter-tested, not Drupal-runtime, provider, hosted or production proven. Requires persisted complete source/design/rights metadata and explicit unsupported-scope handling. See `docs/plans/SELECTED_STAGING_CONTINUATION_LOCAL_2026-09-17.md`.

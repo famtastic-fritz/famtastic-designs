@@ -933,6 +933,7 @@ final class CustomerPortalService {
         'status' => 'deployed',
         'url' => (string) ($stagingReceipt['staging_url'] ?? ''),
         'artifact_sha256' => (string) ($stagingReceipt['artifact_sha256'] ?? ''),
+        'receipt_hash' => (string) ($row['staging_receipt_hash'] ?? ''),
         'completed_at' => (string) ($stagingReceipt['completed_at'] ?? ''),
       ]
       : NULL;
@@ -1593,7 +1594,7 @@ final class CustomerPortalService {
       throw new \InvalidArgumentException('Choose a proof direction or request a permitted revision.');
     }
     $status = (string) $row['proof_review_status'];
-    if ($action === 'select' && !in_array($status, ['customer_ready', 'notified'], TRUE)) {
+    if ($action === 'select' && !in_array($status, ['customer_ready', 'notified', 'selected'], TRUE)) {
       throw new \RuntimeException($status === 'selected' || $status === 'revision_requested'
         ? 'Your proof choice is already recorded. Contact FAMtastic if it needs to be reopened before checkout.'
         : 'Website proofs are not available.');
@@ -1607,6 +1608,9 @@ final class CustomerPortalService {
       if ($notes === '') throw new \InvalidArgumentException('Tell us what you want adjusted.');
       $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
       $isEditRound = !empty($row['selected_proof_direction']);
+      if ($isEditRound) {
+        return $this->queueSelectedSiteRevision($row, $notes);
+      }
       $historyKey = $isEditRound ? 'proof_edit_round_requests' : 'proof_design_reset_requests';
       $limit = $isEditRound ? 3 : 1;
       $history = is_array($intake[$historyKey] ?? NULL) ? $intake[$historyKey] : [];
@@ -1642,45 +1646,100 @@ final class CustomerPortalService {
       $variant = $variantIds ? $this->entities->getStorage('proof_variant')->load((int) reset($variantIds)) : NULL;
       if (!$campaign || !$variant) throw new \RuntimeException('The selected proof artifact is unavailable.');
       $transaction = $this->database->startTransaction();
-      $this->database->update('famtastic_project_request')->fields([
-        'proof_review_status' => 'selected',
-        'selected_proof_direction' => $direction,
-        'selected_proof_at' => $now,
-        'staging_status' => 'queued',
-        'staging_review_status' => 'not_started',
-        'staging_reviewed_at' => NULL,
-        'staging_receipt_json' => NULL,
-        'staging_receipt_hash' => '',
-        'staging_locked_at' => NULL,
-        'staging_deployed_at' => NULL,
-        'changed' => $now,
-      ])->condition('id', $row['id'])->execute();
-      if ($campaign) $campaign->set('selected_variant', $direction)->set('selected_at', $now)->save();
-      $this->prepareSelectedProofStaging($row, $variant, $direction);
-      $this->activity((int) $row['organization_id'], 'website_request.proof_selected', 'A website concept was selected. Staging is being prepared; checkout opens only after staging review is accepted.');
-      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
-      $customer = $this->customerContact((int) $row['customer_id']);
-      foreach (['owner-proof-selected', 'customer-proof-selected'] as $supersedeKey) {
-        $this->database->update('famtastic_notification_outbox')->fields(['status' => 'superseded', 'changed' => $now])
-          ->condition('notification_key', 'website-request:' . $row['id'] . ':' . $supersedeKey . ':%', 'LIKE')
-          ->condition('status', ['queued', 'retry'], 'IN')->execute();
+      try {
+        $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', (int) $row['id'])->forUpdate()->execute()->fetchAssoc();
+        if (!$row || (int) $row['customer_id'] !== $customerId || (int) $row['proof_campaign_id'] !== (int) $campaign->id() || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected'], TRUE)) throw new \InvalidArgumentException('The available proof selection changed. Refresh before choosing.');
+        if (!empty($row['commerce_order_id'])) throw new \RuntimeException('A paid request cannot start pre-payment staging.');
+        if (($row['proof_review_status'] ?? '') === 'selected' && ($row['selected_proof_direction'] ?? '') === $direction) {
+          unset($transaction);
+          return $this->serializeWebsiteRequest($row);
+        }
+        $this->database->update('famtastic_project_request')->fields([
+          'proof_review_status' => 'selected',
+          'selected_proof_direction' => $direction,
+          'selected_proof_at' => $now,
+          'changed' => $now,
+        ])->condition('id', $row['id'])->execute();
+        if ($campaign) $campaign->set('selected_variant', $direction)->set('selected_at', $now)->save();
+        $staging = $this->prepareSelectedProofStaging($row, $variant, $direction);
+        if (($staging['status'] ?? '') === 'exception') {
+          unset($transaction);
+          $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', (int) $row['id'])->execute()->fetchAssoc();
+          return $this->serializeWebsiteRequest($updated);
+        }
+        $this->activity((int) $row['organization_id'], 'website_request.proof_selected', 'A website concept was selected. Staging is being prepared; checkout opens only after staging review is accepted.');
+        $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
+        $customer = $this->customerContact((int) $row['customer_id']);
+        foreach (['owner-proof-selected', 'customer-proof-selected'] as $supersedeKey) {
+          $this->database->update('famtastic_notification_outbox')->fields(['status' => 'superseded', 'changed' => $now])
+            ->condition('notification_key', 'website-request:' . $row['id'] . ':' . $supersedeKey . ':%', 'LIKE')
+            ->condition('status', ['queued', 'retry'], 'IN')->execute();
+        }
+        $this->queueNotification('website-request:' . $row['id'] . ':owner-proof-selected:' . $direction, 'operational', $admin,
+          'Customer selected proof ' . strtoupper($direction) . ' — ' . $row['project_name'],
+          "Customer: {$customer['display_name']} ({$customer['email']})\nSelected direction: " . strtoupper($direction) . "\nNext step: prepare staging for review. Checkout remains closed until the account owner accepts the staging review.\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
+        if ($customer['email'] !== '') {
+          $this->queueNotification('website-request:' . $row['id'] . ':customer-proof-selected:' . $direction, 'transactional', $customer['email'],
+            'We received your website direction choice',
+            "Hi {$customer['display_name']},\n\nThanks for choosing direction " . strtoupper($direction) . " for {$row['project_name']}. FAMtastic Concierge is preparing staging for your review. Checkout opens only after you review and accept that staging preview.\n" . $this->portalLink((string) $row['public_id']) . "\n\n— FAMtastic Concierge");
+        }
+        unset($transaction);
+      } catch (\Throwable $e) {
+        $transaction->rollBack();
+        throw $e;
       }
-      $this->queueNotification('website-request:' . $row['id'] . ':owner-proof-selected:' . $direction, 'operational', $admin,
-        'Customer selected proof ' . strtoupper($direction) . ' — ' . $row['project_name'],
-        "Customer: {$customer['display_name']} ({$customer['email']})\nSelected direction: " . strtoupper($direction) . "\nNext step: prepare staging for review. Checkout remains closed until the account owner accepts the staging review.\nReview: https://famtasticdesigns.com/web/admin/famtastic/website-request/{$row['id']}/proof-review");
-      if ($customer['email'] !== '') {
-        $this->queueNotification('website-request:' . $row['id'] . ':customer-proof-selected:' . $direction, 'transactional', $customer['email'],
-          'We received your website direction choice',
-          "Hi {$customer['display_name']},\n\nThanks for choosing direction " . strtoupper($direction) . " for {$row['project_name']}. FAMtastic Concierge is preparing staging for your review. Checkout opens only after you review and accept that staging preview.\n" . $this->portalLink((string) $row['public_id']) . "\n\n— FAMtastic Concierge");
-      }
-      unset($transaction);
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
     return $this->serializeWebsiteRequest($updated);
   }
 
+  /** Worker preflight uses the same immutable registry as the callback. */
+  public function assertCurrentSelectedStagingPacket(array $packet): void {
+    $this->siteStudioPackets->assertActiveSelectedPacket($packet);
+  }
+
+  /** Ordinary selected-site edits continue the selected build, never a new proof set. */
+  private function queueSelectedSiteRevision(array $row, string $notes): array {
+    $transaction = $this->database->startTransaction();
+    try {
+      $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', (int) $row['id'])->forUpdate()->execute()->fetchAssoc();
+      if (!$row || !empty($row['commerce_order_id']) || empty($row['selected_proof_direction'])) throw new \InvalidArgumentException('Only unpaid selected-site revisions use this continuation.');
+      $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
+      $history = $intake['selected_site_revision_requests'] ?? [];
+      if ($history && (end($history)['notes'] ?? '') === $notes && ($row['staging_status'] ?? '') === 'queued') {
+        unset($transaction);
+        return $this->serializeWebsiteRequest($row);
+      }
+      $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $row['selected_proof_direction'])->range(0, 1)->execute();
+      $variant = $ids ? $this->entities->getStorage('proof_variant')->load((int) reset($ids)) : NULL;
+      if (!$variant) throw new \RuntimeException('Selected revision source is unavailable.');
+      $history[] = ['notes' => $notes, 'requested_at' => gmdate(DATE_ATOM, $this->time->getRequestTime())];
+      $intake['selected_site_revision_requests'] = $history;
+      $this->database->update('famtastic_project_request')->fields(['proof_review_status' => 'selected', 'intake_data' => json_encode($intake, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR), 'changed' => $this->time->getRequestTime()])->condition('id', (int) $row['id'])->execute();
+      $this->prepareSelectedProofStaging($row, $variant, (string) $row['selected_proof_direction'], $notes);
+      unset($transaction);
+      $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', (int) $row['id'])->execute()->fetchAssoc();
+      return $this->serializeWebsiteRequest($updated);
+    }
+    catch (\Throwable $e) {
+      $transaction->rollBack();
+      throw $e;
+    }
+  }
+
   /** Creates the account-bound pre-payment project, packet, and durable job. */
-  private function prepareSelectedProofStaging(array $row, object $variant, string $direction): array {
+  private function prepareSelectedProofStaging(array $row, object $variant, string $direction, ?string $revisionNotes = NULL): array {
+    try {
+      return $this->createSelectedProofStaging($row, $variant, $direction, $revisionNotes);
+    }
+    catch (\InvalidArgumentException $error) {
+      if (!preg_match('/^(selected_continuation_|unsupported_scope:|legacy_packet_migration_required:)/', $error->getMessage())) throw $error;
+      $this->siteStudioPackets->recordSelectedException((int) $row['id'], $direction, $error->getMessage(), $revisionNotes);
+      return ['status' => 'exception'];
+    }
+  }
+
+  private function createSelectedProofStaging(array $row, object $variant, string $direction, ?string $revisionNotes = NULL): array {
     $projectStorage = $this->entities->getStorage('famtastic_project');
     $project = !empty($row['project_id']) ? $projectStorage->load((int) $row['project_id']) : NULL;
     if (!$project) {
@@ -1696,16 +1755,22 @@ final class CustomerPortalService {
         'project_id' => (int) $project->id(), 'changed' => $this->time->getRequestTime(),
       ])->condition('id', (int) $row['id'])->execute();
     }
-    $packetId = 'staging-packet:request:' . (int) $row['id'] . ':direction:' . $direction;
+    $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+    $previous = $studio['site_studio_build_packet'] ?? NULL;
+    if (is_array($previous) && !isset($previous['continuation'])) {
+      throw new \InvalidArgumentException('legacy_packet_migration_required: reconcile the registered selection before creating a new revision.');
+    }
+    $revision = (int) ($previous['continuation']['selection_revision'] ?? 0) + 1;
+    $packetId = 'staging-packet:request:' . (int) $row['id'] . ':revision:' . $revision;
     $sourcePath = trim((string) $variant->get('artifact_path')->value);
     if ($sourcePath === '' || str_starts_with($sourcePath, '/') || str_contains($sourcePath, '..')) {
-      throw new \RuntimeException('The selected proof artifact path is unsafe.');
+      throw new \InvalidArgumentException('selected_continuation_artifact_unsafe: selected proof storage path must be reconciled.');
     }
     $sourceAbsolute = dirname(\Drupal::root()) . '/' . $sourcePath;
     $sourceHash = is_file($sourceAbsolute) ? hash_file('sha256', $sourceAbsolute) : FALSE;
     $sourceBytes = is_file($sourceAbsolute) ? filesize($sourceAbsolute) : FALSE;
     if ($sourceHash === FALSE || $sourceBytes === FALSE) {
-      throw new \RuntimeException('The selected proof artifact is missing from protected storage.');
+      throw new \InvalidArgumentException('selected_continuation_artifact_missing: restore the selected protected source bytes.');
     }
     $artifacts = [[
       'role' => 'selected_preview',
@@ -1717,7 +1782,7 @@ final class CustomerPortalService {
     foreach (ProofAssetContract::normalizeStoredManifest(is_array($designDna) ? ($designDna['asset_manifest'] ?? []) : []) as $asset) {
       $assetPath = (string) $asset['artifact_path'];
       if (str_starts_with($assetPath, '/') || str_contains($assetPath, '..')) {
-        throw new \RuntimeException('The selected proof asset path is unsafe.');
+        throw new \InvalidArgumentException('selected_continuation_artifact_unsafe: selected asset storage path must be reconciled.');
       }
       $assetAbsolute = dirname(\Drupal::root()) . '/' . $assetPath;
       $assetHash = is_file($assetAbsolute) ? hash_file('sha256', $assetAbsolute) : FALSE;
@@ -1725,7 +1790,7 @@ final class CustomerPortalService {
       if ($assetHash === FALSE || $assetBytes === FALSE
         || !hash_equals((string) $asset['sha256'], $assetHash)
         || (int) $asset['size_bytes'] !== (int) $assetBytes) {
-        throw new \RuntimeException('A selected proof asset does not match its protected manifest.');
+        throw new \InvalidArgumentException('selected_continuation_artifact_mismatch: restore selected asset bytes matching the protected manifest.');
       }
       $artifacts[] = [
         'role' => 'source_material',
@@ -1734,29 +1799,32 @@ final class CustomerPortalService {
         'bytes' => (int) $assetBytes,
       ];
     }
-    $packet = [
-      'schema' => 'famtastic.site-studio.build-packet.v1',
-      'packet_id' => $packetId,
-      'idempotency_key' => $packetId,
-      'request_id' => (string) $row['public_id'],
-      'project_id' => (string) $project->id(),
-      'build_class' => 'prepayment_selected_direction_staging',
-      'selected_direction_ids' => ['direction-' . $direction],
-      'artifacts' => $artifacts,
-      'artifact_manifest_sha256' => SiteStudioBuildPacketService::artifactManifestDigest($artifacts),
-      'selected_artifacts' => [[
-        'direction_id' => 'direction-' . $direction,
-        'source_artifact_path' => $sourcePath,
-        'source_artifact_sha256' => $sourceHash,
-        'source_artifact_bytes' => (int) $sourceBytes,
-      ]],
-      'source_preview_url' => (string) $variant->get('preview_url')->value,
-      'design_dna_sha256' => hash('sha256', (string) $variant->get('design_dna')->value),
-      'created_at' => gmdate(DATE_ATOM, $this->time->getRequestTime()),
-    ];
+    // Optional complete static source manifest. Hashes are recorded upstream;
+    // a preview alone never stands in for unmaterialized application scope.
+    foreach (($designDna['selected_build_artifacts'] ?? []) as $file) {
+      $path = (string) ($file['path'] ?? '');
+      $absolute = realpath(dirname(\Drupal::root()) . '/' . $path);
+      $selectedRoot = realpath(dirname($sourceAbsolute));
+      if ($path === '' || str_starts_with($path, '/') || str_contains($path, '..') || !$absolute || !$selectedRoot || !str_starts_with($absolute, $selectedRoot . DIRECTORY_SEPARATOR) || !is_file($absolute)
+        || !preg_match('/^[a-f0-9]{64}$/', (string) ($file['sha256'] ?? '')) || !hash_equals((string) $file['sha256'], hash_file('sha256', $absolute)) || !is_int($file['bytes'] ?? NULL) || filesize($absolute) !== $file['bytes']) {
+        throw new \InvalidArgumentException('selected_continuation_artifact_manifest_invalid: complete source must remain inside the selected protected artifact directory and match recorded bytes.');
+      }
+      if (in_array($path, array_column($artifacts, 'path'), TRUE)) continue;
+      $artifacts[] = ['role' => 'source_material', 'path' => $path, 'sha256' => $file['sha256'], 'bytes' => $file['bytes']];
+    }
+    $dnaJson = (string) $variant->get('design_dna')->value;
+    if ($revisionNotes !== NULL) {
+      $revisionDna = json_decode($dnaJson, TRUE, 512, JSON_THROW_ON_ERROR);
+      if (!is_array($revisionDna['selected_build_continuation'] ?? NULL)) throw new \InvalidArgumentException('selected_continuation_evidence_required: selected revision has no executable source contract.');
+      $revisionDna['selected_build_continuation']['operation'] = 'continue_build';
+      $revisionDna['selected_build_continuation']['requested_changes'] = $revisionNotes;
+      $revisionDna['selected_build_continuation']['remaining_stages'] = ['apply_customer_revision'];
+      $dnaJson = json_encode($revisionDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+    }
+    $packet = SelectedStagingContinuation::createPacket($row, (string) $project->id(), $direction, $artifacts, $sourcePath, (string) $variant->get('preview_url')->value, $dnaJson, $this->customerContact((int) $row['customer_id']), (int) $variant->id(), $revision, gmdate(DATE_ATOM, $this->time->getRequestTime()));
     $this->siteStudioPackets->registerPacket($packet);
     $jobId = $this->ledger->enqueue(
-      'site-studio.staging:request:' . (int) $row['id'] . ':direction:' . $direction,
+      'site-studio.staging:' . $packetId,
       'site_studio_staging_prepare',
       ['packet' => $packet, 'website_request_id' => (int) $row['id'], 'project_id' => (int) $project->id()],
       (int) $row['prospect_id'],
@@ -1768,7 +1836,7 @@ final class CustomerPortalService {
    * Records the account owner's explicit acceptance of the deployed staging
    * preview. This is idempotent and never charges, emails, or deploys.
    */
-  public function acceptWebsiteStagingReview(int $customerId, string $publicId): array {
+  public function acceptWebsiteStagingReview(int $customerId, string $publicId, string $expectedReceiptHash = ''): array {
     $row = $this->ownedWebsiteRequest($customerId, $publicId);
     if (!$row) {
       throw new \RuntimeException('Website staging preview is not available.');
@@ -1778,6 +1846,7 @@ final class CustomerPortalService {
       || trim((string) ($row['staging_receipt_hash'] ?? '')) === '') {
       throw new \InvalidArgumentException('Your staging preview is not ready for review yet.');
     }
+    StagingReceiptService::assertCurrentReviewReceipt($row, $expectedReceiptHash);
     if ((string) ($row['staging_review_status'] ?? '') !== 'accepted') {
       $now = $this->time->getRequestTime();
       $updated = $this->database->update('famtastic_project_request')->fields([
@@ -1787,6 +1856,7 @@ final class CustomerPortalService {
       ])->condition('id', (int) $row['id'])
         ->condition('customer_id', $customerId)
         ->condition('staging_status', 'deployed')
+        ->condition('staging_receipt_hash', $expectedReceiptHash)
         ->condition('staging_review_status', 'accepted', '<>')
         ->execute();
       if ((int) $updated !== 1) {

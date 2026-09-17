@@ -2491,3 +2491,9 @@ Use a fresh public CMS snapshot for deterministic broad layout tests and separat
 live-readonly captures for source integration. Record retries and test limitations.
 Legacy service promises and Contact's one-day/backend-default-three-day inconsistency
 were preserved, flagged, and not newly verified by this presentation work.
+
+## 2026-09-17 — metadata and transfer are separate from execution
+
+Observed that selected preview bytes and design_dna hash alone do not prove complete application scope, rights or a normalized design contract. Root cause: packet acceptance had been treated as enough context for continuation. Rule: require recorded complete source metadata, preserve operation/correlation and reject unsupported unfinished stages; never regenerate creative stages merely because a packet arrived. See isolated selected staging runbook for proof limits.
+
+- September 17 local continuation correction: preserve selected intent as a durable operational exception when complete metadata is missing; explicit legacy reconciliation binds unchanged source/project; completed-review UI/API now requires displayed receipt hash and clears acceptance after stale refresh. Forty PHP assertions, three API-flow tests and synthetic React browser checks at 320/390/768/1280 passed. No production activation.

@@ -35,12 +35,19 @@ final class StagingReceiptService {
    * @return array{newly_processed: bool, request_id: int, staging_url: string}
    */
   public function accept(array $receipt): array {
-    $this->validate($receipt);
+    foreach (['customer_accepted', 'checkout_eligible', 'final_launch'] as $boundary) {
+      if (($receipt[$boundary] ?? FALSE) !== FALSE) throw new \InvalidArgumentException('Studio callbacks cannot authorize acceptance, checkout or final launch.');
+    }
+    $failure = ($receipt['schema'] ?? '') === 'famtastic.site-studio.staging-failure.v1';
+    if (!$failure) $this->validate($receipt);
+    else self::validateFailure($receipt);
+    $transaction = $this->database->startTransaction();
     $requestId = (int) $receipt['website_request_id'];
     $row = $this->database->select('famtastic_project_request', 'r')
       ->fields('r', ['id', 'project_id', 'customer_id', 'public_id', 'proof_review_status', 'commerce_order_id', 'staging_status', 'staging_review_status', 'staging_receipt_hash', 'staging_receipt_json'])
       ->condition('id', $requestId)
       ->range(0, 1)
+      ->forUpdate()
       ->execute()
       ->fetchAssoc();
     if (!$row) {
@@ -52,14 +59,16 @@ final class StagingReceiptService {
     if ((int) ($receipt['project_id'] ?? 0) < 1 || (!empty($row['project_id']) && (int) $row['project_id'] !== (int) $receipt['project_id'])) {
       throw new \InvalidArgumentException('Staging receipt project does not match the website request.');
     }
-    self::assertReceiptMatchesRegisteredPacket($receipt, $this->registeredPacket((int) $receipt['project_id']));
+    $packet = $this->registeredPacket((int) $receipt['project_id']);
+    self::assertReceiptMatchesRegisteredPacket($receipt, $packet);
+    self::assertRequestBinding($receipt, $packet, $row);
     $receiptHash = hash('sha256', json_encode($receipt, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
     $existingHash = trim((string) ($row['staging_receipt_hash'] ?? ''));
     if ($existingHash !== '') {
       if (!hash_equals($existingHash, $receiptHash)) {
         throw new \InvalidArgumentException('Website request already has a different staging receipt.');
       }
-      $this->queueStagingReviewNotification($row, $receiptHash);
+      if (!$failure) $this->queueStagingReviewNotification($row, $receiptHash);
       return [
         'newly_processed' => FALSE,
         'request_id' => $requestId,
@@ -71,11 +80,10 @@ final class StagingReceiptService {
     }
 
     $now = $this->time->getRequestTime();
-    $transaction = $this->database->startTransaction();
     try {
       $isNew = $this->ledger->recordEvent(
         'site-studio.staging:' . $receipt['event_id'],
-        'site_studio.staging_deployed',
+        $failure ? 'site_studio.staging_failed' : 'site_studio.staging_deployed',
         [
           'event_id' => $receipt['event_id'],
           'packet_id' => $receipt['packet_id'],
@@ -85,12 +93,13 @@ final class StagingReceiptService {
           'selected_direction_id' => $receipt['selected_direction_id'],
           'selected_artifact_sha256' => $receipt['selected_artifact_sha256'],
           'artifact_manifest_sha256' => $receipt['artifact_manifest_sha256'],
-          'staging_url' => $receipt['staging_url'],
+          'staging_url' => $receipt['staging_url'] ?? '',
+          'error' => $receipt['error'] ?? NULL,
           // This is the deployed output checksum. It is intentionally not
           // compared with selected_artifact_sha256, which identifies the
           // immutable source file selected from the registered packet.
-          'output_artifact_sha256' => $receipt['artifact_sha256'],
-          'qa' => $receipt['qa'],
+          'output_artifact_sha256' => $receipt['artifact_sha256'] ?? NULL,
+          'qa' => $receipt['qa'] ?? [],
         ],
         projectId: !empty($receipt['project_id']) ? (int) $receipt['project_id'] : NULL,
         provider: 'site_studio',
@@ -101,13 +110,13 @@ final class StagingReceiptService {
         return [
           'newly_processed' => FALSE,
           'request_id' => $requestId,
-          'staging_url' => (string) $receipt['staging_url'],
+          'staging_url' => (string) ($receipt['staging_url'] ?? ''),
         ];
       }
       $updated = $this->database->update('famtastic_project_request')
         ->fields([
-          'staging_status' => 'deployed',
-          'staging_review_status' => 'pending',
+          'staging_status' => $failure ? 'failed' : 'deployed',
+          'staging_review_status' => $failure ? 'not_started' : 'pending',
           'staging_reviewed_at' => NULL,
           // The staging lock-in is the point at which a pre-payment request
           // receives its standalone project binding.
@@ -115,7 +124,7 @@ final class StagingReceiptService {
           'staging_receipt_json' => json_encode($receipt, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
           'staging_receipt_hash' => $receiptHash,
           'staging_locked_at' => $now,
-          'staging_deployed_at' => $now,
+          'staging_deployed_at' => $failure ? NULL : $now,
           'changed' => $now,
         ])
         ->condition('id', $requestId)
@@ -125,12 +134,12 @@ final class StagingReceiptService {
       if ((int) $updated !== 1) {
         throw new \RuntimeException('Website request changed before the staging receipt could be locked.');
       }
-      $this->queueStagingReviewNotification($row, $receiptHash);
+      if (!$failure) $this->queueStagingReviewNotification($row, $receiptHash);
       unset($transaction);
       return [
         'newly_processed' => TRUE,
         'request_id' => $requestId,
-        'staging_url' => (string) $receipt['staging_url'],
+        'staging_url' => (string) ($receipt['staging_url'] ?? ''),
       ];
     }
     catch (\Throwable $e) {
@@ -192,7 +201,7 @@ final class StagingReceiptService {
     if (str_contains((string) $receipt['remote_subdirectory'], '..') || str_starts_with((string) $receipt['remote_subdirectory'], '/')) {
       throw new \InvalidArgumentException('Staging receipt remote_subdirectory must be a safe relative path.');
     }
-    if (!filter_var((string) $receipt['staging_url'], FILTER_VALIDATE_URL) || !str_starts_with((string) $receipt['staging_url'], 'https://')) {
+    if (!filter_var((string) ($receipt['staging_url'] ?? ''), FILTER_VALIDATE_URL) || !str_starts_with((string) ($receipt['staging_url'] ?? ''), 'https://')) {
       throw new \InvalidArgumentException('Staging receipt must contain an HTTPS staging URL.');
     }
     foreach (['artifact_sha256', 'selected_artifact_sha256', 'artifact_manifest_sha256'] as $field) {
@@ -218,6 +227,19 @@ final class StagingReceiptService {
    * the callback to selected source bytes and the packet's full file manifest.
    */
   public static function assertReceiptMatchesRegisteredPacket(array $receipt, array $packet): void {
+    if (isset($packet['continuation'])) {
+      $c = $packet['continuation'];
+      if (($receipt['status'] ?? '') === 'deployed') {
+        foreach (['staging_url', 'target_path', 'remote_subdirectory'] as $field) {
+          if (empty($c['hosting_target'][$field]) || !hash_equals((string) $c['hosting_target'][$field], (string) ($receipt[$field] ?? ''))) throw new \InvalidArgumentException('Staging receipt review target mismatch: ' . $field);
+        }
+      }
+
+      if ((string) ($receipt['customer_id'] ?? '') !== (string) ($c['customer']['id'] ?? '') || ($receipt['website_request_id'] ?? NULL) !== ($c['website_request_id'] ?? NULL) || ($receipt['selection_revision'] ?? NULL) !== ($c['selection_revision'] ?? NULL)) {
+        throw new \InvalidArgumentException('Staging callback does not match the current account/revision.');
+      }
+    }
+
     foreach (['packet_id', 'idempotency_key', 'request_id', 'project_id', 'artifact_manifest_sha256'] as $field) {
       if (!hash_equals((string) ($packet[$field] ?? ''), (string) ($receipt[$field] ?? ''))) {
         throw new \InvalidArgumentException(sprintf('Staging receipt %s does not match the registered build packet.', $field));
@@ -236,6 +258,31 @@ final class StagingReceiptService {
     }
   }
 
+  /** Browser acceptance is bound to the exact displayed receipt. */
+  public static function assertCurrentReviewReceipt(array $row, string $expectedReceiptHash): void {
+    if ($expectedReceiptHash === '' || !hash_equals((string) ($row['staging_receipt_hash'] ?? ''), $expectedReceiptHash)) {
+      throw new \InvalidArgumentException('Accept the exact staging revision currently displayed. Refresh and review the current artifact.');
+    }
+  }
+
+  /** Failure callback is terminal evidence, never readiness or customer mail. */
+  public static function validateFailure(array $receipt): void {
+    if (($receipt['schema'] ?? '') !== 'famtastic.site-studio.staging-failure.v1' || ($receipt['status'] ?? '') !== 'failed' || empty($receipt['event_id']) || empty($receipt['error']['code']) || empty($receipt['error']['stage'])) {
+      throw new \InvalidArgumentException('Named selected-staging failure evidence is required.');
+    }
+    if (isset($receipt['staging_url']) || isset($receipt['artifact_sha256'])) throw new \InvalidArgumentException('Failure cannot claim a ready artifact.');
+  }
+
+  public static function assertRequestBinding(array $receipt, array $packet, array $row): void {
+    if (isset($packet['continuation'])) {
+      if ((string) ($receipt['customer_id'] ?? '') !== (string) $row['customer_id'] || (int) ($receipt['website_request_id'] ?? 0) !== (int) $row['id'] || (int) ($receipt['project_id'] ?? 0) !== (int) $row['project_id']) {
+        throw new \InvalidArgumentException('Staging callback account/request/project binding mismatch.');
+      }
+      // Current packet, not prior receipt, is the revision authority.
+      if (($receipt['selection_revision'] ?? NULL) !== ($packet['continuation']['selection_revision'] ?? NULL)) throw new \InvalidArgumentException('Stale selected staging callback.');
+    }
+  }
+
   /** Loads the immutable packet saved on the exact project entity. */
   private function registeredPacket(int $projectId): array {
     $project = $this->entities->getStorage('famtastic_project')->load($projectId);
@@ -243,6 +290,7 @@ final class StagingReceiptService {
       throw new \InvalidArgumentException('Staging receipt references an unknown Site Studio project.');
     }
     $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE);
+    if (!empty($studio['selected_staging_exception'])) throw new \InvalidArgumentException('Selected staging evidence is unresolved; callback cannot enable review.');
     $packet = is_array($studio) ? ($studio['site_studio_build_packet'] ?? NULL) : NULL;
     if (!is_array($packet)) {
       throw new \InvalidArgumentException('Staging receipt project has no registered Site Studio build packet.');

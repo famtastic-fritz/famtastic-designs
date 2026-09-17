@@ -82,14 +82,14 @@ final class SiteStudioCallbackController extends ControllerBase {
           'status' => 'site_studio_build_succeeded',
         ]);
       }
-      if (($data['schema'] ?? '') === 'famtastic.site-studio.staging-receipt.v1') {
+      if (in_array(($data['schema'] ?? ''), ['famtastic.site-studio.staging-receipt.v1', 'famtastic.site-studio.staging-failure.v1'], TRUE)) {
         $result = $this->stagingReceipts->accept($data);
         return new JsonResponse([
           'ok' => TRUE,
           'newly_processed' => $result['newly_processed'],
           'website_request_id' => $result['request_id'],
           'staging_url' => $result['staging_url'],
-          'status' => 'site_studio_staging_deployed',
+          'status' => ($data['status'] ?? '') === 'failed' ? 'site_studio_staging_failed' : 'site_studio_staging_deployed',
         ]);
       }
       $result = $this->proofCampaigns->acceptCallback(

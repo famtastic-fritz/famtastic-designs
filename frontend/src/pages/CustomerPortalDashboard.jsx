@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import {
+  acceptWebsiteStagingReview,
   createCustomerReferral,
   createWebsiteRequest,
   customerLogout,
@@ -15,6 +16,7 @@ import {
   updateWebsiteRequestProofShare,
   uploadWebsiteRequestAsset,
 } from '../api/customer.js';
+import { acceptDisplayedStagingReview } from '../api/stagingReview.js';
 import { collectUtmParams } from '../api/pipeline.js';
 import '../portal.css';
 
@@ -370,7 +372,15 @@ export default function CustomerPortalDashboard() {
       return decision;
     }, payload.action === 'revision'
       ? 'Changes requested. FAMtastic has your notes.'
-      : 'Selection saved. Your staging build is the next recorded step; checkout stays closed until that review is ready.');
+      : 'Selection saved. Your project shows the current build status; checkout stays closed until you accept the completed review.');
+    return result.ok;
+  };
+
+  const acceptStagingReview = async (requestId, receiptHash) => {
+    const result = await act(() => acceptDisplayedStagingReview(requestId, receiptHash, {
+      accept: acceptWebsiteStagingReview,
+      refresh,
+    }), 'This website revision is accepted. Checkout remains a separate step.');
     return result.ok;
   };
 
@@ -481,6 +491,7 @@ export default function CustomerPortalDashboard() {
             onSaveWebsiteRequest={saveWebsiteRequest}
             onUploadAsset={uploadReference}
             onDecideProof={decideProof}
+            onAcceptStaging={acceptStagingReview}
             onShareProof={shareProof}
             onArchiveRequest={archiveWebsiteRequest}
             navigate={navigate}

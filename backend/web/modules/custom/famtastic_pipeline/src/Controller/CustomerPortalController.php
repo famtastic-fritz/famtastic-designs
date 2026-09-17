@@ -528,7 +528,7 @@ final class CustomerPortalController extends ControllerBase {
     try {
       return $this->noStore(new JsonResponse([
         'ok' => TRUE,
-        'website_request' => $this->portal->acceptWebsiteStagingReview((int) $customer['id'], $website_request),
+        'website_request' => $this->portal->acceptWebsiteStagingReview((int) $customer['id'], $website_request, (string) ($this->body($request)['receipt_hash'] ?? '')),
       ]));
     }
     catch (\InvalidArgumentException $error) { return $this->error('staging_review_not_ready', 422, $error->getMessage()); }
