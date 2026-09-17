@@ -1,5 +1,11 @@
 # Brand Context
 
+Visual authority (September 17, 2026): [FAMtastic Design System](docs/design/FAMTASTIC-DESIGN-SYSTEM.md).
+Preserve architecture before enhancing identity. The supplied dimensional F/A/M
+logo is immutable; canonical crown derivatives come from its original PNG, never
+AI redraws. Business philosophy below is unchanged. Root `design.md` governs the
+experience; visual DNA adds materials, semantic glow and surface intensity.
+
 > This file is auto-loaded by all blog sub-skills. Last updated: 2026-09-04.
 > **v2** — rewritten after the owner interview. v1 was inferred from repo
 > evidence alone and got the audience scope, business model, and content

@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Canonical visual DNA / crown family
+
+**Local-tested / review-only.** Shared CSS materials, React crown primitive,
+original-derived favicon family, manifest and agency-scoped Drupal attachments.
+Existing mail architecture is unchanged and compatible. This is not a new mail
+system, PWA/offline capability, workflow implementation or production rollout.
+Public responsive/browser, email pure-render, portal mocked inbox and icon checks
+are distinct from authenticated Drupal integration (not available locally).
+See `docs/design/BRAND-DNA-HANDOFF-2026-09-17.md` for exact failures/limitations.
+
 ## 2026-09-17 — Portal/admin canonical-logo implementation
 
 Production-smoke-tested: both releases `98c17d58`; existing authenticated owner

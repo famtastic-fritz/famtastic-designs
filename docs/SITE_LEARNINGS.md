@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Identity is not redesign authority
+
+Preserve layouts, customer worlds and workflow semantics before adding materials.
+Root design.md owns experience, Design System MD owns visual grammar, and existing
+email is a consumer. Crown extraction must preserve partially transparent source
+strokes; a high alpha cutoff made the first tiny derivative too thin. Deterministic
+source-mask cleanup and small optical compensation are recorded in provenance.
+Chrome automation may mask tab icons; native unclaimed-tab inspection confirmed
+the actual crown. Static showcase directory tests need a static server, not Vite's
+SPA fallback. Keep fixture proof separate from authenticated Drupal proof.
+
 ## 2026-09-17 — Brand inventory includes authenticated shells
 
 Observation: public header/footer migration missed client and admin wordmarks.

@@ -1,0 +1,45 @@
+{
+  "source": "frontend/public/brand/famtastic-designs-logo-v1.png",
+  "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+  "method": "deterministic green-chroma source-pixel extraction within crown ROI; no AI or vector trace",
+  "bounds": {
+    "left": 1821,
+    "top": 31,
+    "width": 251,
+    "height": 254
+  },
+  "smallIcons": "same extracted alpha silhouette, threshold 64; retain 8-connected source-pixel components >=100 pixels to discard detached glow; flat #7cfc00 on #070907; optical 4-direction expansion .38px at16 and .2px at32; no glow",
+  "svg": "embedded PNG, not reviewed vector artwork",
+  "files": [
+    {
+      "path": "frontend/public/favicon-16x16.png",
+      "bytes": 699,
+      "sha256": "f3438b34a977d6212a2aaef08185b5f8408c64ba013a6532a8df614a243a11ac"
+    },
+    {
+      "path": "frontend/public/favicon-32x32.png",
+      "bytes": 1468,
+      "sha256": "f850e13e79d70a042b8d80fb8cd2f2b5076108d68a04ec858d266d7324459b29"
+    },
+    {
+      "path": "frontend/public/favicon-48x48.png",
+      "bytes": 2618,
+      "sha256": "0fa99b6de029b27729252ff8c20ee2bfc0dbcf45ce518a24c281f8ffe579605c"
+    },
+    {
+      "path": "frontend/public/apple-touch-icon.png",
+      "bytes": 17440,
+      "sha256": "bfecd20ca2653e000d13e0d4b3a59b71b059e205d414601811755edc1cd48fd6"
+    },
+    {
+      "path": "frontend/public/android-chrome-192x192.png",
+      "bytes": 19393,
+      "sha256": "818da02fb95cd1d0d8747471e7d892d0ae8bad9cc425e88d7ed6c66aa3e70770"
+    },
+    {
+      "path": "frontend/public/android-chrome-512x512.png",
+      "bytes": 85271,
+      "sha256": "6dfd5f9cd99c5eaad35b34f0a4e8113b9912de38ae3af499fe396cdc02fd0bae"
+    }
+  ]
+}

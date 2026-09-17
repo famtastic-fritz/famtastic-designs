@@ -1,5 +1,16 @@
 # Logo migration inventory and first website slice
 
+## Brand DNA review continuation — September 17, 2026
+
+Owner selected original-derived crown-only compact identity. Review branch
+`famtastic/brand-dna-site-enhancement-v1` adds shared materials, crown/favicon assets
+and metadata without replacing page/workflow architecture. Prior live releases
+below remain historical facts; this new pass is **not deployed or merged**.
+See [visual authority](../design/FAMTASTIC-DESIGN-SYSTEM.md) and
+[review handoff](../design/BRAND-DNA-HANDOFF-2026-09-17.md).
+Legacy editorial `famtastic-mark.svg` references remain where not part of the
+canonical header/portal/favicon migration; do not overwrite client project brands.
+
 ## Portal/admin live continuation — September 17, 2026
 
 Owner approved implementation and publication. Both backend and frontend now run

@@ -1,5 +1,8 @@
 # FAMtastic Designs agent entry point
 
+Visual authority: `design.md` plus `docs/design/FAMTASTIC-DESIGN-SYSTEM.md`.
+Apply identity to existing architecture; no redesign or email-system duplication.
+
 Read and follow `AGENTS.md` and the required operating documents it names. These rules
 apply to Gemini as well as Codex, Claude and other agents. This is the agency application
 repository, not a parent source repository for independent customer businesses.

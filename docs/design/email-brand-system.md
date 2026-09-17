@@ -16,8 +16,17 @@ No AI redraw, recoloring, vector reconstruction, or baked-in message text.
 
 Creative Studio guidance is applied by preserving the original artwork and
 keeping typography in editable HTML. No image provider or new paid tool was used.
-The PNG lives in documentation assets until a separately approved hosting step;
-it is not silently added to the live frontend build.
+The identical PNG is now hosted by the approved release recorded above; the
+documentation copy remains the provenance reference.
+
+## Canonical visual DNA relationship
+
+[FAMtastic Design System](FAMTASTIC-DESIGN-SYSTEM.md) owns visual grammar; this file
+owns email-specific adaptation. September 17 brand enhancement audit found the
+existing renderer already uses the approved logo, obsidian/lime/warm-paper tokens
+and one CTA glow. It therefore remains unchanged. The crown inside the original
+logo is canonical; no independent ornament or second EmailShell is needed.
+Re-run `scripts/email-preview/test.php` and browser previews when tokens change.
 
 ## Presentation contract
 
@@ -40,8 +49,8 @@ it is not silently added to the live frontend build.
 
 `OutreachMailer` recognizes `customer_staging_review_ready/v1` and delegates only
 that new template to `StagingReviewEmail`. Previous templates remain unchanged.
-No queue producer is switched, no notification event is emitted, and no send is
-performed. Plain text remains the durable body and existing PHPMailer `AltBody`.
+Rendering itself does not switch queue producers, emit events or send mail.
+Plain text remains the durable body and existing PHPMailer `AltBody`.
 
 The terminal system-authored plain-text block is required:
 
@@ -70,8 +79,10 @@ The explicit pure-render local preview allows only the fixed relative asset path
 See [local preview instructions and file/test inventory](../../scripts/email-preview/README.md).
 Valerie's approved copy uses The Signal Room, explains staging and no payment due,
 links `https://prosintraining.famtasticinc.com/`, and signs Shay.
-The related site footnote is in the separate `site-pros-in-training` repository,
-on `codex/staging-footnote-preview`, not deployed.
+The related site footnote belongs to the separate `site-pros-in-training`
+repository; its later approved staging publication is recorded in the release
+record, not part of this visual-DNA review branch.
 
-Local browser proof is not Gmail, Outlook or Apple Mail proof. No production
-delivery, recipient inbox placement, client approval or charging is established.
+Local browser proof is not Gmail, Outlook or Apple Mail proof. The earlier release
+records SMTP acceptance separately; previews establish neither recipient inbox
+placement nor client approval nor charging. This enhancement sends nothing.

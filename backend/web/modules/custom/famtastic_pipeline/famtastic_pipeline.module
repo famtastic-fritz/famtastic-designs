@@ -107,6 +107,32 @@ function famtastic_pipeline_page_attachments(array &$attachments): void {
 }
 
 /**
+ * Implements hook_page_attachments_alter().
+ *
+ * Only agency-owned Drupal themes inherit the canonical compact identity.
+ */
+function famtastic_pipeline_page_attachments_alter(array &$attachments): void {
+  $theme = \Drupal::theme()->getActiveTheme()->getName();
+  if (!in_array($theme, ['famtastic_admin', 'famtastic_customer'], TRUE)) {
+    return;
+  }
+  $attachments['#cache']['contexts'][] = 'theme';
+  $base = base_path() . \Drupal::service('extension.list.theme')->getPath('famtastic_admin') . '/brand/';
+  $links = $attachments['#attached']['html_head_link'] ?? [];
+  $links = array_values(array_filter($links, static fn(array $link): bool => !in_array(
+    strtolower($link[0]['rel'] ?? ''), ['icon', 'shortcut icon', 'apple-touch-icon'], TRUE
+  )));
+  $links[] = [['rel' => 'icon', 'href' => $base . 'favicon.ico', 'sizes' => '16x16 32x32 48x48'], FALSE];
+  $links[] = [['rel' => 'icon', 'href' => $base . 'favicon-32x32.png', 'type' => 'image/png', 'sizes' => '32x32'], FALSE];
+  $links[] = [['rel' => 'apple-touch-icon', 'href' => $base . 'apple-touch-icon.png', 'sizes' => '180x180'], FALSE];
+  $attachments['#attached']['html_head_link'] = $links;
+  $attachments['#attached']['html_head'][] = [
+    ['#tag' => 'meta', '#attributes' => ['name' => 'theme-color', 'content' => '#070907']],
+    'famtastic_brand_theme_color',
+  ];
+}
+
+/**
  * Implements hook_user_insert().
  *
  * Every registered user becomes a FAMtastic customer. If a prospect already

@@ -1,0 +1,31 @@
+/* Canonical visual primitives. Theme copy generated; see Design System MD. */
+:root {
+  --fam-dna-obsidian:#070907; --fam-dna-glass:rgba(16,19,16,.88);
+  --fam-dna-line:#252b25; --fam-dna-lime:#7cfc00; --fam-dna-paper:#f7f7f4;
+  --fam-dna-glow-0:none;
+  --fam-dna-glow-1:0 0 16px rgba(124,252,0,.08);
+  --fam-dna-glow-2:0 0 20px rgba(124,252,0,.20);
+  --fam-dna-glow-3:0 0 24px rgba(124,252,0,.35),0 0 64px rgba(124,252,0,.10);
+  --fam-dna-grain:repeating-radial-gradient(circle at 17% 31%,rgba(255,255,255,.025) 0 .5px,transparent .8px 3px);
+  --fam-dna-carbon:repeating-linear-gradient(115deg,rgba(255,255,255,.015) 0 1px,transparent 1px 5px);
+  --fam-dna-metal:repeating-linear-gradient(95deg,rgba(255,255,255,.05) 0 1px,transparent 1px 4px);
+  --fam-dna-interface:Inter,system-ui,sans-serif;
+  --fam-dna-display:'Space Grotesk',system-ui,sans-serif;
+  --fam-dna-signature:'Segoe Print','Bradley Hand',cursive;
+}
+.fam-material--obsidian { background-color:var(--fam-dna-obsidian); background-image:var(--fam-dna-grain); }
+.fam-material--black-glass { background:var(--fam-dna-glass); border:1px solid var(--fam-dna-line); backdrop-filter:blur(10px); }
+.fam-material--carbon-grain { background-color:var(--fam-dna-obsidian); background-image:var(--fam-dna-carbon); }
+.fam-material--brushed-metal { background-color:#181c18; background-image:var(--fam-dna-metal); }
+.fam-material--gold-cinematic { background-image:radial-gradient(ellipse at top right,rgba(215,170,60,.1),transparent 60%); }
+.fam-material--stardust { background-image:radial-gradient(circle at 13% 22%,#ffffff30 0 1px,transparent 1.5px),radial-gradient(circle at 83% 71%,#7cfc0020 0 1px,transparent 1.5px); }
+.fam-signature { font-family:var(--fam-dna-signature); font-style:italic; letter-spacing:-.025em; }
+.fam-crown { display:inline-block; width:2rem; height:auto; vertical-align:middle; object-fit:contain; }
+.fam-crown--subtle { width:1.5rem; opacity:.8; }
+.fam-crown--hero { width:3rem; }
+.fam-brush { background:currentColor; height:3px; clip-path:polygon(0 40%,94% 0,100% 50%,90% 100%,3% 80%); }
+.fam-brush--lime { color:var(--fam-dna-lime); }
+.fam-brush--white { color:#fff; }
+.fam-brush--identity { background:linear-gradient(105deg,#ed2024 0 32%,#f2c230 35% 64%,#086cff 68%); opacity:.04; height:5rem; }
+@media(prefers-reduced-motion:reduce) { .fam-crown,.fam-brush { animation:none!important; transition:none!important; } }
+@media(forced-colors:active) { .fam-brush { background:CanvasText; } }

@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Canonical visual enhancement contract
+
+Read root design.md plus docs/design/FAMTASTIC-DESIGN-SYSTEM.md. Preserve before
+enhancing. Original PNG stays unchanged; crown-only favicon uses its extracted
+silhouette, not AI concepts. FAM 0–3 is surface expression, not customer creative
+intensity. Existing PHP mail is a consumer, never duplicate its shell. Review
+branch is not a release. Local CSS fixtures are not authenticated workflow proof.
+Static room tests pass using a static root; Vite directory fallback is not proof
+that those independent project worlds are broken.
+
 ## 2026-09-17 — Authenticated logo continuation
 
 Observation: public brand proof does not include portal/admin. Guidance: preserve

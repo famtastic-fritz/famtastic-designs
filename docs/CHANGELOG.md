@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-17 — Visual DNA enhancement (review branch, not released)
+
+- Canonical Design System plus root design.md/agent guidance: preserve before
+  enhancing; intensity decreases from public to operational surfaces.
+- Immutable logo; deterministically extracted crown and complete favicon family.
+- Scoped public/client/admin materials and focus styling, no workflow redesign.
+- Existing email renderer unchanged; 35 assertions and local browser preview pass.
+- Local build/brand checks and mocked inbox tests pass. Full Drupal integration
+  and actual email-client certification remain unperformed. One pre-existing
+  fulfillment-copy assertion is documented, not silently changed.
+- No merge, push to main, deployment, client notification or payment activity.
+  Evidence: `docs/design/BRAND-DNA-HANDOFF-2026-09-17.md`.
+
 ## 2026-09-17 — Portal/admin branding continuation
 
 - Published backend/frontend `98c17d58`; authenticated owner desktop/mobile

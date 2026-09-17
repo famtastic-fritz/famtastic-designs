@@ -1,5 +1,17 @@
 # FAMtastic Experience System v1
 
+## Preserve before enhancing — visual authority
+
+[FAMTASTIC-DESIGN-SYSTEM.md](docs/design/FAMTASTIC-DESIGN-SYSTEM.md) is the canonical
+visual specification for agency-owned surfaces. This root design.md remains the
+experience/workflow contract; neither overrides customer-approved project worlds.
+Apply identity to existing architecture, never infer permission to redesign it.
+FAM 0–3 intensity decreases with operational density. Lime is action/state, not
+the whole identity. Source artwork is immutable; crown derivatives share its
+silhouette. Email is an existing consumer, not a system to rebuild.
+Machine-readable visual DNA: `docs/design/famtastic-site-dna.v1.json`.
+September 17 enhancement is review-branch only until separately released.
+
 Owner rule, September14,2026: every new customer build must include a site-specific `design.md` before implementation. Reference this shared contract, the approved customer direction, responsive/type rules, component boundaries and acceptance evidence. A file added during maintenance must disclose that timing rather than imply it governed the original generation.
 
 This is the required, reusable design contract for every customer-facing

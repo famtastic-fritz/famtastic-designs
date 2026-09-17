@@ -1,5 +1,15 @@
 # Agent Instructions
 
+## Canonical visual DNA — preserve before enhancing
+
+Read root `design.md` and `docs/design/FAMTASTIC-DESIGN-SYSTEM.md` for owned-surface
+visual work. Apply FAMtastic identity to existing architecture; this is not blanket
+redesign authority. Preserve customer project worlds and operational workflows.
+Use the immutable supplied logo and original-derived crown, with shared tokens
+and FAM 0–3 intensity. Run `node scripts/sync-brand-assets.cjs --check` after changes.
+The PHP email renderer already exists: no duplicate mail shell or notification
+migration. Brand approval alone is not deployment, email-send or client approval.
+
 ## Repository ownership: agency and customer businesses are separate
 
 This repository owns the FAMtastic Designs agency website, portal, CRM/Commerce and

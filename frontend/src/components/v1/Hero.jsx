@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import ParticleField from './ParticleField.jsx';
 import { FadeUp } from './motion.jsx';
+import FAMCrown from '../FAMCrown.jsx';
 
 /** Internal links use <Link>, external ones a plain anchor. */
 export function CtaLink({ href = '/contact', label, kind = 'primary', className = '' }) {
@@ -43,6 +44,7 @@ export default function Hero({
         {eyebrow && (
           <FadeUp>
             <span className="v1-eyebrow v1-eyebrow--pill">{eyebrow}</span>
+            {particles && <span className="v1-hero__signature"><FAMCrown intent="signature" intensity="subtle" /></span>}
           </FadeUp>
         )}
         <FadeUp delay={0.08}>

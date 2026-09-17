@@ -42,7 +42,7 @@ export default function Layout() {
   }, []);
 
   return (
-    <div className="layout">
+    <div className="layout fam-owned" data-fam-intensity="2">
       <a className="skip-link" href="#main-content">Skip to main content</a>
       <Header />
 

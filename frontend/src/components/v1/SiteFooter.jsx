@@ -71,7 +71,7 @@ export default function SiteFooter({ services = [], packages = [] }) {
           <Link to="/privacy-policy">Privacy Policy</Link>
           <Link to="/terms-of-service">Terms of Service</Link>
         </nav>
-        <p className="v1-footer__stack">Design that glows in the dark.</p>
+        <p className="v1-footer__stack"><span className="fam-signature">Design that glows</span> in the dark.</p>
       </div>
     </footer>
   );

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Panel, Empty, date } from './PortalShared.jsx';
 import PortalServicesView from './PortalServicesView.jsx';
 import { derivePortalFulfillmentState } from '../../lib/portalFulfillment.js';
+import FAMCrown from '../FAMCrown.jsx';
 
 export default function PortalHomeView({
   workspace,
@@ -87,7 +88,7 @@ export default function PortalHomeView({
       )}
       <section className="portal-next-action" aria-labelledby="portal-next-action-title">
         <div>
-          <span className="portal-eyebrow">Your next decision</span>
+          <span className="portal-eyebrow"><FAMCrown intent="signature" intensity="subtle" />Your next decision</span>
           <h2 id="portal-next-action-title">
             {readyProof
               ? `${readyProof.proofs.variants.length} website concepts are ready to review`

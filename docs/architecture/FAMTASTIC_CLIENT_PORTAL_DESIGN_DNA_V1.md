@@ -1,5 +1,10 @@
 # FAMtastic Client Portal Design DNA v1
 
+Visual grammar imports [FAMtastic Design System](../design/FAMTASTIC-DESIGN-SYSTEM.md).
+This portal contract remains authoritative for workflow, information hierarchy,
+single-focus glow and accessibility. FAM 1 normal / FAM 2 welcome does not authorize
+rearranging operations or styling customer proof worlds as agency pages.
+
 ## Purpose
 
 The **Client Portal** is the authenticated control plane and prospect workspace for FAMtastic customers. It empowers clients to manage what they own, review and approve creative proofs, track onboarding and fulfillment, exchange contextual messages, manage subscriptions and billing, and discover their next high-leverage growth capability.

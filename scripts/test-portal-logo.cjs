@@ -22,7 +22,8 @@ const root = 'http://127.0.0.1:4187';
       const {createRoot}=(await import('${dependency('react-dom_client')}')).default;
       const {MemoryRouter}=await import('${dependency('react-router')}');
       const {default:Nav}=await import('/src/components/portal/PortalNav.jsx');
-      await import('/src/index.css');await import('/src/portal.css');
+      await import('/src/index.css');await import('/src/portal.css');await import('/src/brand-dna.css');
+      const tokens=document.createElement('link');tokens.rel='stylesheet';tokens.href='/brand/famtastic-dna.css';document.head.append(tokens);
       function Demo(){const [menu,setMenu]=React.useState(false);return React.createElement('div',{className:'portal-app'+(menu?' menu-open':'')},React.createElement(Nav,{section:'home',menu,setMenu,go:()=>{},onSignOut:()=>{}}),React.createElement('main',{className:'portal-main'},'Local layout fixture — no account data'));}
       createRoot(document.getElementById('root')).render(React.createElement(MemoryRouter,null,React.createElement(Demo)));
       </script></body></html>`}));

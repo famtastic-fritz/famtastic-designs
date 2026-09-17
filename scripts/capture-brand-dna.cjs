@@ -1,0 +1,7 @@
+const {chromium}=require('../frontend/node_modules/@playwright/test');
+const fs=require('node:fs');
+const phase=process.argv[2]||'after';
+const dir='.local-email-preview/brand-dna';fs.mkdirSync(dir,{recursive:true});
+(async()=>{const b=await chromium.launch();const results=[];try{for(const [name,path,width] of [['home-desktop','/',1440],['home-mobile','/',390],['work','/work',1440],['offer','/packages/199-quick-start',1440]]){
+ const p=await b.newPage({viewport:{width,height:1000},reducedMotion:'reduce'});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:4187'+path);await p.waitForLoadState('networkidle');await p.locator('h1').first().waitFor();await p.waitForFunction(()=>document.querySelectorAll('.v1-nav a').length>=5);await p.locator('.fam-brand-logo--header').evaluate(i=>i.decode());await p.evaluate(()=>document.fonts.ready);await p.waitForFunction(()=>[...document.querySelectorAll('h1')].every(e=>Number(getComputedStyle(e).opacity)===1));await p.screenshot({path:`${dir}/${phase}-${name}.png`,fullPage:true});results.push({name,path,width,overflow:await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),headings:await p.locator('h1').allTextContents(),errors});await p.close();
+ }fs.writeFileSync(`${dir}/${phase}.json`,JSON.stringify(results,null,2));console.log(JSON.stringify(results));}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1});

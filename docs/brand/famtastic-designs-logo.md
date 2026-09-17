@@ -23,11 +23,12 @@ source/preview status in [logo-migration.md](logo-migration.md).
   Footer up to 280px. The descriptor is decorative at the smallest sizes; the
   accessible link name remains “FAMtastic Designs — home.” Prefer larger usage
   when descriptor reading is necessary.
-- No approved compact/favicon, light variant, crown-only mark or vector master
-  was supplied. Do not invent one or squeeze this full lockup into a 28px square.
-  Existing compact contexts are explicitly retained pending reviewed artwork.
-  September 17 owner-requested favicon explorations are proposals only; the
-  shortlist is FAM+crown, red F+crown and crown-only. No selected production icon.
+- September 17 follow-up selects **original-derived crown only** on obsidian for
+  compact identity. Canonical raster derivatives and provenance are governed by
+  [the visual specification](../design/FAMTASTIC-DESIGN-SYSTEM.md). Earlier AI
+  explorations are not source artwork. New favicon assets remain review-branch
+  only; no reviewed vector master or light full-logo variant exists. The favicon
+  SVG is an embedded raster container, not an invented vector reconstruction.
 
 Portal placement: 180px sidebar, 132px mobile menu bar, 210px private project
 header. Admin shell: 180px; Drupal login/recovery: 210px. The backend theme

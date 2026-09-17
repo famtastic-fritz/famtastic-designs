@@ -1,5 +1,12 @@
 # FAMtastic Designs production changelog
 
+## 2026-09-17 — Review-only visual DNA (not a production release)
+
+Canonical visual specification, immutable-logo crown derivatives, icon family,
+scoped frontend/client/admin materials and agent/design.md links added on
+`famtastic/brand-dna-site-enhancement-v1`. Existing mail renderer retained and
+retested. No merge or deployment. See docs/design/BRAND-DNA-HANDOFF-2026-09-17.md.
+
 ## 2026-08-28 — Modular Customer Portal, My Products Hub & Project Provisioning Wizard
 
 - Added dedicated "My Products" hub (`/portal?tab=products`) displaying active SSD cloud hosting (IP `198.71.232.3`), custom domain DNS helper records, and client command center status.

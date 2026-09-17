@@ -1,5 +1,9 @@
 # Transactional email template registry v1
 
+Visual authority: [FAMtastic Design System](../design/FAMTASTIC-DESIGN-SYSTEM.md).
+Existing PHP rendering and dynamic-message contracts remain intact. The September
+17 visual-DNA pass audits this consumer; it does not duplicate or migrate templates.
+
 ## September 17 approval update
 
 `customer_staging_review_ready/v1` is owner-approved for the exact Valerie delivery.

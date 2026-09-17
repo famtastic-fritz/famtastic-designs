@@ -1,0 +1,30 @@
+/* FAM 0 operational UI; expression stays on the surrounding shell. */
+body.famtastic-admin-shell,
+body.famtastic-auth-page {
+  background-color: var(--fam-dna-obsidian);
+  background-image: var(--fam-dna-carbon);
+}
+.famtastic-admin-nav {
+  background-color: var(--fam-dna-obsidian);
+  background-image: var(--fam-dna-grain);
+  border-bottom-color: #35402e;
+}
+.famtastic-hub__hero {
+  background-color: var(--fam-dna-glass);
+  box-shadow: inset 0 1px rgba(255,255,255,.05);
+}
+.famtastic-admin-nav__link[aria-current="page"] {
+  border-bottom: 2px solid var(--fam-dna-lime);
+}
+body.famtastic-admin-shell :is(a,button,input,select,textarea):focus-visible,
+body.famtastic-auth-page :is(a,button,input,select,textarea):focus-visible {
+  outline: 2px solid var(--fam-dna-lime);
+  outline-offset: 3px;
+  box-shadow: var(--fam-dna-glow-2);
+}
+/* No decorative crowns on routine messages, warnings, controls or tables.
+ * Major completion surfaces may opt into the shared .fam-crown primitive only
+ * when backed by their existing authoritative success state. */
+@media (prefers-reduced-motion: reduce) {
+  .famtastic-admin-nav__link { transition: none !important; }
+}

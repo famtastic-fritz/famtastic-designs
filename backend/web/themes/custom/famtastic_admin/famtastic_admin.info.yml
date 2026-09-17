@@ -6,7 +6,7 @@ core_version_requirement: ^11
 base theme: claro
 
 # Default logo placement (theme setting) used by the Site Branding block.
-logo: logo.svg
+logo: famtastic-designs-logo-v1.png
 
 # Brand stylesheet, auto-attached on every page rendered by this theme.
 # Also attached defensively in famtastic_admin.theme (Drupal de-duplicates).
