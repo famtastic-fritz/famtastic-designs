@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Canonical logo and scope
+
+Use shared BrandLogo plus `frontend/src/lib/brand.js` for primary website placements.
+Follow `docs/brand/famtastic-designs-logo.md`; original PNG only, no AI reconstruction.
+Six public responsive checks passed. Do not infer authenticated portal/admin or
+compact-mark migration from public header/footer proof.
+
 ## 2026-09-17 — Exact release and recipient proof
 
 Observation: approved preview became production source `20448c71` and one durable

@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import SocialSignal from './SocialSignal.jsx';
+import BrandLogo from '../BrandLogo.jsx';
 
 const CONTACT_EMAIL = 'hello@famtasticdesigns.com';
 
@@ -15,9 +16,9 @@ export default function SiteFooter({ services = [], packages = [] }) {
     <footer className="v1-footer">
       <div className="v1-container v1-footer__grid">
         <div className="v1-footer__brand">
-          <p className="v1-footer__name">
-            <span className="v1-brand__mark">FAM</span>tastic Designs
-          </p>
+          <Link to="/" className="v1-footer__logo" aria-label="FAMtastic Designs — home">
+            <BrandLogo placement="footer" decorative />
+          </Link>
           <p className="v1-footer__blurb">
             Intelligent websites, AI systems, lead capture, and automation for growing businesses —
             engineered for your business, not a template.

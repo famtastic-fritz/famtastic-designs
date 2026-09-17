@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router';
+import BrandLogo from '../BrandLogo.jsx';
 
 /**
  * v1 site navbar — sticky blurred bar, FAM/tastic Designs wordmark, top-level
@@ -157,8 +158,7 @@ export default function SiteNavbar({ menuItems = [], services = [], packages = [
     <header className="v1-header">
       <div className="v1-header__inner">
         <Link to="/" className="v1-brand" aria-label="FAMtastic Designs — home">
-          <span className="v1-brand__mark">FAM</span>
-          <span className="v1-brand__rest">tastic&nbsp;Designs</span>
+          <BrandLogo decorative />
         </Link>
 
         <nav className="v1-nav" aria-label="Main navigation">

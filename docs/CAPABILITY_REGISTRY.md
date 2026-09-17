@@ -1,5 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Website canonical-logo presentation (local proof)
+
+Primary public header/footer and Organization metadata migrated in the website
+feature branch. Six viewport browser checks pass; source/build only, not released.
+Portal/admin/compact campaign placements remain inventoried follow-ups. Approved
+email and hosted asset production proof remains separate below.
+
 ## 2026-09-17 — Approved staging-ready email delivered to SMTP
 
 Versioned branded renderer and unchanged hosted PNG are production-deployed at

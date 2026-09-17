@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Wide logo migration needs navigation geometry
+
+The new master is 3:1, not a compact icon. Preserve exact bytes and aspect ratio,
+reserve realistic header height, align the mobile overlay offset, and test the full
+loaded menu rather than an early fallback-only screenshot. Keep small editorial
+marks until reviewed compact artwork exists; a mass asset-path replace distorts them.
+
 ## 2026-09-17 — Authorized exact-key release handoff
 
 Keep approved design, source push, deployed bytes and SMTP acceptance separate.

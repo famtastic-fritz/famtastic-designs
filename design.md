@@ -25,6 +25,10 @@ the answer to #3. Tooltips support clear copy; they never replace it.
 
 ## Shared visual and interaction tokens
 
+Primary agency logo: September 17 original PNG, governed by
+`docs/brand/famtastic-designs-logo.md`. Use the shared React BrandLogo for migrated
+website placements. RGB/gold logo colors do not replace existing action/surface tokens.
+
 - Canvas: `#070907`; panel: `#101310`–`#141814`; border: `#252b25`; action
   lime: `#7cfc00`; primary text: near-white.
 - Inter is the interface and body face. A recipe may add a compatible display

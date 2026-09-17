@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-17 — Website logo migration first pass (preview)
+
+Added shared BrandLogo/asset constants, original master in public header/footer,
+responsive header/menu geometry and canonical Organization metadata. Documented
+all major legacy placements and deferred compact/authenticated contexts. Six public
+viewport checks, production build and 34 portal contract checks pass. Not deployed.
+
 ## 2026-09-17 — Approved brand email live and Valerie notified
 
 Deployed exact agency source `20448c71`, verified unchanged hosted PNG and both

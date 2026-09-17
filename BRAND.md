@@ -41,18 +41,22 @@
 
 ## Positioning
 
-September 17 email-preview update: the owner supplied a new Designs logo for
-the approved [email direction](docs/design/email-brand-system.md). Preserve that
-PNG exactly. The older placeholder status below describes the current website;
-broader logo migration and hosted asset publication are not part of this preview.
+September 17 owner approval: the supplied Designs logo is canonical. Its PNG and
+staging-ready email are published; website placements are being migrated in a
+separate preview. Follow [logo usage](docs/brand/famtastic-designs-logo.md) and the
+[surface inventory](docs/brand/logo-migration.md). No wider redesign is authorized.
 
 - **Official entity name**: FAMtastic Designs
 - **Homepage**: https://famtasticdesigns.com/
-- **Logo**: ⚠️ **NOT FINAL.** `/brand/famtastic-mark.svg` is a working
-  placeholder. Neither the master FAMtastic mark nor the finalized FAMtastic
-  Designs mark is complete. Do not treat the current file as canonical brand
-  identity, and do not cite it as the definitive logo in schema or press
-  contexts until the real marks ship.
+- **Logo**: September 17 canonical asset `/brand/famtastic-designs-logo-v1.png`.
+  F is red, A yellow/gold, M blue; white handwritten “tastic,” lime crown,
+  uppercase tracked DESIGNS. Lime `#7cfc00` remains the action accent. Preserve
+  original bytes and proportions. The old SVG remains only in inventoried compact
+  contexts until reviewed compact artwork exists; it is not the primary master.
+- Never regenerate or reinterpret the FAMtastic Designs logo with an image
+  model when a canonical logo asset is available. Generated artwork should
+  reserve appropriate logo-safe space. Production code or deterministic
+  compositing must place the canonical logo.
 - **Published address (live site schema)**: 1729 NW St. Lucie West Blvd #1181,
   Port Saint Lucie, FL 34986, US
 - **sameAs profiles**:
@@ -210,9 +214,10 @@ material ways, all corrected above:
    educates and grows businesses, and financial growth is downstream of that.
    Replaced with the Stance section above.
 
-Also corrected: the logo is **not final** (v1 cited a placeholder as
-canonical), and the `@nineoo1` YouTube channel is **intentional** (v1 flagged
-it as an error).
+Historical September 4 correction: the logo was then **not final** (v1 cited a
+placeholder as canonical). The September 17 canonical-logo approval above now
+supersedes that status. The `@nineoo1` YouTube channel was **intentional** (v1
+flagged it as an error).
 
 **Standing caution for future sessions:** the generic blog skills carry
 assumptions that do not all fit this brand — competitor positioning, and word

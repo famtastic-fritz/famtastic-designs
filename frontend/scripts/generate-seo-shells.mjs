@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SEO_PAGES, seoForPath } from '../src/seo.js';
+import { BRAND_LOGO } from '../src/lib/brand.js';
 import {
   FILMS,
   campaignForBlogSlug,
@@ -70,7 +71,9 @@ function organizationEntities() {
       url: 'https://famtasticdesigns.com/',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://famtasticdesigns.com/brand/famtastic-mark.svg',
+        url: BRAND_LOGO.url,
+        width: BRAND_LOGO.width,
+        height: BRAND_LOGO.height,
       },
       address: {
         '@type': 'PostalAddress',

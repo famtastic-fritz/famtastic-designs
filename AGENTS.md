@@ -42,6 +42,13 @@ updated, say so explicitly in the session report rather than skipping silently.
 
 ## Required operating context
 
+- Brand source: `docs/brand/famtastic-designs-logo.md`; migration status:
+  `docs/brand/logo-migration.md`. Preserve the September 17 canonical PNG exactly;
+  never AI-redraw it or invent compact/vector variants. Email design/renderer rules
+  are in `docs/design/email-brand-system.md` and the transactional template registry.
+  Use the existing PHP mailer and versioned templates; design approval, deployed
+  source, authorized send and SMTP/inbox receipts are separate states.
+
 - Owner policy 2026-09-17: client direction selection starts the complete site
   build and protected review without per-site Fritz approval. Routine in-scope
   revisions continue until explicit customer acceptance of the current exact
