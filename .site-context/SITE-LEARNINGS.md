@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Exact release and recipient proof
+
+Observation: approved preview became production source `20448c71` and one durable
+SMTP receipt (outbox 704), not a general notification migration. Guidance: reuse
+versioned renderer and exact-key dispatcher, check hosted hashes and customer binding,
+and record receipt separately from inbox/read or final customer acceptance.
+
 ## 2026-09-17 — Email image failure is a separate layout state
 
 Observation: a decorative watermark fit with its PNG loaded but caused 8px mobile overflow when images were blocked. Guidance: test images-disabled geometry as well as text visibility; reserve a narrow mobile watermark slot. Keep the original artwork unchanged and the body/button as live HTML. Local-only proof; no client compatibility or send claim.

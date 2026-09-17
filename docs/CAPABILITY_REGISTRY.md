@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Approved staging-ready email delivered to SMTP
+
+Versioned branded renderer and unchanged hosted PNG are production-deployed at
+`20448c71`. Exact request-9 dispatch created outbox 704: processed 1, sent 1,
+failed 0, retried 0, durable provider receipt. Pros In Training explanatory footer
+is live with 390/768/1280px proof and noindex retained. Inbox/read and actual mail-client
+rendering remain unproven. No automatic staging notification producer enabled.
+See `docs/design/EMAIL_BRAND_RELEASE_2026-09-17.md`.
+
 ## 2026-09-17 — Branded staging-ready email: local presentation proof only
 
 `customer_staging_review_ready/v1` has locally tested PHP renderer dispatch, escaped input, constrained CTA/asset URLs, plain-text fixture and Chromium desktop/mobile/images-disabled evidence. Existing-template regression renders are unchanged. No producer, SMTP send, hosted asset, deployment, client inbox or Gmail/Outlook/Apple Mail rendering is proven. See `docs/design/email-brand-system.md` and `scripts/email-preview/README.md`.

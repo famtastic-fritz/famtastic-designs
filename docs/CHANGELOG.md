@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-17 — Approved brand email live and Valerie notified
+
+Deployed exact agency source `20448c71`, verified unchanged hosted PNG and both
+public hosts, and sent only the approved Valerie key: outbox 704, SMTP accepted.
+Customer footer published through its own repository. No charge or final acceptance.
+
 ## 2026-09-17 — Owner approval and release preparation
 
 Owner approved email and footnote publication plus one exact Valerie send. Added immutable hosted logo asset, approved canonical URL and request-bound exact-key send preflight. See `docs/design/EMAIL_BRAND_RELEASE_2026-09-17.md`; no broad dispatcher or website redesign is included in this release.

@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Authorized exact-key release handoff
+
+Keep approved design, source push, deployed bytes and SMTP acceptance separate.
+Verified live site/logo hashes and request/customer/direction binding before one
+exact-key dispatch (704). Read-only replay confirms its existing receipt. Customer
+cPanel HTML reads must disable update_html_document_encoding before backup hashing.
+
 ## 2026-09-17 — Preview isolation and existing-mail preservation
 
 The rich supplied email mockup and simpler supplied HTML are different fidelity inputs: the image sets direction, the table HTML supplies safe structure. Implement the new template independently, compare old renders, and fail closed without an approved hosted logo. A local rendering cannot establish mail-client compatibility or delivery. Images-disabled testing caught and fixed decorative watermark overflow before handoff. See `docs/design/email-brand-system.md`.
