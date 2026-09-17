@@ -100,6 +100,7 @@ final class SiteStudioBuildPacketService {
       if ($selectionRequest !== NULL) $this->supersedeReviewNotifications((int) $selectionRequest['id']);
       unset($request['selected_staging_exception']);
       $request['site_studio_build_packet'] = $packet;
+      $request['selected_dispatch_packet'] = $packet;
       $project
         ->set('studio_json', json_encode($request, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))
         ->set('delivery_status', 'submitted')
@@ -122,6 +123,63 @@ final class SiteStudioBuildPacketService {
       $transaction->rollBack();
       throw $e;
     }
+  }
+
+  public function registerPlanningPacket(array $packet): void {
+    $transaction = $this->database->startTransaction();
+    try {
+    $intent = $packet['intent'] ?? [];
+    if (SelectedPlanningPacket::create($intent, $packet['dispatch_issue'] ?? NULL) !== $packet) throw new \InvalidArgumentException('Selected planning packet is not canonical.');
+    $project = $this->loadProject((string) $packet['project_id']);
+    $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+    if (($studio['selected_source_intent'] ?? NULL) !== $intent) throw new \InvalidArgumentException('selected_staging_packet_superseded');
+    if (($studio['selected_dispatch_packet'] ?? NULL) === $packet) return;
+    if (($studio['selected_dispatch_packet']['packet_id'] ?? NULL) === $packet['packet_id']) throw new \InvalidArgumentException('Planning packet is immutable for a revision.');
+    $this->recordSelectedException((int) $intent['website_request_id'], $intent['selection']['direction_id'], 'selected_continuation_planning: remaining work and authority issues are being planned.');
+    $studio = json_decode((string) $project->get('studio_json')->value, TRUE);
+    if (isset($studio['selected_dispatch_packet'])) $studio['selected_dispatch_history'][] = $studio['selected_dispatch_packet'];
+    if (isset($studio['selected_source_plan'])) $studio['selected_source_plan_history'][] = $studio['selected_source_plan'];
+    unset($studio['selected_source_plan']);
+    $studio['selected_dispatch_packet'] = $packet;
+    $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+    $this->database->update('famtastic_project_request')->fields(['staging_status' => 'planning'])->condition('id', (int) $intent['website_request_id'])->execute();
+    } catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+  }
+
+  /** Planning is a private operational result, never a review-ready receipt. */
+  public function acceptPlanningResult(array $result): array {
+    $transaction = $this->database->startTransaction();
+    try {
+      $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', (int) ($result['website_request_id'] ?? 0))->forUpdate()->execute()->fetchAssoc();
+      if (!$row || !empty($row['commerce_order_id']) || (string) $row['id'] !== (string) ($result['website_request_id'] ?? '') || (string) $row['project_id'] !== (string) ($result['project_id'] ?? '') || (string) $row['customer_id'] !== (string) ($result['customer_id'] ?? '') || $row['public_id'] !== ($result['request_id'] ?? '')) throw new \InvalidArgumentException('Planning result identity mismatch.');
+      $project = $this->loadProject((string) $result['project_id']);
+      $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+      $packet = $studio['selected_dispatch_packet'] ?? [];
+      $this->assertActiveSelectedPacket($packet);
+      if (($packet['schema'] ?? '') !== 'famtastic.site-studio.planning-packet.v1') throw new \InvalidArgumentException('Planning result does not match active work.');
+      foreach (['packet_id', 'idempotency_key', 'request_id', 'project_id', 'artifact_manifest_sha256'] as $field) {
+        if (($result[$field] ?? NULL) !== ($packet[$field] ?? NULL)) throw new \InvalidArgumentException('Planning result binding mismatch: ' . $field);
+      }
+      $intent = $packet['intent'];
+      if (($result['selected_direction_id'] ?? '') !== $packet['selected_direction_ids'][0] || ($result['selected_artifact_sha256'] ?? '') !== $packet['selected_artifacts'][0]['source_artifact_sha256']) throw new \InvalidArgumentException('Planning selected source mismatch.');
+      $intentHash = hash('sha256', json_encode($intent, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+      if (($result['schema'] ?? '') !== 'famtastic.site-studio.planning-result.v1' || !in_array($result['status'] ?? '', ['planning_complete', 'planning_failed'], TRUE)
+        || ($result['intent_id'] ?? '') !== $intent['intent_id'] || ($result['intent_sha256'] ?? '') !== $intentHash
+        || ($result['selection_revision'] ?? 0) !== $intent['selection']['revision'] || empty($result['event_id'])
+        || ($result['ready'] ?? TRUE) !== FALSE || ($result['customer_accepted'] ?? TRUE) !== FALSE || ($result['checkout_eligible'] ?? TRUE) !== FALSE || ($result['final_launch'] ?? TRUE) !== FALSE) throw new \InvalidArgumentException('Planning result cannot establish readiness.');
+      foreach (['staging_url', 'artifact_sha256', 'qa', 'hosting_verified'] as $field) if (isset($result[$field])) throw new \InvalidArgumentException('Planning result cannot contain staging evidence.');
+      if ($result['status'] === 'planning_complete' && (($result['plan']['schema'] ?? '') !== 'famtastic.selected-source-plan.v1' || ($result['plan']['operation'] ?? '') !== 'continue_build' || ($result['plan']['source_artifacts'] ?? NULL) !== $intent['source']['artifacts'] || ($result['plan']['requested_scope'] ?? NULL) !== $intent['scope'] || ($result['plan']['intent_id'] ?? '') !== $intent['intent_id'] || ($result['plan']['ready'] ?? TRUE) !== FALSE || ($result['plan']['executable'] ?? TRUE) !== FALSE || !is_array($result['plan']['issues'] ?? NULL))) throw new \InvalidArgumentException('Planning result is not a remaining-work plan.');
+      $prior = $studio['selected_source_plan'] ?? NULL;
+      if ($prior !== NULL) {
+        if ($prior !== $result) throw new \InvalidArgumentException('Planning result changed for the same revision.');
+        return ['newly_processed' => FALSE, 'ready' => FALSE];
+      }
+      $studio['selected_source_plan'] = $result;
+      $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+      $this->database->update('famtastic_project_request')->fields(['staging_status' => $result['status'] === 'planning_complete' ? 'planning_blocked' : 'planning_failed'])->condition('id', (int) $intent['website_request_id'])->execute();
+      $this->ledger->recordEvent('site-studio.plan:' . $result['event_id'], 'site_studio.selected_source_planned', ['intent_id' => $intent['intent_id'], 'status' => $result['status']], projectId: (int) $project->id());
+      return ['newly_processed' => TRUE, 'ready' => FALSE];
+    } catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
   }
 
   /** Preserves selected intent and invalidates readiness when evidence is incomplete. */
@@ -149,6 +207,11 @@ final class SiteStudioBuildPacketService {
   public function assertActiveSelectedPacket(array $packet): void {
     $project = $this->loadProject((string) ($packet['project_id'] ?? ''));
     $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+    if (($packet['schema'] ?? '') === 'famtastic.site-studio.planning-packet.v1') {
+      if (($studio['selected_dispatch_packet'] ?? NULL) !== $packet || ($studio['selected_source_intent'] ?? NULL) !== ($packet['intent'] ?? NULL)) throw new \InvalidArgumentException('selected_staging_packet_superseded');
+      return;
+    }
+    if (isset($studio['selected_dispatch_packet']) && $studio['selected_dispatch_packet'] !== $packet) throw new \InvalidArgumentException('selected_staging_packet_superseded');
     if (!empty($studio['selected_staging_exception'])) throw new \InvalidArgumentException('selected_staging_evidence_pending');
     $current = $this->projectPacket($project);
     if ($current === NULL || json_encode($current, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) !== json_encode($packet, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)) {

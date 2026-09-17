@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — One execution path per selected revision
+
+Freeze either planning or executable work on each revision using existing ledger
+idempotency. Authority/export changes advance intent identity; do not dispatch
+both contracts or interpret a planning receipt as a ready website.
+
 ## 2026-09-17 — Reuse authority records without upgrading their meaning
 
 Blocked intents need their own immutable revision/history before any executable

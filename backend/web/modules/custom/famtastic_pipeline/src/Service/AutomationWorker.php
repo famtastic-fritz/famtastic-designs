@@ -85,7 +85,8 @@ final class AutomationWorker {
         throw new \RuntimeException('Selected staging packet is missing its immutable ' . $field . '.');
       }
     }
-    if ($packet['schema'] !== 'famtastic.site-studio.build-packet.v1' || $packet['build_class'] !== 'prepayment_selected_direction_staging') {
+    $planning = $packet['schema'] === 'famtastic.site-studio.planning-packet.v1' && $packet['build_class'] === 'selected_direction_remaining_work';
+    if (!$planning && ($packet['schema'] !== 'famtastic.site-studio.build-packet.v1' || $packet['build_class'] !== 'prepayment_selected_direction_staging')) {
       throw new \RuntimeException('Selected staging packet failed its fail-closed boundary validation.');
     }
     $this->portal->assertCurrentSelectedStagingPacket($packet);

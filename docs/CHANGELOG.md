@@ -3444,6 +3444,13 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 
 ## 2026-09-17 — selected source intent (isolated, unreleased)
 
+- Unresolved source intents now enqueue exactly one planning path through the
+  existing staging ledger/client, with active-packet checks and immutable revision
+  identity. Matched planning callbacks store private blocked-stage results; no
+  review-ready mail, acceptance, checkout or launch can result. Existing complete
+  exports take the executable path instead. Synthetic restart/duplicate/stale/
+  tenant proof and mixed-case PHP-to-Node manifest checks pass.
+
 - Added signed source-export registration for existing mapped projects and a
   completed-export adapter in the real selection seam. Actual Next output now
   traverses registry/portal/serializer/worker/receipt with synthetic authority;

@@ -2,6 +2,10 @@
 
 ## 2026-09-17 — Selected-source intent, local source proof
 
+Unresolved intents now traverse the actual ledger/AutomationWorker/staging-client
+dispatch and return matched planning state from Next's durable worker. This is
+local synthetic transport proof, never staging readiness or customer delivery.
+
 Completed Next exports now traverse actual source registration and portal
 selection into the serializer. The cross-repository test reaches the actual
 receipt service while reusing one mapped repository. Authority/HTTP persistence

@@ -1706,7 +1706,7 @@ final class CustomerPortalService {
       if (!$row || !empty($row['commerce_order_id']) || empty($row['selected_proof_direction'])) throw new \InvalidArgumentException('Only unpaid selected-site revisions use this continuation.');
       $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
       $history = $intake['selected_site_revision_requests'] ?? [];
-      if ($history && (end($history)['notes'] ?? '') === $notes && ($row['staging_status'] ?? '') === 'queued') {
+      if ($history && (end($history)['notes'] ?? '') === $notes && in_array(($row['staging_status'] ?? ''), ['queued', 'planning', 'planning_blocked'], TRUE)) {
         unset($transaction);
         return $this->serializeWebsiteRequest($row);
       }
@@ -1816,11 +1816,14 @@ final class CustomerPortalService {
     $intent = SelectedSourceIntent::create($row, (string) $project->id(), (int) $variant->id(), $direction, $revision,
       gmdate(DATE_ATOM, $this->time->getRequestTime()), $artifacts, is_array($designDna) ? $designDna : [],
       $this->requestAssets((int) $row['id']), $revisionNotes);
+    $intent['execution_binding'] = ['export' => $studio['next_source_export']['sha256'] ?? NULL,
+      'authority_sha256' => hash('sha256', json_encode($studio['selected_source_authority'] ?? [], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))];
     $priorIntent = $studio['selected_source_intent'] ?? NULL;
     if (is_array($priorIntent)) {
       $fingerprint = static fn(array $value): string => hash('sha256', json_encode([
         $value['source'], $value['scope'], $value['asset_authority'], $value['requested_changes'],
         $value['selection']['variant_id'], $value['selection']['direction_id'],
+        $value['execution_binding'] ?? [],
       ], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
       if (hash_equals($fingerprint($priorIntent), $fingerprint($intent))) {
         $intent = $priorIntent;
@@ -1832,13 +1835,14 @@ final class CustomerPortalService {
     $studio['selected_source_intent'] = $intent;
     $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
     if (!is_array($designDna['selected_build_continuation'] ?? NULL) && isset($studio['next_source_export'])) {
-      $designDna['selected_build_continuation'] = SelectedFinalizedSource::continuation($studio['next_source_export'], $intent, $studio['selected_source_authority'] ?? []);
+      try { $designDna['selected_build_continuation'] = SelectedFinalizedSource::continuation($studio['next_source_export'], $intent, $studio['selected_source_authority'] ?? []); }
+      catch (\InvalidArgumentException $error) { return $this->queueSelectedPlanning($row, $intent, $error->getMessage()); }
       $dnaJson = json_encode($designDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
       $studio['selected_source_resolution'] = ['intent_id' => $intent['intent_id'], 'source_export_sha256' => $studio['next_source_export']['sha256'], 'status' => 'executable_package_bound'];
       $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
     }
     if (!is_array($designDna['selected_build_continuation'] ?? NULL)) {
-      throw new \InvalidArgumentException('selected_continuation_blocked: ' . json_encode($intent['issues'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+      return $this->queueSelectedPlanning($row, $intent);
     }
     if ($revisionNotes !== NULL) {
       $revisionDna = json_decode($dnaJson, TRUE, 512, JSON_THROW_ON_ERROR);
@@ -1848,7 +1852,8 @@ final class CustomerPortalService {
       $revisionDna['selected_build_continuation']['remaining_stages'] = ['apply_customer_revision'];
       $dnaJson = json_encode($revisionDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
     }
-    $packet = SelectedStagingContinuation::createPacket($row, (string) $project->id(), $direction, $artifacts, $sourcePath, (string) $variant->get('preview_url')->value, $dnaJson, $this->customerContact((int) $row['customer_id']), (int) $variant->id(), $revision, gmdate(DATE_ATOM, $this->time->getRequestTime()));
+    try { $packet = SelectedStagingContinuation::createPacket($row, (string) $project->id(), $direction, $artifacts, $sourcePath, (string) $variant->get('preview_url')->value, $dnaJson, $this->customerContact((int) $row['customer_id']), (int) $variant->id(), $revision, $intent['selection']['selected_at']); }
+    catch (\InvalidArgumentException $error) { return $this->queueSelectedPlanning($row, $intent, $error->getMessage()); }
     $this->siteStudioPackets->registerPacket($packet);
     $jobId = $this->ledger->enqueue(
       'site-studio.staging:' . $packetId,
@@ -1857,6 +1862,14 @@ final class CustomerPortalService {
       (int) $row['prospect_id'],
     );
     return ['project_id' => (int) $project->id(), 'job_id' => $jobId, 'packet_id' => $packetId];
+  }
+
+  private function queueSelectedPlanning(array $row, array $intent, ?string $issue = NULL): array {
+    $packet = SelectedPlanningPacket::create($intent, $issue);
+    $this->siteStudioPackets->registerPlanningPacket($packet);
+    $job = $this->ledger->enqueue('site-studio.staging:' . $packet['packet_id'], 'site_studio_staging_prepare',
+      ['packet' => $packet, 'website_request_id' => (int) $row['id'], 'project_id' => (int) $intent['project_id']], (int) $row['prospect_id']);
+    return ['project_id' => (int) $intent['project_id'], 'job_id' => $job, 'packet_id' => $packet['packet_id'], 'status' => 'planning_queued'];
   }
 
   /**

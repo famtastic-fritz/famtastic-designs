@@ -73,6 +73,9 @@ final class SiteStudioCallbackController extends ControllerBase {
       ], 403);
     }
     try {
+      if (($data['schema'] ?? '') === 'famtastic.site-studio.planning-result.v1') {
+        return new JsonResponse(['ok' => TRUE] + $this->buildPackets->acceptPlanningResult($data));
+      }
       if (($data['schema'] ?? '') === 'famtastic.site-studio.source-finalized.v1') {
         return new JsonResponse(['ok' => TRUE] + $this->buildPackets->registerSourceExport($data));
       }

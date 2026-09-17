@@ -2472,6 +2472,10 @@ the direction is recorded separately from expanded review and production release
 
 ## 2026-09-17 — selected revision identity
 
+Planning now uses the same durable staging dispatch and callback plumbing, with
+an explicitly non-ready result and current-revision check. Same intent retries
+reuse one job; new authority/export evidence creates the next intent revision.
+
 Completed-source follow-on: bind registered export to existing authority and
 retain one customer source checkout. Intent history must advance independently
 of executable packets; no completion/rights/hosting truth comes from a concept.

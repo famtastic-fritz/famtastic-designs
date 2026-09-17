@@ -57,6 +57,10 @@ namespace {
   foreach (['SelectedStagingContinuation', 'SiteStudioBuildPacketService', 'StagingReceiptService'] as $class) require $serviceRoot . $class . '.php';
   use Drupal\famtastic_pipeline\Service\SelectedStagingContinuation as Producer;
   use Drupal\famtastic_pipeline\Service\StagingReceiptService as Receipts;
+  if (($argv[1] ?? '') === '--manifest-digest') {
+    echo \Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService::artifactManifestDigest(json_decode(stream_get_contents(STDIN), TRUE, 512, JSON_THROW_ON_ERROR));
+    exit;
+  }
   $html = '<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Synthetic selected site</title></head><body><main><h1>Synthetic selected site</h1><p>Complete static scope.</p></main></body></html>';
   $artifacts = [['role' => 'selected_preview', 'path' => 'proofs/selected/index.html', 'sha256' => hash('sha256', $html), 'bytes' => strlen($html)]];
   $row = ['id' => 901, 'public_id' => 'synthetic-request', 'project_id' => 902, 'customer_id' => 903, 'proof_campaign_id' => 904, 'proof_review_status' => 'selected', 'commerce_order_id' => NULL, 'staging_status' => 'queued', 'staging_review_status' => 'not_started', 'staging_receipt_hash' => '', 'staging_receipt_json' => NULL];
