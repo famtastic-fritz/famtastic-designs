@@ -6,6 +6,8 @@ Observation: public header/footer migration missed client and admin wordmarks.
 Rule: inventory public, client desktop/mobile, token workspace, admin and login
 surfaces separately. Preserve token-aware links and native access checks; version
 Drupal CSS libraries and verify authenticated rendering after deployment.
+Proof: both live releases `98c17d58`, existing owner session verified. Screenshot
+tests must await settled drawer geometry, not merely a changed open/closed class.
 
 ## 2026-09-17 — Close the approved website rollout
 

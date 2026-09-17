@@ -2,6 +2,10 @@
 
 ## 2026-09-17 — Portal/admin canonical-logo implementation
 
+Production-smoke-tested: both releases `98c17d58`; existing authenticated owner
+portal/admin desktop/mobile plus anonymous login verified. Ordinary-customer and
+token-workspace end-to-end flows were not rerun for this presentation-only release.
+
 Presentation-only continuation adds exact master to authenticated React navigation
 and Drupal shell/login. No permission, mail, payment or customer workflow changes.
 Deployment and authenticated evidence recorded in `docs/brand/logo-migration.md`.

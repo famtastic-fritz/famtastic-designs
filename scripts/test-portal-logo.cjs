@@ -15,7 +15,7 @@ const root = 'http://127.0.0.1:4187';
     for (const width of [320,390,768,1280]) {
       const p = await b.newPage({viewport:{width,height:900}});
       const errors=[]; p.on('pageerror',e=>{errors.push(e.message);console.error(e.message);});
-      await p.route('**/logo-component-check',r=>r.fulfill({contentType:'text/html',body:`<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div id="root"></div><script type="module">
+      await p.route('**/logo-component-check',r=>r.fulfill({contentType:'text/html; charset=utf-8',body:`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div id="root"></div><script type="module">
       import RefreshRuntime from '/@react-refresh';
       RefreshRuntime.injectIntoGlobalHook(window);window.$RefreshReg$=()=>{};window.$RefreshSig$=()=>type=>type;window.__vite_plugin_react_preamble_installed__=true;
       const React=(await import('${dependency('react')}')).default;
@@ -28,7 +28,7 @@ const root = 'http://127.0.0.1:4187';
       </script></body></html>`}));
       await p.goto(root+'/logo-component-check');
       await p.locator('.portal-logo img').evaluate(i=>i.decode());
-      if(width<=900){await p.locator('.portal-menu-toggle').click();await p.waitForFunction(()=>document.querySelector('.portal-app').classList.contains('menu-open'));}
+      if(width<=900){await p.locator('.portal-menu-toggle').click();await p.waitForFunction(()=>Math.abs(document.querySelector('.portal-nav').getBoundingClientRect().x)<1);}
       const logo=await p.locator('.portal-logo img').boundingBox();assert.ok(Math.abs(logo.width/logo.height-3)<.02);
       assert.equal(await p.locator('.portal-logo').getAttribute('href'),'/');
       assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth),width);
@@ -36,6 +36,7 @@ const root = 'http://127.0.0.1:4187';
         const close=await p.locator('.portal-nav-head>button').boundingBox();assert.ok(close.x>=logo.x+logo.width,'Close button must not overlap logo');
         await p.locator('.portal-nav-head>button').click();await p.locator('.portal-menu-toggle').click();await p.keyboard.press('Escape');
         assert.equal(await p.locator('.portal-menu-toggle').getAttribute('aria-expanded'),'false');
+        await p.waitForFunction(()=>document.querySelector('.portal-nav').getBoundingClientRect().right<=0);
       }
       await p.screenshot({path:`.local-email-preview/portal-brand-fixture-${width}.png`});
       assert.deepEqual(errors,[]);await p.close();

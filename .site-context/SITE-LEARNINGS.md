@@ -5,6 +5,9 @@
 Observation: public brand proof does not include portal/admin. Guidance: preserve
 full logo aspect ratio, make it visible in the mobile menu bar, test drawer-close
 geometry and retain all native authentication, permissions and token links.
+Release `98c17d58` now live; authenticated owner portal/admin smoke passed.
+Await drawer transition completion before saving evidence; class changes are
+not visual settlement. Favicon preview is not production selection.
 
 ## 2026-09-17 — Website logo release completion
 

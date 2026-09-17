@@ -2,6 +2,9 @@
 
 ## 2026-09-17 — Portal/admin branding continuation
 
+- Published backend/frontend `98c17d58`; authenticated owner desktop/mobile
+  portal/admin verification, four-size login and apex/www regressions passed.
+
 - Replaced client sidebar, mobile bar, token-workspace and Drupal admin/login
   wordmarks with the canonical logo; links, forms and permissions unchanged.
 - Added local component layout regression checks; full local Drupal crawl is

@@ -1,5 +1,42 @@
 # Logo migration inventory and first website slice
 
+## Portal/admin live continuation — September 17, 2026
+
+Owner approved implementation and publication. Both backend and frontend now run
+`98c17d58e0f985c5680ce6cd11c2f31698dc06da` (backend 15:22:15 UTC; frontend
+15:23:27 UTC). Release markers read back; no pending database updates. Original
+PNG bytes retained in both frontend and theme-local copies. The public-only
+receipt below is historical and superseded by this release.
+
+Evidence:
+- Existing authenticated owner session: client desktop sidebar, 390px mobile
+  top bar/drawer and close interaction, admin desktop/mobile shell. Logos decoded
+  at 2172px intrinsic width and 3:1 display ratio; no page horizontal overflow.
+- Anonymous native login: 320/390/768/1280; form retained, logo decoded, no page
+  exceptions or horizontal overflow. No login or reset form was submitted.
+- Public apex/www: six viewport regression passes, populated React root and
+  correct HTTP 200 JavaScript/CSS MIME types. Local portal component fixture:
+  four sizes, no overlap, close/Escape, original hash. Admin local shell fragment:
+  four sizes. 34 Design DNA assertions, PHP lint and Node 22 build passed.
+- Full local Drupal portal crawler not run: backend/vendor is absent. Existing
+  live owner session is not a fresh ordinary-customer or token-workspace end-to-end
+  test. Token-preserving source and compilation verified; business flows unchanged.
+- Drupal already displayed a security-update warning before this release. No core
+  or dependency upgrade attempted; handle in a separate reviewed maintenance task.
+
+Backups in `/home/xrdj7j99xhzt/backups/`:
+- Frontend: `famtastic-frontend-20260917T152218Z-98c17d58e0f985c5680ce6cd11c2f31698dc06da.tgz`.
+- Backend: `famtastic-{pipeline,admin,customer,dependencies,commercial-config}-20260917T151959Z-98c17d58e0f985c5680ce6cd11c2f31698dc06da.tgz`;
+  database uses the same stamp/SHA with `famtastic-database-` and `.sql.gz`.
+Use canonical deployment docs for scoped rollback; database restore needs separate approval.
+
+Favicon shortlist: local `http://127.0.0.1:8765/favicon-shortlist.html`, screenshot
+`.local-email-preview/favicon-shortlist.png`. Original generated #1 FAM+crown,
+#3 red F+crown, #4 crown-only are displayed at actual 16/32 CSS pixels on light
+and dark tab-like backgrounds (100% zoom). Browser-scaled concept PNGs only,
+not optimized ICO files. Crown-only is clearest in this comparison, but no
+production favicon selection or installation is approved. Master logo unchanged.
+
 Status: first website slice is **production-deployed and browser-verified** at
 `145b0d4a673b9181214c52210a06fe6f8128b130`, September 17, 2026 14:35:12 UTC.
 Both apex and www passed all six viewport checks. Approved email/hosted PNG already live at
