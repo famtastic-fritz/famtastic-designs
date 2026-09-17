@@ -1,4 +1,5 @@
-/** Read-only production smoke. No synthetic responses, consent changes or submissions. */
+/** Live production smoke. No application mocks, consent changes or submissions.
+ * Only analytics collection is locally acknowledged to keep QA out of reporting. */
 const { chromium } = require('../frontend/node_modules/@playwright/test');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -10,12 +11,17 @@ const output = 'docs/evidence/content-experience-production/browser-results.json
 (async () => {
   const { CONTENT_ROUTES } = await import(pathToFileURL(path.resolve('frontend/src/components/content-experience/recipes.js')));
   const representatives = ['/packages', '/packages/199-quick-start', '/services', '/services/custom-website-development', '/about', '/contact'];
-  const results = { scope: 'anonymous live-readonly production presentation; no mocked data or successful form submission', routes: [], blockedWrites: [], assets: [] };
+  const results = { scope: 'anonymous live production presentation; no application data mocks or form submission; analytics collection locally suppressed', routes: [], blockedWrites: [], suppressedTelemetry: [], assets: [] };
   fs.mkdirSync(folder, { recursive: true });
   const browser = await chromium.launch();
   try {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     await context.route('**/*', route => {
+      const url = new URL(route.request().url());
+      if (['www.google-analytics.com', 'www.google.com'].includes(url.hostname) && url.pathname === '/g/collect') {
+        results.suppressedTelemetry.push({ method: route.request().method(), url: url.origin + url.pathname });
+        return route.fulfill({ status: 204, body: '', headers: { 'access-control-allow-origin': '*' } });
+      }
       if (!['GET', 'HEAD'].includes(route.request().method())) {
         results.blockedWrites.push({ method: route.request().method(), url: route.request().url() }); return route.abort();
       }
@@ -85,6 +91,6 @@ const output = 'docs/evidence/content-experience-production/browser-results.json
     assert.deepEqual(results.blockedWrites, []);
     results.status = 'passed'; results.checkedAt = new Date().toISOString();
     fs.mkdirSync(path.dirname(output), { recursive: true }); fs.writeFileSync(output, JSON.stringify(results, null, 2) + '\n');
-    console.log(`PASS: ${results.routes.length} live desktop/mobile checks; ${results.assets.length} compiled assets; zero writes. ${output}`);
+    console.log(`PASS: ${results.routes.length} live desktop/mobile checks; ${results.assets.length} compiled assets; zero application writes; ${results.suppressedTelemetry.length} telemetry requests suppressed. ${output}`);
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

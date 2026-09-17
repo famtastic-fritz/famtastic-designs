@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Content experience production evidence
+
+Production-presentation-smoke-tested at `71620bf1`: 17 existing content routes,
+six distinct recipes; 50 live apex/www desktop/mobile cases and six-width public
+logo/navigation regression passed. Source assets and deployed marker verified.
+This supersedes the local-only family status below. Local Contact receipt fixtures
+are still synthetic; no new mail, payment, authenticated or customer delivery
+capability is claimed. Backend/database unchanged. Hosted CI could not start due
+to account billing lock, separate from successful build/live acceptance. Receipt:
+`docs/design/CONTENT-EXPERIENCE-RELEASE-2026-09-17.md`.
+
 ## 2026-09-17 — Approved content family propagation (local-tested)
 
 Supersedes the first-proof review state below: owner approved the Web Basics

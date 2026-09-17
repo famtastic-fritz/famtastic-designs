@@ -1,6 +1,11 @@
 # Approved content direction — family propagation
 
-Status: **local-tested, expanded review ready; not pushed or deployed**.
+Current status: **owner-approved and released at `71620bf1`**. The subsequent
+“ok approved push live !” authorization, deployment and 50 live desktop/mobile
+checks are recorded in `CONTENT-EXPERIENCE-RELEASE-2026-09-17.md`.
+
+The remainder records the historical local-tested expanded-review checkpoint at
+`c004c589`, before production authorization; its limits describe that checkpoint.
 Branch: `codex/content-experience-web-basics`, parent proof5d98e4d1. The owner's
 “Approved!” approved the Web Basics visual direction and its explicitly proposed
 Packages → Solutions → Services → About → Contact propagation. It did not authorize

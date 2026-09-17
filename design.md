@@ -11,8 +11,9 @@ the whole identity. Source artwork is immutable; crown derivatives share its
 silhouette. Email is an existing consumer, not a system to rebuild.
 Machine-readable visual DNA: `docs/design/famtastic-site-dna.v1.json`.
 The September 17 visual-DNA baseline is released; see its deployment receipt.
-The newer content-page system has owner-approved direction and remains a local
-expanded-review checkpoint; it has not been released.
+The content-page system was subsequently owner-approved and released at `71620bf1`.
+See [the content release receipt](docs/design/CONTENT-EXPERIENCE-RELEASE-2026-09-17.md)
+for live evidence and the separate GitHub Actions billing limitation.
 
 ## Owned content pages — shared DNA, distinct recipes
 
@@ -25,7 +26,8 @@ safe CTA variants and exact route enrollment; never apply a global page restyle.
 Keep all offer facts and existing workflow/approval/payment boundaries intact.
 First proof `/packages/199-quick-start` was owner-approved September 17, authorizing
 the explicit Packages → Solutions/Services → About → Contact propagation. The
-expanded local preview is documented in `docs/design/CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`.
+expanded preview is documented in `docs/design/CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`;
+the later explicit release approval and production proof are in the receipt above.
 Do not extend Web Basics billing terms to other packages or interpret brand approval
 as a deployment instruction. Contact success decoration requires `ok`, a positive
 integer `request_id` and a saved status; a mail draft is not a saved request or send.

@@ -6,10 +6,11 @@ For owned frontend content pages, also read
 `docs/design/FAMTASTIC-CONTENT-EXPERIENCE.md`. Use the existing content-experience
 primitives and explicit page-family recipes; shared DNA does not mean identical
 layouts. Enrollment is exact-route, not price/title inference. The owner approved
-the Web Basics direction and its propagation on September 17. The 17-route local
-rollout now has a separate expanded-review checkpoint; that approval did not
-authorize production. Blogs and customer worlds remain excluded. See
-`docs/design/CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md` for current evidence/gates.
+the Web Basics direction and its propagation on September 17, then explicitly
+approved release with “ok approved push live !”. The 17-route frontend is live at
+`71620bf1`, with 50 production desktop/mobile checks. Blogs and customer worlds
+remain excluded; this approval does not authorize future unrelated releases. See
+`docs/design/CONTENT-EXPERIENCE-RELEASE-2026-09-17.md` for receipts and limits.
 
 Read root `design.md` and `docs/design/FAMTASTIC-DESIGN-SYSTEM.md` for owned-surface
 visual work. Apply FAMtastic identity to existing architecture; this is not blanket

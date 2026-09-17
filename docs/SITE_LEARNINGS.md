@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Release completion is a separate proof stage
+
+Observation: reviewed content visuals, GitHub main and the live frontend became
+aligned only after explicit release approval and canonical deployment of `71620bf1`.
+Guidance: append release evidence to the active family Build DNA, retaining the
+review checkpoint in Git and leaving the parent proof frozen. Documentation-only
+follow-up commits are not new deployed artifacts; do not redeploy merely for them.
+
+Rollback needs both root/assets and generated nested route shells; record both
+archives before promotion. Browser QA may suppress exact analytics endpoints with
+local 204 responses to avoid fake traffic and intentional-abort console failures;
+never mock application data or turn off error assertions for live acceptance.
+GitHub Actions billing-lock failures mean jobs never ran, not failed application
+tests or a hosted CI pass. Keep that limitation visible alongside live proof.
+
 ## 2026-09-17 — Identity is not redesign authority
 
 Preserve layouts, customer worlds and workflow semantics before adding materials.

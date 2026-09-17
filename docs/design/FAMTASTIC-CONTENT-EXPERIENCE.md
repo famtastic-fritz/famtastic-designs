@@ -1,9 +1,10 @@
 # FAMtastic Content Experience v1.1
 
-Status: **owner-approved direction, expanded local review**, September 17, 2026.
+Status: **owner-approved, production-presentation-smoke-tested**, September 17, 2026.
 The first Web Basics proof at5d98e4d1 was approved with “Approved!”, authorizing the
-planned family propagation. The earlier visual DNA release is live; this page-system
-extension is not. Branch: `codex/content-experience-web-basics`. The 17 existing
+planned family propagation. After expanded review, “ok approved push live !”
+authorized deployment of `71620bf1`; see `CONTENT-EXPERIENCE-RELEASE-2026-09-17.md`.
+Branch: `codex/content-experience-web-basics`. The 17 existing
 routes and six recipes are explicit; no new /solutions URL or CMS schema was added.
 
 ## Share identity, not identical layouts
@@ -45,12 +46,12 @@ those strings requires explicit binding review, not a claim of automatic migrati
 
 | Family | Intensity | Character / ordered composition | Status |
 | --- | --- | --- | --- |
-| Package detail | 2 | Offer → features → fit → optional add-ons → Web Basics pricing only → education → finale | Seven existing packages, local |
-| Packages hub | 2 | Introduction → scope comparison → finale | Local |
-| Solution detail | 2 | Brief/index → challenge → system → source process → reviewed proof if present → deliverables → FAQ → education → existing finder → finale | Six existing services, local |
-| Services hub | 2 | Introduction → indexed capability rows → finale | Local; existing Solutions destination |
-| About | 3 | Story → F/A/M definition → philosophy → existing business story → finale | Local; no invented founder biography |
-| Contact | 2 | Invitation → existing project-fit intake → existing conversation form / real next-step state | Local; synthetic transport QA only |
+| Package detail | 2 | Offer → features → fit → optional add-ons → Web Basics pricing only → education → finale | Seven existing packages, live |
+| Packages hub | 2 | Introduction → scope comparison → finale | Live |
+| Solution detail | 2 | Brief/index → challenge → system → source process → reviewed proof if present → deliverables → FAQ → education → existing finder → finale | Six existing services, live |
+| Services hub | 2 | Introduction → indexed capability rows → finale | Live; existing Solutions destination |
+| About | 3 | Story → F/A/M definition → philosophy → existing business story → finale | Live; no invented founder biography |
+| Contact | 2 | Invitation → existing project-fit intake → existing conversation form / real next-step state | Live presentation; synthetic transport QA only, no real submission |
 | Intake / Get Started | 1–2 | Guided action, minimal distraction | Existing, unchanged |
 | Login / account threshold | 2 | Brand entry, conventional authentication | Existing, unchanged |
 | Portal / admin | 1 / 0–1 | Operational contracts govern | Excluded |
@@ -162,14 +163,24 @@ Expanded before/after gallery: `http://127.0.0.1:8765/content-rollout/`. Capture
 `before` only from the parent proof revision, never overwrite it with new source.
 
 Current Build DNA: `docs/evidence/content-experience-rollout/build-dna.json`.
+Its original expanded-review checkpoint is retained at `c004c589`; production
+approval, deployment and live browser attempts are appended to the same record.
+Do not rerun `render-content-families-review.cjs` over that released ledger: it
+reconstructs a local-only checkpoint and would discard later release evidence.
 Parent Web Basics Build DNA is frozen at5d98e4d1; validate its source hashes at that
 revision, not against the changed descendant. Do not rerun its historical renderer
 to replace the approved receipt. Both disclose actual timing/model/cost limits.
-No Drupal projection or Site Studio packet is needed for this agency-only checkpoint.
+No Drupal projection or Site Studio packet is needed for this agency-only release.
 
 Dev-only pagination correction: absolute Drupal `/web/jsonapi` next links now
 continue through Vite's same-origin `/jsonapi` proxy when using its default base.
 Production still uses absolute links. No blog content, design or publication changed.
 
-Review completion is not production authorization. Preserve the deployed brand
-release until explicit release approval. See `CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`.
+Review completion alone is not production authorization. This release has a
+separate explicit authorization and verified frontend marker; future changes need
+their own authority. `node scripts/test-content-live.cjs` checks 50 anonymous
+production desktop/mobile cases without application data mocks or form submission.
+It locally acknowledges analytics collection to keep QA out of reporting and
+blocks other writes. Evidence: `docs/evidence/content-experience-production/browser-results.json`.
+No real lead delivery, payment, email-client compatibility or authenticated flow
+is claimed by this presentation-only acceptance.

@@ -2,18 +2,19 @@
   "schema": "famtastic.build-dna.v1",
   "build_id": "agency-content-experience-families-20260917",
   "parent_build_id": "agency-content-experience-web-basics-20260917",
-  "classification": "owner_approved_direction_local_tested_family_review_ready",
+  "classification": "production_presentation_smoke_tested",
   "created_at": "2026-09-17T19:25:41Z",
   "repository": {
     "name": "famtastic-designs",
-    "revision": "5d98e4d1",
-    "worktree_state": "codex/content-experience-web-basics; before family implementation"
+    "revision": "71620bf12a56289a7c99fa753b196aa92441a2ff",
+    "worktree_state": "clean codex/content-experience-web-basics equals origin/main at deployment; later documentation and QA-only evidence appended",
+    "review_checkpoint_revision": "c004c5897f8d72f54891cca27aa1613fb1763e2a"
   },
   "recipe": {
     "routine": "agency-owned-content-experience",
     "version": "1.1.0",
     "build_class": "existing-agency-page-presentation",
-    "owner_approval": "Approved! — approval of Web Basics direction and planned family propagation, not production release",
+    "owner_approval": "Approved! authorized direction and propagation; subsequent ok approved push live ! authorized the reviewed frontend production release on 2026-09-17",
     "families": [
       "package-detail",
       "packages-hub",
@@ -27,11 +28,14 @@
       "preserve CMS facts and existing workflow",
       "original logo unchanged",
       "no blog or customer-world restyle",
-      "no production or outbound activity"
+      "only the explicitly approved agency frontend production release",
+      "no outbound communication, application writes, backend, database or customer-site changes"
     ],
-    "open_gates": [
-      "expanded visual review",
-      "separate production authorization"
+    "open_gates": [],
+    "limits": [
+      "GitHub Actions could not start because of account billing lock",
+      "live checks prove anonymous presentation, not real intake or delivery",
+      "future unrelated changes require separate authorization"
     ]
   },
   "stages": [
@@ -173,9 +177,102 @@
           "not full accessibility certification"
         ]
       }
+    },
+    {
+      "stage_id": "frontend-production-deployment",
+      "attempt": 1,
+      "capability": "explicitly approved canonical frontend release",
+      "execution": {
+        "provider": { "id": "godaddy-cpanel", "transport": "existing SSH release script" },
+        "model": { "status": "not_applicable" },
+        "timing": { "status": "partial", "deployed_at": "2026-09-17T20:10:05Z", "duration": "not_recorded" },
+        "cost": { "status": "not_reported" },
+        "input": {
+          "commit": "71620bf12a56289a7c99fa753b196aa92441a2ff",
+          "command": "./scripts/deploy-frontend-godaddy.sh followed by ./scripts/deploy-frontend-godaddy.sh --apply"
+        },
+        "output": { "artifact": "docs/design/CONTENT-EXPERIENCE-RELEASE-2026-09-17.md" }
+      },
+      "result": {
+        "status": "passed",
+        "generated_route_shells_verified": 216,
+        "frontend_marker": "71620bf12a56289a7c99fa753b196aa92441a2ff",
+        "backend_marker_unchanged": "9d4e000d4294461808f5a69068af778320f6b568",
+        "note": "Compiled JS/CSS and original logo hashes match approved build; canonical and supplemental route-shell backups recorded; no database migration."
+      }
+    },
+    {
+      "stage_id": "hosted-ci",
+      "attempt": 1,
+      "capability": "GitHub Actions acceptance jobs",
+      "execution": {
+        "provider": { "id": "github-actions" },
+        "model": { "status": "not_applicable" },
+        "timing": { "status": "not_started" },
+        "cost": { "status": "not_reported" },
+        "output": { "url": "https://github.com/famtastic-fritz/famtastic-designs/actions/runs/35268560051" }
+      },
+      "result": {
+        "status": "blocked",
+        "note": "Account billing lock prevented jobs from starting; zero executed steps, no hosted CI pass. Local, server and live evidence are separate."
+      }
+    },
+    {
+      "stage_id": "production-browser-qa",
+      "attempt": 1,
+      "capability": "anonymous live presentation acceptance",
+      "execution": {
+        "provider": { "id": "local-chromium", "transport": "Playwright against live HTTPS" },
+        "model": { "status": "not_applicable" },
+        "timing": { "status": "not_recorded_per_attempt" },
+        "cost": { "status": "not_applicable" }
+      },
+      "result": {
+        "status": "failed",
+        "note": "The no-POST guard intentionally aborted Google analytics and generated net::ERR_FAILED console errors. Exact known collection endpoints are now locally fulfilled with 204; application data remains live, other writes remain blocked, console assertions retained. No deployed code change."
+      }
+    },
+    {
+      "stage_id": "production-browser-qa",
+      "attempt": 2,
+      "capability": "anonymous live presentation acceptance",
+      "execution": {
+        "provider": { "id": "local-chromium", "transport": "Playwright against live HTTPS" },
+        "model": { "status": "not_applicable" },
+        "timing": { "status": "partial", "completed_at": "2026-09-17T20:14:01.683Z" },
+        "cost": { "status": "not_applicable" },
+        "input": { "command": "node scripts/test-content-live.cjs", "widths": [390, 1440] },
+        "output": { "artifact": "docs/evidence/content-experience-production/browser-results.json" }
+      },
+      "result": {
+        "status": "passed",
+        "cases": 50,
+        "compiled_asset_host_checks": 4,
+        "application_writes": 0,
+        "locally_suppressed_telemetry_requests": 3,
+        "limits": ["no application data mocks", "no real form submission or delivery proof", "not authenticated flow or full accessibility certification"]
+      }
     }
   ],
   "artifacts": [
+    {
+      "role": "production_release_receipt",
+      "path": "docs/design/CONTENT-EXPERIENCE-RELEASE-2026-09-17.md",
+      "sha256": "5293bb63ffa660548ce1fed16917267c835a2d55fe22b9362d39516534f28188",
+      "rights": "agency-owned operational receipt"
+    },
+    {
+      "role": "production_browser_acceptance",
+      "path": "docs/evidence/content-experience-production/browser-results.json",
+      "sha256": "65c2ab85398b8c39651bc35eff10c5551fc04561f08cbd1b4a2ac86816869e33",
+      "rights": "sanitized public presentation result"
+    },
+    {
+      "role": "production_browser_acceptance_script",
+      "path": "scripts/test-content-live.cjs",
+      "sha256": "adbdfeabab3813fe88a20fbad30209fc82c59593c913c19bec57a0f19cf9806e",
+      "rights": "agency-owned source"
+    },
     {
       "role": "immutable_source_logo",
       "path": "frontend/public/brand/famtastic-designs-logo-v1.png",
@@ -287,8 +384,10 @@
     {
       "role": "source_or_acceptance",
       "path": "docs/design/FAMTASTIC-CONTENT-EXPERIENCE.md",
-      "sha256": "eeaad9052e3675bb5b61e8c105d46bc0a70d60650de3582e04204a0c532e6c9b",
-      "rights": "agency-owned source and sanitized test result"
+      "sha256": "a8f1d445e4e30b0cd3d4f046d6ce3a382a76e8a8b3d4351f3b89fec41abdb2b8",
+      "rights": "agency-owned source and sanitized test result",
+      "historical_review_sha256": "eeaad9052e3675bb5b61e8c105d46bc0a70d60650de3582e04204a0c532e6c9b",
+      "note": "Current release status and acceptance instructions appended; original review guide retained at c004c589."
     },
     {
       "role": "source_or_acceptance",
@@ -339,7 +438,7 @@
     },
     "database": {
       "status": "not_applicable",
-      "reason": "agency-only local preview; no customer delivery"
+      "reason": "agency frontend-only release; no customer delivery or database change"
     },
     "site_studio": {
       "status": "not_applicable",

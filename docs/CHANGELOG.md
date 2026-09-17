@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-17 — Approved content experience released
+
+- Pushed and deployed frontend `71620bf1` through the canonical GoDaddy release
+  process; 216 generated route shells verified, backend marker unchanged.
+- Passed 50 live apex/www desktop/mobile checks plus six-width logo/navigation
+  regression; compiled JS/CSS and immutable logo match approved build hashes.
+- Updated design/agent rules, active Build DNA, rollback receipts and Drive mirror.
+  Follow-up changes are documentation/QA only and do not require redeployment.
+- GitHub Actions could not start because of an account billing lock. Local/server
+  build and live acceptance passed; no hosted CI pass is claimed. No real form
+  submission, customer communication, payment, database or customer-site changes.
+- Receipt: `docs/design/CONTENT-EXPERIENCE-RELEASE-2026-09-17.md`.
+
 ## 2026-09-17 — Approved content direction propagated (local, not deployed)
 
 - Extended the approved page primitives to17 exact routes across Packages,

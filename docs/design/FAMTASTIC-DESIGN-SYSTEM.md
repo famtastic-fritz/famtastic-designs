@@ -109,9 +109,9 @@ routine status messages or their semantics. None is added to fabricated live dat
 
 Owned content-page recipes and reusable primitives are governed by
 `FAMTASTIC-CONTENT-EXPERIENCE.md`. Shared identity must not become identical layouts.
-Web Basics was owner-approved on September 17; the explicit 17-route family
-propagation is implemented locally, not deployed. See
-`CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`. Shared primitives do not permit enrollment
+Web Basics and the explicit 17-route family propagation were owner-approved on
+September 17, then released at `71620bf1`. See
+`CONTENT-EXPERIENCE-RELEASE-2026-09-17.md`. Shared primitives do not permit enrollment
 outside the exact route registry. Contact's success crown means a server-confirmed
 saved request; partial notification failure remains visible and is not send proof.
 
@@ -158,5 +158,6 @@ do not establish Gmail/Outlook compatibility or real customer workflow success.
 Audit: `BRAND-DNA-AUDIT-2026-09-17.md`. Handoff records changed files, source refs,
 before/after images, fixture limitations, icon tests and exact checks. The original
 baseline was subsequently released; see `BRAND-DNA-RELEASE-2026-09-17.md`.
-New content-experience work is separately review-gated: no deployment or customer
-send follows merely from implementing or reviewing a local page.
+The separately authorized content-experience release is recorded in
+`CONTENT-EXPERIENCE-RELEASE-2026-09-17.md`. Future changes remain review-gated:
+no deployment or customer send follows merely from implementing a local page.

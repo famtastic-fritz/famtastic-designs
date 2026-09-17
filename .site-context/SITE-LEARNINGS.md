@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Prove release bytes and isolate QA telemetry
+
+Observation: the owner-approved content release is live at `71620bf1`, proven by
+marker, asset hashes and 50 actual public browser cases, not just a main push.
+Guidance: keep frontend/backend markers separate; this frontend-only release
+leaves backend `9d4e000d` unchanged. Save all generated route shells as well as the
+canonical root/assets backup so rollback includes nested routes.
+
+Observation: aborting analytics POSTs caused expected console errors in the first
+smoke attempt. Guidance: locally acknowledge only known analytics collection
+endpoints, record the suppression and block all application writes. Do not waive
+application errors or change production consent/analytics settings. GitHub's
+billing lock prevented jobs from starting; report that independently from the
+successful local/server build and live QA. Full receipt is in
+`docs/design/CONTENT-EXPERIENCE-RELEASE-2026-09-17.md`.
+
 ## 2026-09-17 — Social profiles need an optical crop check
 
 Observation: complete landscape logo fits a circle, but fine descriptors are not
