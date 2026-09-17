@@ -1,5 +1,9 @@
 # FAMtastic visual DNA — owner review handoff
 
+Owner subsequently approved production release. See
+`BRAND-DNA-RELEASE-2026-09-17.md` for current release evidence; review-only statements
+below are historical records of the initial milestone.
+
 ## Follow-up: cursive headings
 
 Owner-approved local extension adds three homepage phrases: H1 “Engineering Studio”

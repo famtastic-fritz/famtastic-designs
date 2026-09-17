@@ -8,7 +8,8 @@ Lime communicates energy, action, state, and signature. FAMtastic identity comes
 
 # FAMtastic visual design system v1
 
-Owner direction: September 17, 2026. **Review implementation, not deployed.**
+Owner direction: September 17, 2026. **Owner approved production release.**
+Deployment evidence is recorded in `BRAND-DNA-RELEASE-2026-09-17.md`.
 This is the canonical visual specification. Root `design.md` retains experience,
 information architecture and workflow rules and imports this specification.
 `BRAND.md` owns philosophy/voice; portal Design DNA owns operational constraints;
