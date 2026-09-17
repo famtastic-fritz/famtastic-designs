@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-17 — Client-led selected-site continuation policy
+
+- Recorded client selection → full build → protected review/revisions → exact client acceptance → checkout, with exception-only Fritz involvement for routine selected-site builds.
+- Reconciled agent, operating, Concierge, proof and lead-to-launch guidance; added explicit executable acceptance backlog instead of labeling documentation as active automation.
+- Recorded the independently hosted Pros In Training review and verified cPanel API route; no agency runtime deployment, charge, acceptance or final client launch is claimed.
+
 ## 2026-09-14 — Travel Addicts follow-up completed; agency access verified
 
 - Found Tarian Lee / Travel Addicts Courier Express in verified customer/user 6 with no linked prospect. Sent the third authorized branded discounted-project follow-up once through outbox 637 at 2026-09-14T22:43:31Z, signed Shay; saved staff message 24 is visible in the correct customer conversation.

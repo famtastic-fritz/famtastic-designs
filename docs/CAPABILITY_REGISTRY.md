@@ -180,3 +180,12 @@ or acceptance report; do not upgrade a classification from confidence alone.
 Backend `0cd25c48` is production-deployed with update8062 and no pending updates. Final frontend `d1b939f6` is deployed, including explicit-entry routing; see `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`. The live generated site key resolves to the existing verified Shay account, active membership and converted request. Thirty production diagnostic assertions passed (owner/cross-account controller reads and rollback-only appointment lifecycle); five separate-process synthetic-lock assertions passed. No customer or test appointment rows were committed by QA and no test customer notifications were sent.
 
 Classification: production-deployed and production smoke-tested, NOT a claim that Shay's personal password sign-in, real customer acceptance/email delivery, simultaneous business transactions or external calendar integration were proven. Two requested owner instruction emails have Gmail SENT receipts. Quick start: `docs/OWNER_DESK_QUICK_START.md`.
+# 2026-09-17 evidence addendum: protected selected-site review
+
+One controlled static Pros In Training review is hosted and browser-verified on
+FAMtastic Inc through its existing cPanel API. This is transport/hosting proof,
+not unattended Studio dispatch, full-scope completion, signed Drupal handoff,
+customer acceptance, payment or production-launch proof. The selected-site plan
+records the remaining automation gates. Registration-alert scheduler failure was
+reproduced under cron's PHP path; recurring delivery is not repaired by backlog
+dispatch. See `docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md`.

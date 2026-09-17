@@ -2395,3 +2395,11 @@ queued.
 ## 2026-09-14 — Verify authoritative site keys before branded release
 
 The generated Locs site key differs from the earlier friendly test slug. Reuse the existing authoritative owner binding and test the real key in the brand adapter; never create a duplicate binding to make fixtures appear valid. Local tests and committed source are not deployment evidence. The production release checklist records both markers, owner-scope checks and email receipts separately.
+# 2026-09-17 — Hosting discovery and client-led acceptance
+
+The SFTP-only default adapter obscured existing cPanel API access. Inspect repo
+recipes, credential IDs and live routing before declaring access unavailable.
+A path can expose a wrong-domain upload even without DNS: protect before upload
+and verify anonymous HTML and assets. User policy makes Fritz an exception
+handler, not every site's build approver; selection starts build, not payment.
+See `docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md` for implementation gaps.

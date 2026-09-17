@@ -59,7 +59,14 @@ The following always require explicit human approval at action time:
 - outgoing customer email, iMessage, SMS, or call;
 - a quote, private offer, grant, recurring term, charge, refund, or checkout;
 - domain registration, transfer, or renewal;
-- proof delivery, public publication, or deployment.
+- initial proof delivery, public publication, or final production deployment.
+
+Owner-authorized exception, 2026-09-17: an authenticated client selection starts
+the complete build and protected review/revision loop automatically, under
+`docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md`. Fritz need not approve each
+routine in-scope build. This does not grant Studio customer-message, acceptance,
+payment or final-launch authority. Existing approved transactional notifications
+remain distinct from new freeform outreach.
 
 ## Current proof boundary
 

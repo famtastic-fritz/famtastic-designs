@@ -2353,3 +2353,10 @@ Navigation observation: an incidental ready-proof record could override an expli
 Observation: the booking fixture used a readable business slug, but the real customer binding and public booking artifact use a generated site key. The real owner was already bound; the narrow brand adapter missed it.
 
 Guidance: verify account, organization, request and exact site key from Drupal before release. Bind presentation to that key without granting access or adding a duplicate site. Recheck generated-key behavior, not only friendly demo fixtures.
+# 2026-09-17 — Selected-build policy and proven hosting route
+
+Observation: existing cPanel API access worked while the default Studio adapter
+had no SFTP configuration. Guidance: discover the stored route before asking the
+owner again. Use protected FAMtastic Inc reviews, explicit current-artifact client
+acceptance before payment, and exception-only owner review for routine builds.
+The workflow plan records which automation remains unimplemented or unproven.

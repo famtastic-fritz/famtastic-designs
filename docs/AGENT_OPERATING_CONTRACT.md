@@ -41,6 +41,14 @@ Tighten Up Your Locs is already separated: read
 
 ## Intake to purchase decision
 
+Selected-site continuation follows the owner-approved
+`docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md`: selection starts the full
+build, protected review and in-scope revision loop without per-site Fritz
+approval. Escalate exceptions. Client acceptance of the exact current completed
+artifact is required before checkout; neither selection nor hosting is final
+acceptance. A changed build invalidates old acceptance. No final launch is
+authorized merely by review hosting. The plan records remaining runtime gaps.
+
 1. A customer owns reusable website requests inside their workspace.
 2. `website_discovery_v3` captures goals, audience, pages, content, brand,
    integrations, SEO, accessibility/legal context, ecommerce, booking, AI,
@@ -229,7 +237,9 @@ The Concierge webhook boundary accepts only verified Inkbox events and records
 metadata/status facts. It must not copy customer message bodies into a new
 shadow store, send a response, or turn a delivery event into commercial or
 deployment approval. Human approval remains required before any outbound
-message, price/offer/grant, payment, domain action, or release. The exact
+message, price/offer/grant, payment, domain action, or final public release.
+Routine selected-site builds and protected review use the bounded September 17
+policy rather than a fresh Fritz approval on every build. The exact
 handoff contract is `docs/architecture/FAMTASTIC_CONNECTIONS_CONCIERGE_CONTRACT_V1.md`.
 
 For a public lead who receives pre-registration working concepts, use only

@@ -455,3 +455,13 @@ operations and health reporting, creates the pre-purchase proof job, blocks
 low-quality fallback proofs, introduces owner review and explicit customer-send
 approval, expands the creative intake contract, and adds auditable scoped
 grant-code fulfillment.
+# Owner amendment: selected-site continuation (2026-09-17)
+
+After client direction selection, build the full agreed site and provide an
+access-controlled FAMtastic Inc review without waiting on Fritz for each routine
+build. Continue in-scope revisions until the client is fully satisfied. Checkout
+requires explicit client acceptance bound to the exact current artifact; changes
+invalidate prior acceptance. Selection, proof approval, staff QA, elapsed time
+and hosting never authorize charging. Final launch remains separate.
+`docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md` is the implementation and
+evidence checklist. Initial-proof delivery gates are otherwise unchanged.

@@ -31,6 +31,14 @@ work, or production.
 
 ## Historical implementation status by capability
 
+September 17 amendment: selection starts the full build and protected review
+without per-site Fritz approval. In-scope customer revisions continue before
+payment; exact current-build acceptance gates checkout. Fritz handles exceptions,
+not routine builds. Final production launch is still separate. See
+`docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md` for runtime gaps and proof.
+The older matrix below must not reintroduce a selection-to-payment or routine
+owner-build bottleneck.
+
 | # | Step | Owner | Definition of done | Evidence required | Status |
 |---|------|-------|--------------------|-------------------|--------|
 | 1 | Lead capture & qualification | CMO (vac.) / public forms | Prospect record created with provenance; dedup + suppression checked | Validator run on synthetic lead | 🔄 |

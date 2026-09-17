@@ -42,6 +42,14 @@ updated, say so explicitly in the session report rather than skipping silently.
 
 ## Required operating context
 
+- Owner policy 2026-09-17: client direction selection starts the complete site
+  build and protected review without per-site Fritz approval. Routine in-scope
+  revisions continue until explicit customer acceptance of the current exact
+  artifact; only then can checkout become eligible. Escalate scope, rights,
+  security, budget and failed-QA exceptions, not every build. Review hosting is
+  not final launch. Read `docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md`;
+  its implementation checklist distinguishes policy from enabled automation.
+
 - Sign future agent-authored customer correspondence as **Shay** or **Shay-Shay**.
   The canonical full spelling is **Shay-Shay**. Preserve an approved template's
   short or full form; do not invent an automatic formal/casual switching rule.
@@ -65,7 +73,9 @@ updated, say so explicitly in the session report rather than skipping silently.
   `docs/architecture/FAMTASTIC_CONNECTIONS_CONCIERGE_CONTRACT_V1.md` before
   changing Concierge, Inkbox, Solution Finder follow-up, or Site Studio work
   intake. Never put credentials in a CLI configuration, commit them, or let an
-  agent autonomously send, quote, grant, charge, purchase a domain, or deploy.
+  agent autonomously send, quote, grant, charge, purchase a domain, or launch.
+  Routine protected selected-site builds use the bounded owner-approved policy
+  above; no per-build Fritz approval is required.
 - For every creative proof, selected-direction refinement, campaign experience,
   or Site Studio-bound build, follow `docs/architecture/BUILD_DNA_STANDARD_V1.md`.
   Create and validate one `famtastic.build-dna.v1` record at run creation;
