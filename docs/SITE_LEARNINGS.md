@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Preview isolation and existing-mail preservation
+
+The rich supplied email mockup and simpler supplied HTML are different fidelity inputs: the image sets direction, the table HTML supplies safe structure. Implement the new template independently, compare old renders, and fail closed without an approved hosted logo. A local rendering cannot establish mail-client compatibility or delivery. Images-disabled testing caught and fixed decorative watermark overflow before handoff. See `docs/design/email-brand-system.md`.
+
 ## 2026-09-14 — Search customers independently; qualify the owner role
 
 Observation: Travel Addicts had a verified customer and Drupal login but no prospect. A prospect-led lookup missed Tarian Lee's account and caused an incorrect no-match conclusion. Guidance: search registered users, customers and organization names independently of prospects; a NULL prospect_id is valid and must not exclude a customer. Personalize from the actual saved business (courier express), not an assumed travel agency.

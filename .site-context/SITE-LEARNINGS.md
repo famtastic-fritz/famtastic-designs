@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Email image failure is a separate layout state
+
+Observation: a decorative watermark fit with its PNG loaded but caused 8px mobile overflow when images were blocked. Guidance: test images-disabled geometry as well as text visibility; reserve a narrow mobile watermark slot. Keep the original artwork unchanged and the body/button as live HTML. Local-only proof; no client compatibility or send claim.
+
 ## 2026-09-14 — Search customers independently; qualify the owner role
 
 Observation: Travel Addicts had a verified customer and Drupal login but no prospect. A prospect-led lookup missed Tarian Lee's account and caused an incorrect no-match conclusion. Guidance: search registered users, customers and organization names independently of prospects; a NULL prospect_id is valid and must not exclude a customer. Personalize from the actual saved business (courier express), not an assumed travel agency.

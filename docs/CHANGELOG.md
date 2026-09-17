@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-17 — Local staging-review email preview
+
+- Added isolated `customer_staging_review_ready/v1` rendering, the unchanged owner PNG, Valerie's non-sending fixture/gallery and local safety/browser checks. Recorded the design direction and preview instructions; no existing notification migrated. Visual acceptance, actual email-client testing, hosting and sending remain pending.
+
 ## 2026-09-17 — Client-led selected-site continuation policy
 
 - Recorded client selection → full build → protected review/revisions → exact client acceptance → checkout, with exception-only Fritz involvement for routine selected-site builds.

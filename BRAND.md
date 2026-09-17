@@ -41,6 +41,11 @@
 
 ## Positioning
 
+September 17 email-preview update: the owner supplied a new Designs logo for
+the approved [email direction](docs/design/email-brand-system.md). Preserve that
+PNG exactly. The older placeholder status below describes the current website;
+broader logo migration and hosted asset publication are not part of this preview.
+
 - **Official entity name**: FAMtastic Designs
 - **Homepage**: https://famtasticdesigns.com/
 - **Logo**: ⚠️ **NOT FINAL.** `/brand/famtastic-mark.svg` is a working

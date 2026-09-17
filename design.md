@@ -55,6 +55,10 @@ the answer to #3. Tooltips support clear copy; they never replace it.
 
 ## Transactional email rule
 
+New staging-review email direction and local-preview proof:
+[`docs/design/email-brand-system.md`](docs/design/email-brand-system.md).
+This September 17 direction does not migrate existing notifications or the website logo.
+
 Account-owned messages use the FAMtastic Concierge frame and a versioned
 template. Each message has one job, one human headline, one graphical CTA, and
 one short fallback destination. Never expose an opaque portal/proof URL as

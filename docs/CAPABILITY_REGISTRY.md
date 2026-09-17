@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Branded staging-ready email: local presentation proof only
+
+`customer_staging_review_ready/v1` has locally tested PHP renderer dispatch, escaped input, constrained CTA/asset URLs, plain-text fixture and Chromium desktop/mobile/images-disabled evidence. Existing-template regression renders are unchanged. No producer, SMTP send, hosted asset, deployment, client inbox or Gmail/Outlook/Apple Mail rendering is proven. See `docs/design/email-brand-system.md` and `scripts/email-preview/README.md`.
+
 ## 2026-09-14 — Customer-only lookup and effective agency access
 
 All three selected-project emails are now SMTP-accepted and saved in scoped portal conversations. Travel Addicts was verified customer/user 6 with no prospect, correcting the incomplete initial lookup; exact outbox 637/message 24 was accepted once at 2026-09-14T22:43:31Z. The live staff view and customer-scoped service confirm the saved correspondence. Recipient inbox/read is not claimed.

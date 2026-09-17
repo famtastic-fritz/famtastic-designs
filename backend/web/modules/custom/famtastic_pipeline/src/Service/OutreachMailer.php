@@ -16,6 +16,8 @@ use RuntimeException;
 class OutreachMailer {
 
   public const TEMPLATE_STANDARD = 'standard';
+  public const TEMPLATE_CUSTOMER_STAGING_REVIEW_READY = 'customer_staging_review_ready';
+  public const TEMPLATE_CUSTOMER_STAGING_REVIEW_READY_VERSION = 1;
   public const TEMPLATE_STANDARD_VERSION = 1;
   public const TEMPLATE_CUSTOMER_INTAKE_SUBMITTED = 'customer_intake_submitted';
   public const TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION = 1;
@@ -148,6 +150,7 @@ class OutreachMailer {
   /** Returns whether a versioned transactional template is available. */
   public static function supportsTemplate(string $template, int $version): bool {
     return ($template === self::TEMPLATE_STANDARD && $version === self::TEMPLATE_STANDARD_VERSION)
+      || ($template === self::TEMPLATE_CUSTOMER_STAGING_REVIEW_READY && $version === self::TEMPLATE_CUSTOMER_STAGING_REVIEW_READY_VERSION)
       || ($template === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED && $version === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION)
       || ($template === self::TEMPLATE_CUSTOMER_PROOF_READY && in_array($version, [...self::TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSIONS, self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION], TRUE))
       || ($template === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED && $version === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION)
@@ -157,6 +160,7 @@ class OutreachMailer {
   /** Selects the current template version for direct, versionless callers. */
   private static function currentTemplateVersion(string $template): int {
     return match ($template) {
+      self::TEMPLATE_CUSTOMER_STAGING_REVIEW_READY => self::TEMPLATE_CUSTOMER_STAGING_REVIEW_READY_VERSION,
       self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED => self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION,
       self::TEMPLATE_CUSTOMER_PROOF_READY => self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION,
       self::TEMPLATE_CUSTOMER_REVISION_RECEIVED => self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION,
@@ -209,6 +213,9 @@ class OutreachMailer {
    * and only http(s) links become anchors after escaping.
    */
   private function renderHtmlMessage(string $subject, string $body, string $template = self::TEMPLATE_STANDARD): string {
+    if ($template === self::TEMPLATE_CUSTOMER_STAGING_REVIEW_READY) {
+      return StagingReviewEmail::render($subject, $body, (string) Settings::get('famtastic_staging_review_logo_url', ''));
+    }
     if ($template === self::TEMPLATE_CUSTOMER_MESSAGE_REPLY) {
       // Only the system-appended destination is a CTA. A customer/staff URL
       // inside the reply must never replace the conversation button.

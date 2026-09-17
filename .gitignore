@@ -76,6 +76,7 @@ marketing/video/public/
 # Voicebox server state (SQLite DB + generated wavs), created when the
 # local TTS server is started with this repo as cwd. Not campaign content.
 data/
+/.local-email-preview/
 
 # Locs source moved to its independent private repository. Retain only pointers;
 # do not accidentally add old ignored test state or recreate customer source here.

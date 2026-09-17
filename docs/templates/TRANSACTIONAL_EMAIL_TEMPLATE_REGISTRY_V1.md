@@ -27,6 +27,21 @@ customer-state transition, offer, charge, or launch.
 
 ## Active templates
 
+### Local-only candidate: `customer_staging_review_ready` v1
+
+Renderer registered; no producer wired, send or deployment. Uses the supplied
+September 17 logo and [email brand system](../design/email-brand-system.md).
+Valerie-only local fixture reviews the selected staging build with no payment due.
+Owner-approved public, noindex staging is a narrow exception to authenticated
+workspace CTA rules: this message links a client site, not private account records.
+Rendering requires an explicit terminal staging destination and configured hosted
+logo; no default hosted asset is assumed. Promotion to active sending requires
+separate visual acceptance, email-client tests, asset hosting, recipient/project
+verification and authorized deployment/send. All current active templates below
+retain their existing rendering and behavior.
+
+### Existing active templates
+
 | ID / version | Trigger and durable key | Recipient / purpose | Brand and CTA | Required truth boundary |
 | --- | --- | --- | --- | --- |
 | `customer_intake_submitted` v1 | First `draft → submitted`; `website-request:{id}:customer` | Verified customer; acknowledges that the Design Review and proof routine have started | FAMtastic Concierge, dark green/lime, “Intake received · verified workspace,” **Open your workspace** | No proof is claimed ready; no payment is requested; exact authenticated portal URL only. |

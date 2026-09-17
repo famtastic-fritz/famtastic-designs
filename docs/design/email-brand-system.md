@@ -1,0 +1,74 @@
+# FAMtastic email brand system v1
+
+Owner-approved direction: September 17, 2026. Rendered implementation status:
+**local preview, awaiting visual feedback**. This is not send/release approval.
+
+## Source and scope
+
+Use the supplied rich black/lime email image as the visual target, and the supplied
+table-based HTML as the structural foundation. Preserve the owner-supplied logo
+exactly: `assets/famtastic-designs-logo-v1.png` (2172 × 724 RGBA PNG), SHA-256
+`ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950`.
+Source filename: `ChatGPT Image Sep 17, 2026, 08_45_12 AM.png`. Owner supplied it
+for this use; no independent trademark/third-party-rights determination is implied.
+No AI redraw, recoloring, vector reconstruction, or baked-in message text.
+
+Creative Studio guidance is applied by preserving the original artwork and
+keeping typography in editable HTML. No image provider or new paid tool was used.
+The PNG lives in documentation assets until a separately approved hosting step;
+it is not silently added to the live frontend build.
+
+## Presentation contract
+
+- 620px desktop presentation table; stack header/footer at 640px and below.
+- Canvas `#070907`, lime `#7cfc00`, warm paper `#f7f7f4`, ink `#252925`.
+- Prominent original logo, “More than a website… A FUTURE.” header, warm-white
+  reading panel, one lime CTA, service strip, branded footer and verified address.
+- Real HTML headline, paragraphs and button; Arial/Helvetica body, italic system
+  display/Georgia accents. Brush lettering and textured artwork in the reference
+  are approximated with email-safe live type and understated CSS decoration,
+  not claimed pixel-identical. No remote fonts or invented logo variants.
+- One CTA glow. Gradients, rounded corners, glyph ornaments and watermark opacity
+  are progressive enhancements. The watermark occupies separate whitespace, never
+  behind text; if opacity is ignored, it remains a non-obstructing duplicate logo.
+- No placeholder phone, unverified social link, preference/unsubscribe placeholder,
+  or unimplemented browser-view destination. This fixture is transactional, not
+  a marketing campaign; campaign compliance remains a separate contract.
+
+## Existing renderer integration
+
+`OutreachMailer` recognizes `customer_staging_review_ready/v1` and delegates only
+that new template to `StagingReviewEmail`. Previous templates remain unchanged.
+No queue producer is switched, no notification event is emitted, and no send is
+performed. Plain text remains the durable body and existing PHPMailer `AltBody`.
+
+The terminal system-authored plain-text block is required:
+
+```text
+Review your staging site:
+https://CLIENT.famtasticinc.com/
+```
+
+The renderer accepts only HTTPS, one valid subdomain under `famtasticinc.com`,
+root path, no credentials, port, query or fragment. Customer-body URLs are escaped
+text, not links; only that terminal destination becomes the CTA. Recipient/project
+authorization belongs to the future producer and must be verified before sending.
+All message/subject content is HTML-escaped. No raw `body_html` slot is accepted.
+
+Normal mail rendering requires Drupal setting `famtastic_staging_review_logo_url`
+with an approved HTTPS PNG on `famtasticdesigns.com` (or www). It currently has no
+default and fails closed. Hosting, asset sizing optimization, actual client tests,
+send approval, recipient verification and producer wiring are subsequent work.
+The explicit pure-render local preview allows only the fixed relative asset path;
+`OutreachMailer` never enables this preview flag.
+
+## Preview and evidence
+
+See [local preview instructions and file/test inventory](../../scripts/email-preview/README.md).
+Valerie's approved copy uses The Signal Room, explains staging and no payment due,
+links `https://prosintraining.famtasticinc.com/`, and signs Shay.
+The related site footnote is in the separate `site-pros-in-training` repository,
+on `codex/staging-footnote-preview`, not deployed.
+
+Local browser proof is not Gmail, Outlook or Apple Mail proof. No production
+delivery, recipient inbox placement, client approval or charging is established.
