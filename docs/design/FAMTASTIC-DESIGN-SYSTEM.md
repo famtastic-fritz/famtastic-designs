@@ -75,6 +75,16 @@ Signature: system handwritten stack (Segoe Print, Bradley Hand, cursive), italic
 fallback; six words maximum, emotional/editorial fragments only. Not a replacement
 for the original logo signature or permission to restyle required information.
 
+Owner-approved heading extension (September 17): public H1/H2 may opt into one
+short cursive phrase, maximum six words, using `SignatureHeading`. Self-hosted
+Kaushan Script supplies consistent brush/cursive lettering; `font-display: swap`
+and system handwritten fallback keep content available. Existing footer signature
+keeps its system stack. Do not globally restyle heading tags or change CMS words.
+Portal script is limited to optional welcome/celebration; admin operational
+headings, prices, forms and system messages stay sans. This font addition supersedes
+the initial review's no-new-font implementation note, not email's no-webfont rule.
+Source/license: `frontend/public/brand/fonts/README.md` and `OFL.txt`.
+
 Brush grammar: lime = action underline/selection; white = short editorial accent;
 F/A/M = sparse brand story. CSS clipped primitives are decoration, never fake logo
 paths. Links remain distinguishable without motion. Primary existing buttons keep

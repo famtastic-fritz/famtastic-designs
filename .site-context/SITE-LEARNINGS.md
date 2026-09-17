@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Cursive is an explicit editorial accent
+
+Owner approved cursive public H1/H2 fragments, not all headings. Preserve CMS text
+with an opt-in phrase component; unknown copy remains plain instead of guessing.
+Limit to six words, self-host the licensed font and verify font-blocked mobile
+layouts. Keep prices, controls, admin operations and email typography unchanged.
+
 ## 2026-09-17 — Canonical visual enhancement contract
 
 Read root design.md plus docs/design/FAMTASTIC-DESIGN-SYSTEM.md. Preserve before

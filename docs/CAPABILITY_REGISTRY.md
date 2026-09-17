@@ -1,5 +1,13 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Selective cursive heading consumer
+
+Local review implementation: SignatureHeading preserves text while emphasizing
+one approved short phrase in selected homepage H1/H2 headings. Self-hosted font,
+no new library or external font request. Not a global heading/portal/email change.
+Validation: scripts/test-cursive-headings.cjs covers four widths with font loaded
+and blocked. Build and local presentation evidence are not deployment proof.
+
 ## 2026-09-17 — Canonical visual DNA / crown family
 
 **Local-tested / review-only.** Shared CSS materials, React crown primitive,

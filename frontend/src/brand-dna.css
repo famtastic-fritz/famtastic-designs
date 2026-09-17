@@ -1,4 +1,21 @@
 /* Identity layer only; no layout/route/content replacement, no showcase selectors. */
+@font-face {
+  font-family:'FAMtastic Heading Script';
+  src:url('/brand/fonts/kaushan-script-latin-v19.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+/* Explicit heading fragments only: never a global h1/h2 font override. */
+.fam-owned :is(h1,h2) .fam-heading-script {
+  font-family:'FAMtastic Heading Script','Segoe Print','Bradley Hand',cursive;
+  font-weight:400;
+  font-style:normal;
+  font-synthesis:none;
+  letter-spacing:0;
+  line-height:1.35;
+  overflow-wrap:break-word;
+}
 .fam-owned { background-color:var(--fam-dna-obsidian); }
 .fam-owned > .v1-header { background:rgba(7,9,7,.94); border-bottom-color:#35402e; }
 .fam-owned .v1-hero { background-color:var(--fam-dna-obsidian); }

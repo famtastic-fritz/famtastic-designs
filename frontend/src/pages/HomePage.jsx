@@ -13,6 +13,7 @@ import {
   Item,
 } from '../components/v1/index.js';
 import SolutionFinder from '../components/SolutionFinder.jsx';
+import SignatureHeading from '../components/SignatureHeading.jsx';
 import { WEB_BASICS } from '../lib/webBasicsOffer.js';
 
 /**
@@ -119,7 +120,7 @@ export default function HomePage() {
       <Hero
         particles
         eyebrow="FAMtastic Designs"
-        title={headline}
+        title={<SignatureHeading text={headline} phrases={['Engineering Studio', 'Work You Need Done']} />}
         lede={subheadline}
         primaryCta={{ label: 'Start the research conversation', href: '/start' }}
         secondaryCta={{ label: 'Compare website starting points', href: '/website-options' }}
@@ -140,7 +141,7 @@ export default function HomePage() {
 
       <Section
         eyebrow="Services"
-        title="Systems engineered for real business outcomes."
+        title={<SignatureHeading text="Systems engineered for real business outcomes." phrases={['real business outcomes.']} />}
         intro="Every service is a fixed-scope system designed to capture leads, answer customers, or run operations — not a template install."
         link={{ href: '/services', label: 'See all services' }}
       >
@@ -184,7 +185,7 @@ export default function HomePage() {
       </Section>
 
       <CTABanner
-        title={finalCta.title}
+        title={<SignatureHeading text={finalCta.title} phrases={['As Hard As You Do']} />}
         bodyHtml={finalCta.bodyHtml}
         primaryCta={{ label: 'Start the research conversation', href: '/start' }}
         secondaryCta={{ label: 'Compare website starting points', href: '/website-options' }}

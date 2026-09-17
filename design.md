@@ -37,6 +37,22 @@ the answer to #3. Tooltips support clear copy; they never replace it.
 
 ## Shared visual and interaction tokens
 
+### Cursive headings — owner-approved September 17, 2026
+
+Use cursive selectively for short public H1/H2 headings or one emphasized phrase
+of at most six words inside a longer heading. Keep surrounding text in the display
+sans; never apply a global cursive rule to all H1/H2 elements. Preserve the actual
+wording, heading level, selectable text and screen-reader reading order. Use the
+opt-in `SignatureHeading` component and self-hosted Kaushan Script (SIL OFL), with
+`font-display: swap`, readable fallback and normal wrapping on narrow screens.
+Do not imitate, regenerate or replace the approved logo's own lettering.
+
+Client portal: reserve script for optional welcome/celebration accents, not project
+status or instructions. Admin operational headings remain interface/display sans.
+Never use script for prices, billing, forms, buttons, navigation, tables, legal
+copy or critical system messages. Check 320px mobile, font-loaded and font-blocked
+layouts. Customer project worlds and email typography retain their own contracts.
+
 Primary agency logo: September 17 original PNG, governed by
 `docs/brand/famtastic-designs-logo.md`. Use the shared React BrandLogo for migrated
 website placements. RGB/gold logo colors do not replace existing action/surface tokens.

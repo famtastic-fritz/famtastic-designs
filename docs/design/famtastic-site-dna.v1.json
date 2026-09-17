@@ -9,7 +9,7 @@
   "colors": {"obsidian": "#070907", "lime": "#7cfc00", "border": "#252b25", "glass": "rgba(16,19,16,.88)", "paper": "#f7f7f4"},
   "glow": {"max_hero_per_view": 1, "operational": "keyboard-focus-only", "decorative_overuse": false},
   "crown": {"asset": "/brand/famtastic-crown-flat.png", "max_prominent_per_region": 1, "intents": ["signature", "featured", "success", "identity"], "requires_durable_success_state": true},
-  "typography": {"interface": "Inter, system-ui", "display": "Space Grotesk, sans-serif", "signature": "system handwritten fallback", "expressive_max_words": 6, "expressive_for_critical_information": false},
+  "typography": {"interface": "Inter, system-ui", "display": "Space Grotesk, sans-serif", "signature": "system handwritten fallback", "public_heading_signature": "self-hosted Kaushan Script, opt-in H1/H2 phrases", "expressive_max_words": 6, "expressive_for_critical_information": false, "global_script_headings": false},
   "favicon": {"symbol": "source-derived-crown", "background": "#070907", "foreground": "#7cfc00", "lettering": false},
   "email": {"architecture": "existing OutreachMailer + versioned templates", "new_shell": false},
   "motion": {"reduced_motion": true, "new_continuous_animation": false},

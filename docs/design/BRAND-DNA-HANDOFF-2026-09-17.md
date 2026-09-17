@@ -1,13 +1,30 @@
 # FAMtastic visual DNA — owner review handoff
 
+## Follow-up: cursive headings
+
+Owner-approved local extension adds three homepage phrases: H1 “Engineering Studio”
+(fallback copy: “Work You Need Done”), services H2 “real business outcomes.” and
+final CTA H2 “As Hard As You Do”. Text, native heading levels and page sections
+remain unchanged. Explicit SignatureHeading usage is not a global heading rule.
+Self-hosted Kaushan Script Latin WOFF2 adds 34,748 bytes on pages that use it;
+OFL license/provenance are bundled. This supersedes the initial pass's no-new-font
+note below; email, logo lettering and operational headings remain untouched.
+Root design.md and visual specification record the constraints. Local captures:
+`cursive-390.png`, `cursive-1440.png` and `-fallback` versions in the review folder.
+The existing before/after gallery's after images are refreshed. No deployment.
+Checks: eight loaded/blocked-font viewport cases pass; existing six-width public
+logo/navigation checks pass; production build passes with the existing chunk-size
+warning. Final JS836.42kB/gzip243.84kB; CSS176.16kB/gzip34.01kB, plus the 34,748-byte font.
+
 ## Status / branch
 
 **Ready for owner visual review, not release certification.** No merge, deployment,
 main push, notification, payment or customer-state mutation occurred in this pass.
 Branch: `famtastic/brand-dna-site-enhancement-v1`.
 Baseline: `1566d531652fcf2ac0bde0cbc9120ba6f2db9c84`.
-Implementation commit: the commit containing this handoff, with subject
-`feat(brand): apply FAMtastic visual DNA across owned surfaces` (`git log -1`).
+Initial implementation commit: `06b55b0a`, subject
+`feat(brand): apply FAMtastic visual DNA across owned surfaces`.
+The later cursive-heading extension is a separate local review commit.
 Local repository: `/Users/famtastic-fritz/Development/worktrees/fd-client-selected-build-flow`.
 This is the substantive agency worktree, not the unrelated Documents checkout.
 

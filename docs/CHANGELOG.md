@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-17 — Cursive heading extension (local review only)
+
+- Added opt-in public H1/H2 cursive phrases, preserving homepage wording and
+  semantic heading levels. Three placements; no operational/global heading rule.
+- Self-hosted licensed Kaushan Script Latin WOFF2 (34,748 bytes), font-display swap.
+- Root design.md and canonical visual DNA record the six-word maximum, functional
+  text exclusions, mobile/fallback checks and unchanged email/logo contracts.
+
 ## 2026-09-17 — Visual DNA enhancement (review branch, not released)
 
 - Canonical Design System plus root design.md/agent guidance: preserve before

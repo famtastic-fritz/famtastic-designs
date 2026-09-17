@@ -1,5 +1,23 @@
 # Brand DNA review — complete changed-file inventory
 
+Cursive-heading follow-up adds/changes, in addition to the initial inventory:
+
+- `frontend/src/components/SignatureHeading.jsx`
+- `frontend/src/pages/HomePage.jsx`
+- `frontend/src/brand-dna.css`
+- `frontend/public/brand/fonts/kaushan-script-latin-v19.woff2`
+- `frontend/public/brand/fonts/OFL.txt`
+- `frontend/public/brand/fonts/README.md`
+- `scripts/test-cursive-headings.cjs`
+- `design.md`
+- `docs/design/FAMTASTIC-DESIGN-SYSTEM.md`
+- `docs/design/famtastic-site-dna.v1.json`
+- `docs/design/BRAND-DNA-HANDOFF-2026-09-17.md`
+- `docs/design/BRAND-DNA-CHANGED-FILES-2026-09-17.md`
+- `docs/CHANGELOG.md`
+- `docs/CAPABILITY_REGISTRY.md`
+- `.site-context/SITE-LEARNINGS.md`
+
 Relative to baseline `1566d531652fcf2ac0bde0cbc9120ba6f2db9c84`.
 Local rendered previews/screenshots are deliberately ignored build artifacts,
 listed separately in the handoff; the original full-logo PNG is unchanged.
