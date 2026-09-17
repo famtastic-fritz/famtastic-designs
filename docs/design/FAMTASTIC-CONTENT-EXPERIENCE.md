@@ -1,8 +1,10 @@
-# FAMtastic Content Experience v1
+# FAMtastic Content Experience v1.1
 
-Status: **local owner-review checkpoint**, September 17, 2026. The earlier visual
-DNA release is live; this page-system extension is not. First proof route only:
-`/packages/199-quick-start`. Branch: `codex/content-experience-web-basics`.
+Status: **owner-approved direction, expanded local review**, September 17, 2026.
+The first Web Basics proof at5d98e4d1 was approved with “Approved!”, authorizing the
+planned family propagation. The earlier visual DNA release is live; this page-system
+extension is not. Branch: `codex/content-experience-web-basics`. The 17 existing
+routes and six recipes are explicit; no new /solutions URL or CMS schema was added.
 
 ## Share identity, not identical layouts
 
@@ -43,12 +45,12 @@ those strings requires explicit binding review, not a claim of automatic migrati
 
 | Family | Intensity | Character / ordered composition | Status |
 | --- | --- | --- | --- |
-| Package detail | 2 | Offer → features → fit → optional add-ons → pricing → education → finale | Web Basics only |
-| Packages hub | 2 | Introduction → comparison → education → finale | Planned |
-| Solution detail | 2 | Problem → system → outcome → process → related → finale | Planned |
-| Services hub | 2 | Introduction → capabilities → related → finale | Planned |
-| About | 3 | Story → philosophy → F/A/M definition → founder → process → finale | Planned |
-| Contact | 2 | Invitation → existing conversation form → real next-step state | Planned |
+| Package detail | 2 | Offer → features → fit → optional add-ons → Web Basics pricing only → education → finale | Seven existing packages, local |
+| Packages hub | 2 | Introduction → scope comparison → finale | Local |
+| Solution detail | 2 | Brief/index → challenge → system → source process → reviewed proof if present → deliverables → FAQ → education → existing finder → finale | Six existing services, local |
+| Services hub | 2 | Introduction → indexed capability rows → finale | Local; existing Solutions destination |
+| About | 3 | Story → F/A/M definition → philosophy → existing business story → finale | Local; no invented founder biography |
+| Contact | 2 | Invitation → existing project-fit intake → existing conversation form / real next-step state | Local; synthetic transport QA only |
 | Intake / Get Started | 1–2 | Guided action, minimal distraction | Existing, unchanged |
 | Login / account threshold | 2 | Brand entry, conventional authentication | Existing, unchanged |
 | Portal / admin | 1 / 0–1 | Operational contracts govern | Excluded |
@@ -57,9 +59,10 @@ those strings requires explicit binding review, not a claim of automatic migrati
 | Blog | Separate | Await the owner's separate direction | Excluded |
 
 No recipe name enrolls routes automatically. Use the exact allowlist in
-`CONTENT_PREVIEW_ROUTES`; never infer styling from a dollar amount or title.
-After owner review, propagate deliberately through Packages → Solutions →
-Services → About → Contact, with a separate recipe/proof per family. Proposed
+`CONTENT_ROUTES` (`CONTENT_PREVIEW_ROUTES` exports its keys); never infer styling
+or research destinations from a dollar amount or title. The owner's approved
+Packages → Solutions → Services → About → Contact propagation keeps a separate
+recipe/proof per family. Proposed
 404, auth, help and success/empty-state treatments are not implemented here.
 
 ## Visual rules that future pages must follow
@@ -105,7 +108,32 @@ Services → About → Contact, with a separate recipe/proof per family. Propose
 - Payment follows final acceptance of the completed staging artifact; a design
   selection, local preview or research action is not payment authorization.
 - Editorial additions (“Give your business a home”, “A future”) are proposed
-  owner-review framing, not new deliverables or outcome guarantees.
+  framing approved with the first proof, not new deliverables or outcome guarantees.
+
+## Family-specific invariants
+
+- Package detail uses the specialized Web Basics composition only at
+  `/packages/199-quick-start`. Other enrolled packages render their exact CMS
+  price/scope, including recurring labels, without borrowing $199 renewal terms.
+  Research destination is exact-slug based: a $1,999 price must not match “199”.
+- Package comparison retains CMS sort order, badges, best-for, timeline, first
+  seven features and existing destinations/select-item analytics. Capability rows
+  retain service order, headline/description, first four source features and links.
+- Solution details retain every existing challenge, solution bullet, process step,
+  deliverable, FAQ, published education link and branch-selected SolutionFinder.
+  Quotes still require reviewed proof fields; no legacy seed testimonial revival.
+  The index is real anchor navigation, not a decorative or simulated workflow.
+- About's F/A/M letter markers are editorial type, not a new logo. The three exact
+  approved meanings accompany the existing Drupal business story. Never fabricate
+  a founder portrait, biography, team, timeline, metrics or process to fill a recipe.
+- Contact keeps project-fit before the contact form, existing IDs, labels,
+  validation, request payload, transport and mail fallback. The opt-in crown needs
+  `ok === true`, positive integer `request_id`, and `received` or `partial_success`.
+  Partial notification failure keeps the server explanation visible. An incomplete
+  receipt or failed transport shows no crown; a mail draft is not saved/send proof.
+- Preserve source copy during a visual pass. Existing CMS speed/performance promises
+  and the contact one-business-day copy versus backend three-day default need a
+  separate factual review; they are not newly verified claims or new guarantees.
 
 ## Acceptance and local review
 
@@ -116,24 +144,32 @@ Do not submit forms through a production proxy.
 ```sh
 VITE_DRUPAL_PROXY_TARGET=https://famtasticdesigns.com/web npm --prefix frontend run dev -- --host 127.0.0.1 --port 4187
 node scripts/test-content-experience.cjs
+node scripts/test-content-families.cjs
+node scripts/capture-content-families.cjs after
+node scripts/render-content-families-review.cjs
 npm --prefix frontend run build
 node scripts/sync-brand-assets.cjs --check
 ```
 
-The browser test blocks non-GET/HEAD requests and checks320/390/768/1024/1440,
+The Web Basics browser regression blocks non-GET/HEAD requests and checks320/390/768/1024/1440,
 existing content, guide data, safe links, native headings, keyboard/reduced motion,
 font fallback, HTML escaping, missing package and exact route opt-in. It produces
 local screenshots plus a checked-in sanitized result; no real request/payment/send.
-Review gallery is generated by `node scripts/render-content-experience-review.cjs`
-and served by the existing8765 static-preview server at `/content-experience/`.
+The family suite checks all17 routes at320/390/768/1440, source-content fidelity,
+FAQs, actual keyboard entry, six-family font failure and synthetic contact receipts.
+Only its explicitly mocked contact POSTs are exercised; other writes are blocked.
+Expanded before/after gallery: `http://127.0.0.1:8765/content-rollout/`. Capture
+`before` only from the parent proof revision, never overwrite it with new source.
 
-Build DNA: `docs/evidence/content-experience-web-basics/build-dna.json`. Initial
-record timing is disclosed; no hidden model/cost/timing is invented. No Drupal
-projection or Site Studio packet is needed for this agency-only local checkpoint.
+Current Build DNA: `docs/evidence/content-experience-rollout/build-dna.json`.
+Parent Web Basics Build DNA is frozen at5d98e4d1; validate its source hashes at that
+revision, not against the changed descendant. Do not rerun its historical renderer
+to replace the approved receipt. Both disclose actual timing/model/cost limits.
+No Drupal projection or Site Studio packet is needed for this agency-only checkpoint.
 
 Dev-only pagination correction: absolute Drupal `/web/jsonapi` next links now
 continue through Vite's same-origin `/jsonapi` proxy when using its default base.
 Production still uses absolute links. No blog content, design or publication changed.
 
 Review completion is not production authorization. Preserve the deployed brand
-release until the owner approves this proof and its eventual release separately.
+release until explicit release approval. See `CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`.

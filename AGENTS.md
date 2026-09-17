@@ -5,8 +5,11 @@
 For owned frontend content pages, also read
 `docs/design/FAMTASTIC-CONTENT-EXPERIENCE.md`. Use the existing content-experience
 primitives and explicit page-family recipes; shared DNA does not mean identical
-layouts. Enrollment is exact-route, not price/title inference. First Web Basics
-proof awaits owner review before propagation; blogs and customer worlds are excluded.
+layouts. Enrollment is exact-route, not price/title inference. The owner approved
+the Web Basics direction and its propagation on September 17. The 17-route local
+rollout now has a separate expanded-review checkpoint; that approval did not
+authorize production. Blogs and customer worlds remain excluded. See
+`docs/design/CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md` for current evidence/gates.
 
 Read root `design.md` and `docs/design/FAMTASTIC-DESIGN-SYSTEM.md` for owned-surface
 visual work. Apply FAMtastic identity to existing architecture; this is not blanket

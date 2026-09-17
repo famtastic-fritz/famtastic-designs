@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 /**
  * v1 FAQ accordion — one open item at a time, smooth height animation via
  * framer-motion (height: auto spring), rotating + / − chevron. Answers may
  * contain HTML from Drupal formatted-text fields.
  */
-export default function FAQAccordion({ items = [] }) {
+export default function FAQAccordion({ items = [], respectReducedMotion = false }) {
   const [openIndex, setOpenIndex] = useState(null);
+  const reduceMotion = useReducedMotion();
+  const instant = respectReducedMotion && reduceMotion;
   if (!items.length) return null;
 
   return (
@@ -33,7 +35,7 @@ export default function FAQAccordion({ items = [] }) {
                 className="v1-faq__chevron"
                 aria-hidden="true"
                 animate={{ rotate: open ? 45 : 0 }}
-                transition={{ duration: 0.25 }}
+                transition={{ duration: instant ? 0 : 0.25 }}
               >
                 +
               </motion.span>
@@ -48,7 +50,7 @@ export default function FAQAccordion({ items = [] }) {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: instant ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
                 >
                   {isHtml ? (
                     <div className="v1-faq__answer" dangerouslySetInnerHTML={{ __html: answer }} />

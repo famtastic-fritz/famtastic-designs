@@ -1,0 +1,654 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "agency-content-experience-families-20260917",
+  "parent_build_id": "agency-content-experience-web-basics-20260917",
+  "classification": "owner_approved_direction_local_tested_family_review_ready",
+  "created_at": "2026-09-17T19:25:41Z",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "5d98e4d1",
+    "worktree_state": "codex/content-experience-web-basics; before family implementation"
+  },
+  "recipe": {
+    "routine": "agency-owned-content-experience",
+    "version": "1.1.0",
+    "build_class": "existing-agency-page-presentation",
+    "owner_approval": "Approved! — approval of Web Basics direction and planned family propagation, not production release",
+    "families": [
+      "package-detail",
+      "packages-hub",
+      "solution-detail",
+      "services-hub",
+      "about",
+      "contact"
+    ],
+    "source_route_note": "Solutions navigation uses the existing /services catalogue; no new /solutions route.",
+    "constraints": [
+      "preserve CMS facts and existing workflow",
+      "original logo unchanged",
+      "no blog or customer-world restyle",
+      "no production or outbound activity"
+    ],
+    "open_gates": [
+      "expanded visual review",
+      "separate production authorization"
+    ]
+  },
+  "stages": [
+    {
+      "stage_id": "family-propagation",
+      "attempt": 1,
+      "capability": "local React/CSS recipe propagation",
+      "execution": {
+        "provider": {
+          "id": "openai",
+          "transport": "Codex desktop"
+        },
+        "model": {
+          "status": "not_disclosed_by_runtime"
+        },
+        "timing": {
+          "status": "partial",
+          "construction_recorded_at": "2026-09-17T19:25:41Z"
+        },
+        "cost": {
+          "status": "provider_did_not_report"
+        },
+        "input": {
+          "approved_source_revision": "5d98e4d1",
+          "facts": "existing published Drupal page, service and package nodes; existing component behavior"
+        }
+      },
+      "result": {
+        "status": "gated",
+        "technical": "passed",
+        "visual": "author inspected desktop/mobile; expanded owner review pending",
+        "release": "not authorized in this milestone"
+      }
+    },
+    {
+      "stage_id": "browser-qa",
+      "attempt": 1,
+      "capability": "local presentation acceptance iteration",
+      "execution": {
+        "provider": {
+          "id": "local-chromium",
+          "transport": "Playwright"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "not_recorded_per_attempt"
+        },
+        "cost": {
+          "status": "not_applicable"
+        }
+      },
+      "result": {
+        "status": "failed",
+        "note": "Overly exact focus assertion expected 2px; existing visible focus was 3px. Assertion now enforces at least2px and adds actual keyboard entry.",
+        "record_timing": "reconstructed from same-turn tool outputs at handoff"
+      }
+    },
+    {
+      "stage_id": "browser-qa",
+      "attempt": 2,
+      "capability": "local presentation acceptance iteration",
+      "execution": {
+        "provider": {
+          "id": "local-chromium",
+          "transport": "Playwright"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "not_recorded_per_attempt"
+        },
+        "cost": {
+          "status": "not_applicable"
+        }
+      },
+      "result": {
+        "status": "failed",
+        "note": "Intermittent networkidle timeout during repeated public CMS reads. Final suite reuses freshly fetched snapshots/cached anonymous GETs; screenshot capture remains live read-only.",
+        "record_timing": "reconstructed from same-turn tool outputs at handoff"
+      }
+    },
+    {
+      "stage_id": "browser-qa",
+      "attempt": 3,
+      "capability": "local presentation acceptance iteration",
+      "execution": {
+        "provider": {
+          "id": "local-chromium",
+          "transport": "Playwright"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "not_recorded_per_attempt"
+        },
+        "cost": {
+          "status": "not_applicable"
+        }
+      },
+      "result": {
+        "status": "passed",
+        "note": "68 cases passed before the final short-price typography refinement; superseded by attempt4. Intermediate report not retained separately.",
+        "record_timing": "reconstructed from same-turn tool outputs at handoff"
+      }
+    },
+    {
+      "stage_id": "browser-qa",
+      "attempt": 4,
+      "capability": "family presentation and non-sending mocked-form acceptance",
+      "execution": {
+        "provider": {
+          "id": "local-chromium",
+          "transport": "Playwright"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "partial",
+          "completed_at": "2026-09-17T19:51:45.257Z"
+        },
+        "cost": {
+          "status": "not_applicable"
+        },
+        "output": {
+          "artifact": "docs/evidence/content-experience-rollout/browser-results.json"
+        }
+      },
+      "result": {
+        "status": "passed",
+        "limits": [
+          "not production",
+          "no real customer writes",
+          "no provider delivery evidence",
+          "not full accessibility certification"
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "immutable_source_logo",
+      "path": "frontend/public/brand/famtastic-designs-logo-v1.png",
+      "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+      "rights": "owner supplied"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/AboutExperience.jsx",
+      "sha256": "62ad24229ba4772487178dc1f1a8e8c520a794bad4139a42a029c6158ba66975",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/CatalogCards.jsx",
+      "sha256": "5d9c7558f3debe1cb65036a4353ad3dd461a3b9b187a63c7b0abdfac0df0bba7",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/PackageExperience.jsx",
+      "sha256": "5efa3753b91ba58d9dc671ffcfd64f164ce43f203ba2b2af03751a0f6a6ad35a",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/SolutionExperience.jsx",
+      "sha256": "cea7fb303e326f1897155bb03783fc96c6bdd8eefd0500be79c6e7904b1748a0",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/WebBasicsExperience.jsx",
+      "sha256": "fb042fb86e1e9caec3bbf18484c22e1c4ab21fecaff443fc1aeddf1c36181175",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/content-experience.css",
+      "sha256": "58dce915c537ad4a7b035e8e274bf128d5a1897dc836197be049bdf984a23aa1",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/index.jsx",
+      "sha256": "48c0bf8a94a6ba6654e9a1f93e3675773faa6a028bc98f486a16f539ce993df0",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/recipes.js",
+      "sha256": "045e2ab2e406ebff43bd2ecd83db40a7b9df406a933f87fc4c517efdd705dc22",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/pages/PackagePage.jsx",
+      "sha256": "983046c73a62cab6d6949803a1e948a1692045a31f16e9d28feabc30d513c0ed",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/pages/PackagesHubPage.jsx",
+      "sha256": "930e0be9a4c5e4fb1cc319bc49aa0c8f52eb9f38e092a9fa01ca39b174f647b4",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/pages/ServicePage.jsx",
+      "sha256": "b0170e582da1646974af441820e7999ab9f622e7b6f36b5c4a4ecb00eca03a8a",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/pages/ServicesHubPage.jsx",
+      "sha256": "4cf6e27d66d587aec48eeaf0708d047833decbc0699ae6714aabc255fd19fb6d",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/pages/AliasPage.jsx",
+      "sha256": "ebd4f5f9deac2cf84f09e181a4ce94b92610eeb0bd6aeeb82bb0c435f1884fd7",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/pages/ContactPage.jsx",
+      "sha256": "22ba8794c8fbc35ebc637a5d637bb0695134a322a6609e77c1eb46ec7719f55f",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/v1/ContactForm.jsx",
+      "sha256": "4c29b85c9cf10709b5fd60b9c444ac7d6ae0213ab8d8eeb1f81412699361e665",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/v1/FAQAccordion.jsx",
+      "sha256": "65cffaf9d2cb1baded4bf22c3f690470c51a3ef18f977213fd3e2a7727813475",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/RelatedEducation.jsx",
+      "sha256": "95e16bb61b36cc5ba0cf106abd986a5b48c1d32e2fd8a7d7c6afa23dc517cbbd",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "docs/design/FAMTASTIC-CONTENT-EXPERIENCE.md",
+      "sha256": "eeaad9052e3675bb5b61e8c105d46bc0a70d60650de3582e04204a0c532e6c9b",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "scripts/test-content-families.cjs",
+      "sha256": "ab8b10da35dfc6dc0f79d9f61a9cd74f78441462fc1654f27da1e984bd7a0634",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "scripts/test-content-experience.cjs",
+      "sha256": "ae5e283bb8cffb190213df5b5b51d2e21a277de434e13e49ca266a7297c825c1",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "scripts/capture-content-families.cjs",
+      "sha256": "e1b0d1149991a0448bbcf50abdf6ffc0c6d6e38b8c2bcbce6d5a20a1d3ae0972",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "scripts/content-families-review.html",
+      "sha256": "efa2dff280a0521884996c5a323daadfc1e6b52a669b61a42537f81312aaff85",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "scripts/render-content-families-review.cjs",
+      "sha256": "a3a4f9895539567f776232ac9549d3d13581de7a15a88fff595fee550812f983",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "docs/evidence/content-experience-rollout/browser-results.json",
+      "sha256": "f44cff102806dec07f9232247cadfc4b36e6ef8641ca7fa60ca413f5f15ba096",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "docs/evidence/content-experience-rollout/web-basics-regression.json",
+      "sha256": "1c861b0171470b74b612d2b4a2a4eab929004a228ec2a90d363837226b2e03c6",
+      "rights": "agency-owned source and sanitized test result"
+    }
+  ],
+  "retrieval": {
+    "filesystem": {
+      "path": "docs/evidence/content-experience-rollout/build-dna.json"
+    },
+    "database": {
+      "status": "not_applicable",
+      "reason": "agency-only local preview; no customer delivery"
+    },
+    "site_studio": {
+      "status": "not_applicable",
+      "reason": "no customer-site handoff"
+    }
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256"
+  },
+  "local_review_artifacts": [
+    {
+      "path": ".local-email-preview/content-rollout/before-packages-390.png",
+      "sha256": "3564de6bedfdf1d46276ca0b6c17c7fd58e37a7ecfcffcf036683160bb370674",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-packages-390-hero.png",
+      "sha256": "cd69864d4ffc91676eacb004a20d317f2f15fbf86455e9e0a23f207e02ffbd82",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-packages-390.png",
+      "sha256": "6c966ae7c06c59daa3e27b64c23e915066f5df0f36b7f4206f269fc513ddbad0",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-packages-390-hero.png",
+      "sha256": "c3d55b3052a367004913f45f7ccfe6111751223e8743f32c99d182d28ca73076",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-packages-390-detail.png",
+      "sha256": "929163d17feae0bd50e1fa59d5c11cddde95df9eb26c68673d7b0e468183d2ce",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-packages-1440.png",
+      "sha256": "3a1fb40a734722a670956c0398d934e51d766083e82bfccb2a468e1e2a3556dd",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-packages-1440-hero.png",
+      "sha256": "a83f9e0c62ff6c329f228e0868cba4c63a8646c9e79fddb2869377309e9e5548",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-packages-1440.png",
+      "sha256": "90d5ad974879e7677a2534ed9111715a9eca68e4c7c33b2a8dacbd3fe9d378fe",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-packages-1440-hero.png",
+      "sha256": "7adbd01cb0060f95da4d3f8a5d9a1049270570489ce7ddd36a4a16d379174191",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-packages-1440-detail.png",
+      "sha256": "dac80d7aaa60a097e9eff0b3abe424fefdc814d7d31dbe69d0190211e5001d57",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-package-390.png",
+      "sha256": "4465152404e15c4683ed3aa3036fcfdfe461d74766d6f49ff58a93ee2711df34",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-package-390-hero.png",
+      "sha256": "49b149fd4701751f1bafc6edee9eb8175a730d9b0ea68aa0732335b63424376a",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-package-390.png",
+      "sha256": "e2e3edeac3570ab43ec4d072317bd05339df2f35872d86ca204c4920f0c3c086",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-package-390-hero.png",
+      "sha256": "037b23a270db21b390222466c51e8b266ff1e50596623b942b2eb19183fbc203",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-package-390-detail.png",
+      "sha256": "8d627d528ef9d75f5275ee5c5b77371d76590dfec11a28c90e955d595b1c11f0",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-package-1440.png",
+      "sha256": "3faa20a5dc5fa0cd47d84f71089eb371b8a27e60fd359fe2b302f598e363fb79",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-package-1440-hero.png",
+      "sha256": "b7ef7f35521f4e1083de5b723c035a7b8379c508aa1c3f871a74287ee44a3357",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-package-1440.png",
+      "sha256": "f986fe88a1be7f7f50ef45373e035cdc9b6e8e74b66817d4d10bec549555c5b1",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-package-1440-hero.png",
+      "sha256": "334f82a5569adab2932c0186b66b9e5f4bbeae4d65ce02990978a1f90d49c23f",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-package-1440-detail.png",
+      "sha256": "f00be72ba3fef71b17361e63cd51d170869aa845263e69e27c90b046034b46a2",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-services-390.png",
+      "sha256": "e39a046acd1bc23e422f6d9d4f6e9edb001b6abe24e414ccd7b6e96f65aa101b",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-services-390-hero.png",
+      "sha256": "8c488955e7bb1704afae9167e565a4628beb1eea9613b4c1accd281dee5bce51",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-services-390.png",
+      "sha256": "e7fd4dbf8fcd7f551ff80eeef135c8ae7b8e372ac572162312ef2b889b364fad",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-services-390-hero.png",
+      "sha256": "a8ace7deac1dfdc4b646c09affddb27a71b77893df1228db8cd7d9b955e7b726",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-services-390-detail.png",
+      "sha256": "5ff9b83b4fa06d6f8925eaea522a72bbd08ab5d568956c763383604ccdf2ce2a",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-services-1440.png",
+      "sha256": "402380c15e0be2e6f9045c4d96ee52ddfa53881867877b8b2f19045540a8084e",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-services-1440-hero.png",
+      "sha256": "c1db6755fe52ffd7188bf25cde76e61f9fe316a11306fb1a36d2496a7b96f625",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-services-1440.png",
+      "sha256": "6c7bdb8a923f2dc4d9cab19a49661bb93f1def6fe7f06a2314fbdc5a38e6b109",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-services-1440-hero.png",
+      "sha256": "6bf921d52e13acb70af4069abc4b4f5fe7d2a8e79d54f9b91d437f4055f4e854",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-services-1440-detail.png",
+      "sha256": "facdd58ef44504e78552dde838a7cd1621072315a921f97478fcdaa55da2a837",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-solution-390.png",
+      "sha256": "e246878156eddd32b65f744626b29a339ed6706c064345c598790005fc2e92a7",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-solution-390-hero.png",
+      "sha256": "3ac4c8c859af1f19cfd8851a9b2e6387e927be96152d9fe02853d02d7454d650",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-solution-390.png",
+      "sha256": "58fed79ce4680b1941aa7c01973811fb89ccb0bcf1c4dd672d5dea9b2764b936",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-solution-390-hero.png",
+      "sha256": "7164d229169649d0f239e2fd5e98ca13bea47ab4d159873bcfe71a79181b1bb8",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-solution-390-detail.png",
+      "sha256": "de2ca41a0dcd96b3ea85bd87b63a4ee73455410475eb8c5684240cc87492601d",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-solution-1440.png",
+      "sha256": "b573e49cf6facfa37a29ab2d113e3e1374062588e247e37257e272c7e3d4db25",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-solution-1440-hero.png",
+      "sha256": "0401382031a458e828f2024f22fb52e46972b1bb5b8284ea87afff0104bc2757",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-solution-1440.png",
+      "sha256": "81abe1657d833bff2001e6aa46ce0c7596c2d0d224fffd6cfc33598da20be878",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-solution-1440-hero.png",
+      "sha256": "4108dcf56fb234c24fb0c9f5735c2599e225183a0af53c5efa48c81e0a33d088",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-solution-1440-detail.png",
+      "sha256": "38ae59b5ac389ce8c06f5b4750fc8e21040ed23591493580799bc7308297b146",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-about-390.png",
+      "sha256": "f4caede395548c97dc2ccb7d84ac1eea7a94e10774d1c688bfbde51fefd9fd5c",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-about-390-hero.png",
+      "sha256": "4ef2c3fa6e1a6f693f44c1b3fca61cbe6a4e0d3c9fc9d7f674da688730668347",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-about-390.png",
+      "sha256": "e6e1c71cf41c5b8edea8e012cc316c91c83d0166276763cbf4e6267ea9376972",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-about-390-hero.png",
+      "sha256": "c1adb798564e86e5fa009b98c55e880e18120d2d192f548bf062d4ef3fb8d832",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-about-390-detail.png",
+      "sha256": "4587833f8566b2b338813be0f2f694ac680f1e176a4beee4be48fdb226efe260",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-about-1440.png",
+      "sha256": "16b2c0790c96baf38fd0dcc98f0392bd33a68829736482c646031781d4e16387",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-about-1440-hero.png",
+      "sha256": "40c6be1e373d29935f7fa2d66cfba4986ba3d45bd5e5eef8151dc5bf0378b396",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-about-1440.png",
+      "sha256": "e3104ddd8eb57c311e3de37da1bcdf41dbabcd7d7dc35d2e1af3e51d41ade9ac",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-about-1440-hero.png",
+      "sha256": "dadd40ace966ffb9fd85fc1e615a82e22ab3d3f71f14a9545dd83edbd45b0d56",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-about-1440-detail.png",
+      "sha256": "5a0ec61c58a197c829404e87a23dc153310dccb50a421838aadf5ea36166ee56",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-contact-390.png",
+      "sha256": "8f246b07069a08e87e60f91089ca0a9041c7722bb1a08e2b2ce6e9f5e89e3a51",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-contact-390-hero.png",
+      "sha256": "cae6f1498faf2c292690c3aa2d88281399ac025a76514ed43121a3f1f33c76e0",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-contact-390.png",
+      "sha256": "1bad5fb2046f596392355e7b0f5c23f93e73d1147c40fb481353f3a66256eb6a",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-contact-390-hero.png",
+      "sha256": "c61d80b1befa545a8bd39be2f7b9bf158caef481f0190f29417fa11955be9a62",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-contact-390-detail.png",
+      "sha256": "2a12272a84fccec5b0ac8e32bfd66f58d3cca9837aa6006d9d5608d40fc3c836",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-contact-1440.png",
+      "sha256": "98b4693d9c07b1f9ecc241df968abd40381b063415ff2841a987b672077d176b",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/before-contact-1440-hero.png",
+      "sha256": "b08f195ec7930b4d488cd30b7f8e2bb55d5fbb444eb12cfe5147e38e5f6c486d",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-contact-1440.png",
+      "sha256": "404928139245f5c8bd0dba86df8d71a100a497b9b03d9b461747e217e164ec84",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-contact-1440-hero.png",
+      "sha256": "156f207e3bc89ee9e2c9f3f76511da61ff6696cccde73690083333905314b216",
+      "retention": "ignored local review artifact, not portable source validation"
+    },
+    {
+      "path": ".local-email-preview/content-rollout/after-contact-1440-detail.png",
+      "sha256": "6e87ecaab9cc6f20d96e5c5892a43eadb9df925aa9f292754f52f0654918169a",
+      "retention": "ignored local review artifact, not portable source validation"
+    }
+  ]
+}

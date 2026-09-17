@@ -2459,3 +2459,20 @@ authoritative. Keep blogs and customer worlds excluded until separately approved
 Local guide cards vanished at Drupal pagination page2 because an absolute next URL
 escaped the Vite proxy. The dev-only resolver now preserves same-origin proxying;
 production absolute URL behavior is unchanged and regression-tested.
+
+## 2026-09-17 — Page-family identity and truthful Contact success
+
+The owner approved Web Basics and the planned17-route propagation, not automatic
+deployment. Package comparison, system briefs, editorial About and inviting Contact
+now share tokens/primitives without sharing a single layout. Enrollment stays exact;
+Blogs and customer worlds remain excluded. Review the family gallery, not just a hero.
+
+Never infer the $199 offer from a substring: $1,999 matched the legacy expression.
+Use the exact Web Basics slug and preserve other packages' own source facts/CTAs.
+Likewise, the form's `sent` boolean included mailto fallback; crown success now
+requires a durable server receipt. Saved-with-notification-failure is not email proof.
+
+Use a fresh public CMS snapshot for deterministic broad layout tests and separate
+live-readonly captures for source integration. Record retries and test limitations.
+Legacy service promises and Contact's one-day/backend-default-three-day inconsistency
+were preserved, flagged, and not newly verified by this presentation work.

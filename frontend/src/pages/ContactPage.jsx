@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import { getNodeByAlias } from '../api/drupal.js';
 import { transformPageNode } from '../lib/drupalAdapter.js';
-import { Section, ContactForm, FadeUp } from '../components/v1/index.js';
+import { ContactForm } from '../components/v1/index.js';
 import SolutionFinder from '../components/SolutionFinder.jsx';
+import { FAMPage, FAMPageHero, FAMSection, FAMBrush } from '../components/content-experience/index.jsx';
 
 const CONTACT_EMAIL = 'hello@famtasticdesigns.com';
 
 /**
- * /contact — NEW page. Pulls the `page` node whose path alias is /contact
- * for the hero copy, then renders the v1 ContactForm next to contact-info
- * cards (v1 contact page layout: info column + form column).
+ * Existing intake-first workflow, with the approved invitation recipe.
  */
 export default function ContactPage() {
   const [page, setPage] = useState(null); // transformed page node | null
@@ -25,52 +24,38 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <>
+    <FAMPage id="contact" recipe="contact">
+    <FAMPageHero id="invitation" eyebrow="Contact / Have an idea?"
+      title={page?.headline || "Let's Build Something Great Together"} signature="Great Together"
+      lede={page?.subheadline || 'Tell us about the website, system, or automation you need — we reply within one business day with next steps and a fixed-price scope.'}
+      primaryCta={{ label: 'Find your project fit', href: '/contact#project-fit' }}
+      secondaryCta={{ label: 'Send us a message', href: '/contact#contact-form' }} />
     {/* SolutionFinder leads — the intake is the primary action on /contact. */}
-    <Section className="v1-section--flush-top" id="project-fit">
-      <div style={{ paddingTop: '3rem' }}>
-        <SolutionFinder />
-      </div>
-    </Section>
+    <FAMSection id="project-fit" eyebrow="Find your project fit"><SolutionFinder /></FAMSection>
 
-    <Section id="contact-form">
-      <div className="v1-split" style={{ paddingTop: '3rem' }}>
-        <FadeUp>
-          <p className="v1-eyebrow">Contact</p>
-          <h1 className="v1-hero__title" style={{ fontSize: 'clamp(1.9rem, 4vw, 3rem)' }}>
-            {page?.headline || "Let's Build Something Great Together"}
-          </h1>
-          <p className="v1-hero__lede">
-            {page?.subheadline ||
-              'Tell us about the website, system, or automation you need — we reply within one business day with next steps and a fixed-price scope.'}
-          </p>
-
-          <div className="v1-grid" style={{ marginTop: '2rem' }}>
-            <div className="v1-card">
-              <p className="v1-pricing-card__label">Email</p>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="v1-card__title" style={{ display: 'block' }}>
-                {CONTACT_EMAIL}
-              </a>
-              <p className="v1-card__text" style={{ marginTop: '0.75rem' }}>
+    <FAMSection id="contact-form" eyebrow="A direct conversation" title="Tell us what you have in mind." signature="in mind.">
+      <div className="fam-ce-contact-layout">
+        <aside className="fam-ce-contact-notes" aria-label="Contact details and next steps">
+          <FAMBrush tone="lime" />
+          <div className="fam-ce-contact-email">
+              <p className="fam-ce-eyebrow">Email</p>
+              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+              <p>
                 Send a note whenever it works for you. We respond by email within 1 business day.
               </p>
-            </div>
-            <div className="v1-card">
-              <p className="v1-pricing-card__label">What happens next</p>
-              <ul className="v1-dot-list">
+          </div>
+          <div>
+              <h3>What happens next</h3>
+              <ol className="fam-ce-contact-next">
                 <li>You send the form, and your request is saved securely.</li>
                 <li>We reply within one business day with a scoped, fixed-price plan.</li>
                 <li>Focused one-page sites start at the $199 Web Basics foundation; defined business sites up to five pages at $499.</li>
-              </ul>
-            </div>
+              </ol>
           </div>
-        </FadeUp>
-
-        <FadeUp delay={0.12}>
-          <ContactForm title="Send Us a Message" />
-        </FadeUp>
+        </aside>
+        <ContactForm title="Send Us a Message" brandSuccess />
       </div>
-    </Section>
-    </>
+    </FAMSection>
+    </FAMPage>
   );
 }

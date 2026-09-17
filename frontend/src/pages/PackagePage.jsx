@@ -9,6 +9,7 @@ import { packageSeo } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp, Stagger, Item } from '../components/v1/index.js';
 import RelatedEducation from '../components/RelatedEducation.jsx';
 import WebBasicsExperience from '../components/content-experience/WebBasicsExperience.jsx';
+import PackageExperience from '../components/content-experience/PackageExperience.jsx';
 import { hasContentExperience } from '../components/content-experience/recipes.js';
 
 /**
@@ -67,14 +68,16 @@ export default function PackagePage() {
   }
 
   const included = plan.whatsIncluded.length ? plan.whatsIncluded : plan.features;
-  const isWebBasics = /199|web basics/i.test(`${plan.price} ${plan.title}`);
+  const isWebBasics = slug === '199-quick-start';
   const cta = isWebBasics
     ? { label: 'Research Web Basics', href: '/start?option=web-basics' }
     : { label: 'Start a scoped request', href: '/start' };
 
-  // First owner-review proof only. Other package and blog routes keep v1.
+  // Explicit owner-approved routes only. Never apply Web Basics terms to other offers.
   if (hasContentExperience(slug)) {
-    return <WebBasicsExperience plan={plan} cta={cta} slug={slug} />;
+    return slug === '199-quick-start'
+      ? <WebBasicsExperience plan={plan} cta={cta} slug={slug} />
+      : <PackageExperience plan={plan} cta={cta} slug={slug} />;
   }
 
   return (

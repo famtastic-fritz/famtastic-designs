@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router';
 import { getNodeByAlias } from '../api/drupal.js';
 import { textValue } from '../utils/content.js';
+import AboutExperience from '../components/content-experience/AboutExperience.jsx';
+import { contentRecipeForPath } from '../components/content-experience/recipes.js';
 
 /**
  * Catch-all route: before bouncing to '/', try to resolve the current path
@@ -33,6 +35,8 @@ export default function AliasPage() {
 
   const attrs = state.node.attributes ?? {};
   const body = textValue(attrs.body);
+
+  if (contentRecipeForPath(pathname) === 'about') return <AboutExperience attrs={attrs} />;
 
   return (
     <article className="node-view">

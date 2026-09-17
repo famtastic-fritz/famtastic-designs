@@ -1,0 +1,60 @@
+{
+  "scope": "local presentation, live read-only CMS; no send/payment/customer persistence",
+  "widths": [
+    {
+      "width": 320,
+      "overflow": false,
+      "preservedFeatures": 6,
+      "guideCards": 4,
+      "keyboardFocus": true,
+      "minTarget": 44,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "preservedFeatures": 6,
+      "guideCards": 4,
+      "keyboardFocus": true,
+      "minTarget": 44,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "overflow": false,
+      "preservedFeatures": 6,
+      "guideCards": 4,
+      "keyboardFocus": true,
+      "minTarget": 44,
+      "errors": []
+    },
+    {
+      "width": 1024,
+      "overflow": false,
+      "preservedFeatures": 6,
+      "guideCards": 4,
+      "keyboardFocus": true,
+      "minTarget": 44,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "preservedFeatures": 6,
+      "guideCards": 4,
+      "keyboardFocus": true,
+      "minTarget": 44,
+      "errors": []
+    }
+  ],
+  "excludedRoutes": [
+    "/",
+    "/blog",
+    "/work"
+  ],
+  "mutations": [],
+  "fontFallback": "passed at320",
+  "escapingAndMissingNode": "passed",
+  "status": "passed",
+  "checkedAt": "2026-09-17T19:43:36.134Z"
+}

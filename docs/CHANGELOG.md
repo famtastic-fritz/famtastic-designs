@@ -1,5 +1,17 @@
 # Product changelog
 
+## 2026-09-17 — Approved content direction propagated (local, not deployed)
+
+- Extended the approved page primitives to17 exact routes across Packages,
+  Solutions/Services, About and Contact, with distinct family compositions.
+- Preserved CMS scope/prices, existing flows and original artwork; added the
+  approved F/A/M definition and a server-confirmed-only Contact success crown.
+- Corrected $1,999 research routing previously caught by the “199” text match.
+- Added68 responsive/source checks, non-sending form fixtures, six-family local
+  before/after gallery, Build DNA and updated design/agent operating rules.
+- Handoff: `docs/design/CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`. No main push,
+  production deployment or customer communication; legacy-copy concerns recorded.
+
 ## 2026-09-17 — Content Experience first proof (local, not deployed)
 
 - Added reusable owned-page primitives and exact-route Web Basics composition:

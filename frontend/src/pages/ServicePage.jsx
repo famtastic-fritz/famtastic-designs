@@ -17,6 +17,8 @@ import {
 } from '../components/v1/index.js';
 import SolutionFinder, { branchForServiceSlug } from '../components/SolutionFinder.jsx';
 import RelatedEducation from '../components/RelatedEducation.jsx';
+import SolutionExperience from '../components/content-experience/SolutionExperience.jsx';
+import { contentRecipeForPath } from '../components/content-experience/recipes.js';
 
 /**
  * /services/:slug — full v1 detail layout for one service_page node:
@@ -74,7 +76,17 @@ export default function ServicePage() {
   function openFinder() {
     setFinderOpen(true);
     // Let the finder render, then bring it into view.
-    requestAnimationFrame(() => finderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    requestAnimationFrame(() => finderRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }));
+  }
+
+  if (contentRecipeForPath(`/services/${slug}`) === 'solution-detail') {
+    return <SolutionExperience service={service} slug={slug} cta={cta}>
+      <div ref={finderRef}>
+        {finderOpen ? <SolutionFinder key={slug} initialBranch={serviceBranch} /> : <button type="button" className="fam-ce-cta fam-ce-cta--primary" onClick={openFinder}>
+          <span>Start with this service</span><span className="fam-ce-cta__arrow" aria-hidden="true">↗</span>
+        </button>}
+      </div>
+    </SolutionExperience>;
   }
 
   return (

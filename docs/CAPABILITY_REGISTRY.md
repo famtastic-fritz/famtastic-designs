@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Approved content family propagation (local-tested)
+
+Supersedes the first-proof review state below: owner approved the Web Basics
+direction and planned propagation. Seventeen existing routes/six recipes now have
+68 responsive source-projection checks and live-readonly screenshot evidence.
+Contact saved/partial/unconfirmed/failure states were tested with intercepted
+synthetic responses only. Existing source/backend is reused; this is not new
+lead-delivery, mail, page-builder or production capability. Expanded local review:
+`docs/design/CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`. No push/deployment occurred.
+
 ## 2026-09-17 — Owned content experience (local tested)
 
 Reusable React presentation primitives and first Web Basics recipe now have

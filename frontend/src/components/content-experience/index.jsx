@@ -10,7 +10,7 @@ export { FAMCrown };
 export function FAMPage({ id, recipe, children }) {
   const definition = CONTENT_RECIPES[recipe];
   return <article id={id} className="fam-page" data-fam-recipe={recipe}
-    data-fam-system={CONTENT_SYSTEM_VERSION} data-fam-intensity={definition?.intensity ?? 0}>{children}</article>;
+    data-fam-character={definition?.character} data-fam-system={CONTENT_SYSTEM_VERSION} data-fam-intensity={definition?.intensity ?? 0}>{children}</article>;
 }
 
 /** Decorative CSS stroke, never independent logo artwork. */
@@ -20,12 +20,12 @@ export function FAMBrush({ tone = 'identity' }) {
 }
 
 /** Navigation only; preserves link semantics and the caller's approved destination. */
-export function FAMCTA({ href, children, label, variant = 'primary', className = '' }) {
+export function FAMCTA({ href, children, label, variant = 'primary', className = '', onClick }) {
   const destination = safeContentHref(href);
   const kind = ['primary', 'secondary', 'editorial'].includes(variant) ? variant : 'secondary';
   const contents = <><span>{children || label}</span><span className="fam-ce-cta__arrow" aria-hidden="true">↗</span></>;
   if (!destination) return <span>{children || label}</span>;
-  const props = { className: `fam-ce-cta fam-ce-cta--${kind} ${className}`.trim() };
+  const props = { className: `fam-ce-cta fam-ce-cta--${kind} ${className}`.trim(), onClick };
   return destination.startsWith('/') ? <Link {...props} to={destination}>{contents}</Link> : <a {...props} href={destination}>{contents}</a>;
 }
 
@@ -41,27 +41,28 @@ export function FAMSectionHeader({ id, eyebrow, title, signature, number }) {
   </header>;
 }
 
-export function FAMSection({ id, eyebrow, title, signature, number, className = '', children }) {
-  return <section id={id} className={`fam-ce-section ${className}`.trim()} aria-labelledby={`${id}-title`}>
+export function FAMSection({ id, eyebrow, title, signature, number, intro, className = '', children }) {
+  return <section id={id} className={`fam-ce-section ${className}`.trim()} aria-labelledby={title ? `${id}-title` : undefined} aria-label={title ? undefined : eyebrow}>
     <div className="fam-ce-container">
-      <FAMSectionHeader id={`${id}-title`} eyebrow={eyebrow} title={title} signature={signature} number={number} />
+      {title && <FAMSectionHeader id={`${id}-title`} eyebrow={eyebrow} title={title} signature={signature} number={number} />}
+      {intro && <p className="fam-ce-section-intro">{intro}</p>}
       {children}
     </div>
   </section>;
 }
 
 /** Native text hero; complementary slot is supplied by the page recipe. */
-export function FAMPageHero({ id, eyebrow, title, lede, primaryCta, secondaryCta, note, breadcrumbs = [], children }) {
-  return <header id={id} className="fam-ce-hero">
+export function FAMPageHero({ id, eyebrow, title, signature, lede, primaryCta, secondaryCta, note, breadcrumbs = [], children }) {
+  return <header id={id} className={`fam-ce-hero${children ? '' : ' fam-ce-hero--solo'}`}>
     <div className="fam-ce-hero__atmosphere" aria-hidden="true"><FAMBrush /></div>
     <div className="fam-ce-container">
       {breadcrumbs.length > 0 && <nav className="fam-ce-breadcrumb" aria-label="Breadcrumb">{breadcrumbs.map(crumb => <span key={crumb.href}><Link to={crumb.href}>{crumb.label}</Link><span aria-hidden="true"> / </span></span>)}<span aria-current="page">{title}</span></nav>}
       <div className="fam-ce-hero__layout">
         <div className="fam-ce-hero__copy">
           <p className="fam-ce-eyebrow">{eyebrow}</p>
-          <h1>{title}</h1>
-          <p className="fam-ce-lede">{lede}</p>
-          <div className="fam-ce-actions"><FAMCTA {...primaryCta} /><FAMCTA {...secondaryCta} variant="secondary" /></div>
+          <h1><SignatureHeading text={title} phrases={signature ? [signature] : []} /></h1>
+          {lede && <p className="fam-ce-lede">{lede}</p>}
+          {(primaryCta || secondaryCta) && <div className="fam-ce-actions">{primaryCta && <FAMCTA {...primaryCta} />}{secondaryCta && <FAMCTA {...secondaryCta} variant="secondary" />}</div>}
           {note && <p className="fam-ce-note">{note}</p>}
         </div>
         {children}
@@ -102,8 +103,8 @@ export function FAMFinale({ id, title, signature, body, primaryCta, secondaryCta
     <div className="fam-ce-container">
       <FAMCrown intensity="hero" />
       <h2 id={`${id}-title`}><SignatureHeading text={title} phrases={signature ? [signature] : []} /></h2>
-      <p>{body}</p>
-      <div className="fam-ce-actions"><FAMCTA {...primaryCta} /><FAMCTA {...secondaryCta} variant="editorial" /></div>
+      {body && <p>{body}</p>}
+      <div className="fam-ce-actions">{primaryCta && <FAMCTA {...primaryCta} />}{secondaryCta && <FAMCTA {...secondaryCta} variant="editorial" />}</div>
     </div>
   </section>;
 }

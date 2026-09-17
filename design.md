@@ -11,7 +11,8 @@ the whole identity. Source artwork is immutable; crown derivatives share its
 silhouette. Email is an existing consumer, not a system to rebuild.
 Machine-readable visual DNA: `docs/design/famtastic-site-dna.v1.json`.
 The September 17 visual-DNA baseline is released; see its deployment receipt.
-The newer content-page system remains a local owner-review checkpoint.
+The newer content-page system has owner-approved direction and remains a local
+expanded-review checkpoint; it has not been released.
 
 ## Owned content pages — shared DNA, distinct recipes
 
@@ -22,7 +23,12 @@ inviting, Work cinematic and Admin operational. Blogs retain a separate directio
 Use the named materials, native heading hierarchy, six-word cursive limit,
 safe CTA variants and exact route enrollment; never apply a global page restyle.
 Keep all offer facts and existing workflow/approval/payment boundaries intact.
-First proof is `/packages/199-quick-start`; owner visual review precedes propagation.
+First proof `/packages/199-quick-start` was owner-approved September 17, authorizing
+the explicit Packages → Solutions/Services → About → Contact propagation. The
+expanded local preview is documented in `docs/design/CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`.
+Do not extend Web Basics billing terms to other packages or interpret brand approval
+as a deployment instruction. Contact success decoration requires `ok`, a positive
+integer `request_id` and a saved status; a mail draft is not a saved request or send.
 
 Owner rule, September14,2026: every new customer build must include a site-specific `design.md` before implementation. Reference this shared contract, the approved customer direction, responsive/type rules, component boundaries and acceptance evidence. A file added during maintenance must disclose that timing rather than imply it governed the original generation.
 

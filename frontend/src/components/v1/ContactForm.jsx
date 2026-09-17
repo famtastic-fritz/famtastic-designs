@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { collectUtmParams, postContactRequest } from '../../api/pipeline.js';
+import FAMCrown from '../FAMCrown.jsx';
 
 const CONTACT_EMAIL = 'hello@famtasticdesigns.com';
 
@@ -7,17 +8,17 @@ const INITIAL = { name: '', email: '', phone: '', business: '', message: '' };
 
 /**
  * v1 contact form — real fields (name, email, phone, business, message) in
- * the dark card style. The headless backend exposes no form endpoint yet, so
- * a valid submission opens the visitor's mail client with a fully composed
- * message to the studio inbox and confirms inline.
+ * the dark card style. Saves through the existing public request endpoint;
+ * transport failure offers the existing mail-client handoff, not delivery proof.
  */
-export default function ContactForm({ title = 'Tell us about your project', compact = false }) {
+export default function ContactForm({ title = 'Tell us about your project', compact = false, brandSuccess = false }) {
   const [values, setValues] = useState(INITIAL);
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [fallbackMailto, setFallbackMailto] = useState('');
+  const [confirmed, setConfirmed] = useState(false);
 
   function update(field) {
     return (event) => {
@@ -67,10 +68,18 @@ export default function ContactForm({ title = 'Tell us about your project', comp
         path: window.location.pathname,
         referrer: document.referrer || null,
       });
-      setMessage(res?.message || 'We received your request. Our team has been notified.');
+      // The crown means saved request, never email delivery. A partial notification
+      // failure is still a durable request, and its server message stays visible.
+      const saved = res?.ok === true && Number.isInteger(res?.request_id) && res.request_id > 0
+        && ['received', 'partial_success'].includes(res.status);
+      setConfirmed(saved);
+      setMessage(brandSuccess && !saved
+        ? 'We could not confirm that your request was saved. You can email your message directly using the link below.'
+        : res?.message || 'We received your request. Our team has been notified.');
       setSent(true);
     } catch {
       setMessage('We could not reach the server. Your email client should open with your message ready to send.');
+      setConfirmed(false);
       window.location.href = mailto;
       setSent(true);
     } finally {
@@ -80,7 +89,8 @@ export default function ContactForm({ title = 'Tell us about your project', comp
 
   if (sent) {
     return (
-      <div className="v1-card v1-form-card" role="status">
+      <div className="v1-card v1-form-card" role="status" data-request-confirmed={confirmed}>
+        {brandSuccess && confirmed && <FAMCrown intent="success" intensity="hero" />}
         <h2 className="v1-form-card__title">Thanks, {values.name.split(' ')[0]}.</h2>
         <p className="v1-card__text">
           {message || 'We received your request. Our team has been notified.'}
@@ -92,6 +102,7 @@ export default function ContactForm({ title = 'Tell us about your project', comp
           className="v1-btn v1-btn--ghost"
           onClick={() => {
               setSent(false);
+              setConfirmed(false);
               setMessage('');
               setFallbackMailto('');
               setValues(INITIAL);

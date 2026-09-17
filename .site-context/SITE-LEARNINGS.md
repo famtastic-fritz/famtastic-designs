@@ -2436,3 +2436,20 @@ Observation: local RelatedEducation silently disappeared because absolute Drupal
 page2 URLs bypassed Vite and failed CORS. Guidance: rebase only the dev-proxy
 JSON:API path; test production absolute URL behavior separately. Do not mistake a
 local fetch failure for unpublished content or fabricate fallback guide cards.
+
+## 2026-09-17 — Approved family propagation keeps facts and state separate
+
+Observation: /199/ in a price/title condition also matched the $1,999 package.
+Guidance: choose the research branch by exact route, not a price substring. Do not
+spread one package's renewal disclosures to the whole family.
+
+Observation: Contact's existing `sent` state also represents a mail-client fallback.
+Guidance: decorate only the backend-confirmed durable request (`ok`, positive integer
+request ID, saved status). Preserve partial notification warnings; neither a crown
+nor a mailto link proves message delivery.
+
+Observation: repeated live CMS fetches made a broad responsive suite intermittently
+time out. Guidance: capture the real source once for deterministic projection tests,
+label that snapshot boundary, and keep separate live-readonly screenshot checks.
+Shared visual primitives still require distinct compositions; owner approval of
+the direction is recorded separately from expanded review and production release.

@@ -109,7 +109,11 @@ routine status messages or their semantics. None is added to fabricated live dat
 
 Owned content-page recipes and reusable primitives are governed by
 `FAMTASTIC-CONTENT-EXPERIENCE.md`. Shared identity must not become identical layouts.
-The Web Basics first-proof extension is local review only; rollout is explicit.
+Web Basics was owner-approved on September 17; the explicit 17-route family
+propagation is implemented locally, not deployed. See
+`CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`. Shared primitives do not permit enrollment
+outside the exact route registry. Contact's success crown means a server-confirmed
+saved request; partial notification failure remains visible and is not send proof.
 
 - Public: opt-in agency Layout wrapper; existing hero, panels, buttons, footer.
   Preserve all copy, sections, routes, $199 terms and individual project worlds.

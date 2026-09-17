@@ -1,5 +1,10 @@
 # Web Basics content-experience checkpoint
 
+**Subsequent decision:** the owner approved this proof and planned propagation on
+September 17. This document preserves the original5d98e4d1 checkpoint below.
+Current expanded local evidence/gates are in `CONTENT-EXPERIENCE-ROLLOUT-2026-09-17.md`.
+The original Build DNA must be validated against that parent revision.
+
 Status: local tested, owner visual review pending. Branch:
 `codex/content-experience-web-basics`, based on7bf7d9d5. No main push or deployment.
 

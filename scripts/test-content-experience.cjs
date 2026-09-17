@@ -6,12 +6,14 @@ const { pathToFileURL } = require('node:url');
 const path = require('node:path');
 const base = process.env.CONTENT_TEST_URL || 'http://127.0.0.1:4187';
 const folder = '.local-email-preview/content-experience';
-const output = 'docs/evidence/content-experience-web-basics/browser-results.json';
+// Keep the original approved proof receipt frozen at its source revision.
+const output = 'docs/evidence/content-experience-rollout/web-basics-regression.json';
 
 (async () => {
   const { hasContentExperience, safeContentHref } = await import(pathToFileURL(path.resolve('frontend/src/components/content-experience/recipes.js')));
   assert.equal(hasContentExperience('199-quick-start'), true);
-  for (const slug of ['499-site-upgrade', 'custom-199', '199', '']) assert.equal(hasContentExperience(slug), false);
+  assert.equal(hasContentExperience('499-site-upgrade'), true);
+  for (const slug of ['custom-199', '199', '']) assert.equal(hasContentExperience(slug), false);
   for (const href of ['javascript:alert(1)', '//example.com', '/\\example.com', 'data:text/html,test', 'https://user:pass@example.com', '/\nexample']) assert.equal(safeContentHref(href), null);
   assert.equal(safeContentHref('/start?option=web-basics'), '/start?option=web-basics');
   const { resolveJsonApiNext } = await import(pathToFileURL(path.resolve('frontend/src/utils/jsonApiPagination.js')));
@@ -107,7 +109,7 @@ const output = 'docs/evidence/content-experience-web-basics/browser-results.json
     assert.match(await content.locator('main').innerText(), /could not find that package/);
     results.escapingAndMissingNode = 'passed'; await content.close();
 
-    for (const route of ['/', '/packages/499-site-upgrade', '/services', '/about', '/contact', '/blog', '/work']) {
+    for (const route of ['/', '/blog', '/work']) {
       const page = await context.newPage(); await page.goto(base + route); await page.waitForLoadState('networkidle');
       assert.equal(await page.locator('.fam-page').count(), 0, `not enrolled: ${route}`);
       results.excludedRoutes.push(route); await page.close();

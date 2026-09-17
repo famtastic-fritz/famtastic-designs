@@ -1,0 +1,646 @@
+{
+  "scope": "local browser presentation against freshly fetched public CMS snapshots and cached anonymous JSON:API GETs; synthetic intercepted form responses only",
+  "sourceNodes": {
+    "package_page": [
+      "60449381-e8c0-4783-8c48-d2ac6ed4c492",
+      "64067cb5-3bb0-4e02-88ac-52290bf7cf57",
+      "cd75a780-b5b6-4239-9bbe-2b3a8886b95f",
+      "be1ff21f-916e-42ca-bb38-ab330b0c5537",
+      "15b687f2-a147-4cce-8003-715067b77d08",
+      "36ad8286-f968-4d89-9c24-08388ec2a74a",
+      "52185497-e840-4377-a028-59d156b8ad71"
+    ],
+    "service_page": [
+      "2b0ca1c6-2fe8-4a1d-9af0-aa46e2086835",
+      "3ae104ed-f458-4ceb-8d32-807ebbef6dbf",
+      "65450a2b-f7f3-4c38-b806-11769b25e7b4",
+      "6fa413f3-8049-41aa-96fd-88c1ca7bbce2",
+      "a2781e04-6df5-404e-b804-d5d057aeeb19",
+      "62414e0e-5fcd-4650-aaf7-3cfb63207357"
+    ],
+    "page": [
+      "1a6beb1f-2465-465b-b551-02607dd472f7",
+      "12fdcda1-4804-4431-91ca-296eab440d42"
+    ]
+  },
+  "routes": [
+    {
+      "route": "/packages",
+      "recipe": "packages-hub",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages",
+      "recipe": "packages-hub",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages",
+      "recipe": "packages-hub",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages",
+      "recipe": "packages-hub",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/199-quick-start",
+      "recipe": "package-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/199-quick-start",
+      "recipe": "package-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/199-quick-start",
+      "recipe": "package-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/199-quick-start",
+      "recipe": "package-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/499-site-upgrade",
+      "recipe": "package-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/499-site-upgrade",
+      "recipe": "package-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/499-site-upgrade",
+      "recipe": "package-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/499-site-upgrade",
+      "recipe": "package-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/starter-website",
+      "recipe": "package-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/starter-website",
+      "recipe": "package-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/starter-website",
+      "recipe": "package-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/starter-website",
+      "recipe": "package-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/business-website",
+      "recipe": "package-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/business-website",
+      "recipe": "package-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/business-website",
+      "recipe": "package-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/business-website",
+      "recipe": "package-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/premium-website-ai",
+      "recipe": "package-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/premium-website-ai",
+      "recipe": "package-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/premium-website-ai",
+      "recipe": "package-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/premium-website-ai",
+      "recipe": "package-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/landing-page",
+      "recipe": "package-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/landing-page",
+      "recipe": "package-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/landing-page",
+      "recipe": "package-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/landing-page",
+      "recipe": "package-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/website-care-plan",
+      "recipe": "package-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/website-care-plan",
+      "recipe": "package-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/website-care-plan",
+      "recipe": "package-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/packages/website-care-plan",
+      "recipe": "package-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services",
+      "recipe": "services-hub",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services",
+      "recipe": "services-hub",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services",
+      "recipe": "services-hub",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services",
+      "recipe": "services-hub",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/ai-chatbot",
+      "recipe": "solution-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/ai-chatbot",
+      "recipe": "solution-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/ai-chatbot",
+      "recipe": "solution-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/ai-chatbot",
+      "recipe": "solution-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/site-rebuild",
+      "recipe": "solution-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/site-rebuild",
+      "recipe": "solution-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/site-rebuild",
+      "recipe": "solution-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/site-rebuild",
+      "recipe": "solution-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/custom-website-development",
+      "recipe": "solution-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/custom-website-development",
+      "recipe": "solution-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/custom-website-development",
+      "recipe": "solution-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/custom-website-development",
+      "recipe": "solution-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/landing-page-design",
+      "recipe": "solution-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/landing-page-design",
+      "recipe": "solution-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/landing-page-design",
+      "recipe": "solution-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/landing-page-design",
+      "recipe": "solution-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/client-portal-systems",
+      "recipe": "solution-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/client-portal-systems",
+      "recipe": "solution-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/client-portal-systems",
+      "recipe": "solution-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/client-portal-systems",
+      "recipe": "solution-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/e-commerce-solutions",
+      "recipe": "solution-detail",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/e-commerce-solutions",
+      "recipe": "solution-detail",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/e-commerce-solutions",
+      "recipe": "solution-detail",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/services/e-commerce-solutions",
+      "recipe": "solution-detail",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/about",
+      "recipe": "about",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/about",
+      "recipe": "about",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/about",
+      "recipe": "about",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/about",
+      "recipe": "about",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/contact",
+      "recipe": "contact",
+      "width": 768,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/contact",
+      "recipe": "contact",
+      "width": 390,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/contact",
+      "recipe": "contact",
+      "width": 320,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    },
+    {
+      "route": "/contact",
+      "recipe": "contact",
+      "width": 1440,
+      "overflow": false,
+      "sourceContentPreserved": true,
+      "errors": []
+    }
+  ],
+  "excludedRoutes": [
+    "/",
+    "/blog",
+    "/work",
+    "/portal",
+    "/login",
+    "/terms"
+  ],
+  "interceptedContactPosts": [
+    {
+      "method": "POST",
+      "scenario": "received",
+      "synthetic": true
+    },
+    {
+      "method": "POST",
+      "scenario": "partial_success",
+      "synthetic": true
+    },
+    {
+      "method": "POST",
+      "scenario": "received",
+      "synthetic": true
+    },
+    {
+      "method": "POST",
+      "scenario": "unconfirmed",
+      "synthetic": true
+    }
+  ],
+  "unexpectedWrites": [],
+  "contact": "validation, confirmed saved, partial notification failure, missing receipt, failed transport, reset: passed with interception; no inbox/provider evidence",
+  "finder": "preselected existing service finder opens and closes without submission",
+  "missingAndEscaping": "passed",
+  "fontFallback": [
+    {
+      "route": "/packages",
+      "width": 320,
+      "overflow": false,
+      "keyboardFocus": true
+    },
+    {
+      "route": "/packages/499-site-upgrade",
+      "width": 320,
+      "overflow": false,
+      "keyboardFocus": true
+    },
+    {
+      "route": "/services",
+      "width": 320,
+      "overflow": false,
+      "keyboardFocus": true
+    },
+    {
+      "route": "/services/ai-chatbot",
+      "width": 320,
+      "overflow": false,
+      "keyboardFocus": true
+    },
+    {
+      "route": "/about",
+      "width": 320,
+      "overflow": false,
+      "keyboardFocus": true
+    },
+    {
+      "route": "/contact",
+      "width": 320,
+      "overflow": false,
+      "keyboardFocus": true
+    }
+  ],
+  "status": "passed",
+  "checkedAt": "2026-09-17T19:51:45.257Z"
+}

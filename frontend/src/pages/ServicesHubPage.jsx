@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { getNodesRaw } from '../api/drupal.js';
 import { transformServiceNode } from '../lib/drupalAdapter.js';
-import { Hero, Section, ServiceCard, CTABanner, Stagger, Item } from '../components/v1/index.js';
+import { FAMPage, FAMPageHero, FAMSection, FAMFinale } from '../components/content-experience/index.jsx';
+import { CapabilityCard } from '../components/content-experience/CatalogCards.jsx';
 
 /**
  * /services — hub listing every service_page as v1 ServiceCards.
@@ -28,17 +29,17 @@ export default function ServicesHubPage() {
   }, []);
 
   return (
-    <>
-      <Hero
+    <FAMPage id="services" recipe="services-hub">
+      <FAMPageHero id="intro"
         eyebrow="Services"
-        title="Systems that capture, answer, and"
-        accent="grow"
+        title="Systems that capture, answer, and grow."
+        signature="grow."
         lede="Agentic AI systems engineered for your specific business challenge — websites, chatbots, lead capture, and client systems built to support growth."
         primaryCta={{ label: 'Start Your Project', href: '/contact' }}
         secondaryCta={{ label: 'See packages', href: '/packages' }}
       />
 
-      <Section>
+      <FAMSection id="capabilities" eyebrow="The capability lineup" title="What are we building?" signature="building?">
         {services === null && <div className="v1-loading" role="status">Loading services…</div>}
 
         {services !== null && services.length === 0 && (
@@ -51,21 +52,19 @@ export default function ServicesHubPage() {
         )}
 
         {services !== null && services.length > 0 && (
-          <Stagger className="v1-grid v1-grid--3">
-            {services.map((service) => (
-              <Item key={service.id}>
-                <ServiceCard service={service} />
-              </Item>
+          <div className="fam-ce-capability-catalog">
+            {services.map((service, index) => (
+              <CapabilityCard key={service.id} service={service} number={index + 1} />
             ))}
-          </Stagger>
+          </div>
         )}
-      </Section>
+      </FAMSection>
 
-      <CTABanner
+      <FAMFinale id="finale"
         title="Not sure which system fits?"
         body="A short consultation maps your workflow to the right build — fixed scope, fixed price, verified before launch."
         primaryCta={{ label: 'Start Your Project', href: '/contact#project-fit' }}
       />
-    </>
+    </FAMPage>
   );
 }
