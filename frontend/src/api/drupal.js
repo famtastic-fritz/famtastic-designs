@@ -16,6 +16,8 @@
  * renders while the backend is down.
  */
 
+import { resolveJsonApiNext } from '../utils/jsonApiPagination.js';
+
 const DRUPAL_BASE = (import.meta.env.VITE_DRUPAL_BASE_URL ?? '').replace(/\/+$/, '');
 const JSONAPI_BASE = `${DRUPAL_BASE}/jsonapi`;
 
@@ -582,7 +584,10 @@ export async function getNodesRaw(type, { include = '', limit = 50 } = {}) {
       }
       const next = json.links?.next?.href ?? json.links?.next ?? '';
       if (!next) break;
-      path = new URL(next, window.location.origin).href;
+      path = resolveJsonApiNext(next, {
+        origin: window.location.origin,
+        useDevelopmentProxy: import.meta.env.DEV && !DRUPAL_BASE,
+      });
       pages += 1;
     }
     return {

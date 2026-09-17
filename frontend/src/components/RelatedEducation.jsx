@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { getNodesRaw } from '../api/drupal.js';
 import { transformBlogNode } from '../lib/drupalAdapter.js';
 import { Section, Stagger, Item } from './v1/index.js';
+import { FAMSection, FAMInsightCard } from './content-experience/index.jsx';
 
 const SERVICE_SERIES = {
   'ai-chatbot': 'AI Website Agent',
@@ -23,7 +24,7 @@ const PACKAGE_SLUGS = {
   'website-care-plan': ['website-care-plan-explained', 'website-numbers-that-matter', 'when-to-change-website-from-analytics'],
 };
 
-export default function RelatedEducation({ kind, slug }) {
+export default function RelatedEducation({ kind, slug, presentation = 'standard' }) {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     let cancelled = false;
@@ -38,6 +39,12 @@ export default function RelatedEducation({ kind, slug }) {
     return () => { cancelled = true; };
   }, [kind, slug]);
   if (!posts.length) return null;
+  if (presentation === 'content-experience') {
+    return <FAMSection id="education" number="03" eyebrow="Learn before you choose"
+      title="Understand what this can do for your business." signature="for your business." className="fam-ce-education">
+      <div className="fam-ce-insights">{posts.map((post, index) => <FAMInsightCard key={post.id} post={post} number={String(index + 1).padStart(2, '0')} />)}</div>
+    </FAMSection>;
+  }
   return (
     <Section eyebrow="Learn before you choose" title="Understand what this can do for your business.">
       <Stagger className="v1-grid v1-grid--2">

@@ -8,6 +8,8 @@ import { trackEvent } from '../lib/googleAnalytics.js';
 import { packageSeo } from '../seo.js';
 import { Hero, Section, CTABanner, FadeUp, Stagger, Item } from '../components/v1/index.js';
 import RelatedEducation from '../components/RelatedEducation.jsx';
+import WebBasicsExperience from '../components/content-experience/WebBasicsExperience.jsx';
+import { hasContentExperience } from '../components/content-experience/recipes.js';
 
 /**
  * /packages/:slug — v1 detail page for one package_page node: hero with
@@ -69,6 +71,11 @@ export default function PackagePage() {
   const cta = isWebBasics
     ? { label: 'Research Web Basics', href: '/start?option=web-basics' }
     : { label: 'Start a scoped request', href: '/start' };
+
+  // First owner-review proof only. Other package and blog routes keep v1.
+  if (hasContentExperience(slug)) {
+    return <WebBasicsExperience plan={plan} cta={cta} slug={slug} />;
+  }
 
   return (
     <article>

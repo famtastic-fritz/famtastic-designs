@@ -107,6 +107,10 @@ routine status messages or their semantics. None is added to fabricated live dat
 
 ## Surface application
 
+Owned content-page recipes and reusable primitives are governed by
+`FAMTASTIC-CONTENT-EXPERIENCE.md`. Shared identity must not become identical layouts.
+The Web Basics first-proof extension is local review only; rollout is explicit.
+
 - Public: opt-in agency Layout wrapper; existing hero, panels, buttons, footer.
   Preserve all copy, sections, routes, $199 terms and individual project worlds.
   FAMtastic is the gallery; client work is the art. No universal `button` restyle.
@@ -132,7 +136,7 @@ Canonical lime crown on #070907; no letters. ICO (16/32/48), SVG raster containe
 weight compensation only. At 48: flat; at 180+: restrained glow. Manifest declares
 application identity/theme/background without adding a service worker, install
 prompt, offline behavior or implied PWA capability. Drupal theme metadata uses
-theme-local copies; production activation is a later release decision.
+theme-local copies; the September 17 baseline activation is recorded in the release receipt.
 
 ## Motion, accessibility, performance
 
@@ -148,5 +152,7 @@ do not establish Gmail/Outlook compatibility or real customer workflow success.
 ## QA and release boundary
 
 Audit: `BRAND-DNA-AUDIT-2026-09-17.md`. Handoff records changed files, source refs,
-before/after images, fixture limitations, icon tests and exact checks. Review branch
-only: no merge, deployment, customer send or claim that these changes are live.
+before/after images, fixture limitations, icon tests and exact checks. The original
+baseline was subsequently released; see `BRAND-DNA-RELEASE-2026-09-17.md`.
+New content-experience work is separately review-gated: no deployment or customer
+send follows merely from implementing or reviewing a local page.

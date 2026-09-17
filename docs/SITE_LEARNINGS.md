@@ -2449,3 +2449,13 @@ A path can expose a wrong-domain upload even without DNS: protect before upload
 and verify anonymous HTML and assets. User policy makes Fritz an exception
 handler, not every site's build approver; selection starts build, not payment.
 See `docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md` for implementation gaps.
+# 2026-09-17 — Shared content primitives, explicit scope
+
+The content-experience pass is a single-route owner-review proof, not authority to
+restyle all pages. Route enrollment is exact; future families share primitives but
+keep their own recipe/character. Existing public facts and commercial gates remain
+authoritative. Keep blogs and customer worlds excluded until separately approved.
+
+Local guide cards vanished at Drupal pagination page2 because an absolute next URL
+escaped the Vite proxy. The dev-only resolver now preserves same-origin proxying;
+production absolute URL behavior is unchanged and regression-tested.

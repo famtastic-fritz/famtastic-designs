@@ -2,6 +2,12 @@
 
 ## Canonical visual DNA — preserve before enhancing
 
+For owned frontend content pages, also read
+`docs/design/FAMTASTIC-CONTENT-EXPERIENCE.md`. Use the existing content-experience
+primitives and explicit page-family recipes; shared DNA does not mean identical
+layouts. Enrollment is exact-route, not price/title inference. First Web Basics
+proof awaits owner review before propagation; blogs and customer worlds are excluded.
+
 Read root `design.md` and `docs/design/FAMTASTIC-DESIGN-SYSTEM.md` for owned-surface
 visual work. Apply FAMtastic identity to existing architecture; this is not blanket
 redesign authority. Preserve customer project worlds and operational workflows.

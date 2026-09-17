@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-17 — Content Experience first proof (local, not deployed)
+
+- Added reusable owned-page primitives and exact-route Web Basics composition:
+  expressive offer, numbered scope, editorial fit, disclosed pricing and guide cards.
+- Documented distinct page recipes, material/type/CTA rules and owner-review gate
+  in root design.md, canonical Design System, Content Experience guide and AGENTS.md.
+- Fixed dev-only JSON:API pagination escaping the local proxy; production behavior
+  unchanged. All five-width content checks, homepage regressions and build pass.
+- Preserved canonical artwork, existing package facts/links and untouched blog,
+  customer-world/portal/admin surfaces. No production or customer-state action.
+
 ## 2026-09-17 — Owner-approved visual DNA production release
 
 - Released9d4e000d to frontend and backend: crown icons, public cursive accents,

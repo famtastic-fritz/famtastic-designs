@@ -1,0 +1,205 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "agency-content-experience-web-basics-20260917",
+  "classification": "local_tested_owner_review_pending",
+  "created_at": "2026-09-17T17:19:01Z",
+  "record_timing_note": "Record initialized during construction, not at initial task start. Earlier exploration timings are unavailable; no retrospective timing claim.",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "7bf7d9d5",
+    "worktree_state": "codex/content-experience-web-basics, source changes in progress"
+  },
+  "recipe": {
+    "routine": "agency-owned-content-experience",
+    "version": "1.0.0",
+    "build_class": "existing-agency-page-presentation",
+    "page_id": "web-basics",
+    "route": "/packages/199-quick-start",
+    "recipe_id": "package-detail",
+    "intensity": 2,
+    "motion": "interaction-only; reduced-motion supported",
+    "original_assets": "Existing immutable PNG and source-derived crown only; no image generation",
+    "open_gates": [
+      "owner visual review",
+      "separate propagation approval",
+      "separate production release authorization"
+    ]
+  },
+  "stages": [
+    {
+      "stage_id": "presentation-construction",
+      "attempt": 1,
+      "capability": "local React/CSS content primitives and Web Basics recipe",
+      "execution": {
+        "provider": {
+          "id": "openai",
+          "transport": "Codex desktop"
+        },
+        "model": {
+          "status": "not_disclosed_by_runtime"
+        },
+        "timing": {
+          "status": "partial",
+          "note": "Task-start and per-edit duration not recorded"
+        },
+        "cost": {
+          "status": "provider_did_not_report"
+        },
+        "input": {
+          "owner_direction": "Attached frontend conversation; scoped first proof then review",
+          "facts": "Published Drupal package node and existing canonical product terms",
+          "reference": "docs/design/FAMTASTIC-DESIGN-SYSTEM.md"
+        }
+      },
+      "result": {
+        "status": "gated",
+        "technical": "passed",
+        "visual": "author inspected; owner review pending"
+      }
+    },
+    {
+      "stage_id": "browser-qa",
+      "attempt": 1,
+      "capability": "read-only presentation acceptance",
+      "execution": {
+        "provider": {
+          "id": "local-chromium",
+          "transport": "Playwright"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "partial",
+          "completed_at": "2026-09-17T17:26:07.934Z"
+        },
+        "cost": {
+          "status": "not_applicable"
+        },
+        "output": {
+          "artifact": "docs/evidence/content-experience-web-basics/browser-results.json"
+        }
+      },
+      "result": {
+        "status": "passed",
+        "limits": [
+          "not production",
+          "no customer state writes",
+          "not independent owner visual approval"
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "immutable_source_logo",
+      "path": "frontend/public/brand/famtastic-designs-logo-v1.png",
+      "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+      "rights": "owner supplied, preserve unchanged"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/index.jsx",
+      "sha256": "eb06ef2b5505e08a2cbf498bf0f544e59cbaaefb0c1152819d7f2f2e3e471c7a",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/WebBasicsExperience.jsx",
+      "sha256": "fb042fb86e1e9caec3bbf18484c22e1c4ab21fecaff443fc1aeddf1c36181175",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/content-experience.css",
+      "sha256": "cd22922a52361bcf72dc7c2e27a3eba3a094d0a0ed5b2fcdad514ee5ec72695c",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/content-experience/recipes.js",
+      "sha256": "24e29f25234b9dcf704b3a2a703fd20a7fa99c1d4214a5868525f772755d3c72",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/pages/PackagePage.jsx",
+      "sha256": "5b4673e38b849190264ade4e56d8578b199d72c9de9ad7ac7c7fbef325902fbc",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/components/RelatedEducation.jsx",
+      "sha256": "95e16bb61b36cc5ba0cf106abd986a5b48c1d32e2fd8a7d7c6afa23dc517cbbd",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/api/drupal.js",
+      "sha256": "b5a993d44df4624ec906d4ccda922aebdbb72a8d1c3cc761c3c25e931378558f",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "frontend/src/utils/jsonApiPagination.js",
+      "sha256": "ad7cb9909d85bed392b89984a9e0102ed7f483cb4f822b450e847ba82eeb51b8",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "docs/design/FAMTASTIC-CONTENT-EXPERIENCE.md",
+      "sha256": "e92c2a2ce7f9cbb8eb89b0f2e3bf3851ec244a014bf12ce11b28b869ea861301",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "scripts/test-content-experience.cjs",
+      "sha256": "1f094e98d5b9c930f65f43323786eb0f1f7bd3008661886b0dcd241cafaf2368",
+      "rights": "agency-owned source and sanitized test result"
+    },
+    {
+      "role": "source_or_acceptance",
+      "path": "docs/evidence/content-experience-web-basics/browser-results.json",
+      "sha256": "c26a54191bb52e9896d704752ac17f8394b0bf40ce65235c6476767ba491e3a0",
+      "rights": "agency-owned source and sanitized test result"
+    }
+  ],
+  "retrieval": {
+    "filesystem": {
+      "path": "docs/evidence/content-experience-web-basics/build-dna.json"
+    },
+    "database": {
+      "status": "not_applicable",
+      "reason": "Agency frontend local review only; no customer delivery or Drupal mutation"
+    },
+    "site_studio": {
+      "status": "not_applicable",
+      "reason": "No customer-site handoff"
+    }
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256"
+  },
+  "local_review_artifacts": [
+    {
+      "path": ".local-email-preview/content-experience/before-390.png",
+      "sha256": "31316ef75ef26474aabda84181a2a9ebcb7b80a1251e67e602aa47282525acc6",
+      "retention": "local ignored review output, not part of portable validation"
+    },
+    {
+      "path": ".local-email-preview/content-experience/before-1440.png",
+      "sha256": "c11c95fe0a47131abd455cf4804dc232e4bbf5be0efb72b69eee8bdbb3170b87",
+      "retention": "local ignored review output, not part of portable validation"
+    },
+    {
+      "path": ".local-email-preview/content-experience/after-390.png",
+      "sha256": "8e893d3037cd410b7a8bbea1aa7098b67171e7376004910086d08715de71a134",
+      "retention": "local ignored review output, not part of portable validation"
+    },
+    {
+      "path": ".local-email-preview/content-experience/after-1440.png",
+      "sha256": "fc08c125117fbcce04c589b2bcbf72d57f0f0496559a9ec8e384881fdda34a4e",
+      "retention": "local ignored review output, not part of portable validation"
+    }
+  ]
+}

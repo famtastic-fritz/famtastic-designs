@@ -2426,3 +2426,13 @@ finished materializing the shared SHA checkout; it safely failed before promotio
 Guidance: serialize checkout initialization, then release/test each surface. Verify
 both runtime markers, not only Git main. Brand release9d4e000d is production-tested;
 notification-queue/security notices remain separate operational concerns.
+# 2026-09-17 — Content identity and local pagination
+
+Observation: the $199 page's facts were correct but repeated neutral panels lacked
+visual hierarchy. Guidance: compose named primitives with distinct page-family
+recipes, not per-page CSS or one universal template. Review one proof before rollout.
+
+Observation: local RelatedEducation silently disappeared because absolute Drupal
+page2 URLs bypassed Vite and failed CORS. Guidance: rebase only the dev-proxy
+JSON:API path; test production absolute URL behavior separately. Do not mistake a
+local fetch failure for unpublished content or fabricate fallback guide cards.

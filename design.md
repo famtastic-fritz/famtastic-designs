@@ -10,7 +10,19 @@ FAM 0–3 intensity decreases with operational density. Lime is action/state, no
 the whole identity. Source artwork is immutable; crown derivatives share its
 silhouette. Email is an existing consumer, not a system to rebuild.
 Machine-readable visual DNA: `docs/design/famtastic-site-dna.v1.json`.
-September 17 enhancement is review-branch only until separately released.
+The September 17 visual-DNA baseline is released; see its deployment receipt.
+The newer content-page system remains a local owner-review checkpoint.
+
+## Owned content pages — shared DNA, distinct recipes
+
+Follow [FAMTASTIC-CONTENT-EXPERIENCE.md](docs/design/FAMTASTIC-CONTENT-EXPERIENCE.md).
+Content pages may share primitives, but must not collapse into one template.
+Packages are commercial, Solutions engineered, About editorial/personal, Contact
+inviting, Work cinematic and Admin operational. Blogs retain a separate direction.
+Use the named materials, native heading hierarchy, six-word cursive limit,
+safe CTA variants and exact route enrollment; never apply a global page restyle.
+Keep all offer facts and existing workflow/approval/payment boundaries intact.
+First proof is `/packages/199-quick-start`; owner visual review precedes propagation.
 
 Owner rule, September14,2026: every new customer build must include a site-specific `design.md` before implementation. Reference this shared contract, the approved customer direction, responsive/type rules, component boundaries and acceptance evidence. A file added during maintenance must disclose that timing rather than imply it governed the original generation.
 

@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Owned content experience (local tested)
+
+Reusable React presentation primitives and first Web Basics recipe now have
+five-width browser evidence, dynamic-CMS content preservation, safe navigation,
+font fallback and explicit route exclusions. See
+docs/design/CONTENT-EXPERIENCE-HANDOFF-2026-09-17.md. Owner review is pending.
+This is not production, a generic page builder, a new offer, a Site Studio adapter,
+an expanded customer lifecycle or a completed site-wide rollout.
+
 ## 2026-09-17 — Visual DNA production evidence
 
 Production-presentation-tested at9d4e000d: public cursive/font and crown icons,
