@@ -3444,6 +3444,16 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 
 ## 2026-09-17 — selected source intent (isolated, unreleased)
 
+- Added signed source-export registration for existing mapped projects and a
+  completed-export adapter in the real selection seam. Actual Next output now
+  traverses registry/portal/serializer/worker/receipt with synthetic authority;
+  no reverse project creation or manually seeded continuation blob. Preserved
+  immutable blocked-intent history and idempotent retries. Three seam cases,
+  42 contract assertions and the cross-repository round trip pass locally.
+- Authority registry writers, unresolved-intent dispatch, concept executor and
+  live Drupal/source-delivery integration remain implementation. Drive mirror
+  remains omitted under the explicit two-worktree local-only boundary.
+
 - Normal CustomerPortalService selection now persists a versioned intent from
   existing request/source/asset records before reporting stage-specific blockers.
   The actual private selection seam passes two synthetic cases preserving

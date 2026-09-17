@@ -114,7 +114,7 @@ final class SelectedStagingContinuation {
   }
 
   /** A new revision must preserve authoritative owner/project/request identity. */
-  public static function assertSuccessor(array $current, array $next): void {
+  public static function assertSuccessor(array $current, array $next, ?int $recordedIntentRevision = NULL): void {
     foreach (['request_id', 'project_id'] as $field) {
       if (empty($current[$field]) || (string) $current[$field] !== (string) ($next[$field] ?? '')) throw new \InvalidArgumentException('Selected packet tenant binding changed: ' . $field);
     }
@@ -126,6 +126,9 @@ final class SelectedStagingContinuation {
       if (empty($current['continuation'][$field]) || $current['continuation'][$field] !== ($next['continuation'][$field] ?? NULL)) throw new \InvalidArgumentException('Selected packet request binding changed.');
     }
     if (empty($current['continuation']['customer']['id']) || $current['continuation']['customer']['id'] !== ($next['continuation']['customer']['id'] ?? NULL)) throw new \InvalidArgumentException('Selected packet account binding changed.');
-    if (!is_int($next['continuation']['selection_revision'] ?? NULL) || $next['continuation']['selection_revision'] !== ($current['continuation']['selection_revision'] ?? 0) + 1 || $current['packet_id'] === $next['packet_id'] || $current['idempotency_key'] === $next['idempotency_key']) throw new \InvalidArgumentException('Selected packet revision must be the next immutable revision.');
+    $nextRevision = $next['continuation']['selection_revision'] ?? NULL;
+    $currentRevision = $current['continuation']['selection_revision'] ?? 0;
+    $knownIntent = $recordedIntentRevision !== NULL && $nextRevision === $recordedIntentRevision && $nextRevision > $currentRevision;
+    if (!is_int($nextRevision) || (!$knownIntent && $nextRevision !== $currentRevision + 1) || $current['packet_id'] === $next['packet_id'] || $current['idempotency_key'] === $next['idempotency_key']) throw new \InvalidArgumentException('Selected packet revision must be the next immutable revision.');
   }
 }

@@ -2472,6 +2472,10 @@ the direction is recorded separately from expanded review and production release
 
 ## 2026-09-17 — selected revision identity
 
+Completed-source follow-on: bind registered export to existing authority and
+retain one customer source checkout. Intent history must advance independently
+of executable packets; no completion/rights/hosting truth comes from a concept.
+
 Selected-source follow-on: normal portal selection now records inherited source
 and intake before stage-specific exceptions. Do not equate media AI consent with
 rights or concept byte identity with scope completion. Two real-service seam

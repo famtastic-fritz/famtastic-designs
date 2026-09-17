@@ -83,7 +83,12 @@ namespace {
     'selected_direction_id' => 'direction-a', 'selected_artifact_sha256' => $artifacts[0]['sha256'], 'artifact_manifest_sha256' => $packet['artifact_manifest_sha256'],
     'artifact_sha256' => str_repeat('b', 64), 'completed_at' => '2026-09-17T00:01:00Z', 'repository' => ['branch' => 'synthetic', 'mode' => 'local_only'], 'qa' => [['name' => 'scope', 'status' => 'passed']],
   ] + $evidence['hosting_target'];
-  if (($argv[1] ?? '') === '--validate-receipt') {
+  if (($argv[1] ?? '') === '--validate-source-receipt') {
+    $input = json_decode(stream_get_contents(STDIN), TRUE, 512, JSON_THROW_ON_ERROR);
+    $packet = $input['packet']; $receipt = $input['receipt'];
+    $row['public_id'] = $packet['request_id'];
+  }
+  elseif (($argv[1] ?? '') === '--validate-receipt') {
     $receipt = json_decode(stream_get_contents(STDIN), TRUE, 512, JSON_THROW_ON_ERROR);
   }
   $db = new \Drupal\Core\Database\Connection(); $db->row = $row;
@@ -97,7 +102,7 @@ namespace {
   $ledger = new \Drupal\famtastic_pipeline\Service\OperationalLedger();
   $service = new Receipts($db, $entities, $ledger, $clock, $config);
   $result = $service->accept($receipt);
-  if (($argv[1] ?? '') === '--validate-receipt') { echo json_encode(['accepted' => TRUE, 'notifications' => count($db->notifications), 'checkout' => Receipts::checkoutGateSatisfied($db->row)]); exit; }
+  if (in_array(($argv[1] ?? ''), ['--validate-receipt', '--validate-source-receipt'], TRUE)) { echo json_encode(['accepted' => TRUE, 'notifications' => count($db->notifications), 'checkout' => Receipts::checkoutGateSatisfied($db->row)]); exit; }
   check($result['newly_processed'] && count($db->notifications) === 1, 'success queues one existing outbox record');
   check(!Receipts::checkoutGateSatisfied($db->row), 'ready is not accepted');
   check(!$service->accept($receipt)['newly_processed'] && count($db->notifications) === 1, 'duplicate callback is idempotent');
@@ -110,6 +115,9 @@ namespace {
   rejects(fn() => $service->accept($failedQa), 'failed QA');
   $next = $packet; $next['continuation']['selection_revision'] = 2; $next['packet_id'] .= ':next'; $next['idempotency_key'] = $next['packet_id'];
   Producer::assertSuccessor($packet, $next); check(TRUE, 'same owner next revision');
+  $jump = $next; $jump['continuation']['selection_revision'] = 3;
+  rejects(fn() => Producer::assertSuccessor($packet, $jump), 'unrecorded revision gap refused');
+  Producer::assertSuccessor($packet, $jump, 3); check(TRUE, 'recorded blocked intent revisions may precede next executable packet');
   rejects(fn() => Producer::assertSuccessor($packet, $packet), 'changed payload same revision');
   $other = $next; $other['continuation']['customer']['id'] = '999'; rejects(fn() => Producer::assertSuccessor($packet, $other), 'cross-tenant successor');
   $db->row['staging_review_status'] = 'accepted';

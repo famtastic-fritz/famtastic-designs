@@ -1760,7 +1760,7 @@ final class CustomerPortalService {
     if (is_array($previous) && !isset($previous['continuation'])) {
       throw new \InvalidArgumentException('legacy_packet_migration_required: reconcile the registered selection before creating a new revision.');
     }
-    $revision = (int) ($previous['continuation']['selection_revision'] ?? 0) + 1;
+    $revision = max((int) ($previous['continuation']['selection_revision'] ?? 0), (int) ($studio['selected_source_intent']['selection']['revision'] ?? 0)) + 1;
     $packetId = 'staging-packet:request:' . (int) $row['id'] . ':revision:' . $revision;
     $sourcePath = trim((string) $variant->get('artifact_path')->value);
     if ($sourcePath === '' || str_starts_with($sourcePath, '/') || str_contains($sourcePath, '..')) {
@@ -1816,8 +1816,27 @@ final class CustomerPortalService {
     $intent = SelectedSourceIntent::create($row, (string) $project->id(), (int) $variant->id(), $direction, $revision,
       gmdate(DATE_ATOM, $this->time->getRequestTime()), $artifacts, is_array($designDna) ? $designDna : [],
       $this->requestAssets((int) $row['id']), $revisionNotes);
+    $priorIntent = $studio['selected_source_intent'] ?? NULL;
+    if (is_array($priorIntent)) {
+      $fingerprint = static fn(array $value): string => hash('sha256', json_encode([
+        $value['source'], $value['scope'], $value['asset_authority'], $value['requested_changes'],
+        $value['selection']['variant_id'], $value['selection']['direction_id'],
+      ], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+      if (hash_equals($fingerprint($priorIntent), $fingerprint($intent))) {
+        $intent = $priorIntent;
+        $revision = (int) $intent['selection']['revision'];
+      }
+      else $studio['selected_source_intent_history'][] = $priorIntent;
+    }
+    $packetId = 'staging-packet:request:' . (int) $row['id'] . ':revision:' . $revision;
     $studio['selected_source_intent'] = $intent;
     $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+    if (!is_array($designDna['selected_build_continuation'] ?? NULL) && isset($studio['next_source_export'])) {
+      $designDna['selected_build_continuation'] = SelectedFinalizedSource::continuation($studio['next_source_export'], $intent, $studio['selected_source_authority'] ?? []);
+      $dnaJson = json_encode($designDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+      $studio['selected_source_resolution'] = ['intent_id' => $intent['intent_id'], 'source_export_sha256' => $studio['next_source_export']['sha256'], 'status' => 'executable_package_bound'];
+      $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+    }
     if (!is_array($designDna['selected_build_continuation'] ?? NULL)) {
       throw new \InvalidArgumentException('selected_continuation_blocked: ' . json_encode($intent['issues'], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
     }

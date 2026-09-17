@@ -2,6 +2,12 @@
 
 ## 2026-09-17 — Selected-source intent, local source proof
 
+Completed Next exports now traverse actual source registration and portal
+selection into the serializer. The cross-repository test reaches the actual
+receipt service while reusing one mapped repository. Authority/HTTP persistence
+adapters are synthetic; registry writers, concept executor and live lifecycle
+remain unproven. Source import does not create customer/project identities.
+
 Normal portal selection records inherited bytes/DNA, requested scope, pending
 edits and separate asset statements with stage-specific unresolved issues.
 Two synthetic persistence cases exercise the actual service seam. This is

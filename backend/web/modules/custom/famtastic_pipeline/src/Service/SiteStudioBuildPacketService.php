@@ -29,6 +29,26 @@ final class SiteStudioBuildPacketService {
   /**
    * Stores the exact outbound packet on its owned project idempotently.
    */
+  public function registerSourceExport(array $envelope): array {
+    $transaction = $this->database->startTransaction();
+    try {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', (string) ($envelope['request_id'] ?? ''))->forUpdate()->execute()->fetchAssoc();
+    if (!$row || (string) $row['project_id'] !== (string) ($envelope['project_id'] ?? '') || (string) $row['customer_id'] !== (string) ($envelope['customer_id'] ?? '') || (string) $row['public_id'] !== (string) ($envelope['request_id'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_mismatch');
+    $project = $this->loadProject((string) ($envelope['project_id'] ?? ''));
+    $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+    $authority = $studio['selected_source_authority'] ?? [];
+    if ((string) ($authority['project_id'] ?? '') !== (string) $project->id() || (string) ($authority['customer_id'] ?? '') !== (string) ($envelope['customer_id'] ?? '') || ($authority['request_id'] ?? '') !== ($envelope['request_id'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_mismatch');
+    $export = $envelope['source_export'] ?? [];
+    SelectedFinalizedSource::validate($export, $authority);
+    $prior = $studio['next_source_export'] ?? NULL;
+    if ($prior === $export) return ['newly_processed' => FALSE];
+    if ($prior !== NULL) $studio['next_source_export_history'][] = $prior;
+    $studio['next_source_export'] = $export;
+    $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+    return ['newly_processed' => TRUE];
+    } catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+  }
+
   public function registerPacket(array $packet): array {
     $this->validatePacket($packet);
     $transaction = $this->database->startTransaction();
@@ -46,7 +66,12 @@ final class SiteStudioBuildPacketService {
         if (json_encode($current, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) === json_encode($packet, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)) {
           return ['newly_registered' => FALSE, 'project' => $project];
         }
-        SelectedStagingContinuation::assertSuccessor($current, $packet);
+        $state = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+        $intent = $state['selected_source_intent'] ?? [];
+        $boundIntent = ($intent['request_id'] ?? '') === $packet['request_id'] && ($intent['project_id'] ?? '') === $packet['project_id']
+          && ($intent['customer_id'] ?? '') === ($packet['continuation']['customer']['id'] ?? '')
+          && ($intent['selection']['direction_id'] ?? '') === substr($packet['selected_direction_ids'][0], strlen('direction-'));
+        SelectedStagingContinuation::assertSuccessor($current, $packet, $boundIntent ? (int) $intent['selection']['revision'] : NULL);
       }
       $request = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE);
       $request = is_array($request) ? $request : [];

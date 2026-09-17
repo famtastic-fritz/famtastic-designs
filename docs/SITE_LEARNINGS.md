@@ -2,6 +2,10 @@
 
 ## 2026-09-17 — Reuse authority records without upgrading their meaning
 
+Blocked intents need their own immutable revision/history before any executable
+packet exists. Retry the identical intent without adding a revision, preserve
+changed intent history, and permit packet gaps only against recorded intent.
+
 Selection intent can reuse intake_data and request-asset consent automatically.
 AI-use consent does not establish ownership, likeness permission or transformation
 authority; selected proof bytes do not establish completed scope. Keep these
