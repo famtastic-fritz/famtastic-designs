@@ -1,7 +1,8 @@
 # FAMtastic email brand system v1
 
 Owner-approved direction: September 17, 2026. Rendered implementation status:
-**local preview, awaiting visual feedback**. This is not send/release approval.
+**approved by owner for release and one Valerie email**. See
+[release record](EMAIL_BRAND_RELEASE_2026-09-17.md) for authorization and actual receipts.
 
 ## Source and scope
 
@@ -56,9 +57,11 @@ authorization belongs to the future producer and must be verified before sending
 All message/subject content is HTML-escaped. No raw `body_html` slot is accepted.
 
 Normal mail rendering requires Drupal setting `famtastic_staging_review_logo_url`
-with an approved HTTPS PNG on `famtasticdesigns.com` (or www). It currently has no
-default and fails closed. Hosting, asset sizing optimization, actual client tests,
-send approval, recipient verification and producer wiring are subsequent work.
+with an approved HTTPS PNG on `famtasticdesigns.com` (or www). After visual approval,
+the default is `https://famtasticdesigns.com/brand/famtastic-designs-logo-v1.png`;
+invalid overrides fail closed. Hosting and exact recipient dispatch are authorized
+in the linked release record. Actual email-client tests remain unperformed, and
+automatic producer wiring remains subsequent work.
 The explicit pure-render local preview allows only the fixed relative asset path;
 `OutreachMailer` never enables this preview flag.
 

@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-17 — Owner approval and release preparation
+
+Owner approved email and footnote publication plus one exact Valerie send. Added immutable hosted logo asset, approved canonical URL and request-bound exact-key send preflight. See `docs/design/EMAIL_BRAND_RELEASE_2026-09-17.md`; no broad dispatcher or website redesign is included in this release.
+
 ## 2026-09-17 — Local staging-review email preview
 
 - Added isolated `customer_staging_review_ready/v1` rendering, the unchanged owner PNG, Valerie's non-sending fixture/gallery and local safety/browser checks. Recorded the design direction and preview instructions; no existing notification migrated. Visual acceptance, actual email-client testing, hosting and sending remain pending.

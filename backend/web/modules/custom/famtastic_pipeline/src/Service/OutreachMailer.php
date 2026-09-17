@@ -214,7 +214,7 @@ class OutreachMailer {
    */
   private function renderHtmlMessage(string $subject, string $body, string $template = self::TEMPLATE_STANDARD): string {
     if ($template === self::TEMPLATE_CUSTOMER_STAGING_REVIEW_READY) {
-      return StagingReviewEmail::render($subject, $body, (string) Settings::get('famtastic_staging_review_logo_url', ''));
+      return StagingReviewEmail::render($subject, $body, (string) Settings::get('famtastic_staging_review_logo_url', 'https://famtasticdesigns.com/brand/famtastic-designs-logo-v1.png'));
     }
     if ($template === self::TEMPLATE_CUSTOMER_MESSAGE_REPLY) {
       // Only the system-appended destination is a CTA. A customer/staff URL

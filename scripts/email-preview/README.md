@@ -1,5 +1,11 @@
 # Valerie email preview — local only
 
+## Approval update — September 17
+
+The owner approved this preview and requested publication plus one Valerie email.
+The original local-only milestone below is historical. Actual release/send receipts
+belong in `docs/design/EMAIL_BRAND_RELEASE_2026-09-17.md`; approval alone is not delivery.
+
 Run from the agency repository root (PHP 8+). No Drupal bootstrap or mail transport
 is loaded by these commands. Do not serve the repository root.
 

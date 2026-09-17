@@ -1,5 +1,13 @@
 # Transactional email template registry v1
 
+## September 17 approval update
+
+`customer_staging_review_ready/v1` is owner-approved for the exact Valerie delivery.
+The earlier candidate description below records the preview checkpoint. The canonical
+logo URL is now the approved immutable `/brand/famtastic-designs-logo-v1.png`.
+See `docs/design/EMAIL_BRAND_RELEASE_2026-09-17.md` for actual release/send receipts.
+Automatic staging-ready producer wiring remains disabled; all other notifications unchanged.
+
 Status: active source-of-truth registry for account-owned transactional notices
 
 Purpose: keep the actual customer experience, the durable outbox record, and
