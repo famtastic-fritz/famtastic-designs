@@ -1862,7 +1862,9 @@ body.famtastic-auth-page {
   backdrop-filter: blur(14px);
 }
 .famtastic-auth__brand { display: inline-flex; align-items: center; gap: .75rem; color: var(--fam-ops-ink); text-decoration: none; }
-.famtastic-auth__brand img { width: 44px; height: 44px; border-radius: 12px; }
+.famtastic-auth__brand img { display: block; width: 210px; max-width: 100%; height: auto; }
+.famtastic-auth__header { flex-wrap: wrap; gap: .75rem; }
+.famtastic-auth__brand:focus-visible, .famtastic-admin-shell__brand a:focus-visible { outline: 2px solid var(--fam-lime); outline-offset: 4px; }
 .famtastic-auth__brand span { display: grid; line-height: 1; }
 .famtastic-auth__brand strong { font-size: 1rem; font-weight: 900; letter-spacing: -.02em; }
 .famtastic-auth__brand strong::first-letter { color: var(--fam-lime); }
@@ -1906,6 +1908,7 @@ body.famtastic-auth-page {
 .famtastic-admin-shell__brand { display: grid; flex: 0 0 auto; gap: .08rem; }
 .famtastic-admin-shell__brand a { color: var(--fam-ops-ink); font-size: 1rem; font-weight: 850; letter-spacing: -.02em; text-decoration: none; }
 .famtastic-admin-shell__brand a::first-letter { color: var(--fam-lime); }
+.famtastic-admin-shell__brand img { display: block; width: 180px; max-width: 100%; height: auto; }
 .famtastic-admin-shell__brand span { color: var(--fam-ops-dim); font-size: .62rem; font-weight: 750; letter-spacing: .11em; text-transform: uppercase; }
 .famtastic-admin-nav { display: flex; flex: 1 1 auto; gap: .25rem; overflow-x: auto; scrollbar-width: none; }
 .famtastic-admin-nav__link { display: inline-flex; align-items: center; min-height: 38px; padding: 0 .7rem; color: var(--fam-ops-muted); border-radius: 10px; font-size: .8rem; font-weight: 750; text-decoration: none; white-space: nowrap; }

@@ -6,7 +6,7 @@
 # in the earlier "layout"/"component"/"state" groups. Equal-specificity
 # selectors therefore always resolve in our favour.
 global-styling:
-  version: 1.0.0
+  version: 1.1.0
   css:
     theme:
       css/famtastic-admin.css: { weight: 50 }

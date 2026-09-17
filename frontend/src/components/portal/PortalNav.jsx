@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import { GROUPS } from './PortalShared.jsx';
+import BrandLogo from '../BrandLogo.jsx';
 
 export default function PortalNav({
   section,
@@ -76,6 +77,7 @@ export default function PortalNav({
       >
         <span aria-hidden="true">☰</span>
         <span>Menu</span>
+        <BrandLogo placement="portal-mobile" decorative />
       </button>
 
       {menu && (
@@ -89,8 +91,8 @@ export default function PortalNav({
 
       <aside id="portal-drawer" className="portal-nav" ref={drawerRef}>
         <div className="portal-nav-head">
-          <Link className="portal-logo" to="/">
-            FAM<span>tastic</span>
+          <Link className="portal-logo" to="/" aria-label="FAMtastic Designs — home">
+            <BrandLogo placement="portal" decorative />
           </Link>
           <button
             ref={closeRef}

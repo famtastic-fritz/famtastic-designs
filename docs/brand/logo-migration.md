@@ -14,14 +14,14 @@ Both apex and www passed all six viewport checks. Approved email/hosted PNG alre
 | frontend/scripts/generate-seo-shells.mjs | Use shared brand constant and intrinsic dimensions for all generated route metadata. |
 | New staging-ready email | Already live; existing PHP renderer, original PNG, exact approved copy. |
 | Other transactional emails | Unchanged; need template-specific versioning/review, not mass replacement. |
-| PortalNav and legacy ClientPortalPage | Text wordmarks identified; retain for next authenticated-layout pass. Do not claim portal migration complete. |
-| Drupal admin shell Twig/theme | Retain existing text pending authenticated admin-layout proof. |
+| PortalNav and legacy ClientPortalPage | Original PNG in sidebar, mobile menu bar and token-preserving project link. Owner approved deployment; release receipt follows below. |
+| Drupal admin shell Twig/theme | Original byte-identical theme-local PNG in admin shell and login/recovery. Library version bumped for CSS cache invalidation. Release receipt follows below. |
 | BlogPostPage, WatchFilmPage, blogArt.js, filmLibrary.js | 28/32px legacy compact mark retained; full horizontal master would be unreadable/distorted here. |
 | FiftyFiveCentWebsitePage | Existing 52px compact campaign mark retained for a separate composition pass. Pricing/content unchanged. |
 | SocialSignal | Existing FAM graphic is a dedicated social-composition element, not blindly replaced. |
 | /brand/famtastic-mark.svg | Retain file for known compact/historical callers; no longer the primary Organization logo. |
 | og-image.jpg / existing social previews | Retain composed cover, not replace with a raw wide logo. Future reviewed social composition. |
-| favicon/app-icon | No approved compact master supplied; no invented or distorted replacement. |
+| favicon/app-icon | Owner shortlisted FAM+crown, red F+crown, crown-only concepts. Local 16/32px comparison only; no live choice approved. |
 
 No customer identity is replaced with agency branding. No prices, claims, hero
 copy, links, forms, account permissions or commerce behavior are changed.

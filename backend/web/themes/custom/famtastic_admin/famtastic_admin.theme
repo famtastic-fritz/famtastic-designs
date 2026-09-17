@@ -22,11 +22,12 @@ declare(strict_types=1);
  */
 function famtastic_admin_preprocess_page(array &$variables): void {
   $variables['#attached']['library'][] = 'famtastic_admin/global-styling';
+  $variables['famtastic_brand_logo_url'] = $variables['base_path'] . $variables['directory'] . '/famtastic-designs-logo-v1.png';
 
   $route_name = \Drupal::routeMatch()->getRouteName();
   if (in_array($route_name, ['user.login', 'user.pass', 'user.reset', 'user.reset.login'], TRUE)) {
     $variables['famtastic_auth_home_url'] = \Drupal\Core\Url::fromRoute('<front>')->toString();
-    $variables['famtastic_auth_logo_url'] = $variables['base_path'] . $variables['directory'] . '/logo.svg';
+    $variables['famtastic_auth_logo_url'] = $variables['famtastic_brand_logo_url'];
   }
 
   $route = \Drupal::routeMatch()->getRouteObject();

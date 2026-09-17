@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { formatPrice, getSession } from '../api/pipeline.js';
 import '../pipeline.css';
+import BrandLogo from '../components/BrandLogo.jsx';
 
 const PHASES = [
   { id: 'purchase', label: 'Purchase', detail: 'Order confirmed' },
@@ -82,7 +83,7 @@ export default function ClientPortalPage() {
   return (
     <div className="cp-page">
       <header className="cp-header">
-        <Link className="cp-brand" to={`/portal/${token}`}>FAM<span>tastic</span> Designs</Link>
+        <Link className="cp-brand" to={`/portal/${token}`} aria-label="FAMtastic Designs — project workspace"><BrandLogo placement="project" decorative /></Link>
         <div className="cp-secure"><i /> Private project workspace</div>
       </header>
 

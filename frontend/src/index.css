@@ -2669,6 +2669,11 @@ a:hover {
 .fam-brand-logo { display: block; height: auto; max-width: 100%; object-fit: contain; }
 .fam-brand-logo--header { width: 228px; }
 .fam-brand-logo--footer { width: 280px; }
+.fam-brand-logo--portal { width: 180px; }
+.fam-brand-logo--portal-mobile { width: 132px; margin-left: auto; }
+.fam-brand-logo--project { width: 210px; }
+.portal-logo, .cp-brand { display: inline-flex; flex: 0 0 auto; align-items: center; min-height: 44px; }
+.portal-logo:focus-visible, .cp-brand:focus-visible { outline: 2px solid #7cfc00; outline-offset: 3px; }
 .v1-footer__logo { display: inline-block; max-width: 100%; }
 .v1-brand:focus-visible, .v1-footer__logo:focus-visible { outline: 2px solid var(--v1-lime); outline-offset: 6px; border-radius: 4px; }
 @media (max-width: 1099px) {

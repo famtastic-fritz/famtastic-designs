@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Authenticated logo continuation
+
+Observation: public brand proof does not include portal/admin. Guidance: preserve
+full logo aspect ratio, make it visible in the mobile menu bar, test drawer-close
+geometry and retain all native authentication, permissions and token links.
+
 ## 2026-09-17 — Website logo release completion
 
 Observation: live hosted PNG did not mean public header/footer were released.

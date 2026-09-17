@@ -26,6 +26,12 @@ source/preview status in [logo-migration.md](logo-migration.md).
 - No approved compact/favicon, light variant, crown-only mark or vector master
   was supplied. Do not invent one or squeeze this full lockup into a 28px square.
   Existing compact contexts are explicitly retained pending reviewed artwork.
+  September 17 owner-requested favicon explorations are proposals only; the
+  shortlist is FAM+crown, red F+crown and crown-only. No selected production icon.
+
+Portal placement: 180px sidebar, 132px mobile menu bar, 210px private project
+header. Admin shell: 180px; Drupal login/recovery: 210px. The backend theme
+bundles a byte-identical PNG so its release does not rely on frontend hosting.
 
 Never regenerate or reinterpret the FAMtastic Designs logo with an image model
 when a canonical logo asset is available. Generated artwork should reserve

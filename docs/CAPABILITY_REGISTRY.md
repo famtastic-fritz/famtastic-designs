@@ -1,5 +1,11 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Portal/admin canonical-logo implementation
+
+Presentation-only continuation adds exact master to authenticated React navigation
+and Drupal shell/login. No permission, mail, payment or customer workflow changes.
+Deployment and authenticated evidence recorded in `docs/brand/logo-migration.md`.
+
 ## 2026-09-17 — Public canonical logo production proof
 
 Supersedes local-only classification below: `145b0d4a` deployed at 14:35:12 UTC,

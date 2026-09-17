@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-17 — Portal/admin branding continuation
+
+- Replaced client sidebar, mobile bar, token-workspace and Drupal admin/login
+  wordmarks with the canonical logo; links, forms and permissions unchanged.
+- Added local component layout regression checks; full local Drupal crawl is
+  unavailable without backend/vendor. Live authenticated acceptance is separate.
+- Favicon shortlist remains preview-only; no live icon changed.
+
 ## 2026-09-17 — Public website logo released
 
 - Deployed `145b0d4a` through the normal frontend lane; supplied logo now renders

@@ -42,8 +42,8 @@
 ## Positioning
 
 September 17 owner approval: the supplied Designs logo is canonical. Its PNG and
-staging-ready email are published; website placements are being migrated in a
-separate preview. Follow [logo usage](docs/brand/famtastic-designs-logo.md) and the
+staging-ready email and public header/footer are published. Portal/admin rollout
+status is recorded separately. Follow [logo usage](docs/brand/famtastic-designs-logo.md) and the
 [surface inventory](docs/brand/logo-migration.md). No wider redesign is authorized.
 
 - **Official entity name**: FAMtastic Designs
