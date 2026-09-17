@@ -1,5 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Public canonical logo production proof
+
+Supersedes local-only classification below: `145b0d4a` deployed at 14:35:12 UTC,
+release marker verified, apex/www six-viewport browser acceptance passed.
+Scope: public header/footer and Organization metadata only. No favicon or
+authenticated brand migration claim. Receipt: `docs/brand/logo-migration.md`.
+
 ## 2026-09-17 — Website canonical-logo presentation (local proof)
 
 Primary public header/footer and Organization metadata migrated in the website

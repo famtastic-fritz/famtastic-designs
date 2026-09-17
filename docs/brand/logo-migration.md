@@ -1,7 +1,8 @@
 # Logo migration inventory and first website slice
 
-Status: first website slice is **local preview, not deployed** on
-`codex/website-logo-migration`. Approved email/hosted PNG already live at
+Status: first website slice is **production-deployed and browser-verified** at
+`145b0d4a673b9181214c52210a06fe6f8128b130`, September 17, 2026 14:35:12 UTC.
+Both apex and www passed all six viewport checks. Approved email/hosted PNG already live at
 `20448c71`; exact send and customer footer evidence are in
 `docs/design/EMAIL_BRAND_RELEASE_2026-09-17.md`.
 
@@ -51,5 +52,18 @@ The script tests public presentation only, not authenticated portal/admin behavi
   contract check, not authenticated portal visual proof.
 - Screenshots: `.local-email-preview/website-desktop.png`, `website-mobile.png`,
   `website-footer-1440.png`, `website-footer-390.png`. These are local artifacts.
-- Website changes are not deployed; live release remains `20448c71` plus its
-  subsequent documentation-only source commit. Feature branch is for review.
+- The original preview-only milestone is superseded by the production release
+  above. Backend remains unchanged; no email resend or customer-site change.
+
+## Production receipt
+
+Normal frontend deployment script built the exact main SHA with Node 22.23.2,
+verified 216 route shells and root .htaccess. Backup:
+`/home/xrdj7j99xhzt/backups/famtastic-frontend-20260917T143225Z-145b0d4a673b9181214c52210a06fe6f8128b130.tgz`.
+Release marker read back over SSH. Both public hosts passed 320/390/768/960/1100/1440
+layout, logo, home-link and mobile-menu checks; additional browser checks found
+populated React roots, rendered headings, HTTP 200 JavaScript/CSS with correct
+MIME types and no console errors. Live desktop screenshot visually inspected.
+Evidence: `.local-email-preview/live-apex-*` and `live-www-*` (local, ignored).
+Repeat with `LOGO_TEST_URL=https://famtasticdesigns.com/ LOGO_TEST_LABEL=live-apex node scripts/test-website-logo.cjs`;
+use the www URL and `live-www` label for the second host.

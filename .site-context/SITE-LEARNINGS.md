@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Website logo release completion
+
+Observation: live hosted PNG did not mean public header/footer were released.
+Guidance: report asset, component deployment and browser acceptance separately.
+Website `145b0d4a` now production-proven on apex/www at six sizes; do not expand
+that claim to favicon, authenticated contexts or customer-site final approval.
+
 ## 2026-09-17 — Canonical logo and scope
 
 Use shared BrandLogo plus `frontend/src/lib/brand.js` for primary website placements.

@@ -3,6 +3,8 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const {createHash} = require('node:crypto');
 const output = '.local-email-preview';
+const target = process.env.LOGO_TEST_URL || 'http://127.0.0.1:4187/';
+const evidence = process.env.LOGO_TEST_LABEL || 'website';
 (async () => {
   const hash=createHash('sha256').update(fs.readFileSync('frontend/public/brand/famtastic-designs-logo-v1.png')).digest('hex');
   assert.equal(hash,'ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950');
@@ -11,7 +13,7 @@ const output = '.local-email-preview';
     for(const width of [320,390,768,960,1100,1440]) {
       const page=await browser.newPage({viewport:{width,height:1000},reducedMotion:'reduce'});
       const errors=[];page.on('pageerror',e=>errors.push(e.message));
-      await page.goto('http://127.0.0.1:4187/');
+      await page.goto(target);
       await page.waitForFunction(()=>document.querySelectorAll('.v1-nav a').length>=5);
       await page.evaluate(()=>document.fonts.ready);
       await page.locator('.fam-brand-logo--header').evaluate(i=>i.decode());
@@ -31,15 +33,15 @@ const output = '.local-email-preview';
         assert.ok(Math.abs(menu.y-(header.y+header.height))<2,'Menu begins below resized header');
         await toggle.click();assert.equal(await page.locator('.v1-nav-mobile').count(),0);
       }
-      if(width===1440||width===390)await page.screenshot({path:`${output}/website-${width===1440?'desktop':'mobile'}.png`});
+      if(width===1440||width===390)await page.screenshot({path:`${output}/${evidence}-${width===1440?'desktop':'mobile'}.png`});
       await page.locator('.v1-footer__logo').scrollIntoViewIfNeeded();
       await page.locator('.fam-brand-logo--footer').evaluate(i=>i.decode());
       const footerLogo=await page.locator('.fam-brand-logo--footer').boundingBox();assert.ok(Math.abs(footerLogo.width/footerLogo.height-3)<.02);
-      if(width===1440||width===390)await page.locator('.v1-footer').screenshot({path:`${output}/website-footer-${width}.png`});
+      if(width===1440||width===390)await page.locator('.v1-footer').screenshot({path:`${output}/${evidence}-footer-${width}.png`});
       assert.deepEqual(errors,[]);results.push({width,overflow:false,logoRatio:'3:1',navigation:'passed',consoleErrors:0});
       await page.close();
     }
-    fs.writeFileSync(`${output}/website-logo-results.json`,JSON.stringify({scope:'local public website only',results},null,2));
+    fs.writeFileSync(`${output}/${evidence}-logo-results.json`,JSON.stringify({scope:'public website presentation only',target,results},null,2));
     console.log('PASS: original asset hash, 6 viewport widths, logo ratios, home links, mobile menus/offset, footer, no console errors.');
   }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

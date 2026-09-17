@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-17 — Public website logo released
+
+- Deployed `145b0d4a` through the normal frontend lane; supplied logo now renders
+  in public header/footer. Apex/www passed six viewport checks and asset acceptance.
+- Added configurable public URL/evidence labels to the logo regression test.
+  Favicon, authenticated placements, backend and customer email remain unchanged.
+
 ## 2026-09-17 — Website logo migration first pass (preview)
 
 Added shared BrandLogo/asset constants, original master in public header/footer,

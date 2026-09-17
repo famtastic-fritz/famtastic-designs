@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 — Close the approved website rollout
+
+Observation: hosted asset/email publication left the visible website logo on a
+preview branch, so the owner's public screenshot still showed the old wordmark.
+Rule: track each approved surface through main, deployed SHA and public-browser
+proof; a live image URL is not evidence that the site's components use it.
+Corrected by deploying `145b0d4a` and verifying both hosts at six viewport sizes.
+
 ## 2026-09-17 — Wide logo migration needs navigation geometry
 
 The new master is 3:1, not a compact icon. Preserve exact bytes and aspect ratio,
