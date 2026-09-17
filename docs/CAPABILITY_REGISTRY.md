@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 — Visual DNA production evidence
+
+Production-presentation-tested at9d4e000d: public cursive/font and crown icons,
+shared materials, existing-owner portal/admin branding and anonymous login metadata.
+This supersedes the local-only visual-DNA/cursive entries below. Public apex/www
+mobile/desktop and six-width navigation passed. No new customer lifecycle, email
+delivery, social publishing or payment capability is claimed. Full receipt:
+docs/design/BRAND-DNA-RELEASE-2026-09-17.md.
+
 ## 2026-09-17 — Social identity exports
 
 Local-asset-tested: deterministic full-logo/FAM+crown square PNG export builder,

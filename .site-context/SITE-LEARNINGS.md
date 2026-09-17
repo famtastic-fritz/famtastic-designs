@@ -2419,3 +2419,10 @@ had no SFTP configuration. Guidance: discover the stored route before asking the
 owner again. Use protected FAMtastic Inc reviews, explicit current-artifact client
 acceptance before payment, and exception-only owner review for routine builds.
 The workflow plan records which automation remains unimplemented or unproven.
+# 2026-09-17 — Shared-checkout release sequencing
+
+Observation: frontend npm ci can start before a concurrent backend release has
+finished materializing the shared SHA checkout; it safely failed before promotion.
+Guidance: serialize checkout initialization, then release/test each surface. Verify
+both runtime markers, not only Git main. Brand release9d4e000d is production-tested;
+notification-queue/security notices remain separate operational concerns.

@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-17 — Owner-approved visual DNA production release
+
+- Released9d4e000d to frontend and backend: crown icons, public cursive accents,
+  shared materials and restrained client/admin branding, preserving existing flows.
+- Verified live apex/www desktop/mobile, six-width public navigation, authenticated
+  owner shells, login icon replacement and no pending database updates.
+- Deployment receipts and existing operational warnings: docs/design/BRAND-DNA-RELEASE-2026-09-17.md.
+
 ## 2026-09-17 — Social-profile export kit (local assets)
 
 - Prepared full-logo and original-derived FAM+crown variants for nine social
