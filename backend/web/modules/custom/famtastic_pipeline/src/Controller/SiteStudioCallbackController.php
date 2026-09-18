@@ -10,6 +10,7 @@ use Drupal\famtastic_pipeline\Service\ProofAssetContract;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService;
 use Drupal\famtastic_pipeline\Service\StagingReceiptService;
+use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +37,7 @@ final class SiteStudioCallbackController extends ControllerBase {
     private readonly ProofCampaignService $proofCampaigns,
     private readonly SiteStudioBuildPacketService $buildPackets,
     private readonly StagingReceiptService $stagingReceipts,
+    private readonly ?CustomerPortalService $portal = NULL,
   ) {}
 
   /**
@@ -46,6 +48,7 @@ final class SiteStudioCallbackController extends ControllerBase {
       $container->get('famtastic_pipeline.proof_campaign_service'),
       $container->get('famtastic_pipeline.site_studio_build_packets'),
       $container->get('famtastic_pipeline.staging_receipts'),
+      $container->get('famtastic_pipeline.customer_portal'),
     );
   }
 
@@ -84,11 +87,19 @@ final class SiteStudioCallbackController extends ControllerBase {
       ], 403);
     }
     try {
+      if (($data['schema'] ?? '') === 'famtastic.site-studio.association-request.v1') {
+        return new JsonResponse(['ok' => TRUE] + $this->buildPackets->issueSourceAssociation($data, (string) $secret));
+      }
       if (($data['schema'] ?? '') === 'famtastic.site-studio.planning-result.v1') {
         return new JsonResponse(['ok' => TRUE] + $this->buildPackets->acceptPlanningResult($data));
       }
       if (($data['schema'] ?? '') === 'famtastic.site-studio.source-finalized.v1') {
-        return new JsonResponse(['ok' => TRUE] + $this->buildPackets->registerSourceExport($data));
+        $result = $this->buildPackets->registerSourceExport($data);
+        if (isset($data['association'])) {
+          if (!$this->portal) throw new \RuntimeException('Source association requires the normal request refresh writer.');
+          $this->portal->refreshSelectedWebsiteRequest((int) $data['customer_id'], (string) $data['request_id']);
+        }
+        return new JsonResponse(['ok' => TRUE] + $result);
       }
       if (($data['schema'] ?? '') === 'site-studio.build-success.v1') {
         $result = $this->buildPackets->acceptSuccess($data);

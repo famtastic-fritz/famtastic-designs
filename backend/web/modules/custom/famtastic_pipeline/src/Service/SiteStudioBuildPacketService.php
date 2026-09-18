@@ -62,6 +62,21 @@ final class SiteStudioBuildPacketService {
     return $bytes;
   }
 
+  public function issueSourceAssociation(array $envelope, string $secret): array {
+    $transaction = $this->database->startTransaction();
+    try {
+      $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', (string) ($envelope['request_id'] ?? ''))->forUpdate()->execute()->fetchAssoc();
+      if (!$row || (string) $row['project_id'] !== ($envelope['project_id'] ?? '') || (string) $row['customer_id'] !== ($envelope['customer_id'] ?? '')) throw new \InvalidArgumentException('source_association_identity_changed');
+      $project = $this->loadProject((string) $row['project_id']);
+      $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+      $grant = SelectedSourceAssociation::issue($row, $studio, $secret, $this->time->getRequestTime());
+      $payload = json_decode($grant['payload_json'], TRUE);
+      $studio['source_association_grants'][$payload['association_id']] = $grant;
+      $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+      return ['association' => $grant];
+    } catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+  }
+
   public function registerSourceExport(array $envelope): array {
     $transaction = $this->database->startTransaction();
     try {
@@ -69,6 +84,16 @@ final class SiteStudioBuildPacketService {
     if (!$row || (string) $row['project_id'] !== (string) ($envelope['project_id'] ?? '') || (string) $row['customer_id'] !== (string) ($envelope['customer_id'] ?? '') || (string) $row['public_id'] !== (string) ($envelope['request_id'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_mismatch');
     $project = $this->loadProject((string) ($envelope['project_id'] ?? ''));
     $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+    if (isset($envelope['association'])) {
+      $mapping = SelectedSourceAssociation::accept($row, $studio, $envelope, $this->time->getRequestTime());
+      $prior = $studio['selected_source_mapping'] ?? NULL;
+      if ($prior && $prior !== $mapping) throw new \InvalidArgumentException('source_association_conflicting_reuse');
+      if ($prior === $mapping) return ['newly_processed' => FALSE];
+      $studio['selected_source_mapping'] = $mapping;
+      $studio['next_source_export'] = $envelope['source_export'];
+      $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+      return ['newly_processed' => TRUE];
+    }
     $authority = $studio['selected_source_mapping'] ?? $studio['selected_source_authority'] ?? [];
     if ((string) ($authority['project_id'] ?? '') !== (string) $project->id() || (string) ($authority['customer_id'] ?? '') !== (string) ($envelope['customer_id'] ?? '') || ($authority['request_id'] ?? '') !== ($envelope['request_id'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_mismatch');
     $export = $envelope['source_export'] ?? [];

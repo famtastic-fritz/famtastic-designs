@@ -1884,6 +1884,7 @@ final class CustomerPortalService {
       $this->requestAssets((int) $row['id']), $revisionNotes);
     $intent['execution_binding'] = ['export' => isset($studio['selected_source_mapping']) ? ($studio['selected_source_intent']['execution_binding']['export'] ?? NULL) : ($studio['next_source_export']['sha256'] ?? NULL),
       'authority_sha256' => hash('sha256', json_encode($studio['selected_source_authority'] ?? [], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))];
+    if (isset($studio['selected_source_mapping']['association_id'])) $intent['execution_binding']['association_id'] = $studio['selected_source_mapping']['association_id'];
     $priorIntent = $studio['selected_source_intent'] ?? NULL;
     if (is_array($priorIntent)) {
       $fingerprint = static fn(array $value): string => hash('sha256', json_encode([

@@ -13,14 +13,16 @@ namespace Drupal\file\FileUsage { interface FileUsageInterface {} }
 namespace Symfony\Component\HttpFoundation {
   class Response {} class JsonResponse extends Response { public function __construct(public array $data, public int $status = 200) {} }
   class Request {
-    public object $request; public object $files;
+    public object $request; public object $files; public object $headers; public string $content = '';
+    public function getContent() { return $this->content; }
+    public static function callback(array $data): self { $r = new self([], new \stdClass()); $r->content = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR); $r->headers = new class($r->content) { public function __construct(private string $raw) {} public function get($key, $default = '') { return 'sha256=' . hash_hmac('sha256', $this->raw, 'synthetic-association-secret'); } }; return $r; }
     public function __construct(array $values, object $file) {
       $this->request = new class($values) { public function __construct(private array $values) {} public function get($key, $default = NULL) { return $this->values[$key] ?? $default; } public function getBoolean($key) { return !empty($this->values[$key]); } };
       $this->files = new class($file) { public function __construct(private object $file) {} public function get($key) { return $this->file; } };
     }
   }
 }
-namespace Drupal\Core\Site { class Settings { public static function get($key, $default = NULL) { return $default; } public static function getHashSalt() { return 'synthetic-share-salt'; } } }
+namespace Drupal\Core\Site { class Settings { public static function get($key, $default = NULL) { return $key === 'site_studio_callback_secret' ? 'synthetic-association-secret' : $default; } public static function getHashSalt() { return 'synthetic-share-salt'; } } }
 namespace Drupal\Core\Database\Statement { class FetchAs { const Associative = 2; } }
 namespace GuzzleHttp { interface ClientInterface {} }
 namespace Drupal\famtastic_pipeline\Entity {
@@ -70,8 +72,11 @@ namespace {
   $root = dirname(__DIR__) . '/backend/web/modules/custom/famtastic_pipeline/src/Service/';
   foreach (['OutreachMailer', 'ProofAssetContract', 'SelectedAssetRights', 'SelectedSourceCapture', 'SelectedRequestContent', 'SelectedRecordResolver', 'SelectedSourceIntent', 'SelectedFinalizedSource', 'SelectedStagingContinuation', 'SelectedPlanningPacket', 'SiteStudioBuildPacketService', 'CustomerPortalService', 'ProofCampaignService', 'StagingReceiptService', 'SiteStudioStagingClient', 'AutomationWorker'] as $class) require $root . $class . '.php';
   require $root . 'CharacterAssetService.php';
+  require $root . 'SelectedSourceAssociation.php';
   require dirname($root) . '/Controller/WebsiteRequestProofController.php';
-  $input = json_decode(stream_get_contents(STDIN), TRUE, 512, JSON_THROW_ON_ERROR);
+  require dirname($root) . '/Controller/SiteStudioCallbackController.php';
+  $interactive = in_array('--association', $argv, TRUE);
+  $input = json_decode($interactive ? fgets(STDIN) : stream_get_contents(STDIN), TRUE, 512, JSON_THROW_ON_ERROR);
   $tmp = sys_get_temp_dir() . '/normal-selected-' . bin2hex(random_bytes(6)); mkdir($tmp); mkdir($tmp . '/web'); Drupal::$dir = $tmp;
   $set = static function(object $object, array $fields): void { $r = new \ReflectionClass($object); foreach ($fields as $k => $v) $r->getProperty($k)->setValue($object, $v); };
   $project = empty($input['no_project']) ? new \Drupal\famtastic_pipeline\Entity\Project(['studio_json' => '{}'], 902) : NULL;
@@ -96,7 +101,7 @@ namespace {
   $db = new \Drupal\Core\Database\Connection();
   $db->row = ['id' => 901, 'public_id' => 'normal-request', 'project_id' => $project ? 902 : NULL, 'customer_id' => 903, 'organization_id' => 907, 'prospect_id' => 906, 'proof_campaign_id' => 904,
     'status' => 'draft', 'project_name' => 'Synthetic request', 'business_name' => 'Synthetic', 'intake_data' => '{}', 'proof_review_status' => 'building', 'submitted_at' => NULL];
-  $clock = new class implements \Drupal\Component\Datetime\TimeInterface { public function getRequestTime() { return 1789600000; } };
+  $clock = new class implements \Drupal\Component\Datetime\TimeInterface { public int $now = 1789600000; public function getRequestTime() { return $this->now; } };
   $config = new class($input['installation']) implements \Drupal\Core\Config\ConfigFactoryInterface {
     public function __construct(private array $installation) {} public function get($name) { return new class($this->installation) {
       public function __construct(private array $installation) {} public function get($key) { return $key === 'selected_staging' ? $this->installation : 'https://agency.example.invalid'; }
@@ -153,6 +158,24 @@ namespace {
         try { $registry->readSelectedArtifact('normal-request', $case === 'wrong_revision' ? $rev + 1 : $rev, $hash, $case === 'bad_signature' ? $auth . '0' : $auth, 'synthetic-reader-secret', $case === 'expired' ? $stamp + 301 : $stamp); throw new \RuntimeException('Reader accepted ' . $case); }
         catch (\InvalidArgumentException) { $negative[$case] = TRUE; }
       }
+    }
+    if ($interactive) {
+      $receipts = new \Drupal\famtastic_pipeline\Service\StagingReceiptService($db, $entities, $ledger, $clock, $config);
+      $callbacks = new \Drupal\famtastic_pipeline\Controller\SiteStudioCallbackController($proofs, $registry, $receipts, $portal);
+      echo json_encode(['packet' => $packet, 'artifact_bytes' => $bytes, 'mapping_absent' => !isset($state['selected_source_mapping'])], JSON_THROW_ON_ERROR) . "\n"; flush();
+      while (($line = fgets(STDIN)) !== FALSE) {
+        $command = json_decode($line, TRUE, 512, JSON_THROW_ON_ERROR);
+        if (!empty($command['close'])) return;
+        if (isset($command['row_change'])) $db->row = $command['row_change'] + $db->row;
+        if (isset($command['now'])) $clock->now = $command['now'];
+        if (isset($command['update'])) $portal->updateWebsiteRequest(903, 'normal-request', $command['update'], json_encode($command['update'], JSON_THROW_ON_ERROR));
+        $response = isset($command['callback']) ? $callbacks->handle(\Symfony\Component\HttpFoundation\Request::callback($command['callback'])) : new \Symfony\Component\HttpFoundation\JsonResponse(['ok' => TRUE]);
+        $current = json_decode($project->get('studio_json')->value, TRUE);
+        $currentBytes = [];
+        foreach ($current['selected_dispatch_packet']['artifacts'] ?? [] as $a) if (!str_starts_with($a['path'], 'next-source/')) $currentBytes[$a['sha256']] = base64_encode(file_get_contents($tmp . '/' . $a['path']));
+        echo json_encode(['status' => $response->status, 'response' => $response->data, 'state' => $current, 'row' => $db->row, 'artifact_bytes' => $currentBytes], JSON_THROW_ON_ERROR) . "\n"; flush();
+      }
+      return;
     }
     putenv('SITE_STUDIO_STAGING_URL=https://studio.example.invalid/api/pipeline/staging/accept'); putenv('FAMTASTIC_STUDIO_DISPATCH_SECRET=synthetic-normal-secret');
     $http = new class implements \GuzzleHttp\ClientInterface {
