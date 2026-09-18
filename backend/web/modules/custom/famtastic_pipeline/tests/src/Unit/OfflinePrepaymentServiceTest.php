@@ -10,6 +10,20 @@ use PHPUnit\Framework\TestCase;
 require_once dirname(__DIR__, 3) . '/src/Service/OfflinePrepaymentService.php';
 
 final class OfflinePrepaymentServiceTest extends TestCase {
+  public function testOnlyExactAuthorizedPrepaymentCanBridgeLegacyStagingGuard(): void {
+    $r = ['id' => 17, 'public_id' => '4940a4fd-91af-40c4-b8a5-2b4dad1a3b95', 'customer_id' => 15, 'organization_id' => 15, 'status' => 'submitted', 'commerce_order_id' => NULL];
+    $o = ['website_request_id' => 17, 'customer_id' => 15, 'organization_id' => 15, 'status' => 'prepaid_held', 'sku' => 'PRIVATE-STOCKANDSHIP98-200', 'offered_amount_minor' => 20000, 'currency' => 'usd', 'commerce_order_id' => 21];
+    $scope = OfflinePrepaymentService::stockandshipScope();
+    $d = ['request_id' => 17, 'request_public_id' => $r['public_id'], 'customer_id' => 15, 'organization_id' => 15, 'scope' => $scope, 'scope_hash' => hash('sha256', json_encode($scope, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)), 'hold' => 'awaiting_customer_terms_domain_and_final_acceptance', 'client_acceptance' => NULL, 'evidence_source' => 'Fritz Medine explicit confirmation'];
+    $p = ['order_id' => 21, 'payment_state' => 'completed', 'received' => '200.00', 'outstanding' => '0.00', 'currency' => 'USD', 'order_state' => 'draft', 'launch_authorized' => FALSE];
+    self::assertTrue(OfflinePrepaymentService::matchesSelectedStagingEvidence($r, $o, $d, $p));
+    self::assertTrue(OfflinePrepaymentService::matchesSelectedStagingEvidence(array_replace($r, ['commerce_order_id' => 21]), $o, $d, $p));
+    foreach ([['id' => 16], ['customer_id' => 14], ['organization_id' => 14], ['commerce_order_id' => 999], ['status' => 'converted']] as $bad) self::assertFalse(OfflinePrepaymentService::matchesSelectedStagingEvidence(array_replace($r, $bad), $o, $d, $p));
+    foreach ([['payment_state' => 'pending'], ['received' => '199.00'], ['outstanding' => '1.00'], ['launch_authorized' => TRUE], ['order_id' => 999]] as $bad) self::assertFalse(OfflinePrepaymentService::matchesSelectedStagingEvidence($r, $o, $d, array_replace($p, $bad)));
+    self::assertFalse(OfflinePrepaymentService::matchesSelectedStagingEvidence($r, array_replace($o, ['status' => 'revoked']), $d, $p));
+    self::assertFalse(OfflinePrepaymentService::matchesSelectedStagingEvidence($r, $o, array_replace($d, ['evidence_source' => 'customer_assertion']), $p));
+    foreach ([['scope_hash' => 'changed'], ['hold' => 'ready'], ['client_acceptance' => TRUE], ['scope' => array_replace($scope, ['amount' => '199.00'])]] as $bad) self::assertFalse(OfflinePrepaymentService::matchesSelectedStagingEvidence($r, $o, array_replace($d, $bad), $p));
+  }
   public function testImmutableOfferKeyIsStableAndRequestSpecific(): void {
     $id = OfflinePrepaymentService::offerId('request-one');
     self::assertMatchesRegularExpression('/^[0-9a-f-]{36}$/', $id);

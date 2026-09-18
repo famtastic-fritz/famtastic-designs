@@ -1650,6 +1650,9 @@ final class CustomerPortalService {
       }
     }
     else {
+      if (!empty($row['commerce_order_id']) && !(new OfflinePrepaymentService())->permitsSelectedStaging($row)) {
+        throw new \RuntimeException('A paid request cannot start pre-payment staging.');
+      }
       $direction = strtolower((string) ($input['direction'] ?? ''));
       if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE)) throw new \InvalidArgumentException('Choose one available website direction.');
       $exists = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $direction)->count()->execute();

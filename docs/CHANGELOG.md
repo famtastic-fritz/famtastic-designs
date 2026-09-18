@@ -3475,3 +3475,4 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 # 2026-09-18 — Request 17 offline-prepayment lane
 
 - Added a bounded native-Commerce manual receipt operation, account-bound single-use same-order completion, private empty project conversation, and tests. Money received is separate from order placement, acceptance and launch; production receipt/release evidence is tracked in `docs/plans/REQUEST17_OFFLINE_PREPAYMENT_2026-09-18.md`.
+- Recorded native order21/payment5 for request17 ($200 received/$0 outstanding), with fresh-process replay and no notices or fulfillment. Request16 has a replay-safe $199 one-time private scope only, not a charge. Added exact paid-exception selection evidence checks and a rollback-only native selector rehearsal; shared-module deployment remains coordinated with the main lane.

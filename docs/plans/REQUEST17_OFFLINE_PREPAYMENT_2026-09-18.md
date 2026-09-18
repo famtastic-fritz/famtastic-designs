@@ -106,3 +106,43 @@ private SKU: a selected-direction, scope-exact payment step remains a separate
 validated integration. Do not send a generic buy URL or promise checkout is ready.
 The nullable offer expiry requires the included portal projection fix to show
 the no-expiry owner-approved scope; no arbitrary deadline is invented.
+
+Request16 offer is now durably recorded as
+`5561e5d8-1b85-5858-a690-df186d47d57d`, SKU `PRIVATE-REUNION16-199`, $199.00,
+scope hash `478a57b7673dc087f657bd273cc48b428ab5497e1a454f8161685ddf472db408`.
+Audit event: `private-scope:request:16:class-of-2000-v1`. No order/payment/mail.
+Original intake hash is unchanged; thread20 remains the same with an added
+support-case assignment to owner UID1. Bank receipt/payment is not applicable.
+Fresh-process replay returned `existing=true`, the same offer and thread20,
+with `order_created=false`, `payment_created=false`, `email_queued=false`.
+
+## Selection compatibility
+
+After recording the real payment, fresh production readback confirmed request17
+is still submitted, `commerce_order_id=NULL`, unselected, and not accepted.
+The repair branch's `A paid request cannot start pre-payment staging` guard
+therefore does not block it. Payment binding lives in the private offer/order.
+Do not fill the request field just to populate an operations column.
+
+`permitsSelectedStaging()` is a defense-in-depth bridge if a later exact caller
+has already bound that field: it reconciles the native completed manual payment,
+zero balance/refunds, held draft order, same request/customer/organization,
+special scope/version and owner-confirmation evidence. It does not permit other
+paid requests or infer client acceptance. When merging the selected-staging
+repair's newer lock/recheck block, replace only its paid-field rejection with
+`!empty($row['commerce_order_id']) && !(new OfflinePrepaymentService())->permitsSelectedStaging($row)`;
+retain its request row lock and all QA/artifact/selection checks.
+
+`verify-request17-selection-rollback.php` performs the exact native selection
+and one-job assertion inside a rollback-only transaction after the real proof
+set is customer-ready. It rejects cross-account selection and proves acceptance
+is not inferred. It refuses to manufacture ready status or commit a choice.
+As of the latest live check the proofs are not yet imported/ready, so this
+specific selection rehearsal remains pending the main lane's QA/import.
+
+The focused suite now passes **21 tests / 133 assertions**, including altered
+scope hashes, mismatched ownership/order, pending payment, nonzero balance,
+released hold and inferred acceptance denials. One existing PHPUnit deprecation
+comes from `PrepaymentStagingContractTest` doc-comment metadata; no test failed.
+PHP lint and `git diff --check` passed. Browser/HTTP completion and actual
+selection remain separate release checks, not claims made by these unit tests.

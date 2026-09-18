@@ -317,6 +317,17 @@ or acceptance report; do not upgrade a classification from confidence alone.
 Backend `0cd25c48` is production-deployed with update8062 and no pending updates. Final frontend `d1b939f6` is deployed, including explicit-entry routing; see `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`. The live generated site key resolves to the existing verified Shay account, active membership and converted request. Thirty production diagnostic assertions passed (owner/cross-account controller reads and rollback-only appointment lifecycle); five separate-process synthetic-lock assertions passed. No customer or test appointment rows were committed by QA and no test customer notifications were sent.
 
 Classification: production-deployed and production smoke-tested, NOT a claim that Shay's personal password sign-in, real customer acceptance/email delivery, simultaneous business transactions or external calendar integration were proven. Two requested owner instruction emails have Gmail SENT receipts. Quick start: `docs/OWNER_DESK_QUICK_START.md`.
+
+## 2026-09-18 — Bounded offline prepayment evidence
+
+Request17 native manual receipt is production-recorded and replay-proven:
+order21/payment5, $200 received/$0 outstanding, held unplaced purchase, no
+fulfillment or email side effects. Request16's $199 private one-time scope is
+recorded/replay-proven without an order or charge. Private project conversations
+are durably bound and support-case assigned to Fritz. Completion/placement guards
+and paid-selection bridge are source-tested but not module-deployed by this lane;
+scope-exact reunion checkout and completion UI are not yet proven. See
+`docs/plans/REQUEST17_OFFLINE_PREPAYMENT_2026-09-18.md`.
 # 2026-09-17 evidence addendum: protected selected-site review
 
 One controlled static Pros In Training review is hosted and browser-verified on

@@ -181,6 +181,50 @@ final class OfflinePrepaymentService {
     ];
   }
 
+  /**
+   * Narrow optional bridge for an older caller that already bound order_id.
+   *
+   * The recorder deliberately leaves that field empty. If a caller later binds
+   * it, this permits only the exact owner-approved StockandShip prepayment, not
+   * arbitrary paid orders. Selection/QA/artifact/acceptance checks still apply.
+   */
+  public function permitsSelectedStaging(array $request): bool {
+    try {
+      $offer = \Drupal::database()->select('famtastic_private_offer', 'o')->fields('o')
+        ->condition('public_id', self::offerId((string) ($request['public_id'] ?? '')))->execute()->fetchAssoc();
+      if (!$offer) return FALSE;
+      $order = \Drupal::entityTypeManager()->getStorage('commerce_order')->load((int) $offer['commerce_order_id']);
+      if (!$order) return FALSE;
+      return self::matchesSelectedStagingEvidence($request, $offer, (array) $order->getData(self::KEY), $this->receipt($order));
+    }
+    catch (\Throwable) { return FALSE; }
+  }
+
+  public static function matchesSelectedStagingEvidence(array $request, array $offer, array $data, array $receipt): bool {
+    $scopeHash = hash('sha256', json_encode(self::stockandshipScope(), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
+    return (int) ($request['id'] ?? 0) === 17
+      && ($request['public_id'] ?? '') === '4940a4fd-91af-40c4-b8a5-2b4dad1a3b95'
+      && (int) ($request['customer_id'] ?? 0) === 15 && (int) ($request['organization_id'] ?? 0) === 15
+      && ($request['status'] ?? '') === 'submitted'
+      && (int) ($offer['website_request_id'] ?? 0) === 17 && (int) ($offer['customer_id'] ?? 0) === 15
+      && (int) ($offer['organization_id'] ?? 0) === 15 && ($offer['status'] ?? '') === 'prepaid_held'
+      && ($offer['sku'] ?? '') === 'PRIVATE-STOCKANDSHIP98-200' && (int) ($offer['offered_amount_minor'] ?? 0) === 20000
+      && ($offer['currency'] ?? '') === 'usd'
+      && (int) ($receipt['order_id'] ?? 0) > 0 && (int) ($offer['commerce_order_id'] ?? 0) === (int) ($receipt['order_id'] ?? 0)
+      && (empty($request['commerce_order_id']) || (int) $request['commerce_order_id'] === (int) $receipt['order_id'])
+      && (int) ($data['request_id'] ?? 0) === 17 && ($data['request_public_id'] ?? '') === $request['public_id']
+      && (int) ($data['customer_id'] ?? 0) === 15 && (int) ($data['organization_id'] ?? 0) === 15
+      && ($data['scope']['version'] ?? '') === 'stockandship98-private-scope-v1'
+      && hash_equals($scopeHash, (string) ($data['scope_hash'] ?? ''))
+      && hash_equals($scopeHash, hash('sha256', json_encode($data['scope'] ?? [], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)))
+      && ($data['hold'] ?? '') === 'awaiting_customer_terms_domain_and_final_acceptance'
+      && array_key_exists('client_acceptance', $data) && $data['client_acceptance'] === NULL
+      && ($data['evidence_source'] ?? '') === 'Fritz Medine explicit confirmation'
+      && ($receipt['payment_state'] ?? '') === 'completed' && ($receipt['received'] ?? '') === '200.00'
+      && ($receipt['outstanding'] ?? '') === '0.00' && ($receipt['currency'] ?? '') === 'USD'
+      && ($receipt['order_state'] ?? '') === 'draft' && ($receipt['launch_authorized'] ?? TRUE) === FALSE;
+  }
+
   /** A private, expiring capability. Return once; never log or email here. */
   public function issueCompletionCode(int $orderId, AccountInterface $staff): string {
     if (!$staff->isAuthenticated() || !$staff->hasPermission('administer famtastic pipeline')) throw new \RuntimeException('staff_required');
