@@ -34,6 +34,16 @@ Propagate newly created project IDs before resolution; persist verified worker s
 
 - Allowed `legacy-shared-shell-v1` continuation in the existing selected staging contract. Next validates hash-bound source, authored content and transformation permission, then assembles absent pages with browser QA.
 - This is local implementation evidence, not an enabled authority writer, Drupal deployment, hosting activation or customer delivery. Drive mirror omitted under the explicit two-worktree-only scope.
+## 2026-09-18 — Shared email branding released
+
+Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use
+the approved shell; three deployed source hashes match the release. No test emails
+or queue mutations. No pending database updates. Exact receipt:
+`docs/design/SHARED-EMAIL-BRAND-2026-09-18.md`. New rendering does not rewrite sent history.
+
+## 2026-09-18 — Shared email branding replaces legacy layouts
+
+Migrated all six active OutreachMailer templates to the approved original-logo shell. Added version compatibility, CI regression coverage and 48 responsive cases. Locally verified; release pending.
 
 ## 2026-09-17 — Approved content experience released
 

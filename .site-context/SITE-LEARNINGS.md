@@ -30,6 +30,16 @@ Guidance: retain source-wire v2 bytes unchanged, verify before decoding, and bin
 
 Observation: marked legacy templates support a bounded text substitution adapter, but the producer must still supply current authored content and permission records.
 Guidance: keep local adapter proof separate from ordinary authority writers, deployed Drupal, hosted receipts and customer acceptance. No Drive mirror write within this two-worktree-only task.
+## 2026-09-18 — Shared email branding released
+
+Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use
+the approved shell; three deployed source hashes match the release. No test emails
+or queue mutations. No pending database updates. Exact receipt:
+`docs/design/SHARED-EMAIL-BRAND-2026-09-18.md`. New rendering does not rewrite sent history.
+
+## 2026-09-18 — Enforce email branding in runtime routing
+
+Observation: agent documentation did not redirect operational notices to the approved design. Guidance: one shared shell for all active template branches, source contract tests, and image-blocked mobile checks; record production separately.
 
 ## 2026-09-17 — Prove release bytes and isolate QA telemetry
 

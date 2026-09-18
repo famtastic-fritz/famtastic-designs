@@ -63,3 +63,11 @@ to it or submitting anything. Nothing calls `send()` or creates an outbox record
 
 Implementation awaits owner visual feedback. No push, deployment, asset hosting,
 customer send, broad logo migration, or additional template fixtures in this milestone.
+
+## All active templates (September 18)
+
+Run `php scripts/email-preview/render-all.php`, then
+`node scripts/email-preview/check-all.cjs /absolute/path/to/@playwright/test`.
+Six synthetic/non-sending previews cover the standard registration alert and each
+active specialized template. Remote requests are blocked; the immutable logo is
+fulfilled from the local provenance asset. Results live in `.local-email-preview`.

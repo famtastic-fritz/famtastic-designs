@@ -1,5 +1,26 @@
 # Agent Instructions
 
+## September 18 — Shared branding for every active agency notification
+
+Owner requested replacement of all old email layouts after a verified-registration
+alert still used the legacy green shell. `BrandedEmail` now owns the one approved
+HTML shell; standard notifications, intake, proof-ready, revision acknowledgments,
+conversation replies and staging reviews all delegate to it. No new renderer may
+copy a full HTML shell or use historical showcase/mockup HTML as a sending template.
+
+Message subjects, plain-text AltBody, recipients, queue keys, transport, unsubscribe
+headers and template-specific CTA extraction remain unchanged. Staging-only claims
+stay in the staging adapter. New template versions: standard/intake/revision/reply
+v2, proof-ready v4; staging remains v1 because its approved design is reused.
+Previously queued versions remain accepted but receive the approved shared branding;
+sent history is never modified or resent. This owner-authorized visual compatibility
+migration is explicit, not a claim that historical HTML has changed.
+
+Run `php scripts/email-preview/test.php` and the six-template responsive harness
+before changing any renderer. CI runs the presentation contracts. See
+`docs/design/SHARED-EMAIL-BRAND-2026-09-18.md` for inventory and release evidence.
+
+
 ## Canonical visual DNA — preserve before enhancing
 
 For owned frontend content pages, also read
@@ -17,8 +38,8 @@ visual work. Apply FAMtastic identity to existing architecture; this is not blan
 redesign authority. Preserve customer project worlds and operational workflows.
 Use the immutable supplied logo and original-derived crown, with shared tokens
 and FAM 0–3 intensity. Run `node scripts/sync-brand-assets.cjs --check` after changes.
-The PHP email renderer already exists: no duplicate mail shell or notification
-migration. Brand approval alone is not deployment, email-send or client approval.
+The shared BrandedEmail renderer is mandatory for every active agency notification;
+no parallel shell or legacy fallback is permitted. Brand approval alone is not deployment, email-send or client approval.
 
 ## Repository ownership: agency and customer businesses are separate
 

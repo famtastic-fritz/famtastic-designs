@@ -44,6 +44,16 @@ Selection intent can reuse intake_data and request-asset consent automatically.
 AI-use consent does not establish ownership, likeness permission or transformation
 authority; selected proof bytes do not establish completed scope. Keep these
 statements separate and report the specific blocked stage.
+## 2026-09-18 — Shared email branding released
+
+Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use
+the approved shell; three deployed source hashes match the release. No test emails
+or queue mutations. No pending database updates. Exact receipt:
+`docs/design/SHARED-EMAIL-BRAND-2026-09-18.md`. New rendering does not rewrite sent history.
+
+## 2026-09-18 — A released template is not a system-wide brand rollout
+
+Observation: registration notices used the standard fallback despite an approved staging template. Rule: inventory and migrate every active renderer, centralize the shell, and enforce coverage in CI. Preserve message semantics and sent history.
 
 ## 2026-09-17 — Release completion is a separate proof stage
 

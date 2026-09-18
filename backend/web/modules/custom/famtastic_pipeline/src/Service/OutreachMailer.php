@@ -18,16 +18,16 @@ class OutreachMailer {
   public const TEMPLATE_STANDARD = 'standard';
   public const TEMPLATE_CUSTOMER_STAGING_REVIEW_READY = 'customer_staging_review_ready';
   public const TEMPLATE_CUSTOMER_STAGING_REVIEW_READY_VERSION = 1;
-  public const TEMPLATE_STANDARD_VERSION = 1;
+  public const TEMPLATE_STANDARD_VERSION = 2;
   public const TEMPLATE_CUSTOMER_INTAKE_SUBMITTED = 'customer_intake_submitted';
-  public const TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION = 1;
+  public const TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION = 2;
   public const TEMPLATE_CUSTOMER_PROOF_READY = 'customer_proof_ready';
-  public const TEMPLATE_CUSTOMER_PROOF_READY_VERSION = 3;
-  public const TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSIONS = [1, 2];
+  public const TEMPLATE_CUSTOMER_PROOF_READY_VERSION = 4;
+  public const TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSIONS = [1, 2, 3];
   public const TEMPLATE_CUSTOMER_REVISION_RECEIVED = 'customer_revision_received';
-  public const TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION = 1;
+  public const TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION = 2;
   public const TEMPLATE_CUSTOMER_MESSAGE_REPLY = 'customer_message_reply';
-  public const TEMPLATE_CUSTOMER_MESSAGE_REPLY_VERSION = 1;
+  public const TEMPLATE_CUSTOMER_MESSAGE_REPLY_VERSION = 2;
 
   public function __construct(
     protected ConfigFactoryInterface $configFactory,
@@ -149,12 +149,12 @@ class OutreachMailer {
 
   /** Returns whether a versioned transactional template is available. */
   public static function supportsTemplate(string $template, int $version): bool {
-    return ($template === self::TEMPLATE_STANDARD && $version === self::TEMPLATE_STANDARD_VERSION)
+    return ($template === self::TEMPLATE_STANDARD && in_array($version, [1, self::TEMPLATE_STANDARD_VERSION], TRUE))
       || ($template === self::TEMPLATE_CUSTOMER_STAGING_REVIEW_READY && $version === self::TEMPLATE_CUSTOMER_STAGING_REVIEW_READY_VERSION)
-      || ($template === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED && $version === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION)
+      || ($template === self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED && in_array($version, [1, self::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION], TRUE))
       || ($template === self::TEMPLATE_CUSTOMER_PROOF_READY && in_array($version, [...self::TEMPLATE_CUSTOMER_PROOF_READY_LEGACY_VERSIONS, self::TEMPLATE_CUSTOMER_PROOF_READY_VERSION], TRUE))
-      || ($template === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED && $version === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION)
-      || ($template === self::TEMPLATE_CUSTOMER_MESSAGE_REPLY && $version === self::TEMPLATE_CUSTOMER_MESSAGE_REPLY_VERSION);
+      || ($template === self::TEMPLATE_CUSTOMER_REVISION_RECEIVED && in_array($version, [1, self::TEMPLATE_CUSTOMER_REVISION_RECEIVED_VERSION], TRUE))
+      || ($template === self::TEMPLATE_CUSTOMER_MESSAGE_REPLY && in_array($version, [1, self::TEMPLATE_CUSTOMER_MESSAGE_REPLY_VERSION], TRUE));
   }
 
   /** Selects the current template version for direct, versionless callers. */
@@ -265,15 +265,9 @@ class OutreachMailer {
       $content = '<p style="margin:0;color:#243126;font:16px/1.55 Arial,Helvetica,sans-serif">A FAMtastic Designs notification is ready for review.</p>';
     }
 
-    $safeSubject = htmlspecialchars($subject, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    return '<!doctype html><html lang="en"><body style="margin:0;padding:0;background:#edf1eb">'
-      . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#edf1eb"><tr><td style="padding:28px 14px">'
-      . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #d8e0d8;border-radius:14px;overflow:hidden">'
-      . '<tr><td style="padding:22px 28px;background:#102a1c;color:#ffffff;font:800 15px/1 Arial,Helvetica,sans-serif;letter-spacing:.08em;text-transform:uppercase">FAMtastic Designs</td></tr>'
-      . '<tr><td style="padding:28px"><h1 style="margin:0 0 20px;color:#102a1c;font:800 27px/1.15 Arial,Helvetica,sans-serif">' . $safeSubject . '</h1>'
-      . $content
-      . '<p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #d8e0d8;color:#66736a;font:13px/1.45 Arial,Helvetica,sans-serif">This is an operational message from FAMtastic Designs. You can reply to this email if you need to add context.</p>'
-      . '</td></tr></table></td></tr></table></body></html>';
+    $content .= '<p style="margin:24px 0 0;font-size:13px;line-height:1.5;">This is an operational message from FAMtastic Designs. You can reply to this email if you need to add context.</p>';
+    return BrandedEmail::render($subject, $content, BrandedEmail::LOGO_URL,
+      badge: 'FAMtastic Designs / Notification');
   }
 
   /**
@@ -322,10 +316,6 @@ class OutreachMailer {
 
   /** Shared visual system for account-owned Concierge transactional notices. */
   private function renderCustomerConciergeMessage(string $subject, string $body, string $headline, string $badge, string $ctaLabel, string $assurance, ?string $explicitCtaUrl = NULL): string {
-    $safeSubject = htmlspecialchars($subject, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $safeHeadline = htmlspecialchars($headline, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $safeBadge = htmlspecialchars($badge, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $safeCtaLabel = htmlspecialchars($ctaLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $safeAssurance = htmlspecialchars($assurance, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     if ($explicitCtaUrl === NULL) [$body, $reviewUrl] = $this->extractConciergeCta($body);
     else $reviewUrl = $explicitCtaUrl;
@@ -341,28 +331,10 @@ class OutreachMailer {
       $content = '<p style="margin:0;color:#26372c;font:16px/1.6 Arial,Helvetica,sans-serif">Your private Studio Review is ready in your FAMtastic workspace.</p>';
     }
 
-    $cta = '';
-    if ($reviewUrl !== '') {
-      $safeReviewUrl = htmlspecialchars($reviewUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-      $cta = '<table role="presentation" cellspacing="0" cellpadding="0" style="margin:22px 0 26px"><tr><td style="border-radius:8px;background:#7cfc00">'
-        . '<a href="' . $safeReviewUrl . '" style="display:inline-block;padding:14px 20px;border-radius:8px;color:#102a1c;font:800 15px/1 Arial,Helvetica,sans-serif;text-decoration:none">' . $safeCtaLabel . '</a>'
-        . '</td></tr></table>';
-    }
+    $content .= '<p style="margin:20px 0 0;font-size:14px;line-height:1.5;">' . $safeAssurance . '</p>';
+    return BrandedEmail::render($subject, $content, BrandedEmail::LOGO_URL,
+      $headline, 'FAMtastic Concierge / ' . $badge, $reviewUrl, $ctaLabel, $subject);
 
-    return '<!doctype html><html lang="en"><body style="margin:0;padding:0;background:#070907">'
-      . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#070907"><tr><td style="padding:28px 14px">'
-      . '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;margin:0 auto;background:#f8fbf7;border:1px solid #263529;border-radius:18px;overflow:hidden">'
-      . '<tr><td style="padding:24px 28px;background:#102a1c;color:#ffffff">'
-      . '<div style="color:#7cfc00;font:800 12px/1 Arial,Helvetica,sans-serif;letter-spacing:.13em;text-transform:uppercase">FAMtastic Concierge</div>'
-      . '<div style="margin-top:10px;font:800 23px/1.15 Arial,Helvetica,sans-serif">' . $safeHeadline . '</div>'
-      . '</td></tr>'
-      . '<tr><td style="padding:28px">'
-      . '<div style="display:inline-block;margin:0 0 18px;padding:7px 10px;border:1px solid #b5d7b2;border-radius:999px;color:#114b31;background:#edf8ea;font:800 12px/1 Arial,Helvetica,sans-serif;letter-spacing:.06em;text-transform:uppercase">' . $safeBadge . '</div>'
-      . '<h1 style="margin:0 0 18px;color:#102a1c;font:800 28px/1.15 Arial,Helvetica,sans-serif">' . $safeSubject . '</h1>'
-      . $content . $cta
-      . '<div style="margin-top:8px;padding:16px;border:1px solid #d8e8d6;border-radius:12px;background:#ffffff;color:#526356;font:14px/1.5 Arial,Helvetica,sans-serif">' . $safeAssurance . '</div>'
-      . '<p style="margin:24px 0 0;padding-top:16px;border-top:1px solid #d8e0d8;color:#66736a;font:13px/1.45 Arial,Helvetica,sans-serif">FAMtastic Designs · 1729 NW St. Lucie West Blvd #1181 · Port Saint Lucie, FL 34986</p>'
-      . '</td></tr></table></td></tr></table></body></html>';
   }
 
   /**

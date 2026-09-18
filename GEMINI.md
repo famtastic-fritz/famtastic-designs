@@ -10,3 +10,5 @@ repository, not a parent source repository for independent customer businesses.
 Customer repositories, including Tighten Up Your Locs, are independently rooted and
 verified against their actual remote. See `docs/SOURCE_OF_TRUTH.md` and
 `docs/architecture/LOCS_REPOSITORY_MIGRATION_2026-09-14.md` before customer work.
+
+All outgoing agency notification HTML must use BrandedEmail. Read the September 18 shared-email section in AGENTS.md and docs/design/email-brand-system.md.

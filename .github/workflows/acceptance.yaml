@@ -47,5 +47,7 @@ jobs:
       - run: composer --working-dir=backend audit
       - name: PHP syntax
         run: find backend/web/modules/custom/famtastic_pipeline -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Shared email brand and destination contracts
+        run: php scripts/email-preview/test.php
       - name: Unit tests
         run: backend/vendor/bin/phpunit -c backend/web/core/phpunit.xml.dist backend/web/modules/custom/famtastic_pipeline/tests/src/Unit

@@ -44,6 +44,16 @@ Normal portal selection records inherited bytes/DNA, requested scope, pending
 edits and separate asset statements with stage-specific unresolved issues.
 Two synthetic persistence cases exercise the actual service seam. This is
 intent production, not completed-site production or runtime activation.
+## 2026-09-18 — Shared email branding released
+
+Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use
+the approved shell; three deployed source hashes match the release. No test emails
+or queue mutations. No pending database updates. Exact receipt:
+`docs/design/SHARED-EMAIL-BRAND-2026-09-18.md`. New rendering does not rewrite sent history.
+
+## 2026-09-18 — Shared email shell — locally verified
+
+All six active template IDs share BrandedEmail; 72 presentation assertions and 48 browser cases pass. Module suite: 217 tests / 1,129 assertions. No new delivery/provider capability or live release claimed yet.
 
 ## 2026-09-17 — Content experience production evidence
 

@@ -1,10 +1,31 @@
 # Transactional email template registry v1
 
+## September 18 — Shared branding for every active agency notification
+
+Owner requested replacement of all old email layouts after a verified-registration
+alert still used the legacy green shell. `BrandedEmail` now owns the one approved
+HTML shell; standard notifications, intake, proof-ready, revision acknowledgments,
+conversation replies and staging reviews all delegate to it. No new renderer may
+copy a full HTML shell or use historical showcase/mockup HTML as a sending template.
+
+Message subjects, plain-text AltBody, recipients, queue keys, transport, unsubscribe
+headers and template-specific CTA extraction remain unchanged. Staging-only claims
+stay in the staging adapter. New template versions: standard/intake/revision/reply
+v2, proof-ready v4; staging remains v1 because its approved design is reused.
+Previously queued versions remain accepted but receive the approved shared branding;
+sent history is never modified or resent. This owner-authorized visual compatibility
+migration is explicit, not a claim that historical HTML has changed.
+
+Run `php scripts/email-preview/test.php` and the six-template responsive harness
+before changing any renderer. CI runs the presentation contracts. See
+`docs/design/SHARED-EMAIL-BRAND-2026-09-18.md` for inventory and release evidence.
+
+
 Visual authority: [FAMtastic Design System](../design/FAMTASTIC-DESIGN-SYSTEM.md).
 Existing PHP rendering and dynamic-message contracts remain intact. The September
 17 visual-DNA pass audits this consumer; it does not duplicate or migrate templates.
 
-## September 17 approval update
+## Historical September 17 approval update (superseded by September 18 migration)
 
 `customer_staging_review_ready/v1` is owner-approved for the exact Valerie delivery.
 The earlier candidate description below records the preview checkpoint. The canonical
@@ -39,7 +60,7 @@ customer-state transition, offer, charge, or launch.
 
 ## Active templates
 
-### Local-only candidate: `customer_staging_review_ready` v1
+### Historical preview checkpoint: `customer_staging_review_ready` v1
 
 Renderer registered; no producer wired, send or deployment. Uses the supplied
 September 17 logo and [email brand system](../design/email-brand-system.md).
@@ -52,20 +73,20 @@ separate visual acceptance, email-client tests, asset hosting, recipient/project
 verification and authorized deployment/send. All current active templates below
 retain their existing rendering and behavior.
 
-### Existing active templates
+### Active templates after September 18 migration
 
 | ID / version | Trigger and durable key | Recipient / purpose | Brand and CTA | Required truth boundary |
 | --- | --- | --- | --- | --- |
-| `customer_intake_submitted` v1 | First `draft → submitted`; `website-request:{id}:customer` | Verified customer; acknowledges that the Design Review and proof routine have started | FAMtastic Concierge, dark green/lime, “Intake received · verified workspace,” **Open your workspace** | No proof is claimed ready; no payment is requested; exact authenticated portal URL only. |
-| `customer_proof_ready` v3 | Owner approves a complete 3- or 6-direction campaign; `website-request:{id}:proofs:{campaign}:{count}` or legacy project proof key | Verified customer; delivers access to the approved Studio Review and the research behind the concepts | FAMtastic Concierge, dark green/lime, “Private concept review · verified workspace,” **Open your proof set** | One job, one graphical CTA, no visible opaque portal URL. No promotion, price, or research-report claim outside the approved proof room; customer sees only owner-approved account-owned concepts. |
-| `customer_revision_received` v1 | Customer submits permitted proof feedback; `website-request:{id}:customer-revision-ack:{notes-hash}` | Verified customer; confirms feedback is being used and keeps them in their workspace | FAMtastic Concierge, dark green/lime, “Feedback saved · next proof round,” **Open your project** | Never claim revised proofs are ready. It says FAMtastic is building the next set and leaves the prior URL out of visible body copy. |
-| `customer_message_reply` v1 | Staff saves a reply; `client-message:{message_id}:customer` | Original contact address or account-owned conversation recipient; conveys the saved reply | FAMtastic Concierge, dark green/lime, **Open your conversation** | Saved portal content and queued email are separate states. Only a provider receipt establishes SMTP acceptance; no inbox, read, proof-ready or launch claim is inferred. CTA returns to the authenticated conversation. |
+| `customer_intake_submitted` v2 | First `draft → submitted`; `website-request:{id}:customer` | Verified customer; acknowledges that the Design Review and proof routine have started | Approved original-logo shell, FAMtastic Concierge, “Intake received · verified workspace,” **Open your workspace** | No proof is claimed ready; no payment is requested; exact authenticated portal URL only. |
+| `customer_proof_ready` v4 | Owner approves a complete 3- or 6-direction campaign; `website-request:{id}:proofs:{campaign}:{count}` or legacy project proof key | Verified customer; delivers access to the approved Studio Review and the research behind the concepts | Approved original-logo shell, FAMtastic Concierge, “Private concept review · verified workspace,” **Open your proof set** | One job, one graphical CTA, no visible opaque portal URL. No promotion, price, or research-report claim outside the approved proof room; customer sees only owner-approved account-owned concepts. |
+| `customer_revision_received` v2 | Customer submits permitted proof feedback; `website-request:{id}:customer-revision-ack:{notes-hash}` | Verified customer; confirms feedback is being used and keeps them in their workspace | Approved original-logo shell, FAMtastic Concierge, “Feedback saved · next proof round,” **Open your project** | Never claim revised proofs are ready. It says FAMtastic is building the next set and leaves the prior URL out of visible body copy. |
+| `customer_message_reply` v2 | Staff saves a reply; `client-message:{message_id}:customer` | Original contact address or account-owned conversation recipient; conveys the saved reply | Approved original-logo shell, FAMtastic Concierge, **Open your conversation** | Saved portal content and queued email are separate states. Only a provider receipt establishes SMTP acceptance; no inbox, read, proof-ready or launch claim is inferred. CTA returns to the authenticated conversation. |
 | `customer_owner_system_review` v1 | Restricted demonstration notice only; external send receipt is retained with the review URL | Customer invited to a temporary, non-live demonstration of a branded client path and mobile Owner Desk | FAMtastic Concierge, dark forest/lime/warm paper, **Review your business system** | Never use for a proof set or selection. Proof delivery, research review, feedback, and choice stay in the authenticated workspace via `customer_proof_ready`. |
-| `standard` v1 | Operational or transactional outbox row without a specialized customer-template assignment | Customer or operator, depending on the row | Neutral FAMtastic operational shell | Must not borrow customer-proof language or make a commercial claim. |
+| `standard` v2 | Operational or transactional outbox row without a specialized customer-template assignment | Customer or operator, depending on the row | Approved original-logo shell; neutral notification copy | Must not borrow customer-proof language or make a commercial claim. |
 
 ## Current customer copy contracts
 
-### `customer_message_reply` v1
+### `customer_message_reply` v2
 
 - Subject: `FAMtastic Concierge — [conversation subject]`.
 - Inputs: escaped conversation subject, exact saved staff reply, authenticated
@@ -77,7 +98,7 @@ retain their existing rendering and behavior.
   retry cannot create a second saved reply or notification.
 - Email acceptance is reported separately from portal persistence and unread state.
 
-### `customer_intake_submitted` v1
+### `customer_intake_submitted` v2
 
 - Subject: `Your FAMtastic design review has started`
 - Inputs: verified display name, request/project name, authenticated workspace
@@ -88,7 +109,7 @@ retain their existing rendering and behavior.
 - Forbidden: a delivery date guarantee, “proofs are ready,” payment request,
   price, research-summary claim, domain action, or public/bearer URL.
 
-### `customer_proof_ready` v3
+### `customer_proof_ready` v4
 
 - Subject: `Your FAMtastic Studio Review is ready`
 - Inputs: verified display name, configured concept-set label, authenticated
