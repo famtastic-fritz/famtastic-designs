@@ -2,6 +2,9 @@
 
 ## 2026-09-18 — Missing admin routes need explicit presentation coverage
 
+Live nuance: ThemeManager passes the master route to negotiators, which is unnamed
+on 404. Read the current subrequest's route attribute, not only that argument.
+
 Observation: native error routes lack admin metadata and fell into the customer
 theme, exposing white-on-white error text. Rule: classify original admin paths
 only on core error routes and reuse that predicate in negotiation and shell

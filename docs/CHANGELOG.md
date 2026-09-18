@@ -2,6 +2,9 @@
 
 ## 2026-09-18 — Admin error continuity and owner mail proof
 
+- Live follow-up: account for ThemeManager's master-route argument while reading
+  the current native error subrequest; added the missing regression case.
+
 - Added permission-preserving old People URL redirect and native admin 403/404
   theme continuity; locally tested, release evidence tracked separately.
 - Sent one owner-authorized historical worker-alert proof through standard/v2;

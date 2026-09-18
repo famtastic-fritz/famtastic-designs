@@ -11,7 +11,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class AdminErrorContext {
 
   public static function applies(RouteMatchInterface $routeMatch, RequestStack $requests): bool {
-    if (!in_array($routeMatch->getRouteName(), ['system.403', 'system.404'], TRUE)) {
+    // ThemeManager passes the master route match to negotiators. For a 404
+    // that match has no name; the current subrequest carries the error route.
+    $routeName = $requests->getCurrentRequest()?->attributes->get('_route') ?? $routeMatch->getRouteName();
+    if (!in_array($routeName, ['system.403', 'system.404'], TRUE)) {
       return FALSE;
     }
     $path = $requests->getMainRequest()?->getPathInfo() ?? '';

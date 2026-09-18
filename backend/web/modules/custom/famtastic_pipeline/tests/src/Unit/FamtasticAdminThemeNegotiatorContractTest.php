@@ -84,4 +84,17 @@ final class FamtasticAdminThemeNegotiatorContractTest extends UnitTestCase {
     ];
   }
 
+  public function testThemeManagerMasterRouteStillUsesCurrentErrorSubrequest(): void {
+    $themes = $this->createMock(ThemeHandlerInterface::class);
+    $themes->method('themeExists')->willReturn(TRUE);
+    $master = $this->createMock(RouteMatchInterface::class);
+    $master->method('getRouteName')->willReturn(NULL);
+    $requests = new RequestStack();
+    $requests->push(Request::create('/admin/missing'));
+    $error = Request::create('/admin/missing');
+    $error->attributes->set('_route', 'system.404');
+    $requests->push($error);
+    $this->assertTrue((new FamtasticAdminThemeNegotiator($themes, $requests))->applies($master));
+  }
+
 }

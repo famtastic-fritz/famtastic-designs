@@ -2,6 +2,9 @@
 
 ## 2026-09-18 — Test admin errors, not only successful screens
 
+Reproduce Drupal's master-route/current-error-subrequest split in unit tests;
+otherwise a direct mock of `system.404` can pass while live theming still fails.
+
 Observation: invalid `/admin/user` lost admin route metadata and therefore the
 brand shell. Guidance: maintain a permission-preserving People compatibility
 redirect and shared error-context predicate, including public-route negative

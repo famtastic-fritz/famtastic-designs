@@ -41,3 +41,16 @@ customer theme combined dark text rules with Olivero's white surfaces.
 - Existing PHPUnit metadata deprecations remain.
 - 72 email presentation assertions pass; immutable brand assets match.
 - Release/live verification pending at this source checkpoint.
+
+## First live check and correction
+
+Release `adb6118f` at 18:48:54Z fixed the original bookmark, confirmed in the
+owner's signed-in Chrome session. A new missing-admin-route check exposed core
+ThemeManager passing the master (unnamed) route to negotiators. The predicate
+now reads the current error subrequest's route attribute while retaining the
+original main-request path boundary. Added an explicit regression test.
+This is why a successful People redirect alone is not error-theme proof.
+
+The owner proof was found in Gmail's Inbox and visually inspected with its
+original logo, approved shell, historical disclaimer and signature. This is
+actual desktop Gmail evidence, not broad email-client certification.
