@@ -2498,3 +2498,7 @@ record a confirmed offline receipt through native Commerce manual payment on a
 held unplaced order; bind via an audited private offer, preserve actual unknown
 bank fields, and keep terms, client acceptance and release distinct. Never use a
 coupon/comp or a second order to acknowledge already-received funds.
+The exact private offer can bind an offline receipt without filling the request's
+normal order field and blocking proof selection. Any compatibility bridge must
+reconcile the native payment, immutable scope hash and held unaccepted order;
+source tests do not replace an actual ready-proof selection rehearsal.

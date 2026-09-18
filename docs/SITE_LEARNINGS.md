@@ -2520,3 +2520,7 @@ exceptions. Native manual payment plus a held order preserves financial truth
 without starting fulfillment or mail. Request17's receipt source is Fritz's
 explicit confirmation; unknown bank date/reference remain unknown. Use the
 request-specific transaction/row lock and replay guard; never fake a paid flag.
+Keep the pre-purchase request's normal order field empty until final readiness;
+its audited private offer carries the prepaid binding. If compatibility requires
+an earlier binding, use exact reconciled exception evidence, never a general
+paid-request selection bypass. Scope hash, ownership and held status matter.
