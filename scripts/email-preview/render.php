@@ -4,6 +4,7 @@ declare(strict_types=1);
 // CLI only. No Drupal bootstrap, database, mailer, queue or transport calls.
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 $root = dirname(__DIR__, 2);
+require $root . '/backend/web/modules/custom/famtastic_pipeline/src/Service/BrandedEmail.php';
 require $root . '/backend/web/modules/custom/famtastic_pipeline/src/Service/StagingReviewEmail.php';
 $fixture = require __DIR__ . '/valerie.php';
 $output = $root . '/.local-email-preview';

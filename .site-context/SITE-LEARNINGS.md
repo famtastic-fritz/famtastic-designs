@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Enforce email branding in runtime routing
+
+Observation: agent documentation did not redirect operational notices to the approved design. Guidance: one shared shell for all active template branches, source contract tests, and image-blocked mobile checks; record production separately.
+
 ## 2026-09-17 — Prove release bytes and isolate QA telemetry
 
 Observation: the owner-approved content release is live at `71620bf1`, proven by

@@ -15,6 +15,7 @@ namespace {
   use Drupal\famtastic_pipeline\Service\OutreachMailer;
   $root = dirname(__DIR__, 2);
   $service = '/backend/web/modules/custom/famtastic_pipeline/src/Service/';
+  require $root . $service . 'BrandedEmail.php';
   require $root . $service . 'StagingReviewEmail.php';
   require $root . $service . 'OutreachMailer.php';
   $fixture = require __DIR__ . '/valerie.php';
@@ -58,16 +59,30 @@ namespace {
   \Drupal\Core\Site\Settings::$logo = 'https://famtasticdesigns.com/brand/famtastic-designs-logo-v1.png';
   $integrated = $method->invoke($mailer, $fixture['subject'], $fixture['body'], 'customer_staging_review_ready');
   check($integrated === StagingReviewEmail::render($fixture['subject'], $fixture['body'], \Drupal\Core\Site\Settings::$logo), 'Mailer uses exact new renderer');
-  // Compare every previous template against the exact pre-change source.
-  $baseline = shell_exec('git -C ' . escapeshellarg($root) . ' show 70d2a8cf:backend/web/modules/custom/famtastic_pipeline/src/Service/OutreachMailer.php');
-  check(is_string($baseline) && str_starts_with($baseline, '<?php'), 'Baseline available');
-  eval(str_replace(['<?php', 'class OutreachMailer {'], ['', 'class BaselineOutreachMailer {'], $baseline));
-  $oldClass = new \ReflectionClass('Drupal\\famtastic_pipeline\\Service\\BaselineOutreachMailer');
-  $old = $oldClass->newInstanceWithoutConstructor();
-  $oldMethod = $oldClass->getMethod('renderHtmlMessage');
+  // Preserve destinations while intentionally replacing every legacy layout.
   foreach (['standard', 'customer_intake_submitted', 'customer_proof_ready', 'customer_revision_received', 'customer_message_reply'] as $template) {
     $body = "Hello & welcome.\n\nOpen your workspace:\nhttps://famtasticdesigns.com/portal";
-    check($method->invoke($mailer, 'A <review>', $body, $template) === $oldMethod->invoke($old, 'A <review>', $body, $template), 'Legacy unchanged: ' . $template);
+    $current = $method->invoke($mailer, 'A <review>', $body, $template);
+    preg_match_all('/href="([^"]+)"/', $current, $afterLinks);
+    check(($template === 'customer_message_reply' ? [] : ['https://famtasticdesigns.com/portal']) === $afterLinks[1], 'Destinations unchanged: ' . $template);
+    check(str_contains($current, 'data-famtastic-email-brand="v1"'), 'Shared brand: ' . $template);
+    check(str_contains($current, 'famtastic-designs-logo-v1.png'), 'Original logo: ' . $template);
+    check(str_contains($current, 'Hello &amp; welcome.'), 'Body preserved: ' . $template);
+    check(str_contains($current, 'A &lt;review&gt;'), 'Subject escaped: ' . $template);
+    check(!str_contains($current, 'background:#102a1c') && !str_contains($current, 'background:#edf1eb'), 'Legacy shell absent: ' . $template);
+    check(!str_contains($current, 'No payment is due at this review stage.'), 'No staging claim leaked: ' . $template);
   }
+  $reply = "<script>bad</script> https://evil.invalid/\n\nOpen your workspace:\nhttps://famtasticdesigns.com/portal?section=messages&thread=12345678-1234-1234-1234-123456789012\n\nSign in with the email address that received this message to continue the conversation.";
+  $replyHtml = $method->invoke($mailer, 'Reply', $reply, 'customer_message_reply');
+  check(!str_contains($replyHtml, '<script>') && !str_contains($replyHtml, 'href="https://evil.invalid/"'), 'Reply content cannot replace trusted CTA');
+  check(str_contains($replyHtml, 'thread=12345678-1234-1234-1234-123456789012'), 'Reply thread preserved');
+  foreach (['javascript:alert(1)', 'https://user:pass@example.test/'] as $badAction) {
+    rejected(fn() => \Drupal\famtastic_pipeline\Service\BrandedEmail::render('Subject', '<p>Safe</p>', url: $badAction));
+  }
+  check(OutreachMailer::supportsTemplate('standard', 1) && OutreachMailer::supportsTemplate('standard', 2), 'Old queued and new standard versions supported');
+  check(OutreachMailer::supportsTemplate('customer_proof_ready', 3) && OutreachMailer::supportsTemplate('customer_proof_ready', 4), 'Proof version compatibility');
+  check(!OutreachMailer::supportsTemplate('standard', 99), 'Unknown versions rejected');
+  $source = file_get_contents($root . $service . 'OutreachMailer.php');
+  check(!str_contains($source, '<!doctype html>'), 'Mailer may not own a parallel HTML shell');
   echo "PASS: {$count} presentation assertions; no transport, queue or database loaded.\n";
 }

@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-18 — Shared email branding replaces legacy layouts
+
+Migrated all six active OutreachMailer templates to the approved original-logo shell. Added version compatibility, CI regression coverage and 48 responsive cases. Locally verified; release pending.
+
 ## 2026-09-17 — Approved content experience released
 
 - Pushed and deployed frontend `71620bf1` through the canonical GoDaddy release

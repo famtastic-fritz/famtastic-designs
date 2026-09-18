@@ -1,5 +1,26 @@
 # FAMtastic agent operating contract
 
+## September 18 — Shared branding for every active agency notification
+
+Owner requested replacement of all old email layouts after a verified-registration
+alert still used the legacy green shell. `BrandedEmail` now owns the one approved
+HTML shell; standard notifications, intake, proof-ready, revision acknowledgments,
+conversation replies and staging reviews all delegate to it. No new renderer may
+copy a full HTML shell or use historical showcase/mockup HTML as a sending template.
+
+Message subjects, plain-text AltBody, recipients, queue keys, transport, unsubscribe
+headers and template-specific CTA extraction remain unchanged. Staging-only claims
+stay in the staging adapter. New template versions: standard/intake/revision/reply
+v2, proof-ready v4; staging remains v1 because its approved design is reused.
+Previously queued versions remain accepted but receive the approved shared branding;
+sent history is never modified or resent. This owner-authorized visual compatibility
+migration is explicit, not a claim that historical HTML has changed.
+
+Run `php scripts/email-preview/test.php` and the six-template responsive harness
+before changing any renderer. CI runs the presentation contracts. See
+`docs/design/SHARED-EMAIL-BRAND-2026-09-18.md` for inventory and release evidence.
+
+
 This file is the common operating context for Codex, Claude Code, Shay, and any
 future CLI agent. Read it before changing customer, product, Commerce, mail,
 deployment, or proof behavior.

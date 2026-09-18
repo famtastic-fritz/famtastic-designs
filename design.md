@@ -109,7 +109,8 @@ website placements. RGB/gold logo colors do not replace existing action/surface 
 
 New staging-review email direction and local-preview proof:
 [`docs/design/email-brand-system.md`](docs/design/email-brand-system.md).
-This September 17 direction does not migrate existing notifications or the website logo.
+The September 18 owner request extends this approved shell to every active agency
+notification via BrandedEmail. Preserve per-template content and trusted actions.
 
 Account-owned messages use the FAMtastic Concierge frame and a versioned
 template. Each message has one job, one human headline, one graphical CTA, and

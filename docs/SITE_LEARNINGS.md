@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — A released template is not a system-wide brand rollout
+
+Observation: registration notices used the standard fallback despite an approved staging template. Rule: inventory and migrate every active renderer, centralize the shell, and enforce coverage in CI. Preserve message semantics and sent history.
+
 ## 2026-09-17 — Release completion is a separate proof stage
 
 Observation: reviewed content visuals, GitHub main and the live frontend became

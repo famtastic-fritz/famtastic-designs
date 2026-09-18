@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Shared email shell — locally verified
+
+All six active template IDs share BrandedEmail; 72 presentation assertions and 48 browser cases pass. Module suite: 217 tests / 1,129 assertions. No new delivery/provider capability or live release claimed yet.
+
 ## 2026-09-17 — Content experience production evidence
 
 Production-presentation-smoke-tested at `71620bf1`: 17 existing content routes,

@@ -1,0 +1,294 @@
+{
+  "cases": [
+    {
+      "template": "standard",
+      "width": 320,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "standard",
+      "width": 320,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "standard",
+      "width": 390,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "standard",
+      "width": 390,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "standard",
+      "width": 660,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "standard",
+      "width": 660,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "standard",
+      "width": 768,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "standard",
+      "width": 768,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_intake_submitted",
+      "width": 320,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_intake_submitted",
+      "width": 320,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_intake_submitted",
+      "width": 390,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_intake_submitted",
+      "width": 390,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_intake_submitted",
+      "width": 660,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_intake_submitted",
+      "width": 660,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_intake_submitted",
+      "width": 768,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_intake_submitted",
+      "width": 768,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_proof_ready",
+      "width": 320,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_proof_ready",
+      "width": 320,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_proof_ready",
+      "width": 390,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_proof_ready",
+      "width": 390,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_proof_ready",
+      "width": 660,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_proof_ready",
+      "width": 660,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_proof_ready",
+      "width": 768,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_proof_ready",
+      "width": 768,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_revision_received",
+      "width": 320,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_revision_received",
+      "width": 320,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_revision_received",
+      "width": 390,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_revision_received",
+      "width": 390,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_revision_received",
+      "width": 660,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_revision_received",
+      "width": 660,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_revision_received",
+      "width": 768,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_revision_received",
+      "width": 768,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_message_reply",
+      "width": 320,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_message_reply",
+      "width": 320,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_message_reply",
+      "width": 390,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_message_reply",
+      "width": 390,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_message_reply",
+      "width": 660,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_message_reply",
+      "width": 660,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_message_reply",
+      "width": 768,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_message_reply",
+      "width": 768,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_staging_review_ready",
+      "width": 320,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_staging_review_ready",
+      "width": 320,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_staging_review_ready",
+      "width": 390,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_staging_review_ready",
+      "width": 390,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_staging_review_ready",
+      "width": 660,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_staging_review_ready",
+      "width": 660,
+      "images": false,
+      "passed": true
+    },
+    {
+      "template": "customer_staging_review_ready",
+      "width": 768,
+      "images": true,
+      "passed": true
+    },
+    {
+      "template": "customer_staging_review_ready",
+      "width": 768,
+      "images": false,
+      "passed": true
+    }
+  ],
+  "sent": false,
+  "emailClients": "not tested"
+}

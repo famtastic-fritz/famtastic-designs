@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 require_once dirname(__DIR__, 3) . '/famtastic_pipeline.install';
 require_once dirname(__DIR__, 3) . '/src/Service/ClientMessagingService.php';
+require_once dirname(__DIR__, 3) . '/src/Service/BrandedEmail.php';
 require_once dirname(__DIR__, 3) . '/src/Service/OutreachMailer.php';
 require_once dirname(__DIR__, 3) . '/src/Controller/ClientMessagesController.php';
 require_once dirname(__DIR__, 3) . '/src/Controller/CustomerPortalController.php';
