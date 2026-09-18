@@ -1,0 +1,35 @@
+{
+  "templates": {
+    "standard": {
+      "shared_brand": true,
+      "html_sha256": "cb9bda924627f47b1f4ea19263f538016a2999392a868fc912d06316506987a6"
+    },
+    "customer_intake_submitted": {
+      "shared_brand": true,
+      "html_sha256": "a969519096865ab1d3d79d8506c30bb0b3e70310ea3eae62afdc166d07f62175"
+    },
+    "customer_proof_ready": {
+      "shared_brand": true,
+      "html_sha256": "abf11cfadafb449875c3701f6bc679bc83eecdad1bf0bdc93a8ee409f2d313a3"
+    },
+    "customer_revision_received": {
+      "shared_brand": true,
+      "html_sha256": "8f809bc6874fd902ceffea5c848e84cd6484ee6a3fc0ce69edbb201bdb5ce42d"
+    },
+    "customer_message_reply": {
+      "shared_brand": true,
+      "html_sha256": "2cdb8f2baef9eb5ed432e2cb57189ab06b59370c712d3f7c35032eabe1db1ff2"
+    },
+    "customer_staging_review_ready": {
+      "shared_brand": true,
+      "html_sha256": "44de2458aa91bbd5ede8a4f610449524c864b7f4baff2718b451bc93535362fc"
+    }
+  },
+  "source_hashes": {
+    "BrandedEmail": "89b8b39a5dfd25e75c805a696272a5e19bd7883f300d8019c94d6086b1f1e7c1",
+    "OutreachMailer": "064f6fccfd12ff69c21ad6713afa9c7bec5a255df9daa7ba9de32cc39415d89d",
+    "StagingReviewEmail": "7fb61607b83475674ade2faf355d59a9a46339b8f925467cd9550a34f634d34b"
+  },
+  "sent": false,
+  "queue_modified": false
+}

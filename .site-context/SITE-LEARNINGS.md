@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Shared email branding released
+
+Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use
+the approved shell; three deployed source hashes match the release. No test emails
+or queue mutations. No pending database updates. Exact receipt:
+`docs/design/SHARED-EMAIL-BRAND-2026-09-18.md`. New rendering does not rewrite sent history.
+
 ## 2026-09-18 — Enforce email branding in runtime routing
 
 Observation: agent documentation did not redirect operational notices to the approved design. Guidance: one shared shell for all active template branches, source contract tests, and image-blocked mobile checks; record production separately.

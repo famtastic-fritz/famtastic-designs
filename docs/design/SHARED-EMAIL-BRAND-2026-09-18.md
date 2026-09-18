@@ -1,6 +1,6 @@
 # Shared email brand migration — September 18, 2026
 
-Status: locally verified; production release pending.
+Status: deployed and live-render verified.
 
 ## Request and diagnosis
 
@@ -52,3 +52,23 @@ AGENTS.md (also CLAUDE.md via symlink), GEMINI.md, operating contract, design.md
 email specification and template registry point to the shared renderer and tests.
 Old worktrees must refresh current-main instructions before email work. Runtime
 centralization protects templates without relying on each agent remembering a design.
+
+## Production release — completed
+
+Owner authorization: “deploy please”, September 18, 2026.
+
+- Normal fast-forward push to main and canonical backend preflight/apply both succeeded.
+- Live backend: `45eedc1aff207d8062ee4cb879cec0208a5ddc4d`, deployed
+  `2026-09-18T12:38:14Z` (8:38 AM Eastern), PHP 8.3.32.
+- Canonical deployer recorded code/theme/config/dependency/database backups under
+  `/home/xrdj7j99xhzt/backups/`, timestamp `20260918T123550Z`.
+- Live Drupal pure rendering passed all six template IDs. BrandedEmail, OutreachMailer
+  and StagingReviewEmail SHA-256 values exactly match committed source. Evidence:
+  `docs/evidence/shared-email-brand/live-render-results.json`. No test mail sent,
+  no outbox dispatch, no queue mutation performed by verification.
+- Approved hosted logo hash matched; apex/www homepage and Drupal login returned 200.
+- No pending database updates; cache, sitemap, entity and AI-foundation checks passed.
+- Existing pilot lock remained 0 and lifecycle scheduler remained enabled.
+- No frontend release required. Historical messages in existing inboxes are unchanged.
+- Actual email-client rendering/inbox placement remains distinct from live pure-render proof.
+- Follow-up evidence/docs commit does not change deployed runtime files.
