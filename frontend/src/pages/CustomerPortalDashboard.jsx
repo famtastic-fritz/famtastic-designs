@@ -16,6 +16,7 @@ import {
   updateWebsiteRequestArchive,
   updateWebsiteRequestProofShare,
   uploadWebsiteRequestAsset,
+  withdrawWebsiteRequestAsset,
 } from '../api/customer.js';
 import { acceptDisplayedStagingReview } from '../api/stagingReview.js';
 import { collectUtmParams } from '../api/pipeline.js';
@@ -373,6 +374,12 @@ export default function CustomerPortalDashboard() {
     }, 'Reference file saved securely with this website request.');
   };
 
+  const withdrawReference = assetId => act(async () => {
+    await withdrawWebsiteRequestAsset(editingRequest.public_id, assetId);
+    await refresh();
+    setEditingRequest(current => ({ ...current, assets: (current.assets || []).filter(asset => asset.public_id !== assetId) }));
+  }, 'Reference withdrawn from new work. Private project records are retained.');
+
   const decideProof = async (requestId, payload) => {
     const result = await act(async () => {
       const decision = await decideWebsiteRequestProof(requestId, payload);
@@ -498,6 +505,7 @@ export default function CustomerPortalDashboard() {
             busy={busy}
             onSaveWebsiteRequest={saveWebsiteRequest}
             onUploadAsset={uploadReference}
+            onWithdrawAsset={withdrawReference}
             onDecideProof={decideProof}
             onAcceptStaging={acceptStagingReview}
             onShareProof={shareProof}

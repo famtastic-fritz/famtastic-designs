@@ -72,6 +72,7 @@ export async function uploadWebsiteRequestAsset(id, formData) {
   if (!response.ok) throw new CustomerApiError(payload.message || 'Please try again.', response.status, payload.error);
   return payload;
 }
+export const withdrawWebsiteRequestAsset = (id, asset) => request(`/website-requests/${encodeURIComponent(id)}/assets/${encodeURIComponent(asset)}/withdraw`, { method: 'POST', csrf: true });
 export const updateCustomerProfile = (payload) => request('/profile', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const updateCustomerPreferences = (payload) => request('/preferences', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const createCustomerReferral = (payload) => request('/referrals', { method: 'POST', csrf: true, body: JSON.stringify(payload) });

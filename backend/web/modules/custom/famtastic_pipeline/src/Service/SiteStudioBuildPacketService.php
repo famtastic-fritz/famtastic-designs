@@ -240,6 +240,7 @@ final class SiteStudioBuildPacketService {
 
   /** Prevents old queued selections from being dispatched after a newer revision. */
   public function assertActiveSelectedPacket(array $packet): void {
+    SelectedAssetRights::assertPacket($this->database, $packet);
     $project = $this->loadProject((string) ($packet['project_id'] ?? ''));
     $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
     if (($packet['schema'] ?? '') === 'famtastic.site-studio.planning-packet.v1') {
@@ -349,6 +350,7 @@ final class SiteStudioBuildPacketService {
    * Validates the immutable outbound packet contract.
    */
   private function validatePacket(array $packet): void {
+    SelectedAssetRights::assertPacket($this->database, $packet);
     if (($packet['schema'] ?? '') !== self::BUILD_SCHEMA) {
       throw new \InvalidArgumentException('Unsupported Site Studio build packet schema.');
     }

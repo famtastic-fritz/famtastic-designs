@@ -681,6 +681,7 @@ export function WebsiteRequestIntakeEditor({
   setEditingRequest,
   onSave,
   onUploadAsset,
+  onWithdrawAsset,
   busy,
 }) {
   return (
@@ -1028,6 +1029,7 @@ export function WebsiteRequestIntakeEditor({
               {editingRequest.assets.map((asset) => (
                 <li key={asset.public_id}>
                   📄 {asset.name} · {Math.ceil(asset.size_bytes / 1024)} KB
+                  {onWithdrawAsset && <button type="button" className="quiet" disabled={busy} onClick={() => onWithdrawAsset(asset.public_id)}>Withdraw reference</button>}
                 </li>
               ))}
             </ul>
@@ -1049,6 +1051,7 @@ export default function PortalProjectsView({
   busy,
   onSaveWebsiteRequest,
   onUploadAsset,
+  onWithdrawAsset,
   onDecideProof,
   onAcceptStaging,
   onShareProof,
@@ -1134,6 +1137,7 @@ export default function PortalProjectsView({
           setEditingRequest={setEditingRequest}
           onSave={onSaveWebsiteRequest}
           onUploadAsset={onUploadAsset}
+          onWithdrawAsset={onWithdrawAsset}
           busy={busy}
         />
       )}

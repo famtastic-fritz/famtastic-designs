@@ -1,5 +1,9 @@
 # Selected staging continuation — isolated agency implementation
 
+## Bounded uploaded-reference increment
+
+Normal upload rights now bind exact same-request/customer proof asset bytes for protected review only. Withdrawal refreshes pending work and acceptance; export/receipt/reader/checkout/public-share gates retain the restriction. Next preserves source policy and denies public consumers. Synthetic PHP/Chromium proof covers this path; no live or Drive writes. Next: authenticated fresh Studio source association to an existing canonical agency request, without seeded source authority or a second repository.
+
 Status: local source and synthetic adapter proof only. No production activation,
 customer job, mail transport, upload, charge, service reload or release occurred.
 Base: `411252cc98ee6fd6147682615c9d218542e1a275`.

@@ -608,6 +608,30 @@ final class CustomerPortalService {
     return $this->serializeWebsiteRequest($updated);
   }
 
+  /** Reconcile normal asset/content writer changes against the selected source. */
+  public function refreshSelectedWebsiteRequest(int $customerId, string $publicId): void {
+    $row = $this->ownedWebsiteRequest($customerId, $publicId);
+    if (!$row) throw new \InvalidArgumentException('Website request not found.');
+    if (($row['proof_review_status'] ?? '') !== 'selected' || empty($row['selected_proof_direction']) || !empty($row['commerce_order_id'])) return;
+    $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $row['selected_proof_direction'])->range(0, 1)->execute();
+    $variant = $ids ? $this->entities->getStorage('proof_variant')->load(reset($ids)) : NULL;
+    if (!$variant) throw new \RuntimeException('The selected proof artifact is unavailable.');
+    $this->prepareSelectedProofStaging($row, $variant, $row['selected_proof_direction']);
+  }
+
+  /** Withdraw future reference use while retaining the private audit record. */
+  public function withdrawWebsiteRequestAsset(int $customerId, string $publicId, string $assetId): void {
+    $row = $this->ownedWebsiteRequest($customerId, $publicId);
+    if (!$row) throw new \InvalidArgumentException('Website request not found.');
+    $asset = $this->database->select('famtastic_request_asset', 'a')->fields('a')->condition('public_id', $assetId)->condition('website_request_id', (int) $row['id'])->condition('customer_id', $customerId)->execute()->fetchAssoc();
+    if (!$asset) throw new \InvalidArgumentException('Reference not found.');
+    if ($asset['status'] !== 'withdrawn') {
+      $this->database->update('famtastic_request_asset')->fields(['status' => 'withdrawn', 'changed' => $this->time->getRequestTime()])->condition('id', (int) $asset['id'])->execute();
+      $this->ledger->recordEvent('request-asset:withdrawn:' . $assetId, 'website_request.reference_withdrawn', ['request_id' => $publicId, 'asset_id' => $assetId, 'sha256' => $asset['sha256']], projectId: (int) ($row['project_id'] ?? 0));
+    }
+    $this->refreshSelectedWebsiteRequest($customerId, $publicId);
+  }
+
   /** Hides or restores one owned request without deleting or stopping its work. */
   public function setWebsiteRequestArchiveState(int $customerId, string $publicId, string $action): array {
     $row = $this->ownedWebsiteRequest($customerId, $publicId);
@@ -1152,7 +1176,7 @@ final class CustomerPortalService {
   public function sharedWebsiteRequest(string $publicId, string $signature): ?array {
     if (!preg_match('/^[0-9a-f]{64}$/', $signature)) return NULL;
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
-    if (!$row || empty($row['proof_share_enabled']) || !$this->requestProofsAreCustomerVisible($row)) return NULL;
+    if (!$row || empty($row['proof_share_enabled']) || !$this->requestProofsAreCustomerVisible($row) || $this->proofContainsPrivateReference($row)) return NULL;
     return hash_equals($this->proofShareSignature($row), $signature) ? $row : NULL;
   }
 
@@ -1177,6 +1201,9 @@ final class CustomerPortalService {
   }
 
   private function changeWebsiteProofShare(array $row, string $action, int $uid): void {
+    if ($action !== 'disable' && $this->proofContainsPrivateReference($row)) {
+      throw new \InvalidArgumentException('Uploaded project references are restricted to private review.');
+    }
     if (!$this->requestProofsAreCustomerVisible($row) || !$this->serializeRequestProof($row)) {
       throw new \RuntimeException('Only a complete owner-approved proof set can be shared.');
     }
@@ -1206,13 +1233,31 @@ final class CustomerPortalService {
   }
 
   private function proofSharePayload(array $row): array {
-    $enabled = !empty($row['proof_share_enabled']) && $this->requestProofsAreCustomerVisible($row) && (bool) $this->serializeRequestProof($row);
+    $enabled = !empty($row['proof_share_enabled']) && $this->requestProofsAreCustomerVisible($row) && !$this->proofContainsPrivateReference($row) && (bool) $this->serializeRequestProof($row);
     $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
     return [
       'enabled' => $enabled,
       'url' => $enabled ? $base . '/proofs/share/' . rawurlencode((string) $row['public_id']) . '/' . $this->proofShareSignature($row) : '',
       'changed_at' => !empty($row['proof_share_changed_at']) ? (int) $row['proof_share_changed_at'] : NULL,
     ];
+  }
+
+  /** Withdrawal does not turn previously private bytes into public material. */
+  private function proofContainsPrivateReference(array $row): bool {
+    $assets = $this->database->select('famtastic_request_asset', 'a')->fields('a')
+      ->condition('website_request_id', (int) $row['id'])->condition('customer_id', (int) $row['customer_id'])->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    if (!$assets || empty($row['proof_campaign_id'])) return FALSE;
+    $storage = $this->entities->getStorage('proof_variant');
+    $ids = $storage->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $row['proof_campaign_id'])->execute();
+    foreach ($storage->loadMultiple($ids) as $variant) {
+      $dna = json_decode((string) $variant->get('design_dna')->value ?: '{}', TRUE);
+      foreach (ProofAssetContract::normalizeStoredManifest($dna['asset_manifest'] ?? []) as $file) {
+        foreach ($assets as $asset) {
+          if (($asset['sha256'] ?? '') === $file['sha256'] && (int) ($asset['size_bytes'] ?? 0) === (int) $file['size_bytes']) return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
   private function proofShareSignature(array $row): string {
@@ -1390,6 +1435,8 @@ final class CustomerPortalService {
     return array_map(static fn(array $row): array => [
       'public_id' => $row['public_id'], 'kind' => $row['kind'], 'role' => $row['role'] ?? $row['kind'], 'name' => $row['original_name'],
       'mime_type' => $row['mime_type'], 'size_bytes' => (int) $row['size_bytes'],
+      'sha256' => (string) ($row['sha256'] ?? ''), 'website_request_id' => (string) ($row['website_request_id'] ?? ''),
+      'customer_id' => (string) ($row['customer_id'] ?? ''), 'status' => (string) ($row['status'] ?? ''),
       'ownership_confirmed' => (bool) $row['ownership_confirmed'], 'ai_use_consent' => (bool) $row['ai_use_consent'],
       'likeness_consent_version' => (string) ($row['likeness_consent_version'] ?? ''),
       'likeness_consent_at' => !empty($row['likeness_consent_at']) ? (int) $row['likeness_consent_at'] : NULL,
@@ -1926,6 +1973,9 @@ final class CustomerPortalService {
       throw new \InvalidArgumentException('Your staging preview is not ready for review yet.');
     }
     StagingReceiptService::assertCurrentReviewReceipt($row, $expectedReceiptHash);
+    $project = $this->entities->getStorage('famtastic_project')->load((int) $row['project_id']);
+    $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+    SelectedAssetRights::assertPacket($this->database, $studio['selected_dispatch_packet'] ?? []);
     if ((string) ($row['staging_review_status'] ?? '') !== 'accepted') {
       $now = $this->time->getRequestTime();
       $updated = $this->database->update('famtastic_project_request')->fields([

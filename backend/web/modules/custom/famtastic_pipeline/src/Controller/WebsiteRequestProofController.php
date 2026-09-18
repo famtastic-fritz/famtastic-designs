@@ -150,6 +150,7 @@ final class WebsiteRequestProofController extends ControllerBase {
       'status' => 'active', 'created' => $now, 'changed' => $now,
     ])->execute();
     $asset = $this->database->select('famtastic_request_asset', 'a')->fields('a')->condition('id', $id)->execute()->fetchAssoc();
+    $this->portal->refreshSelectedWebsiteRequest((int) $customer['id'], $website_request);
     return new JsonResponse(['ok' => TRUE, 'duplicate' => FALSE, 'asset' => $this->assetPayload($asset)], 201);
   }
 
@@ -175,6 +176,14 @@ final class WebsiteRequestProofController extends ControllerBase {
     $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'none'; form-action 'none'");
     $response->headers->addCacheControlDirective('no-store', TRUE);
     return $response;
+  }
+
+  public function withdrawAsset(Request $request, string $website_request, string $asset): JsonResponse {
+    $customer = $this->account->isAuthenticated() ? $this->portal->customerForUid((int) $this->account->id()) : NULL;
+    if (!$customer) return new JsonResponse(['ok' => FALSE, 'error' => 'authentication_required'], 401);
+    try { $this->portal->withdrawWebsiteRequestAsset((int) $customer['id'], $website_request, $asset); }
+    catch (\InvalidArgumentException) { return new JsonResponse(['ok' => FALSE, 'error' => 'reference_unavailable', 'message' => 'Reference not found.'], 404); }
+    return new JsonResponse(['ok' => TRUE, 'asset_id' => $asset, 'status' => 'withdrawn']);
   }
 
   /** Safely maps declared callback asset paths into a scoped controller route. */

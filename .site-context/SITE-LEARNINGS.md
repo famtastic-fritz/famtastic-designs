@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Private uploaded reference reuse (local)
+
+Observation: protected hosting checks alone left existing anonymous proof-share routes as a possible bypass. Guidance: gate the shared request reader, sharing writer and URL projection against exact same-project private-upload manifests, including withdrawn records. Revalidate current rights before success/acceptance and clear acceptance through actual withdrawal writer. Local-only proof; Drive mirror intentionally excluded by task authority.
+
 ## 2026-09-17 - Form and ancestor evidence
 
 Observation: callback delay can leave agency source A behind local source B. Guidance: retain truthful A and reconcile verified ancestry downstream, never fabricate acknowledgement. Actual portal editor/serializer passes mobile/desktop component proof. Full suite 1,010 tests / 97 files; no live or Drive changes.

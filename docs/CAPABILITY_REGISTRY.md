@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 - Private uploaded reference reuse (local)
+
+Connection-proven locally: actual upload/controller/request/selection/receipt writers support exact same-project protected reference reuse and withdrawal. Anonymous signed proof shares are blocked when manifests contain that request/customer's private upload bytes, even after withdrawal. Cross-tenant/changed-byte/rights negatives and Next public-consumer gates pass. Full sweep before final share hardening:1,011/98; component browser and transport remain synthetic. No generated-media license, production activation, customer send or public launch proof.
+
 ## 2026-09-17 - Portal page-copy component/browser proof
 
 Real intake editor and shared dashboard serializer verified at 390/1280 for preservation, partial copy, edits and explicit withdrawal. Three successive normal request updates can reference an older acknowledged source while Next safely reconciles verified local completion. Browser save wrapper, persistence and hosting are synthetic; no live portal or publication claim.

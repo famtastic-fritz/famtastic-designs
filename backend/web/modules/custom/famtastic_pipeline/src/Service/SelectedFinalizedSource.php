@@ -13,6 +13,7 @@ final class SelectedFinalizedSource {
     }
     if (!is_array($mapping) || ($mapping['project_id'] ?? '') !== $packet['project_id'] || ($mapping['customer_id'] ?? '') !== $packet['continuation']['customer']['id'] || ($mapping['request_id'] ?? '') !== $packet['request_id'] || ($mapping['source_export_sha256'] ?? '') !== ($receipt['source_export_sha256'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_completion_identity');
     $record = self::validate($mapping['source_export'] ?? [], $mapping);
+    SelectedAssetRights::assertExport($packet, $receipt, $record);
     if (empty($record['scope_complete']) || ($record['scope']['required_pages'] ?? []) !== $packet['continuation']['required_pages'] || ($record['run_id'] ?? '') !== ($mapping['run_id'] ?? '') || ($record['repository']['commit'] ?? '') !== ($receipt['repository']['commit'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_completion_scope');
     $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE, 512, JSON_THROW_ON_ERROR);
     $prior = $studio['selected_source_mapping'] ?? NULL;
@@ -38,6 +39,7 @@ final class SelectedFinalizedSource {
   }
 
   public static function continuation(array $export, array $intent, array $authority): array {
+    if (!empty(self::validate($export, $authority)['use_restrictions'])) throw new \InvalidArgumentException('selected_continuation_protected_source_requires_current_asset_bindings');
     $export = self::validate($export, $authority);
     if ((string) ($authority['project_id'] ?? '') !== $intent['project_id'] || (string) ($authority['customer_id'] ?? '') !== $intent['customer_id'] || ($authority['request_id'] ?? '') !== $intent['request_id']) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_mismatch');
     if (($export['scope_complete'] ?? FALSE) !== TRUE || !empty($export['issues']) || !empty($intent['requested_changes']) || ($export['review_qa']['source_binding']['manifest_sha256'] ?? '') !== ($export['manifest_sha256'] ?? '') || ($export['review_qa']['source_binding']['site_id'] ?? '') !== $export['site_id'] || ($export['review_qa']['source_binding']['run_id'] ?? '') !== $export['run_id']) throw new \InvalidArgumentException('selected_continuation_source_scope_incomplete');

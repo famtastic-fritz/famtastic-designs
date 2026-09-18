@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Private uploaded reference reuse (local)
+
+Existing private-project upload wording authorizes only bounded exact reference reuse. Match request/customer/hash/size, never global hashes. Withdrawal invalidates pending work and acceptance but never makes old private copies public. Audit anonymous share readers as well as deployment gates. Stable aria-labelledby avoids textarea values contaminating accessible labels after React rerenders.
+
 ## 2026-09-17 - Share the serializer with browser proof
 
 Exercise the actual form serializer rather than copying its logic into a test wrapper. Distinguish untouched copy fields from an explicit empty list. Keep an older acknowledged source digest intact; downstream verified ancestry handles completion that the agency has not acknowledged yet.

@@ -24,8 +24,12 @@ final class SelectedRecordResolver {
     if (!is_array($target) || (string) ($target['customer_id'] ?? '') !== (string) $row['customer_id']) self::issue('review_target_binding_missing');
     $policy = $installation['authored_shell_policy'] ?? [];
     if (($policy['status'] ?? '') !== 'approved' || empty($policy['evidence_ref'])) self::issue('shell_rights_binding_missing');
-    // Initial bounded profile has no media. Never infer media rights from selection.
-    if (count($artifacts) !== 1) self::issue('asset_rights_bindings_required');
+    $sourceAssets = [];
+    foreach (ProofAssetContract::normalizeStoredManifest($dna['asset_manifest'] ?? []) as $asset) {
+      $sourceAssets['assets/' . $asset['relative_path']] = ['artifact' => ['path' => $asset['artifact_path'], 'sha256' => $asset['sha256'], 'bytes' => $asset['size_bytes']],
+        'rights' => SelectedAssetRights::bind($row, $intent['asset_authority']['records'], $asset)];
+    }
+    if (count($artifacts) !== 1 + count($sourceAssets)) self::issue('asset_rights_bindings_required');
     $intake = json_decode((string) $row['intake_data'], TRUE, 512, JSON_THROW_ON_ERROR);
     foreach (['required_features', 'integrations', 'booking_details', 'ecommerce_details', 'custom_needs'] as $field) if (trim((string) ($intake[$field] ?? '')) !== '') self::issue('unsupported_feature_' . $field);
     if ($intent['requested_changes']) self::issue('revision_requires_named_page_content');
@@ -39,11 +43,12 @@ final class SelectedRecordResolver {
     }
     if (!isset($pages['index.html'])) self::issue('selected_home_scope_missing');
     $existing = ['index.html' => $selected];
+    foreach ($sourceAssets as $path => $asset) $existing[$path] = $asset['artifact'];
     if ($completed) {
       $home = array_values(array_filter($completed['files'], static fn(array $f): bool => $f['path'] === 'index.html'));
       if (count($home) !== 1 || $home[0]['sha256'] !== $selected['sha256']) self::issue('source_changed_requires_edit_recipe');
       foreach ($completed['files'] as $file) {
-        if (!isset($pages[$file['path']])) self::issue('existing_page_removal_requires_edit_recipe');
+        if (!isset($pages[$file['path']]) && !isset($sourceAssets[$file['path']])) self::issue('existing_page_removal_requires_edit_recipe');
         $existing[$file['path']] = $file;
       }
     }
@@ -66,7 +71,9 @@ final class SelectedRecordResolver {
     $url = static fn(string $hash): string => $base . '/api/site-studio/selected-artifacts/' . rawurlencode((string) $row['public_id']) . '/' . $intent['selection']['revision'] . '/' . $hash;
     $steps = []; $changes = [];
     $files = [['path' => 'index.html', 'source_path' => $selected['path'], 'url' => $url($selected['sha256']), 'rights' => $policy]];
+    foreach ($sourceAssets as $path => $asset) $files[] = ['path' => $path, 'source_path' => $asset['artifact']['path'], 'url' => $url($asset['artifact']['sha256']), 'rights' => $asset['rights']];
     foreach ($existing as $path => $file) {
+      if (isset($sourceAssets[$path])) continue;
       $saved = array_values(array_filter($intake['authored_content']['pages'] ?? [], static fn(array $p): bool => strtolower($p['text']['page_name']) === strtolower($pages[$path])));
       if ($saved && ($mapping['content_records'][$path] ?? '') !== $saved[0]['record_id']) self::issue('existing_page_copy_requires_edit_recipe:' . $path);
       if (!$saved && isset($mapping['content_records'][$path])) self::issue('existing_page_copy_removed_requires_review:' . $path);

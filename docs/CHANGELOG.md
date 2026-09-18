@@ -1,5 +1,11 @@
 # Product changelog
 
+Final uploaded-reference verification including anonymous-share hardening: **1,011 tests / 98 files in 55.85s** with all PHP/browser harnesses enabled. PHP 42 contract assertions/3 selection cases, 34 portal DNA checks, brand check, routing YAML, syntax, lint and diff checks pass. No live or Drive writes.
+
+## 2026-09-17 - Private uploaded reference reuse (local)
+
+Reuse active owned uploads as exact same-project protected references, retaining separate AI/likeness statements and no publication/license claim. Add authenticated CSRF withdrawal with selection/acceptance refresh. Reject stale rights at dispatch, acceptance and checkout; enforce export/receipt restrictions and deny anonymous proof sharing of private reference bytes. Browser withdrawal preserves unsaved copy using stable accessible labels. Local synthetic proof only.
+
 ## 2026-09-17 - Portal copy serialization proof (local)
 
 Extract the actual dashboard page-copy serializer for shared browser verification. The real intake editor passes unchanged/partial/edited/removed-copy checks at 390/1280 without page errors or overflow. Extend the real-service harness to successive request updates for three-revision callback/upload-delay tests. Cross-worktree full suite: 1,010 tests / 97 files in 54.50s; component/save-wrapper proof is not live Drupal authentication.

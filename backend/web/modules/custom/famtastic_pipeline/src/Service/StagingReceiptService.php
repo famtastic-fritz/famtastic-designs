@@ -60,6 +60,7 @@ final class StagingReceiptService {
       throw new \InvalidArgumentException('Staging receipt project does not match the website request.');
     }
     $packet = $this->registeredPacket((int) $receipt['project_id']);
+    if (!$failure) SelectedAssetRights::assertPacket($this->database, $packet);
     self::assertReceiptMatchesRegisteredPacket($receipt, $packet);
     self::assertRequestBinding($receipt, $packet, $row);
     $receiptHash = hash('sha256', json_encode($receipt, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
@@ -159,12 +160,15 @@ final class StagingReceiptService {
       return FALSE;
     }
     $row = $this->database->select('famtastic_project_request', 'r')
-      ->fields('r', ['staging_status', 'staging_review_status', 'staging_receipt_hash', 'staging_receipt_json'])
+      ->fields('r', ['project_id', 'staging_status', 'staging_review_status', 'staging_receipt_hash', 'staging_receipt_json'])
       ->condition('id', $requestId)
       ->range(0, 1)
       ->execute()
       ->fetchAssoc();
-    return $row ? self::checkoutGateSatisfied($row) : FALSE;
+    if (!$row || !self::checkoutGateSatisfied($row)) return FALSE;
+    try { SelectedAssetRights::assertPacket($this->database, $this->registeredPacket((int) $row['project_id'])); }
+    catch (\InvalidArgumentException) { return FALSE; }
+    return TRUE;
   }
 
   /**

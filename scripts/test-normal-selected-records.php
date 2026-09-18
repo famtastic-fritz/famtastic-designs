@@ -4,8 +4,23 @@ declare(strict_types=1);
 namespace Drupal\Core\Entity { interface EntityTypeManagerInterface { public function getStorage($name); } }
 namespace Drupal\Component\Datetime { interface TimeInterface { public function getRequestTime(); } }
 namespace Drupal\Core\Config { interface ConfigFactoryInterface { public function get($name); } }
-namespace Drupal\Core\File { interface FileSystemInterface { const CREATE_DIRECTORY = 1, MODIFY_PERMISSIONS = 2, EXISTS_REPLACE = 1; } }
-namespace Drupal\Core\Site { class Settings { public static function get($key, $default = NULL) { return $default; } } }
+namespace Drupal\Core\File { interface FileSystemInterface { const CREATE_DIRECTORY = 1, MODIFY_PERMISSIONS = 2, EXISTS_REPLACE = 1, EXISTS_ERROR = 0; } }
+namespace Drupal\Core\Controller { class ControllerBase {} }
+namespace Drupal\Core\Session { interface AccountProxyInterface {} }
+namespace Drupal\Component\Uuid { interface UuidInterface {} }
+namespace Drupal\file { interface FileRepositoryInterface {} }
+namespace Drupal\file\FileUsage { interface FileUsageInterface {} }
+namespace Symfony\Component\HttpFoundation {
+  class Response {} class JsonResponse extends Response { public function __construct(public array $data, public int $status = 200) {} }
+  class Request {
+    public object $request; public object $files;
+    public function __construct(array $values, object $file) {
+      $this->request = new class($values) { public function __construct(private array $values) {} public function get($key, $default = NULL) { return $this->values[$key] ?? $default; } public function getBoolean($key) { return !empty($this->values[$key]); } };
+      $this->files = new class($file) { public function __construct(private object $file) {} public function get($key) { return $this->file; } };
+    }
+  }
+}
+namespace Drupal\Core\Site { class Settings { public static function get($key, $default = NULL) { return $default; } public static function getHashSalt() { return 'synthetic-share-salt'; } } }
 namespace Drupal\Core\Database\Statement { class FetchAs { const Associative = 2; } }
 namespace GuzzleHttp { interface ClientInterface {} }
 namespace Drupal\famtastic_pipeline\Entity {
@@ -34,15 +49,18 @@ namespace Drupal\Core\Database {
   }
   class Query {
     private array $values = [];
+    private array $conditions = [];
     public function __construct(private Connection $db, private string $table, private bool $write = FALSE) {}
     public function fields(...$args) { if ($this->write) $this->values = $args[0]; return $this; }
     public function insertFields($values) { $this->values = $values; return $this; }
     public function updateFields($values) { $this->values = $values + $this->values; return $this; }
+    public function condition($key, $value, ...$args) { $this->conditions[$key] = $value; return $this; }
+    private function asset() { $row = $this->db->tables['famtastic_request_asset'] ?? FALSE; if (!$row) return FALSE; $row += ['id' => 1]; foreach ($this->conditions as $key => $value) if ((string) ($row[$key] ?? '') !== (string) $value) return FALSE; return $row; }
     public function __call($name, $args) { return $this; }
-    public function execute() { if ($this->write) { $this->db->writes[] = $this->table; $this->db->tables[$this->table] = $this->values; if ($this->table === 'famtastic_project_request') $this->db->row = $this->values + $this->db->row; return 1; } return $this; }
+    public function execute() { if ($this->write) { $this->db->writes[] = $this->table; $this->db->tables[$this->table] = $this->values + ($this->table === 'famtastic_request_asset' ? ($this->db->tables[$this->table] ?? []) : []); if ($this->table === 'famtastic_project_request') $this->db->row = $this->values + $this->db->row; return 1; } return $this; }
     public function fetchField() { return match ($this->table) { 'famtastic_membership' => 1, 'famtastic_website_proof_research_snapshot' => $this->db->tables[$this->table]['snapshot_json'] ?? FALSE, default => 0 }; }
-    public function fetchAssoc() { return match ($this->table) { 'famtastic_project_request' => $this->db->row, 'famtastic_customer_resource' => ['organization_id' => 907, 'resource_type' => 'project', 'resource_id' => 902], 'famtastic_customer' => ['id' => 903, 'display_name' => 'Synthetic owner', 'email' => 'owner@example.invalid'], 'famtastic_website_proof_research_snapshot' => $this->db->tables[$this->table] ?? FALSE, default => FALSE }; }
-    public function fetchAll(...$args) { return []; }
+    public function fetchAssoc() { return match ($this->table) { 'famtastic_request_asset' => $this->asset(), 'famtastic_project_request' => $this->db->row, 'famtastic_customer_resource' => ['organization_id' => 907, 'resource_type' => 'project', 'resource_id' => 902], 'famtastic_customer' => ['id' => 903, 'display_name' => 'Synthetic owner', 'email' => 'owner@example.invalid'], 'famtastic_website_proof_research_snapshot' => $this->db->tables[$this->table] ?? FALSE, default => FALSE }; }
+    public function fetchAll(...$args) { return $this->table === 'famtastic_request_asset' && $this->asset() ? [$this->asset()] : []; }
   }
 }
 namespace {
@@ -50,12 +68,14 @@ namespace {
   if (!function_exists('mb_substr')) { function mb_substr($s, $start, $length) { return substr($s, $start, $length); } }
   if (!function_exists('mb_strtolower')) { function mb_strtolower($s) { return strtolower($s); } }
   $root = dirname(__DIR__) . '/backend/web/modules/custom/famtastic_pipeline/src/Service/';
-  foreach (['OutreachMailer', 'ProofAssetContract', 'SelectedSourceCapture', 'SelectedRequestContent', 'SelectedRecordResolver', 'SelectedSourceIntent', 'SelectedFinalizedSource', 'SelectedStagingContinuation', 'SelectedPlanningPacket', 'SiteStudioBuildPacketService', 'CustomerPortalService', 'ProofCampaignService', 'StagingReceiptService', 'SiteStudioStagingClient', 'AutomationWorker'] as $class) require $root . $class . '.php';
+  foreach (['OutreachMailer', 'ProofAssetContract', 'SelectedAssetRights', 'SelectedSourceCapture', 'SelectedRequestContent', 'SelectedRecordResolver', 'SelectedSourceIntent', 'SelectedFinalizedSource', 'SelectedStagingContinuation', 'SelectedPlanningPacket', 'SiteStudioBuildPacketService', 'CustomerPortalService', 'ProofCampaignService', 'StagingReceiptService', 'SiteStudioStagingClient', 'AutomationWorker'] as $class) require $root . $class . '.php';
+  require $root . 'CharacterAssetService.php';
+  require dirname($root) . '/Controller/WebsiteRequestProofController.php';
   $input = json_decode(stream_get_contents(STDIN), TRUE, 512, JSON_THROW_ON_ERROR);
   $tmp = sys_get_temp_dir() . '/normal-selected-' . bin2hex(random_bytes(6)); mkdir($tmp); mkdir($tmp . '/web'); Drupal::$dir = $tmp;
   $set = static function(object $object, array $fields): void { $r = new \ReflectionClass($object); foreach ($fields as $k => $v) $r->getProperty($k)->setValue($object, $v); };
   $project = empty($input['no_project']) ? new \Drupal\famtastic_pipeline\Entity\Project(['studio_json' => '{}'], 902) : NULL;
-  $campaign = new \Drupal\famtastic_pipeline\Entity\ProofCampaign(['campaign_id' => 'normal-proof', 'studio_job_id' => 'normal-job', 'prospect_id' => 906, 'callback_event_ids' => '[]'], 904);
+  $campaign = new \Drupal\famtastic_pipeline\Entity\ProofCampaign(['campaign_id' => json_decode($input['raw_callback'], TRUE, 512, JSON_THROW_ON_ERROR)['campaign_id'], 'studio_job_id' => 'normal-job', 'prospect_id' => 906, 'callback_event_ids' => '[]'], 904);
   $entities = new class($project, $campaign) implements \Drupal\Core\Entity\EntityTypeManagerInterface {
     public array $variants = []; public int $projectsCreated = 0;
     public function __construct(public ?object $project, public object $campaign) {}
@@ -88,11 +108,24 @@ namespace {
   $set($portal, ['database' => $db, 'entities' => $entities, 'time' => $clock, 'configFactory' => $config, 'ledger' => $ledger, 'siteStudioPackets' => $registry]);
   $proofs = (new \ReflectionClass(\Drupal\famtastic_pipeline\Service\ProofCampaignService::class))->newInstanceWithoutConstructor();
   $fs = new class implements \Drupal\Core\File\FileSystemInterface {
-    public function prepareDirectory($path, $flags) { return is_dir($path) || mkdir($path, 0700, TRUE); }
+    public function prepareDirectory($path, $flags) { return str_starts_with($path, 'private://') || is_dir($path) || mkdir($path, 0700, TRUE); }
     public function saveData($bytes, $path, $flags) { file_put_contents($path, $bytes); return $path; }
   };
   $set($proofs, ['entityTypeManager' => $entities, 'configFactory' => $config, 'time' => $clock, 'fileSystem' => $fs, 'ledger' => $ledger, 'database' => $db, 'portal' => $portal, 'previews' => new \Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService()]);
   try {
+    $uploadResult = NULL;
+    if (isset($input['upload'])) {
+      $upload = $input['upload']; file_put_contents($tmp . '/upload.png', base64_decode($upload['base64'], TRUE));
+      $file = new class($tmp . '/upload.png') { public function __construct(private string $path) {} public function isValid() { return TRUE; } public function getSize() { return filesize($this->path); } public function getPathname() { return $this->path; } public function getClientOriginalName() { return 'logo.png'; } };
+      $account = new class implements \Drupal\Core\Session\AccountProxyInterface { public function isAuthenticated() { return TRUE; } public function id() { return 777; } };
+      $repository = new class($tmp) implements \Drupal\file\FileRepositoryInterface { public function __construct(private string $tmp) {} public function writeData($bytes, $path, $flags) { file_put_contents($this->tmp . '/private-upload.png', $bytes); return new class { public function setPermanent() {} public function save() {} public function id() { return 1001; } }; } };
+      $usage = new class implements \Drupal\file\FileUsage\FileUsageInterface { public function add(...$args) {} };
+      $uuid = new class implements \Drupal\Component\Uuid\UuidInterface { public function generate() { return 'normal-upload-1'; } };
+      $character = (new \ReflectionClass(\Drupal\famtastic_pipeline\Service\CharacterAssetService::class))->newInstanceWithoutConstructor();
+      $controller = new \Drupal\famtastic_pipeline\Controller\WebsiteRequestProofController($db, $entities, $portal, $account, $fs, $repository, $usage, $uuid, $character);
+      $uploadResult = $controller->uploadAsset(new \Symfony\Component\HttpFoundation\Request($upload['fields'] ?? ['ownership_confirmed' => TRUE], $file), 'normal-request');
+      if (isset($input['asset_changes'], $db->tables['famtastic_request_asset'])) $db->tables['famtastic_request_asset'] = $input['asset_changes'] + $db->tables['famtastic_request_asset'];
+    }
     $raw = $input['raw_callback']; $callback = json_decode($raw, TRUE, 512, JSON_THROW_ON_ERROR);
     $first = $proofs->acceptCallback($callback['event_id'], $callback['campaign_id'], $callback['job_id'], $callback['variants'], $raw);
     $retry = $proofs->acceptCallback($callback['event_id'], $callback['campaign_id'], $callback['job_id'], $callback['variants'], $raw);
@@ -148,6 +181,21 @@ namespace {
     }
     if (isset($input['followup_request'])) $portal->updateWebsiteRequest(903, 'normal-request', $input['followup_request'], $input['followup_raw'] ?? json_encode($input['followup_request'], JSON_THROW_ON_ERROR));
     foreach ($input['followup_requests'] ?? [] as $followup) $portal->updateWebsiteRequest(903, 'normal-request', $followup, json_encode($followup, JSON_THROW_ON_ERROR));
+    if (!empty($input['withdraw_after_receipt'])) {
+      if ($controller->withdrawAsset(new \Symfony\Component\HttpFoundation\Request([], $file), 'normal-request', 'normal-upload-1')->status !== 200) throw new \RuntimeException('Reference withdrawal failed');
+      $afterWithdrawal = $project->get('studio_json')->value;
+      $controller->withdrawAsset(new \Symfony\Component\HttpFoundation\Request([], $file), 'normal-request', 'normal-upload-1');
+      if ($afterWithdrawal !== $project->get('studio_json')->value || $receipts->isReady(901)) throw new \RuntimeException('Withdrawal retry or checkout boundary failed');
+      try { $registry->assertActiveSelectedPacket($packet); throw new \RuntimeException('Withdrawn reference remained dispatchable'); }
+      catch (\InvalidArgumentException) { $negative['asset_rights_changed'] = TRUE; }
+    }
+    if (isset($input['later_asset_changes'])) {
+      $db->tables['famtastic_request_asset'] = $input['later_asset_changes'] + $db->tables['famtastic_request_asset'];
+      try { $registry->assertActiveSelectedPacket($packet); throw new \RuntimeException('Changed asset rights remained dispatchable'); }
+      catch (\InvalidArgumentException) { $negative['asset_rights_changed'] = TRUE; }
+      if (isset($receipts) && $receipts->isReady(901)) throw new \RuntimeException('Withdrawn asset remained checkout-ready');
+      $portal->refreshSelectedWebsiteRequest(903, 'normal-request');
+    }
     $finalState = json_decode($project->get('studio_json')->value, TRUE);
     $finalPacket = $finalState['selected_dispatch_packet'];
     $finalBytes = [];
@@ -158,6 +206,14 @@ namespace {
       $finalBytes[$hash] = base64_encode($registry->readSelectedArtifact('normal-request', $rev, $hash, "FAMtastic-Artifact $stamp:$signature", 'synthetic-reader-secret', $stamp));
     }
     $variantDna = json_decode($variant->get('design_dna')->value, TRUE);
+    $privateReference = $ref->getMethod('proofContainsPrivateReference')->invoke($portal, $db->row);
+    if ($privateReference) {
+      $db->row['proof_share_enabled'] = 1;
+      $shareSignature = $ref->getMethod('proofShareSignature')->invoke($portal, $db->row);
+      if ($portal->sharedWebsiteRequest('normal-request', $shareSignature) !== NULL || $portal->publicWebsiteProofShare('normal-request', $shareSignature) !== NULL) throw new \RuntimeException('Private reference exposed through anonymous sharing');
+      try { $ref->getMethod('changeWebsiteProofShare')->invoke($portal, $db->row, 'enable', 777); throw new \RuntimeException('Private reference sharing enabled'); }
+      catch (\InvalidArgumentException) { $negative['public_reference_denied'] = TRUE; }
+    }
     $capturedRaw = file_get_contents(dirname($tmp . '/' . $variant->get('artifact_path')->value) . '/' . $variantDna['source_capture']['raw_callback_file']);
     echo json_encode(['packet' => $packet, 'wire' => $http->wire, 'receipt_result' => $accepted, 'artifact_bytes' => $bytes, 'reader_negatives' => $negative, 'jobs' => $jobs, 'intake' => json_decode($db->row['intake_data'], TRUE), 'variant_dna' => $variantDna, 'captured_raw_callback' => $capturedRaw, 'projects_created' => $entities->projectsCreated, 'final_state' => $finalState, 'final_row' => $db->row, 'final_packet' => $finalPacket, 'final_artifact_bytes' => $finalBytes, 'final_jobs' => $ledger->jobs], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
   } finally {

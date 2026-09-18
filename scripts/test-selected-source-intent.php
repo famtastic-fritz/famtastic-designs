@@ -36,7 +36,7 @@ namespace Drupal\Core\Database {
 namespace {
   class Drupal { public static string $dir; public static function root() { return self::$dir . '/web'; } }
   $root = dirname(__DIR__) . '/backend/web/modules/custom/famtastic_pipeline/src/Service/';
-  foreach (['ProofAssetContract', 'SelectedSourceIntent', 'SelectedFinalizedSource', 'SelectedStagingContinuation', 'SelectedPlanningPacket', 'SiteStudioBuildPacketService', 'CustomerPortalService', 'SiteStudioStagingClient', 'AutomationWorker'] as $class) require $root . $class . '.php';
+  foreach (['ProofAssetContract', 'SelectedAssetRights', 'SelectedSourceIntent', 'SelectedFinalizedSource', 'SelectedStagingContinuation', 'SelectedPlanningPacket', 'SiteStudioBuildPacketService', 'CustomerPortalService', 'SiteStudioStagingClient', 'AutomationWorker'] as $class) require $root . $class . '.php';
   if (!function_exists('mb_strtolower')) { function mb_strtolower($text) { return strtolower($text); } }
   if (!function_exists('mb_substr')) { function mb_substr($text, $start, $length) { return substr($text, $start, $length); } }
   $input = ($argv[1] ?? '') === '--export-packet' ? json_decode(stream_get_contents(STDIN), TRUE, 512, JSON_THROW_ON_ERROR) : NULL;
