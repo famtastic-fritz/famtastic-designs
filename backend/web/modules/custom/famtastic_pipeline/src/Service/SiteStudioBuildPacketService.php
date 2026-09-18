@@ -29,6 +29,33 @@ final class SiteStudioBuildPacketService {
   /**
    * Stores the exact outbound packet on its owned project idempotently.
    */
+  public function resolveSelectedRecords(array $row, array $dna, array $intent, array $artifacts): ?array {
+    $installation = $this->configFactory->get('famtastic_pipeline.settings')->get('selected_staging');
+    if (!is_array($installation)) return NULL;
+    return SelectedRecordResolver::resolve($row, $dna, $intent, $artifacts, $installation, dirname(\Drupal::root()));
+  }
+
+  /** Worker-only original bytes: no preview rewriting or arbitrary path input. */
+  public function readSelectedArtifact(string $requestId, int $revision, string $hash, string $authorization, string $secret, int $now): string {
+    if ($secret === '' || !preg_match('/^FAMtastic-Artifact ([0-9]{10}):([a-f0-9]{64})$/', $authorization, $m) || abs($now - (int) $m[1]) > 300
+      || !preg_match('/^[a-f0-9]{64}$/', $hash) || !hash_equals(hash_hmac('sha256', "selected-artifact.v1\n$requestId\n$revision\n$hash\n" . $m[1], $secret), $m[2])) throw new \InvalidArgumentException('artifact_authorization_invalid');
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $requestId)->execute()->fetchAssoc();
+    if (!$row || $row['public_id'] !== $requestId) throw new \InvalidArgumentException('artifact_request_missing');
+    $project = $this->loadProject((string) $row['project_id']);
+    $studio = json_decode((string) $project->get('studio_json')->value, TRUE, 512, JSON_THROW_ON_ERROR);
+    $packet = $studio['selected_dispatch_packet'] ?? [];
+    $this->assertActiveSelectedPacket($packet);
+    if ((string) ($packet['project_id'] ?? '') !== (string) $row['project_id'] || (string) ($packet['continuation']['customer']['id'] ?? '') !== (string) $row['customer_id'] || ($packet['continuation']['selection_revision'] ?? 0) !== $revision) throw new \InvalidArgumentException('artifact_selection_changed');
+    $matches = array_values(array_filter($packet['artifacts'] ?? [], static fn(array $a): bool => $a['sha256'] === $hash));
+    if (count($matches) !== 1) throw new \InvalidArgumentException('artifact_not_declared');
+    $a = $matches[0]; $root = realpath(\Drupal::root() . '/proofs');
+    $path = realpath(dirname(\Drupal::root()) . '/' . $a['path']);
+    if (!$root || !$path || !str_starts_with($path, $root . DIRECTORY_SEPARATOR) || !is_file($path)) throw new \InvalidArgumentException('artifact_path_invalid');
+    $bytes = file_get_contents($path);
+    if (strlen($bytes) !== $a['bytes'] || hash('sha256', $bytes) !== $hash) throw new \InvalidArgumentException('artifact_bytes_changed');
+    return $bytes;
+  }
+
   public function registerSourceExport(array $envelope): array {
     $transaction = $this->database->startTransaction();
     try {

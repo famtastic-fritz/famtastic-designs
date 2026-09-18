@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Record customer text once and derive internal bindings
+
+Customers supply page names and copy, not hashes or renderer IDs. The writer records text provenance; selection derives bounded field permissions and recipe IDs. Save partial copy and report the exact missing text at planning. Read worker bytes without the browser preview's URL rewriting; authenticate immutable hash/revision reads.
+
 ## 2026-09-17 - Do not re-encode foreign JSON for integrity
 
 PHP associative decoding changes object/array representations and numeric spelling. Verify exact versioned source payload bytes, store them unchanged and use decoded data only as a business-field view. Producer intent/scope hashes now bind recorded JSON bytes. Raw upstream intake/DNA capture remains a separate normal-writer responsibility.

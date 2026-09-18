@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Normal selected-record writers
+
+Observation: selected marked HTML can provide an exact reusable shell, while the browser preview changes asset URLs.
+Guidance: retain raw source ingress and customer submissions; derive internal records from normal saved copy; use a separate authenticated unchanged-byte reader. Keep unsupported media/features and incomplete mappings explicit. Drive mirror remains outside the two-worktree scope.
+
 ## 2026-09-17 - Source wire integrity
 
 Observation: valid empty objects and small/large numbers broke cross-language export hashes.

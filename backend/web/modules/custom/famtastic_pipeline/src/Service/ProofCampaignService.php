@@ -367,8 +367,8 @@ class ProofCampaignService {
    * a future CLI or HTTP caller from treating a valid callback payload as a
    * substitute for that immutable provenance record.
    */
-  public function acceptCallback(string $eventId, string $campaignId, string $studioJobId, array $variants): array {
-    return $this->acceptCallbackInternal($eventId, $campaignId, $studioJobId, $variants, FALSE);
+  public function acceptCallback(string $eventId, string $campaignId, string $studioJobId, array $variants, ?string $rawCallback = NULL): array {
+    return $this->acceptCallbackInternal($eventId, $campaignId, $studioJobId, $variants, FALSE, $rawCallback);
   }
 
   /**
@@ -399,7 +399,7 @@ class ProofCampaignService {
   /**
    * Shared callback implementation after the source-lane boundary is known.
    */
-  private function acceptCallbackInternal(string $eventId, string $campaignId, string $studioJobId, array $variants, bool $verifiedColdPrivateImport): array {
+  private function acceptCallbackInternal(string $eventId, string $campaignId, string $studioJobId, array $variants, bool $verifiedColdPrivateImport, ?string $rawCallback = NULL): array {
     if ($eventId === '' || strlen($eventId) > 255) {
       throw new \InvalidArgumentException('callback event_id is required.');
     }
@@ -563,6 +563,9 @@ class ProofCampaignService {
       $fallbackDirectionName = (string) ($requiredDirections[$direction] ?? self::DIRECTIONS[$direction]);
       $directionName = mb_substr(trim(strip_tags((string) ($variant['design_dna']['direction_name'] ?? $fallbackDirectionName))), 0, 255);
       $designDna = $variant['design_dna'];
+      if ($rawCallback !== NULL) {
+        $designDna['source_capture'] = SelectedSourceCapture::write(dirname(\Drupal::root()) . '/' . dirname($path), $rawCallback, $eventId, $campaignId, $studioJobId, $direction, $variant['html']);
+      }
       // The stored manifest is generated from validated bytes and the exact
       // protected artifact locations. Never trust an upstream DNA asset list.
       $designDna['asset_manifest'] = $assetManifest;

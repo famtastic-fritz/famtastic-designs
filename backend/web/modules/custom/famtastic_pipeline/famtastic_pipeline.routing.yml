@@ -1399,3 +1399,13 @@ famtastic_pipeline.ai_brief_synthesizer:
   methods: [POST]
   requirements:
     _access: 'TRUE'
+# Original manifest bytes for the authenticated selected-build worker.
+famtastic_pipeline.selected_worker_artifact:
+  path: '/api/site-studio/selected-artifacts/{website_request}/{revision}/{sha256}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\SiteStudioCallbackController::artifact'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    revision: '[0-9]+'
+    sha256: '[a-f0-9]{64}'

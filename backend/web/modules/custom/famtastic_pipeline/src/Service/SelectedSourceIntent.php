@@ -25,6 +25,8 @@ final class SelectedSourceIntent {
         'completion' => 'not_established'],
       // Preserve each distinct statement. These are not output-file approvals.
       'asset_authority' => ['source' => 'famtastic_request_asset', 'records' => $assets, 'output_bindings' => []],
+      'authored_content' => $intake['authored_content'] ?? NULL,
+      'raw_request_submission' => $intake['request_submission'] ?? NULL,
       'requested_changes' => $changes === NULL ? [] : [['text' => $changes, 'status' => 'pending']],
       'operation' => 'plan_remaining_work',
       'issues' => [

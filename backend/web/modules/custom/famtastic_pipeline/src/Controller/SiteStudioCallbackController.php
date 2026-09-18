@@ -13,11 +13,21 @@ use Drupal\famtastic_pipeline\Service\StagingReceiptService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Signature-verified asynchronous Site Studio completion callback.
  */
 final class SiteStudioCallbackController extends ControllerBase {
+
+  public function artifact(Request $request, string $website_request, int $revision, string $sha256): Response {
+    $secret = getenv('FAMTASTIC_STUDIO_DISPATCH_SECRET') ?: Settings::get('site_studio_staging_dispatch_secret');
+    if (!$secret) return new JsonResponse(['error' => 'artifact_reader_unconfigured'], 503);
+    try {
+      $bytes = $this->buildPackets->readSelectedArtifact($website_request, $revision, $sha256, (string) $request->headers->get('Authorization', ''), (string) $secret, time());
+      return new Response($bytes, 200, ['Content-Type' => 'application/octet-stream', 'Cache-Control' => 'private, no-store', 'X-Robots-Tag' => 'noindex, nofollow', 'X-Content-Type-Options' => 'nosniff']);
+    } catch (\InvalidArgumentException) { return new JsonResponse(['error' => 'artifact_unavailable'], 403); }
+  }
 
   /**
    * Constructs the callback controller.
@@ -55,7 +65,8 @@ final class SiteStudioCallbackController extends ControllerBase {
     if (!hash_equals($expected, $provided)) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_signature'], 400);
     }
-    $data = json_decode($request->getContent(), TRUE);
+    $rawCallback = $request->getContent();
+    $data = json_decode($rawCallback, TRUE);
     if (!is_array($data)) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_json'], 400);
     }
@@ -103,6 +114,7 @@ final class SiteStudioCallbackController extends ControllerBase {
         (string) ($data['campaign_id'] ?? ''),
         (string) ($data['job_id'] ?? ''),
         is_array($data['variants'] ?? NULL) ? $data['variants'] : [],
+        $rawCallback,
       );
     }
     catch (\InvalidArgumentException $e) {

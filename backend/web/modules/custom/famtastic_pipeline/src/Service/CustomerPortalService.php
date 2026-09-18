@@ -329,10 +329,12 @@ final class CustomerPortalService {
   }
 
   /** Creates a draft or submitted request and its distinct Drupal lead record. */
-  public function createWebsiteRequest(int $customerId, string $organizationPublicId, array $input): array {
+  public function createWebsiteRequest(int $customerId, string $organizationPublicId, array $input, ?string $rawInput = NULL): array {
     $organization = $this->authorizedOrganization($customerId, $organizationPublicId);
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
     $clean = $this->validateWebsiteRequest($input);
+    $clean['intake']['authored_content'] = SelectedRequestContent::record($input, $customerId, $rawInput);
+    $clean['intake']['request_submission'] = ['raw_json' => $rawInput, 'sha256' => $rawInput === NULL ? NULL : hash('sha256', $rawInput)];
     $now = $this->time->getRequestTime();
     $attribution = $this->attribution->snapshotFromArray($input, 'customer_portal');
     $claimedProspectId = $this->previews->claimedProspectId($customerId);
@@ -550,7 +552,7 @@ final class CustomerPortalService {
   }
 
   /** Saves or submits an existing request, enforcing customer and organization ownership. */
-  public function updateWebsiteRequest(int $customerId, string $publicId, array $input): array {
+  public function updateWebsiteRequest(int $customerId, string $publicId, array $input, ?string $rawInput = NULL): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
     if (!$row || (int) $row['customer_id'] !== $customerId || !$this->isMember($customerId, (int) $row['organization_id'])) throw new \RuntimeException('Website request not found.');
     if (in_array($row['status'], ['converted', 'cancelled'], TRUE)) throw new \InvalidArgumentException('This request can no longer be edited.');
@@ -563,6 +565,14 @@ final class CustomerPortalService {
     // of an included reset or edit round. Research is retained in its own
     // proof-campaign table below for the same reason.
     $existingIntake = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    $submission = SelectedRequestContent::record($input, $customerId, $rawInput);
+    $clean['intake']['request_submission'] = ['raw_json' => $rawInput, 'sha256' => $rawInput === NULL ? NULL : hash('sha256', $rawInput)];
+    $clean['intake']['authored_content'] = array_key_exists('page_content', $input)
+      ? $submission
+      : ($existingIntake['authored_content'] ?? $submission);
+    if (isset($existingIntake['authored_content']) && $existingIntake['authored_content'] !== $clean['intake']['authored_content']) {
+      $clean['intake']['authored_content_history'] = [...($existingIntake['authored_content_history'] ?? []), $existingIntake['authored_content']];
+    } elseif (isset($existingIntake['authored_content_history'])) $clean['intake']['authored_content_history'] = $existingIntake['authored_content_history'];
     foreach (['proof_design_reset_requests', 'proof_edit_round_requests', 'proof_revision_request'] as $protectedKey) {
       if (array_key_exists($protectedKey, $existingIntake)) {
         $clean['intake'][$protectedKey] = $existingIntake[$protectedKey];
@@ -1651,6 +1661,7 @@ final class CustomerPortalService {
         if (!$row || (int) $row['customer_id'] !== $customerId || (int) $row['proof_campaign_id'] !== (int) $campaign->id() || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected'], TRUE)) throw new \InvalidArgumentException('The available proof selection changed. Refresh before choosing.');
         if (!empty($row['commerce_order_id'])) throw new \RuntimeException('A paid request cannot start pre-payment staging.');
         if (($row['proof_review_status'] ?? '') === 'selected' && ($row['selected_proof_direction'] ?? '') === $direction) {
+          $this->prepareSelectedProofStaging($row, $variant, $direction);
           unset($transaction);
           return $this->serializeWebsiteRequest($row);
         }
@@ -1824,6 +1835,7 @@ final class CustomerPortalService {
         $value['source'], $value['scope'], $value['asset_authority'], $value['requested_changes'],
         $value['selection']['variant_id'], $value['selection']['direction_id'],
         $value['execution_binding'] ?? [],
+        $value['authored_content'] ?? NULL,
       ], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
       if (hash_equals($fingerprint($priorIntent), $fingerprint($intent))) {
         $intent = $priorIntent;
@@ -1834,6 +1846,17 @@ final class CustomerPortalService {
     $packetId = 'staging-packet:request:' . (int) $row['id'] . ':revision:' . $revision;
     $studio['selected_source_intent'] = $intent;
     $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+    if (!is_array($designDna['selected_build_continuation'] ?? NULL)) {
+      try { $resolved = $this->siteStudioPackets->resolveSelectedRecords($row, $designDna, $intent, $artifacts); }
+      catch (\InvalidArgumentException $error) { return $this->queueSelectedPlanning($row, $intent, $error->getMessage()); }
+      if ($resolved !== NULL) {
+        $artifacts = $resolved['artifacts'];
+        $designDna['selected_build_continuation'] = $resolved['continuation'];
+        $dnaJson = json_encode($designDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+        $studio['selected_source_resolution'] = ['intent_id' => $intent['intent_id'], 'status' => 'normal_records_resolved'];
+        $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+      }
+    }
     if (!is_array($designDna['selected_build_continuation'] ?? NULL) && isset($studio['next_source_export'])) {
       try { $designDna['selected_build_continuation'] = SelectedFinalizedSource::continuation($studio['next_source_export'], $intent, $studio['selected_source_authority'] ?? []); }
       catch (\InvalidArgumentException $error) { return $this->queueSelectedPlanning($row, $intent, $error->getMessage()); }

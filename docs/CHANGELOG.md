@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-17 - Normal source, content and selection writers (local)
+
+- Proof callbacks retain exact raw ingress bytes; request updates retain raw submissions and authored page records. Optional portal page-copy fields expose ordinary customer inputs.
+- Normal selection derives hash-bound content/permission/recipe records for supported static pages, using installation code rights/target policy. No prefilled continuation or source-authority blob is required for this profile.
+- Added an authenticated immutable artifact reader with active tenant/revision/hash checks; Next import through exact receipt is locally exercised. Source mapping/media/revision follow-ons remain open. No activation or Drive mirror write.
+
 ## 2026-09-17 - Source export integrity and planning digest correction (local)
 
 - Verify and retain source-wire v2 payload bytes before decoding; reject stale mapping/tampered payload without JSON normalization.

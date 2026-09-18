@@ -309,6 +309,12 @@ export default function CustomerPortalDashboard() {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
+    if (formData.has('page_content_present')) {
+      const fields = ['page_name', 'title', 'heading', 'description', 'body'];
+      data.page_content = formData.getAll('page_copy_page_name').map((_, index) => Object.fromEntries(fields.map(field => [field, String(formData.getAll(`page_copy_${field}`)[index] || '')])));
+      delete data.page_content_present;
+      for (const field of fields) delete data[`page_copy_${field}`];
+    }
     data.organization = org.public_id;
     data.recommendation_requested = formData.has('recommendation_requested');
     data.utm = collectUtmParams();

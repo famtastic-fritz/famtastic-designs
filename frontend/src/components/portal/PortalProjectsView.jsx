@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Panel, title, date } from './PortalShared.jsx';
 import { collectUtmParams } from '../../api/pipeline.js';
+import PortalPageContentFields from './PortalPageContentFields.jsx';
 
 export function customerNextStep(request) {
   if (!request) return null;
@@ -811,6 +812,9 @@ export function WebsiteRequestIntakeEditor({
                     defaultValue={editingRequest.intake?.page_count || 1}
                   />
                 </label>
+                <label>Page names
+                  <input name="page_list" defaultValue={editingRequest.intake?.page_list || ''} placeholder="Home, About, Contact" />
+                </label>
                 <label>
                   Who makes the final launch decision?
                   <input
@@ -823,6 +827,7 @@ export function WebsiteRequestIntakeEditor({
             </fieldset>
 
             {/* YOUR BUSINESS */}
+            <PortalPageContentFields request={editingRequest} />
             <fieldset className="portal-form-group">
               <legend>Your business details</legend>
               <div className="portal-form-grid">

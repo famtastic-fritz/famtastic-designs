@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 - Writer-produced static page continuation (local)
+
+Actual callback, request update, proof approval, customer selection, automation dispatch, immutable artifact read and receipt service now support an assetless marked intro-section profile with saved page copy. Synthetic persistence and hosting adapters remain; no live Drupal or production claim. General generation, source mapping and media-rights propagation are unfinished.
+
 ## 2026-09-17 - Byte-preserving source registry (local)
 
 Source-wire v2 registration preserves original JSON bytes and verifies the version-bound digest, including empty objects/arrays and numeric forms. Planning echoes a verified producer byte hash. This strengthens local contracts only; normal source/content/permission/target writers and production execution are not complete.
