@@ -24,6 +24,19 @@ send unrelated queued mail, charge a customer, or overwrite a completed site.
 - [ ] Activate a selected-staging-only schedule using explicit CLI PHP.
 - [ ] Record actual served receipts and honest remaining unsupported scope.
 
+## Saved source — not a production release
+
+Both repair branches were committed and pushed on September 18:
+
+- Designs `codex/selected-staging-contract`: implementation `accf1ec2468db3f76b1603d8bf31821f0a8d3ada`.
+- Studio `codex/selected-staging-continuation`: implementation `2e597d0423c37516094a72632b17bc0e122f58f9`.
+
+Neither main was advanced, no canonical deploy script was applied, and the
+running Studio was not restarted. Preserve this distinction in owner updates.
+The dated status was also written to the existing local Drive mirror directory;
+remote Drive synchronization was not verified. No customer notification, charge
+or final acceptance occurred.
+
 ## Read-only production findings
 
 Backend marker: `45eedc1aff207d8062ee4cb879cec0208a5ddc4d`.
