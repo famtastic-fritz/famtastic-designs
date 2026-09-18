@@ -4,21 +4,28 @@ namespace Drupal\famtastic_pipeline\Service;
 
 /** Maps a real Next export and separate agency authority into the existing contract. */
 final class SelectedFinalizedSource {
-  public static function validate(array $export, array $authority): void {
-    $body = $export; unset($body['sha256']);
-    $hash = hash('sha256', json_encode($body, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
-    if (($export['schema'] ?? '') !== 'famtastic.finalized-source.v1' || !hash_equals($hash, (string) ($export['sha256'] ?? ''))) throw new \InvalidArgumentException('selected_continuation_source_export_digest_mismatch');
+  public static function validate(array $export, array $authority): array {
+    $keys = array_keys($export); sort($keys);
+    if (($export['schema'] ?? '') !== 'famtastic.finalized-source-wire.v2' || !is_string($export['payload_json'] ?? NULL) || $keys !== ['payload_json', 'schema', 'sha256']) throw new \InvalidArgumentException('selected_continuation_source_export_digest_mismatch');
+    $hash = hash('sha256', "famtastic.finalized-source-wire.v2\n" . $export['payload_json']);
+    if (!hash_equals($hash, (string) ($export['sha256'] ?? ''))) throw new \InvalidArgumentException('selected_continuation_source_export_digest_mismatch');
+    // Keep the wire payload unchanged in storage. Decode only after byte verification.
+    $export = json_decode($export['payload_json'], TRUE, 512, JSON_THROW_ON_ERROR);
+    if (!is_array($export) || ($export['schema'] ?? '') !== 'famtastic.finalized-source.v1' || array_key_exists('sha256', $export)) throw new \InvalidArgumentException('selected_continuation_source_export_payload_invalid');
     if (empty($authority['evidence_ref']) || ($authority['site_id'] ?? '') !== ($export['site_id'] ?? '') || ($authority['repository_path'] ?? '') !== ($export['repository']['repository_path'] ?? '') || ($authority['source_export_sha256'] ?? '') !== $hash) throw new \InvalidArgumentException('selected_continuation_source_mapping_required');
+    return $export + ['sha256' => $hash];
   }
 
   public static function continuation(array $export, array $intent, array $authority): array {
-    self::validate($export, $authority);
+    $export = self::validate($export, $authority);
     if ((string) ($authority['project_id'] ?? '') !== $intent['project_id'] || (string) ($authority['customer_id'] ?? '') !== $intent['customer_id'] || ($authority['request_id'] ?? '') !== $intent['request_id']) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_mismatch');
     if (($export['scope_complete'] ?? FALSE) !== TRUE || !empty($export['issues']) || !empty($intent['requested_changes']) || ($export['review_qa']['source_binding']['manifest_sha256'] ?? '') !== ($export['manifest_sha256'] ?? '') || ($export['review_qa']['source_binding']['site_id'] ?? '') !== $export['site_id'] || ($export['review_qa']['source_binding']['run_id'] ?? '') !== $export['run_id']) throw new \InvalidArgumentException('selected_continuation_source_scope_incomplete');
     if (($authority['scope_evidence_ref'] ?? '') !== ($export['scope']['evidence_ref'] ?? '') || empty($authority['scope_evidence_ref'])) throw new \InvalidArgumentException('selected_continuation_scope_binding_required');
     $requested = $intent['scope']['snapshot'];
-    $requestedHash = hash('sha256', json_encode($requested, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
-    if (!hash_equals($requestedHash, (string) ($authority['request_scope_sha256'] ?? ''))) throw new \InvalidArgumentException('selected_continuation_requested_scope_changed');
+    $scopeJson = $intent['scope']['snapshot_json'] ?? '';
+    if (($intent['scope']['digest_strategy'] ?? '') !== 'sha256-json-utf8-bytes.v1' || !is_string($scopeJson) || json_decode($scopeJson, TRUE, 512, JSON_THROW_ON_ERROR) !== $requested) throw new \InvalidArgumentException('selected_continuation_requested_scope_changed');
+    $requestedHash = hash('sha256', $scopeJson);
+    if (!hash_equals($requestedHash, (string) ($intent['scope']['snapshot_sha256'] ?? '')) || !hash_equals($requestedHash, (string) ($authority['request_scope_sha256'] ?? ''))) throw new \InvalidArgumentException('selected_continuation_requested_scope_changed');
     if ((int) ($requested['page_count'] ?? 0) !== count($export['scope']['required_pages'])) throw new \InvalidArgumentException('selected_continuation_requested_pages_incomplete');
     foreach (['required_features', 'integrations', 'booking_details', 'ecommerce_details', 'custom_needs'] as $field) {
       if (trim((string) ($requested[$field] ?? '')) !== '') throw new \InvalidArgumentException('unsupported_scope: requested features require an executable recipe: ' . $field);

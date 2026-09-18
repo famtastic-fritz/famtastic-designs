@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Source wire integrity
+
+Observation: valid empty objects and small/large numbers broke cross-language export hashes.
+Guidance: retain source-wire v2 bytes unchanged, verify before decoding, and bind the exact hash to source authority. Do not silently migrate old flat exports. Drive mirror omitted under two-worktree scope.
+
 ## 2026-09-17 - Shared-shell continuation boundary
 
 Observation: marked legacy templates support a bounded text substitution adapter, but the producer must still supply current authored content and permission records.

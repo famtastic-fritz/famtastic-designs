@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-17 - Source export integrity and planning digest correction (local)
+
+- Verify and retain source-wire v2 payload bytes before decoding; reject stale mapping/tampered payload without JSON normalization.
+- Planning intent and scope snapshots carry exact producer JSON bytes for cross-language hash comparisons. Actual PHP registry and selection tests cover numeric/Unicode and source object/array boundaries.
+- Normal record-writer connection plan remains implementation work. No deployment; Drive mirror excluded by two-worktree scope.
+
 ## 2026-09-17 - Shared-shell recipe contract (local)
 
 - Allowed `legacy-shared-shell-v1` continuation in the existing selected staging contract. Next validates hash-bound source, authored content and transformation permission, then assembles absent pages with browser QA.

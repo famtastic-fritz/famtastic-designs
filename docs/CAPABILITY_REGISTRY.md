@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 - Byte-preserving source registry (local)
+
+Source-wire v2 registration preserves original JSON bytes and verifies the version-bound digest, including empty objects/arrays and numeric forms. Planning echoes a verified producer byte hash. This strengthens local contracts only; normal source/content/permission/target writers and production execution are not complete.
+
 ## 2026-09-17 - Bounded legacy shared-shell consumer
 
 Local contract recognizes `legacy-shared-shell-v1`; Next synthetic proof covers authored text substitutions, preserved shared shell, explicit metadata, existing-repository continuation, browser QA and callback gating. Normal content/permission/template producer writers remain unfinished. No production capability promotion.

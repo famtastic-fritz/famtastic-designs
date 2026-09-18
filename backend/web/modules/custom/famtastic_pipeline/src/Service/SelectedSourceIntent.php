@@ -10,6 +10,7 @@ final class SelectedSourceIntent {
   public static function create(array $row, string $projectId, int $variantId, string $direction, int $revision, string $selectedAt, array $artifacts, array $dna, array $assets, ?string $changes): array {
     $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE) ?: [];
     $scope = array_intersect_key($intake, array_flip(['page_count', 'page_list', 'required_features', 'integrations', 'booking_details', 'ecommerce_details', 'custom_needs', 'content_status', 'copywriting_needs', 'products_services', 'desired_actions']));
+    $scopeJson = json_encode($scope, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     return [
       'schema' => 'famtastic.selected-source-intent.v1',
       'intent_id' => 'selected-source:request:' . $row['id'] . ':revision:' . $revision,
@@ -17,7 +18,8 @@ final class SelectedSourceIntent {
       'customer_id' => (string) $row['customer_id'], 'project_id' => $projectId,
       'proof_campaign_id' => (string) $row['proof_campaign_id'],
       'selection' => ['variant_id' => (string) $variantId, 'direction_id' => $direction, 'revision' => $revision, 'selected_at' => $selectedAt],
-      'scope' => ['status' => 'requested', 'source' => 'famtastic_project_request.intake_data', 'snapshot' => $scope],
+      'scope' => ['status' => 'requested', 'source' => 'famtastic_project_request.intake_data', 'snapshot' => $scope,
+        'digest_strategy' => 'sha256-json-utf8-bytes.v1', 'snapshot_json' => $scopeJson, 'snapshot_sha256' => hash('sha256', $scopeJson)],
       'source' => ['kind' => 'selected_proof', 'artifacts' => $artifacts, 'design_dna' => $dna,
         'design_dna_sha256' => hash('sha256', json_encode($dna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)),
         'completion' => 'not_established'],

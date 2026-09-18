@@ -46,7 +46,7 @@ namespace {
   $html = $input ? base64_decode($input['html_base64'], TRUE) : '<!doctype html><html><body><h1>Selected concept</h1></body></html>';
   file_put_contents($tmp . '/proofs/index.html', $html);
   $dna = ['proof_id' => 'proof-a', 'direction_id' => 'a', 'direction_name' => 'Selected',
-    'spec_snapshot' => ['site_name' => 'Synthetic', 'pages' => ['index.html']],
+    'spec_snapshot' => ['site_name' => 'Synthetic Café 雪', 'pages' => ['index.html'], 'small_numeric' => 1e-7, 'large_numeric' => 1e30, 'empty_list' => []],
     'style_fingerprint' => 'original', 'font_pairing' => 'original',
     'media_fulfillment' => ['status' => 'not_needed', 'assets' => []],
     'content_verification' => ['valid' => TRUE], 'asset_manifest' => []];
@@ -66,7 +66,7 @@ namespace {
   $clock = new class implements \Drupal\Component\Datetime\TimeInterface { public function getRequestTime() { return 1789600000; } };
   foreach (['entities' => $entities, 'database' => $db, 'time' => $clock] as $name => $value) $ref->getProperty($name)->setValue($service, $value);
   $row = ['id' => 901, 'public_id' => 'request-1', 'project_id' => 902, 'customer_id' => 903, 'proof_campaign_id' => 904, 'prospect_id' => 906,
-    'intake_data' => json_encode(['page_count' => 3, 'page_list' => 'Home, About, Contact', 'booking_details' => 'request appointments'])];
+    'intake_data' => json_encode(['page_count' => 3, 'page_list' => 'Home, About, Contact', 'booking_details' => 'request appointments', 'products_services' => ['small' => 1e-7, 'large' => 1e30, 'label' => 'Café 雪']])];
   $db->row = $row;
   $ledger = new \Drupal\famtastic_pipeline\Service\OperationalLedger();
   $config = new class implements \Drupal\Core\Config\ConfigFactoryInterface { public function get($name) { return new class { public function get($key) { return 'https://agency.example.test'; } }; } };
@@ -82,7 +82,7 @@ namespace {
       $envelope = ['project_id' => '902', 'customer_id' => '903', 'request_id' => 'request-1', 'source_export' => $export];
       if (!$registry->registerSourceExport($envelope)['newly_processed'] || $registry->registerSourceExport($envelope)['newly_processed']) throw new \RuntimeException('Source export registration not idempotent');
       $ref->getMethod('createSelectedProofStaging')->invoke($service, $row, $variant, 'a', NULL);
-      echo json_encode(['packet' => $project->studio['selected_dispatch_packet']], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+      echo json_encode(['packet' => $project->studio['selected_dispatch_packet'], 'stored_source_export' => $project->studio['next_source_export']], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
       return;
     }
     foreach ([NULL, 'Change the contact details', 'Change the contact details'] as $index => $notes) {

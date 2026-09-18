@@ -8,12 +8,13 @@ final class SelectedPlanningPacket {
     if (count($source) !== 1) throw new \InvalidArgumentException('Planning requires exactly one selected source.');
     $selected = $source[0]; $direction = 'direction-' . $intent['selection']['direction_id'];
     $id = 'selected-planning:request:' . $intent['website_request_id'] . ':revision:' . $intent['selection']['revision'];
+    $intentJson = json_encode($intent, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     return ['schema' => 'famtastic.site-studio.planning-packet.v1', 'build_class' => 'selected_direction_remaining_work',
       'packet_id' => $id, 'idempotency_key' => $id, 'request_id' => $intent['request_id'], 'project_id' => $intent['project_id'],
       'selected_direction_ids' => [$direction], 'artifacts' => $intent['source']['artifacts'],
       'artifact_manifest_sha256' => SiteStudioBuildPacketService::artifactManifestDigest($intent['source']['artifacts']),
       'selected_artifacts' => [['direction_id' => $direction, 'source_artifact_path' => $selected['path'], 'source_artifact_sha256' => $selected['sha256'], 'source_artifact_bytes' => $selected['bytes']]],
       'continuation' => ['customer' => ['id' => $intent['customer_id']], 'selection_revision' => $intent['selection']['revision'], 'website_request_id' => $intent['website_request_id']],
-      'intent' => $intent, 'dispatch_issue' => $issue];
+      'intent' => $intent, 'intent_digest_strategy' => 'sha256-json-utf8-bytes.v1', 'intent_payload_json' => $intentJson, 'intent_sha256' => hash('sha256', $intentJson), 'dispatch_issue' => $issue];
   }
 }

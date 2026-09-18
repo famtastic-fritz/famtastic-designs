@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Do not re-encode foreign JSON for integrity
+
+PHP associative decoding changes object/array representations and numeric spelling. Verify exact versioned source payload bytes, store them unchanged and use decoded data only as a business-field view. Producer intent/scope hashes now bind recorded JSON bytes. Raw upstream intake/DNA capture remains a separate normal-writer responsibility.
+
 ## 2026-09-17 - Content authority and rendering are separate
 
 Authored text and permission must bind the selected/template hashes, component IDs, field paths, output path and record revision. Renderer validity cannot substitute for these records. Preserve exact source files and shared shell; reject stale permission independently. Drive mirror remains outside this task's two-worktree authorization.

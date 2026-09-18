@@ -162,7 +162,9 @@ final class SiteStudioBuildPacketService {
       }
       $intent = $packet['intent'];
       if (($result['selected_direction_id'] ?? '') !== $packet['selected_direction_ids'][0] || ($result['selected_artifact_sha256'] ?? '') !== $packet['selected_artifacts'][0]['source_artifact_sha256']) throw new \InvalidArgumentException('Planning selected source mismatch.');
-      $intentHash = hash('sha256', json_encode($intent, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+      $intentJson = $packet['intent_payload_json'] ?? '';
+      $intentHash = hash('sha256', $intentJson);
+      if (($packet['intent_digest_strategy'] ?? '') !== 'sha256-json-utf8-bytes.v1' || $intentHash !== ($packet['intent_sha256'] ?? '') || json_decode($intentJson, TRUE, 512, JSON_THROW_ON_ERROR) !== $intent) throw new \InvalidArgumentException('Planning intent wire changed.');
       if (($result['schema'] ?? '') !== 'famtastic.site-studio.planning-result.v1' || !in_array($result['status'] ?? '', ['planning_complete', 'planning_failed'], TRUE)
         || ($result['intent_id'] ?? '') !== $intent['intent_id'] || ($result['intent_sha256'] ?? '') !== $intentHash
         || ($result['selection_revision'] ?? 0) !== $intent['selection']['revision'] || empty($result['event_id'])
