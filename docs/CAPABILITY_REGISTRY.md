@@ -1,5 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Independent QA proof release, locally proven
+
+Trusted service operation atomically retains automated QA/research and reveals
+three account-bound proofs with one personalized standard/v2 outbox. Fifteen
+real SQLite/filesystem tests pass (64 assertions); entity lookup is mocked.
+Not deployed, SMTP-proven or unattended scheduling. See the automated proof release plan.
+
 ## 2026-09-18 — Branded operational email: owner proof accepted
 
 Live follow-up: backend `3f1169ae` deployed at 18:54:55Z. Signed-in People redirect

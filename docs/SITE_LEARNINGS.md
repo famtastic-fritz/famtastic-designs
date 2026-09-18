@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Personal delivery requires an atomic review boundary
+
+Human approval queued generic copy and stamped a uid. The new trusted QA
+operation retains distinct automation evidence and current file/research hashes,
+then commits reveal/research/personal outbox together. Late outbox failure must
+roll back all three. SMTP acceptance remains separate; uncertain sends are not retried blindly.
+
 ## 2026-09-18 — Missing admin routes need explicit presentation coverage
 
 Live nuance: ThemeManager passes the master route to negotiators, which is unnamed

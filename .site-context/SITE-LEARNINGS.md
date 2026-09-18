@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Automation approval is not a human uid
+
+Observation: reusing human proof approval would stamp a staff uid and queue the
+generic notice before the personal message. Guidance: bind independent QA and
+research to exact bytes, retain an automation decision, and atomically reveal
+proofs plus the one approved personal outbox; do not attribute automation to Fritz.
+
 ## 2026-09-18 — Test admin errors, not only successful screens
 
 Reproduce Drupal's master-route/current-error-subrequest split in unit tests;

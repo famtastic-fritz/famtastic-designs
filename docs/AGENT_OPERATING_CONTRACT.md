@@ -1,5 +1,15 @@
 # FAMtastic agent operating contract
 
+## September 18 amendment — independent QA authority
+
+For routine account-bound three-proof deliveries, the owner's approved policy
+supersedes the per-set Fritz approval described historically below. Use the
+evidence-bound operation in `plans/AUTOMATED_PROOF_RELEASE_2026-09-18.md`, with
+an automation actor distinct from the generator and no human uid attribution.
+The operation queues one authorized personalized standard/v2 notice atomically;
+it does not send, select, charge or launch. Exception and exact client-acceptance
+gates remain. No old queue or generic campaign is automatically admitted.
+
 ## September 18 — Shared branding for every active agency notification
 
 Owner requested replacement of all old email layouts after a verified-registration

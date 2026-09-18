@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-18 — Evidence-bound personal proof delivery (local)
+
+- Added trusted independent-QA release with automation attribution, current
+  artifact/research binding, atomic personal standard/v2 outbox and safe exact retries.
+- Fifteen SQLite/filesystem tests pass with 64 assertions; no migration, live
+  customer change, send or scheduler activation. See AUTOMATED_PROOF_RELEASE plan.
+
 ## 2026-09-18 — Admin error continuity and owner mail proof
 
 - Released `3f1169ae` at 18:54:55Z; live authenticated redirect and error branding
