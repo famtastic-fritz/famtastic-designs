@@ -1,6 +1,17 @@
 # Product changelog
 
-Final uploaded-reference verification including anonymous-share hardening: **1,011 tests / 98 files in 55.85s** with all PHP/browser harnesses enabled. PHP 42 contract assertions/3 selection cases, 34 portal DNA checks, brand check, routing YAML, syntax, lint and diff checks pass. No live or Drive writes.
+## 2026-09-18 — Selected-staging integration repair; release gates remain
+
+Preserved the current email-branding main while integrating the selected-source
+handoff. Real installed Drupal/SQLite proof passed 54 checks and found two
+transaction hazards: non-duplicate integrity errors were swallowed as duplicates,
+and authored input plus selected packet refresh needed one transaction. Fixed
+both. Portal blocked/failed states now request attention without implying work
+is still running or payment is due. Runtime boot and mounted callback fixes live
+in the companion Studio branch. No production activation or automatic target
+allocation is claimed; see `docs/plans/SELECTED_STAGING_RELEASE_2026-09-18.md`.
+
+Historical September 17 uploaded-reference verification including anonymous-share hardening: **1,011 tests / 98 files in 55.85s** with all PHP/browser harnesses enabled. PHP 42 contract assertions/3 selection cases, 34 portal DNA checks, brand check, routing YAML, syntax, lint and diff checks pass. No live or Drive writes in that pass.
 
 ## 2026-09-17 - Private uploaded reference reuse (local)
 

@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Do not promote partial repair to automatic delivery
+
+Real Drupal tests found swallowed non-duplicate integrity failures and a missing
+transaction around input plus selected-packet refresh; both are repaired and
+covered by 54 installed SQLite assertions. Verify actual boot and `/web` callback
+mount independently. The isolated hosted synthetic receipt proves cPanel byte
+transport, not production customer acceptance. Automatic target allocation and
+production activation remain open; preserve public Kakes/PIT files and do not
+replay their failed historical jobs. See the September 18 release plan.
+
 ## 2026-09-17 - Private uploaded reference reuse (local)
 
 Observation: protected hosting checks alone left existing anonymous proof-share routes as a possible bypass. Guidance: gate the shared request reader, sharing writer and URL projection against exact same-project private-upload manifests, including withdrawn records. Revalidate current rights before success/acceptance and clear acceptance through actual withdrawal writer. Local-only proof; Drive mirror intentionally excluded by task authority.

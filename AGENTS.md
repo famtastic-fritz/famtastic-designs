@@ -124,6 +124,11 @@ updated, say so explicitly in the session report rather than skipping silently.
   agent autonomously send, quote, grant, charge, purchase a domain, or launch.
   Routine protected selected-site builds use the bounded owner-approved policy
   above; no per-build Fritz approval is required.
+  A tested handoff branch or hosted manual site is not proof of automatic
+  delivery. Before reporting this lane enabled, verify the running consumer,
+  matching customer/project hosting binding, signed callback, explicit-PHP
+  schedule and exact served artifact. The September 18 repair still has no
+  automatic target allocator; see `docs/plans/SELECTED_STAGING_RELEASE_2026-09-18.md`.
 - For every creative proof, selected-direction refinement, campaign experience,
   or Site Studio-bound build, follow `docs/architecture/BUILD_DNA_STANDARD_V1.md`.
   Create and validate one `famtastic.build-dna.v1` record at run creation;

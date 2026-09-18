@@ -24,7 +24,7 @@ export function customerNextStep(request) {
     return { owner: 'famtastic', tone: 'waiting', label: 'Your build is underway', detail: 'Payment is recorded. FAMtastic owns the next build update.', action: '' };
   }
   if (request.proof_review_status === 'selected') {
-    if (request.staging_status === 'failed') return { owner: 'famtastic', tone: 'attention', label: 'Your selected build needs attention', detail: 'Your choice and feedback are saved. FAMtastic is resolving a build requirement before review can continue.', action: 'support' };
+    if (['failed', 'planning_failed', 'planning_blocked'].includes(request.staging_status)) return { owner: 'famtastic', tone: 'attention', label: 'Your selected build needs attention', detail: 'Your choice and feedback are saved. FAMtastic is resolving a build requirement before review can continue.', action: 'support' };
     if (request.staging_preview?.status === 'deployed') return { owner: 'you', tone: 'action', label: 'Review your completed website', detail: 'Open the protected review, request changes or accept this exact revision. No payment is taken here.', action: 'review' };
     return { owner: 'famtastic', tone: 'waiting', label: 'Your selected website is being prepared', detail: 'Your direction is saved. Review and acceptance come before checkout.', action: '' };
   }
@@ -67,7 +67,7 @@ export function StagingReview({ request, busy, onAccept }) {
 function customerStage(request) {
   if (request.proof_review_status === 'revision_requested') return 'We are making a new set from your feedback';
   if (['customer_ready', 'notified'].includes(request.proof_review_status)) return 'Your 3 directions are ready to review';
-  if (request.proof_review_status === 'selected') return request.direct_checkout_available ? 'Your completed review is accepted — checkout is next' : request.staging_status === 'failed' ? 'Your selection is saved — the build needs attention' : request.staging_preview?.status === 'deployed' ? 'Your completed website is ready for your review' : 'Your selected website is being prepared';
+  if (request.proof_review_status === 'selected') return request.direct_checkout_available ? 'Your completed review is accepted — checkout is next' : ['failed', 'planning_failed', 'planning_blocked'].includes(request.staging_status) ? 'Your selection is saved — the build needs attention' : request.staging_preview?.status === 'deployed' ? 'Your completed website is ready for your review' : 'Your selected website is being prepared';
   if (request.status === 'draft') return 'Your brief needs a few more details';
   if (request.status === 'converted') return 'Your website build is underway';
   return 'FAMtastic is preparing your directions';

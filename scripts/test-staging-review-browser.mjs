@@ -13,7 +13,8 @@ const html = `<!doctype html><html><head><meta name="viewport" content="width=de
 fs.writeFileSync(path.join(root, 'index.html'), html);
 fs.writeFileSync(path.join(root, 'entry.jsx'), `import React, {useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {StagingReview} from '${repo}/frontend/src/components/portal/PortalProjectsView.jsx';
+import {StagingReview,customerNextStep} from '${repo}/frontend/src/components/portal/PortalProjectsView.jsx';
+window.selectedBuildNextStep = customerNextStep;
 import {acceptWebsiteStagingReview} from '${repo}/frontend/src/api/customer.js';
 import {acceptDisplayedStagingReview} from '${repo}/frontend/src/api/stagingReview.js';
 import '${repo}/frontend/src/index.css';
@@ -31,6 +32,11 @@ try {
   await page.goto(server.resolvedUrls.local[0]);
   const button = page.getByRole('button', {name:'Accept this website revision'});
   await button.waitFor(); assert.equal(await button.isDisabled(), true);
+  for (const staging_status of ['failed', 'planning_failed', 'planning_blocked']) {
+    const step = await page.evaluate(status => window.selectedBuildNextStep({proof_review_status:'selected',staging_status:status}), staging_status);
+    assert.equal(step.tone, 'attention'); assert.equal(step.action, 'support');
+    assert.equal(step.owner, 'famtastic');
+  }
   await page.getByRole('checkbox').check(); assert.equal(await button.isEnabled(), true);
   await button.click(); await page.getByRole('alert').filter({hasText:'Review the updated website'}).waitFor();
   assert.deepEqual(sent,[{receipt_hash:'a'.repeat(64)}]);
@@ -41,5 +47,5 @@ try {
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true, `containment ${width}`);
     assert.ok((await button.boundingBox()).height>=44, `touch target ${width}`);
   }
-  console.log('PASS: actual review component + API; stale hash refresh clears acceptance, one request only, 320/390/768/1280px containment and 44px button.');
+  console.log('PASS: actual review component + API; blocked/failed selection is attention, stale hash refresh clears acceptance, one request only, 320/390/768/1280px containment and 44px button.');
 } finally { if(browser) await browser.close(); await server.close(); fs.rmSync(root,{recursive:true,force:true}); }

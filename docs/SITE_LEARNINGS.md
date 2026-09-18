@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Real persistence and operational activation
+
+SQLSTATE 23000 is an integrity class, not a duplicate-key proof. Preserve rollback
+for NOT NULL/CHECK/foreign-key/trigger errors. Save authored input and its selected
+packet/job atomically. Installed SQLite and trigger-interleaving tests reveal
+failures hidden by persistence mocks; they still do not prove MySQL row locking.
+Production callback routing includes `/web`. Both sides require legitimate
+customer-bound hosting targets; target allocation is absent, and a worker boot
+or manually hosted site cannot substitute for that missing capability.
+
 ## 2026-09-17 - Private uploaded reference reuse (local)
 
 Existing private-project upload wording authorizes only bounded exact reference reuse. Match request/customer/hash/size, never global hashes. Withdrawal invalidates pending work and acceptance but never makes old private copies public. Audit anonymous share readers as well as deployment gates. Stable aria-labelledby avoids textarea values contaminating accessible labels after React rerenders.

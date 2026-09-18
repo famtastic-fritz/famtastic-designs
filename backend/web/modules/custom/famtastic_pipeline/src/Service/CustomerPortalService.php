@@ -553,7 +553,21 @@ final class CustomerPortalService {
 
   /** Saves or submits an existing request, enforcing customer and organization ownership. */
   public function updateWebsiteRequest(int $customerId, string $publicId, array $input, ?string $rawInput = NULL): array {
-    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
+    $transaction = $this->database->startTransaction();
+    try {
+      $result = $this->writeWebsiteRequestUpdate($customerId, $publicId, $input, $rawInput);
+      unset($transaction);
+      return $result;
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+  }
+
+  /** Saves authored intake and its selected packet/job as one transaction. */
+  private function writeWebsiteRequestUpdate(int $customerId, string $publicId, array $input, ?string $rawInput): array {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->forUpdate()->execute()->fetchAssoc();
     if (!$row || (int) $row['customer_id'] !== $customerId || !$this->isMember($customerId, (int) $row['organization_id'])) throw new \RuntimeException('Website request not found.');
     if (in_array($row['status'], ['converted', 'cancelled'], TRUE)) throw new \InvalidArgumentException('This request can no longer be edited.');
     $clean = $this->validateWebsiteRequest($input);
@@ -610,13 +624,23 @@ final class CustomerPortalService {
 
   /** Reconcile normal asset/content writer changes against the selected source. */
   public function refreshSelectedWebsiteRequest(int $customerId, string $publicId): void {
-    $row = $this->ownedWebsiteRequest($customerId, $publicId);
-    if (!$row) throw new \InvalidArgumentException('Website request not found.');
-    if (($row['proof_review_status'] ?? '') !== 'selected' || empty($row['selected_proof_direction']) || !empty($row['commerce_order_id'])) return;
-    $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $row['selected_proof_direction'])->range(0, 1)->execute();
-    $variant = $ids ? $this->entities->getStorage('proof_variant')->load(reset($ids)) : NULL;
-    if (!$variant) throw new \RuntimeException('The selected proof artifact is unavailable.');
-    $this->prepareSelectedProofStaging($row, $variant, $row['selected_proof_direction']);
+    $transaction = $this->database->startTransaction();
+    try {
+      $row = $this->ownedWebsiteRequest($customerId, $publicId);
+      if (!$row) throw new \InvalidArgumentException('Website request not found.');
+      $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', (int) $row['id'])->forUpdate()->execute()->fetchAssoc();
+      if (!$row || (int) $row['customer_id'] !== $customerId) throw new \InvalidArgumentException('Website request changed.');
+      if (($row['proof_review_status'] ?? '') !== 'selected' || empty($row['selected_proof_direction']) || !empty($row['commerce_order_id'])) return;
+      $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $row['selected_proof_direction'])->range(0, 1)->execute();
+      $variant = $ids ? $this->entities->getStorage('proof_variant')->load(reset($ids)) : NULL;
+      if (!$variant) throw new \RuntimeException('The selected proof artifact is unavailable.');
+      $this->prepareSelectedProofStaging($row, $variant, $row['selected_proof_direction']);
+      unset($transaction);
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
   }
 
   /** Withdraw future reference use while retaining the private audit record. */
@@ -1059,13 +1083,20 @@ final class CustomerPortalService {
         ];
       }
       if ($generation === 'ready' && (string) ($row['proof_review_status'] ?? '') === 'selected') {
+        if (in_array((string) ($row['staging_status'] ?? ''), ['failed', 'planning_failed', 'planning_blocked'], TRUE)) {
+          return $base + [
+            'state' => 'needs_attention',
+            'label' => 'Your selected build needs attention',
+            'detail' => 'Your choice and feedback are saved. FAMtastic is resolving a build requirement before review can continue. No payment is due at this stage.',
+          ];
+        }
         return $base + [
           'state' => 'direction_selected',
           'label' => 'Your website direction is selected',
           'detail' => !empty($row['commerce_order_id'])
             ? 'Your selection and order are recorded. FAMtastic can continue into the build and edit stages.'
             : (($row['staging_status'] ?? '') === 'deployed'
-              ? 'Your selected direction has a recorded staging preview. Review it, then use the approved offer or checkout to begin the paid build.'
+              ? 'Review the website and request any changes. Checkout stays closed until you accept the current completed revision.'
               : 'Your selection is recorded. FAMtastic is preparing the staging preview required before checkout opens.'),
         ];
       }

@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Real selected-staging integration; activation not proven
+
+Installed disposable Drupal 11.4.5 / PHP 8.5.9 / SQLite passed 54 assertions:
+authenticated ownership, exact signed receipt persistence, deduplication,
+revision invalidation, checkout gating and injected failure rollback. Corrected
+non-duplicate integrity-error handling and atomic authored-request refresh.
+This is not production MySQL locking or a live logged-in customer test. Next's
+combined source suite and a real isolated cPanel transport smoke passed, but the
+smoke callback was local capture only. No automatic target allocator, production
+worker activation or customer replay is claimed. See the September 18 release plan.
+
 ## 2026-09-17 - Private uploaded reference reuse (local)
 
 Connection-proven locally: actual upload/controller/request/selection/receipt writers support exact same-project protected reference reuse and withdrawal. Anonymous signed proof shares are blocked when manifests contain that request/customer's private upload bytes, even after withdrawal. Cross-tenant/changed-byte/rights negatives and Next public-consumer gates pass. Full sweep before final share hardening:1,011/98; component browser and transport remain synthetic. No generated-media license, production activation, customer send or public launch proof.
