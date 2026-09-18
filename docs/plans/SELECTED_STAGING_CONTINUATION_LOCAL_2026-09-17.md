@@ -1,5 +1,15 @@
 # Selected staging continuation — isolated agency implementation
 
+## Current synopsis
+
+Reviewed code checkpoints: Next `7b44be4` / agency `cd030113`. Own full sweep: 1,022 tests/99 files in70.01s; independent parent full sweep: 1,022/99 in77.73s, with all PHP and portal browser environments. PHP42 contract assertions,3 selection cases,3 portal API cases and Next lint/diff also pass. No open finding remains within the bounded local profile.
+
+Normal Designs callback/request/selection writers now derive executable static records; exact private uploads have scoped reuse/withdrawal; verified source mappings and separate Studio association to existing canonical requests are produced by normal writers. Source callbacks automatically refresh current requests and retry through ordinary worker wakes with persisted backoff. Complete source packages unchanged; supported missing pages reuse one repository and verified partial ancestry. Combined build-and-associate is rejected before work.
+
+Unsupported: generic applications, arbitrary existing-page editors/layouts, media generation/transformation/licensing, and creating new agency customers/requests from Studio. Initial Studio association is assetless. Real Drupal runtime/SQL/controller/customer proof, target allocation/configuration and live hosting/activation remain outstanding. Production cron/email and Kakes are not repaired by local source alone; no new per-site engineering approval gate or live authority was introduced.
+
+Current companion references are the Next worktree's `docs/env/selected-staging-handoff-2026-09-17.md`, `docs/env/normal-selected-records-proof-2026-09-17.md`, and `docs/plans/SOURCE-ASSOCIATION-2026-09-17.md`. Older sections below are retained as historical checkpoints and may describe then-missing writers or older test totals.
+
 ## Bounded uploaded-reference increment
 
 Normal upload rights now bind exact same-request/customer proof asset bytes for protected review only. Withdrawal refreshes pending work and acceptance; export/receipt/reader/checkout/public-share gates retain the restriction. Next preserves source policy and denies public consumers. Synthetic PHP/Chromium proof covers this path; no live or Drive writes. Next: authenticated fresh Studio source association to an existing canonical agency request, without seeded source authority or a second repository.
