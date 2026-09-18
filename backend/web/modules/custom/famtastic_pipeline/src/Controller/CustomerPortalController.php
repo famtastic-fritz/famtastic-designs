@@ -311,6 +311,12 @@ final class CustomerPortalController extends ControllerBase {
         return $this->error('website_request_not_ready', 422, 'Submit the website request before purchasing.');
       }
       $requestIntake = json_decode((string) $websiteRequest['intake_data'], TRUE) ?: [];
+      $prepaidOrder = $this->database->select('famtastic_private_offer', 'p')->fields('p', ['commerce_order_id'])
+        ->condition('website_request_id', (int) $websiteRequest['id'])->condition('customer_id', (int) $customer['id'])
+        ->condition('status', 'prepaid_held')->execute()->fetchField();
+      if ($prepaidOrder) {
+        return $this->error('prepaid_completion_required', 409, 'Payment is already recorded for this request. Use the private completion step for the existing purchase; do not pay again.');
+      }
       $recommendedSku = (string) ($requestIntake['recommendation']['recommended_sku'] ?? '');
       $privateOffer = $this->database->select('famtastic_private_offer', 'o')->fields('o')
         ->condition('website_request_id', (int) $websiteRequest['id'])->condition('customer_id', (int) $customer['id'])

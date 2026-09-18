@@ -3465,3 +3465,6 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 - Preserve explicit Owner Desk links when an account also has ready website proofs; keep proof-specific links and default proof routing intact. Added ready-proof browser regression at390/768/1280.
 - Integrated reviewed Owner Desk source into main under explicit deployment authorization; production proof is recorded separately in `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`.
 - Corrected Ruby Signal presentation mapping to the existing generated production site key, retaining tenant-independent reusable source and adding two focused tests.
+# 2026-09-18 — Request 17 offline-prepayment lane
+
+- Added a bounded native-Commerce manual receipt operation, account-bound single-use same-order completion, private empty project conversation, and tests. Money received is separate from order placement, acceptance and launch; production receipt/release evidence is tracked in `docs/plans/REQUEST17_OFFLINE_PREPAYMENT_2026-09-18.md`.

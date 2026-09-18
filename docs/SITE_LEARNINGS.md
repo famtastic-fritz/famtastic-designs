@@ -2513,3 +2513,10 @@ Use a fresh public CMS snapshot for deterministic broad layout tests and separat
 live-readonly captures for source integration. Record retries and test limitations.
 Legacy service promises and Contact's one-day/backend-default-three-day inconsistency
 were preserved, flagged, and not newly verified by this presentation work.
+# 2026-09-18 — Owner-confirmed offline receipts
+
+The legacy assumption that completed order = money received fails for prepaid
+exceptions. Native manual payment plus a held order preserves financial truth
+without starting fulfillment or mail. Request17's receipt source is Fritz's
+explicit confirmation; unknown bank date/reference remain unknown. Use the
+request-specific transaction/row lock and replay guard; never fake a paid flag.

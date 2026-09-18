@@ -2490,3 +2490,11 @@ time out. Guidance: capture the real source once for deterministic projection te
 label that snapshot boundary, and keep separate live-readonly screenshot checks.
 Shared visual primitives still require distinct compositions; owner approval of
 the direction is recorded separately from expanded review and production release.
+# 2026-09-18 — Prepaid does not mean placed or delivered
+
+Observation: the existing completed-order hook starts fulfillment and queues mail,
+while normal request order binding closes pre-purchase revision paths. Guidance:
+record a confirmed offline receipt through native Commerce manual payment on a
+held unplaced order; bind via an audited private offer, preserve actual unknown
+bank fields, and keep terms, client acceptance and release distinct. Never use a
+coupon/comp or a second order to acknowledge already-received funds.

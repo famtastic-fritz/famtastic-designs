@@ -1,4 +1,9 @@
 services:
+  famtastic_pipeline.offline_prepayment_placement_guard:
+    class: Drupal\famtastic_pipeline\EventSubscriber\OfflinePrepaymentPlacementGuard
+    tags:
+      - { name: event_subscriber }
+
   famtastic_pipeline.client_messages:
     class: Drupal\famtastic_pipeline\Service\ClientMessagingService
     arguments: ['@database', '@datetime.time', '@uuid', '@config.factory', '@lock']

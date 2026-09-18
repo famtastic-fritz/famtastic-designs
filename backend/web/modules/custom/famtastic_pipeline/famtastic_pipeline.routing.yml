@@ -418,6 +418,18 @@ famtastic_pipeline.customer_checkout:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.customer_prepaid_completion:
+  path: '/api/customer/prepaid-orders/{order}/complete'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\PrepaidCompletionController::complete'
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    order: '[0-9]+'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_website_requests:
   path: '/api/customer/website-requests'
   defaults:
