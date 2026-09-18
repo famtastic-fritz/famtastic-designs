@@ -54,3 +54,24 @@ This is why a successful People redirect alone is not error-theme proof.
 The owner proof was found in Gmail's Inbox and visually inspected with its
 original logo, approved shell, historical disclaimer and signature. This is
 actual desktop Gmail evidence, not broad email-client certification.
+
+## Completed release and live acceptance
+
+- Backend `3f1169ae3d512a80beb2976b23327f9544ce7a67` deployed at
+  `2026-09-18T18:54:55Z` through the canonical deployer. Backups in
+  `/home/xrdj7j99xhzt/backups/` use timestamp `20260918T185327Z` and this SHA.
+- No pending DB updates; existing pilot lock remained 0 and scheduler marker
+  remained present. No broad worker dispatch or historical-message replay.
+  Canonical release routines reseeded existing demand content and verified the
+  package catalog, sitemap and entity definitions; no new dependency versions.
+- Signed-in Chrome: original `/web/admin/user` redirects to `/web/admin/people`;
+  People and an unknown admin page visually show the original logo, dark shell
+  and readable text. No account records/permissions changed during verification.
+- Anonymous HTTP: old People URL stays 403 with admin shell; unknown admin path
+  stays 404 with admin shell; unknown public path stays 404 without admin shell.
+- Final local suite: 227 tests / 1,136 assertions pass with the same one unrelated
+  missing-external-fixture exclusion documented above. Theme contract passes.
+- Existing Drupal security-update warning observed; not hidden or repaired by
+  this presentation change. Dependency/security maintenance is a separate task.
+- Drive status file written to the existing local sync folder. Cloud readback
+  not verified. This follow-up evidence commit does not require redeployment.

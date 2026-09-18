@@ -2,6 +2,9 @@
 
 ## 2026-09-18 — Admin error continuity and owner mail proof
 
+- Released `3f1169ae` at 18:54:55Z; live authenticated redirect and error branding
+  verified, anonymous access restrictions and public-error exclusion preserved.
+
 - Live follow-up: account for ThemeManager's master-route argument while reading
   the current native error subrequest; added the missing regression case.
 

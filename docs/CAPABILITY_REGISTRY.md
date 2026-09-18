@@ -2,6 +2,10 @@
 
 ## 2026-09-18 — Branded operational email: owner proof accepted
 
+Live follow-up: backend `3f1169ae` deployed at 18:54:55Z. Signed-in People redirect
+and admin 404 styling verified in Chrome; anonymous 403/404 and public exclusion
+verified by HTTP. Owner email confirmed in Gmail Inbox with branded rendering.
+
 Exact-key outbox 752 reached SMTP acceptance with standard/v2 and one attempt.
 No inbox/client-rendering claim. Admin error continuity is locally tested;
 release receipt: `docs/design/ADMIN-ERROR-AND-MAIL-PROOF-2026-09-18.md`.
