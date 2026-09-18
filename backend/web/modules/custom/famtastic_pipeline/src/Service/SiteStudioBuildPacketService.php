@@ -49,12 +49,16 @@ final class SiteStudioBuildPacketService {
     $this->assertActiveSelectedPacket($packet);
     if ((string) ($packet['project_id'] ?? '') !== (string) $row['project_id'] || (string) ($packet['continuation']['customer']['id'] ?? '') !== (string) $row['customer_id'] || ($packet['continuation']['selection_revision'] ?? 0) !== $revision) throw new \InvalidArgumentException('artifact_selection_changed');
     $matches = array_values(array_filter($packet['artifacts'] ?? [], static fn(array $a): bool => $a['sha256'] === $hash));
-    if (count($matches) !== 1) throw new \InvalidArgumentException('artifact_not_declared');
-    $a = $matches[0]; $root = realpath(\Drupal::root() . '/proofs');
-    $path = realpath(dirname(\Drupal::root()) . '/' . $a['path']);
-    if (!$root || !$path || !str_starts_with($path, $root . DIRECTORY_SEPARATOR) || !is_file($path)) throw new \InvalidArgumentException('artifact_path_invalid');
-    $bytes = file_get_contents($path);
-    if (strlen($bytes) !== $a['bytes'] || hash('sha256', $bytes) !== $hash) throw new \InvalidArgumentException('artifact_bytes_changed');
+    if (!$matches) throw new \InvalidArgumentException('artifact_not_declared');
+    $root = realpath(\Drupal::root() . '/proofs');
+    // A hash can have multiple declared output aliases. Validate every alias
+    // against the same current packet and protected storage before serving it.
+    foreach ($matches as $a) {
+      $path = realpath(dirname(\Drupal::root()) . '/' . $a['path']);
+      if (!$root || !$path || !str_starts_with($path, $root . DIRECTORY_SEPARATOR) || !is_file($path)) throw new \InvalidArgumentException('artifact_path_invalid');
+      $bytes = file_get_contents($path);
+      if (strlen($bytes) !== $a['bytes'] || hash('sha256', $bytes) !== $hash) throw new \InvalidArgumentException('artifact_bytes_changed');
+    }
     return $bytes;
   }
 

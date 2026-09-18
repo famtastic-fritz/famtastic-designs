@@ -188,6 +188,9 @@ namespace {
       if ($afterWithdrawal !== $project->get('studio_json')->value || $receipts->isReady(901)) throw new \RuntimeException('Withdrawal retry or checkout boundary failed');
       try { $registry->assertActiveSelectedPacket($packet); throw new \RuntimeException('Withdrawn reference remained dispatchable'); }
       catch (\InvalidArgumentException) { $negative['asset_rights_changed'] = TRUE; }
+      $reupload = $controller->uploadAsset(new \Symfony\Component\HttpFoundation\Request($upload['fields'], $file), 'normal-request');
+      if ($reupload->status !== 409 || $reupload->data['ok'] !== FALSE || $db->tables['famtastic_request_asset']['status'] !== 'withdrawn') throw new \RuntimeException('Withdrawn reupload claimed active success');
+      $negative['withdrawn_reupload_rejected'] = $reupload->data['message'];
     }
     if (isset($input['later_asset_changes'])) {
       $db->tables['famtastic_request_asset'] = $input['later_asset_changes'] + $db->tables['famtastic_request_asset'];

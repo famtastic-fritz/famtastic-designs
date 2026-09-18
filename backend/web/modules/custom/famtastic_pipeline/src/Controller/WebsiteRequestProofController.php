@@ -124,7 +124,8 @@ final class WebsiteRequestProofController extends ControllerBase {
     if (!in_array($mime, $allowed, TRUE)) return new JsonResponse(['ok' => FALSE, 'error' => 'asset_type', 'message' => 'Upload a PNG, JPEG, WebP, or PDF reference.'], 422);
     $sha = hash('sha256', $bytes);
     $existing = $this->database->select('famtastic_request_asset', 'a')->fields('a')
-      ->condition('website_request_id', (int) $row['id'])->condition('sha256', $sha)->execute()->fetchAssoc();
+      ->condition('website_request_id', (int) $row['id'])->condition('customer_id', (int) $customer['id'])->condition('sha256', $sha)->execute()->fetchAssoc();
+    if ($existing && ($existing['status'] ?? '') !== 'active') return new JsonResponse(['ok' => FALSE, 'error' => 'reference_inactive', 'message' => 'This reference was withdrawn and remains inactive. Uploading it again does not restore permission to use it.'], 409);
     if ($existing) return new JsonResponse(['ok' => TRUE, 'duplicate' => TRUE, 'asset' => $this->assetPayload($existing)]);
     $directory = 'private://famtastic-request-assets/' . preg_replace('/[^0-9a-f-]/', '', $website_request);
     if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {

@@ -339,3 +339,6 @@ dispatch. See `docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md`.
 ## 2026-09-17 — selected staging continuation local evidence
 
 Actual PHP producer/registry/receipt service verified with synthetic adapters (40 assertions); portal structural validator 34/0. Classification: locally implemented and adapter-tested, not Drupal-runtime, provider, hosted or production proven. Requires persisted complete source/design/rights metadata and explicit unsupported-scope handling. See `docs/plans/SELECTED_STAGING_CONTINUATION_LOCAL_2026-09-17.md`.
+## 2026-09-17 - Reference aliases and inactive reupload correction
+
+Independent review found two bounded edge cases. Hash-addressed reads now validate every same-packet declared alias and return exact bytes without dropping either output path; tenant/current-rights/containment checks remain required. Reuploading withdrawn bytes returns an explicit inactive-reference conflict, preserving withdrawal evidence. The dashboard clears stale success notices before actions; its existing API error path displays the conflict. Actual controller and two-path worker completion plus browser API error propagation are covered locally. No regrant, live action or Drive write.

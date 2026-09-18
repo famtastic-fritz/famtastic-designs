@@ -253,6 +253,7 @@ export default function CustomerPortalDashboard() {
 
   const act = async (work, success) => {
     setError('');
+    setNotice('');
     setBusy(true);
     try {
       const value = await work();
