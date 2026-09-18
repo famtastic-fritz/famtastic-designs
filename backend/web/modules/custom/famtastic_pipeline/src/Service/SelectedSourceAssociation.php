@@ -9,6 +9,15 @@ final class SelectedSourceAssociation {
     if (($row['proof_review_status'] ?? '') !== 'selected' || !empty($row['commerce_order_id'])
       || ($intent['request_id'] ?? '') !== (string) $row['public_id'] || ($intent['project_id'] ?? '') !== (string) $row['project_id']
       || ($intent['customer_id'] ?? '') !== (string) $row['customer_id'] || ($intent['selection']['direction_id'] ?? '') !== ($row['selected_proof_direction'] ?? '')) throw new \InvalidArgumentException('source_association_current_selection_required');
+    $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE, 512, JSON_THROW_ON_ERROR);
+    $scope = array_intersect_key($intake, array_flip(['page_count', 'page_list', 'required_features', 'integrations', 'booking_details', 'ecommerce_details', 'custom_needs', 'content_status', 'copywriting_needs', 'products_services', 'desired_actions']));
+    if ($scope !== $intent['scope']['snapshot'] || ($intake['authored_content']['pages'] ?? NULL) !== ($intent['authored_content']['pages'] ?? NULL)) throw new \InvalidArgumentException('source_association_current_input_changed');
+    $root = realpath(\Drupal::root() . '/proofs');
+    foreach ($intent['source']['artifacts'] as $artifact) {
+      $path = realpath(dirname(\Drupal::root()) . '/' . $artifact['path']);
+      if (!$root || !$path || !str_starts_with($path, $root . DIRECTORY_SEPARATOR) || !is_file($path)
+        || filesize($path) !== $artifact['bytes'] || hash_file('sha256', $path) !== $artifact['sha256']) throw new \InvalidArgumentException('source_association_current_source_changed');
+    }
     return $intent;
   }
   public static function issue(array $row, array $studio, string $secret, int $now): array {

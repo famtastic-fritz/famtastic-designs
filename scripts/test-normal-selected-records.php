@@ -168,6 +168,7 @@ namespace {
         if (!empty($command['close'])) return;
         if (isset($command['row_change'])) $db->row = $command['row_change'] + $db->row;
         if (isset($command['now'])) $clock->now = $command['now'];
+        if (isset($command['selected_html'])) file_put_contents($tmp . '/' . $variant->get('artifact_path')->value, $command['selected_html']);
         if (isset($command['update'])) $portal->updateWebsiteRequest(903, 'normal-request', $command['update'], json_encode($command['update'], JSON_THROW_ON_ERROR));
         $response = isset($command['callback']) ? $callbacks->handle(\Symfony\Component\HttpFoundation\Request::callback($command['callback'])) : new \Symfony\Component\HttpFoundation\JsonResponse(['ok' => TRUE]);
         $current = json_decode($project->get('studio_json')->value, TRUE);
