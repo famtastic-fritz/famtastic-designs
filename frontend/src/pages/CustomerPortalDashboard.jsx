@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { pageContentFromForm } from '../components/portal/pageContentForm.js';
 import { useNavigate, useSearchParams } from 'react-router';
 import {
+  acceptWebsiteStagingReview,
   createCustomerReferral,
   createWebsiteRequest,
   customerLogout,
@@ -14,7 +16,9 @@ import {
   updateWebsiteRequestArchive,
   updateWebsiteRequestProofShare,
   uploadWebsiteRequestAsset,
+  withdrawWebsiteRequestAsset,
 } from '../api/customer.js';
+import { acceptDisplayedStagingReview } from '../api/stagingReview.js';
 import { collectUtmParams } from '../api/pipeline.js';
 import '../portal.css';
 
@@ -249,6 +253,7 @@ export default function CustomerPortalDashboard() {
 
   const act = async (work, success) => {
     setError('');
+    setNotice('');
     setBusy(true);
     try {
       const value = await work();
@@ -307,6 +312,13 @@ export default function CustomerPortalDashboard() {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
+    const pageContent = pageContentFromForm(formData);
+    if (pageContent !== undefined) {
+      const fields = ['page_name', 'title', 'heading', 'description', 'body'];
+      data.page_content = pageContent;
+      delete data.page_content_present;
+      for (const field of fields) delete data[`page_copy_${field}`];
+    }
     data.organization = org.public_id;
     data.recommendation_requested = formData.has('recommendation_requested');
     data.utm = collectUtmParams();
@@ -363,6 +375,12 @@ export default function CustomerPortalDashboard() {
     }, 'Reference file saved securely with this website request.');
   };
 
+  const withdrawReference = assetId => act(async () => {
+    await withdrawWebsiteRequestAsset(editingRequest.public_id, assetId);
+    await refresh();
+    setEditingRequest(current => ({ ...current, assets: (current.assets || []).filter(asset => asset.public_id !== assetId) }));
+  }, 'Reference withdrawn from new work. Private project records are retained.');
+
   const decideProof = async (requestId, payload) => {
     const result = await act(async () => {
       const decision = await decideWebsiteRequestProof(requestId, payload);
@@ -370,7 +388,15 @@ export default function CustomerPortalDashboard() {
       return decision;
     }, payload.action === 'revision'
       ? 'Changes requested. FAMtastic has your notes.'
-      : 'Selection saved. Your staging build is the next recorded step; checkout stays closed until that review is ready.');
+      : 'Selection saved. Your project shows the current build status; checkout stays closed until you accept the completed review.');
+    return result.ok;
+  };
+
+  const acceptStagingReview = async (requestId, receiptHash) => {
+    const result = await act(() => acceptDisplayedStagingReview(requestId, receiptHash, {
+      accept: acceptWebsiteStagingReview,
+      refresh,
+    }), 'This website revision is accepted. Checkout remains a separate step.');
     return result.ok;
   };
 
@@ -480,7 +506,9 @@ export default function CustomerPortalDashboard() {
             busy={busy}
             onSaveWebsiteRequest={saveWebsiteRequest}
             onUploadAsset={uploadReference}
+            onWithdrawAsset={withdrawReference}
             onDecideProof={decideProof}
+            onAcceptStaging={acceptStagingReview}
             onShareProof={shareProof}
             onArchiveRequest={archiveWebsiteRequest}
             navigate={navigate}

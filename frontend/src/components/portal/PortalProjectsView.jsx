@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Panel, title, date } from './PortalShared.jsx';
 import { collectUtmParams } from '../../api/pipeline.js';
+import PortalPageContentFields from './PortalPageContentFields.jsx';
 
 export function customerNextStep(request) {
   if (!request) return null;
@@ -14,7 +15,7 @@ export function customerNextStep(request) {
     return { owner: 'famtastic', tone: 'waiting', label: 'FAMtastic is working on your changes', detail: 'Your notes are saved. You do not need to do anything right now.', action: '' };
   }
   if (request.proof_review_status === 'selected' && request.direct_checkout_available) {
-    return { owner: 'you', tone: 'action', label: 'Complete payment to start the build', detail: 'Your direction is saved. Secure checkout is the next separate step.', action: 'payment' };
+    return { owner: 'you', tone: 'action', label: 'Your completed review is accepted', detail: 'Secure checkout is the next separate step.', action: 'payment' };
   }
   if (request.status === 'checkout_started') {
     return { owner: 'you', tone: 'action', label: 'Finish secure checkout', detail: 'Your direction is saved, but payment is not recorded yet.', action: 'billing' };
@@ -23,7 +24,9 @@ export function customerNextStep(request) {
     return { owner: 'famtastic', tone: 'waiting', label: 'Your build is underway', detail: 'Payment is recorded. FAMtastic owns the next build update.', action: '' };
   }
   if (request.proof_review_status === 'selected') {
-    return { owner: 'famtastic', tone: 'waiting', label: 'FAMtastic is preparing your build offer', detail: 'Your direction is saved. Nothing else is required until your offer is ready.', action: '' };
+    if (['failed', 'planning_failed', 'planning_blocked'].includes(request.staging_status)) return { owner: 'famtastic', tone: 'attention', label: 'Your selected build needs attention', detail: 'Your choice and feedback are saved. FAMtastic is resolving a build requirement before review can continue.', action: 'support' };
+    if (request.staging_preview?.status === 'deployed') return { owner: 'you', tone: 'action', label: 'Review your completed website', detail: 'Open the protected review, request changes or accept this exact revision. No payment is taken here.', action: 'review' };
+    return { owner: 'famtastic', tone: 'waiting', label: 'Your selected website is being prepared', detail: 'Your direction is saved. Review and acceptance come before checkout.', action: '' };
   }
   if (request.proof_handoff?.state === 'needs_attention') {
     return {
@@ -37,10 +40,34 @@ export function customerNextStep(request) {
   return { owner: 'famtastic', tone: 'waiting', label: request.proof_handoff?.label || 'FAMtastic is preparing your concepts', detail: request.proof_handoff?.detail || 'You do not need to do anything right now.', action: '' };
 }
 
+export function StagingReview({ request, busy, onAccept }) {
+  const preview = request.staging_preview;
+  const [confirmedHash, setConfirmedHash] = useState('');
+  useEffect(() => setConfirmedHash(''), [preview?.receipt_hash]);
+  if (!preview || preview.status !== 'deployed' || !preview.receipt_hash) return null;
+  const accepted = request.staging_review_status === 'accepted';
+  return (
+    <section id={`staging-review-${request.public_id}`} className="portal-proof-next" aria-label="Completed website review">
+      <h3>{accepted ? 'This website revision is accepted' : 'Review your completed website'}</h3>
+      <p>Open the protected review and check the pages and features you requested. Acceptance applies to this revision only. Payment and final launch are separate steps.</p>
+      <div className="portal-proof-next__actions"><a href={preview.url} target="_blank" rel="noreferrer">Open completed website review ↗</a></div>
+      {!accepted && (
+        <form onSubmit={(event) => { event.preventDefault(); if (confirmedHash === preview.receipt_hash) onAccept(request.public_id, preview.receipt_hash); }}>
+          <label className="portal-check" style={{ minHeight: 44 }}>
+            <input type="checkbox" checked={confirmedHash === preview.receipt_hash} onChange={(event) => setConfirmedHash(event.target.checked ? preview.receipt_hash : '')} />
+            I reviewed this completed website and accept this revision.
+          </label>
+          <button type="submit" disabled={busy || confirmedHash !== preview.receipt_hash}>Accept this website revision</button>
+        </form>
+      )}
+    </section>
+  );
+}
+
 function customerStage(request) {
   if (request.proof_review_status === 'revision_requested') return 'We are making a new set from your feedback';
   if (['customer_ready', 'notified'].includes(request.proof_review_status)) return 'Your 3 directions are ready to review';
-  if (request.proof_review_status === 'selected') return request.direct_checkout_available ? 'Your direction is saved — payment is next' : 'Your direction is saved — FAMtastic is preparing the next step';
+  if (request.proof_review_status === 'selected') return request.direct_checkout_available ? 'Your completed review is accepted — checkout is next' : ['failed', 'planning_failed', 'planning_blocked'].includes(request.staging_status) ? 'Your selection is saved — the build needs attention' : request.staging_preview?.status === 'deployed' ? 'Your completed website is ready for your review' : 'Your selected website is being prepared';
   if (request.status === 'draft') return 'Your brief needs a few more details';
   if (request.status === 'converted') return 'Your website build is underway';
   return 'FAMtastic is preparing your directions';
@@ -140,9 +167,10 @@ function ProofDecisionGuide({ request }) {
         <strong>What happens next</strong>
         <span>1. Open all 3</span>
         <span>2. Choose one</span>
-        <span>3. Pay to start the build</span>
+        <span>3. Review the completed website</span>
+        <span>4. Accept, then choose checkout</span>
       </div>
-      <small className="portal-proof-included">Included: {terms.design_reset_remaining ?? 1} full design reset before selection and {terms.edit_rounds_remaining ?? 3} edit rounds after selection.</small>
+      <small className="portal-proof-included">Included: {terms.design_reset_remaining ?? 1} full design reset before selection. In-scope changes to your selected website continue before acceptance.</small>
     </section>
   );
 }
@@ -163,7 +191,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare, onConti
   const terms = request.proofs?.review_terms || {};
   const directionRationale = request.proofs?.research_snapshot?.direction_rationale || {};
   const changesRemaining = selectedDirection
-    ? (terms.edit_rounds_remaining ?? 3)
+    ? Number.POSITIVE_INFINITY
     : (terms.design_reset_remaining ?? 1);
 
   useEffect(() => {
@@ -305,8 +333,8 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare, onConti
               : request.status === 'converted'
               ? 'Payment is recorded and your build has started. FAMtastic owns the next update.'
               : request.direct_checkout_available
-              ? 'Your choice is saved. Payment is the next separate step and starts the build.'
-              : 'Your choice is saved. FAMtastic is preparing the approved offer or next build step.'}
+              ? 'You accepted the completed website review. Secure checkout is the next separate step.'
+              : 'Your choice is saved. Your current build and review status appear above; checkout opens after you accept the completed website.'}
           </p>
           <div className="portal-proof-next__actions">
             <a href={selectedProof.preview_url} target="_blank" rel="noreferrer">
@@ -366,7 +394,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare, onConti
             <h3>{selectedProof ? 'What should FAMtastic refine?' : 'What should we rethink before a new proof set?'}</h3>
             <p>
               {selectedProof
-                ? 'Use one of your included edit rounds for specific changes to the direction you chose.'
+                ? 'Tell us the in-scope changes you need before accepting your selected website. Your feedback stays with this direction.'
                 : 'Use your included design reset when the directions need a different mix. Tell us what to keep, change, or combine before choosing.'}
             </p>
           </div>
@@ -653,6 +681,7 @@ export function WebsiteRequestIntakeEditor({
   setEditingRequest,
   onSave,
   onUploadAsset,
+  onWithdrawAsset,
   busy,
 }) {
   return (
@@ -784,6 +813,9 @@ export function WebsiteRequestIntakeEditor({
                     defaultValue={editingRequest.intake?.page_count || 1}
                   />
                 </label>
+                <label>Page names
+                  <input name="page_list" defaultValue={editingRequest.intake?.page_list || ''} placeholder="Home, About, Contact" />
+                </label>
                 <label>
                   Who makes the final launch decision?
                   <input
@@ -796,6 +828,7 @@ export function WebsiteRequestIntakeEditor({
             </fieldset>
 
             {/* YOUR BUSINESS */}
+            <PortalPageContentFields request={editingRequest} />
             <fieldset className="portal-form-group">
               <legend>Your business details</legend>
               <div className="portal-form-grid">
@@ -996,6 +1029,7 @@ export function WebsiteRequestIntakeEditor({
               {editingRequest.assets.map((asset) => (
                 <li key={asset.public_id}>
                   📄 {asset.name} · {Math.ceil(asset.size_bytes / 1024)} KB
+                  {onWithdrawAsset && <button type="button" className="quiet" disabled={busy} onClick={() => onWithdrawAsset(asset.public_id)}>Withdraw reference</button>}
                 </li>
               ))}
             </ul>
@@ -1017,7 +1051,9 @@ export default function PortalProjectsView({
   busy,
   onSaveWebsiteRequest,
   onUploadAsset,
+  onWithdrawAsset,
   onDecideProof,
+  onAcceptStaging,
   onShareProof,
   onArchiveRequest,
   navigate,
@@ -1101,6 +1137,7 @@ export default function PortalProjectsView({
           setEditingRequest={setEditingRequest}
           onSave={onSaveWebsiteRequest}
           onUploadAsset={onUploadAsset}
+          onWithdrawAsset={onWithdrawAsset}
           busy={busy}
         />
       )}
@@ -1140,6 +1177,9 @@ export default function PortalProjectsView({
             )}
             {nextStep.action === 'proofs' && (
               <a href={`#proof-review-${activeRequest.public_id}`}>Review 3 directions ↓</a>
+            )}
+            {nextStep.action === 'review' && (
+              <a href={`#staging-review-${activeRequest.public_id}`}>Review completed website ↓</a>
             )}
             {nextStep.action === 'payment' && (
               <button type="button" onClick={() => navigate(`/buy?request=${encodeURIComponent(activeRequest.public_id)}`)}>Continue to payment →</button>
@@ -1181,6 +1221,8 @@ export default function PortalProjectsView({
                 <dd>{date(activeRequest.changed)}</dd>
               </div>
             </dl>
+
+            <StagingReview request={activeRequest} busy={busy} onAccept={onAcceptStaging} />
 
             {/* CONCEPT PROOFS OR DURABLE HANDOFF STATUS */}
             {proofReady(activeRequest) && activeRequest.proof_review_status !== 'revision_requested' ? (

@@ -1,4 +1,4 @@
-const WEB_PREFIX = import.meta.env.DEV ? '' : '/web';
+const WEB_PREFIX = import.meta.env?.DEV ? '' : '/web';
 const API = `${WEB_PREFIX}/api/customer`;
 
 export class CustomerApiError extends Error {
@@ -60,6 +60,7 @@ export const createWebsiteRequest = (payload) => request('/website-requests', { 
 export const updateWebsiteRequest = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}`, { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const updateWebsiteRequestArchive = (id, action) => request(`/website-requests/${encodeURIComponent(id)}/archive`, { method: 'POST', csrf: true, body: JSON.stringify({ action }) });
 export const decideWebsiteRequestProof = (id, payload) => request(`/website-requests/${encodeURIComponent(id)}/proof-decision`, { method: 'POST', csrf: true, body: JSON.stringify(payload) });
+export const acceptWebsiteStagingReview = (id, receiptHash) => request(`/website-requests/${encodeURIComponent(id)}/staging-review/accept`, { method: 'POST', csrf: true, body: JSON.stringify({ receipt_hash: receiptHash }) });
 export const updateWebsiteRequestProofShare = (id, action) => request(`/website-requests/${encodeURIComponent(id)}/proof-share`, { method: 'POST', csrf: true, body: JSON.stringify({ action }) });
 export const sendWebsiteRequestToSiteStudio = (id) => request(`/website-requests/${encodeURIComponent(id)}/send-to-site-studio`, { method: 'POST', csrf: true });
 export async function uploadWebsiteRequestAsset(id, formData) {
@@ -71,6 +72,7 @@ export async function uploadWebsiteRequestAsset(id, formData) {
   if (!response.ok) throw new CustomerApiError(payload.message || 'Please try again.', response.status, payload.error);
   return payload;
 }
+export const withdrawWebsiteRequestAsset = (id, asset) => request(`/website-requests/${encodeURIComponent(id)}/assets/${encodeURIComponent(asset)}/withdraw`, { method: 'POST', csrf: true });
 export const updateCustomerProfile = (payload) => request('/profile', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const updateCustomerPreferences = (payload) => request('/preferences', { method: 'PATCH', csrf: true, body: JSON.stringify(payload) });
 export const createCustomerReferral = (payload) => request('/referrals', { method: 'POST', csrf: true, body: JSON.stringify(payload) });

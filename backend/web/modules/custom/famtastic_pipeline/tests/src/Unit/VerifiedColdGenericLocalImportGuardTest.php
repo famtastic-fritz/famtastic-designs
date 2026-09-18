@@ -43,7 +43,18 @@ final class VerifiedColdGenericLocalImportGuardTest extends UnitTestCase {
     $this->assertIsString($service);
     $this->assertIsString($commands);
 
-    $this->assertStringContainsString('acceptCallbackInternal($eventId, $campaignId, $studioJobId, $variants, FALSE)', $service);
+    // Raw callback capture was added after the immutable source-lane flag; it
+    // must not turn a generic caller into the privileged private importer.
+    $this->assertStringContainsString('acceptCallbackInternal($eventId, $campaignId, $studioJobId, $variants, FALSE, $rawCallback)', $service);
+    $this->assertStringContainsString('acceptCallbackInternal($eventId, $campaignId, $studioJobId, $variants, TRUE)', $service);
+    $this->assertStringContainsString('if ($requiresSignedAssets && !$verifiedColdPrivateImport)', $service);
+    $sharedStart = strpos($service, 'private function acceptCallbackInternal(');
+    $this->assertNotFalse($sharedStart);
+    $guard = strpos($service, 'if ($requiresSignedAssets && !$verifiedColdPrivateImport)', $sharedStart);
+    $duplicate = strpos($service, 'if (in_array($eventId, (array) $processed, TRUE))', $sharedStart);
+    $this->assertNotFalse($guard);
+    $this->assertNotFalse($duplicate);
+    $this->assertLessThan($duplicate, $guard, 'Even a duplicate event must not bypass the private importer boundary.');
     $this->assertStringContainsString('public function acceptVerifiedColdCallback(', $service);
     $this->assertStringContainsString('assertVerifiedColdPrivateImportProvenance', $service);
     $this->assertStringContainsString('recordBuildDna($buildDna)', $service);

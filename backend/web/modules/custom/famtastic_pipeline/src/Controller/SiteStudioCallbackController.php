@@ -10,14 +10,25 @@ use Drupal\famtastic_pipeline\Service\ProofAssetContract;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
 use Drupal\famtastic_pipeline\Service\SiteStudioBuildPacketService;
 use Drupal\famtastic_pipeline\Service\StagingReceiptService;
+use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Signature-verified asynchronous Site Studio completion callback.
  */
 final class SiteStudioCallbackController extends ControllerBase {
+
+  public function artifact(Request $request, string $website_request, int $revision, string $sha256): Response {
+    $secret = getenv('FAMTASTIC_STUDIO_DISPATCH_SECRET') ?: Settings::get('site_studio_staging_dispatch_secret');
+    if (!$secret) return new JsonResponse(['error' => 'artifact_reader_unconfigured'], 503);
+    try {
+      $bytes = $this->buildPackets->readSelectedArtifact($website_request, $revision, $sha256, (string) $request->headers->get('Authorization', ''), (string) $secret, time());
+      return new Response($bytes, 200, ['Content-Type' => 'application/octet-stream', 'Cache-Control' => 'private, no-store', 'X-Robots-Tag' => 'noindex, nofollow', 'X-Content-Type-Options' => 'nosniff']);
+    } catch (\InvalidArgumentException) { return new JsonResponse(['error' => 'artifact_unavailable'], 403); }
+  }
 
   /**
    * Constructs the callback controller.
@@ -26,6 +37,7 @@ final class SiteStudioCallbackController extends ControllerBase {
     private readonly ProofCampaignService $proofCampaigns,
     private readonly SiteStudioBuildPacketService $buildPackets,
     private readonly StagingReceiptService $stagingReceipts,
+    private readonly ?CustomerPortalService $portal = NULL,
   ) {}
 
   /**
@@ -36,6 +48,7 @@ final class SiteStudioCallbackController extends ControllerBase {
       $container->get('famtastic_pipeline.proof_campaign_service'),
       $container->get('famtastic_pipeline.site_studio_build_packets'),
       $container->get('famtastic_pipeline.staging_receipts'),
+      $container->get('famtastic_pipeline.customer_portal'),
     );
   }
 
@@ -55,7 +68,8 @@ final class SiteStudioCallbackController extends ControllerBase {
     if (!hash_equals($expected, $provided)) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_signature'], 400);
     }
-    $data = json_decode($request->getContent(), TRUE);
+    $rawCallback = $request->getContent();
+    $data = json_decode($rawCallback, TRUE);
     if (!is_array($data)) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_json'], 400);
     }
@@ -73,6 +87,20 @@ final class SiteStudioCallbackController extends ControllerBase {
       ], 403);
     }
     try {
+      if (($data['schema'] ?? '') === 'famtastic.site-studio.association-request.v1') {
+        return new JsonResponse(['ok' => TRUE] + $this->buildPackets->issueSourceAssociation($data, (string) $secret));
+      }
+      if (($data['schema'] ?? '') === 'famtastic.site-studio.planning-result.v1') {
+        return new JsonResponse(['ok' => TRUE] + $this->buildPackets->acceptPlanningResult($data));
+      }
+      if (($data['schema'] ?? '') === 'famtastic.site-studio.source-finalized.v1') {
+        $result = $this->buildPackets->registerSourceExport($data);
+        if (isset($data['association'])) {
+          if (!$this->portal) throw new \RuntimeException('Source association requires the normal request refresh writer.');
+          $this->portal->refreshSelectedWebsiteRequest((int) $data['customer_id'], (string) $data['request_id']);
+        }
+        return new JsonResponse(['ok' => TRUE] + $result);
+      }
       if (($data['schema'] ?? '') === 'site-studio.build-success.v1') {
         $result = $this->buildPackets->acceptSuccess($data);
         return new JsonResponse([
@@ -82,14 +110,14 @@ final class SiteStudioCallbackController extends ControllerBase {
           'status' => 'site_studio_build_succeeded',
         ]);
       }
-      if (($data['schema'] ?? '') === 'famtastic.site-studio.staging-receipt.v1') {
+      if (in_array(($data['schema'] ?? ''), ['famtastic.site-studio.staging-receipt.v1', 'famtastic.site-studio.staging-failure.v1'], TRUE)) {
         $result = $this->stagingReceipts->accept($data);
         return new JsonResponse([
           'ok' => TRUE,
           'newly_processed' => $result['newly_processed'],
           'website_request_id' => $result['request_id'],
           'staging_url' => $result['staging_url'],
-          'status' => 'site_studio_staging_deployed',
+          'status' => ($data['status'] ?? '') === 'failed' ? 'site_studio_staging_failed' : 'site_studio_staging_deployed',
         ]);
       }
       $result = $this->proofCampaigns->acceptCallback(
@@ -97,6 +125,7 @@ final class SiteStudioCallbackController extends ControllerBase {
         (string) ($data['campaign_id'] ?? ''),
         (string) ($data['job_id'] ?? ''),
         is_array($data['variants'] ?? NULL) ? $data['variants'] : [],
+        $rawCallback,
       );
     }
     catch (\InvalidArgumentException $e) {

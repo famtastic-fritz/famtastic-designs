@@ -10,6 +10,47 @@ brand shell. Guidance: maintain a permission-preserving People compatibility
 redirect and shared error-context predicate, including public-route negative
 tests. SMTP acceptance of owner proof 752 is not inbox/client-rendering proof.
 
+## 2026-09-18 — Do not promote partial repair to automatic delivery
+
+Real Drupal tests found swallowed non-duplicate integrity failures and a missing
+transaction around input plus selected-packet refresh; both are repaired and
+covered by 54 installed SQLite assertions. Verify actual boot and `/web` callback
+mount independently. The isolated hosted synthetic receipt proves cPanel byte
+transport, not production customer acceptance. Automatic target allocation and
+production activation remain open; preserve public Kakes/PIT files and do not
+replay their failed historical jobs. See the September 18 release plan.
+
+## 2026-09-17 - Private uploaded reference reuse (local)
+
+Observation: protected hosting checks alone left existing anonymous proof-share routes as a possible bypass. Guidance: gate the shared request reader, sharing writer and URL projection against exact same-project private-upload manifests, including withdrawn records. Revalidate current rights before success/acceptance and clear acceptance through actual withdrawal writer. Local-only proof; Drive mirror intentionally excluded by task authority.
+
+## 2026-09-17 - Form and ancestor evidence
+
+Observation: callback delay can leave agency source A behind local source B. Guidance: retain truthful A and reconcile verified ancestry downstream, never fabricate acknowledgement. Actual portal editor/serializer passes mobile/desktop component proof. Full suite 1,010 tests / 97 files; no live or Drive changes.
+
+## 2026-09-17 - Timing and copy semantics
+
+Preserve Home edit intent and treat removed completed-page copy records as pending review. Keep original source provenance immutable across re-registration. A missing callback does not erase Next's verified local completed work; the downstream worker reconciles exact bindings before assembly. No live or Drive changes.
+
+## 2026-09-17 - Source mapping and request-driven invalidation
+
+Verified worker receipts now write source mappings; selected request edits trigger scoped reevaluation, while unchanged semantic copy preserves acceptance. First-project selection and non-intro transfer-only regressions pass. Fresh Studio-first mapping and media rights remain separate work. Evidence is local with synthetic persistence/hosting; Drive mirror remains outside scope.
+
+## 2026-09-17 - Normal selected-record writers
+
+Observation: selected marked HTML can provide an exact reusable shell, while the browser preview changes asset URLs.
+Guidance: retain raw source ingress and customer submissions; derive internal records from normal saved copy; use a separate authenticated unchanged-byte reader. Keep unsupported media/features and incomplete mappings explicit. Drive mirror remains outside the two-worktree scope.
+
+## 2026-09-17 - Source wire integrity
+
+Observation: valid empty objects and small/large numbers broke cross-language export hashes.
+Guidance: retain source-wire v2 bytes unchanged, verify before decoding, and bind the exact hash to source authority. Do not silently migrate old flat exports. Drive mirror omitted under two-worktree scope.
+
+## 2026-09-17 - Shared-shell continuation boundary
+
+Observation: marked legacy templates support a bounded text substitution adapter, but the producer must still supply current authored content and permission records.
+Guidance: keep local adapter proof separate from ordinary authority writers, deployed Drupal, hosted receipts and customer acceptance. No Drive mirror write within this two-worktree-only task.
+
 ## 2026-09-18 — Shared email branding released
 
 Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use
@@ -2490,3 +2531,42 @@ time out. Guidance: capture the real source once for deterministic projection te
 label that snapshot boundary, and keep separate live-readonly screenshot checks.
 Shared visual primitives still require distinct compositions; owner approval of
 the direction is recorded separately from expanded review and production release.
+
+## 2026-09-17 — selected revision identity
+
+Planning now uses the same durable staging dispatch and callback plumbing, with
+an explicitly non-ready result and current-revision check. Same intent retries
+reuse one job; new authority/export evidence creates the next intent revision.
+
+Completed-source follow-on: bind registered export to existing authority and
+retain one customer source checkout. Intent history must advance independently
+of executable packets; no completion/rights/hosting truth comes from a concept.
+
+Selected-source follow-on: normal portal selection now records inherited source
+and intake before stage-specific exceptions. Do not equate media AI consent with
+rights or concept byte identity with scope completion. Two real-service seam
+cases pass using synthetic filesystem/entity adapters; full Drupal is unproven.
+
+Observation: original packet/job identity used request+direction and the registry rejected any different packet; selecting/revising the same direction could not express a new immutable build. Guidance: serialize per-request revisions under a DB lock, preserve prior packet/receipt/acceptance, reject changed same-revision payloads and stale callbacks, and invalidate acceptance before new work. Adapter proof is not live Drupal concurrency proof.
+
+- September 17 local continuation correction: preserve selected intent as a durable operational exception when complete metadata is missing; explicit legacy reconciliation binds unchanged source/project; completed-review UI/API now requires displayed receipt hash and clears acceptance after stale refresh. Forty PHP assertions, three API-flow tests and synthetic React browser checks at 320/390/768/1280 passed. No production activation.
+## 2026-09-17 - Reference aliases and inactive reupload correction
+
+Independent review found two bounded edge cases. Hash-addressed reads now validate every same-packet declared alias and return exact bytes without dropping either output path; tenant/current-rights/containment checks remain required. Reuploading withdrawn bytes returns an explicit inactive-reference conflict, preserving withdrawal evidence. The dashboard clears stale success notices before actions; its existing API error path displays the conflict. Actual controller and two-path worker completion plus browser API error propagation are covered locally. No regrant, live action or Drive write.
+## 2026-09-17 - First canonical-request Studio association (local)
+
+The actual current unpaid request/selection writer issues an immutable one-hour signed source association. A normal Studio run can bind its verified Git/browser/file evidence without seeded mapping or rebuilding completed pages. Exact completed-copy evidence is checked against current authored fields. Durable callback retry survives restart; the first signed callback registers source and refreshes the normal request without Select. Complete pages package unchanged; only missing pages build in the same repository. Paid/reselected/expired/cross-tenant/conflicting-source/changed-copy cases fail. The grant never establishes hosting, acceptance or checkout. Initial association is static and assetless; arbitrary Studio-first agency customer/request creation and live transport remain unproven. Full regression is recorded separately; no production or Drive writes.
+
+Association freshness follow-up: grant issue/acceptance re-read actual canonical intake scope/authored pages and contained selected file hashes/sizes, not only the saved intent. Direct row or source drift is rejected before mapping. Focused normal association/controller/route proof passes 3/3 in7.02s after this correction; the preceding full regression remains 1,014/99. Local only; no Drive write.
+
+## 2026-09-17 - Unattended source callback and partial ancestry correction
+
+Independent review found that durable association callbacks needed another manual call and that later ancestry rejected valid associated partial sources. The existing worker wake now retries the exact outbox envelope with explicit matched acknowledgement, shared project claims and bounded attempts. Expired/paid/reselected/changed-source/incorrect acknowledgements enter actionable non-ready reconciliation; unrelated work proceeds. Valid partial ancestry requires the original association and scope digest, exact authenticated wire, bound source/browser QA, only required_pages_incomplete, and actual Git ancestry/unchanged bytes. Callback-delay and upload-failure sequences add only Team after local About completion. Focused lifecycle proof10/10 passes21.57s; full regression recorded separately. No daemon, live activation, mail or Drive writes.
+
+## 2026-09-17 - Keep build success separate from handoff retries
+
+Independent POST-route review found that combining build and source association could rebuild on a failed callback replay. The combined run option is now explicitly rejected before work; supported orchestration creates once, then associates the stored site/run through its separate endpoint. Actual POST replay/concurrency/conflicting-input checks preserve run count and Git HEAD. Transient callback failures (including408/429/503) now retain persisted due times with5-second exponential backoff capped300 seconds, continuing within grant validity instead of stopping after three attempts. Permanent/stale authority still requires reconciliation. Focused11-case proof includes more than three transient failures, restart, automatic recovery and unrelated work; full regression recorded separately. No live or Drive changes.
+
+## 2026-09-17 - Current handoff synopsis and independent closeout
+
+Final independent parent code review passed 1,022 tests/99 files in77.73s with all PHP/browser environments, plus PHP42/3 selection/3 portal API cases and lint/diff. Refreshed the canonical handoff and writer-plan openings to describe current bounded support, explicit unsupported profiles and actual operational gates; marked older checkpoint claims historical. Append-only progress entries must not leave the current synopsis stale. No production or Drive changes; final dependency cleanup is separate from code proof.

@@ -263,6 +263,14 @@ Routine selected-site builds and protected review use the bounded September 17
 policy rather than a fresh Fritz approval on every build. The exact
 handoff contract is `docs/architecture/FAMTASTIC_CONNECTIONS_CONCIERGE_CONTRACT_V1.md`.
 
+Selected-site activation must have separate evidence for source deployment,
+consumer boot, customer-bound hosting target, signed callback and scheduled
+dispatch. Passing local tests or a manual customer deploy cannot stand in for
+that evidence. Keep failed historical jobs closed until their source and current
+revision are reconciled; never replay an old packet onto a manually completed
+site. Current repair/activation gaps are tracked in
+`docs/plans/SELECTED_STAGING_RELEASE_2026-09-18.md`.
+
 For a public lead who receives pre-registration working concepts, use only
 `docs/architecture/PUBLIC_PREVIEW_DELIVERY_V1.md`. A campaign email, a legacy
 prospect token page, an account-owned proof share, or a manually copied URL is

@@ -478,7 +478,7 @@ final class CustomerPortalController extends ControllerBase {
     if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
     try {
       $data = $this->body($request);
-      return new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->createWebsiteRequest((int) $customer['id'], (string) ($data['organization'] ?? ''), $data)], 201);
+      return new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->createWebsiteRequest((int) $customer['id'], (string) ($data['organization'] ?? ''), $data, $request->getContent())], 201);
     }
     catch (\InvalidArgumentException $e) { return $this->error('invalid_website_request', 422, $e->getMessage()); }
     catch (\RuntimeException) { return $this->error('workspace_not_found', 404, 'Customer workspace not found.'); }
@@ -488,7 +488,7 @@ final class CustomerPortalController extends ControllerBase {
     $customer = $this->currentCustomer();
     if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
     try {
-      return new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->updateWebsiteRequest((int) $customer['id'], $website_request, $this->body($request))]);
+      return new JsonResponse(['ok' => TRUE, 'website_request' => $this->portal->updateWebsiteRequest((int) $customer['id'], $website_request, $this->body($request), $request->getContent())]);
     }
     catch (\InvalidArgumentException $e) { return $this->error('invalid_website_request', 422, $e->getMessage()); }
     catch (\RuntimeException) { return $this->error('website_request_not_found', 404, 'Website request not found.'); }
@@ -528,7 +528,7 @@ final class CustomerPortalController extends ControllerBase {
     try {
       return $this->noStore(new JsonResponse([
         'ok' => TRUE,
-        'website_request' => $this->portal->acceptWebsiteStagingReview((int) $customer['id'], $website_request),
+        'website_request' => $this->portal->acceptWebsiteStagingReview((int) $customer['id'], $website_request, (string) ($this->body($request)['receipt_hash'] ?? '')),
       ]));
     }
     catch (\InvalidArgumentException $error) { return $this->error('staging_review_not_ready', 422, $error->getMessage()); }

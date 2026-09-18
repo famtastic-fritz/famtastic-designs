@@ -645,6 +645,19 @@ famtastic_pipeline.customer_website_request_asset:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.customer_website_request_asset_withdraw:
+  path: '/api/customer/website-requests/{website_request}/assets/{asset}/withdraw'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\WebsiteRequestProofController::withdrawAsset'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    website_request: '[0-9a-f-]{36}'
+    asset: '[0-9a-f-]{36}'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_website_request_proof_preview:
   path: '/api/customer/website-requests/{website_request}/proofs/{direction}'
   defaults:
@@ -1411,3 +1424,13 @@ famtastic_pipeline.ai_brief_synthesizer:
   methods: [POST]
   requirements:
     _access: 'TRUE'
+# Original manifest bytes for the authenticated selected-build worker.
+famtastic_pipeline.selected_worker_artifact:
+  path: '/api/site-studio/selected-artifacts/{website_request}/{revision}/{sha256}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\SiteStudioCallbackController::artifact'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    revision: '[0-9]+'
+    sha256: '[a-f0-9]{64}'

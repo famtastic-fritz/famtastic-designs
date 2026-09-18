@@ -11,6 +11,61 @@ only on core error routes and reuse that predicate in negotiation and shell
 hooks. Preserve permissions and status. Old inbox messages remain historical;
 send a separately labeled, exact-recipient proof rather than replaying old rows.
 
+## 2026-09-18 — Real persistence and operational activation
+
+SQLSTATE 23000 is an integrity class, not a duplicate-key proof. Preserve rollback
+for NOT NULL/CHECK/foreign-key/trigger errors. Save authored input and its selected
+packet/job atomically. Installed SQLite and trigger-interleaving tests reveal
+failures hidden by persistence mocks; they still do not prove MySQL row locking.
+Production callback routing includes `/web`. Both sides require legitimate
+customer-bound hosting targets; target allocation is absent, and a worker boot
+or manually hosted site cannot substitute for that missing capability.
+
+## 2026-09-17 - Private uploaded reference reuse (local)
+
+Existing private-project upload wording authorizes only bounded exact reference reuse. Match request/customer/hash/size, never global hashes. Withdrawal invalidates pending work and acceptance but never makes old private copies public. Audit anonymous share readers as well as deployment gates. Stable aria-labelledby avoids textarea values contaminating accessible labels after React rerenders.
+
+## 2026-09-17 - Share the serializer with browser proof
+
+Exercise the actual form serializer rather than copying its logic into a test wrapper. Distinguish untouched copy fields from an explicit empty list. Keep an older acknowledged source digest intact; downstream verified ancestry handles completion that the agency has not acknowledged yet.
+
+## 2026-09-17 - Preserve every requested copy change
+
+Do not skip Home when comparing existing page copy. Absence of a formerly supplied record requires review; it does not authorize erasing live text or claiming the edit is implemented. A later registration caller does not change the original source origin. Locally completed source and acknowledged receipt are distinct states.
+
+## 2026-09-17 - Normal edits own selected revision changes
+
+After project creation, propagate its ID to the resolver's current row. Request edits must reevaluate selected work without another Select click. Compare semantic page records rather than raw JSON whitespace; completed source receipt arrival is not a new customer instruction. Resolve actual missing work before demanding assembler fields. Preserve explicit unsupported existing-page edits and media rights.
+
+## 2026-09-17 - Record customer text once and derive internal bindings
+
+Customers supply page names and copy, not hashes or renderer IDs. The writer records text provenance; selection derives bounded field permissions and recipe IDs. Save partial copy and report the exact missing text at planning. Read worker bytes without the browser preview's URL rewriting; authenticate immutable hash/revision reads.
+
+## 2026-09-17 - Do not re-encode foreign JSON for integrity
+
+PHP associative decoding changes object/array representations and numeric spelling. Verify exact versioned source payload bytes, store them unchanged and use decoded data only as a business-field view. Producer intent/scope hashes now bind recorded JSON bytes. Raw upstream intake/DNA capture remains a separate normal-writer responsibility.
+
+## 2026-09-17 - Content authority and rendering are separate
+
+Authored text and permission must bind the selected/template hashes, component IDs, field paths, output path and record revision. Renderer validity cannot substitute for these records. Preserve exact source files and shared shell; reject stale permission independently. Drive mirror remains outside this task's two-worktree authorization.
+
+## 2026-09-17 — One execution path per selected revision
+
+Freeze either planning or executable work on each revision using existing ledger
+idempotency. Authority/export changes advance intent identity; do not dispatch
+both contracts or interpret a planning receipt as a ready website.
+
+## 2026-09-17 — Reuse authority records without upgrading their meaning
+
+Blocked intents need their own immutable revision/history before any executable
+packet exists. Retry the identical intent without adding a revision, preserve
+changed intent history, and permit packet gaps only against recorded intent.
+
+Selection intent can reuse intake_data and request-asset consent automatically.
+AI-use consent does not establish ownership, likeness permission or transformation
+authority; selected proof bytes do not establish completed scope. Keep these
+statements separate and report the specific blocked stage.
+
 ## 2026-09-18 — Shared email branding released
 
 Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use
@@ -2513,3 +2568,29 @@ Use a fresh public CMS snapshot for deterministic broad layout tests and separat
 live-readonly captures for source integration. Record retries and test limitations.
 Legacy service promises and Contact's one-day/backend-default-three-day inconsistency
 were preserved, flagged, and not newly verified by this presentation work.
+
+## 2026-09-17 — metadata and transfer are separate from execution
+
+Observed that selected preview bytes and design_dna hash alone do not prove complete application scope, rights or a normalized design contract. Root cause: packet acceptance had been treated as enough context for continuation. Rule: require recorded complete source metadata, preserve operation/correlation and reject unsupported unfinished stages; never regenerate creative stages merely because a packet arrived. See isolated selected staging runbook for proof limits.
+
+- September 17 local continuation correction: preserve selected intent as a durable operational exception when complete metadata is missing; explicit legacy reconciliation binds unchanged source/project; completed-review UI/API now requires displayed receipt hash and clears acceptance after stale refresh. Forty PHP assertions, three API-flow tests and synthetic React browser checks at 320/390/768/1280 passed. No production activation.
+## 2026-09-17 - Reference aliases and inactive reupload correction
+
+Independent review found two bounded edge cases. Hash-addressed reads now validate every same-packet declared alias and return exact bytes without dropping either output path; tenant/current-rights/containment checks remain required. Reuploading withdrawn bytes returns an explicit inactive-reference conflict, preserving withdrawal evidence. The dashboard clears stale success notices before actions; its existing API error path displays the conflict. Actual controller and two-path worker completion plus browser API error propagation are covered locally. No regrant, live action or Drive write.
+## 2026-09-17 - First canonical-request Studio association (local)
+
+The actual current unpaid request/selection writer issues an immutable one-hour signed source association. A normal Studio run can bind its verified Git/browser/file evidence without seeded mapping or rebuilding completed pages. Exact completed-copy evidence is checked against current authored fields. Durable callback retry survives restart; the first signed callback registers source and refreshes the normal request without Select. Complete pages package unchanged; only missing pages build in the same repository. Paid/reselected/expired/cross-tenant/conflicting-source/changed-copy cases fail. The grant never establishes hosting, acceptance or checkout. Initial association is static and assetless; arbitrary Studio-first agency customer/request creation and live transport remain unproven. Full regression is recorded separately; no production or Drive writes.
+
+Association freshness follow-up: grant issue/acceptance re-read actual canonical intake scope/authored pages and contained selected file hashes/sizes, not only the saved intent. Direct row or source drift is rejected before mapping. Focused normal association/controller/route proof passes 3/3 in7.02s after this correction; the preceding full regression remains 1,014/99. Local only; no Drive write.
+
+## 2026-09-17 - Unattended source callback and partial ancestry correction
+
+Independent review found that durable association callbacks needed another manual call and that later ancestry rejected valid associated partial sources. The existing worker wake now retries the exact outbox envelope with explicit matched acknowledgement, shared project claims and bounded attempts. Expired/paid/reselected/changed-source/incorrect acknowledgements enter actionable non-ready reconciliation; unrelated work proceeds. Valid partial ancestry requires the original association and scope digest, exact authenticated wire, bound source/browser QA, only required_pages_incomplete, and actual Git ancestry/unchanged bytes. Callback-delay and upload-failure sequences add only Team after local About completion. Focused lifecycle proof10/10 passes21.57s; full regression recorded separately. No daemon, live activation, mail or Drive writes.
+
+## 2026-09-17 - Keep build success separate from handoff retries
+
+Independent POST-route review found that combining build and source association could rebuild on a failed callback replay. The combined run option is now explicitly rejected before work; supported orchestration creates once, then associates the stored site/run through its separate endpoint. Actual POST replay/concurrency/conflicting-input checks preserve run count and Git HEAD. Transient callback failures (including408/429/503) now retain persisted due times with5-second exponential backoff capped300 seconds, continuing within grant validity instead of stopping after three attempts. Permanent/stale authority still requires reconciliation. Focused11-case proof includes more than three transient failures, restart, automatic recovery and unrelated work; full regression recorded separately. No live or Drive changes.
+
+## 2026-09-17 - Current handoff synopsis and independent closeout
+
+Final independent parent code review passed 1,022 tests/99 files in77.73s with all PHP/browser environments, plus PHP42/3 selection/3 portal API cases and lint/diff. Refreshed the canonical handoff and writer-plan openings to describe current bounded support, explicit unsupported profiles and actual operational gates; marked older checkpoint claims historical. Append-only progress entries must not leave the current synopsis stale. No production or Drive changes; final dependency cleanup is separate from code proof.

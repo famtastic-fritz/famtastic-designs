@@ -412,9 +412,11 @@ final class OperationalLedger {
    */
   private function isDuplicateKey(\Throwable $exception): bool {
     $message = $exception->getMessage();
+    // SQLSTATE 23000 also covers NOT NULL, CHECK, foreign-key and trigger
+    // failures. Only an actual duplicate may be treated as an idempotent retry;
+    // other integrity failures must reach the caller's transaction rollback.
     return str_contains($message, 'UNIQUE constraint failed')
-      || str_contains($message, 'Duplicate entry')
-      || str_contains($message, 'SQLSTATE[23000]');
+      || str_contains($message, 'Duplicate entry');
   }
 
 }

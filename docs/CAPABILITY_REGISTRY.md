@@ -10,6 +10,62 @@ Exact-key outbox 752 reached SMTP acceptance with standard/v2 and one attempt.
 No inbox/client-rendering claim. Admin error continuity is locally tested;
 release receipt: `docs/design/ADMIN-ERROR-AND-MAIL-PROOF-2026-09-18.md`.
 
+## 2026-09-18 — Real selected-staging integration; activation not proven
+
+Installed disposable Drupal 11.4.5 / PHP 8.5.9 / SQLite passed 54 assertions:
+authenticated ownership, exact signed receipt persistence, deduplication,
+revision invalidation, checkout gating and injected failure rollback. Corrected
+non-duplicate integrity-error handling and atomic authored-request refresh.
+This is not production MySQL locking or a live logged-in customer test. Next's
+combined source suite and a real isolated cPanel transport smoke passed, but the
+smoke callback was local capture only. No automatic target allocator, production
+worker activation or customer replay is claimed. See the September 18 release plan.
+
+## 2026-09-17 - Private uploaded reference reuse (local)
+
+Connection-proven locally: actual upload/controller/request/selection/receipt writers support exact same-project protected reference reuse and withdrawal. Anonymous signed proof shares are blocked when manifests contain that request/customer's private upload bytes, even after withdrawal. Cross-tenant/changed-byte/rights negatives and Next public-consumer gates pass. Full sweep before final share hardening:1,011/98; component browser and transport remain synthetic. No generated-media license, production activation, customer send or public launch proof.
+
+## 2026-09-17 - Portal page-copy component/browser proof
+
+Real intake editor and shared dashboard serializer verified at 390/1280 for preservation, partial copy, edits and explicit withdrawal. Three successive normal request updates can reference an older acknowledged source while Next safely reconciles verified local completion. Browser save wrapper, persistence and hosting are synthetic; no live portal or publication claim.
+
+## 2026-09-17 - Existing-page input completeness (local)
+
+Home copy is included in existing-page edit detection. Removed supplied copy becomes pending review rather than a claimed content deletion. Original source origin remains distinct from a later Studio handoff. Intro and hero components share a bounded strict text executor; arbitrary layouts/application generation remain unsupported. Downstream local completion can now survive delayed agency acknowledgement without rebuilding completed pages.
+
+## 2026-09-17 - Writer-owned source mapping and revision invalidation (local)
+
+Successful matched receipts persist the exact Next source mapping and finalized wire. Request updates automatically refresh selected scope/content; unchanged semantic input preserves acceptance, while changed existing-page copy becomes a narrow edit-recipe issue and missing pages continue the mapped repository. Completed mappings support idempotent Studio re-registration. Fresh Studio-first mappings, normal media-rights linkage, and live Drupal/portal integration remain unproven. No production activation or Drive synchronization.
+
+## 2026-09-17 - Writer-produced static page continuation (local)
+
+Actual callback, request update, proof approval, customer selection, automation dispatch, immutable artifact read and receipt service now support an assetless marked intro-section profile with saved page copy. Synthetic persistence and hosting adapters remain; no live Drupal or production claim. General generation, source mapping and media-rights propagation are unfinished.
+
+## 2026-09-17 - Byte-preserving source registry (local)
+
+Source-wire v2 registration preserves original JSON bytes and verifies the version-bound digest, including empty objects/arrays and numeric forms. Planning echoes a verified producer byte hash. This strengthens local contracts only; normal source/content/permission/target writers and production execution are not complete.
+
+## 2026-09-17 - Bounded legacy shared-shell consumer
+
+Local contract recognizes `legacy-shared-shell-v1`; Next synthetic proof covers authored text substitutions, preserved shared shell, explicit metadata, existing-repository continuation, browser QA and callback gating. Normal content/permission/template producer writers remain unfinished. No production capability promotion.
+
+## 2026-09-17 — Selected-source intent, local source proof
+
+Unresolved intents now traverse the actual ledger/AutomationWorker/staging-client
+dispatch and return matched planning state from Next's durable worker. This is
+local synthetic transport proof, never staging readiness or customer delivery.
+
+Completed Next exports now traverse actual source registration and portal
+selection into the serializer. The cross-repository test reaches the actual
+receipt service while reusing one mapped repository. Authority/HTTP persistence
+adapters are synthetic; registry writers, concept executor and live lifecycle
+remain unproven. Source import does not create customer/project identities.
+
+Normal portal selection records inherited bytes/DNA, requested scope, pending
+edits and separate asset statements with stage-specific unresolved issues.
+Two synthetic persistence cases exercise the actual service seam. This is
+intent production, not completed-site production or runtime activation.
+
 ## 2026-09-18 — Shared email branding released
 
 Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use
@@ -311,3 +367,32 @@ customer acceptance, payment or production-launch proof. The selected-site plan
 records the remaining automation gates. Registration-alert scheduler failure was
 reproduced under cron's PHP path; recurring delivery is not repaired by backlog
 dispatch. See `docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md`.
+
+## 2026-09-17 — selected staging continuation local evidence
+
+Actual PHP producer/registry/receipt service verified with synthetic adapters (40 assertions); portal structural validator 34/0. Classification: locally implemented and adapter-tested, not Drupal-runtime, provider, hosted or production proven. Requires persisted complete source/design/rights metadata and explicit unsupported-scope handling. See `docs/plans/SELECTED_STAGING_CONTINUATION_LOCAL_2026-09-17.md`.
+## 2026-09-17 - Reference aliases and inactive reupload correction
+
+Independent review found two bounded edge cases. Hash-addressed reads now validate every same-packet declared alias and return exact bytes without dropping either output path; tenant/current-rights/containment checks remain required. Reuploading withdrawn bytes returns an explicit inactive-reference conflict, preserving withdrawal evidence. The dashboard clears stale success notices before actions; its existing API error path displays the conflict. Actual controller and two-path worker completion plus browser API error propagation are covered locally. No regrant, live action or Drive write.
+## 2026-09-17 - First canonical-request Studio association (local)
+
+The actual current unpaid request/selection writer issues an immutable one-hour signed source association. A normal Studio run can bind its verified Git/browser/file evidence without seeded mapping or rebuilding completed pages. Exact completed-copy evidence is checked against current authored fields. Durable callback retry survives restart; the first signed callback registers source and refreshes the normal request without Select. Complete pages package unchanged; only missing pages build in the same repository. Paid/reselected/expired/cross-tenant/conflicting-source/changed-copy cases fail. The grant never establishes hosting, acceptance or checkout. Initial association is static and assetless; arbitrary Studio-first agency customer/request creation and live transport remain unproven. Full regression is recorded separately; no production or Drive writes.
+Final association validation: full suite **1,014 tests / 99 files in 59.76s** with all PHP and actual portal component browser harnesses enabled. Follow-up source-association route-handler/negative proof **3/3 in 6.49s**. PHP 42 contract assertions/3 selection cases, changed PHP syntax, Next lint/diff, brand integrity and 34 portal DNA checks pass. Tests use synthetic Drupal persistence and protected hosting responses; production remains unchanged.
+
+Association freshness follow-up: grant issue/acceptance re-read actual canonical intake scope/authored pages and contained selected file hashes/sizes, not only the saved intent. Direct row or source drift is rejected before mapping. Focused normal association/controller/route proof passes 3/3 in7.02s after this correction; the preceding full regression remains 1,014/99. Local only; no Drive write.
+
+## 2026-09-17 - Unattended source callback and partial ancestry correction
+
+Independent review found that durable association callbacks needed another manual call and that later ancestry rejected valid associated partial sources. The existing worker wake now retries the exact outbox envelope with explicit matched acknowledgement, shared project claims and bounded attempts. Expired/paid/reselected/changed-source/incorrect acknowledgements enter actionable non-ready reconciliation; unrelated work proceeds. Valid partial ancestry requires the original association and scope digest, exact authenticated wire, bound source/browser QA, only required_pages_incomplete, and actual Git ancestry/unchanged bytes. Callback-delay and upload-failure sequences add only Team after local About completion. Focused lifecycle proof10/10 passes21.57s; full regression recorded separately. No daemon, live activation, mail or Drive writes.
+
+Final unattended-outbox and associated-partial-ancestor regression: **1,021 tests / 99 files in 74.56s**, with all three PHP harness variables and actual portal component/browser dependencies. All10 association lifecycle cases pass, including ordinary wake after restart, explicit ACK mismatch, non-ready reconciliation, unrelated-job progress, callback delay and upload failure. PHP42/3, syntax, Next lint and diff checks pass. No production or Drive writes.
+
+## 2026-09-17 - Keep build success separate from handoff retries
+
+Independent POST-route review found that combining build and source association could rebuild on a failed callback replay. The combined run option is now explicitly rejected before work; supported orchestration creates once, then associates the stored site/run through its separate endpoint. Actual POST replay/concurrency/conflicting-input checks preserve run count and Git HEAD. Transient callback failures (including408/429/503) now retain persisted due times with5-second exponential backoff capped300 seconds, continuing within grant validity instead of stopping after three attempts. Permanent/stale authority still requires reconciliation. Focused11-case proof includes more than three transient failures, restart, automatic recovery and unrelated work; full regression recorded separately. No live or Drive changes.
+
+Final separate-handoff/backoff regression: **1,022 tests / 99 files in 70.01s**, all three PHP harnesses and actual portal component/browser dependencies enabled. Eleven association cases include actual POST combined-option refusal with concurrent/replayed/conflicting inputs, more than three transient failures including429, persisted due-time suppression, restart/ordinary-wake recovery, and unrelated-job fairness. Next lint and diff checks pass. Agency code is unchanged by this last correction; prior PHP42/3 and syntax checks remain applicable. Local-only; Drive excluded.
+
+## 2026-09-17 - Current handoff synopsis and independent closeout
+
+Final independent parent code review passed 1,022 tests/99 files in77.73s with all PHP/browser environments, plus PHP42/3 selection/3 portal API cases and lint/diff. Refreshed the canonical handoff and writer-plan openings to describe current bounded support, explicit unsupported profiles and actual operational gates; marked older checkpoint claims historical. Append-only progress entries must not leave the current synopsis stale. No production or Drive changes; final dependency cleanup is separate from code proof.
