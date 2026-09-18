@@ -4,6 +4,26 @@ namespace Drupal\famtastic_pipeline\Service;
 
 /** Maps a real Next export and separate agency authority into the existing contract. */
 final class SelectedFinalizedSource {
+  /** Persist the source mapping emitted by a verified, packet-matched worker. */
+  public static function recordCompletion(object $project, array $packet, array $receipt): void {
+    $mapping = $receipt['source_completion'] ?? NULL;
+    if ($mapping === NULL) {
+      if (($packet['continuation']['brand']['design_contract']['kind'] ?? '') === 'selected-source-preservation-v1') throw new \InvalidArgumentException('selected_continuation_source_completion_required');
+      return;
+    }
+    if (!is_array($mapping) || ($mapping['project_id'] ?? '') !== $packet['project_id'] || ($mapping['customer_id'] ?? '') !== $packet['continuation']['customer']['id'] || ($mapping['request_id'] ?? '') !== $packet['request_id'] || ($mapping['source_export_sha256'] ?? '') !== ($receipt['source_export_sha256'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_completion_identity');
+    $record = self::validate($mapping['source_export'] ?? [], $mapping);
+    if (empty($record['scope_complete']) || ($record['scope']['required_pages'] ?? []) !== $packet['continuation']['required_pages'] || ($record['run_id'] ?? '') !== ($mapping['run_id'] ?? '') || ($record['repository']['commit'] ?? '') !== ($receipt['repository']['commit'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_completion_scope');
+    $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE, 512, JSON_THROW_ON_ERROR);
+    $prior = $studio['selected_source_mapping'] ?? NULL;
+    if ($prior && (($prior['site_id'] ?? '') !== $mapping['site_id'] || ($prior['repository_path'] ?? '') !== $mapping['repository_path'])) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_changed');
+    if ($prior === $mapping) return;
+    if (isset($studio['next_source_export'])) $studio['next_source_export_history'][] = $studio['next_source_export'];
+    $studio['selected_source_mapping'] = $mapping;
+    $studio['next_source_export'] = $mapping['source_export'];
+    $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+  }
+
   public static function validate(array $export, array $authority): array {
     $keys = array_keys($export); sort($keys);
     if (($export['schema'] ?? '') !== 'famtastic.finalized-source-wire.v2' || !is_string($export['payload_json'] ?? NULL) || $keys !== ['payload_json', 'schema', 'sha256']) throw new \InvalidArgumentException('selected_continuation_source_export_digest_mismatch');

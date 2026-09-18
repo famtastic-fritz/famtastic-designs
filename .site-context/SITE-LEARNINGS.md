@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Source mapping and request-driven invalidation
+
+Verified worker receipts now write source mappings; selected request edits trigger scoped reevaluation, while unchanged semantic copy preserves acceptance. First-project selection and non-intro transfer-only regressions pass. Fresh Studio-first mapping and media rights remain separate work. Evidence is local with synthetic persistence/hosting; Drive mirror remains outside scope.
+
 ## 2026-09-17 - Normal selected-record writers
 
 Observation: selected marked HTML can provide an exact reusable shell, while the browser preview changes asset URLs.

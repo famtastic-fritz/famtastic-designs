@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Normal edits own selected revision changes
+
+After project creation, propagate its ID to the resolver's current row. Request edits must reevaluate selected work without another Select click. Compare semantic page records rather than raw JSON whitespace; completed source receipt arrival is not a new customer instruction. Resolve actual missing work before demanding assembler fields. Preserve explicit unsupported existing-page edits and media rights.
+
 ## 2026-09-17 - Record customer text once and derive internal bindings
 
 Customers supply page names and copy, not hashes or renderer IDs. The writer records text provenance; selection derives bounded field permissions and recipe IDs. Save partial copy and report the exact missing text at planning. Read worker bytes without the browser preview's URL rewriting; authenticate immutable hash/revision reads.

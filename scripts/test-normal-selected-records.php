@@ -54,15 +54,15 @@ namespace {
   $input = json_decode(stream_get_contents(STDIN), TRUE, 512, JSON_THROW_ON_ERROR);
   $tmp = sys_get_temp_dir() . '/normal-selected-' . bin2hex(random_bytes(6)); mkdir($tmp); mkdir($tmp . '/web'); Drupal::$dir = $tmp;
   $set = static function(object $object, array $fields): void { $r = new \ReflectionClass($object); foreach ($fields as $k => $v) $r->getProperty($k)->setValue($object, $v); };
-  $project = new \Drupal\famtastic_pipeline\Entity\Project(['studio_json' => '{}'], 902);
+  $project = empty($input['no_project']) ? new \Drupal\famtastic_pipeline\Entity\Project(['studio_json' => '{}'], 902) : NULL;
   $campaign = new \Drupal\famtastic_pipeline\Entity\ProofCampaign(['campaign_id' => 'normal-proof', 'studio_job_id' => 'normal-job', 'prospect_id' => 906, 'callback_event_ids' => '[]'], 904);
   $entities = new class($project, $campaign) implements \Drupal\Core\Entity\EntityTypeManagerInterface {
-    public array $variants = [];
-    public function __construct(public object $project, public object $campaign) {}
+    public array $variants = []; public int $projectsCreated = 0;
+    public function __construct(public ?object $project, public object $campaign) {}
     public function getStorage($name) { return new class($this, $name) {
       public function __construct(private object $all, private string $name) {}
       public function load($id) { return match ($this->name) { 'famtastic_project' => $this->all->project, 'proof_campaign' => $this->all->campaign, 'proof_variant' => $this->all->variants[$id] ?? NULL, default => NULL }; }
-      public function create($data) { $id = 905 + count($this->all->variants); return $this->all->variants[$id] = new \Drupal\famtastic_pipeline\Entity\ProofVariant($data, $id); }
+      public function create($data) { if ($this->name === 'famtastic_project') { $this->all->projectsCreated++; return $this->all->project = new \Drupal\famtastic_pipeline\Entity\Project($data, 902); } $id = 905 + count($this->all->variants); return $this->all->variants[$id] = new \Drupal\famtastic_pipeline\Entity\ProofVariant($data, $id); }
       public function loadMultiple($ids) { return array_intersect_key($this->all->variants, array_flip($ids)); }
       public function getQuery() { return new class($this->all, $this->name) {
         private ?string $direction = NULL; private bool $count = FALSE;
@@ -74,7 +74,7 @@ namespace {
     }; }
   };
   $db = new \Drupal\Core\Database\Connection();
-  $db->row = ['id' => 901, 'public_id' => 'normal-request', 'project_id' => 902, 'customer_id' => 903, 'organization_id' => 907, 'prospect_id' => 906, 'proof_campaign_id' => 904,
+  $db->row = ['id' => 901, 'public_id' => 'normal-request', 'project_id' => $project ? 902 : NULL, 'customer_id' => 903, 'organization_id' => 907, 'prospect_id' => 906, 'proof_campaign_id' => 904,
     'status' => 'draft', 'project_name' => 'Synthetic request', 'business_name' => 'Synthetic', 'intake_data' => '{}', 'proof_review_status' => 'building', 'submitted_at' => NULL];
   $clock = new class implements \Drupal\Component\Datetime\TimeInterface { public function getRequestTime() { return 1789600000; } };
   $config = new class($input['installation']) implements \Drupal\Core\Config\ConfigFactoryInterface {
@@ -104,6 +104,7 @@ namespace {
     $portal->saveWebsiteRequestProofResearchSnapshot(901, 1, ['overview' => 'Synthetic owner review', 'direction_rationale' => ['a' => 'Clear introduction', 'b' => 'Bold introduction', 'c' => 'Expressive introduction'], 'sources' => ['Synthetic authored brief'], 'researched_at' => '2026-09-17']);
     $portal->approveWebsiteRequestProof(901, 1);
     $portal->decideWebsiteRequestProof(903, 'normal-request', ['action' => 'select', 'direction' => 'a']);
+    $project = $entities->project;
     $state = json_decode($project->get('studio_json')->value, TRUE);
     $packet = $state['selected_dispatch_packet'];
     $portal->decideWebsiteRequestProof(903, 'normal-request', ['action' => 'select', 'direction' => 'a']);
@@ -138,10 +139,26 @@ namespace {
       $receipts = new \Drupal\famtastic_pipeline\Service\StagingReceiptService($db, $entities, $ledger, $clock, $config);
       $accepted = $receipts->accept($input['receipt']);
       if (!$accepted['newly_processed'] || $receipts->accept($input['receipt'])['newly_processed'] || $receipts->isReady(901)) throw new \RuntimeException('Receipt retry or checkout boundary failed');
+      if (!empty($input['accept_review'])) $portal->acceptWebsiteStagingReview(903, 'normal-request', $db->row['staging_receipt_hash']);
+      if (!empty($input['studio_origin'])) {
+        $envelope = ['request_id' => 'normal-request', 'project_id' => '902', 'customer_id' => '903', 'source_export' => $input['receipt']['source_completion']['source_export']];
+        $registry->registerSourceExport($envelope);
+        if ($registry->registerSourceExport($envelope)['newly_processed']) throw new \RuntimeException('Source retry duplicated mapping');
+      }
+    }
+    if (isset($input['followup_request'])) $portal->updateWebsiteRequest(903, 'normal-request', $input['followup_request'], $input['followup_raw'] ?? json_encode($input['followup_request'], JSON_THROW_ON_ERROR));
+    $finalState = json_decode($project->get('studio_json')->value, TRUE);
+    $finalPacket = $finalState['selected_dispatch_packet'];
+    $finalBytes = [];
+    if ($finalPacket['schema'] === 'famtastic.site-studio.build-packet.v1') foreach ($finalPacket['artifacts'] as $a) {
+      if (str_starts_with($a['path'], 'next-source/')) continue;
+      $hash = $a['sha256']; $rev = $finalPacket['continuation']['selection_revision']; $stamp = 1789600000;
+      $signature = hash_hmac('sha256', "selected-artifact.v1\nnormal-request\n$rev\n$hash\n$stamp", 'synthetic-reader-secret');
+      $finalBytes[$hash] = base64_encode($registry->readSelectedArtifact('normal-request', $rev, $hash, "FAMtastic-Artifact $stamp:$signature", 'synthetic-reader-secret', $stamp));
     }
     $variantDna = json_decode($variant->get('design_dna')->value, TRUE);
     $capturedRaw = file_get_contents(dirname($tmp . '/' . $variant->get('artifact_path')->value) . '/' . $variantDna['source_capture']['raw_callback_file']);
-    echo json_encode(['packet' => $packet, 'wire' => $http->wire, 'receipt_result' => $accepted, 'artifact_bytes' => $bytes, 'reader_negatives' => $negative, 'jobs' => $jobs, 'intake' => json_decode($db->row['intake_data'], TRUE), 'variant_dna' => $variantDna, 'captured_raw_callback' => $capturedRaw], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+    echo json_encode(['packet' => $packet, 'wire' => $http->wire, 'receipt_result' => $accepted, 'artifact_bytes' => $bytes, 'reader_negatives' => $negative, 'jobs' => $jobs, 'intake' => json_decode($db->row['intake_data'], TRUE), 'variant_dna' => $variantDna, 'captured_raw_callback' => $capturedRaw, 'projects_created' => $entities->projectsCreated, 'final_state' => $finalState, 'final_row' => $db->row, 'final_packet' => $finalPacket, 'final_artifact_bytes' => $finalBytes, 'final_jobs' => $ledger->jobs], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
   } finally {
     $walk = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($tmp, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
     foreach ($walk as $file) { $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname()); } rmdir($tmp);

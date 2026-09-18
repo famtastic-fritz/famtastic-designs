@@ -54,7 +54,7 @@ namespace Drupal\famtastic_pipeline\Service {
 namespace {
   if (!function_exists('mb_strtolower')) { function mb_strtolower($s) { return strtolower($s); } }
   $serviceRoot = dirname(__DIR__) . '/backend/web/modules/custom/famtastic_pipeline/src/Service/';
-  foreach (['SelectedStagingContinuation', 'SiteStudioBuildPacketService', 'StagingReceiptService'] as $class) require $serviceRoot . $class . '.php';
+  foreach (['SelectedFinalizedSource', 'SelectedStagingContinuation', 'SiteStudioBuildPacketService', 'StagingReceiptService'] as $class) require $serviceRoot . $class . '.php';
   use Drupal\famtastic_pipeline\Service\SelectedStagingContinuation as Producer;
   use Drupal\famtastic_pipeline\Service\StagingReceiptService as Receipts;
   if (($argv[1] ?? '') === '--manifest-digest') {

@@ -64,7 +64,8 @@ final class SelectedStagingContinuation {
       if (!preg_match('#^(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_-][a-zA-Z0-9_.-]*\.(?:html|css|js|png|jpg|jpeg|webp|svg|ico|woff2|txt)$#', $path) || str_contains($path, '..') || isset($paths[$path])) {
         throw new \InvalidArgumentException('selected_continuation_unsafe_public_path');
       }
-      if (!is_array($url) || ($url['scheme'] ?? '') !== 'https' || empty($url['host']) || isset($url['user']) || isset($url['pass']) || isset($url['query']) || isset($url['fragment'])) {
+      $mapped = ($file['source_origin'] ?? '') === 'mapped_repository';
+      if ($mapped ? (!preg_match('/^[a-f0-9]{64}$/', (string) ($evidence['source_export_sha256'] ?? '')) || isset($file['url'])) : (!is_array($url) || ($url['scheme'] ?? '') !== 'https' || empty($url['host']) || isset($url['user']) || isset($url['pass']) || isset($url['query']) || isset($url['fragment']))) {
         throw new \InvalidArgumentException('selected_continuation_unsafe_artifact_url');
       }
       $matches = array_filter($packet['artifacts'], static fn(array $a): bool => $a['path'] === ($file['source_path'] ?? '') && $a['role'] !== 'render_evidence');

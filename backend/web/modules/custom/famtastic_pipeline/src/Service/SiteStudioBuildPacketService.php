@@ -32,7 +32,9 @@ final class SiteStudioBuildPacketService {
   public function resolveSelectedRecords(array $row, array $dna, array $intent, array $artifacts): ?array {
     $installation = $this->configFactory->get('famtastic_pipeline.settings')->get('selected_staging');
     if (!is_array($installation)) return NULL;
-    return SelectedRecordResolver::resolve($row, $dna, $intent, $artifacts, $installation, dirname(\Drupal::root()));
+    $project = $this->loadProject((string) $row['project_id']);
+    $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE);
+    return SelectedRecordResolver::resolve($row, $dna, $intent, $artifacts, $installation, dirname(\Drupal::root()), $studio['selected_source_mapping'] ?? NULL);
   }
 
   /** Worker-only original bytes: no preview rewriting or arbitrary path input. */
@@ -63,11 +65,15 @@ final class SiteStudioBuildPacketService {
     if (!$row || (string) $row['project_id'] !== (string) ($envelope['project_id'] ?? '') || (string) $row['customer_id'] !== (string) ($envelope['customer_id'] ?? '') || (string) $row['public_id'] !== (string) ($envelope['request_id'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_mismatch');
     $project = $this->loadProject((string) ($envelope['project_id'] ?? ''));
     $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
-    $authority = $studio['selected_source_authority'] ?? [];
+    $authority = $studio['selected_source_mapping'] ?? $studio['selected_source_authority'] ?? [];
     if ((string) ($authority['project_id'] ?? '') !== (string) $project->id() || (string) ($authority['customer_id'] ?? '') !== (string) ($envelope['customer_id'] ?? '') || ($authority['request_id'] ?? '') !== ($envelope['request_id'] ?? '')) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_mismatch');
     $export = $envelope['source_export'] ?? [];
     SelectedFinalizedSource::validate($export, $authority);
     $prior = $studio['next_source_export'] ?? NULL;
+    if (isset($studio['selected_source_mapping'])) {
+      $studio['selected_source_mapping']['originating_system'] = 'studio';
+      $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+    }
     if ($prior === $export) return ['newly_processed' => FALSE];
     if ($prior !== NULL) $studio['next_source_export_history'][] = $prior;
     $studio['next_source_export'] = $export;

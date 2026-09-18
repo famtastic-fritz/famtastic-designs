@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 - Writer-owned source mapping and revision invalidation (local)
+
+Successful matched receipts persist the exact Next source mapping and finalized wire. Request updates automatically refresh selected scope/content; unchanged semantic input preserves acceptance, while changed existing-page copy becomes a narrow edit-recipe issue and missing pages continue the mapped repository. Completed mappings support idempotent Studio re-registration. Fresh Studio-first mappings, normal media-rights linkage, and live Drupal/portal integration remain unproven. No production activation or Drive synchronization.
+
 ## 2026-09-17 - Writer-produced static page continuation (local)
 
 Actual callback, request update, proof approval, customer selection, automation dispatch, immutable artifact read and receipt service now support an assetless marked intro-section profile with saved page copy. Synthetic persistence and hosting adapters remain; no live Drupal or production claim. General generation, source mapping and media-rights propagation are unfinished.

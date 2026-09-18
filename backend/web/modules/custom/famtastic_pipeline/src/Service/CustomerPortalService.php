@@ -598,6 +598,13 @@ final class CustomerPortalService {
       $this->activity((int) $row['organization_id'], 'website_request.submitted', 'A website request was submitted for review.');
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
+    if (($updated['proof_review_status'] ?? '') === 'selected' && !empty($updated['selected_proof_direction']) && empty($updated['commerce_order_id'])) {
+      $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $updated['proof_campaign_id'])->condition('direction_id', $updated['selected_proof_direction'])->range(0, 1)->execute();
+      $variant = $ids ? $this->entities->getStorage('proof_variant')->load(reset($ids)) : NULL;
+      if (!$variant) throw new \RuntimeException('The selected proof artifact is unavailable.');
+      $this->prepareSelectedProofStaging($updated, $variant, $updated['selected_proof_direction']);
+      $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
+    }
     return $this->serializeWebsiteRequest($updated);
   }
 
@@ -1765,6 +1772,7 @@ final class CustomerPortalService {
       $this->database->update('famtastic_project_request')->fields([
         'project_id' => (int) $project->id(), 'changed' => $this->time->getRequestTime(),
       ])->condition('id', (int) $row['id'])->execute();
+      $row['project_id'] = (int) $project->id();
     }
     $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
     $previous = $studio['site_studio_build_packet'] ?? NULL;
@@ -1827,7 +1835,7 @@ final class CustomerPortalService {
     $intent = SelectedSourceIntent::create($row, (string) $project->id(), (int) $variant->id(), $direction, $revision,
       gmdate(DATE_ATOM, $this->time->getRequestTime()), $artifacts, is_array($designDna) ? $designDna : [],
       $this->requestAssets((int) $row['id']), $revisionNotes);
-    $intent['execution_binding'] = ['export' => $studio['next_source_export']['sha256'] ?? NULL,
+    $intent['execution_binding'] = ['export' => isset($studio['selected_source_mapping']) ? ($studio['selected_source_intent']['execution_binding']['export'] ?? NULL) : ($studio['next_source_export']['sha256'] ?? NULL),
       'authority_sha256' => hash('sha256', json_encode($studio['selected_source_authority'] ?? [], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))];
     $priorIntent = $studio['selected_source_intent'] ?? NULL;
     if (is_array($priorIntent)) {
@@ -1835,17 +1843,25 @@ final class CustomerPortalService {
         $value['source'], $value['scope'], $value['asset_authority'], $value['requested_changes'],
         $value['selection']['variant_id'], $value['selection']['direction_id'],
         $value['execution_binding'] ?? [],
-        $value['authored_content'] ?? NULL,
+        $value['authored_content']['pages'] ?? NULL,
       ], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
       if (hash_equals($fingerprint($priorIntent), $fingerprint($intent))) {
         $intent = $priorIntent;
         $revision = (int) $intent['selection']['revision'];
+        if (isset($studio['selected_source_mapping'], $studio['selected_dispatch_packet'])) {
+          return ['project_id' => (int) $project->id(), 'packet_id' => $studio['selected_dispatch_packet']['packet_id'], 'status' => 'unchanged'];
+        }
       }
       else $studio['selected_source_intent_history'][] = $priorIntent;
     }
     $packetId = 'staging-packet:request:' . (int) $row['id'] . ':revision:' . $revision;
     $studio['selected_source_intent'] = $intent;
     $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+    if (!is_array($designDna['selected_build_continuation'] ?? NULL) && empty($designDna['source_capture']) && !isset($studio['selected_source_mapping']) && isset($studio['next_source_export'])) {
+      try { $designDna['selected_build_continuation'] = SelectedFinalizedSource::continuation($studio['next_source_export'], $intent, $studio['selected_source_authority'] ?? []); }
+      catch (\InvalidArgumentException $error) { return $this->queueSelectedPlanning($row, $intent, $error->getMessage()); }
+      $dnaJson = json_encode($designDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+    }
     if (!is_array($designDna['selected_build_continuation'] ?? NULL)) {
       try { $resolved = $this->siteStudioPackets->resolveSelectedRecords($row, $designDna, $intent, $artifacts); }
       catch (\InvalidArgumentException $error) { return $this->queueSelectedPlanning($row, $intent, $error->getMessage()); }

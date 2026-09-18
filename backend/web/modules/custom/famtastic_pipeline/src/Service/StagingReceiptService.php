@@ -68,6 +68,7 @@ final class StagingReceiptService {
       if (!hash_equals($existingHash, $receiptHash)) {
         throw new \InvalidArgumentException('Website request already has a different staging receipt.');
       }
+      if (!$failure && isset($receipt['source_completion'])) SelectedFinalizedSource::recordCompletion($this->entities->getStorage('famtastic_project')->load((int) $receipt['project_id']), $packet, $receipt);
       if (!$failure) $this->queueStagingReviewNotification($row, $receiptHash);
       return [
         'newly_processed' => FALSE,
@@ -134,6 +135,7 @@ final class StagingReceiptService {
       if ((int) $updated !== 1) {
         throw new \RuntimeException('Website request changed before the staging receipt could be locked.');
       }
+      if (!$failure && (isset($receipt['source_completion']) || ($packet['continuation']['brand']['design_contract']['kind'] ?? '') === 'selected-source-preservation-v1')) SelectedFinalizedSource::recordCompletion($this->entities->getStorage('famtastic_project')->load((int) $receipt['project_id']), $packet, $receipt);
       if (!$failure) $this->queueStagingReviewNotification($row, $receiptHash);
       unset($transaction);
       return [

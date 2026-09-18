@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-17 - Automatic selected-request refresh and source mapping (local)
+
+Propagate newly created project IDs before resolution; persist verified worker source completion through the receipt writer; automatically reevaluate selected request edits and invalidate stale acceptance. Unchanged semantic copy retains its packet, including whitespace-only raw submission changes. Transfer-only source does not require intro fields. Normal writer tests cover one-project retries, receipt/acceptance/update, mapped missing-page continuation after restart, and non-intro packaging. Full Next suite passed 1,004 tests / 96 files; PHP contract 42 assertions and selection seam 3 cases pass. Synthetic persistence/hosting only.
+
 ## 2026-09-17 - Normal source, content and selection writers (local)
 
 - Proof callbacks retain exact raw ingress bytes; request updates retain raw submissions and authored page records. Optional portal page-copy fields expose ordinary customer inputs.
