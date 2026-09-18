@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Test admin errors, not only successful screens
+
+Observation: invalid `/admin/user` lost admin route metadata and therefore the
+brand shell. Guidance: maintain a permission-preserving People compatibility
+redirect and shared error-context predicate, including public-route negative
+tests. SMTP acceptance of owner proof 752 is not inbox/client-rendering proof.
+
 ## 2026-09-18 — Shared email branding released
 
 Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use

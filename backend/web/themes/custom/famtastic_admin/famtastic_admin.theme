@@ -91,7 +91,7 @@ function famtastic_admin_preprocess_html(array &$variables): void {
     $variables['attributes']['class'][] = 'famtastic-auth-page';
   }
   $route = \Drupal::routeMatch()->getRouteObject();
-  if ($route && $route->getOption('_admin_route')) {
+  if (($route && $route->getOption('_admin_route')) || \Drupal\famtastic_pipeline\Theme\AdminErrorContext::applies(\Drupal::routeMatch(), \Drupal::service('request_stack'))) {
     $variables['attributes']['class'][] = 'famtastic-admin-shell';
   }
 }
@@ -109,7 +109,7 @@ function famtastic_admin_theme_suggestions_page_alter(array &$suggestions, array
     $suggestions[] = 'page__famtastic_auth';
   }
   $route = \Drupal::routeMatch()->getRouteObject();
-  if ($route && $route->getOption('_admin_route')) {
+  if (($route && $route->getOption('_admin_route')) || \Drupal\famtastic_pipeline\Theme\AdminErrorContext::applies(\Drupal::routeMatch(), \Drupal::service('request_stack'))) {
     $suggestions[] = 'page__famtastic_admin';
   }
 }

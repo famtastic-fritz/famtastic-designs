@@ -1,3 +1,15 @@
+# Compatibility for old People bookmarks; same permission as core People.
+famtastic_pipeline.legacy_admin_user:
+  path: '/admin/user'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\LegacyAdminUserController::redirectToPeople'
+  methods: [GET]
+  requirements:
+    _permission: 'administer users'
+  options:
+    _admin_route: TRUE
+    no_cache: TRUE
+
 # --- Public, token-scoped prospect API (anonymous; access is by link token) ---
 famtastic_pipeline.public_quote:
   path: '/api/public/quote'

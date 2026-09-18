@@ -1,5 +1,11 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Branded operational email: owner proof accepted
+
+Exact-key outbox 752 reached SMTP acceptance with standard/v2 and one attempt.
+No inbox/client-rendering claim. Admin error continuity is locally tested;
+release receipt: `docs/design/ADMIN-ERROR-AND-MAIL-PROOF-2026-09-18.md`.
+
 ## 2026-09-18 — Shared email branding released
 
 Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use

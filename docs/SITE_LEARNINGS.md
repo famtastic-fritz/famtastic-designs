@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Missing admin routes need explicit presentation coverage
+
+Observation: native error routes lack admin metadata and fell into the customer
+theme, exposing white-on-white error text. Rule: classify original admin paths
+only on core error routes and reuse that predicate in negotiation and shell
+hooks. Preserve permissions and status. Old inbox messages remain historical;
+send a separately labeled, exact-recipient proof rather than replaying old rows.
+
 ## 2026-09-18 — Shared email branding released
 
 Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use

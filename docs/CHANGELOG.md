@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-18 — Admin error continuity and owner mail proof
+
+- Added permission-preserving old People URL redirect and native admin 403/404
+  theme continuity; locally tested, release evidence tracked separately.
+- Sent one owner-authorized historical worker-alert proof through standard/v2;
+  outbox 752 accepted by SMTP. See `docs/design/ADMIN-ERROR-AND-MAIL-PROOF-2026-09-18.md`.
+
 ## 2026-09-18 — Shared email branding released
 
 Backend `45eedc1a` deployed at 12:38:14Z. All six live Drupal render paths use

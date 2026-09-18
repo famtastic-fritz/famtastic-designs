@@ -9,7 +9,7 @@ services:
       - { name: http_middleware, priority: 260 }
   famtastic_pipeline.famtastic_admin_theme_negotiator:
     class: Drupal\famtastic_pipeline\Theme\FamtasticAdminThemeNegotiator
-    arguments: ['@theme_handler']
+    arguments: ['@theme_handler', '@request_stack']
     tags:
       - { name: theme_negotiator, priority: 1000 }
 

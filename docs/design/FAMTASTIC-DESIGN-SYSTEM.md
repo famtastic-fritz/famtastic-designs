@@ -161,3 +161,9 @@ baseline was subsequently released; see `BRAND-DNA-RELEASE-2026-09-17.md`.
 The separately authorized content-experience release is recorded in
 `CONTENT-EXPERIENCE-RELEASE-2026-09-17.md`. Future changes remain review-gated:
 no deployment or customer send follows merely from implementing a local page.
+# Admin error-state coverage (2026-09-18)
+
+Apply the existing restrained admin shell to native 403/404 responses whose
+original request is `/admin` or `/admin/…`. Theme negotiation and shell selection
+must agree; styling cannot override access checks or error status. Public/customer
+error pages remain outside this rule. Test unknown routes as well as valid pages.
