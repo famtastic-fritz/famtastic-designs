@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Timing and copy semantics
+
+Preserve Home edit intent and treat removed completed-page copy records as pending review. Keep original source provenance immutable across re-registration. A missing callback does not erase Next's verified local completed work; the downstream worker reconciles exact bindings before assembly. No live or Drive changes.
+
 ## 2026-09-17 - Source mapping and request-driven invalidation
 
 Verified worker receipts now write source mappings; selected request edits trigger scoped reevaluation, while unchanged semantic copy preserves acceptance. First-project selection and non-intro transfer-only regressions pass. Fresh Studio-first mapping and media rights remain separate work. Evidence is local with synthetic persistence/hosting; Drive mirror remains outside scope.

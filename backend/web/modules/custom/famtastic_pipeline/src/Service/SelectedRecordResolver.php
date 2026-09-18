@@ -52,12 +52,12 @@ final class SelectedRecordResolver {
     $dom = new \DOMDocument(); $prior = libxml_use_internal_errors(TRUE);
     try { $dom->loadHTML($html, LIBXML_NONET); } finally { libxml_clear_errors(); libxml_use_internal_errors($prior); }
     $xpath = new \DOMXPath($dom);
-    $components = $xpath->query('//main/*[@data-section-type="intro"]');
-    if ($components->length !== 1) self::issue('intro_component_ambiguous');
+    $components = $xpath->query('//main/*[@data-section-type="intro" or @data-section-type="hero"]');
+    if ($components->length !== 1) self::issue('text_component_ambiguous');
     $component = $components->item(0); $componentId = $component->getAttribute('data-section-id');
     $heading = $xpath->query('.//h1[@data-field-type="text"]', $component); $body = $xpath->query('.//p[@data-field-type="text"]', $component);
-    if ($heading->length !== 1 || $body->length !== 1 || $xpath->query('.//*[@data-field-type="text"]', $component)->length !== 2) self::issue('intro_text_fields_unsupported');
-    foreach ([$componentId, $heading->item(0)->getAttribute('data-field-id'), $body->item(0)->getAttribute('data-field-id')] as $id) if (!preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', $id)) self::issue('intro_field_identity_missing');
+    if ($heading->length !== 1 || $body->length !== 1 || $xpath->query('.//*[@data-field-type="text"]', $component)->length !== 2) self::issue('text_component_fields_unsupported');
+    foreach ([$componentId, $heading->item(0)->getAttribute('data-field-id'), $body->item(0)->getAttribute('data-field-id')] as $id) if (!preg_match('/^[A-Za-z][A-Za-z0-9_-]*$/', $id)) self::issue('text_component_field_identity_missing');
     }
     $design = ['schema_version' => 1, 'kind' => 'selected-source-preservation-v1', 'source_sha256' => $selected['sha256'],
       'preservation' => 'exact-source-and-marked-shell', 'asset_policy' => ['preserve' => TRUE, 'rights_safe_only' => TRUE]];
@@ -67,12 +67,13 @@ final class SelectedRecordResolver {
     $steps = []; $changes = [];
     $files = [['path' => 'index.html', 'source_path' => $selected['path'], 'url' => $url($selected['sha256']), 'rights' => $policy]];
     foreach ($existing as $path => $file) {
+      $saved = array_values(array_filter($intake['authored_content']['pages'] ?? [], static fn(array $p): bool => strtolower($p['text']['page_name']) === strtolower($pages[$path])));
+      if ($saved && ($mapping['content_records'][$path] ?? '') !== $saved[0]['record_id']) self::issue('existing_page_copy_requires_edit_recipe:' . $path);
+      if (!$saved && isset($mapping['content_records'][$path])) self::issue('existing_page_copy_removed_requires_review:' . $path);
       if ($path === 'index.html') continue;
       $sourcePath = 'next-source/' . $completed['run_id'] . '/' . $path;
       $artifacts[] = ['role' => 'source_material', 'path' => $sourcePath, 'sha256' => $file['sha256'], 'bytes' => $file['bytes']];
       $files[] = ['path' => $path, 'source_path' => $sourcePath, 'source_origin' => 'mapped_repository', 'rights' => $policy];
-      $saved = array_values(array_filter($intake['authored_content']['pages'] ?? [], static fn(array $p): bool => strtolower($p['text']['page_name']) === strtolower($pages[$path])));
-      if ($saved && ($mapping['content_records'][$path] ?? '') !== $saved[0]['record_id']) self::issue('existing_page_copy_requires_edit_recipe:' . $path);
     }
     $write = static function(array $record) use (&$artifacts, $directory, $storageRoot, $url): array {
       $json = json_encode($record, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
@@ -102,7 +103,7 @@ final class SelectedRecordResolver {
         'content_source_path' => $c['path'], 'content_sha256' => $c['sha256'], 'content_url' => $c['url'], 'permission_source_path' => $p['path'], 'permission_sha256' => $p['sha256'], 'permission_url' => $p['url'],
         'design_contract_sha256' => hash('sha256', json_encode($design, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)), 'rights' => $policy, 'resolves_change_ids' => [$change]];
     }
-    return ['artifacts' => $artifacts, 'continuation' => ['operation' => $steps ? 'continue_build' : 'package_existing', 'initiating_system' => $mapping['originating_system'] ?? 'designs', 'correlation_id' => $intent['intent_id'], 'requested_next_action' => 'protected_review', ...($mapping ? ['source_export_sha256' => $mapping['source_export_sha256']] : []),
+    return ['artifacts' => $artifacts, 'continuation' => ['operation' => $steps ? 'continue_build' : 'package_existing', 'initiating_system' => $mapping['handoff_initiator'] ?? $mapping['originating_system'] ?? 'designs', 'correlation_id' => $intent['intent_id'], 'requested_next_action' => 'protected_review', ...($mapping ? ['source_export_sha256' => $mapping['source_export_sha256']] : []),
       'spec' => ['capability_class' => 'static', 'site_needs' => ['pages' => array_keys($pages)]], 'required_pages' => array_keys($pages),
       'files' => $files,
       'source' => ['campaign_id' => (string) $row['proof_campaign_id']], 'selection' => ['direction_name' => $dna['direction_name'] ?? $intent['selection']['direction_id'], 'proof_version' => (string) $intent['selection']['revision'], 'approval_id' => $intent['intent_id']],

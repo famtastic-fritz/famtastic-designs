@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 - Existing-page input completeness (local)
+
+Home copy is included in existing-page edit detection. Removed supplied copy becomes pending review rather than a claimed content deletion. Original source origin remains distinct from a later Studio handoff. Intro and hero components share a bounded strict text executor; arbitrary layouts/application generation remain unsupported. Downstream local completion can now survive delayed agency acknowledgement without rebuilding completed pages.
+
 ## 2026-09-17 - Writer-owned source mapping and revision invalidation (local)
 
 Successful matched receipts persist the exact Next source mapping and finalized wire. Request updates automatically refresh selected scope/content; unchanged semantic input preserves acceptance, while changed existing-page copy becomes a narrow edit-recipe issue and missing pages continue the mapped repository. Completed mappings support idempotent Studio re-registration. Fresh Studio-first mappings, normal media-rights linkage, and live Drupal/portal integration remain unproven. No production activation or Drive synchronization.

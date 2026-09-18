@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Preserve every requested copy change
+
+Do not skip Home when comparing existing page copy. Absence of a formerly supplied record requires review; it does not authorize erasing live text or claiming the edit is implemented. A later registration caller does not change the original source origin. Locally completed source and acknowledged receipt are distinct states.
+
 ## 2026-09-17 - Normal edits own selected revision changes
 
 After project creation, propagate its ID to the resolver's current row. Request edits must reevaluate selected work without another Select click. Compare semantic page records rather than raw JSON whitespace; completed source receipt arrival is not a new customer instruction. Resolve actual missing work before demanding assembler fields. Preserve explicit unsupported existing-page edits and media rights.

@@ -71,7 +71,7 @@ final class SiteStudioBuildPacketService {
     SelectedFinalizedSource::validate($export, $authority);
     $prior = $studio['next_source_export'] ?? NULL;
     if (isset($studio['selected_source_mapping'])) {
-      $studio['selected_source_mapping']['originating_system'] = 'studio';
+      $studio['selected_source_mapping']['handoff_initiator'] = 'studio';
       $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
     }
     if ($prior === $export) return ['newly_processed' => FALSE];

@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-17 - Preserve Home edits and original source origin (local)
+
+New Home copy and removal of previously supplied completed-page copy now stay explicit pending edits and clear old acceptance. Copy-record removal does not imply deleting live content. Source re-registration changes only current handoff initiator, preserving original source origin. Missing-page resolution supports one unambiguous hero or intro with the same strict two-text-field profile. Local delayed-callback/upload-failure tests exercise downstream reconciliation without agency receipt acknowledgement.
+
 ## 2026-09-17 - Automatic selected-request refresh and source mapping (local)
 
 Propagate newly created project IDs before resolution; persist verified worker source completion through the receipt writer; automatically reevaluate selected request edits and invalidate stale acceptance. Unchanged semantic copy retains its packet, including whitespace-only raw submission changes. Transfer-only source does not require intro fields. Normal writer tests cover one-project retries, receipt/acceptance/update, mapped missing-page continuation after restart, and non-intro packaging. Full Next suite passed 1,004 tests / 96 files; PHP contract 42 assertions and selection seam 3 cases pass. Synthetic persistence/hosting only.

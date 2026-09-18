@@ -17,6 +17,7 @@ final class SelectedFinalizedSource {
     $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE, 512, JSON_THROW_ON_ERROR);
     $prior = $studio['selected_source_mapping'] ?? NULL;
     if ($prior && (($prior['site_id'] ?? '') !== $mapping['site_id'] || ($prior['repository_path'] ?? '') !== $mapping['repository_path'])) throw new \InvalidArgumentException('selected_continuation_source_mapping_identity_changed');
+    if (isset($mapping['originating_system']) && $mapping['originating_system'] !== ($prior['originating_system'] ?? $packet['continuation']['initiating_system'])) throw new \InvalidArgumentException('selected_continuation_source_origin_changed');
     if ($prior === $mapping) return;
     if (isset($studio['next_source_export'])) $studio['next_source_export_history'][] = $studio['next_source_export'];
     $studio['selected_source_mapping'] = $mapping;
