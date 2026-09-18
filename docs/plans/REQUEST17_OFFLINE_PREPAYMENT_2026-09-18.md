@@ -74,3 +74,35 @@ expired/wrong code, changed terms/scope, unsafe domains and exact verified ident
   main orchestrator's coordinated backend release. No frontend code-entry UI yet.
 - Full unattended pipeline and final custom-scope fulfillment are outside this
   bounded payment lane. Do not call them proven by a receipt.
+
+## Durable production receipt
+
+Recorded at 2026-09-18T23:37:39Z via immutable source `87861944`, private CLI
+operation only. Native **order21 / FAM-2609-0021**, **payment5 completed**, private
+offer `8acdaeb2-9a7e-5c89-a712-6de7ea979807`: $200.00 received, $0.00 balance.
+Fresh-process replay returned `existing=true` with the same order/payment.
+One offer, one payment, zero fulfillment rows, zero order notifications.
+Manual gateway is disabled for checkout; order is locked/non-cart/draft.
+The recorded time is not an invented bank-transfer date.
+
+Thread22 `b434c7ee-e5f9-4174-887d-305651f1bdfb` is the private request17 project
+conversation. It has zero fabricated messages and an assigned support case with
+`owner_uid=1`. The thread table itself has no assignee column. Owner notification
+routing reads the existing configured address; no notification was sent.
+
+The preceding dry-run order20/payment4/thread21 were fully rolled back; independent
+readback proved all absent, including the temporary gateway configuration. Those
+sequence IDs must never be reported as actual purchases.
+
+## Request 16 supplemental scope lane
+
+`record-request16-private-scope.php` records one $199 one-time private offer and
+an immutable scope/approval event. It does not create an order or payment, inherit
+`FAM-CUSTOM-1999` terms, authorize renewals or change original intake data.
+Dates, venue, prices, photos, committee and domain remain customer confirmations.
+The original thread20 is reused; a support-case owner is added rather than a
+duplicate conversation. Generic checkout deliberately cannot buy this unknown
+private SKU: a selected-direction, scope-exact payment step remains a separate
+validated integration. Do not send a generic buy URL or promise checkout is ready.
+The nullable offer expiry requires the included portal projection fix to show
+the no-expiry owner-approved scope; no arbitrary deadline is invented.

@@ -269,7 +269,8 @@ final class CustomerPortalService {
         'package' => implode(', ', array_map(static fn($item): string => $item->getTitle(), $commerceOrder->getItems())),
         'amount' => (int) round((float) $commerceOrder->getTotalPrice()->getNumber() * 100),
         'currency' => strtolower($commerceOrder->getTotalPrice()->getCurrencyCode()),
-        'payment_status' => $commerceOrder->isPaid() ? 'paid' : $commerceOrder->getState()->value,
+        'payment_status' => $commerceOrder->getData('famtastic_offline_prepayment') && $commerceOrder->isPaid()
+          ? 'paid' : ($commerceOrder->getState()->value === 'completed' ? 'paid' : $commerceOrder->getState()->value),
         'paid_at' => $commerceOrder->getData('famtastic_offline_prepayment') ? NULL : $commerceOrder->getPlacedTime(),
         'payment_recorded_at' => $commerceOrder->getData('famtastic_offline_prepayment')['recorded_at'] ?? NULL,
         'fulfillment_hold' => $commerceOrder->getData('famtastic_offline_prepayment')['hold'] ?? NULL,
@@ -925,9 +926,10 @@ final class CustomerPortalService {
     $row['customer_archived_at'] = (int) ($row['customer_archived_at'] ?? 0) ?: NULL;
     $row['customer_archived'] = $row['customer_archived_at'] !== NULL;
     $recommendation = (array) ($row['intake']['recommendation'] ?? []);
-    $offer = $this->database->select('famtastic_private_offer', 'o')->fields('o', ['public_id', 'sku', 'list_amount_minor', 'offered_amount_minor', 'currency', 'reason', 'expires_at'])
-      ->condition('website_request_id', (int) $row['id'])->condition('status', 'active')
-      ->condition('expires_at', $this->time->getRequestTime(), '>')->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    $offerQuery = $this->database->select('famtastic_private_offer', 'o')->fields('o', ['public_id', 'sku', 'list_amount_minor', 'offered_amount_minor', 'currency', 'reason', 'expires_at'])
+      ->condition('website_request_id', (int) $row['id'])->condition('status', 'active');
+    $offer = $offerQuery->condition($offerQuery->orConditionGroup()->isNull('expires_at')->condition('expires_at', $this->time->getRequestTime(), '>'))
+      ->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $row['private_offer'] = $offer ?: NULL;
     $stagingReceipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
     $row['staging_preview'] = ($row['staging_status'] ?? '') === 'deployed' && is_array($stagingReceipt)
