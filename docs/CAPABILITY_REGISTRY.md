@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 - Portal page-copy component/browser proof
+
+Real intake editor and shared dashboard serializer verified at 390/1280 for preservation, partial copy, edits and explicit withdrawal. Three successive normal request updates can reference an older acknowledged source while Next safely reconciles verified local completion. Browser save wrapper, persistence and hosting are synthetic; no live portal or publication claim.
+
 ## 2026-09-17 - Existing-page input completeness (local)
 
 Home copy is included in existing-page edit detection. Removed supplied copy becomes pending review rather than a claimed content deletion. Original source origin remains distinct from a later Studio handoff. Intro and hero components share a bounded strict text executor; arbitrary layouts/application generation remain unsupported. Downstream local completion can now survive delayed agency acknowledgement without rebuilding completed pages.

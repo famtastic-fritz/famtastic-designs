@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Share the serializer with browser proof
+
+Exercise the actual form serializer rather than copying its logic into a test wrapper. Distinguish untouched copy fields from an explicit empty list. Keep an older acknowledged source digest intact; downstream verified ancestry handles completion that the agency has not acknowledged yet.
+
 ## 2026-09-17 - Preserve every requested copy change
 
 Do not skip Home when comparing existing page copy. Absence of a formerly supplied record requires review; it does not authorize erasing live text or claiming the edit is implemented. A later registration caller does not change the original source origin. Locally completed source and acknowledged receipt are distinct states.

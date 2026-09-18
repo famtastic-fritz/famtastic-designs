@@ -147,6 +147,7 @@ namespace {
       }
     }
     if (isset($input['followup_request'])) $portal->updateWebsiteRequest(903, 'normal-request', $input['followup_request'], $input['followup_raw'] ?? json_encode($input['followup_request'], JSON_THROW_ON_ERROR));
+    foreach ($input['followup_requests'] ?? [] as $followup) $portal->updateWebsiteRequest(903, 'normal-request', $followup, json_encode($followup, JSON_THROW_ON_ERROR));
     $finalState = json_decode($project->get('studio_json')->value, TRUE);
     $finalPacket = $finalState['selected_dispatch_packet'];
     $finalBytes = [];

@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-17 - Portal copy serialization proof (local)
+
+Extract the actual dashboard page-copy serializer for shared browser verification. The real intake editor passes unchanged/partial/edited/removed-copy checks at 390/1280 without page errors or overflow. Extend the real-service harness to successive request updates for three-revision callback/upload-delay tests. Cross-worktree full suite: 1,010 tests / 97 files in 54.50s; component/save-wrapper proof is not live Drupal authentication.
+
 ## 2026-09-17 - Preserve Home edits and original source origin (local)
 
 New Home copy and removal of previously supplied completed-page copy now stay explicit pending edits and clear old acceptance. Copy-record removal does not imply deleting live content. Source re-registration changes only current handoff initiator, preserving original source origin. Missing-page resolution supports one unambiguous hero or intro with the same strict two-text-field profile. Local delayed-callback/upload-failure tests exercise downstream reconciliation without agency receipt acknowledgement.

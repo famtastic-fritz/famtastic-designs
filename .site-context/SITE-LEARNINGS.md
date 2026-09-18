@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Form and ancestor evidence
+
+Observation: callback delay can leave agency source A behind local source B. Guidance: retain truthful A and reconcile verified ancestry downstream, never fabricate acknowledgement. Actual portal editor/serializer passes mobile/desktop component proof. Full suite 1,010 tests / 97 files; no live or Drive changes.
+
 ## 2026-09-17 - Timing and copy semantics
 
 Preserve Home edit intent and treat removed completed-page copy records as pending review. Keep original source provenance immutable across re-registration. A missing callback does not erase Next's verified local completed work; the downstream worker reconciles exact bindings before assembly. No live or Drive changes.

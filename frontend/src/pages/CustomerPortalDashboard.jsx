@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { pageContentFromForm } from '../components/portal/pageContentForm.js';
 import { useNavigate, useSearchParams } from 'react-router';
 import {
   acceptWebsiteStagingReview,
@@ -309,9 +310,10 @@ export default function CustomerPortalDashboard() {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-    if (formData.has('page_content_present')) {
+    const pageContent = pageContentFromForm(formData);
+    if (pageContent !== undefined) {
       const fields = ['page_name', 'title', 'heading', 'description', 'body'];
-      data.page_content = formData.getAll('page_copy_page_name').map((_, index) => Object.fromEntries(fields.map(field => [field, String(formData.getAll(`page_copy_${field}`)[index] || '')])));
+      data.page_content = pageContent;
       delete data.page_content_present;
       for (const field of fields) delete data[`page_copy_${field}`];
     }
