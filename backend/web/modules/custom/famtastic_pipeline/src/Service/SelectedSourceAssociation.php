@@ -49,7 +49,7 @@ final class SelectedSourceAssociation {
     if (($payload['issued_at'] ?? PHP_INT_MAX) > $now || ($payload['expires_at'] ?? 0) < $now || !$sameIntent) throw new \InvalidArgumentException('source_association_stale');
     $mapping = $envelope['source_completion'] ?? [];
     foreach (['project_id', 'customer_id', 'request_id'] as $key) if (($mapping[$key] ?? '') !== $payload[$key] || ($envelope[$key] ?? '') !== $payload[$key]) throw new \InvalidArgumentException('source_association_identity_changed');
-    if (($mapping['association_id'] ?? '') !== $payload['association_id'] || ($mapping['originating_system'] ?? '') !== 'studio' || ($mapping['handoff_initiator'] ?? '') !== 'studio') throw new \InvalidArgumentException('source_association_origin_invalid');
+    if (($mapping['association_id'] ?? '') !== $payload['association_id'] || ($mapping['association_scope_sha256'] ?? '') !== $payload['scope_sha256'] || ($mapping['originating_system'] ?? '') !== 'studio' || ($mapping['handoff_initiator'] ?? '') !== 'studio') throw new \InvalidArgumentException('source_association_origin_invalid');
     $record = SelectedFinalizedSource::validate($envelope['source_export'] ?? [], $mapping);
     if (($record['run_id'] ?? '') !== ($mapping['run_id'] ?? '') || ($record['scope']['request_scope_sha256'] ?? '') !== $payload['scope_sha256']
       || ($record['scope']['evidence_ref'] ?? '') !== 'association:' . $payload['association_id'] || ($record['review_qa']['source_binding']['site_id'] ?? '') !== $record['site_id']
