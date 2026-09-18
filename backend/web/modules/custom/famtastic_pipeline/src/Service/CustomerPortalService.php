@@ -1587,6 +1587,20 @@ final class CustomerPortalService {
     }
   }
 
+  /** Trusted staff/worker QA context. This is deliberately not a customer route. */
+  public function websiteRequestAutomatedProofQaContext(int $requestId, array $research): array {
+    $normalized = $this->normalizeProofResearchSnapshot($research);
+    if (!$normalized) throw new \InvalidArgumentException('Complete sourced research and three direction rationales are required.');
+    return \Drupal::service('famtastic_pipeline.automated_proof_release')->context($requestId, $normalized);
+  }
+
+  /** Trusted staff/worker caller supplies independent QA and owner-authorized copy. */
+  public function releaseWebsiteRequestProofAfterQa(int $requestId, array $research, array $evidence, string $authenticatedReviewer, array $notification): array {
+    $normalized = $this->normalizeProofResearchSnapshot($research);
+    if (!$normalized) throw new \InvalidArgumentException('Complete sourced research and three direction rationales are required.');
+    return \Drupal::service('famtastic_pipeline.automated_proof_release')->release($requestId, $normalized, $evidence, $authenticatedReviewer, $notification);
+  }
+
   /** Owner approval reveals proofs and queues one transactional customer email. */
   public function approveWebsiteRequestProof(int $requestId, int $uid): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();

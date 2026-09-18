@@ -1,5 +1,15 @@
 # Agent Instructions
 
+## September 18 — Routine green proof release
+
+The approved client-delivery policy allows independently QA-passed account-bound
+three-proof sets to reach customer review without another Fritz gate. Use
+`docs/plans/AUTOMATED_PROOF_RELEASE_2026-09-18.md`: retain automation identity,
+policy and evidence; never stamp Fritz's uid. The exact atomic operation saves
+research and queues the approved personal standard/v2 notice; sending is separate.
+Scope/spend/rights/security exceptions and client final acceptance remain gates.
+Do not enable a broad worker or replay historical jobs to deliver a current client.
+
 ## September 18 — Shared branding for every active agency notification
 
 Owner requested replacement of all old email layouts after a verified-registration
