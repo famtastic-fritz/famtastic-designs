@@ -31,6 +31,11 @@ final class CommerceLifecycleService {
    * Idempotently fulfills one completed Commerce order.
    */
   public function fulfill(OrderInterface $order): array {
+    // Received funds do not imply client acceptance or permission to place an
+    // offline-prepaid special scope into the normal SKU fulfillment workflow.
+    if ($order->getData('famtastic_offline_prepayment')) {
+      return ['fulfilled' => FALSE, 'reason' => 'offline_prepayment_requires_explicit_completion_and_launch_readiness'];
+    }
     if ($order->getState()->value !== 'completed') {
       return ['fulfilled' => FALSE, 'reason' => 'order_not_completed'];
     }

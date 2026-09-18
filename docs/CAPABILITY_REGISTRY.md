@@ -7,6 +7,14 @@ three account-bound proofs with one personalized standard/v2 outbox. Fifteen
 real SQLite/filesystem tests pass (64 assertions); entity lookup is mocked.
 Not deployed, SMTP-proven or unattended scheduling. See the automated proof release plan.
 
+## 2026-09-18 — Bounded offline-prepayment source
+
+Locally tested: request-bound native manual receipt operation, replay guards,
+hashed same-purchase completion and private conversation reuse; 18 tests/95
+assertions include existing durable messaging. Not a new payment provider,
+launch authority or deployed completion UI. Live recording and module release
+are separate in `docs/plans/REQUEST17_OFFLINE_PREPAYMENT_2026-09-18.md`.
+
 ## 2026-09-18 — Branded operational email: owner proof accepted
 
 Live follow-up: backend `3f1169ae` deployed at 18:54:55Z. Signed-in People redirect

@@ -269,8 +269,10 @@ final class CustomerPortalService {
         'package' => implode(', ', array_map(static fn($item): string => $item->getTitle(), $commerceOrder->getItems())),
         'amount' => (int) round((float) $commerceOrder->getTotalPrice()->getNumber() * 100),
         'currency' => strtolower($commerceOrder->getTotalPrice()->getCurrencyCode()),
-        'payment_status' => $commerceOrder->getState()->value === 'completed' ? 'paid' : $commerceOrder->getState()->value,
-        'paid_at' => $commerceOrder->getPlacedTime(),
+        'payment_status' => $commerceOrder->isPaid() ? 'paid' : $commerceOrder->getState()->value,
+        'paid_at' => $commerceOrder->getData('famtastic_offline_prepayment') ? NULL : $commerceOrder->getPlacedTime(),
+        'payment_recorded_at' => $commerceOrder->getData('famtastic_offline_prepayment')['recorded_at'] ?? NULL,
+        'fulfillment_hold' => $commerceOrder->getData('famtastic_offline_prepayment')['hold'] ?? NULL,
         'created' => $commerceOrder->getCreatedTime(),
         'source' => 'commerce',
       ];
