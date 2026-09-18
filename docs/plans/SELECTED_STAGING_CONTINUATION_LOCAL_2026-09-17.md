@@ -171,3 +171,6 @@ existing compatible frontend dependency directory; no install is required. The
 implementation borrowed `/Users/famtastic-fritz/Development/worktrees/fd-client-selected-build-flow/frontend/node_modules`
 via an ignored symlink for verification only. No canonical Node22 or complete
 public-asset production build was proved in this low-disk worktree.
+## Shared-shell contract follow-on
+
+The consumer recipe allowlist now includes `legacy-shared-shell-v1`. Next local proof covers hash-bound authored content/permission records, source-offset text assembly, preserved shared shell, explicit metadata, same-repository continuation and assembled-page QA. The bounded regression sweep passed 69 tests in 9 files with actual PHP harnesses; the agency contract harness passed 42 assertions. Normal content/permission/template producer writers remain implementation work. No production activation, legacy writes, credentials, mail or provider calls. Drive mirror omitted under explicit two-worktree-only scope.

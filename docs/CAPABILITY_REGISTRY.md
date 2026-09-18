@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-17 - Bounded legacy shared-shell consumer
+
+Local contract recognizes `legacy-shared-shell-v1`; Next synthetic proof covers authored text substitutions, preserved shared shell, explicit metadata, existing-repository continuation, browser QA and callback gating. Normal content/permission/template producer writers remain unfinished. No production capability promotion.
+
 ## 2026-09-17 — Selected-source intent, local source proof
 
 Unresolved intents now traverse the actual ledger/AutomationWorker/staging-client

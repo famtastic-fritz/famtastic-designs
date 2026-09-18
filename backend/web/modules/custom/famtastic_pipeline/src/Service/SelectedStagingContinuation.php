@@ -73,7 +73,7 @@ final class SelectedStagingContinuation {
       }
       $paths[$path] = TRUE;
     }
-    $recipePaths = ($evidence['recipe']['id'] ?? '') === 'selected-html-slots-v1' ? array_column($evidence['recipe']['steps'] ?? [], 'path') : [];
+    $recipePaths = in_array(($evidence['recipe']['id'] ?? ''), ['selected-html-slots-v1', 'legacy-shared-shell-v1'], TRUE) ? array_column($evidence['recipe']['steps'] ?? [], 'path') : [];
     foreach ($evidence['required_pages'] as $page) {
       if (!is_string($page) || !str_ends_with($page, '.html') || (!isset($paths[$page]) && !in_array($page, $recipePaths, TRUE))) {
         throw new \InvalidArgumentException('unsupported_scope: required page is not materialized in selected packet.');

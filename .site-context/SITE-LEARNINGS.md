@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Shared-shell continuation boundary
+
+Observation: marked legacy templates support a bounded text substitution adapter, but the producer must still supply current authored content and permission records.
+Guidance: keep local adapter proof separate from ordinary authority writers, deployed Drupal, hosted receipts and customer acceptance. No Drive mirror write within this two-worktree-only task.
+
 ## 2026-09-17 — Prove release bytes and isolate QA telemetry
 
 Observation: the owner-approved content release is live at `71620bf1`, proven by

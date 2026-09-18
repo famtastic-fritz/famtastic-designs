@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-17 - Content authority and rendering are separate
+
+Authored text and permission must bind the selected/template hashes, component IDs, field paths, output path and record revision. Renderer validity cannot substitute for these records. Preserve exact source files and shared shell; reject stale permission independently. Drive mirror remains outside this task's two-worktree authorization.
+
 ## 2026-09-17 — One execution path per selected revision
 
 Freeze either planning or executable work on each revision using existing ledger

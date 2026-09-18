@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-17 - Shared-shell recipe contract (local)
+
+- Allowed `legacy-shared-shell-v1` continuation in the existing selected staging contract. Next validates hash-bound source, authored content and transformation permission, then assembles absent pages with browser QA.
+- This is local implementation evidence, not an enabled authority writer, Drupal deployment, hosting activation or customer delivery. Drive mirror omitted under the explicit two-worktree-only scope.
+
 ## 2026-09-17 — Approved content experience released
 
 - Pushed and deployed frontend `71620bf1` through the canonical GoDaddy release
