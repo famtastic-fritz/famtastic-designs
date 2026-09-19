@@ -9,6 +9,10 @@ policy and evidence; never stamp Fritz's uid. The exact atomic operation saves
 research and queues the approved personal standard/v2 notice; sending is separate.
 Scope/spend/rights/security exceptions and client final acceptance remain gates.
 Do not enable a broad worker or replay historical jobs to deliver a current client.
+Read `docs/plans/CLIENT-DELIVERY-2026-09-18.md` for current client receipts and
+remaining runtime gates. A duplicate callback must preserve same-campaign QA,
+notification, selection and revision state; run `ProofAttachmentReplayTest` when
+changing that writer. Variant deduplication alone is not lifecycle idempotency.
 
 ## September 18 — Shared branding for every active agency notification
 

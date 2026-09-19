@@ -35,13 +35,22 @@ gate; scope/spend/rights/security/merchant authority/repeated QA failure escalat
   C received dedicated texture/surface passes. Final independent QA passed all nine
   gates; scores A8.30/B8.55/C8.55. Build DNA record42 is registered. Canonical import
   created exactly three variants in campaign56. Deployed protected access passed42
-  controller/asset checks. Personal standard/v2 outbox769 was queued, not yet sent.
+  controller/asset checks. Personal standard/v2 outbox769 was accepted once by SMTP
+  at1789777893 /00:31:33Z, signed Always FAMtastic, Shay. Provider acceptance is not
+  inbox placement/readership. The private customer repo retains the redacted receipt.
 - The post-release callback replay test discovered a real regression: duplicate
   import preserved the three artifacts but reset `customer_ready` to `owner_review`.
   Do not call that whole-lifecycle idempotency. The attachment writer now preserves
   later states for the same campaign and uses compare-and-set against concurrent
-  QA/choice. Request17 requires exact audited reconciliation before notification;
-  never waive the QA gate or forge a client choice to repair this projection.
+  QA/choice. Fix and trusted-intake preservation deployed as `5a9c6906` at00:28:57Z.
+  Exact original QA evidence was reconciled at00:29:16Z with a separate repair event;
+  callback replay then preserved the release and42 access checks passed again.
+  No QA gate was waived and no client choice was forged.
+- StockandShip rollback-only production selection rehearsal: correct account could
+  select, other account denied, exactly one staging job queued, payment unchanged,
+  acceptance separate. Fresh process00:30:40Z confirmed every test write rolled back.
+  Both clients remain genuinely unselected; there are no real selected staging URLs
+  at this checkpoint. Selection-to-queue is not completed WooCommerce execution.
 
 The targeted integrated gate/payment/messaging suite passed34 tests177 assertions.
 The fresh canonical lifecycle initially found stale template and staging fixtures;
@@ -66,6 +75,29 @@ requires cloud authorization, a real compatible worker and an unattended test.
 See `AUTOMATION_RUNTIME_2026-09-18.md` on the automation integration branch for
 host, scheduler, lease, credentials, recovery and $25/month cost boundaries.
 Static selected packaging is not WooCommerce or reunion backend implementation.
+
+### Finite background work still pending activation
+
+- Reliability integration: `codex/automation-reliability`, tested merge `6792b0db`
+  and docs `21a95402`, reconciled with main `5a9c6906`. It preserves the callback
+  replay repair and trusted staff/revision metadata. Source has101 focused PHP
+  tests/604 assertions,28 Node tests, and a complete fresh synthetic lifecycle
+  receipt at00:27:03Z. Independent main integration/production checks remain.
+- Do not merge this as an urgent email prerequisite. It includes coordinated
+  frontend/backend receipt-hash acceptance, selected source association, bounded
+  worker tables/endpoints and observe-only scheduler repair. Review, test and
+  release the matching surfaces together; keep static dispatch disabled until
+  its source/target/rights/cost bindings and callbacks are verified.
+- Private purchase follow-up: `codex/request17-commerce`, `dc3eae6d`. Same-order
+  completion form for17 and a customer-initiated, scoped199 checkout for16. Source
+  tests pass; real native checkout/CSRF/provider/browser acceptance is still needed.
+  The reunion checkout flag defaultsOFF. Do not issue a second order/payment for17
+  or test a real card charge. Never describe a mocked gateway as tested production.
+- The Mac heartbeat should advance these finite approved repairs while clients
+  choose, then perform only small selection checks. It must not regenerate proofs,
+  resend accepted emails or run idle generation loops. No cloud deployment until
+  the authorized Google account is connected and the complete cost/worker proof
+  can be run. Do not restart retired VM agents to bypass that prerequisite.
 
 ## Customer source and completion boundaries
 

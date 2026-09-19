@@ -34,6 +34,12 @@ integer `request_id` and a saved status; a mail draft is not a saved request or 
 
 Owner rule, September14,2026: every new customer build must include a site-specific `design.md` before implementation. Reference this shared contract, the approved customer direction, responsive/type rules, component boundaries and acceptance evidence. A file added during maintenance must disclose that timing rather than imply it governed the original generation.
 
+For expressive customer proofs, texture, surface geometry and lighting are separate
+scoped layers, not permission to replace working architecture or spread one customer's
+palette globally. Keep decoration noninteractive, preserve44px targets and semantic
+controls, limit motion, and test text/focus contrast against the actual lit surface.
+See the [StockandShip material-layer contract](docs/plans/CLIENT-DELIVERY-2026-09-18.md#reusable-material-layer-contract).
+
 This is the required, reusable design contract for every customer-facing
 FAMtastic surface: `famtasticdesigns.com`, Client Portal, proof rooms, Site
 Studio handoffs, transactional email, and industry recipes. It does not replace

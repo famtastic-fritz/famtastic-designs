@@ -9,6 +9,11 @@ an automation actor distinct from the generator and no human uid attribution.
 The operation queues one authorized personalized standard/v2 notice atomically;
 it does not send, select, charge or launch. Exception and exact client-acceptance
 gates remain. No old queue or generic campaign is automatically admitted.
+Callback retries must not undo this decision or a later customer choice. Recheck
+the actual request state, protected access, scoped notification and selection job
+after replay—not just the variant count. Preserve trusted staff-assisted briefs
+and revision history across customer edits. Current receipts and pending activation
+work are in `plans/CLIENT-DELIVERY-2026-09-18.md`.
 
 ## September 18 — Shared branding for every active agency notification
 
