@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>What's the catch? — FAMtastic</title>
+<style>
+@font-face{font-family:FAM;src:url('assets/metropolis-regular.woff2')}@font-face{font-family:FAM;src:url('assets/metropolis-bold.woff2');font-weight:800}@font-face{font-family:FAMScript;src:url('assets/kaushan-script.woff2')}
+</style><link rel="stylesheet" href="style.css"><script src="assets/gsap.min.js"></script></head>
+<body><div id="no-catch" data-composition-id="no-catch" data-width="1920" data-height="1080" data-duration="{{DURATION}}">
+<div class="base"></div>
+<header><div class="brand-shell"><img src="assets/famtastic-designs-logo-v1.png" alt="FAMtastic Designs"></div><div class="series">THE FAMTASTIC PHILOSOPHY<span>YOU GROW. WE GROW.</span></div></header>
+{{SCENES}}
+{{CAPTIONS}}
+<div class="credit">{{CREDIT}}</div>
+<audio id="narration" class="clip" data-start="0" data-duration="{{AUDIO_DURATION}}" data-track-index="15" src="assets/narration.m4a"></audio>
+</div><script>const SCENES={{TIMINGS}};const CUES={{CUES}};{{MOTION}}</script></body></html>

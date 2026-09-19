@@ -29,6 +29,14 @@ export const SEO_PAGES = {
     description: WEB_BASICS.description,
     keywords: WEB_BASICS.keywords,
   },
+  '/why-famtastic': {
+    title: 'You Grow. We Grow. | What’s the Catch? | FAMtastic Designs',
+    description: 'Watch the FAMtastic Designs film behind the $199 Starter Mobile Business Foundation, read the complete narration, and review the actual scope and renewal terms.',
+    ogDescription: 'The belief behind the $199 FAMtastic Designs starter offer, with the complete transcript and plain-language scope.',
+    twitterDescription: 'Watch “What’s the Catch?” and read the full $199 Starter Mobile Business Foundation scope.',
+    keywords: '$199 website, FAMtastic Designs, small business website, starter mobile business foundation, website hosting renewal',
+    image: '/media/films/whats-the-catch-20260919.jpg',
+  },
   '/website-options': {
     title: 'Compare Starter Mobile Business Foundation and Business Website Options | FAMtastic Designs',
     description: 'Compare the defined Web Basics and Business Website starting points, then use research to confirm the right scope before any website purchase.',
@@ -185,7 +193,7 @@ export function seoForPath(pathname = '/') {
     twitterDescription: page.twitterDescription || page.ogDescription || page.description,
     keywords: page.keywords || DEFAULT_KEYWORDS,
     canonical,
-    image: DEFAULT_IMAGE,
+    image: page.image ? `${SITE_URL}${page.image}` : DEFAULT_IMAGE,
     path,
   };
 }
