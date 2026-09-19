@@ -51,6 +51,8 @@ marketing/runtime/
 # Git cannot re-include a file whose parent directory is excluded — so this only
 # works because frontend/public/ is itself tracked.
 !frontend/public/video/*.mp4
+# This finished card must ship its supplied commercial in every clean release.
+!frontend/public/connect/commercial.mp4
 
 # nested app checkouts, and dependency output in the artifact/Drive evidence
 # lanes described by the Build DNA record.

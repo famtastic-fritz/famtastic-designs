@@ -15,6 +15,13 @@
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  # Standalone digital card: normalize its base before relative assets resolve.
+  RewriteRule ^connect$ /connect/ [R=301,L]
+  # Missing card assets must never receive a React/Drupal HTML fallback.
+  RewriteCond %{REQUEST_URI} ^/connect/ [NC]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ - [R=404,L]
   RewriteCond %{REQUEST_URI} ^/assets/ [NC]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ - [R=404,L]

@@ -1,0 +1,2 @@
+# Preserve the supplied vCard's required CRLF line endings byte-for-byte.
+frontend/public/connect/fritz-famtastic.vcf -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
