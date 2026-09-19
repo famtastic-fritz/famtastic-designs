@@ -45,7 +45,7 @@ final class PublicPreviewController extends ControllerBase {
     if (!empty($variant['assets'])) {
       $html = $this->injectAssetBase($html, $this->previews->publicAssetBaseUrl($preview_delivery, $signature, $direction));
     }
-    $response = new Response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+    $response = new Response(\Drupal\famtastic_pipeline\Service\CreatorCredit::present($html), 200, ['Content-Type' => 'text/html; charset=UTF-8']);
     $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'self'; form-action 'none'");
     return $this->secure($response);
   }

@@ -152,7 +152,12 @@ resolved_main="$(git --git-dir="$mirror_dir" rev-parse refs/heads/main)"
 if [[ ! -d "$source_dir/.git" && ! -f "$source_dir/.git" ]]; then
   rm -rf "$release_dir"
   mkdir -p "$release_dir"
-  git --git-dir="$mirror_dir" worktree add --detach "$source_dir" "$commit_sha"
+  if [[ "$creator_credit_only" == 1 ]]; then
+    git --git-dir="$mirror_dir" worktree add --detach --no-checkout "$source_dir" "$commit_sha"
+    git -C "$source_dir" sparse-checkout set frontend scripts backend/web/modules/custom/famtastic_pipeline
+  else
+    git --git-dir="$mirror_dir" worktree add --detach "$source_dir" "$commit_sha"
+  fi
 fi
 
 cd "$source_dir"

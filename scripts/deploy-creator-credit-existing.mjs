@@ -37,7 +37,8 @@ function unlisted(dir) {
   }
 }
 unlisted(join(production, 'proofs/unlisted'));
-unlisted(join(production, 'proofs/friends-20260918'));
+// PHP-backed symlink releases require their own immutable versioning step.
+excluded.push({ path: 'proofs/friends-20260918', reason: 'three-php-backed-symlink-releases-separate-versioned-retrofit' });
 // Back up every exact HTML target before writes. Old artifact evidence stays untouched.
 mkdirSync(backup, { recursive: true });
 for (const row of candidates) {

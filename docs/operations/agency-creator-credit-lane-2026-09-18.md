@@ -86,4 +86,31 @@ customer launches. Server dynamic authenticated proof body inventory is not clai
 Source changes for historical builders were syntax-checked, not fully rerun with
 old copyrighted assets/provider jobs. Drive mirror status will be recorded at close.
 
-Release result and exact SHAs: pending below; source readiness is not deployment.
+## Runtime inventory correction and response decoration
+
+The earlier zero-file friends count was a file-only find result, NOT proof of no
+deliverables. The directory has three PHP-backed symlinks to private versioned
+releases: coastbound-electric (now 8ae887fd3aef9ba5b960eb35332f8980da5193cb,
+changed concurrently from 126c10517f91b160235b70c51e189987ccaef279 and already has
+canonical logo/UTM credit), south-shore-communication-systems
+(9105c9727e8773de195f31e9eb1c0c2452f9f64f), your-concierge-guru
+(0fcdf04d583ac82da77d83427616911440960b11). These have public index.php/admin.php,
+backend/bootstrap.php and a var symlink to private persistent state. Never flatten
+these into static HTML or copy/reset their state. No customer repo changes in this
+agency lane. Other lane coordination is necessary before swapping those releases.
+
+Drupal runtime: 114 HTML files in 31 campaign directories under public_html/web/proofs.
+WebsiteRequestProofController serves account/private-share directions;
+PublicPreviewController serves signed lead directions. Both already rewrite asset
+URLs after authorization. CreatorCredit::present now decorates the response after
+those checks, without saving, changing approval hashes, customer records or status.
+There is no byte-signature blocker; the prior statement requiring fresh customer
+review for footer presentation is superseded. Same-origin PNG preserves the current
+CSP; no access/security header is weakened. A pure PHP regression proves original
+bytes/hash and old footer remain unchanged, and rendered credit is final/idempotent.
+
+The scoped backend release is now five files (three services, two controllers).
+Initial source commit 9c782bf8; integration e51ed18f9d8ff3dc9c16f35683466c444fa9f926
+was pushed to main. Its remote build passed; rollout stopped on the new symlink
+discovery before any live file write. Follow-up isolates those linked PHP releases
+and adds serving-time enforcement. Exact final release receipts follow below.

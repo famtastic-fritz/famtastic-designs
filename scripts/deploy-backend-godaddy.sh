@@ -102,17 +102,25 @@ test "$(git -C "$release/source" rev-parse HEAD)" = "$commit"
 test "$(sha256sum "$target/BrandedEmail.php" | cut -d' ' -f1)" = 89b8b39a5dfd25e75c805a696272a5e19bd7883f300d8019c94d6086b1f1e7c1
 test "$(sha256sum "$target/ProofCampaignService.php" | cut -d' ' -f1)" = 56b66b5973fd1627799ed33f2e1a82e8a22c25cb2a837b5569869e6f4fc5db92
 test ! -e "$target/CreatorCredit.php"
+test "$(sha256sum "$target/../Controller/WebsiteRequestProofController.php" | cut -d' ' -f1)" = 243c4d59934df154af6aafa58d99b7b7dc4dea449b85bd63e71c310bd6852828
+test "$(sha256sum "$target/../Controller/PublicPreviewController.php" | cut -d' ' -f1)" = 816b881688caf347c77adf15efcb9e700a2fb024ba0cabb7ea283d190278aa4b
 for name in CreatorCredit.php BrandedEmail.php ProofCampaignService.php; do php -l "$source/$name"; done
-if [[ "$apply" != true ]]; then echo 'Scoped backend preflight passed; three presentation source files only'; exit 0; fi
+for name in WebsiteRequestProofController.php PublicPreviewController.php; do php -l "$source/../Controller/$name"; done
+if [[ "$apply" != true ]]; then echo 'Scoped backend preflight passed; five presentation source files only'; exit 0; fi
 backup="$release/creator-credit-backend-backup"
 test ! -e "$backup"
 mkdir "$backup"
 cp -p "$target/BrandedEmail.php" "$target/ProofCampaignService.php" "$backup/"
+cp -p "$target/../Controller/WebsiteRequestProofController.php" "$target/../Controller/PublicPreviewController.php" "$backup/"
 for name in CreatorCredit.php BrandedEmail.php ProofCampaignService.php; do
   install -m 0644 "$source/$name" "$target/$name"
   cmp "$source/$name" "$target/$name"
 done
-{ printf 'commit=%s\nbackup=%s\nscope=three-presentation-files-no-state-mutation\n' "$commit" "$backup"; sha256sum "$target/CreatorCredit.php" "$target/BrandedEmail.php" "$target/ProofCampaignService.php"; } > "$production/.creator-credit-backend-release"
+for name in WebsiteRequestProofController.php PublicPreviewController.php; do
+  install -m 0644 "$source/../Controller/$name" "$target/../Controller/$name"
+  cmp "$source/../Controller/$name" "$target/../Controller/$name"
+done
+{ printf 'commit=%s\nbackup=%s\nscope=five-presentation-files-no-state-mutation\n' "$commit" "$backup"; sha256sum "$target/CreatorCredit.php" "$target/BrandedEmail.php" "$target/ProofCampaignService.php" "$target/../Controller/WebsiteRequestProofController.php" "$target/../Controller/PublicPreviewController.php"; } > "$production/.creator-credit-backend-release"
 cat "$production/.creator-credit-backend-release"
 CREDIT_BACKEND
   exit 0
