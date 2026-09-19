@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1080,height=1920,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Walking continuation — FAMtastic Designs</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="walking-continuation" data-composition-id="walking-continuation" data-width="1080" data-height="1920" data-duration="{{DURATION}}">
+  <div class="world" aria-hidden="true">
+    <div class="sky"></div>
+    <div class="city" id="city">{{CITY}}</div>
+    <div class="ground-grid"></div>
+    <div class="horizon"></div>
+  </div>
+  <svg class="home-geometry" viewBox="0 0 1080 1920" aria-hidden="true">
+    <g class="home-shadow"><path d="M120 1190 540 820 960 1190v460H120Z"/><path d="m540 820 160-95 390 346v580l-130 62v-460L540 820Z"/></g>
+    <g class="home-line"><path id="roof-front" d="m95 1200 445-395 445 395"/><path id="walls-front" d="M150 1155v520h780v-520"/><path id="roof-side" d="m540 805 160-96 415 372-130 119"/><path id="walls-side" d="M930 1155v520l185-90v-584"/></g>
+    <path class="door" d="M438 1675v-292q102-56 204 0v292"/>
+  </svg>
+  <div class="walkway" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+  <div class="business-fragments" id="fragments" aria-hidden="true">
+    <div class="fragment fragment-vision"><small>THE VISION</small><strong>What you’re building.</strong></div>
+    <div class="fragment fragment-plan"><small>THE PLAN</small><strong>One clear next step.</strong></div>
+    <div class="fragment fragment-tools"><small>THE TOOLS</small><strong>Work. Services. Inquiries.</strong></div>
+  </div>
+
+  <section class="website-panel" id="website-panel" aria-label="Illustration of a simple business website">
+    <div class="browser-bar"><i></i><i></i><i></i><span>yourbusiness.com</span></div>
+    <div class="website-inner">
+      <div class="website-mark">YOUR BUSINESS</div>
+      <div class="website-hero"><small>A PLACE FOR YOUR WORK</small><strong>One clear<br>business home.</strong><div class="work-swatch"><b></b><b></b><b></b></div></div>
+      <div class="website-row"><em>01</em><span>Show your work<small>Make what you do easy to see.</small></span></div>
+      <div class="website-row"><em>02</em><span>Explain your services<small>Help people understand the fit.</small></span></div>
+      <div class="website-contact"><strong>Start a conversation.</strong><i>Name</i><i>What can we help with?</i><b>Send an inquiry ↗</b></div>
+      <div class="illustration-note">WEBSITE ILLUSTRATION</div>
+    </div>
+  </section>
+
+  <section class="plan-panel" id="plan-panel" aria-hidden="true">
+    <div class="panel-kicker">A BUSINESS, BUILT WITH INTENTION</div>
+    <div class="plan-line"><b>01</b><span>Vision<small>What you want to build</small></span><i>●</i></div>
+    <div class="plan-line"><b>02</b><span>Plan<small>A grounded next step</small></span><i>●</i></div>
+    <div class="plan-line"><b>03</b><span>Tools<small>One place to show your work</small></span><i>●</i></div>
+    <div class="plan-rule"></div>
+    <strong class="plan-outcome">A stronger business.<br>A clearer home.</strong>
+  </section>
+
+  <header class="brand-header">
+    <img src="assets/famtastic-designs-logo-v1.png" width="2172" height="724" alt="FAMtastic Designs">
+    <div class="header-rule" aria-hidden="true"><i></i><i></i><i></i></div>
+  </header>
+
+  <div class="title title-opening" id="title-opening"><small>YOU’VE GOT THE HUSTLE.</small><strong>Still no<br><span>website?</span></strong></div>
+  <div class="title title-vision" id="title-vision"><small>YOUR VISION. YOUR HUSTLE. YOUR GRIND.</small><strong>The business<br>you’re trying to build.</strong></div>
+  <div class="title title-home" id="title-home"><small>MAKE THE NEXT STEP CLEAR.</small><strong>Give your business<br><span>a home.</span></strong></div>
+  <div class="title title-grow" id="title-grow"><small>CONFIDENCE IN THE WORK.</small><strong>You grow.<br><span>We grow.</span></strong></div>
+
+  <div class="voiceover-marker" id="voiceover-marker"><span class="vo-dot"></span>VOICEOVER · SEPARATE NARRATOR</div>
+
+  <video id="shot-opening" class="clip performance-shot direct-shot opening-shot" src="assets/presenter.webm" data-start="0" data-duration="5.92" data-media-start="0" data-track-index="0" muted playsinline></video>
+  <video id="shot-bridge-walk" class="clip performance-shot wide-shot" src="assets/presenter.webm" data-start="5.92" data-duration="1.36" data-media-start="5.92" data-track-index="0" muted playsinline></video>
+  <video id="shot-bridge-a" class="clip performance-shot wide-shot body-cutaway" src="assets/presenter.webm" data-start="7.28" data-duration="8.856" data-media-start="4.0" data-track-index="0" muted playsinline></video>
+  <video id="shot-ui-gesture" class="clip performance-shot direct-shot ui-shot" src="assets/presenter.webm" data-start="16.136" data-duration="5.12" data-media-start="7.28" data-track-index="0" muted playsinline></video>
+  <video id="shot-bridge-b" class="clip performance-shot wide-shot body-cutaway" src="assets/presenter.webm" data-start="21.256" data-duration="4.984" data-media-start="4.0" data-track-index="0" muted playsinline></video>
+  <video id="shot-bridge-b-reprise" class="clip performance-shot wide-shot reprise-shot" src="assets/presenter.webm" data-start="26.24" data-duration="5.104" data-media-start="8.0" data-track-index="0" muted playsinline></video>
+  <video id="shot-closing" class="clip performance-shot direct-shot closing-shot" src="assets/presenter.webm" data-start="31.344" data-duration="3.46" data-media-start="26.24" data-track-index="0" muted playsinline></video>
+
+  <div class="caption-area" aria-label="Spoken captions">{{CAPTIONS}}</div>
+  <div class="creator-footer">{{CREDIT}}</div>
+  <audio id="soundtrack-master" class="clip" src="assets/soundtrack.m4a" data-start="0" data-duration="{{DURATION}}" data-track-index="10" data-volume="1"></audio>
+</main>
+<script src="assets/gsap.min.js"></script>
+<script>{{MOTION}}</script>
+</body>
+</html>

@@ -1,10 +1,14 @@
 # Product changelog
 
+## 2026-09-19 — Presenter continuation and free local voice-conversion proof
+
+Added the scripted portrait continuation with preserved source dialogue, measured captions, local voiceover and retained failed/repaired renders. Added an offline OpenVoice V2 runner with exact runtime/model pins, evidence-backed references, immutable snapshots and eight focused regression tests (105 Video Studio tests total). Added a three-part synthetic voice comparison, official repository/license research, real Mac/storage assessment, a third fixed publication edition and two one-attempt owner notice scripts. Personal voice matching, new acting and lip-sync remain unproved.
+
 ## 2026-09-19 — Faster film revision and brand phonetics
 
 - Produced the owner-requested 72.8-second version two with the complete script, new faster local narration, explicit fam-TAS-tik phonemes, retimed scenes/captions and preserved v1 evidence.
 - Added a local narration runner with frozen inputs and a fail-closed pronunciation contract; 97 Video Studio regressions pass.
-- Prepared fixed-edition no-clobber media publication and a separate exact-key owner milestone notice. See `docs/marketing/local-video-studio/VIDEO-REVISION-V2-2026-09-19.md` for measured proof and current delivery state.
+- Published the new fixed MP4/JPG/VTT review set and sent one standard/v2 owner notice (outbox 802); retained the existing v1 page and assets. See `docs/marketing/local-video-studio/VIDEO-REVISION-V2-2026-09-19.md` for measured proof and current delivery state.
 
 ## 2026-09-19 — Original “What’s the catch?” film
 

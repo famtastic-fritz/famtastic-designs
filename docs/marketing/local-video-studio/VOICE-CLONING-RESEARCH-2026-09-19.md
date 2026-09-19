@@ -1,0 +1,48 @@
+# Local voice conversion research and proof — 2026-09-19
+
+## Decision
+
+For a local, consented voice-color conversion on the M5 Mac, the smallest option proved here is the official OpenVoice V2 converter applied to speech already synthesized with the existing local Kokoro setup. OpenVoice is MIT-licensed in both its [official code repository](https://github.com/myshell-ai/OpenVoice) and [V2 model card](https://huggingface.co/myshell-ai/OpenVoiceV2). The conversion runtime and weights occupied about 922 MB together, fitting the chosen 1.2 GB incremental setup target.
+
+This proves that the pinned converter can process local audio and a separate local reference. It does **not** prove that it reproduces a person's identity, sounds like Fritz, pronounces “FAMtastic” acceptably, or is ready for an advertisement. The source and reference in this proof are both synthetic Kokoro stock voices. No owner voice recording was used. Human listening review and the owner's answer about voice authority/consent remain pending. Keep the output as a technical draft; do not promote it into the campaign.
+
+## Candidate comparison
+
+| Candidate | Official terms and local footprint | Fit for this Mac and task |
+| --- | --- | --- |
+| [OpenVoice V2](https://github.com/myshell-ai/OpenVoice) | MIT code; [MIT model card](https://huggingface.co/myshell-ai/OpenVoiceV2). The pinned converter checkpoint and config are about 131 MB; pinned Python runtime inventory is about 791 MB. The installed runtime uses CPU PyTorch. | **Recommended for a bounded local proof.** Converts an existing TTS source against a local speaker reference and was exercised on this M5 with two CPU threads. Requires an authorized reference and a human voice review before any campaign use. |
+| [Pocket TTS](https://github.com/kyutai-labs/pocket-tts) | Official model card is [CC-BY-4.0](https://huggingface.co/kyutai/pocket-tts) and currently requires agreeing to share contact information to access the model. The official repository also publishes a smaller [no-voice-cloning model](https://huggingface.co/kyutai/pocket-tts-without-voice-cloning); its corresponding code path does not accept an arbitrary speaker reference. | Attractive CPU-oriented design, but not selected. Do not bypass the model-card terms or substitute a mirror. No model was downloaded or tested. Revisit only if the owner accepts the access terms and the exact intended license/use is reviewed. |
+| [Chatterbox Nano](https://huggingface.co/ResembleAI/chatterbox-nano) | MIT model card, but its official model files total about 3 GB. The card describes CPU use on an eight-core host. | Larger disk/runtime footprint than OpenVoice and the selected small local setup. Not downloaded or tested. |
+| [Qwen3-TTS 0.6B Base](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base) | Apache-2.0; official full model tree is about 2.52 GB. An [MLX-community 4-bit conversion](https://huggingface.co/mlx-community/Qwen3-TTS-12Hz-0.6B-Base-4bit) is about 1.71 GB. | A plausible later native-Apple-Silicon comparison, but it exceeds the proof's chosen model/runtime target and the quantized copy is community-converted. Not downloaded or tested. |
+
+Existing speech synthesis remains [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M), Apache-2.0. OpenVoice here is only a local conversion step, not a replacement TTS system.
+
+## Reproduction and frozen inputs
+
+The reusable runner is [`scripts/famtastic-local-voice-convert.py`](../../../scripts/famtastic-local-voice-convert.py), with its exact package inventory in [`openvoice-v2-runtime.lock`](../../../marketing/engine/video_studio/openvoice-v2-runtime.lock) and focused tests in [`test_local_voice_convert.py`](../../../marketing/engine/video_studio/tests/test_local_voice_convert.py). The runner fails closed unless the clean OpenVoice source is the pinned commit, package inventory and model hashes match, all inputs are local regular files, provenance cites hashed evidence, and the chosen output/receipt paths are new. It snapshots its own executing bytes, runtime lock, audio, provenance and cited evidence, model/config, and every tracked OpenVoice source file into a receipt-specific Build DNA directory **before inference**. Inference receives those snapshots and rechecks their hashes. It limits PyTorch to at most two CPU threads, has offline environment flags, performs no installation/download/provider call/upload, and does not publish. The owner-voice provenance mode requires a local consent-evidence file; a boolean consent flag is rejected.
+
+The corrected complete-utterance run is `conversion-attempt-05.json`. Inputs and output:
+
+| Role | Local path | SHA-256 |
+| --- | --- | --- |
+| Full synthetic source narration (`am_michael`, Kokoro-82M) | `artifacts/video-studio/no-catch-v2-20260919/voice-sample/narration.wav` | `0d0dd52e2720c931142c9e767726fc2d257a36696452ed12c2b6a1c9cd952310` |
+| Synthetic target reference (`af_bella`, Kokoro-82M), 4.864 s | `artifacts/video-studio/voice-clone-research-20260919/openvoice-v2-local-proof/synthetic-reference-af-bella.wav` | `e1853ea7701f85592b27cf89319fea8b25054f24cf20214377fa55b4064fe17d` |
+| Converted complete utterance | `artifacts/video-studio/voice-clone-research-20260919/openvoice-v2-local-proof/conversion/converted-synthetic-af-bella-full-v4.wav` | `197b842ad4b5513fc82f249560c1afc948f269b5f8879a71d26b3cdf98fab07b` |
+
+The source is 13.437333 s. The output is mono PCM-16, 22,050 Hz, 13.432744 s (−4.59 ms). The run used Python 3.11.15 on Darwin arm64, 2 CPU threads, 7.674 s wall time, and recorded a process peak RSS of 1,630,732,288 bytes. The runtime lock SHA-256 is `2572e504a299c409bfb580ad32b377889ba04e184701f7bcf6c663b8fa7941fc`. The executing runner snapshot SHA-256 is `754705a409c1822377eab77bd870707cb25fa9811ba29ad0a72a3f51d0c21b2f`. OpenVoice code commit is `74a1d147b17a8c3092dd5430504bd83ef6c7eb23`; the 37-file frozen source tree hash is `477585d11e9e4a5c03c1c7ce8bbff3e5b7aa11cacce4c99294ec2761182ca558`. The model-card revision is `f36e7edfe1684461a8343844af60babc2efbb727`; local checkpoint and config hashes are pinned in the runner.
+
+The per-run immutable input set and manifest are under `artifacts/video-studio/voice-clone-research-20260919/openvoice-v2-local-proof/conversion/run-v5/inputs-conversion-attempt-05/`; the manifest records 46 files including the runner, lock, and OpenVoice source snapshot. The canonical ledger is `.../conversion/run-v5/build-dna.json`. It passed `node website-delivery-swarm/scripts/validate-build-dna.mjs ...` with two stage records and 51 artifact checksums. The full-run receipt and retained log are `.../conversion/conversion-attempt-05.json` and `.../conversion/conversion-attempt-05.log`.
+
+The separate 5-second `conversion-attempt-04` is only a short mechanics proof and is not a substitute for the full-utterance comparison. Earlier attempts are retained: attempts 01–02 failed before successful conversion; attempt 03 succeeded on earlier mutable runner bytes, so the new receipt-specific frozen-input run supersedes it for reproducible evidence. Nothing has been deleted or rewritten.
+
+## Listening and content boundary
+
+Local `whisper-cli` small.en ASR was run against both the full source and the corrected conversion. Its cached model SHA-256 was `c6138d6d58ecc8322097e0f987c32f1be8bb0a18532a3f88f734d1bbf9c41e5d`. On the new output, ASR returned “That’s Famtastic, FamtasticDesigns.com.” Earlier attempt 03 ASR instead merged this as “FantasticFantasticDesigns.com.” That difference is a signal for human listening, not a pronunciation-quality result. Full source and converted transcript files are retained at `conversion/source-asr.txt` and `conversion/converted-full-v4-asr.txt`, with the local JSON/log alongside them. This report makes no claim that the voice is convincing, matches a person, or is acceptable to the owner.
+
+The upstream converter exposes a watermark toggle through a constructor bug at the pinned commit: its tone-color constructor forwards `enable_watermark` into a base constructor that rejects it. The runner initializes the pinned base class directly and sets `watermark_model=None`. The separate WavMark dependency/checkpoint is not installed; no download or load is attempted. The output is explicitly unwatermarked, and the runner receipt says so. This is a disclosed technical limitation, not an assertion that the converter is watermarked or that a watermark was removed.
+
+## Test result
+
+`PYTHONPATH=marketing/engine/video_studio python3 -m unittest marketing.engine.video_studio.tests.test_local_voice_convert -v` passed all 8 focused tests after the snapshot fix. The successful-path regression asserts that the converter receives frozen source/reference/model inputs and that the receipt-specific manifest lists runner, runtime, provenance, evidence, and pinned source snapshots. The canonical Build DNA validator passed for the final full-utterance run. Combined test, Build DNA, syntax, and whitespace output is retained at `artifacts/video-studio/voice-clone-research-20260919/openvoice-v2-local-proof/conversion/final-checks-runner-freeze.log` (SHA-256 `81dad7060cf13236a8316f2fd71d6fbf61c0dc5decf8e43b8924f436a729f7ca`). Voice identity, naturalness, pronunciation, and permission for any real person's voice remain human decisions.
+
+Earlier attempt receipts incorrectly described WavMark weights as having no declared license. The current [official WavMark model record](https://huggingface.co/M4869/WavMark) declares MIT. The final runner corrects the rationale: that separate dependency/checkpoint is absent from this pinned runtime, rather than license-blocked. Earlier receipts remain unchanged as superseded evidence.
