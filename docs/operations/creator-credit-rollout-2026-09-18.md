@@ -153,45 +153,48 @@ work explicitly; it is not a claim that the entire fleet retrofit is finished.
 
 | Repository | Source checkpoint / branch | Release and remaining boundary |
 | --- | --- | --- |
-| site-alex-touch | `45c50951688a` / codex/creator-credit-20260918 | SOURCE-ONLY feature branch pushed. Default build/current-output guard passes; historical artifacts and approvals unchanged. Not deployed. Fresh CUA and any separately authorized existing artifact replacement/import; Earlier diagnostic mobile overlap findings on some owner/gallery routes require final CUA and any fixes |
+| site-alex-touch | `c5759b94b5e9` / main | MERGED source; versioned v2 credit geometry, guards and representative CUA pass. Historical artifacts preserved. No deployment or first launch; fresh-clone rebuild not rerun due capacity. |
 | site-altitude | `42657bf7b935` / dev | SOURCE COMPLETE for complete authored surfaces; verified default dev updated; NO DEPLOYMENT No verified existing live URL or provider path; no first launch |
 | site-auntie-gale-garage-sales | `ccc9d905b0a0` / dev | SOURCE COMPLETE for complete authored surfaces; verified default dev updated; NO DEPLOYMENT Existing Netlify staging confirmed; live old footer remains; provider publish-directory/branch binding unknown; parent read-only assessment pending |
 | site-brother-k | `90ea91795477` / — | EXCLUDED: concurrent scaffold/proof authoring, uncommitted foreign work, no first launch  |
 | site-coastbound-electric | `f3af01be24d9` / main | DEPLOYED existing surface; no first launch Authenticated owner-desk live browser QA not exercised; source template and isolated auth/integration tests covered |
 | site-drop-the-beat | `a6fa00e7c1d7` / dev | SOURCE COMPLETE for complete authored surfaces; verified default dev updated; NO DEPLOYMENT No verified existing live URL or provider path; no first launch |
-| site-famtastic-hosting | `888baacfd003` / codex/creator-credit-20260918 | SOURCE-ONLY feature branch pushed; no production deploy Post-cache-hardening Astro build and CUA; Narrow SSR release plan; broad unrelated deployment not authorized |
+| site-famtastic-hosting | `4d6a8b32ecdb` / main | MERGED source; focused tests/build and responsive credit QA passed. Existing deployment binding unresolved; NOT DEPLOYED. |
 | site-famtastic-inc | `3bfd4fe0d768` / main | DEPLOYED existing surface; no first launch  |
 | site-famtastic-thoughts | `1452eefa35a6` / — | EXCLUDED: reserved empty repository  |
 | site-fresh-cuts-in-atlanta | `fd51888bf38e` / dev | SOURCE COMPLETE for complete authored surfaces; verified default dev updated; NO DEPLOYMENT No verified existing live URL or provider path; no first launch |
 | site-groove-theory | `c8ecec2ad92e` / dev | SOURCE COMPLETE for complete authored surfaces; verified default dev updated; NO DEPLOYMENT No verified existing live URL or provider path; no first launch |
 | site-guys-classy-shoes | `3341ff4207ce` / — | EXCLUDED: recovered archive, no confirmed publishable surface  |
-| site-jamari-graduation | `5a61403565ea` / codex/creator-credit-20260918 | SOURCE-ONLY feature branch pushed. Default build/current-output guard passes; historical artifacts and approvals unchanged. Not deployed. Fresh CUA and any separately authorized existing artifact replacement/import; Earlier diagnostic mobile overlap findings on some owner/gallery routes require final CUA and any fixes |
+| site-jamari-graduation | `aadc40045c20` / main | MERGED source; versioned v2 credit geometry, guards and representative CUA pass. Historical artifacts preserved. No deployment or first launch; fresh-clone rebuild not rerun due capacity. |
 | site-jj-ba-transport2 | `c3cf22072525` / dev | SOURCE COMPLETE for complete authored surfaces; verified default dev updated; NO DEPLOYMENT No verified existing live URL or provider path; no first launch |
 | site-kakes-by-kesline | `54a3acf3746d` / codex/kakes-owner-desk | DEPLOYED existing surface; no first launch Standalone historical404 and authenticated static screenshot guide not retrofitted; Authenticated desk browser QA not exercised; local PHP auth/data tests passed |
 | site-marios-pizza | `85229aa5f46f` / dev | SOURCE COMPLETE for complete authored surfaces; verified default dev updated; NO DEPLOYMENT No verified existing live URL or provider path; no first launch |
-| site-mbsh-class-of-2000 | `128534620baa` / codex/creator-credit-20260918 | SOURCE-ONLY feature branch pushed. Default build/current-output guard passes; historical artifacts and approvals unchanged. Not deployed. Fresh CUA and any separately authorized existing artifact replacement/import |
+| site-mbsh-class-of-2000 | `c95494586df5` / main | MERGED source; versioned v2 credit geometry, guards and representative CUA pass. Historical artifacts preserved. No deployment or first launch; fresh-clone rebuild not rerun due capacity. |
 | site-mbsh-reunion | `2880e9aa9e2d` / main | LIVE; runtime76b578c; see release table.  |
-| site-omar-top-deals | `7cf4ea6f8376` / codex/creator-credit-20260918 | SOURCE-ONLY feature branch pushed. Default build/current-output guard passes; historical artifacts and approvals unchanged. Not deployed. Fresh CUA and any separately authorized existing artifact replacement/import; Earlier diagnostic mobile overlap findings on some owner/gallery routes require final CUA and any fixes |
+| site-omar-top-deals | `979e6273f4f1` / main | MERGED source; versioned v2 credit geometry, guards and representative CUA pass. Historical artifacts preserved. No deployment or first launch; fresh-clone rebuild not rerun due capacity. |
 | site-pros-in-training | `0bd0e6b5e18e` / main | DEPLOYED existing surface; no first launch  |
 | site-readings-by-maria-research | `62cf3e2c7427` / — | EXCLUDED: recovered archive, no confirmed publishable surface  |
 | site-south-shore-communication-systems | `1840321bc121` / main | DEPLOYED existing surface; no first launch Authenticated owner-desk live browser QA not exercised; source template and isolated auth/integration tests covered |
-| site-stockandship98 | `548ff24b764f` / codex/creator-credit-20260918 | SOURCE-ONLY feature branch pushed. Default build/current-output guard passes; historical artifacts and approvals unchanged. Not deployed. Fresh CUA and any separately authorized existing artifact replacement/import |
+| site-stockandship98 | `a685eef1f490` / main | MERGED source; versioned v2 credit geometry, guards and representative CUA pass. Historical artifacts preserved. No deployment or first launch; fresh-clone rebuild not rerun due capacity. |
 | site-street-family-reunion | `986466ac255c` / — | EXCLUDED: recovered archive, no confirmed publishable surface  |
 | site-studio-next | `b43e440fdfb8` / main | MERGED and idle runtime reloaded; no customer builds dispatched.  |
-| site-the-best-lawn-care | `8f0c2669d268` / codex/creator-credit-20260918 | SOURCE-ONLY feature branch pushed; no deployment or new launch Historical Netlify URL not reverified; current publication eligibility unresolved |
+| site-the-best-lawn-care | `abaab49d0998` / main | MERGED source; focused tests/build and responsive credit QA passed. Existing deployment binding unresolved; NOT DEPLOYED. |
 | site-the-daily-grind | `25e901b35864` / dev | Footer partial and fail-closed publication guard merged. Twelve tests pass; normal build/adoption intentionally rejects four pre-existing truncated pages before output writes. Original HTML unchanged; NO DEPLOYMENT. |
 | site-the-daily-grind-in-atlanta | `785c765c6871` / dev | SOURCE COMPLETE for complete authored surfaces; verified default dev updated; NO DEPLOYMENT No verified existing live URL or provider path; no first launch |
 | site-the-reckoning | `d293cc6ca1ae` / main | DEPLOYED existing surface; no first launch  |
-| site-thirst-trap-772 | `4d7afd339b3e` / codex/creator-credit-20260918 | SOURCE-ONLY feature branch pushed. Default build/current-output guard passes; historical artifacts and approvals unchanged. Not deployed. Fresh CUA and any separately authorized existing artifact replacement/import |
+| site-thirst-trap-772 | `59dcecee6a78` / main | MERGED source; versioned v2 credit geometry, guards and representative CUA pass. Historical artifacts preserved. No deployment or first launch; fresh-clone rebuild not rerun due capacity. |
 | site-tighten-up-your-locs | `1ddd7f49d969` / main | DEPLOYED existing surface; no first launch Private/auth surfaces not covered by public three-page retrofit |
 | site-your-concierge-guru | `fe2a763689f6` / main | DEPLOYED existing surface; no first launch Authenticated owner-desk live browser QA not exercised; source template and isolated auth/integration tests covered |
 
 ### Remaining work
 
-- Six versioned prototype repositories still need final mobile fixes/QA and main
-  merges. Existing feature branches preserve source checkpoints and original
-  artifacts. Alex has a confirmed mobile-overlap finding.
-- Hosting and Lawn source updates require final release eligibility/QA checks.
+- Six versioned prototype repositories completed mobile geometry fixes and normal
+  remote-main fast-forwards. All20 generated pages passed publication/preservation
+  guards, six original suites/validators passed, and seven mobile CUA cases plus
+  Alex desktop passed. Representative checks are not exhaustive authenticated QA.
+  Old variants remain unchanged. No source-only variant was newly deployed.
+- Hosting and Lawn source updates are merged and credit QA passed; deployment
+  binding/eligibility remains unresolved, so neither was published.
 - Auntie Gale has an existing Netlify staging site and an available local provider
   credential. Read-only comparison found all seven published HTML files differ
   from the pre-credit source (layout, navigation, phone text and stylesheets).
@@ -210,15 +213,15 @@ work explicitly; it is not a claim that the entire fleet retrofit is finished.
 
 ### Final follow-up receipts
 
-- Hosting: feature888baacfd003 remains unmerged; main2a8ed5c31410. Tests/build
-  passed and mobile homepage/login credit is clear. Full breakpoint QA unfinished.
-  Live certificate is expired; documented runtime files are absent and deployment
-  binding unresolved. Task-created dependency symlink is untracked.
-- Lawn: feature8f0c2669d268 remains unmerged; maina51c7a1d6d5d. Seven pages at
-  three widths passed CUA including open-popup clearance. A two-line clearance
-  CSS fix remains uncommitted in the isolated worktree; tests passed after it,
-  full build passed before it. Existing Netlify site responds, provider binding
-  remains unresolved. Only validated disposable task build output was removed.
+- Hosting: final main4d6a8b32ecdb, clean worktree. Tests/build passed;30 CUA
+  route/size checks confirmed loaded credit and settled footer clearance. Mobile
+  Domains/Servers page overflow remains a separate documented issue. Live
+  certificate is expired; documented runtime files absent; deployment unresolved.
+- Lawn: final mainabaab49d0998, clean worktree. Popup-clearance fix committed;
+  seven pages at three widths plus open-popup mobile CUA passed. Validation of168
+  files and three builder tests passed. Existing Netlify site responds but provider
+  binding remains unresolved. Only validated disposable task output was removed.
+  Both repositories commit receipts at docs/creator-credit-v1/SOURCE-FINAL-QA.md.
 - Locs: public three-page release remains live. Login/forgot/reset, owner desk,
   newsletter owner and confirmation/unsubscribe, and419/429 runtime templates
   are still uncredited; assessed read-only, not represented as complete.
