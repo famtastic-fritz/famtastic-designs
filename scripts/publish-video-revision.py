@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 EDITIONS = {
     "no-catch-v2": "whats-the-catch-v2-20260919",
     "walking-continuation": "walking-continuation-20260919",
+    "local-voice-proof": "local-voice-proof-20260919",
 }
 
 

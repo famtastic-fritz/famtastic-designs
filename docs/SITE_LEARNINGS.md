@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Continuation and voice-conversion evidence
+
+A supplied-performance continuation can retain original dialogue-to-picture timing while inserting separately identified narration. Verify the assembled PCM against independently decoded source excerpts, strip audio from the visual-only VP9 matte, and accept Matroska alpha metadata keys case-insensitively. New acting and lip synchronization require separate proof.
+
+Freeze runner bytes and their input dependencies before voice conversion; a post-run repair must create a fresh attempt instead of changing a historical ledger. Measure local conversion independently of perceptual quality: successful inference and equal duration do not establish correct brand pronunciation or personal voice identity.
+
 ## 2026-09-19 — Pronunciation is phonetic, not orthographic
 
 - **Observation:** ASR recognized Famtastic while the owner heard fam-TAY-stik. **Guidance:** Inspect the actual phonemes and preserve explicit brand IPA separately from source/caption text; ASR alone cannot approve pronunciation. The faster 1.06-speed revision is 72.8 seconds, with complete content and new timing.

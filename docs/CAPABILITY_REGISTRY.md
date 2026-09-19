@@ -1,8 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Reference continuation and local voice conversion
+
+A 35.583-second portrait continuation pairs three original dialogue/performance passages with the owner’s 62-word bridge as an explicitly separate local narrator. The source remains 480×854; wide unoccluded source inserts create no new acting, walking or lip synchronization. Official OpenVoice V2 now has a pinned local CPU conversion runner with immutable input snapshots: a complete 13.437-second synthetic sample converted in 7.674 seconds, peak process RSS 1.63 GB. Identity and listening quality are unscored. The comparison uses synthetic voices, not Fritz’s voice. The expanded Video Studio suite passes 105 tests. See the revision, voice-research and walking-generation reports for actual render/publication status. Full-body diffusion generation remains unproven on this M5/16 GiB Mac.
+
 ## 2026-09-19 — Owner-directed faster voice revision
 
-**Local v2 film technically proven; listening acceptance pending.** The complete script now renders at 72.8 seconds with 1.06-speed Kokoro speech, reduced gaps and an explicit `fæmtˈæstɪk` brand lexicon. The owner’s rejection supersedes the earlier claim that title-case spelling fixed pronunciation: the installed phonemizer actually emitted fam-TAY-stik. Current proof includes native motion/contrast checks, equal AAC/PCM master hashes, full unmuted CUA playback, loaded captions and 97 passing tests. This does not establish an owner voice clone or new generated presenter motion. Review/publication state is recorded in `docs/marketing/local-video-studio/VIDEO-REVISION-V2-2026-09-19.md`.
+**Local v2 film technically proven; listening acceptance pending.** The complete script now renders at 72.8 seconds with 1.06-speed Kokoro speech, reduced gaps and an explicit `fæmtˈæstɪk` brand lexicon. The owner’s rejection supersedes the earlier claim that title-case spelling fixed pronunciation: the installed phonemizer actually emitted fam-TAY-stik. Current proof includes native motion/contrast checks, equal AAC/PCM master hashes, full unmuted CUA playback, loaded captions and 97 passing tests. This does not establish an owner voice clone or new generated presenter motion. The versioned review film is public with exact byte/range/MIME and complete CUA playback proof; one owner notice has SMTP acceptance (outbox 802). Delivery state is recorded in `docs/marketing/local-video-studio/VIDEO-REVISION-V2-2026-09-19.md`.
 
 ## 2026-09-19 — Full-script original local brand film
 
