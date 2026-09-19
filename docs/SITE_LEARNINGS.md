@@ -1,5 +1,10 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Pronunciation is phonetic, not orthographic
+
+- **Observation:** ASR recognized Famtastic while the owner heard fam-TAY-stik. **Guidance:** Inspect the actual phonemes and preserve explicit brand IPA separately from source/caption text; ASR alone cannot approve pronunciation. The faster 1.06-speed revision is 72.8 seconds, with complete content and new timing.
+- **Observation:** Reusing a performer matte preserves recorded movement but does not create new acting or synchronize a different script. **Guidance:** Label reference-led edits, local voice conversion and from-scratch video generation as separate proof lanes.
+
 ## 2026-09-19 — Script-to-film pronunciation and release boundaries
 
 **Verified outcome:** `/why-famtastic/` is live at frontend `63114513`, with full public playback, exact media hashes, proper WebVTT type and responsive page/CTA proof. One owner email reached Gmail; the read-only repeat preserves outbox 796 without resending. Render, voice and final release projections are rows 46–48. See `docs/marketing/local-video-studio/NO-CATCH-FILM-2026-09-19.md`.
