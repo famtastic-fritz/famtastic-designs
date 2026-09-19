@@ -6,6 +6,12 @@ const DEFAULT_IMAGE = `${SITE_URL}/og-image.jpg`;
 const DEFAULT_KEYWORDS = 'custom website design, AI solutions, business applications, web development, digital transformation, agentic AI';
 
 export const SEO_PAGES = {
+  '/video-review': {
+    title: 'Your Latest Films | FAMtastic Designs',
+    description: 'Watch the walking continuation, faster What’s the Catch ad, and experimental local voice comparison.',
+    image: '/media/films/walking-continuation-20260919.jpg',
+    robots: 'noindex, nofollow',
+  },
   '/': {
     title: 'FAMtastic Designs | Agentic AI Business Solutions Engineering Studio',
     description:
@@ -194,6 +200,7 @@ export function seoForPath(pathname = '/') {
     keywords: page.keywords || DEFAULT_KEYWORDS,
     canonical,
     image: page.image ? `${SITE_URL}${page.image}` : DEFAULT_IMAGE,
+    ...(page.robots ? { robots: page.robots } : {}),
     path,
   };
 }

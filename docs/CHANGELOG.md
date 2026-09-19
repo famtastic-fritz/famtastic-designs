@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-19 — Phone-friendly video review page
+
+- Added `/video-review/` with all three latest films, inline controls, captions and direct video links. Only one soundtrack plays at a time; movies load on demand. The exact owner notice uses a new immutable key. Local production build, mobile browser checks and nine existing contracts pass; live receipts are recorded in `docs/marketing/local-video-studio/MOBILE-REVIEW-PAGE-2026-09-19.md`.
+
 ## 2026-09-19 — Presenter continuation and free local voice-conversion proof
 
 Added the scripted portrait continuation with preserved source dialogue, measured captions, local voiceover and retained failed/repaired renders. Added an offline OpenVoice V2 runner with exact runtime/model pins, evidence-backed references, immutable snapshots and eight focused regression tests (105 Video Studio tests total). Added a three-part synthetic voice comparison, official repository/license research, real Mac/storage assessment, a third fixed publication edition and two one-attempt owner notice scripts. Personal voice matching, new acting and lip-sync remain unproved.

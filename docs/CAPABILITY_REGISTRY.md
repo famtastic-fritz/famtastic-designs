@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Unified mobile video review
+
+The local `/video-review/` page presents the three proven films with phone-sized players, native full-screen controls, optional captions, direct MP4 links and exclusive audio playback. CUA verifies 320/390px layout and player switching. This presentation adds no voice-cloning or generated-motion capability; production and email receipts are tracked separately in `docs/marketing/local-video-studio/MOBILE-REVIEW-PAGE-2026-09-19.md`.
+
 ## 2026-09-19 — Reference continuation and local voice conversion
 
 A 35.583-second portrait continuation pairs three original dialogue/performance passages with the owner’s 62-word bridge as an explicitly separate local narrator. The source remains 480×854; wide unoccluded source inserts create no new acting, walking or lip synchronization. Official OpenVoice V2 now has a pinned local CPU conversion runner with immutable input snapshots: a complete 13.437-second synthetic sample converted in 7.674 seconds, peak process RSS 1.63 GB. Identity and listening quality are unscored. The comparison uses synthetic voices, not Fritz’s voice. The expanded Video Studio suite passes 105 tests. See the revision, voice-research and walking-generation reports for actual render/publication status. Full-body diffusion generation remains unproven on this M5/16 GiB Mac.

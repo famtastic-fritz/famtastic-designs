@@ -114,6 +114,10 @@ function breadcrumbEntity(path, title) {
 function renderShell(path) {
   const seo = seoForPath(path);
   let html = template;
+  if (seo.robots) {
+    html = replaceTag(html, /<meta\s+name=["']robots["']\s+content=["'][^"']*["']\s*\/?>/i,
+      `<meta name="robots" content="${escapeHtml(seo.robots)}" />`);
+  }
   html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(seo.title)}</title>`);
   html = replaceTag(
     html,
@@ -488,7 +492,7 @@ const changedByPath = new Map([
 const buildDate = new Date().toISOString().slice(0, 10);
 const sitemapPaths = [
   ...new Set([
-    ...Object.keys(SEO_PAGES),
+    ...Object.keys(SEO_PAGES).filter(path => !SEO_PAGES[path].robots?.includes('noindex')),
     ...FILMS.map((film) => `/watch/${film.slug}`),
     ...discoveredRoutes.map((route) => route.path),
   ]),
