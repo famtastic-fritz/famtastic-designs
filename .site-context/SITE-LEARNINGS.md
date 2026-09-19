@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Hosting quota is separate from filesystem free space
+
+**Observation:** A canonical frontend install failed with `EDQUOT` (−122), despite `df` reporting 957 GB free. Old private release build outputs consumed account storage. **Guidance:** Treat per-account quota independently of the host filesystem. For a routine repair, verify exact old release revisions and untracked `frontend/dist` paths, remove only reproducible generated builds, preserve the live build/source/backups, retain a cleanup receipt, then retry the canonical deployment. Five old dist trees reclaimed 1,067,544 KiB and the same-commit retry succeeded. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md`.
+
 ## 2026-09-19 — Narration pace and pause are separate controls
 
 **Observation:** The owner liked the faster V2 film but wanted a female narrator and more realistic pauses. Uniformly slowing speech would undo the pacing improvement. **Guidance:** Compare a short stock-voice excerpt using complete thought groups, local speed adjustments and explicit phrase/line rests; preserve the IPA pronunciation override and canonical text. Read the resolved performance schedule instead of mistaking the fallback gap for effective timing. ASR and playback prove neither human naturalness nor correct-sounding brand pronunciation.
