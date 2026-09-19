@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-19 — Female narrator auditions and phrase pacing
+
+- Added source-bound phrase speeds and pauses, measured phrase cues, two cached local female voice auditions, and the reusable natural-narration skill.
+- Extended the phone review page with native audio auditions and a transcript; prepared one distinct owner notice. Release evidence: `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md`.
+- Audited existing voice connections without generation spend: HeyGen account/catalog proved; Gemini and OpenAI speech access remains unproved.
+
 ## 2026-09-19 — Phone-friendly video review page
 
 - Added `/video-review/` with all three latest films, inline controls, captions and direct video links. Only one soundtrack plays at a time; movies load on demand. The exact owner notice uses a new immutable key. Deployed `736ab1ff` through the canonical frontend lane; public mobile playback and owner Gmail receipt (outbox 805) pass. Local build and nine existing contracts pass; full receipts are recorded in `docs/marketing/local-video-studio/MOBILE-REVIEW-PAGE-2026-09-19.md`.

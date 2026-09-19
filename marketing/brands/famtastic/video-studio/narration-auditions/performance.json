@@ -1,0 +1,85 @@
+{
+  "schema": "famtastic.narration-performance.v1",
+  "source_sha256": "2e5275e7f5c7e3a6bd1a6a2eba4c9a86f8d611943ba1a0e071ec4a8073f3177b",
+  "lines": [
+    {
+      "index": 0,
+      "speed": 1.08,
+      "pause_after_seconds": 0.18
+    },
+    {
+      "index": 1,
+      "speed": 1.02,
+      "pause_after_seconds": 0.45
+    },
+    {
+      "index": 2,
+      "speed": 1.08,
+      "pause_after_seconds": 0.34,
+      "phrases": [
+        {
+          "text": "There isn’t one.",
+          "speed": 1.03,
+          "pause_after_seconds": 0.22
+        },
+        {
+          "text": "No hidden fees.",
+          "pause_after_seconds": 0.16
+        },
+        {
+          "text": "No surprise add-ons.",
+          "pause_after_seconds": 0.16
+        },
+        {
+          "text": "No trick buried in the fine print."
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "speed": 1.03,
+      "pause_after_seconds": 0.32
+    },
+    {
+      "index": 4,
+      "speed": 1.08,
+      "pause_after_seconds": 0.2
+    },
+    {
+      "index": 5,
+      "speed": 1.08,
+      "pause_after_seconds": 0.2
+    },
+    {
+      "index": 6,
+      "speed": 1.08,
+      "pause_after_seconds": 0.34
+    },
+    {
+      "index": 7,
+      "speed": 1.08,
+      "pause_after_seconds": 0.38,
+      "phrases": [
+        {
+          "text": "You grow.",
+          "speed": 1.04,
+          "pause_after_seconds": 0.28
+        },
+        {
+          "text": "We grow.",
+          "speed": 1.04
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "speed": 1.03,
+      "pause_after_seconds": 0.3
+    },
+    {
+      "index": 9,
+      "speed": 1.02,
+      "pause_after_seconds": 0
+    }
+  ]
+}

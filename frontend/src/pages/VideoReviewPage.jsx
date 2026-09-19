@@ -2,6 +2,11 @@ import { useRef } from 'react';
 import { FAMPage, FAMPageHero } from '../components/content-experience/index.jsx';
 import './video-review-page.css';
 
+const AUDITIONS = [
+  { id: 'heart', title: 'Heart', length: '23 seconds', file: 'heart-20260919.m4a' },
+  { id: 'bella', title: 'Bella', length: '22 seconds', file: 'bella-20260919.m4a' },
+];
+
 const FILMS = [
   {
     id: 'walking',
@@ -27,7 +32,7 @@ const FILMS = [
     length: '0:33',
     format: 'square',
     stem: 'local-voice-proof-20260919',
-    description: 'Hear the original narrator, a reference voice, and the converted result side by side.',
+    description: 'Hear the original narrator, a reference voice, and the converted result in three labeled chapters.',
     note: 'An experimental comparison using synthetic voices. This is not a clone of Fritz’s voice.',
   },
 ];
@@ -48,15 +53,48 @@ export default function VideoReviewPage() {
         eyebrow="FAMtastic Designs · September 19, 2026"
         title="Your latest films."
         signature="latest films."
-        lede="Three videos. One place to watch. Tap a player to begin, with sound."
-        note="Captions are included in the videos. Use the player controls for full screen."
+        lede="Watch the films and compare two new female narrators. Tap a player to begin, with sound."
+        note="Each voice sample uses the same words and deliberate pauses. Captions are included in the videos."
       />
-      <nav className="video-review-nav fam-ce-container" aria-label="Choose a video">
+      <nav className="video-review-nav fam-ce-container" aria-label="Choose a video or voice sample">
+        <a href="#female-voices">New female voices</a>
         <a href="#walking">Walking continuation</a>
         <a href="#faster-ad">Faster ad · V2</a>
         <a href="#voice-test">Voice experiment</a>
       </nav>
       <div className="fam-ce-container">
+        <section id="female-voices" className="video-review-auditions" aria-labelledby="female-voices-title">
+          <div className="video-review-copy">
+            <p className="fam-ce-eyebrow">NEW / VOICE AUDITIONS</p>
+            <h2 id="female-voices-title">A little room to breathe.</h2>
+            <p>Two local female voices with brisk delivery and space between thoughts. Listen for “What’s the catch?”, the reassurance, and “You grow. We grow.”</p>
+            <p className="video-review-note">Short excerpts from the ad, using synthetic stock voices. These are auditions for your listening review.</p>
+          </div>
+          <div className="video-review-audio-grid">
+            {AUDITIONS.map(voice => {
+              const src = `/media/narration-auditions/${voice.file}`;
+              return (
+                <article className="video-review-audio-card" key={voice.id}>
+                  <h3>{voice.title} <span>{voice.length}</span></h3>
+                  <audio
+                    ref={node => { if (node) players.current.set(voice.id, node); else players.current.delete(voice.id); }}
+                    controls preload="none" aria-label={`${voice.title} female voice audition`} onPlay={playOne}
+                  >
+                    <source src={src} type="audio/mp4" />
+                    <p><a href={src}>Listen to {voice.title}</a></p>
+                  </audio>
+                  <a className="video-review-direct" href={src} target="_blank" rel="noopener">Open {voice.title} audio ↗</a>
+                </article>
+              );
+            })}
+          </div>
+          <details className="video-review-transcript">
+            <summary>Read the audition words</summary>
+            <p>The question I get asked the most about our $199 Special is: “What’s the catch?” There isn’t one. No hidden fees. No surprise add-ons. No trick buried in the fine print.</p>
+            <p>We believe in you. Your vision. Your hustle. Your grind.</p>
+            <p>You grow. We grow. That’s FAMtastic. FAMtasticDesigns.com</p>
+          </details>
+        </section>
         {FILMS.map((film, index) => {
           const base = `/media/films/${film.stem}`;
           return (
