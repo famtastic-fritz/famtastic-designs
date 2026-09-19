@@ -38,3 +38,14 @@ Final candidate: six tests, Node22 build, exact brand check and diff check passe
 390px CUA screenshot: no horizontal overflow; six Company targets remain44px;
 pause changes the ambient pseudo-element's computed animation state to paused.
 Existing large-bundle warning remains. No backend/mail/customer-site changes.
+## Verified production receipt — September 19, 2026
+
+Footer runtime commit: 6d54d542af2cc59cb729cfa320467a0715272f00.
+Canonical frontend deployment completed at 2026-09-19T14:18:35Z on Node22.23.2;
+release marker read back exactly. Backup:
+/home/xrdj7j99xhzt/backups/famtastic-frontend-20260919T141438Z-6d54d542af2cc59cb729cfa320467a0715272f00.tgz.
+Apex390px and www1280px browser checks rendered real CMS links, the new background,
+and working pause. Six Company links remained44px; no horizontal overflow or
+captured console errors. Compiled JS/CSS returned200 with correct MIME types.
+320px local fixture also passed. Reduced-motion CSS contract tested; no OS-level
+reduced-motion browser emulation claimed. This is footer-only release evidence.
