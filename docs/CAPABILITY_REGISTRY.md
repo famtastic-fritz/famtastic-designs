@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Native Commerce bridge (narrow test-provider proof)
+
+One actual synthetic test payment reached native order/payment completion through
+a signed CLI-forwarded callback; exact replay preserved one payment/receipt and a
+native full refund persisted in a fresh process.8 runtime checks +33 Node/34 PHP
+offline checks; exact hashes/provider IDs retained. Fresh SQLite, anonymous synthetic
+order, memory mail and native plugin only. NOT private16/17, browser/3DS/decline,
+hosted middleware/MySQL, agency fulfillment or full12+4 matrix acceptance. Checkout
+OFF; feature source not deployed. See plans/STRIPE_NATIVE_PROVIDER_2026-09-19.md.
+
 ## 2026-09-19 — Dedicated Stripe profile test-mode read observed
 
 Explicit `famtastic-sandbox-auth`/account preflight passed an actual test-mode balance

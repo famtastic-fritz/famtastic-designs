@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Native provider testing needs its own safe runtime
+
+Observation: account-mirroring offline fixtures cannot safely become provider tests.
+A separate synthetic native runner now proves one real signed payment/replay/refund.
+Guidance: keep test keys in stdin-backed per-process config overrides; nested gateway
+loads reset keys assigned to only one entity. Verify raw config stays key-free.
+Use native money comparison, tolerate only the SDK's empty account header, and bind
+the native plugin's exact request shape. Refuse existing remote webhook destinations.
+Persist checked/fsynced mutation journals outside disposable cleanup before dispatch.
+Unknown response is not no-op; reconcile before retry. Stop owned listener process
+groups, not only npm wrappers; verify group death. Do not relabel test-provider
+native success as private-flow, browser, hosted or production readiness.
+
 ## 2026-09-19 — Discover named test profiles before declaring auth missing
 
 Observation: default Stripe CLI profile belonged to another workstream, but existing

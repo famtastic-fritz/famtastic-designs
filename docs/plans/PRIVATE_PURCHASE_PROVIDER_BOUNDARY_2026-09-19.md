@@ -1,5 +1,9 @@
 # Private purchase: native entry versus provider evidence
 
+Later08:21UTC: [a separate synthetic native bridge](STRIPE_NATIVE_PROVIDER_2026-09-19.md)
+now proves payment/signed callback/replay/native refund. It does not activate this
+private-purchase feature or complete its authenticated/browser/hosted/failure gates.
+
 07:00UTC follow-up: the existing repository-named `famtastic-sandbox-auth` profile
 was found and successfully checked through the new read-only exact-account
 preflight. No new account/key or AlreadyBuilt-profile adoption. Full provider

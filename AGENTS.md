@@ -1,5 +1,17 @@
 # Agent Instructions
 
+## September19 — Native provider bridge is not private checkout readiness
+
+Read `docs/plans/STRIPE_NATIVE_PROVIDER_2026-09-19.md` before further provider tests.
+One synthetic native payment/signed callback/replay/refund is proven. Keep the
+account-mirroring offline fixtures network-disabled; use the separate fresh runtime
+and exact dedicated test profile. Never persist credentials to solve nested gateway
+reloads; use ephemeral overrides. Preserve external durable mutation journals and
+reconcile uncertain outcomes before new writes. Refuse existing remote destinations,
+terminate the owned CLI process group, retain failures and keep production checkoutOFF.
+Full private/browser/failure/hosted/catalog gates remain; do not rerun the passing
+success path merely for activity or create customer notices while waiting for choice.
+
 ## September 18 — Embedded build instructions must cover the current request
 
 Never reuse `selected_build_continuation` merely because it exists. Its producer

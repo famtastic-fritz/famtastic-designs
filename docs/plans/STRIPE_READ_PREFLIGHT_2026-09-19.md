@@ -1,5 +1,9 @@
 # Stripe test-profile read preflight — not checkout acceptance
 
+Later08:21UTC: the separate synthetic native bridge passed a real payment/signed
+callback/replay/refund cycle. This earlier read-only receipt is unchanged; see
+[the newer, still narrowly bounded evidence](STRIPE_NATIVE_PROVIDER_2026-09-19.md).
+
 ## September19 07:00UTC
 
 The repo's existing `stripe-sandbox-billing-acceptance.sh` and

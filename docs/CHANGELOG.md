@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-19 — Native Stripe synthetic bridge (test-provider proven only)
+
+- Added a separate fresh native-Commerce runner; real signed test callback completed
+  one order/payment, replay preserved one receipt, native full refund persisted.
+- Added33 Node and34 PHP guard checks, test-only credential/config isolation,
+  empty remote-destination gate, durable external journals and owned-process cleanup.
+- Retained failed attempts and separately refunded the one earlier synthetic payment;
+  cleanup replay performed no write. Recorded exact source/provider receipts.
+- No agency application/deployment, customer charge/send or checkout activation.
+  Full private, browser, failure/recovery, hosted and catalog acceptance remain.
+
 ## 2026-09-19 — Safe read-only Stripe preflight (tooling only)
 
 - Added explicit profile/account preflight, fixed read-only CLI commands, child-env

@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Signed callback proof exposed a test credential reload defect
+
+One per-entity key assignment was lost when native Commerce loaded its gateway
+again through a payment method. The signed test event was genuine, but the native
+payment failed. Reproduced offline; fixed with ephemeral bootstrap config overrides
+from stdin, never credential persistence. The failed test payment was separately
+refunded, then a fresh native payment/replay/refund passed; retain both receipts.
+Test harnesses also need durable external pre-write journals, unknown-outcome state,
+empty remote endpoint inventories and process-group cleanup. These are safety
+boundaries, not permission to activate incomplete private checkout. Detailed evidence:
+plans/STRIPE_NATIVE_PROVIDER_2026-09-19.md.
+
 ## 2026-09-19 — Read-only credential capability is narrower than payment proof
 
 Repository-named famtastic-sandbox-auth existed alongside a different defaultprofile.

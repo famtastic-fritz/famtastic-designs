@@ -1,5 +1,11 @@
 # September 18 client delivery — operational truth
 
+08:22UTC follow-up:8/16/17 still unselected/staging not_started and772/773/775 sent
+once. Native test-provider payment/signed callback/replay/refund now passes in a
+separate synthetic runtime, not the private-flow or production release. CheckoutOFF.
+See [newest finite-work receipt](STRIPE_NATIVE_PROVIDER_2026-09-19.md). Earlier
+checkpoints below retain their historical narrower coverage.
+
 06:33Z follow-up:8/16/17 remain unselected; notices unchanged. Native private
 checkout entry is now locally covered by41 HTTP checks, not payment-provider proof.
 The isolated provider runner remains unfinished; checkoutOFF. Current source and
