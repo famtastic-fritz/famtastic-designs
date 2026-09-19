@@ -3,10 +3,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import vm from 'node:vm';
 
 const root = new URL('../frontend/public/connect/', import.meta.url);
 const read = name => readFileSync(new URL(name, root), 'utf8');
+
+test('every supplied file is tracked and available to a clean server build', () => {
+  const rows = JSON.parse(readFileSync(new URL('../docs/evidence/connect-production/source-downloads.json', import.meta.url)));
+  execFileSync('git', ['ls-files', '--error-unmatch', '--', ...rows.map(row => `frontend/public/connect/${row.path}`)], { cwd: new URL('../', import.meta.url), stdio: 'pipe' });
+});
 
 function fixture({ standalone = false, reduced = false, hash = '', ua = 'Android Chrome', script = 'app.js' } = {}) {
   class Element {
