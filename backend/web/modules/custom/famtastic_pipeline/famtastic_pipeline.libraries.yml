@@ -25,3 +25,7 @@ user_page_clean:
   css:
     theme:
       css/user-page-clean.css: {}
+private_purchase:
+  css:
+    theme:
+      css/private-purchase.css: {}

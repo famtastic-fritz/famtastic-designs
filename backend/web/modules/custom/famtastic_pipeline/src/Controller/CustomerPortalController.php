@@ -311,6 +311,9 @@ final class CustomerPortalController extends ControllerBase {
         return $this->error('website_request_not_ready', 422, 'Submit the website request before purchasing.');
       }
       $requestIntake = json_decode((string) $websiteRequest['intake_data'], TRUE) ?: [];
+      if (in_array((string) $websiteRequest['public_id'], [\Drupal\famtastic_pipeline\Service\PrivatePurchaseService::REUNION, \Drupal\famtastic_pipeline\Service\PrivatePurchaseService::STOCK], TRUE)) {
+        return $this->error('private_scope_required', 409, 'This request uses its own account-bound private scope. Open the private purchase details in your portal; do not buy a catalog package for it.');
+      }
       $prepaidOrder = $this->database->select('famtastic_private_offer', 'p')->fields('p', ['commerce_order_id'])
         ->condition('website_request_id', (int) $websiteRequest['id'])->condition('customer_id', (int) $customer['id'])
         ->condition('status', 'prepaid_held')->execute()->fetchField();

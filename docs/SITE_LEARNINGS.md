@@ -2681,3 +2681,10 @@ Stored proof bytes need not change for a footer: decorate authorized controller
 responses, and version48 legacy direct HTML presentations with exact original hashes.
 Keep66 protected direct URLs forbidden. Separate scoped release markers from normal
 full-release markers, and record source checks separately from authenticated visual QA.
+
+# 2026-09-18 — Private purchase reads
+
+Commerce draft-order `load()` may refresh and save. Private financial GET views
+use native `loadUnchanged()` to avoid hidden refresh side effects. Customer scope
+acknowledgment, checkout initiation, native payment and exact website acceptance
+remain four separate facts; no private scope inherits a convenient public SKU.

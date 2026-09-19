@@ -1,0 +1,7 @@
+.famtastic-private-purchase { max-width: 48rem; margin-inline: auto; overflow-wrap: anywhere; }
+.famtastic-private-purchase :is(input:not([type=checkbox]), select, button, .button) { box-sizing: border-box; min-height: 44px; max-width: 100%; }
+.famtastic-private-purchase .form-type-checkbox { padding-block: 12px; }
+.famtastic-private-purchase .form-type-checkbox label { display: inline-flex; align-items: center; min-height: 44px; }
+.famtastic-private-purchase :is(a, summary) { display: inline-flex; align-items: center; min-height: 44px; }
+.famtastic-private-purchase input[type=checkbox] { min-width: 24px; min-height: 24px; }
+.famtastic-private-purchase :is(input, select, button, a, summary):focus-visible { outline: 2px solid #7cfc00; outline-offset: 3px; }

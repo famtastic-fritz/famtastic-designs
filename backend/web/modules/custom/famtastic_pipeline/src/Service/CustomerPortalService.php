@@ -269,8 +269,10 @@ final class CustomerPortalService {
         'package' => implode(', ', array_map(static fn($item): string => $item->getTitle(), $commerceOrder->getItems())),
         'amount' => (int) round((float) $commerceOrder->getTotalPrice()->getNumber() * 100),
         'currency' => strtolower($commerceOrder->getTotalPrice()->getCurrencyCode()),
-        'payment_status' => $commerceOrder->getData('famtastic_offline_prepayment') && $commerceOrder->isPaid()
-          ? 'paid' : ($commerceOrder->getState()->value === 'completed' ? 'paid' : $commerceOrder->getState()->value),
+        'payment_status' => $commerceOrder->getData(PrivatePurchaseService::KEY)
+          ? ($commerceOrder->isPaid() ? 'paid' : ($commerceOrder->getState()->value === 'completed' ? 'payment_attention' : 'unpaid'))
+          : ($commerceOrder->getData('famtastic_offline_prepayment') && $commerceOrder->isPaid()
+          ? 'paid' : ($commerceOrder->getState()->value === 'completed' ? 'paid' : $commerceOrder->getState()->value)),
         'paid_at' => $commerceOrder->getData('famtastic_offline_prepayment') ? NULL : $commerceOrder->getPlacedTime(),
         'payment_recorded_at' => $commerceOrder->getData('famtastic_offline_prepayment')['recorded_at'] ?? NULL,
         'fulfillment_hold' => $commerceOrder->getData('famtastic_offline_prepayment')['hold'] ?? NULL,
@@ -997,6 +999,8 @@ final class CustomerPortalService {
     $offer = $offerQuery->condition($offerQuery->orConditionGroup()->isNull('expires_at')->condition('expires_at', $this->time->getRequestTime(), '>'))
       ->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $row['private_offer'] = $offer ?: NULL;
+    $row['private_purchase_url'] = in_array((string) $row['public_id'], [PrivatePurchaseService::STOCK, PrivatePurchaseService::REUNION], TRUE)
+      ? PrivatePurchaseService::url((string) $row['public_id']) : NULL;
     $stagingReceipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
     $row['staging_preview'] = ($row['staging_status'] ?? '') === 'deployed' && is_array($stagingReceipt)
       ? [
@@ -1021,6 +1025,7 @@ final class CustomerPortalService {
       'FAM-AI-6999',
     ];
     $row['direct_checkout_available'] = $row['status'] === 'submitted'
+      && empty($row['private_purchase_url'])
       && $row['proof_review_status'] === 'selected'
       && (string) ($row['staging_status'] ?? '') === 'deployed'
       && (string) ($row['staging_review_status'] ?? '') === 'accepted'

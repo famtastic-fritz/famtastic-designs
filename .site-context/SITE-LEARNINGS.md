@@ -2693,3 +2693,10 @@ Agency-only retrofit:222 existing static/React shells;114 runtime originals in31
 campaigns remain unchanged;48 direct-public new presentations and66 protected403s.
 Three friends PHP apps are symlink-backed separately versioned apps, not zero files.
 Exact releases, parent CUA receipts and pending targets are in the agency lane audit.
+
+# 2026-09-18 — Private purchase reads
+
+Observation: native draft order loading may save a refreshed entity. Use
+`loadUnchanged()` for read-only financial forms. A future private checkout must
+reuse its request-bound order, snapshot the exact special scope, and continue
+selected staging independently; never imply paid from a redirect or order state.
