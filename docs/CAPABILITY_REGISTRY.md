@@ -534,3 +534,11 @@ module, verified five widths and real click/keyboard analytics-failure navigatio
 Reduced-motion rule simulation and CSS 200% zoom pass; OS media emulation, physical
 touch and cross-browser QA remain unproven. Source/QA: `docs/design/social-footer/REVIEW.md`.
 Not production-proven; no release occurred.
+## September 19, 2026 — compact footer atmosphere release candidate
+
+Owner authorized deployment. Mobile Company links are compact with 44px targets;
+subtle cursive and red/gold/blue light stay behind content, with pause and static
+reduced-motion support. Fritz character cancelled. Six tests, Node22 build,
+canonical assets and 390px browser checks pass. Production receipt is tracked in
+docs/design/social-footer/SPACING-ATMOSPHERE-2026-09-19.md; do not equate a push
+with a verified deployment.

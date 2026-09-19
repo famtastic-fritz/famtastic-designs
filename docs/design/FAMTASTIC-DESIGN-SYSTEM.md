@@ -149,7 +149,9 @@ September19 owner exception: the shared public footer may carry decorative,
 noninteractive cursive background phrases, opacity1.8–6.5%,24s fading cycle,
 with an explicit pause toggle and static reduced-motion rendering. This does
 not apply to platform logos, portal/admin, customer worlds or email. A requested
-Fritz character layer remains pending approved standalone artwork.
+Fritz character layer was cancelled by the owner. Restrained red/gold/blue CSS
+light pools may fade on a 32s cycle, maximum 7.5% color alpha; the same pause and
+reduced-motion controls govern them. No added height, portraits or particle loop.
 Reduced-motion disables these transitions and decorative movements. Existing
 particle/motion behavior is not expanded. Dense admin never animates routine data.
 44px important touch targets, readable contrast, semantic controls, keyboard focus,

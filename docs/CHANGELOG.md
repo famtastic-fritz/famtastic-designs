@@ -3713,3 +3713,11 @@ Final independent parent code review passed 1,022 tests/99 files in77.73s with a
 - Replaced the existing SocialSignal orbit with reusable smoked-metal/enamel social badges and one approved-profile configuration inside SiteFooter; preserved canonical logo, CMS navigation, legal/year/signature and native click events.
 - Added ten-platform local gallery, official-asset provenance, Design MD/Site DNA and focused tests. Desktop social height 368px → 157.45px; five responsive widths fit. Build, seven footer/analytics tests, five credit tests, public-flow and brand checks pass.
 - Source only on `famtastic/social-footer-v1`; Fritz visual review pending. No push, merge, deployment or customer send. See `docs/design/social-footer/REVIEW.md` for exact limits, commands and screenshots.
+## September 19, 2026 — compact footer atmosphere release candidate
+
+Owner authorized deployment. Mobile Company links are compact with 44px targets;
+subtle cursive and red/gold/blue light stay behind content, with pause and static
+reduced-motion support. Fritz character cancelled. Six tests, Node22 build,
+canonical assets and 390px browser checks pass. Production receipt is tracked in
+docs/design/social-footer/SPACING-ATMOSPHERE-2026-09-19.md; do not equate a push
+with a verified deployment.

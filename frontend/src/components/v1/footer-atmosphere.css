@@ -1,6 +1,15 @@
 /* Owner-requested public-footer atmosphere only; no motion on platform marks. */
 .v1-footer { position: relative; isolation: isolate; }
 .v1-footer__atmosphere { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; user-select: none; }
+.v1-footer__atmosphere::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 0% 20%, rgba(233, 44, 48, .075), transparent 52%),
+    radial-gradient(ellipse at 52% 80%, rgba(238, 181, 49, .045), transparent 48%),
+    radial-gradient(ellipse at 100% 38%, rgba(35, 115, 245, .075), transparent 55%);
+  animation: fam-footer-light 32s ease-in-out infinite;
+}
+@keyframes fam-footer-light { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
 .v1-footer__atmosphere span {
   position: absolute; left: 3%; top: 12%; max-width: 94%;
   font-family: 'FAMtastic Heading Script', var(--fam-dna-signature, cursive);
@@ -10,10 +19,12 @@
 }
 .v1-footer__atmosphere span + span { top: auto; bottom: 12%; left: auto; right: 3%; animation-delay: -12s; }
 @keyframes fam-footer-breathe { 0%, 100% { opacity: .018; } 50% { opacity: .065; } }
-.v1-footer[data-motion-paused="true"] .v1-footer__atmosphere span { animation-play-state: paused; }
+.v1-footer[data-motion-paused="true"] .v1-footer__atmosphere span,
+.v1-footer[data-motion-paused="true"] .v1-footer__atmosphere::before { animation-play-state: paused; }
 .v1-footer__motion-toggle { border: 0; background: transparent; color: inherit; font: inherit; padding: 0 .25rem; min-height: 44px; cursor: pointer; text-align: left; }
 .v1-footer__motion-toggle:focus-visible { outline: 2px solid #7cfc00; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
+  .v1-footer__atmosphere::before { animation: none !important; opacity: .65; }
   .v1-footer__atmosphere span { animation: none !important; opacity: .035; }
   .v1-footer__motion-toggle { display: none; }
 }

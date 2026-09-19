@@ -75,6 +75,10 @@ test('social badges retain static idle marks and safe navigation',()=>{
 test('background-only slow fade is pausable, reduced-motion safe, and adds no image guess',()=>{
   const css=readFileSync(new URL('../src/components/v1/footer-atmosphere.css',import.meta.url),'utf8');
   assert.match(css,/24s ease-in-out/);
+  assert.match(css,/32s ease-in-out/);
+  assert.match(css,/radial-gradient/);
+  assert.match(css,/::before \{ animation-play-state: paused/);
+  assert.match(css,/::before \{ animation: none !important/);
   assert.match(css,/pointer-events: none/);
   assert.match(css,/animation-play-state: paused/);
   assert.match(css,/prefers-reduced-motion: reduce/);

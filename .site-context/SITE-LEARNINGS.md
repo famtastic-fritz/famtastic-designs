@@ -2722,3 +2722,11 @@ data, and YouTube's PNG export included transparent padding that made it too sma
 Guidance: use the official PNG at an appropriate pixel size; preserve mark geometry
 and measure visible artwork, export padding and compressed asset size independently.
 Keep material/interaction layers separate from official symbols.
+## September 19, 2026 — compact footer atmosphere release candidate
+
+Owner authorized deployment. Mobile Company links are compact with 44px targets;
+subtle cursive and red/gold/blue light stay behind content, with pause and static
+reduced-motion support. Fritz character cancelled. Six tests, Node22 build,
+canonical assets and 390px browser checks pass. Production receipt is tracked in
+docs/design/social-footer/SPACING-ATMOSPHERE-2026-09-19.md; do not equate a push
+with a verified deployment.

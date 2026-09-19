@@ -173,8 +173,9 @@ retaining44px targets and all destinations. Public-footer background may use
 short cursive phrases with a slow24s low-opacity fade, a pause control and a
 static reduced-motion fallback. This explicit exception is background-only,
 not permission to animate social platform marks or operational surfaces.
-Fritz character artwork requires an identified approved asset; never substitute
-a customer's image or invent an approved portrait.
+The owner cancelled the Fritz character. Use faint red/gold/blue CSS light pools
+behind the content instead: maximum 7.5% color alpha, 32s opacity-only cycle,
+covered by the same pause and reduced-motion controls. No portraits or particles.
 
 The existing footer's compact social family is governed by
 [the scoped social-footer specification](docs/design/FAMTASTIC-SOCIAL-FOOTER.md).
