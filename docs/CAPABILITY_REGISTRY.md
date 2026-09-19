@@ -2,7 +2,7 @@
 
 ## 2026-09-19 — Unified mobile video review
 
-The local `/video-review/` page presents the three proven films with phone-sized players, native full-screen controls, optional captions, direct MP4 links and exclusive audio playback. CUA verifies 320/390px layout and player switching. This presentation adds no voice-cloning or generated-motion capability; production and email receipts are tracked separately in `docs/marketing/local-video-studio/MOBILE-REVIEW-PAGE-2026-09-19.md`.
+The live `/video-review/` page presents the three proven films with phone-sized players, native full-screen controls, optional captions, direct MP4 links and exclusive audio playback. Local CUA verifies 320/390px layout and player switching; public apex playback and www rendering pass at deployed `736ab1ff`. One new owner notice reached Gmail (outbox 805) without resend. This presentation adds no voice-cloning or generated-motion capability; production and email receipts are retained in `docs/marketing/local-video-studio/MOBILE-REVIEW-PAGE-2026-09-19.md`.
 
 ## 2026-09-19 — Reference continuation and local voice conversion
 

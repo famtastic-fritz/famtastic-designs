@@ -2,7 +2,7 @@
 
 ## 2026-09-19 — One link for mobile film review
 
-**Observation:** Individual MP4 links were technically playable but inconvenient for reviewing three revisions on a phone. **Guidance:** Provide one canonical page with explicitly labeled editions, native inline controls and direct-file fallbacks. Use on-demand loading and pause other players when playback starts. Verify the narrow layout and public page after the canonical release.
+**Observation:** Individual MP4 links were technically playable but inconvenient for reviewing three revisions on a phone. **Guidance:** Provide one canonical page with explicitly labeled editions, native inline controls and direct-file fallbacks. Use on-demand loading and pause other players when playback starts. Verify the narrow layout and public page after the canonical release. The current page passed public playback at `736ab1ff`; the separate owner inbox receipt is outbox 805.
 
 ## 2026-09-19 — Continuation and voice-conversion evidence
 
