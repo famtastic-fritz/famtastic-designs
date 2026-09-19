@@ -98,6 +98,15 @@ commit="$3"
 apply="$4"
 source="$release/source/backend/web/modules/custom/famtastic_pipeline/src/Service"
 target="$production/web/modules/custom/famtastic_pipeline/src/Service"
+if [[ ! -e "$release/source/.git" ]]; then
+  mirror="$HOME/$2/repository.git"
+  git --git-dir="$mirror" fetch origin
+  test "$(git --git-dir="$mirror" rev-parse refs/heads/main)" = "$commit"
+  mkdir -p "$release"
+  git --git-dir="$mirror" worktree add --detach --no-checkout "$release/source" "$commit"
+  git -C "$release/source" sparse-checkout set backend/web/modules/custom/famtastic_pipeline backend/web/themes/custom/famtastic_admin scripts frontend/src/lib frontend/public/brand
+  git -C "$release/source" read-tree -mu HEAD
+fi
 test "$(git -C "$release/source" rev-parse HEAD)" = "$commit"
 test "$(sha256sum "$target/BrandedEmail.php" | cut -d' ' -f1)" = 89b8b39a5dfd25e75c805a696272a5e19bd7883f300d8019c94d6086b1f1e7c1
 test "$(sha256sum "$target/ProofCampaignService.php" | cut -d' ' -f1)" = 56b66b5973fd1627799ed33f2e1a82e8a22c25cb2a837b5569869e6f4fc5db92
@@ -106,12 +115,21 @@ test "$(sha256sum "$target/../Controller/WebsiteRequestProofController.php" | cu
 test "$(sha256sum "$target/../Controller/PublicPreviewController.php" | cut -d' ' -f1)" = 816b881688caf347c77adf15efcb9e700a2fb024ba0cabb7ea283d190278aa4b
 for name in CreatorCredit.php BrandedEmail.php ProofCampaignService.php; do php -l "$source/$name"; done
 for name in WebsiteRequestProofController.php PublicPreviewController.php; do php -l "$source/../Controller/$name"; done
-if [[ "$apply" != true ]]; then echo 'Scoped backend preflight passed; five presentation source files only'; exit 0; fi
+theme_source="$release/source/backend/web/themes/custom/famtastic_admin/famtastic_admin.theme"
+theme_target="$production/web/themes/custom/famtastic_admin/famtastic_admin.theme"
+php -l "$theme_source"
+git -C "$release/source" show 8eb12209:backend/web/themes/custom/famtastic_admin/famtastic_admin.theme | cmp - "$theme_target"
+export NVM_DIR="$HOME/.nvm"
+source "$NVM_DIR/nvm.sh"
+nvm use 22
+node "$release/source/scripts/version-public-runtime-proofs.mjs" "$production/web/proofs" "$commit" > /dev/null
+if [[ "$apply" != true ]]; then echo 'Scoped backend preflight passed; six presentation source files only'; exit 0; fi
 backup="$release/creator-credit-backend-backup"
 test ! -e "$backup"
 mkdir "$backup"
 cp -p "$target/BrandedEmail.php" "$target/ProofCampaignService.php" "$backup/"
 cp -p "$target/../Controller/WebsiteRequestProofController.php" "$target/../Controller/PublicPreviewController.php" "$backup/"
+cp -p "$theme_target" "$backup/famtastic_admin.theme"
 for name in CreatorCredit.php BrandedEmail.php ProofCampaignService.php; do
   install -m 0644 "$source/$name" "$target/$name"
   cmp "$source/$name" "$target/$name"
@@ -120,8 +138,11 @@ for name in WebsiteRequestProofController.php PublicPreviewController.php; do
   install -m 0644 "$source/../Controller/$name" "$target/../Controller/$name"
   cmp "$source/../Controller/$name" "$target/../Controller/$name"
 done
-{ printf 'commit=%s\nbackup=%s\nscope=five-presentation-files-no-state-mutation\n' "$commit" "$backup"; sha256sum "$target/CreatorCredit.php" "$target/BrandedEmail.php" "$target/ProofCampaignService.php" "$target/../Controller/WebsiteRequestProofController.php" "$target/../Controller/PublicPreviewController.php"; } > "$production/.creator-credit-backend-release"
+install -m 0644 "$theme_source" "$theme_target"
+cmp "$theme_source" "$theme_target"
+{ printf 'commit=%s\nbackup=%s\nscope=six-presentation-files-no-state-mutation\n' "$commit" "$backup"; sha256sum "$target/CreatorCredit.php" "$target/BrandedEmail.php" "$target/ProofCampaignService.php" "$target/../Controller/WebsiteRequestProofController.php" "$target/../Controller/PublicPreviewController.php" "$theme_target"; } > "$production/.creator-credit-backend-release"
 cat "$production/.creator-credit-backend-release"
+node "$release/source/scripts/version-public-runtime-proofs.mjs" "$production/web/proofs" "$commit" --apply
 CREDIT_BACKEND
   exit 0
 fi

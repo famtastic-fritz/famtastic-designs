@@ -86,6 +86,11 @@ function famtastic_admin_preprocess_page(array &$variables): void {
  * allowlist.
  */
 function famtastic_admin_preprocess_html(array &$variables): void {
+  // HTML-only theme hook: does not run for JSON/API responses or alter access.
+  $variables['page_bottom']['famtastic_creator_credit'] = [
+    '#markup' => \Drupal\Core\Render\Markup::create(\Drupal\famtastic_pipeline\Service\CreatorCredit::html()),
+    '#weight' => 10000,
+  ];
   $route_name = \Drupal::routeMatch()->getRouteName();
   if (in_array($route_name, ['user.login', 'user.pass', 'user.reset', 'user.reset.login'], TRUE)) {
     $variables['attributes']['class'][] = 'famtastic-auth-page';

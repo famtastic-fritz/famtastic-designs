@@ -10,8 +10,10 @@ then authorized scoped agency main merges/existing-live releases.
 
 Machine inventory: ../evidence/agency-creator-credit-2026-09-18/inventory.json.
 Customer-facing inventory: 48 frontend/public static showcase pages, 170 React/SEO
-output shells, four existing unlisted marketing HTML pages, and zero files in
-friends-20260918. The wider source appendix is discovery context only: upstream
+output shells, four existing unlisted marketing HTML pages, 114 runtime proof HTML
+files in 31 campaign directories, and three symlink-backed PHP apps in
+friends-20260918. These are distinct inventories, not a claim that all are deployed
+or independently visually verified. The wider source appendix is discovery context only: upstream
 .agents/skills examples are third-party templates excluded unless exported, not
 customer deliverables or retrofit targets. Historical review/evidence and video
 composition HTML likewise is not retrofitted merely because it is tracked.
@@ -35,8 +37,8 @@ Covered owners/build paths:
 - PHP deterministic stub builder and shared BrandedEmail shell for future renders.
 - Marketing HTML versioner and existing unlisted-publication enforcement gate.
 
-Read-only live discovery: showcase families exist. /proofs/friends-20260918 exists
-but has no files (not a live demo to retrofit at inspection). One existing unlisted
+Read-only live discovery: showcase families exist. /proofs/friends-20260918 contains
+three live symlink-backed PHP apps, detailed below. One existing unlisted
 marketing directory contains index.html and three cards; public token not used for
 attribution. Scoped release captures its exact paths in the server receipt.
 
@@ -79,17 +81,17 @@ caller. Restore old React shells, keep harmless hashed assets. No database resto
 
 Exclusions/pending: immutable historical evidence and approval hashes; standalone
 customer repositories/platform/studios (other lanes); historical media compositions,
-stills/videos; database-stored prior proof HTML (requires new authored version and
-fresh review, not in-place mutation); untracked/non-main demos absent from inventory;
+stills/videos; original database-stored proof HTML and approval hashes remain immutable
+while response presentation is decorated (no fresh customer approval barrier);
+linked PHP apps require separately coordinated versioned releases;
 private authenticated visual QA; actual email client/inbox proof. No unpublished
 customer launches. Server dynamic authenticated proof body inventory is not claimed.
 Source changes for historical builders were syntax-checked, not fully rerun with
 old copyrighted assets/provider jobs. Drive mirror status will be recorded at close.
 
-## Runtime inventory correction and response decoration
+## Runtime inventory and response decoration
 
-The earlier zero-file friends count was a file-only find result, NOT proof of no
-deliverables. The directory has three PHP-backed symlinks to private versioned
+The directory has three PHP-backed symlinks to private versioned
 releases: coastbound-electric (now 8ae887fd3aef9ba5b960eb35332f8980da5193cb,
 changed concurrently from 126c10517f91b160235b70c51e189987ccaef279 and already has
 canonical logo/UTM credit), south-shore-communication-systems
@@ -114,3 +116,24 @@ Initial source commit 9c782bf8; integration e51ed18f9d8ff3dc9c16f35683466c444fa9
 was pushed to main. Its remote build passed; rollout stopped on the new symlink
 discovery before any live file write. Follow-up isolates those linked PHP releases
 and adds serving-time enforcement. Exact final release receipts follow below.
+
+## Independent parent CUA receipts
+
+Parent reported production agency homepage desktop and 390px mobile: exactly one
+final centered credit row, original image loaded at natural width 2172, mobile
+display width 180px, clear of controls. Parent also verified www homepage: one
+credit image loaded at natural width 2172. The Inc footer click resolved to the
+agency URL with attribution parameters retained (Inc itself is another lane).
+
+Parent independently visually checked the existing Palmera Fade Society C proof:
+https://famtasticdesigns.com/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/c/index.html
+Desktop and 390px mobile had the final centered 180px logo, preserved demo footer
+and forms, and correct generic agency attribution. No form was submitted.
+These are parent-provided CUA receipts, not checks performed by this lane.
+
+## Learnings
+
+The initial zero-file friends result came from a regular-file-only find that did
+not follow release symlinks. It was an inventory error, not absence of live demos;
+the corrected headline counts all three PHP apps. Inspect symlink targets and state
+boundaries before classifying runtime outputs or preparing static deployment.
