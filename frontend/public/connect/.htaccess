@@ -1,0 +1,14 @@
+# These files belong only to the independent /connect/ card.
+DirectoryIndex index.html
+AddType application/manifest+json .webmanifest
+AddType text/vcard .vcf
+AddType image/svg+xml .svg
+AddType video/mp4 .mp4
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:html|js|css|webmanifest|svg|png)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <Files "fritz-famtastic.vcf">
+    Header set Content-Disposition "attachment; filename=\"Fritz-FAMtastic-Designs.vcf\""
+  </Files>
+</IfModule>

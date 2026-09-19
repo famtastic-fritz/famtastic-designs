@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — FAMtastic Connect card migration
+
+Static `/connect/` card, install fallback and exact production QR formats are locally verified. The installed-mode launch guard is simulation-proven; real Android installation and the reported old-origin black-screen cause remain unverified. No service worker or offline capability is introduced. Production status: `docs/plans/CONNECT_PRODUCTION_2026-09-19.md`.
+
 ## 2026-09-19 — Source-bound local narration performance
 
 Local female stock narration and exact inserted phrase pauses are technically proved with Kokoro af_heart/af_bella; human naturalness and pronunciation acceptance remain pending. A script-bound performance plan preserves canonical copy, produces sample-derived phrase/source-line cues and retains model/input/audio hashes. Natural-narration skill installed and validated. HeyGen account/catalog connection and SSML controls are available but no cloud speech request was run; image credentials do not prove Gemini/OpenAI TTS entitlement. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md` for actual publication status.

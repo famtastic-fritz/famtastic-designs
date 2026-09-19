@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Installed card launch and migration boundaries
+
+**Observation:** The finished source has relative manifest fields, no service-worker registration and a timed full-logo intro. A reported black screen with the green F icon does not establish an intro failure; the affected Android install was unavailable. The fetched source HTML also included hosting-injected challenge code.
+
+**Guidance:** Preserve app/media bytes and remove origin-specific hosting injection when migrating. Set explicit subpath identity/start/scope, keep the document usable without JS, skip the intro for installed launches and provide an independent CSS deadline. Verify native prompting separately from manual instructions and real device installation. Decode new QR artifacts exactly; neither old downloaded codes nor old-origin installed apps update across origins. Evidence: `docs/plans/CONNECT_PRODUCTION_2026-09-19.md`.
+
 ## 2026-09-19 — Hosting quota is separate from filesystem free space
 
 **Observation:** A canonical frontend install failed with `EDQUOT` (−122), despite `df` reporting 957 GB free. Old private release build outputs consumed account storage. **Guidance:** Treat per-account quota independently of the host filesystem. For a routine repair, verify exact old release revisions and untracked `frontend/dist` paths, remove only reproducible generated builds, preserve the live build/source/backups, retain a cleanup receipt, then retry the canonical deployment. Five old dist trees reclaimed 1,067,544 KiB and the same-commit retry succeeded. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md`.

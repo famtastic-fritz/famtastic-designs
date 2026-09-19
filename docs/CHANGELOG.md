@@ -1,5 +1,10 @@
 # Product changelog
 
+## 2026-09-19 — FAMtastic Connect production migration
+
+- Imported the owner's finished card and byte-preserved media/contact assets into `/connect/`, with explicit manifest identity/scope, native/manual installation, an intro timeout independent of JavaScript, and production-address QR SVG/PNG.
+- Added slash normalization and missing-asset rejection within the existing static release lane. Local build, mobile CUA, interruption fixture, QR decoding and 15 contracts pass; production receipt is tracked in `docs/plans/CONNECT_PRODUCTION_2026-09-19.md`.
+
 ## 2026-09-19 — Female narrator auditions and phrase pacing
 
 - Added source-bound phrase speeds and pauses, measured phrase cues, two cached local female voice auditions, and the reusable natural-narration skill.

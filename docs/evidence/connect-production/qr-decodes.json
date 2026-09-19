@@ -1,0 +1,17 @@
+[
+  {
+    "artifact": "production PNG",
+    "decodes_to": "https://famtasticdesigns.com/connect/",
+    "sha256": "fcfb9945199a342866eb317cee9ae8704aec3ec5b22de826e09e2e82df4e9899"
+  },
+  {
+    "artifact": "production SVG rasterization",
+    "decodes_to": "https://famtasticdesigns.com/connect/",
+    "sha256": "6a5b4479141a517d562fbc826c6e5bee46e9270681e8a935c610f2ebe199d2f8"
+  },
+  {
+    "artifact": "previous source PNG",
+    "decodes_to": "https://famtastic-connect.nineoo.chatgpt.site",
+    "sha256": "2d55d56b0094dacea50d497211266c233f53e6e10a7de546bf235e5a5d734f4f"
+  }
+]

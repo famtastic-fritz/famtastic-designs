@@ -1,0 +1,121 @@
+[
+  {
+    "path": "index.html",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/",
+    "content_type": "text/html",
+    "bytes": 9414,
+    "sha256": "9debcab3d86caee9b01ceed3541080a19afe507b7efe719aa804048c03dc21f8"
+  },
+  {
+    "path": "style.css",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/style.css",
+    "content_type": "text/css",
+    "bytes": 9782,
+    "sha256": "6d9843290114768d21cbd7987ccc76de9ac50e3cb9750540d4ed4fa6f7920b56"
+  },
+  {
+    "path": "app.js",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/app.js",
+    "content_type": "text/javascript",
+    "bytes": 3312,
+    "sha256": "43543508d62aeb809a25e46b85d33a967e162cfa46f1f1eaa7c16829b82ca913"
+  },
+  {
+    "path": "install.js",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/install.js",
+    "content_type": "text/javascript",
+    "bytes": 5283,
+    "sha256": "ebf0c046446bc70eb7a3156bbe729e891c6e0d05b93528efaca02ca77ca5b71b"
+  },
+  {
+    "path": "logo.png",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/logo.png",
+    "content_type": "image/png",
+    "bytes": 2020725,
+    "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950"
+  },
+  {
+    "path": "commercial.mp4",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/commercial.mp4",
+    "content_type": "video/mp4",
+    "bytes": 7473049,
+    "sha256": "95ae3ca64a6eaee00c772ddd70063c210b55dff03632b9690ec645ffa2bae49f"
+  },
+  {
+    "path": "commercial-poster.jpg",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/commercial-poster.jpg",
+    "content_type": "image/jpeg",
+    "bytes": 47711,
+    "sha256": "397d7904c1abbd74877ce74752d6f85018f252ecb624d707a6dfb7f3e07ccb1f"
+  },
+  {
+    "path": "fritz-famtastic.vcf",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/fritz-famtastic.vcf",
+    "content_type": "text/x-vcard",
+    "bytes": 307,
+    "sha256": "487d2fe72a9ce029ab1114392f40c879a2664ec6410aa048019d5cac056eb59c"
+  },
+  {
+    "path": "manifest.webmanifest",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/manifest.webmanifest",
+    "content_type": "application/manifest+json",
+    "bytes": 661,
+    "sha256": "03e9599680d523363db789e757eef66b59c8b899549b369471e211cd3e3ee162"
+  },
+  {
+    "path": "qr.svg",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/qr.svg",
+    "content_type": "image/svg+xml",
+    "bytes": 13616,
+    "sha256": "db7f6251efe439580908ca780223bd64fd641d4ab3f368c4e406594a8ccb2055"
+  },
+  {
+    "path": "FAMtastic-Connect-QR.png",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/FAMtastic-Connect-QR.png",
+    "content_type": "image/png",
+    "bytes": 1156,
+    "sha256": "2d55d56b0094dacea50d497211266c233f53e6e10a7de546bf235e5a5d734f4f"
+  },
+  {
+    "path": "icons/icon.svg",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/icons/icon.svg",
+    "content_type": "image/svg+xml",
+    "bytes": 194,
+    "sha256": "6d7a29ec36dd951408025a8dbf9b2c42b01155f32feac7b8f950cd23bf9eb91b"
+  },
+  {
+    "path": "icons/icon-maskable.svg",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/icons/icon-maskable.svg",
+    "content_type": "image/svg+xml",
+    "bytes": 183,
+    "sha256": "57ef4d991aff2be178f7e42a64608294554bb326fbf486da573c016f302a515d"
+  },
+  {
+    "path": "icons/icon-192.png",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/icons/icon-192.png",
+    "content_type": "image/png",
+    "bytes": 2563,
+    "sha256": "0cb9961bf0216fb2f7533e4043167eb779d59fe37fcb46be1dc34256355d7abd"
+  },
+  {
+    "path": "icons/icon-512.png",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/icons/icon-512.png",
+    "content_type": "image/png",
+    "bytes": 11102,
+    "sha256": "d84f69df871e71e27a0270625be28270c696310f9be8304bb0f80cd19365f8c2"
+  },
+  {
+    "path": "icons/icon-maskable-512.png",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/icons/icon-maskable-512.png",
+    "content_type": "image/png",
+    "bytes": 7282,
+    "sha256": "07a2579536623c9eeedb446179172c432486e03a2aee773518fc2ee6a1f033de"
+  },
+  {
+    "path": "icons/apple-touch-icon.png",
+    "url": "https://famtastic-connect.nineoo.chatgpt.site/icons/apple-touch-icon.png",
+    "content_type": "image/png",
+    "bytes": 2441,
+    "sha256": "ab44eb2c9752f98d18e48a55f51d99784e8b64d8af6867d7381c168300577456"
+  }
+]

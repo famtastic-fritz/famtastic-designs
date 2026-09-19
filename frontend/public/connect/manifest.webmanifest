@@ -1,0 +1,33 @@
+{
+  "id": "/connect/",
+  "name": "FAMtastic Connect",
+  "short_name": "FAMtastic",
+  "description": "FAMtastic Designs: your contact card, website offer, and commercial.",
+  "start_url": "/connect/",
+  "scope": "/connect/",
+  "display": "standalone",
+  "background_color": "#080a08",
+  "theme_color": "#080a08",
+  "lang": "en",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/connect/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/connect/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/connect/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
