@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Test the email's entry point, not just protected proof bytes
+
+Observation: request17's branded personal notice exposed protected `/web/api`
+proof links as raw text. Those do not provide the portal login return. Guidance:
+use one named portal button, preserve the request through login, focus Concepts,
+and keep API/admin routes out of customer email entry. Outbox772 is the explicitly
+authorized one-time correction; original769 remains immutable. See the dated
+proof-email navigation record for source, browser and delivery boundaries.
+
 ## 2026-09-18 — Automation approval is not a human uid
 
 Observation: reusing human proof approval would stamp a staff uid and queue the

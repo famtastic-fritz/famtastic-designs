@@ -211,6 +211,7 @@ export function WebsiteProofReview({ request, busy, onDecision, onShare, onConti
   return (
     <section
       className="portal-proof-review"
+      id={`proof-review-${request.public_id}`}
       aria-label={`Review concepts for ${request.project_name}`}
     >
       <ProofDecisionGuide request={request} />
@@ -1184,7 +1185,7 @@ export default function PortalProjectsView({
 
             {/* CONCEPT PROOFS OR DURABLE HANDOFF STATUS */}
             {proofReady(activeRequest) && activeRequest.proof_review_status !== 'revision_requested' ? (
-              <div id={`concepts-${activeRequest.public_id}`} style={{ marginTop: '1.5rem', scrollMarginTop: '5rem' }}>
+              <div id={`concepts-${activeRequest.public_id}`} tabIndex={-1} style={{ marginTop: '1.5rem', scrollMarginTop: '5rem' }}>
                 <h3 style={{ margin: '0 0 0.35rem', fontSize: '1.3rem', color: '#fff' }}>
                   Choose one direction
                 </h3>
@@ -1200,7 +1201,7 @@ export default function PortalProjectsView({
                 />
               </div>
             ) : (
-              <div id={`concepts-${activeRequest.public_id}`}
+              <div id={`concepts-${activeRequest.public_id}`} tabIndex={-1}
                 style={{
                   margin: '1.5rem 0',
                   padding: '1.4rem',

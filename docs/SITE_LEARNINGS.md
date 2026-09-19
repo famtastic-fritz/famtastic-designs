@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Branded does not prove usable email navigation
+
+Personal proof notices used standard/v2, whose autolinker printed raw URLs;
+direct protected proof documents bypassed the portal's login-return flow.
+Brand/screenshots and account-bound HTTP tests did not catch that customer
+entry failure. Require the existing proof-ready adapter, one exact portal CTA,
+raw-visible-URL assertions, and signed-out-to-proof browser QA before sending.
+Authorized correction is a new idempotent receipt, never a rewrite of sent mail.
+
 ## 2026-09-18 — Personal delivery requires an atomic review boundary
 
 Human approval queued generic copy and stamped a uid. The new trusted QA

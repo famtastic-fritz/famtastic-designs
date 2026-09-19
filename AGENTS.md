@@ -1,5 +1,16 @@
 # Agent Instructions
 
+## September 18 — Customer email buttons and portal entry (mandatory)
+
+Customer proof emails must use the existing `customer_proof_ready/v4` adapter
+with one exact account-bound `/portal/?section=projects&request=...` destination.
+Do not email Drupal `/web/admin` or `/web/api` proof URLs. APIs stay internal to
+the authenticated portal; no access checks are removed. The HTML action is a
+named, 44px button, never a visible raw URL. Plain-text mail retains its fallback.
+Test signed-out login return, signed-in project access, mobile layout and tenant
+isolation. Corrections require an explicitly authorized, separate immutable key;
+never modify or retry a sent row. See `docs/design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+
 ## September 18 — Routine green proof release
 
 The approved client-delivery policy allows independently QA-passed account-bound

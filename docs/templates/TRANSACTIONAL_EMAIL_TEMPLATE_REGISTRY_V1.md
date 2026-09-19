@@ -1,5 +1,14 @@
 # Transactional email template registry v1
 
+## September 18 correction — customer entry and visible action
+
+New automated personal proof releases use `customer_proof_ready/v4`, not
+`standard/v2`, with exactly one request-bound portal URL. The standard compatibility
+renderer now displays validated links as named buttons and converts old queued
+customer proof API links to their portal project destination. Versions, historical
+receipts and plain-text bodies are not rewritten. No send is implied by rendering.
+See [navigation release evidence](../design/PROOF-EMAIL-NAVIGATION-2026-09-18.md).
+
 ## September 18 — Shared branding for every active agency notification
 
 Owner requested replacement of all old email layouts after a verified-registration

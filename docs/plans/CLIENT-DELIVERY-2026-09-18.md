@@ -128,3 +128,11 @@ Test text against the rendered lit surface, not just its nominal background colo
 Selected lime controls require a dark focus ring; dark surfaces require a light
 ring. Preserve44px targets, per-view skip focus, reduced motion, honest sample copy
 and independent QA. Never waive accessibility to ship a more dramatic effect.
+# September18 follow-up: request17 email navigation corrected
+
+Fritz reported direct `/web` proof links and raw visible URLs in the original
+personal notice. The authorized correction, outbox772, was SMTP-accepted once
+at2026-09-19T01:02:52Z with one named portal button and existing proof-ready/v4
+branding. Original769 is unchanged. No selection/payment/build state changed.
+See `../design/PROOF-EMAIL-NAVIGATION-2026-09-18.md` for recurrence guards,
+login-return browser evidence, deployment status and recipient-read limits.

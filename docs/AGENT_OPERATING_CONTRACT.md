@@ -1,5 +1,15 @@
 # FAMtastic agent operating contract
 
+## September 18 amendment — proof notification navigation
+
+The personal-copy requirement does not mean using the generic standard template.
+New independently reviewed proof releases use existing `customer_proof_ready/v4`:
+one named HTML button to the exact `/portal/?section=projects&request=...` path.
+No direct Drupal proof/admin URLs, raw HTML-visible URLs, or login bypass.
+Plain-text fallback remains available. This supersedes the standard/v2 producer
+choice below, not historical send receipts. Exact historical retries remain
+immutable. See `design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+
 ## September 18 amendment — independent QA authority
 
 For routine account-bound three-proof deliveries, the owner's approved policy

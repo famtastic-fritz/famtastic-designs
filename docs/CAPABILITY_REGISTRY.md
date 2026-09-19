@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Corrected proof notification acceptance
+
+Request17 correction outbox772 is SMTP-accepted once with the existing
+customer_proof_ready/v4 shell, one portal button and no raw visible URLs.
+Separately authorized request16 correction773 has the same verified acceptance.
+Live anonymous desktop/mobile login return and mocked post-login rendering of
+the actual deployed frontend pass; no client password/readership claim.
+The new recurrence guards and Concepts focus are source-tested pending the
+release recorded in `docs/design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+
 ## 2026-09-18 — Independent QA proof release, locally proven
 
 Trusted service operation atomically retains automated QA/research and reveals

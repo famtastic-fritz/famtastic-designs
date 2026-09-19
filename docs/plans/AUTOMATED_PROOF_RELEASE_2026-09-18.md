@@ -104,3 +104,10 @@ authored source but has only bounded static capabilities, not ecommerce generati
 The running Studio, target bindings, signed callbacks, lease worker, cloud credentials
 and laptop-unavailable proof each need their own evidence. This gate alone does not
 make the full pipeline unattended and does not select a customer direction.
+# September18 email-navigation correction
+
+New QA releases retain personal plain-text copy but now use the existing
+`customer_proof_ready/v4` adapter with exactly one account-bound portal URL.
+This supersedes standard/v2 below for newly created notices, not historical
+exact retries. No direct Drupal proof URLs in customer email. See
+`../design/PROOF-EMAIL-NAVIGATION-2026-09-18.md` for the owner-authorized correction.

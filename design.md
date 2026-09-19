@@ -113,6 +113,15 @@ website placements. RGB/gold logo colors do not replace existing action/surface 
 
 ## Transactional email rule
 
+September 18 correction: customer proof actions always enter `/portal`, not
+Drupal `/web/admin` or protected `/web/api` document URLs. Render named HTML
+buttons; raw URLs belong only in the plain-text alternative. New personal proof
+releases use the existing `customer_proof_ready/v4` adapter with one request-bound
+portal URL, preserving personal copy and Shay's signature. Preserve the exact
+destination through login and put Concepts in view. Never add bearer credentials
+or bypass account ownership to make a link convenient. The generic standard
+renderer also presents valid links as named buttons, not visible raw URLs.
+
 New staging-review email direction and local-preview proof:
 [`docs/design/email-brand-system.md`](docs/design/email-brand-system.md).
 The September 18 owner request extends this approved shell to every active agency

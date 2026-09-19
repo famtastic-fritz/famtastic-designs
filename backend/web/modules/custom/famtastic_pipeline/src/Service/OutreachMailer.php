@@ -253,7 +253,28 @@ class OutreachMailer {
             $trailing = $m[0];
             $url = substr($url, 0, strlen($url) - strlen($trailing));
           }
-          return '<a href="' . $url . '" style="color:#0f6b47;font-weight:700;word-break:break-word">' . $url . '</a>' . $trailing;
+          $decoded = html_entity_decode($url, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+          $parts = parse_url($decoded);
+          if (!filter_var($decoded, FILTER_VALIDATE_URL) || !is_array($parts)
+            || !in_array(strtolower($parts['scheme'] ?? ''), ['http', 'https'], TRUE)
+            || isset($parts['user']) || isset($parts['pass']) || preg_match('/[<>"\x00-\x20]/', $decoded)) {
+            return '[Invalid link omitted]' . $trailing;
+          }
+          $label = 'Open link';
+          if (in_array(strtolower($parts['host'] ?? ''), ['famtasticdesigns.com', 'www.famtasticdesigns.com'], TRUE)) {
+            $path = $parts['path'] ?? '';
+            // Compatibility for old queued personal notices. The private proof
+            // API remains an iframe resource, never an email entry point.
+            if (preg_match('~^/web/api/customer/website-requests/([0-9a-f-]{36})/proofs/[a-f]$~D', $path, $proof)) {
+              $decoded = 'https://famtasticdesigns.com/portal/?section=projects&request=' . $proof[1];
+              $label = 'Open your proof set';
+            }
+            elseif (preg_match('~^/portal(?:/|$)~', $path)) $label = 'Open your portal';
+            elseif (str_starts_with($path, '/web/admin/')) $label = 'Open staff workspace';
+            elseif ($path === '/login') $label = 'Sign in';
+          }
+          $href = htmlspecialchars($decoded, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+          return '<a class="email-link-button" href="' . $href . '" style="display:inline-block;margin:6px 0;padding:12px 18px;min-height:20px;line-height:20px;background:#101310;color:#7cfc00;border:1px solid #52613d;border-radius:8px;text-decoration:none;font-weight:700">' . $label . '</a>' . $trailing;
         },
         $escaped,
       ) ?? $escaped;

@@ -84,5 +84,22 @@ namespace {
   check(!OutreachMailer::supportsTemplate('standard', 99), 'Unknown versions rejected');
   $source = file_get_contents($root . $service . 'OutreachMailer.php');
   check(!str_contains($source, '<!doctype html>'), 'Mailer may not own a parallel HTML shell');
+  $projectUrl = 'https://famtasticdesigns.com/portal/?section=projects&request=12345678-1234-1234-1234-123456789012';
+  $legacyApi = 'https://famtasticdesigns.com/web/api/customer/website-requests/12345678-1234-1234-1234-123456789012/proofs/c';
+  foreach (['standard', 'customer_proof_ready'] as $template) {
+    $message = $method->invoke($mailer, 'Proof test', "Hello <script>x</script>\n\nOpen your project:\n$projectUrl\n\nAlways FAMtastic,\nShay", $template);
+    $doc = new \DOMDocument(); @$doc->loadHTML($message);
+    check(!str_contains($doc->getElementsByTagName('body')->item(0)->textContent, 'https://'), 'No visible raw URLs: ' . $template);
+    check($doc->getElementsByTagName('a')->length === 1, 'Exactly one named action: ' . $template);
+    check($doc->getElementsByTagName('a')->item(0)->getAttribute('href') === $projectUrl, 'Exact query preserved: ' . $template);
+    check(!str_contains($message, '<script>'), 'Escaped content: ' . $template);
+  }
+  $legacy = $method->invoke($mailer, 'Legacy queued', $legacyApi, 'standard');
+  check(str_contains($legacy, htmlspecialchars($projectUrl, ENT_QUOTES)), 'Legacy protected proof converted to portal button');
+  check(!str_contains($legacy, '/web/api/'), 'API URL never an email entry');
+  foreach (['https://user:password@evil.invalid/', 'https://evil.invalid/"onclick="x'] as $unsafe) {
+    $bad = $method->invoke($mailer, 'Unsafe', $unsafe, 'standard');
+    check(!str_contains($bad, 'href='), 'Invalid or credential-bearing action rejected');
+  }
   echo "PASS: {$count} presentation assertions; no transport, queue or database loaded.\n";
 }

@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-18 — Proof email correction and portal return
+
+- Sent one owner-authorized request17 correction through the existing branded
+  proof-ready adapter: outbox772 SMTP-accepted once; original769 unchanged.
+- Separately authorized request16 correction: outbox773 SMTP-accepted once,
+  original767 unchanged; reunion copy and private$199scope retained.
+- Added source guards for one portal destination, named standard-email buttons,
+  and direct Concepts focus after login; repaired the Review3 anchor.
+- Added regression/browser checks and mandatory agent/design guidance. Release
+  and evidence status: `docs/design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+
 ## 2026-09-18 — Evidence-bound personal proof delivery (local)
 
 - Added trusted independent-QA release with automation attribution, current
