@@ -1,11 +1,14 @@
 #!/usr/bin/env node
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync as writeRaw, existsSync } from 'node:fs';
+import { addCreatorCredit } from '../../../scripts/creator-credit.mjs';
+const writeFileSync = (path, data) => writeRaw(path, String(path).endsWith('.html') ? addCreatorCredit(data) : data);
 import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const pilot = dirname(fileURLToPath(import.meta.url));
 const output = resolve(process.argv[2] || join(pilot, 'proof'));
+if (!process.argv[2] || existsSync(output)) throw new Error('Supply a new output directory; historical proof versions are immutable.');
 const scenario = JSON.parse(readFileSync(join(pilot, 'scenario.json'), 'utf8'));
 const directions = JSON.parse(readFileSync(join(pilot, 'directions.json'), 'utf8'));
 const sha = (value) => createHash('sha256').update(value).digest('hex');
@@ -34,7 +37,7 @@ for (const [i,d] of directions.entries()) {
   const dir=join(output,d.slug); mkdirSync(join(dir,'assets'),{recursive:true});
   copyFileSync(join(pilot,'assets',d.art),join(dir,'assets','hero.png'));
   const html=renderers[i](d); writeFileSync(join(dir,'index.html'),html);
-  manifest.push({...d,entry:`${d.slug}/index.html`,html_sha256:sha(html),hero_sha256:sha(readFileSync(join(dir,'assets','hero.png')))});
+  manifest.push({...d,entry:`${d.slug}/index.html`,html_sha256:sha(addCreatorCredit(html)),hero_sha256:sha(readFileSync(join(dir,'assets','hero.png')))});
 }
 const cards=manifest.map(d=>`<article><img src="${d.slug}/assets/hero.png" alt="Concept artwork for ${esc(d.name)}"><div><span>${esc(d.mode.replaceAll('_',' '))} · ${d.famtastic_level}/10</span><h2>${esc(d.name)}</h2><p>${esc(d.dek)}</p><a href="${d.entry}">Open working site →</a></div></article>`).join('');
 const hub=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Six Candy Lady directions</title><style>${base}body{margin:0;background:#120816;color:#fff;font-family:Arial,sans-serif}.hero{padding:80px 0 45px}.hero h1{font-size:clamp(46px,8vw,96px);line-height:.9;max-width:900px;margin:15px 0}.hero p{font-size:20px;max-width:740px;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;padding-bottom:80px}article{overflow:hidden;border-radius:28px;background:#fff;color:#17121a}article img{width:100%;aspect-ratio:16/8;object-fit:cover}article div{padding:26px}article span{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.14em}article h2{font-size:34px;margin:10px 0}article a{font-weight:900}@media(max-width:720px){.grid{grid-template-columns:1fr}.hero{padding-top:50px}}</style></head><body>${note}<main id="main"><header class="wrap hero"><span class="eyebrow">Six complete website proofs</span><h1>One safe. One medium. Four fully FAMtastic.</h1><p>The Good Ole Candy Lady Shop is a fictional local benchmark. Every direction includes a responsive navigation, menu strategy, preorder concept, event or fundraising path, and a deliberately disconnected QR-payment placeholder.</p></header><section class="wrap grid">${cards}</section></main></body></html>`;

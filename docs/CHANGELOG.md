@@ -45,6 +45,42 @@
   acceptance and reselection invalidation; live gates were not changed for tests.
 - QA gate `988d9d6d` independently observed deployed at23:46:20Z. Worker changes
   remain separate and disabled; main owns subsequent shared releases.
+
+## 2026-09-18 — Cross-repository creator-credit rollout
+
+- MBSH96 released first; customer/site and studio lanes now carry the same exact
+  approved-logo final-row contract. Existing attribution and customer state remain.
+- Consolidated live receipts, source-only work, default-branch exceptions, tests,
+  browser evidence and remaining gaps in
+  `operations/creator-credit-rollout-2026-09-18.md`.
+- Verified live mobile Kakes and Reckoning final rows, plus authenticated agency
+  admin credit with its navigation drawer closed. No customer forms or mail sent.
+
+## 2026-09-18 — Agency creator credit
+
+- Deployed222 existing frontend/static HTML at50a07d5e and six presentation PHP/theme
+  files plus48 immutable-original legacy presentation versions at7490f297.
+  Verified114 original hashes unchanged,48 public response hashes and66 protected403s.
+- Added exact-PNG final credit to agency React, static/lead proof builders, future
+  mail/stub rendering and marketing publication gates. Preserved existing footers.
+- Added new-version inventories and existing-files-only deploy modes; no state or
+  historical approval mutation. See operations/agency-creator-credit-lane-2026-09-18.md
+  for exact source, tests, rollout status and exclusions.
+
+## 2026-09-18 — Proof email correction and portal return
+
+- Sent one owner-authorized request17 correction through the existing branded
+  proof-ready adapter: outbox772 SMTP-accepted once; original769 unchanged.
+- Separately authorized request16 correction: outbox773 SMTP-accepted once,
+  original767 unchanged; reunion copy and private$199scope retained.
+- Added source guards for one portal destination, named standard-email buttons,
+  and direct Concepts focus after login; repaired the Review3 anchor.
+- Added regression/browser checks and mandatory agent/design guidance. Release
+  and evidence status: `docs/design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+- Released8eb12209 to backend and frontend; exact markers/source hashes verified.
+  Full unit suite273tests/1449assertions,8 live-frontend fixture cases and75
+  deployed account/asset boundary checks pass. No real customer login is claimed.
+
 ## 2026-09-18 — Evidence-bound personal proof delivery (local)
 
 - Added trusted independent-QA release with automation attribution, current

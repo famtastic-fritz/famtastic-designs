@@ -41,6 +41,33 @@ selected-source/receipt identity. Guidance: verify canonical versions, then repa
 fixture evidence; never relax acceptance/checkout gates to make stale tests green.
 Native held prepayments may be bound by a private offer and order data while the
 normal converted-order field is NULL; do not manufacture another sale.
+
+## 2026-09-18 — Final-row geometry and artifact continuity
+
+Pin critical logo dimensions inline: a cached stylesheet can otherwise expose the
+2172px intrinsic PNG even when the new source CSS is correct. Test fixed chat,
+consent and mobile navigation separately. An older selected proof receives a
+derived credited presentation with original/derived hashes, not regenerated pages
+or rewritten approval evidence. Verify the repository's actual default branch;
+legacy `dev` must not be mislabeled missing `main` or a deployment failure.
+
+## 2026-09-18 — Credit retrofit provenance
+
+Observation: static showcase source carries historical approval/hash evidence,
+and normal deployers promote broader files/state than a creator-credit retrofit.
+Guidance: author new output hashes, back up exact existing targets, exclude absent
+customer routes, and separate narrow release markers from full-site release claims.
+Fixed mobile owner/portal navigation needs clearance below the final credit row.
+
+## 2026-09-18 — Test the email's entry point, not just protected proof bytes
+
+Observation: request17's branded personal notice exposed protected `/web/api`
+proof links as raw text. Those do not provide the portal login return. Guidance:
+use one named portal button, preserve the request through login, focus Concepts,
+and keep API/admin routes out of customer email entry. Outbox772 is the explicitly
+authorized one-time correction; original769 remains immutable. See the dated
+proof-email navigation record for source, browser and delivery boundaries.
+
 ## 2026-09-18 — Automation approval is not a human uid
 
 Observation: reusing human proof approval would stamp a staff uid and queue the
@@ -2630,3 +2657,9 @@ The exact private offer can bind an offline receipt without filling the request'
 normal order field and blocking proof selection. Any compatibility bridge must
 reconcile the native payment, immutable scope hash and held unaccepted order;
 source tests do not replace an actual ready-proof selection rehearsal.
+# 2026-09-18 — Creator-credit release evidence
+
+Agency-only retrofit:222 existing static/React shells;114 runtime originals in31
+campaigns remain unchanged;48 direct-public new presentations and66 protected403s.
+Three friends PHP apps are symlink-backed separately versioned apps, not zero files.
+Exact releases, parent CUA receipts and pending targets are in the agency lane audit.

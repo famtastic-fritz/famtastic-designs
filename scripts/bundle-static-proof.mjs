@@ -2,6 +2,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { addCreatorCredit } from './creator-credit.mjs';
 
 const [sourceDirectory, outputPath] = process.argv.slice(2);
 if (!sourceDirectory || !outputPath) {
@@ -39,6 +40,7 @@ html = html.replace(assetPattern, (_placeholder, filename) => {
 if (assetPattern.test(html) || html.includes('{{asset:')) {
   throw new Error('One or more proof asset placeholders were not resolved.');
 }
+html = addCreatorCredit(html);
 if (Buffer.byteLength(html, 'utf8') > 500_000) {
   throw new Error('Bundled proof exceeds the 500 KB callback limit.');
 }

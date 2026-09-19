@@ -32,6 +32,36 @@ Fresh canonical lifecycle passed00:00:11Z with fixture27ab74fa: real installed
 Drupal/SQLite, authenticated customer HTTP, signed synthetic hosting receipt,
 receipt-bound acceptance, memory email/payment, fixture DNS and local deployment.
 No real hosting, merchant, cloud or laptop-unavailable proof is implied.
+
+## 2026-09-18 — Cross-repository credit evidence
+
+The dated [rollout audit](operations/creator-credit-rollout-2026-09-18.md)
+separates live customer patches, source/default-branch adoption, studio build
+guards and exclusions. Parent CUA additionally verifies live Kakes/Reckoning and
+authenticated native admin credit. This is not a claim that every historical
+media export or unlaunched site is published, nor a customer-delivery test.
+
+## 2026-09-18 — Creator credit source implementation
+
+Agency credit pattern/build gates are tested and scoped existing-live deployment is
+verified:222 frontend/static HTML,48 new legacy proof presentation versions, six
+PHP/theme files. All114 original proof hashes unchanged;66 protected direct URLs
+remain403. Parent CUA covers homepage/www/Palmera; lane CUA covers owner-nav clearance.
+Exact releases and pending linked app/private visual QA are recorded in the lane report.
+No ecosystem-wide, email-send or customer-acceptance capability upgrade is implied.
+
+## 2026-09-18 — Corrected proof notification acceptance
+
+Request17 correction outbox772 is SMTP-accepted once with the existing
+customer_proof_ready/v4 shell, one portal button and no raw visible URLs.
+Separately authorized request16 correction773 has the same verified acceptance.
+Live anonymous desktop/mobile login return and mocked post-login rendering of
+the actual deployed frontend pass; no client password/readership claim.
+The recurrence guards and Concepts focus are live at8eb12209 (backend01:20:09Z,
+frontend01:22:41Z September19 UTC). Eight live-frontend browser-fixture cases
+and75 actual deployed proof-controller/asset checks pass. Exact release evidence
+and real-customer-login limits: `docs/design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+
 ## 2026-09-18 — Independent QA proof release, service deployed
 
 Trusted service operation atomically retains automated QA/research and reveals

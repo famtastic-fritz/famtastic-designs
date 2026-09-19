@@ -1,5 +1,12 @@
 # FAMtastic Experience System v1
 
+Creator credit is mandatory by default for every authored surface, regardless of
+tier. Preserve original footer text and customer visual world; append the exact
+owner PNG in a centered final row. The September 18 contract is
+[CREATOR-CREDIT-2026-09-18.md](docs/design/CREATOR-CREDIT-2026-09-18.md).
+Only explicit owner override creates an exception. Source implementation and
+production proof are recorded separately; historical approvals remain historical.
+
 ## Preserve before enhancing — visual authority
 
 [FAMTASTIC-DESIGN-SYSTEM.md](docs/design/FAMTASTIC-DESIGN-SYSTEM.md) is the canonical
@@ -33,6 +40,12 @@ as a deployment instruction. Contact success decoration requires `ok`, a positiv
 integer `request_id` and a saved status; a mail draft is not a saved request or send.
 
 Owner rule, September14,2026: every new customer build must include a site-specific `design.md` before implementation. Reference this shared contract, the approved customer direction, responsive/type rules, component boundaries and acceptance evidence. A file added during maintenance must disclose that timing rather than imply it governed the original generation.
+
+For expressive customer proofs, texture, surface geometry and lighting are separate
+scoped layers, not permission to replace working architecture or spread one customer's
+palette globally. Keep decoration noninteractive, preserve44px targets and semantic
+controls, limit motion, and test text/focus contrast against the actual lit surface.
+See the [StockandShip material-layer contract](docs/plans/CLIENT-DELIVERY-2026-09-18.md#reusable-material-layer-contract).
 
 This is the required, reusable design contract for every customer-facing
 FAMtastic surface: `famtasticdesigns.com`, Client Portal, proof rooms, Site
@@ -106,6 +119,15 @@ website placements. RGB/gold logo colors do not replace existing action/surface 
   as an assumption in the research—not silently invented.
 
 ## Transactional email rule
+
+September 18 correction: customer proof actions always enter `/portal`, not
+Drupal `/web/admin` or protected `/web/api` document URLs. Render named HTML
+buttons; raw URLs belong only in the plain-text alternative. New personal proof
+releases use the existing `customer_proof_ready/v4` adapter with one request-bound
+portal URL, preserving personal copy and Shay's signature. Preserve the exact
+destination through login and put Concepts in view. Never add bearer credentials
+or bypass account ownership to make a link convenient. The generic standard
+renderer also presents valid links as named buttons, not visible raw URLs.
 
 New staging-review email direction and local-preview proof:
 [`docs/design/email-brand-system.md`](docs/design/email-brand-system.md).

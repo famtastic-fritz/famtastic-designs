@@ -73,7 +73,7 @@ final class AutomatedProofReleaseTest extends UnitTestCase {
     $context = $this->portal->websiteRequestAutomatedProofQaContext(991, $this->research);
     $this->evidence = $context + ['producer' => 'automation:builder', 'reviewer' => 'automation:independent-reviewer', 'exceptions' => [], 'scope_in_bounds' => TRUE];
     foreach (AutomatedProofPolicy::CHECKS as $check) $this->evidence['checks'][$check] = ['passed' => TRUE, 'evidence_ref' => 'evidence:fixture/' . $check, 'evidence_sha256' => hash('sha256', $check)];
-    $this->notice = ['notification_key' => 'website-request:991:proofs:995:qa-v1', 'recipient' => 'fixture@example.test', 'subject' => 'Personal fixture', 'body' => 'A personal message. Always FAMtastic, Shay'];
+    $this->notice = ['notification_key' => 'website-request:991:proofs:995:qa-v1', 'recipient' => 'fixture@example.test', 'subject' => 'Personal fixture', 'body' => "A personal message. Always FAMtastic, Shay\n\nOpen your project:\nhttps://famtasticdesigns.com/portal/?section=projects&request=fixture-request"];
   }
 
   protected function tearDown(): void {
@@ -96,8 +96,8 @@ final class AutomatedProofReleaseTest extends UnitTestCase {
     self::assertNull($r['proof_approved_by_uid']);
     $m = $this->db->select('famtastic_notification_outbox', 'n')->fields('n')->execute()->fetchAssoc();
     self::assertSame($this->notice['body'], $m['body']);
-    self::assertSame('standard', $m['template_id']);
-    self::assertSame(2, (int) $m['template_version']);
+    self::assertSame('customer_proof_ready', $m['template_id']);
+    self::assertSame(4, (int) $m['template_version']);
     self::assertSame(1, (int) $m['max_attempts']);
     self::assertSame(0, (int) $m['attempts']);
   }
@@ -115,6 +115,11 @@ final class AutomatedProofReleaseTest extends UnitTestCase {
       'scope_exception' => $this->evidence['exceptions'] = ['merchant_permission'],
       'wrong_recipient' => $this->notice['recipient'] = 'other@example.test',
       'wrong_key' => $this->notice['notification_key'] = 'shared-key',
+      'no_portal_link' => $this->notice['body'] = 'No destination',
+      'admin_link' => $this->notice['body'] = 'https://famtasticdesigns.com/web/admin/famtastic/website-request/991/proof/a',
+      'api_link' => $this->notice['body'] = 'https://famtasticdesigns.com/web/api/customer/website-requests/fixture-request/proofs/a',
+      'foreign_portal_link' => $this->notice['body'] = 'https://famtasticdesigns.com/portal/?section=projects&request=foreign-request',
+      'extra_link' => $this->notice['body'] .= "\nhttps://example.test/unrelated",
       'changed_artifact' => file_put_contents($this->fixtureRoot . '/web/proofs/fixture-campaign/a/index.html', 'changed'),
       'changed_research' => $this->research['overview'] = 'changed',
     };
@@ -124,7 +129,20 @@ final class AutomatedProofReleaseTest extends UnitTestCase {
     self::assertSame(0, $this->rowCount('famtastic_notification_outbox'));
     self::assertSame('owner_review', $this->db->select('famtastic_project_request', 'r')->fields('r', ['proof_review_status'])->execute()->fetchField());
   }
-  public static function negativeCases(): iterable { foreach (['self_review','foreign_customer','foreign_campaign','foreign_request','stale_policy','missing_evidence','failed_qa','scope_exception','wrong_recipient','wrong_key','changed_artifact','changed_research'] as $c) yield $c => [$c]; }
+  public static function negativeCases(): iterable { foreach (['self_review','foreign_customer','foreign_campaign','foreign_request','stale_policy','missing_evidence','failed_qa','scope_exception','wrong_recipient','wrong_key','no_portal_link','admin_link','api_link','foreign_portal_link','extra_link','changed_artifact','changed_research'] as $c) yield $c => [$c]; }
+
+  public function testHistoricalExactRetryPreservesOriginalTemplateAndReceipt(): void {
+    $this->release();
+    // Fixture representing a pre-fix release. No production history is edited.
+    $this->notice['body'] = "Legacy personal body\nhttps://famtasticdesigns.com/web/api/customer/website-requests/fixture-request/proofs/a";
+    $payload = json_decode($this->db->select('famtastic_event', 'e')->fields('e', ['payload'])->execute()->fetchField(), TRUE);
+    $payload['notification_sha256'] = hash('sha256', json_encode($this->notice, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
+    $this->db->update('famtastic_event')->fields(['payload' => json_encode($payload)])->execute();
+    $this->db->update('famtastic_notification_outbox')->fields(['template_id' => 'standard', 'template_version' => 2, 'body' => $this->notice['body'], 'status' => 'sent', 'provider_message_id' => '<original@fixture.invalid>'])->execute();
+    $before = $this->db->select('famtastic_notification_outbox', 'n')->fields('n')->execute()->fetchAssoc();
+    self::assertTrue($this->release()['duplicate']);
+    self::assertSame($before, $this->db->select('famtastic_notification_outbox', 'n')->fields('n')->execute()->fetchAssoc());
+  }
 
   public function testLateOutboxFailureRollsBackRevealResearchAndDecision(): void {
     $this->db->query("CREATE TRIGGER fail_notice BEFORE INSERT ON famtastic_notification_outbox BEGIN SELECT RAISE(ABORT, 'fixture late failure'); END", [], ['allow_delimiter_in_query' => TRUE]);

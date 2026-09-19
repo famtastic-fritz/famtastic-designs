@@ -42,6 +42,7 @@ done
 test -s "$site_dir/index.html"
 test -s "$site_dir/styles.css"
 test -s "$site_dir/app.js"
+node "$repo_dir/scripts/check-creator-credit.mjs" "$site_dir"
 [[ -z "$(find "$site_dir" -type l -print -quit)" ]] || { echo "Symbolic links are not allowed." >&2; exit 1; }
 [[ -z "$(find "$site_dir" -type f \( -name '*.php' -o -name '.htaccess' -o -name '*.cgi' -o -name '*.pl' -o -name '*.sh' -o -name '*.py' \) -print -quit)" ]] || { echo "Executable or server-side files are not allowed." >&2; exit 1; }
 

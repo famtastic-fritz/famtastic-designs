@@ -9,6 +9,17 @@ activation. Never use a broad lifecycle drain to demonstrate the new worker.
 Routine green work needs no extra Fritz decision; unsupported commerce needs its
 implementation capability, not a false static success. Laptop independence is
 unproven until a real unattended test runs with the Mac unavailable.
+
+## September 18 amendment — proof notification navigation
+
+The personal-copy requirement does not mean using the generic standard template.
+New independently reviewed proof releases use existing `customer_proof_ready/v4`:
+one named HTML button to the exact `/portal/?section=projects&request=...` path.
+No direct Drupal proof/admin URLs, raw HTML-visible URLs, or login bypass.
+Plain-text fallback remains available. This supersedes the standard/v2 producer
+choice below, not historical send receipts. Exact historical retries remain
+immutable. See `design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+
 ## September 18 amendment — independent QA authority
 
 For routine account-bound three-proof deliveries, the owner's approved policy
@@ -18,6 +29,11 @@ an automation actor distinct from the generator and no human uid attribution.
 The operation queues one authorized personalized standard/v2 notice atomically;
 it does not send, select, charge or launch. Exception and exact client-acceptance
 gates remain. No old queue or generic campaign is automatically admitted.
+Callback retries must not undo this decision or a later customer choice. Recheck
+the actual request state, protected access, scoped notification and selection job
+after replay—not just the variant count. Preserve trusted staff-assisted briefs
+and revision history across customer edits. Current receipts and pending activation
+work are in `plans/CLIENT-DELIVERY-2026-09-18.md`.
 
 ## September 18 — Shared branding for every active agency notification
 

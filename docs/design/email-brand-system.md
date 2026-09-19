@@ -1,5 +1,16 @@
 # FAMtastic email brand system v1
 
+## Required action/navigation rule — September 18 correction
+
+Keep HTML actions as named, real buttons with at least 44px touch height; do not
+show raw URLs. Plain-text alternatives retain usable URLs. Personal proof copy
+uses the existing `customer_proof_ready/v4` adapter and one account-bound portal
+destination. Never send `/web/admin` or `/web/api` proof documents as customer
+entry links. Sign-in must retain the exact project and return to Concepts.
+This is an implementation correction to the existing shell, not a second mail
+system. Standard/v2 compatibility rendering now uses named safe-link buttons.
+Historical delivered mail remains unchanged. [Incident and proof](PROOF-EMAIL-NAVIGATION-2026-09-18.md).
+
 ## September 18 — Shared branding for every active agency notification
 
 Owner requested replacement of all old email layouts after a verified-registration

@@ -77,6 +77,7 @@ marketing/video/public/
 # local TTS server is started with this repo as cwd. Not campaign content.
 data/
 /.local-email-preview/
+/.local-creator-credit/
 
 # Locs source moved to its independent private repository. Retain only pointers;
 # do not accidentally add old ignored test state or recreate customer source here.

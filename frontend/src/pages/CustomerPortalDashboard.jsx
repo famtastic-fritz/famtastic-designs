@@ -76,6 +76,10 @@ export default function CustomerPortalDashboard() {
   const messages = usePortalInbox({ enabled: state === 'ready', isViewing: section === 'messages', organization: workspace?.organization?.public_id });
 
   useEffect(() => {
+    let cancelled = false;
+    // Capture before the asynchronous load: a second late 401 must not replace
+    // the original project return with the login page (StrictMode/retry race).
+    const destination = portalReturn(window.location.pathname + window.location.search);
     setState('loading');
     setError('');
     loadCustomerPortal({
@@ -84,6 +88,7 @@ export default function CustomerPortalDashboard() {
       getCatalog: getCustomerCatalog,
     })
       .then(({ session: nextSession, workspace: nextWorkspace, catalog: nextCatalog }) => {
+        if (cancelled) return;
         setSession(nextSession);
         setWorkspace(nextWorkspace);
         setCatalog(nextCatalog);
@@ -93,14 +98,15 @@ export default function CustomerPortalDashboard() {
         setState('ready');
       })
       .catch((exception) => {
+        if (cancelled) return;
         if ([401, 403].includes(exception?.status)) {
-          const destination = portalReturn(window.location.pathname + window.location.search);
           navigate('/login?redirect=' + encodeURIComponent(destination), { replace: true });
           return;
         }
         setError('Your command center could not connect. Your saved work is unchanged. Check your connection and try again.');
         setState('error');
       });
+    return () => { cancelled = true; };
   }, [navigate, loadAttempt]);
 
   useEffect(() => {
@@ -189,10 +195,11 @@ export default function CustomerPortalDashboard() {
 
   useEffect(() => {
     if (section !== 'projects' || !targetRequest) return;
-    const target = document.getElementById(`website-request-${targetRequest}`);
+    const target = document.getElementById(`concepts-${targetRequest}`)
+      || document.getElementById(`website-request-${targetRequest}`);
     if (!target) return;
     window.requestAnimationFrame(() => {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.scrollIntoView({ behavior: 'instant', block: 'start' });
       target.focus({ preventScroll: true });
     });
   }, [section, targetRequest]);

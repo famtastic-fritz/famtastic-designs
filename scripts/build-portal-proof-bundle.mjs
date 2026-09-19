@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { basename, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
+import { addCreatorCredit } from './creator-credit.mjs';
 
 const [artifactArg, outputArg, campaignId, jobId, eventId, directionArg] = process.argv.slice(2);
 if (!artifactArg || !outputArg || !campaignId || !jobId || !eventId || !directionArg) {
@@ -34,7 +35,7 @@ try {
     for (const path of [sourceHtmlPath, sourceHeroPath, sourceScreenshot]) if (!existsSync(path)) throw new Error(`Missing ${path}`);
     const directionDirectory = join(output, letter);
     mkdirSync(directionDirectory);
-    let html = readFileSync(sourceHtmlPath, 'utf8');
+    let html = addCreatorCredit(readFileSync(sourceHtmlPath, 'utf8'));
     let finalHtml = '';
     for (const [width, quality] of [[1400, 72], [1200, 68], [1000, 62], [900, 56]]) {
       const compressed = join(scratch, `${letter}-${width}-${quality}.jpg`);

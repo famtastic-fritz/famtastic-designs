@@ -1205,6 +1205,7 @@ class ProofCampaignService {
 <footer id="contact">
   ' . ($contactBits !== '' ? $contactBits . '<br>' : '') . 'Website concept prepared for ' . $e($businessName) . '.
 </footer>
+' . CreatorCredit::html() . '
 </body>
 </html>
 ';

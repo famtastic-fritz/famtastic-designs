@@ -71,7 +71,9 @@ HTML;
 <tr><td style="padding:24px 24px 15px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td class="stack" width="260"><img class="footer-logo" src="{$logo}" width="235" alt="FAMtastic Designs" style="display:block;width:235px;max-width:100%;height:auto;border:0;color:#fff;"></td><td class="stack" align="right" style="font-size:9px;letter-spacing:1.2px;line-height:2;color:#e1e5dc;">FEARLESS DEVIATION<br>APPLYING MASTERY<br>MANIFESTING EXTRAORDINARY</td></tr></table>
 <p style="font-family:Georgia,serif;font-style:italic;text-align:center;font-size:13px;line-height:1.7;color:#e1e5dc;margin:18px 0;">We design the process, engineer the intelligence, and build the experience.</p>
 <div style="border-top:2px solid #7cfc00;padding-top:18px;text-align:center;font-size:10px;line-height:1.8;letter-spacing:.7px;color:#c6cfbd;">FAMTASTICDESIGNS.COM<br>1729 NW St. Lucie West Blvd #1181<br>Port Saint Lucie, FL 34986</div>
-</td></tr></table>
+</td></tr>
+<tr data-famtastic-creator-credit="v1"><td align="center" style="padding:12px;text-align:center;"><a href="https://famtasticdesigns.com/?utm_source=famtastic-designs&amp;utm_medium=creator_credit&amp;utm_campaign=created_by_famtastic" aria-label="Created by FAMtastic Designs" style="display:inline-block;min-height:44px;padding:12px;background:#070907;max-width:100%;box-sizing:border-box;"><img src="https://famtasticdesigns.com/brand/famtastic-designs-logo-v1.png" alt="Created by FAMtastic Designs" width="180" style="display:block;width:180px;max-width:100%;height:auto;border:0;"></a></td></tr>
+</table>
 <!--[if mso]></td></tr></table><![endif]-->
 </td></tr></table></body></html>
 HTML;

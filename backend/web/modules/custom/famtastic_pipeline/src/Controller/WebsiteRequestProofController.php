@@ -168,7 +168,7 @@ final class WebsiteRequestProofController extends ControllerBase {
     $root = realpath(\Drupal::root() . '/proofs');
     if (!$real || !$root || !str_starts_with($real, $root . DIRECTORY_SEPARATOR) || !is_file($real)) return new Response('Proof artifact unavailable.', 404);
     $html = $this->rewriteArtifactAssetUrls((string) file_get_contents($real), $variant, (int) $row['id'], (string) $row['public_id'], $direction, $shareSignature);
-    $response = new Response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+    $response = new Response(\Drupal\famtastic_pipeline\Service\CreatorCredit::present($html), 200, ['Content-Type' => 'text/html; charset=UTF-8']);
     $response->setPrivate();
     $response->setMaxAge(0);
     $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');

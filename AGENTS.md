@@ -9,6 +9,33 @@ static packaging is not an ecommerce implementation. Preserve the commercial
 lane's narrowly reconciled prepaid exception and exact customer acceptance.
 Coordinate one shared release with the main lane. A Mac heartbeat is an
 orchestrated fallback; no Cloud Run/laptop-independent claim without actual proof.
+
+## Owner mandate — creator credit (September 18, 2026)
+
+Preserve every existing footer/credit and append the final centered creator-credit
+row to every new agency-authored site, proof, prototype, lead demo and HTML output.
+Use only the exact approved PNG, linked to https://famtasticdesigns.com/, with an
+accessible name, responsive 160–220px image, >=44px target and compact obsidian
+backing where needed. No redraw, recolor, tracker, new cookie or tier exemption;
+lower-cost work is especially mandatory. Only explicit owner override can exempt
+an exact artifact. Attribution must use public non-PII slugs, never tokens/user IDs.
+Use `scripts/creator-credit.mjs` or React CreatorCredit; run the contract tests.
+Existing approved artifacts require new authored versions and fresh hashes; never
+rewrite historical evidence/approval hashes. Marketing HTML must pass the existing
+publication preflight. See `docs/design/CREATOR-CREDIT-2026-09-18.md` and the separate
+agency lane report. Browser verification uses CUA only going forward.
+
+## September 18 — Customer email buttons and portal entry (mandatory)
+
+Customer proof emails must use the existing `customer_proof_ready/v4` adapter
+with one exact account-bound `/portal/?section=projects&request=...` destination.
+Do not email Drupal `/web/admin` or `/web/api` proof URLs. APIs stay internal to
+the authenticated portal; no access checks are removed. The HTML action is a
+named, 44px button, never a visible raw URL. Plain-text mail retains its fallback.
+Test signed-out login return, signed-in project access, mobile layout and tenant
+isolation. Corrections require an explicitly authorized, separate immutable key;
+never modify or retry a sent row. See `docs/design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+
 ## September 18 — Routine green proof release
 
 The approved client-delivery policy allows independently QA-passed account-bound
@@ -18,6 +45,10 @@ policy and evidence; never stamp Fritz's uid. The exact atomic operation saves
 research and queues the approved personal standard/v2 notice; sending is separate.
 Scope/spend/rights/security exceptions and client final acceptance remain gates.
 Do not enable a broad worker or replay historical jobs to deliver a current client.
+Read `docs/plans/CLIENT-DELIVERY-2026-09-18.md` for current client receipts and
+remaining runtime gates. A duplicate callback must preserve same-campaign QA,
+notification, selection and revision state; run `ProofAttachmentReplayTest` when
+changing that writer. Variant deduplication alone is not lifecycle idempotency.
 
 ## September 18 — Shared branding for every active agency notification
 

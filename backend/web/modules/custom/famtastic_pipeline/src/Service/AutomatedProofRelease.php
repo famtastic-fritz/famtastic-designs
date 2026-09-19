@@ -42,7 +42,7 @@ final class AutomatedProofRelease {
       'policy_version' => AutomatedProofPolicy::VERSION];
   }
 
-  /** Atomic reveal + personal standard/v2 outbox. No send; no generic mail. */
+  /** Atomic reveal + personal proof-ready outbox. No send; no generic mail. */
   public function release(int $id, array $research, array $evidence, string $reviewer, array $notification): array {
     $tx = $this->database->startTransaction();
     try {
@@ -68,6 +68,11 @@ final class AutomatedProofRelease {
           || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected'], TRUE)) throw new \RuntimeException('Previous QA release differs; require a new campaign, never overwrite sent history.');
         return $this->receipt($id, $key, TRUE);
       }
+      // A proof email opens the branded workspace, never its protected Drupal
+      // renderer or a staff route. Keep historical exact retries above intact.
+      $expectedUrl = 'https://famtasticdesigns.com/portal/?section=projects&request=' . rawurlencode((string) $row['public_id']);
+      preg_match_all('~https?://[^\s]+~i', $notification['body'], $links);
+      if ($links[0] !== [$expectedUrl]) throw new \InvalidArgumentException('Proof notice requires exactly one account-bound portal destination; keep other links inside the project.');
       if ($row['proof_review_status'] !== 'owner_review') throw new \RuntimeException('This proof set is not awaiting QA.');
       $now = $this->time->getCurrentTime();
       // NULL means no human approved this. Evidence records the automation actor.
@@ -83,7 +88,7 @@ final class AutomatedProofRelease {
       ])->execute();
       $existingMail = $this->database->select('famtastic_notification_outbox', 'n')->fields('n')->condition('notification_key', $key)->execute()->fetchAssoc();
       if ($existingMail) throw new \RuntimeException('Personalized notification key already exists without this QA release.');
-      $this->portal->queueNotification($key, 'transactional', $notification['recipient'], $notification['subject'], $notification['body'], 'standard', 2);
+      $this->portal->queueNotification($key, 'transactional', $notification['recipient'], $notification['subject'], $notification['body'], OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY, OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY_VERSION);
       // Uncertain SMTP delivery must be reconciled, not automatically retried.
       $this->database->update('famtastic_notification_outbox')->fields(['max_attempts' => 1])->condition('notification_key', $key)->execute();
       $this->database->update('famtastic_notification_outbox')->fields(['status' => 'superseded', 'changed' => $now])

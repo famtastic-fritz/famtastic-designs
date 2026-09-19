@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Branded does not prove usable email navigation
+
+Personal proof notices used standard/v2, whose autolinker printed raw URLs;
+direct protected proof documents bypassed the portal's login-return flow.
+Brand/screenshots and account-bound HTTP tests did not catch that customer
+entry failure. Require the existing proof-ready adapter, one exact portal CTA,
+raw-visible-URL assertions, and signed-out-to-proof browser QA before sending.
+Authorized correction is a new idempotent receipt, never a rewrite of sent mail.
+
 ## 2026-09-18 — Personal delivery requires an atomic review boundary
 
 Human approval queued generic copy and stamped a uid. The new trusted QA
@@ -2634,3 +2643,11 @@ Keep the pre-purchase request's normal order field empty until final readiness;
 its audited private offer carries the prepaid binding. If compatibility requires
 an earlier binding, use exact reconciled exception evidence, never a general
 paid-request selection bypass. Scope hash, ownership and held status matter.
+# 2026-09-18 — Creator-credit runtime inventory
+
+Regular-file-only inventory missed three symlink-backed PHP friends apps. Inspect
+release targets and persistent var symlinks; never flatten them into a static deploy.
+Stored proof bytes need not change for a footer: decorate authorized controller
+responses, and version48 legacy direct HTML presentations with exact original hashes.
+Keep66 protected direct URLs forbidden. Separate scoped release markers from normal
+full-release markers, and record source checks separately from authenticated visual QA.
