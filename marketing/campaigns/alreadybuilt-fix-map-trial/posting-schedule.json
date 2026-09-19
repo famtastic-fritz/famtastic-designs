@@ -29,7 +29,9 @@
       "theme": "Understand an existing website before paying for changes",
       "headline": "Already have a website? What should you fix first?",
       "state": "copy_ready",
-      "channels": ["facebook"],
+      "channels": [
+        "facebook"
+      ],
       "media_type": "text_link",
       "copy": {
         "all_channels": "Already have a website? What should you fix first?\n\nA score is a starting point. Before paying for changes, look for the actual finding, a proposed fix, and a way to check the result.\n\nAlreadyBuilt checks one public page you own or have permission to test. See the free preview first. If the findings are useful, the optional Website Fix Map is $39 once: prioritized fixes, implementation steps, and checks for your developer.\n\nIt is an informational report, not automatic website repairs. No subscription or guaranteed results. You can also use Google's free PageSpeed Insights directly.\n\nStart with the free check:"
@@ -41,13 +43,28 @@
         "campaign": "fix_map_trial_20260918",
         "content": "ab_intro_facebook_20260919"
       },
-      "approval": {"content": true, "media": true, "publish": true},
-      "provider_ids": {},
+      "approval": {
+        "content": true,
+        "media": true,
+        "publish": true
+      },
+      "provider_ids": {
+        "postiz_draft_id": "cmu8zjjhz0010rq76qt0wo4b2"
+      },
       "evidence": [
         {
           "kind": "agent_content_and_destination_qa",
           "at": "2026-09-19T22:54:00Z",
           "note": "Scoped schema, dry-run, 16 copy/URL/HTTP assertions and browser-visible offer checks passed; frontend build passed. Text-only media is intentional. Campaign authority is Fritz's existing owned-channel trial approval, not a claim that Fritz reviewed this exact copy. The broader demand check fails on the unchanged own-your-online-presence blog series in both this worktree and the owner checkout; no blog change or whole-site content signoff is claimed."
+        },
+        {
+          "kind": "postiz_draft_queued",
+          "at": "2026-09-19T22:55:09Z",
+          "postiz_post_id": "cmu8zjjhz0010rq76qt0wo4b2",
+          "date_utc": "2026-09-19T23:00:00.000Z",
+          "integrations": [
+            "facebook"
+          ]
         }
       ]
     }
