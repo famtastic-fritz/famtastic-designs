@@ -2,6 +2,7 @@
 
 ## 2026-09-19 — Original “What’s the catch?” film
 
+- Published the original 1:44 / 1080p film and offer-linked page at `/why-famtastic/`; verified live hashes, MIME, byte ranges, full playback, mobile layout and research CTA. Deployed `63114513` and verified one standard/v2 owner notice in Gmail (outbox 796).
 - Added a scoped WebVTT MIME mapping after the production asset check exposed the host's `text/plain` fallback for captions.
 - Built the complete owner-supplied script into an original local HyperFrames film, with new Kokoro narration, real cue timing, captions, canonical branding and recorded pronunciation/loudness repair.
 - Added `/why-famtastic/`, a film player, full transcript, explicit $199 scope/renewal terms, SEO shell/sitemap and a discovery link from the existing offer page.
