@@ -1,5 +1,13 @@
 # Selected request changes: executable evidence must still match
 
+## Release completion
+
+Final independently cleared378c3d86 passed85 installed assertions and the full
+fresh journey at that exact committed SHA, then deployed to backend03:50:31Z and
+frontend03:53:03Z September19UTC. Live browser smoke and real observe-only CLI cron
+tick passed. [Release evidence](RELIABILITY_RELEASE_2026-09-19.md) supersedes the
+historical pending-release language below; dispatch/cloud remain separate gates.
+
 ## Independent re-review: source association scope corrected
 
 Exact baae38fc passed the full canonical lifecycle and81 installed checks, but

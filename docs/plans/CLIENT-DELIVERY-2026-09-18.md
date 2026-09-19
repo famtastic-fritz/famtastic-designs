@@ -1,5 +1,17 @@
 # September 18 client delivery — operational truth
 
+## Current checkpoint — September19 03:55Z
+
+Requests16/17 still customer_ready, unselected, staging not_started; their four
+original/correction outboxes are unchanged and sent once. Brother K8 is also
+customer_ready, outbox775 sent once, awaiting his choice; no duplicate notice.
+Reviewed reliability378c3d86 is now deployed to both surfaces. Explicit-CLI cron
+produced a real observe-only tick at03:55:03Z with zero queue mutations/spending.
+This is not automatic creative/backend dispatch or laptop independence. See
+[release receipt](RELIABILITY_RELEASE_2026-09-19.md). Private-purchase follow-up
+still needs isolated integration/native tests; #16's owner-authorized payment-after-
+selection exception must survive reconciliation, with its checkout flag stillOFF.
+
 ## September19 03:32Z monitoring and reliability checkpoint
 
 Authoritative read still shows16/17 customer_ready with no selection or staging.

@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-18 — Reliability release and bounded scheduler smoke test
+
+- Deployed matching reviewed378c3d86 backend/frontend through canonical releases;
+  browser apex/www render checks pass. Exact-source85 installed checks and full
+  fresh synthetic journey pass; see plans/RELIABILITY_RELEASE_2026-09-19.md.
+- Replaced the exact broken implicit-PHP cron with bounded explicit-CLI observe-only
+  schedule and private backup; actual03:55:03Z tick reported zero queue changes/cost.
+- Preserved sent notices, client choices and payment state. Dispatch/cloud remain
+  disabled; commerce follow-up native integration/provider tests remain outstanding.
+
 ## 2026-09-18 — Share scope definition across source association (local)
 
 - Independent re-review caught association rejecting the producer's new project-type

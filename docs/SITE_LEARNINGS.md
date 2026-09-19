@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Separate scheduled health from autonomous fulfillment
+
+The broken CGI cron was replaced through exact hash/marker comparison and private
+backup. Actual03:55:03Z CLI observe-only execution changed no jobs/outbox/budget.
+Rule: deployment, real schedule, dispatch, provider generation and fulfillment
+are separate evidence milestones. A working health schedule cannot claim the rest.
+Final exact-source synthetic suites passed sequentially after parallel core copies
+ran out of local disk. Keep failed evidence and serialize; never delete user data.
+Preserve #16's explicit payment-after-direction exception during commerce integration;
+reconcile scope/version safety rather than imposing the default policy blindly.
+
 ## 2026-09-18 — Share hashed scope across producer and validator
 
 Adding project type to intent exposed a duplicate older scope list in association.

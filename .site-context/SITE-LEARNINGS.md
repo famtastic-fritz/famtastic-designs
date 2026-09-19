@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Prove the scheduler without draining the pipeline
+
+Reviewed378c3d86 is live. Exact-marker/hash-backed repair installed CLI PHP in
+observe-only mode; the actual03:55:03Z scheduled log and unchanged operational
+counts prove scheduling, not dispatch or completed delivery. Never use a manual
+tick as cron evidence. Serialize disposable Drupal suites when local disk is low.
+Commercial reconciliation must retain explicit client-specific payment exceptions,
+not silently apply ordinary acceptance-first rules to #16's authorized flat rate.
+
 ## 2026-09-18 — A green journey does not cover every handoff
 
 Observation: source association still used a duplicated older scope definition and

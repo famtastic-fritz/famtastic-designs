@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Production release and observe-only cron proven
+
+Reviewed378c3d86 backend/frontend is deployed with apex/www browser smoke checks.
+Explicit-CLI five-minute server cron emitted03:55:03Z observe-only health with zero
+queue changes, enrolled jobs or spend. This is scheduled server execution, NOT an
+autonomous creative/backend worker or laptop-independent delivery.85 installed
+checks/full synthetic journey bind the exact source; provider gates remain separate.
+Receipt: `plans/RELIABILITY_RELEASE_2026-09-19.md`.
+
 ## 2026-09-18 — Source-association regression coverage (local only)
 
 Expanded installed Drupal suite passes85 assertions after reproducing and correcting

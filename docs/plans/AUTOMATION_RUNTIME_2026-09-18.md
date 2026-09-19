@@ -1,4 +1,13 @@
-# Bounded automation runtime: source implemented, activation pending
+# Bounded automation runtime: released, observe-only schedule proven
+
+## Current checkpoint — September19 03:55Z
+
+Matching backend/frontend378c3d86 is deployed and browser smoke-tested. Exact owned
+cron repair is installed; real03:55:03Z server tick used CLI PHP, observe_only,
+zero queue mutations/reservations. Dispatch and cloud remain OFF/unproven. Earlier
+pending statements below are historical checkpoints, not current activation status.
+See [release receipt](RELIABILITY_RELEASE_2026-09-19.md) for exact hashes, backups,
+final tests, customer states and remaining private-purchase/native-worker gates.
 
 Re-review follow-up03:39Z: baae38fc's original reuse guard is correct, but duplicated
 scope extraction broke source association. The regression was reproduced on real
