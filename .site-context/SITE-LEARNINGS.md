@@ -2,6 +2,7 @@
 
 ## 2026-09-19 — Original narrated film release
 
+**Observation:** GoDaddy served the hash-correct VTT as `text/plain`. **Guidance:** Ship the film-directory `AddType text/vtt .vtt` rule in canonical frontend source and verify the public header and browser track loading after deployment.
 **Observation:** Uppercase `FAMtastic` made the local narrator spell F.A.M.; cached Whisper caught it even though every word was present. A title-case pronunciation A/B fixed the speech while retaining exact source/caption spelling. **Guidance:** Preserve source spelling separately from a recorded TTS normalization map, audit names with short A/B clips, and retain failed/quiet masters instead of overwriting their evidence.
 
 **Observation:** Ignored generated media cannot enter the clean server-side Git frontend build. **Guidance:** Publish only the exact versioned MP4/JPG/VTT set via private staging, hash verification and no-clobber promotion; then use the canonical frontend release. An existing accessible MIME/range response is not proof of the new film. Verify actual assets and CUA playback before one exact-key owner notice.

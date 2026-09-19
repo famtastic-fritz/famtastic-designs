@@ -33,10 +33,13 @@ Final v3 is a **103.933333-second, 1920×1080, 30 fps** H.264/yuv420p film with 
 - Final runtime, layout, motion and contrast audit passed, with **300 motion samples and 41 contrast checks**. One duplicate-image lint advisory remains for intentional header/footer logo reuse. Independent snapshots cover all eleven scenes; the final offer card was corrected to say “basic managed hosting.”
 - Exported AAC packets and decoded PCM both match the narration master exactly. A complete FFmpeg decode reported no errors. Master loudness: −16.5 LUFS, −1.8 dBTP. Final local ASR checked all 21 utterances, including the corrected brand pronunciation.
 - CUA observed the final local page’s video reach its natural end at 103.933333 seconds, unmuted and readyState 4, at 1920×1080. The transcript has 21 paragraphs; the optional VTT track is initially disabled because captions are already burned in. Responsive inspection covers 320, 390, 768 and 1440px.
+- Final voice Build DNA validation passed: **5 stages, 57 artifact checksums**. Historical reproduction runner bytes were recovered exactly from their original creation records after an edit invalidated those references; corrected v2 runners use frozen runner copies and passed their bounded fixtures. No audio was regenerated during this source repair.
 - Render Build DNA validation passed: **6 stages, 31 artifact checksums**. Raw native audio, failed attempts, pronunciation trials, source snapshots, final audio-master comparison, cache receipt and CUA evidence are retained locally.
 - Final publication set is `artifacts/video-studio/no-catch-20260919/media-v3/`: MP4 above; JPEG SHA-256 `99bfb0baaf6083c68c3a9e502ec6dc98c7c5f4842792f038eae0b750417bdfce`; WebVTT SHA-256 `101db30c2a9149bad5e2a252ad2da4a9141a710025adb60bd4ad418f7c30c59d`. Publisher tests: **11 passed**.
 
 The local delivery copy is `~/Downloads/FAMtastic-Whats-The-Catch-20260919.mp4`. This source checkpoint is ready for the explicitly authorized release. Public upload hashes, deployed commit, live browser evidence and notification receipts are appended after those actions occur; this checkpoint does not claim publication or email delivery.
+
+The first public asset check passed MP4/JPEG hashes but caught the VTT being served as `text/plain`. The canonical frontend now includes a scoped film-directory `AddType text/vtt .vtt` rule. The failed HTTP check is retained; final MIME/browser results follow the repair release.
 
 ## Release mechanics
 
