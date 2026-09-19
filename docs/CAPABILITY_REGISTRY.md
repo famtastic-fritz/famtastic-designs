@@ -1,5 +1,19 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Private authority separation (local source/native/HTTP)
+
+The fixed production16 authority is now a trusted, frozen code dependency; no
+runtime request/settings/env override exists. Prepaid17 remains unchanged. Form,
+source/selection validation and native guards consume the same service, including
+stripped-metadata detection. Default regression passed344 unit tests/2587 assertions,
+native36, HTTP41 and the full canonical synthetic lifecycle/frontend build.
+Independent source review found no defect in the seven production/test boundary
+files; it did not independently rerun tests. Fresh synthetic fixture passed65 checks
+across two processes, including all three guards and distinct organization ownership.
+Separate synthetic fixture limits and retained failed attempt:
+plans/PRIVATE_PURCHASE_SYNTHETIC_AUTHORITY_2026-09-19.md. Not deployed, not private
+provider/browser/hosted readiness; production checkoutOFF.
+
 ## 2026-09-19 — Same-intent recovery (narrow test-provider proof)
 
 Deliberately lost confirm response plus discarded signed callback body recovered

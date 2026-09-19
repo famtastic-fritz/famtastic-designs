@@ -17,30 +17,57 @@ final class PrivatePurchaseService {
   public const REUNION_HASH = '478a57b7673dc087f657bd273cc48b428ab5497e1a454f8161685ddf472db408';
   public const REUNION_POLICY = 'request16-private-payment-after-direction-v1';
 
+  private readonly array $reunion;
+
+  public function __construct(?PrivatePurchaseAuthorityInterface $authority = NULL) {
+    $definition = ($authority ?? new ApprovedPrivatePurchaseAuthority())->reunion();
+    $integers = ['request_id', 'customer_id', 'organization_id', 'prospect_id'];
+    $strings = ['public_id', 'email', 'sku', 'scope_hash', 'policy', 'event_key', 'authority'];
+    if (count($definition) !== count($integers) + count($strings)) throw new \InvalidArgumentException('private_authority_invalid');
+    foreach ($integers as $field) {
+      if (!is_int($definition[$field] ?? NULL) || $definition[$field] < 1) throw new \InvalidArgumentException('private_authority_invalid');
+    }
+    foreach ($strings as $field) {
+      if (!is_string($definition[$field] ?? NULL) || $definition[$field] === '' || strlen($definition[$field]) > 254
+        || preg_match('/[\r\n\x00]/', $definition[$field])) throw new \InvalidArgumentException('private_authority_invalid');
+    }
+    if (!preg_match('/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/D', $definition['public_id'])
+      || $definition['public_id'] === self::STOCK || $definition['request_id'] === 17
+      || !filter_var($definition['email'], FILTER_VALIDATE_EMAIL)
+      || !preg_match('/^[a-f0-9]{64}$/D', $definition['scope_hash'])) throw new \InvalidArgumentException('private_authority_invalid');
+    // Snapshot once: an implementation cannot change authorization mid-operation.
+    $this->reunion = $definition;
+  }
+
+  public function reunionRequestId(): int { return $this->reunion['request_id']; }
+  public function reunionPublicId(): string { return $this->reunion['public_id']; }
+
   public static function url(string $request): string {
     return '/web/customer/private-purchase/' . rawurlencode($request);
   }
 
   /** Read-only; never issue a code, reserve an order or initialize Stripe on GET. */
   public function context(AccountInterface $account, string $publicId, bool $lock = FALSE): array {
+    $a = $this->reunion;
     if (!$account->isAuthenticated() || ($account instanceof \Drupal\user\UserInterface && !$account->isActive())
-      || !in_array($publicId, [self::REUNION, self::STOCK], TRUE)) throw new \RuntimeException('private_purchase_not_found');
+      || !in_array($publicId, [$a['public_id'], self::STOCK], TRUE)) throw new \RuntimeException('private_purchase_not_found');
     $db = \Drupal::database();
     $query = $db->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId);
     if ($lock) $query->forUpdate();
     $request = $query->execute()->fetchAssoc();
     $customer = $db->select('famtastic_customer', 'c')->fields('c')->condition('uid', (int) $account->id())->execute()->fetchAssoc();
-    $expectedCustomer = $publicId === self::STOCK ? 15 : 14;
-    $email = $publicId === self::STOCK ? 'sprospere@yahoo.com' : 'mbshclassof2000@gmail.com';
+    $expectedCustomer = $publicId === self::STOCK ? 15 : $a['customer_id'];
+    $expectedOrganization = $publicId === self::STOCK ? 15 : $a['organization_id'];
+    $email = $publicId === self::STOCK ? 'sprospere@yahoo.com' : $a['email'];
     OfflinePrepaymentService::assertIdentity($request ?: [], $customer ?: [], $expectedCustomer, $email);
-    if ((int) $request['organization_id'] !== $expectedCustomer
+    if ((int) $request['organization_id'] !== $expectedOrganization
       || !hash_equals(strtolower($email), strtolower($account->getEmail()))
-      || !$db->select('famtastic_membership', 'm')->condition('customer_id', $expectedCustomer)->condition('organization_id', $expectedCustomer)
+      || !$db->select('famtastic_membership', 'm')->condition('customer_id', $expectedCustomer)->condition('organization_id', $expectedOrganization)
         ->condition('status', 'active')->condition('role', 'owner')->countQuery()->execute()->fetchField()) throw new \RuntimeException('private_purchase_not_found');
-    $offerId = OfflinePrepaymentService::offerId(($publicId === self::REUNION ? 'reunion-private-scope:' : '') . $publicId);
+    $offerId = OfflinePrepaymentService::offerId(($publicId === $a['public_id'] ? 'reunion-private-scope:' : '') . $publicId);
     $offer = $db->select('famtastic_private_offer', 'o')->fields('o')->condition('public_id', $offerId)->execute()->fetchAssoc();
     if (!$offer || (int) $offer['website_request_id'] !== (int) $request['id'] || (int) $offer['customer_id'] !== $expectedCustomer
-      || (int) $offer['organization_id'] !== $expectedCustomer) throw new \RuntimeException('private_purchase_not_found');
+      || (int) $offer['organization_id'] !== $expectedOrganization) throw new \RuntimeException('private_purchase_not_found');
     // Native load() can refresh/save a draft order. loadUnchanged() explicitly
     // skips Commerce refresh, keeping this GET/read path free of those effects.
     $order = empty($offer['commerce_order_id']) ? NULL : \Drupal::entityTypeManager()->getStorage('commerce_order')->loadUnchanged((int) $offer['commerce_order_id']);
@@ -52,27 +79,32 @@ final class PrivatePurchaseService {
       $receipt = (new OfflinePrepaymentService())->receipt($order);
       return compact('request', 'customer', 'offer', 'order', 'data', 'receipt') + ['kind' => 'prepaid', 'scope' => $data['scope'], 'scope_hash' => $data['scope_hash']];
     }
-    $event = $db->select('famtastic_event', 'e')->fields('e', ['payload'])->condition('event_key', 'private-scope:request:16:class-of-2000-v1')->execute()->fetchField();
+    $event = $db->select('famtastic_event', 'e')->fields('e', ['payload'])->condition('event_key', $a['event_key'])->execute()->fetchField();
     $evidence = json_decode((string) $event, TRUE, 512, JSON_THROW_ON_ERROR);
-    self::assertReunionScope($request, $offer, $evidence ?: []);
+    $this->assertScope($request, $offer, $evidence ?: []);
     if (!empty($request['commerce_order_id']) || ($order ? $offer['status'] !== 'checkout_started' : $offer['status'] !== 'active')) {
       throw new \RuntimeException('private_existing_purchase_reconcile');
     }
     $scope = $evidence['scope'];
-    return compact('request', 'customer', 'offer', 'order', 'scope') + ['kind' => 'reunion', 'scope_hash' => self::REUNION_HASH];
+    return compact('request', 'customer', 'offer', 'order', 'scope') + ['kind' => 'reunion', 'scope_hash' => $a['scope_hash']];
   }
 
   public static function assertReunionScope(array $request, array $offer, array $event): void {
-    if ((int) ($request['id'] ?? 0) !== 16 || ($request['public_id'] ?? '') !== self::REUNION
-      || (int) ($request['customer_id'] ?? 0) !== 14 || (int) ($request['organization_id'] ?? 0) !== 14
-      || (int) ($offer['website_request_id'] ?? 0) !== 16 || (int) ($offer['customer_id'] ?? 0) !== 14 || (int) ($offer['organization_id'] ?? 0) !== 14
-      || ($offer['sku'] ?? '') !== 'PRIVATE-REUNION16-199' || (int) ($offer['offered_amount_minor'] ?? 0) !== 19900 || ($offer['currency'] ?? '') !== 'usd'
+    (new self())->assertScope($request, $offer, $event);
+  }
+
+  public function assertScope(array $request, array $offer, array $event): void {
+    $a = $this->reunion;
+    if ((int) ($request['id'] ?? 0) !== $a['request_id'] || ($request['public_id'] ?? '') !== $a['public_id']
+      || (int) ($request['customer_id'] ?? 0) !== $a['customer_id'] || (int) ($request['organization_id'] ?? 0) !== $a['organization_id']
+      || (int) ($offer['website_request_id'] ?? 0) !== $a['request_id'] || (int) ($offer['customer_id'] ?? 0) !== $a['customer_id'] || (int) ($offer['organization_id'] ?? 0) !== $a['organization_id']
+      || ($offer['sku'] ?? '') !== $a['sku'] || (int) ($offer['offered_amount_minor'] ?? 0) !== 19900 || ($offer['currency'] ?? '') !== 'usd'
       || !in_array($offer['status'] ?? '', ['active', 'checkout_started'], TRUE)
       || (!empty($offer['expires_at']) && (int) $offer['expires_at'] <= time())
-      || ($event['authority'] ?? '') !== 'Fritz Medine explicit approval' || ($event['scope_hash'] ?? '') !== self::REUNION_HASH
-      || (int) ($event['request_id'] ?? 0) !== 16 || (int) ($event['customer_id'] ?? 0) !== 14 || (int) ($event['organization_id'] ?? 0) !== 14
+      || ($event['authority'] ?? '') !== $a['authority'] || ($event['scope_hash'] ?? '') !== $a['scope_hash']
+      || (int) ($event['request_id'] ?? 0) !== $a['request_id'] || (int) ($event['customer_id'] ?? 0) !== $a['customer_id'] || (int) ($event['organization_id'] ?? 0) !== $a['organization_id']
       || ($event['offer_public_id'] ?? '') !== ($offer['public_id'] ?? '')
-      || !hash_equals(self::REUNION_HASH, hash('sha256', json_encode($event['scope'] ?? [], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)))) {
+      || !hash_equals($a['scope_hash'], hash('sha256', json_encode($event['scope'] ?? [], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)))) {
       throw new \RuntimeException('private_scope_changed');
     }
   }
@@ -85,13 +117,18 @@ final class PrivatePurchaseService {
    * an intent or silently rebase an existing purchase onto new work.
    */
   public static function selection(array $request): array {
+    return (new self())->selectionSnapshot($request);
+  }
+
+  public function selectionSnapshot(array $request): array {
+    $a = $this->reunion;
     if (($request['status'] ?? '') !== 'submitted' || ($request['proof_review_status'] ?? '') !== 'selected'
       || !in_array($request['selected_proof_direction'] ?? '', ['a', 'b', 'c'], TRUE) || empty($request['proof_campaign_id'])) {
       throw new \RuntimeException('private_scope_selection_required');
     }
     try {
-      if ((int) ($request['id'] ?? 0) !== 16 || ($request['public_id'] ?? '') !== self::REUNION
-        || (int) ($request['customer_id'] ?? 0) !== 14 || (int) ($request['organization_id'] ?? 0) !== 14
+      if ((int) ($request['id'] ?? 0) !== $a['request_id'] || ($request['public_id'] ?? '') !== $a['public_id']
+        || (int) ($request['customer_id'] ?? 0) !== $a['customer_id'] || (int) ($request['organization_id'] ?? 0) !== $a['organization_id']
         || (int) ($request['project_id'] ?? 0) < 1 || (int) ($request['selected_proof_at'] ?? 0) < 1) {
         throw new \RuntimeException('missing_selection');
       }
@@ -103,9 +140,9 @@ final class PrivatePurchaseService {
       $intent = $studio['selected_source_intent'] ?? [];
       $revision = $intent['selection']['revision'] ?? NULL;
       if (($intent['schema'] ?? '') !== 'famtastic.selected-source-intent.v1' || !is_int($revision) || $revision < 1
-        || ($intent['intent_id'] ?? '') !== 'selected-source:request:16:revision:' . $revision
-        || ($intent['request_id'] ?? '') !== self::REUNION || (int) ($intent['website_request_id'] ?? 0) !== 16
-        || ($intent['project_id'] ?? '') !== (string) $request['project_id'] || ($intent['customer_id'] ?? '') !== '14'
+        || ($intent['intent_id'] ?? '') !== 'selected-source:request:' . $a['request_id'] . ':revision:' . $revision
+        || ($intent['request_id'] ?? '') !== $a['public_id'] || (int) ($intent['website_request_id'] ?? 0) !== $a['request_id']
+        || ($intent['project_id'] ?? '') !== (string) $request['project_id'] || ($intent['customer_id'] ?? '') !== (string) $a['customer_id']
         || ($intent['proof_campaign_id'] ?? '') !== (string) $request['proof_campaign_id']
         || ($intent['selection']['direction_id'] ?? '') !== $request['selected_proof_direction']
         || empty($intent['selection']['selected_at']) || (int) ($intent['selection']['variant_id'] ?? 0) < 1) {
@@ -123,7 +160,7 @@ final class PrivatePurchaseService {
         throw new \RuntimeException('selection_input_changed');
       }
       foreach ($assets as $asset) {
-        if ($asset['customer_id'] !== '14' || $asset['website_request_id'] !== '16') throw new \RuntimeException('selection_asset_owner_changed');
+        if ($asset['customer_id'] !== (string) $a['customer_id'] || $asset['website_request_id'] !== (string) $a['request_id']) throw new \RuntimeException('selection_asset_owner_changed');
       }
       $variant = $entities->getStorage('proof_variant')->loadUnchanged((int) $intent['selection']['variant_id']);
       $campaign = $entities->getStorage('proof_campaign')->loadUnchanged((int) $request['proof_campaign_id']);
@@ -154,7 +191,7 @@ final class PrivatePurchaseService {
           || hash_file('sha256', $path) !== $artifact['sha256']) throw new \RuntimeException('selection_source_changed');
       }
       return [
-        'schema' => 'famtastic.private-purchase-selection.v1', 'policy' => self::REUNION_POLICY,
+        'schema' => 'famtastic.private-purchase-selection.v1', 'policy' => $a['policy'],
         'campaign_id' => (int) $request['proof_campaign_id'], 'direction' => $request['selected_proof_direction'],
         'project_id' => (int) $request['project_id'], 'selected_proof_at' => (int) $request['selected_proof_at'],
         'intent_id' => $intent['intent_id'], 'selection_revision' => $revision, 'variant_id' => (int) $intent['selection']['variant_id'],
@@ -201,13 +238,14 @@ final class PrivatePurchaseService {
 
   /** POST only by the verified customer. Creates no payment and calls no gateway. */
   public function startReunion(AccountInterface $account, string $publicId, array $input): OrderInterface {
-    if ($publicId !== self::REUNION || !self::checkoutEnabled()) throw new \RuntimeException('private_checkout_unavailable');
+    $a = $this->reunion;
+    if ($publicId !== $a['public_id'] || !self::checkoutEnabled()) throw new \RuntimeException('private_checkout_unavailable');
     $db = \Drupal::database();
     $transaction = $db->startTransaction();
     try {
       $context = $this->context($account, $publicId, TRUE);
       self::assertDetails($input, $context['scope']['version'], $context['scope_hash']);
-      $selection = self::selection($context['request']);
+      $selection = $this->selectionSnapshot($context['request']);
       if (($input['selection_snapshot'] ?? NULL) !== $selection) throw new \RuntimeException('private_scope_selection_snapshot_changed');
       if ($context['order']) {
         $this->assertReunionOrder($context['order'], $context);
@@ -232,7 +270,7 @@ final class PrivatePurchaseService {
       $order = $entities->getStorage('commerce_order')->create(['type' => 'default', 'store_id' => 1, 'uid' => (int) $account->id(),
         'mail' => $context['customer']['email'], 'order_items' => [$item], 'state' => 'draft', 'cart' => FALSE]);
       $order->setData(self::KEY, [
-        'version' => 2, 'request_id' => 16, 'request_public_id' => $publicId, 'customer_id' => 14, 'organization_id' => 14,
+        'version' => 2, 'request_id' => $a['request_id'], 'request_public_id' => $publicId, 'customer_id' => $a['customer_id'], 'organization_id' => $a['organization_id'],
         'offer_public_id' => $context['offer']['public_id'], 'scope' => $context['scope'], 'scope_hash' => $context['scope_hash'],
         'selection' => $selection, 'accepted_by_uid' => (int) $account->id(), 'accepted_at' => time(),
         'domain_choice' => $input['domain_choice'], 'domain' => trim((string) ($input['domain'] ?? '')),
@@ -243,11 +281,11 @@ final class PrivatePurchaseService {
       $order->save();
       $db->update('famtastic_private_offer')->fields(['status' => 'checkout_started', 'commerce_order_id' => (int) $order->id(), 'accepted_at' => time(), 'changed' => time()])
         ->condition('id', (int) $context['offer']['id'])->execute();
-      \Drupal::service('famtastic_pipeline.customer_portal')->claimResource(14, 'commerce_order', (int) $order->id());
-      \Drupal::service('famtastic_pipeline.operational_ledger')->recordEvent('private-scope:request:16:checkout', 'commerce.private_scope_checkout_started', [
-        'request_id' => 16, 'customer_id' => 14, 'order_id' => (int) $order->id(), 'scope_hash' => self::REUNION_HASH,
+      \Drupal::service('famtastic_pipeline.customer_portal')->claimResource($a['organization_id'], 'commerce_order', (int) $order->id());
+      \Drupal::service('famtastic_pipeline.operational_ledger')->recordEvent('private-scope:request:' . $a['request_id'] . ':checkout', 'commerce.private_scope_checkout_started', [
+        'request_id' => $a['request_id'], 'customer_id' => $a['customer_id'], 'order_id' => (int) $order->id(), 'scope_hash' => $a['scope_hash'],
         'actor_uid' => (int) $account->id(), 'payment_created' => FALSE, 'client_acceptance' => FALSE, 'launch_authorized' => FALSE,
-      ], 298, NULL, (int) $order->id());
+      ], $a['prospect_id'], NULL, (int) $order->id());
       return $order;
     }
     catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
@@ -255,6 +293,7 @@ final class PrivatePurchaseService {
 
   /** Reconcile exact private order before resuming checkout or placing it. */
   public function assertReunionOrder(OrderInterface $order, ?array $context = NULL): void {
+    $a = $this->reunion;
     $data = (array) $order->getData(self::KEY);
     if ($context !== NULL && (int) ($context['customer']['uid'] ?? 0) !== (int) $order->getCustomerId()) {
       throw new \RuntimeException('private_order_reconciliation_required');
@@ -262,17 +301,17 @@ final class PrivatePurchaseService {
     // Supplied form/request context may be stale. Re-read account, membership,
     // offer and request even when resuming within an existing request process.
     $context = $this->context($order->getCustomer(), (string) ($data['request_public_id'] ?? ''));
-    $selection = self::selection($context['request']);
+    $selection = $this->selectionSnapshot($context['request']);
     if ($context['kind'] !== 'reunion' || (int) $context['offer']['commerce_order_id'] !== (int) $order->id()
-      || ($data['version'] ?? NULL) !== 2 || ($data['request_id'] ?? NULL) !== 16 || ($data['request_public_id'] ?? '') !== self::REUNION
+      || ($data['version'] ?? NULL) !== 2 || ($data['request_id'] ?? NULL) !== $a['request_id'] || ($data['request_public_id'] ?? '') !== $a['public_id']
       || ($data['offer_public_id'] ?? '') !== $context['offer']['public_id']
-      || ($data['scope_hash'] ?? '') !== self::REUNION_HASH || ($data['selection'] ?? []) !== $selection
-      || hash('sha256', json_encode($data['scope'] ?? [], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)) !== self::REUNION_HASH
+      || ($data['scope_hash'] ?? '') !== $a['scope_hash'] || ($data['selection'] ?? []) !== $selection
+      || hash('sha256', json_encode($data['scope'] ?? [], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)) !== $a['scope_hash']
       || ($data['recurring_authorized'] ?? TRUE) !== FALSE || (int) ($data['accepted_by_uid'] ?? 0) !== (int) $order->getCustomerId()
       || !array_key_exists('client_acceptance', $data) || $data['client_acceptance'] !== NULL
       || ($data['launch_authorized'] ?? TRUE) !== FALSE
       || ($data['hold'] ?? '') !== 'selected_staging_continues_independently;final_acceptance_and_launch_readiness_required'
-      || (int) ($data['customer_id'] ?? 0) !== 14 || (int) ($data['organization_id'] ?? 0) !== 14
+      || (int) ($data['customer_id'] ?? 0) !== $a['customer_id'] || (int) ($data['organization_id'] ?? 0) !== $a['organization_id']
       || $order->getData(OfflinePrepaymentService::KEY) || $order->getData('famtastic_checkout') || count($order->getItems()) !== 1
       || (int) $order->getStoreId() !== 1
       || !$order->getTotalPrice()?->equals(new Price('199.00', 'USD')) || $order->getAdjustments()

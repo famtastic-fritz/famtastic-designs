@@ -17,7 +17,7 @@ final class PrivatePurchaseForm extends FormBase {
   public function getFormId(): string { return 'famtastic_private_purchase'; }
 
   public function buildForm(array $form, FormStateInterface $form_state, ?string $website_request = NULL): array {
-    try { $context = (new PrivatePurchaseService())->context($this->currentUser(), (string) $website_request); }
+    try { $context = \Drupal::service('famtastic_pipeline.private_purchase')->context($this->currentUser(), (string) $website_request); }
     catch (\Throwable) { throw new NotFoundHttpException('This private purchase is not available to this account.'); }
     $scope = $context['scope'];
     $form['#cache'] = ['max-age' => 0, 'contexts' => ['user']];
@@ -36,7 +36,7 @@ final class PrivatePurchaseForm extends FormBase {
     // normal Form API CSRF token remains independently required on submission.
     $snapshot = NULL;
     if ($context['kind'] === 'reunion') {
-      try { $snapshot = PrivatePurchaseService::selection($context['request']); }
+      try { $snapshot = \Drupal::service('famtastic_pipeline.private_purchase')->selectionSnapshot($context['request']); }
       catch (\RuntimeException) { /* Unselected requests have no purchase action. */ }
     }
     $displayed = ['request' => $website_request, 'version' => $scope['version'], 'hash' => $context['scope_hash'],
@@ -65,7 +65,7 @@ final class PrivatePurchaseForm extends FormBase {
         ? $this->t('Payment is recorded on your existing $199.00 order. No new payment is needed here. Final website approval is still separate.')
         : $this->t('$199.00 USD, one time. Payment has not been confirmed. After choosing a direction, you can review this scope and continue to secure checkout. Proofs and staging do not require a domain purchase.')];
       if ($paid) return $form;
-      try { PrivatePurchaseService::selection($context['request']); }
+      try { \Drupal::service('famtastic_pipeline.private_purchase')->selectionSnapshot($context['request']); }
       catch (\RuntimeException) {
         $form['waiting'] = ['#type' => 'html_tag', '#tag' => 'p', '#value' => $this->t('Choose your direction in the project first. Nothing has been charged or ordered by opening this page.')];
         return $form;
@@ -86,7 +86,7 @@ final class PrivatePurchaseForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state): void {
     $displayed = $form_state->get('private_scope') ?: [];
     try {
-      $context = (new PrivatePurchaseService())->context($this->currentUser(), (string) ($displayed['request'] ?? ''));
+      $context = \Drupal::service('famtastic_pipeline.private_purchase')->context($this->currentUser(), (string) ($displayed['request'] ?? ''));
       PrivatePurchaseService::assertDetails($this->input($form_state), $context['scope']['version'], $context['scope_hash']);
       if ($context['kind'] === 'prepaid') {
         $flood = \Drupal::service('flood');
@@ -96,7 +96,7 @@ final class PrivatePurchaseForm extends FormBase {
         OfflinePrepaymentService::assertCompletion($context['data'], (string) $form_state->getValue('completion_code'), $this->input($form_state), time());
       }
       else {
-        if (($this->input($form_state)['selection_snapshot'] ?? NULL) !== PrivatePurchaseService::selection($context['request'])) {
+        if (($this->input($form_state)['selection_snapshot'] ?? NULL) !== \Drupal::service('famtastic_pipeline.private_purchase')->selectionSnapshot($context['request'])) {
           throw new \RuntimeException('private_scope_selection_changed');
         }
       }
@@ -107,7 +107,7 @@ final class PrivatePurchaseForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $request = (string) $form_state->get('private_scope')['request'];
     try {
-      $service = new PrivatePurchaseService();
+      $service = \Drupal::service('famtastic_pipeline.private_purchase');
       $context = $service->context($this->currentUser(), $request);
       if ($context['kind'] === 'prepaid') {
         (new OfflinePrepaymentService())->complete((int) $context['order']->id(), $this->currentUser(), (string) $form_state->getValue('completion_code'), $this->input($form_state));

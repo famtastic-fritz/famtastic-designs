@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — A synthetic fixture must traverse the real guards
+
+The private-purchase identity was coupled to production16, blocking safe future
+provider testing with new identities. The trusted code dependency keeps production
+exact while a scripts-only module supplies a fresh offline fixture. Independent
+review caught additional seams: native gateway lookup, durable offer lookup after
+stripped metadata, ledger scope and organization-owned resource claims. Updating
+only the first context check would not test the real workflow. No environment or
+request switch may select the synthetic authority. Default HTTP and full canonical
+journey tests remain separate from direct-form/native synthetic evidence; neither
+is provider, browser challenge, hosted middleware or concurrent recovery proof.
+
 ## 2026-09-19 — Drush shutdown can override an injected exit
 
 The recovery runner's first actual confirmation lost its response as designed but

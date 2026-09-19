@@ -32,7 +32,7 @@ final class PrivateScopeCheckoutGuard implements EventSubscriberInterface {
       return;
     }
     try {
-      $service = new PrivatePurchaseService();
+      $service = \Drupal::service('famtastic_pipeline.private_purchase');
       $context = $service->context(\Drupal::currentUser(), (string) ($order->getData(PrivatePurchaseService::KEY)['request_public_id'] ?? ''));
       $service->assertReunionOrder($order, $context);
       $this->assertSavedGateway($order);
@@ -45,8 +45,8 @@ final class PrivateScopeCheckoutGuard implements EventSubscriberInterface {
     if (!$this->applies($event->getOrder())) return;
     try {
       if (!PrivatePurchaseService::checkoutEnabled()) throw new \RuntimeException('disabled');
-      $service = new PrivatePurchaseService();
-      $context = $service->context(\Drupal::currentUser(), PrivatePurchaseService::REUNION);
+      $service = \Drupal::service('famtastic_pipeline.private_purchase');
+      $context = $service->context(\Drupal::currentUser(), $service->reunionPublicId());
       $service->assertReunionOrder($event->getOrder(), $context);
       $this->assertSavedGateway($event->getOrder());
       $event->setPaymentGateways(array_filter($event->getPaymentGateways(), static fn($gateway): bool => $gateway->status() && in_array($gateway->getPluginId(), ['stripe', 'stripe_payment_element'], TRUE)));
@@ -59,7 +59,7 @@ final class PrivateScopeCheckoutGuard implements EventSubscriberInterface {
     if (!$this->applies($order)) return;
     try {
       if (!PrivatePurchaseService::checkoutEnabled()) throw new \RuntimeException('disabled');
-      (new PrivatePurchaseService())->assertReunionOrder($order);
+      \Drupal::service('famtastic_pipeline.private_purchase')->assertReunionOrder($order);
       $this->assertSavedGateway($order);
     }
     catch (\Throwable) { throw new AccessDeniedHttpException('The private scope must be reconciled before completing this order.'); }
@@ -80,7 +80,7 @@ final class PrivateScopeCheckoutGuard implements EventSubscriberInterface {
   private function applies(OrderInterface $order): bool {
     return $order->getData(PrivatePurchaseService::KEY) !== NULL || ($order->id()
       && (bool) \Drupal::database()->select('famtastic_private_offer', 'o')
-        ->condition('website_request_id', 16)->condition('commerce_order_id', (int) $order->id())
+        ->condition('website_request_id', \Drupal::service('famtastic_pipeline.private_purchase')->reunionRequestId())->condition('commerce_order_id', (int) $order->id())
         ->countQuery()->execute()->fetchField());
   }
 }

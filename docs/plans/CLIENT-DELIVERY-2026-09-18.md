@@ -1,5 +1,16 @@
 # September 18 client delivery — operational truth
 
+10:23UTC delivery read:8/16/17 remain customer_ready, unselected and staging
+not_started;767/769/772/773/775 remain sent once.10:20:03UTC CLI scheduled tick is
+observe_only with zero mutations/enrollment/reservations. Source-only follow-up
+separates unchanged production private authority from an isolated synthetic fixture;
+344 unit tests/2587 assertions, default native36/HTTP41 and full canonical journey
+passed. No provider/customer writes, checkout activation or deployment in this
+increment. See [authority separation and exact evidence](PRIVATE_PURCHASE_SYNTHETIC_AUTHORITY_2026-09-19.md).
+10:41UTC read remains unchanged; actual10:40:03UTC cron also observe-only. New
+synthetic authority fixture now passes65 checks across two processes, retaining
+the same unpaid order and no payment/mail/fulfillment. Still source-only.
+
 10:00UTC finite-work checkpoint: same-intent lost-confirm-response and discarded-
 callback-body recovery passed9 actual synthetic provider checks; one native payment/
 receipt through replay, fully refunded.94 Node/61 PHP checks and real offline Drush

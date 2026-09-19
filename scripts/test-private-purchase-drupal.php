@@ -32,9 +32,10 @@ $report = ['schema' => 'famtastic.private-purchase-native-proof.v1', 'status' =>
   'limits' => ['Disposable SQLite, not concurrent production MySQL.', 'Native entities/services, not browser or authenticated HTTP/CSRF proof.',
     'Configured test-only Stripe gateway is never invoked. No Stripe, webhook, 3DS or external payment proof.',
     'Synthetic manual receipt is not the production order21/payment5.'], 'records' => []];
-foreach (['Service/PrivatePurchaseService.php', 'Form/PrivatePurchaseForm.php', 'EventSubscriber/PrivateScopeCheckoutGuard.php', 'Service/OfflinePrepaymentService.php'] as $file) {
+foreach (['Service/PrivatePurchaseService.php', 'Service/PrivatePurchaseAuthorityInterface.php', 'Service/ApprovedPrivatePurchaseAuthority.php', 'Form/PrivatePurchaseForm.php', 'EventSubscriber/PrivateScopeCheckoutGuard.php', 'Service/OfflinePrepaymentService.php'] as $file) {
   $report['tested_source_sha256'][$file] = hash_file('sha256', \Drupal::root() . '/modules/custom/famtastic_pipeline/src/' . $file);
 }
+$report['tested_source_sha256']['famtastic_pipeline.services.yml'] = hash_file('sha256', \Drupal::root() . '/modules/custom/famtastic_pipeline/famtastic_pipeline.services.yml');
 $report['harness_sha256'] = hash_file('sha256', __FILE__);
 if (getenv('PRIVATE_PURCHASE_PHASE') === 'verify') $report = json_decode(file_get_contents($evidence), TRUE, 512, JSON_THROW_ON_ERROR);
 $GLOBALS['privatePurchaseReport'] =& $report;

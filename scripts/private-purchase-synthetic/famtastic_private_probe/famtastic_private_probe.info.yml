@@ -1,0 +1,10 @@
+name: FAMtastic private purchase offline probe
+type: module
+description: Isolated synthetic authority; never install in a shared or production site.
+package: Testing
+core_version_requirement: ^10 || ^11
+hidden: true
+dependencies:
+  - famtastic_pipeline:famtastic_pipeline
+  - commerce:commerce_cart
+  - commerce_stripe:commerce_stripe

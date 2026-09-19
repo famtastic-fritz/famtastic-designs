@@ -1,5 +1,19 @@
 # Product changelog
 
+## 2026-09-19 — Closed purchase authority dependency (source only)
+
+- Separated the fixed approved private16 identity from purchase validation through
+  a frozen, typed code dependency; preserved prepaid17 and every financial guard.
+- Routed form and native guards through one service; durable offer lookup still
+  guards stripped metadata, and resource ownership uses organization ID.
+- Default regression passed344 PHP tests/2587 assertions,41 HTTP checks,36 native
+  purchase checks and the full isolated customer journey. No provider/customer
+  writes or checkout activation. Synthetic fixture evidence is recorded separately
+  in plans/PRIVATE_PURCHASE_SYNTHETIC_AUTHORITY_2026-09-19.md.
+- Fresh synthetic-only fixture passed65 checks across two processes with disjoint
+  customer/organization IDs, all native guards and zero payment/mail/fulfillment.
+  Retained the failed seed-integration attempt and exact executed-source hashes.
+
 ## 2026-09-19 — Same-intent recovery and real-wrapper fault proof (test only)
 
 - Added bounded response-interruption/callback-processing-loss scenario to the

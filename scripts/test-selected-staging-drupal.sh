@@ -9,7 +9,7 @@
 set -euo pipefail
 
 mode="${1:-selected}"
-[[ "$mode" == selected || "$mode" == --canonical || "$mode" == --phpunit || "$mode" == --private-purchase || "$mode" == --private-purchase-http ]] || { echo 'Usage: test-selected-staging-drupal.sh [--canonical|--phpunit|--private-purchase|--private-purchase-http]' >&2; exit 2; }
+[[ "$mode" == selected || "$mode" == --canonical || "$mode" == --phpunit || "$mode" == --private-purchase || "$mode" == --private-purchase-http || "$mode" == --private-purchase-synthetic ]] || { echo 'Usage: test-selected-staging-drupal.sh [--canonical|--phpunit|--private-purchase|--private-purchase-http|--private-purchase-synthetic]' >&2; exit 2; }
 
 repo_root="$(cd "$(dirname "$0")/.." && pwd -P)"
 vendor_source="${FAMTASTIC_BACKEND_VENDOR:-$repo_root/backend/vendor}"
@@ -116,6 +116,19 @@ actual_root="$("${drush[@]}" status --field=root 2>>"$evidence/install.log")"
 [[ "$actual_root" == "$sandbox/backend/web" ]] || { echo "ERROR: Drush bootstrapped another root: $actual_root" >&2; exit 1; }
 test -s "$sandbox/backend/web/sites/default/files/.ht.sqlite"
 "${drush[@]}" en -y famtastic_pipeline >>"$evidence/install.log" 2>&1
+if [[ "$mode" == --private-purchase-synthetic ]]; then
+  # Test-only module is outside the deployed tree; explicit mode alone copies it
+  # into this exact fresh, entirely network-disabled installation.
+  rsync -a "$repo_root/scripts/private-purchase-synthetic/famtastic_private_probe/" "$sandbox/backend/web/modules/custom/famtastic_private_probe/"
+  "${drush[@]}" en -y commerce_cart commerce_stripe famtastic_private_probe >>"$evidence/install.log" 2>&1
+  "${drush[@]}" php:script "$sandbox/scripts/test-private-purchase-synthetic.php" 2>&1 | tee "$evidence/test.log"
+  "${isolated[@]}" PRIVATE_SYNTHETIC_PHASE=verify "$php_bin" "${php_args[@]}" \
+    "$sandbox/backend/vendor/drush/drush/drush.php" "--root=$sandbox/backend/web" --uri=http://selected-drupal.example.test \
+    php:script "$sandbox/scripts/test-private-purchase-synthetic.php" 2>&1 | tee -a "$evidence/test.log"
+  "$php_bin" -r '$e=json_decode(file_get_contents($argv[1]),true,512,JSON_THROW_ON_ERROR); if (($e["status"]??"")!=="passed" || !$e["checks"] || in_array(false,$e["checks"],true)) exit(1);' "$evidence/private-purchase-synthetic.json"
+  echo "Evidence: $evidence/private-purchase-synthetic.json"
+  exit 0
+fi
 if [[ "$mode" == --private-purchase-http ]]; then
   "${drush[@]}" en -y commerce_cart commerce_stripe >>"$evidence/install.log" 2>&1
   "${drush[@]}" theme:enable -y famtastic_customer famtastic_admin >>"$evidence/install.log" 2>&1

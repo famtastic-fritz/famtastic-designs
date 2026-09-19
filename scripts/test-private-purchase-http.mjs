@@ -15,8 +15,9 @@ const report = { schema: 'famtastic.private-purchase-http-proof.v1', status: 'ru
     'Real authenticated HTTP/forms and native records; no browser/layout proof from these requests.',
     'All provider/mail transports disabled; fake test gateway credentials never invoked. No Stripe/3DS/webhook/refund proof.'] };
 const hash = file => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
-report.tested_source_sha256 = Object.fromEntries(['Form/PrivatePurchaseForm.php', 'Service/PrivatePurchaseService.php', 'EventSubscriber/PrivateScopeCheckoutGuard.php']
+report.tested_source_sha256 = Object.fromEntries(['Form/PrivatePurchaseForm.php', 'Service/PrivatePurchaseService.php', 'Service/PrivatePurchaseAuthorityInterface.php', 'Service/ApprovedPrivatePurchaseAuthority.php', 'EventSubscriber/PrivateScopeCheckoutGuard.php']
   .map(file => [file, hash(`${sandbox}/backend/web/modules/custom/famtastic_pipeline/src/${file}`)]));
+report.tested_source_sha256['famtastic_pipeline.services.yml'] = hash(`${sandbox}/backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.services.yml`);
 report.harness_sha256 = hash(new URL(import.meta.url));
 report.presentation_sha256 = Object.fromEntries([
   'modules/custom/famtastic_pipeline/css/private-purchase.css',

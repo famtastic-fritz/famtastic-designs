@@ -1,4 +1,9 @@
 services:
+  famtastic_pipeline.private_purchase_authority:
+    class: Drupal\famtastic_pipeline\Service\ApprovedPrivatePurchaseAuthority
+  famtastic_pipeline.private_purchase:
+    class: Drupal\famtastic_pipeline\Service\PrivatePurchaseService
+    arguments: ['@famtastic_pipeline.private_purchase_authority']
   famtastic_pipeline.worker_coordinator:
     class: Drupal\famtastic_pipeline\Service\WorkerCoordinator
     arguments: ['@database', '@datetime.time', '@lock']

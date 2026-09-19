@@ -1,5 +1,18 @@
 # Agent Instructions
 
+## September19 — Separate test identity without loosening purchase guards
+
+Read `docs/plans/PRIVATE_PURCHASE_SYNTHETIC_AUTHORITY_2026-09-19.md` before
+private-flow provider work. The production authority is a fixed code dependency,
+not a request/settings/environment selector. Preserve its exact approved16 binding
+and prepaid17 behavior. Only the explicit isolated test runner installs the
+synthetic override from scripts; never ship that module with application modules.
+Form, scope, selection, order and native guard paths must share the same authority;
+durable offer lookup must still catch stripped order metadata. Customer and
+organization IDs are not interchangeable. Synthetic direct-form/native evidence
+does not prove portal routing, HTTP/CSRF, providers or hosted readiness. Keep
+account-mirroring fixtures network-disabled and production checkoutOFF.
+
 ## September19 — Recovery evidence and command-wrapper parity
 
 Read `docs/plans/STRIPE_RECOVERY_PROVIDER_2026-09-19.md` before more provider work.

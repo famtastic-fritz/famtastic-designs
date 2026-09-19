@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Decouple fixture identity, not authorization
+
+Private16/17 fixtures deliberately mirror real account data and must never be
+reused for provider execution. Extracting a frozen, typed code dependency lets
+a separate fresh test module supply synthetic identity without a production
+allowlist switch. Carry it through form validation, source snapshots, metadata,
+ledger writes and all native guards, including durable offer lookup when metadata
+is missing. Test distinct customer/organization IDs: resource claims belong to the
+organization. Keep the existing default identity and static wrappers exact.
+Portal/catalog hard-coded approved links remain outside synthetic-native proof.
+See plans/PRIVATE_PURCHASE_SYNTHETIC_AUTHORITY_2026-09-19.md for bounded evidence.
+
 ## 2026-09-19 — Test interruption through the actual command wrapper
 
 Observation: a direct-PHP fake-transport exit86 passed, but locked Drush's shutdown

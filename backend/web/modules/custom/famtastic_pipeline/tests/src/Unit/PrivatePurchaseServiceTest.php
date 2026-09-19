@@ -29,6 +29,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 require_once dirname(__DIR__, 3) . '/famtastic_pipeline.install';
 require_once dirname(__DIR__, 3) . '/src/Service/OfflinePrepaymentService.php';
+require_once dirname(__DIR__, 3) . '/src/Service/PrivatePurchaseAuthorityInterface.php';
+require_once dirname(__DIR__, 3) . '/src/Service/ApprovedPrivatePurchaseAuthority.php';
 require_once dirname(__DIR__, 3) . '/src/Service/PrivatePurchaseService.php';
 require_once dirname(__DIR__, 3) . '/src/Service/SelectedSourceIntent.php';
 require_once dirname(__DIR__, 3) . '/src/Form/PrivatePurchaseForm.php';
@@ -165,6 +167,7 @@ final class PrivatePurchaseServiceTest extends UnitTestCase {
     $this->container->set('entity_type.manager', $manager);
     \Drupal::setContainer($this->container);
     $this->service = new PrivatePurchaseService();
+    $this->container->set('famtastic_pipeline.private_purchase', $this->service);
     $artifact = dirname(__DIR__, 2) . '/fixtures/reunion-private-scope.json';
     $this->studio['selected_source_intent'] = SelectedSourceIntent::create($this->request(), '501', 601, 'a', 1, gmdate(DATE_ATOM, 123),
       [['role' => 'selected_preview', 'path' => 'fixtures/reunion-private-scope.json', 'sha256' => hash_file('sha256', $artifact), 'bytes' => filesize($artifact)]], ['fixture' => TRUE], [], NULL);
