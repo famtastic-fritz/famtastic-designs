@@ -1,0 +1,364 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "agency-social-footer-20260919",
+  "classification": "local_tested_owner_review_pending",
+  "created_at": "2026-09-19T12:56:23.992538+00:00",
+  "record_timing_note": "Record assembled during QA after construction; task-start and per-edit telemetry were not recorded. No retrospective timing claim.",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "ceee698a189d7fefe0661ba4a345907573fa253b",
+    "worktree_state": "famtastic/social-footer-v1; local implementation pending commit"
+  },
+  "recipe": {
+    "routine": "existing-agency-social-footer",
+    "version": "1.0.0",
+    "build_class": "existing-public-footer-refinement",
+    "component_instance": "SiteFooter/SocialSignal",
+    "intensity": 2,
+    "motion": "220ms interaction-only edge; reduced-motion static focus",
+    "asset_strategy": "official platform symbols; original CSS housing; immutable canonical logo",
+    "open_gates": [
+      "owner visual review",
+      "applicable platform rights review",
+      "separate release authorization"
+    ]
+  },
+  "stages": [
+    {
+      "stage_id": "implementation",
+      "attempt": 1,
+      "capability": "refactor existing footer presentation",
+      "execution": {
+        "provider": {
+          "id": "openai",
+          "transport": "Codex desktop"
+        },
+        "model": {
+          "status": "disclosed",
+          "id": "GPT-6"
+        },
+        "timing": {
+          "status": "partial",
+          "note": "Per-edit timing unavailable"
+        },
+        "cost": {
+          "status": "provider_did_not_report"
+        },
+        "input": {
+          "prompt_artifact": "docs/design/social-footer/CODEX-PROMPT.md",
+          "references": "docs/design/social-footer/references/"
+        }
+      },
+      "result": {
+        "status": "gated",
+        "technical": "focused tests and build passed",
+        "visual": "author inspected; Fritz review pending"
+      }
+    },
+    {
+      "stage_id": "browser-qa",
+      "attempt": 1,
+      "capability": "responsive presentation and native activation",
+      "execution": {
+        "provider": {
+          "id": "CUA in-app Chromium"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "partial",
+          "completed_at": "2026-09-19T12:56:23.992995+00:00"
+        },
+        "cost": {
+          "status": "not_applicable"
+        }
+      },
+      "result": {
+        "status": "partial",
+        "passed": [
+          "five widths",
+          "visible keyboard focus",
+          "single-badge hover",
+          "native click/Enter/middle-click",
+          "analytics absent/throws",
+          "reduced-motion rule simulation",
+          "200 percent CSS zoom"
+        ],
+        "unverified": [
+          "OS media preference",
+          "physical touch",
+          "Safari/Firefox",
+          "held-pointer pressed capture",
+          "live CMS integration"
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/src/components/v1/SiteFooter.jsx",
+      "sha256": "123bf92f3d3959fde11beb58379cf52debfd9c560fa2f2e91d27740f8995e64d",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/src/components/v1/SocialSignal.jsx",
+      "sha256": "337cf1397e3402767eb5e8b5655407ae842ba6f88ce6587886db65b9e8339c19",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/src/components/v1/SocialBadge.jsx",
+      "sha256": "ae5273cb4028d6299014d231bb6476ad9db1bfd9b402e88fdf9527f6c1aee3d1",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/src/components/v1/social-footer.css",
+      "sha256": "221e48a97032f3271f9a9d42b5d30891bcbe3177d6d98505b1ea49476a32d232",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/src/lib/socialProfiles.js",
+      "sha256": "685e8dbaf57bb7ae62ff68b2f96cee1ce6111c6682ac480f8f731c2071bfba61",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/scripts/test-social-footer.mjs",
+      "sha256": "a3cc97d2ee0ebf6bc27296bad275a6fbae1d90b43f3f8dc318f460eb73456ac9",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/design/FAMTASTIC-SOCIAL-FOOTER.md",
+      "sha256": "684dd7dd348fa02c7b35125b128275c4144a0010a3af63f57bb49fca38f99dac",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/design/social-footer/SOURCES.md",
+      "sha256": "3dd94623cd4a125510976ed4d8424a4cfedba9eeb484735ad0db89594718ebbc",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/design/social-footer/assets.json",
+      "sha256": "ef04764385f4bc74803e989696b4961ad1e2b88b7a47c53c1d560622d3ebe3dc",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/design/social-footer/REVIEW.md",
+      "sha256": "7c920c3b8953e7832dbe52b707c40c5374ff3b7d253b35a9fd8ad9b409149771",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/design/social-footer/CODEX-PROMPT.md",
+      "sha256": "5cc595ddaad20645cee29d3c29a7a6cf4262a603af3f7d393914ae2aa240ae6e",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/public/brand/famtastic-designs-logo-v1.png",
+      "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/public/brand/social/instagram.png",
+      "sha256": "19e83f89f6906fcbcd59752fb00adc4f3d6dbe7ade5bbb0885808a45764de592",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/public/brand/social/x.png",
+      "sha256": "026d272897dba32ab0b5c3caadad8af32b386ec43761db91cc641a3621b399e4",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/public/brand/social/tiktok.png",
+      "sha256": "8e4e2c373496e52a52c818f5f950b06074cb7dd3425f40522364172b68161583",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/public/brand/social/linkedin.png",
+      "sha256": "ead32878f513aaa9012f41449bb8fcd8dda7bdd0e3820ac69c61c864a7f60429",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/public/brand/social/youtube.png",
+      "sha256": "48ce910d9584747b067f55fd8b807453611e88b1653aeb7a22c810d9b75d2720",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/public/brand/social/discord.svg",
+      "sha256": "eb3bf5a2e8b9f9aa39c1b1d38aeaa7c2997084567634c55f4141aa39cf426cec",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/public/brand/social/pinterest.jpg",
+      "sha256": "c4d9364fb4e9d3a8057c8bfd172a76b1d6e227ff1f09d8a7fcd9fa5eb18c5c88",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "frontend/public/brand/social/facebook.png",
+      "sha256": "2204bea83928bdd495f57f12798d2331582ec25ab5759e8672206286b78260fc",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/evidence/social-footer/before-bundle.json",
+      "sha256": "7e47f17987e0b8bfb21de6855f12bc42e9cd89b64db9a6bb9780ddb139474737",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/evidence/social-footer/before-measurements.json",
+      "sha256": "fd3b2391b8c2dc35735dbd700bd48e98bc7d886667ef2012e309f45d758a8e29",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/evidence/social-footer/after-measurements.json",
+      "sha256": "39bd3bfe41b765d9ae6da7212ef3f54bce8a375c0e3426add060768d16d37e78",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/evidence/social-footer/after-bundle.json",
+      "sha256": "89ad500c5c3fea0aed5c03b11c08ecf5a5762c6b5ef6ca1ba00905da944232fb",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/design/social-footer/references/social-icons-approved.png",
+      "sha256": "91c5ffb7d4cdb9fec8d42dca4b5e393a9f44bf281bb83cfa36aaab21d53ef32a",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    },
+    {
+      "role": "source_reference_or_acceptance",
+      "path": "docs/design/social-footer/references/footer-approved.png",
+      "sha256": "fb971ae76032e54eef89ad856c4af27b6114697f7cb4718e0a93597293c3e195",
+      "rights": "agency source or official platform trademark asset; see source manifest"
+    }
+  ],
+  "local_review_artifacts": [
+    {
+      "path": ".artifacts/social-footer/hover-desktop.png",
+      "sha256": "2b509cd8538d7a5fb143d23d1e0ef6f9c63355f75bec03be0277374e5c5695cb",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/actual-home-footer-1440.png",
+      "sha256": "977dd3523791aabaa98506f7916a1bcf331c2b996f296eef31581ed12069a0f8",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/gallery.png",
+      "sha256": "f81334769d7c7b7e902dd13e014e8322e3b0bf16f447cb8e3c1f3f113daaf58c",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/badge-focus-closeup.png",
+      "sha256": "eea75d1c5af13ccad6fffe012d15dae42330eac0186e4e9912042920b6185f10",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/before-1024.png",
+      "sha256": "4ec7d8d0f497f5c3968ae0c77cb2760bf00d8de7d1a8a2d1557b7cc786dffcfe",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/before-320.png",
+      "sha256": "5dca0b252072a45383048018755344fd00ac817f311b93b49e3bd3114e3762f5",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/before-390.png",
+      "sha256": "8cdce23b6aa7083b064375e733ca02370993bc36976ec4fa431a94ceb0e0dfa2",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/before-768.png",
+      "sha256": "859782ae5307fac6aca4c9cc0f6077db384b08a09290986f55d773ec3e35696d",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/focus-desktop.png",
+      "sha256": "fd66fb4c00e828f6d930a67a5e8d9adbcedc819818ee5003e4123bedcfd4644e",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/before-1440.png",
+      "sha256": "7265d0db2734ef02bea2f2c21ff55d25c2af6987054c8c2657fde029ddacd7c3",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/reduced-motion-focus.png",
+      "sha256": "1f9f88897d909055971dbd05c1d91d3102c21a9d7ddaad3b8633056bd3d4380f",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/after-1024.png",
+      "sha256": "64d73519e17dfe262fc86bc03d036b5684359fc9ce490ea559aa3634c417767b",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/after-320.png",
+      "sha256": "4a9f7eed78c67b722900e91cc2e080589eb35d441b61b7d5d325643d3ef20806",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/zoom-200.png",
+      "sha256": "70b3fd78f891529b2df02965a1891f3af1057a927ae778852bee4cdf0e706825",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/actual-home-footer-390.png",
+      "sha256": "b374c4efa5be6802480f2ce095f21c4a99dd78e0c6bc3b3e581285708ed65ce1",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/after-768.png",
+      "sha256": "28c0b700d1dc882b53bbac9e31d369af6c5e75d43d6d79390e3baa62e050c26c",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/after-390.png",
+      "sha256": "895e18c87d24555caca77c8ebd1674e2cefdf4db88cf843cb0a9d51009407faf",
+      "retention": "local ignored screenshot"
+    },
+    {
+      "path": ".artifacts/social-footer/after-1440.png",
+      "sha256": "67005c276cee3f1097991227e8e084eaad9ad96eff4369cd1ae77aa38e7124d0",
+      "retention": "local ignored screenshot"
+    }
+  ],
+  "retrieval": {
+    "filesystem": {
+      "path": "docs/evidence/social-footer/build-dna.json"
+    },
+    "database": {
+      "status": "not_applicable",
+      "reason": "local agency footer review, no customer build run"
+    },
+    "site_studio": {
+      "status": "not_applicable",
+      "reason": "no Site Studio handoff"
+    }
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256"
+  }
+}

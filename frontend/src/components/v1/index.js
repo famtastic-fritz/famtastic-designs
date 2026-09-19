@@ -12,3 +12,4 @@ export { default as SiteFooter } from './SiteFooter.jsx';
 export { default as SocialSignal } from './SocialSignal.jsx';
 export { default as SiteNavbar } from './SiteNavbar.jsx';
 export { FadeUp, Stagger, Item } from './motion.jsx';
+export { default as SocialBadge } from './SocialBadge.jsx';

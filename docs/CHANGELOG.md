@@ -3694,3 +3694,9 @@ Final independent parent code review passed 1,022 tests/99 files in77.73s with a
 
 - Added a bounded native-Commerce manual receipt operation, account-bound single-use same-order completion, private empty project conversation, and tests. Money received is separate from order placement, acceptance and launch; production receipt/release evidence is tracked in `docs/plans/REQUEST17_OFFLINE_PREPAYMENT_2026-09-18.md`.
 - Recorded native order21/payment5 for request17 ($200 received/$0 outstanding), with fresh-process replay and no notices or fulfillment. Request16 has a replay-safe $199 one-time private scope only, not a charge. Added exact paid-exception selection evidence checks and a rollback-only native selector rehearsal; shared-module deployment remains coordinated with the main lane.
+
+## 2026-09-19 — Compact social footer (local review only)
+
+- Replaced the existing SocialSignal orbit with reusable smoked-metal/enamel social badges and one approved-profile configuration inside SiteFooter; preserved canonical logo, CMS navigation, legal/year/signature and native click events.
+- Added ten-platform local gallery, official-asset provenance, Design MD/Site DNA and focused tests. Desktop social height 368px → 157.45px; five responsive widths fit. Build, seven footer/analytics tests, five credit tests, public-flow and brand checks pass.
+- Source only on `famtastic/social-footer-v1`; Fritz visual review pending. No push, merge, deployment or customer send. See `docs/design/social-footer/REVIEW.md` for exact limits, commands and screenshots.

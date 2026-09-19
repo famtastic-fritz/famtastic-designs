@@ -70,9 +70,10 @@ status is recorded separately. Follow [logo usage](docs/brand/famtastic-designs-
   - TikTok: https://tiktok.com/@famtasticdesigns8
   - Facebook: FAMTastic Designs
   - X: https://x.com/FritzMedine (owner's personal-brand account)
-  - YouTube: `@nineoo1` — owner-confirmed as the correct channel **for now**;
-    intentional, not an error. Expect this to change when brand channels
-    consolidate.
+  - YouTube: https://youtube.com/@FAMtastic-Designs — owner-confirmed Brand
+    Account, superseding `@nineoo1`. Reconciled from local
+    `feat/youtube-brand-channel-activation` at `ee9edf9e` for the September 19
+    footer; this destination does not assert current publishing activity.
 - **Wikidata Q-ID**: none (not notable; leave blank rather than invent)
 - **Mission**: Get a working business into the game online — then keep
   engineering what it needs as it grows.

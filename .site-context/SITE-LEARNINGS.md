@@ -2693,3 +2693,17 @@ Agency-only retrofit:222 existing static/React shells;114 runtime originals in31
 campaigns remain unchanged;48 direct-public new presentations and66 protected403s.
 Three friends PHP apps are symlink-backed separately versioned apps, not zero files.
 Exact releases, parent CUA receipts and pending targets are in the agency lane audit.
+
+## 2026-09-19 — Footer source and asset reconciliation
+
+Observation: the older main checkout had campaign work and stale logo-era files,
+while fetched origin/main had the canonical footer identity. Its YouTube reference
+was older than the owner-confirmed channel in a separate local feature branch.
+Guidance: isolate from current origin/main; reconcile the exact channel fact with
+provenance, never copy an entire stale BRAND.md or another agent's campaign work.
+
+Observation: the official Instagram gradient SVG contained ~10MB of embedded image
+data, and YouTube's PNG export included transparent padding that made it too small.
+Guidance: use the official PNG at an appropriate pixel size; preserve mark geometry
+and measure visible artwork, export padding and compressed asset size independently.
+Keep material/interaction layers separate from official symbols.

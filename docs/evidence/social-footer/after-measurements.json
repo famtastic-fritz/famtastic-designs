@@ -1,0 +1,222 @@
+[
+  {
+    "width": 1440,
+    "badges": [
+      {
+        "height": 105.265625,
+        "label": "Facebook",
+        "top": 181.78125,
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "label": "Instagram",
+        "top": 181.78125,
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "label": "YouTube",
+        "top": 181.78125,
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "label": "XFritz’s channel",
+        "top": 181.78125,
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "label": "TikTok",
+        "top": 181.78125,
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "label": "Email",
+        "top": 181.78125,
+        "width": 80
+      }
+    ],
+    "height": 157.453125,
+    "scrollWidth": 1440,
+    "viewport": 1440
+  },
+  {
+    "width": 1024,
+    "badges": [
+      {
+        "height": 97.265625,
+        "label": "Facebook",
+        "top": 181.78125,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "Instagram",
+        "top": 181.78125,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "YouTube",
+        "top": 181.78125,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "XFritz’s channel",
+        "top": 181.78125,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "TikTok",
+        "top": 181.78125,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "Email",
+        "top": 181.78125,
+        "width": 72
+      }
+    ],
+    "height": 149.453125,
+    "scrollWidth": 1024,
+    "viewport": 1024
+  },
+  {
+    "width": 768,
+    "badges": [
+      {
+        "height": 97.265625,
+        "label": "Facebook",
+        "top": 429.15625,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "Instagram",
+        "top": 429.15625,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "YouTube",
+        "top": 429.15625,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "XFritz’s channel",
+        "top": 429.15625,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "TikTok",
+        "top": 429.15625,
+        "width": 72
+      },
+      {
+        "height": 97.265625,
+        "label": "Email",
+        "top": 429.15625,
+        "width": 72
+      }
+    ],
+    "height": 149.453125,
+    "scrollWidth": 768,
+    "viewport": 768
+  },
+  {
+    "width": 390,
+    "badges": [
+      {
+        "height": 96.140625,
+        "label": "Facebook",
+        "top": 463.375,
+        "width": 77.75
+      },
+      {
+        "height": 96.140625,
+        "label": "Instagram",
+        "top": 463.375,
+        "width": 77.75
+      },
+      {
+        "height": 96.140625,
+        "label": "YouTube",
+        "top": 463.375,
+        "width": 77.75
+      },
+      {
+        "height": 96.140625,
+        "label": "XFritz’s channel",
+        "top": 463.375,
+        "width": 77.75
+      },
+      {
+        "height": 81.671875,
+        "label": "TikTok",
+        "top": 575.515625,
+        "width": 77.75
+      },
+      {
+        "height": 81.671875,
+        "label": "Email",
+        "top": 575.515625,
+        "width": 77.75
+      }
+    ],
+    "height": 246,
+    "scrollWidth": 375,
+    "viewport": 390
+  },
+  {
+    "width": 320,
+    "badges": [
+      {
+        "height": 73.671875,
+        "label": "Facebook",
+        "top": 543.71875,
+        "width": 83
+      },
+      {
+        "height": 73.671875,
+        "label": "Instagram",
+        "top": 543.71875,
+        "width": 83
+      },
+      {
+        "height": 73.671875,
+        "label": "YouTube",
+        "top": 543.71875,
+        "width": 83
+      },
+      {
+        "height": 88.140625,
+        "label": "XFritz’s channel",
+        "top": 633.390625,
+        "width": 83
+      },
+      {
+        "height": 88.140625,
+        "label": "TikTok",
+        "top": 633.390625,
+        "width": 83
+      },
+      {
+        "height": 88.140625,
+        "label": "Email",
+        "top": 633.390625,
+        "width": 83
+      }
+    ],
+    "height": 254.296875,
+    "scrollWidth": 305,
+    "viewport": 320
+  }
+]

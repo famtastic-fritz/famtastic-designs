@@ -1,0 +1,74 @@
+[
+  {
+    "id": "facebook",
+    "file": "frontend/public/brand/social/facebook.png",
+    "source_member": "facebook/Facebook Brand Asset Pack/Logo/Primary Logo/Facebook_Logo_Primary.png",
+    "source_sha256": "2adfd474d91fd20c51084309ed000c1ae6cc7f5f70af14d375930f5a71301308",
+    "sha256": "2204bea83928bdd495f57f12798d2331582ec25ab5759e8672206286b78260fc",
+    "bytes": 5577,
+    "processing": "proportional sips resize to 128px; no recoloring or effects"
+  },
+  {
+    "id": "instagram",
+    "file": "frontend/public/brand/social/instagram.png",
+    "source_member": "instagram/01 Static Glyph/01 Gradient Glyph/Instagram_Glyph_Gradient.png",
+    "source_sha256": "21f86b55f986848665ce54ab354ff6b43b7705e6c421d90c04369882b5956766",
+    "sha256": "19e83f89f6906fcbcd59752fb00adc4f3d6dbe7ade5bbb0885808a45764de592",
+    "bytes": 16584,
+    "processing": "Official PNG proportionally resized to 128px; no recoloring or effects"
+  },
+  {
+    "id": "youtube",
+    "file": "frontend/public/brand/social/youtube.png",
+    "source_member": "youtube/YouTube_Icon/Digital/01 Red/yt_icon_red_digital.png",
+    "source_sha256": "1027b1b0517727adb9697155a270744381c3ce9b047b1c8bd8a9389dc7d07a83",
+    "sha256": "48ce910d9584747b067f55fd8b807453611e88b1653aeb7a22c810d9b75d2720",
+    "bytes": 3144,
+    "processing": "Transparent export padding removed; original mark proportionally resized to 128px, clear space supplied by housing"
+  },
+  {
+    "id": "x",
+    "file": "frontend/public/brand/social/x.png",
+    "source_member": "x/logo-white.png",
+    "source_sha256": "432bdd47255b48366843ec21d209e774f93b807e1fd0894fc983aad0dc7bd03b",
+    "sha256": "026d272897dba32ab0b5c3caadad8af32b386ec43761db91cc641a3621b399e4",
+    "bytes": 5873,
+    "processing": "proportional sips resize to 128px; no recoloring or effects"
+  },
+  {
+    "id": "tiktok",
+    "file": "frontend/public/brand/social/tiktok.png",
+    "source_member": "tiktok/Dev Portal Logo Pack/TikTok Logo Pack/TikTok \u0393\u00c7\u00f4 Icons/TikTok_Icon_Black_Square.png",
+    "source_sha256": "e8013e14350422f54f4b61735d91e232bf02972f6156d979cd82905559f5ee2e",
+    "sha256": "8e4e2c373496e52a52c818f5f950b06074cb7dd3425f40522364172b68161583",
+    "bytes": 5068,
+    "processing": "proportional sips resize to 128px; no recoloring or effects"
+  },
+  {
+    "id": "linkedin",
+    "file": "frontend/public/brand/social/linkedin.png",
+    "source_member": "linkedin/in-logo/LI-In-Bug.png",
+    "source_sha256": "3c0149f26168b5fe0f43e68664abe40341a6443b3cd435d18a73e12f64f8b600",
+    "sha256": "ead32878f513aaa9012f41449bb8fcd8dda7bdd0e3820ac69c61c864a7f60429",
+    "bytes": 4062,
+    "processing": "proportional sips resize to 128px; no recoloring or effects"
+  },
+  {
+    "id": "discord",
+    "file": "frontend/public/brand/social/discord.svg",
+    "source_member": "discord.svg",
+    "source_sha256": "eb3bf5a2e8b9f9aa39c1b1d38aeaa7c2997084567634c55f4141aa39cf426cec",
+    "sha256": "eb3bf5a2e8b9f9aa39c1b1d38aeaa7c2997084567634c55f4141aa39cf426cec",
+    "bytes": 1306,
+    "processing": "unchanged SVG"
+  },
+  {
+    "id": "pinterest",
+    "file": "frontend/public/brand/social/pinterest.jpg",
+    "source_member": "pinterest.jpg",
+    "source_sha256": "46a5a77abb3987bea68f4416e88e96b9fda8ed03734e537c0a88b066f4049012",
+    "sha256": "c4d9364fb4e9d3a8057c8bfd172a76b1d6e227ff1f09d8a7fcd9fa5eb18c5c88",
+    "bytes": 2309,
+    "processing": "proportional sips resize to 128px; no recoloring or effects"
+  }
+]

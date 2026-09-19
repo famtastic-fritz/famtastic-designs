@@ -1,0 +1,14 @@
+{
+  "js": {
+    "bytes": 866667,
+    "gzip": 248425
+  },
+  "css": {
+    "bytes": 199998,
+    "gzip": 37871
+  },
+  "social_assets": {
+    "bytes": 43923,
+    "gzip": 42753
+  }
+}

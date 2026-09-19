@@ -511,3 +511,13 @@ Final separate-handoff/backoff regression: **1,022 tests / 99 files in 70.01s**,
 ## 2026-09-17 - Current handoff synopsis and independent closeout
 
 Final independent parent code review passed 1,022 tests/99 files in77.73s with all PHP/browser environments, plus PHP42/3 selection/3 portal API cases and lint/diff. Refreshed the canonical handoff and writer-plan openings to describe current bounded support, explicit unsupported profiles and actual operational gates; marked older checkpoint claims historical. Append-only progress entries must not leave the current synopsis stale. No production or Drive changes; final dependency cleanup is separate from code proof.
+
+## 2026-09-19 — Compact footer social family (locally proven)
+
+Actual SiteFooter integrates SocialBadge via its existing SocialSignal export. Six
+configured destinations, four dormant platforms, visible labels, native anchors and
+preserved event fields; no inferred follow conversion. CUA measured 157.45px desktop
+module, verified five widths and real click/keyboard analytics-failure navigation.
+Reduced-motion rule simulation and CSS 200% zoom pass; OS media emulation, physical
+touch and cross-browser QA remain unproven. Source/QA: `docs/design/social-footer/REVIEW.md`.
+Not production-proven; no release occurred.

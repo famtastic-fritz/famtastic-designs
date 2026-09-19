@@ -165,3 +165,10 @@ and `/admin/…` requests. Use the shared AdminErrorContext predicate for theme
 selection and shell hooks. Preserve access checks and HTTP status; never apply
 this exception to public/customer error pages or infer authority from a URL.
 Legacy `/admin/user` bookmarks resolve to the permission-protected People route.
+
+## Public footer extension — September 19, 2026
+
+The existing footer's compact social family is governed by
+[the scoped social-footer specification](docs/design/FAMTASTIC-SOCIAL-FOOTER.md).
+Keep live service/package navigation, canonical logo and current closing CTA.
+Local implementation/review evidence is separate from production release approval.

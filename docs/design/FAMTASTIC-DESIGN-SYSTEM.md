@@ -167,3 +167,14 @@ Apply the existing restrained admin shell to native 403/404 responses whose
 original request is `/admin` or `/admin/…`. Theme negotiation and shell selection
 must agree; styling cannot override access checks or error status. Public/customer
 error pages remain outside this rule. Test unknown routes as well as valid pages.
+
+## Compact social footer — local review September 19, 2026
+
+Scoped extension: [FAMTASTIC-SOCIAL-FOOTER.md](FAMTASTIC-SOCIAL-FOOTER.md).
+The existing SiteFooter/SocialSignal seam now uses separate smoked-metal housing,
+obsidian face, restrained F/A/M brush fragments, and unchanged official platform
+marks. Keep the canonical logo/crown and CMS navigation. Visible labels are mandatory;
+only configured approved destinations render. Motion is a 220ms local edge response,
+no orbit/loop or follow-success state. Sources: [social-footer/SOURCES.md](social-footer/SOURCES.md).
+This implementation is local and awaits Fritz's visual review; prior release receipts
+remain unchanged. No extension to email, portal/admin, favicon or customer worlds.

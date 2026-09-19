@@ -2681,3 +2681,17 @@ Stored proof bytes need not change for a footer: decorate authorized controller
 responses, and version48 legacy direct HTML presentations with exact original hashes.
 Keep66 protected direct URLs forbidden. Separate scoped release markers from normal
 full-release markers, and record source checks separately from authenticated visual QA.
+
+## 2026-09-19 — Footer source and asset reconciliation
+
+Observation: the older main checkout had campaign work and stale logo-era files,
+while fetched origin/main had the canonical footer identity. Its YouTube reference
+was older than the owner-confirmed channel in a separate local feature branch.
+Guidance: isolate from current origin/main; reconcile the exact channel fact with
+provenance, never copy an entire stale BRAND.md or another agent's campaign work.
+
+Observation: the official Instagram gradient SVG contained ~10MB of embedded image
+data, and YouTube's PNG export included transparent padding that made it too small.
+Guidance: use the official PNG at an appropriate pixel size; preserve mark geometry
+and measure visible artwork, export padding and compressed asset size independently.
+Keep material/interaction layers separate from official symbols.

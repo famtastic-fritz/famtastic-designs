@@ -1,0 +1,32 @@
+[
+  {
+    "width": 1440,
+    "height": 368,
+    "scrollWidth": 1440,
+    "viewport": 1440
+  },
+  {
+    "width": 1024,
+    "height": 348.140625,
+    "scrollWidth": 1024,
+    "viewport": 1024
+  },
+  {
+    "width": 768,
+    "height": 325.109375,
+    "scrollWidth": 753,
+    "viewport": 768
+  },
+  {
+    "width": 390,
+    "height": 411.109375,
+    "scrollWidth": 375,
+    "viewport": 390
+  },
+  {
+    "width": 320,
+    "height": 437.140625,
+    "scrollWidth": 305,
+    "viewport": 320
+  }
+]
