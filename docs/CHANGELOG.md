@@ -1,5 +1,20 @@
 # Product changelog
 
+## 2026-09-19 — Private purchase HTTP and native-theme proof (source only)
+
+- Added a disposable provider-free HTTP runner:38 checks cover actual cookie
+  login, tenant/staff denial, CSRF/signed/stale terms, one-order replay, same-paid
+  completion, disabled saved gateway and feature-OFF enforcement.
+- Fixed the private route's unreadable inherited white page with a restrained dark
+  native shell and exact canonical PNG. Kept native forms/access/financial source
+  unchanged; fixed submit specificity and narrow-screen select padding.
+- Repeated native36 and full canonical journey/frontend build passed; portalDNA34,
+  email86 and local CUA320/390/1280 evidence recorded. Retained a malformed earlier
+  screenshot export and replaced it with verified normal-viewport captures.
+- Updated design/agent rules and operational receipts. No deployment, payment,
+  email or selection change. Checkout staysOFF pending provider/hosted gates.
+  See plans/PRIVATE_PURCHASE_HTTP_2026-09-19.md.
+
 ## 2026-09-19 — Private purchase integration checkpoint (local only)
 
 - Reconciled dc3eae6d onto current main as3b650349 without replacing the live

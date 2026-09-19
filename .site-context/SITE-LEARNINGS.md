@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Native forms need theme and transport evidence separately
+
+Observation: real service/HTTP tests passed while inherited Olivero surfaces made
+the private form near-white on white. A generic input selector also overrode the
+lime submit. Guidance: inspect the actual route at phone/desktop sizes, scope theme
+fixes narrowly, test computed control colors and preserve native content/errors.
+Normal-viewport screenshot files must be reopened; a full-page export was malformed
+despite a correct live view. Retain failed artifacts without calling them approval.
+First native post-login redirect may add check_logged_in=1; validate exact origin,
+order path and only that known query instead of false duplicate-order conclusions.
+Root302 points to production: observe without following in isolated HTTP tests.
+
 ## 2026-09-19 — Displayed purchase terms must survive a fresh POST
 
 Observation: rebuilt server form state can silently replace the version a customer

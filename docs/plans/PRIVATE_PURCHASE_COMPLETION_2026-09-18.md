@@ -1,5 +1,20 @@
 # Private purchase completion — follow-up after e692d890
 
+## September19 06:10Z follow-up — HTTP and native presentation locally proven
+
+The follow-up on `codex/private-purchase-integration-20260919` now passes38 real
+authenticated HTTP checks,36 native Commerce assertions and the complete synthetic
+journey/frontend build. CUA confirms scoped native branding at320/390/1280px and
+the same-paid-purchase page without another charge button. Exact current receipts,
+source hashes, retained failures and screenshots are in
+[the HTTP/browser checkpoint](PRIVATE_PURCHASE_HTTP_2026-09-19.md).
+
+This supersedes the older local HTTP/browser gap below, NOT provider or hosted
+activation gates. Successful gateway checkout, provider/webhook/3DS/failure/refund,
+full portal-return flow and deployed Apache/MySQL still need proof. Private checkout
+remainsOFF; deployed378c3d86, existing paid order21/payment5 and sent mail unchanged.
+The integration checkpoint below is historical evidence, not a second pending merge.
+
 ## September 19 integration checkpoint — local, not activated
 
 Follow-up dc3eae6d was cherry-picked as 3b650349 onto current main ceee698a,

@@ -1,5 +1,17 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Private purchase HTTP and browser evidence (locally proven)
+
+38 real authenticated HTTP checks now cover native CSRF/signed/stale forms,
+customer/staff isolation, one unpaid order/replay, same prepaid completion and
+disabled-gateway/feature guards. Native36 and full synthetic lifecycle/frontend
+build pass again. CUA tests the route-scoped native theme at320/390/1280px;
+the canonical logo and prepaid no-second-charge presentation are verified locally.
+This supersedes the HTTP/browser gap in the earlier entry, not its provider gates.
+Private checkout remainsOFF and source is not deployed. No successful provider
+checkout/webhook/3DS/refund, complete portal navigation, hosted middleware/MySQL or
+customer acceptance claim. Receipt: plans/PRIVATE_PURCHASE_HTTP_2026-09-19.md.
+
 ## 2026-09-19 — Private purchase native evidence (locally proven, disabled)
 
 36 installed Drupal Commerce assertions verify real custom-price order creation,

@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Prove native appearance after proving authority
+
+HTTP safety does not prove legibility: the native customer theme inherited white
+regions under light text. A route-specific template/CSS fix preserves native forms,
+errors and financial logic without redesigning all checkout/account pages. Avoid
+general input selectors overriding submit colors. Check real320px controls and
+image loading. Reopen exported screenshots; retain malformed full-page captures as
+failures and use verified normal-viewport captures for evidence.
+Native login fixture usernames must match email-as-username production semantics.
+The first redirect's check_logged_in=1 is not a different order; compare exact
+origin/order path and allow only that query. Never follow fixture root redirects
+into production. Local HTTP/native/visual proof is still not provider activation.
+
 ## 2026-09-19 — Private terms require current selection and displayed authority
 
 Use canonical producer scope/content/assets plus persisted selection revision and

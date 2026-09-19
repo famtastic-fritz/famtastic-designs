@@ -1,5 +1,16 @@
 # Bounded automation runtime: released, observe-only schedule proven
 
+## September19 06:10Z follow-up
+
+Real06:10:03Z explicit-CLI scheduled tick remains observe_only with zero mutations,
+enrollment or reservations. No clients8/16/17 have selected. Private purchase source
+is integrated/hardened on `codex/private-purchase-integration-20260919`; HTTP38,
+native36 and the full synthetic journey now pass locally. The exact-route form
+presentation is browser-checked, not deployed. See
+[HTTP/native browser evidence](PRIVATE_PURCHASE_HTTP_2026-09-19.md). Checkout remains
+OFF pending provider/hosted gates. Dispatch/cloud/independence remain unproven;
+do not redo the completed cron repair or replay the already-integrated commerce work.
+
 ## Current checkpoint — September19 03:55Z
 
 Matching backend/frontend378c3d86 is deployed and browser smoke-tested. Exact owned

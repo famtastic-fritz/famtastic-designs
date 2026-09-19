@@ -121,6 +121,10 @@ website placements. RGB/gold logo colors do not replace existing action/surface 
   never a second checkout. Unknown/expired/unissued code and disabled payment
   states are explicit. Scope acknowledgment is not finished-site acceptance;
   standard bundle renewal copy never overrides a private one-time agreement.
+  Native companion forms require actual rendered theme QA: inheriting a dark
+  body does not neutralize a base theme's white layout. Use exact-route shell
+  overrides, canonical local assets and visible native errors; never globally
+  restyle Commerce to repair one private form.
 - **Clarification:** a blocking unknown becomes one plain question, a focused
   answer surface, and a versioned branded email. A nonblocking unknown is shown
   as an assumption in the research—not silently invented.

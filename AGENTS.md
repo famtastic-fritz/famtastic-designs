@@ -166,6 +166,10 @@ updated, say so explicitly in the session report rather than skipping silently.
   approval. Keep current scope/source/revision binding, account isolation and
   native checkout release tests; an inactive feature flag is not Fritz approval.
   See `docs/plans/PRIVATE_PURCHASE_COMPLETION_2026-09-18.md`.
+  Private-form HTTP proof uses `test-selected-staging-drupal.sh --private-purchase-http`
+  in a disposable provider-free runtime. Do not equate the fixture activation flag
+  or rendered purchase button with production checkout. Browser evidence and
+  remaining provider/hosted gates: `docs/plans/PRIVATE_PURCHASE_HTTP_2026-09-19.md`.
 
 - Sign future agent-authored customer correspondence as **Shay** or **Shay-Shay**.
   The canonical full spelling is **Shay-Shay**. Preserve an approved template's

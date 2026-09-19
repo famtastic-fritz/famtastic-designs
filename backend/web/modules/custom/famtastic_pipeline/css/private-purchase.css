@@ -5,3 +5,37 @@
 .famtastic-private-purchase :is(a, summary) { display: inline-flex; align-items: center; min-height: 44px; }
 .famtastic-private-purchase input[type=checkbox] { min-width: 24px; min-height: 24px; }
 .famtastic-private-purchase :is(input, select, button, a, summary):focus-visible { outline: 2px solid #7cfc00; outline-offset: 3px; }
+
+/* Native customer companion, not a global Olivero/checkout redesign. */
+.famtastic-purchase-shell { box-sizing: border-box; min-height: 100vh; background: #070907; color: #e8ecea; font: 1rem/1.6 Inter, system-ui, sans-serif; hyphens: none; }
+.famtastic-purchase-shell *, .famtastic-purchase-shell *::before, .famtastic-purchase-shell *::after { box-sizing: border-box; }
+.famtastic-purchase-shell__header { padding: 1.5rem max(1rem, calc((100% - 48rem) / 2)); border-bottom: 1px solid #252b25; background: #101310; }
+.famtastic-purchase-shell__header img { display: block; width: 210px; max-width: 100%; height: auto; }
+.famtastic-purchase-shell__header p { margin: 1rem 0 0; color: #b8c3b9; }
+.famtastic-purchase-shell__main { width: min(100%, 52rem); margin: auto; padding: 2rem clamp(1rem, 4vw, 2rem); }
+.famtastic-purchase-shell :is(h1, h2, h3, label, legend) { color: #f3f6f3; font-family: inherit; hyphens: none; }
+.famtastic-purchase-shell h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); line-height: 1.3; }
+.famtastic-purchase-shell .block { margin: 0; }
+.famtastic-purchase-shell__main .region { display: block; width: 100%; }
+.famtastic-purchase-shell .famtastic-private-purchase { width: 100%; }
+.famtastic-purchase-shell .famtastic-private-purchase details { border: 1px solid #394339; border-radius: 12px; background: #101310; color: #e8ecea; margin: 1.5rem 0; box-shadow: none; }
+.famtastic-purchase-shell .famtastic-private-purchase summary { display: list-item; padding: 1rem 1.25rem; background: #141814; color: #f3f6f3; cursor: pointer; }
+.famtastic-purchase-shell .famtastic-private-purchase summary::marker { color: #7cfc00; }
+.famtastic-purchase-shell .details-wrapper { padding: 0 1.25rem 1.25rem; margin: 0; }
+.famtastic-purchase-shell .famtastic-private-purchase li { margin-block: .65rem; }
+.famtastic-purchase-shell .famtastic-private-purchase ul { padding-inline-start: 1.25rem; margin-inline: 0; }
+.famtastic-purchase-shell .form-item__description { color: #b8c3b9; font-size: .95rem; }
+.famtastic-purchase-shell .famtastic-private-purchase :is(input:not([type=checkbox]):not([type=hidden]):not([type=submit]), select) { width: 100%; background-color: #101310; color: #f3f6f3; border: 1px solid #637063; border-radius: 8px; font: inherit; }
+.famtastic-purchase-shell .famtastic-private-purchase input[type=submit] { background: #7cfc00; color: #071000; border: 0; padding: .85rem 1rem; font-weight: 800; white-space: normal; cursor: pointer; }
+.famtastic-purchase-shell .famtastic-private-purchase select { padding-inline: 12px 40px; }
+.famtastic-purchase-shell .form-type-checkbox { display: flex; align-items: flex-start; gap: .75rem; }
+.famtastic-purchase-shell .form-type-checkbox input { flex-shrink: 0; margin: .3rem 0 0; }
+.famtastic-purchase-shell .form-type-checkbox label { padding: 0; margin: 0; }
+.famtastic-purchase-shell .famtastic-private-purchase a { color: #a0ff42; text-decoration: underline; text-underline-offset: .2em; }
+.famtastic-purchase-shell .famtastic-private-purchase :is(input, select, button, a, summary):focus-visible { outline: 2px solid #7cfc00; outline-offset: 3px; box-shadow: none; }
+.famtastic-purchase-shell__footer { border-top: 1px solid #252b25; padding: 1rem; }
+@media (max-width: 480px) {
+  .famtastic-purchase-shell__header img { width: 174px; }
+  .famtastic-purchase-shell .famtastic-private-purchase summary { padding: .85rem 1rem; }
+  .famtastic-purchase-shell .details-wrapper { padding-inline: 1rem; }
+}

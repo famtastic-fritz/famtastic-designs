@@ -1,0 +1,16 @@
+{# Exact private-purchase route only. Preserve native content and error messages. #}
+<div class="famtastic-purchase-shell">
+  <header class="famtastic-purchase-shell__header">
+    <img src="{{ famtastic_logo_url }}" alt="FAMtastic Designs" width="2172" height="724">
+    <p>{{ 'Your project · private purchase details'|t }}</p>
+  </header>
+  <main id="main-content" class="famtastic-purchase-shell__main" tabindex="-1">
+    <h1>{{ 'Your private purchase'|t }}</h1>
+    {{ page.highlighted }}
+    {{ page.content }}
+  </main>
+  <footer class="famtastic-purchase-shell__footer">
+    {{ page.footer }}
+    {{ famtastic_creator_credit }}
+  </footer>
+</div>

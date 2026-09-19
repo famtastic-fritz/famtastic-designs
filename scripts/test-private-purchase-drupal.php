@@ -24,7 +24,8 @@ if (!preg_match('#/famtastic-selected-drupal\.[A-Za-z0-9]{6}$#', $sandbox)
   || ini_get('allow_url_fopen') !== '0' || function_exists('curl_exec') || function_exists('stream_socket_client') || function_exists('mail')) {
   throw new RuntimeException('Private purchase harness requires isolated database, captured mail and disabled network.');
 }
-$evidence = getenv('SELECTED_DRUPAL_EVIDENCE') . '/private-purchase.json';
+$phase = getenv('PRIVATE_PURCHASE_PHASE') ?: 'test';
+$evidence = getenv('SELECTED_DRUPAL_EVIDENCE') . ($phase === 'http-seed' ? '/private-purchase-http-seed.json' : '/private-purchase.json');
 $report = ['schema' => 'famtastic.private-purchase-native-proof.v1', 'status' => 'running',
   'source_sha' => getenv('SELECTED_DRUPAL_SOURCE_SHA'), 'classification' => 'locally proven',
   'php_version' => PHP_VERSION, 'drupal_version' => \Drupal::VERSION, 'checks' => [],
@@ -93,7 +94,7 @@ ppCheck((int) $store->id() === 1, 'fresh_store_exact_binding');
 // Real installed gateway configuration; fake keys and all transports disabled.
 PaymentGateway::create(['id' => 'private_fixture_stripe', 'label' => 'Never invoked fixture', 'plugin' => 'stripe', 'status' => TRUE,
   'configuration' => ['mode' => 'test', 'publishable_key' => 'pk_test_disposable_not_a_key', 'secret_key' => 'sk_test_disposable_not_a_key']])->save();
-$users = [];
+$users = []; $passwords = [];
 // Reserve fixture identities before native user hooks allocate customer/org rows.
 // This is only the fresh disposable SQLite DB, never a production sequence.
 foreach (['famtastic_customer', 'famtastic_organization'] as $table) {
@@ -102,7 +103,9 @@ foreach (['famtastic_customer', 'famtastic_organization'] as $table) {
 }
 foreach ([14 => ['email' => 'mbshclassof2000@gmail.com', 'request' => 16, 'public_id' => Purchase::REUNION],
   15 => ['email' => 'sprospere@yahoo.com', 'request' => 17, 'public_id' => Purchase::STOCK]] as $id => $fixture) {
-  $user = User::create(['name' => 'private-fixture-' . $id, 'mail' => $fixture['email'], 'status' => 1, 'pass' => bin2hex(random_bytes(20))]);
+  $passwords[$id] = $phase === 'http-seed' ? 'Disposable-local-' . $id . '-only!' : bin2hex(random_bytes(20));
+  // Match the actual portal writer: customer usernames are their email address.
+  $user = User::create(['name' => $fixture['email'], 'mail' => $fixture['email'], 'status' => 1, 'pass' => $passwords[$id]]);
   $user->save(); $users[$id] = $user;
   $customer = \Drupal::service('famtastic_pipeline.customer_portal')->customerForUid((int) $user->id());
   ppCheck((int) $customer['id'] === $id && $customer['email'] === $fixture['email']
@@ -138,6 +141,29 @@ $db->insert('famtastic_private_offer')->fields(['public_id' => $offerId, 'websit
   ['request_id' => 16, 'customer_id' => 14, 'organization_id' => 14, 'scope' => $scope, 'scope_hash' => Purchase::REUNION_HASH,
     'offer_public_id' => $offerId, 'authority' => 'Fritz Medine explicit approval']);
 $baseline = ppCounts();
+if ($phase === 'http-seed') {
+  // Separate fresh HTTP fixture, not a replay/reset of a real customer's order.
+  $offline = new Offline();
+  $receipt = $offline->record(Purchase::STOCK, 15, $stock->getEmail(), Offline::stockandshipScope(), 'Disposable HTTP fixture; never production.');
+  $completion = $offline->issueCompletionCode($receipt['order_id'], User::load(1));
+  $fixture = ['accounts' => [], 'requests' => ['reunion' => Purchase::REUNION, 'stock' => Purchase::STOCK],
+    'stock_order' => $receipt['order_id'], 'completion_code' => $completion, 'original_intake' => ppRequest()['intake_data']];
+  foreach ($users as $id => $user) $fixture['accounts'][$id === 14 ? 'reunion' : 'stock'] = ['email' => $user->getEmail(), 'password' => $passwords[$id], 'uid' => (int) $user->id()];
+  file_put_contents($sandbox . '/private-http-fixture.json', json_encode($fixture, JSON_THROW_ON_ERROR));
+  chmod($sandbox . '/private-http-fixture.json', 0600);
+  touch($sandbox . '/private-http-checkout-enabled');
+  $settingsFile = \Drupal::root() . '/sites/default/settings.php';
+  chmod($settingsFile, 0600);
+  file_put_contents($settingsFile, "\n\$settings['trusted_host_patterns'][] = '^127\\.0\\.0\\.1$';\n"
+    . "\$settings['famtastic_payment_mode'] = 'test';\n"
+    . "\$settings['famtastic_private_reunion_checkout_enabled'] = is_file(" . var_export($sandbox . '/private-http-checkout-enabled', TRUE) . ");\n"
+    . "\$config['system.theme']['default'] = 'famtastic_customer';\n"
+    . "\$config['system.performance']['css']['preprocess'] = FALSE;\n"
+    . "\$config['system.performance']['js']['preprocess'] = FALSE;\n", FILE_APPEND);
+  $report['status'] = 'passed';
+  $report['limits'][] = 'Fixture seed only; HTTP assertions are recorded separately.';
+  return;
+}
 $context = $service->context($owner, Purchase::REUNION);
 ppCheck(ppCounts() === $baseline && $context['order'] === NULL, 'read_context_creates_no_order_or_payment');
 ppReject(fn() => $service->context($stock, Purchase::REUNION), 'other_customer_context_rejected', 'prepayment_account_mismatch');

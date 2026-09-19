@@ -9,7 +9,7 @@
 set -euo pipefail
 
 mode="${1:-selected}"
-[[ "$mode" == selected || "$mode" == --canonical || "$mode" == --phpunit || "$mode" == --private-purchase ]] || { echo 'Usage: test-selected-staging-drupal.sh [--canonical|--phpunit|--private-purchase]' >&2; exit 2; }
+[[ "$mode" == selected || "$mode" == --canonical || "$mode" == --phpunit || "$mode" == --private-purchase || "$mode" == --private-purchase-http ]] || { echo 'Usage: test-selected-staging-drupal.sh [--canonical|--phpunit|--private-purchase|--private-purchase-http]' >&2; exit 2; }
 
 repo_root="$(cd "$(dirname "$0")/.." && pwd -P)"
 vendor_source="${FAMTASTIC_BACKEND_VENDOR:-$repo_root/backend/vendor}"
@@ -30,9 +30,11 @@ evidence="$repo_root/.artifacts/selected-staging-drupal/$run_id"
 sandbox="$(mktemp -d /tmp/famtastic-selected-drupal.XXXXXX)"
 sandbox="$(cd "$sandbox" && pwd -P)"
 mkdir -p "$evidence" "$sandbox/backend/web/sites/default/files" "$sandbox/backend/private" "$sandbox/home" "$sandbox/tmp" "$sandbox/scripts"
+http_server_pid=""
 cleanup() {
   local result=$?
   trap - EXIT
+  if [[ -n "$http_server_pid" ]]; then kill "$http_server_pid" 2>/dev/null || true; wait "$http_server_pid" 2>/dev/null || true; fi
   if [[ "$result" != 0 ]]; then
     echo "FAIL: retained diagnostics: $evidence" >&2
     tail -n 35 "$evidence/install.log" "$evidence/test.log" "$evidence/canonical.log" 2>/dev/null || true
@@ -64,6 +66,12 @@ for kind in profiles themes libraries; do
     rsync -a "$runtime_backend/web/$kind/" "$sandbox/backend/web/$kind/"
   fi
 done
+if [[ "$mode" == --private-purchase-http ]]; then
+  # Exact reviewed source themes, not the borrowed runtime's potentially old UI.
+  for theme in famtastic_customer famtastic_admin; do
+    rsync -a "$repo_root/backend/web/themes/custom/$theme/" "$sandbox/backend/web/themes/custom/$theme/"
+  done
+fi
 for runtime_file in .ht.router.php .htaccess autoload.php autoload_runtime.php index.php robots.txt update.php; do
   if [[ -f "$runtime_backend/web/$runtime_file" ]]; then
     cp "$runtime_backend/web/$runtime_file" "$sandbox/backend/web/$runtime_file"
@@ -108,6 +116,27 @@ actual_root="$("${drush[@]}" status --field=root 2>>"$evidence/install.log")"
 [[ "$actual_root" == "$sandbox/backend/web" ]] || { echo "ERROR: Drush bootstrapped another root: $actual_root" >&2; exit 1; }
 test -s "$sandbox/backend/web/sites/default/files/.ht.sqlite"
 "${drush[@]}" en -y famtastic_pipeline >>"$evidence/install.log" 2>&1
+if [[ "$mode" == --private-purchase-http ]]; then
+  "${drush[@]}" en -y commerce_cart commerce_stripe >>"$evidence/install.log" 2>&1
+  "${drush[@]}" theme:enable -y famtastic_customer famtastic_admin >>"$evidence/install.log" 2>&1
+  "${isolated[@]}" PRIVATE_PURCHASE_PHASE=http-seed "$php_bin" "${php_args[@]}" \
+    "$sandbox/backend/vendor/drush/drush/drush.php" "--root=$sandbox/backend/web" --uri=http://selected-drupal.example.test \
+    php:script "$sandbox/scripts/test-private-purchase-drupal.php" >"$evidence/http-seed.log" 2>&1
+  http_port="${FAMTASTIC_PRIVATE_HTTP_PORT:-$((29500 + ($$ % 300)))}"
+  [[ "$http_port" =~ ^[0-9]+$ && "$http_port" -ge 29500 && "$http_port" -lt 29800 ]] || { echo 'Unsafe local HTTP port'; exit 1; }
+  "${isolated[@]}" "$php_bin" "${php_args[@]}" -S "127.0.0.1:$http_port" -t "$sandbox/backend" \
+    "$sandbox/scripts/private-purchase-http-router.php" >"$evidence/http-server.log" 2>&1 &
+  http_server_pid=$!
+  "${isolated[@]}" "PRIVATE_HTTP_PORT=$http_port" "PRIVATE_HTTP_PHP=$php_bin" node "$sandbox/scripts/test-private-purchase-http.mjs" | tee "$evidence/http-test.log"
+  "$php_bin" -r '$e=json_decode(file_get_contents($argv[1]),true,512,JSON_THROW_ON_ERROR); if (($e["status"]??"")!=="passed" || count($e["checks"]) < 38 || in_array(false,$e["checks"],true)) exit(1);' "$evidence/private-purchase-http.json"
+  echo "Evidence: $evidence/private-purchase-http.json"
+  if [[ "${FAMTASTIC_PRIVATE_HTTP_BROWSER_HOLD:-0}" == 1 ]]; then
+    echo "Local browser fixture: http://127.0.0.1:$http_port/web/user/login ; sandbox: $sandbox"
+    echo 'Press Enter when browser checks finish (automatic cleanup after 20 minutes).'
+    read -r -t 1200 _ || true
+  fi
+  exit 0
+fi
 if [[ "$mode" == --private-purchase ]]; then
   # Same isolated installation and network/mail boundary, real Commerce entities.
   "${drush[@]}" en -y commerce_cart commerce_stripe >>"$evidence/install.log" 2>&1

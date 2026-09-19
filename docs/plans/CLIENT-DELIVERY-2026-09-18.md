@@ -1,6 +1,21 @@
 # September 18 client delivery — operational truth
 
-## Current checkpoint — September19 03:55Z
+## Current checkpoint — September19 06:10Z
+
+Requests8/16/17 remain customer_ready, unselected and staging not_started; exact
+correction/new notices772/773/775 remain sent once. No proof regeneration, resend,
+customer selection, charge or new staging artifact occurred. Deployed backend and
+frontend remain378c3d86; origin/mainceee698a adds documentation. Scheduled06:10:03Z
+CLI health remains observe_only, zero mutations/enrollment/reservations.
+
+Private purchase integration is no longer pending: dc3eae6d became3b650349 on
+current main, hardened in0f509157. Its feature branch now also has38 real HTTP/CSRF
+checks, native36 and fresh full synthetic journey evidence, with a tested exact-route
+native branding fix. Checkout remainsOFF; provider/hosted/complete navigation gates
+remain. See [current follow-up](PRIVATE_PURCHASE_HTTP_2026-09-19.md). Earlier pending
+integration/scheduler statements below describe historical checkpoints only.
+
+## Historical checkpoint — September19 03:55Z
 
 Requests16/17 still customer_ready, unselected, staging not_started; their four
 original/correction outboxes are unchanged and sent once. Brother K8 is also
