@@ -14,12 +14,14 @@ Fresh canonical lifecycle passed00:00:11Z with fixture27ab74fa: real installed
 Drupal/SQLite, authenticated customer HTTP, signed synthetic hosting receipt,
 receipt-bound acceptance, memory email/payment, fixture DNS and local deployment.
 No real hosting, merchant, cloud or laptop-unavailable proof is implied.
-## 2026-09-18 — Independent QA proof release, locally proven
+## 2026-09-18 — Independent QA proof release, service deployed
 
 Trusted service operation atomically retains automated QA/research and reveals
 three account-bound proofs with one personalized standard/v2 outbox. Fifteen
 real SQLite/filesystem tests pass (64 assertions); entity lookup is mocked.
-Not deployed, SMTP-proven or unattended scheduling. See the automated proof release plan.
+Service deployed as988d9d6d at23:46:20Z; deployment alone is not SMTP proof or
+unattended scheduling. Customer release receipts belong to the delivery lane.
+See the automated proof release plan.
 
 ## 2026-09-18 — Bounded offline-prepayment source
 

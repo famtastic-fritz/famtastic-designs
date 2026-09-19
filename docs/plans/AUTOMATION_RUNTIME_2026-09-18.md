@@ -31,6 +31,15 @@ VMs/agents, adopts their keys or claims their latest state from old records.
 
 ## What this source actually implements
 
+The existing new-request path is not a general creative worker:
+`AutomationWorker::generateProof()` reuses the request-bound campaign. When
+`SiteStudioProofClient` has a configured endpoint it submits a signed asynchronous
+handoff; otherwise, with stub flags disabled, `ProofCampaignService` creates a
+`local-*` waiting campaign and a `proof.waiting_for_creative_provider` event, with
+zero variants. The job can return `waiting_callback` and be marked handoff-complete.
+No autonomous consumer is started by that result. Stub/no-image flags belong only
+to isolated tests, not a way to claim a customer's three designs are complete.
+
 - `WorkerCoordinator` admits only an exact fresh unattempted
   `site_studio_staging_prepare` job with a frozen payload and supported static
   build class. No automatic admission of history, generic proof generation,
@@ -132,6 +141,14 @@ is free. Enable a dispatcher/trigger only after its headroom and no-work behavio
    and cost ceiling. Set `FAMTASTIC_BOUNDED_MODE=dispatch` only after these gates. It
    runs at most one explicitly enrolled static handoff, not any generic queued job.
 
+Canonical backend deployer now validates the exact existing legacy/bounded pair
+in preflight and rechecks the unchanged snapshot after promotion. It preserves
+observe/dispatch mode and never re-adds a legacy worker when the bounded marker
+is present. Missing schedule remains explicitly `none_not_activated`; deployment
+is not scheduler authorization. Unknown/altered/duplicate entries fail closed.
+The regression executes the actual extracted Bash classifier without SSH/cron
+writes, including the bounded-plus-legacy case that caused the reinsertion risk.
+
 Enrollment command (never run on an old failed job to "unstick" it):
 `famtastic:worker-enroll ID --key=EXACT --confirm=EXACT --sha256=PAYLOAD_HASH --reserve-cents=25`.
 An orchestrator may enroll routine supported work automatically after these admission
@@ -157,8 +174,9 @@ Node environment: `FAMTASTIC_WORKER_ID`, `FAMTASTIC_WORKER_API_BASE` (HTTPS `/we
 - On worker loss, wait out the fence, reconcile the exact selected packet and existing
   Studio idempotency receipt, then retry only remaining work. Never regenerate the
   winning design or resend an uncertain customer notice.
-- Last focused local checks: 74 relevant PHP tests / 377 assertions (existing PHPUnit
-  metadata deprecations), eight Node tests. Real SQLite/transaction/filesystem
+- Last focused local checks: 80 relevant PHP tests / 418 assertions (existing PHPUnit
+  metadata deprecations), 24 Node tests (16 actual Bash deployer cases plus eight
+  runner cases). Real SQLite/transaction/filesystem
   operations plus controller authentication; mocked entity lookup and lock backend.
   **Not multi-process MySQL lock proof**. Email presentation: 72 assertions passed.
 - After explicit authorization to copy the bounded disposable runtime, the fresh
@@ -172,6 +190,13 @@ Node environment: `FAMTASTIC_WORKER_ID`, `FAMTASTIC_WORKER_API_BASE` (HTTPS `/we
   `fresh-customer-proof-20260918T235933Z-82730/evidence.json`. Source receipt names
   base8aaec4ab plus then-uncommitted fixture/worker changes; fixture was committed
   as27ab74fa. This is a disposable synthetic lifecycle, not customer/cloud delivery.
+- After integrating reviewed commercial main de3aa707 in isolated39ea4a56, the
+  full fresh canonical run passed again, then passed with actual installed Drush
+  `automation-health` / default `automation-tick` checks added. Latest receipt:
+  `fresh-customer-proof-20260919T001047Z-87924/evidence.json` (base7bd14d79 plus
+  then-uncommitted health fixture). Queue/outbox/claim/budget counts stayed unchanged.
+  The private native-payment service remains byte-identical to reviewed main;
+  portal source guards reuse its exact reconciliation helper, not duplicate logic.
 - No Cloud Run provider execution, production claim/nonce test, scheduler tick,
   automatic target allocation, ecommerce adapter or laptop-unavailable end-to-end
   execution has occurred. Laptop independence remains **unproven**.

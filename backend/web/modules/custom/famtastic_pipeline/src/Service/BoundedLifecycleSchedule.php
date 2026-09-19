@@ -18,6 +18,7 @@ final class BoundedLifecycleSchedule {
     $old = '*/5 * * * * cd ' . self::ROOT . ' && ' . self::ROOT . '/vendor/bin/drush famtastic:lifecycle-run --limit=50 >/dev/null 2>&1';
     foreach ($lines as $i => $line) {
       if (in_array($line, [self::OLD_MARKER, self::MARKER], TRUE)) $matches[] = $i;
+      elseif (preg_match('/FAMTASTIC_(LIFECYCLE|BOUNDED_WORKER)_CRON/', $line)) throw new \RuntimeException('Unknown lifecycle marker requires reconciliation.');
       if (trim($line) !== '' && !str_starts_with(ltrim($line), '#')
         && preg_match('/famtastic:(?:lifecycle-run|jobs-run|automation-tick)|\bdrush(?:\.php)?\s+(?:cron|fjr|flr|ev|php:eval|php:script)\b|automation[_:-]?worker/i', $line)
         && !in_array($lines[$i - 1] ?? '', [self::OLD_MARKER, self::MARKER], TRUE)) throw new \RuntimeException('Unowned automation schedule requires reconciliation.');

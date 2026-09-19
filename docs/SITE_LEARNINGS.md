@@ -2601,6 +2601,13 @@ Independent POST-route review found that combining build and source association 
 ## 2026-09-17 - Current handoff synopsis and independent closeout
 
 Final independent parent code review passed 1,022 tests/99 files in77.73s with all PHP/browser environments, plus PHP42/3 selection/3 portal API cases and lint/diff. Refreshed the canonical handoff and writer-plan openings to describe current bounded support, explicit unsupported profiles and actual operational gates; marked older checkpoint claims historical. Append-only progress entries must not leave the current synopsis stale. No production or Drive changes; final dependency cleanup is separate from code proof.
+## 2026-09-18 — Bounded scheduler persistence
+
+Cron repair is incomplete if the next backend deploy reinstalls the broad runner.
+The canonical deployer now preserves an exact verified legacy/bounded mode and
+refuses unknown/duplicate commands. Observe-only installed CLI proof has no queue,
+mail, claim or budget mutations; synthetic lifecycle success is not cloud proof.
+
 # 2026-09-18 — Owner-confirmed offline receipts
 
 The legacy assumption that completed order = money received fails for prepaid

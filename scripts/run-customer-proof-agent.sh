@@ -18,6 +18,7 @@ scripts/e2e-commerce-catalog.sh
 "${drush[@]}" en -y famtastic_pipeline >/dev/null
 "${drush[@]}" updb -y >/dev/null
 "${drush[@]}" cr >/dev/null
+bash scripts/e2e-bounded-worker-health.sh
 scripts/e2e-seo-discovery.sh
 scripts/e2e-autonomous-journey.sh
 php scripts/validate-product-pipeline.php

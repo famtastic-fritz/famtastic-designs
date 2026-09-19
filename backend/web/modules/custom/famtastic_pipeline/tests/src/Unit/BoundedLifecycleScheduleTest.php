@@ -18,8 +18,8 @@ final class BoundedLifecycleScheduleTest extends TestCase {
   #[DataProvider('badSchedules')]
   public function testRefusesAmbiguousOrChangedSchedules(string $case): void {
     $old = $this->old();
-    $input = match ($case) { 'duplicate' => $old . $old, 'missing' => '', 'changed' => str_replace('--limit=50', '--limit=1', $old), 'unowned' => $old . "* * * * * drush famtastic:jobs-run\n" };
+    $input = match ($case) { 'duplicate' => $old . $old, 'missing' => '', 'changed' => str_replace('--limit=50', '--limit=1', $old), 'unowned' => $old . "* * * * * drush famtastic:jobs-run\n", 'unknown_marker' => $old . "# FAMTASTIC_BOUNDED_WORKER_CRON_V2\n" };
     $this->expectException(\RuntimeException::class); Schedule::transform($input);
   }
-  public static function badSchedules(): iterable { foreach (['duplicate', 'missing', 'changed', 'unowned'] as $x) yield $x => [$x]; }
+  public static function badSchedules(): iterable { foreach (['duplicate', 'missing', 'changed', 'unowned', 'unknown_marker'] as $x) yield $x => [$x]; }
 }

@@ -78,6 +78,12 @@ exactly-once SMTP delivery when a provider accepts then the connection is lost.
 
 ## Validation and release
 
+Main deployed this service gate as988d9d6d at2026-09-18T23:46:20Z; independently
+read back the production marker. That release did not activate a scheduler.
+Customer-specific QA/outbox/send receipts remain owned by the delivery lane.
+The later opt-in signed reviewer HTTP wrapper is worker source only, disabled
+until its separate installation; see AUTOMATION_RUNTIME_2026-09-18.md.
+
 `AutomatedProofReleaseTest`: 15 tests, 64 assertions, real in-memory Drupal SQLite
 queries and filesystem artifact hashes; mocked entity lookups. Covers happy path,
 duplicate release, no human attribution, personal standard/v2 message preservation,

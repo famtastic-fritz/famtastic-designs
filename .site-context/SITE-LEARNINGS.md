@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Scheduler repair must survive deployment
+
+Observation: the canonical deployer recognized only the legacy cron marker and
+would re-add a broad lifecycle worker beside the new bounded one. Guidance: exact
+preflight classification and unchanged-snapshot recheck preserve observe/dispatch
+mode; never interpret a missing old marker as authorization to create old cron.
+Unknown or duplicate entries fail closed. Actual extracted Bash regression runs
+without SSH/cron edits; installed observe-only CLI tests leave all queue counts fixed.
+
 ## 2026-09-18 — Repair runtime without unleashing a backlog
 
 Observation: cron resolves PHP CGI; `/usr/local/bin/php` is CLI. The old lifecycle

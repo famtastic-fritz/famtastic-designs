@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-18 — Preserve bounded cron on every later release (local)
+
+- Canonical deployer7bd14d79 now recognizes exact legacy/bounded modes, rejects
+  changed/duplicate schedulers, and cannot reinsert broad cron after bounded repair.
+- Integration with reviewed commercial main passes80 focused PHP tests/418
+  assertions and24 Node tests. Latest fresh canonical run also passes real installed
+  observe-only CLI checks with unchanged job/outbox/claim/budget counts; no live tick.
+- New-request proof generation still needs its creative implementation consumer;
+  local waiting campaigns and static dispatch are not an autonomous shop builder.
+
 ## 2026-09-18 — Bounded automation coordinator (local; activation pending)
 
 - Added opt-in Drupal claims, renewable fenced leases, exact payload hashes,
