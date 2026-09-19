@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "duration": 30.041666666667,
+  "assertions": [
+    {"kind": "appearsBy", "selector": "#opening", "bySec": 0.9},
+    {"kind": "appearsBy", "selector": "#site", "bySec": 7.8},
+    {"kind": "appearsBy", "selector": "#offer", "bySec": 14.1},
+    {"kind": "appearsBy", "selector": "#daily", "bySec": 18.6},
+    {"kind": "appearsBy", "selector": "#renewal", "bySec": 20.8},
+    {"kind": "appearsBy", "selector": "#closing", "bySec": 27.0},
+    {"kind": "before", "a": "#opening", "b": "#site"},
+    {"kind": "before", "a": "#site", "b": "#offer"},
+    {"kind": "before", "a": "#daily", "b": "#renewal"},
+    {"kind": "before", "a": "#offer", "b": "#closing"},
+    {"kind": "staysInFrame", "selector": "#closing"},
+    {"kind": "keepsMoving", "withinSelector": "#architecture", "maxStaticSec": 2}
+  ]
+}

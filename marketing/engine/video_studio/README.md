@@ -50,6 +50,7 @@ The CUDA opt-out is supported by the transitive ONNX installer and avoids an unn
 | `validate CAMPAIGN` | Checks timing, formats, local assets, declared rights and media duration |
 | `plan CAMPAIGN --output NEW_DIR` | Frozen storyboard and generation prompt pack |
 | `render CAMPAIGN` | One MP4, contact sheet, verification and Build DNA |
+| `render-project PROJECT_DIR` | Render a trusted, locally authored HyperFrames project with frozen source/asset inputs and canonical evidence |
 | `batch CAMPAIGN` | Four separately composed formats: 9:16, 4:5, 1:1, 16:9 |
 | `voice SCRIPT.txt --output NEW.wav` | Already installed macOS system voice; recording yourself is preferred |
 | `demo-audio --output NEW.wav --duration 12` | Original synthetic pulse for pipeline testing, not narration |
@@ -62,6 +63,58 @@ The CUDA opt-out is supported by the transitive ONNX installer and avoids an unn
 `render`/`batch` accept `--quality draft|looks|delivery`, `--format`, `--scale 0.3–1`, `--timeout`, and `--no-cache`. A changed input, source asset, tool probe, code, brand or quality creates a different cache key. A cache hit requires the MP4 and retained evidence hashes to match.
 
 Outputs live under ignored `artifacts/video-studio/`. Never commit personal references, generated videos, weights, runtime environments or credentials. Review, canonical campaign enrollment, Drupal projection and public publication are separate existing processes.
+
+## Authored projects and supplied-performance recreation
+
+`render-project` gives continuous custom compositions the same evidence and cache
+contract as campaign rendering. It accepts `--manifest project.json`,
+`--quality draft|looks|delivery`, `--hyperframes`, `--timeout`, and `--no-cache`.
+The manifest schema is `famtastic.local-hyperframes-project.v1`, with a public
+`id`, `title`, integer `width`/`height`/`fps`, frame-aligned `duration_seconds`,
+`entrypoint: "index.html"`, an explicit list of relative `files`, configured
+`brand_logo: {path, sha256}`, and
+`creator_credit_marker: 'data-famtastic-creator-credit="v1"'`.
+
+Include every HTML/CSS/JavaScript/font/media input and any motion-check sidecar
+in `files`; the manifest itself is snapshotted automatically. The exact canonical
+embedded creator-credit row must be live markup. Each run freezes read-only
+source copies, renders a separate working copy, checks source integrity, probes
+the MP4, creates a contact sheet, and validates canonical Build DNA. Cache reuse
+requires unchanged source bytes, engine, brand, selected tool/quality, movie and
+retained evidence. Failed attempts remain separate. All outputs remain drafts;
+no command grants publication authority.
+
+For an unchanged, pre-mixed AAC soundtrack, the optional manifest field
+`audio_master: {"path":"assets/soundtrack.m4a","mode":"copy","start_seconds":0}`
+selects explicit mastering after native rendering. The path must be listed in
+`files` and contain exactly one AAC stream with a positive, finite duration no
+longer than the composition plus one frame. Other offsets and modes are rejected.
+The original native output remains `hyperframes-render.mp4`; a separately logged
+FFmpeg stage copies its video and the frozen source AAC into `video.mp4` without
+re-encoding. Final stream checks, both movies and the mastering log enter the same
+ledger. Source bytes and the declaration participate in the cache key. This is
+appropriate for a finished soundtrack; timing, mixing and fades must already be
+present in that source. The supplied-movie proof additionally compares AAC packet
+hashes and decoded PCM against the original.
+
+This accepts trusted operator-authored code. Static checks reject path escapes,
+unlisted resources and recognized remote fetches; they are **not a JavaScript
+security sandbox or workstation-wide network firewall**. Inert links and tool
+configuration schema/registry URLs are allowed. Installed HyperFrames may use its
+own cached font/runtime resources. Native readiness preserves the raw doctor
+payload while treating update notices, optional TTS/music, Whisper and Docker as
+advisory; rendering still requires the browser/media tools and capacity checks.
+
+The reproducible example is
+`marketing/brands/famtastic/video-studio/business-home-remake/`. Its builder
+requires the exact supplied original, a locally prepared transparent presenter
+clip and pinned GSAP bytes, and refuses to replace a prior project directory.
+The local macOS helper `tools/segment-presenter.swift` produces Vision masks;
+it does not generate an actor or reconstruct covered pixels. The example retains
+the original soundtrack and performance, with newly authored 1080p graphics and
+phrase captions. Source detail remains 480×854. See the
+[supplied-movie proof](../../../docs/marketing/local-video-studio/RECREATION-PROOF-2026-09-19.md)
+for reproduction commands, measured results and creative limits.
 
 ## Campaign contract
 

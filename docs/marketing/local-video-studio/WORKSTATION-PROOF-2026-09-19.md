@@ -2,6 +2,12 @@
 
 Status: workstation composition, native MoneyPrinterTurbo draft and cache proof passed. This is a review-branch handoff; no production release, publishing or owner creative acceptance.
 
+**Continuation:** the owner subsequently supplied the 30-second FAMtastic movie
+and authorized merging after proof. This document preserves the earlier import
+and four-format measurements. See
+[RECREATION-PROOF-2026-09-19.md](RECREATION-PROOF-2026-09-19.md) for the authored
+remake, exact soundtrack preservation, current tests and source integration.
+
 ## Import and isolation
 
 - Package: `~/Downloads/FAMtastic-Local-Video-Studio.zip`; SHA-256 `760ec2e8520abe1d8ef1dc459738f26acdf3ed44c3fd85bc68b6f43d5d52263e`.

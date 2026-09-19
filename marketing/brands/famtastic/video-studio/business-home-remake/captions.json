@@ -1,0 +1,22 @@
+{
+  "schema": "famtastic.reviewed-phrase-captions.v1",
+  "timing_basis": "Local whisper.cpp small.en transcript plus supplemental DTW. Phrase grouping, punctuation, brand spelling and price formatting are editorial. The Get started onset is approximate (about 14.2s); no word-perfect alignment claim.",
+  "cues": [
+    {"start": 0.20, "end": 1.58, "text": "You’ve got the hustle."},
+    {"start": 1.58, "end": 2.55, "text": "Still no website?"},
+    {"start": 2.55, "end": 4.25, "text": "FAMtastic Designs"},
+    {"start": 4.25, "end": 6.15, "text": "gives your business a home."},
+    {"start": 7.28, "end": 8.40, "text": "Show your work."},
+    {"start": 8.40, "end": 10.10, "text": "Explain your services."},
+    {"start": 10.10, "end": 11.18, "text": "And collect inquiries"},
+    {"start": 11.18, "end": 12.62, "text": "while you’re busy."},
+    {"start": 14.16, "end": 15.34, "text": "Get started for $199"},
+    {"start": 15.34, "end": 17.53, "text": "for your first year."},
+    {"start": 17.53, "end": 19.76, "text": "That’s about 55 cents a day."},
+    {"start": 19.76, "end": 22.28, "text": "After that, $9.99 a month."},
+    {"start": 22.28, "end": 23.66, "text": "Domain costs extra."},
+    {"start": 23.66, "end": 26.24, "text": "Turn attention into opportunity."},
+    {"start": 26.24, "end": 27.71, "text": "Give your business a home"},
+    {"start": 27.71, "end": 30.00, "text": "at famtasticdesigns.com."}
+  ]
+}

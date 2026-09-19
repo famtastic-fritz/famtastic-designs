@@ -1,0 +1,255 @@
+{
+  "schema": "famtastic.local-video-recreation-evidence.v1",
+  "date": "2026-09-19",
+  "classification": "local_production_proven_creative_acceptance_pending",
+  "branch": "codex/local-video-studio-proof",
+  "implementation_commit": "f24eec09d3a08a667a80463670f188f49f641f5d",
+  "required_base": "076261ebb8ede3d60a7eb54ada44aa449794fafa",
+  "reconciled_main": "8a79aa8e49bdd9c6355e17912aeba13702675ced",
+  "worktree": "/Users/famtastic-fritz/Documents/ChatGPT/famtastic-video-proof",
+  "source": {
+    "path": "artifacts/video-studio/originals/FAMtastic-Designs-30sec-FINAL-COPY-FIXED.mp4",
+    "sha256": "95ae3ca64a6eaee00c772ddd70063c210b55dff03632b9690ec645ffa2bae49f",
+    "size_bytes": 7473049
+  },
+  "final": {
+    "path": "artifacts/video-studio/project-business-home-remake-20260919T160957Z-5fa4bd31/video.mp4",
+    "sha256": "f3e7b2dd4e0860f7f70cd2808743eacb59afe26f13ce2297ba5c5518ee8f6c23",
+    "size_bytes": 22186105
+  },
+  "raw_native_video": {
+    "path": "artifacts/video-studio/project-business-home-remake-20260919T160957Z-5fa4bd31/hyperframes-render.mp4",
+    "sha256": "4d265249744564a51b63f24a795a16b7a9362c75619929345d0fbac02db5ea96",
+    "size_bytes": 22441670
+  },
+  "delivery_copy": {
+    "source": "/Users/famtastic-fritz/Documents/ChatGPT/famtastic-video-proof/artifacts/video-studio/project-business-home-remake-20260919T160957Z-5fa4bd31/video.mp4",
+    "delivery": "/Users/famtastic-fritz/Downloads/FAMtastic-Designs-30sec-REMAKE-20260919.mp4",
+    "sha256": "f3e7b2dd4e0860f7f70cd2808743eacb59afe26f13ce2297ba5c5518ee8f6c23",
+    "size_bytes": 22186105
+  },
+  "technical": {
+    "schema": "famtastic.video-verification.v1",
+    "path": "/Users/famtastic-fritz/Documents/ChatGPT/famtastic-video-proof/artifacts/video-studio/project-business-home-remake-20260919T160957Z-5fa4bd31/video.mp4",
+    "status": "passed",
+    "passed": true,
+    "failures": [],
+    "warnings": [],
+    "video": {
+      "codec": "h264",
+      "width": 1080,
+      "height": 1920,
+      "pixel_format": "yuv420p",
+      "fps": 24.0,
+      "frame_count": "721",
+      "duration_seconds": 30.041667
+    },
+    "audio": [
+      {
+        "codec": "aac",
+        "channels": 2,
+        "sample_rate": 32000.0,
+        "duration_seconds": 29.952
+      }
+    ],
+    "duration_seconds": 30.041667,
+    "review": "review_pending",
+    "command": [
+      "/opt/homebrew/bin/ffprobe",
+      "-v",
+      "error",
+      "-show_format",
+      "-show_streams",
+      "-of",
+      "json",
+      "/Users/famtastic-fritz/Documents/ChatGPT/famtastic-video-proof/artifacts/video-studio/project-business-home-remake-20260919T160957Z-5fa4bd31/video.mp4"
+    ],
+    "container_duration_seconds": 30.041667,
+    "size_bytes": 22186105,
+    "limits": [
+      "Metadata check only; no full-frame decode or visual approval is implied."
+    ],
+    "audio_master": {
+      "mode": "copy",
+      "start_seconds": 0.0,
+      "codec": "aac",
+      "source_path": "assets/soundtrack.m4a",
+      "source_sha256": "94511f1cbb791c99f14d047a8c5316457df4fe0af0787454cdc23e8054648d1c",
+      "source_probe": {
+        "command": [
+          "/opt/homebrew/bin/ffprobe",
+          "-v",
+          "error",
+          "-select_streams",
+          "a",
+          "-show_entries",
+          "stream=index,codec_type,codec_name,duration,duration_ts,time_base",
+          "-of",
+          "json",
+          "/Users/famtastic-fritz/Documents/ChatGPT/famtastic-video-proof/artifacts/video-studio/recreation-20260919/project-v8/assets/soundtrack.m4a"
+        ],
+        "stream_index": 0,
+        "codec": "aac",
+        "duration_seconds": 29.952
+      },
+      "final_stream": {
+        "codec": "aac",
+        "duration_seconds": 29.952
+      },
+      "verification": "single AAC stream; codec and duration match the declared source master"
+    }
+  },
+  "canonical_evidence": {
+    "path": "artifacts/video-studio/project-business-home-remake-20260919T160957Z-5fa4bd31/build-dna.json",
+    "sha256": "613398c46ffebdbe64ca4959410a75dbd8ce2a36c0b648faf5db945fbcfd10b9",
+    "size_bytes": 35637
+  },
+  "source_manifest": {
+    "path": "artifacts/video-studio/project-business-home-remake-20260919T160957Z-5fa4bd31/project-source-snapshot/project.json",
+    "sha256": "0611927a05f47d3934cd1e30f700f28b0c371d5b60a5ce0502666eb73c833c24",
+    "size_bytes": 1095
+  },
+  "audio_master": {
+    "proof": {
+      "path": "artifacts/video-studio/recreation-20260919/audio-review/final-audio-master-proof.json",
+      "sha256": "406ee94aac440d1bda523d44c4b775641dcbf8cdda14ff96817a9ebabb29c783",
+      "size_bytes": 11332
+    },
+    "report": {
+      "path": "artifacts/video-studio/recreation-20260919/audio-review/final-audio-master-proof.md",
+      "sha256": "f8f73fb1a4a7d706f827e80d69ca2b26c145fd3311aaab1309c557855246862e",
+      "size_bytes": 3391
+    },
+    "ordered_aac_packets_matching": 937,
+    "decoded_pcm_byte_identical": true,
+    "video_packets_matching_raw": 721,
+    "subjective_listening": "not_performed"
+  },
+  "cache": {
+    "proof": {
+      "path": "artifacts/video-studio/recreation-20260919/cache-v8.json",
+      "sha256": "53fe0bf73b7208b25f3c28dcc6d2a8211a122e691be932e1b3154258a46969ee",
+      "size_bytes": 3548
+    },
+    "cache_hit": true,
+    "wall_seconds": 0.9558912497013807,
+    "same_video_sha256": true
+  },
+  "times_seconds": {
+    "vision_all_721_frames": 37.33,
+    "alpha_encode": 41.58,
+    "native_pipeline": 53.911,
+    "native_capture": 46.876,
+    "native_check_plus_render_stage": 106.677583,
+    "master_audio_stage": 0.068804,
+    "canonical_run": 107.935537,
+    "mpt_adapter": 61.237,
+    "mpt_process_wall": 61.54
+  },
+  "tests": {
+    "video_studio": {
+      "passed": 93,
+      "failed": 0,
+      "log": {
+        "path": "artifacts/video-studio/recreation-20260919/final-checks/video-studio-unittest-20260919.log",
+        "sha256": "f47a820363e6c3f84dda487fc2936e5cb17bfab618017984e4f4a7d8298d608f",
+        "size_bytes": 14323
+      }
+    },
+    "creator_credit_passed": 5,
+    "canonical_completed_ledgers_passed": 19,
+    "receipt": {
+      "path": "artifacts/video-studio/recreation-20260919/final-checks/core-final-checks-20260919.json",
+      "sha256": "007ef151aa917d13b42f3a842141803a6d71867dcdd1280d1b41705556e4b2b8",
+      "size_bytes": 7320
+    },
+    "staged_secrets_scan": {
+      "path": "artifacts/video-studio/recreation-20260919/final-checks/staged-secrets-scan.json",
+      "sha256": "106da01da6b2397e693688e8355a5d45706e864bfa7587048da8c05d92b84a32",
+      "status": "passed"
+    },
+    "staged_capability_drift": {
+      "path": "artifacts/video-studio/recreation-20260919/final-checks/capability-drift-staged.json",
+      "sha256": "c08edfce759e7f5f7856399275ebd9287257c7e7bee83eb7c9de32089e7a2f5d",
+      "status": "pass"
+    }
+  },
+  "browser_playback": {
+    "original": {
+      "path": "artifacts/video-studio/recreation-20260919/original-browser-playback.json",
+      "sha256": "52ca0841cbedd63d20c8e58c526800480435aa2179762f2115df808e45f2b29c",
+      "size_bytes": 598
+    },
+    "final_and_mpt": {
+      "path": "artifacts/video-studio/recreation-20260919/final-browser-playback.json",
+      "sha256": "dde857b16ac20787b86d14b21288ee984570ba221526f7a976a22eee5f0fc16a",
+      "size_bytes": 1061
+    }
+  },
+  "visual": {
+    "final_midpoints": {
+      "path": "artifacts/video-studio/project-business-home-remake-20260919T160957Z-5fa4bd31/contact-sheet.jpg",
+      "sha256": "fdb716aa741c7959bf85812b77deb10443783612e9063d37a0e68ae569316aa4",
+      "size_bytes": 126036
+    },
+    "final_critical_frames": {
+      "path": "artifacts/video-studio/recreation-20260919/final-critical-frames.jpg",
+      "sha256": "4f26bf496b6c11d055aabcce9977f7a159d90487253cb00b2b19f159bdd569a9",
+      "size_bytes": 190783
+    },
+    "independent_equivalent_v7": {
+      "path": "artifacts/video-studio/recreation-20260919/visual-review-v7/REVIEW.md",
+      "sha256": "e699a6f3aac69fa2a73efa84b5f99e145ea2c3a613166a358f2e645b9c402e79",
+      "size_bytes": 1497
+    },
+    "comparison_directory": "artifacts/video-studio/recreation-20260919/comparison-final-v8"
+  },
+  "native_mpt": {
+    "video": {
+      "path": "artifacts/video-studio/mpt-real-source-20260919-mpt-20260919T154638Z-1863a08c/output/moneyprinter-draft-01.mp4",
+      "sha256": "bc13af7009171657fda3c8a3ee7f5f33278c5c4c62f42dc6ad8772aedafd577c",
+      "size_bytes": 15518980
+    },
+    "ledger": {
+      "path": "artifacts/video-studio/mpt-real-source-20260919-mpt-20260919T154638Z-1863a08c/build-dna.json",
+      "sha256": "809abaf3cc8e12dff467a0d59cf53734830f4c7a4da6c44ab5e1a47fa95d0b6b",
+      "size_bytes": 12959
+    },
+    "report": "docs/marketing/local-video-studio/MPT-ORIGINAL-SOURCE-PROOF-2026-09-19.md"
+  },
+  "previous_four_format_proof": "docs/marketing/local-video-studio/WORKSTATION-EVIDENCE-2026-09-19.json",
+  "generation": {
+    "vision_person_segmentation": "locally_proven",
+    "comfyui_diffusion": "not_installed_not_run",
+    "segmentation_report": {
+      "path": "artifacts/video-studio/recreation-20260919/segmentation-pilot/REPORT.md",
+      "sha256": "e34a10d759e349379edaa44b79380745e160fb15cdb03805ed33afe5be1f4b88",
+      "size_bytes": 9753
+    }
+  },
+  "ci": {
+    "status": "jobs_not_started_account_billing_lock",
+    "run_url": "https://github.com/famtastic-fritz/famtastic-designs/actions/runs/35448391411",
+    "receipt": {
+      "path": "artifacts/video-studio/workstation-proof/core-review/ci-billing-lock-2026-09-19.md",
+      "sha256": "96120e36c67664e0799011663cb1278807fda9b060526a8d8a363e5f9ab5c0a6",
+      "size_bytes": 1191
+    }
+  },
+  "limits": [
+    "480x854 source presenter detail and soft matte edges",
+    "Occluded anatomy not reconstructed",
+    "Phrase captions approximate, not word-perfect",
+    "One vertical remake; four other format fixtures already proved",
+    "No subjective listening or owner creative acceptance",
+    "Second original not yet supplied",
+    "No local diffusion execution or inference fit claim"
+  ],
+  "side_effects": {
+    "creative_provider_fee_usd": 0,
+    "provider_spending_enabled": false,
+    "publication": false,
+    "production_deployment": false,
+    "electricity_and_agent_account_usage": "not_measured_as_render_fee"
+  }
+}

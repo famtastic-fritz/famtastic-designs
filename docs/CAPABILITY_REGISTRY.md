@@ -1,5 +1,20 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Authored local video and supplied-performance recomposition
+
+Locally proved: continuous authored HyperFrames projects with immutable input
+snapshots, native MP4 verification, canonical Build DNA, and validated cache reuse;
+explicit AAC master copying; 721-frame local Apple Vision presenter segmentation;
+and a 30-second 1080p remake using supplied performance with rebuilt graphics and
+captions. Existing campaign rendering retains its four-format workstation proof.
+MoneyPrinterTurbo separately accepts the actual supplied original and soundtrack.
+
+This is source integration and local media proof, not production activation,
+automatic publishing, owner creative acceptance, voice cloning, recovery of
+occluded pixels or generation of new actor footage. Presenter detail remains
+480×854; ComfyUI/Wan generation is unproven on this workstation. See
+`docs/marketing/local-video-studio/RECREATION-PROOF-2026-09-19.md`.
+
 ## 2026-09-19 — Compact footer atmosphere, local evidence
 
 Six focused tests and mobile CUA prove the existing footer's compact Company

@@ -146,6 +146,7 @@ def parser(default_brand=None):
     for name in ('render','batch'):
         q=sub.add_parser(name);q.add_argument('campaign',type=Path);q.add_argument('--brand',type=Path,default=default_brand);q.add_argument('--format',choices=FORMATS);q.add_argument('--scale',type=float,default=1);q.add_argument('--hyperframes');q.add_argument('--quality',choices=['draft','looks','delivery'],default='draft');q.add_argument('--timeout',type=int,default=1800);q.add_argument('--no-cache',action='store_true')
         if name=='batch':q.add_argument('--formats',nargs='+',choices=FORMATS,default=list(FORMATS))
+    q=sub.add_parser('render-project');q.add_argument('project_dir',type=Path);q.add_argument('--manifest',default='project.json');q.add_argument('--brand',type=Path,default=default_brand);q.add_argument('--hyperframes');q.add_argument('--quality',choices=['draft','looks','delivery'],default='draft');q.add_argument('--timeout',type=int,default=1800);q.add_argument('--no-cache',action='store_true')
     q=sub.add_parser('verify');q.add_argument('video',type=Path)
     q=sub.add_parser('compare');q.add_argument('reference',type=Path);q.add_argument('candidate',type=Path);q.add_argument('--output',type=Path,required=True)
     q=sub.add_parser('voice');q.add_argument('script',type=Path);q.add_argument('--output',type=Path,required=True);q.add_argument('--voice-name')
@@ -210,6 +211,14 @@ def main(argv=None,repo_root=None,default_brand=None):
                 output(result);return 0
             except Exception:
                 ledger.finalize(status='partial');raise
+        if args.command=='render-project':
+            if not args.brand:raise CampaignError('--brand is required outside the repository wrapper')
+            from .project_render import render_project
+            brand=load_brand(args.brand,root)
+            result=render_project(args.project_dir,root,brand,args.brand,manifest_name=args.manifest,
+                                  executable=args.hyperframes or executable_default(root),quality=args.quality,
+                                  timeout=args.timeout,no_cache=args.no_cache)
+            output(result);return 0
         c=load_campaign(args.campaign,getattr(args,'format',None),getattr(args,'scale',1))
         if args.command=='mpt-draft':
             from .adapters import moneyprinter

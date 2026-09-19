@@ -15,6 +15,57 @@ from fractions import Fraction
 from pathlib import Path
 
 
+_REQUIRED_DOCTOR_CHECKS = {
+    "node.js", "cpu", "memory", "disk", "frames cache", "archive extractor", "environment",
+    "ffmpeg", "ffprobe", "chrome",
+}
+_ADVISORY_DOCTOR_CHECKS = {
+    "version", "tts (kokoro)", "bgm (musicgen)", "whisper-cpp", "docker", "docker running",
+}
+
+
+def _readiness_from_doctor(diagnosis: dict) -> dict:
+    """Assess native video-render prerequisites separately from optional integrations and update notices."""
+    checks = diagnosis.get("checks")
+    if checks is None:
+        # Older supported CLIs return only the aggregate boolean.
+        passed = diagnosis.get("ok") is True
+        return {"ok": passed, "reason": None if passed else "HyperFrames doctor reported not ready."}
+    if not isinstance(checks, list):
+        return {"ok": False, "reason": "HyperFrames doctor returned an invalid checks list."}
+
+    by_name: dict[str, list[dict]] = {}
+    malformed = []
+    for item in checks:
+        if not isinstance(item, dict) or not isinstance(item.get("name"), str):
+            malformed.append("unnamed doctor check")
+            continue
+        name = " ".join(item["name"].lower().split())
+        by_name.setdefault(name, []).append(item)
+
+    missing = sorted(_REQUIRED_DOCTOR_CHECKS - set(by_name))
+    failed = sorted(name for name, items in by_name.items()
+                    if name not in _ADVISORY_DOCTOR_CHECKS and any(item.get("ok") is not True for item in items))
+    duplicates = sorted(name for name, items in by_name.items() if len(items) != 1)
+    problems = []
+    if missing:
+        problems.append("missing required checks: " + ", ".join(missing))
+    if failed:
+        problems.append("failed checks: " + ", ".join(failed))
+    if duplicates:
+        problems.append("duplicate checks: " + ", ".join(duplicates))
+    if malformed:
+        problems.append("malformed checks: " + ", ".join(malformed))
+    advisory_failures = sorted(name for name in _ADVISORY_DOCTOR_CHECKS & set(by_name)
+                               if any(item.get("ok") is not True for item in by_name[name]))
+    return {
+        "ok": not problems,
+        "reason": "HyperFrames local rendering prerequisites " + "; ".join(problems) + "." if problems else None,
+        "required_check_names": sorted(_REQUIRED_DOCTOR_CHECKS),
+        "advisory_failures": advisory_failures,
+    }
+
+
 def _environment() -> dict[str, str]:
     return {
         **os.environ,
@@ -102,8 +153,15 @@ def inspect(executable: str = "hyperframes") -> dict:
         report["reason"] = "HyperFrames doctor returned no parseable diagnosis"
         return report
     report["doctor"] = diagnosis
-    # Doctor always exits zero; the payload determines environment readiness.
-    report["ok"] = doctor["returncode"] == 0 and diagnosis.get("ok") is True
+    # Preserve the CLI's full aggregate diagnosis; only local render prerequisites
+    # gate this adapter. Model add-ons and update notifications are advisory.
+    readiness = _readiness_from_doctor(diagnosis)
+    report["readiness"] = readiness
+    report["ok"] = doctor["returncode"] == 0 and readiness["ok"]
+    if doctor["returncode"] != 0:
+        report["reason"] = "HyperFrames doctor command failed."
+    elif not readiness["ok"]:
+        report["reason"] = readiness["reason"]
     return report
 
 

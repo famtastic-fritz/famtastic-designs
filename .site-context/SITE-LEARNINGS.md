@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Measure the final soundtrack and respect baked-in occlusion
+
+Native video metadata and plausible loudness do not prove preserved audio. The
+supplied-movie check found inconsistent waveform alignment in native HyperFrames
+audio; keep those attempts and master from the explicit AAC source when exact
+preservation is required. Validate decoded PCM and packet hashes. A browser mute
+attribute alone is weaker than a visual asset with no audio stream.
+
+A local Vision matte can separate a supplied performer within the M5's memory
+limits, but it cannot recover a sleeve hidden behind a baked-in price card.
+Preserve that occlusion intentionally in composition and disclose source detail,
+matte edges and subjective-review limits. Use a trusted authored-project manifest,
+freeze inputs, and inspect actual encoded transitions, not only browser snapshots.
+See `docs/marketing/local-video-studio/RECREATION-PROOF-2026-09-19.md`.
+
 ## 2026-09-19 — Keep native video proof tied to the actual workstation
 
 Observation: the existing HyperFrames CLI uses `standard/high`, the package uses

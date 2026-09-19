@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-09-19 — Supplied-movie remake and authored project evidence
+
+- Added `render-project` with frozen manifests/assets, canonical branding,
+  native verification, Build DNA and integrity-checked reuse.
+- Added explicit AAC master copying with retained raw video and mastering logs;
+  the final soundtrack matches all 937 original AAC packets and decoded PCM.
+- Separated required HyperFrames readiness from update notices and optional
+  TTS, music, transcription and Docker integrations.
+- Rebuilt the supplied movie at 1080p with original performance, local Vision
+  matte, newly authored graphics, phrase captions and the original AAC master.
+- Proved the installed MPT montage worker with this actual source and soundtrack.
+- Recorded 93 passing regressions, 19 valid completed ledgers, native timings,
+  playback, cache reuse and limitations in
+  `docs/marketing/local-video-studio/RECREATION-PROOF-2026-09-19.md`.
+  Paid providers, publication and production deployment remain disabled.
+
 ## 2026-09-19 — Local Video Studio workstation proof and repairs
 
 Imported the exact packaged implementation into isolated branch

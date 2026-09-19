@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Prove authored video with the real source
+
+A real 30-second source exposed seams the synthetic fixture did not: baked-in
+foreground occlusion, low-resolution matte edges, and an audio waveform mismatch
+that stream presence and loudness checks missed. Retain original/source hashes,
+all rejected takes, source-aligned captions, and a separately evidenced lossless
+AAC mastering step. Test required renderer prerequisites independently of optional
+model/server integrations and update notifications.
+
+The new project-manifest path captures continuous custom compositions in canonical
+Build DNA and invalidates reuse when any declared input or retained proof changes.
+Local Vision segmentation is not local diffusion or new performer generation.
+One movie was supplied; do not keep describing it as absent or invent a second.
+GitHub runner billing failures are external blockers, not failing source tests.
+See `docs/marketing/local-video-studio/RECREATION-PROOF-2026-09-19.md`.
+
 ## 2026-09-19 — Prove the installed video toolchain and retained evidence
 
 The installed HyperFrames 0.8.29 names quality presets differently from the
