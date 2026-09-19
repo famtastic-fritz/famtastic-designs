@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Hosting quota is separate from filesystem free space
+
+**Observation:** A canonical frontend install failed with `EDQUOT` (−122), despite `df` reporting 957 GB free. Old private release build outputs consumed account storage. **Guidance:** Treat per-account quota independently of the host filesystem. For a routine repair, verify exact old release revisions and untracked `frontend/dist` paths, remove only reproducible generated builds, preserve the live build/source/backups, retain a cleanup receipt, then retry the canonical deployment. Five old dist trees reclaimed 1,067,544 KiB and the same-commit retry succeeded. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md`.
+
 ## 2026-09-19 — Narration snapshots and performance controls
 
 A narration runner that parses a script and later rereads it for the frozen snapshot can attest different bytes from those spoken. Failure paths also need to register partial WAVs, logs and receipts. Freeze one input read, retain failed attempts, and keep variable pause plans explicitly separate from consumers with a fixed-gap contract. Effective pauses come from the resolved plan, not the campaign default. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md`.

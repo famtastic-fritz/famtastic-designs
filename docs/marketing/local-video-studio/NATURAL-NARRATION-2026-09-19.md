@@ -35,7 +35,7 @@ No paid synthesis, new account, API purchase or provider fallback occurred. Cach
 
 Evidence root: `artifacts/video-studio/natural-narration-20260919/`. Separate `heart` and `bella` ledgers retain the initial audio, exact inputs, phrase cues and measurements. The API audit has sanitized configuration, connection and official-source evidence. Human listening acceptance remains pending; successful playback and transcription cannot substitute for it.
 
-The existing `/video-review/` route is being extended with two native audio controls, a matching transcript and mutual exclusion across audio and video players. New owner notice key: `natural-narration-auditions-20260919-v1`; exact recipient `fritz.medine@gmail.com`; existing standard/v2 renderer. Production and inbox receipts will be appended after verification.
+The existing `/video-review/` route now includes two native audio controls, a matching transcript and mutual exclusion across audio and video players. New owner notice key: `natural-narration-auditions-20260919-v1`; exact recipient `fritz.medine@gmail.com`; existing standard/v2 renderer. Production and inbox receipts are recorded below.
 
 ## Validation before publication
 
@@ -53,3 +53,29 @@ The repaired runner regenerated fresh `heart-v2` and `bella-v2` runs in **7.114 
 - Bella AAC SHA-256: `092b6764805101df9a2453471bbf5e2054bfe2bb2f080401168ee2c57fb45f86`.
 
 The final source-bound runs retain their own immutable script, performance, input manifest and runner/module snapshots. Failed-run cleanup regressions verify partial artifact retention and preservation of the original failure. This proves the revised runner’s technical behavior, not owner listening acceptance.
+
+## Website release and recovered hosting quota
+
+PR 32 merged implementation `07027bf5dfe5f6fb2dfadec8fde2d3ad4bf743f9` into `main` as **`ca42d7db8d4fbc40bdb61b31bd671ef13283c425`**. That exact commit was deployed using the canonical private Git checkout and Node **22.23.2**. The final server build passed in **20.91 s** and verified 218 route shells plus the root `.htaccess`.
+
+The first attempt failed before promotion with npm `EDQUOT` / error −122 and missing Vite, while the filesystem reported 957 GB free. Five old private `frontend/dist` trees were verified untracked at their expected Git revisions and removed, reclaiming **1,067,544 KiB** of reproducible generated output. The live `736ab1ff` build, all source checkouts, the Git mirror and all backups were retained. The retry succeeded. Cleanup script, exact before/after paths and both deployment logs are retained; no historical media evidence was rewritten.
+
+Backup: `/home/xrdj7j99xhzt/backups/famtastic-frontend-20260919T221436Z-ca42d7db8d4fbc40bdb61b31bd671ef13283c425.tgz`.
+
+Public listening page: **https://famtasticdesigns.com/video-review/#female-voices**. Both AAC files return HTTP 200, `audio/mp4`, exact local SHA-256 hashes and HTTP 206 byte ranges. Apex and www route shells return 200 with noindex/nofollow. This release publishes only the auditions and supporting page; selection of the full-ad narrator remains open.
+
+GitHub Actions did not execute: each job reports that the account is locked due to a billing issue. The normal PR merge succeeded without admin override or protection changes. Local/native tests are passing; cloud CI is not claimed green.
+
+Narration Build DNA records are registered in Drupal as **rows 60 and 61**, with matching immutable file checksums.
+
+## Public browser and owner notice
+
+CUA observed full unmuted playback of both public clips (Heart 22.516667 s, Bella 21.514 s), with no media or console errors, at 390 px. The www page passed at 1280 px with two audio players, all three existing films, no horizontal overflow and the canonical creator credit. Local 320 px controls and player switching also passed. This is browser viewport testing, not physical iPhone/Safari certification.
+
+The exact-key notice `natural-narration-auditions-20260919-v1` was accepted by SMTP as outbox **806**, with one dispatch and zero retries. Provider Message-ID: `<YMf9WVR3UAR8rVSHvPDUO7rQMqV2UvAxnNduTsVEgM@default>`. The notice points to `/video-review/#female-voices` and asks the owner to choose the preferred full-ad narrator after listening.
+
+The notice reached Gmail **INBOX**, message `1a0bbc1c7797e223`, with the intended comparison link in both plain text and the HTML button. SPF, DKIM and DMARC pass; template is `standard/v2`. A subsequent read-only invocation returned `already_sent`, outbox 806 and `resent: false`.
+
+Final delivery Build DNA **`video-20260919T215629-59632cad7d`** validates with **11 stage records and 67 artifact checksums**, including the failed deployment and successful recovery. Human listening acceptance and the full-ad narrator choice remain open; the technical delivery and zero provider-spend claims are proved.
+
+The completed immutable delivery ledger is registered as Drupal row **62**. The report is mirrored to the mounted Drive folder as `2026-09-19-Natural-Narration-Auditions-Live.md`; local mirror bytes are read back and verified against this source report.
