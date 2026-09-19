@@ -4,6 +4,10 @@
 
 Added the scripted portrait continuation with preserved source dialogue, measured captions, local voiceover and retained failed/repaired renders. Added an offline OpenVoice V2 runner with exact runtime/model pins, evidence-backed references, immutable snapshots and eight focused regression tests (105 Video Studio tests total). Added a three-part synthetic voice comparison, official repository/license research, real Mac/storage assessment, a third fixed publication edition and two one-attempt owner notice scripts. Personal voice matching, new acting and lip-sync remain unproved.
 
+- Published the final 35.6-second continuation and 32.8-second voice comparison; exact public hashes, byte ranges and complete unmuted playback pass.
+- Verified both standard/v2 owner notices in Gmail (outbox 803/804) and read-only no-resend receipts. All three revision milestones have inbox proof.
+- Registered technical evidence rows 52–57 and the finalized combined delivery ledger as row 58. PR 28 merged at `5499d202`; GitHub Actions remains blocked by account billing, separately from passing local checks. See `docs/marketing/local-video-studio/WALKING-AND-VOICE-PROOF-2026-09-19.md`.
+
 ## 2026-09-19 — Faster film revision and brand phonetics
 
 - Produced the owner-requested 72.8-second version two with the complete script, new faster local narration, explicit fam-TAS-tik phonemes, retimed scenes/captions and preserved v1 evidence.

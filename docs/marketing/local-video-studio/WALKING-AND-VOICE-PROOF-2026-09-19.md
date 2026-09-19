@@ -38,4 +38,21 @@ Evidence roots:
 
 ## Publication and notices
 
-The versioned review assets use the existing fixed-file, no-clobber publication lane. The original `/why-famtastic/` page and first-film assets remain unchanged. The comparison is already public with matching HTTP hashes/MIME, 206 byte ranges and complete unmuted browser playback. Continuation publication and both exact-key standard/v2 owner notices are being completed from this proven source; actual receipts will be appended here after delivery. No broad email worker, social scheduler, paid creative provider or frontend deployment is enabled.
+Both versioned review sets are public through the existing fixed-file, no-clobber publication lane:
+
+- [Watch the 35.6-second presenter continuation](https://famtasticdesigns.com/media/films/walking-continuation-20260919.mp4).
+- [Hear the 32.8-second local voice comparison](https://famtasticdesigns.com/media/films/local-voice-proof-20260919.mp4).
+- [Read the continuation script](../../../marketing/brands/famtastic/video-studio/walking-continuation/SCRIPT.md).
+
+All six public MP4/JPG/VTT hashes and MIME types match the retained delivery files; both MP4s return 206 byte ranges. Public CUA playback ended at 35.583333 and 32.8 seconds, respectively, unmuted and without a media error. Exact local copies also exist in Downloads as `FAMtastic-Walking-Continuation-20260919.mp4` and `FAMtastic-Local-Voice-Comparison-20260919.mp4`. The original `/why-famtastic/` page and first-film assets remain intact; frontend runtime remains `63114513`.
+
+[PR 28](https://github.com/famtastic-fritz/famtastic-designs/pull/28) merged implementation `6ea36a9f440217434d807dddc52248ed08e17347` into main at `5499d20264eeef787791c370d9caca5756b8cdcd`. The two notice scripts ran from that exact private source checkout, with local/remote SHA-256 equality. The voice report's main-branch link was verified before sending. No repository-protection or billing setting was changed. GitHub Actions run `35464142962` did not start its jobs because the account is billing-locked.
+
+| Milestone | Outbox | SMTP provider Message-ID | Verified Gmail inbox message |
+| --- | ---: | --- | --- |
+| Presenter continuation | 803 | `<a7xMZGQq7YDMjKzwnzGZd2nNbHBEr26PQqlz1IWKI@default>` | `1a0bb264a6734496` |
+| Local voice experiment | 804 | `<yhUiYbtIqZZuR5FiRVpWtJ4YSivndNw04rrsBFHWk@default>` | `1a0bb266ad7cbe73` |
+
+Both notices reached `fritz.medine@gmail.com` with the exact intended links, standard/v2 template and SPF/DKIM/DMARC pass. Read-only repeats returned `already_sent`, `resent=false`, retaining the original rows and Message-IDs. Together with the v2-ad notice (outbox 802), all three requested milestone emails have verified Gmail receipts.
+
+Canonical render/QA/conversion projections are Drupal rows **52–56**; the completed v2-ad release is row **57**. The final combined delivery ledger, `video-20260919T191649-6708e59b20`, passes with **17 stage records and 22 artifact checksums** and is registered as Drupal row **58**. It retains an initial projection preflight failure that occurred before remote writes, alongside the corrected successful attempt. Technical delivery is complete; owner listening approval remains pending. No broad email worker, social scheduler, paid creative provider or frontend deployment was enabled.
