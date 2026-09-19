@@ -10,7 +10,7 @@ final class SelectedSourceAssociation {
       || ($intent['request_id'] ?? '') !== (string) $row['public_id'] || ($intent['project_id'] ?? '') !== (string) $row['project_id']
       || ($intent['customer_id'] ?? '') !== (string) $row['customer_id'] || ($intent['selection']['direction_id'] ?? '') !== ($row['selected_proof_direction'] ?? '')) throw new \InvalidArgumentException('source_association_current_selection_required');
     $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE, 512, JSON_THROW_ON_ERROR);
-    $scope = array_intersect_key($intake, array_flip(['page_count', 'page_list', 'required_features', 'integrations', 'booking_details', 'ecommerce_details', 'custom_needs', 'content_status', 'copywriting_needs', 'products_services', 'desired_actions']));
+    $scope = SelectedSourceIntent::requestedScope($row, $intake);
     if ($scope !== $intent['scope']['snapshot'] || ($intake['authored_content']['pages'] ?? NULL) !== ($intent['authored_content']['pages'] ?? NULL)) throw new \InvalidArgumentException('source_association_current_input_changed');
     $root = realpath(\Drupal::root() . '/proofs');
     foreach ($intent['source']['artifacts'] as $artifact) {

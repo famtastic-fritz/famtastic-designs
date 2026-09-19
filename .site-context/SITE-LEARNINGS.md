@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — A green journey does not cover every handoff
+
+Observation: source association still used a duplicated older scope definition and
+rejected the producer's new project type. Guidance: share requestedScope() and add
+real issue/accept/duplicate/stale tests. The new installed regression failed before
+the fix and the expanded85-check suite passes; provider execution remains separate.
+
 ## 2026-09-18 — A newer revision can still contain an old specification
 
 Observation: embedded continuation metadata bypassed normal scope reconciliation.

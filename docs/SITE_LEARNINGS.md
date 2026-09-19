@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Share hashed scope across producer and validator
+
+Adding project type to intent exposed a duplicate older scope list in association.
+The full journey did not exercise this grant path. Rule: one canonical scope
+builder supplies field inclusion/order; test producer -> real grant issuance ->
+persisted source acceptance, plus changed-input rejection. Keep failed evidence
+and strict equality rather than dropping the new field or weakening validation.
+
 ## 2026-09-18 — Reconcile embedded build evidence after customer edits
 
 Root cause: an existing `selected_build_continuation` skipped normal-record

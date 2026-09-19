@@ -590,6 +590,43 @@ portalCall($uid, 'updateWebsiteRequest', $preEditId, ['project_name' => 'Scope c
 portalCall($uid, 'websiteProofDecision', $preEditId, ['direction' => 'a']);
 check(row($preEditId)['staging_status'] === 'planning' && !isset(studio($preEditId)['site_studio_build_packet']), 'preselection_scope_change_cannot_reuse_old_static_evidence');
 
+// Producer -> real association issue/accept must use one canonical scope.
+// This synthetic verified-source envelope proves persistence/validation only,
+// not a real Studio build or server-side HMAC endpoint execution.
+$associationId = fixture($uid, 'Source association scope contract', FALSE, TRUE);
+portalCall($uid, 'websiteProofDecision', $associationId, ['direction' => 'a']);
+$associationRow = row($associationId); $associationState = studio($associationId);
+$identity = ['project_id' => (string) $associationRow['project_id'], 'customer_id' => (string) $associationRow['customer_id'], 'request_id' => $associationId];
+$association = $registry->issueSourceAssociation($identity, 'synthetic-association-secret')['association'];
+$grantPayload = json_decode($association['payload_json'], TRUE);
+check($grantPayload['intent'] === $associationState['selected_source_intent']
+  && $grantPayload['intent']['scope']['snapshot']['project_type'] === 'new_website'
+  && hash_equals(hash_hmac('sha256', "famtastic.source-association.v1\n" . $association['payload_json'], 'synthetic-association-secret'), $association['signature']),
+  'real_source_association_issue_accepts_current_producer_scope');
+$home = $associationState['selected_source_intent']['source']['artifacts'][0];
+$manifestHash = hash('sha256', 'synthetic-association-manifest');
+$record = ['schema' => 'famtastic.finalized-source.v1', 'site_id' => 'synthetic-associated-site', 'run_id' => 'synthetic-associated-run',
+  'repository' => ['repository_path' => '/synthetic-only/associated-site'], 'manifest_sha256' => $manifestHash,
+  'scope' => ['request_scope_sha256' => $grantPayload['scope_sha256'], 'evidence_ref' => 'association:' . $grantPayload['association_id'], 'required_pages' => ['index.html']],
+  'scope_complete' => TRUE, 'issues' => [], 'use_restrictions' => [],
+  'files' => [['path' => 'index.html', 'sha256' => $home['sha256'], 'bytes' => $home['bytes']]],
+  'review_qa' => ['passed' => TRUE, 'problems' => [], 'source_binding' => ['manifest_sha256' => $manifestHash, 'site_id' => 'synthetic-associated-site', 'run_id' => 'synthetic-associated-run']]];
+$recordJson = json_encode($record, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+$export = ['schema' => 'famtastic.finalized-source-wire.v2', 'payload_json' => $recordJson, 'sha256' => hash('sha256', "famtastic.finalized-source-wire.v2\n" . $recordJson)];
+$mapping = $identity + ['association_id' => $grantPayload['association_id'], 'association_scope_sha256' => $grantPayload['scope_sha256'],
+  'originating_system' => 'studio', 'handoff_initiator' => 'studio', 'site_id' => $record['site_id'], 'run_id' => $record['run_id'],
+  'repository_path' => $record['repository']['repository_path'], 'evidence_ref' => 'synthetic-verified-source', 'source_export_sha256' => $export['sha256'], 'source_export' => $export];
+$envelope = $identity + ['association' => $association, 'source_export' => $export, 'source_completion' => $mapping];
+check($registry->registerSourceExport($envelope)['newly_processed'] && studio($associationId)['selected_source_mapping'] === $mapping,
+  'real_source_association_accept_persists_exact_verified_mapping');
+check(!$registry->registerSourceExport($envelope)['newly_processed'], 'real_source_association_retry_is_idempotent');
+$changedRow = array_replace($associationRow, ['project_type' => 'online_store']);
+expectThrow(static fn() => \Drupal\famtastic_pipeline\Service\SelectedSourceAssociation::issue($changedRow, studio($associationId), 'synthetic-association-secret', time()), 'source_association_current_input_changed');
+portalCall($uid, 'updateWebsiteRequest', $associationId, ['project_name' => 'Source association scope contract', 'project_type' => 'online_store', 'page_count' => 1, 'page_list' => 'Home']);
+expectThrow(static fn() => $registry->registerSourceExport($envelope), 'source_association_stale');
+check(studio($associationId)['selected_source_mapping'] === $mapping && row($associationId)['staging_status'] === 'planning',
+  'changed_scope_rejects_stale_association_without_replacing_recorded_source');
+
 // Simulate a historical mapped intent that already matches today's facts but
 // whose embedded executable never recorded a trustworthy baseline. The old
 // unchanged-intent shortcut must not rescue it, even if its policy label exists.

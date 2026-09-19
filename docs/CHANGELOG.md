@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-18 — Share scope definition across source association (local)
+
+- Independent re-review caught association rejecting the producer's new project-type
+  scope field. A real installed grant test reproduced the defect before the fix.
+- Producer and association now use one canonical scope builder without weakening
+  strict validation.85 installed checks pass, including issue/accept/retry and stale
+  scope rejection. No deployment or production state change in this checkpoint.
+
 ## 2026-09-18 — Reconciled release and stale embedded-build guard (local)
 
 - Reconciled latest main b2aadd5a at33df2775, retaining portal navigation, creator

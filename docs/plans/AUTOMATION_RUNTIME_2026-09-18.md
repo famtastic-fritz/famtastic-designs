@@ -1,5 +1,11 @@
 # Bounded automation runtime: source implemented, activation pending
 
+Re-review follow-up03:39Z: baae38fc's original reuse guard is correct, but duplicated
+scope extraction broke source association. The regression was reproduced on real
+installed Drupal and corrected with shared requestedScope(). Expanded85 assertions
+pass. See SELECTED_REQUEST_BINDING for retained failure and exact local receipts;
+production release/cron activation remain pending independent clearance.
+
 ## September19 03:32Z reconciliation checkpoint
 
 Latest main b2aadd5a merged at33df2775. Current live read: both requests16/17 remain

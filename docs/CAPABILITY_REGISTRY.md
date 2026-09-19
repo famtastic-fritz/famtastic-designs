@@ -1,5 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Source-association regression coverage (local only)
+
+Expanded installed Drupal suite passes85 assertions after reproducing and correcting
+producer/association scope drift. Actual service writes persist and deduplicate the
+synthetic source grant/mapping; changed scope rejects old authority. Earlier81-check
+and full synthetic passes did not cover this seam. No provider or cloud claim.
+
 ## 2026-09-18 — Current-request bound continuation (locally proven)
 
 Producer-bound embedded evidence cannot silently cover later scope/copy/asset edits.

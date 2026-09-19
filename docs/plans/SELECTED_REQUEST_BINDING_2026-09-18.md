@@ -1,5 +1,23 @@
 # Selected request changes: executable evidence must still match
 
+## Independent re-review: source association scope corrected
+
+Exact baae38fc passed the full canonical lifecycle and81 installed checks, but
+independent review found a missing boundary: source association rebuilt scope with
+an older duplicate field list and rejected the newly included project type. A new
+real installed issue/accept test reproduced `source_association_current_input_changed`
+at `.artifacts/selected-staging-drupal/20260919T033752Z-64692/test.log` before the fix.
+This failed evidence is retained; the earlier passes did not cover grant issuance.
+
+`SelectedSourceIntent::requestedScope()` now owns field inclusion/order for both
+producer and association. Strict scope/content/source checks remain intact.
+The expanded real installed suite passes85 assertions, including persistent grant
+issuance, exact-source association, duplicate acceptance, changed-type issuance
+rejection and stale-grant rejection after a real customer update. Receipt:
+`.artifacts/selected-staging-drupal/20260919T033847Z-64925/evidence.json`.
+This remains a synthetic verified-source envelope, not a Studio provider build.
+Final independent clearance and release are separate from these local results.
+
 ## Defect and correction
 
 Independent review of reconciled integration `33df2775` found a release blocker:
