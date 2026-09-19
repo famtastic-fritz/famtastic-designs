@@ -3714,3 +3714,5 @@ Final independent parent code review passed 1,022 tests/99 files in77.73s with a
 - Added the local campaign video CLI, four-format HyperFrames composition, exact brand/caption/audio support and source-aware cache under `marketing/engine/video_studio/`.
 - Added explicit MoneyPrinterTurbo draft and local ComfyUI workflow/resume adapters, canonical Build DNA, media checks and recreation comparison tooling.
 - Added FAMtastic creative examples, current primary-source research and a workstation proof handoff at `docs/marketing/local-video-studio/`; no deployment or publishing.
+
+- Remote write access rejected the feature push; supplied a verified Git bundle for owner-side CLI import instead of claiming a pushed branch.

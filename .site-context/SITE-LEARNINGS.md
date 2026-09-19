@@ -2724,3 +2724,5 @@ Observation: the uploaded discussion treated16GB as dedicated GPU VRAM, while `m
 Observation: cached video bytes alone do not prove retained source/evidence is intact. Guidance: verify the cached ledger and all referenced artifact hashes, and include source bytes, code, brand dependencies and stable tool version in invalidation.
 
 Observation: HyperFrames' native animation example needs the runtime's `data-no-timeline` root contract; compact captioned formats can overflow despite a valid vertical render. Guidance: run real checks and render representative aspects; never weaken checks to conceal missing motion or overflowing copy. See the local-video-studio proof and handoff.
+
+Observation: repository metadata reported push permissions but the connected integration rejected Git-object writes. Guidance: actual write authorization must be verified; provide a verified bundle and clearly label local-only commits when remote publication is blocked.

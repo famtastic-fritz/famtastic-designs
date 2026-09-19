@@ -8,19 +8,25 @@ Prove this implementation on Fritz's actual workstation, using the installed Hyp
 
 The implementation is under `marketing/engine/video_studio/`; FAMtastic inputs live in `marketing/brands/famtastic/video-studio/`; the entrypoint is `scripts/famtastic-video.py`. Research is alongside this document. Canonical brand, product and campaign authority remain where the repository already places them.
 
-## Get the branch safely
+## Import the committed branch safely
 
-From an existing checkout, inspect status and fetch without pulling into a dirty tree:
+**Delivery status:** remote write access was denied by the available GitHub integration (HTTP403), and the shell has no GitHub login. The implementation is committed locally and supplied in `FAMtastic-Local-Video-Studio.zip` as an exact Git bundle, patch and inspectable source. It has not been pushed or deployed.
+
+Extract the ZIP into a temporary folder. From the owner's existing repository, inspect status, fetch current public state and verify/import the bundle:
 
 ```bash
 git status --short --branch
 git fetch origin
-git log --oneline -5 origin/feat/famtastic-local-video-studio
-git worktree add ../famtastic-video-proof -b proof/local-video-studio origin/feat/famtastic-local-video-studio
+git bundle verify /absolute/path/FAMtastic-Local-Video-Studio.bundle
+git fetch /absolute/path/FAMtastic-Local-Video-Studio.bundle HEAD:refs/heads/proof/local-video-studio
+git worktree add ../famtastic-video-proof proof/local-video-studio
 cd ../famtastic-video-proof
+git log -1 --oneline
 ```
 
-Choose a different worktree/branch name if those already exist. Do not reset another agent's work. The branch is a review handoff, not a production release.
+Choose a different worktree/branch name if those already exist. Do not reset another agent's work. The bundle is based on `076261ebb8ede3d60a7eb54ada44aa449794fafa`; if verification reports that prerequisite missing, fetch the repository history containing it before retrying. Do not blindly copy over a current checkout. Inspect incoming changes from current `origin/main` and reconcile in the isolated worktree before integration.
+
+The included patch is a secondary review/import option, not a second change to apply after importing the bundle. The supplied source tree is for inspection. Once the owner-side CLI has authenticated write access, it can push the proof branch through the normal repository procedure. This is a review handoff, not a production release.
 
 ## Prove the deterministic core first
 
