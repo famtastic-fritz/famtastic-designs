@@ -30,7 +30,7 @@ if ($phase === 'configure') {
 
 // Per-process only. Native nested gateway loads must receive the same ephemeral
 // key through Drupal's config overrides; never save it to config storage.
-if (in_array(getenv('NATIVE_PROBE_PHASE'), ['create', 'confirm', 'callback', 'replay', 'refund', 'inspect'], TRUE)) {
+if (in_array(getenv('NATIVE_PROBE_PHASE'), ['create', 'confirm', 'callback', 'replay', 'refund', 'inspect', 'observe', 'cancel'], TRUE)) {
   if (!isset($GLOBALS['nativeProbeSecrets'])) {
     $GLOBALS['nativeProbeSecrets'] = json_decode(file_get_contents('php://stdin'), TRUE, 512, JSON_THROW_ON_ERROR);
   }
@@ -106,6 +106,23 @@ try {
   $order = Order::load($binding['order_id']);
   if (!$order || $order->getEmail() !== 'buyer@example.test' || $order->getCustomerId() != 0
     || !$order->getTotalPrice()->equals(new \Drupal\commerce_price\Price('199.00', 'USD'))) throw new RuntimeException('synthetic_order_refused');
+  $scenario = $binding['scenario'] ?? 'success';
+  $eventType = ['success' => 'payment_intent.succeeded', 'decline' => 'payment_intent.payment_failed',
+    'action-required' => 'payment_intent.requires_action', 'abandonment' => 'payment_intent.canceled'][$scenario] ?? NULL;
+  if (!$eventType) throw new RuntimeException('scenario_refused');
+  $verifyIntent = static function($intent) use (&$binding): void {
+    if ($intent->livemode !== FALSE || $intent->id !== $binding['intent_id'] || $intent->amount !== 19900 || $intent->currency !== 'usd'
+      || $intent->customer !== NULL || $intent->receipt_email !== NULL || $intent->metadata->native_probe !== $binding['run_id']
+      || (string) $intent->metadata->order_id !== $binding['order_id'] || (string) $intent->metadata->store_id !== $binding['store_id'])
+      throw new RuntimeException('intent_binding_refused');
+  };
+  $observeIntent = static function($intent) use (&$binding, $verifyIntent): void {
+    $verifyIntent($intent);
+    $binding['provider_status'] = $intent->status;
+    $binding['amount_received'] = $intent->amount_received;
+    $binding['action_required'] = $intent->status === 'requires_action' && !empty($intent->next_action->type);
+    $binding['method_id'] = $intent->payment_method ?? '';
+  };
   if ($phase === 'create') {
     if ($binding['intent_id'] ?? '') throw new RuntimeException('existing_intent_refused');
     if ($client->accounts->retrieve()->id !== 'acct_1TqwE9DDGtWR2WVN' || $client->balance->retrieve()->livemode !== FALSE) throw new RuntimeException('account_mode_refused');
@@ -115,24 +132,49 @@ try {
   }
   elseif ($phase === 'confirm') {
     $binding['phase'] = 'confirm'; $save();
-    $intent = $client->paymentIntents->confirm($binding['intent_id'], ['payment_method' => 'pm_card_visa']);
-    $binding['method_id'] = $intent->payment_method; $binding['phase'] = 'confirmed'; $save();
+    $fixture = ['success' => 'pm_card_visa', 'decline' => 'pm_card_visa_chargeDeclined', 'action-required' => 'pm_card_threeDSecure2Required'][$scenario] ?? NULL;
+    if (!$fixture) throw new RuntimeException('scenario_refused');
+    try {
+      $intent = $client->paymentIntents->confirm($binding['intent_id'], ['payment_method' => $fixture]);
+      if ($scenario === 'decline') throw new RuntimeException('expected_decline_missing');
+    }
+    catch (\Stripe\Exception\CardException $decline) {
+      if ($scenario !== 'decline' || $decline->getStripeCode() !== 'card_declined' || $decline->getDeclineCode() !== 'generic_decline') throw new RuntimeException('unexpected_decline');
+      $intent = $client->paymentIntents->retrieve($binding['intent_id']);
+      $verifyIntent($intent);
+      if ($intent->status !== 'requires_payment_method' || $intent->amount_received !== 0) throw new RuntimeException('decline_state_refused');
+      $binding['decline_verified'] = TRUE;
+    }
+    $observeIntent($intent); $binding['phase'] = 'confirmed'; $save();
+  }
+  elseif ($phase === 'observe' || $phase === 'cancel') {
+    if ($scenario === 'success') throw new RuntimeException('scenario_refused');
+    $intent = $client->paymentIntents->retrieve($binding['intent_id']);
+    $verifyIntent($intent);
+    if ($phase === 'cancel') {
+      if ($intent->amount_received !== 0 || !in_array($intent->status, ['requires_payment_method', 'requires_action'], TRUE)) throw new RuntimeException('cancel_state_refused');
+      $binding['phase'] = 'cancel'; $save();
+      $intent = $client->paymentIntents->cancel($binding['intent_id'], ['cancellation_reason' => 'abandoned']);
+      $verifyIntent($intent);
+      if ($intent->status !== 'canceled' || $intent->amount_received !== 0) throw new RuntimeException('cancel_state_refused');
+    }
+    $observeIntent($intent); $save();
   }
   elseif ($phase === 'callback' || $phase === 'replay') {
     $packet = $secrets['packet'];
     $event = \Stripe\Webhook::constructEvent($packet['body'], $packet['signature'], $secrets['webhook']);
     $object = $event->data->object;
-    if ($event->livemode !== FALSE || $event->type !== 'payment_intent.succeeded' || $object->livemode !== FALSE
+    if ($event->livemode !== FALSE || $event->type !== $eventType || $object->livemode !== FALSE
       || $object->id !== $binding['intent_id'] || (string) $object->metadata->order_id !== $binding['order_id']
       || (string) $object->metadata->store_id !== $binding['store_id'] || $object->metadata->native_probe !== $binding['run_id']
       || $object->amount !== 19900 || $object->currency !== 'usd' || !empty($event->account)) throw new RuntimeException('callback_binding_refused');
     $binding['event_id'] = $event->id; $binding['method_id'] = $object->payment_method; $save();
     $providerEvent = $client->events->retrieve($event->id);
-    if ($providerEvent->livemode !== FALSE || $providerEvent->data->object->id !== $binding['intent_id']) throw new RuntimeException('event_account_refused');
+    if ($providerEvent->livemode !== FALSE || $providerEvent->type !== $eventType || $providerEvent->data->object->id !== $binding['intent_id']) throw new RuntimeException('event_account_refused');
     $request = Request::create('http://native-probe.example.test/payment/notify/native_probe', 'POST', [], [], [], ['HTTP_STRIPE_SIGNATURE' => $packet['signature']], $packet['body']);
     $response = $plugin->onNotify($request);
     if ($response && $response->getStatusCode() >= 400) throw new RuntimeException('native_callback_failed');
-    $binding['callback_verified'] = TRUE; $save();
+    $binding['callback_verified'] = TRUE; $binding['event_type'] = $eventType; $save();
   }
   elseif ($phase === 'refund') {
     $payment = \Drupal::entityTypeManager()->getStorage('commerce_payment')->loadByRemoteId($binding['intent_id']);
@@ -154,6 +196,9 @@ try {
     'refunded_full' => $payment ? $payment->getRefundedAmount()->equals(new \Drupal\commerce_price\Price('199.00', 'USD')) : FALSE,
     'intent_id' => $binding['intent_id'] ?? NULL, 'event_id' => $binding['event_id'] ?? NULL,
     'callback_verified' => $binding['callback_verified'] ?? FALSE,
+    'event_type' => $binding['event_type'] ?? NULL, 'scenario' => $scenario,
+    'provider_status' => $binding['provider_status'] ?? NULL, 'amount_received' => $binding['amount_received'] ?? NULL,
+    'decline_verified' => $binding['decline_verified'] ?? FALSE, 'action_required' => $binding['action_required'] ?? FALSE,
     'captured_mail_count' => count(\Drupal::state()->get('system.test_mail_collector', [])),
     'credentials_persisted' => !empty($savedGateway['configuration']['secret_key']) || !empty($savedGateway['configuration']['webhook_signing_secret']),
     'ephemeral_gateway_reload_verified' => TRUE,

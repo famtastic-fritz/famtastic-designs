@@ -1,5 +1,12 @@
 # September 18 client delivery — operational truth
 
+08:58UTC finite-work checkpoint: isolated declined/action-required/unconfirmed
+abandonment cases pass real test-provider callbacks/replay with no native payment
+or receipt; all three intents canceled.102 offline checks pass. This is not
+private/browser checkout release. Latest delivery read remains unselected8/16/17,
+sent-once notices; production checkoutOFF. See
+[nonpayment evidence and next recovery work](STRIPE_NONPAYMENT_PROVIDER_2026-09-19.md).
+
 08:22UTC follow-up:8/16/17 still unselected/staging not_started and772/773/775 sent
 once. Native test-provider payment/signed callback/replay/refund now passes in a
 separate synthetic runtime, not the private-flow or production release. CheckoutOFF.

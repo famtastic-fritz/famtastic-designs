@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — An expected decline is not a lost response
+
+The guard previously refused every HTTP error before response journaling, which
+would classify an ordinary402 decline as uncertain. Only a fully bound generic
+test decline now records a safe response before native SDK CardException handling;
+foreign/unrecognized errors still fail closed. Actual negative provider cases prove
+zero payment/receipt and safe replay. Never infer financial state from HTTP200:
+native requires_action is ignored and failed/canceled events can simply skip.
+Explicit cancellation proves test cleanup, not browser recovery. Preserve every
+phase and reconcile any known intent without a proved terminal cleanup state.
+
 ## 2026-09-19 — Signed callback proof exposed a test credential reload defect
 
 One per-entity key assignment was lost when native Commerce loaded its gateway

@@ -38,6 +38,7 @@ final class NativeProbeGuard implements \Stripe\HttpClient\ClientInterface {
     $intent = $binding['intent_id'] ?? '';
     $methodId = $binding['method_id'] ?? '';
     $event = $binding['event_id'] ?? '';
+    $scenario = $binding['scenario'] ?? 'success';
     if ($method === 'get' && !$params) {
       foreach (['/v1/payment_intents/' => $intent, '/v1/payment_methods/' => $methodId, '/v1/events/' => $event] as $prefix => $id) {
         if ($id !== '' && $path === $prefix . $id) return $path;
@@ -51,14 +52,33 @@ final class NativeProbeGuard implements \Stripe\HttpClient\ClientInterface {
         'payment_method_options' => ['us_bank_account' => ['verification_method' => 'instant']]];
       if ($same($params, $expected)) return $path;
     }
+    $fixture = ['success' => 'pm_card_visa', 'decline' => 'pm_card_visa_chargeDeclined', 'action-required' => 'pm_card_threeDSecure2Required'][$scenario] ?? NULL;
     if ($method === 'post' && $intent && $path === '/v1/payment_intents/' . $intent . '/confirm'
-      && ($binding['phase'] ?? '') === 'confirm' && $params === ['payment_method' => 'pm_card_visa']) return $path;
+      && ($binding['phase'] ?? '') === 'confirm' && $fixture && $params === ['payment_method' => $fixture]) return $path;
+    if ($method === 'post' && $intent && $path === '/v1/payment_intents/' . $intent . '/cancel'
+      && ($binding['phase'] ?? '') === 'cancel' && in_array($scenario, ['decline', 'action-required', 'abandonment'], TRUE)
+      && $params === ['cancellation_reason' => 'abandoned']) return $path;
     if ($method === 'post' && $intent && $path === '/v1/payment_intents/' . $intent
       && $same($params, ['metadata' => $metadata])) return $path;
     if ($method === 'post' && $path === '/v1/refunds' && $intent && ($binding['phase'] ?? '') === 'refund'
       && $same($params, ['amount' => 19900, 'payment_intent' => $intent,
         'metadata' => ['refund_source' => 'Drupal', 'refund_uid' => '0']])) return $path;
     $fail();
+  }
+
+  public static function expectedDecline(array $object, array $binding, string $method, string $path, int $status): bool {
+    $error = $object['error'] ?? [];
+    $intent = $error['payment_intent'] ?? [];
+    return $status === 402 && $method === 'post' && ($binding['scenario'] ?? '') === 'decline'
+      && ($binding['phase'] ?? '') === 'confirm' && $path === '/v1/payment_intents/' . ($binding['intent_id'] ?? '') . '/confirm'
+      && ($error['type'] ?? '') === 'card_error' && ($error['code'] ?? '') === 'card_declined'
+      && ($error['decline_code'] ?? '') === 'generic_decline' && ($intent['id'] ?? '') === ($binding['intent_id'] ?? '')
+      && ($intent['livemode'] ?? NULL) === FALSE && ($intent['status'] ?? '') === 'requires_payment_method'
+      && ($intent['amount'] ?? 0) === 19900 && ($intent['amount_received'] ?? -1) === 0 && ($intent['currency'] ?? '') === 'usd'
+      && ($intent['customer'] ?? NULL) === NULL && ($intent['receipt_email'] ?? NULL) === NULL
+      && ($intent['metadata']['native_probe'] ?? '') === $binding['run_id']
+      && (string) ($intent['metadata']['order_id'] ?? '') === $binding['order_id']
+      && (string) ($intent['metadata']['store_id'] ?? '') === $binding['store_id'];
   }
 
   public function request($method, $absUrl, $headers, $params, $hasFile) {
@@ -81,14 +101,23 @@ final class NativeProbeGuard implements \Stripe\HttpClient\ClientInterface {
     if ($count >= 35) throw new RuntimeException('provider_request_limit');
     self::durable($countPath, (string) ($count + 1));
     // Stable per-run intent/refund idempotency, including an uncertain response.
-    if ($method === 'post' && in_array($path, ['/v1/payment_intents', '/v1/refunds'], TRUE)) {
+    if ($method === 'post' && (in_array($path, ['/v1/payment_intents', '/v1/refunds'], TRUE) || str_ends_with($path, '/confirm') || str_ends_with($path, '/cancel'))) {
       $headers = array_values(array_filter($headers, static fn($h) => stripos($h, 'Idempotency-Key:') !== 0));
-      $headers[] = 'Idempotency-Key: ' . $binding['run_id'] . ($path === '/v1/refunds' ? '-refund' : '-intent');
+      $suffix = $path === '/v1/refunds' ? 'refund' : (str_ends_with($path, '/confirm') ? 'confirm' : (str_ends_with($path, '/cancel') ? 'cancel' : 'intent'));
+      $headers[] = 'Idempotency-Key: ' . $binding['run_id'] . '-' . $suffix;
     }
     self::durable($this->journalDirectory . '/attempts.jsonl', json_encode(['method' => $method, 'path' => $path,
       'run_id' => $binding['run_id'], 'account_id' => 'acct_1TqwE9DDGtWR2WVN', 'intent_id' => $binding['intent_id'] ?? NULL]) . "\n", TRUE);
     $result = $this->transport->request($method, $absUrl, $headers, $params, $hasFile);
     $object = json_decode($result[0], TRUE, 512, JSON_THROW_ON_ERROR);
+    if (self::expectedDecline($object, $binding, $method, $path, (int) $result[1])) {
+      // A correlated, definite decline is a recorded response, not an uncertain
+      // transport outcome. Let the locked SDK emit its normal CardException.
+      self::durable($this->journalDirectory . '/requests.jsonl', json_encode(['method' => $method, 'path' => $path,
+        'status' => 402, 'request_id' => $result[2]['Request-Id'] ?? NULL, 'provider_object_id' => $binding['intent_id'],
+        'expected_decline' => TRUE]) . "\n", TRUE);
+      return $result;
+    }
     if ($result[1] >= 400) throw new RuntimeException('provider_http_' . (int) $result[1]);
     if (($object['object'] ?? '') === 'refund' && $path === '/v1/refunds') {
       // Refund objects do not carry livemode. Bind to the already test-proven PI,

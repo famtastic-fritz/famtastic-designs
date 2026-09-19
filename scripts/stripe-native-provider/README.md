@@ -33,8 +33,11 @@ it is not either client's order, charge, settlement or launch approval.
 - The callback is genuinely forwarded by Stripe CLI over loopback and then passed
   to native `onNotify`. This is **not** hosted Apache middleware or browser proof.
 - Successful native payment, replay, captured receipt and native full refund are
-  separate assertions. Full private checkout, 3DS, declines, abandonment, uncertainty
-  recovery, agency entitlements, MySQL and the12+4 catalog matrix remain later gates.
+  separate assertions. The new bounded negative scenarios prove non-settlement,
+  signed event handling/replay and exact test-intent cleanup, not browser challenge
+  completion, browser abandonment detection or a customer recovery experience.
+  Full private checkout, uncertainty recovery, agency entitlements, MySQL and the
+  12+4 catalog matrix remain later gates.
 
 ## Run
 
@@ -54,6 +57,11 @@ FAMTASTIC_STRIPE_TEST_PROFILE=famtastic-sandbox-auth \
 FAMTASTIC_STRIPE_EXPECTED_ACCOUNT=acct_1TqwE9DDGtWR2WVN \
 FAMTASTIC_STRIPE_NATIVE_TEST=1 \
   node scripts/stripe-native-provider/run.mjs
+
+# Same explicit profile/account/vendor and test opt-in as above; one case at a time:
+# node scripts/stripe-native-provider/run.mjs --scenario decline
+# node scripts/stripe-native-provider/run.mjs --scenario action-required
+# node scripts/stripe-native-provider/run.mjs --scenario abandonment
 ```
 
 Default invocation refuses before providers. `--offline` proves the fresh native
@@ -62,6 +70,18 @@ real credential resolution or provider access. The existing broad
 `stripe-provider-e2e.sh` remains a scaffold; this narrower runner does not relabel it.
 Do not enable network on `test-private-purchase-drupal.php` or weaken protected
 staging's503 refusal. No rendering/screenshot or real customer mail is performed.
+
+Negative scenarios use only official PaymentMethod fixtures, never raw card data:
+`pm_card_visa_chargeDeclined`, `pm_card_threeDSecure2Required`, or no confirmation
+at all for abandonment. A definite402 decline is journaled only after exact
+test-mode/intent/run/order/store/amount/error binding; other unknown/error outcomes
+still require reconciliation. Failed/unfinished intents must show zero received
+amount, native draft/full balance, no payment and no captured receipt. Replay must
+preserve those states. Exact unpaid intents are canceled and freshly read back;
+this is test cleanup, not native order cancellation or a new production feature.
+Native `requires_action` event handling is an ignored event; asserting no payment
+does not claim the plugin implements challenge UX. Preserve each phase snapshot.
+Any known intent without proved refund/cancellation is reconciliation-required.
 
 `refund-failed-test.mjs <recorded-native-probe-run-id>` is only an explicitly opted-in
 cleanup for a failed synthetic run that already created a payment. It rechecks

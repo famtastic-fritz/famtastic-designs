@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-19 — Native nonpayment and replay evidence (test-provider only)
+
+- Added exact declined/action-required/unconfirmed-abandonment scenarios to the
+  isolated native bridge; all18 real-provider assertions passed, with all three
+  test intents canceled, zero native payments/receipts and preserved callback replay.
+- Journaled exactly bound402 declines without relabeling them uncertain; retained
+  all phase snapshots and require reconciliation for unclosed known test intents.
+- 47 Node/55 PHP offline checks pass; exact receipts/hashes and next recovery gates
+  recorded. No agency application/deployment, customer payment/mail or checkout change.
+
 ## 2026-09-19 — Native Stripe synthetic bridge (test-provider proven only)
 
 - Added a separate fresh native-Commerce runner; real signed test callback completed

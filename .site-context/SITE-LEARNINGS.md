@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Verify nonpayment state independently of webhook status
+
+Observation: native failure/cancel callbacks may skip and requires_action is an
+unsupported-event no-op. A200 callback is not an order/payment outcome. Guidance:
+assert persistent draft/full balance/no payment/no receipt through exact replay;
+distinguish real3DS-required state from completed browser challenge. Journal a
+fully bound expected402 response, keep other uncertainty visible, and require
+reconciliation for every unclosed known test intent. Three real isolated cases
+now pass; do not repeat them instead of advancing interruption/recovery proof.
+
 ## 2026-09-19 — Native provider testing needs its own safe runtime
 
 Observation: account-mirroring offline fixtures cannot safely become provider tests.

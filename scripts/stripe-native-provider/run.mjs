@@ -14,6 +14,18 @@ export const ACCOUNT = 'acct_1TqwE9DDGtWR2WVN';
 const fail = reason => { throw new Error(reason); };
 const writePrivate = (file, value) => fs.writeFileSync(file, JSON.stringify(value), { mode: 0o600 });
 
+export function parseScenario(args) {
+  if (args.length === 0) return { scenario: 'success', offline: false };
+  if (args.length === 1 && args[0] === '--offline') return { scenario: 'success', offline: true };
+  if (args.length === 2 && args[0] === '--scenario' && ['decline', 'action-required', 'abandonment'].includes(args[1]))
+    return { scenario: args[1], offline: false };
+  fail('scenario_refused');
+}
+export const eventFor = scenario => ({ success: 'payment_intent.succeeded', decline: 'payment_intent.payment_failed',
+  'action-required': 'payment_intent.requires_action', abandonment: 'payment_intent.canceled' })[scenario];
+export const unpaidNative = state => state?.payment_count === 0 && state.order_state === 'draft'
+  && state.balance_zero === false && Number(state.balance) === 199 && state.captured_mail_count === 0;
+
 // Evidence/report errors must never bypass secret/runtime cleanup.
 export async function finalizeProbe({ collect, cleanup, persist }) {
   let collectionFailed = false, cleanupFailed = false;
@@ -83,7 +95,7 @@ export function validSignature(body, header, secret, now = Math.floor(Date.now()
 
 export function ownEvent(event, binding) {
   const object = event?.data?.object;
-  return event?.livemode === false && event?.type === 'payment_intent.succeeded'
+  return event?.livemode === false && event?.type === eventFor(binding.scenario ?? 'success')
     && !event.account && /^evt_[A-Za-z0-9]+$/.test(event.id ?? '')
     && object?.livemode === false && object?.id === binding.intent_id
     && object?.metadata?.native_probe === binding.run_id
@@ -92,8 +104,8 @@ export function ownEvent(event, binding) {
 }
 
 async function main() {
-  const offline = process.argv.length === 3 && process.argv[2] === '--offline';
-  if ((!offline && process.argv.length !== 2) || (!offline && process.env.FAMTASTIC_STRIPE_NATIVE_TEST !== '1')) fail('explicit_native_test_opt_in_required');
+  const { offline, scenario } = parseScenario(process.argv.slice(2));
+  if (!offline && process.env.FAMTASTIC_STRIPE_NATIVE_TEST !== '1') fail('explicit_native_test_opt_in_required');
   if (process.env.FAMTASTIC_STRIPE_TEST_PROFILE !== PROFILE || process.env.FAMTASTIC_STRIPE_EXPECTED_ACCOUNT !== ACCOUNT) fail('exact_profile_account_required');
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
   const borrowed = process.env.FAMTASTIC_BACKEND_VENDOR ? path.resolve(process.env.FAMTASTIC_BACKEND_VENDOR, '..') : '';
@@ -105,10 +117,10 @@ async function main() {
   const evidence = `${root}/.artifacts/stripe-native-provider/${runId}`;
   fs.mkdirSync(evidence, { recursive: true, mode: 0o700 });
   const bindingPath = `${runtime}/binding.json`;
-  writePrivate(bindingPath, { run_id: runId, expires_at: Math.floor(Date.now() / 1000) + 900 });
+  writePrivate(bindingPath, { run_id: runId, scenario, expires_at: Math.floor(Date.now() / 1000) + 900 });
   const baseEnv = cliEnvironment(process.env);
   const childEnv = { PATH: baseEnv.PATH, HOME: `${runtime}/home`, TMPDIR: `${runtime}/tmp`, LANG: 'C', NATIVE_PROBE_ROOT: runtime, NATIVE_PROBE_EVIDENCE: evidence };
-  const report = { schema: 'famtastic.native-stripe-provider.v1', run_id: runId, started_at: new Date().toISOString(), status: 'running', offline,
+  const report = { schema: 'famtastic.native-stripe-provider.v1', run_id: runId, started_at: new Date().toISOString(), status: 'running', offline, scenario,
     source_sha: spawnSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).stdout.trim(),
     limits: ['Native plugin in a fresh SQLite installation, not production or the request16 private purchase.',
       'CLI-forwarded signed test event then native onNotify in process, not hosted Apache webhook middleware.',
@@ -141,7 +153,9 @@ async function main() {
     });
     let record;
     try { record = JSON.parse(result.stdout.trim()); } catch { fail(`native_${phase}_invalid_result`); }
-    report.phases[phase] = record;
+    let phaseKey = phase, occurrence = 1;
+    while (Object.hasOwn(report.phases, phaseKey)) phaseKey = `${phase}_${++occurrence}`;
+    report.phases[phaseKey] = record;
     if (result.status !== 0 || record.status === 'refused') fail(`native_${phase}_failed`);
     return record;
   };
@@ -187,7 +201,7 @@ async function main() {
     });
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
     const port = server.address().port;
-    listener = spawn('stripe', ['listen', `--project-name=${PROFILE}`, '--color=off', '--skip-update', '--events=payment_intent.succeeded',
+    listener = spawn('stripe', ['listen', `--project-name=${PROFILE}`, '--color=off', '--skip-update', `--events=${eventFor(scenario)}`,
       `--forward-to=http://127.0.0.1:${port}/callback`], { env: { ...baseEnv, STRIPE_API_KEY: key }, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
     await new Promise((resolve, reject) => {
       let pending = '';
@@ -203,12 +217,36 @@ async function main() {
     });
     inspectRemoteDestinations({ ...baseEnv, STRIPE_API_KEY: key });
     await native('create');
-    await native('confirm');
+    if (scenario === 'abandonment') {
+      const waiting = await native('observe');
+      report.checks.abandoned_unconfirmed = unpaidNative(waiting) && waiting.provider_status === 'requires_payment_method' && waiting.amount_received === 0;
+      await native('cancel');
+    }
+    else {
+      await native('confirm');
+      if (scenario !== 'success') {
+        const waiting = await native('observe');
+        report.checks.expected_nonpayment = unpaidNative(waiting) && waiting.amount_received === 0
+          && (scenario === 'decline' ? waiting.provider_status === 'requires_payment_method' && waiting.decline_verified === true
+            : waiting.provider_status === 'requires_action' && waiting.action_required === true);
+      }
+    }
     const deadline = Date.now() + 30000;
     while (!packet && !cancelled && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 200));
     if (!packet) fail('own_signed_callback_not_received');
     const paid = await native('callback');
     const replay = await native('replay');
+    if (scenario !== 'success') {
+      report.checks.signed_nonpayment_callback = paid.callback_verified === true && paid.event_type === eventFor(scenario);
+      report.checks.nonpayment_replay_no_receipt = unpaidNative(paid) && unpaidNative(replay) && paid.order_id === replay.order_id;
+      if (scenario !== 'abandonment') await native('cancel');
+      const durable = await native('observe');
+      report.checks.provider_canceled_unpaid = durable.provider_status === 'canceled' && durable.amount_received === 0 && unpaidNative(durable);
+      report.checks.credentials_not_saved = Object.values(report.phases).every(x => x.credentials_persisted === false);
+      if (Object.values(report.checks).includes(false)) fail('nonpayment_assertion_failed');
+      report.status = 'passed'; report.classification = 'test-provider proven: native nonpayment boundary only';
+      return;
+    }
     report.checks.native_paid_once = paid.payment_count === 1 && paid.payment_state === 'completed' && paid.balance_zero === true && paid.order_state !== 'draft';
     report.checks.signed_callback = paid.callback_verified === true && /^evt_/.test(paid.event_id);
     report.checks.replay_no_duplicate = replay.payment_count === 1 && replay.payment_id === paid.payment_id && replay.order_id === paid.order_id;
@@ -262,8 +300,10 @@ async function main() {
         if (!report.disposable_runtime_removed) report.cleanup_required_path = runtime;
         report.completed_at = new Date().toISOString();
         report.provider_objects_retained_in_test_mode = report.intent_id ? true : (report.uncertain_provider_response ? 'unknown' : false);
-        report.reconciliation_required = report.uncertain_provider_response === true;
         report.test_refund_confirmed = report.checks.refund_persisted === true;
+        report.test_cancellation_confirmed = report.checks.provider_canceled_unpaid === true;
+        report.reconciliation_required = report.uncertain_provider_response === true
+          || Boolean(report.intent_id && !report.test_refund_confirmed && !report.test_cancellation_confirmed);
         // Raw SDK/CLI outputs, keys, SQLite and signed payload never enter evidence.
         try { writePrivate(`${evidence}/evidence.json`, report); }
         catch {

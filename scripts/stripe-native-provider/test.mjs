@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-import { resolveTestKey, validSignature, ownEvent, finalizeProbe, assertNoRemoteDestinations, stopOwnedGroup, PROFILE } from './run.mjs';
+import { resolveTestKey, validSignature, ownEvent, finalizeProbe, assertNoRemoteDestinations, stopOwnedGroup, PROFILE, parseScenario, eventFor, unpaidNative } from './run.mjs';
 const key = ['rk', 'test', 'synthetic_not_real'].join('_');
 test('only exact test field, never other profile or live field', async () => {
   assert.equal(await resolveTestKey(['[other]', `test_mode_api_key = "ignored"`, `[${PROFILE}]`, 'live_mode_api_key = "never_return_this"', `test_mode_api_key = "${key}"`], PROFILE), key);
@@ -62,3 +62,21 @@ test('group remaining after escalation is cleanup failure', async () => {
 test('invalid group never signaled', async () => {
   await assert.rejects(() => stopOwnedGroup(1, () => { throw new Error('must not call'); }), /invalid_owned_group/);
 });
+for (const scenario of ['decline', 'action-required', 'abandonment']) {
+  test(`explicit scenario ${scenario}`, () => {
+    assert.deepEqual(parseScenario(['--scenario', scenario]), { scenario, offline: false });
+    const copy = structuredClone(event); copy.type = eventFor(scenario);
+    assert.equal(ownEvent(copy, { ...binding, scenario }), true);
+    assert.equal(ownEvent(event, { ...binding, scenario }), false);
+  });
+}
+for (const args of [['--scenario', 'live'], ['--scenario'], ['--offline', '--scenario', 'decline'], ['--scenario', 'decline', 'extra']])
+  test(`reject scenario arguments ${args.join(' ')}`, () => assert.throws(() => parseScenario(args), /scenario_refused/));
+test('legacy offline and success remain explicit modes', () => {
+  assert.deepEqual(parseScenario([]), { scenario: 'success', offline: false });
+  assert.deepEqual(parseScenario(['--offline']), { scenario: 'success', offline: true });
+});
+const unpaid = { payment_count: 0, order_state: 'draft', balance_zero: false, balance: '199.00', captured_mail_count: 0 };
+test('nonpayment requires draft full balance no payment and no receipt', () => assert.equal(unpaidNative(unpaid), true));
+for (const [key, value] of Object.entries({ payment_count: 1, order_state: 'completed', balance_zero: true, balance: '0', captured_mail_count: 1 }))
+  test(`refuse nonpayment claim with ${key}`, () => assert.equal(unpaidNative({ ...unpaid, [key]: value }), false));

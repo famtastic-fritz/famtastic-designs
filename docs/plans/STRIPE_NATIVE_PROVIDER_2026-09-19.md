@@ -1,5 +1,9 @@
 # Native Stripe bridge: one real synthetic cycle, not private checkout release
 
+Later08:58UTC: three additional nonpayment cases passed with real signed events,
+replay and exact unpaid-intent cancellation. This earlier success/refund evidence
+is unchanged. See [the narrower negative-case receipt](STRIPE_NONPAYMENT_PROVIDER_2026-09-19.md).
+
 ## Verified September19 08:21UTC
 
 The separate `scripts/stripe-native-provider/` harness has completed an actual

@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Native nonpayment boundary (narrow test-provider proof)
+
+Three real synthetic provider cases passed: generic decline, unfinished3DS action
+and unconfirmed-intent abandonment model. Genuine signed callback/replay preserved
+draft/full balance/no native payment/no receipt; exact SDK cancellation and fresh
+read confirmed all three unpaid.18 provider assertions and102 offline checks pass.
+NOT browser3DS completion, browser abandonment detection, native voidPayment,
+uncertain response recovery, private checkout or hosted/agency fulfillment. Checkout
+OFF; source only. See plans/STRIPE_NONPAYMENT_PROVIDER_2026-09-19.md.
+
 ## 2026-09-19 — Native Commerce bridge (narrow test-provider proof)
 
 One actual synthetic test payment reached native order/payment completion through

@@ -1,5 +1,16 @@
 # Agent Instructions
 
+## September19 — Nonpayment proof is not browser recovery
+
+Read `docs/plans/STRIPE_NONPAYMENT_PROVIDER_2026-09-19.md` for the three passing
+negative provider cases; do not repeat them just for activity. A correlated402 is
+a definite decline, not an unknown transport outcome; retain sanitized response
+journals before SDK exception handling. Native requires_action callbacks are ignored,
+not a completed challenge. Explicit unpaid-intent cancellation models cleanup, not
+browser abandonment detection or native order cancellation. Known intents lacking
+proved refund/cancellation require reconciliation. Next prove interruption/callback
+loss recovery on the SAME synthetic intent/order, then private/browser/hosted gates.
+
 ## September19 — Native provider bridge is not private checkout readiness
 
 Read `docs/plans/STRIPE_NATIVE_PROVIDER_2026-09-19.md` before further provider tests.

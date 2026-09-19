@@ -35,16 +35,39 @@ $binding['phase'] = 'refund';
 $refund = ['payment_intent' => 'pi_Test', 'amount' => 19900, 'metadata' => ['refund_source' => 'Drupal', 'refund_uid' => '0']];
 $check('own refund', 'post', "$base/v1/refunds", $refund, $binding, TRUE);
 $check('foreign refund', 'post', "$base/v1/refunds", array_replace($refund, ['payment_intent' => 'pi_Foreign']), $binding, FALSE);
+foreach (['decline' => 'pm_card_visa_chargeDeclined', 'action-required' => 'pm_card_threeDSecure2Required'] as $scenario => $fixture) {
+  $negative = array_replace($binding, ['scenario' => $scenario, 'phase' => 'confirm']);
+  $check('negative fixture', 'post', "$base/v1/payment_intents/pi_Test/confirm", ['payment_method' => $fixture], $negative, TRUE);
+  $check('success fixture refused in negative', 'post', "$base/v1/payment_intents/pi_Test/confirm", ['payment_method' => 'pm_card_visa'], $negative, FALSE);
+  $negative['phase'] = 'cancel';
+  $check('exact cancel', 'post', "$base/v1/payment_intents/pi_Test/cancel", ['cancellation_reason' => 'abandoned'], $negative, TRUE);
+  $check('foreign cancel', 'post', "$base/v1/payment_intents/pi_Foreign/cancel", ['cancellation_reason' => 'abandoned'], $negative, FALSE);
+}
+$check('success cannot cancel', 'post', "$base/v1/payment_intents/pi_Test/cancel", ['cancellation_reason' => 'abandoned'], array_replace($binding, ['phase' => 'cancel']), FALSE);
+$check('abandoned cannot confirm', 'post', "$base/v1/payment_intents/pi_Test/confirm", ['payment_method' => 'pm_card_visa'], array_replace($binding, ['phase' => 'confirm', 'scenario' => 'abandonment']), FALSE);
+$declineBinding = array_replace($binding, ['phase' => 'confirm', 'scenario' => 'decline']);
+$declineObject = ['error' => ['type' => 'card_error', 'code' => 'card_declined', 'decline_code' => 'generic_decline',
+  'payment_intent' => ['id' => 'pi_Test', 'livemode' => FALSE, 'status' => 'requires_payment_method', 'amount' => 19900,
+    'amount_received' => 0, 'currency' => 'usd', 'metadata' => $metadata]]];
+$isDecline = static fn($object, $binding = NULL) => NativeProbeGuard::expectedDecline($object, $binding ?? $declineBinding, 'post', '/v1/payment_intents/pi_Test/confirm', 402);
+if (!$isDecline($declineObject)) throw new LogicException('Valid decline rejected'); ++$passed;
+foreach (['id' => 'pi_Foreign', 'livemode' => TRUE, 'status' => 'succeeded', 'amount_received' => 19900, 'amount' => 20000,
+  'customer' => 'cus_Foreign', 'receipt_email' => 'client@example.com', 'metadata' => ['native_probe' => 'foreign']] as $field => $value) {
+  $other = $declineObject; $other['error']['payment_intent'][$field] = $value;
+  if ($isDecline($other)) throw new LogicException('Unsafe decline accepted'); ++$passed;
+}
+if ($isDecline($declineObject, array_replace($declineBinding, ['scenario' => 'success']))) throw new LogicException('Wrong scenario accepted'); ++$passed;
 $directory = sys_get_temp_dir() . '/native-guard-test-' . bin2hex(random_bytes(8));
 mkdir($directory, 0700);
 $key = implode('_', ['rk', 'test', 'synthetic_not_real']);
 $transport = new class implements \Stripe\HttpClient\ClientInterface {
   public int $calls = 0;
   public bool $uncertain = FALSE;
+  public ?array $result = NULL;
   public function request($method, $absUrl, $headers, $params, $hasFile) {
     ++$this->calls;
     if ($this->uncertain) throw new RuntimeException('simulated_uncertain_response');
-    return ['{"object":"balance","livemode":false}', 200, []];
+    return $this->result ?? ['{"object":"balance","livemode":false}', 200, []];
   }
 };
 try {
@@ -70,6 +93,12 @@ try {
   $transport->uncertain = FALSE;
   $guard->request('get', "$base/v1/balance", ['Authorization: Bearer ' . $key, 'Stripe-Account: ', 'Stripe-Context:'], [], FALSE);
   if ($transport->calls !== 2) throw new LogicException('Empty SDK account header not handled');
+  ++$passed;
+  NativeProbeGuard::durable($directory . '/binding.json', json_encode($declineBinding + ['expires_at' => time() + 60]));
+  $transport->result = [json_encode($declineObject), 402, ['Request-Id' => 'req_Synthetic']];
+  $result = $guard->request('post', "$base/v1/payment_intents/pi_Test/confirm", ['Authorization: Bearer ' . $key], ['payment_method' => 'pm_card_visa_chargeDeclined'], FALSE);
+  $lines = array_map('json_decode', explode("\n", trim(file_get_contents($directory . '/requests.jsonl'))));
+  if ($result[1] !== 402 || end($lines)->expected_decline !== TRUE) throw new LogicException('Definite decline not journaled');
   ++$passed;
 }
 finally {
