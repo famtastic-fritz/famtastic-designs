@@ -1,5 +1,11 @@
 # Private purchase completion — follow-up after e692d890
 
+Latest06:33Z: expanded41 real HTTP checks now also prove the owner reaches native
+order information, foreign checkout denial and unchanged financial projections.
+The Stripe runner is still scaffold-only; authentication exists, but the isolated
+provider path is unfinished. CheckoutOFF. See
+[the exact boundary](PRIVATE_PURCHASE_PROVIDER_BOUNDARY_2026-09-19.md).
+
 ## September19 06:10Z follow-up — HTTP and native presentation locally proven
 
 The follow-up on `codex/private-purchase-integration-20260919` now passes38 real

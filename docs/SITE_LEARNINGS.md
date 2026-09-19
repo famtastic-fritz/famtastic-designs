@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Distinguish allowed checkout entry from provider completion
+
+Add positive native-route coverage beside denial tests. The41-check extension
+proves owner order-information200, foreign403 and financial projection stability;
+it does not prove a rendered provider element or completed payment. Native flow
+metadata saves are not payments and must not be hidden under an all-DB-no-write
+claim. CLI authentication, isolated key binding and executable provider acceptance
+are separate. Existing private fixtures mirror real identities for local allowlist
+tests; keep all transports blocked and never export them into provider objects.
+
 ## 2026-09-19 — Prove native appearance after proving authority
 
 HTTP safety does not prove legibility: the native customer theme inherited white

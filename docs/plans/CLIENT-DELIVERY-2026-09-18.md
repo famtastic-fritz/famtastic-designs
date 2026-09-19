@@ -1,5 +1,10 @@
 # September 18 client delivery — operational truth
 
+06:33Z follow-up:8/16/17 remain unselected; notices unchanged. Native private
+checkout entry is now locally covered by41 HTTP checks, not payment-provider proof.
+The isolated provider runner remains unfinished; checkoutOFF. Current source and
+scope: [provider boundary](PRIVATE_PURCHASE_PROVIDER_BOUNDARY_2026-09-19.md).
+
 ## Current checkpoint — September19 06:10Z
 
 Requests8/16/17 remain customer_ready, unselected and staging not_started; exact

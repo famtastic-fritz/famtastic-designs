@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-19 — Test the allowed native checkout path (source tests only)
+
+- Expanded private HTTP coverage38→41: owner reaches native order information,
+  foreign native checkout is denied, financial/delivery projection unchanged.
+- Bound redirect following to the exact local order/steps with a three-hop cap.
+- Recorded that authenticated Stripe CLI is not an implemented provider runner;
+  existing provider scaffold exits2 without calls. CheckoutOFF, no application
+  source/deployment/customer changes. See PRIVATE_PURCHASE_PROVIDER_BOUNDARY plan.
+
 ## 2026-09-19 — Private purchase HTTP and native-theme proof (source only)
 
 - Added a disposable provider-free HTTP runner:38 checks cover actual cookie

@@ -113,6 +113,20 @@ try {
   const replay = await request(route('reunion'), 'reunion', form);
   check([302, 303].includes(replay.status) && checkoutDestination(replay.location, afterCreate.reunion_order)
     && same(afterCreate, state()), 'repeated_http_post_reuses_same_order_without_payment');
+  // Test the allowed native route as well as denials. Follow only this exact
+  // local order and its native steps; never navigate a fixture into production.
+  let checkoutPage = await request(`/web/checkout/${afterCreate.reunion_order}`, 'reunion');
+  for (let redirects = 0; [301, 302, 303, 307, 308].includes(checkoutPage.status) && redirects < 3; redirects++) {
+    if (!checkoutPage.location) throw Error('Native checkout redirect missing destination');
+    const next = new URL(checkoutPage.location, base);
+    if (next.origin !== base || !new RegExp(`^/web/checkout/${afterCreate.reunion_order}(?:/[a-z_]+)?$`).test(next.pathname)
+      || next.hash || [...next.searchParams].some(([key, value]) => key !== 'check_logged_in' || value !== '1')) throw Error('Unsafe native checkout redirect');
+    checkoutPage = await request(next.href, 'reunion');
+  }
+  check(checkoutPage.status === 200 && checkoutPage.html.includes('commerce-checkout-flow')
+    && checkoutPage.html.includes('form_token'), 'enabled_native_checkout_form_renders_for_owner');
+  check(same(afterCreate, state()), 'native_checkout_get_preserves_financial_and_delivery_projection');
+  check([403, 404].includes((await request(`/web/checkout/${afterCreate.reunion_order}`, 'stock')).status), 'foreign_native_checkout_rejected');
   state('gateway-disable');
   check((await request(`/web/checkout/${afterCreate.reunion_order}`, 'reunion')).status === 403, 'disabled_saved_gateway_rejected_by_actual_http_middleware');
   const stockPage = await request(route('stock'), 'stock'); const stockForm = fields(stockPage.html);

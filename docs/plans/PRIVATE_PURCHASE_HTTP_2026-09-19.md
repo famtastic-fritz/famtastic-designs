@@ -1,5 +1,9 @@
 # Private purchase HTTP and browser checkpoint — September 19
 
+Follow-up: [native allowed-route and provider boundary](PRIVATE_PURCHASE_PROVIDER_BOUNDARY_2026-09-19.md)
+adds41-check HTTP evidence after this38-check checkpoint. It proves order-information
+entry, not a successful Stripe checkout. Earlier receipts below remain unchanged.
+
 ## Boundary
 
 Local disposable Drupal/SQLite only. Production retains deployed378c3d86 and

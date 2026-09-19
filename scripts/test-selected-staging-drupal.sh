@@ -128,7 +128,7 @@ if [[ "$mode" == --private-purchase-http ]]; then
     "$sandbox/scripts/private-purchase-http-router.php" >"$evidence/http-server.log" 2>&1 &
   http_server_pid=$!
   "${isolated[@]}" "PRIVATE_HTTP_PORT=$http_port" "PRIVATE_HTTP_PHP=$php_bin" node "$sandbox/scripts/test-private-purchase-http.mjs" | tee "$evidence/http-test.log"
-  "$php_bin" -r '$e=json_decode(file_get_contents($argv[1]),true,512,JSON_THROW_ON_ERROR); if (($e["status"]??"")!=="passed" || count($e["checks"]) < 38 || in_array(false,$e["checks"],true)) exit(1);' "$evidence/private-purchase-http.json"
+  "$php_bin" -r '$e=json_decode(file_get_contents($argv[1]),true,512,JSON_THROW_ON_ERROR); if (($e["status"]??"")!=="passed" || count($e["checks"]) < 41 || in_array(false,$e["checks"],true)) exit(1);' "$evidence/private-purchase-http.json"
   echo "Evidence: $evidence/private-purchase-http.json"
   if [[ "${FAMTASTIC_PRIVATE_HTTP_BROWSER_HOLD:-0}" == 1 ]]; then
     echo "Local browser fixture: http://127.0.0.1:$http_port/web/user/login ; sandbox: $sandbox"

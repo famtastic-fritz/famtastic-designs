@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Denial coverage is not allowed-path coverage
+
+Observation:38 passing HTTP assertions stopped after the private form's redirect
+and checked native checkout only when disabled. Guidance: follow the exact local
+order/step with a bounded redirect allowlist; assert real native form/CSRF and
+unchanged financial projection, plus foreign denial. Native flow metadata may
+legitimately change on entry. Separate this from provider payment completion.
+An authenticated CLI with both modes and a scaffold runner is not a test-only
+integration. Never export the account-mirroring offline fixture to Stripe or
+weaken protected staging's intentional payment refusal to claim readiness.
+
 ## 2026-09-19 — Native forms need theme and transport evidence separately
 
 Observation: real service/HTTP tests passed while inherited Olivero surfaces made

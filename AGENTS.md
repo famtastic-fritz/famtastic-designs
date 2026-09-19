@@ -170,6 +170,10 @@ updated, say so explicitly in the session report rather than skipping silently.
   in a disposable provider-free runtime. Do not equate the fixture activation flag
   or rendered purchase button with production checkout. Browser evidence and
   remaining provider/hosted gates: `docs/plans/PRIVATE_PURCHASE_HTTP_2026-09-19.md`.
+  Test allowed native entry as well as denials; a private-form redirect alone does
+  not prove checkout. Provider execution remains separately gated; see
+  `docs/plans/PRIVATE_PURCHASE_PROVIDER_BOUNDARY_2026-09-19.md`. Never export the
+  offline account-mirroring fixture into provider objects or enable its transports.
 
 - Sign future agent-authored customer correspondence as **Shay** or **Shay-Shay**.
   The canonical full spelling is **Shay-Shay**. Preserve an approved template's

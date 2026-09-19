@@ -1,5 +1,13 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Native private checkout entry (locally proven only)
+
+41 HTTP checks include actual allowed owner checkout302→order_information200,
+foreign403 and unchanged financial/delivery projection. Not a completed payment,
+Stripe element or webhook proof. Provider matrix12+4 validates but execution remains
+scaffold-only, exit2. CLI authentication exists; no credential was adopted. Feature
+source only, checkoutOFF. See plans/PRIVATE_PURCHASE_PROVIDER_BOUNDARY_2026-09-19.md.
+
 ## 2026-09-19 — Private purchase HTTP and browser evidence (locally proven)
 
 38 real authenticated HTTP checks now cover native CSRF/signed/stale forms,
