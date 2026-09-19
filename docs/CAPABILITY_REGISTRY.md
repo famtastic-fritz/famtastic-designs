@@ -1,5 +1,11 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Compact footer atmosphere, local evidence
+
+Six focused tests and mobile CUA prove the existing footer's compact Company
+layout and pauseable cursive background. Character artwork is not enabled and
+production remains unchanged. See design/social-footer/SPACING-ATMOSPHERE-2026-09-19.md.
+
 ## 2026-09-19 — Compact social footer (production verified)
 
 Approved `49ce5033` is deployed. Reusable official-mark badges replace the orbit

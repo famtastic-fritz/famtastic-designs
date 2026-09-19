@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-19 — Mobile footer spacing and atmosphere (local)
+
+- Tightened mobile footer grid and two-column Company navigation, retaining44px targets.
+- Added separate subtle cursive fade with pause/reduced-motion support; no platform-mark animation.
+- Fritz character remains pending approved artwork. No production deployment.
+
 ## 2026-09-19 — Approved social footer deployed
 
 Owner approved release. Footer commit `49ce5033` is live on apex/www through the

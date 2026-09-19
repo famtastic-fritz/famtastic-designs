@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Compact utility navigation without smaller targets
+
+Observation:44px mobile targets plus grid gaps and a full-width single Company
+column make a footer unnecessarily tall. Reduce gaps and use two columns before
+shrinking targets or removing links. Keep background motion separately pausable
+and reduced-motion safe; never animate official social marks or guess a portrait.
+
 ## 2026-09-19 — Bind visual approval to source and live evidence
 
 The owner approved the social footer and explicitly requested commit/push/live.

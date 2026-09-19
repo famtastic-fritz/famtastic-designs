@@ -44,12 +44,21 @@
   .v1-footer .v1-footer__blurb { max-width: 32rem; }
 }
 @media (max-width: 599px) {
-  .v1-footer .v1-footer__grid { gap: 2rem; padding-top: 2rem; }
+  .v1-footer .v1-footer__grid { gap: 1.25rem; padding-block: 1.5rem 1rem; }
+  .v1-footer .fam-brand-logo--footer { width: 240px; max-width: 100%; }
+  .v1-footer .v1-footer__tags { margin-top: .85rem; }
+  .v1-footer__links .v1-footer__col { gap: .15rem; }
+  .v1-footer__links .v1-footer__col a { min-height: 44px; line-height: 1.4; padding-block: .25rem; }
+  .v1-footer__links .v1-footer__company { grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 1rem; }
+  .v1-footer__company .v1-footer__heading, .v1-footer__company a[href^="mailto:"] { grid-column: 1 / -1; }
+  .v1-footer .v1-footer__bottom { padding-block: 1rem; gap: .35rem .8rem; }
+  .v1-footer__legal { flex-wrap: wrap; }
+  .v1-footer__legal a { min-height: 44px; display: inline-flex; align-items: center; }
   .v1-social-signal__list { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px 8px; }
   .fam-social-badge { --badge-size: 56px; width: 100%; }
   .fam-social-badge__label { font-size: .7rem; }
   .v1-social-signal__heading span { margin-left: 0; }
-  .v1-footer__links { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.5rem 1rem; }
+  .v1-footer__links { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; padding-top: 1rem; }
   .v1-footer__links .v1-footer__col:last-child { grid-column: 1 / -1; }
 }
 @media (max-width: 359px) {

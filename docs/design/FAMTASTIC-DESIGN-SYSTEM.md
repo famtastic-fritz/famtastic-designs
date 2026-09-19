@@ -145,6 +145,11 @@ theme-local copies; the September 17 baseline activation is recorded in the rele
 ## Motion, accessibility, performance
 
 Only interaction-triggered underline/glow transitions; no new continuous motion.
+September19 owner exception: the shared public footer may carry decorative,
+noninteractive cursive background phrases, opacity1.8–6.5%,24s fading cycle,
+with an explicit pause toggle and static reduced-motion rendering. This does
+not apply to platform logos, portal/admin, customer worlds or email. A requested
+Fritz character layer remains pending approved standalone artwork.
 Reduced-motion disables these transitions and decorative movements. Existing
 particle/motion behavior is not expanded. Dense admin never animates routine data.
 44px important touch targets, readable contrast, semantic controls, keyboard focus,

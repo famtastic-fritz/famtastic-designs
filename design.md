@@ -168,6 +168,14 @@ Legacy `/admin/user` bookmarks resolve to the permission-protected People route.
 
 ## Public footer extension — September 19, 2026
 
+Owner-requested mobile refinement: compact Company links into two columns while
+retaining44px targets and all destinations. Public-footer background may use
+short cursive phrases with a slow24s low-opacity fade, a pause control and a
+static reduced-motion fallback. This explicit exception is background-only,
+not permission to animate social platform marks or operational surfaces.
+Fritz character artwork requires an identified approved asset; never substitute
+a customer's image or invent an approved portrait.
+
 The existing footer's compact social family is governed by
 [the scoped social-footer specification](docs/design/FAMTASTIC-SOCIAL-FOOTER.md).
 Keep live service/package navigation, canonical logo and current closing CTA.
