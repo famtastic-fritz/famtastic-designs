@@ -178,3 +178,9 @@ only configured approved destinations render. Motion is a 220ms local edge respo
 no orbit/loop or follow-success state. Sources: [social-footer/SOURCES.md](social-footer/SOURCES.md).
 This implementation is local and awaits Fritz's visual review; prior release receipts
 remain unchanged. No extension to email, portal/admin, favicon or customer worlds.
+
+## Social footer production receipt — 2026-09-19
+
+Owner-approved footer `49ce5033` is live and verified on apex/www. See
+`docs/design/social-footer/RELEASE-2026-09-19.md` for exact source, backup and
+live desktop/mobile evidence. Historical local review records stay immutable.

@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Bind visual approval to source and live evidence
+
+The owner approved the social footer and explicitly requested commit/push/live.
+Release `49ce5033` passed canonical deployment and CUA apex/www acceptance.
+Rule: preserve the original local review hashes, append a separate live receipt,
+and compare actual CMS anchors after hydration before claiming preservation.
+See `docs/design/social-footer/RELEASE-2026-09-19.md`.
+
 ## 2026-09-18 — Prove the scheduler without draining the pipeline
 
 Reviewed378c3d86 is live. Exact-marker/hash-backed repair installed CLI PHP in

@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-19 — Approved social footer deployed
+
+Owner approved release. Footer commit `49ce5033` is live on apex/www through the
+canonical deployer. Desktop/mobile browser checks preserve all 15 CMS navigation
+anchors, canonical logos and six configured social links, with no overflow.
+Receipt: `design/social-footer/RELEASE-2026-09-19.md`.
+
 ## 2026-09-18 — Reliability release and bounded scheduler smoke test
 
 - Deployed matching reviewed378c3d86 backend/frontend through canonical releases;

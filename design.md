@@ -172,3 +172,9 @@ The existing footer's compact social family is governed by
 [the scoped social-footer specification](docs/design/FAMTASTIC-SOCIAL-FOOTER.md).
 Keep live service/package navigation, canonical logo and current closing CTA.
 Local implementation/review evidence is separate from production release approval.
+
+## Social footer production receipt — 2026-09-19
+
+Owner-approved footer `49ce5033` is live and verified on apex/www. See
+`docs/design/social-footer/RELEASE-2026-09-19.md` for exact source, backup and
+live desktop/mobile evidence. Historical local review records stay immutable.

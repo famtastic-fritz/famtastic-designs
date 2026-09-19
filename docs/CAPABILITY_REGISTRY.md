@@ -1,5 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Compact social footer (production verified)
+
+Approved `49ce5033` is deployed. Reusable official-mark badges replace the orbit
+in the existing footer. CUA confirms live CMS links, desktop/mobile layout and
+keyboard focus on apex/www. Unknown profiles stay hidden; no fake follow state.
+Evidence and limits: `design/social-footer/RELEASE-2026-09-19.md`.
+
 ## 2026-09-18 — Production release and observe-only cron proven
 
 Reviewed378c3d86 backend/frontend is deployed with apex/www browser smoke checks.

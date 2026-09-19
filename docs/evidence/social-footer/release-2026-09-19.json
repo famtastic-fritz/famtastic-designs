@@ -1,0 +1,313 @@
+{
+  "desktop": {
+    "badges": [
+      {
+        "height": 105.265625,
+        "href": "https://www.facebook.com/people/FAMTastic-Designs/100038380452647/",
+        "label": "Facebook",
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "href": "https://www.instagram.com/famtasticdesigns/",
+        "label": "Instagram",
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "href": "https://youtube.com/@FAMtastic-Designs",
+        "label": "YouTube",
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "href": "https://x.com/FritzMedine",
+        "label": "XFritz\u2019s channel",
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "href": "https://tiktok.com/@famtasticdesigns8",
+        "label": "TikTok",
+        "width": 80
+      },
+      {
+        "height": 105.265625,
+        "href": "mailto:hello@famtasticdesigns.com",
+        "label": "Email",
+        "width": 80
+      }
+    ],
+    "documentWidth": 1425,
+    "footers": 1,
+    "h1": "Agentic AI Business Solutions Engineering Studio ",
+    "images": [
+      {
+        "loaded": true,
+        "src": "/brand/famtastic-designs-logo-v1.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/facebook.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/instagram.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/youtube.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/x.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/tiktok.png"
+      }
+    ],
+    "links": [
+      {
+        "href": "/services/ai-chatbot",
+        "text": "AI Chatbot Solutions"
+      },
+      {
+        "href": "/services/site-rebuild",
+        "text": "Site Rebuild & Redesign"
+      },
+      {
+        "href": "/services/custom-website-development",
+        "text": "Custom Website Development"
+      },
+      {
+        "href": "/services/landing-page-design",
+        "text": "Landing Page Design"
+      },
+      {
+        "href": "/services/client-portal-systems",
+        "text": "Client Portal Systems"
+      },
+      {
+        "href": "/services/e-commerce-solutions",
+        "text": "E-Commerce Solutions"
+      },
+      {
+        "href": "/services",
+        "text": "All services \u2192"
+      },
+      {
+        "href": "/packages/199-quick-start",
+        "text": "Web Basics Bundle \u2014 $199"
+      },
+      {
+        "href": "/packages/499-site-upgrade",
+        "text": "Business Website Bundle \u2014 $499"
+      },
+      {
+        "href": "/packages/starter-website",
+        "text": "Custom Website \u2014 $1,999"
+      },
+      {
+        "href": "/packages/business-website",
+        "text": "Business Growth System \u2014 $3,999"
+      },
+      {
+        "href": "/packages/premium-website-ai",
+        "text": "Premium Website + AI System \u2014 $6,999"
+      },
+      {
+        "href": "/packages/landing-page",
+        "text": "Campaign Landing Page System \u2014 $1,499"
+      },
+      {
+        "href": "/packages/website-care-plan",
+        "text": "Website Care & Maintenance \u2014 $149/month"
+      },
+      {
+        "href": "/packages",
+        "text": "All packages \u2192"
+      }
+    ],
+    "scripts": [
+      "https://famtasticdesigns.com/assets/index-C-DCSccB.js",
+      "https://www.googletagmanager.com/gtag/js?id=G-T2ENFBZR4K"
+    ],
+    "socialHeight": 157.453125,
+    "socialSections": 1,
+    "styles": [
+      "https://famtasticdesigns.com/brand/famtastic-dna.css",
+      "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap",
+      "https://famtasticdesigns.com/assets/index-BOw6hux0.css"
+    ],
+    "url": "https://famtasticdesigns.com/",
+    "viewport": 1440
+  },
+  "mobile": {
+    "badges": [
+      {
+        "height": 96.140625,
+        "label": "Facebook",
+        "top": 374.109375,
+        "width": 77.75
+      },
+      {
+        "height": 96.140625,
+        "label": "Instagram",
+        "top": 374.109375,
+        "width": 77.75
+      },
+      {
+        "height": 96.140625,
+        "label": "YouTube",
+        "top": 374.109375,
+        "width": 77.75
+      },
+      {
+        "height": 96.140625,
+        "label": "XFritz\u2019s channel",
+        "top": 374.109375,
+        "width": 77.75
+      },
+      {
+        "height": 81.671875,
+        "label": "TikTok",
+        "top": 486.25,
+        "width": 77.75
+      },
+      {
+        "height": 81.671875,
+        "label": "Email",
+        "top": 486.25,
+        "width": 77.75
+      }
+    ],
+    "documentWidth": 375,
+    "footers": 1,
+    "socialHeight": 246,
+    "socialSections": 1,
+    "url": "https://famtasticdesigns.com/",
+    "viewport": 390
+  },
+  "www": {
+    "badges": 6,
+    "documentWidth": 1905,
+    "h1": "Agentic AI Business Solutions Engineering Studio ",
+    "images": [
+      {
+        "loaded": true,
+        "src": "/brand/famtastic-designs-logo-v1.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/facebook.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/instagram.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/youtube.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/x.png"
+      },
+      {
+        "loaded": true,
+        "src": "/brand/social/tiktok.png"
+      }
+    ],
+    "packages": "PACKAGES\n\nWeb Basics Bundle \u2014 $199\nBusiness Website Bundle \u2014 $499\nCustom Website \u2014 $1,999\nBusiness Growth System \u2014 $3,999\nPremium Website + AI System \u2014 $6,999\nCampaign Landing Page System \u2014 $1,499\nWebsite Care & Maintenance \u2014 $149/month\nAll packages \u2192",
+    "services": "SERVICES\n\nAI Chatbot Solutions\nSite Rebuild & Redesign\nCustom Website Development\nLanding Page Design\nClient Portal Systems\nE-Commerce Solutions\nAll services \u2192",
+    "social": 1,
+    "url": "https://www.famtasticdesigns.com/",
+    "viewport": 1920
+  },
+  "cmsUnchanged": true,
+  "logs": {
+    "apex": [
+      {
+        "level": "error",
+        "message": "Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received",
+        "timestamp": "2026-09-19T13:07:40.752Z",
+        "url": "https://famtasticdesigns.com/"
+      },
+      {
+        "level": "error",
+        "message": "Error: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received",
+        "timestamp": "2026-09-19T13:07:40.752Z",
+        "url": "https://famtasticdesigns.com/"
+      }
+    ],
+    "www": []
+  },
+  "schema": "famtastic.social-footer-release.v1",
+  "implementation_commit": "49ce503300bda5984a95e5a65106d7995865c9e7",
+  "deployed_at": "2026-09-19T13:11:23Z",
+  "http": [
+    {
+      "url": "https://famtasticdesigns.com/",
+      "status": 200,
+      "content_type": "text/html",
+      "final_url": "https://famtasticdesigns.com/"
+    },
+    {
+      "url": "https://www.famtasticdesigns.com/",
+      "status": 200,
+      "content_type": "text/html",
+      "final_url": "https://www.famtasticdesigns.com/"
+    },
+    {
+      "url": "https://famtasticdesigns.com/assets/index-C-DCSccB.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "final_url": "https://famtasticdesigns.com/assets/index-C-DCSccB.js"
+    },
+    {
+      "url": "https://famtasticdesigns.com/assets/index-BOw6hux0.css",
+      "status": 200,
+      "content_type": "text/css",
+      "final_url": "https://famtasticdesigns.com/assets/index-BOw6hux0.css"
+    },
+    {
+      "url": "https://www.famtasticdesigns.com/assets/index-C-DCSccB.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "final_url": "https://www.famtasticdesigns.com/assets/index-C-DCSccB.js"
+    },
+    {
+      "url": "https://www.famtasticdesigns.com/assets/index-BOw6hux0.css",
+      "status": 200,
+      "content_type": "text/css",
+      "final_url": "https://www.famtasticdesigns.com/assets/index-BOw6hux0.css"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": ".artifacts/social-footer/live-before-1440.png",
+      "sha256": "d8528480defd4e41c7ce739ea25aa8cbeb48af762481267ae8fb21a2d10e7a28"
+    },
+    {
+      "path": ".artifacts/social-footer/live-before-390.png",
+      "sha256": "868cc3b19e3f955dfc1527041073bb4f69b5071aff712ebfb2d3997d438cb7a8"
+    },
+    {
+      "path": ".artifacts/social-footer/live-after-1440.png",
+      "sha256": "ca0c0534cb02cb506bc29414981df46afe18bc11991d1788662a3c0c196b2322"
+    },
+    {
+      "path": ".artifacts/social-footer/live-after-390.png",
+      "sha256": "3a6712ad0346d5a3d7d0fbf9fe9c72aaea842dcf605bc66f55607674a1656fa2"
+    },
+    {
+      "path": ".artifacts/social-footer/live-focus-1440.png",
+      "sha256": "399c0bad4f68991776061a0a62b1c06bf2298fe013368b33cc3a6b7013796eef"
+    },
+    {
+      "path": ".artifacts/social-footer/live-www.png",
+      "sha256": "f9f1c2b04b1a42d67efd1dd68758f88985b17df02a8f6e84bac030d4a2ae7a0b"
+    }
+  ]
+}

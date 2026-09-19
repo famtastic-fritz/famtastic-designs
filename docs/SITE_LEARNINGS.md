@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Separate immutable review from live acceptance
+
+Footer approval authorized the existing implementation release, not unrelated
+work. `49ce5033` was built and deployed exactly; 15 live CMS anchors matched the
+baseline. Initial render briefly shows empty-data fallbacks and lazy logos, so
+verify hydrated content and scroll logos into view before diagnosing missing data.
+Rule: append live evidence without rewriting local approval hashes; distinguish
+the runtime commit from the later documentation-only receipt commit.
+See `design/social-footer/RELEASE-2026-09-19.md`.
+
 ## 2026-09-18 — Separate scheduled health from autonomous fulfillment
 
 The broken CGI cron was replaced through exact hash/marker comparison and private
